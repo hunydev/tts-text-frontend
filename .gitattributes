@@ -1,0 +1,7 @@
+* text=auto
+*.c text eol=lf
+*.h text eol=lf
+*.md text eol=lf
+*.tsv text eol=lf whitespace=-blank-at-eol
+*.ttfm text eol=lf
+*.ttfb binary

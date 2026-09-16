@@ -1,0 +1,41 @@
+# Pronunciation lexicons
+
+Pronunciation overrides are separate from TN rules. `3개 → 세 개` is semantic
+verbalization; `Apple → 애플` is a pronunciation lookup.
+
+| Priority | Typical owner |
+| --- | --- |
+| User | Per-engine request/profile pronunciation customization |
+| Customer | Organization-specific names and policies |
+| Domain | Finance, telecom or product vocabulary |
+| System | Curated language-pack vocabulary |
+| Fallback | Source dictionary, G2P, phonetic renderer, grapheme renderer |
+
+`ttf_lexicon_add(engine, layer, source_lang, render_lang, word, pronunciation)`
+adds/replaces an entry at one layer before freeze. Word keys use deterministic ASCII
+case folding; source and render language tags are explicit. `ttf_lexicon_remove`
+removes that layer's entry, revealing lower-priority entries. To evaluate emergency
+fallback, remove the system lexicon entry and any matching source pronunciation
+resource in a separate test resource tree, or invoke the target renderer directly.
+
+Foreign lexicon TSV rows have kind `lexicon`, language equal to the target tag and
+key `<source-tag>:<lowercase-word>`:
+
+```text
+lexicon<TAB>ko-KR<TAB>en-US:apple<TAB>애플
+```
+
+System data are grouped into `common`, `brands`, `technology` and `acronyms` under
+`resources/languages/ko-KR/lexicon/`. New categories such as proper nouns and customer
+terms can be listed in the manifest without editing C code. Entries include Apple,
+Microsoft, Google, YouTube, WiFi, OpenAI and ChatGPT, plus initialism/acronym defaults.
+SQL and GIF readings are policy choices that callers can override.
+
+Runtime records live in an engine-owned hash table. Lookup is independent of the
+storage representation; changing to a trie, double-array trie, DAWG, FST or compiled
+binary index can happen behind that interface. This initial table is suitable for
+small to moderate seed data; large dictionaries need memory and collision profiling.
+
+Inspect output records hit provenance and layer. The callback/result text is owned
+by the request, so an application can replace entire frozen engines without pointers
+from a completed result depending on lexicon record lifetimes.

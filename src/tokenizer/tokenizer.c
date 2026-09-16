@@ -1,0 +1,116 @@
+#include "../core/internal.h"
+/* Returns 1 complete, 0 incomplete, -1 invalid. Reject overlong encodings,
+   surrogates, NUL and code points outside Unicode. Locale independent. */
+int ttf_utf8_decode(const char *s, size_t n, uint32_t *cp, size_t *w) {
+    uint32_t c, min;
+    size_t k, i;
+    if (!n)
+        return 0;
+    c = (unsigned char)s[0];
+    if (c < 0x80) {
+        if (!c)
+            return -1;
+        *cp = c;
+        *w = 1;
+        return 1;
+    }
+    if (c >= 0xc2 && c <= 0xdf) {
+        k = 2;
+        c &= 31;
+        min = 0x80;
+    } else if (c >= 0xe0 && c <= 0xef) {
+        k = 3;
+        c &= 15;
+        min = 0x800;
+    } else if (c >= 0xf0 && c <= 0xf4) {
+        k = 4;
+        c &= 7;
+        min = 0x10000;
+    } else
+        return -1;
+    for (i = 1; i < k && i < n; i++) {
+        if (((unsigned char)s[i] & 0xc0) != 0x80)
+            return -1;
+    }
+    if (n < k)
+        return 0;
+    for (i = 1; i < k; i++)
+        c = (c << 6) | ((unsigned char)s[i] & 63);
+    if (c < min || c > 0x10ffff || (c >= 0xd800 && c <= 0xdfff))
+        return -1;
+    *cp = c;
+    *w = k;
+    return 1;
+}
+ttf_script_t ttf_script_of(uint32_t c) {
+    if ((c >= 0xac00 && c <= 0xd7a3) || (c >= 0x1100 && c <= 0x11ff) ||
+        (c >= 0x3130 && c <= 0x318f) || (c >= 0xa960 && c <= 0xa97f) ||
+        (c >= 0xd7b0 && c <= 0xd7ff))
+        return TTF_SCRIPT_HANGUL;
+    if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
+        (c >= 0xc0 && c <= 0x2af && c != 0xd7 && c != 0xf7))
+        return TTF_SCRIPT_LATIN;
+    if (c >= '0' && c <= '9')
+        return TTF_SCRIPT_DIGIT;
+    if (c == ' ' || (c >= 9 && c <= 13) || c == 0xa0 || c == 0x3000 || (c >= 0x2000 && c <= 0x200a))
+        return TTF_SCRIPT_WHITESPACE;
+    if (c == '.' || c == ',' || c == '!' || c == '?' || c == ':' || c == ';' || c == '-' ||
+        c == '\'' || c == '"' || c == '(' || c == ')' || c == '[' || c == ']' || c == '{' ||
+        c == '}' || c == '/' || c == '\\' || c == '_' || (c >= 0x2010 && c <= 0x2027) ||
+        c == 0x3001 || c == 0x3002 || c == 0xff01 || c == 0xff1f)
+        return TTF_SCRIPT_PUNCTUATION;
+    if (c == '$' || c == '%' || c == '#' || c == '@' || c == '&' || c == '+' || c == '=' ||
+        c == '*' || c == '<' || c == '>' || c == '~' || c == '^' || c == '|' || c == '`' ||
+        (c >= 0x20a0 && c <= 0x20cf) || c == 0xa3 || c == 0xa5 || (c >= 0x2190 && c <= 0x2bff) ||
+        (c >= 0x1f000 && c <= 0x1faff))
+        return TTF_SCRIPT_SYMBOL;
+    return TTF_SCRIPT_OTHER;
+}
+ttf_status_t ttf_tokenize(const char *s, size_t n, ttf_token_t **out, size_t *count) {
+    ttf_token_t *a = NULL;
+    size_t len = 0, cap = 0, i = 0, w;
+    uint32_t cp;
+    if (!out || !count || (!s && n))
+        return TTF_EINVAL;
+    *out = NULL;
+    *count = 0;
+    while (i < n) {
+        ttf_script_t sc;
+        ttf_token_t *p;
+        if (ttf_utf8_decode(s + i, n - i, &cp, &w) != 1) {
+            free(a);
+            return TTF_EUTF8;
+        }
+        sc = ttf_script_of(cp);
+        if (len && a[len - 1].script == sc && sc != TTF_SCRIPT_PUNCTUATION &&
+            sc != TTF_SCRIPT_SYMBOL)
+            a[len - 1].end = i + w;
+        else {
+            if (len == cap) {
+                size_t next = cap ? cap * 2 : 32;
+                if (next < cap || next > SIZE_MAX / sizeof(*p)) {
+                    free(a);
+                    return TTF_ELIMIT;
+                }
+                p = (ttf_token_t *)realloc(a, next * sizeof(*p));
+                if (!p) {
+                    free(a);
+                    return TTF_ENOMEM;
+                }
+                a = p;
+                cap = next;
+            }
+            a[len].begin = i;
+            a[len].end = i + w;
+            a[len].script = sc;
+            len++;
+        }
+        i += w;
+    }
+    *out = a;
+    *count = len;
+    return TTF_OK;
+}
+void ttf_tokens_free(ttf_token_t *t) {
+    free(t);
+}

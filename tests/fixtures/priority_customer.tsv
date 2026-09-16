@@ -1,0 +1,6 @@
+exact	ko-KR	alpha	고객
+exact	ko-KR	alpha	후순위
+exact	ko-KR	beta	고객베타
+exact	ko-KR	beta gamma	긴일치
+pattern	ko-KR	X{digits}	패턴
+exact	ko-KR	X12	정확

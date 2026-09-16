@@ -1,0 +1,50 @@
+# Longest grapheme match, deliberately small deterministic prototype
+g2p	en-US	tion	SH AH N
+g2p	en-US	igh	AY
+g2p	en-US	oo	UW
+g2p	en-US	ee	IY
+g2p	en-US	ea	IY
+g2p	en-US	ai	EY
+g2p	en-US	ay	EY
+g2p	en-US	oi	OY
+g2p	en-US	oy	OY
+g2p	en-US	ow	OW
+g2p	en-US	ou	AW
+g2p	en-US	sh	SH
+g2p	en-US	ch	CH
+g2p	en-US	th	TH
+g2p	en-US	ph	F
+g2p	en-US	ck	K
+g2p	en-US	ng	NG
+g2p	en-US	ar	AA R
+g2p	en-US	er	ER
+g2p	en-US	ir	ER
+g2p	en-US	or	AO R
+g2p	en-US	ur	ER
+g2p	en-US	qu	K W
+g2p	en-US	a	AE
+g2p	en-US	b	B
+g2p	en-US	c	K
+g2p	en-US	d	D
+g2p	en-US	e	EH
+g2p	en-US	f	F
+g2p	en-US	g	G
+g2p	en-US	h	HH
+g2p	en-US	i	IH
+g2p	en-US	j	JH
+g2p	en-US	k	K
+g2p	en-US	l	L
+g2p	en-US	m	M
+g2p	en-US	n	N
+g2p	en-US	o	AA
+g2p	en-US	p	P
+g2p	en-US	q	K
+g2p	en-US	r	R
+g2p	en-US	s	S
+g2p	en-US	t	T
+g2p	en-US	u	AH
+g2p	en-US	v	V
+g2p	en-US	w	W
+g2p	en-US	x	K S
+g2p	en-US	y	Y
+g2p	en-US	z	Z

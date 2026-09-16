@@ -1,0 +1,8 @@
+# UTF-8 tab-separated: kind, language, key, value
+lexicon	ko-KR	en-US:apple	애플
+lexicon	ko-KR	en-US:microsoft	마이크로소프트
+lexicon	ko-KR	en-US:google	구글
+lexicon	ko-KR	en-US:youtube	유튜브
+lexicon	ko-KR	en-US:openai	오픈에이아이
+lexicon	ko-KR	en-US:chatgpt	챗지피티
+lexicon	ko-KR	en-US:iphone	아이폰

@@ -1,0 +1,10 @@
+/build*/
+/install*/
+*.o
+*.a
+*.so
+*.so.*
+*.dylib
+*.dll
+*.exe
+__pycache__/

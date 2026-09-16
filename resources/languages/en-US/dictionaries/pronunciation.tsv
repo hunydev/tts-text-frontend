@@ -1,0 +1,19 @@
+# Prototype dictionary, shared ARPABET subset
+pronunciation	en-US	apple	AE P AH L
+pronunciation	en-US	wifi	W AY F AY
+pronunciation	en-US	first	F ER S T
+pronunciation	en-US	second	S EH K AH N D
+pronunciation	en-US	third	TH ER D
+pronunciation	en-US	fourth	F AO R TH
+pronunciation	en-US	nasa	N AE S AH
+pronunciation	en-US	hello	HH EH L OW
+digit_pronunciation	en-US	0	Z IH R OW
+digit_pronunciation	en-US	1	W AH N
+digit_pronunciation	en-US	2	T UW
+digit_pronunciation	en-US	3	TH R IY
+digit_pronunciation	en-US	4	F AO R
+digit_pronunciation	en-US	5	F AY V
+digit_pronunciation	en-US	6	S IH K S
+digit_pronunciation	en-US	7	S EH V AH N
+digit_pronunciation	en-US	8	EY T
+digit_pronunciation	en-US	9	N AY N

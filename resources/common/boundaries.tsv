@@ -1,0 +1,8 @@
+# Protected abbreviations: a period following these is not a sentence end.
+abbreviation	*	ver	protected
+abbreviation	*	mr	protected
+abbreviation	*	mrs	protected
+abbreviation	*	dr	protected
+abbreviation	*	prof	protected
+abbreviation	*	e.g	protected
+abbreviation	*	i.e	protected

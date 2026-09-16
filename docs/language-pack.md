@@ -1,0 +1,46 @@
+# Language packs
+
+The public contract is `include/tts_text_frontend/ttf_language_pack.h`.
+`ttf_language_pack_t` has a structure size, ABI version, language tag, caller-owned
+userdata, and callbacks. The descriptor, callbacks and userdata must outlive the
+engine. Callbacks must be reentrant once the engine is frozen.
+
+| Hook | Meaning |
+| --- | --- |
+| `script_score` | Source-language evidence for a universal script category |
+| `context_score` | Deterministic context evidence for a stable local unit |
+| `classify` | Optional semantic recognition; returns consumed tokens, emits IR |
+| `verbalize` | Render one semantic object using language reading policy |
+| `pronounce` | Source text to shared Pronunciation IR |
+| `render_phones` | Shared phones to this language's phonetic text |
+| `render_graphemes` | Emergency target-language rendering |
+
+An optional classifier extends universal recognition, never writes output text.
+The `ttf_pack_input_t` view provides input bytes, lexical tokens, current index and
+immutable engine resources. Output goes through dynamically growing
+`ttf_buffer_append`/`ttf_buffer_puts`, returning allocation errors to the caller.
+
+## Add a pack
+
+1. Add `languages/ja-JP/pack.c`, exporting
+   `const ttf_language_pack_t ttf_pack_ja_JP`.
+2. Implement the callbacks needed by the language. Source pronunciation and target
+   phone rendering are separate so the core requires no pair-specific branches.
+3. Add resource files under `resources/languages/ja-JP/` and list them in
+   `resources/manifest.ttfm`.
+4. Reconfigure/build. CMake discovers `languages/*/pack.c` and generates registration.
+5. Add independent golden and mixed-language tests.
+
+Alternatively, an application can compile the pack separately and call
+`ttf_engine_register_pack` before freezing. This requires no core rebuild. Shared
+object discovery/loading is not implemented; the application owns loading and
+unloading if it uses plugins. Resource-only changes need no recompilation.
+
+The test `language_pack_extension` uses the public API to register `xx-Test`, routes
+an Other Unicode script context, and verbalizes a universal number. It proves the
+extension mechanism without claiming a complete Japanese pack.
+
+The initial packs keep their compact implementation in one `pack.c` each. Split
+classifier/verbalizer/G2P code into subdirectories as they grow; CMake already
+includes pack source files recursively. Pronunciation and TN data are separate
+under `resources/languages/<tag>/`.

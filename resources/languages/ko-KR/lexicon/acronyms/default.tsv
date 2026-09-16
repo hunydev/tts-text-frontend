@@ -1,0 +1,8 @@
+# UTF-8 tab-separated: kind, language, key, value
+lexicon	ko-KR	en-US:gpu	지피유
+lexicon	ko-KR	en-US:cpu	씨피유
+lexicon	ko-KR	en-US:usb	유에스비
+lexicon	ko-KR	en-US:ai	에이아이
+lexicon	ko-KR	en-US:nasa	나사
+lexicon	ko-KR	en-US:sql	에스큐엘
+lexicon	ko-KR	en-US:gif	기프

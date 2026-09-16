@@ -1,0 +1,13 @@
+# UTF-8 tab-separated: kind, language, key, value
+lexicon	ko-KR	en-US:first	퍼스트
+lexicon	ko-KR	en-US:second	세컨드
+lexicon	ko-KR	en-US:third	서드
+lexicon	ko-KR	en-US:fourth	포스
+lexicon	ko-KR	en-US:fifth	피프스
+lexicon	ko-KR	en-US:sixth	식스스
+lexicon	ko-KR	en-US:seventh	세븐스
+lexicon	ko-KR	en-US:eighth	에이스
+lexicon	ko-KR	en-US:ninth	나인스
+lexicon	ko-KR	en-US:tenth	텐스
+lexicon	ko-KR	en-US:hello	헬로
+lexicon	ko-KR	en-US:world	월드

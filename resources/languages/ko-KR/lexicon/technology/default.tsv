@@ -1,0 +1,6 @@
+# UTF-8 tab-separated: kind, language, key, value
+lexicon	ko-KR	en-US:wifi	와이파이
+lexicon	ko-KR	en-US:bluetooth	블루투스
+lexicon	ko-KR	en-US:linux	리눅스
+lexicon	ko-KR	en-US:github	깃허브
+lexicon	ko-KR	en-US:python	파이썬

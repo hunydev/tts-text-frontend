@@ -1,0 +1,3 @@
+# Finance reads hyphen-separated identifiers as digit sequences.
+policy	ko-KR	range_mode	digits
+policy	ko-KR	range_separator	 

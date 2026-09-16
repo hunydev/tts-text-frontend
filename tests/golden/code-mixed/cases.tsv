@@ -1,0 +1,8 @@
+# input<TAB>expected; escaped newline is supported
+1st는 첫 번째라는 뜻입니다.\n영어로는 다음과 같은 예문이 있습니다.\nPlease go to the 1st floor	퍼스트는 첫 번째라는 뜻입니다.\n영어로는 다음과 같은 예문이 있습니다.\nPlease go to the first floor
+Apple은 사과입니다.	애플은 사과입니다.
+Apple released the iPhone.	Apple released the iPhone.
+1st는 첫 번째입니다. Please go to the 1st floor.	퍼스트는 첫 번째입니다. Please go to the first floor.
+This is 한글 in a sentence.	This is 한글 in a sentence.
+USB CPU GPU AI NASA SQL GIF를 사용합니다.	유에스비 씨피유 지피유 에이아이 나사 에스큐엘 기프를 사용합니다.
+한국어에서 Please go to the 1st floor 예문을 봅니다.	한국어에서 Please go to the first floor 예문을 봅니다.

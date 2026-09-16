@@ -1,0 +1,23 @@
+# input<TAB>expected; escaped newline is supported
+0	zero
+1	one
+101	one hundred one
+10000	ten thousand
+100000000	one hundred million
+1st	first
+2nd	second
+3rd	third
+4th	fourth
+Please go to the 1st floor.	Please go to the first floor.
+2026-09-16	September sixteenth two thousand twenty six
+14:30	fourteen thirty
+09:05	nine oh five
+$12	twelve dollars
+$12.50	twelve dollars and fifty cents
+12%	twelve percent
+12.5%	twelve point five percent
+3kg	three kilograms
+10km	ten kilometers
+32GB	thirty two gigabytes
+2GHz	two gigahertz
+184467440737095516160th	184467440737095516160th

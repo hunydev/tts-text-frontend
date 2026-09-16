@@ -1,0 +1,3 @@
+# input<TAB>expected; escaped newline is supported
+가격은 12,500원입니다.	가격은 만이천오백 원입니다.
+3.5만원입니다.	삼 점 오만원입니다.

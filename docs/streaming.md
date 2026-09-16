@@ -1,0 +1,62 @@
+# Streaming and stable commitment
+
+An engine is immutable after freeze. Every stream owns a pending byte buffer,
+commit cursor and first/subsequent segment state. `write` accepts arbitrary bytes,
+including incomplete UTF-8 code points. `flush` validates and commits the remaining
+input, then finishes the request; do not use a flushed stream for a new request.
+Destroy does not implicitly flush.
+
+For `가격은 12` followed by `,500원입니다.`, the first write cannot commit `12`.
+The pending lexical unit is held until a stable boundary or final flush. UTF-8
+validation rejects malformed sequences and a final incomplete sequence.
+
+Batch normalization and streaming share the lexical boundary planner and the same
+normalization path. Therefore:
+
+```text
+batch(input, configuration, resources)
+    == concatenate(callback.text for any byte chunking of the same input)
+```
+
+The invariant includes spaces and newlines. Tests cover every single two-chunk byte
+split for representative inputs, one-byte feeds, randomized chunk sizes, randomized
+mixed-token corpora and alternate segment targets. Splits inside multibyte Hangul,
+`12,500`, URLs, decimal points, versions and dotted dates are exercised.
+
+## Segmentation configuration
+
+| Option | Purpose |
+| --- | --- |
+| `first_segment_target` | Default 48; early phrase target to reduce first callback latency |
+| `normal_segment_target` | Default 112; larger target for later throughput |
+| `max_segment_length` | Default 200; character target for forcing a safe phrase boundary |
+| `sentence_split` | Emit safe sentence boundaries |
+| `phrase_split` | Emit safe phrase boundaries before a sentence ends |
+| `max_pending_bytes` | Default 1 MiB; hard safety limit for an unbreakable pending unit |
+
+A target is measured in source Unicode characters, not UTF-8 bytes. Atomic tokens
+can exceed a segment target; the maximum is a soft boundary preference rather than
+permission to split a numeric token or UTF-8 character. The pending byte cap returns
+`TTF_ELIMIT` when safe progress is impossible within the configured limit.
+
+Sentence detection uses the shared lexical scan and structural checks. Periods in
+numbers, dates, versions, URLs and configured abbreviations do not automatically
+commit. Sufficient lookahead is required: the end of a write is not evidence of a
+sentence end. `flush` explicitly supplies final-input evidence.
+
+Context detection is local to stable planned units. Shorter phrase targets can
+change contextual readings compared with longer targets; batch and stream remain
+equal for the same configuration. This bounded context is the initial tradeoff for
+incremental commitment. There is no claimed absolute TTFB target or benchmark yet.
+
+Callbacks run synchronously during `write`/`flush`; the caller controls pacing by
+returning from the callback. A nonzero callback return cancels the request with
+`TTF_ECALLBACK`. A real TTS queue should copy segment data if synthesis continues
+after the callback. The library does not supply asynchronous queues or backpressure
+scheduling. Do not reenter, write, flush or destroy the same stream from its callback; the
+engine and stream must outlive callback execution.
+
+Segment text and span arrays are valid only during the callback. Output offsets
+are local to the segment; input offsets refer to the original stream. An error after
+prior callbacks cannot retract already delivered text. Treat a failed stream as a
+failed request and destroy it.

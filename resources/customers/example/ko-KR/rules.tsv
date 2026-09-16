@@ -1,0 +1,3 @@
+# A customer may override the domain's joining phrase without rebuilding core.
+policy	ko-KR	range_mode	digits
+policy	ko-KR	range_separator	 번에 
