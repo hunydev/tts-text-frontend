@@ -1,5 +1,6 @@
 # Deterministic load order; domain/customer overlays are loaded explicitly.
 common/boundaries.tsv
+common/protected.tsv
 languages/en-US/dictionaries/pronunciation.tsv
 languages/en-US/g2p/graphemes.tsv
 languages/en-US/rules/context.tsv

@@ -154,3 +154,7 @@ retain leading zeros and hyphen groups. Ordinary quantities remain numeric.
 `bp`, `%p`, decimal ranges, scientific quantities and uppercase AM/PM have defined
 Semantic IR contracts. [Financial text](financial-text.md) documents exact supported
 forms, data-only customer customization, arithmetic limits and negative cases.
+
+Code/markup and explicit paths now follow shared [literal contracts](protected-text.md).
+Their internal Latin tokens remain literal and do not enter Korean foreign-word
+rendering. Ordinary neighboring Korean/English words retain existing routing.

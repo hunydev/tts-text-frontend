@@ -182,11 +182,12 @@ batch/stream equivalence. No speech synthesis or listening comparison is require
 The text report shows independent expected strings, character differences,
 category scores, resource provenance and fallback paths. The current regression
 suite has 346 golden cases, a 109-case regression corpus, 60 finance/content
-scenarios and 30 advanced finance/content regressions. These are curated regression checks, not a measurement of accuracy on
+scenarios, 30 advanced finance/content regressions and 40 literal-preservation
+references. These are curated regression checks, not a measurement of accuracy on
 unseen text. A separate 15-case advisory challenge report exposes unsupported
-forms and ambiguous policies; 2 currently fail (HTML/code and file paths).
-Thirteen challenge cases now also appear in the strict development suite; the
-challenge score is no longer an unseen-data result.
+forms and ambiguous policies. All 15 now pass their fixed references and have
+been adopted into strict development suites; the score is not an unseen-data
+result or a general accuracy estimate.
 
 ```sh
 python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources \
@@ -219,6 +220,23 @@ The v0.5 finance and content additions include:
 Identifiers require explicit resource labels; the engine does not validate bank
 accounts. `%`, `%p`, and `bp` have distinct meanings and values are never silently
 converted between them. See [financial text contracts](docs/financial-text.md).
+
+### Literal code, markup and paths
+
+```text
+<code>GPU 3개</code> 예제는 3개입니다.
+→ <code>GPU 3개</code> 예제는 세 개입니다.
+
+설정 파일 /etc/app/config-v2.json을 확인합니다.
+→ 설정 파일 /etc/app/config-v2.json을 확인합니다.
+```
+
+Selected opaque elements, backtick code and explicit paths remain byte-identical.
+Ordinary tag bodies still normalize. Protected spans carry `TEXT`, a `code` /
+`markup` / `path` unit, neutral language tags and inspectable rule/layer metadata.
+Common resource policies can be overridden per customer. This is literal
+preservation, with no tag stripping or HTML/Markdown interpretation. See
+[protected text contracts](docs/protected-text.md) for syntax, limits and examples.
 
 Open `artifacts/text-evaluation/report.html` to inspect text failures and metadata.
 Output directories must be new on each run. CI publishes the same text report.

@@ -68,3 +68,12 @@ An explicit pack identifier classification outranks generic numeric/date/phone
 syntax only when both cover the same token count and byte extent. Exact/pattern
 resource overrides still run afterward. Identifier labels are reading hints,
 not verification that a number is a valid account. See [financial contracts](financial-text.md).
+
+## Literal spans (v0.6)
+
+Protected code, markup and paths use existing `TEXT`, with `unit=code|markup|path`,
+empty numeric values, neutral source/context/render tags (`und`) and identity
+rendering. Complete source/output offsets carry the literal, including paths
+longer than a numeric value field. Diagnostic `protected.*` rules and layers
+make the policy observable. These spans are opaque to context routing and further
+TN rules; they do not claim a spoken pronunciation. Public ABI layouts are unchanged.

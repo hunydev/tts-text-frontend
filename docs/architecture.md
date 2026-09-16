@@ -9,7 +9,10 @@ metadata assembly and streaming lifecycle.
 flowchart TD
     Input[UTF-8 text / incremental writes] --> Pending[Pending buffer]
     Pending --> Tokens[Universal tokenizer]
-    Tokens --> Planner[Shared stable boundary planner]
+    Tokens --> Literal[Resource-driven literal recognition / neutral token view]
+    Literal --> Planner[Shared stable boundary planner]
+    Literal --> Preserved[TEXT IR / identity rendering]
+    Preserved --> Spans
     Planner --> Router[Source and context router]
     Router --> Classifier[Universal and pack classifiers]
     Classifier --> IR[Universal Semantic IR]
@@ -66,6 +69,7 @@ flowchart TD
 | Component | Responsibility |
 | --- | --- |
 | `src/tokenizer` | Valid UTF-8, category boundaries, reusable byte offsets |
+| `src/protected` | Shared literal grammar, neutral token view, pending lookahead |
 | `src/semantic` | Universal structured token recognition and semantic values |
 | `src/core` | Engine lifecycle, pack routing, result assembly |
 | `src/rule`, `src/resource` | Exact/pattern rules, layered lookup, transactional load |
@@ -147,3 +151,18 @@ adds 17 explicit references. The old 15-case file remains unchanged for historic
 comparison, but is no longer an unseen holdout. HTML/code and paths remain visible
 failures. [Financial contracts](financial-text.md) and [validation](validation.md)
 state implemented policy and limitations separately from future production work.
+
+## Literal-source checkpoint (0.6.0)
+
+Explicit code/markup/path syntax is recognized before routing. The public scanner
+still exposes normal lexical categories; its internal protected view coalesces
+literal spans into neutral tokens. These feed both the commit planner and the
+normalizer, keeping their byte boundaries consistent. Literal items become TEXT
+Semantic IR with a typed unit and then identity output, without language-pair
+logic or lossy copies into numeric value fields.
+
+An active preservation policy takes precedence over TN/lexicon transformation.
+Prose classifiers and rules cannot consume across a literal; pack results are
+validated against this bound. Resource flags and opaque-tag inventories select
+policy without rebuilding. See [protected text](protected-text.md) for exact
+syntax and the distinction from a document renderer or speech policy.

@@ -104,3 +104,12 @@ byte chunks and tiny targets do not discard the hint. Title retention is capped
 at `max(max_segment_length, 256)` codepoints per committed unit; after that,
 ordinary safe phrase boundaries apply. Very long titles can lose their cue after
 the first committed window. This bounds commitment latency without changing ABI.
+
+## Literal context isolation (v0.6)
+
+Code, markup tags and explicit file paths use one neutral internal token per
+protected region. Their internal words, scripts and quotes cannot contribute
+KO/EN scores or extend quotation scopes. Their own language metadata is `und`.
+Ordinary text in non-opaque tag bodies continues through normal routing. Language
+packs should consume the supplied token view and respect classification bounds;
+raw bytes inside an opaque token are not prose evidence.

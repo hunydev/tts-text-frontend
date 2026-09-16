@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(tts_text_frontend VERSION 0.5.0 LANGUAGES C)
+project(tts_text_frontend VERSION 0.6.0 LANGUAGES C)
 include(GNUInstallDirs)
 include(CTest)
 option(TTF_ENABLE_ASAN "Enable AddressSanitizer" OFF)
@@ -87,6 +87,15 @@ if(BUILD_TESTING)
   add_executable(ttf_test_boundaries tests/streaming/test_semantic_boundaries.c)
   target_link_libraries(ttf_test_boundaries PRIVATE tts_text_frontend_static ttf_build_flags)
   add_test(NAME semantic_boundary_streaming COMMAND ttf_test_boundaries ${CMAKE_CURRENT_SOURCE_DIR}/resources)
+  add_executable(ttf_test_markup tests/unit/test_protected_markup.c)
+  target_link_libraries(ttf_test_markup PRIVATE tts_text_frontend_static ttf_build_flags)
+  add_test(NAME protected_markup_grammar COMMAND ttf_test_markup)
+  add_executable(ttf_test_protected_limits tests/streaming/test_protected_limits.c)
+  target_link_libraries(ttf_test_protected_limits PRIVATE tts_text_frontend_static ttf_build_flags)
+  add_test(NAME protected_stream_limits COMMAND ttf_test_protected_limits ${CMAKE_CURRENT_SOURCE_DIR}/resources)
+  add_executable(ttf_test_protected_cache tests/streaming/test_protected_cache.c)
+  target_link_libraries(ttf_test_protected_cache PRIVATE tts_text_frontend_static ttf_build_flags)
+  add_test(NAME protected_stream_cache COMMAND ttf_test_protected_cache ${CMAKE_CURRENT_SOURCE_DIR}/resources)
   if(UNIX)
     find_package(Threads REQUIRED)
     add_executable(ttf_test_concurrent tests/integration/test_concurrent.c)
@@ -126,6 +135,12 @@ if(BUILD_TESTING)
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
     add_test(NAME financial_quantity_values COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_financial_quantities.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
+    add_test(NAME protected_text_evaluation COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources protected_cases.jsonl 40)
+    add_test(NAME protected_text_integration COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_protected.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
     add_test(NAME compiled_resources COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_compiled_resources.py

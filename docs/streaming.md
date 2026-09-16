@@ -95,3 +95,23 @@ current unit before ordinary phrase cuts resume; this is a soft limit at a safe
 whitespace boundary. It trades scope on exceptionally long titles for bounded
 first-callback delay. Identifier cues still follow their exact numeric scope and
 IR limits. The pending-byte hard cap remains authoritative for indivisible text.
+
+## Protected source spans and incremental validation (v0.6)
+
+The shared protected token view prevents sentence/phrase cuts inside recognized
+code, comments, tag attributes and paths. The same lexical recognizers produce
+identity TEXT spans during normalization. Open literals wait for a closing boundary
+or final flush; raw tails survive finalization. They remain subject to the hard
+pending cap, and may exceed soft segment targets.
+
+Streams retain a UTF-8 validation cursor and a private incomplete-literal hint.
+Safe ordinary body bytes do not trigger another full lexical scan; possible
+closers or syntax changes do. Undecided prefixes use conservative scanning.
+Normal prose still plans on each write, so the optimization does not batch its
+sentence callbacks. UTF-8 errors are validated before any cache skip. Hints are
+cleared after commitment and belong to a single stream, never a shared engine.
+
+Long opaque content can still delay output until its delimiter and require the
+pending buffer. Inputs dense with delimiter candidates may still cause repeated
+scans; the cache is not a general linear-time document parser. Public callback,
+error and ownership contracts are unchanged. See [protected text](protected-text.md).

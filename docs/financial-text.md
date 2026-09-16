@@ -172,6 +172,6 @@ The current scope is plain text with explicit reading policies. Production work
 still includes customer-approved identifier vocabularies, broader real input
 coverage, ambiguity review, locale-specific amount policies and operational
 resource versioning. Synthetic passing cases do not establish production
-accuracy. Markup, file paths and unrestricted financial expressions require
-additional handling; the frontend should not be treated as an automatic parser
-of every document format.
+accuracy. Selected code/markup/path forms now have a [literal-preservation
+policy](protected-text.md); unrestricted financial expressions and general document
+interpretation remain outside the contract.

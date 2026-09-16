@@ -1,4 +1,4 @@
-# Text validation — 0.5.0
+# Text validation — 0.6.0
 
 Validated on Linux on 2026-09-16 with GCC 13.3, Clang 18.1, C11 and CMake 3.28.
 Acceptance uses normalized output text, semantic/language metadata and deterministic
@@ -8,23 +8,25 @@ streaming. Speech synthesis, audio comparison and listening scores are excluded.
 
 | Check | Result |
 | --- | --- |
-| GCC Debug | 29/29 CTest tests passed |
-| Clang Release | 29/29 CTest tests passed |
-| Clang ASan + UBSan + leak detection | 29/29 CTest tests passed |
+| GCC Debug | 34/34 CTest tests passed |
+| Clang Release | 34/34 CTest tests passed |
+| Clang ASan + UBSan + leak detection | 34/34 CTest tests passed |
 | C golden corpus | 346 explicit input/output cases passed |
 | Text regression corpus | 109/109 passed, across 18 categories |
 | Finance/content development corpus | 60/60 passed, previously 47/60 including metadata |
 | Advanced finance/content corpus | 30/30 passed; frozen v0.4 baseline 8/30 |
-| Historical advisory challenge corpus | 13/15 passed; HTML/code and file paths still fail |
+| Protected text development corpus | 40/40 passed; frozen v0.5 baseline 4/40 including metadata |
+| Historical challenge corpus | 15/15 fixed known references passed |
+| Protected grammar/stream checks | Native parser, flush/cap/cache checks; 316 integration checks |
 | Financial quantity checks | 516 exact-value/unit/endpoint/chunk checks, including 50 Decimal reference amounts |
 | Explicit financial identifier checks | 10 positive + 8 negative cases; 95 text/metadata/chunk/override checks |
 | Content cue/lexicon checks | 88 checks: title scope, overrides, hyphenated words and bounded long-title commitment |
 | Independent financial value checks | 85 generated amounts, 170 value/span/chunk checks plus 3 word-boundary guards |
 | Context routing checks | 17 cases, 90 text/language/trace checks |
-| Explicit metadata assertions | 75 regression + 33 scenario span checks passed |
+| Explicit metadata assertions | 75 regression + 33 scenario + 20 advanced + 45 protected span checks passed |
 | Evaluation streaming | Each case checked with 1-, 7-, and 64-byte writes |
-| Text reference errors | 0 character edits across 1,394 reference codepoints |
-| New semantic/quotation streaming checks | 2,237 exhaustive two-chunk byte splits, including tiny segment targets |
+| Regression text reference errors | 0 character edits across 1,394 reference codepoints |
+| New semantic/quotation streaming checks | 4,289 exhaustive two-chunk byte splits, including tiny segment targets |
 | Existing streaming checks | 717 representative comparisons plus spaced-date splits |
 | Generative checks | 200 mixed inputs, 1,000 chunk comparisons, 5,000 scanner probes |
 | Shared-engine concurrency | Eight threads, 800 requests |
@@ -43,12 +45,27 @@ headers are unchanged. No compiler warnings or sanitizer errors were observed.
 These are regression results for explicit, curated references, not an estimate of
 accuracy on unseen production text. All new scenario data is original synthetic
 text, not customer traffic or independently annotated human references. The
-unchanged challenge file now passes 13/15, compared with 3/15 in v0.4. Thirteen
-references were promoted into development regressions, so it is no longer an
-unseen holdout. HTML/code and file paths remain failures. See [scenario evidence
-and limitations](domain-corpus.md); no speech synthesis was used.
+unchanged challenge file now passes 15/15, compared with 13/15 in v0.5. All fifteen
+references have been adopted into development regressions, so it is no longer an
+unseen holdout. The implementation remains a bounded lexical frontend, not a
+general document parser. See [protected text contracts](protected-text.md); no
+speech synthesis was used.
 
-## v0.5 changes against the frozen v0.4 baseline
+## v0.6 changes against the frozen v0.5 baseline
+
+The v0.5 executable and resources at commit `ff5f847` were copied before changes.
+Forty synthetic protected-text references were fixed before either baseline or
+candidate execution. Complete text/metadata/parity acceptance improved 4/40 to
+40/40; text-only matches improved 8/40 to 40/40. The two historical challenge
+failures now pass without changing their reference strings.
+
+Checks cover unchanged literal bytes, neighboring TN, neutral language metadata,
+customer policies, rule isolation, invalid UTF-8, every representative byte split,
+pre-EOF callbacks and pending limits. A third-party pack that exceeds its
+classification view is rejected. Long-literal tests verify caching does not defer
+a completed span's callback or hide UTF-8 errors. See [protected text](protected-text.md).
+
+## Historical v0.5 changes against the frozen v0.4 baseline
 
 The v0.4 executable and resources at commit `493f966` were copied before changes.
 The new advanced reference file was written before its first baseline/candidate
@@ -84,7 +101,7 @@ more character errors under the noun-phrase policy. Historical outputs remain in
 ## Retained v0.3 regression evidence
 
 The previous outputs below were captured against v0.2 before the v0.3 fixes.
-They remain regression checks in v0.5; they are not additional v0.5 improvements.
+They remain regression checks in v0.6; they are not additional v0.6 improvements.
 
 | Input | Previous text | Current text |
 | --- | --- | --- |
@@ -140,7 +157,8 @@ python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources \
 ```
 
 The report directory must be new. Additional CI reports use
-`tests/evaluation/domain_cases.jsonl` and `advanced_cases.jsonl` (strict), plus
+`tests/evaluation/domain_cases.jsonl`, `advanced_cases.jsonl` and
+`protected_cases.jsonl` (strict), plus
 `challenge_cases.jsonl` (advisory). `report.html` shows text differences and metadata;
 `report.json` contains metrics and hashes; `cases.csv` supports case triage. The CI
 `text-evaluation` job publishes this text-only artifact. No speech backend is installed
@@ -148,8 +166,9 @@ or called by the test/evaluation workflow.
 
 ## Remaining work, in priority order
 
-1. Add explicit code/path handling and collect authorized finance/content samples
-   with agreed reference readings. Separate protected document text from prose.
+1. Collect authorized finance/content samples with agreed readings. Decide document
+   ingestion policies beyond literal preservation (entities, markup removal, Unicode
+   paths and quoted source versus speech content).
 2. Extend locale-specific quantities, currency intervals, datetime/time zones and
    ambiguity around unquoted titles, names, short imperatives and identifiers.
 3. Expand reviewed pronunciation data beyond the 163-entry seed lexicon and

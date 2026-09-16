@@ -5,12 +5,41 @@ struct ttf_stream {
     void *userdata;
     ttf_buffer_t pending;
     size_t input_offset, segments;
+    size_t validated, wait_scanned;
+    ttf_boundary_wait_t wait;
     int finished, busy;
     ttf_status_t failed;
 };
+static int path_continuation(unsigned char c) {
+    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
+           (c >= '0' && c <= '9') || c == '/' || c == '\\' || c == '.' || c == '_' ||
+           c == '-' || c == '~' || c == '+' || c == '@' || c == '$';
+}
+/* UTF-8 is validated before this check. Only literal body bytes can be skipped:
+   possible closers and syntax changes immediately restore the full planner.
+   This does not batch or delay sentence callbacks for ordinary text. */
+static int waiting_for_literal(ttf_stream_t *s, size_t valid) {
+    size_t p = s->wait_scanned;
+    if (s->wait.kind == TTF_WAIT_NONE)
+        return 0;
+    if (s->wait.kind == TTF_WAIT_BACKTICKS && p && p < valid &&
+        s->pending.data[p - 1] == '`')
+        return 0; /* A closing delimiter run needs one byte of lookahead. */
+    for (; p < valid; ++p) {
+        unsigned char c = (unsigned char)s->pending.data[p];
+        if ((s->wait.kind == TTF_WAIT_BACKTICKS && c == '`') ||
+            (s->wait.kind == TTF_WAIT_ELEMENT && (c == '<' || c == '>')) ||
+            (s->wait.kind == TTF_WAIT_COMMENT && c == '>') ||
+            (s->wait.kind == TTF_WAIT_QUOTED && c == (unsigned char)s->wait.quote) ||
+            (s->wait.kind == TTF_WAIT_PATH && !path_continuation(c)))
+            return 0;
+    }
+    s->wait_scanned = valid;
+    return 1;
+}
 static ttf_status_t drain(ttf_stream_t *s, int final) {
     while (s->pending.length) {
-        size_t valid = 0, w, boundary;
+        size_t valid = s->validated, w, boundary;
         uint32_t cp;
         ttf_result_t result;
         ttf_segment_t seg;
@@ -24,9 +53,16 @@ static ttf_status_t drain(ttf_stream_t *s, int final) {
                 break;
             valid += w;
         }
+        s->validated = valid;
         if (final && valid < s->pending.length)
             return TTF_EUTF8;
-        boundary = ttf_next_boundary(s->engine, s->pending.data, valid, final, s->segments == 0);
+        if (!final && waiting_for_literal(s, valid))
+            return TTF_OK;
+        st = ttf_next_boundary(s->engine, s->pending.data, valid, final, s->segments == 0,
+                               &boundary, &s->wait);
+        s->wait_scanned = valid;
+        if (st != TTF_OK)
+            return st;
         if (!boundary)
             return TTF_OK;
         st = ttf_process_unit(s->engine, s->pending.data, boundary, s->input_offset, &result);
@@ -47,6 +83,9 @@ static ttf_status_t drain(ttf_stream_t *s, int final) {
         s->segments++;
         s->input_offset += boundary;
         s->pending.length -= boundary;
+        s->validated -= boundary;
+        memset(&s->wait, 0, sizeof(s->wait));
+        s->wait_scanned = 0;
         memmove(s->pending.data, s->pending.data + boundary, s->pending.length);
         s->pending.data[s->pending.length] = 0;
     }

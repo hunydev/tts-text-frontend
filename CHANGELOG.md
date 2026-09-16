@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.6.0 — Literal code, markup and path preservation
+
+- Resource-driven preservation of opaque HTML-style elements, comments, backtick
+  code, explicit Unix/Windows paths and quoted paths with spaces/UTF-8.
+- Shared protected token view isolates literal contents from language routing,
+  classifiers, rule overrides and sentence/phrase boundary interpretation.
+- Emit inspectable neutral `TEXT` spans; preserve unfinished literals on flush,
+  reject invalid UTF-8, and honor pending caps. Native ABI v1 remains unchanged.
+- Cache safe incomplete-literal body continuations with incremental UTF-8
+  validation; keep closing-delimiter and early callback behavior observable.
+- Propagate planner allocation/resource errors through the streaming API.
+- Add 40 frozen synthetic text references, parser, stream-limit and overlay tests.
+  Same references improve 4/40 to 40/40 across text/metadata/parity; historical
+  challenge cases improve 13/15 to 15/15. These are development regression results.
+
 ## 0.5.0 — Financial identifiers, exact quantities and content cues
 
 - Explicit resource labels select identifier digit reading with leading zeros and

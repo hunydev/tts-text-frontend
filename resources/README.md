@@ -4,7 +4,7 @@
 Domain and customer overlays are intentionally opt-in (`ttf_resource_load` or CLI
 `--domain` / `--customer`). Do not list them in the system manifest.
 
-* `common/`: shared segmentation data and future generic syntax policies.
+* `common/`: shared segmentation data and literal-preservation policies.
 * `languages/ko-KR/rules/`: Korean reading, units, counters and context policy.
 * `languages/ko-KR/lexicon/{common,brands,technology,acronyms}/`: foreign spellings
   and Hangul pronunciation; independent of TN rules.

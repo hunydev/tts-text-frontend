@@ -187,3 +187,13 @@ edit distance is also reported, even when the case already failed before. Exit 1
 means a newly failing case or increased edit distance; exit 2 means incomparable/malformed evidence. Remaining failures are
 reported and never reclassified as passes. The comparison is an analysis tool, not
 a replacement for the strict evaluator's acceptance exit status.
+
+## Protected-source corpus (v0.6)
+
+`protected_cases.jsonl` adds 40 strict original synthetic references. Fixed before
+baseline/candidate execution, they compare exact source preservation, neighboring
+TN, language neutrality and metadata. CTest and CI evaluate them independently of
+the 109/60/30-case existing corpora. The original 15 historical challenge references
+are unchanged and now all pass; all are known development material, not a held-out
+measurement. See [protected text provenance](protected-text.md) and versioned
+`docs/evidence/0.6.0-text-results.json` for comparison data.

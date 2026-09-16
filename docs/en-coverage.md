@@ -89,3 +89,7 @@ a period. English pronunciation fallback remains a prototype.
 The English golden corpus contains independent positive and negative expected
 text. Shared streaming tests separately verify that the new spaced constructions
 survive arbitrary UTF-8 byte chunk boundaries and short phrase targets.
+
+The v0.6 shared literal recognizer protects explicit code/markup/path spans before
+English classification; see [literal contracts](protected-text.md). This does not
+extend English G2P or define spoken path/code pronunciation.

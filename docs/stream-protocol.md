@@ -102,3 +102,12 @@ control escapes, byte offsets and required metadata, source/context differences,
 batch equivalence across read sizes and segment settings, empty input, malformed
 UTF-8, invalid options, and a first callback arriving before stdin closes. It uses
 only the Python standard library and the built CLI.
+
+## Literal-source metadata (v0.6)
+
+Protected spans are `TEXT` with `unit` equal to `code`, `markup` or `path`.
+Source/context/render tags are `und`, `verbalizer` is `identity`, and the diagnostic
+rule starts with `protected.`. Text and delimiters are byte-identical to the
+source interval. Consumers can apply a downstream policy for these literal spans;
+the frontend does not define spoken-code/path rendering. No JSONL schema or native
+ABI version change is required. See [protected text](protected-text.md).

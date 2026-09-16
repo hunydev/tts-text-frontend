@@ -114,3 +114,13 @@ On engine freeze the core indexes effective cue records for the shared boundary
 planner. Customer/domain precedence applies before indexing. This avoids scanning
 the complete pronunciation dictionary at every potential boundary. This compact
 index and its links are engine-private; public C ABI v1 is unchanged.
+
+## Literal preservation (v0.6)
+
+`common/protected.tsv` declares `protection` switches for `markup`, `code` and
+`path`, plus `protected_tag` names whose value `opaque` preserves complete
+contents. These Common records follow the existing layer hierarchy; a customer
+can disable a switch or change an element to `transparent` without core changes.
+They remain separate from TN replacement rules and pronunciation lexicons. Active
+preservation prevents rules from consuming or modifying a literal. See
+[protected text contracts](protected-text.md) for runnable overlays.

@@ -1,6 +1,6 @@
 # Finance and content scenario corpus
 
-The v0.4 checkpoint below is retained as historical evidence. Current v0.5 results
+The v0.4 checkpoint below is retained as historical evidence. The v0.5 and v0.6 results
 and promotion of known challenges into strict regressions are recorded at the end.
 
 The current development priority is finance, followed by content creation. The
@@ -227,3 +227,17 @@ forms and numeric bounds.
 CTest and CI require the advanced corpus to pass. CI also publishes the unchanged
 advisory challenge report, including remaining failures. Compact metrics, hashes
 and changed outputs are committed in `docs/evidence/0.5.0-text-results.json`.
+
+## v0.6 literal-source checkpoint
+
+The separate 40-case `protected_cases.jsonl` was frozen before execution on v0.5
+and the v0.6 candidate. It covers code/markup, paths, context isolation, neighboring
+finance/content normalization and negative guards. Text+metadata+parity acceptance
+improves from 4/40 to 40/40 (text-only 8/40 to 40/40).
+
+The existing 60 scenario and 30 advanced cases continue to pass. The original
+15-case challenge file now passes 15/15: its final two code/path references are
+also covered by the new strict suite. All these challenge cases are now known
+development cases. This records regression progress without implying unseen
+accuracy or complete HTML/Markdown support. [Protected text contracts](protected-text.md)
+contain detailed scope, provenance and remaining limits.

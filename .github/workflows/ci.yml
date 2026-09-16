@@ -47,6 +47,8 @@ jobs:
           python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources --corpus tests/evaluation/challenge_cases.jsonl --output-dir artifacts/evaluation/challenge || test "$?" -eq 1
       - name: Verify advanced finance and content regressions
         run: python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources --corpus tests/evaluation/advanced_cases.jsonl --output-dir artifacts/evaluation/advanced
+      - name: Verify literal code, markup and path preservation
+        run: python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources --corpus tests/evaluation/protected_cases.jsonl --output-dir artifacts/evaluation/protected
       - name: Upload evaluation artifact
         uses: actions/upload-artifact@v7.0.1
         with:

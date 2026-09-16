@@ -42,7 +42,22 @@ size_t ttf_classify_universal(const ttf_pack_input_t *input, ttf_semantic_t *out
 /* Normalize one stable context unit; shared by batch and streaming. */
 ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t length,
                               size_t input_offset, ttf_result_t *out);
-/* Shared lexical boundary planner. 0 means more lookahead is required. */
-size_t ttf_next_boundary(const ttf_engine_t *e, const char *text, size_t length, int final,
-                         int first);
+/* A planner hint only permits skipping bytes that cannot change an incomplete
+   literal. It is request-local and never changes the public streaming ABI. */
+typedef enum {
+    TTF_WAIT_NONE,
+    TTF_WAIT_BACKTICKS,
+    TTF_WAIT_ELEMENT,
+    TTF_WAIT_COMMENT,
+    TTF_WAIT_QUOTED,
+    TTF_WAIT_PATH
+} ttf_wait_kind_t;
+typedef struct {
+    ttf_wait_kind_t kind;
+    size_t begin;
+    char quote;
+} ttf_boundary_wait_t;
+/* Shared lexical boundary planner. A zero boundary requires more lookahead. */
+ttf_status_t ttf_next_boundary(const ttf_engine_t *e, const char *text, size_t length, int final,
+                               int first, size_t *boundary, ttf_boundary_wait_t *wait);
 #endif

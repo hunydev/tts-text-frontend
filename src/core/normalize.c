@@ -1,4 +1,5 @@
 #include "internal.h"
+#include "../protected/protected.h"
 const ttf_entry_t *ttf_rule_match(const ttf_engine_t *, const char *, const char *, size_t,
                                   size_t *);
 ttf_status_t ttf_foreign_render(const ttf_engine_t *, const ttf_language_pack_t *,
@@ -29,6 +30,8 @@ static context_scope_t *quote_scopes(const char *text, size_t length, const ttf_
     for (i = 0; i < count; ++i) {
         uint32_t cp, closer;
         size_t width, j;
+        if (tokens[i].script != TTF_SCRIPT_PUNCTUATION)
+            continue;
         if (ttf_utf8_decode(text + tokens[i].begin, length - tokens[i].begin, &cp, &width) != 1)
             continue;
         if (depth && cp == closers[depth - 1]) {
@@ -99,23 +102,26 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
                               ttf_result_t *out) {
     ttf_token_t *tokens = NULL;
     context_scope_t *scopes = NULL;
+    ttf_protected_region_t *regions = NULL;
+    size_t region_count = 0, region_index = 0;
     size_t count = 0, i = 0, capacity = 0;
     ttf_buffer_t output = {0};
     ttf_status_t st;
     memset(out, 0, sizeof(*out));
-    st = ttf_tokenize(text, length, &tokens, &count);
+    st = ttf_tokenize_protected(e, text, length, 1, &tokens, &count, &regions, &region_count);
     if (st != TTF_OK)
         return st;
     scopes = quote_scopes(text, length, tokens, count);
     if (count && !scopes) {
         free(tokens);
+        free(regions);
         return TTF_ENOMEM;
     }
     while (i < count) {
         ttf_pack_input_t in;
         ttf_span_t span;
         ttf_semantic_t *sem = &span.semantic;
-        size_t consumed = 0, j, end, matched = 0;
+        size_t consumed = 0, j, end, matched = 0, semantic_limit = length;
         const ttf_language_pack_t *source, *context, *renderer;
         const ttf_entry_t *rule = NULL;
         ttf_buffer_t normalized = {0};
@@ -123,6 +129,29 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
         sem->struct_size = sizeof(*sem);
         sem->type = TTF_SEM_TEXT;
         sem->layer = TTF_LAYER_COMMON;
+        if (region_index < region_count && regions[region_index].begin == tokens[i].begin) {
+            const ttf_protected_match_t *literal = &regions[region_index++].match;
+            sem->input_begin = span.input_begin = tokens[i].begin + offset;
+            sem->input_end = span.input_end = literal->end + offset;
+            sem->layer = literal->layer;
+            snprintf(sem->unit, sizeof(sem->unit), "%s", literal->kind);
+            snprintf(sem->rule, sizeof(sem->rule), "%s", literal->rule);
+            tag(sem->source_lang, "und");
+            tag(sem->context_lang, "und");
+            tag(sem->render_lang, "und");
+            tag(span.verbalizer, "identity");
+            snprintf(span.context_trace, sizeof(span.context_trace), "protected:excluded");
+            span.script = TTF_SCRIPT_SYMBOL;
+            span.begin = output.length;
+            st = ttf_buffer_append(&output, text + tokens[i].begin, literal->end - tokens[i].begin);
+            span.end = output.length;
+            if (st == TTF_OK)
+                st = add_span(out, &span, &capacity);
+            if (st != TTF_OK)
+                goto fail;
+            ++i;
+            continue;
+        }
         in.text = text;
         in.length = length;
         in.tokens = tokens;
@@ -144,7 +173,16 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
             goto fail;
         }
         if (tokens[i].script != TTF_SCRIPT_WHITESPACE) {
-            consumed = ttf_classify_universal(&in, sem);
+            ttf_pack_input_t classification = in;
+            if (region_index < region_count) {
+                classification.length = regions[region_index].begin;
+                classification.token_count = i;
+                while (classification.token_count < count &&
+                       tokens[classification.token_count].begin < classification.length)
+                    ++classification.token_count;
+            }
+            semantic_limit = classification.length;
+            consumed = ttf_classify_universal(&classification, sem);
             for (j = 0; j < e->pack_count; j++)
                 if (e->packs[j]->classify) {
                     ttf_semantic_t candidate;
@@ -152,7 +190,12 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
                     memset(&candidate, 0, sizeof(candidate));
                     candidate.struct_size = sizeof(candidate);
                     candidate.layer = TTF_LAYER_SYSTEM;
-                    n = e->packs[j]->classify(&in, &candidate);
+                    n = e->packs[j]->classify(&classification, &candidate);
+                    if (n > classification.token_count - i ||
+                        (n && candidate.input_end > classification.length)) {
+                        st = TTF_ERESOURCE;
+                        goto fail;
+                    }
                     /* An explicit pack identifier cue is more specific than
                        generic numeric syntax over the identical byte extent. */
                     int labeled_identifier = n && n == consumed &&
@@ -169,7 +212,7 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
                     }
                 }
             rule = ttf_rule_match(e, context->language_tag, text + tokens[i].begin,
-                                  length - tokens[i].begin, &matched);
+                                  classification.length - tokens[i].begin, &matched);
         }
         if (rule) {
             sem->type = TTF_SEM_CUSTOM;
@@ -198,7 +241,7 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
             goto fail;
         }
         end = sem->input_end ? sem->input_end : tokens[i + consumed - 1].end;
-        if (end <= tokens[i].begin || end > tokens[i + consumed - 1].end) {
+        if (end <= tokens[i].begin || end > tokens[i + consumed - 1].end || end > semantic_limit) {
             st = TTF_ERESOURCE;
             goto fail;
         }
@@ -270,10 +313,12 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
     out->length = output.length;
     free(tokens);
     free(scopes);
+    free(regions);
     return TTF_OK;
 fail:
     free(tokens);
     free(scopes);
+    free(regions);
     ttf_buffer_free(&output);
     ttf_result_free(out);
     return st;

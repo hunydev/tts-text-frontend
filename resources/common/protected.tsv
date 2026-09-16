@@ -1,0 +1,8 @@
+# Literal preservation; never markup stripping, entity decoding, or execution.
+protection	*	markup	1
+protection	*	code	1
+protection	*	path	1
+protected_tag	*	code	opaque
+protected_tag	*	pre	opaque
+protected_tag	*	kbd	opaque
+protected_tag	*	samp	opaque

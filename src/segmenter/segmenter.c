@@ -1,4 +1,5 @@
 #include "../core/internal.h"
+#include "../protected/protected.h"
 static int horizontal_space(char c) {
     return c == ' ' || c == '\t';
 }
@@ -113,21 +114,109 @@ static int protected_period(const ttf_engine_t *e, const char *s, size_t at) {
             return 1;
     return 0;
 }
-size_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, int final, int first) {
+static int quoted_path_prefix(const char *s, size_t n, size_t begin) {
+    size_t p = begin + 1;
+    unsigned char c;
+    if (p == n)
+        return 0;
+    c = (unsigned char)s[p++];
+    /* An absolute '/' still needs a byte proving it is not protocol-relative
+       '//'. Other prefixes are decisive once their final slash is present. */
+    if (c == '/')
+        return p < n && s[p] != '/';
+    if (c == '.') {
+        if (p < n && s[p] == '.')
+            ++p;
+        return p < n && s[p] == '/';
+    }
+    if (c == '~')
+        return p < n && s[p] == '/';
+    if (c == '\\')
+        return p < n && s[p] == '\\';
+    if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
+        return n - p >= 2 && s[p] == ':' && (s[p + 1] == '/' || s[p + 1] == '\\');
+    return 0;
+}
+static void incomplete_literal_hint(const char *s, size_t n,
+                                     const ttf_protected_region_t *region,
+                                     ttf_boundary_wait_t *wait) {
+    size_t p = region->begin;
+    char quote = 0;
+    wait->begin = p;
+    if (!strcmp(region->match.kind, "path")) {
+        if (s[p] == '\'' || s[p] == '"') {
+            if (quoted_path_prefix(s, n, p)) {
+                wait->kind = TTF_WAIT_QUOTED;
+                wait->quote = s[p];
+            }
+        } else
+            wait->kind = TTF_WAIT_PATH;
+    } else if (s[p] == '`')
+        wait->kind = TTF_WAIT_BACKTICKS;
+    else if (n - p >= 4 && !memcmp(s + p, "<!--", 4))
+        wait->kind = TTF_WAIT_COMMENT;
+    else if (s[p] == '<') {
+        /* The recognizer has already checked tag syntax. Determine only if its
+           first opening tag ended, or a quoted attribute is still open. Never
+           cache an undecided tag name or an unquoted attribute value. */
+        for (++p; p < n; ++p) {
+            if (quote) {
+                if (s[p] == quote)
+                    quote = 0;
+            } else if (s[p] == '\'' || s[p] == '"')
+                quote = s[p];
+            else if (s[p] == '>') {
+                if (!strcmp(region->match.kind, "code"))
+                    wait->kind = TTF_WAIT_ELEMENT;
+                return;
+            }
+        }
+        if (quote) {
+            wait->kind = TTF_WAIT_QUOTED;
+            wait->quote = quote;
+        }
+    }
+}
+ttf_status_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, int final, int first,
+                               size_t *boundary, ttf_boundary_wait_t *wait) {
     ttf_token_t *tokens = NULL;
+    ttf_protected_region_t *regions = NULL;
+    size_t region_count = 0, region_index = 0;
     size_t count = 0, i, at, chars = 0,
            target = first ? e->config.first_segment_target : e->config.normal_segment_target;
     size_t selected = 0, protected_until = 0, title_limit;
     cue_scope_cache_t cue_caches[2] = {{0, 0, 0}, {0, 0, 0}};
     uint32_t quote_stack[32];
     size_t quote_depth = 0;
-    if (ttf_tokenize(s, n, &tokens, &count) != TTF_OK)
-        return 0;
+    ttf_status_t status =
+        ttf_tokenize_protected(e, s, n, final, &tokens, &count, &regions, &region_count);
+    *boundary = 0;
+    memset(wait, 0, sizeof(*wait));
+    if (status != TTF_OK)
+        return status;
     /* A long title eventually yields a phrase. The cap is measured from the
        current unit start, so input chunk boundaries cannot change it. */
     title_limit = title_scope_limit(s, n, e->config.max_segment_length);
     for (i = 0; i < count; i++) {
         const ttf_token_t *t = &tokens[i];
+        if (region_index < region_count && regions[region_index].begin == t->begin) {
+            if (!regions[region_index].match.complete) {
+                incomplete_literal_hint(s, n, &regions[region_index], wait);
+                goto done;
+            }
+            ++region_index;
+            /* Internal punctuation, whitespace and quotes belong to the literal.
+               Count codepoints for the next safe cut, without interpreting them. */
+            for (at = t->begin; at < t->end;) {
+                uint32_t cp;
+                size_t width;
+                if (ttf_utf8_decode(s + at, t->end - at, &cp, &width) != 1)
+                    goto done;
+                ++chars;
+                at += width;
+            }
+            continue;
+        }
         extend_cue_range(e, s, n, t->begin, title_limit, &protected_until, cue_caches);
         /* The same lexical categories drive routing, semantic recognition and
            safe cuts. Only whitespace cuts can be used for phrase segmentation. */
@@ -224,5 +313,7 @@ size_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, int fin
         selected = n;
 done:
     free(tokens);
-    return selected;
+    free(regions);
+    *boundary = selected;
+    return TTF_OK;
 }
