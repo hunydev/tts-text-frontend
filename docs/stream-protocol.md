@@ -16,7 +16,7 @@ creating extra protocol lines. Unicode text remains UTF-8.
 ## Segment event
 
 ```json
-{"version":1,"event":"segment","sequence":0,"input_begin":0,"input_end":5,"text":"애플","spans":[{"begin":0,"end":6,"input_begin":0,"input_end":5,"script":"LATIN","source_lang":"en-US","context_lang":"ko-KR","render_lang":"ko-KR","semantic_type":"WORD","value":"","unit":"","rule":"identity","resource_layer":"common","pronunciation_layer":"system","lexicon":"lexicon:system","verbalizer":"en-US","context_trace":"en-US=8 ko-KR=260"}]}
+{"version":1,"event":"segment","sequence":0,"input_begin":0,"input_end":5,"text":"애플","spans":[{"begin":0,"end":6,"input_begin":0,"input_end":5,"script":"LATIN","source_lang":"en-US","context_lang":"ko-KR","render_lang":"ko-KR","semantic_type":"WORD","value":"","secondary":"","unit":"","rule":"identity","resource_layer":"common","pronunciation_layer":"system","lexicon":"lexicon:system","verbalizer":"en-US","context_trace":"en-US=8 ko-KR=260"}]}
 ```
 
 The example illustrates the schema; actual context scores depend on the surrounding
@@ -36,10 +36,14 @@ All offsets are **UTF-8 byte offsets**, with an exclusive end:
 | `context_lang` | Speech context chosen by deterministic routing |
 | `render_lang` | Language of the rendered output |
 | `semantic_type`, `value`, `unit` | Classification and primary semantic value |
+| `secondary` | Optional since v0.5: range/fraction endpoint, AM/PM, or matched identifier cue |
 | `rule`, `resource_layer` | Selected TN rule and its layer |
 | `pronunciation_layer`, `lexicon` | Foreign pronunciation provenance and path |
 | `verbalizer` | Selected verbalizer language tag |
 | `context_trace` | Diagnostic context scores |
+
+Readers must tolerate unknown additive fields and absent `secondary` from older
+JSONL v1 producers. Native ABI layouts have not changed.
 
 Consumers should use the dedicated language and semantic fields for dispatch;
 `context_trace`, `rule`, and `lexicon` are diagnostic strings whose contents can

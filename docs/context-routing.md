@@ -84,3 +84,23 @@ current corpus is not an estimate of general language accuracy.
 and exact text, including the final word of unquoted clauses, arbitrary input
 chunk sizes, a data-only predicate override and an English-default engine with
 explicit Korean grammar. No speech synthesis or audio comparison is involved.
+
+## Explicit title cues (v0.5)
+
+`context_cue en-US 제목은 800` (tab-separated) adds a score to the immediately
+following English lexical run. `타이틀은` and `영문제목은` are also supplied. Labels
+match complete tokens; horizontal spaces and an optional ASCII colon are allowed.
+The run must include a real lexical word: `제목은 The 1st day입니다.` stays English,
+while the established `오늘의 제목은 21st입니다.` reading remains Korean. At least
+one word is a heuristic, not automatic detection of titles in arbitrary prose.
+
+Scores are integer values in 0..1000; zero disables a cue through customer resources.
+New labels use the same resource kind. The cue ends at script/clause boundaries,
+and does not cross a newline, quotation boundary or intervening punctuation.
+Pronunciation lexicons remain independent: `Apple Watch를` still localizes.
+
+The shared segmenter retains cue prefixes and their following run so arbitrary
+byte chunks and tiny targets do not discard the hint. Title retention is capped
+at `max(max_segment_length, 256)` codepoints per committed unit; after that,
+ordinary safe phrase boundaries apply. Very long titles can lose their cue after
+the first committed window. This bounds commitment latency without changing ABI.

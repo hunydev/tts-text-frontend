@@ -12,3 +12,4 @@ languages/ko-KR/lexicon/common/default.tsv
 languages/ko-KR/lexicon/technology/default.tsv
 languages/ko-KR/rules/context.tsv
 languages/ko-KR/rules/numeric.tsv
+languages/ko-KR/rules/identifiers.tsv

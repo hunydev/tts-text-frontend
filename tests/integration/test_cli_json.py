@@ -13,7 +13,7 @@ import threading
 CLI, RESOURCES = sys.argv[1:3]
 FIELDS = {
     "begin", "end", "input_begin", "input_end", "script", "source_lang",
-    "context_lang", "render_lang", "semantic_type", "value", "unit", "rule",
+    "context_lang", "render_lang", "semantic_type", "value", "secondary", "unit", "rule",
     "resource_layer", "pronunciation_layer", "lexicon", "verbalizer", "context_trace",
 }
 

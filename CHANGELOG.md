@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.5.0 — Financial identifiers, exact quantities and content cues
+
+- Explicit resource labels select identifier digit reading with leading zeros and
+  group boundaries; customer labels, zero spelling and separators are configurable.
+- Added distinct `bp`/`%p` measures, decimal/signed ranges with units, exact bounded
+  scientific notation, and uppercase AM/PM. Semantic values remain inspectable.
+- Added resource title cues and generic hyphenated foreign words; curated spellings
+  for `real-time`, `dashboard` and `quasar`. Unknown-word G2P remains a prototype.
+- Preserve cue/value context across arbitrary stream chunks and tiny targets;
+  bound title retention and avoid repeatedly rescanning prior words at each cut.
+- Add optional `secondary` to JSONL v1 span records and `secondary`/`unit` to inspect.
+  Native ABI v1 signatures, public structs and shared SONAME are unchanged.
+- Promote known challenges into a strict 30-case text suite. Compare frozen v0.4
+  output: 8/30 to 30/30; unchanged challenge references: 3/15 to 13/15. HTML/code and
+  file-path handling still fail their desired references. No speech evaluation.
+
 ## 0.4.0 — Finance and content text quality
 
 * Parse compound Korean amounts into a single canonical semantic value with exact

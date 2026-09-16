@@ -1,5 +1,8 @@
 # Finance and content scenario corpus
 
+The v0.4 checkpoint below is retained as historical evidence. Current v0.5 results
+and promotion of known challenges into strict regressions are recorded at the end.
+
 The current development priority is finance, followed by content creation. The
 text frontend remains general purpose: domain resources may change policies,
 while the universal core and language packs remain reusable. Evaluation is
@@ -190,3 +193,37 @@ reference and executable hashes; the full reports additionally retain span strea
 
 No synthesis backend, generated audio, listening score, or acoustic comparison
 is part of these acceptance criteria.
+
+## v0.5 advanced regression checkpoint
+
+The new `advanced_cases.jsonl` contains 30 original synthetic development cases:
+13 adopted from the unchanged challenge file, plus 17 explicit additional
+references. They exercise explicit identifier cues/zeros, rate units, exponent
+amounts, decimal ranges, title context, loanwords and AM/PM. This is a development
+set used to guide implementation, with no independent human annotation.
+
+References were fixed before the first execution on the frozen v0.4 binary and
+resources (commit `493f966`). Their SHA-256 is:
+
+```text
+5c88870b780e2a10442dc159a1815af8a33d72acd0b39c6d4e0e554187b048e0
+```
+
+| Same fixed references | v0.4 | v0.5 |
+| --- | ---: | ---: |
+| Advanced strict cases, text + metadata + parity | 8/30 | 30/30 |
+| Advanced character edit distance / reference characters | 240/775 | 0/775 |
+| Original 60 scenario cases | 60/60 | 60/60 |
+| Unchanged 15 challenge cases | 3/15 | 13/15 |
+
+The challenge file is kept to show historical progress, but 13 of its references
+are now training/development material for this engineering iteration. It cannot
+be presented as an unseen holdout. The two remaining failures are HTML/code and
+file-path treatment; the plain-text frontend still verbalizes parts of them.
+The new `quasar` spelling is an explicit lexicon entry, not a solved unknown-word
+phonetic rule. [Financial text contracts](financial-text.md) state the supported
+forms and numeric bounds.
+
+CTest and CI require the advanced corpus to pass. CI also publishes the unchanged
+advisory challenge report, including remaining failures. Compact metrics, hashes
+and changed outputs are committed in `docs/evidence/0.5.0-text-results.json`.

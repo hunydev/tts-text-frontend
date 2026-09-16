@@ -79,9 +79,11 @@ Malformed structured objects are preserved as TEXT, with an inspectable
 Preservation prevents a false normalized prefix from corrupting the whole object;
 it is not a claim that the TTS engine can pronounce the preserved string well.
 URLs, email addresses, versions and IP addresses also retain their original
-text. Full scientific notation, AM/PM, time zones, natural-language dates,
-locale-dependent currency formats, decimal ranges and DATETIME rendering remain
-outside this iteration. Group separators are commas and the decimal separator is
+text. Bounded scientific notation, decimal/signed ranges with one trailing unit,
+`bp`/`%p`, and uppercase AM/PM are supported as documented in
+[financial text contracts](financial-text.md). Time zones, natural-language dates,
+locale-dependent currency formats, repeated-unit ranges and DATETIME rendering
+remain outside this iteration. Group separators are commas and the decimal separator is
 a period. English pronunciation fallback remains a prototype.
 
 The English golden corpus contains independent positive and negative expected

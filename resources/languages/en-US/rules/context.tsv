@@ -183,3 +183,8 @@ context_role	en-US	subscribe	imperative
 # Universal quantity symbols inherit the neighboring numerical context.
 context_connector	*	%	number
 context_connector	*	°	number
+# Explicit content labels select the following lexical run's speech language.
+# A customer weight of 0 disables a label; labels are exact token spellings.
+context_cue	en-US	제목은	800
+context_cue	en-US	타이틀은	800
+context_cue	en-US	영문제목은	800

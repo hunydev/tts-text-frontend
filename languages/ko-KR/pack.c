@@ -1,6 +1,7 @@
 /* Korean reading policy and phonetic realization live in this language pack.
  * The core only dispatches through the versioned language-pack interface. */
 #include "tts_text_frontend/ttf_language_pack.h"
+#include "identifiers.h"
 #include "../context_run.h"
 #include <stdint.h>
 #include <stdio.h>
@@ -185,6 +186,8 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         TRY(ttf_buffer_puts(out, resource(e, "number", "ordinal_prefix", "제")));
         return cardinal(e, s->value, out);
     case TTF_SEM_DIGIT_SEQUENCE:
+        if (strcmp(s->unit, "financial_identifier") == 0)
+            return ttf_ko_render_identifier(e, s->value, out);
         return digits(e, s->value, 0, out);
     case TTF_SEM_PHONE:
         return digits(e, s->value, 1, out);
@@ -209,13 +212,30 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     case TTF_SEM_MEASURE:
         return quantity(e, s->value, resource(e, "unit", s->unit, s->unit), 0, out);
     case TTF_SEM_RANGE: {
-        int digit_mode = strcmp(resource(e, "policy", "range_mode", "cardinal"), "digits") == 0;
+        int quantity_range = s->unit[0] || strchr(s->value, '.') || strchr(s->secondary, '.') ||
+                             s->value[0] == '-' || s->value[0] == '+' ||
+                             s->secondary[0] == '-' || s->secondary[0] == '+';
+        int digit_mode = !quantity_range &&
+                         strcmp(resource(e, "policy", "range_mode", "cardinal"), "digits") == 0;
+        const char *unit;
         if (digit_mode)
             TRY(digits(e, s->value, 0, out));
         else
             TRY(cardinal(e, s->value, out));
-        TRY(ttf_buffer_puts(out, resource(e, "policy", "range_separator", " 다시 ")));
-        return digit_mode ? digits(e, s->secondary, 0, out) : cardinal(e, s->secondary, out);
+        TRY(ttf_buffer_puts(out, resource(e, "policy", quantity_range ? "quantity_range_separator"
+                                                                    : "range_separator",
+                                         " 다시 ")));
+        if (digit_mode)
+            TRY(digits(e, s->secondary, 0, out));
+        else
+            TRY(cardinal(e, s->secondary, out));
+        if (!s->unit[0])
+            return TTF_OK;
+        unit = ttf_resource_get(e, "unit", "ko-KR", s->unit, NULL);
+        if (!unit)
+            unit = resource(e, "currency", s->unit, s->unit);
+        TRY(ttf_buffer_puts(out, " "));
+        return ttf_buffer_puts(out, unit);
     }
     case TTF_SEM_FRACTION: {
         const char *numerator = s->value;
@@ -255,6 +275,10 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         fields = sscanf(s->value, "%u:%u:%u", &hour, &minute, &second);
         if (fields < 2)
             return TTF_EINVAL;
+        if (s->secondary[0]) {
+            TRY(ttf_buffer_puts(out, resource(e, "meridiem", s->secondary, s->secondary)));
+            TRY(ttf_buffer_puts(out, " "));
+        }
         (void)snprintf(value, sizeof(value), "%u", hour);
         TRY(quantity(e, value, resource(e, "unit", "hour", "시"), 1, out));
         TRY(ttf_buffer_puts(out, " "));
@@ -657,6 +681,9 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     const char *text = in->text;
     size_t n = in->length, begin = in->tokens[in->index].begin, p, q;
     unsigned year, month, day;
+    size_t identifier = ttf_ko_classify_identifier(in, s);
+    if (identifier)
+        return identifier;
     p = unsigned_value(text, n, begin, &year);
     q = skip_spaces(text, n, p);
     if (p - begin == 4 && literal_at(text, n, q, "년")) {

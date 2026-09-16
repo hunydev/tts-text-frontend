@@ -100,3 +100,17 @@ Use actual tab characters in a source resource. The value carries the semantic
 class and source language. Matching requires the complete term, so `C++x` does
 not match `C++`. Rendering remains in the pack and separate pronunciation lexicon;
 this table contains recognition metadata only.
+
+## Identifier and context cue resources (v0.5)
+
+The KO pack recognizes `identifier_label ko-KR <label> digits`; `disabled` turns off
+an inherited label. `identifier_render` controls `zero` and `separator`. Labels
+may contain spaces (horizontal input whitespace is normalized). See
+[financial text contracts](financial-text.md) for copyable customer examples.
+`context_cue en-US <label> <0..1000>` adds an explicit title-context score; zero
+turns it off. Neither kind belongs in the pronunciation lexicon.
+
+On engine freeze the core indexes effective cue records for the shared boundary
+planner. Customer/domain precedence applies before indexing. This avoids scanning
+the complete pronunciation dictionary at every potential boundary. This compact
+index and its links are engine-private; public C ABI v1 is unchanged.

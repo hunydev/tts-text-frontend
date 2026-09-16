@@ -166,7 +166,11 @@ scenarios with frozen reference text. It is a strict CTest and CI gate. The sepa
 15-case `challenge_cases.jsonl` is reported as advisory; text mismatches remain
 visible, while malformed protocol or execution errors still fail CI. See
 [corpus provenance and limits](domain-corpus.md). No real customer accuracy is
-inferred from these synthetic examples.
+inferred from these synthetic examples. Since v0.5, `advanced_cases.jsonl` adds 30
+strict regressions: 13 adopted challenge references plus 17 added finance/content
+references. The unchanged challenge report therefore measures known-case progress,
+not unseen generalization. Native/Python integration checks separately validate
+range endpoints, identifier cue names and AM/PM stored in `secondary`.
 
 ```sh
 python3 tools/evaluation/compare.py \

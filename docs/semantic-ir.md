@@ -28,6 +28,12 @@ $12 → CURRENCY(value="12", unit="USD")
 3kg / 3 kg → MEASURE(value="3", unit="kg")
 1 / 2 → FRACTION(value="1", secondary="2")
 14:30:05 → TIME(value="14:30:05")
+9:05 AM → TIME(value="09:05", secondary="AM")
+0.25%p → MEASURE(value="0.25", unit="percentage_point")
+25bp → MEASURE(value="25", unit="basis_point")
+1.5-2.5% → RANGE(value="1.5", secondary="2.5", unit="percent")
+1.2e6원 → CURRENCY(value="1200000", unit="KRW")
+계좌는 001-204 → DIGIT_SEQUENCE(value="001-204", secondary="계좌는", unit="financial_identifier")
 2026년 6월 1일 → DATE(value="2026-06-01")
 3.5만원 → CURRENCY(value="35000", unit="KRW")
 1억2천3백만원 → CURRENCY(value="123000000", unit="KRW")
@@ -57,3 +63,8 @@ offsets refer to the original request.
 space-separated phone symbols and provenance. This keeps future phoneme output
 separate from normalized text. Current API exposes pronunciation callbacks for
 packs; a final phoneme-sequence request/output API remains future work.
+
+An explicit pack identifier classification outranks generic numeric/date/phone
+syntax only when both cover the same token count and byte extent. Exact/pattern
+resource overrides still run afterward. Identifier labels are reading hints,
+not verification that a number is a valid account. See [financial contracts](financial-text.md).

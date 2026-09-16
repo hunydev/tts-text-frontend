@@ -181,16 +181,20 @@ Acceptance is based on normalized output text, semantic/language metadata and
 batch/stream equivalence. No speech synthesis or listening comparison is required.
 The text report shows independent expected strings, character differences,
 category scores, resource provenance and fallback paths. The current regression
-suite has 346 golden cases, a 109-case regression corpus and 60 finance/content
-scenarios. These are curated regression checks, not a measurement of accuracy on
+suite has 346 golden cases, a 109-case regression corpus, 60 finance/content
+scenarios and 30 advanced finance/content regressions. These are curated regression checks, not a measurement of accuracy on
 unseen text. A separate 15-case advisory challenge report exposes unsupported
-forms and ambiguous policies; 12 currently fail.
+forms and ambiguous policies; 2 currently fail (HTML/code and file paths).
+Thirteen challenge cases now also appear in the strict development suite; the
+challenge score is no longer an unseen-data result.
 
 ```sh
 python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources \
   --corpus tests/evaluation/cases.jsonl --output-dir artifacts/text-evaluation
 python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources \
   --corpus tests/evaluation/domain_cases.jsonl --output-dir artifacts/domain-evaluation
+python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources \
+  --corpus tests/evaluation/advanced_cases.jsonl --output-dir artifacts/advanced-evaluation
 build/ttf stream-json examples/code_mixed.txt > segments.jsonl
 build/ttf_bench --iterations 100 --chunk-bytes 64 examples/code_mixed.txt
 ```
@@ -200,6 +204,21 @@ multilingual text retained as reference domains. Compound amounts such as
 `1억2천3백만원` yield one `CURRENCY` span with value `123000000`, then render as
 `일억이천삼백만 원`. See [scenario evidence](docs/domain-corpus.md) and
 [context routing](docs/context-routing.md) for measured changes and remaining gaps.
+
+The v0.5 finance and content additions include:
+
+| Input | Normalized text |
+| --- | --- |
+| `계좌는 110-123-456789입니다.` | `계좌는 일일공 일이삼 사오육칠팔구입니다.` |
+| `금리는 0.25%p 상승했습니다.` | `금리는 영 점 이오 퍼센트포인트 상승했습니다.` |
+| `예상 수익률은 1.5-2.5%입니다.` | `예상 수익률은 일 점 오 다시 이 점 오 퍼센트입니다.` |
+| `표시 금액은 1.2e6원입니다.` | `표시 금액은 백이십만 원입니다.` |
+| `제목은 The 1st day입니다.` | `제목은 The first day입니다.` |
+| `새로운 real-time dashboard를 소개합니다.` | `새로운 리얼타임 대시보드를 소개합니다.` |
+
+Identifiers require explicit resource labels; the engine does not validate bank
+accounts. `%`, `%p`, and `bp` have distinct meanings and values are never silently
+converted between them. See [financial text contracts](docs/financial-text.md).
 
 Open `artifacts/text-evaluation/report.html` to inspect text failures and metadata.
 Output directories must be new on each run. CI publishes the same text report.

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(tts_text_frontend VERSION 0.4.0 LANGUAGES C)
+project(tts_text_frontend VERSION 0.5.0 LANGUAGES C)
 include(GNUInstallDirs)
 include(CTest)
 option(TTF_ENABLE_ASAN "Enable AddressSanitizer" OFF)
@@ -114,6 +114,18 @@ if(BUILD_TESTING)
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
     add_test(NAME context_language_routes COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_context_routes.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
+    add_test(NAME advanced_text_evaluation COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources advanced_cases.jsonl 30)
+    add_test(NAME content_context_and_lexicon COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_content_context.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
+    add_test(NAME labeled_financial_identifiers COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_identifiers.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
+    add_test(NAME financial_quantity_values COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_financial_quantities.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
     add_test(NAME compiled_resources COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_compiled_resources.py

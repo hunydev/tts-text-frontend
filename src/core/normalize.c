@@ -153,7 +153,17 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
                     candidate.struct_size = sizeof(candidate);
                     candidate.layer = TTF_LAYER_SYSTEM;
                     n = e->packs[j]->classify(&in, &candidate);
-                    if (n > consumed || (n && n == consumed && sem->type == TTF_SEM_WORD)) {
+                    /* An explicit pack identifier cue is more specific than
+                       generic numeric syntax over the identical byte extent. */
+                    int labeled_identifier = n && n == consumed &&
+                        candidate.input_end == sem->input_end &&
+                        candidate.type == TTF_SEM_DIGIT_SEQUENCE &&
+                        (sem->type == TTF_SEM_CARDINAL || sem->type == TTF_SEM_NUMBER ||
+                         sem->type == TTF_SEM_PHONE || sem->type == TTF_SEM_RANGE ||
+                         sem->type == TTF_SEM_DATE ||
+                         sem->type == TTF_SEM_TEXT);
+                    if (n > consumed || (n && n == consumed && sem->type == TTF_SEM_WORD) ||
+                        labeled_identifier) {
                         *sem = candidate;
                         consumed = n;
                     }

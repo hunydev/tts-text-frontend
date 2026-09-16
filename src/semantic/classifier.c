@@ -27,6 +27,66 @@ static size_t integer(const char *s, size_t n, size_t p) {
         ++p;
     return p;
 }
+/* Expand a bounded decimal exponent using decimal digits only. The IR stores
+   exact base-ten values; binary floating point must not round financial input. */
+static int expand_exponent(char *value, int exponent) {
+    char digits[TTF_IR_VALUE_SIZE], result[TTF_IR_VALUE_SIZE];
+    size_t i = 0, count = 0, fractional = 0, out = 0, start = 0;
+    int point, decimal = 0;
+    char sign = 0;
+    if (value[i] == '+' || value[i] == '-')
+        sign = value[i++];
+    for (; value[i]; ++i) {
+        if (value[i] == '.') {
+            decimal = 1;
+        } else {
+            digits[count++] = value[i];
+            if (decimal)
+                ++fractional;
+        }
+    }
+    point = (int)count - (int)fractional + exponent;
+    while (start + 1 < count && digits[start] == '0') {
+        ++start;
+        --point;
+    }
+    count -= start;
+    memmove(digits, digits + start, count);
+    if (count == 1 && digits[0] == '0') {
+        point = 1;
+    } else {
+        while (count > 1 && (int)count > point && digits[count - 1] == '0')
+            --count;
+    }
+    if (sign)
+        result[out++] = sign;
+    if (point <= 0) {
+        size_t zeros = (size_t)(-point);
+        if (out + 2 + zeros + count >= sizeof(result))
+            return 0;
+        result[out++] = '0';
+        result[out++] = '.';
+        memset(result + out, '0', zeros);
+        out += zeros;
+        memcpy(result + out, digits, count);
+        out += count;
+    } else {
+        size_t whole = (size_t)point;
+        size_t required = whole < count ? count + 1 : whole;
+        if (out + required >= sizeof(result))
+            return 0;
+        for (i = 0; i < whole; ++i)
+            result[out++] = i < count ? digits[i] : '0';
+        if (whole < count) {
+            result[out++] = '.';
+            memcpy(result + out, digits + whole, count - whole);
+            out += count - whole;
+        }
+    }
+    result[out] = '\0';
+    memcpy(value, result, out + 1);
+    return 1;
+}
 static size_t number(const char *s, size_t n, size_t p, char *value) {
     size_t start = p, k = 0, first;
     if (p < n && (s[p] == '-' || s[p] == '+')) {
@@ -63,6 +123,24 @@ static size_t number(const char *s, size_t n, size_t p, char *value) {
         p = q;
     }
     value[k] = '\0';
+    if (p < n && (s[p] == 'e' || s[p] == 'E')) {
+        unsigned exponent = 0;
+        int negative = 0;
+        size_t first_digit;
+        ++p;
+        if (p < n && (s[p] == '+' || s[p] == '-'))
+            negative = s[p++] == '-';
+        first_digit = p;
+        while (p < n && digit(s[p])) {
+            /* A 96-byte mantissa and result cannot require a larger shift. */
+            if (exponent > TTF_IR_VALUE_SIZE ||
+                exponent * 10u + (unsigned)(s[p] - '0') > TTF_IR_VALUE_SIZE)
+                return start;
+            exponent = exponent * 10u + (unsigned)(s[p++] - '0');
+        }
+        if (p == first_digit || !expand_exponent(value, negative ? -(int)exponent : (int)exponent))
+            return start;
+    }
     return p;
 }
 static unsigned small_uint(const char *s, size_t n) {
@@ -119,6 +197,8 @@ static int structured_tail(const char *s, size_t n, size_t p) {
     if (next > p + 1 && next < n && digit(s[next]))
         return 1;
     return ascii_letter(s[p]) || digit(s[p]) || s[p] == ':' || s[p] == '/' ||
+           (s[p] == '%' && p + 1 < n &&
+            (ascii_letter(s[p + 1]) || digit(s[p + 1]) || s[p + 1] == '%')) ||
            ((s[p] == '.' || s[p] == ',' || s[p] == '-') && p + 1 < n && digit(s[p + 1]));
 }
 static size_t preserve(const ttf_pack_input_t *in, ttf_semantic_t *out, size_t end,
@@ -144,6 +224,37 @@ static int valid_ordinal(const ttf_pack_input_t *in, const char *language, const
 static int ascii_web(char c) {
     unsigned char u = (unsigned char)c;
     return u > 32 && u < 127 && c != '<' && c != '>' && c != '"';
+}
+/* Trailing quantity units retain their semantic identity in the IR. In
+   particular percentage points and basis points are not converted to percent. */
+static int quantity_suffix(const ttf_pack_input_t *in, size_t p, ttf_semantic_t *out, size_t *end,
+                           ttf_semantic_type_t *type) {
+    const char *value;
+    ttf_resource_layer_t layer;
+    if (resource_prefix(in, "numeric_suffix", p, &value, end, &layer) &&
+        !structured_tail(in->text, in->length, *end)) {
+        const char *colon = strchr(value, ':');
+        if (!strncmp(value, "COUNTER:", 8))
+            *type = TTF_SEM_COUNTER;
+        else if (!strncmp(value, "CURRENCY:", 9))
+            *type = TTF_SEM_CURRENCY;
+        else if (!strncmp(value, "MEASURE:", 8))
+            *type = TTF_SEM_MEASURE;
+        else
+            colon = NULL;
+        if (colon && colon[1] && strlen(colon + 1) < sizeof(out->unit)) {
+            (void)snprintf(out->unit, sizeof(out->unit), "%s", colon + 1);
+            out->layer = layer;
+            return 1;
+        }
+    }
+    if (p < in->length && in->text[p] == '%' && (p + 1 == in->length || in->text[p + 1] != '%') &&
+        !structured_tail(in->text, in->length, p + 1)) {
+        *end = p + 1;
+        *type = TTF_SEM_PERCENT;
+        return 1;
+    }
+    return 0;
 }
 
 size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
@@ -287,6 +398,18 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
             second = end - r == 2 ? small_uint(s + r, 2) : 60;
             valid = valid && second < 60;
         }
+        {
+            size_t suffix_start = skip_space(s, n, end), suffix_end;
+            if (resource_prefix(in, "time_suffix", suffix_start, &rule_value, &suffix_end,
+                                &layer) &&
+                !structured_tail(s, n, suffix_end)) {
+                valid = valid && hour >= 1 && hour <= 12 &&
+                        copy_value(out->secondary, sizeof(out->secondary), rule_value,
+                                   strlen(rule_value));
+                end = suffix_end;
+                out->layer = layer;
+            }
+        }
         if (valid && !structured_tail(s, n, end)) {
             if (has_seconds)
                 (void)snprintf(out->value, sizeof(out->value), "%02u:%02u:%02u", hour, minute,
@@ -295,7 +418,7 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
                 (void)snprintf(out->value, sizeof(out->value), "%02u:%02u", hour, minute);
             return finish(in, out, end, TTF_SEM_TIME, "syntax.time");
         }
-        return preserve(in, out, atom_end(s, n, b), "syntax.invalid-time");
+        return preserve(in, out, atom_end(s, n, end), "syntax.invalid-time");
     }
     if (a_end > b && a_end < n && s[a_end] == '-') {
         p = a_end + 1;
@@ -309,12 +432,6 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
                 return finish(in, out, end, TTF_SEM_PHONE, "syntax.phone");
             return preserve(in, out, atom_end(s, n, b), "syntax.invalid-phone");
         }
-        if (q > p && !structured_tail(s, n, q) &&
-            copy_value(out->value, sizeof(out->value), s + b, a_end - b) &&
-            copy_value(out->secondary, sizeof(out->secondary), s + p, q - p))
-            return finish(in, out, q, TTF_SEM_RANGE, "syntax.range");
-        if (q > p)
-            return preserve(in, out, atom_end(s, n, b), "syntax.invalid-range");
     }
     if (a_end > b && a_end < n && s[a_end] == '.') {
         unsigned parts = 1;
@@ -335,6 +452,28 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     if (p == b)
         return preserve(in, out, atom_end(s, n, b), "syntax.invalid-number");
     q = skip_space(s, n, p);
+    if (q < n && s[q] == '-') {
+        size_t start = skip_space(s, n, q + 1);
+        /* Adjacent signs also spell damaged identifiers (1--2); preserve that
+           established behavior. A signed second endpoint needs whitespace. */
+        if (start == q + 1 && start < n && (s[start] == '-' || s[start] == '+'))
+            return preserve(in, out, atom_end(s, n, start), "syntax.invalid-range");
+        end = number(s, n, start, out->secondary);
+        if (end > start) {
+            size_t suffix_start = skip_space(s, n, end), suffix_end;
+            ttf_semantic_type_t suffix_type;
+            if (quantity_suffix(in, suffix_start, out, &suffix_end, &suffix_type)) {
+                if (suffix_type == TTF_SEM_PERCENT)
+                    (void)snprintf(out->unit, sizeof(out->unit), "percent");
+                return finish(in, out, suffix_end, TTF_SEM_RANGE, "syntax.quantity-range");
+            }
+            if (!structured_tail(s, n, end))
+                return finish(in, out, end, TTF_SEM_RANGE, "syntax.range");
+            return preserve(in, out, atom_end(s, n, end), "syntax.invalid-range");
+        }
+        if (start < n && (digit(s[start]) || s[start] == '+' || s[start] == '-' || s[start] == '.'))
+            return preserve(in, out, atom_end(s, n, start), "syntax.invalid-range");
+    }
     if (q < n && s[q] == '/') {
         int nonzero = 0;
         size_t start = skip_space(s, n, q + 1);
@@ -357,23 +496,11 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
         return preserve(in, out, atom_end(s, n, b), "syntax.invalid-ordinal");
     }
     q = skip_space(s, n, p);
-    if (q < n && s[q] == '%' && !structured_tail(s, n, q + 1))
-        return finish(in, out, q + 1, TTF_SEM_PERCENT, "syntax.percent");
-    if (resource_prefix(in, "numeric_suffix", q, &rule_value, &end, &layer) &&
-        !structured_tail(s, n, end)) {
-        const char *colon = strchr(rule_value, ':');
-        ttf_semantic_type_t type = TTF_SEM_MEASURE;
-        if (!strncmp(rule_value, "COUNTER:", 8))
-            type = TTF_SEM_COUNTER;
-        else if (!strncmp(rule_value, "CURRENCY:", 9))
-            type = TTF_SEM_CURRENCY;
-        else if (strncmp(rule_value, "MEASURE:", 8))
-            colon = NULL;
-        if (colon) {
-            (void)snprintf(out->unit, sizeof(out->unit), "%s", colon + 1);
-            out->layer = layer;
-            return finish(in, out, end, type, "syntax.numeric-suffix");
-        }
+    {
+        ttf_semantic_type_t type;
+        if (quantity_suffix(in, q, out, &end, &type))
+            return finish(in, out, end, type,
+                          type == TTF_SEM_PERCENT ? "syntax.percent" : "syntax.numeric-suffix");
     }
     if (structured_tail(s, n, p))
         return preserve(in, out, atom_end(s, n, b), "syntax.unsupported-numeric");

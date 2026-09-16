@@ -80,3 +80,18 @@ for English contractions; they do not open a quotation scope. Unclosed quotation
 wait until final flush or the pending-byte limit. This improves text correctness
 but may delay the first callback for long quoted passages; maximum segment length
 is a soft target for these indivisible scopes too.
+
+## Resource cues and bounded title retention (v0.5)
+
+The boundary planner shares `identifier_label` and `context_cue` resources with
+classification/routing. It retains partial multiword cue prefixes and cue/value
+boundaries without requiring future bytes. A reference label and leading zeros
+therefore remain in one context window even with targets of one/three codepoints.
+Cue state is advanced within the existing forward scan rather than searching the
+entire preceding lexical run separately at every whitespace.
+
+Title cues may retain at most `max(max_segment_length, 256)` codepoints of the
+current unit before ordinary phrase cuts resume; this is a soft limit at a safe
+whitespace boundary. It trades scope on exceptionally long titles for bounded
+first-callback delay. Identifier cues still follow their exact numeric scope and
+IR limits. The pending-byte hard cap remains authoritative for indivisible text.

@@ -1,0 +1,1560 @@
+{
+  "version": "0.5.0",
+  "baseline_commit": "493f9667cd6d2a09976925277e3d2606b3b5e2a4",
+  "data_origin": "Original synthetic references; advanced corpus adopted 13 known challenges and added 17 explicit cases before baseline execution. No independent human review or unseen holdout claim.",
+  "evaluations": {
+    "advanced": {
+      "corpus_sha256": "5c88870b780e2a10442dc159a1815af8a33d72acd0b39c6d4e0e554187b048e0",
+      "chunk_bytes": [
+        1,
+        7,
+        64
+      ],
+      "baseline": {
+        "cases": 30,
+        "passed": 8,
+        "failed": 22,
+        "matches": 8,
+        "mismatches": 22,
+        "exact_match_rate": 0.26666666666666666,
+        "metadata_failures": 17,
+        "batch_stream_failures": 0,
+        "character_edit_distance": 240,
+        "reference_characters": 775,
+        "character_error_rate": 0.3096774193548387,
+        "fallback_spans": 8
+      },
+      "candidate": {
+        "cases": 30,
+        "passed": 30,
+        "failed": 0,
+        "matches": 30,
+        "mismatches": 0,
+        "exact_match_rate": 1.0,
+        "metadata_failures": 0,
+        "batch_stream_failures": 0,
+        "character_edit_distance": 0,
+        "reference_characters": 775,
+        "character_error_rate": 0.0,
+        "fallback_spans": 0
+      },
+      "comparison": {
+        "fixed": 22,
+        "regressed": 0,
+        "remaining_failure": 0,
+        "unchanged_pass": 8,
+        "text_error_increased": 0
+      },
+      "baseline_binary_sha256": "479cafe615736991936f65b95024860af5d12daaccb92913b2762ff944233bd4",
+      "candidate_binary_sha256": "007da27da1a21d43b84b8b22a2b7f742a363409b841964329508463a9ef02b8d",
+      "baseline_resources_sha256": {
+        "README.md": "e229e5d25466d3479116e794bbeb901fbd2c61a563de667e5ccf2b0c497024eb",
+        "common/boundaries.tsv": "da089327d5b127fb7de4d053fd8533a60f4a3f1311b2d1e61a7667caca196213",
+        "customers/example/ko-KR/rules.tsv": "fd32794a3414e420e0e7e84214ef444b2c5af9a401cf494ee170c528e7a70238",
+        "domains/finance/ko-KR/rules.tsv": "ed9ecca8fc7f9f64461f44becd4d46281ead636b26f74af5b16d57abd002c5bf",
+        "languages/en-US/dictionaries/pronunciation.tsv": "10d73f76afda2a5219d8a8a0d03a8bf7d79616032b3ae04c27a28ece39b918ce",
+        "languages/en-US/g2p/graphemes.tsv": "2bd30e83894089ad2947df5a754c55ef0d3c93f311a3ea775fc58d9c2d994e5d",
+        "languages/en-US/rules/context.tsv": "762443bd099f81b6dcbc4deac4939dd4e7f6d82c733f81f6593029cf85c3aa69",
+        "languages/en-US/rules/numeric.tsv": "62cbef508f6630a5598804d644e197a21f9cf84f08bc7b9024ae80316a3f5707",
+        "languages/ko-KR/dictionaries/graphemes.tsv": "2707d81b10c4d91e6cece0466186574df9b52dc7a774c3c64e9c0e4927fc883a",
+        "languages/ko-KR/dictionaries/phones.tsv": "d15c8b0788e0ba134f236a5aeb5129e9f9716a26d8927065b1f52fad63f364db",
+        "languages/ko-KR/lexicon/acronyms/default.tsv": "0c2ee8e11c02c5c02e32ddc8b7b5327ef4d414bd3aac1ac27306726a35614021",
+        "languages/ko-KR/lexicon/brands/default.tsv": "d624494685c9df7b320c72c8ce4e37dbb849971951171960e534c5138cfb9733",
+        "languages/ko-KR/lexicon/common/default.tsv": "131c80f812283fc70ad56ecd61f5d679d0863e683b075b4e02bc49effd867bd4",
+        "languages/ko-KR/lexicon/technology/default.tsv": "40316d8a4f95a0819023f0af7c10f354b044e79a760405018e0cd89de7d88e93",
+        "languages/ko-KR/rules/context.tsv": "72e60833cb3a563dd5a2b511993d787046002325f30a05be017e3db7870ca96d",
+        "languages/ko-KR/rules/numeric.tsv": "d8915eab1b525558be44ac73b454357776eaf16412c52a38ecc30c543607787b",
+        "manifest.ttfm": "55485a4783fe726bfd658f7495be8afca70fe79adf5613a372061d80fe9d55fc"
+      },
+      "candidate_resources_sha256": {
+        "README.md": "e229e5d25466d3479116e794bbeb901fbd2c61a563de667e5ccf2b0c497024eb",
+        "common/boundaries.tsv": "da089327d5b127fb7de4d053fd8533a60f4a3f1311b2d1e61a7667caca196213",
+        "customers/example/ko-KR/rules.tsv": "fd32794a3414e420e0e7e84214ef444b2c5af9a401cf494ee170c528e7a70238",
+        "domains/finance/ko-KR/rules.tsv": "ed9ecca8fc7f9f64461f44becd4d46281ead636b26f74af5b16d57abd002c5bf",
+        "languages/en-US/dictionaries/pronunciation.tsv": "10d73f76afda2a5219d8a8a0d03a8bf7d79616032b3ae04c27a28ece39b918ce",
+        "languages/en-US/g2p/graphemes.tsv": "2bd30e83894089ad2947df5a754c55ef0d3c93f311a3ea775fc58d9c2d994e5d",
+        "languages/en-US/rules/context.tsv": "21e85352409733e419e55c99f9956852d52cee1b108a65db15f9f93cc14306ab",
+        "languages/en-US/rules/numeric.tsv": "cbbe6b344d0ecefc8ced59ef0de88f275c61036426afcb162be999f50789b02e",
+        "languages/ko-KR/dictionaries/graphemes.tsv": "2707d81b10c4d91e6cece0466186574df9b52dc7a774c3c64e9c0e4927fc883a",
+        "languages/ko-KR/dictionaries/phones.tsv": "d15c8b0788e0ba134f236a5aeb5129e9f9716a26d8927065b1f52fad63f364db",
+        "languages/ko-KR/lexicon/acronyms/default.tsv": "0c2ee8e11c02c5c02e32ddc8b7b5327ef4d414bd3aac1ac27306726a35614021",
+        "languages/ko-KR/lexicon/brands/default.tsv": "d624494685c9df7b320c72c8ce4e37dbb849971951171960e534c5138cfb9733",
+        "languages/ko-KR/lexicon/common/default.tsv": "e152d9b59bafcb175242a203b507b9a2d3f4ae3ed5db42b9e87d533df1139780",
+        "languages/ko-KR/lexicon/technology/default.tsv": "1ea75e7d058862e236f4070ddbc0091f3f6494ea189075ee1dca6f3c572caccc",
+        "languages/ko-KR/rules/context.tsv": "72e60833cb3a563dd5a2b511993d787046002325f30a05be017e3db7870ca96d",
+        "languages/ko-KR/rules/identifiers.tsv": "7b5a0fe04a86b7ea1d8db39dba76f17faa878f1b42024be032154f61a5c13ff3",
+        "languages/ko-KR/rules/numeric.tsv": "b2b0a1fa3c1907d2d909ce40cc1b3fa8509726989bc5f22bfba889137ecaea83",
+        "manifest.ttfm": "e4bb819923c9043dad33da147ad4d5b3b9be9fa20b748d947c9298d816283a5c"
+      },
+      "cases": [
+        {
+          "id": "advanced-account-short",
+          "category": "finance/identifier",
+          "status": "fixed",
+          "text": "계좌는 010-001입니다.",
+          "expected": "계좌는 공일공 공공일입니다.",
+          "before": "계좌는 십 다시 일입니다.",
+          "after": "계좌는 공일공 공공일입니다.",
+          "before_errors": 6,
+          "after_errors": 0,
+          "before_metadata_failures": [
+            {
+              "check": 0,
+              "surface": "010-001",
+              "field": "semantic_type",
+              "expected": "DIGIT_SEQUENCE",
+              "actual": "RANGE",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "010-001",
+              "field": "unit",
+              "expected": "financial_identifier",
+              "actual": "",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "010-001",
+              "field": "value",
+              "expected": "010-001",
+              "actual": "010",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "010-001",
+              "field": "semantic_type",
+              "expected": "DIGIT_SEQUENCE",
+              "actual": "RANGE",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "010-001",
+              "field": "unit",
+              "expected": "financial_identifier",
+              "actual": "",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "010-001",
+              "field": "value",
+              "expected": "010-001",
+              "actual": "010",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "010-001",
+              "field": "semantic_type",
+              "expected": "DIGIT_SEQUENCE",
+              "actual": "RANGE",
+              "chunk_bytes": 64
+            },
+            {
+              "check": 0,
+              "surface": "010-001",
+              "field": "unit",
+              "expected": "financial_identifier",
+              "actual": "",
+              "chunk_bytes": 64
+            },
+            {
+              "check": 0,
+              "surface": "010-001",
+              "field": "value",
+              "expected": "010-001",
+              "actual": "010",
+              "chunk_bytes": 64
+            }
+          ],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "advanced-basis-decimal",
+          "category": "finance/quantities",
+          "status": "fixed",
+          "text": "조정폭은 12.5bp입니다.",
+          "expected": "조정폭은 십이 점 오 베이시스포인트입니다.",
+          "before": "조정폭은 12.5bp입니다.",
+          "after": "조정폭은 십이 점 오 베이시스포인트입니다.",
+          "before_errors": 14,
+          "after_errors": 0,
+          "before_metadata_failures": [
+            {
+              "check": 0,
+              "surface": "12.5bp",
+              "field": "semantic_type",
+              "expected": "MEASURE",
+              "actual": "TEXT",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "12.5bp",
+              "field": "unit",
+              "expected": "basis_point",
+              "actual": "",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "12.5bp",
+              "field": "value",
+              "expected": "12.5",
+              "actual": "",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "12.5bp",
+              "field": "semantic_type",
+              "expected": "MEASURE",
+              "actual": "TEXT",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "12.5bp",
+              "field": "unit",
+              "expected": "basis_point",
+              "actual": "",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "12.5bp",
+              "field": "value",
+              "expected": "12.5",
+              "actual": "",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "12.5bp",
+              "field": "semantic_type",
+              "expected": "MEASURE",
+              "actual": "TEXT",
+              "chunk_bytes": 64
+            },
+            {
+              "check": 0,
+              "surface": "12.5bp",
+              "field": "unit",
+              "expected": "basis_point",
+              "actual": "",
+              "chunk_bytes": 64
+            },
+            {
+              "check": 0,
+              "surface": "12.5bp",
+              "field": "value",
+              "expected": "12.5",
+              "actual": "",
+              "chunk_bytes": 64
+            }
+          ],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "advanced-clock-pm",
+          "category": "content/english",
+          "status": "fixed",
+          "text": "The webinar starts at 9:05 PM.",
+          "expected": "The webinar starts at nine oh five p m.",
+          "before": "The webinar starts at nine oh five PM.",
+          "after": "The webinar starts at nine oh five p m.",
+          "before_errors": 3,
+          "after_errors": 0,
+          "before_metadata_failures": [],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "advanced-content-english-clock",
+          "category": "content/english",
+          "status": "fixed",
+          "text": "The webinar starts at 9:05 AM.",
+          "expected": "The webinar starts at nine oh five a m.",
+          "before": "The webinar starts at nine oh five AM.",
+          "after": "The webinar starts at nine oh five a m.",
+          "before_errors": 3,
+          "after_errors": 0,
+          "before_metadata_failures": [],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "advanced-content-hyphenated",
+          "category": "content/code-mixed",
+          "status": "fixed",
+          "text": "새로운 real-time dashboard를 소개합니다.",
+          "expected": "새로운 리얼타임 대시보드를 소개합니다.",
+          "before": "새로운 릴-티메 대스바아르드를 소개합니다.",
+          "after": "새로운 리얼타임 대시보드를 소개합니다.",
+          "before_errors": 8,
+          "after_errors": 0,
+          "before_metadata_failures": [],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "advanced-content-mixed-title",
+          "category": "content/code-mixed",
+          "status": "fixed",
+          "text": "제목은 The 1st day입니다.",
+          "expected": "제목은 The first day입니다.",
+          "before": "제목은 더 퍼스트 데이입니다.",
+          "after": "제목은 The first day입니다.",
+          "before_errors": 11,
+          "after_errors": 0,
+          "before_metadata_failures": [
+            {
+              "check": 0,
+              "surface": "1st",
+              "field": "context_lang",
+              "expected": "en-US",
+              "actual": "ko-KR",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "1st",
+              "field": "render_lang",
+              "expected": "en-US",
+              "actual": "ko-KR",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "1st",
+              "field": "context_lang",
+              "expected": "en-US",
+              "actual": "ko-KR",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "1st",
+              "field": "render_lang",
+              "expected": "en-US",
+              "actual": "ko-KR",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "1st",
+              "field": "context_lang",
+              "expected": "en-US",
+              "actual": "ko-KR",
+              "chunk_bytes": 64
+            },
+            {
+              "check": 0,
+              "surface": "1st",
+              "field": "render_lang",
+              "expected": "en-US",
+              "actual": "ko-KR",
+              "chunk_bytes": 64
+            }
+          ],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "advanced-content-unknown-word",
+          "category": "content/foreign-pronunciation",
+          "status": "fixed",
+          "text": "이번 영상에서는 quasar를 설명합니다.",
+          "expected": "이번 영상에서는 퀘이사를 설명합니다.",
+          "before": "이번 영상에서는 쾌사를 설명합니다.",
+          "after": "이번 영상에서는 퀘이사를 설명합니다.",
+          "before_errors": 2,
+          "after_errors": 0,
+          "before_metadata_failures": [],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "advanced-english-basis",
+          "category": "finance/english",
+          "status": "fixed",
+          "text": "The change is 1bp.",
+          "expected": "The change is one basis point.",
+          "before": "The change is 1bp.",
+          "after": "The change is one basis point.",
+          "before_errors": 13,
+          "after_errors": 0,
+          "before_metadata_failures": [
+            {
+              "check": 0,
+              "surface": "1bp",
+              "field": "semantic_type",
+              "expected": "MEASURE",
+              "actual": "TEXT",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "1bp",
+              "field": "unit",
+              "expected": "basis_point",
+              "actual": "",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "1bp",
+              "field": "value",
+              "expected": "1",
+              "actual": "",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "1bp",
+              "field": "semantic_type",
+              "expected": "MEASURE",
+              "actual": "TEXT",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "1bp",
+              "field": "unit",
+              "expected": "basis_point",
+              "actual": "",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "1bp",
+              "field": "value",
+              "expected": "1",
+              "actual": "",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "1bp",
+              "field": "semantic_type",
+              "expected": "MEASURE",
+              "actual": "TEXT",
+              "chunk_bytes": 64
+            },
+            {
+              "check": 0,
+              "surface": "1bp",
+              "field": "unit",
+              "expected": "basis_point",
+              "actual": "",
+              "chunk_bytes": 64
+            },
+            {
+              "check": 0,
+              "surface": "1bp",
+              "field": "value",
+              "expected": "1",
+              "actual": "",
+              "chunk_bytes": 64
+            }
+          ],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "advanced-english-point",
+          "category": "finance/english",
+          "status": "fixed",
+          "text": "The change is 0.25%p.",
+          "expected": "The change is zero point two five percentage points.",
+          "before": "The change is zero point two five%p.",
+          "after": "The change is zero point two five percentage points.",
+          "before_errors": 17,
+          "after_errors": 0,
+          "before_metadata_failures": [
+            {
+              "check": 0,
+              "surface": "0.25%p",
+              "input_begin": 14,
+              "input_end": 20,
+              "error": "no span with these exact source offsets",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "0.25%p",
+              "input_begin": 14,
+              "input_end": 20,
+              "error": "no span with these exact source offsets",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "0.25%p",
+              "input_begin": 14,
+              "input_end": 20,
+              "error": "no span with these exact source offsets",
+              "chunk_bytes": 64
+            }
+          ],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "advanced-english-range",
+          "category": "finance/english",
+          "status": "fixed",
+          "text": "The rate is 1.5-2.5%.",
+          "expected": "The rate is one point five to two point five percent.",
+          "before": "The rate is 1.5-2.5%.",
+          "after": "The rate is one point five to two point five percent.",
+          "before_errors": 40,
+          "after_errors": 0,
+          "before_metadata_failures": [
+            {
+              "check": 0,
+              "surface": "1.5-2.5%",
+              "field": "semantic_type",
+              "expected": "RANGE",
+              "actual": "TEXT",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "1.5-2.5%",
+              "field": "unit",
+              "expected": "percent",
+              "actual": "",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "1.5-2.5%",
+              "field": "value",
+              "expected": "1.5",
+              "actual": "",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "1.5-2.5%",
+              "field": "semantic_type",
+              "expected": "RANGE",
+              "actual": "TEXT",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "1.5-2.5%",
+              "field": "unit",
+              "expected": "percent",
+              "actual": "",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "1.5-2.5%",
+              "field": "value",
+              "expected": "1.5",
+              "actual": "",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "1.5-2.5%",
+              "field": "semantic_type",
+              "expected": "RANGE",
+              "actual": "TEXT",
+              "chunk_bytes": 64
+            },
+            {
+              "check": 0,
+              "surface": "1.5-2.5%",
+              "field": "unit",
+              "expected": "percent",
+              "actual": "",
+              "chunk_bytes": 64
+            },
+            {
+              "check": 0,
+              "surface": "1.5-2.5%",
+              "field": "value",
+              "expected": "1.5",
+              "actual": "",
+              "chunk_bytes": 64
+            }
+          ],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "advanced-finance-account",
+          "category": "finance/identifier",
+          "status": "fixed",
+          "text": "입금 계좌는 110-123-456789입니다.",
+          "expected": "입금 계좌는 일일공 일이삼 사오육칠팔구입니다.",
+          "before": "입금 계좌는 110-123-456789입니다.",
+          "after": "입금 계좌는 일일공 일이삼 사오육칠팔구입니다.",
+          "before_errors": 14,
+          "after_errors": 0,
+          "before_metadata_failures": [
+            {
+              "check": 0,
+              "surface": "110-123-456789",
+              "field": "semantic_type",
+              "expected": "DIGIT_SEQUENCE",
+              "actual": "TEXT",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "110-123-456789",
+              "field": "unit",
+              "expected": "financial_identifier",
+              "actual": "",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "110-123-456789",
+              "field": "value",
+              "expected": "110-123-456789",
+              "actual": "",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "110-123-456789",
+              "field": "semantic_type",
+              "expected": "DIGIT_SEQUENCE",
+              "actual": "TEXT",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "110-123-456789",
+              "field": "unit",
+              "expected": "financial_identifier",
+              "actual": "",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "110-123-456789",
+              "field": "value",
+              "expected": "110-123-456789",
+              "actual": "",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "110-123-456789",
+              "field": "semantic_type",
+              "expected": "DIGIT_SEQUENCE",
+              "actual": "TEXT",
+              "chunk_bytes": 64
+            },
+            {
+              "check": 0,
+              "surface": "110-123-456789",
+              "field": "unit",
+              "expected": "financial_identifier",
+              "actual": "",
+              "chunk_bytes": 64
+            },
+            {
+              "check": 0,
+              "surface": "110-123-456789",
+              "field": "value",
+              "expected": "110-123-456789",
+              "actual": "",
+              "chunk_bytes": 64
+            }
+          ],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "advanced-finance-basis-points",
+          "category": "finance/quantities",
+          "status": "fixed",
+          "text": "기준금리를 25bp 인상했습니다.",
+          "expected": "기준금리를 이십오 베이시스포인트 인상했습니다.",
+          "before": "기준금리를 25bp 인상했습니다.",
+          "after": "기준금리를 이십오 베이시스포인트 인상했습니다.",
+          "before_errors": 11,
+          "after_errors": 0,
+          "before_metadata_failures": [
+            {
+              "check": 0,
+              "surface": "25bp",
+              "field": "semantic_type",
+              "expected": "MEASURE",
+              "actual": "TEXT",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "25bp",
+              "field": "unit",
+              "expected": "basis_point",
+              "actual": "",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "25bp",
+              "field": "value",
+              "expected": "25",
+              "actual": "",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "25bp",
+              "field": "semantic_type",
+              "expected": "MEASURE",
+              "actual": "TEXT",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "25bp",
+              "field": "unit",
+              "expected": "basis_point",
+              "actual": "",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "25bp",
+              "field": "value",
+              "expected": "25",
+              "actual": "",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "25bp",
+              "field": "semantic_type",
+              "expected": "MEASURE",
+              "actual": "TEXT",
+              "chunk_bytes": 64
+            },
+            {
+              "check": 0,
+              "surface": "25bp",
+              "field": "unit",
+              "expected": "basis_point",
+              "actual": "",
+              "chunk_bytes": 64
+            },
+            {
+              "check": 0,
+              "surface": "25bp",
+              "field": "value",
+              "expected": "25",
+              "actual": "",
+              "chunk_bytes": 64
+            }
+          ],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "advanced-finance-decimal-range",
+          "category": "finance/quantities",
+          "status": "fixed",
+          "text": "예상 수익률은 1.5-2.5%입니다.",
+          "expected": "예상 수익률은 일 점 오 다시 이 점 오 퍼센트입니다.",
+          "before": "예상 수익률은 1.5-2.5%입니다.",
+          "after": "예상 수익률은 일 점 오 다시 이 점 오 퍼센트입니다.",
+          "before_errors": 18,
+          "after_errors": 0,
+          "before_metadata_failures": [
+            {
+              "check": 0,
+              "surface": "1.5-2.5%",
+              "field": "semantic_type",
+              "expected": "RANGE",
+              "actual": "TEXT",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "1.5-2.5%",
+              "field": "unit",
+              "expected": "percent",
+              "actual": "",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "1.5-2.5%",
+              "field": "value",
+              "expected": "1.5",
+              "actual": "",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "1.5-2.5%",
+              "field": "semantic_type",
+              "expected": "RANGE",
+              "actual": "TEXT",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "1.5-2.5%",
+              "field": "unit",
+              "expected": "percent",
+              "actual": "",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "1.5-2.5%",
+              "field": "value",
+              "expected": "1.5",
+              "actual": "",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "1.5-2.5%",
+              "field": "semantic_type",
+              "expected": "RANGE",
+              "actual": "TEXT",
+              "chunk_bytes": 64
+            },
+            {
+              "check": 0,
+              "surface": "1.5-2.5%",
+              "field": "unit",
+              "expected": "percent",
+              "actual": "",
+              "chunk_bytes": 64
+            },
+            {
+              "check": 0,
+              "surface": "1.5-2.5%",
+              "field": "value",
+              "expected": "1.5",
+              "actual": "",
+              "chunk_bytes": 64
+            }
+          ],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "advanced-finance-percentage-point",
+          "category": "finance/quantities",
+          "status": "fixed",
+          "text": "금리는 0.25%p 상승했습니다.",
+          "expected": "금리는 영 점 이오 퍼센트포인트 상승했습니다.",
+          "before": "금리는 영 점 이오%프 상승했습니다.",
+          "after": "금리는 영 점 이오 퍼센트포인트 상승했습니다.",
+          "before_errors": 7,
+          "after_errors": 0,
+          "before_metadata_failures": [
+            {
+              "check": 0,
+              "surface": "0.25%p",
+              "input_begin": 10,
+              "input_end": 16,
+              "error": "no span with these exact source offsets",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "0.25%p",
+              "input_begin": 10,
+              "input_end": 16,
+              "error": "no span with these exact source offsets",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "0.25%p",
+              "input_begin": 10,
+              "input_end": 16,
+              "error": "no span with these exact source offsets",
+              "chunk_bytes": 64
+            }
+          ],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "advanced-finance-reference",
+          "category": "finance/identifier",
+          "status": "fixed",
+          "text": "거래 참조 번호는 001204입니다.",
+          "expected": "거래 참조 번호는 공공일이공사입니다.",
+          "before": "거래 참조 번호는 천이백사입니다.",
+          "after": "거래 참조 번호는 공공일이공사입니다.",
+          "before_errors": 4,
+          "after_errors": 0,
+          "before_metadata_failures": [
+            {
+              "check": 0,
+              "surface": "001204",
+              "field": "semantic_type",
+              "expected": "DIGIT_SEQUENCE",
+              "actual": "CARDINAL",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "001204",
+              "field": "unit",
+              "expected": "financial_identifier",
+              "actual": "",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "001204",
+              "field": "semantic_type",
+              "expected": "DIGIT_SEQUENCE",
+              "actual": "CARDINAL",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "001204",
+              "field": "unit",
+              "expected": "financial_identifier",
+              "actual": "",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "001204",
+              "field": "semantic_type",
+              "expected": "DIGIT_SEQUENCE",
+              "actual": "CARDINAL",
+              "chunk_bytes": 64
+            },
+            {
+              "check": 0,
+              "surface": "001204",
+              "field": "unit",
+              "expected": "financial_identifier",
+              "actual": "",
+              "chunk_bytes": 64
+            }
+          ],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "advanced-finance-scientific",
+          "category": "finance/quantities",
+          "status": "fixed",
+          "text": "표시 금액은 1.2e6원입니다.",
+          "expected": "표시 금액은 백이십만 원입니다.",
+          "before": "표시 금액은 1.2e6원입니다.",
+          "after": "표시 금액은 백이십만 원입니다.",
+          "before_errors": 5,
+          "after_errors": 0,
+          "before_metadata_failures": [
+            {
+              "check": 0,
+              "surface": "1.2e6원",
+              "input_begin": 17,
+              "input_end": 25,
+              "error": "no span with these exact source offsets",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "1.2e6원",
+              "input_begin": 17,
+              "input_end": 25,
+              "error": "no span with these exact source offsets",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "1.2e6원",
+              "input_begin": 17,
+              "input_end": 25,
+              "error": "no span with these exact source offsets",
+              "chunk_bytes": 64
+            }
+          ],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "advanced-measure-range",
+          "category": "finance/quantities",
+          "status": "fixed",
+          "text": "거리는 1.5-2.5km입니다.",
+          "expected": "거리는 일 점 오 다시 이 점 오 킬로미터입니다.",
+          "before": "거리는 1.5-2.5km입니다.",
+          "after": "거리는 일 점 오 다시 이 점 오 킬로미터입니다.",
+          "before_errors": 19,
+          "after_errors": 0,
+          "before_metadata_failures": [
+            {
+              "check": 0,
+              "surface": "1.5-2.5km",
+              "field": "semantic_type",
+              "expected": "RANGE",
+              "actual": "TEXT",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "1.5-2.5km",
+              "field": "unit",
+              "expected": "km",
+              "actual": "",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "1.5-2.5km",
+              "field": "value",
+              "expected": "1.5",
+              "actual": "",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "1.5-2.5km",
+              "field": "semantic_type",
+              "expected": "RANGE",
+              "actual": "TEXT",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "1.5-2.5km",
+              "field": "unit",
+              "expected": "km",
+              "actual": "",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "1.5-2.5km",
+              "field": "value",
+              "expected": "1.5",
+              "actual": "",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "1.5-2.5km",
+              "field": "semantic_type",
+              "expected": "RANGE",
+              "actual": "TEXT",
+              "chunk_bytes": 64
+            },
+            {
+              "check": 0,
+              "surface": "1.5-2.5km",
+              "field": "unit",
+              "expected": "km",
+              "actual": "",
+              "chunk_bytes": 64
+            },
+            {
+              "check": 0,
+              "surface": "1.5-2.5km",
+              "field": "value",
+              "expected": "1.5",
+              "actual": "",
+              "chunk_bytes": 64
+            }
+          ],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "advanced-rate-versus-point",
+          "category": "finance/quantities",
+          "status": "fixed",
+          "text": "금리는 3%이며 변동폭은 0.5%p입니다.",
+          "expected": "금리는 삼 퍼센트이며 변동폭은 영 점 오 퍼센트포인트입니다.",
+          "before": "금리는 삼 퍼센트이며 변동폭은 영 점 오%프입니다.",
+          "after": "금리는 삼 퍼센트이며 변동폭은 영 점 오 퍼센트포인트입니다.",
+          "before_errors": 7,
+          "after_errors": 0,
+          "before_metadata_failures": [
+            {
+              "check": 0,
+              "surface": "0.5%p",
+              "input_begin": 32,
+              "input_end": 37,
+              "error": "no span with these exact source offsets",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "0.5%p",
+              "input_begin": 32,
+              "input_end": 37,
+              "error": "no span with these exact source offsets",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "0.5%p",
+              "input_begin": 32,
+              "input_end": 37,
+              "error": "no span with these exact source offsets",
+              "chunk_bytes": 64
+            }
+          ],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "advanced-reference-colon",
+          "category": "finance/identifier",
+          "status": "fixed",
+          "text": "참조 번호: 000123",
+          "expected": "참조 번호: 공공공일이삼",
+          "before": "참조 번호: 백이십삼",
+          "after": "참조 번호: 공공공일이삼",
+          "before_errors": 5,
+          "after_errors": 0,
+          "before_metadata_failures": [
+            {
+              "check": 0,
+              "surface": "000123",
+              "field": "semantic_type",
+              "expected": "DIGIT_SEQUENCE",
+              "actual": "CARDINAL",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "000123",
+              "field": "unit",
+              "expected": "financial_identifier",
+              "actual": "",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "000123",
+              "field": "semantic_type",
+              "expected": "DIGIT_SEQUENCE",
+              "actual": "CARDINAL",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "000123",
+              "field": "unit",
+              "expected": "financial_identifier",
+              "actual": "",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "000123",
+              "field": "semantic_type",
+              "expected": "DIGIT_SEQUENCE",
+              "actual": "CARDINAL",
+              "chunk_bytes": 64
+            },
+            {
+              "check": 0,
+              "surface": "000123",
+              "field": "unit",
+              "expected": "financial_identifier",
+              "actual": "",
+              "chunk_bytes": 64
+            }
+          ],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "advanced-scientific-negative",
+          "category": "finance/quantities",
+          "status": "fixed",
+          "text": "정산액은 -2.5e3원입니다.",
+          "expected": "정산액은 마이너스 이천오백 원입니다.",
+          "before": "정산액은 -2.5e3원입니다.",
+          "after": "정산액은 마이너스 이천오백 원입니다.",
+          "before_errors": 10,
+          "after_errors": 0,
+          "before_metadata_failures": [
+            {
+              "check": 0,
+              "surface": "-2.5e3원",
+              "input_begin": 13,
+              "input_end": 22,
+              "error": "no span with these exact source offsets",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "-2.5e3원",
+              "input_begin": 13,
+              "input_end": 22,
+              "error": "no span with these exact source offsets",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "-2.5e3원",
+              "input_begin": 13,
+              "input_end": 22,
+              "error": "no span with these exact source offsets",
+              "chunk_bytes": 64
+            }
+          ],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "advanced-scientific-small",
+          "category": "finance/quantities",
+          "status": "fixed",
+          "text": "비율은 1.25e-2%입니다.",
+          "expected": "비율은 영 점 영일이오 퍼센트입니다.",
+          "before": "비율은 1.25e-2%입니다.",
+          "after": "비율은 영 점 영일이오 퍼센트입니다.",
+          "before_errors": 12,
+          "after_errors": 0,
+          "before_metadata_failures": [
+            {
+              "check": 0,
+              "surface": "1.25e-2%",
+              "field": "semantic_type",
+              "expected": "PERCENT",
+              "actual": "TEXT",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "1.25e-2%",
+              "field": "value",
+              "expected": "0.0125",
+              "actual": "",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "1.25e-2%",
+              "field": "semantic_type",
+              "expected": "PERCENT",
+              "actual": "TEXT",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "1.25e-2%",
+              "field": "value",
+              "expected": "0.0125",
+              "actual": "",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "1.25e-2%",
+              "field": "semantic_type",
+              "expected": "PERCENT",
+              "actual": "TEXT",
+              "chunk_bytes": 64
+            },
+            {
+              "check": 0,
+              "surface": "1.25e-2%",
+              "field": "value",
+              "expected": "0.0125",
+              "actual": "",
+              "chunk_bytes": 64
+            }
+          ],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "advanced-title-versus-loanword",
+          "category": "content/code-mixed",
+          "status": "fixed",
+          "text": "제목은 The 1st day입니다. Apple Watch를 소개합니다.",
+          "expected": "제목은 The first day입니다. 애플 워치를 소개합니다.",
+          "before": "제목은 더 퍼스트 데이입니다. 애플 워치를 소개합니다.",
+          "after": "제목은 The first day입니다. 애플 워치를 소개합니다.",
+          "before_errors": 11,
+          "after_errors": 0,
+          "before_metadata_failures": [],
+          "after_metadata_failures": []
+        }
+      ]
+    },
+    "challenge": {
+      "corpus_sha256": "4ae71edddfde98aa4e38c8cbeb83ad1d0b3f1d4fdeef1ce6e297ffa4c62bdf10",
+      "chunk_bytes": [
+        1,
+        7,
+        64
+      ],
+      "baseline": {
+        "cases": 15,
+        "passed": 3,
+        "failed": 12,
+        "matches": 3,
+        "mismatches": 12,
+        "exact_match_rate": 0.2,
+        "metadata_failures": 0,
+        "batch_stream_failures": 0,
+        "character_edit_distance": 112,
+        "reference_characters": 405,
+        "character_error_rate": 0.2765432098765432,
+        "fallback_spans": 12
+      },
+      "candidate": {
+        "cases": 15,
+        "passed": 13,
+        "failed": 2,
+        "matches": 13,
+        "mismatches": 2,
+        "exact_match_rate": 0.8666666666666667,
+        "metadata_failures": 0,
+        "batch_stream_failures": 0,
+        "character_edit_distance": 29,
+        "reference_characters": 405,
+        "character_error_rate": 0.07160493827160494,
+        "fallback_spans": 5
+      },
+      "comparison": {
+        "fixed": 10,
+        "regressed": 0,
+        "remaining_failure": 2,
+        "unchanged_pass": 3,
+        "text_error_increased": 0
+      },
+      "baseline_binary_sha256": "479cafe615736991936f65b95024860af5d12daaccb92913b2762ff944233bd4",
+      "candidate_binary_sha256": "007da27da1a21d43b84b8b22a2b7f742a363409b841964329508463a9ef02b8d",
+      "baseline_resources_sha256": {
+        "README.md": "e229e5d25466d3479116e794bbeb901fbd2c61a563de667e5ccf2b0c497024eb",
+        "common/boundaries.tsv": "da089327d5b127fb7de4d053fd8533a60f4a3f1311b2d1e61a7667caca196213",
+        "customers/example/ko-KR/rules.tsv": "fd32794a3414e420e0e7e84214ef444b2c5af9a401cf494ee170c528e7a70238",
+        "domains/finance/ko-KR/rules.tsv": "ed9ecca8fc7f9f64461f44becd4d46281ead636b26f74af5b16d57abd002c5bf",
+        "languages/en-US/dictionaries/pronunciation.tsv": "10d73f76afda2a5219d8a8a0d03a8bf7d79616032b3ae04c27a28ece39b918ce",
+        "languages/en-US/g2p/graphemes.tsv": "2bd30e83894089ad2947df5a754c55ef0d3c93f311a3ea775fc58d9c2d994e5d",
+        "languages/en-US/rules/context.tsv": "762443bd099f81b6dcbc4deac4939dd4e7f6d82c733f81f6593029cf85c3aa69",
+        "languages/en-US/rules/numeric.tsv": "62cbef508f6630a5598804d644e197a21f9cf84f08bc7b9024ae80316a3f5707",
+        "languages/ko-KR/dictionaries/graphemes.tsv": "2707d81b10c4d91e6cece0466186574df9b52dc7a774c3c64e9c0e4927fc883a",
+        "languages/ko-KR/dictionaries/phones.tsv": "d15c8b0788e0ba134f236a5aeb5129e9f9716a26d8927065b1f52fad63f364db",
+        "languages/ko-KR/lexicon/acronyms/default.tsv": "0c2ee8e11c02c5c02e32ddc8b7b5327ef4d414bd3aac1ac27306726a35614021",
+        "languages/ko-KR/lexicon/brands/default.tsv": "d624494685c9df7b320c72c8ce4e37dbb849971951171960e534c5138cfb9733",
+        "languages/ko-KR/lexicon/common/default.tsv": "131c80f812283fc70ad56ecd61f5d679d0863e683b075b4e02bc49effd867bd4",
+        "languages/ko-KR/lexicon/technology/default.tsv": "40316d8a4f95a0819023f0af7c10f354b044e79a760405018e0cd89de7d88e93",
+        "languages/ko-KR/rules/context.tsv": "72e60833cb3a563dd5a2b511993d787046002325f30a05be017e3db7870ca96d",
+        "languages/ko-KR/rules/numeric.tsv": "d8915eab1b525558be44ac73b454357776eaf16412c52a38ecc30c543607787b",
+        "manifest.ttfm": "55485a4783fe726bfd658f7495be8afca70fe79adf5613a372061d80fe9d55fc"
+      },
+      "candidate_resources_sha256": {
+        "README.md": "e229e5d25466d3479116e794bbeb901fbd2c61a563de667e5ccf2b0c497024eb",
+        "common/boundaries.tsv": "da089327d5b127fb7de4d053fd8533a60f4a3f1311b2d1e61a7667caca196213",
+        "customers/example/ko-KR/rules.tsv": "fd32794a3414e420e0e7e84214ef444b2c5af9a401cf494ee170c528e7a70238",
+        "domains/finance/ko-KR/rules.tsv": "ed9ecca8fc7f9f64461f44becd4d46281ead636b26f74af5b16d57abd002c5bf",
+        "languages/en-US/dictionaries/pronunciation.tsv": "10d73f76afda2a5219d8a8a0d03a8bf7d79616032b3ae04c27a28ece39b918ce",
+        "languages/en-US/g2p/graphemes.tsv": "2bd30e83894089ad2947df5a754c55ef0d3c93f311a3ea775fc58d9c2d994e5d",
+        "languages/en-US/rules/context.tsv": "21e85352409733e419e55c99f9956852d52cee1b108a65db15f9f93cc14306ab",
+        "languages/en-US/rules/numeric.tsv": "cbbe6b344d0ecefc8ced59ef0de88f275c61036426afcb162be999f50789b02e",
+        "languages/ko-KR/dictionaries/graphemes.tsv": "2707d81b10c4d91e6cece0466186574df9b52dc7a774c3c64e9c0e4927fc883a",
+        "languages/ko-KR/dictionaries/phones.tsv": "d15c8b0788e0ba134f236a5aeb5129e9f9716a26d8927065b1f52fad63f364db",
+        "languages/ko-KR/lexicon/acronyms/default.tsv": "0c2ee8e11c02c5c02e32ddc8b7b5327ef4d414bd3aac1ac27306726a35614021",
+        "languages/ko-KR/lexicon/brands/default.tsv": "d624494685c9df7b320c72c8ce4e37dbb849971951171960e534c5138cfb9733",
+        "languages/ko-KR/lexicon/common/default.tsv": "e152d9b59bafcb175242a203b507b9a2d3f4ae3ed5db42b9e87d533df1139780",
+        "languages/ko-KR/lexicon/technology/default.tsv": "1ea75e7d058862e236f4070ddbc0091f3f6494ea189075ee1dca6f3c572caccc",
+        "languages/ko-KR/rules/context.tsv": "72e60833cb3a563dd5a2b511993d787046002325f30a05be017e3db7870ca96d",
+        "languages/ko-KR/rules/identifiers.tsv": "7b5a0fe04a86b7ea1d8db39dba76f17faa878f1b42024be032154f61a5c13ff3",
+        "languages/ko-KR/rules/numeric.tsv": "b2b0a1fa3c1907d2d909ce40cc1b3fa8509726989bc5f22bfba889137ecaea83",
+        "manifest.ttfm": "e4bb819923c9043dad33da147ad4d5b3b9be9fa20b748d947c9298d816283a5c"
+      },
+      "cases": [
+        {
+          "id": "challenge-content-english-clock",
+          "category": "content/english",
+          "status": "fixed",
+          "text": "The webinar starts at 9:05 AM.",
+          "expected": "The webinar starts at nine oh five a m.",
+          "before": "The webinar starts at nine oh five AM.",
+          "after": "The webinar starts at nine oh five a m.",
+          "before_errors": 3,
+          "after_errors": 0,
+          "before_metadata_failures": [],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "challenge-content-hyphenated",
+          "category": "content/code-mixed",
+          "status": "fixed",
+          "text": "새로운 real-time dashboard를 소개합니다.",
+          "expected": "새로운 리얼타임 대시보드를 소개합니다.",
+          "before": "새로운 릴-티메 대스바아르드를 소개합니다.",
+          "after": "새로운 리얼타임 대시보드를 소개합니다.",
+          "before_errors": 8,
+          "after_errors": 0,
+          "before_metadata_failures": [],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "challenge-content-mixed-title",
+          "category": "content/code-mixed",
+          "status": "fixed",
+          "text": "제목은 The 1st day입니다.",
+          "expected": "제목은 The first day입니다.",
+          "before": "제목은 더 퍼스트 데이입니다.",
+          "after": "제목은 The first day입니다.",
+          "before_errors": 11,
+          "after_errors": 0,
+          "before_metadata_failures": [],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "challenge-content-unknown-word",
+          "category": "content/foreign-pronunciation",
+          "status": "fixed",
+          "text": "이번 영상에서는 quasar를 설명합니다.",
+          "expected": "이번 영상에서는 퀘이사를 설명합니다.",
+          "before": "이번 영상에서는 쾌사를 설명합니다.",
+          "after": "이번 영상에서는 퀘이사를 설명합니다.",
+          "before_errors": 2,
+          "after_errors": 0,
+          "before_metadata_failures": [],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "challenge-finance-account",
+          "category": "finance/identifier",
+          "status": "fixed",
+          "text": "입금 계좌는 110-123-456789입니다.",
+          "expected": "입금 계좌는 일일공 일이삼 사오육칠팔구입니다.",
+          "before": "입금 계좌는 110-123-456789입니다.",
+          "after": "입금 계좌는 일일공 일이삼 사오육칠팔구입니다.",
+          "before_errors": 14,
+          "after_errors": 0,
+          "before_metadata_failures": [],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "challenge-finance-basis-points",
+          "category": "finance/quantities",
+          "status": "fixed",
+          "text": "기준금리를 25bp 인상했습니다.",
+          "expected": "기준금리를 이십오 베이시스포인트 인상했습니다.",
+          "before": "기준금리를 25bp 인상했습니다.",
+          "after": "기준금리를 이십오 베이시스포인트 인상했습니다.",
+          "before_errors": 11,
+          "after_errors": 0,
+          "before_metadata_failures": [],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "challenge-finance-decimal-range",
+          "category": "finance/quantities",
+          "status": "fixed",
+          "text": "예상 수익률은 1.5-2.5%입니다.",
+          "expected": "예상 수익률은 일 점 오 다시 이 점 오 퍼센트입니다.",
+          "before": "예상 수익률은 1.5-2.5%입니다.",
+          "after": "예상 수익률은 일 점 오 다시 이 점 오 퍼센트입니다.",
+          "before_errors": 18,
+          "after_errors": 0,
+          "before_metadata_failures": [],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "challenge-finance-percentage-point",
+          "category": "finance/quantities",
+          "status": "fixed",
+          "text": "금리는 0.25%p 상승했습니다.",
+          "expected": "금리는 영 점 이오 퍼센트포인트 상승했습니다.",
+          "before": "금리는 영 점 이오%프 상승했습니다.",
+          "after": "금리는 영 점 이오 퍼센트포인트 상승했습니다.",
+          "before_errors": 7,
+          "after_errors": 0,
+          "before_metadata_failures": [],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "challenge-finance-reference",
+          "category": "finance/identifier",
+          "status": "fixed",
+          "text": "거래 참조 번호는 001204입니다.",
+          "expected": "거래 참조 번호는 공공일이공사입니다.",
+          "before": "거래 참조 번호는 천이백사입니다.",
+          "after": "거래 참조 번호는 공공일이공사입니다.",
+          "before_errors": 4,
+          "after_errors": 0,
+          "before_metadata_failures": [],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "challenge-finance-scientific",
+          "category": "finance/quantities",
+          "status": "fixed",
+          "text": "표시 금액은 1.2e6원입니다.",
+          "expected": "표시 금액은 백이십만 원입니다.",
+          "before": "표시 금액은 1.2e6원입니다.",
+          "after": "표시 금액은 백이십만 원입니다.",
+          "before_errors": 5,
+          "after_errors": 0,
+          "before_metadata_failures": [],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "challenge-technical-filepath",
+          "category": "technical/protected",
+          "status": "remaining_failure",
+          "text": "설정 파일 /etc/app/config-v2.json을 확인합니다.",
+          "expected": "설정 파일 /etc/app/config-v2.json을 확인합니다.",
+          "before": "설정 파일 /에트크/애프프/칸피그-브이.제이슨을 확인합니다.",
+          "after": "설정 파일 /에트크/애프프/크오느피그-브이.제이슨을 확인합니다.",
+          "before_errors": 18,
+          "after_errors": 18,
+          "before_metadata_failures": [],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "challenge-technical-html",
+          "category": "technical/protected",
+          "status": "remaining_failure",
+          "text": "문서의 <code>GPU</code> 태그를 확인합니다.",
+          "expected": "문서의 <code>GPU</code> 태그를 확인합니다.",
+          "before": "문서의 <카데>지피유</카데> 태그를 확인합니다.",
+          "after": "문서의 <카데>지피유</카데> 태그를 확인합니다.",
+          "before_errors": 11,
+          "after_errors": 11,
+          "before_metadata_failures": [],
+          "after_metadata_failures": []
+        }
+      ]
+    },
+    "regression": {
+      "corpus_sha256": "4fdd5145c34f8dcd12d8f6c052e3c084de18f8fea846c09172229f018810b9f7",
+      "candidate": {
+        "cases": 109,
+        "passed": 109,
+        "failed": 0,
+        "matches": 109,
+        "mismatches": 0,
+        "exact_match_rate": 1.0,
+        "metadata_failures": 0,
+        "batch_stream_failures": 0,
+        "character_edit_distance": 0,
+        "reference_characters": 1394,
+        "character_error_rate": 0.0,
+        "fallback_spans": 1
+      }
+    },
+    "domain": {
+      "corpus_sha256": "b3a4837a041b99475720fd5566c2e981197282ee0156514b7d73a374fd8882c8",
+      "candidate": {
+        "cases": 60,
+        "passed": 60,
+        "failed": 0,
+        "matches": 60,
+        "mismatches": 0,
+        "exact_match_rate": 1.0,
+        "metadata_failures": 0,
+        "batch_stream_failures": 0,
+        "character_edit_distance": 0,
+        "reference_characters": 1843,
+        "character_error_rate": 0.0,
+        "fallback_spans": 0
+      }
+    }
+  }
+}

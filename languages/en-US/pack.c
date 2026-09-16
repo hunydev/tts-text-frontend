@@ -194,6 +194,19 @@ static int neutral_marker(const ttf_pack_input_t *in, size_t index, const char *
     const ttf_token_t *t = &in->tokens[index];
     size_t previous = index, start, length;
     char original[96];
+    /* The exponent marker inside scientific numeric syntax is not an English
+       word. The universal classifier remains responsible for validation. */
+    if (!strcmp(lower, "e") && index && in->tokens[index - 1].script == TTF_SCRIPT_DIGIT &&
+        in->tokens[index - 1].end == t->begin) {
+        size_t next = index + 1, end = t->end;
+        if (next < in->token_count && in->tokens[next].begin == end &&
+            in->tokens[next].end == end + 1 &&
+            (in->text[end] == '+' || in->text[end] == '-'))
+            end = in->tokens[next++].end;
+        if (next < in->token_count && in->tokens[next].begin == end &&
+            in->tokens[next].script == TTF_SCRIPT_DIGIT)
+            return 1;
+    }
     while (previous && (in->tokens[previous - 1].script == TTF_SCRIPT_WHITESPACE ||
                         in->tokens[previous - 1].script == TTF_SCRIPT_SYMBOL))
         --previous;
@@ -211,6 +224,38 @@ static int neutral_marker(const ttf_pack_input_t *in, size_t index, const char *
     memcpy(original, in->text + start, length);
     original[length] = '\0';
     return ttf_resource_get(in->engine, "numeric_suffix", "*", original, NULL) != NULL;
+}
+/* An explicit label selects the speech language of its immediately following
+   lexical run. The labels and their weights are resource data, and a zero
+   weight disables an inherited label. Sentence/line boundaries end the cue. */
+static int context_cue_score(const ttf_pack_input_t *in, size_t begin) {
+    const ttf_token_t *token;
+    char key[96];
+    size_t i, n;
+    int colon = 0;
+    while (begin) {
+        token = &in->tokens[begin - 1];
+        if (token->script == TTF_SCRIPT_WHITESPACE) {
+            for (i = token->begin; i < token->end; ++i)
+                if (in->text[i] == '\r' || in->text[i] == '\n')
+                    return 0;
+            --begin;
+        } else if (!colon && token->end == token->begin + 1 &&
+                   in->text[token->begin] == ':') {
+            colon = 1;
+            --begin;
+        } else
+            break;
+    }
+    if (!begin)
+        return 0;
+    token = &in->tokens[begin - 1];
+    n = token->end - token->begin;
+    if (n >= sizeof(key))
+        return 0;
+    memcpy(key, in->text + token->begin, n);
+    key[n] = '\0';
+    return weight(res(in->engine, "context_cue", key), 0);
 }
 static int context_score(const ttf_pack_input_t *in) {
     size_t begin, end, i, words = 0;
@@ -256,14 +301,36 @@ static int context_score(const ttf_pack_input_t *in) {
     if ((predicate && words >= 2) ||
         (imperative && ((words >= 3) || ((polite || subject) && words >= 2))))
         total += weight(res(in->engine, "context", "clause_weight"), 500);
-    return total;
+    /* An ordinal alone is a quantity title and keeps the surrounding speech
+       language. At least one lexical word is required for a foreign title. */
+    return total + (words ? context_cue_score(in, begin) : 0);
 }
 static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     const ttf_token_t *t = &in->tokens[in->index];
     char key[96];
-    size_t n = t->end - t->begin, j;
+    size_t n = t->end - t->begin, j, consumed = 1, end = t->end;
     const char *kind;
     if (t->script != TTF_SCRIPT_LATIN || n >= sizeof(key))
+        return 0;
+    /* Treat an adjacent hyphenated word as one lexical unit so the existing
+       layered lexicon can choose a pronunciation for the complete spelling.
+       Spaces, doubled hyphens and numeric terms are separate grammar. */
+    while (in->index + consumed + 1 < in->token_count) {
+        const ttf_token_t *separator = &in->tokens[in->index + consumed];
+        const ttf_token_t *next = &in->tokens[in->index + consumed + 1];
+        if (separator->begin != end || separator->end != separator->begin + 1 ||
+            in->text[separator->begin] != '-' || next->begin != separator->end ||
+            next->script != TTF_SCRIPT_LATIN)
+            break;
+        /* Bound lookahead as well as the copied key. Otherwise an overlong
+           chain revisited from each component would take quadratic time. */
+        if (next->end - t->begin >= sizeof(key))
+            return 0;
+        end = next->end;
+        consumed += 2;
+    }
+    n = end - t->begin;
+    if (n >= sizeof(key))
         return 0;
     for (j = 0; j < n; ++j)
         key[j] = ascii_lower(in->text[t->begin + j]);
@@ -292,15 +359,18 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
             out->lexical_class = TTF_LEX_INITIALISM;
         }
     }
-    if (t->end < in->length && in->text[t->end] == '.' && res(in->engine, "abbreviation", key)) {
+    if (consumed == 1 && t->end < in->length && in->text[t->end] == '.' &&
+        res(in->engine, "abbreviation", key)) {
         out->type = TTF_SEM_ABBREVIATION;
         out->input_end = t->end + 1;
         (void)snprintf(out->rule, sizeof(out->rule), "pack.abbreviation");
         return in->index + 1 < in->token_count ? 2 : 1;
     }
-    (void)snprintf(out->rule, sizeof(out->rule), "pack.lexical");
+    out->input_end = end;
+    (void)snprintf(out->rule, sizeof(out->rule), "%s",
+                   consumed > 1 ? "pack.hyphenated-word" : "pack.lexical");
     (void)snprintf(out->source_lang, sizeof(out->source_lang), "%s", EN);
-    return 1;
+    return consumed;
 }
 static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, const char *surface,
                               size_t length, ttf_buffer_t *b) {
@@ -355,13 +425,19 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             if ((st = card(e, min, b)) != TTF_OK)
                 return st;
         }
-        if (fields < 3)
-            return TTF_OK;
-        if ((st = space(b)) != TTF_OK || (st = word(e, b, "number", "and")) != TTF_OK ||
-            (st = space(b)) != TTF_OK || (st = card(e, sec, b)) != TTF_OK ||
-            (st = space(b)) != TTF_OK)
-            return st;
-        return word(e, b, "unit", sec == 1 ? "s.one" : "s.many");
+        if (fields == 3) {
+            if ((st = space(b)) != TTF_OK || (st = word(e, b, "number", "and")) != TTF_OK ||
+                (st = space(b)) != TTF_OK || (st = card(e, sec, b)) != TTF_OK ||
+                (st = space(b)) != TTF_OK ||
+                (st = word(e, b, "unit", sec == 1 ? "s.one" : "s.many")) != TTF_OK)
+                return st;
+        }
+        if (s->secondary[0]) {
+            if ((st = space(b)) != TTF_OK)
+                return st;
+            return word(e, b, "meridiem", s->secondary);
+        }
+        return TTF_OK;
     }
     case TTF_SEM_FRACTION:
         if ((st = numeric(e, s->value, b)) != TTF_OK || (st = space(b)) != TTF_OK ||
@@ -425,7 +501,17 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             return st;
         if ((st = space(b)) != TTF_OK)
             return st;
-        return numeric(e, s->secondary, b);
+        if ((st = numeric(e, s->secondary, b)) != TTF_OK || !s->unit[0])
+            return st;
+        if ((st = space(b)) != TTF_OK)
+            return st;
+        if (!strcmp(s->unit, "percent"))
+            return word(e, b, "number", "percent");
+        (void)snprintf(key, sizeof(key), "%s.%s", s->unit, singular(s->secondary) ? "one" : "many");
+        label = res(e, "unit", key);
+        if (!label)
+            label = res(e, "currency", key);
+        return ttf_buffer_puts(b, label ? label : s->unit);
     default:
         return ttf_buffer_append(b, surface, length);
     }

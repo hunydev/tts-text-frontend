@@ -146,3 +146,11 @@ Resource and customer policies can replace number labels, counter readings,
 context weights, foreign lexicon entries, and range separators without a core
 rebuild. See [the Korean pack guide](../languages/ko-KR/README.md) for exact files
 and [resource documentation](resources.md) for priority and load rules.
+
+## Financial text additions (v0.5)
+
+Explicit account/reference labels select digit-sequence readings with `공` and
+retain leading zeros and hyphen groups. Ordinary quantities remain numeric.
+`bp`, `%p`, decimal ranges, scientific quantities and uppercase AM/PM have defined
+Semantic IR contracts. [Financial text](financial-text.md) documents exact supported
+forms, data-only customer customization, arithmetic limits and negative cases.

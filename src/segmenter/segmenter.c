@@ -1,4 +1,95 @@
 #include "../core/internal.h"
+static int horizontal_space(char c) {
+    return c == ' ' || c == '\t';
+}
+/* Cue decisions depend only on the prefix before a candidate cut. A complete
+   input lets us compute protection ranges in advance, but a key mismatch must
+   still protect earlier matching prefixes: the same cut must be chosen when
+   the mismatch arrives in a later write. */
+static int cue_match_prefix(const char *s, size_t begin, size_t end, const char *key,
+                            size_t *after) {
+    size_t p = begin, k = 0;
+    while (p < end && key[k]) {
+        if (horizontal_space(s[p]) && key[k] == ' ') {
+            while (p < end && horizontal_space(s[p]))
+                ++p;
+            while (key[k] == ' ')
+                ++k;
+        } else if (s[p] == key[k]) {
+            ++p;
+            ++k;
+        } else
+            break;
+    }
+    *after = p;
+    return key[k] == '\0';
+}
+typedef struct {
+    size_t begin, end;
+    int valid;
+} cue_scope_cache_t;
+static size_t cue_scope_end(const char *s, size_t begin, size_t end, int identifier,
+                             cue_scope_cache_t *cache) {
+    size_t p = begin;
+    /* A dot is only a continuation after a digit inside the same scope. */
+    if (begin < end && s[begin] == '.')
+        return begin;
+    if (cache->valid && begin >= cache->begin && begin <= cache->end)
+        return cache->end < end ? cache->end : end;
+    while (p < end) {
+        unsigned char c = (unsigned char)s[p];
+        if (cache->valid && p == cache->begin) {
+            p = cache->end < end ? cache->end : end;
+            break;
+        }
+        if (horizontal_space((char)c) || c == ':' || c == '-' || (c >= '0' && c <= '9'))
+            ++p;
+        else if (p + 3 <= end && !memcmp(s + p, "\xef\xbc\x9a", 3))
+            p += 3;
+        else if (!identifier && ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
+                                 c == '\'' || (c == '.' && p > begin &&
+                                 s[p - 1] >= '0' && s[p - 1] <= '9')))
+            ++p;
+        else
+            break;
+    }
+    cache->begin = begin;
+    cache->end = p;
+    cache->valid = 1;
+    return p;
+}
+static size_t title_scope_limit(const char *s, size_t n, size_t maximum) {
+    size_t p = 0, count = 0;
+    size_t limit = maximum > 256 ? maximum : 256;
+    while (p < n && count < limit) {
+        uint32_t cp;
+        size_t width;
+        if (ttf_utf8_decode(s + p, n - p, &cp, &width) != 1)
+            break;
+        p += width;
+        ++count;
+    }
+    return p;
+}
+/* Match from each lexical start once. Scope caches reuse the valid suffix when
+   labels overlap, instead of scanning back over the entire title at every
+   whitespace. This planner state is local to a single scan. */
+static void extend_cue_range(const ttf_engine_t *e, const char *s, size_t n, size_t begin,
+                              size_t title_limit, size_t *protected_until,
+                              cue_scope_cache_t caches[2]) {
+    const ttf_entry_t *cue;
+    for (cue = e->boundary_cues; cue; cue = cue->boundary_next) {
+        size_t after, end;
+        int complete, identifier = !strcmp(cue->kind, "identifier_label");
+        size_t limit = identifier ? n : title_limit;
+        if (begin >= limit || s[begin] != cue->key[0])
+            continue;
+        complete = cue_match_prefix(s, begin, limit, cue->key, &after);
+        end = complete ? cue_scope_end(s, after, limit, identifier, &caches[identifier]) : after;
+        if (end > *protected_until)
+            *protected_until = end;
+    }
+}
 static int protected_period(const ttf_engine_t *e, const char *s, size_t at) {
     size_t begin = at, n;
     char key[96];
@@ -26,13 +117,18 @@ size_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, int fin
     ttf_token_t *tokens = NULL;
     size_t count = 0, i, at, chars = 0,
            target = first ? e->config.first_segment_target : e->config.normal_segment_target;
-    size_t selected = 0;
+    size_t selected = 0, protected_until = 0, title_limit;
+    cue_scope_cache_t cue_caches[2] = {{0, 0, 0}, {0, 0, 0}};
     uint32_t quote_stack[32];
     size_t quote_depth = 0;
     if (ttf_tokenize(s, n, &tokens, &count) != TTF_OK)
         return 0;
+    /* A long title eventually yields a phrase. The cap is measured from the
+       current unit start, so input chunk boundaries cannot change it. */
+    title_limit = title_scope_limit(s, n, e->config.max_segment_length);
     for (i = 0; i < count; i++) {
         const ttf_token_t *t = &tokens[i];
+        extend_cue_range(e, s, n, t->begin, title_limit, &protected_until, cue_caches);
         /* The same lexical categories drive routing, semantic recognition and
            safe cuts. Only whitespace cuts can be used for phrase segmentation. */
         for (at = t->begin; at < t->end;) {
@@ -68,6 +164,10 @@ size_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, int fin
                 ((e->config.phrase_split && chars >= target) ||
                  chars >= e->config.max_segment_length)) {
                 size_t previous = at;
+                if (at < protected_until) {
+                    at += w;
+                    continue;
+                }
                 while (previous && (s[previous - 1] == ' ' || s[previous - 1] == '\t' ||
                                     s[previous - 1] == '\r'))
                     previous--;

@@ -48,7 +48,10 @@ Inspect output records hit provenance and layer. The callback/result text is own
 by the request, so an application can replace entire frozen engines without pointers
 from a completed result depending on lexicon record lifetimes.
 
-The v0.4 seed contains 160 direct foreign-pronunciation entries. Five additions
+The v0.4 seed contained 160 direct foreign-pronunciation entries. Five additions
 support the reviewed phrase cases (`watch`, `and`, `the`, `database`, `backup`).
-Vocabulary coverage is still small; the advisory unknown-word and hyphenated-term
-failures document why a nonempty fallback does not establish correct spelling.
+The v0.5 seed has 163 entries, adding `real-time`, `dashboard` and `quasar`.
+Adjacent Latin words connected by single hyphens are now one lexical WORD (bounded
+to 95 bytes), allowing user/customer whole-term overrides before G2P fallback.
+English context preserves the original spelling. These three curated entries fix
+known vocabulary cases; they do not establish general unknown-word accuracy.

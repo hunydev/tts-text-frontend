@@ -1,4 +1,4 @@
-# Text validation — 0.4.0
+# Text validation — 0.5.0
 
 Validated on Linux on 2026-09-16 with GCC 13.3, Clang 18.1, C11 and CMake 3.28.
 Acceptance uses normalized output text, semantic/language metadata and deterministic
@@ -8,19 +8,23 @@ streaming. Speech synthesis, audio comparison and listening scores are excluded.
 
 | Check | Result |
 | --- | --- |
-| GCC Debug | 25/25 CTest tests passed |
-| Clang Release | 25/25 CTest tests passed |
-| Clang ASan + UBSan + leak detection | 25/25 CTest tests passed |
-| C golden corpus | 346 explicit input/output cases passed (previously 270) |
+| GCC Debug | 29/29 CTest tests passed |
+| Clang Release | 29/29 CTest tests passed |
+| Clang ASan + UBSan + leak detection | 29/29 CTest tests passed |
+| C golden corpus | 346 explicit input/output cases passed |
 | Text regression corpus | 109/109 passed, across 18 categories |
 | Finance/content development corpus | 60/60 passed, previously 47/60 including metadata |
-| Separate advisory challenge corpus | 3/15 passed, 12 failures explicitly retained |
+| Advanced finance/content corpus | 30/30 passed; frozen v0.4 baseline 8/30 |
+| Historical advisory challenge corpus | 13/15 passed; HTML/code and file paths still fail |
+| Financial quantity checks | 516 exact-value/unit/endpoint/chunk checks, including 50 Decimal reference amounts |
+| Explicit financial identifier checks | 10 positive + 8 negative cases; 95 text/metadata/chunk/override checks |
+| Content cue/lexicon checks | 88 checks: title scope, overrides, hyphenated words and bounded long-title commitment |
 | Independent financial value checks | 85 generated amounts, 170 value/span/chunk checks plus 3 word-boundary guards |
 | Context routing checks | 17 cases, 90 text/language/trace checks |
 | Explicit metadata assertions | 75 regression + 33 scenario span checks passed |
 | Evaluation streaming | Each case checked with 1-, 7-, and 64-byte writes |
 | Text reference errors | 0 character edits across 1,394 reference codepoints |
-| New semantic/quotation streaming checks | 1,514 exhaustive two-chunk byte splits, including tiny segment targets |
+| New semantic/quotation streaming checks | 2,237 exhaustive two-chunk byte splits, including tiny segment targets |
 | Existing streaming checks | 717 representative comparisons plus spaced-date splits |
 | Generative checks | 200 mixed inputs, 1,000 chunk comparisons, 5,000 scanner probes |
 | Shared-engine concurrency | Eight threads, 800 requests |
@@ -39,11 +43,27 @@ headers are unchanged. No compiler warnings or sanitizer errors were observed.
 These are regression results for explicit, curated references, not an estimate of
 accuracy on unseen production text. All new scenario data is original synthetic
 text, not customer traffic or independently annotated human references. The
-separate challenge set passed only 3/15 and its total character error increased
-from 109 to 112 because of ambiguous-title routing. See [scenario evidence and
-limitations](domain-corpus.md) for both improvements and remaining errors.
+unchanged challenge file now passes 13/15, compared with 3/15 in v0.4. Thirteen
+references were promoted into development regressions, so it is no longer an
+unseen holdout. HTML/code and file paths remain failures. See [scenario evidence
+and limitations](domain-corpus.md); no speech synthesis was used.
 
-## v0.4 changes against the frozen v0.3 baseline
+## v0.5 changes against the frozen v0.4 baseline
+
+The v0.4 executable and resources at commit `493f966` were copied before changes.
+The new advanced reference file was written before its first baseline/candidate
+execution and kept unchanged. Eight of 30 baseline cases passed; all 30 candidate
+cases pass, including the 20 explicit span assertions. The original 60-case corpus
+and 109-case core corpus continue to pass. Known challenge cases improved from
+3/15 to 13/15 without changing their reference strings.
+
+New tests independently check scientific values with Python Decimal, semantic
+range endpoints and units, zero-preserving identifier values, cue resource layers,
+AM/PM markers, tiny segmentation targets and malformed objects. Direct lexicon
+entries fix three observed foreign-word spellings; this is vocabulary coverage,
+not evidence that unknown-word G2P was solved. Details: [financial contracts](financial-text.md).
+
+## Historical v0.4 changes against the frozen v0.3 baseline
 
 The 60-case scenario file was unchanged throughout comparison. Thirteen cases
 changed from failing to passing when text, metadata and parity are combined;
@@ -57,14 +77,14 @@ rendering against the equivalent flat amount. One- and 64-byte writes with tiny
 segment targets exercise 170 checks. This validates numerical meaning, rather
 than relying on output spelling alone.
 
-The advisory challenge set remains separate: 12/15 fail, and an ambiguous title
-has more character errors under the new noun-phrase policy. Details and exact
-outputs are preserved in [scenario validation](domain-corpus.md).
+At the v0.4 checkpoint, 12/15 challenge cases failed and an ambiguous title had
+more character errors under the noun-phrase policy. Historical outputs remain in
+[scenario validation](domain-corpus.md) and the versioned evidence JSON.
 
 ## Retained v0.3 regression evidence
 
 The previous outputs below were captured against v0.2 before the v0.3 fixes.
-They remain regression checks in v0.4; they are not additional v0.4 improvements.
+They remain regression checks in v0.5; they are not additional v0.5 improvements.
 
 | Input | Previous text | Current text |
 | --- | --- | --- |
@@ -120,27 +140,22 @@ python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources \
 ```
 
 The report directory must be new. Additional CI reports use
-`tests/evaluation/domain_cases.jsonl` (strict) and `challenge_cases.jsonl` (advisory). `report.html` shows text differences and metadata;
+`tests/evaluation/domain_cases.jsonl` and `advanced_cases.jsonl` (strict), plus
+`challenge_cases.jsonl` (advisory). `report.html` shows text differences and metadata;
 `report.json` contains metrics and hashes; `cases.csv` supports case triage. The CI
 `text-evaluation` job publishes this text-only artifact. No speech backend is installed
 or called by the test/evaluation workflow.
 
 ## Remaining work, in priority order
 
-1. Add finance identifier context (account/reference digit sequences), `%p`/`bp`
-   units and decimal ranges, driven by the recorded challenge failures. Collect
-   authorized application samples and agree on expected policy first.
-2. Improve mixed-language context around unquoted code switches, short ambiguous
-   Latin runs, names, homographic Korean counters and technical identifiers.
-3. Expand licensed/reviewed pronunciation data beyond the 160-entry seed lexicon;
-   replace prototype English G2P and Hangul phone mapping where text error analysis
-   shows systematic failures. The dictionary-free fallback guarantees a usable
-   string, not the right spelling.
-4. Extend scientific notation, combined datetime/time-zone grammar, AM/PM and
-   explicit code/path treatment; improve unsupported quantity grammar.
-   June/October currently follow the documented spaced-unit `유 월` / `시 월` policy.
-5. Profile large workloads/lexicons, index compiled resources and rule candidates,
-   and add Windows/macOS plus automated binary ABI compatibility CI.
+1. Add explicit code/path handling and collect authorized finance/content samples
+   with agreed reference readings. Separate protected document text from prose.
+2. Extend locale-specific quantities, currency intervals, datetime/time zones and
+   ambiguity around unquoted titles, names, short imperatives and identifiers.
+3. Expand reviewed pronunciation data beyond the 163-entry seed lexicon and
+   improve prototype G2P/phone mapping. Nonempty fallback is not correct spelling.
+4. Profile large lexicons and worst-case streaming inputs; add a real third language
+   pack, Windows/macOS and automated binary ABI compatibility CI.
 
 Native callback and JSONL consumers can begin integrating with a frontend whose
 ownership and streaming contracts are tested. Unrestricted production text quality

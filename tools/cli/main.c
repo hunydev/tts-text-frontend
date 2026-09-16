@@ -91,6 +91,7 @@ static int emit_json(const ttf_segment_t *segment, void *user_data) {
         json_string_field("render_lang", sem->render_lang);
         json_string_field("semantic_type", ttf_semantic_type_name(sem->type));
         json_string_field("value", sem->value);
+        json_string_field("secondary", sem->secondary);
         json_string_field("unit", sem->unit);
         json_string_field("rule", sem->rule);
         json_string_field("resource_layer", ttf_layer_name(sem->layer));
@@ -324,6 +325,10 @@ int main(int argc, char **argv) {
                        ttf_script_name(span->script), sem->source_lang, sem->context_lang,
                        sem->render_lang, ttf_semantic_type_name(sem->type));
                 escaped(sem->value, strlen(sem->value));
+                printf(" secondary=");
+                escaped(sem->secondary, strlen(sem->secondary));
+                printf(" unit=");
+                escaped(sem->unit, strlen(sem->unit));
                 fputs(" scores=", stdout);
                 escaped(span->context_trace, strlen(span->context_trace));
                 printf(" rule=%s layer=%s lexicon=%s pronunciation_layer=%s verbalizer=%s "

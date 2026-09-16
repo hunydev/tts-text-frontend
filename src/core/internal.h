@@ -14,6 +14,7 @@ typedef struct ttf_entry {
     ttf_resource_layer_t layer;
     size_t order;
     struct ttf_entry *next;
+    struct ttf_entry *boundary_next;
 } ttf_entry_t;
 struct ttf_engine {
     ttf_config_t config;
@@ -22,6 +23,7 @@ struct ttf_engine {
     const ttf_language_pack_t *packs[TTF_MAX_PACKS];
     size_t pack_count, resource_order;
     ttf_entry_t *resources[TTF_HASH_BUCKETS];
+    ttf_entry_t *boundary_cues;
 };
 char *ttf_strdup(const char *s);
 char *ttf_strndup(const char *s, size_t n);

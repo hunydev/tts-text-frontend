@@ -128,3 +128,22 @@ heuristics and bounded streaming context.
 previous version and current version. Strict regression/development gates and the
 advisory challenge report are kept distinct. This produces evidence of improvement
 and visible limitations without changing expected text to match runtime output.
+
+## Financial/context checkpoint (0.5.0)
+
+Universal syntax now parses exact scientific decimal shifts and quantity ranges;
+unit inventories and readout labels remain resources. Explicit pack identifier
+cues outrank equal-extent generic numeric/date syntax, preserving zeros in the IR.
+The core does not branch on a language name. The KO pack supplies label semantics
+and rendering. Existing ABI v1 layouts and callback ownership are unchanged.
+
+Freeze builds an immutable index of effective boundary cues. The segmenter and
+language packs use the same cue resources to keep label/number and title context
+across stream writes. Title retention has a bounded horizon so a long English
+run cannot postpone all output. [Streaming](streaming.md) records the tradeoff.
+
+The 30-case strict advanced suite promotes 13 previously observed challenges and
+adds 17 explicit references. The old 15-case file remains unchanged for historical
+comparison, but is no longer an unseen holdout. HTML/code and paths remain visible
+failures. [Financial contracts](financial-text.md) and [validation](validation.md)
+state implemented policy and limitations separately from future production work.

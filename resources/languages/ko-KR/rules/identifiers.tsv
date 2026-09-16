@@ -1,0 +1,18 @@
+# Explicit financial labels. These select digit reading, never bank validation.
+# A customer value of disabled suppresses the same system cue.
+identifier_label	ko-KR	계좌는	digits
+identifier_label	ko-KR	계좌	digits
+identifier_label	ko-KR	계좌번호는	digits
+identifier_label	ko-KR	계좌번호	digits
+identifier_label	ko-KR	계좌 번호는	digits
+identifier_label	ko-KR	계좌 번호	digits
+identifier_label	ko-KR	참조번호는	digits
+identifier_label	ko-KR	참조번호	digits
+identifier_label	ko-KR	참조 번호는	digits
+identifier_label	ko-KR	참조 번호	digits
+identifier_label	ko-KR	거래번호는	digits
+identifier_label	ko-KR	거래번호	digits
+identifier_label	ko-KR	거래 번호는	digits
+identifier_label	ko-KR	거래 번호	digits
+identifier_render	ko-KR	zero	공
+identifier_render	ko-KR	separator	 

@@ -173,3 +173,17 @@ numeric_suffix	*	kW	MEASURE:kW
 semantic_term	*	C++	ALNUM_TERM:en-US
 semantic_term	*	USB-C	ALNUM_TERM:en-US
 semantic_term	*	3D	ALNUM_TERM:en-US
+
+# Distinct rate-change quantities; never convert their values to percent.
+numeric_suffix	*	%p	MEASURE:percentage_point
+numeric_suffix	*	bp	MEASURE:basis_point
+unit	en-US	percentage_point.one	percentage point
+unit	en-US	percentage_point.many	percentage points
+unit	en-US	basis_point.one	basis point
+unit	en-US	basis_point.many	basis points
+
+# Written meridiem suffix and language-specific rendering.
+time_suffix	*	AM	AM
+time_suffix	*	PM	PM
+meridiem	en-US	AM	a m
+meridiem	en-US	PM	p m

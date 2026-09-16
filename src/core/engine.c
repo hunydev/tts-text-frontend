@@ -114,10 +114,45 @@ ttf_status_t ttf_engine_create(const ttf_config_t *cfg, ttf_engine_t **out) {
     return TTF_OK;
 }
 ttf_status_t ttf_engine_freeze(ttf_engine_t *e) {
+    size_t bucket;
     if (!e)
         return TTF_EINVAL;
+    if (e->frozen)
+        return TTF_OK;
     if (!ttf_find_pack(e, e->default_language))
         return TTF_EINVAL;
+    /* Index only effective cues once. Boundary planning never scans the whole
+       lexicon, and customer overrides can disable a system cue. */
+    for (bucket = 0; bucket < TTF_HASH_BUCKETS; ++bucket) {
+        ttf_entry_t *entry;
+        for (entry = e->resources[bucket]; entry; entry = entry->next) {
+            int active = 0;
+            size_t pack;
+            if (strcmp(entry->lang, "*") && !ttf_find_pack(e, entry->lang))
+                continue;
+            if (ttf_resource_get(e, entry->kind, entry->lang, entry->key, NULL) != entry->value)
+                continue;
+            if (!strcmp(entry->lang, "*")) {
+                for (pack = 0; pack < e->pack_count; ++pack)
+                    if (ttf_resource_get(e, entry->kind, e->packs[pack]->language_tag,
+                                         entry->key, NULL) == entry->value)
+                        break;
+                if (pack == e->pack_count)
+                    continue;
+            }
+            if (!strcmp(entry->kind, "identifier_label"))
+                active = !strcmp(entry->value, "digits");
+            else if (!strcmp(entry->kind, "context_cue")) {
+                char *end;
+                long score = strtol(entry->value, &end, 10);
+                active = *end == '\0' && score > 0 && score <= 1000;
+            }
+            if (active) {
+                entry->boundary_next = e->boundary_cues;
+                e->boundary_cues = entry;
+            }
+        }
+    }
     e->frozen = 1;
     return TTF_OK;
 }
