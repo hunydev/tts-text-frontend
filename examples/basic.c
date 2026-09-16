@@ -4,7 +4,7 @@
 
 static int on_segment(const ttf_segment_t *segment, void *user_data) {
     FILE *out = (FILE *)user_data;
-    /* Pass segment->text and span context language tags to your TTS engine.
+    /* Pass segment->text and span render language tags to your TTS engine.
        Copy them here if synthesis will outlive this callback. */
     return fwrite(segment->text, 1, segment->length, out) != segment->length;
 }

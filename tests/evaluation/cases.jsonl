@@ -1,0 +1,21 @@
+{"id":"mixed-ordinal","text":"1st는 첫 번째라는 뜻입니다.\n영어로는 다음과 같은 예문이 있습니다.\nPlease go to the 1st floor","expected":"퍼스트는 첫 번째라는 뜻입니다.\n영어로는 다음과 같은 예문이 있습니다.\nPlease go to the first floor","notes":"Listen for the same source ordinal in Korean and English context; check the voice transition."}
+{"id":"apple-ko","text":"Apple은 사과입니다.","expected":"애플은 사과입니다.","notes":"Foreign pronunciation rendering, not translation."}
+{"id":"apple-en","text":"Apple released the iPhone.","expected":"Apple released the iPhone.","notes":"English context must preserve the input words."}
+{"id":"gpu","text":"GPU를 사용합니다.","expected":"지피유를 사용합니다.","notes":"Check initialism reading and following Korean particle."}
+{"id":"openai","text":"OpenAI가 발표했습니다.","expected":"오픈에이아이가 발표했습니다.","notes":"Brand pronunciation lexicon and particle."}
+{"id":"wifi","text":"WiFi를 사용합니다.","expected":"와이파이를 사용합니다.","notes":"System lexicon reading. Dictionary-removal fallback is covered separately by the native API tests."}
+{"id":"unknown-foobar","text":"foobar를 사용합니다.","expected":"푸바를 사용합니다.","notes":"Prototype G2P path. Matching this expected text does not establish pronunciation quality."}
+{"id":"nasa","text":"NASA는 기관입니다.","expected":"나사는 기관입니다.","notes":"Word acronym instead of a letter-by-letter initialism."}
+{"id":"alnum-gpt4","text":"GPT-4를 사용합니다.","expected":"지피티포를 사용합니다.","notes":"Alphanumeric term rendering."}
+{"id":"embedded-english","text":"한국어에서 Please go to the 1st floor 예문을 봅니다.","expected":"한국어에서 Please go to the first floor 예문을 봅니다.","notes":"English function-word sequence inside a Korean sentence. Listen for audible voice transitions."}
+{"id":"currency-stream","text":"가격은 12,500원입니다.","expected":"가격은 만이천오백 원입니다.","notes":"Bytewise writes must retain the partial number until it is safe to commit."}
+{"id":"counter","text":"3개 3명 3살 3시 3분 3초","expected":"세 개 세 명 세 살 세 시 삼 분 삼 초","notes":"Native Korean counters compared with Sino-Korean units."}
+{"id":"date-ko","text":"2026-09-16","expected":"이천이십육 년 구 월 십육 일","notes":"Korean date reading."}
+{"id":"time-ko","text":"09:05","expected":"아홉 시 오 분","notes":"Korean hour and minute readings."}
+{"id":"phone-ko","text":"010-1234-5678","expected":"공일공 일이삼사 오육칠팔","notes":"Digit sequence with grouping."}
+{"id":"percent-ko","text":"12.5%","expected":"십이 점 오 퍼센트","notes":"Decimal percent."}
+{"id":"measure-ko","text":"3kg 10km 32GB 2GHz","expected":"삼 킬로그램 십 킬로미터 삼십이 기가바이트 이 기가헤르츠","notes":"Language pack unit readings."}
+{"id":"ordinal-en","text":"Please go to the 1st floor.","expected":"Please go to the first floor.","default_language":"en-US","notes":"English ordinal verbalizer."}
+{"id":"date-en","text":"2026-09-16","expected":"September sixteenth two thousand twenty six","default_language":"en-US","notes":"Same semantic date with an English renderer."}
+{"id":"currency-en","text":"$12.50","expected":"twelve dollars and fifty cents","default_language":"en-US","notes":"Dollars and cents."}
+{"id":"measure-en","text":"3kg","expected":"three kilograms","default_language":"en-US","notes":"English measure verbalization."}

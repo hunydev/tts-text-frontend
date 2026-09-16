@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(tts_text_frontend VERSION 0.1.0 LANGUAGES C)
+project(tts_text_frontend VERSION 0.2.0 LANGUAGES C)
 include(GNUInstallDirs)
 include(CTest)
 option(TTF_ENABLE_ASAN "Enable AddressSanitizer" OFF)
@@ -61,6 +61,8 @@ add_library(tts_text_frontend::static ALIAS tts_text_frontend_static)
 add_library(tts_text_frontend::shared ALIAS tts_text_frontend_shared)
 add_executable(ttf tools/cli/main.c)
 target_link_libraries(ttf PRIVATE tts_text_frontend_static ttf_build_flags)
+add_executable(ttf_bench tools/benchmark/main.c)
+target_link_libraries(ttf_bench PRIVATE tts_text_frontend_static ttf_build_flags)
 add_executable(ttf_example examples/basic.c)
 target_link_libraries(ttf_example PRIVATE tts_text_frontend_static ttf_build_flags)
 
@@ -90,6 +92,24 @@ if(BUILD_TESTING)
   endif()
   find_package(Python3 COMPONENTS Interpreter QUIET)
   if(Python3_Interpreter_FOUND)
+    add_test(NAME cli_stream_json COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_cli_json.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
+    add_test(NAME benchmark_smoke COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_benchmark.py
+      $<TARGET_FILE:ttf_bench> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
+    add_test(NAME evaluation_reports COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_evaluation.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
+    find_program(ESPEAK_NG_EXECUTABLE espeak-ng)
+    set(TTF_OPTIONAL_ESPEAK)
+    if(ESPEAK_NG_EXECUTABLE)
+      list(APPEND TTF_OPTIONAL_ESPEAK ${ESPEAK_NG_EXECUTABLE})
+    endif()
+    add_test(NAME tts_bridge COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/tts_bridge/test_bridge.py
+      ${CMAKE_CURRENT_SOURCE_DIR} $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources
+      ${TTF_OPTIONAL_ESPEAK})
     add_test(NAME compiled_resources COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_compiled_resources.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/tools/resource_compiler/compile_resources.py
@@ -100,7 +120,7 @@ if(BUILD_TESTING)
   add_test(NAME cli_inspect COMMAND ttf inspect "OpenAI가 발표했습니다.")
   set_tests_properties(cli_inspect PROPERTIES PASS_REGULAR_EXPRESSION "source=en-US.*context=ko-KR")
 endif()
-install(TARGETS tts_text_frontend_static tts_text_frontend_shared ttf
+install(TARGETS tts_text_frontend_static tts_text_frontend_shared ttf ttf_bench
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})

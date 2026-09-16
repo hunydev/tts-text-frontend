@@ -71,7 +71,9 @@ flowchart TD
 | `src/segmenter`, `src/stream` | Deterministic safe boundary and callbacks |
 | `languages/*` | Context scoring, classification hooks, verbalizers, G2P/renderers |
 | `resources/*` | Reading policy, numeric/unit data, pronunciation data, overrides |
-| `tools/cli` | Normalize, inspect and streaming debugging |
+| `tools/cli` | Normalize, inspect and JSONL streaming transport |
+| `tools/tts_bridge`, `tools/evaluation` | Optional acoustic engine adapters, PCM validation and listening reports |
+| `tools/benchmark` | Warm-engine frontend commitment timing through public C API |
 | `tools/resource_compiler` | Validated source resources to versioned runtime envelope |
 
 Pack directories are discovered by CMake, which generates registration code. A
@@ -87,9 +89,22 @@ and verbalizes a cardinal without editing core code.
 | 2 — KO / EN | Basic cardinal, ordinal, date/time, currency, percent, units; Korean counters/phone | Coverage for locales, ambiguity and edge cases |
 | 3 — Code Mixed | Pack context scores, attached particle signals, context inheritance, `1st` case | Embedded quotations, longer mixed-language passages |
 | 4 — Foreign Pronunciation | Layered lexicons, initialism/acronym data, source dictionary/G2P, phone IR, fallback | Licensed large vocabulary and measured phonetic quality |
-| 5 — Streaming | Pending/lookahead, shared boundaries, phrase targets, callbacks | TTFB benchmarks and backpressure integration |
+| 5 — Streaming | Pending/lookahead, shared boundaries, phrase targets, callbacks, frontend benchmarks and synchronous adapter backpressure | First-audio benchmarks and persistent engine sessions |
 | 6 — Extensibility Validation | Synthetic third-pack test, generated build registry | Real third language pack and platform matrix |
 
 These are initial implementation milestones, not claims of complete linguistic
 coverage. The next production priority is to evaluate corpus failures against a
 real TTS voice, improve the relevant pack resources, and enforce ABI v1 compatibility in release automation.
+
+## Integration checkpoint (0.2.0)
+
+The C ABI v1, language packs and core normalization behavior are retained. New CLI
+and tooling interfaces consume committed spans. JSONL protocol v1 is independent
+of the native ABI and carries render language for acoustic voice selection. The
+reference adapter uses one external process per language run; a real deployment
+can replace that adapter with a persistent engine or direct C callback integration.
+
+The listening corpus provides exact text checks, real optional WAVs and blank human
+ratings. Text correctness, frontend callback latency, audio availability and perceived
+pronunciation quality are recorded as distinct observations. Backend sessions,
+async cancellation and production voice acceptance remain follow-up work.

@@ -20,7 +20,7 @@ with current structure sizes; this initial release requires matching ABI version
 ABI v1 freezes existing public function signatures and structure layouts after this
 initial release. Incompatible changes require a new major ABI, API version and
 shared-library SOVERSION; they must not silently alter v1. The project release
-version is 0.1.0 and the shared-library SOVERSION is 1. New extensible capabilities
+version is 0.2.0 and the shared-library SOVERSION is 1. New extensible capabilities
 should use additional APIs or explicitly versioned descriptors. Automated ABI
 comparison in release CI remains future work.
 

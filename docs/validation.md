@@ -56,3 +56,35 @@ Please go to the first floor
 layers, context scores, lexicon/fallback provenance and byte offsets. These tests
 verify behavior and integration boundaries, not linguistic quality over unrestricted
 input. See the architecture milestone table and Korean coverage document for limits.
+
+## 0.2.0 integration checkpoint
+
+On 2026-09-16, GCC Debug, Clang Release and Clang ASan/UBSan each passed all
+**21 CTest tests**. The added checks cover the JSONL protocol (including first
+segment delivery before pipe EOF), benchmark accounting, evaluation reports and
+real reference speech synthesis with eSpeak NG 1.51. Public ABI headers, core
+sources and language resources are unchanged from the initial implementation.
+
+The separate listening corpus has 21 cases. All 21 normalized strings match their
+expected values and all 21 produce readable, nonempty PCM WAVs. One case uses the
+prototype G2P path. Human listening scores remain pending; successful audio
+production is not a quality approval. The HTML/JSON report, CSV worksheet and WAVs
+are generated artifacts, also published by the `tts-integration` CI job.
+
+### Measured frontend baseline
+
+Clang 18.1 Release, Linux VM, warm frozen engine, 64-byte writes, default segment
+targets. Small workload is `examples/code_mixed.txt`; large is that file repeated
+256 times. These are local workload measurements, not latency guarantees.
+
+| Workload | Input bytes | Iterations | First callback p50 / p95 | Total p50 / p95 | Throughput |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Small | 194 | 100 | 0.067 / 0.115 ms | 0.325 / 0.546 ms | 0.533 MiB/s |
+| Repeated | 49,664 | 20 | 0.039 / 0.044 ms | 49.321 / 51.672 ms | 0.953 MiB/s |
+
+Every measured iteration delivered its first callback after a submitted input
+extent of 64 bytes (37 committed bytes), before the caller supplied all remaining
+input. Exact batch/stream comparison runs before timing; every timed run verifies
+output length, hash and callback accounting. Timing excludes engine setup and
+acoustic synthesis and must not be described as audio TTFB. See
+[benchmark definitions](benchmark.md) and [audio integration timing](tts-integration.md).

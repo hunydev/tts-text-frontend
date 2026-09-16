@@ -12,7 +12,7 @@ jobs:
       matrix:
         compiler: [gcc, clang]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
       - name: Configure
         run: cmake -S . -B build -DCMAKE_C_COMPILER=${{ matrix.compiler }} -DCMAKE_BUILD_TYPE=Debug
       - name: Build
@@ -22,10 +22,30 @@ jobs:
   sanitizers:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
       - run: cmake -S . -B build -DCMAKE_C_COMPILER=clang -DCMAKE_BUILD_TYPE=Debug -DTTF_ENABLE_ASAN=ON -DTTF_ENABLE_UBSAN=ON
       - run: cmake --build build --parallel 2
       - run: ctest --test-dir build --output-on-failure
         env:
           ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
           UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+
+  tts-integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - name: Install optional offline TTS engine
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends espeak-ng
+      - run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - run: cmake --build build --parallel 2
+      - name: Verify protocol and real synthesis
+        run: ctest --test-dir build --output-on-failure -R 'cli_stream_json|tts_bridge|evaluation'
+      - name: Build listening report and audio samples
+        run: python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources --corpus tests/evaluation/cases.jsonl --output-dir artifacts/evaluation --synthesize
+      - name: Upload evaluation artifact
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: tts-listening-evaluation
+          path: artifacts/evaluation/
+          retention-days: 14
+          if-no-files-found: error

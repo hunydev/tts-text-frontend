@@ -42,7 +42,7 @@ ctest --test-dir build-sanitize --output-on-failure
 ```
 
 Produces `libtts_text_frontend.so`, `libtts_text_frontend.a`, `ttf`, and
-`ttf_example`. Both library variants are built in the same invocation. Public
+`ttf_example`, and `ttf_bench`. Both library variants are built in the same invocation. Public
 headers use opaque engine and stream handles, `ttf_` symbols, ABI versions and
 structure sizes. Existing ABI v1 signatures/layouts are frozen; incompatible
 changes require a new major ABI/SOVERSION. Linux is verified; portable C and Windows export annotations
@@ -69,7 +69,8 @@ build/ttf normalize 'GPU를 사용합니다.'
 build/ttf normalize 'WiFi를 사용합니다.'
 build/ttf normalize --language en-US 'Please go to the 1st floor.'
 build/ttf inspect 'OpenAI가 발표했습니다.'
-build/ttf stream input.txt
+build/ttf stream examples/code_mixed.txt
+build/ttf stream-json --chunk-bytes 64 examples/code_mixed.txt
 ```
 
 `inspect` includes surface text, script, source/context/render language, semantic
@@ -173,6 +174,39 @@ matches batch output for the same configuration and resources. Targets for first
 and subsequent segments, maximum length, sentence/phrase splitting and pending
 buffer limit are configurable. Callback pointers live only during the callback.
 See [streaming invariants and latency tradeoffs](docs/streaming.md).
+
+## TTS integration and listening reports
+
+Version 0.2.0 adds a versioned JSONL stream for engine adapters. It flushes each
+committed segment immediately, preserving render-language metadata and byte offsets.
+The optional bridge selects the acoustic voice using `render_lang` and produces PCM
+WAVs through eSpeak NG or a configurable external adapter process.
+
+```sh
+# Optional offline TTS engine on Ubuntu
+sudo apt-get install espeak-ng
+python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources \
+  --corpus tests/evaluation/cases.jsonl --output-dir artifacts/evaluation --synthesize
+```
+
+Open `artifacts/evaluation/report.html` for 21 input/expected/output comparisons,
+audio players and a listening worksheet. `report.json` records text checks, fallback
+paths and resource hashes; `review.csv` holds human scores. A successful synthesis
+is not a pronunciation quality score. Output directories must be new on each run.
+GitHub Actions also publishes this report and audio as an evaluation artifact.
+
+```sh
+build/ttf stream-json examples/code_mixed.txt > segments.jsonl
+python3 tools/tts_bridge/bridge.py --input segments.jsonl --output-dir artifacts/demo-audio
+build/ttf_bench --iterations 100 --chunk-bytes 64 examples/code_mixed.txt
+```
+
+The benchmark reports frontend first-callback latency, total processing time and
+throughput with a warm frozen engine. It does not measure audio TTFB. The bridge
+records time until the first complete audio file separately.
+
+See [TTS integration](docs/tts-integration.md), [JSONL protocol](docs/stream-protocol.md),
+[evaluation](docs/evaluation.md), and [benchmark definitions](docs/benchmark.md).
 
 ## Architecture and scope
 

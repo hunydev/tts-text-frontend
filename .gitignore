@@ -8,3 +8,5 @@
 *.dll
 *.exe
 __pycache__/
+
+/artifacts/
