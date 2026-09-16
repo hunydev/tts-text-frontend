@@ -45,8 +45,8 @@
 {"id":"ko-quantity-percent-spaced","category":"ko/quantities","text":"12.5 %","expected":"십이 점 오 퍼센트"}
 {"id":"ko-quantity-kg-spaced","category":"ko/quantities","text":"3 kg","expected":"삼 킬로그램"}
 {"id":"ko-quantity-gb-spaced","category":"ko/quantities","text":"32 GB","expected":"삼십이 기가바이트"}
-{"id":"ko-date-labelled","category":"ko/date-time","text":"2026년 6월 1일","expected":"이천이십육 년 유 월 일 일","expected_spans":[{"surface":"2026년 6월 1일","semantic_type":"DATE"}]}
-{"id":"ko-date-labelled-compact","category":"ko/date-time","text":"2026년10월16일","expected":"이천이십육 년 시 월 십육 일","expected_spans":[{"surface":"2026년10월16일","semantic_type":"DATE"}]}
+{"id":"ko-date-labelled","category":"ko/date-time","text":"2026년 6월 1일","expected":"이천이십육 년 유월 일 일","expected_spans":[{"surface":"2026년 6월 1일","semantic_type":"DATE"}]}
+{"id":"ko-date-labelled-compact","category":"ko/date-time","text":"2026년10월16일","expected":"이천이십육 년 시월 십육 일","expected_spans":[{"surface":"2026년10월16일","semantic_type":"DATE"}]}
 {"id":"ko-date-spaced-dots","category":"ko/date-time","text":"2026. 9. 16.","expected":"이천이십육 년 구 월 십육 일","expected_spans":[{"surface":"2026. 9. 16.","semantic_type":"DATE"}]}
 {"id":"ko-leap-date","category":"ko/date-time","text":"2024-02-29","expected":"이천이십사 년 이 월 이십구 일","expected_spans":[{"surface":"2024-02-29","semantic_type":"DATE"}]}
 {"id":"ko-time-seconds","category":"ko/date-time","text":"14:30:05","expected":"열네 시 삼십 분 오 초","expected_spans":[{"surface":"14:30:05","semantic_type":"TIME"}]}
@@ -84,7 +84,7 @@
 {"id":"invalid-comma-leading-group","category":"invalid-input","text":"1234,567","expected":"1234,567","default_language":"en-US","expected_spans":[{"surface":"1234,567","semantic_type":"TEXT"}]}
 {"id":"invalid-nonleap-date","category":"invalid-input","text":"2026-02-29","expected":"2026-02-29","default_language":"en-US","expected_spans":[{"surface":"2026-02-29","semantic_type":"TEXT"}]}
 {"id":"invalid-month-out-of-range","category":"invalid-input","text":"2026-13-01","expected":"2026-13-01","default_language":"en-US","expected_spans":[{"surface":"2026-13-01","semantic_type":"TEXT"}]}
-{"id":"invalid-hour-out-of-range","category":"invalid-input","text":"24:00","expected":"24:00","default_language":"en-US","expected_spans":[{"surface":"24:00","semantic_type":"TEXT"}]}
+{"id":"invalid-hour-out-of-range","category":"unsupported/date-time","text":"24:00","expected":"24:00","default_language":"en-US","expected_spans":[{"surface":"24:00","semantic_type":"TEXT"}],"notes":"24:00 is a valid end-of-day convention in some systems, unsupported by the current grammar. Original spelling is deliberately retained."}
 {"id":"invalid-minute-out-of-range","category":"invalid-input","text":"12:60","expected":"12:60","default_language":"en-US","expected_spans":[{"surface":"12:60","semantic_type":"TEXT"}]}
 {"id":"invalid-second-out-of-range","category":"invalid-input","text":"12:30:60","expected":"12:30:60","default_language":"en-US","expected_spans":[{"surface":"12:30:60","semantic_type":"TEXT"}]}
 {"id":"invalid-zero-denominator","category":"invalid-input","text":"1/0","expected":"1/0","default_language":"en-US","expected_spans":[{"surface":"1/0","semantic_type":"TEXT"}]}
@@ -104,6 +104,6 @@
 {"id":"email-protection","category":"protected-syntax","text":"support@example.com","expected":"support@example.com","default_language":"en-US","expected_spans":[{"surface":"support@example.com","semantic_type":"EMAIL"}]}
 {"id":"version-protection","category":"protected-syntax","text":"2.1.3","expected":"2.1.3","expected_spans":[{"surface":"2.1.3","semantic_type":"VERSION"}]}
 {"id":"ip-protection","category":"protected-syntax","text":"192.168.0.1","expected":"192.168.0.1","expected_spans":[{"surface":"192.168.0.1","semantic_type":"IP_ADDRESS"}]}
-{"id":"range-default","category":"domain","text":"123-456","expected":"백이십삼 다시 사백오십육","expected_spans":[{"surface":"123-456","semantic_type":"RANGE"}]}
+{"id":"range-default","category":"domain","text":"123-456","expected":"백이십삼에서 사백오십육","expected_spans":[{"surface":"123-456","semantic_type":"RANGE"}]}
 {"id":"range-finance","category":"domain","text":"123-456","expected":"일이삼 사오육","expected_spans":[{"surface":"123-456","semantic_type":"RANGE"}],"resource_overrides":[{"layer":"domain","path":"domains/finance/ko-KR/rules.tsv"}]}
 {"id":"range-customer","category":"customer","text":"123-456","expected":"일이삼 번에 사오육","expected_spans":[{"surface":"123-456","semantic_type":"RANGE"}],"resource_overrides":[{"layer":"domain","path":"domains/finance/ko-KR/rules.tsv"},{"layer":"customer","path":"customers/example/ko-KR/rules.tsv"}]}

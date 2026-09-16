@@ -95,7 +95,7 @@ static void extend_cue_range(const ttf_engine_t *e, const char *s, size_t n, siz
    interval. Keep its following whitespace pending without consulting future
    bytes, so tiny phrase targets cannot make chunk boundaries change the IR.
    Reuse pack classification over a bounded prefix; the core knows no unit or
-   language spelling. Counters retain their existing phrase behavior. */
+   language spelling. Counter and clock endpoints need the same lookahead. */
 static int quantity_before_space(const ttf_engine_t *e, const char *s,
                                  const ttf_token_t *tokens, size_t index, size_t end) {
     size_t j = index, pack;
@@ -128,6 +128,7 @@ static int quantity_before_space(const ttf_engine_t *e, const char *s,
         }
         return best.input_end == end &&
                (best.type == TTF_SEM_CURRENCY || best.type == TTF_SEM_PERCENT ||
+                best.type == TTF_SEM_COUNTER || best.type == TTF_SEM_TIME ||
                 best.type == TTF_SEM_MEASURE ||
                 (best.type == TTF_SEM_RANGE && best.unit[0]));
     }

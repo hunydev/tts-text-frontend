@@ -57,7 +57,8 @@
           <label class="sr-only" for="sample">예제 선택</label
           ><select id="sample">
             <option value="">예제 불러오기</option></select
-          ><label class="sr-only" for="source">입력 텍스트</label
+          ><p id="sample-review" class="small">예제의 기준 분류를 확인할 수 있습니다.</p>
+          <label class="sr-only" for="source">입력 텍스트</label
           ><textarea
             id="source"
             spellcheck="false"
@@ -69,6 +70,7 @@
           </div>
           <details id="expected-details">
             <summary>기대 출력과 비교</summary>
+            <p class="small">일치는 지정한 기대값과 같다는 뜻입니다. 발음·표현의 독립 검토 완료를 뜻하지 않습니다.</p>
             <label for="expected-enabled" class="check"
               ><input id="expected-enabled" type="checkbox" />정확한 텍스트 일치
               검사</label
@@ -101,7 +103,7 @@
       </section>
       <section id="corpus-panel" class="panel" hidden>
         <div class="panel-heading">
-          <h2>고정 정답 코퍼스 <span>Regression</span></h2>
+          <h2>기대 출력 코퍼스 <span>Regression</span></h2>
           <div>
             <span class="badge muted">합성 개발 데이터</span
             ><button id="corpus-download" class="text-button" disabled>
@@ -110,17 +112,20 @@
           </div>
         </div>
         <p>
-          등록된 예문의 출력·메타데이터·청크 일치성을 함께 검사합니다. 이 결과는
-          실제 고객 입력의 정확도 지표가 아닙니다.
+          개발자가 작성한 기대 출력·메타데이터·청크 일치성을 함께 검사합니다.
+          발음 임시값과 보존 계약을 구분하며, 통과 건수는 언어 품질 승인 건수가 아닙니다.
         </p>
+        <p id="reference-summary" class="small"></p>
         <label for="corpus">검증 세트</label
         ><select id="corpus"></select>
+        <p id="corpus-review" class="small"></p>
         <p class="small">
           코퍼스에는 각 예문의 고정 언어·리소스 설정이 적용됩니다. 아래 실험
           설정은 사용하지 않습니다.
         </p>
         <div id="corpus-progress" role="status"></div>
         <div id="corpus-results"></div>
+        <p><a href="https://github.com/hunydev/tts-text-frontend/blob/main/docs/resource-editing-guide.ko.md" target="_blank" rel="noopener">읽기 규칙·발음사전·기대 출력 수정 안내 ↗</a></p>
       </section>
       <div class="action-bar">
         <div>
@@ -305,6 +310,7 @@
         </details>
         <details>
           <summary>발음사전 / 고객 리소스 실험</summary>
+          <p class="small"><a href="https://github.com/hunydev/tts-text-frontend/blob/main/docs/resource-editing-guide.ko.md" target="_blank" rel="noopener">리소스 파일과 기대 출력 수정 방법 ↗</a></p>
           <div class="config-grid two">
             <label
               >사용자 발음사전<textarea

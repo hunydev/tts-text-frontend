@@ -1,0 +1,3639 @@
+{
+  "audit_kind": "agent linguistic/semantic reference audit, not human certification",
+  "revision": "ca1d7657af3e531cdd8ad1fb999afdffdc8deef5",
+  "date": "2026-09-16",
+  "scope": "All rows read; numeric/finance subset receives substantive numeric review. No engine-output comparison was used as correctness evidence.",
+  "files": [
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "sha256": "09792173bf5f387a08d78f15b6a3229eb3272786fcdac7450be859ae5946b841",
+      "records": 147,
+      "numeric_or_finance_records": 147
+    },
+    {
+      "path": "tests/evaluation/cases.jsonl",
+      "sha256": "4fdd5145c34f8dcd12d8f6c052e3c084de18f8fea846c09172229f018810b9f7",
+      "records": 109,
+      "numeric_or_finance_records": 93
+    },
+    {
+      "path": "tests/evaluation/domain_cases_v8.jsonl",
+      "sha256": "d3576fe172b36e5aff54c2dc564834337062e344617a640ee11c4c86ec5e0759",
+      "records": 60,
+      "numeric_or_finance_records": 51
+    },
+    {
+      "path": "tests/evaluation/advanced_cases.jsonl",
+      "sha256": "5c88870b780e2a10442dc159a1815af8a33d72acd0b39c6d4e0e554187b048e0",
+      "records": 30,
+      "numeric_or_finance_records": 27
+    },
+    {
+      "path": "tests/evaluation/finance_ranges_v7.jsonl",
+      "sha256": "844d5ba7eab0d542eb017cbb6523a128718605702b603ca53893a273eec36e0a",
+      "records": 24,
+      "numeric_or_finance_records": 24
+    }
+  ],
+  "total_records": 370,
+  "numeric_or_finance_records": 342,
+  "no_engine_execution": true,
+  "records": [
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 2,
+      "id": "line-2",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 3,
+      "id": "line-3",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 4,
+      "id": "line-4",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 5,
+      "id": "line-5",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 6,
+      "id": "line-6",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 7,
+      "id": "line-7",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 8,
+      "id": "line-8",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 9,
+      "id": "line-9",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 10,
+      "id": "line-10",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 11,
+      "id": "line-11",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 12,
+      "id": "line-12",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 13,
+      "id": "line-13",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 14,
+      "id": "line-14",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 15,
+      "id": "line-15",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 16,
+      "id": "line-16",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 17,
+      "id": "line-17",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 18,
+      "id": "line-18",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 19,
+      "id": "line-19",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 20,
+      "id": "line-20",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 21,
+      "id": "line-21",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 22,
+      "id": "line-22",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 23,
+      "id": "line-23",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 24,
+      "id": "line-24",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 25,
+      "id": "line-25",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 26,
+      "id": "line-26",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 27,
+      "id": "line-27",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 28,
+      "id": "line-28",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 29,
+      "id": "line-29",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 30,
+      "id": "line-30",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 31,
+      "id": "line-31",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 32,
+      "id": "line-32",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-04"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 35,
+      "id": "line-35",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 36,
+      "id": "line-36",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 37,
+      "id": "line-37",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 38,
+      "id": "line-38",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 39,
+      "id": "line-39",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 40,
+      "id": "line-40",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 41,
+      "id": "line-41",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 42,
+      "id": "line-42",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 43,
+      "id": "line-43",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 44,
+      "id": "line-44",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 45,
+      "id": "line-45",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 46,
+      "id": "line-46",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 47,
+      "id": "line-47",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 48,
+      "id": "line-48",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 49,
+      "id": "line-49",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 50,
+      "id": "line-50",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 51,
+      "id": "line-51",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 52,
+      "id": "line-52",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 53,
+      "id": "line-53",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 54,
+      "id": "line-54",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 55,
+      "id": "line-55",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-03"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 56,
+      "id": "line-56",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-03"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 57,
+      "id": "line-57",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 58,
+      "id": "line-58",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 59,
+      "id": "line-59",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-03"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 60,
+      "id": "line-60",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-03"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 61,
+      "id": "line-61",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 62,
+      "id": "line-62",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 63,
+      "id": "line-63",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 64,
+      "id": "line-64",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 65,
+      "id": "line-65",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 66,
+      "id": "line-66",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 67,
+      "id": "line-67",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 68,
+      "id": "line-68",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 69,
+      "id": "line-69",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 70,
+      "id": "line-70",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 71,
+      "id": "line-71",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 72,
+      "id": "line-72",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 73,
+      "id": "line-73",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 74,
+      "id": "line-74",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 75,
+      "id": "line-75",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 76,
+      "id": "line-76",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 77,
+      "id": "line-77",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 78,
+      "id": "line-78",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 79,
+      "id": "line-79",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 80,
+      "id": "line-80",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 81,
+      "id": "line-81",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 82,
+      "id": "line-82",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 85,
+      "id": "line-85",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-03"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 86,
+      "id": "line-86",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-03"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 87,
+      "id": "line-87",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 88,
+      "id": "line-88",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 89,
+      "id": "line-89",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 90,
+      "id": "line-90",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-05"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 91,
+      "id": "line-91",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 92,
+      "id": "line-92",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 93,
+      "id": "line-93",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 94,
+      "id": "line-94",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 95,
+      "id": "line-95",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 96,
+      "id": "line-96",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 97,
+      "id": "line-97",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 100,
+      "id": "line-100",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 101,
+      "id": "line-101",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 102,
+      "id": "line-102",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 103,
+      "id": "line-103",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 106,
+      "id": "line-106",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 107,
+      "id": "line-107",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 108,
+      "id": "line-108",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 109,
+      "id": "line-109",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 110,
+      "id": "line-110",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 111,
+      "id": "line-111",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 112,
+      "id": "line-112",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-11"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 113,
+      "id": "line-113",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 114,
+      "id": "line-114",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 115,
+      "id": "line-115",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 116,
+      "id": "line-116",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 117,
+      "id": "line-117",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 118,
+      "id": "line-118",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 119,
+      "id": "line-119",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 120,
+      "id": "line-120",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 121,
+      "id": "line-121",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 122,
+      "id": "line-122",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 123,
+      "id": "line-123",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 124,
+      "id": "line-124",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 125,
+      "id": "line-125",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 126,
+      "id": "line-126",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 127,
+      "id": "line-127",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 128,
+      "id": "line-128",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 129,
+      "id": "line-129",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 130,
+      "id": "line-130",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 131,
+      "id": "line-131",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 132,
+      "id": "line-132",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 133,
+      "id": "line-133",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 134,
+      "id": "line-134",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 135,
+      "id": "line-135",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 138,
+      "id": "line-138",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 139,
+      "id": "line-139",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 140,
+      "id": "line-140",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 141,
+      "id": "line-141",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 142,
+      "id": "line-142",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 143,
+      "id": "line-143",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 144,
+      "id": "line-144",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 145,
+      "id": "line-145",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 146,
+      "id": "line-146",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 147,
+      "id": "line-147",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 148,
+      "id": "line-148",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 149,
+      "id": "line-149",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 150,
+      "id": "line-150",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 151,
+      "id": "line-151",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 152,
+      "id": "line-152",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 153,
+      "id": "line-153",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 154,
+      "id": "line-154",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 155,
+      "id": "line-155",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 156,
+      "id": "line-156",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 159,
+      "id": "line-159",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 160,
+      "id": "line-160",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 1,
+      "id": "mixed-ordinal",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 2,
+      "id": "apple-ko",
+      "numeric_or_finance_relevant": false,
+      "findings": [],
+      "status": "screened_out_of_numeric_scope"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 3,
+      "id": "apple-en",
+      "numeric_or_finance_relevant": false,
+      "findings": [],
+      "status": "screened_out_of_numeric_scope"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 4,
+      "id": "gpu",
+      "numeric_or_finance_relevant": false,
+      "findings": [],
+      "status": "screened_out_of_numeric_scope"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 5,
+      "id": "openai",
+      "numeric_or_finance_relevant": false,
+      "findings": [],
+      "status": "screened_out_of_numeric_scope"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 6,
+      "id": "wifi",
+      "numeric_or_finance_relevant": false,
+      "findings": [],
+      "status": "screened_out_of_numeric_scope"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 7,
+      "id": "unknown-foobar",
+      "numeric_or_finance_relevant": false,
+      "findings": [],
+      "status": "screened_out_of_numeric_scope"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 8,
+      "id": "nasa",
+      "numeric_or_finance_relevant": false,
+      "findings": [],
+      "status": "screened_out_of_numeric_scope"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 9,
+      "id": "alnum-gpt4",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 10,
+      "id": "embedded-english",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 11,
+      "id": "currency-stream",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 12,
+      "id": "counter",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 13,
+      "id": "date-ko",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 14,
+      "id": "time-ko",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 15,
+      "id": "phone-ko",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 16,
+      "id": "percent-ko",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 17,
+      "id": "measure-ko",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 18,
+      "id": "ordinal-en",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 19,
+      "id": "date-en",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 20,
+      "id": "currency-en",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 21,
+      "id": "measure-en",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 22,
+      "id": "ko-number-zero",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 23,
+      "id": "ko-number-hundred-one",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 24,
+      "id": "ko-number-ten-thousand",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 25,
+      "id": "ko-number-hundred-million",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 26,
+      "id": "ko-number-negative-decimal",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 27,
+      "id": "ko-number-grouped",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 28,
+      "id": "ko-counter-27",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 29,
+      "id": "ko-counter-28",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 30,
+      "id": "ko-counter-29",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 31,
+      "id": "ko-counter-30",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 32,
+      "id": "ko-counter-31",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 33,
+      "id": "ko-counter-32",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 34,
+      "id": "ko-counter-33",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 35,
+      "id": "ko-counter-34",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 36,
+      "id": "ko-counter-35",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 37,
+      "id": "ko-counter-36",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 38,
+      "id": "ko-counter-37",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 39,
+      "id": "ko-counter-38",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 40,
+      "id": "ko-quantity-scale-won",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 41,
+      "id": "ko-quantity-scale-large",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 42,
+      "id": "ko-quantity-scale-negative",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 43,
+      "id": "ko-quantity-scale-spaced",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 44,
+      "id": "ko-quantity-won-prefix-spaced",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 45,
+      "id": "ko-quantity-percent-spaced",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 46,
+      "id": "ko-quantity-kg-spaced",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 47,
+      "id": "ko-quantity-gb-spaced",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 48,
+      "id": "ko-date-labelled",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-03"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 49,
+      "id": "ko-date-labelled-compact",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-03"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 50,
+      "id": "ko-date-spaced-dots",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 51,
+      "id": "ko-leap-date",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 52,
+      "id": "ko-time-seconds",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 53,
+      "id": "ko-fraction-half",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 54,
+      "id": "ko-fraction-negative-half",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 55,
+      "id": "ko-fraction-third",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 56,
+      "id": "en-number-twelve",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 57,
+      "id": "en-number-hundred-one",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 58,
+      "id": "en-number-million",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 59,
+      "id": "en-number-negative-decimal",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 60,
+      "id": "en-ordinal-2nd",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 61,
+      "id": "en-ordinal-3rd",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 62,
+      "id": "en-ordinal-4th",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 63,
+      "id": "en-ordinal-11th",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 64,
+      "id": "en-ordinal-12th",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 65,
+      "id": "en-ordinal-13th",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 66,
+      "id": "en-ordinal-21st",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 67,
+      "id": "en-ordinal-22nd",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 68,
+      "id": "en-ordinal-23rd",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 69,
+      "id": "en-ordinal-101st",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 70,
+      "id": "en-quantity-kg-spaced",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 71,
+      "id": "en-quantity-dollar-spaced",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 72,
+      "id": "en-quantity-percent-spaced",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 73,
+      "id": "en-quantity-decimal-singular-unit",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 74,
+      "id": "en-half",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 75,
+      "id": "en-negative-fraction",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 76,
+      "id": "en-time-seconds",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 77,
+      "id": "en-time-singular-second",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-09"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 78,
+      "id": "en-leap-date",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 79,
+      "id": "invalid-ordinal-11",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 80,
+      "id": "invalid-ordinal-12",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 81,
+      "id": "invalid-ordinal-13",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 82,
+      "id": "invalid-ordinal-21",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 83,
+      "id": "invalid-comma-group",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 84,
+      "id": "invalid-comma-leading-group",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 85,
+      "id": "invalid-nonleap-date",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 86,
+      "id": "invalid-month-out-of-range",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 87,
+      "id": "invalid-hour-out-of-range",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-08"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 88,
+      "id": "invalid-minute-out-of-range",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 89,
+      "id": "invalid-second-out-of-range",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 90,
+      "id": "invalid-zero-denominator",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 91,
+      "id": "invalid-unit-prefix-only",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 92,
+      "id": "invalid-ko-date",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 93,
+      "id": "foreign-api",
+      "numeric_or_finance_relevant": false,
+      "findings": [],
+      "status": "screened_out_of_numeric_scope"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 94,
+      "id": "foreign-coffee",
+      "numeric_or_finance_relevant": false,
+      "findings": [],
+      "status": "screened_out_of_numeric_scope"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 95,
+      "id": "foreign-chrome",
+      "numeric_or_finance_relevant": false,
+      "findings": [],
+      "status": "screened_out_of_numeric_scope"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 96,
+      "id": "foreign-docker",
+      "numeric_or_finance_relevant": false,
+      "findings": [],
+      "status": "screened_out_of_numeric_scope"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 97,
+      "id": "foreign-json",
+      "numeric_or_finance_relevant": false,
+      "findings": [],
+      "status": "screened_out_of_numeric_scope"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 98,
+      "id": "quoted-english",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 99,
+      "id": "compound-ordinal-ko",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 100,
+      "id": "empty-input",
+      "numeric_or_finance_relevant": false,
+      "findings": [],
+      "status": "screened_out_of_numeric_scope"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 101,
+      "id": "whitespace-preservation",
+      "numeric_or_finance_relevant": false,
+      "findings": [],
+      "status": "screened_out_of_numeric_scope"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 102,
+      "id": "crlf-preservation",
+      "numeric_or_finance_relevant": false,
+      "findings": [],
+      "status": "screened_out_of_numeric_scope"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 103,
+      "id": "url-protection",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 104,
+      "id": "email-protection",
+      "numeric_or_finance_relevant": false,
+      "findings": [],
+      "status": "screened_out_of_numeric_scope"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 105,
+      "id": "version-protection",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 106,
+      "id": "ip-protection",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 107,
+      "id": "range-default",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-04"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 108,
+      "id": "range-finance",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-04"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/evaluation/cases.jsonl",
+      "line": 109,
+      "id": "range-customer",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-04"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 1,
+      "id": "finance-contract-compound",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 2,
+      "id": "finance-refund-compound",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 3,
+      "id": "finance-negative-adjustment",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 4,
+      "id": "finance-spaced-compound",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 5,
+      "id": "finance-decimal-component",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 6,
+      "id": "finance-large-budget",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 7,
+      "id": "finance-fee-and-rate",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 8,
+      "id": "finance-decimal-man",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 9,
+      "id": "finance-exact-small-scale",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 10,
+      "id": "finance-remaining-balance",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 11,
+      "id": "finance-symbol-currency",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 12,
+      "id": "finance-fraction-share",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 13,
+      "id": "finance-negative-rate",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 14,
+      "id": "finance-maturity-date",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-03"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 15,
+      "id": "finance-payment-deadline",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 16,
+      "id": "finance-transaction-time",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 17,
+      "id": "finance-contact-phone",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 18,
+      "id": "finance-installment-months",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 19,
+      "id": "finance-customer-count",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 20,
+      "id": "finance-english-invoice",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 21,
+      "id": "finance-english-rate",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 22,
+      "id": "finance-english-date",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 23,
+      "id": "finance-english-order",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 24,
+      "id": "finance-malformed-grouping",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 25,
+      "id": "finance-impossible-date",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 26,
+      "id": "finance-repeated-scale",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 27,
+      "id": "finance-ascending-scale",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 28,
+      "id": "finance-domain-reference",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 29,
+      "id": "finance-customer-reference",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 30,
+      "id": "finance-range-default",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-01"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 31,
+      "id": "content-product-watch",
+      "numeric_or_finance_relevant": false,
+      "findings": [],
+      "status": "screened_out_of_numeric_scope"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 32,
+      "id": "content-product-nounphrase",
+      "numeric_or_finance_relevant": false,
+      "findings": [],
+      "status": "screened_out_of_numeric_scope"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 33,
+      "id": "content-script-clause",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 34,
+      "id": "content-script-quote",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 35,
+      "id": "content-title-ordinal",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 36,
+      "id": "content-comparison-initialisms",
+      "numeric_or_finance_relevant": false,
+      "findings": [],
+      "status": "screened_out_of_numeric_scope"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 37,
+      "id": "content-tool-brand",
+      "numeric_or_finance_relevant": false,
+      "findings": [],
+      "status": "screened_out_of_numeric_scope"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 38,
+      "id": "content-complete-clause",
+      "numeric_or_finance_relevant": false,
+      "findings": [],
+      "status": "screened_out_of_numeric_scope"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 39,
+      "id": "content-storage-demo",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 40,
+      "id": "content-video-duration",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 41,
+      "id": "content-release-day",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 42,
+      "id": "content-discount-price",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 43,
+      "id": "content-recipe",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 44,
+      "id": "content-temperature",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-05"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 45,
+      "id": "content-chapter-card",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 46,
+      "id": "content-english-promo",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 47,
+      "id": "content-english-specification",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 48,
+      "id": "content-english-fraction",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 49,
+      "id": "technical-backup-nounphrase",
+      "numeric_or_finance_relevant": false,
+      "findings": [],
+      "status": "screened_out_of_numeric_scope"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 50,
+      "id": "technical-cloud-counter",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 51,
+      "id": "technical-language-term",
+      "numeric_or_finance_relevant": false,
+      "findings": [],
+      "status": "screened_out_of_numeric_scope"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 52,
+      "id": "technical-clock-measure",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 53,
+      "id": "technical-version-ip",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 54,
+      "id": "technical-url",
+      "numeric_or_finance_relevant": false,
+      "findings": [],
+      "status": "screened_out_of_numeric_scope"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 55,
+      "id": "customer-email",
+      "numeric_or_finance_relevant": false,
+      "findings": [],
+      "status": "screened_out_of_numeric_scope"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 56,
+      "id": "customer-phone",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 57,
+      "id": "customer-appointment",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-03"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 58,
+      "id": "customer-wifi-help",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 59,
+      "id": "customer-bilingual-floor",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/domain_cases_v8.jsonl",
+      "line": 60,
+      "id": "customer-english-parcel",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/advanced_cases.jsonl",
+      "line": 1,
+      "id": "advanced-finance-account",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/advanced_cases.jsonl",
+      "line": 2,
+      "id": "advanced-finance-reference",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/advanced_cases.jsonl",
+      "line": 3,
+      "id": "advanced-finance-basis-points",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/advanced_cases.jsonl",
+      "line": 4,
+      "id": "advanced-finance-percentage-point",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/advanced_cases.jsonl",
+      "line": 5,
+      "id": "advanced-finance-scientific",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/advanced_cases.jsonl",
+      "line": 6,
+      "id": "advanced-finance-decimal-range",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-01"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/evaluation/advanced_cases.jsonl",
+      "line": 7,
+      "id": "advanced-finance-negated-rate",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/advanced_cases.jsonl",
+      "line": 8,
+      "id": "advanced-finance-large-final-group",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/advanced_cases.jsonl",
+      "line": 9,
+      "id": "advanced-content-contraction",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/advanced_cases.jsonl",
+      "line": 10,
+      "id": "advanced-content-hyphenated",
+      "numeric_or_finance_relevant": false,
+      "findings": [],
+      "status": "screened_out_of_numeric_scope"
+    },
+    {
+      "file": "tests/evaluation/advanced_cases.jsonl",
+      "line": 11,
+      "id": "advanced-content-unknown-word",
+      "numeric_or_finance_relevant": false,
+      "findings": [],
+      "status": "screened_out_of_numeric_scope"
+    },
+    {
+      "file": "tests/evaluation/advanced_cases.jsonl",
+      "line": 12,
+      "id": "advanced-content-mixed-title",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/advanced_cases.jsonl",
+      "line": 13,
+      "id": "advanced-content-english-clock",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/advanced_cases.jsonl",
+      "line": 14,
+      "id": "advanced-account-short",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/advanced_cases.jsonl",
+      "line": 15,
+      "id": "advanced-reference-colon",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/advanced_cases.jsonl",
+      "line": 16,
+      "id": "advanced-unlabeled-cardinal",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/advanced_cases.jsonl",
+      "line": 17,
+      "id": "advanced-quantity-after-label",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/advanced_cases.jsonl",
+      "line": 18,
+      "id": "advanced-bare-identifier-ambiguous",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/advanced_cases.jsonl",
+      "line": 19,
+      "id": "advanced-rate-versus-point",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/advanced_cases.jsonl",
+      "line": 20,
+      "id": "advanced-basis-decimal",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/advanced_cases.jsonl",
+      "line": 21,
+      "id": "advanced-scientific-small",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/advanced_cases.jsonl",
+      "line": 22,
+      "id": "advanced-scientific-negative",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/advanced_cases.jsonl",
+      "line": 23,
+      "id": "advanced-scientific-invalid",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/advanced_cases.jsonl",
+      "line": 24,
+      "id": "advanced-measure-range",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-01"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/evaluation/advanced_cases.jsonl",
+      "line": 25,
+      "id": "advanced-english-basis",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/advanced_cases.jsonl",
+      "line": 26,
+      "id": "advanced-english-point",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/advanced_cases.jsonl",
+      "line": 27,
+      "id": "advanced-english-range",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/advanced_cases.jsonl",
+      "line": 28,
+      "id": "advanced-title-versus-loanword",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/advanced_cases.jsonl",
+      "line": 29,
+      "id": "advanced-hyphen-english",
+      "numeric_or_finance_relevant": false,
+      "findings": [],
+      "status": "screened_out_of_numeric_scope"
+    },
+    {
+      "file": "tests/evaluation/advanced_cases.jsonl",
+      "line": 30,
+      "id": "advanced-clock-pm",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/finance_ranges_v7.jsonl",
+      "line": 1,
+      "id": "range-krw",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-01"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/evaluation/finance_ranges_v7.jsonl",
+      "line": 2,
+      "id": "range-scaled-krw",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-01"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/evaluation/finance_ranges_v7.jsonl",
+      "line": 3,
+      "id": "range-scaled-mixed",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-01"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/evaluation/finance_ranges_v7.jsonl",
+      "line": 4,
+      "id": "range-scaled-second",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-01"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/evaluation/finance_ranges_v7.jsonl",
+      "line": 5,
+      "id": "range-scaled-decimal",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-01"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/evaluation/finance_ranges_v7.jsonl",
+      "line": 6,
+      "id": "range-scaled-spaces",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-01"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/evaluation/finance_ranges_v7.jsonl",
+      "line": 7,
+      "id": "range-prefixed-krw",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-01"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/evaluation/finance_ranges_v7.jsonl",
+      "line": 8,
+      "id": "range-dollars-ko",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-01"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/evaluation/finance_ranges_v7.jsonl",
+      "line": 9,
+      "id": "range-dollars-en",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/finance_ranges_v7.jsonl",
+      "line": 10,
+      "id": "range-dollar-decimals",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-10"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/evaluation/finance_ranges_v7.jsonl",
+      "line": 11,
+      "id": "range-rate",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-01",
+        "NUM-02"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/evaluation/finance_ranges_v7.jsonl",
+      "line": 12,
+      "id": "range-rate-spaces",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-01",
+        "NUM-02"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/evaluation/finance_ranges_v7.jsonl",
+      "line": 13,
+      "id": "range-rate-en",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/finance_ranges_v7.jsonl",
+      "line": 14,
+      "id": "range-negative-rate",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-01",
+        "NUM-02"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/evaluation/finance_ranges_v7.jsonl",
+      "line": 15,
+      "id": "range-bp",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-01",
+        "NUM-02"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/evaluation/finance_ranges_v7.jsonl",
+      "line": 16,
+      "id": "range-pp",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-01",
+        "NUM-02"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/evaluation/finance_ranges_v7.jsonl",
+      "line": 17,
+      "id": "range-pp-en",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/finance_ranges_v7.jsonl",
+      "line": 18,
+      "id": "range-kg",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-01",
+        "NUM-02"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/evaluation/finance_ranges_v7.jsonl",
+      "line": 19,
+      "id": "range-kg-en",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/finance_ranges_v7.jsonl",
+      "line": 20,
+      "id": "range-scientific",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-01"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/evaluation/finance_ranges_v7.jsonl",
+      "line": 21,
+      "id": "range-mismatch-currency",
+      "numeric_or_finance_relevant": true,
+      "findings": [],
+      "status": "reviewed_no_additional_specific_issue_detected"
+    },
+    {
+      "file": "tests/evaluation/finance_ranges_v7.jsonl",
+      "line": 22,
+      "id": "range-mismatch-units",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-02"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/evaluation/finance_ranges_v7.jsonl",
+      "line": 23,
+      "id": "range-mismatch-rate",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-02"
+      ],
+      "status": "findings_listed"
+    },
+    {
+      "file": "tests/evaluation/finance_ranges_v7.jsonl",
+      "line": 24,
+      "id": "range-mismatch-scale",
+      "numeric_or_finance_relevant": true,
+      "findings": [
+        "NUM-02"
+      ],
+      "status": "findings_listed"
+    }
+  ],
+  "independent_arithmetic_subset": [
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 2,
+      "input": "0",
+      "expected": "영",
+      "input_decimal": "0",
+      "spoken_decimal": "0",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 3,
+      "input": "1",
+      "expected": "일",
+      "input_decimal": "1",
+      "spoken_decimal": "1",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 4,
+      "input": "10",
+      "expected": "십",
+      "input_decimal": "10",
+      "spoken_decimal": "10",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 5,
+      "input": "11",
+      "expected": "십일",
+      "input_decimal": "11",
+      "spoken_decimal": "11",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 6,
+      "input": "100",
+      "expected": "백",
+      "input_decimal": "100",
+      "spoken_decimal": "100",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 7,
+      "input": "101",
+      "expected": "백일",
+      "input_decimal": "101",
+      "spoken_decimal": "101",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 8,
+      "input": "1000",
+      "expected": "천",
+      "input_decimal": "1000",
+      "spoken_decimal": "1000",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 9,
+      "input": "10000",
+      "expected": "만",
+      "input_decimal": "10000",
+      "spoken_decimal": "10000",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 10,
+      "input": "100000000",
+      "expected": "일억",
+      "input_decimal": "100000000",
+      "spoken_decimal": "100000000",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 17,
+      "input": "3원",
+      "expected": "삼 원",
+      "input_decimal": "3",
+      "spoken_decimal": "3",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 22,
+      "input": "12,500원",
+      "expected": "만이천오백 원",
+      "input_decimal": "12500",
+      "spoken_decimal": "12500",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 23,
+      "input": "₩12,500",
+      "expected": "만이천오백 원",
+      "input_decimal": "12500",
+      "spoken_decimal": "12500",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 24,
+      "input": "12%",
+      "expected": "십이 퍼센트",
+      "input_decimal": "12",
+      "spoken_decimal": "12",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 25,
+      "input": "12.5%",
+      "expected": "십이 점 오 퍼센트",
+      "input_decimal": "12.5",
+      "spoken_decimal": "12.5",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 26,
+      "input": "3kg",
+      "expected": "삼 킬로그램",
+      "input_decimal": "3",
+      "spoken_decimal": "3",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 39,
+      "input": "100명",
+      "expected": "백 명",
+      "input_decimal": "100",
+      "spoken_decimal": "100",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 53,
+      "input": "3 kg",
+      "expected": "삼 킬로그램",
+      "input_decimal": "3",
+      "spoken_decimal": "3",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 54,
+      "input": "12,500 원",
+      "expected": "만이천오백 원",
+      "input_decimal": "12500",
+      "spoken_decimal": "12500",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 68,
+      "input": "3.5만원",
+      "expected": "삼만오천 원",
+      "input_decimal": "35000.0",
+      "spoken_decimal": "35000",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 70,
+      "input": "1.25억원",
+      "expected": "일억이천오백만 원",
+      "input_decimal": "125000000.00",
+      "spoken_decimal": "125000000",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 71,
+      "input": "12,500만원",
+      "expected": "일억이천오백만 원",
+      "input_decimal": "125000000",
+      "spoken_decimal": "125000000",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 72,
+      "input": "3천만 원",
+      "expected": "삼천만 원",
+      "input_decimal": "30000000",
+      "spoken_decimal": "30000000",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 73,
+      "input": "2억명",
+      "expected": "이억 명",
+      "input_decimal": "200000000",
+      "spoken_decimal": "200000000",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 74,
+      "input": "3.5만",
+      "expected": "삼만오천",
+      "input_decimal": "35000.0",
+      "spoken_decimal": "35000",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 75,
+      "input": "-0.25만원",
+      "expected": "마이너스 이천오백 원",
+      "input_decimal": "-2500.00",
+      "spoken_decimal": "-2500",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 76,
+      "input": "1.001만원",
+      "expected": "만십 원",
+      "input_decimal": "10010.000",
+      "spoken_decimal": "10010",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 77,
+      "input": "2조원",
+      "expected": "이조 원",
+      "input_decimal": "2000000000000",
+      "spoken_decimal": "2000000000000",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 78,
+      "input": "1.00001만원",
+      "expected": "만 점 일 원",
+      "input_decimal": "10000.10000",
+      "spoken_decimal": "10000.1",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 79,
+      "input": "0.005억원",
+      "expected": "오십만 원",
+      "input_decimal": "500000.000",
+      "spoken_decimal": "500000",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 80,
+      "input": "-3.5",
+      "expected": "마이너스 삼 점 오",
+      "input_decimal": "-3.5",
+      "spoken_decimal": "-3.5",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 81,
+      "input": "1,234,567.89",
+      "expected": "백이십삼만사천오백육십칠 점 팔구",
+      "input_decimal": "1234567.89",
+      "spoken_decimal": "1234567.89",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 82,
+      "input": "00010",
+      "expected": "십",
+      "input_decimal": "10",
+      "spoken_decimal": "10",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 106,
+      "input": "1억2천3백만원",
+      "expected": "일억이천삼백만 원",
+      "input_decimal": "123000000",
+      "spoken_decimal": "123000000",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 107,
+      "input": "1억 2,500만원",
+      "expected": "일억이천오백만 원",
+      "input_decimal": "125000000",
+      "spoken_decimal": "125000000",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 108,
+      "input": "1 억 2 천 3 백 만 원",
+      "expected": "일억이천삼백만 원",
+      "input_decimal": "123000000",
+      "spoken_decimal": "123000000",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 109,
+      "input": "2조3억4만원",
+      "expected": "이조삼억사만 원",
+      "input_decimal": "2000300040000",
+      "spoken_decimal": "2000300040000",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 110,
+      "input": "2만5천원",
+      "expected": "이만오천 원",
+      "input_decimal": "25000",
+      "spoken_decimal": "25000",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 111,
+      "input": "-1억2천만원",
+      "expected": "마이너스 일억이천만 원",
+      "input_decimal": "-120000000",
+      "spoken_decimal": "-120000000",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 112,
+      "input": "+1억2천만원",
+      "expected": "일억이천만 원",
+      "input_decimal": "120000000",
+      "spoken_decimal": "120000000",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 113,
+      "input": "1억2.5천만원",
+      "expected": "일억이천오백만 원",
+      "input_decimal": "125000000.0",
+      "spoken_decimal": "125000000",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 114,
+      "input": "₩1억2천만원",
+      "expected": "일억이천만 원",
+      "input_decimal": "120000000",
+      "spoken_decimal": "120000000",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 115,
+      "input": "₩ 1억 2천만",
+      "expected": "일억이천만 원",
+      "input_decimal": "120000000",
+      "spoken_decimal": "120000000",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 116,
+      "input": "1억2천3백4십5만6천7백8십9원",
+      "expected": "일억이천삼백사십오만육천칠백팔십구 원",
+      "input_decimal": "123456789",
+      "spoken_decimal": "123456789",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 117,
+      "input": "1조2천3백45억6천7백89만1234원",
+      "expected": "일조이천삼백사십오억육천칠백팔십구만천이백삼십사 원",
+      "input_decimal": "1234567891234",
+      "spoken_decimal": "1234567891234",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 118,
+      "input": "1천2백3십4.5원",
+      "expected": "천이백삼십사 점 오 원",
+      "input_decimal": "1234.5",
+      "spoken_decimal": "1234.5",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 119,
+      "input": "1백20만원",
+      "expected": "백이십만 원",
+      "input_decimal": "1200000",
+      "spoken_decimal": "1200000",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 120,
+      "input": "1억9999만원",
+      "expected": "일억구천구백구십구만 원",
+      "input_decimal": "199990000",
+      "spoken_decimal": "199990000",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 121,
+      "input": "1억0만0원",
+      "expected": "일억 원",
+      "input_decimal": "100000000",
+      "spoken_decimal": "100000000",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 122,
+      "input": "1억0.00001만원",
+      "expected": "일억 점 일 원",
+      "input_decimal": "100000000.10000",
+      "spoken_decimal": "100000000.1",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 123,
+      "input": "0.00000001억원",
+      "expected": "일 원",
+      "input_decimal": "1.00000000",
+      "spoken_decimal": "1",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 124,
+      "input": "9.9999999999억원",
+      "expected": "구억구천구백구십구만구천구백구십구 점 구구 원",
+      "input_decimal": "999999999.9900000000",
+      "spoken_decimal": "999999999.99",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 125,
+      "input": "-0.00001만원",
+      "expected": "마이너스 영 점 일 원",
+      "input_decimal": "-0.10000",
+      "spoken_decimal": "-0.1",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 126,
+      "input": "0억0만원",
+      "expected": "영 원",
+      "input_decimal": "0",
+      "spoken_decimal": "0",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 127,
+      "input": "3십만원",
+      "expected": "삼십만 원",
+      "input_decimal": "300000",
+      "spoken_decimal": "300000",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 128,
+      "input": "2십억원",
+      "expected": "이십억 원",
+      "input_decimal": "2000000000",
+      "spoken_decimal": "2000000000",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 129,
+      "input": "1백만원",
+      "expected": "백만 원",
+      "input_decimal": "1000000",
+      "spoken_decimal": "1000000",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 130,
+      "input": "1경2조3억4만원",
+      "expected": "일경이조삼억사만 원",
+      "input_decimal": "10002000300040000",
+      "spoken_decimal": "10002000300040000",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 133,
+      "input": "1만2천명",
+      "expected": "만이천 명",
+      "input_decimal": "12000",
+      "spoken_decimal": "12000",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 134,
+      "input": "1만2천kg",
+      "expected": "만이천 킬로그램",
+      "input_decimal": "12000",
+      "spoken_decimal": "12000",
+      "equal": true
+    },
+    {
+      "file": "tests/golden/ko/cases.tsv",
+      "line": 135,
+      "input": "$1억2천만",
+      "expected": "일억이천만 달러",
+      "input_decimal": "120000000",
+      "spoken_decimal": "120000000",
+      "equal": true
+    }
+  ],
+  "limitations": [
+    "Not independent human annotation or production accuracy measurement.",
+    "No synthesized speech was generated or evaluated.",
+    "No automatic claim that unflagged references are universally correct.",
+    "Findings apply to the named commit; later corrected corpus versions must retain provenance."
+  ]
+}

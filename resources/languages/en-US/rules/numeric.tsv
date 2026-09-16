@@ -191,3 +191,8 @@ meridiem	en-US	PM	p m
 # Delimiters for repeated explicit quantity units.
 quantity_range_separator	*	-	1
 quantity_range_separator	*	~	1
+
+# Clock text policy: midnight and full 24-hour values above twelve.
+clock	en-US	midnight	midnight
+clock	en-US	after	after
+clock	en-US	h24_full_hour	hundred hours

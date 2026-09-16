@@ -25,6 +25,28 @@ WiFi를 사용합니다.           → 와이파이를 사용합니다.
 `Apple → 애플` is pronunciation rendering. Source, context and render languages
 remain distinct in the semantic IR and output metadata.
 
+## Range readings and reference review (v0.9)
+
+```text
+1~2          → 일에서 이
+1시~2시      → 한 시에서 두 시
+1~2개        → 한 개에서 두 개
+1~2만 원     → 만 원에서 이만 원
+1.5%~2.5%    → 일 점 오 퍼센트에서 이 점 오 퍼센트
+~            → 물결
+```
+
+Range meanings are distinct from separator symbols and identifiers. Both range
+endpoints keep their units; counter resources choose native or Sino-Korean numbers.
+See the [Korean resource editing guide](docs/resource-editing-guide.ko.md) to change
+`에서` to `부터 … 까지`, unit labels, or pronunciation lexicons without rebuilding C.
+
+The v0.9 audit corrects erroneous range, month and midnight references as well as
+malformed example particles. Corpus passes mean **conformance to expected text**;
+they do not certify linguistic correctness. All fixtures carry review classifications;
+independent human approval has not been claimed. See [reference changes](docs/audit/reference-corrections-0.9.0.json),
+[audit reports](docs/audit/numeric-reference-audit.md), and [validation](docs/validation.md).
+
 ## Web testing workbench
 
 `tools/web/` provides a Korean web UI backed by the actual C shared library:

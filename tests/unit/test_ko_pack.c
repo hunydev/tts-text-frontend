@@ -72,10 +72,10 @@ int main(int argc, char **argv) {
     expect_semantic(engine, TTF_SEM_COUNTER, "100", "", "개", "백 개");
     expect_semantic(engine, TTF_SEM_TIME, "09:05", "", "", "아홉 시 오 분");
     expect_semantic(engine, TTF_SEM_TIME, "14:30", "", "", "열네 시 삼십 분");
-    expect_semantic(engine, TTF_SEM_DATE, "2026-06-10", "", "", "이천이십육 년 유 월 십 일");
-    expect_semantic(engine, TTF_SEM_DATE, "2026-10-16", "", "", "이천이십육 년 시 월 십육 일");
+    expect_semantic(engine, TTF_SEM_DATE, "2026-06-10", "", "", "이천이십육 년 유월 십 일");
+    expect_semantic(engine, TTF_SEM_DATE, "2026-10-16", "", "", "이천이십육 년 시월 십육 일");
     expect_semantic(engine, TTF_SEM_PHONE, "010-1234-5678", "", "", "공일공 일이삼사 오육칠팔");
-    expect_semantic(engine, TTF_SEM_RANGE, "123", "456", "", "백이십삼 다시 사백오십육");
+    expect_semantic(engine, TTF_SEM_RANGE, "123", "456", "", "백이십삼에서 사백오십육");
     expect_phones(engine, "F UW B AA R", "푸바");
     expect_phones(engine, "W AY F AY", "와이파이");
     expect_phones(engine, "letter.C letter.P letter.U", "씨피유");

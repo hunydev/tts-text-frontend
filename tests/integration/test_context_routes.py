@@ -42,7 +42,7 @@ cases = [
      [("-3.5%", "en-US", "minus three point five percent", "und")]),
     ("₩12,500 is the price.", "twelve thousand five hundred won is the price.",
      [("₩12,500", "en-US", "twelve thousand five hundred won", "und")]),
-    ("32 °C", "삼십이 도", [("32 °C", "ko-KR", "삼십이 도", "und")]),
+    ("32 °C", "섭씨 삼십이 도", [("32 °C", "ko-KR", "섭씨 삼십이 도", "und")]),
     ("32 °C is the temperature.", "thirty two degrees Celsius is the temperature.",
      [("32 °C", "en-US", "thirty two degrees Celsius", "und")]),
 ]

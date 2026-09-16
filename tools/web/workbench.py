@@ -2,6 +2,7 @@
 
 import json
 import re
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -154,8 +155,40 @@ def version():
     ).group(1)
 
 
+def reference_audit():
+    """Read the review inventory; engine agreement never supplies approval."""
+    directory = str(ROOT / "tools/evaluation")
+    if directory not in sys.path:
+        sys.path.insert(0, directory)
+    from audit_references import audit
+
+    return audit(ROOT)
+
+
+def reference_case_reviews(report, corpus_key):
+    relative = corpus_path(corpus_key).relative_to(ROOT).as_posix()
+    return {row["id"]: row for row in report["cases"] if row["path"] == relative}
+
+
 def catalog():
+    audit = reference_audit()
+    reviewed_files = {row["path"]: row for row in audit["files"]}
+    reviewed_cases = {(row["path"], row["id"]): row for row in audit["cases"]}
     samples = [
+        dict(
+            id="amount-range",
+            category="금융",
+            title="금액 범위와 생략된 단위",
+            text="1~2만 원",
+            expected="만 원에서 이만 원",
+        ),
+        dict(
+            id="tilde-symbol",
+            category="기호",
+            title="범위가 아닌 물결표",
+            text="~",
+            expected="물결",
+        ),
         dict(
             id="mixed",
             category="코드믹스",
@@ -261,13 +294,38 @@ def catalog():
                         options={
                             "default_language": row.get("default_language", "ko-KR")
                         },
+                        reference_review=reviewed_cases[
+                            (corpus_path(key).relative_to(ROOT).as_posix(), row["id"])
+                        ],
                     )
                 )
+    example_references = {
+        "amount-range": ("finance-v7", "range-krw"),
+        "mixed": ("regression", "mixed-ordinal"),
+        "foreign": ("regression", "wifi"),
+        "fallback": ("regression", "unknown-foobar"),
+        "multiword": ("multiword-v8", "multiword-after-effects"),
+        "protected": ("protected", "protected-code-challenge"),
+    }
+    for sample in samples:
+        if "reference_review" not in sample:
+            corpus_key, case_id = example_references.get(sample["id"], ("regression", "mixed-ordinal"))
+            relative = corpus_path(corpus_key).relative_to(ROOT).as_posix()
+            # The example follows this inventory category; it is not a claim
+            # that a different sample text received the source case's review.
+            decision = reviewed_cases[(relative, case_id)]
+            sample["reference_review"] = {
+                "classification": decision["classification"],
+                "review_status": decision["review_status"],
+                "reference_source": "developer-authored workbench example",
+                "reason": "Editable example following the selected project policy; no independent linguistic approval.",
+            }
     return dict(
         version=version(),
         abi_version=1,
         samples=samples,
         defaults=DEFAULTS,
+        reference_summary=audit["summary"],
         corpora=[
             dict(
                 id=k,
@@ -275,6 +333,7 @@ def catalog():
                 count=sum(
                     bool(x.strip()) for x in corpus_path(k).read_text().splitlines()
                 ),
+                reference_review=reviewed_files[corpus_path(k).relative_to(ROOT).as_posix()],
             )
             for k, v in CORPORA.items()
             if corpus_path(k).exists()

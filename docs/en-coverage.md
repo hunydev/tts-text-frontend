@@ -71,7 +71,8 @@ Malformed structured objects are preserved as TEXT, with an inspectable
 
 - Bad grouping: `12,34`, `1234,567`, `1,234,56`, `1,,234`.
 - Invalid dates: `2026-02-29`, `1900-02-29`, `2026-13-01`, `2026-04-31`.
-- Invalid times: `24:00`, `12:60`, `12:3`, `12:30:60`.
+- Invalid times: `12:60`, `12:3`, `12:30:60`.
+- Unsupported end-of-day notation: `24:00` is preserved; it is not universally invalid.
 - Invalid fractions and suffixes: `1/0`, `1/2/3`, `1.2nd`, `10kmh`.
 - Unsupported attached identifiers: `123abc` and ISO datetimes such as
   `2026-09-16T14:30`.

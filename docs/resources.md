@@ -56,7 +56,7 @@ Path("customer.tsv").write_text(
     "policy\tko-KR\trange_separator\t 번에 \n", encoding="utf-8")
 ```
 
-System `123-456` is `백이십삼 다시 사백오십육`; finance gives `일이삼 사오육`;
+System `123-456` is `백이십삼에서 사백오십육`; finance gives `일이삼 사오육`;
 customer gives `일이삼 번에 사오육`. `ttf_resource_load` is transactional: malformed
 input does not partially mutate the engine. Loads after freeze return `TTF_ESTATE`.
 
@@ -124,3 +124,10 @@ can disable a switch or change an element to `transparent` without core changes.
 They remain separate from TN replacement rules and pronunciation lexicons. Active
 preservation prevents rules from consuming or modifying a literal. See
 [protected text contracts](protected-text.md) for runnable overlays.
+
+## Human editing
+
+See the [Korean resource editing guide](resource-editing-guide.ko.md) for range
+connectors, counter policies, pronunciation data and reference review. Legacy
+`range_mode=digits` is a broad hyphen customization example, not a recommended
+financial default: use labeled identifier resources for actual account identifiers.

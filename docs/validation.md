@@ -1,4 +1,73 @@
-# Text validation — 0.8.0
+# Text validation — 0.9.0
+
+Validation date: 2026-09-16. Acceptance covers output text, semantic/language
+metadata, resource precedence and batch/stream parity. Audio synthesis and
+listening evaluation are excluded.
+
+## Current executed checks
+
+| Check | Result |
+|---|---|
+| GCC Debug / Clang Release | 48/48 CTest each |
+| Clang ASan + UBSan + leak detection | 47/47 CTest |
+| Web API / browser | 52 API checks; Chromium desktop/mobile pass |
+| Explicit numeric/counter/clock ranges | 260 text/IR/chunk/resource checks |
+| Shared Korean scales | 447 exact endpoint/chunk/override checks + 5 whitespace guards |
+| English clock / clock range references | 174 + 42 checks |
+| Reference inventory | 15 golden/JSONL files, 703 cases, all classified |
+| Known reference defect audit | 0 flagged; audit self-tests pass |
+| Reference changes | 54 existing corrections/new cases in explicit ledger |
+
+Static and shared C11 builds retain ABI v1, SONAME1 and the same 24 public
+symbols. 5,120 exhaustive native two-chunk checks cover spaced counters,
+shared monetary scales, attached time particles and clock ranges with tiny targets.
+No compiler warning or sanitizer defect was observed in these checks.
+
+## What the correction establishes
+
+Earlier references were wrong about range `다시`, split lexical months `유 월` /
+`시 월`, and English `zero o'clock`. Their passing regression scores were not
+proof of correct language. The v0.9 changes correct the expected text and renderer
+with an explicit [change ledger](audit/reference-corrections-0.9.0.json), and fix
+incorrect example particles, mislabeled quantity prose, and lost Celsius scale.
+
+On the **same corrected references**, the captured v0.8 binary/resources and v0.9
+candidate compare as follows. These are known development cases, not a holdout:
+
+| Corpus | v0.8 baseline | v0.9 candidate |
+|---|---:|---:|
+| Core | 106/109 | 109/109 |
+| Finance/content | 56/60 | 60/60 |
+| Advanced | 28/30 | 30/30 |
+| Historical challenge | 14/15 | 15/15 |
+| Finance ranges | 9/24 | 24/24 |
+| Content vocabulary | 40/40 | 40/40 |
+
+Correcting malformed input particles improves the fixture; it does not imply a
+new automatic particle-repair feature. Exact figures/hashes are in
+[versioned evidence](evidence/0.9.0-text-results.json).
+
+The inventory classifies 525 cases as developer policy, 96 as provisional
+pronunciation, 65 as preservation contracts, and 17 as needing further review.
+**All 703 await independent review; zero are labeled human-approved.** The
+mechanical audit detects known error patterns and structural defects. It cannot
+certify every lexical pronunciation or context choice as universally correct.
+Python/native focused tests add separate regression contracts beyond this inventory.
+
+Use the [Korean resource guide](resource-editing-guide.ko.md) for human changes.
+Audit reports separate clear errors, supported reading styles, and unresolved
+naturalness/brand-pronunciation questions. Meridiem interval inheritance, ambiguous
+mixed shared scales, Unicode interval symbols, and general linguistic judgment
+remain outside the supported grammar.
+
+---
+
+# Historical validation — 0.8.0 (superseded references)
+
+The following is the original v0.8 execution record. Several expected strings
+were later found wrong; these scores describe agreement with those old fixtures.
+Do not use them as current linguistic correctness or production accuracy claims.
+
 
 Validated on Linux on 2026-09-16 with GCC 13.3, Clang 18.1, C11 and CMake 3.28.
 Acceptance uses normalized output text, semantic/language metadata and deterministic

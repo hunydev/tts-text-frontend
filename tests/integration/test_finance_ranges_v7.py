@@ -75,12 +75,13 @@ for text in ("1kg~2km", "1%~2%p", "$10~₩20", "1만원~2kg", "1kg~2만원",
 
 with tempfile.TemporaryDirectory(prefix="ttf-finance-ranges-") as temp:
     path = Path(temp) / "customer.tsv"
-    path.write_text("policy\tko-KR\tquantity_range_separator\t 에서 \n"
+    path.write_text("policy\tko-KR\tquantity_range_separator\t부터 \n"
+                    "policy\tko-KR\tquantity_range_suffix\t까지\n"
                     "quantity_range_separator\t*\t|\t1\n", encoding="utf-8")
     overlay = ("--customer", str(path))
-    for text, expected in (("1.5%~2.5%", "일 점 오 에서 이 점 오 퍼센트"),
-                           ("1만원|2만원", "만 에서 이만 원"),
-                           ("1kg | 2kg", "일 에서 이 킬로그램")):
+    for text, expected in (("1.5%~2.5%", "일 점 오 퍼센트부터 이 점 오 퍼센트까지"),
+                           ("1만원|2만원", "만 원부터 이만 원까지"),
+                           ("1kg | 2kg", "일 킬로그램부터 이 킬로그램까지")):
         for profile in profiles:
             output, spans, _ = stream(text, profile=profile, overlay=overlay)
             assert output == expected, (text, output)
@@ -90,7 +91,7 @@ with tempfile.TemporaryDirectory(prefix="ttf-finance-ranges-") as temp:
             checks += 1
     path.write_text("quantity_range_separator\t*\t~\t0\n", encoding="utf-8")
     output, spans, _ = stream("1%~2%", overlay=overlay)
-    assert output == "일 퍼센트~이 퍼센트" and all(s["semantic_type"] != "RANGE" for s in spans)
+    assert output == "일 퍼센트물결이 퍼센트" and all(s["semantic_type"] != "RANGE" for s in spans)
     checks += 1
 
 print(f"{checks} repeated-unit interval text/IR/secondary/span/chunk/override checks")

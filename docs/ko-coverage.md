@@ -17,7 +17,7 @@ following outputs were verified with the built CLI and corpus tests.
 | Scaled currency | `3.5만원`, `1.25억원` | `삼만오천 원`, `일억이천오백만 원` |
 | Compound currency | `1억2천3백만원`, `1억 2,500만원` | `일억이천삼백만 원`, `일억이천오백만 원` |
 | Multiple magnitudes | `2조3억4만원` | `이조삼억사만 원` |
-| Korean date notation | `2026년 6월 1일` | `이천이십육 년 유 월 일 일` |
+| Korean date notation | `2026년 6월 1일` | `이천이십육 년 유월 일 일` |
 | Seconds | `14:30:05` | `열네 시 삼십 분 오 초` |
 | Fraction | `3/4`, `-1/2` | `사 분의 삼`, `마이너스 이 분의 일` |
 | Percent | `12%`, `12.5%` | `십이 퍼센트`, `십이 점 오 퍼센트` |
@@ -48,9 +48,9 @@ the denominator first. Signed fractions place the sign before the entire reading
 
 The Korean classifier recognizes complete `YYYY년 M월 D일` forms, including adjacent
 markers and spaces. Invalid calendar forms such as `2026년2월29일` remain unchanged.
-June and October use `유 월` and `시 월` under the existing spaced-unit policy. This
-is an explicit output-text convention; applications wanting orthographic `유월`
-and `시월` need to choose that policy before adopting their reference corpus.
+June and October use the lexical spellings `유월` and `시월`. The earlier spaced
+references were erroneous and were corrected in the v0.9 reference audit. Other
+number/unit spacing remains an explicit output policy.
 
 ## Compound amount grammar
 

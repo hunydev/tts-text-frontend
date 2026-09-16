@@ -276,7 +276,47 @@ static int quantity_suffix(const ttf_pack_input_t *in, size_t p, ttf_semantic_t 
     return 0;
 }
 
-/* Only explicitly repeated currency/rate/measure units participate. A missing
+/* Clock interval endpoints deliberately exclude meridiem/offset metadata:
+   RANGE.secondary is already occupied by the second exact endpoint. */
+static size_t clock_endpoint(const ttf_pack_input_t *in, size_t start,
+                             ttf_semantic_t *out, int allow_range) {
+    const char *s = in->text, *suffix;
+    size_t n = in->length, hour_end = integer(s, n, start), p, end, suffix_end;
+    unsigned hour, minute, second = 0;
+    int seconds = 0, valid;
+    ttf_resource_layer_t layer;
+    if (hour_end == start || hour_end >= n || s[hour_end] != ':')
+        return 0;
+    hour = hour_end - start <= 2 ? small_uint(s + start, hour_end - start) : 24;
+    p = hour_end + 1;
+    end = integer(s, n, p);
+    minute = end - p == 2 ? small_uint(s + p, 2) : 60;
+    valid = hour < 24 && minute < 60;
+    if (end < n && s[end] == ':') {
+        seconds = 1;
+        p = end + 1;
+        end = integer(s, n, p);
+        second = end - p == 2 ? small_uint(s + p, 2) : 60;
+        valid = valid && second < 60;
+    }
+    if (resource_prefix(in, "time_suffix", skip_space(s, n, end), &suffix, &suffix_end, &layer)) {
+        end = suffix_end;
+        valid = 0;
+    }
+    if (!quantity_tail(in, end, allow_range)) {
+        valid = 0;
+        end = atom_end(s, n, end);
+    }
+    out->type = valid ? TTF_SEM_TIME : TTF_SEM_TEXT;
+    (void)snprintf(out->unit, sizeof(out->unit), "time");
+    if (seconds)
+        (void)snprintf(out->value, sizeof(out->value), "%02u:%02u:%02u", hour, minute, second);
+    else
+        (void)snprintf(out->value, sizeof(out->value), "%02u:%02u", hour, minute);
+    return end;
+}
+
+/* Explicitly repeated currency/rate/measure/counter/clock units participate. A missing
    or different second unit must never be inferred as an exchange conversion. */
 static size_t quantity_endpoint(const ttf_pack_input_t *in, size_t start,
                                 ttf_semantic_t *out, int allow_range) {
@@ -284,6 +324,9 @@ static size_t quantity_endpoint(const ttf_pack_input_t *in, size_t start,
     size_t number_start = start, p, suffix_end;
     ttf_resource_layer_t layer = TTF_LAYER_COMMON;
     ttf_semantic_type_t type;
+    p = clock_endpoint(in, start, out, allow_range);
+    if (p)
+        return p;
     if (resource_prefix(in, "currency_prefix", start, &prefix, &p, &layer))
         number_start = skip_space(in->text, in->length, p);
     p = number(in->text, in->length, number_start, out->value);
@@ -291,7 +334,8 @@ static size_t quantity_endpoint(const ttf_pack_input_t *in, size_t start,
         return 0;
     if (quantity_suffix(in, skip_space(in->text, in->length, p), out, &suffix_end, &type,
                         allow_range)) {
-        if (type != TTF_SEM_CURRENCY && type != TTF_SEM_MEASURE && type != TTF_SEM_PERCENT)
+        if (type != TTF_SEM_CURRENCY && type != TTF_SEM_MEASURE && type != TTF_SEM_PERCENT &&
+            type != TTF_SEM_COUNTER)
             return 0;
         if (type == TTF_SEM_PERCENT)
             (void)snprintf(out->unit, sizeof(out->unit), "percent");
@@ -307,6 +351,32 @@ static size_t quantity_endpoint(const ttf_pack_input_t *in, size_t start,
     }
     return 0;
 }
+/* Preserve unsupported chains through each numeric endpoint, rather than
+   verbalizing their last number after retaining only an invalid prefix. */
+static size_t range_chain_end(const ttf_pack_input_t *in, size_t end) {
+    size_t separator;
+    while ((separator = quantity_separator(in, skip_space(in->text, in->length, end), NULL))) {
+        ttf_semantic_t next = {0};
+        size_t start = skip_space(in->text, in->length, separator);
+        size_t next_end = quantity_endpoint(in, start, &next, 1);
+        if (!next_end) {
+            ttf_semantic_type_t type;
+            size_t suffix_end;
+            next_end = number(in->text, in->length, start, next.value);
+            if (next_end == start) {
+                end = separator;
+                break;
+            }
+            if (quantity_suffix(in, skip_space(in->text, in->length, next_end), &next,
+                                &suffix_end, &type, 1))
+                next_end = suffix_end;
+        }
+        if (next_end <= end)
+            break;
+        end = next_end;
+    }
+    return end;
+}
 static size_t repeated_quantity_range(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     ttf_semantic_t first = {0}, second = {0};
     ttf_resource_layer_t delimiter_layer = TTF_LAYER_COMMON;
@@ -321,30 +391,16 @@ static size_t repeated_quantity_range(const ttf_pack_input_t *in, ttf_semantic_t
     start = skip_space(in->text, in->length, p);
     if (start >= in->length)
         return 0;
-    end = quantity_endpoint(in, start, &second, 0);
+    end = quantity_endpoint(in, start, &second, 1);
     if (!end) {
         /* A numeric malformed endpoint remains visible as one TEXT object. */
         if (!digit(in->text[start]) && in->text[start] != '+' && in->text[start] != '-')
             return 0;
-        end = atom_end(in->text, in->length, start);
+        end = range_chain_end(in, atom_end(in->text, in->length, start));
         return preserve(in, out, end, "syntax.invalid-quantity-range");
     }
-    /* More than two explicit endpoints are not a supported interval. */
-    {
-        size_t chain = quantity_separator(in, skip_space(in->text, in->length, end), NULL);
-        if (chain) {
-            do {
-                ttf_semantic_t next = {0};
-                size_t next_start = skip_space(in->text, in->length, chain);
-                size_t next_end = quantity_endpoint(in, next_start, &next, 1);
-                if (!next_end)
-                    break;
-                end = next_end;
-                chain = quantity_separator(in, skip_space(in->text, in->length, end), NULL);
-            } while (chain);
-            return preserve(in, out, end, "syntax.invalid-quantity-range");
-        }
-    }
+    if (quantity_separator(in, skip_space(in->text, in->length, end), NULL))
+        return preserve(in, out, range_chain_end(in, end), "syntax.invalid-quantity-range");
     if (first.type == TTF_SEM_TEXT || second.type == TTF_SEM_TEXT ||
         first.type != second.type || strcmp(first.unit, second.unit) ||
         (in->text[separator] == '-' && p == start &&
@@ -356,7 +412,8 @@ static size_t repeated_quantity_range(const ttf_pack_input_t *in, ttf_semantic_t
     out->layer = first.layer > second.layer ? first.layer : second.layer;
     if (delimiter_layer > out->layer)
         out->layer = delimiter_layer;
-    return finish(in, out, end, TTF_SEM_RANGE, "syntax.repeated-quantity-range");
+    return finish(in, out, end, TTF_SEM_RANGE,
+                  first.type == TTF_SEM_TIME ? "syntax.time-range" : "syntax.repeated-quantity-range");
 }
 
 size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
@@ -558,27 +615,46 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     if (p == b)
         return preserve(in, out, atom_end(s, n, b), "syntax.invalid-number");
     q = skip_space(s, n, p);
-    if (q < n && s[q] == '-') {
-        size_t start = skip_space(s, n, q + 1);
-        /* Adjacent signs also spell damaged identifiers (1--2); preserve that
-           established behavior. A signed second endpoint needs whitespace. */
-        if (start == q + 1 && start < n && (s[start] == '-' || s[start] == '+'))
-            return preserve(in, out, atom_end(s, n, start), "syntax.invalid-range");
-        end = number(s, n, start, out->secondary);
-        if (end > start) {
-            size_t suffix_start = skip_space(s, n, end), suffix_end;
-            ttf_semantic_type_t suffix_type;
-            if (quantity_suffix(in, suffix_start, out, &suffix_end, &suffix_type, 0)) {
-                if (suffix_type == TTF_SEM_PERCENT)
-                    (void)snprintf(out->unit, sizeof(out->unit), "percent");
-                return finish(in, out, suffix_end, TTF_SEM_RANGE, "syntax.quantity-range");
+    {
+        ttf_resource_layer_t separator_layer = TTF_LAYER_COMMON;
+        size_t separator_end = quantity_separator(in, q, &separator_layer);
+        int legacy_hyphen = q < n && s[q] == '-';
+        /* Keep the established bare-hyphen compatibility grammar; resource
+           delimiters additionally provide explicit ranges such as 1~2. */
+        if (!separator_end && legacy_hyphen)
+            separator_end = q + 1;
+        if (separator_end) {
+            size_t start = skip_space(s, n, separator_end);
+            if (legacy_hyphen && start == separator_end && start < n &&
+                (s[start] == '-' || s[start] == '+'))
+                return preserve(in, out, atom_end(s, n, start), "syntax.invalid-range");
+            end = number(s, n, start, out->secondary);
+            if (end > start) {
+                size_t suffix_start = skip_space(s, n, end), suffix_end;
+                ttf_semantic_type_t suffix_type;
+                if (quantity_suffix(in, suffix_start, out, &suffix_end, &suffix_type, 1)) {
+                    if (suffix_type == TTF_SEM_PERCENT)
+                        (void)snprintf(out->unit, sizeof(out->unit), "percent");
+                    if (quantity_separator(in, skip_space(s, n, suffix_end), NULL))
+                        return preserve(in, out, range_chain_end(in, suffix_end),
+                                        "syntax.invalid-range");
+                    if (separator_layer > out->layer)
+                        out->layer = separator_layer;
+                    return finish(in, out, suffix_end, TTF_SEM_RANGE, "syntax.quantity-range");
+                }
+                if (quantity_separator(in, skip_space(s, n, end), NULL))
+                    return preserve(in, out, range_chain_end(in, end), "syntax.invalid-range");
+                if (!structured_tail(s, n, end)) {
+                    out->layer = separator_layer;
+                    return finish(in, out, end, TTF_SEM_RANGE,
+                                  legacy_hyphen ? "syntax.range" : "syntax.explicit-range");
+                }
+                return preserve(in, out, atom_end(s, n, end), "syntax.invalid-range");
             }
-            if (!structured_tail(s, n, end))
-                return finish(in, out, end, TTF_SEM_RANGE, "syntax.range");
-            return preserve(in, out, atom_end(s, n, end), "syntax.invalid-range");
+            if ((!legacy_hyphen && start == n) ||
+                (start < n && (digit(s[start]) || s[start] == '+' || s[start] == '-' || s[start] == '.')))
+                return preserve(in, out, atom_end(s, n, start), "syntax.invalid-range");
         }
-        if (start < n && (digit(s[start]) || s[start] == '+' || s[start] == '-' || s[start] == '.'))
-            return preserve(in, out, atom_end(s, n, start), "syntax.invalid-range");
     }
     if (q < n && s[q] == '/') {
         int nonzero = 0;

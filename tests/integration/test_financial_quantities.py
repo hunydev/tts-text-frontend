@@ -45,12 +45,12 @@ def check(text, expected, semantic, value, unit="", secondary="", language="ko-K
 for args in [
     ("25bp", "이십오 베이시스포인트", "MEASURE", "25", "basis_point"),
     ("0.25%p", "영 점 이오 퍼센트포인트", "MEASURE", "0.25", "percentage_point"),
-    ("1.5-2.5%", "일 점 오 다시 이 점 오 퍼센트", "RANGE", "1.5", "percent", "2.5"),
-    ("1.5 - 2.5 km", "일 점 오 다시 이 점 오 킬로미터", "RANGE", "1.5", "km", "2.5"),
-    ("-1.5 - -0.5%", "마이너스 일 점 오 다시 마이너스 영 점 오 퍼센트", "RANGE", "-1.5",
+    ("1.5-2.5%", "일 점 오 퍼센트에서 이 점 오 퍼센트", "RANGE", "1.5", "percent", "2.5"),
+    ("1.5 - 2.5 km", "일 점 오 킬로미터에서 이 점 오 킬로미터", "RANGE", "1.5", "km", "2.5"),
+    ("-1.5 - -0.5%", "마이너스 일 점 오 퍼센트에서 마이너스 영 점 오 퍼센트", "RANGE", "-1.5",
      "percent", "-0.5"),
-    ("1,200-2,500원", "천이백 다시 이천오백 원", "RANGE", "1200", "KRW", "2500"),
-    ("1e2-2e2kg", "백 다시 이백 킬로그램", "RANGE", "100", "kg", "200"),
+    ("1,200-2,500원", "천이백 원에서 이천오백 원", "RANGE", "1200", "KRW", "2500"),
+    ("1e2-2e2kg", "백 킬로그램에서 이백 킬로그램", "RANGE", "100", "kg", "200"),
     ("2.5e-2%p", "영 점 영이오 퍼센트포인트", "MEASURE", "0.025", "percentage_point"),
     ("1bp", "one basis point", "MEASURE", "1", "basis_point", "", "en-US"),
     ("2bp", "two basis points", "MEASURE", "2", "basis_point", "", "en-US"),
@@ -69,7 +69,7 @@ for args in [
 # quantities must not silently become identifiers under that policy.
 finance = ("--domain", str(Path(resources) / "domains/finance/ko-KR/rules.tsv"))
 check("123-456", "일이삼 사오육", "RANGE", "123", "", "456", overlay=finance)
-check("1.5-2.5%", "일 점 오 다시 이 점 오 퍼센트", "RANGE", "1.5", "percent", "2.5",
+check("1.5-2.5%", "일 점 오 퍼센트에서 이 점 오 퍼센트", "RANGE", "1.5", "percent", "2.5",
       overlay=finance)
 
 # Decimal independently computes values; matching flat numeral rendering checks

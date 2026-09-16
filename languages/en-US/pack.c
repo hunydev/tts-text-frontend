@@ -408,12 +408,27 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         int fields = sscanf(s->value, "%u:%u:%u", &h, &min, &sec);
         if (fields < 2)
             return TTF_EINVAL;
+        /* Midnight is a time, not a zero-valued twelve-hour clock position.
+           Keep labels and the optional seconds relation in editable resources. */
+        if (!h && !min) {
+            if (fields == 3 && sec) {
+                if ((st = card(e, sec, b)) != TTF_OK || (st = space(b)) != TTF_OK ||
+                    (st = word(e, b, "unit", sec == 1 ? "s.one" : "s.many")) != TTF_OK ||
+                    (st = space(b)) != TTF_OK || (st = word(e, b, "clock", "after")) != TTF_OK ||
+                    (st = space(b)) != TTF_OK)
+                    return st;
+            }
+            return word(e, b, "clock", "midnight");
+        }
         if ((st = card(e, h, b)) != TTF_OK)
             return st;
         if ((st = space(b)) != TTF_OK)
             return st;
         if (!min) {
-            if ((st = word(e, b, "number", "oclock")) != TTF_OK)
+            /* The project keeps 24-hour values; do not attach o'clock to 13..23. */
+            st = h <= 12 ? word(e, b, "number", "oclock") :
+                           word(e, b, "clock", "h24_full_hour");
+            if (st != TTF_OK)
                 return st;
         } else {
             if (min < 10) {
@@ -493,6 +508,18 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         label = res(e, "unit", key);
         return ttf_buffer_puts(b, label ? label : s->unit);
     case TTF_SEM_RANGE:
+        if (!strcmp(s->unit, "time")) {
+            ttf_semantic_t endpoint = *s;
+            endpoint.type = TTF_SEM_TIME;
+            endpoint.secondary[0] = '\0';
+            endpoint.unit[0] = '\0';
+            if ((st = verbalize(e, &endpoint, surface, length, b)) != TTF_OK ||
+                (st = space(b)) != TTF_OK || (st = word(e, b, "number", "range")) != TTF_OK ||
+                (st = space(b)) != TTF_OK)
+                return st;
+            (void)snprintf(endpoint.value, sizeof(endpoint.value), "%s", s->secondary);
+            return verbalize(e, &endpoint, surface, length, b);
+        }
         if ((st = numeric(e, s->value, b)) != TTF_OK)
             return st;
         if ((st = space(b)) != TTF_OK)

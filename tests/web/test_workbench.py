@@ -60,11 +60,18 @@ try:
     with urllib.request.urlopen(base + "/api/catalog") as response:
         catalog = json.load(response)
     assert catalog["abi_version"] == 1 and len(catalog["samples"]) >= 8
+    assert catalog["reference_summary"]["human_approved_cases"] == 0
+    assert catalog["reference_summary"]["pending_independent_review"] == catalog["reference_summary"]["cases"]
+    assert all(item["reference_review"]["review_status"] == "pending-independent-review"
+               for item in catalog["samples"] + catalog["corpora"])
+    assert catalog["samples"][0]["text"] == "1~2만 원"
+    assert catalog["samples"][0]["expected"] == "만 원에서 이만 원"
     for sample in catalog["samples"]:
         result, _ = run(
             sample["text"], opts=sample.get("options"), expected=sample.get("expected")
         )
         assert result["expected_match"] is not False, (sample, result)
+        assert result["reference_review"]["human_approved"] is False
     text = "1st는 첫 번째입니다.\nPlease go to the 1st floor"
     result, events = run(text, "verify")
     assert (
@@ -158,10 +165,16 @@ try:
     with post("/api/corpus", {"corpus": "protected"}) as r:
         corpus = [json.loads(x) for x in r]
     assert corpus[-2]["passed"] == 40 and corpus[-2]["failed"] == 0
+    assert corpus[-2]["human_approved_cases"] == 0
+    assert all(row["reference_review"]["classification"] == "preservation-contract"
+               for row in corpus[-2]["cases"])
     checks += 1
     with post("/api/corpus", {"corpus": "multiword-v8"}) as r:
         corpus = [json.loads(x) for x in r]
     assert corpus[-2]["passed"] == 30 and corpus[-2]["failed"] == 0
+    assert corpus[-2]["pending_independent_review"] == 30
+    assert any(row["reference_review"]["classification"] == "needs-review"
+               for row in corpus[-2]["cases"])
     checks += 1
     for body in [
         dict(mode="verify", text="x", options={"chunk_bytes": 0}),

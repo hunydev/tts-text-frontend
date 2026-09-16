@@ -21,7 +21,7 @@ $12.50	twelve dollars and fifty cents
 32GB	thirty two gigabytes
 2GHz	two gigahertz
 184467440737095516160th	184467440737095516160th
-# Expanded numeric grammar: expected text is a reviewed reading policy.
+# Expanded numeric grammar: original project-policy fixtures, not independent human review.
 21	twenty one
 999	nine hundred ninety nine
 1001	one thousand one
@@ -45,7 +45,17 @@ $12.50	twelve dollars and fifty cents
 2024-02-29	February twenty ninth two thousand twenty four
 2000-02-29	February twenty ninth two thousand
 2026. 9. 16.	September sixteenth two thousand twenty six
-00:00	zero o'clock
+# Corrected clock reference: midnight; 24-hour full-hour style is project policy.
+00:00	midnight
+0:00	midnight
+00:00:00	midnight
+00:00:01	one second after midnight
+00:00:59	fifty nine seconds after midnight
+13:00	thirteen hundred hours
+14:00	fourteen hundred hours
+23:00	twenty three hundred hours
+13:00:01	thirteen hundred hours and one second
+23:00:00	twenty three hundred hours and zero seconds
 23:59	twenty three fifty nine
 14:30:05	fourteen thirty and five seconds
 09:00:01	nine o'clock and one second
@@ -65,7 +75,7 @@ $-1	minus one dollar
 1/2	one over two
 -3/4	minus three over four
 22/7	twenty two over seven
-# Invalid structures must remain unchanged rather than partially normalize.
+# Malformed or unsupported structures remain unchanged instead of partial normalization.
 11st	11st
 12nd	12nd
 13rd	13rd
@@ -86,6 +96,7 @@ $ 1234,567	$ 1234,567
 2026-09-161	2026-09-161
 2026. 13. 16.	2026. 13. 16.
 2026-09-16T14:30	2026-09-16T14:30
+# Valid end-of-day notation outside the current 00..23 clock grammar.
 24:00	24:00
 12:60	12:60
 12:3	12:3

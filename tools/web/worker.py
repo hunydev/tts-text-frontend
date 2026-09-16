@@ -7,7 +7,7 @@ import sys
 import time
 from pathlib import Path
 from native import Engine, flatten
-from workbench import ROOT, corpus_path, stream_sizes, validate, version
+from workbench import ROOT, corpus_path, reference_audit, reference_case_reviews, stream_sizes, validate, version
 
 
 def emit(event):
@@ -75,6 +75,11 @@ def run(request, library, resources):
         result["expected_match"] = (
             result["text"] == request["expected"] if "expected" in request else None
         )
+        result["reference_review"] = {
+            "reference_source": "request-supplied expectation" if "expected" in request else "no expectation supplied",
+            "review_status": "not-independently-reviewed",
+            "human_approved": False,
+        }
         if mode == "verify":
             result["verification"] = compare(engine, source, result, opts)
         emit(
@@ -93,6 +98,8 @@ def corpus(request, library, resources):
     from evaluate import read_corpus, check_spans
 
     rows = read_corpus(corpus_path(request["corpus"]))
+    audit = reference_audit()
+    reviews = reference_case_reviews(audit, request["corpus"])
     results = []
     emit(dict(event="start", version=version(), mode="corpus", total=len(rows)))
     for row in rows:
@@ -127,6 +134,7 @@ def corpus(request, library, resources):
                 passed=passed,
                 metadata_failures=failures,
                 parity=verification["passed"],
+                reference_review=reviews[row["id"]],
             )
             results.append(result)
             emit(dict(result, event="case"))
@@ -139,6 +147,8 @@ def corpus(request, library, resources):
             passed=sum(r["passed"] for r in results),
             failed=sum(not r["passed"] for r in results),
             cases=results,
+            pending_independent_review=len(results),
+            human_approved_cases=0,
         )
     )
 

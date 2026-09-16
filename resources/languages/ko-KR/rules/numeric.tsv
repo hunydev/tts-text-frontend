@@ -76,7 +76,7 @@ currency	ko-KR	JPY	엔
 month	ko-KR	6	유
 month	ko-KR	10	시
 policy	ko-KR	range_mode	cardinal
-policy	ko-KR	range_separator	 다시 
+policy	ko-KR	range_separator	에서 
 numeric_suffix	*	개	COUNTER:개
 numeric_suffix	*	명	COUNTER:명
 numeric_suffix	*	살	COUNTER:살
@@ -217,9 +217,20 @@ quantity_tail	ko-KR	대	1
 # Financial quantities retain their written unit and exact decimal value.
 unit	ko-KR	percentage_point	퍼센트포인트
 unit	ko-KR	basis_point	베이시스포인트
-policy	ko-KR	quantity_range_separator	 다시 
+policy	ko-KR	quantity_range_separator	에서 
 
 # Written meridiem suffix and language-specific rendering.
 meridiem	ko-KR	AM	오전
 meridiem	ko-KR	PM	오후
 unit	ko-KR	percent	퍼센트
+
+# Range endpoints retain units; "none" disables the optional final suffix.
+policy	ko-KR	quantity_range_repeat_unit	1
+policy	ko-KR	quantity_range_suffix	none
+symbol	ko-KR	~	물결
+quantity_prefix	ko-KR	°C	섭씨 
+
+# Written currency names use the same semantic units as currency symbols.
+numeric_suffix	*	달러	CURRENCY:USD
+numeric_suffix	*	유로	CURRENCY:EUR
+numeric_suffix	*	엔	CURRENCY:JPY

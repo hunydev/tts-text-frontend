@@ -201,3 +201,24 @@ word spans and a space. The original 60-case `domain_cases.jsonl` is preserved a
 historical evidence; `domain_cases_v8.jsonl` keeps every input/output reference and
 updates only that case's metadata. Consumers must use byte offsets and semantic
 fields rather than assume one span per word. See [multiword contracts](multiword-lexicon.md).
+
+
+## Reference integrity and interval semantics (0.9.0)
+
+Ranges carry both exact endpoints in Semantic IR before rendering. Shared units
+and Korean scales are resolved by the generic classifier and language pack,
+respectively. Counter/clock lookahead uses the same classification so a phrase
+callback cannot prematurely commit the first endpoint. Clock ranges use unit
+`time` with canonical values in the existing ABI v1 string fields.
+
+Korean endpoints independently select native/Sino/unit/prefix resources and then
+join using the configured interval connector. Symbol names are only used outside
+recognized semantic ranges. Legacy bare-hyphen identifier overrides remain explicit;
+resource-driven tilde ranges are not affected by that digit policy.
+
+Expected-text fixtures have a separate audit inventory. Structural checks and
+known-defect checks run without invoking the frontend, and the web exposes each
+reference's review class. Changes to incorrect expectations are recorded with
+before/after text and reasons. Historical output agreement is retained as evidence,
+not promoted to linguistic truth. See [v0.9 validation](validation.md) and
+[human resource editing](resource-editing-guide.ko.md).

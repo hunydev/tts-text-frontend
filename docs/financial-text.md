@@ -102,24 +102,24 @@ the second in `secondary`, and an optional shared trailing `unit`. Examples:
 
 ```text
 1.5-2.5%       → RANGE("1.5", "2.5", unit="percent")
-              → 일 점 오 다시 이 점 오 퍼센트
--1.5 - -0.5%  → 마이너스 일 점 오 다시 마이너스 영 점 오 퍼센트
+              → 일 점 오 퍼센트에서 이 점 오 퍼센트
+-1.5 - -0.5%  → 마이너스 일 점 오 퍼센트에서 마이너스 영 점 오 퍼센트
 ```
 
-Use an ASCII hyphen as the separator. A signed second endpoint requires whitespace
+ASCII `-` and `~` delimit supported numerical ranges. A signed second endpoint requires whitespace
 after that separator: `1--2` remains invalid rather than becoming a signed range.
 The v0.5 grammar supports one shared trailing unit and does not infer arbitrary
 prose intervals or inequalities. Since v0.7, [repeated explicit units](finance-ranges.md)
 such as `1만원~2만원` and `$10-$20` are also recognized when both units agree.
 
 The legacy `range_mode`/`range_separator` policies apply to bare unsigned integer
-ranges. Thus `123-456` is `백이십삼 다시 사백오십육` by default and
+ranges. Thus `123-456` is `백이십삼에서 사백오십육` by default and
 `일이삼 사오육` with `resources/domains/finance/ko-KR/rules.tsv`. The example
 customer overlay joins the digit groups with ` 번에 `.
 
 Decimal, signed and unit-bearing ranges use quantity reading even when the
 finance domain is loaded. Their separator is controlled separately by
-`policy / ko-KR / quantity_range_separator`, whose system value is ` 다시 `.
+`policy / ko-KR / quantity_range_separator`, whose system value is `에서 `.
 This prevents the identifier-oriented legacy overlay from changing a rate range
 such as `1.5-2.5%` into an identifier reading.
 
@@ -176,3 +176,8 @@ resource versioning. Synthetic passing cases do not establish production
 accuracy. Selected code/markup/path forms now have a [literal-preservation
 policy](protected-text.md); unrestricted financial expressions and general document
 interpretation remain outside the contract.
+
+The v0.9 Korean renderer repeats a shared unit at both endpoints. Counter ranges
+use native/Sino resources and shared Korean scales are supported in bounded
+forms such as `1~2만 원`. See [range contracts](finance-ranges.md). Historical
+`다시` references were corrected; past pass rates do not establish their correctness.

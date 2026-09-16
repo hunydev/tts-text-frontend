@@ -11,7 +11,7 @@
 {"id":"finance-symbol-currency","category":"finance/amounts","text":"결제 금액 ₩ 12,500을 확인하세요.","expected":"결제 금액 만이천오백 원을 확인하세요."}
 {"id":"finance-fraction-share","category":"finance/notices","text":"배당금의 1/4을 이번 달에 지급합니다.","expected":"배당금의 사 분의 일을 이번 달에 지급합니다.","expected_spans":[{"surface":"1/4","semantic_type":"FRACTION","value":"1"}]}
 {"id":"finance-negative-rate","category":"finance/notices","text":"이번 달 수익률은 -3.5%입니다.","expected":"이번 달 수익률은 마이너스 삼 점 오 퍼센트입니다."}
-{"id":"finance-maturity-date","category":"finance/notices","text":"만기일은 2026년 10월 16일입니다.","expected":"만기일은 이천이십육 년 시 월 십육 일입니다.","expected_spans":[{"surface":"2026년 10월 16일","semantic_type":"DATE"}]}
+{"id":"finance-maturity-date","category":"finance/notices","text":"만기일은 2026년 10월 16일입니다.","expected":"만기일은 이천이십육 년 시월 십육 일입니다.","expected_spans":[{"surface":"2026년 10월 16일","semantic_type":"DATE"}]}
 {"id":"finance-payment-deadline","category":"finance/notices","text":"납부 마감은 2026-09-30 14:30입니다.","expected":"납부 마감은 이천이십육 년 구 월 삼십 일 열네 시 삼십 분입니다."}
 {"id":"finance-transaction-time","category":"finance/notices","text":"거래 시각은 09:05:01입니다.","expected":"거래 시각은 아홉 시 오 분 일 초입니다."}
 {"id":"finance-contact-phone","category":"finance/notices","text":"문의 전화는 02-123-4567입니다.","expected":"문의 전화는 공이 일이삼 사오육칠입니다.","expected_spans":[{"surface":"02-123-4567","semantic_type":"PHONE"}]}
@@ -27,7 +27,7 @@
 {"id":"finance-ascending-scale","category":"finance/invalid","text":"입력 금액 2만3억원을 확인하세요.","expected":"입력 금액 2만3억원을 확인하세요.","notes":"An ascending major scale is invalid and must remain intact."}
 {"id":"finance-domain-reference","category":"finance/identifier-policy","text":"참조 번호는 123-456입니다.","expected":"참조 번호는 일이삼 사오육입니다.","notes":"Explicit finance range policy; no claim of automatic bank-account recognition.","resource_overrides":[{"layer":"domain","path":"domains/finance/ko-KR/rules.tsv"}]}
 {"id":"finance-customer-reference","category":"finance/identifier-policy","text":"접수 번호는 123-456입니다.","expected":"접수 번호는 일이삼 번에 사오육입니다.","resource_overrides":[{"layer":"domain","path":"domains/finance/ko-KR/rules.tsv"},{"layer":"customer","path":"customers/example/ko-KR/rules.tsv"}]}
-{"id":"finance-range-default","category":"finance/identifier-policy","text":"기본 구간은 123-456입니다.","expected":"기본 구간은 백이십삼 다시 사백오십육입니다.","notes":"The same surface retains the documented default cardinal range policy."}
+{"id":"finance-range-default","category":"finance/identifier-policy","text":"기본 구간은 123-456입니다.","expected":"기본 구간은 백이십삼에서 사백오십육입니다.","notes":"v0.9 reference correction: a numerical interval is read with 에서, not the hyphen/identifier label 다시."}
 {"id":"content-product-watch","category":"content/code-mixed","text":"오늘은 Apple Watch를 소개합니다.","expected":"오늘은 애플 워치를 소개합니다.","expected_spans":[{"surface":"Apple Watch","source_lang":"en-US","context_lang":"ko-KR","render_lang":"ko-KR","normalized":"애플 워치","semantic_type":"WORD","rule":"lexicon.phrase","lexicon":"lexicon:system"}],"notes":"v0.8 metadata migration: Apple and Watch now form one multiword lexicon span; input and expected text are unchanged. Original reference remains in domain_cases.jsonl."}
 {"id":"content-product-nounphrase","category":"content/code-mixed","text":"새로운 cloud server를 살펴보겠습니다.","expected":"새로운 클라우드 서버를 살펴보겠습니다.","expected_spans":[{"surface":"cloud","source_lang":"en-US","context_lang":"ko-KR","render_lang":"ko-KR","normalized":"클라우드"},{"surface":"server","source_lang":"en-US","context_lang":"ko-KR","render_lang":"ko-KR","normalized":"서버"}]}
 {"id":"content-script-clause","category":"content/code-mixed","text":"화면에는 Please go to the 2nd floor라고 적혀 있습니다.","expected":"화면에는 Please go to the second floor라고 적혀 있습니다.","expected_spans":[{"surface":"2nd","semantic_type":"ORDINAL","value":"2","source_lang":"en-US","context_lang":"en-US","render_lang":"en-US","normalized":"second"}]}
@@ -41,7 +41,7 @@
 {"id":"content-release-day","category":"content/narration","text":"공개일은 2026. 9. 16. 기준입니다.","expected":"공개일은 이천이십육 년 구 월 십육 일 기준입니다."}
 {"id":"content-discount-price","category":"content/narration","text":"행사 가격은 2만5천원이며 할인율은 10%입니다.","expected":"행사 가격은 이만오천 원이며 할인율은 십 퍼센트입니다."}
 {"id":"content-recipe","category":"content/narration","text":"재료 3 kg과 물 2 L를 준비합니다.","expected":"재료 삼 킬로그램과 물 이 리터를 준비합니다."}
-{"id":"content-temperature","category":"content/narration","text":"설정 온도는 32 °C입니다.","expected":"설정 온도는 삼십이 도입니다."}
+{"id":"content-temperature","category":"content/narration","text":"설정 온도는 32 °C입니다.","expected":"설정 온도는 섭씨 삼십이 도입니다."}
 {"id":"content-chapter-card","category":"content/narration","text":"화면 카드 3장을 보여 주고 2초 동안 기다립니다.","expected":"화면 카드 세 장을 보여 주고 이 초 동안 기다립니다."}
 {"id":"content-english-promo","category":"content/english","text":"Save 12.5% on the 3rd order.","expected":"Save twelve point five percent on the third order.","default_language":"en-US"}
 {"id":"content-english-specification","category":"content/english","text":"The device has 32GB and weighs 1kg.","expected":"The device has thirty two gigabytes and weighs one kilogram.","default_language":"en-US"}
@@ -54,7 +54,7 @@
 {"id":"technical-url","category":"technical/protected","text":"설명서는 https://example.com/docs 에 있습니다.","expected":"설명서는 https://example.com/docs 에 있습니다.","expected_spans":[{"surface":"https://example.com/docs","semantic_type":"URL"}]}
 {"id":"customer-email","category":"customer/contact","text":"문의는 support@example.com 으로 보내 주세요.","expected":"문의는 support@example.com 으로 보내 주세요.","expected_spans":[{"surface":"support@example.com","semantic_type":"EMAIL"}]}
 {"id":"customer-phone","category":"customer/contact","text":"상담 전화는 010-1234-5678이며 운영 시간은 09:05입니다.","expected":"상담 전화는 공일공 일이삼사 오육칠팔이며 운영 시간은 아홉 시 오 분입니다."}
-{"id":"customer-appointment","category":"customer/notices","text":"예약은 2026-10-01 14:30이고 인원은 3명입니다.","expected":"예약은 이천이십육 년 시 월 일 일 열네 시 삼십 분이고 인원은 세 명입니다."}
+{"id":"customer-appointment","category":"customer/notices","text":"예약은 2026-10-01 14:30이고 인원은 3명입니다.","expected":"예약은 이천이십육 년 시월 일 일 열네 시 삼십 분이고 인원은 세 명입니다."}
 {"id":"customer-wifi-help","category":"customer/notices","text":"WiFi를 연결한 뒤 3초 동안 기다려 주세요.","expected":"와이파이를 연결한 뒤 삼 초 동안 기다려 주세요."}
 {"id":"customer-bilingual-floor","category":"customer/code-mixed","text":"방문 안내입니다. Please go to the 1st floor. 접수 창구는 2개입니다.","expected":"방문 안내입니다. Please go to the first floor. 접수 창구는 두 개입니다.","expected_spans":[{"surface":"1st","semantic_type":"ORDINAL","value":"1","source_lang":"en-US","context_lang":"en-US","render_lang":"en-US","normalized":"first"}]}
 {"id":"customer-english-parcel","category":"customer/english","text":"Your parcel weighs 3kg and arrives on 2026-09-16.","expected":"Your parcel weighs three kilograms and arrives on September sixteenth two thousand twenty six.","default_language":"en-US"}

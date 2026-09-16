@@ -25,7 +25,13 @@ const path = require("node:path");
       await page.locator("#notice").textContent(),
     );
   };
+  assert.equal(await page.inputValue("#source"), "1~2만 원");
+  assert.equal(await page.inputValue("#expected"), "만 원에서 이만 원");
+  assert((await page.locator("#sample-review").textContent()).includes("독립 검토 대기"));
+  await run();
+  assert.equal(await page.locator("#output").textContent(), "만 원에서 이만 원");
   await page.fill("#source", "Apple은 사과입니다.");
+  await page.uncheck("#expected-enabled");
   await run();
   assert.equal(
     await page.locator("#output").textContent(),
@@ -118,8 +124,11 @@ const path = require("node:path");
   assert.equal(await page.evaluate(() => globalThis.PWNED), undefined);
   assert.equal(await page.locator("#output script").count(), 0);
   await page.click('[data-mode="corpus"]');
+  assert((await page.locator("#reference-summary").textContent()).includes("독립 검토 완료 0건"));
+  assert((await page.locator("#corpus-panel h2").textContent()).includes("기대 출력 코퍼스"));
   await page.selectOption("#corpus", "protected");
   await run();
+  assert((await page.locator("#corpus-review").textContent()).includes("원문 보존 계약"));
   assert(
     (await page.locator("#corpus-progress").textContent()).includes(
       "40건 통과, 0건 실패",
@@ -127,6 +136,7 @@ const path = require("node:path");
   );
   await page.selectOption("#corpus", "multiword-v8");
   await run();
+  assert((await page.locator("#corpus-review").textContent()).includes("임시 발음값"));
   assert(
     (await page.locator("#corpus-progress").textContent()).includes(
       "30건 통과, 0건 실패",

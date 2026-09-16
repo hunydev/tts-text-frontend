@@ -1,0 +1,397 @@
+{
+  "version": 1,
+  "scope": "Current active JSONL corpora and seven golden fixture files; native/API adversarial fixtures and historical reports are not pronunciation quality references.",
+  "classification_definitions": {
+    "reference-policy": "Developer-authored expected normalization/routing policy; not a human-approved language reference.",
+    "provisional-pronunciation": "Project-selected pronunciation or fallback spelling awaiting independent review.",
+    "preservation-contract": "Original text/literal preservation or a documented keep-language policy.",
+    "needs-review": "An identified reference concern or historical challenge requires an explicit review decision."
+  },
+  "review_status": "pending-independent-review",
+  "human_approved_cases": 0,
+  "files": [
+    {
+      "path": "tests/evaluation/cases.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "developer-authored synthetic fixture",
+        "reason": "A developer-authored normalization or routing policy regression; its expected value is not independently approved linguistic truth."
+      },
+      "category_overrides": {
+        "foreign-pronunciation": {
+          "classification": "provisional-pronunciation",
+          "review_status": "pending-independent-review",
+          "reference_source": "developer-authored synthetic fixture",
+          "reason": "A project seed pronunciation or prototype fallback; matching it verifies the selected spelling, not independently established pronunciation correctness."
+        },
+        "protected-syntax": {
+          "classification": "preservation-contract",
+          "review_status": "pending-independent-review",
+          "reference_source": "developer-authored synthetic fixture",
+          "reason": "An explicit source preservation contract; passing does not assert that literal code, paths or original English should be spoken by every consumer."
+        }
+      },
+      "case_overrides": {
+        "unknown-foobar": {
+          "classification": "provisional-pronunciation",
+          "review_status": "pending-independent-review",
+          "reference_source": "developer-authored synthetic fixture",
+          "reason": "foobar → 푸바 is a prototype rendering regression, not unknown-word pronunciation ground truth."
+        }
+      }
+    },
+    {
+      "path": "tests/evaluation/domain_cases_v8.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "developer-authored synthetic fixture",
+        "reason": "A developer-authored normalization or routing policy regression; its expected value is not independently approved linguistic truth."
+      },
+      "category_overrides": {
+        "technical/protected": {
+          "classification": "preservation-contract",
+          "review_status": "pending-independent-review",
+          "reference_source": "developer-authored synthetic fixture",
+          "reason": "An explicit source preservation contract; passing does not assert that literal code, paths or original English should be spoken by every consumer."
+        },
+        "content/code-mixed": {
+          "classification": "provisional-pronunciation",
+          "review_status": "pending-independent-review",
+          "reference_source": "developer-authored synthetic fixture",
+          "reason": "A project seed pronunciation or prototype fallback; matching it verifies the selected spelling, not independently established pronunciation correctness."
+        },
+        "technical/code-mixed": {
+          "classification": "provisional-pronunciation",
+          "review_status": "pending-independent-review",
+          "reference_source": "developer-authored synthetic fixture",
+          "reason": "A project seed pronunciation or prototype fallback; matching it verifies the selected spelling, not independently established pronunciation correctness."
+        }
+      },
+      "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/advanced_cases.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "developer-authored synthetic fixture",
+        "reason": "A developer-authored normalization or routing policy regression; its expected value is not independently approved linguistic truth."
+      },
+      "category_overrides": {
+        "content/foreign-pronunciation": {
+          "classification": "provisional-pronunciation",
+          "review_status": "pending-independent-review",
+          "reference_source": "developer-authored synthetic fixture",
+          "reason": "A project seed pronunciation or prototype fallback; matching it verifies the selected spelling, not independently established pronunciation correctness."
+        },
+        "content/code-mixed": {
+          "classification": "provisional-pronunciation",
+          "review_status": "pending-independent-review",
+          "reference_source": "developer-authored synthetic fixture",
+          "reason": "A project seed pronunciation or prototype fallback; matching it verifies the selected spelling, not independently established pronunciation correctness."
+        }
+      },
+      "case_overrides": {
+        "advanced-content-unknown-word": {
+          "classification": "provisional-pronunciation",
+          "review_status": "pending-independent-review",
+          "reference_source": "developer-authored synthetic fixture",
+          "reason": "quasar is now an explicit system lexicon hit; this case must not count as an unknown-word G2P success."
+        }
+      }
+    },
+    {
+      "path": "tests/evaluation/challenge_cases.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "needs-review",
+        "review_status": "pending-independent-review",
+        "reference_source": "developer-authored synthetic fixture",
+        "reason": "Historical challenge material used during development; each current reference still needs an independent contextual and linguistic review."
+      },
+      "category_overrides": {
+        "technical/protected": {
+          "classification": "preservation-contract",
+          "review_status": "pending-independent-review",
+          "reference_source": "developer-authored synthetic fixture",
+          "reason": "An explicit source preservation contract; passing does not assert that literal code, paths or original English should be spoken by every consumer."
+        }
+      },
+      "case_overrides": {
+        "challenge-content-unknown-word": {
+          "classification": "provisional-pronunciation",
+          "review_status": "pending-independent-review",
+          "reference_source": "developer-authored synthetic fixture",
+          "reason": "This originally unseen quasar item is known development data and a current lexicon hit; it is not a held-out G2P measurement."
+        }
+      }
+    },
+    {
+      "path": "tests/evaluation/protected_cases.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "preservation-contract",
+        "review_status": "pending-independent-review",
+        "reference_source": "developer-authored synthetic fixture",
+        "reason": "An explicit source preservation contract; passing does not assert that literal code, paths or original English should be spoken by every consumer."
+      },
+      "category_overrides": {},
+      "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/content_v7.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "provisional-pronunciation",
+        "review_status": "pending-independent-review",
+        "reference_source": "developer-authored synthetic fixture",
+        "reason": "A project seed pronunciation or prototype fallback; matching it verifies the selected spelling, not independently established pronunciation correctness."
+      },
+      "category_overrides": {
+        "content/title": {
+          "classification": "reference-policy",
+          "review_status": "pending-independent-review",
+          "reference_source": "developer-authored synthetic fixture",
+          "reason": "A developer-authored normalization or routing policy regression; its expected value is not independently approved linguistic truth."
+        },
+        "content/guard": {
+          "classification": "reference-policy",
+          "review_status": "pending-independent-review",
+          "reference_source": "developer-authored synthetic fixture",
+          "reason": "A developer-authored normalization or routing policy regression; its expected value is not independently approved linguistic truth."
+        },
+        "finance/guard": {
+          "classification": "preservation-contract",
+          "review_status": "pending-independent-review",
+          "reference_source": "developer-authored synthetic fixture",
+          "reason": "An explicit source preservation contract; passing does not assert that literal code, paths or original English should be spoken by every consumer."
+        }
+      },
+      "case_overrides": {
+        "content-v7-thumbnail": {
+          "classification": "provisional-pronunciation",
+          "review_status": "pending-independent-review",
+          "reference_source": "developer-authored synthetic fixture",
+          "reason": "Audit found an inappropriate source-particle template; corrected input/reference pairs require a change record and independent pronunciation review."
+        },
+        "content-v7-timeline": {
+          "classification": "provisional-pronunciation",
+          "review_status": "pending-independent-review",
+          "reference_source": "developer-authored synthetic fixture",
+          "reason": "Audit found an inappropriate source-particle template; corrected input/reference pairs require a change record and independent pronunciation review."
+        },
+        "content-v7-keyframe": {
+          "classification": "provisional-pronunciation",
+          "review_status": "pending-independent-review",
+          "reference_source": "developer-authored synthetic fixture",
+          "reason": "Audit found an inappropriate source-particle template; corrected input/reference pairs require a change record and independent pronunciation review."
+        },
+        "content-v7-codec": {
+          "classification": "provisional-pronunciation",
+          "review_status": "pending-independent-review",
+          "reference_source": "developer-authored synthetic fixture",
+          "reason": "Audit found an inappropriate source-particle template; corrected input/reference pairs require a change record and independent pronunciation review."
+        },
+        "content-v7-livestream": {
+          "classification": "provisional-pronunciation",
+          "review_status": "pending-independent-review",
+          "reference_source": "developer-authored synthetic fixture",
+          "reason": "Audit found an inappropriate source-particle template; corrected input/reference pairs require a change record and independent pronunciation review."
+        },
+        "content-v7-photoshop": {
+          "classification": "provisional-pronunciation",
+          "review_status": "pending-independent-review",
+          "reference_source": "developer-authored synthetic fixture",
+          "reason": "Audit found an inappropriate source-particle template; corrected input/reference pairs require a change record and independent pronunciation review."
+        },
+        "content-v7-capcut": {
+          "classification": "provisional-pronunciation",
+          "review_status": "pending-independent-review",
+          "reference_source": "developer-authored synthetic fixture",
+          "reason": "Audit found an inappropriate source-particle template; corrected input/reference pairs require a change record and independent pronunciation review."
+        },
+        "content-v7-aftereffects": {
+          "classification": "needs-review",
+          "review_status": "pending-independent-review",
+          "reference_source": "developer-authored synthetic fixture",
+          "reason": "Project 애프터이펙츠 differs from Adobe Korean 애프터 이펙트; select and document source-pronunciation versus localized product-name policy."
+        },
+        "content-v7-literal-untouched": {
+          "classification": "preservation-contract",
+          "review_status": "pending-independent-review",
+          "reference_source": "developer-authored synthetic fixture",
+          "reason": "An explicit source preservation contract; passing does not assert that literal code, paths or original English should be spoken by every consumer."
+        }
+      }
+    },
+    {
+      "path": "tests/evaluation/finance_ranges_v7.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "developer-authored synthetic fixture",
+        "reason": "A developer-authored normalization or routing policy regression; its expected value is not independently approved linguistic truth."
+      },
+      "category_overrides": {},
+      "case_overrides": {
+        "range-kg": {
+          "classification": "needs-review",
+          "review_status": "pending-independent-review",
+          "reference_source": "developer-authored synthetic fixture",
+          "reason": "The original 금액은 1kg~2kg sentence used an inappropriate money template; a natural quantity scenario and range reading need recorded review."
+        },
+        "range-mismatch-units": {
+          "classification": "needs-review",
+          "review_status": "pending-independent-review",
+          "reference_source": "developer-authored synthetic fixture",
+          "reason": "Intentionally incompatible units are malformed-input preservation tests, not natural finance examples or pronunciation accuracy successes."
+        },
+        "range-mismatch-scale": {
+          "classification": "needs-review",
+          "review_status": "pending-independent-review",
+          "reference_source": "developer-authored synthetic fixture",
+          "reason": "Intentionally incompatible currency and mass units are malformed-input preservation tests, not natural finance examples."
+        }
+      }
+    },
+    {
+      "path": "tests/evaluation/multiword_v8.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "provisional-pronunciation",
+        "review_status": "pending-independent-review",
+        "reference_source": "developer-authored synthetic fixture",
+        "reason": "A project seed pronunciation or prototype fallback; matching it verifies the selected spelling, not independently established pronunciation correctness."
+      },
+      "category_overrides": {
+        "multiword/english-preserve": {
+          "classification": "preservation-contract",
+          "review_status": "pending-independent-review",
+          "reference_source": "developer-authored synthetic fixture",
+          "reason": "An explicit source preservation contract; passing does not assert that literal code, paths or original English should be spoken by every consumer."
+        },
+        "multiword/title-preserve": {
+          "classification": "preservation-contract",
+          "review_status": "pending-independent-review",
+          "reference_source": "developer-authored synthetic fixture",
+          "reason": "An explicit source preservation contract; passing does not assert that literal code, paths or original English should be spoken by every consumer."
+        },
+        "multiword/literal-preserve": {
+          "classification": "preservation-contract",
+          "review_status": "pending-independent-review",
+          "reference_source": "developer-authored synthetic fixture",
+          "reason": "An explicit source preservation contract; passing does not assert that literal code, paths or original English should be spoken by every consumer."
+        }
+      },
+      "case_overrides": {
+        "multiword-after-effects": {
+          "classification": "needs-review",
+          "review_status": "pending-independent-review",
+          "reference_source": "developer-authored synthetic fixture",
+          "reason": "Project 애프터 이펙츠 differs from Adobe Korean 애프터 이펙트; matching this seed does not establish authoritative product pronunciation."
+        }
+      }
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "format": "golden-tsv",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "developer-authored synthetic fixture",
+        "reason": "A developer-authored normalization or routing policy regression; its expected value is not independently approved linguistic truth."
+      },
+      "category_overrides": {},
+      "case_overrides": {}
+    },
+    {
+      "path": "tests/golden/en/cases.tsv",
+      "format": "golden-tsv",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "developer-authored synthetic fixture",
+        "reason": "A developer-authored normalization or routing policy regression; its expected value is not independently approved linguistic truth."
+      },
+      "category_overrides": {},
+      "case_overrides": {}
+    },
+    {
+      "path": "tests/golden/code-mixed/cases.tsv",
+      "format": "golden-tsv",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "developer-authored synthetic fixture",
+        "reason": "A developer-authored normalization or routing policy regression; its expected value is not independently approved linguistic truth."
+      },
+      "category_overrides": {},
+      "case_overrides": {}
+    },
+    {
+      "path": "tests/golden/foreign-pronunciation/cases.tsv",
+      "format": "golden-tsv",
+      "default": {
+        "classification": "provisional-pronunciation",
+        "review_status": "pending-independent-review",
+        "reference_source": "developer-authored synthetic fixture",
+        "reason": "A project seed pronunciation or prototype fallback; matching it verifies the selected spelling, not independently established pronunciation correctness."
+      },
+      "category_overrides": {},
+      "case_overrides": {}
+    },
+    {
+      "path": "tests/golden/streaming/cases.tsv",
+      "format": "golden-tsv",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "developer-authored synthetic fixture",
+        "reason": "A developer-authored normalization or routing policy regression; its expected value is not independently approved linguistic truth."
+      },
+      "category_overrides": {},
+      "case_overrides": {}
+    },
+    {
+      "path": "tests/golden/domain/cases.tsv",
+      "format": "golden-tsv",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "developer-authored synthetic fixture",
+        "reason": "A developer-authored normalization or routing policy regression; its expected value is not independently approved linguistic truth."
+      },
+      "category_overrides": {},
+      "case_overrides": {}
+    },
+    {
+      "path": "tests/golden/customer/cases.tsv",
+      "format": "golden-tsv",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "developer-authored synthetic fixture",
+        "reason": "A developer-authored normalization or routing policy regression; its expected value is not independently approved linguistic truth."
+      },
+      "category_overrides": {},
+      "case_overrides": {}
+    }
+  ],
+  "excluded": [
+    {
+      "path": "tests/evaluation/domain_cases.jsonl",
+      "reason": "Historical pre-v0.8 span layout; current active counterpart is domain_cases_v8.jsonl."
+    },
+    {
+      "path": "docs/evidence/",
+      "reason": "Historical evidence must retain its original expected values; not an active reference gate."
+    }
+  ],
+  "review_policy": "Passing structural checks or matching engine output never changes review_status or human_approved_cases. Human approval requires a separate named reviewer, dated rationale and evidence; the script cannot supply it."
+}

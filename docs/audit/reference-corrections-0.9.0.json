@@ -1,0 +1,766 @@
+{
+  "version": 1,
+  "baseline_commit": "ca1d7657af3e531cdd8ad1fb999afdffdc8deef5",
+  "target_version": "0.9.0",
+  "reference_source": "Developer-authored meaning/policy corrections, reviewed independently of candidate output; not independent human annotation.",
+  "changes": [
+    {
+      "path": "tests/evaluation/advanced_cases.jsonl",
+      "id": "advanced-finance-decimal-range",
+      "changed_fields": [
+        "expected"
+      ],
+      "before": {
+        "expected": "예상 수익률은 일 점 오 다시 이 점 오 퍼센트입니다."
+      },
+      "after": {
+        "expected": "예상 수익률은 일 점 오 퍼센트에서 이 점 오 퍼센트입니다."
+      },
+      "reasons": [
+        "Numerical interval meaning: replace hyphen label 다시 with 에서 and preserve units at both endpoints."
+      ]
+    },
+    {
+      "path": "tests/evaluation/advanced_cases.jsonl",
+      "id": "advanced-measure-range",
+      "changed_fields": [
+        "expected"
+      ],
+      "before": {
+        "expected": "거리는 일 점 오 다시 이 점 오 킬로미터입니다."
+      },
+      "after": {
+        "expected": "거리는 일 점 오 킬로미터에서 이 점 오 킬로미터입니다."
+      },
+      "reasons": [
+        "Numerical interval meaning: replace hyphen label 다시 with 에서 and preserve units at both endpoints."
+      ]
+    },
+    {
+      "path": "tests/evaluation/cases.jsonl",
+      "id": "ko-date-labelled",
+      "changed_fields": [
+        "expected"
+      ],
+      "before": {
+        "expected": "이천이십육 년 유 월 일 일"
+      },
+      "after": {
+        "expected": "이천이십육 년 유월 일 일"
+      },
+      "reasons": [
+        "Use lexical month spellings 유월/시월 without splitting the word."
+      ]
+    },
+    {
+      "path": "tests/evaluation/cases.jsonl",
+      "id": "ko-date-labelled-compact",
+      "changed_fields": [
+        "expected"
+      ],
+      "before": {
+        "expected": "이천이십육 년 시 월 십육 일"
+      },
+      "after": {
+        "expected": "이천이십육 년 시월 십육 일"
+      },
+      "reasons": [
+        "Use lexical month spellings 유월/시월 without splitting the word."
+      ]
+    },
+    {
+      "path": "tests/evaluation/cases.jsonl",
+      "id": "invalid-hour-out-of-range",
+      "changed_fields": [
+        "category"
+      ],
+      "before": {
+        "category": "invalid-input"
+      },
+      "after": {
+        "category": "unsupported/date-time"
+      },
+      "reasons": [
+        "24:00 is a conventionally valid end-of-day notation unsupported by this parser, not universally invalid."
+      ]
+    },
+    {
+      "path": "tests/evaluation/cases.jsonl",
+      "id": "range-default",
+      "changed_fields": [
+        "expected"
+      ],
+      "before": {
+        "expected": "백이십삼 다시 사백오십육"
+      },
+      "after": {
+        "expected": "백이십삼에서 사백오십육"
+      },
+      "reasons": [
+        "Numerical interval meaning: replace hyphen label 다시 with 에서 and preserve units at both endpoints."
+      ]
+    },
+    {
+      "path": "tests/evaluation/challenge_cases.jsonl",
+      "id": "challenge-finance-decimal-range",
+      "changed_fields": [
+        "expected"
+      ],
+      "before": {
+        "expected": "예상 수익률은 일 점 오 다시 이 점 오 퍼센트입니다."
+      },
+      "after": {
+        "expected": "예상 수익률은 일 점 오 퍼센트에서 이 점 오 퍼센트입니다."
+      },
+      "reasons": [
+        "Numerical interval meaning: replace hyphen label 다시 with 에서 and preserve units at both endpoints."
+      ]
+    },
+    {
+      "path": "tests/evaluation/content_v7.jsonl",
+      "id": "content-v7-thumbnail",
+      "changed_fields": [
+        "text",
+        "expected"
+      ],
+      "before": {
+        "text": "thumbnail를 소개합니다.",
+        "expected": "섬네일를 소개합니다."
+      },
+      "after": {
+        "text": "thumbnail을 소개합니다.",
+        "expected": "섬네일을 소개합니다."
+      },
+      "reasons": [
+        "Correct the source particle and reference to 을 after a consonant-final name. No automatic particle-correction feature is implied."
+      ]
+    },
+    {
+      "path": "tests/evaluation/content_v7.jsonl",
+      "id": "content-v7-timeline",
+      "changed_fields": [
+        "text",
+        "expected"
+      ],
+      "before": {
+        "text": "timeline를 소개합니다.",
+        "expected": "타임라인를 소개합니다."
+      },
+      "after": {
+        "text": "timeline을 소개합니다.",
+        "expected": "타임라인을 소개합니다."
+      },
+      "reasons": [
+        "Correct the source particle and reference to 을 after a consonant-final name. No automatic particle-correction feature is implied."
+      ]
+    },
+    {
+      "path": "tests/evaluation/content_v7.jsonl",
+      "id": "content-v7-keyframe",
+      "changed_fields": [
+        "text",
+        "expected"
+      ],
+      "before": {
+        "text": "keyframe를 소개합니다.",
+        "expected": "키프레임를 소개합니다."
+      },
+      "after": {
+        "text": "keyframe을 소개합니다.",
+        "expected": "키프레임을 소개합니다."
+      },
+      "reasons": [
+        "Correct the source particle and reference to 을 after a consonant-final name. No automatic particle-correction feature is implied."
+      ]
+    },
+    {
+      "path": "tests/evaluation/content_v7.jsonl",
+      "id": "content-v7-codec",
+      "changed_fields": [
+        "text",
+        "expected"
+      ],
+      "before": {
+        "text": "codec를 소개합니다.",
+        "expected": "코덱를 소개합니다."
+      },
+      "after": {
+        "text": "codec을 소개합니다.",
+        "expected": "코덱을 소개합니다."
+      },
+      "reasons": [
+        "Correct the source particle and reference to 을 after a consonant-final name. No automatic particle-correction feature is implied."
+      ]
+    },
+    {
+      "path": "tests/evaluation/content_v7.jsonl",
+      "id": "content-v7-livestream",
+      "changed_fields": [
+        "text",
+        "expected"
+      ],
+      "before": {
+        "text": "livestream를 소개합니다.",
+        "expected": "라이브스트림를 소개합니다."
+      },
+      "after": {
+        "text": "livestream을 소개합니다.",
+        "expected": "라이브스트림을 소개합니다."
+      },
+      "reasons": [
+        "Correct the source particle and reference to 을 after a consonant-final name. No automatic particle-correction feature is implied."
+      ]
+    },
+    {
+      "path": "tests/evaluation/content_v7.jsonl",
+      "id": "content-v7-photoshop",
+      "changed_fields": [
+        "text",
+        "expected"
+      ],
+      "before": {
+        "text": "Photoshop를 사용합니다.",
+        "expected": "포토샵를 사용합니다."
+      },
+      "after": {
+        "text": "Photoshop을 사용합니다.",
+        "expected": "포토샵을 사용합니다."
+      },
+      "reasons": [
+        "Correct the source particle and reference to 을 after a consonant-final name. No automatic particle-correction feature is implied."
+      ]
+    },
+    {
+      "path": "tests/evaluation/content_v7.jsonl",
+      "id": "content-v7-capcut",
+      "changed_fields": [
+        "text",
+        "expected"
+      ],
+      "before": {
+        "text": "CapCut를 사용합니다.",
+        "expected": "캡컷를 사용합니다."
+      },
+      "after": {
+        "text": "CapCut을 사용합니다.",
+        "expected": "캡컷을 사용합니다."
+      },
+      "reasons": [
+        "Correct the source particle and reference to 을 after a consonant-final name. No automatic particle-correction feature is implied."
+      ]
+    },
+    {
+      "path": "tests/evaluation/domain_cases_v8.jsonl",
+      "id": "finance-maturity-date",
+      "changed_fields": [
+        "expected"
+      ],
+      "before": {
+        "expected": "만기일은 이천이십육 년 시 월 십육 일입니다."
+      },
+      "after": {
+        "expected": "만기일은 이천이십육 년 시월 십육 일입니다."
+      },
+      "reasons": [
+        "Use lexical month spellings 유월/시월 without splitting the word."
+      ]
+    },
+    {
+      "path": "tests/evaluation/domain_cases_v8.jsonl",
+      "id": "finance-range-default",
+      "changed_fields": [
+        "expected"
+      ],
+      "before": {
+        "expected": "기본 구간은 백이십삼 다시 사백오십육입니다."
+      },
+      "after": {
+        "expected": "기본 구간은 백이십삼에서 사백오십육입니다."
+      },
+      "reasons": [
+        "Numerical interval meaning: replace hyphen label 다시 with 에서 and preserve units at both endpoints."
+      ]
+    },
+    {
+      "path": "tests/evaluation/domain_cases_v8.jsonl",
+      "id": "content-temperature",
+      "changed_fields": [
+        "expected"
+      ],
+      "before": {
+        "expected": "설정 온도는 삼십이 도입니다."
+      },
+      "after": {
+        "expected": "설정 온도는 섭씨 삼십이 도입니다."
+      },
+      "reasons": [
+        "Preserve the explicitly written Celsius scale, not an unspecified degree."
+      ]
+    },
+    {
+      "path": "tests/evaluation/domain_cases_v8.jsonl",
+      "id": "customer-appointment",
+      "changed_fields": [
+        "expected"
+      ],
+      "before": {
+        "expected": "예약은 이천이십육 년 시 월 일 일 열네 시 삼십 분이고 인원은 세 명입니다."
+      },
+      "after": {
+        "expected": "예약은 이천이십육 년 시월 일 일 열네 시 삼십 분이고 인원은 세 명입니다."
+      },
+      "reasons": [
+        "Use lexical month spellings 유월/시월 without splitting the word."
+      ]
+    },
+    {
+      "path": "tests/evaluation/finance_ranges_v7.jsonl",
+      "id": "range-krw",
+      "changed_fields": [
+        "expected"
+      ],
+      "before": {
+        "expected": "금액은 백 다시 이백 원입니다."
+      },
+      "after": {
+        "expected": "금액은 백 원에서 이백 원입니다."
+      },
+      "reasons": [
+        "Numerical interval meaning: replace hyphen label 다시 with 에서 and preserve units at both endpoints."
+      ]
+    },
+    {
+      "path": "tests/evaluation/finance_ranges_v7.jsonl",
+      "id": "range-scaled-krw",
+      "changed_fields": [
+        "expected"
+      ],
+      "before": {
+        "expected": "금액은 만 다시 이만 원입니다."
+      },
+      "after": {
+        "expected": "금액은 만 원에서 이만 원입니다."
+      },
+      "reasons": [
+        "Numerical interval meaning: replace hyphen label 다시 with 에서 and preserve units at both endpoints."
+      ]
+    },
+    {
+      "path": "tests/evaluation/finance_ranges_v7.jsonl",
+      "id": "range-scaled-mixed",
+      "changed_fields": [
+        "expected"
+      ],
+      "before": {
+        "expected": "금액은 만 다시 이만 원입니다."
+      },
+      "after": {
+        "expected": "금액은 만 원에서 이만 원입니다."
+      },
+      "reasons": [
+        "Numerical interval meaning: replace hyphen label 다시 with 에서 and preserve units at both endpoints."
+      ]
+    },
+    {
+      "path": "tests/evaluation/finance_ranges_v7.jsonl",
+      "id": "range-scaled-second",
+      "changed_fields": [
+        "expected"
+      ],
+      "before": {
+        "expected": "금액은 만 다시 이만 원입니다."
+      },
+      "after": {
+        "expected": "금액은 만 원에서 이만 원입니다."
+      },
+      "reasons": [
+        "Numerical interval meaning: replace hyphen label 다시 with 에서 and preserve units at both endpoints."
+      ]
+    },
+    {
+      "path": "tests/evaluation/finance_ranges_v7.jsonl",
+      "id": "range-scaled-decimal",
+      "changed_fields": [
+        "expected"
+      ],
+      "before": {
+        "expected": "금액은 만오천 다시 이만오천 원입니다."
+      },
+      "after": {
+        "expected": "금액은 만오천 원에서 이만오천 원입니다."
+      },
+      "reasons": [
+        "Numerical interval meaning: replace hyphen label 다시 with 에서 and preserve units at both endpoints."
+      ]
+    },
+    {
+      "path": "tests/evaluation/finance_ranges_v7.jsonl",
+      "id": "range-scaled-spaces",
+      "changed_fields": [
+        "expected"
+      ],
+      "before": {
+        "expected": "금액은 일억 다시 이억 원입니다."
+      },
+      "after": {
+        "expected": "금액은 일억 원에서 이억 원입니다."
+      },
+      "reasons": [
+        "Numerical interval meaning: replace hyphen label 다시 with 에서 and preserve units at both endpoints."
+      ]
+    },
+    {
+      "path": "tests/evaluation/finance_ranges_v7.jsonl",
+      "id": "range-prefixed-krw",
+      "changed_fields": [
+        "expected"
+      ],
+      "before": {
+        "expected": "금액은 천 다시 이천 원입니다."
+      },
+      "after": {
+        "expected": "금액은 천 원에서 이천 원입니다."
+      },
+      "reasons": [
+        "Numerical interval meaning: replace hyphen label 다시 with 에서 and preserve units at both endpoints."
+      ]
+    },
+    {
+      "path": "tests/evaluation/finance_ranges_v7.jsonl",
+      "id": "range-dollars-ko",
+      "changed_fields": [
+        "expected"
+      ],
+      "before": {
+        "expected": "금액은 십 다시 이십 달러입니다."
+      },
+      "after": {
+        "expected": "금액은 십 달러에서 이십 달러입니다."
+      },
+      "reasons": [
+        "Numerical interval meaning: replace hyphen label 다시 with 에서 and preserve units at both endpoints."
+      ]
+    },
+    {
+      "path": "tests/evaluation/finance_ranges_v7.jsonl",
+      "id": "range-rate",
+      "changed_fields": [
+        "text",
+        "expected"
+      ],
+      "before": {
+        "text": "금액은 1.5%~2.5%입니다.",
+        "expected": "금액은 일 점 오 다시 이 점 오 퍼센트입니다."
+      },
+      "after": {
+        "text": "금리는 1.5%~2.5%입니다.",
+        "expected": "금리는 일 점 오 퍼센트에서 이 점 오 퍼센트입니다."
+      },
+      "reasons": [
+        "Numerical interval meaning: replace hyphen label 다시 with 에서 and preserve units at both endpoints.",
+        "Describe rates, variation, mass or incompatible notation accurately instead of calling every quantity 금액."
+      ]
+    },
+    {
+      "path": "tests/evaluation/finance_ranges_v7.jsonl",
+      "id": "range-rate-spaces",
+      "changed_fields": [
+        "text",
+        "expected"
+      ],
+      "before": {
+        "text": "금액은 1.5% ~ 2.5%입니다.",
+        "expected": "금액은 일 점 오 다시 이 점 오 퍼센트입니다."
+      },
+      "after": {
+        "text": "금리는 1.5% ~ 2.5%입니다.",
+        "expected": "금리는 일 점 오 퍼센트에서 이 점 오 퍼센트입니다."
+      },
+      "reasons": [
+        "Numerical interval meaning: replace hyphen label 다시 with 에서 and preserve units at both endpoints.",
+        "Describe rates, variation, mass or incompatible notation accurately instead of calling every quantity 금액."
+      ]
+    },
+    {
+      "path": "tests/evaluation/finance_ranges_v7.jsonl",
+      "id": "range-negative-rate",
+      "changed_fields": [
+        "text",
+        "expected"
+      ],
+      "before": {
+        "text": "금액은 -1.5% ~ -0.5%입니다.",
+        "expected": "금액은 마이너스 일 점 오 다시 마이너스 영 점 오 퍼센트입니다."
+      },
+      "after": {
+        "text": "수익률은 -1.5% ~ -0.5%입니다.",
+        "expected": "수익률은 마이너스 일 점 오 퍼센트에서 마이너스 영 점 오 퍼센트입니다."
+      },
+      "reasons": [
+        "Numerical interval meaning: replace hyphen label 다시 with 에서 and preserve units at both endpoints.",
+        "Describe rates, variation, mass or incompatible notation accurately instead of calling every quantity 금액."
+      ]
+    },
+    {
+      "path": "tests/evaluation/finance_ranges_v7.jsonl",
+      "id": "range-bp",
+      "changed_fields": [
+        "text",
+        "expected"
+      ],
+      "before": {
+        "text": "금액은 25bp~50bp입니다.",
+        "expected": "금액은 이십오 다시 오십 베이시스포인트입니다."
+      },
+      "after": {
+        "text": "변동폭은 25bp~50bp입니다.",
+        "expected": "변동폭은 이십오 베이시스포인트에서 오십 베이시스포인트입니다."
+      },
+      "reasons": [
+        "Numerical interval meaning: replace hyphen label 다시 with 에서 and preserve units at both endpoints.",
+        "Describe rates, variation, mass or incompatible notation accurately instead of calling every quantity 금액."
+      ]
+    },
+    {
+      "path": "tests/evaluation/finance_ranges_v7.jsonl",
+      "id": "range-pp",
+      "changed_fields": [
+        "text",
+        "expected"
+      ],
+      "before": {
+        "text": "금액은 0.1%p~0.2%p입니다.",
+        "expected": "금액은 영 점 일 다시 영 점 이 퍼센트포인트입니다."
+      },
+      "after": {
+        "text": "변동폭은 0.1%p~0.2%p입니다.",
+        "expected": "변동폭은 영 점 일 퍼센트포인트에서 영 점 이 퍼센트포인트입니다."
+      },
+      "reasons": [
+        "Numerical interval meaning: replace hyphen label 다시 with 에서 and preserve units at both endpoints.",
+        "Describe rates, variation, mass or incompatible notation accurately instead of calling every quantity 금액."
+      ]
+    },
+    {
+      "path": "tests/evaluation/finance_ranges_v7.jsonl",
+      "id": "range-kg",
+      "changed_fields": [
+        "text",
+        "expected"
+      ],
+      "before": {
+        "text": "금액은 1kg~2kg입니다.",
+        "expected": "금액은 일 다시 이 킬로그램입니다."
+      },
+      "after": {
+        "text": "질량은 1kg~2kg입니다.",
+        "expected": "질량은 일 킬로그램에서 이 킬로그램입니다."
+      },
+      "reasons": [
+        "Numerical interval meaning: replace hyphen label 다시 with 에서 and preserve units at both endpoints.",
+        "Describe rates, variation, mass or incompatible notation accurately instead of calling every quantity 금액."
+      ]
+    },
+    {
+      "path": "tests/evaluation/finance_ranges_v7.jsonl",
+      "id": "range-scientific",
+      "changed_fields": [
+        "expected"
+      ],
+      "before": {
+        "expected": "금액은 백 다시 이백 원입니다."
+      },
+      "after": {
+        "expected": "금액은 백 원에서 이백 원입니다."
+      },
+      "reasons": [
+        "Numerical interval meaning: replace hyphen label 다시 with 에서 and preserve units at both endpoints."
+      ]
+    },
+    {
+      "path": "tests/evaluation/finance_ranges_v7.jsonl",
+      "id": "range-mismatch-units",
+      "changed_fields": [
+        "text",
+        "expected"
+      ],
+      "before": {
+        "text": "금액은 1kg~2km입니다.",
+        "expected": "금액은 1kg~2km입니다."
+      },
+      "after": {
+        "text": "표기는 1kg~2km입니다.",
+        "expected": "표기는 1kg~2km입니다."
+      },
+      "reasons": [
+        "Describe rates, variation, mass or incompatible notation accurately instead of calling every quantity 금액."
+      ]
+    },
+    {
+      "path": "tests/evaluation/finance_ranges_v7.jsonl",
+      "id": "range-mismatch-rate",
+      "changed_fields": [
+        "text",
+        "expected"
+      ],
+      "before": {
+        "text": "금액은 1%~2%p입니다.",
+        "expected": "금액은 1%~2%p입니다."
+      },
+      "after": {
+        "text": "표기는 1%~2%p입니다.",
+        "expected": "표기는 1%~2%p입니다."
+      },
+      "reasons": [
+        "Describe rates, variation, mass or incompatible notation accurately instead of calling every quantity 금액."
+      ]
+    },
+    {
+      "path": "tests/evaluation/finance_ranges_v7.jsonl",
+      "id": "range-mismatch-scale",
+      "changed_fields": [
+        "text",
+        "expected"
+      ],
+      "before": {
+        "text": "금액은 1만원~2kg입니다.",
+        "expected": "금액은 1만원~2kg입니다."
+      },
+      "after": {
+        "text": "표기는 1만원~2kg입니다.",
+        "expected": "표기는 1만원~2kg입니다."
+      },
+      "reasons": [
+        "Describe rates, variation, mass or incompatible notation accurately instead of calling every quantity 금액."
+      ]
+    },
+    {
+      "path": "tests/golden/en/cases.tsv",
+      "input": "00:00",
+      "before": "zero o'clock",
+      "after": "midnight",
+      "reason": "Corrected semantic reading or month/temperature spelling; see numeric and English audit reports."
+    },
+    {
+      "path": "tests/golden/en/cases.tsv",
+      "input": "0:00",
+      "before": null,
+      "after": "midnight",
+      "reason": "New explicit regression reference for English clock style; not a unique linguistic truth."
+    },
+    {
+      "path": "tests/golden/en/cases.tsv",
+      "input": "00:00:00",
+      "before": null,
+      "after": "midnight",
+      "reason": "New explicit regression reference for English clock style; not a unique linguistic truth."
+    },
+    {
+      "path": "tests/golden/en/cases.tsv",
+      "input": "00:00:01",
+      "before": null,
+      "after": "one second after midnight",
+      "reason": "New explicit regression reference for English clock style; not a unique linguistic truth."
+    },
+    {
+      "path": "tests/golden/en/cases.tsv",
+      "input": "00:00:59",
+      "before": null,
+      "after": "fifty nine seconds after midnight",
+      "reason": "New explicit regression reference for English clock style; not a unique linguistic truth."
+    },
+    {
+      "path": "tests/golden/en/cases.tsv",
+      "input": "13:00",
+      "before": null,
+      "after": "thirteen hundred hours",
+      "reason": "New explicit regression reference for English clock style; not a unique linguistic truth."
+    },
+    {
+      "path": "tests/golden/en/cases.tsv",
+      "input": "14:00",
+      "before": null,
+      "after": "fourteen hundred hours",
+      "reason": "New explicit regression reference for English clock style; not a unique linguistic truth."
+    },
+    {
+      "path": "tests/golden/en/cases.tsv",
+      "input": "23:00",
+      "before": null,
+      "after": "twenty three hundred hours",
+      "reason": "New explicit regression reference for English clock style; not a unique linguistic truth."
+    },
+    {
+      "path": "tests/golden/en/cases.tsv",
+      "input": "13:00:01",
+      "before": null,
+      "after": "thirteen hundred hours and one second",
+      "reason": "New explicit regression reference for English clock style; not a unique linguistic truth."
+    },
+    {
+      "path": "tests/golden/en/cases.tsv",
+      "input": "23:00:00",
+      "before": null,
+      "after": "twenty three hundred hours and zero seconds",
+      "reason": "New explicit regression reference for English clock style; not a unique linguistic truth."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "input": "123-456",
+      "before": "백이십삼 다시 사백오십육",
+      "after": "백이십삼에서 사백오십육",
+      "reason": "Corrected semantic reading or month/temperature spelling; see numeric and English audit reports."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "input": "2026년 6월 1일",
+      "before": "이천이십육 년 유 월 일 일",
+      "after": "이천이십육 년 유월 일 일",
+      "reason": "Corrected semantic reading or month/temperature spelling; see numeric and English audit reports."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "input": "2026년10월16일",
+      "before": "이천이십육 년 시 월 십육 일",
+      "after": "이천이십육 년 시월 십육 일",
+      "reason": "Corrected semantic reading or month/temperature spelling; see numeric and English audit reports."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "input": "6월",
+      "before": "유 월",
+      "after": "유월",
+      "reason": "Corrected semantic reading or month/temperature spelling; see numeric and English audit reports."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "input": "10월",
+      "before": "시 월",
+      "after": "시월",
+      "reason": "Corrected semantic reading or month/temperature spelling; see numeric and English audit reports."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "input": "06월",
+      "before": "유 월",
+      "after": "유월",
+      "reason": "Corrected semantic reading or month/temperature spelling; see numeric and English audit reports."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "input": "010월",
+      "before": "시 월",
+      "after": "시월",
+      "reason": "Corrected semantic reading or month/temperature spelling; see numeric and English audit reports."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "input": "32°C",
+      "before": "삼십이 도",
+      "after": "섭씨 삼십이 도",
+      "reason": "Corrected semantic reading or month/temperature spelling; see numeric and English audit reports."
+    }
+  ],
+  "changed_or_added_cases": 54,
+  "historical_evidence": "docs/evidence/0.8.0-text-results.json and tests/evaluation/domain_cases.jsonl remain historical, not current correctness oracles."
+}

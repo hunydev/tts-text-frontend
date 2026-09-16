@@ -1,0 +1,894 @@
+{
+  "version": "0.9.0",
+  "baseline_commit": "ca1d7657af3e531cdd8ad1fb999afdffdc8deef5",
+  "scope": "Output text, Semantic IR, resource layers and deterministic streaming only; no audio. Corrected development references, not independent human annotation or unseen production accuracy.",
+  "tests": {
+    "gcc_ctest": {
+      "passed": 48,
+      "total": 48
+    },
+    "clang_ctest": {
+      "passed": 48,
+      "total": 48
+    },
+    "clang_asan_ubsan_ctest": {
+      "passed": 47,
+      "total": 47
+    },
+    "web_api_checks": 52,
+    "browser": "Chromium desktop/mobile passed against deployed port 8000, including review labels and the shared-scale default example",
+    "range_semantics_checks": 260,
+    "shared_scale_checks": 447,
+    "english_clock_checks": 174,
+    "english_clock_range_checks": 42,
+    "non_horizontal_whitespace_guards": 5,
+    "exhaustive_native_semantic_chunk_splits": 5120
+  },
+  "reference_audit": {
+    "files": 15,
+    "cases": 703,
+    "classifications": {
+      "needs-review": 17,
+      "preservation-contract": 65,
+      "provisional-pronunciation": 96,
+      "reference-policy": 525
+    },
+    "pending_independent_review": 703,
+    "human_approved_cases": 0,
+    "reference_defects": 0,
+    "structural_passed": true,
+    "known_defect_checks_passed": true,
+    "linguistic_accuracy": null
+  },
+  "reference_files": [
+    {
+      "path": "tests/evaluation/cases.jsonl",
+      "cases": 109,
+      "classifications": {
+        "preservation-contract": 4,
+        "provisional-pronunciation": 11,
+        "reference-policy": 94
+      },
+      "review_status": "pending-independent-review",
+      "human_approved_cases": 0,
+      "source_sha256": "db1846799069e130820ef3f336132b322330e1739f65c0c92266ce5ef44c1d5b"
+    },
+    {
+      "path": "tests/evaluation/domain_cases_v8.jsonl",
+      "cases": 60,
+      "classifications": {
+        "preservation-contract": 2,
+        "provisional-pronunciation": 11,
+        "reference-policy": 47
+      },
+      "review_status": "pending-independent-review",
+      "human_approved_cases": 0,
+      "source_sha256": "03db553c03d3c05cb5bd20ce390ae568f5cb14bfee8583a07ac56a7caa73e7a7"
+    },
+    {
+      "path": "tests/evaluation/advanced_cases.jsonl",
+      "cases": 30,
+      "classifications": {
+        "provisional-pronunciation": 5,
+        "reference-policy": 25
+      },
+      "review_status": "pending-independent-review",
+      "human_approved_cases": 0,
+      "source_sha256": "a70837b057c8c6fa38aa978709c0bd78c98e628e0692e539024bfb20708c3b29"
+    },
+    {
+      "path": "tests/evaluation/challenge_cases.jsonl",
+      "cases": 15,
+      "classifications": {
+        "needs-review": 12,
+        "preservation-contract": 2,
+        "provisional-pronunciation": 1
+      },
+      "review_status": "pending-independent-review",
+      "human_approved_cases": 0,
+      "source_sha256": "2ec5b5336bd3ea28baf54231aeb42b10b1218aad062407a43d1d7781aa017784"
+    },
+    {
+      "path": "tests/evaluation/protected_cases.jsonl",
+      "cases": 40,
+      "classifications": {
+        "preservation-contract": 40
+      },
+      "review_status": "pending-independent-review",
+      "human_approved_cases": 0,
+      "source_sha256": "7138d68f356dd5772f9374f30afaab0584d376280fbf8e9d5646f8b64aba1ae6"
+    },
+    {
+      "path": "tests/evaluation/content_v7.jsonl",
+      "cases": 40,
+      "classifications": {
+        "needs-review": 1,
+        "preservation-contract": 2,
+        "provisional-pronunciation": 24,
+        "reference-policy": 13
+      },
+      "review_status": "pending-independent-review",
+      "human_approved_cases": 0,
+      "source_sha256": "bbc86dd8fef4ddbfb26ed6cc5b2d5d1351f93d013d2c71c2f5f4c4ccd0512749"
+    },
+    {
+      "path": "tests/evaluation/finance_ranges_v7.jsonl",
+      "cases": 24,
+      "classifications": {
+        "needs-review": 3,
+        "reference-policy": 21
+      },
+      "review_status": "pending-independent-review",
+      "human_approved_cases": 0,
+      "source_sha256": "b0eb56b2f5d190892014acbc2e5ad20ed09e32e1d5ed3caaeabb9b453f573e33"
+    },
+    {
+      "path": "tests/evaluation/multiword_v8.jsonl",
+      "cases": 30,
+      "classifications": {
+        "needs-review": 1,
+        "preservation-contract": 15,
+        "provisional-pronunciation": 14
+      },
+      "review_status": "pending-independent-review",
+      "human_approved_cases": 0,
+      "source_sha256": "5e8b9d4082e33cfbb7e94f4e79546626424a9587a7e35a95b25e9c9d86787544"
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "cases": 147,
+      "classifications": {
+        "reference-policy": 147
+      },
+      "review_status": "pending-independent-review",
+      "human_approved_cases": 0,
+      "source_sha256": "069472a690b9ffeb31759e6f70df13d5da6a3a0a73bff25f2d4a4417af046065"
+    },
+    {
+      "path": "tests/golden/en/cases.tsv",
+      "cases": 137,
+      "classifications": {
+        "reference-policy": 137
+      },
+      "review_status": "pending-independent-review",
+      "human_approved_cases": 0,
+      "source_sha256": "671761fb39a776ec4fca173b2a6aa8f2c43b83fb9d65d14f5796ad2576de7267"
+    },
+    {
+      "path": "tests/golden/code-mixed/cases.tsv",
+      "cases": 37,
+      "classifications": {
+        "reference-policy": 37
+      },
+      "review_status": "pending-independent-review",
+      "human_approved_cases": 0,
+      "source_sha256": "0925601bd1c8b893504b3ec4369c60208a585346ded8b658637d1d85a8fc74a0"
+    },
+    {
+      "path": "tests/golden/foreign-pronunciation/cases.tsv",
+      "cases": 30,
+      "classifications": {
+        "provisional-pronunciation": 30
+      },
+      "review_status": "pending-independent-review",
+      "human_approved_cases": 0,
+      "source_sha256": "9064c171253ddf80bce8aaefbfa46fdf25c2b8676583f8df81acf10eacc6e959"
+    },
+    {
+      "path": "tests/golden/streaming/cases.tsv",
+      "cases": 2,
+      "classifications": {
+        "reference-policy": 2
+      },
+      "review_status": "pending-independent-review",
+      "human_approved_cases": 0,
+      "source_sha256": "a7d9153778a778ec2025a049ecda6379043d16d9e993892c2df5fa23cb74a3af"
+    },
+    {
+      "path": "tests/golden/domain/cases.tsv",
+      "cases": 1,
+      "classifications": {
+        "reference-policy": 1
+      },
+      "review_status": "pending-independent-review",
+      "human_approved_cases": 0,
+      "source_sha256": "aa12ec5ee1a949e2a04fae71fb2d7595c0fcc30f90125b65b3a2a0f71511558d"
+    },
+    {
+      "path": "tests/golden/customer/cases.tsv",
+      "cases": 1,
+      "classifications": {
+        "reference-policy": 1
+      },
+      "review_status": "pending-independent-review",
+      "human_approved_cases": 0,
+      "source_sha256": "2cbfc3c751d62b233c9efef31b57f6f1005dcf4a82bd58c248a99d3bec40c640"
+    }
+  ],
+  "comparison_on_corrected_references": {
+    "cases": {
+      "baseline": {
+        "summary": {
+          "cases": 109,
+          "passed": 106,
+          "failed": 3,
+          "matches": 106,
+          "mismatches": 3,
+          "exact_match_rate": 0.9724770642201835,
+          "metadata_failures": 0,
+          "batch_stream_failures": 0,
+          "character_edit_distance": 5,
+          "reference_characters": 1391,
+          "character_error_rate": 0.0035945363048166786,
+          "fallback_spans": 1
+        },
+        "provenance": {
+          "ttf": "/home/exedev/tts-text-frontend/artifacts/baseline-0.8.0/ttf",
+          "ttf_sha256": "72dc0bca04d6ee211700413167e5ee011efd91c5111a0936b5773ecb138af94d",
+          "corpus": "/home/exedev/tts-text-frontend/tests/evaluation/cases.jsonl",
+          "corpus_sha256": "db1846799069e130820ef3f336132b322330e1739f65c0c92266ce5ef44c1d5b",
+          "resources": "/home/exedev/tts-text-frontend/artifacts/baseline-0.8.0/resources",
+          "resource_sha256": {
+            "README.md": "dce1bb7d27a0d7b07b2e44406d26995d69afc2f481a562cddc2e12297b383165",
+            "common/boundaries.tsv": "da089327d5b127fb7de4d053fd8533a60f4a3f1311b2d1e61a7667caca196213",
+            "common/protected.tsv": "fed106b8ce8f2e81a73110e4f86ff352c034458c5f6271ec0d4067a1eb9dd8d1",
+            "customers/example/ko-KR/rules.tsv": "fd32794a3414e420e0e7e84214ef444b2c5af9a401cf494ee170c528e7a70238",
+            "domains/finance/ko-KR/rules.tsv": "ed9ecca8fc7f9f64461f44becd4d46281ead636b26f74af5b16d57abd002c5bf",
+            "languages/en-US/dictionaries/pronunciation.tsv": "10d73f76afda2a5219d8a8a0d03a8bf7d79616032b3ae04c27a28ece39b918ce",
+            "languages/en-US/g2p/graphemes.tsv": "2bd30e83894089ad2947df5a754c55ef0d3c93f311a3ea775fc58d9c2d994e5d",
+            "languages/en-US/rules/context.tsv": "e7ec75d2975fd31b67d771da1382dcaaa9e04c6c5941e737c3de3a89b69239ec",
+            "languages/en-US/rules/numeric.tsv": "bcbdb93d89072111f5599958084c782421c45082ccb993c6b5216b8adab1ee9e",
+            "languages/ko-KR/dictionaries/graphemes.tsv": "2707d81b10c4d91e6cece0466186574df9b52dc7a774c3c64e9c0e4927fc883a",
+            "languages/ko-KR/dictionaries/phones.tsv": "d15c8b0788e0ba134f236a5aeb5129e9f9716a26d8927065b1f52fad63f364db",
+            "languages/ko-KR/lexicon/acronyms/default.tsv": "0c2ee8e11c02c5c02e32ddc8b7b5327ef4d414bd3aac1ac27306726a35614021",
+            "languages/ko-KR/lexicon/brands/default.tsv": "d624494685c9df7b320c72c8ce4e37dbb849971951171960e534c5138cfb9733",
+            "languages/ko-KR/lexicon/common/default.tsv": "e152d9b59bafcb175242a203b507b9a2d3f4ae3ed5db42b9e87d533df1139780",
+            "languages/ko-KR/lexicon/content/default.tsv": "8d37167ac61ceaad062f2aca65cfa930a3450516dce52a40bed48472ed85ad01",
+            "languages/ko-KR/lexicon/finance/default.tsv": "fec6b8304217188ee20314a672640fe692d2466626de3522b16dbab9790857c4",
+            "languages/ko-KR/lexicon/multiword/content.tsv": "7928ca2f4d2d9e16ce413e45690be19b13178a0369edf4e18dd0934919418d4a",
+            "languages/ko-KR/lexicon/multiword/finance.tsv": "cc9e690f4a9c2253c495ebc40523ddcfcdc5d2729f25a5933c510225ecc22671",
+            "languages/ko-KR/lexicon/multiword/places_media.tsv": "e56b07f5d35ed24faf464ad74fbc83310dbf10667bda4cfb3de9290ab9aca33f",
+            "languages/ko-KR/lexicon/proper_nouns/default.tsv": "48ac54fbec1ff1dff0823b67ae4acf75443b7e520fc1789e108d17eac19c31ab",
+            "languages/ko-KR/lexicon/technology/default.tsv": "1ea75e7d058862e236f4070ddbc0091f3f6494ea189075ee1dca6f3c572caccc",
+            "languages/ko-KR/rules/context.tsv": "72e60833cb3a563dd5a2b511993d787046002325f30a05be017e3db7870ca96d",
+            "languages/ko-KR/rules/identifiers.tsv": "7b5a0fe04a86b7ea1d8db39dba76f17faa878f1b42024be032154f61a5c13ff3",
+            "languages/ko-KR/rules/numeric.tsv": "b2b0a1fa3c1907d2d909ce40cc1b3fa8509726989bc5f22bfba889137ecaea83",
+            "manifest.ttfm": "1532f69faef57e31ae9fe80170a823792d0a702d392ba826cb66097a382e6a2c"
+          },
+          "chunk_bytes": [
+            1,
+            7,
+            64
+          ],
+          "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]"
+        }
+      },
+      "candidate": {
+        "summary": {
+          "cases": 109,
+          "passed": 109,
+          "failed": 0,
+          "matches": 109,
+          "mismatches": 0,
+          "exact_match_rate": 1.0,
+          "metadata_failures": 0,
+          "batch_stream_failures": 0,
+          "character_edit_distance": 0,
+          "reference_characters": 1391,
+          "character_error_rate": 0.0,
+          "fallback_spans": 1
+        },
+        "provenance": {
+          "ttf": "/home/exedev/tts-text-frontend/build/ttf",
+          "ttf_sha256": "d56f7fa814699dc619d1e0aa2e98cd3776e6fa40451d8dca92d2cd669a1b97e4",
+          "corpus": "/home/exedev/tts-text-frontend/tests/evaluation/cases.jsonl",
+          "corpus_sha256": "db1846799069e130820ef3f336132b322330e1739f65c0c92266ce5ef44c1d5b",
+          "resources": "/home/exedev/tts-text-frontend/resources",
+          "resource_sha256": {
+            "README.md": "dce1bb7d27a0d7b07b2e44406d26995d69afc2f481a562cddc2e12297b383165",
+            "common/boundaries.tsv": "da089327d5b127fb7de4d053fd8533a60f4a3f1311b2d1e61a7667caca196213",
+            "common/protected.tsv": "fed106b8ce8f2e81a73110e4f86ff352c034458c5f6271ec0d4067a1eb9dd8d1",
+            "customers/example/ko-KR/rules.tsv": "fd32794a3414e420e0e7e84214ef444b2c5af9a401cf494ee170c528e7a70238",
+            "domains/finance/ko-KR/rules.tsv": "ed9ecca8fc7f9f64461f44becd4d46281ead636b26f74af5b16d57abd002c5bf",
+            "languages/en-US/dictionaries/pronunciation.tsv": "10d73f76afda2a5219d8a8a0d03a8bf7d79616032b3ae04c27a28ece39b918ce",
+            "languages/en-US/g2p/graphemes.tsv": "2bd30e83894089ad2947df5a754c55ef0d3c93f311a3ea775fc58d9c2d994e5d",
+            "languages/en-US/rules/context.tsv": "e7ec75d2975fd31b67d771da1382dcaaa9e04c6c5941e737c3de3a89b69239ec",
+            "languages/en-US/rules/numeric.tsv": "3f1079a94d534046633e6b3e8c54abcb00aeee3079c0f8bd268d036f1445ac57",
+            "languages/ko-KR/dictionaries/graphemes.tsv": "2707d81b10c4d91e6cece0466186574df9b52dc7a774c3c64e9c0e4927fc883a",
+            "languages/ko-KR/dictionaries/phones.tsv": "d15c8b0788e0ba134f236a5aeb5129e9f9716a26d8927065b1f52fad63f364db",
+            "languages/ko-KR/lexicon/acronyms/default.tsv": "0c2ee8e11c02c5c02e32ddc8b7b5327ef4d414bd3aac1ac27306726a35614021",
+            "languages/ko-KR/lexicon/brands/default.tsv": "d624494685c9df7b320c72c8ce4e37dbb849971951171960e534c5138cfb9733",
+            "languages/ko-KR/lexicon/common/default.tsv": "e152d9b59bafcb175242a203b507b9a2d3f4ae3ed5db42b9e87d533df1139780",
+            "languages/ko-KR/lexicon/content/default.tsv": "8d37167ac61ceaad062f2aca65cfa930a3450516dce52a40bed48472ed85ad01",
+            "languages/ko-KR/lexicon/finance/default.tsv": "fec6b8304217188ee20314a672640fe692d2466626de3522b16dbab9790857c4",
+            "languages/ko-KR/lexicon/multiword/content.tsv": "7928ca2f4d2d9e16ce413e45690be19b13178a0369edf4e18dd0934919418d4a",
+            "languages/ko-KR/lexicon/multiword/finance.tsv": "cc9e690f4a9c2253c495ebc40523ddcfcdc5d2729f25a5933c510225ecc22671",
+            "languages/ko-KR/lexicon/multiword/places_media.tsv": "e56b07f5d35ed24faf464ad74fbc83310dbf10667bda4cfb3de9290ab9aca33f",
+            "languages/ko-KR/lexicon/proper_nouns/default.tsv": "48ac54fbec1ff1dff0823b67ae4acf75443b7e520fc1789e108d17eac19c31ab",
+            "languages/ko-KR/lexicon/technology/default.tsv": "1ea75e7d058862e236f4070ddbc0091f3f6494ea189075ee1dca6f3c572caccc",
+            "languages/ko-KR/rules/context.tsv": "72e60833cb3a563dd5a2b511993d787046002325f30a05be017e3db7870ca96d",
+            "languages/ko-KR/rules/identifiers.tsv": "7b5a0fe04a86b7ea1d8db39dba76f17faa878f1b42024be032154f61a5c13ff3",
+            "languages/ko-KR/rules/numeric.tsv": "619cbb409c9c2a1deefb0b1f7ef3d2eb503a942f7e15dadcd5e077de6075a92e",
+            "manifest.ttfm": "1532f69faef57e31ae9fe80170a823792d0a702d392ba826cb66097a382e6a2c"
+          },
+          "chunk_bytes": [
+            1,
+            7,
+            64
+          ],
+          "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]"
+        }
+      }
+    },
+    "domain_cases_v8": {
+      "baseline": {
+        "summary": {
+          "cases": 60,
+          "passed": 56,
+          "failed": 4,
+          "matches": 56,
+          "mismatches": 4,
+          "exact_match_rate": 0.9333333333333333,
+          "metadata_failures": 0,
+          "batch_stream_failures": 0,
+          "character_edit_distance": 8,
+          "reference_characters": 1843,
+          "character_error_rate": 0.004340748779164406,
+          "fallback_spans": 0
+        },
+        "provenance": {
+          "ttf": "/home/exedev/tts-text-frontend/artifacts/baseline-0.8.0/ttf",
+          "ttf_sha256": "72dc0bca04d6ee211700413167e5ee011efd91c5111a0936b5773ecb138af94d",
+          "corpus": "/home/exedev/tts-text-frontend/tests/evaluation/domain_cases_v8.jsonl",
+          "corpus_sha256": "03db553c03d3c05cb5bd20ce390ae568f5cb14bfee8583a07ac56a7caa73e7a7",
+          "resources": "/home/exedev/tts-text-frontend/artifacts/baseline-0.8.0/resources",
+          "resource_sha256": {
+            "README.md": "dce1bb7d27a0d7b07b2e44406d26995d69afc2f481a562cddc2e12297b383165",
+            "common/boundaries.tsv": "da089327d5b127fb7de4d053fd8533a60f4a3f1311b2d1e61a7667caca196213",
+            "common/protected.tsv": "fed106b8ce8f2e81a73110e4f86ff352c034458c5f6271ec0d4067a1eb9dd8d1",
+            "customers/example/ko-KR/rules.tsv": "fd32794a3414e420e0e7e84214ef444b2c5af9a401cf494ee170c528e7a70238",
+            "domains/finance/ko-KR/rules.tsv": "ed9ecca8fc7f9f64461f44becd4d46281ead636b26f74af5b16d57abd002c5bf",
+            "languages/en-US/dictionaries/pronunciation.tsv": "10d73f76afda2a5219d8a8a0d03a8bf7d79616032b3ae04c27a28ece39b918ce",
+            "languages/en-US/g2p/graphemes.tsv": "2bd30e83894089ad2947df5a754c55ef0d3c93f311a3ea775fc58d9c2d994e5d",
+            "languages/en-US/rules/context.tsv": "e7ec75d2975fd31b67d771da1382dcaaa9e04c6c5941e737c3de3a89b69239ec",
+            "languages/en-US/rules/numeric.tsv": "bcbdb93d89072111f5599958084c782421c45082ccb993c6b5216b8adab1ee9e",
+            "languages/ko-KR/dictionaries/graphemes.tsv": "2707d81b10c4d91e6cece0466186574df9b52dc7a774c3c64e9c0e4927fc883a",
+            "languages/ko-KR/dictionaries/phones.tsv": "d15c8b0788e0ba134f236a5aeb5129e9f9716a26d8927065b1f52fad63f364db",
+            "languages/ko-KR/lexicon/acronyms/default.tsv": "0c2ee8e11c02c5c02e32ddc8b7b5327ef4d414bd3aac1ac27306726a35614021",
+            "languages/ko-KR/lexicon/brands/default.tsv": "d624494685c9df7b320c72c8ce4e37dbb849971951171960e534c5138cfb9733",
+            "languages/ko-KR/lexicon/common/default.tsv": "e152d9b59bafcb175242a203b507b9a2d3f4ae3ed5db42b9e87d533df1139780",
+            "languages/ko-KR/lexicon/content/default.tsv": "8d37167ac61ceaad062f2aca65cfa930a3450516dce52a40bed48472ed85ad01",
+            "languages/ko-KR/lexicon/finance/default.tsv": "fec6b8304217188ee20314a672640fe692d2466626de3522b16dbab9790857c4",
+            "languages/ko-KR/lexicon/multiword/content.tsv": "7928ca2f4d2d9e16ce413e45690be19b13178a0369edf4e18dd0934919418d4a",
+            "languages/ko-KR/lexicon/multiword/finance.tsv": "cc9e690f4a9c2253c495ebc40523ddcfcdc5d2729f25a5933c510225ecc22671",
+            "languages/ko-KR/lexicon/multiword/places_media.tsv": "e56b07f5d35ed24faf464ad74fbc83310dbf10667bda4cfb3de9290ab9aca33f",
+            "languages/ko-KR/lexicon/proper_nouns/default.tsv": "48ac54fbec1ff1dff0823b67ae4acf75443b7e520fc1789e108d17eac19c31ab",
+            "languages/ko-KR/lexicon/technology/default.tsv": "1ea75e7d058862e236f4070ddbc0091f3f6494ea189075ee1dca6f3c572caccc",
+            "languages/ko-KR/rules/context.tsv": "72e60833cb3a563dd5a2b511993d787046002325f30a05be017e3db7870ca96d",
+            "languages/ko-KR/rules/identifiers.tsv": "7b5a0fe04a86b7ea1d8db39dba76f17faa878f1b42024be032154f61a5c13ff3",
+            "languages/ko-KR/rules/numeric.tsv": "b2b0a1fa3c1907d2d909ce40cc1b3fa8509726989bc5f22bfba889137ecaea83",
+            "manifest.ttfm": "1532f69faef57e31ae9fe80170a823792d0a702d392ba826cb66097a382e6a2c"
+          },
+          "chunk_bytes": [
+            1,
+            7,
+            64
+          ],
+          "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]"
+        }
+      },
+      "candidate": {
+        "summary": {
+          "cases": 60,
+          "passed": 60,
+          "failed": 0,
+          "matches": 60,
+          "mismatches": 0,
+          "exact_match_rate": 1.0,
+          "metadata_failures": 0,
+          "batch_stream_failures": 0,
+          "character_edit_distance": 0,
+          "reference_characters": 1843,
+          "character_error_rate": 0.0,
+          "fallback_spans": 0
+        },
+        "provenance": {
+          "ttf": "/home/exedev/tts-text-frontend/build/ttf",
+          "ttf_sha256": "d56f7fa814699dc619d1e0aa2e98cd3776e6fa40451d8dca92d2cd669a1b97e4",
+          "corpus": "/home/exedev/tts-text-frontend/tests/evaluation/domain_cases_v8.jsonl",
+          "corpus_sha256": "03db553c03d3c05cb5bd20ce390ae568f5cb14bfee8583a07ac56a7caa73e7a7",
+          "resources": "/home/exedev/tts-text-frontend/resources",
+          "resource_sha256": {
+            "README.md": "dce1bb7d27a0d7b07b2e44406d26995d69afc2f481a562cddc2e12297b383165",
+            "common/boundaries.tsv": "da089327d5b127fb7de4d053fd8533a60f4a3f1311b2d1e61a7667caca196213",
+            "common/protected.tsv": "fed106b8ce8f2e81a73110e4f86ff352c034458c5f6271ec0d4067a1eb9dd8d1",
+            "customers/example/ko-KR/rules.tsv": "fd32794a3414e420e0e7e84214ef444b2c5af9a401cf494ee170c528e7a70238",
+            "domains/finance/ko-KR/rules.tsv": "ed9ecca8fc7f9f64461f44becd4d46281ead636b26f74af5b16d57abd002c5bf",
+            "languages/en-US/dictionaries/pronunciation.tsv": "10d73f76afda2a5219d8a8a0d03a8bf7d79616032b3ae04c27a28ece39b918ce",
+            "languages/en-US/g2p/graphemes.tsv": "2bd30e83894089ad2947df5a754c55ef0d3c93f311a3ea775fc58d9c2d994e5d",
+            "languages/en-US/rules/context.tsv": "e7ec75d2975fd31b67d771da1382dcaaa9e04c6c5941e737c3de3a89b69239ec",
+            "languages/en-US/rules/numeric.tsv": "3f1079a94d534046633e6b3e8c54abcb00aeee3079c0f8bd268d036f1445ac57",
+            "languages/ko-KR/dictionaries/graphemes.tsv": "2707d81b10c4d91e6cece0466186574df9b52dc7a774c3c64e9c0e4927fc883a",
+            "languages/ko-KR/dictionaries/phones.tsv": "d15c8b0788e0ba134f236a5aeb5129e9f9716a26d8927065b1f52fad63f364db",
+            "languages/ko-KR/lexicon/acronyms/default.tsv": "0c2ee8e11c02c5c02e32ddc8b7b5327ef4d414bd3aac1ac27306726a35614021",
+            "languages/ko-KR/lexicon/brands/default.tsv": "d624494685c9df7b320c72c8ce4e37dbb849971951171960e534c5138cfb9733",
+            "languages/ko-KR/lexicon/common/default.tsv": "e152d9b59bafcb175242a203b507b9a2d3f4ae3ed5db42b9e87d533df1139780",
+            "languages/ko-KR/lexicon/content/default.tsv": "8d37167ac61ceaad062f2aca65cfa930a3450516dce52a40bed48472ed85ad01",
+            "languages/ko-KR/lexicon/finance/default.tsv": "fec6b8304217188ee20314a672640fe692d2466626de3522b16dbab9790857c4",
+            "languages/ko-KR/lexicon/multiword/content.tsv": "7928ca2f4d2d9e16ce413e45690be19b13178a0369edf4e18dd0934919418d4a",
+            "languages/ko-KR/lexicon/multiword/finance.tsv": "cc9e690f4a9c2253c495ebc40523ddcfcdc5d2729f25a5933c510225ecc22671",
+            "languages/ko-KR/lexicon/multiword/places_media.tsv": "e56b07f5d35ed24faf464ad74fbc83310dbf10667bda4cfb3de9290ab9aca33f",
+            "languages/ko-KR/lexicon/proper_nouns/default.tsv": "48ac54fbec1ff1dff0823b67ae4acf75443b7e520fc1789e108d17eac19c31ab",
+            "languages/ko-KR/lexicon/technology/default.tsv": "1ea75e7d058862e236f4070ddbc0091f3f6494ea189075ee1dca6f3c572caccc",
+            "languages/ko-KR/rules/context.tsv": "72e60833cb3a563dd5a2b511993d787046002325f30a05be017e3db7870ca96d",
+            "languages/ko-KR/rules/identifiers.tsv": "7b5a0fe04a86b7ea1d8db39dba76f17faa878f1b42024be032154f61a5c13ff3",
+            "languages/ko-KR/rules/numeric.tsv": "619cbb409c9c2a1deefb0b1f7ef3d2eb503a942f7e15dadcd5e077de6075a92e",
+            "manifest.ttfm": "1532f69faef57e31ae9fe80170a823792d0a702d392ba826cb66097a382e6a2c"
+          },
+          "chunk_bytes": [
+            1,
+            7,
+            64
+          ],
+          "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]"
+        }
+      }
+    },
+    "advanced_cases": {
+      "baseline": {
+        "summary": {
+          "cases": 30,
+          "passed": 28,
+          "failed": 2,
+          "matches": 28,
+          "mismatches": 2,
+          "exact_match_rate": 0.9333333333333333,
+          "metadata_failures": 0,
+          "batch_stream_failures": 0,
+          "character_edit_distance": 11,
+          "reference_characters": 782,
+          "character_error_rate": 0.014066496163682864,
+          "fallback_spans": 0
+        },
+        "provenance": {
+          "ttf": "/home/exedev/tts-text-frontend/artifacts/baseline-0.8.0/ttf",
+          "ttf_sha256": "72dc0bca04d6ee211700413167e5ee011efd91c5111a0936b5773ecb138af94d",
+          "corpus": "/home/exedev/tts-text-frontend/tests/evaluation/advanced_cases.jsonl",
+          "corpus_sha256": "a70837b057c8c6fa38aa978709c0bd78c98e628e0692e539024bfb20708c3b29",
+          "resources": "/home/exedev/tts-text-frontend/artifacts/baseline-0.8.0/resources",
+          "resource_sha256": {
+            "README.md": "dce1bb7d27a0d7b07b2e44406d26995d69afc2f481a562cddc2e12297b383165",
+            "common/boundaries.tsv": "da089327d5b127fb7de4d053fd8533a60f4a3f1311b2d1e61a7667caca196213",
+            "common/protected.tsv": "fed106b8ce8f2e81a73110e4f86ff352c034458c5f6271ec0d4067a1eb9dd8d1",
+            "customers/example/ko-KR/rules.tsv": "fd32794a3414e420e0e7e84214ef444b2c5af9a401cf494ee170c528e7a70238",
+            "domains/finance/ko-KR/rules.tsv": "ed9ecca8fc7f9f64461f44becd4d46281ead636b26f74af5b16d57abd002c5bf",
+            "languages/en-US/dictionaries/pronunciation.tsv": "10d73f76afda2a5219d8a8a0d03a8bf7d79616032b3ae04c27a28ece39b918ce",
+            "languages/en-US/g2p/graphemes.tsv": "2bd30e83894089ad2947df5a754c55ef0d3c93f311a3ea775fc58d9c2d994e5d",
+            "languages/en-US/rules/context.tsv": "e7ec75d2975fd31b67d771da1382dcaaa9e04c6c5941e737c3de3a89b69239ec",
+            "languages/en-US/rules/numeric.tsv": "bcbdb93d89072111f5599958084c782421c45082ccb993c6b5216b8adab1ee9e",
+            "languages/ko-KR/dictionaries/graphemes.tsv": "2707d81b10c4d91e6cece0466186574df9b52dc7a774c3c64e9c0e4927fc883a",
+            "languages/ko-KR/dictionaries/phones.tsv": "d15c8b0788e0ba134f236a5aeb5129e9f9716a26d8927065b1f52fad63f364db",
+            "languages/ko-KR/lexicon/acronyms/default.tsv": "0c2ee8e11c02c5c02e32ddc8b7b5327ef4d414bd3aac1ac27306726a35614021",
+            "languages/ko-KR/lexicon/brands/default.tsv": "d624494685c9df7b320c72c8ce4e37dbb849971951171960e534c5138cfb9733",
+            "languages/ko-KR/lexicon/common/default.tsv": "e152d9b59bafcb175242a203b507b9a2d3f4ae3ed5db42b9e87d533df1139780",
+            "languages/ko-KR/lexicon/content/default.tsv": "8d37167ac61ceaad062f2aca65cfa930a3450516dce52a40bed48472ed85ad01",
+            "languages/ko-KR/lexicon/finance/default.tsv": "fec6b8304217188ee20314a672640fe692d2466626de3522b16dbab9790857c4",
+            "languages/ko-KR/lexicon/multiword/content.tsv": "7928ca2f4d2d9e16ce413e45690be19b13178a0369edf4e18dd0934919418d4a",
+            "languages/ko-KR/lexicon/multiword/finance.tsv": "cc9e690f4a9c2253c495ebc40523ddcfcdc5d2729f25a5933c510225ecc22671",
+            "languages/ko-KR/lexicon/multiword/places_media.tsv": "e56b07f5d35ed24faf464ad74fbc83310dbf10667bda4cfb3de9290ab9aca33f",
+            "languages/ko-KR/lexicon/proper_nouns/default.tsv": "48ac54fbec1ff1dff0823b67ae4acf75443b7e520fc1789e108d17eac19c31ab",
+            "languages/ko-KR/lexicon/technology/default.tsv": "1ea75e7d058862e236f4070ddbc0091f3f6494ea189075ee1dca6f3c572caccc",
+            "languages/ko-KR/rules/context.tsv": "72e60833cb3a563dd5a2b511993d787046002325f30a05be017e3db7870ca96d",
+            "languages/ko-KR/rules/identifiers.tsv": "7b5a0fe04a86b7ea1d8db39dba76f17faa878f1b42024be032154f61a5c13ff3",
+            "languages/ko-KR/rules/numeric.tsv": "b2b0a1fa3c1907d2d909ce40cc1b3fa8509726989bc5f22bfba889137ecaea83",
+            "manifest.ttfm": "1532f69faef57e31ae9fe80170a823792d0a702d392ba826cb66097a382e6a2c"
+          },
+          "chunk_bytes": [
+            1,
+            7,
+            64
+          ],
+          "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]"
+        }
+      },
+      "candidate": {
+        "summary": {
+          "cases": 30,
+          "passed": 30,
+          "failed": 0,
+          "matches": 30,
+          "mismatches": 0,
+          "exact_match_rate": 1.0,
+          "metadata_failures": 0,
+          "batch_stream_failures": 0,
+          "character_edit_distance": 0,
+          "reference_characters": 782,
+          "character_error_rate": 0.0,
+          "fallback_spans": 0
+        },
+        "provenance": {
+          "ttf": "/home/exedev/tts-text-frontend/build/ttf",
+          "ttf_sha256": "d56f7fa814699dc619d1e0aa2e98cd3776e6fa40451d8dca92d2cd669a1b97e4",
+          "corpus": "/home/exedev/tts-text-frontend/tests/evaluation/advanced_cases.jsonl",
+          "corpus_sha256": "a70837b057c8c6fa38aa978709c0bd78c98e628e0692e539024bfb20708c3b29",
+          "resources": "/home/exedev/tts-text-frontend/resources",
+          "resource_sha256": {
+            "README.md": "dce1bb7d27a0d7b07b2e44406d26995d69afc2f481a562cddc2e12297b383165",
+            "common/boundaries.tsv": "da089327d5b127fb7de4d053fd8533a60f4a3f1311b2d1e61a7667caca196213",
+            "common/protected.tsv": "fed106b8ce8f2e81a73110e4f86ff352c034458c5f6271ec0d4067a1eb9dd8d1",
+            "customers/example/ko-KR/rules.tsv": "fd32794a3414e420e0e7e84214ef444b2c5af9a401cf494ee170c528e7a70238",
+            "domains/finance/ko-KR/rules.tsv": "ed9ecca8fc7f9f64461f44becd4d46281ead636b26f74af5b16d57abd002c5bf",
+            "languages/en-US/dictionaries/pronunciation.tsv": "10d73f76afda2a5219d8a8a0d03a8bf7d79616032b3ae04c27a28ece39b918ce",
+            "languages/en-US/g2p/graphemes.tsv": "2bd30e83894089ad2947df5a754c55ef0d3c93f311a3ea775fc58d9c2d994e5d",
+            "languages/en-US/rules/context.tsv": "e7ec75d2975fd31b67d771da1382dcaaa9e04c6c5941e737c3de3a89b69239ec",
+            "languages/en-US/rules/numeric.tsv": "3f1079a94d534046633e6b3e8c54abcb00aeee3079c0f8bd268d036f1445ac57",
+            "languages/ko-KR/dictionaries/graphemes.tsv": "2707d81b10c4d91e6cece0466186574df9b52dc7a774c3c64e9c0e4927fc883a",
+            "languages/ko-KR/dictionaries/phones.tsv": "d15c8b0788e0ba134f236a5aeb5129e9f9716a26d8927065b1f52fad63f364db",
+            "languages/ko-KR/lexicon/acronyms/default.tsv": "0c2ee8e11c02c5c02e32ddc8b7b5327ef4d414bd3aac1ac27306726a35614021",
+            "languages/ko-KR/lexicon/brands/default.tsv": "d624494685c9df7b320c72c8ce4e37dbb849971951171960e534c5138cfb9733",
+            "languages/ko-KR/lexicon/common/default.tsv": "e152d9b59bafcb175242a203b507b9a2d3f4ae3ed5db42b9e87d533df1139780",
+            "languages/ko-KR/lexicon/content/default.tsv": "8d37167ac61ceaad062f2aca65cfa930a3450516dce52a40bed48472ed85ad01",
+            "languages/ko-KR/lexicon/finance/default.tsv": "fec6b8304217188ee20314a672640fe692d2466626de3522b16dbab9790857c4",
+            "languages/ko-KR/lexicon/multiword/content.tsv": "7928ca2f4d2d9e16ce413e45690be19b13178a0369edf4e18dd0934919418d4a",
+            "languages/ko-KR/lexicon/multiword/finance.tsv": "cc9e690f4a9c2253c495ebc40523ddcfcdc5d2729f25a5933c510225ecc22671",
+            "languages/ko-KR/lexicon/multiword/places_media.tsv": "e56b07f5d35ed24faf464ad74fbc83310dbf10667bda4cfb3de9290ab9aca33f",
+            "languages/ko-KR/lexicon/proper_nouns/default.tsv": "48ac54fbec1ff1dff0823b67ae4acf75443b7e520fc1789e108d17eac19c31ab",
+            "languages/ko-KR/lexicon/technology/default.tsv": "1ea75e7d058862e236f4070ddbc0091f3f6494ea189075ee1dca6f3c572caccc",
+            "languages/ko-KR/rules/context.tsv": "72e60833cb3a563dd5a2b511993d787046002325f30a05be017e3db7870ca96d",
+            "languages/ko-KR/rules/identifiers.tsv": "7b5a0fe04a86b7ea1d8db39dba76f17faa878f1b42024be032154f61a5c13ff3",
+            "languages/ko-KR/rules/numeric.tsv": "619cbb409c9c2a1deefb0b1f7ef3d2eb503a942f7e15dadcd5e077de6075a92e",
+            "manifest.ttfm": "1532f69faef57e31ae9fe80170a823792d0a702d392ba826cb66097a382e6a2c"
+          },
+          "chunk_bytes": [
+            1,
+            7,
+            64
+          ],
+          "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]"
+        }
+      }
+    },
+    "challenge_cases": {
+      "baseline": {
+        "summary": {
+          "cases": 15,
+          "passed": 14,
+          "failed": 1,
+          "matches": 14,
+          "mismatches": 1,
+          "exact_match_rate": 0.9333333333333333,
+          "metadata_failures": 0,
+          "batch_stream_failures": 0,
+          "character_edit_distance": 5,
+          "reference_characters": 408,
+          "character_error_rate": 0.012254901960784314,
+          "fallback_spans": 0
+        },
+        "provenance": {
+          "ttf": "/home/exedev/tts-text-frontend/artifacts/baseline-0.8.0/ttf",
+          "ttf_sha256": "72dc0bca04d6ee211700413167e5ee011efd91c5111a0936b5773ecb138af94d",
+          "corpus": "/home/exedev/tts-text-frontend/tests/evaluation/challenge_cases.jsonl",
+          "corpus_sha256": "2ec5b5336bd3ea28baf54231aeb42b10b1218aad062407a43d1d7781aa017784",
+          "resources": "/home/exedev/tts-text-frontend/artifacts/baseline-0.8.0/resources",
+          "resource_sha256": {
+            "README.md": "dce1bb7d27a0d7b07b2e44406d26995d69afc2f481a562cddc2e12297b383165",
+            "common/boundaries.tsv": "da089327d5b127fb7de4d053fd8533a60f4a3f1311b2d1e61a7667caca196213",
+            "common/protected.tsv": "fed106b8ce8f2e81a73110e4f86ff352c034458c5f6271ec0d4067a1eb9dd8d1",
+            "customers/example/ko-KR/rules.tsv": "fd32794a3414e420e0e7e84214ef444b2c5af9a401cf494ee170c528e7a70238",
+            "domains/finance/ko-KR/rules.tsv": "ed9ecca8fc7f9f64461f44becd4d46281ead636b26f74af5b16d57abd002c5bf",
+            "languages/en-US/dictionaries/pronunciation.tsv": "10d73f76afda2a5219d8a8a0d03a8bf7d79616032b3ae04c27a28ece39b918ce",
+            "languages/en-US/g2p/graphemes.tsv": "2bd30e83894089ad2947df5a754c55ef0d3c93f311a3ea775fc58d9c2d994e5d",
+            "languages/en-US/rules/context.tsv": "e7ec75d2975fd31b67d771da1382dcaaa9e04c6c5941e737c3de3a89b69239ec",
+            "languages/en-US/rules/numeric.tsv": "bcbdb93d89072111f5599958084c782421c45082ccb993c6b5216b8adab1ee9e",
+            "languages/ko-KR/dictionaries/graphemes.tsv": "2707d81b10c4d91e6cece0466186574df9b52dc7a774c3c64e9c0e4927fc883a",
+            "languages/ko-KR/dictionaries/phones.tsv": "d15c8b0788e0ba134f236a5aeb5129e9f9716a26d8927065b1f52fad63f364db",
+            "languages/ko-KR/lexicon/acronyms/default.tsv": "0c2ee8e11c02c5c02e32ddc8b7b5327ef4d414bd3aac1ac27306726a35614021",
+            "languages/ko-KR/lexicon/brands/default.tsv": "d624494685c9df7b320c72c8ce4e37dbb849971951171960e534c5138cfb9733",
+            "languages/ko-KR/lexicon/common/default.tsv": "e152d9b59bafcb175242a203b507b9a2d3f4ae3ed5db42b9e87d533df1139780",
+            "languages/ko-KR/lexicon/content/default.tsv": "8d37167ac61ceaad062f2aca65cfa930a3450516dce52a40bed48472ed85ad01",
+            "languages/ko-KR/lexicon/finance/default.tsv": "fec6b8304217188ee20314a672640fe692d2466626de3522b16dbab9790857c4",
+            "languages/ko-KR/lexicon/multiword/content.tsv": "7928ca2f4d2d9e16ce413e45690be19b13178a0369edf4e18dd0934919418d4a",
+            "languages/ko-KR/lexicon/multiword/finance.tsv": "cc9e690f4a9c2253c495ebc40523ddcfcdc5d2729f25a5933c510225ecc22671",
+            "languages/ko-KR/lexicon/multiword/places_media.tsv": "e56b07f5d35ed24faf464ad74fbc83310dbf10667bda4cfb3de9290ab9aca33f",
+            "languages/ko-KR/lexicon/proper_nouns/default.tsv": "48ac54fbec1ff1dff0823b67ae4acf75443b7e520fc1789e108d17eac19c31ab",
+            "languages/ko-KR/lexicon/technology/default.tsv": "1ea75e7d058862e236f4070ddbc0091f3f6494ea189075ee1dca6f3c572caccc",
+            "languages/ko-KR/rules/context.tsv": "72e60833cb3a563dd5a2b511993d787046002325f30a05be017e3db7870ca96d",
+            "languages/ko-KR/rules/identifiers.tsv": "7b5a0fe04a86b7ea1d8db39dba76f17faa878f1b42024be032154f61a5c13ff3",
+            "languages/ko-KR/rules/numeric.tsv": "b2b0a1fa3c1907d2d909ce40cc1b3fa8509726989bc5f22bfba889137ecaea83",
+            "manifest.ttfm": "1532f69faef57e31ae9fe80170a823792d0a702d392ba826cb66097a382e6a2c"
+          },
+          "chunk_bytes": [
+            1,
+            7,
+            64
+          ],
+          "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]"
+        }
+      },
+      "candidate": {
+        "summary": {
+          "cases": 15,
+          "passed": 15,
+          "failed": 0,
+          "matches": 15,
+          "mismatches": 0,
+          "exact_match_rate": 1.0,
+          "metadata_failures": 0,
+          "batch_stream_failures": 0,
+          "character_edit_distance": 0,
+          "reference_characters": 408,
+          "character_error_rate": 0.0,
+          "fallback_spans": 0
+        },
+        "provenance": {
+          "ttf": "/home/exedev/tts-text-frontend/build/ttf",
+          "ttf_sha256": "d56f7fa814699dc619d1e0aa2e98cd3776e6fa40451d8dca92d2cd669a1b97e4",
+          "corpus": "/home/exedev/tts-text-frontend/tests/evaluation/challenge_cases.jsonl",
+          "corpus_sha256": "2ec5b5336bd3ea28baf54231aeb42b10b1218aad062407a43d1d7781aa017784",
+          "resources": "/home/exedev/tts-text-frontend/resources",
+          "resource_sha256": {
+            "README.md": "dce1bb7d27a0d7b07b2e44406d26995d69afc2f481a562cddc2e12297b383165",
+            "common/boundaries.tsv": "da089327d5b127fb7de4d053fd8533a60f4a3f1311b2d1e61a7667caca196213",
+            "common/protected.tsv": "fed106b8ce8f2e81a73110e4f86ff352c034458c5f6271ec0d4067a1eb9dd8d1",
+            "customers/example/ko-KR/rules.tsv": "fd32794a3414e420e0e7e84214ef444b2c5af9a401cf494ee170c528e7a70238",
+            "domains/finance/ko-KR/rules.tsv": "ed9ecca8fc7f9f64461f44becd4d46281ead636b26f74af5b16d57abd002c5bf",
+            "languages/en-US/dictionaries/pronunciation.tsv": "10d73f76afda2a5219d8a8a0d03a8bf7d79616032b3ae04c27a28ece39b918ce",
+            "languages/en-US/g2p/graphemes.tsv": "2bd30e83894089ad2947df5a754c55ef0d3c93f311a3ea775fc58d9c2d994e5d",
+            "languages/en-US/rules/context.tsv": "e7ec75d2975fd31b67d771da1382dcaaa9e04c6c5941e737c3de3a89b69239ec",
+            "languages/en-US/rules/numeric.tsv": "3f1079a94d534046633e6b3e8c54abcb00aeee3079c0f8bd268d036f1445ac57",
+            "languages/ko-KR/dictionaries/graphemes.tsv": "2707d81b10c4d91e6cece0466186574df9b52dc7a774c3c64e9c0e4927fc883a",
+            "languages/ko-KR/dictionaries/phones.tsv": "d15c8b0788e0ba134f236a5aeb5129e9f9716a26d8927065b1f52fad63f364db",
+            "languages/ko-KR/lexicon/acronyms/default.tsv": "0c2ee8e11c02c5c02e32ddc8b7b5327ef4d414bd3aac1ac27306726a35614021",
+            "languages/ko-KR/lexicon/brands/default.tsv": "d624494685c9df7b320c72c8ce4e37dbb849971951171960e534c5138cfb9733",
+            "languages/ko-KR/lexicon/common/default.tsv": "e152d9b59bafcb175242a203b507b9a2d3f4ae3ed5db42b9e87d533df1139780",
+            "languages/ko-KR/lexicon/content/default.tsv": "8d37167ac61ceaad062f2aca65cfa930a3450516dce52a40bed48472ed85ad01",
+            "languages/ko-KR/lexicon/finance/default.tsv": "fec6b8304217188ee20314a672640fe692d2466626de3522b16dbab9790857c4",
+            "languages/ko-KR/lexicon/multiword/content.tsv": "7928ca2f4d2d9e16ce413e45690be19b13178a0369edf4e18dd0934919418d4a",
+            "languages/ko-KR/lexicon/multiword/finance.tsv": "cc9e690f4a9c2253c495ebc40523ddcfcdc5d2729f25a5933c510225ecc22671",
+            "languages/ko-KR/lexicon/multiword/places_media.tsv": "e56b07f5d35ed24faf464ad74fbc83310dbf10667bda4cfb3de9290ab9aca33f",
+            "languages/ko-KR/lexicon/proper_nouns/default.tsv": "48ac54fbec1ff1dff0823b67ae4acf75443b7e520fc1789e108d17eac19c31ab",
+            "languages/ko-KR/lexicon/technology/default.tsv": "1ea75e7d058862e236f4070ddbc0091f3f6494ea189075ee1dca6f3c572caccc",
+            "languages/ko-KR/rules/context.tsv": "72e60833cb3a563dd5a2b511993d787046002325f30a05be017e3db7870ca96d",
+            "languages/ko-KR/rules/identifiers.tsv": "7b5a0fe04a86b7ea1d8db39dba76f17faa878f1b42024be032154f61a5c13ff3",
+            "languages/ko-KR/rules/numeric.tsv": "619cbb409c9c2a1deefb0b1f7ef3d2eb503a942f7e15dadcd5e077de6075a92e",
+            "manifest.ttfm": "1532f69faef57e31ae9fe80170a823792d0a702d392ba826cb66097a382e6a2c"
+          },
+          "chunk_bytes": [
+            1,
+            7,
+            64
+          ],
+          "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]"
+        }
+      }
+    },
+    "finance_ranges_v7": {
+      "baseline": {
+        "summary": {
+          "cases": 24,
+          "passed": 9,
+          "failed": 15,
+          "matches": 9,
+          "mismatches": 15,
+          "exact_match_rate": 0.375,
+          "metadata_failures": 0,
+          "batch_stream_failures": 0,
+          "character_edit_distance": 65,
+          "reference_characters": 661,
+          "character_error_rate": 0.09833585476550681,
+          "fallback_spans": 0
+        },
+        "provenance": {
+          "ttf": "/home/exedev/tts-text-frontend/artifacts/baseline-0.8.0/ttf",
+          "ttf_sha256": "72dc0bca04d6ee211700413167e5ee011efd91c5111a0936b5773ecb138af94d",
+          "corpus": "/home/exedev/tts-text-frontend/tests/evaluation/finance_ranges_v7.jsonl",
+          "corpus_sha256": "b0eb56b2f5d190892014acbc2e5ad20ed09e32e1d5ed3caaeabb9b453f573e33",
+          "resources": "/home/exedev/tts-text-frontend/artifacts/baseline-0.8.0/resources",
+          "resource_sha256": {
+            "README.md": "dce1bb7d27a0d7b07b2e44406d26995d69afc2f481a562cddc2e12297b383165",
+            "common/boundaries.tsv": "da089327d5b127fb7de4d053fd8533a60f4a3f1311b2d1e61a7667caca196213",
+            "common/protected.tsv": "fed106b8ce8f2e81a73110e4f86ff352c034458c5f6271ec0d4067a1eb9dd8d1",
+            "customers/example/ko-KR/rules.tsv": "fd32794a3414e420e0e7e84214ef444b2c5af9a401cf494ee170c528e7a70238",
+            "domains/finance/ko-KR/rules.tsv": "ed9ecca8fc7f9f64461f44becd4d46281ead636b26f74af5b16d57abd002c5bf",
+            "languages/en-US/dictionaries/pronunciation.tsv": "10d73f76afda2a5219d8a8a0d03a8bf7d79616032b3ae04c27a28ece39b918ce",
+            "languages/en-US/g2p/graphemes.tsv": "2bd30e83894089ad2947df5a754c55ef0d3c93f311a3ea775fc58d9c2d994e5d",
+            "languages/en-US/rules/context.tsv": "e7ec75d2975fd31b67d771da1382dcaaa9e04c6c5941e737c3de3a89b69239ec",
+            "languages/en-US/rules/numeric.tsv": "bcbdb93d89072111f5599958084c782421c45082ccb993c6b5216b8adab1ee9e",
+            "languages/ko-KR/dictionaries/graphemes.tsv": "2707d81b10c4d91e6cece0466186574df9b52dc7a774c3c64e9c0e4927fc883a",
+            "languages/ko-KR/dictionaries/phones.tsv": "d15c8b0788e0ba134f236a5aeb5129e9f9716a26d8927065b1f52fad63f364db",
+            "languages/ko-KR/lexicon/acronyms/default.tsv": "0c2ee8e11c02c5c02e32ddc8b7b5327ef4d414bd3aac1ac27306726a35614021",
+            "languages/ko-KR/lexicon/brands/default.tsv": "d624494685c9df7b320c72c8ce4e37dbb849971951171960e534c5138cfb9733",
+            "languages/ko-KR/lexicon/common/default.tsv": "e152d9b59bafcb175242a203b507b9a2d3f4ae3ed5db42b9e87d533df1139780",
+            "languages/ko-KR/lexicon/content/default.tsv": "8d37167ac61ceaad062f2aca65cfa930a3450516dce52a40bed48472ed85ad01",
+            "languages/ko-KR/lexicon/finance/default.tsv": "fec6b8304217188ee20314a672640fe692d2466626de3522b16dbab9790857c4",
+            "languages/ko-KR/lexicon/multiword/content.tsv": "7928ca2f4d2d9e16ce413e45690be19b13178a0369edf4e18dd0934919418d4a",
+            "languages/ko-KR/lexicon/multiword/finance.tsv": "cc9e690f4a9c2253c495ebc40523ddcfcdc5d2729f25a5933c510225ecc22671",
+            "languages/ko-KR/lexicon/multiword/places_media.tsv": "e56b07f5d35ed24faf464ad74fbc83310dbf10667bda4cfb3de9290ab9aca33f",
+            "languages/ko-KR/lexicon/proper_nouns/default.tsv": "48ac54fbec1ff1dff0823b67ae4acf75443b7e520fc1789e108d17eac19c31ab",
+            "languages/ko-KR/lexicon/technology/default.tsv": "1ea75e7d058862e236f4070ddbc0091f3f6494ea189075ee1dca6f3c572caccc",
+            "languages/ko-KR/rules/context.tsv": "72e60833cb3a563dd5a2b511993d787046002325f30a05be017e3db7870ca96d",
+            "languages/ko-KR/rules/identifiers.tsv": "7b5a0fe04a86b7ea1d8db39dba76f17faa878f1b42024be032154f61a5c13ff3",
+            "languages/ko-KR/rules/numeric.tsv": "b2b0a1fa3c1907d2d909ce40cc1b3fa8509726989bc5f22bfba889137ecaea83",
+            "manifest.ttfm": "1532f69faef57e31ae9fe80170a823792d0a702d392ba826cb66097a382e6a2c"
+          },
+          "chunk_bytes": [
+            1,
+            7,
+            64
+          ],
+          "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]"
+        }
+      },
+      "candidate": {
+        "summary": {
+          "cases": 24,
+          "passed": 24,
+          "failed": 0,
+          "matches": 24,
+          "mismatches": 0,
+          "exact_match_rate": 1.0,
+          "metadata_failures": 0,
+          "batch_stream_failures": 0,
+          "character_edit_distance": 0,
+          "reference_characters": 661,
+          "character_error_rate": 0.0,
+          "fallback_spans": 0
+        },
+        "provenance": {
+          "ttf": "/home/exedev/tts-text-frontend/build/ttf",
+          "ttf_sha256": "d56f7fa814699dc619d1e0aa2e98cd3776e6fa40451d8dca92d2cd669a1b97e4",
+          "corpus": "/home/exedev/tts-text-frontend/tests/evaluation/finance_ranges_v7.jsonl",
+          "corpus_sha256": "b0eb56b2f5d190892014acbc2e5ad20ed09e32e1d5ed3caaeabb9b453f573e33",
+          "resources": "/home/exedev/tts-text-frontend/resources",
+          "resource_sha256": {
+            "README.md": "dce1bb7d27a0d7b07b2e44406d26995d69afc2f481a562cddc2e12297b383165",
+            "common/boundaries.tsv": "da089327d5b127fb7de4d053fd8533a60f4a3f1311b2d1e61a7667caca196213",
+            "common/protected.tsv": "fed106b8ce8f2e81a73110e4f86ff352c034458c5f6271ec0d4067a1eb9dd8d1",
+            "customers/example/ko-KR/rules.tsv": "fd32794a3414e420e0e7e84214ef444b2c5af9a401cf494ee170c528e7a70238",
+            "domains/finance/ko-KR/rules.tsv": "ed9ecca8fc7f9f64461f44becd4d46281ead636b26f74af5b16d57abd002c5bf",
+            "languages/en-US/dictionaries/pronunciation.tsv": "10d73f76afda2a5219d8a8a0d03a8bf7d79616032b3ae04c27a28ece39b918ce",
+            "languages/en-US/g2p/graphemes.tsv": "2bd30e83894089ad2947df5a754c55ef0d3c93f311a3ea775fc58d9c2d994e5d",
+            "languages/en-US/rules/context.tsv": "e7ec75d2975fd31b67d771da1382dcaaa9e04c6c5941e737c3de3a89b69239ec",
+            "languages/en-US/rules/numeric.tsv": "3f1079a94d534046633e6b3e8c54abcb00aeee3079c0f8bd268d036f1445ac57",
+            "languages/ko-KR/dictionaries/graphemes.tsv": "2707d81b10c4d91e6cece0466186574df9b52dc7a774c3c64e9c0e4927fc883a",
+            "languages/ko-KR/dictionaries/phones.tsv": "d15c8b0788e0ba134f236a5aeb5129e9f9716a26d8927065b1f52fad63f364db",
+            "languages/ko-KR/lexicon/acronyms/default.tsv": "0c2ee8e11c02c5c02e32ddc8b7b5327ef4d414bd3aac1ac27306726a35614021",
+            "languages/ko-KR/lexicon/brands/default.tsv": "d624494685c9df7b320c72c8ce4e37dbb849971951171960e534c5138cfb9733",
+            "languages/ko-KR/lexicon/common/default.tsv": "e152d9b59bafcb175242a203b507b9a2d3f4ae3ed5db42b9e87d533df1139780",
+            "languages/ko-KR/lexicon/content/default.tsv": "8d37167ac61ceaad062f2aca65cfa930a3450516dce52a40bed48472ed85ad01",
+            "languages/ko-KR/lexicon/finance/default.tsv": "fec6b8304217188ee20314a672640fe692d2466626de3522b16dbab9790857c4",
+            "languages/ko-KR/lexicon/multiword/content.tsv": "7928ca2f4d2d9e16ce413e45690be19b13178a0369edf4e18dd0934919418d4a",
+            "languages/ko-KR/lexicon/multiword/finance.tsv": "cc9e690f4a9c2253c495ebc40523ddcfcdc5d2729f25a5933c510225ecc22671",
+            "languages/ko-KR/lexicon/multiword/places_media.tsv": "e56b07f5d35ed24faf464ad74fbc83310dbf10667bda4cfb3de9290ab9aca33f",
+            "languages/ko-KR/lexicon/proper_nouns/default.tsv": "48ac54fbec1ff1dff0823b67ae4acf75443b7e520fc1789e108d17eac19c31ab",
+            "languages/ko-KR/lexicon/technology/default.tsv": "1ea75e7d058862e236f4070ddbc0091f3f6494ea189075ee1dca6f3c572caccc",
+            "languages/ko-KR/rules/context.tsv": "72e60833cb3a563dd5a2b511993d787046002325f30a05be017e3db7870ca96d",
+            "languages/ko-KR/rules/identifiers.tsv": "7b5a0fe04a86b7ea1d8db39dba76f17faa878f1b42024be032154f61a5c13ff3",
+            "languages/ko-KR/rules/numeric.tsv": "619cbb409c9c2a1deefb0b1f7ef3d2eb503a942f7e15dadcd5e077de6075a92e",
+            "manifest.ttfm": "1532f69faef57e31ae9fe80170a823792d0a702d392ba826cb66097a382e6a2c"
+          },
+          "chunk_bytes": [
+            1,
+            7,
+            64
+          ],
+          "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]"
+        }
+      }
+    },
+    "content_v7": {
+      "baseline": {
+        "summary": {
+          "cases": 40,
+          "passed": 40,
+          "failed": 0,
+          "matches": 40,
+          "mismatches": 0,
+          "exact_match_rate": 1.0,
+          "metadata_failures": 0,
+          "batch_stream_failures": 0,
+          "character_edit_distance": 0,
+          "reference_characters": 686,
+          "character_error_rate": 0.0,
+          "fallback_spans": 0
+        },
+        "provenance": {
+          "ttf": "/home/exedev/tts-text-frontend/artifacts/baseline-0.8.0/ttf",
+          "ttf_sha256": "72dc0bca04d6ee211700413167e5ee011efd91c5111a0936b5773ecb138af94d",
+          "corpus": "/home/exedev/tts-text-frontend/tests/evaluation/content_v7.jsonl",
+          "corpus_sha256": "bbc86dd8fef4ddbfb26ed6cc5b2d5d1351f93d013d2c71c2f5f4c4ccd0512749",
+          "resources": "/home/exedev/tts-text-frontend/artifacts/baseline-0.8.0/resources",
+          "resource_sha256": {
+            "README.md": "dce1bb7d27a0d7b07b2e44406d26995d69afc2f481a562cddc2e12297b383165",
+            "common/boundaries.tsv": "da089327d5b127fb7de4d053fd8533a60f4a3f1311b2d1e61a7667caca196213",
+            "common/protected.tsv": "fed106b8ce8f2e81a73110e4f86ff352c034458c5f6271ec0d4067a1eb9dd8d1",
+            "customers/example/ko-KR/rules.tsv": "fd32794a3414e420e0e7e84214ef444b2c5af9a401cf494ee170c528e7a70238",
+            "domains/finance/ko-KR/rules.tsv": "ed9ecca8fc7f9f64461f44becd4d46281ead636b26f74af5b16d57abd002c5bf",
+            "languages/en-US/dictionaries/pronunciation.tsv": "10d73f76afda2a5219d8a8a0d03a8bf7d79616032b3ae04c27a28ece39b918ce",
+            "languages/en-US/g2p/graphemes.tsv": "2bd30e83894089ad2947df5a754c55ef0d3c93f311a3ea775fc58d9c2d994e5d",
+            "languages/en-US/rules/context.tsv": "e7ec75d2975fd31b67d771da1382dcaaa9e04c6c5941e737c3de3a89b69239ec",
+            "languages/en-US/rules/numeric.tsv": "bcbdb93d89072111f5599958084c782421c45082ccb993c6b5216b8adab1ee9e",
+            "languages/ko-KR/dictionaries/graphemes.tsv": "2707d81b10c4d91e6cece0466186574df9b52dc7a774c3c64e9c0e4927fc883a",
+            "languages/ko-KR/dictionaries/phones.tsv": "d15c8b0788e0ba134f236a5aeb5129e9f9716a26d8927065b1f52fad63f364db",
+            "languages/ko-KR/lexicon/acronyms/default.tsv": "0c2ee8e11c02c5c02e32ddc8b7b5327ef4d414bd3aac1ac27306726a35614021",
+            "languages/ko-KR/lexicon/brands/default.tsv": "d624494685c9df7b320c72c8ce4e37dbb849971951171960e534c5138cfb9733",
+            "languages/ko-KR/lexicon/common/default.tsv": "e152d9b59bafcb175242a203b507b9a2d3f4ae3ed5db42b9e87d533df1139780",
+            "languages/ko-KR/lexicon/content/default.tsv": "8d37167ac61ceaad062f2aca65cfa930a3450516dce52a40bed48472ed85ad01",
+            "languages/ko-KR/lexicon/finance/default.tsv": "fec6b8304217188ee20314a672640fe692d2466626de3522b16dbab9790857c4",
+            "languages/ko-KR/lexicon/multiword/content.tsv": "7928ca2f4d2d9e16ce413e45690be19b13178a0369edf4e18dd0934919418d4a",
+            "languages/ko-KR/lexicon/multiword/finance.tsv": "cc9e690f4a9c2253c495ebc40523ddcfcdc5d2729f25a5933c510225ecc22671",
+            "languages/ko-KR/lexicon/multiword/places_media.tsv": "e56b07f5d35ed24faf464ad74fbc83310dbf10667bda4cfb3de9290ab9aca33f",
+            "languages/ko-KR/lexicon/proper_nouns/default.tsv": "48ac54fbec1ff1dff0823b67ae4acf75443b7e520fc1789e108d17eac19c31ab",
+            "languages/ko-KR/lexicon/technology/default.tsv": "1ea75e7d058862e236f4070ddbc0091f3f6494ea189075ee1dca6f3c572caccc",
+            "languages/ko-KR/rules/context.tsv": "72e60833cb3a563dd5a2b511993d787046002325f30a05be017e3db7870ca96d",
+            "languages/ko-KR/rules/identifiers.tsv": "7b5a0fe04a86b7ea1d8db39dba76f17faa878f1b42024be032154f61a5c13ff3",
+            "languages/ko-KR/rules/numeric.tsv": "b2b0a1fa3c1907d2d909ce40cc1b3fa8509726989bc5f22bfba889137ecaea83",
+            "manifest.ttfm": "1532f69faef57e31ae9fe80170a823792d0a702d392ba826cb66097a382e6a2c"
+          },
+          "chunk_bytes": [
+            1,
+            7,
+            64
+          ],
+          "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]"
+        }
+      },
+      "candidate": {
+        "summary": {
+          "cases": 40,
+          "passed": 40,
+          "failed": 0,
+          "matches": 40,
+          "mismatches": 0,
+          "exact_match_rate": 1.0,
+          "metadata_failures": 0,
+          "batch_stream_failures": 0,
+          "character_edit_distance": 0,
+          "reference_characters": 686,
+          "character_error_rate": 0.0,
+          "fallback_spans": 0
+        },
+        "provenance": {
+          "ttf": "/home/exedev/tts-text-frontend/build/ttf",
+          "ttf_sha256": "d56f7fa814699dc619d1e0aa2e98cd3776e6fa40451d8dca92d2cd669a1b97e4",
+          "corpus": "/home/exedev/tts-text-frontend/tests/evaluation/content_v7.jsonl",
+          "corpus_sha256": "bbc86dd8fef4ddbfb26ed6cc5b2d5d1351f93d013d2c71c2f5f4c4ccd0512749",
+          "resources": "/home/exedev/tts-text-frontend/resources",
+          "resource_sha256": {
+            "README.md": "dce1bb7d27a0d7b07b2e44406d26995d69afc2f481a562cddc2e12297b383165",
+            "common/boundaries.tsv": "da089327d5b127fb7de4d053fd8533a60f4a3f1311b2d1e61a7667caca196213",
+            "common/protected.tsv": "fed106b8ce8f2e81a73110e4f86ff352c034458c5f6271ec0d4067a1eb9dd8d1",
+            "customers/example/ko-KR/rules.tsv": "fd32794a3414e420e0e7e84214ef444b2c5af9a401cf494ee170c528e7a70238",
+            "domains/finance/ko-KR/rules.tsv": "ed9ecca8fc7f9f64461f44becd4d46281ead636b26f74af5b16d57abd002c5bf",
+            "languages/en-US/dictionaries/pronunciation.tsv": "10d73f76afda2a5219d8a8a0d03a8bf7d79616032b3ae04c27a28ece39b918ce",
+            "languages/en-US/g2p/graphemes.tsv": "2bd30e83894089ad2947df5a754c55ef0d3c93f311a3ea775fc58d9c2d994e5d",
+            "languages/en-US/rules/context.tsv": "e7ec75d2975fd31b67d771da1382dcaaa9e04c6c5941e737c3de3a89b69239ec",
+            "languages/en-US/rules/numeric.tsv": "3f1079a94d534046633e6b3e8c54abcb00aeee3079c0f8bd268d036f1445ac57",
+            "languages/ko-KR/dictionaries/graphemes.tsv": "2707d81b10c4d91e6cece0466186574df9b52dc7a774c3c64e9c0e4927fc883a",
+            "languages/ko-KR/dictionaries/phones.tsv": "d15c8b0788e0ba134f236a5aeb5129e9f9716a26d8927065b1f52fad63f364db",
+            "languages/ko-KR/lexicon/acronyms/default.tsv": "0c2ee8e11c02c5c02e32ddc8b7b5327ef4d414bd3aac1ac27306726a35614021",
+            "languages/ko-KR/lexicon/brands/default.tsv": "d624494685c9df7b320c72c8ce4e37dbb849971951171960e534c5138cfb9733",
+            "languages/ko-KR/lexicon/common/default.tsv": "e152d9b59bafcb175242a203b507b9a2d3f4ae3ed5db42b9e87d533df1139780",
+            "languages/ko-KR/lexicon/content/default.tsv": "8d37167ac61ceaad062f2aca65cfa930a3450516dce52a40bed48472ed85ad01",
+            "languages/ko-KR/lexicon/finance/default.tsv": "fec6b8304217188ee20314a672640fe692d2466626de3522b16dbab9790857c4",
+            "languages/ko-KR/lexicon/multiword/content.tsv": "7928ca2f4d2d9e16ce413e45690be19b13178a0369edf4e18dd0934919418d4a",
+            "languages/ko-KR/lexicon/multiword/finance.tsv": "cc9e690f4a9c2253c495ebc40523ddcfcdc5d2729f25a5933c510225ecc22671",
+            "languages/ko-KR/lexicon/multiword/places_media.tsv": "e56b07f5d35ed24faf464ad74fbc83310dbf10667bda4cfb3de9290ab9aca33f",
+            "languages/ko-KR/lexicon/proper_nouns/default.tsv": "48ac54fbec1ff1dff0823b67ae4acf75443b7e520fc1789e108d17eac19c31ab",
+            "languages/ko-KR/lexicon/technology/default.tsv": "1ea75e7d058862e236f4070ddbc0091f3f6494ea189075ee1dca6f3c572caccc",
+            "languages/ko-KR/rules/context.tsv": "72e60833cb3a563dd5a2b511993d787046002325f30a05be017e3db7870ca96d",
+            "languages/ko-KR/rules/identifiers.tsv": "7b5a0fe04a86b7ea1d8db39dba76f17faa878f1b42024be032154f61a5c13ff3",
+            "languages/ko-KR/rules/numeric.tsv": "619cbb409c9c2a1deefb0b1f7ef3d2eb503a942f7e15dadcd5e077de6075a92e",
+            "manifest.ttfm": "1532f69faef57e31ae9fe80170a823792d0a702d392ba826cb66097a382e6a2c"
+          },
+          "chunk_bytes": [
+            1,
+            7,
+            64
+          ],
+          "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]"
+        }
+      }
+    }
+  }
+}

@@ -8,13 +8,44 @@ const state = {
   result: null,
   controller: null,
   request: null,
+  sampleReview: null,
 };
 const descriptions = {
   normalize: "정규화된 텍스트와 모든 span을 확인합니다.",
   stream: "입력을 나누어 보내고 실제 출력 콜백을 관찰합니다.",
   verify: "같은 설정의 batch와 여러 청크 분할 결과를 비교합니다.",
-  corpus: "고정된 정답·메타데이터로 등록 코퍼스를 검증합니다.",
+  corpus: "개발 기대값·메타데이터·청크 일치를 확인하고 기준의 검토 상태를 표시합니다.",
 };
+const reviewLabels = {
+  "reference-policy": "개발 정책 기대값",
+  "provisional-pronunciation": "임시 발음값",
+  "preservation-contract": "원문 보존 계약",
+  "needs-review": "추가 검토 필요",
+};
+function reviewText(review) {
+  const label = reviewLabels[review?.classification] || "사용자 지정 기대 출력";
+  return `${label} · 독립 검토 대기`;
+}
+function corpusReview() {
+  const selected = state.catalog?.corpora.find((item) => item.id === $("corpus").value);
+  const review = selected?.reference_review;
+  $("corpus-review").textContent = review
+    ? Object.entries(review.classifications)
+        .map(([key, value]) => `${reviewLabels[key] || key} ${value}건`)
+        .join(" · ") + ` · 독립 검토 완료 ${review.human_approved_cases}건`
+    : "기준의 검토 상태가 없습니다.";
+}
+function loadSample(sample) {
+  $("sample").value = sample.id;
+  $("source").value = sample.text;
+  $("expected").value = sample.expected ?? "";
+  $("expected-enabled").checked = sample.expected !== undefined;
+  $("expected-details").open = sample.expected !== undefined;
+  state.sampleReview = sample.reference_review;
+  $("sample-review").textContent = reviewText(state.sampleReview);
+  settings(sample.options);
+  count();
+}
 const labels = {
   normalize: "정규화 실행 ↗",
   stream: "스트리밍 시작 ↗",
@@ -321,14 +352,15 @@ function caseResult(event) {
     node("span", event.id),
     node(
       "span",
-      event.passed ? "PASS" : "FAIL",
+      event.passed ? "회귀 일치" : "불일치",
       "badge " + (event.passed ? "" : "fail"),
     ),
   );
   d.append(summary);
+  d.append(node("p", reviewText(event.reference_review), "small"));
   for (const [label, key] of [
     ["입력", "text"],
-    ["기대", "expected"],
+    ["기대 출력", "expected"],
     ["출력", "actual"],
   ])
     d.append(node("small", label), node("pre", event[key]));
@@ -363,7 +395,7 @@ function handle(event) {
     state.result = event;
     if (state.mode === "corpus") {
       $("corpus-progress").textContent =
-        `검증 완료 · ${event.total}건 중 ${event.passed}건 통과, ${event.failed}건 실패`;
+        `회귀 검증 완료 · ${event.total}건 중 ${event.passed}건 통과, ${event.failed}건 실패 · 독립 검토 완료 ${event.human_approved_cases}건`;
       return;
     }
     $("output").textContent = event.text || "(빈 출력)";
@@ -506,8 +538,17 @@ document
 $("run").addEventListener("click", execute);
 $("cancel").addEventListener("click", () => state.controller?.abort());
 $("source").addEventListener("input", count);
+for (const id of ["source", "expected"]) {
+  $(id).addEventListener("input", () => {
+    state.sampleReview = null;
+    $("sample-review").textContent = "직접 편집한 입력·기대 출력 · 독립 검토 상태 없음";
+  });
+}
+$("corpus").addEventListener("change", corpusReview);
 $("clear").addEventListener("click", () => {
   $("source").value = "";
+  state.sampleReview = null;
+  $("sample-review").textContent = "직접 편집한 입력·기대 출력 · 독립 검토 상태 없음";
   count();
   markStale();
 });
@@ -565,12 +606,7 @@ document.querySelectorAll("[data-view]").forEach((x) =>
 $("sample").addEventListener("change", () => {
   const s = state.catalog.samples.find((x) => x.id === $("sample").value);
   if (!s) return;
-  $("source").value = s.text;
-  $("expected").value = s.expected ?? "";
-  $("expected-enabled").checked = s.expected !== undefined;
-  $("expected-details").open = s.expected !== undefined;
-  settings(s.options);
-  count();
+  loadSample(s);
   markStale();
   message("예제와 권장 설정을 불러왔습니다. 실행 버튼으로 확인하세요.");
 });
@@ -589,6 +625,8 @@ $("download").addEventListener("click", () => {
     request: state.request,
     events: state.events,
     result: state.result,
+    selected_reference_review: state.sampleReview,
+    reference_summary: state.catalog.reference_summary,
   };
   const url = URL.createObjectURL(
     new Blob([JSON.stringify(report, null, 2)], { type: "application/json" }),
@@ -629,9 +667,11 @@ document.addEventListener("keydown", (e) => {
       o.value = c.id;
       $("corpus").append(o);
     });
-    settings();
-    $("source").value = state.catalog.samples[0].text;
-    count();
+    loadSample(state.catalog.samples[0]);
+    const audit = state.catalog.reference_summary;
+    $("reference-summary").textContent =
+      `저장소 기준 ${audit.cases}건 · 독립 검토 대기 ${audit.pending_independent_review}건 · 독립 검토 완료 ${audit.human_approved_cases}건`;
+    corpusReview();
     $("run").disabled = false;
     inspect();
   } catch (e) {
