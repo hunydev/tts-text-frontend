@@ -1,0 +1,35 @@
+# Original generic unit rules prompted by an external benchmark coverage audit.
+# Values retain exact magnitude; no unit conversion or corpus-specific exact rules.
+numeric_suffix	*	mph	MEASURE:mph
+unit	en-US	mph.one	mile per hour
+unit	en-US	mph.many	miles per hour
+numeric_suffix	*	km/h	MEASURE:km_per_hour
+unit	en-US	km_per_hour.one	kilometer per hour
+unit	en-US	km_per_hour.many	kilometers per hour
+numeric_suffix	*	ft	MEASURE:ft
+unit	en-US	ft.one	foot
+unit	en-US	ft.many	feet
+numeric_suffix	*	mi	MEASURE:mi
+unit	en-US	mi.one	mile
+unit	en-US	mi.many	miles
+numeric_suffix	*	nm	MEASURE:nm
+unit	en-US	nm.one	nanometer
+unit	en-US	nm.many	nanometers
+numeric_suffix	*	KB	MEASURE:KB
+unit	en-US	KB.one	kilobyte
+unit	en-US	KB.many	kilobytes
+numeric_suffix	*	MW	MEASURE:MW
+unit	en-US	MW.one	megawatt
+unit	en-US	MW.many	megawatts
+numeric_suffix	*	Wh/km	MEASURE:Wh_per_km
+unit	en-US	Wh_per_km.one	watt hour per kilometer
+unit	en-US	Wh_per_km.many	watt hours per kilometer
+numeric_suffix	*	km²	MEASURE:square_km
+unit	en-US	square_km.one	square kilometer
+unit	en-US	square_km.many	square kilometers
+currency_prefix	*	US$	USD
+currency_prefix	*	€	EUR
+currency	en-US	EUR.one	euro
+currency	en-US	EUR.many	euros
+currency	en-US	EUR.minor.one	cent
+currency	en-US	EUR.minor.many	cents

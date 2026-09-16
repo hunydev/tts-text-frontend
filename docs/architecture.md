@@ -240,3 +240,47 @@ shared-engine request concurrency and the existing deterministic priority orderi
 The public ABI is unchanged. This removes a whole-dictionary scan per token;
 fixed hash bucket storage still needs growth/compiled storage work for large data.
 See [source workflow](lexicon-maintenance.ko.md) and [scale experiment](lexicon-scale-v10.md).
+
+## ADR: external evidence without replacing the C frontend (v0.11)
+
+The [NeMo review](research/nemo-sproat.md) supports keeping class-specific
+classification, verbalization and authoring-time compilation separate. We retain
+numeric semantic values in Universal IR: NeMo's English tagger can already contain
+English number words, which is not our language-neutral contract. Weighted FST
+selection is not substituted for the existing explicit layer/longest/specificity/
+declaration order. FAR/OpenFst/Sparrowhawk are not introduced as C11 dependencies.
+Current TTFB remains a checked TSV envelope rather than a compiled FST or DAWG.
+
+```mermaid
+flowchart LR
+    A[External source with revision and rights] --> B[Independent importer]
+    B --> C[Local benchmark with reference status]
+    C --> D[Frozen C engine and resources]
+    D --> E[Contextual span and class failures]
+    E --> F[Human review and independent contracts]
+    F --> G[Deterministic grammar or resource change]
+    G --> H[Same benchmark and chunk parity]
+    C --> H
+    H --> I[Fixed and regressed counts]
+```
+
+The Python research layer is outside the runtime. Its schema distinguishes source
+annotations from candidates and unknown references. Evaluators validate complete
+input/output byte coverage, include unaligned references as failures, record
+content hashes, and reject incomparable runs. Corpus and failure text retain source
+restrictions; no automatic feedback path copies them into shipped dictionaries.
+[Corea Numeric](research/korean-sources.md) is an optional local restricted benchmark,
+not product vocabulary or independently labeled written/spoken pairs.
+
+[CMU import](research/pronunciation-sources.md) preserves every pronunciation and
+stress marker offline. An explicit base-variant adapter can build the existing
+native pronunciation resource with license/provenance sidecars. The source pack
+and target renderer still meet at Pronunciation IR. Direct target-language
+lexicons take priority; the native renderer's simplified phonetic output is not
+approved automatically by a dictionary hit. Variant selection, complete phonetic
+features and detailed source/layer trace remain future versioned API work.
+
+The first feedback iteration adds generic unit/currency resources and makes Latin
+currency prefixes use the universal numeric grammar. Single currency amounts now
+use the same prefix/suffix consistency check as interval endpoints. No language-pair
+branch, copied corpus-specific rule, or public ABI change is introduced.

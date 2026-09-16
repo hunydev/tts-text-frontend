@@ -339,6 +339,8 @@ static size_t quantity_endpoint(const ttf_pack_input_t *in, size_t start,
             return 0;
         if (type == TTF_SEM_PERCENT)
             (void)snprintf(out->unit, sizeof(out->unit), "percent");
+        if (prefix && layer > out->layer)
+            out->layer = layer;
         out->type = prefix && (type != TTF_SEM_CURRENCY || strcmp(prefix, out->unit))
                         ? TTF_SEM_TEXT : type;
         return suffix_end;
@@ -465,7 +467,11 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
             --q;
         return finish(in, out, q, TTF_SEM_URL, "syntax.url");
     }
-    if (in->tokens[in->index].script == TTF_SCRIPT_LATIN) {
+    /* Declared currency prefixes may begin with letters (for example US$).
+       Let the common numeric grammar consume the whole resource-defined prefix
+       before the Latin lexical fast path; unknown spellings still stay lexical. */
+    if (in->tokens[in->index].script == TTF_SCRIPT_LATIN &&
+        !resource_prefix(in, "currency_prefix", b, &rule_value, &end, &layer)) {
         int at = 0, dot = 0;
         q = b;
         while (q < n &&
@@ -501,10 +507,17 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
 
     if (resource_prefix(in, "currency_prefix", b, &rule_value, &end, &layer)) {
         size_t start = skip_space(s, n, end);
-        p = number(s, n, start, out->value);
-        if (p > start && !structured_tail(s, n, p)) {
-            (void)snprintf(out->unit, sizeof(out->unit), "%s", rule_value);
-            out->layer = layer;
+        ttf_semantic_t quantity = {0};
+        p = quantity_endpoint(in, b, &quantity, 0);
+        if (p) {
+            /* Prefix and suffix must describe the same currency. Reuse the
+               interval endpoint contract for single amounts too, so a written
+               currency name is neither duplicated nor silently contradicted. */
+            if (quantity.type == TTF_SEM_TEXT)
+                return preserve(in, out, p, "syntax.invalid-currency");
+            memcpy(out->value, quantity.value, sizeof(out->value));
+            memcpy(out->unit, quantity.unit, sizeof(out->unit));
+            out->layer = quantity.layer;
             return finish(in, out, p, TTF_SEM_CURRENCY, "syntax.currency-prefix");
         }
         if (start < n && (digit(s[start]) || s[start] == '+' || s[start] == '-'))

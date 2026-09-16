@@ -9,6 +9,19 @@
 검증한 뒤 저장소에 보관하는 방식을 권한다. 시스템 파일을 직접 덮어쓸 필요는 없다.
 검증 대상은 출력 텍스트, 의미·언어 메타데이터, 스트리밍 일치성이다.
 
+v0.11의 추가 단위·통화 규칙은
+`resources/languages/en-US/rules/measurements.tsv`와
+`resources/languages/ko-KR/rules/measurements.tsv`에 있다. `numeric_suffix`는
+표기와 의미 단위를 연결하고 `unit`/`quantity_prefix`는 언어별 읽기만 정한다.
+예를 들어 `mph`는 숫자 값을 바꾸지 않고 영어에서는 `miles per hour`,
+한국어에서는 `시속 … 마일`로 읽는다. `MW`와 `mW`는 다른 표기이며 대소문자를
+구별한다. 단위를 자동 환산하지 않는다. 통화 prefix와 suffix가 충돌하는
+`US$15원`은 원문을 유지하고, 같은 통화인 `US$15달러`는 한 번만 읽는다.
+
+외부 코퍼스에서 새 표기를 발견했다면 [외부 평가 가이드](../benchmark/README.md)의
+동일 reference 비교 절차로 개선량과 퇴행을 확인한다. corpus의 발음 결과를
+그대로 제품 사전에 옮기지 말고 의미·읽기 정책·출처·이용 조건을 각각 검토한다.
+
 ## 1. 가장 짧은 실습: 금액 범위를 “부터 … 까지”로 읽기
 
 저장소 최상위 디렉터리에서 다음 Python 명령을 실행한다. 문자열의 `\t`는 실제 TAB,

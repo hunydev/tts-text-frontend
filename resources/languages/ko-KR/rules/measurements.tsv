@@ -1,0 +1,13 @@
+# Korean labels for the shared measurement semantics.
+unit	ko-KR	mph	마일
+quantity_prefix	ko-KR	mph	시속 
+unit	ko-KR	km_per_hour	킬로미터
+quantity_prefix	ko-KR	km_per_hour	시속 
+unit	ko-KR	ft	피트
+unit	ko-KR	mi	마일
+unit	ko-KR	nm	나노미터
+unit	ko-KR	KB	킬로바이트
+unit	ko-KR	MW	메가와트
+unit	ko-KR	Wh_per_km	와트시
+quantity_prefix	ko-KR	Wh_per_km	킬로미터당 
+unit	ko-KR	square_km	제곱킬로미터

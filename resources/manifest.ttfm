@@ -5,6 +5,7 @@ languages/en-US/dictionaries/pronunciation.tsv
 languages/en-US/g2p/graphemes.tsv
 languages/en-US/rules/context.tsv
 languages/en-US/rules/numeric.tsv
+languages/en-US/rules/measurements.tsv
 languages/ko-KR/dictionaries/graphemes.tsv
 languages/ko-KR/dictionaries/phones.tsv
 languages/ko-KR/lexicon/acronyms/default.tsv
@@ -19,4 +20,5 @@ languages/ko-KR/lexicon/multiword/places_media.tsv
 languages/ko-KR/lexicon/multiword/content.tsv
 languages/ko-KR/rules/context.tsv
 languages/ko-KR/rules/numeric.tsv
+languages/ko-KR/rules/measurements.tsv
 languages/ko-KR/rules/identifiers.tsv

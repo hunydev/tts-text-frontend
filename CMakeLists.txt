@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(tts_text_frontend VERSION 0.10.0 LANGUAGES C)
+project(tts_text_frontend VERSION 0.11.0 LANGUAGES C)
 include(GNUInstallDirs)
 include(CTest)
 option(TTF_ENABLE_ASAN "Enable AddressSanitizer" OFF)
@@ -110,6 +110,20 @@ if(BUILD_TESTING)
   endif()
   find_package(Python3 COMPONENTS Interpreter QUIET)
   if(Python3_Interpreter_FOUND)
+    # Offline, original fixtures only: external corpora are explicit local inputs.
+    add_test(NAME external_sproat_importer COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/benchmark/importers/sproat/test_import_sproat.py)
+    add_test(NAME external_korean_importers COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/benchmark/test_korean_importers.py)
+    add_test(NAME external_cmudict_importer COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/benchmark/test_cmudict.py
+      --ttf $<TARGET_FILE:ttf> --resources ${CMAKE_CURRENT_SOURCE_DIR}/resources)
+    add_test(NAME external_benchmark_evaluator COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/benchmark/test_evaluator.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
+    add_test(NAME external_gap_measurement_contracts COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/benchmark/test_measurement_resources.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
     add_test(NAME lexicon_generated_resources COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tools/lexicon/manage.py build --check)
     add_test(NAME lexicon_source_validation COMMAND ${Python3_EXECUTABLE}

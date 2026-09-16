@@ -1,0 +1,743 @@
+{
+  "schema_version": 1,
+  "schema": "ttf-external-source-catalog",
+  "checked_at": "2026-09-16",
+  "purpose": "Descriptive provenance and observed terms; not a downloader, runtime resource manifest, permission grant or legal opinion.",
+  "automatic_download": false,
+  "evaluation_scope": "Text normalization and pronunciation representations only; no synthesized audio evaluation.",
+  "policy": {
+    "separate_artifacts": "Code, data, papers and normative rules have separate permission evidence.",
+    "missing_or_conflicting_terms": "Keep unresolved; do not infer a grant from public visibility or select only a more permissive statement.",
+    "local_acknowledgement": "Importer flags record operator acknowledgement; they do not obtain or verify rights.",
+    "generated_outputs": "Keep external corpora, derivative imports, references and detailed reports in ignored generated or external local paths subject to original terms.",
+    "pins": "A code or card commit is not an acquired corpus hash; null revision means no immutable material version was established."
+  },
+  "sources": [
+    {
+      "id": "nemo-code",
+      "title": "NVIDIA NeMo text processing code",
+      "artifact_type": "code",
+      "source_url": "https://github.com/NVIDIA/NeMo-text-processing",
+      "pin": {
+        "kind": "git-commit",
+        "revision": "acacc21b1cb7916b10558855bc4f85957a0b2fde"
+      },
+      "license": {
+        "declared": "Apache-2.0",
+        "status": "license-file-and-inspected-headers",
+        "evidence_urls": [
+          "https://github.com/NVIDIA/NeMo-text-processing/blob/acacc21b1cb7916b10558855bc4f85957a0b2fde/LICENSE",
+          "https://www.apache.org/licenses/LICENSE-2.0"
+        ]
+      },
+      "commercial_use": {
+        "assessment": "permitted-with-conditions",
+        "note": "Applies to the licensed code, not automatically to all data or dependencies."
+      },
+      "redistribution": {
+        "assessment": "permitted-with-conditions",
+        "conditions": [
+          "Provide the license; retain applicable notices; identify modified files.",
+          "Retain applicable NOTICE content when supplied; no separate NOTICE was found at the inspected revision.",
+          "No trademark permission inferred."
+        ]
+      },
+      "attribution": [
+        "NVIDIA CORPORATION & AFFILIATES and applicable contributors/notices"
+      ],
+      "vendoring": {
+        "committed": false,
+        "upstream_files_in_product": [],
+        "project_policy": "Source inspection only; no copied code, FAR assets or runtime dependency."
+      },
+      "inspection": "Pinned shallow checkout and grammar/export source inspection; NeMo not executed.",
+      "automatic_download": false,
+      "rights_conflicts": [],
+      "research_document": "docs/research/nemo-sproat.md"
+    },
+    {
+      "id": "nemo-evaluation-data",
+      "title": "NeMo evaluation data: EngConf, GoogleTN, LibriTTS",
+      "artifact_type": "data",
+      "source_url": "https://github.com/NVIDIA/NeMo-text-processing/blob/acacc21b1cb7916b10558855bc4f85957a0b2fde/data/README.md",
+      "pin": {
+        "kind": "git-commit",
+        "revision": "acacc21b1cb7916b10558855bc4f85957a0b2fde"
+      },
+      "license": {
+        "declared": "CC-BY-4.0 (directory README claim)",
+        "status": "artifact-readme-claim-with-derivative-provenance-open",
+        "evidence_urls": [
+          "https://github.com/NVIDIA/NeMo-text-processing/blob/acacc21b1cb7916b10558855bc4f85957a0b2fde/data/README.md",
+          "https://creativecommons.org/licenses/by/4.0/"
+        ]
+      },
+      "commercial_use": {
+        "assessment": "unresolved-for-derived-material",
+        "note": "CC BY allows commercial use under its conditions, but the upstream rights chain of derived material is not settled here."
+      },
+      "redistribution": {
+        "assessment": "not-approved-by-this-review",
+        "conditions": [
+          "Honor attribution, license link and change notices if applicable rights are established.",
+          "Check GoogleTN and LibriTTS upstream conditions before redistribution."
+        ]
+      },
+      "attribution": [
+        "NVIDIA evaluation dataset authors and applicable upstream corpus creators"
+      ],
+      "vendoring": {
+        "committed": false,
+        "upstream_files_in_product": [],
+        "project_policy": "No evaluation data copied into product or committed to this repository."
+      },
+      "inspection": "Pinned directory README inspected; file-specific source chain identified, not resolved.",
+      "automatic_download": false,
+      "rights_conflicts": [
+        "GoogleTN.json is described as derived from Sproat data, whose distribution claims CC BY-SA 4.0 with truncated text and Unknown metadata; a CC BY-only chain is not inferred."
+      ],
+      "research_document": "docs/THIRD_PARTY.md",
+      "material_scope": [
+        "data/EngConf.txt",
+        "data/GoogleTN.json",
+        "data/LibriTTS.json"
+      ]
+    },
+    {
+      "id": "nemo-roman-name-data",
+      "title": "Mark Kantrowitz name lists referenced by NeMo",
+      "artifact_type": "data",
+      "source_url": "https://github.com/NVIDIA/NeMo-text-processing/blob/acacc21b1cb7916b10558855bc4f85957a0b2fde/nemo_text_processing/text_normalization/en/data/roman/README.md",
+      "pin": {
+        "kind": "containing-git-commit",
+        "revision": "acacc21b1cb7916b10558855bc4f85957a0b2fde"
+      },
+      "license": {
+        "declared": "Custom attribution and README redistribution terms",
+        "status": "file-specific-notice-inspected",
+        "evidence_urls": [
+          "https://github.com/NVIDIA/NeMo-text-processing/blob/acacc21b1cb7916b10558855bc4f85957a0b2fde/nemo_text_processing/text_normalization/en/data/roman/README.md",
+          "https://www.cs.cmu.edu/Groups/AI/areas/nlp/corpora/names/readme.txt"
+        ]
+      },
+      "commercial_use": {
+        "assessment": "permitted-with-conditions-in-notice",
+        "note": "The inspected notice permits any purpose with credit in published work; do not replace this notice with Apache-2.0."
+      },
+      "redistribution": {
+        "assessment": "permitted-with-conditions-in-notice",
+        "conditions": [
+          "Give credit in published work.",
+          "Provide recipients a copy of the source README when redistributing the lists."
+        ]
+      },
+      "attribution": [
+        "Mark Kantrowitz, copyright January 1991; lists version 1.3, 29-MAR-94"
+      ],
+      "vendoring": {
+        "committed": false,
+        "upstream_files_in_product": [],
+        "project_policy": "No name-list data copied; verify original notice with exact files before any future vendoring."
+      },
+      "inspection": "NeMo pinned file-specific notice inspected.",
+      "automatic_download": false,
+      "rights_conflicts": [],
+      "research_document": "docs/THIRD_PARTY.md",
+      "material_scope": [
+        "nemo_text_processing/text_normalization/en/data/roman/female.tsv",
+        "nemo_text_processing/text_normalization/en/data/roman/male.tsv"
+      ]
+    },
+    {
+      "id": "sproat-split-code",
+      "title": "Sproat text-normalization split repository",
+      "artifact_type": "code",
+      "source_url": "https://github.com/rwsproat/text-normalization-data",
+      "pin": {
+        "kind": "git-commit",
+        "revision": "ab18388a34a9da78c77b7fa4b49e6d631ea348eb"
+      },
+      "license": {
+        "declared": null,
+        "status": "no-license-file-found",
+        "evidence_urls": [
+          "https://github.com/rwsproat/text-normalization-data/blob/ab18388a34a9da78c77b7fa4b49e6d631ea348eb/README.md",
+          "https://github.com/rwsproat/text-normalization-data/blob/ab18388a34a9da78c77b7fa4b49e6d631ea348eb/split.sh"
+        ]
+      },
+      "commercial_use": {
+        "assessment": "not-established",
+        "note": "Public visibility is not an established commercial code reuse grant."
+      },
+      "redistribution": {
+        "assessment": "not-established",
+        "conditions": [
+          "Do not infer a code license from the separately distributed dataset."
+        ]
+      },
+      "attribution": [
+        "Richard Sproat; cite the source when describing its split definitions."
+      ],
+      "vendoring": {
+        "committed": false,
+        "upstream_files_in_product": [],
+        "project_policy": "Read definitions only; do not copy or execute split.sh as part of this project."
+      },
+      "inspection": "Tracked README.md and split.sh inspected; no LICENSE present.",
+      "automatic_download": false,
+      "rights_conflicts": [],
+      "research_document": "docs/research/nemo-sproat.md"
+    },
+    {
+      "id": "sproat-tn-data",
+      "title": "Sproat English/Russian/Polish text normalization data",
+      "artifact_type": "data",
+      "source_url": "https://www.kaggle.com/datasets/richardwilliamsproat/text-normalization-for-english-russian-and-polish",
+      "pin": {
+        "kind": "kaggle-dataset-version",
+        "revision": "dataset-869240/version-1"
+      },
+      "license": {
+        "declared": "CC-BY-SA-4.0 (truncated distribution LICENSE); Kaggle metadata Unknown",
+        "status": "conflicting-or-incomplete-evidence",
+        "evidence_urls": [
+          "https://www.kaggle.com/api/v1/datasets/download/richardwilliamsproat/text-normalization-for-english-russian-and-polish/LICENSE",
+          "https://www.kaggle.com/api/v1/datasets/download/richardwilliamsproat/text-normalization-for-english-russian-and-polish/README",
+          "https://www.kaggle.com/datasets/richardwilliamsproat/text-normalization-for-english-russian-and-polish",
+          "https://creativecommons.org/licenses/by-sa/4.0/"
+        ]
+      },
+      "commercial_use": {
+        "assessment": "unresolved",
+        "note": "The declared CC BY-SA 4.0 permits commercial use with conditions, but incomplete/conflicting distribution evidence is unresolved."
+      },
+      "redistribution": {
+        "assessment": "not-approved-for-product-by-this-review",
+        "conditions": [
+          "Preserve source, creator, license and change notices.",
+          "If CC BY-SA applies, adapted material shared onward must satisfy ShareAlike.",
+          "Keep the incomplete LICENSE and metadata conflict visible; do not silently replace the grant."
+        ]
+      },
+      "attribution": [
+        "Richard Sproat / original distribution; Sproat and Jaitly paper; applicable upstream source notices"
+      ],
+      "vendoring": {
+        "committed": false,
+        "upstream_files_in_product": [],
+        "project_policy": "External benchmark sample only; no corpus, derived lexicon or references committed to product resources."
+      },
+      "inspection": "Bounded English archive prefix inspected; full corpus not downloaded; reference labels are not human approval.",
+      "automatic_download": false,
+      "rights_conflicts": [
+        "Downloaded LICENSE has CC BY-SA 4.0 heading but ends after 7,668 bytes.",
+        "Kaggle API metadata reports Unknown."
+      ],
+      "research_document": "docs/research/nemo-sproat.md",
+      "published_date": "2020-09-11",
+      "evidence_sha256": {
+        "LICENSE": "fd8835cb194d0aa572b709835dfbf7b5dc336a37494e0889137b142b564d0db7",
+        "README": "11fd3fb0ac149f332c84df031b4fb9fe1213afdf9b9134e956ea32c75b037128"
+      },
+      "acquired_sample": {
+        "source_file": "en_with_types/output-00058-of-00100",
+        "sha256": "072964db038fbf9091658de7c8d95b0f02689e22c047173a0b3f70899d60c567",
+        "bytes": 916200,
+        "lines": 49998,
+        "sentences": 3785,
+        "selection": "First archive member prefix cut at complete EOS; training shard, not randomized or held-out.",
+        "full_archive_crc_verified": false
+      }
+    },
+    {
+      "id": "sproat-jaitly-paper",
+      "title": "Sproat/Jaitly text normalization paper",
+      "artifact_type": "paper",
+      "source_url": "https://arxiv.org/abs/1611.00068v2",
+      "pin": {
+        "kind": "paper-version",
+        "revision": "arXiv:1611.00068v2"
+      },
+      "license": {
+        "declared": null,
+        "status": "paper-redistribution-license-not-established-in-review",
+        "evidence_urls": [
+          "https://arxiv.org/abs/1611.00068v2",
+          "https://arxiv.org/pdf/1611.00068v2"
+        ]
+      },
+      "commercial_use": {
+        "assessment": "not-assessed",
+        "note": "Citation and technical reading do not establish a reuse grant for the PDF or data."
+      },
+      "redistribution": {
+        "assessment": "not-established",
+        "conditions": [
+          "Consult the paper-specific distribution terms before reproducing the article."
+        ]
+      },
+      "attribution": [
+        "Richard Sproat and Navdeep Jaitly; arXiv:1611.00068v2"
+      ],
+      "vendoring": {
+        "committed": false,
+        "upstream_files_in_product": [],
+        "project_policy": "Citation/technical review only; PDF not committed."
+      },
+      "inspection": "Paper text and split description inspected.",
+      "automatic_download": false,
+      "rights_conflicts": [],
+      "research_document": "docs/research/nemo-sproat.md",
+      "published_date": "2017-01-24"
+    },
+    {
+      "id": "ksponspeech-code",
+      "title": "KsponSpeech reference preprocessing code",
+      "artifact_type": "code",
+      "source_url": "https://github.com/sooftware/ksponspeech",
+      "pin": {
+        "kind": "git-commit",
+        "revision": "54fe0cebd890e519d424ae9d339a57040b399108"
+      },
+      "license": {
+        "declared": "MIT",
+        "status": "license-file-inspected",
+        "evidence_urls": [
+          "https://github.com/sooftware/ksponspeech/blob/54fe0cebd890e519d424ae9d339a57040b399108/LICENSE",
+          "https://github.com/sooftware/ksponspeech/blob/54fe0cebd890e519d424ae9d339a57040b399108/preprocess/preprocess.py"
+        ]
+      },
+      "commercial_use": {
+        "assessment": "permitted-with-conditions",
+        "note": "MIT code permission does not license AI Hub transcripts/audio."
+      },
+      "redistribution": {
+        "assessment": "permitted-with-conditions",
+        "conditions": [
+          "Retain copyright and permission notice in copies or substantial portions."
+        ]
+      },
+      "attribution": [
+        "Copyright (c) 2020 Soohwan Kim"
+      ],
+      "vendoring": {
+        "committed": false,
+        "upstream_files_in_product": [],
+        "project_policy": "No upstream code copied; independent local-text importer."
+      },
+      "inspection": "Pinned source checkout and LICENSE inspected.",
+      "automatic_download": false,
+      "rights_conflicts": [],
+      "research_document": "docs/research/korean-sources.md"
+    },
+    {
+      "id": "ksponspeech-paper",
+      "title": "KsponSpeech paper",
+      "artifact_type": "paper",
+      "source_url": "https://www.mdpi.com/2076-3417/10/19/6936",
+      "pin": {
+        "kind": "doi",
+        "revision": "10.3390/app10196936"
+      },
+      "license": {
+        "declared": "CC-BY-4.0",
+        "status": "publisher-article-notice-inspected",
+        "evidence_urls": [
+          "https://www.mdpi.com/2076-3417/10/19/6936",
+          "https://mdpi-res.com/d_attachment/applsci/applsci-10-06936/article_deploy/applsci-10-06936.pdf",
+          "https://creativecommons.org/licenses/by/4.0/"
+        ]
+      },
+      "commercial_use": {
+        "assessment": "permitted-with-conditions-for-article",
+        "note": "Article license applies to the article, not corpus access rights."
+      },
+      "redistribution": {
+        "assessment": "permitted-with-conditions-for-article",
+        "conditions": [
+          "Give article creator/source/license credit and identify changes."
+        ]
+      },
+      "attribution": [
+        "KsponSpeech article authors; Applied Sciences 2020, 10(19), 6936; DOI 10.3390/app10196936"
+      ],
+      "vendoring": {
+        "committed": false,
+        "upstream_files_in_product": [],
+        "project_policy": "Citation only; PDF not committed."
+      },
+      "inspection": "Publisher article final-page CC BY 4.0 notice inspected.",
+      "automatic_download": false,
+      "rights_conflicts": [],
+      "research_document": "docs/research/korean-sources.md"
+    },
+    {
+      "id": "ksponspeech-data",
+      "title": "KsponSpeech AI Hub dataset 123",
+      "artifact_type": "data",
+      "source_url": "https://www.aihub.or.kr/aihubdata/data/view.do?currMenu=115&topMenu=100&aihubDataSe=data&dataSetSn=123",
+      "pin": {
+        "kind": "no-corpus-release-acquired",
+        "revision": null
+      },
+      "license": {
+        "declared": "AI Hub dataset policy and user agreement",
+        "status": "agreement-dependent",
+        "evidence_urls": [
+          "https://www.aihub.or.kr/aihubdata/data/view.do?currMenu=115&topMenu=100&aihubDataSe=data&dataSetSn=123",
+          "https://aihub.or.kr/intrcn/guid/usagepolicy.do?currMenu=151&topMenu=105"
+        ]
+      },
+      "commercial_use": {
+        "assessment": "conditional-not-established-for-this-benchmark",
+        "note": "Policy mentions commercial/noncommercial R&D but includes detailed purpose, access, location and agreement restrictions; MIT code and CC BY paper do not resolve them."
+      },
+      "redistribution": {
+        "assessment": "not-authorized-by-this-review",
+        "conditions": [
+          "Check the actual dataset access agreement and whether text-only evaluation is an allowed purpose.",
+          "Observe model-training purpose and third-party access/provision conditions.",
+          "Check separate arrangements for overseas entities/export and sale/commercial exploitation."
+        ]
+      },
+      "attribution": [
+        "NIA attribution as specified by AI Hub policy and the applicable agreement."
+      ],
+      "vendoring": {
+        "committed": false,
+        "upstream_files_in_product": [],
+        "project_policy": "No corpus acquired, redistributed or committed; operator-supplied local data requires established rights."
+      },
+      "inspection": "Official dataset page/policy and paper inspected; no corpus content or hash acquired.",
+      "automatic_download": false,
+      "rights_conflicts": [],
+      "research_document": "docs/research/korean-sources.md",
+      "catalog_identifier": "AI Hub dataSetSn=123"
+    },
+    {
+      "id": "coreaspeech-code",
+      "title": "CoreaSpeech preprocessing/training/evaluation code and N2gk+",
+      "artifact_type": "code",
+      "source_url": "https://github.com/CoreaSpeech/CoreaSpeech",
+      "pin": {
+        "kind": "git-commit",
+        "revision": "424229a8affea08848e2e647c0d3e471b3ef9d39"
+      },
+      "license": {
+        "declared": "MIT (README claim)",
+        "status": "readme-claim-without-standalone-license",
+        "evidence_urls": [
+          "https://github.com/CoreaSpeech/CoreaSpeech/blob/424229a8affea08848e2e647c0d3e471b3ef9d39/README.md#license",
+          "https://github.com/CoreaSpeech/CoreaSpeech/blob/424229a8affea08848e2e647c0d3e471b3ef9d39/src/module/data_conditioning/normalization.py"
+        ]
+      },
+      "commercial_use": {
+        "assessment": "claim-present-vendoring-not-reviewed",
+        "note": "README claims MIT for code; confirm applicable copyright/permission notices and dependencies before actual copying."
+      },
+      "redistribution": {
+        "assessment": "not-approved-for-vendoring-by-this-review",
+        "conditions": [
+          "Resolve missing standalone notice details and dependency terms before copying."
+        ]
+      },
+      "attribution": [
+        "CoreaSpeech authors and applicable original copyright holders."
+      ],
+      "vendoring": {
+        "committed": false,
+        "upstream_files_in_product": [],
+        "project_policy": "No code, tables or model assets copied or executed; importer independently authored."
+      },
+      "inspection": "Pinned checkout and README inspected; no standalone LICENSE at the revision.",
+      "automatic_download": false,
+      "rights_conflicts": [],
+      "research_document": "docs/research/korean-sources.md"
+    },
+    {
+      "id": "coreaspeech-testset-data",
+      "title": "KoreanUniversalTestset official distribution",
+      "artifact_type": "data",
+      "source_url": "https://huggingface.co/datasets/aanonyyy/M6A5P1Q7",
+      "pin": {
+        "kind": "dataset-card-git-commit",
+        "revision": "9829037ec950e08db7ef499656cae69c7157bd6b"
+      },
+      "license": {
+        "declared": "CC-BY-NC-4.0 claim plus stricter official card restrictions",
+        "status": "conflicting-evidence",
+        "evidence_urls": [
+          "https://huggingface.co/datasets/aanonyyy/M6A5P1Q7/blob/9829037ec950e08db7ef499656cae69c7157bd6b/README.md",
+          "https://github.com/CoreaSpeech/CoreaSpeech/blob/424229a8affea08848e2e647c0d3e471b3ef9d39/README.md#license",
+          "https://proceedings.neurips.cc/paper_files/paper/2025/file/5b221bc040a287a255a0f311598aec61-Paper-Datasets_and_Benchmarks_Track.pdf",
+          "https://coreaspeech.github.io/demo/",
+          "https://creativecommons.org/licenses/by-nc/4.0/legalcode.en"
+        ]
+      },
+      "commercial_use": {
+        "assessment": "no-commercial-grant-established",
+        "note": "A business benchmark is not automatically noncommercial; explicit rights clarification is needed."
+      },
+      "redistribution": {
+        "assessment": "not-authorized-by-this-review",
+        "conditions": [
+          "Do not resolve the conflict by choosing only the more permissive license text.",
+          "Use only separately authorized local text exports; CLI acknowledgement does not grant or verify rights."
+        ]
+      },
+      "attribution": [
+        "Where authorized: creator/source/license credit, paper citation and change notices; attribution alone does not resolve the conflict."
+      ],
+      "vendoring": {
+        "committed": false,
+        "upstream_files_in_product": [],
+        "project_policy": "No dataset/audio acquired or committed; no product inclusion or redistribution."
+      },
+      "inspection": "Official linked pinned card inspected; no corpus/Parquet content acquired.",
+      "automatic_download": false,
+      "rights_conflicts": [
+        "Repository README and paper checklist claim CC BY-NC 4.0 for data/testset/checkpoints.",
+        "Pinned official data cards state research-only use and prohibit modification and redistribution.",
+        "The card restrictions conflict with the sharing/adaptation permissions normally present in CC BY-NC; clarification not obtained."
+      ],
+      "research_document": "docs/research/korean-sources.md",
+      "corpus_sha256": null
+    },
+    {
+      "id": "coreaspeech-training-data",
+      "title": "CoreaSpeech official training distribution",
+      "artifact_type": "data",
+      "source_url": "https://huggingface.co/datasets/aanonyyy/F5I9N7A1",
+      "pin": {
+        "kind": "dataset-card-git-commit",
+        "revision": "950d6a50b2b3e338d141313d11440fe47b037745"
+      },
+      "license": {
+        "declared": "CC-BY-NC-4.0 claim plus stricter official card restrictions",
+        "status": "conflicting-evidence",
+        "evidence_urls": [
+          "https://huggingface.co/datasets/aanonyyy/F5I9N7A1/blob/950d6a50b2b3e338d141313d11440fe47b037745/README.md",
+          "https://github.com/CoreaSpeech/CoreaSpeech/blob/424229a8affea08848e2e647c0d3e471b3ef9d39/README.md#license",
+          "https://proceedings.neurips.cc/paper_files/paper/2025/file/5b221bc040a287a255a0f311598aec61-Paper-Datasets_and_Benchmarks_Track.pdf",
+          "https://coreaspeech.github.io/demo/",
+          "https://creativecommons.org/licenses/by-nc/4.0/legalcode.en"
+        ]
+      },
+      "commercial_use": {
+        "assessment": "no-commercial-grant-established",
+        "note": "A business benchmark is not automatically noncommercial; explicit rights clarification is needed."
+      },
+      "redistribution": {
+        "assessment": "not-authorized-by-this-review",
+        "conditions": [
+          "Do not resolve the conflict by choosing only the more permissive license text.",
+          "Use only separately authorized local text exports; CLI acknowledgement does not grant or verify rights."
+        ]
+      },
+      "attribution": [
+        "Where authorized: creator/source/license credit, paper citation and change notices; attribution alone does not resolve the conflict."
+      ],
+      "vendoring": {
+        "committed": false,
+        "upstream_files_in_product": [],
+        "project_policy": "No dataset/audio acquired or committed; no product inclusion or redistribution."
+      },
+      "inspection": "Official linked pinned card inspected; no corpus/Parquet content acquired.",
+      "automatic_download": false,
+      "rights_conflicts": [
+        "Repository README and paper checklist claim CC BY-NC 4.0 for data/testset/checkpoints.",
+        "Pinned official data cards state research-only use and prohibit modification and redistribution.",
+        "The card restrictions conflict with the sharing/adaptation permissions normally present in CC BY-NC; clarification not obtained."
+      ],
+      "research_document": "docs/research/korean-sources.md",
+      "corpus_sha256": null
+    },
+    {
+      "id": "coreaspeech-checkpoints",
+      "title": "CoreaSpeech model checkpoints (policy reference only)",
+      "artifact_type": "data",
+      "source_url": "https://github.com/CoreaSpeech/CoreaSpeech/blob/424229a8affea08848e2e647c0d3e471b3ef9d39/README.md#license",
+      "pin": {
+        "kind": "policy-code-commit-not-model-revision",
+        "revision": "424229a8affea08848e2e647c0d3e471b3ef9d39"
+      },
+      "license": {
+        "declared": "CC-BY-NC-4.0 (README claim)",
+        "status": "asset-specific-terms-not-verified",
+        "evidence_urls": [
+          "https://github.com/CoreaSpeech/CoreaSpeech/blob/424229a8affea08848e2e647c0d3e471b3ef9d39/README.md#license",
+          "https://proceedings.neurips.cc/paper_files/paper/2025/file/5b221bc040a287a255a0f311598aec61-Paper-Datasets_and_Benchmarks_Track.pdf",
+          "https://creativecommons.org/licenses/by-nc/4.0/legalcode.en"
+        ]
+      },
+      "commercial_use": {
+        "assessment": "no-commercial-grant-established",
+        "note": "No checkpoint-specific download, artifact pin or license verification was performed."
+      },
+      "redistribution": {
+        "assessment": "not-authorized-by-this-review",
+        "conditions": [
+          "Check each actual model artifact and applicable terms before acquisition or distribution."
+        ]
+      },
+      "attribution": [
+        "CoreaSpeech creators and applicable model/source notices, if rights are established."
+      ],
+      "vendoring": {
+        "committed": false,
+        "upstream_files_in_product": [],
+        "project_policy": "No checkpoints downloaded, executed, committed or used by runtime."
+      },
+      "inspection": "README asset category only; no model artifacts inspected.",
+      "automatic_download": false,
+      "rights_conflicts": [],
+      "research_document": "docs/research/korean-sources.md",
+      "model_revision": null
+    },
+    {
+      "id": "coreaspeech-paper",
+      "title": "CoreaSpeech NeurIPS 2025 paper",
+      "artifact_type": "paper",
+      "source_url": "https://proceedings.neurips.cc/paper_files/paper/2025/file/5b221bc040a287a255a0f311598aec61-Paper-Datasets_and_Benchmarks_Track.pdf",
+      "pin": {
+        "kind": "proceedings-identifier",
+        "revision": "NeurIPS-2025/5b221bc040a287a255a0f311598aec61"
+      },
+      "license": {
+        "declared": null,
+        "status": "paper-redistribution-license-not-established-in-review",
+        "evidence_urls": [
+          "https://proceedings.neurips.cc/paper_files/paper/2025/file/5b221bc040a287a255a0f311598aec61-Paper-Datasets_and_Benchmarks_Track.pdf"
+        ]
+      },
+      "commercial_use": {
+        "assessment": "not-assessed",
+        "note": "Paper access and its statements about dataset licenses do not establish a PDF reuse grant."
+      },
+      "redistribution": {
+        "assessment": "not-established",
+        "conditions": [
+          "Check article-specific publication terms before reproducing the paper."
+        ]
+      },
+      "attribution": [
+        "CoreaSpeech paper authors; NeurIPS 2025 Datasets and Benchmarks Track"
+      ],
+      "vendoring": {
+        "committed": false,
+        "upstream_files_in_product": [],
+        "project_policy": "Citation only; no PDF committed."
+      },
+      "inspection": "Paper description and dataset-license checklist inspected.",
+      "automatic_download": false,
+      "rights_conflicts": [],
+      "research_document": "docs/research/korean-sources.md"
+    },
+    {
+      "id": "cmudict-pronunciation-data",
+      "title": "Carnegie Mellon Pronouncing Dictionary",
+      "artifact_type": "data",
+      "source_url": "https://github.com/cmusphinx/cmudict",
+      "pin": {
+        "kind": "git-commit",
+        "revision": "74790861f652b15e4ac49015a90074ad62a27690"
+      },
+      "license": {
+        "declared": "BSD-2-Clause (upstream LICENSE retained verbatim)",
+        "status": "license-and-commercial-readme-inspected",
+        "evidence_urls": [
+          "https://github.com/cmusphinx/cmudict/blob/74790861f652b15e4ac49015a90074ad62a27690/LICENSE",
+          "https://github.com/cmusphinx/cmudict/blob/74790861f652b15e4ac49015a90074ad62a27690/README"
+        ]
+      },
+      "commercial_use": {
+        "assessment": "permitted-with-conditions",
+        "note": "README explicitly allows research and commercial purposes; source/binary notice conditions still apply."
+      },
+      "redistribution": {
+        "assessment": "permitted-with-conditions",
+        "conditions": [
+          "Source redistribution retains copyright, conditions and disclaimer.",
+          "Binary redistribution reproduces those notices in documentation or accompanying materials.",
+          "Keep exported COPYING and NOTICE.txt with TSV/TTFB redistribution."
+        ]
+      },
+      "attribution": [
+        "Carnegie Mellon University, CMU Pronouncing Dictionary.",
+        "LICENSE copyright 1993-2015 is preserved verbatim; README separately says 1993-2014."
+      ],
+      "vendoring": {
+        "committed": false,
+        "upstream_files_in_product": [],
+        "project_policy": "No bulk dictionary committed. Optional explicit base-variant export creates a separate bundle and never changes default resources."
+      },
+      "inspection": "Pinned full dictionary, phone inventories, helper code and license inspected; import/export and native loading tested.",
+      "automatic_download": false,
+      "rights_conflicts": [],
+      "research_document": "docs/research/pronunciation-sources.md",
+      "source_sha256": {
+        "cmudict.dict": "81917843c7f44ce2b094ac63873c2c7a4cf802040792c455ba3ca406891c3d22",
+        "cmudict.phones": "ffb588a5e55684723582c7256e1d2f9fadb130011392d9e59237c76e34c2cfd6",
+        "cmudict.symbols": "408ccaae803641c6d7b626b6299949320c2dbca96b2220fd3fb17887b023b027",
+        "LICENSE": "bd4ce8e44170a5f9f481310ca85c51de3c4f851a65e679b40e603b143bd3542a"
+      },
+      "observed_counts": {
+        "headwords": 126052,
+        "pronunciations": 135166,
+        "multiple_pronunciation_headwords": 8447
+      },
+      "importer": "benchmark/importers/cmudict/import_cmudict.py"
+    },
+    {
+      "id": "nikl-loanword-rules",
+      "title": "National Institute of Korean Language loanword spelling rules",
+      "artifact_type": "rules",
+      "source_url": "https://www.korean.go.kr/front/page/pageView.do?mn_id=97&page_id=P000104",
+      "pin": {
+        "kind": "live-official-pages-no-immutable-version",
+        "revision": null
+      },
+      "license": {
+        "declared": "Official website policy; material-specific public-use conditions",
+        "status": "material-specific-not-blanket-grant",
+        "evidence_urls": [
+          "https://www.korean.go.kr/front/page/pageView.do?mn_id=97&page_id=P000104",
+          "https://www.korean.go.kr/front/page/pageView.do?mn_id=97&page_id=P000105",
+          "https://www.korean.go.kr/front/page/pageView.do?mn_id=97&page_id=P000124",
+          "https://www.korean.go.kr/front/page/pageView.do?page_id=P000145",
+          "https://www.korean.go.kr/front/nuri/pageView.do?mkn=3&page_id=P000189"
+        ]
+      },
+      "commercial_use": {
+        "assessment": "not-established-for-bulk-reuse",
+        "note": "Public access to rules does not establish commercial redistribution rights for every dictionary, examples database or API response."
+      },
+      "redistribution": {
+        "assessment": "material-specific-review-required",
+        "conditions": [
+          "Check the particular work and KOGL designation before reproducing bulk materials.",
+          "Do not extend the conditions of one public-use type to other assets."
+        ]
+      },
+      "attribution": [
+        "National Institute of Korean Language, exact official page/chapter, access date; follow item-specific required attribution."
+      ],
+      "vendoring": {
+        "committed": false,
+        "upstream_files_in_product": [],
+        "project_policy": "Rules read and independently analyzed; no bulk examples database or dictionary extracted or committed."
+      },
+      "inspection": "Official principle, IPA table, English rules, proper-name rules and copyright policy pages read.",
+      "automatic_download": false,
+      "rights_conflicts": [],
+      "research_document": "docs/research/pronunciation-sources.md",
+      "page_urls": [
+        "https://www.korean.go.kr/front/page/pageView.do?mn_id=97&page_id=P000104",
+        "https://www.korean.go.kr/front/page/pageView.do?mn_id=97&page_id=P000105",
+        "https://www.korean.go.kr/front/page/pageView.do?mn_id=97&page_id=P000124",
+        "https://www.korean.go.kr/front/page/pageView.do?page_id=P000145"
+      ],
+      "bulk_dictionary_rights": "not-verified"
+    }
+  ]
+}

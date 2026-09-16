@@ -12,3 +12,7 @@ __pycache__/
 /artifacts/
 
 node_modules/
+
+# Local external datasets, compiled imports and benchmark reports (never vendor).
+/benchmark/generated/*
+!/benchmark/generated/.gitkeep

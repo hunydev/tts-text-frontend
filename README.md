@@ -25,6 +25,33 @@ WiFi를 사용합니다.           → 와이파이를 사용합니다.
 `Apple → 애플` is pronunciation rendering. Source, context and render languages
 remain distinct in the semantic IR and output metadata.
 
+## External benchmark pipeline (v0.11)
+
+The [external benchmark guide](benchmark/README.md) adds Sproat sentence/span/class
+evaluation, selected Kspon dual-transcription candidates, optional local Corea
+Numeric inputs, and a pinned CMUdict importer that preserves stress and alternative
+pronunciations. Dataset references, unreviewed candidates and unlabeled inputs are
+kept separate. Comparisons require the same corpus and evaluation policy; reports
+record engine/resource hashes and class-level fixes and regressions.
+
+Read the [research and measured coverage gaps](docs/research/external-benchmark-results.md)
+and [artifact-specific licenses](docs/THIRD_PARTY.md). External data and generated
+reports stay outside Git and product resources. No audio evaluation is performed.
+CI uses original offline fixtures, not downloaded datasets.
+
+The first measured improvements add resource-defined speed, length, storage,
+power and area units, `US$` and `€`. Currency prefix/suffix conflicts are preserved
+for review instead of producing contradictory readings. This remains an early
+frontend; external reference agreement does not establish production accuracy.
+
+```sh
+ctest --test-dir build --output-on-failure -R '^external_'
+build/ttf normalize --language en-US 'The speed is 28 mph.'
+# The speed is twenty eight miles per hour.
+build/ttf normalize '금액은 US$15달러입니다.'
+# 금액은 십오 달러입니다.
+```
+
 ## Managed pronunciation dictionaries (v0.10)
 
 The editable source now lives in `lexicons/`: **374 entries / 376 keys**, including
