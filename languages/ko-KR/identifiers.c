@@ -106,7 +106,7 @@ static int valid_tail(const ttf_pack_input_t *in, size_t end) {
 size_t ttf_ko_classify_identifier(const ttf_pack_input_t *in, ttf_semantic_t *semantic) {
     size_t begin = in->tokens[in->index].begin, end = begin, i;
     char label[TTF_IR_VALUE_SIZE];
-    ttf_resource_layer_t layer;
+    ttf_resource_layer_t layer = TTF_LAYER_COMMON;
     if (begin == in->length || !decimal_digit(in->text[begin]) ||
         !preceding_label(in, begin, label, sizeof(label), &layer))
         return 0;

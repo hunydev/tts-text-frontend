@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(tts_text_frontend VERSION 0.6.0 LANGUAGES C)
+project(tts_text_frontend VERSION 0.7.0 LANGUAGES C)
 include(GNUInstallDirs)
 include(CTest)
 option(TTF_ENABLE_ASAN "Enable AddressSanitizer" OFF)
@@ -142,6 +142,27 @@ if(BUILD_TESTING)
     add_test(NAME protected_text_integration COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_protected.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
+    foreach(CORPUS content_v7 finance_ranges_v7)
+      if(CORPUS STREQUAL "content_v7")
+        set(CASE_COUNT 40)
+      else()
+        set(CASE_COUNT 24)
+      endif()
+      add_test(NAME ${CORPUS}_evaluation COMMAND ${Python3_EXECUTABLE}
+        ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
+        $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources ${CORPUS}.jsonl ${CASE_COUNT})
+      add_test(NAME ${CORPUS}_integration COMMAND ${Python3_EXECUTABLE}
+        ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_${CORPUS}.py
+        $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
+    endforeach()
+    if(UNIX AND NOT TTF_ENABLE_ASAN AND NOT TTF_ENABLE_UBSAN)
+      add_executable(ttf_web_abi tests/web/abi_layout.c)
+      target_link_libraries(ttf_web_abi PRIVATE tts_text_frontend_static ttf_build_flags)
+      add_test(NAME web_workbench COMMAND ${Python3_EXECUTABLE}
+        ${CMAKE_CURRENT_SOURCE_DIR}/tests/web/test_workbench.py
+        $<TARGET_FILE:tts_text_frontend_shared> ${CMAKE_CURRENT_SOURCE_DIR}/resources
+        $<TARGET_FILE:ttf> $<TARGET_FILE:ttf_web_abi>)
+    endif()
     add_test(NAME compiled_resources COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_compiled_resources.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/tools/resource_compiler/compile_resources.py

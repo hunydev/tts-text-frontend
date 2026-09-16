@@ -1,6 +1,7 @@
 /* Korean reading policy and phonetic realization live in this language pack.
  * The core only dispatches through the versioned language-pack interface. */
 #include "tts_text_frontend/ttf_language_pack.h"
+#include "../../src/core/internal.h" /* Builtin scalar grammar reuse; not public ABI. */
 #include "identifiers.h"
 #include "../context_run.h"
 #include <stdint.h>
@@ -676,6 +677,126 @@ static size_t compound_amount(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                       type == TTF_SEM_CURRENCY ? "ko:compound-currency" : "ko:compound-number");
 }
 
+/* Scaled Korean currency endpoints reuse the exact compound arithmetic above.
+ * A bounded first-endpoint view stops the scale grammar at a resource delimiter;
+ * the resulting RANGE remains language-neutral and can use any pack renderer. */
+static size_t compound_currency_range(const ttf_pack_input_t *in, ttf_semantic_t *out) {
+    size_t begin = in->tokens[in->index].begin, i;
+    if (in->tokens[in->index].script != TTF_SCRIPT_DIGIT &&
+        in->tokens[in->index].script != TTF_SCRIPT_SYMBOL &&
+        in->text[begin] != '-' && in->text[begin] != '+')
+        return 0;
+    for (i = in->index + 1; i < in->token_count; ++i) {
+        const ttf_token_t *token = &in->tokens[i];
+        char key[8];
+        size_t width = token->end - token->begin, next, first_count, second_count;
+        int first_scaled = 0, second_scaled = 0;
+        const char *enabled;
+        ttf_resource_layer_t delimiter_layer;
+        ttf_pack_input_t left = *in, right = *in;
+        ttf_semantic_t first = {0}, second = {0};
+        /* Two 96-byte coefficients plus written scale/unit syntax are bounded.
+           Larger constructs continue through ordinary scalar classification. */
+        if (token->begin - begin > 512)
+            break;
+        if (token->script == TTF_SCRIPT_WHITESPACE &&
+            memchr(in->text + token->begin, '\n', width))
+            break;
+        if (width >= sizeof(key))
+            continue;
+        memcpy(key, in->text + token->begin, width);
+        key[width] = '\0';
+        enabled = ttf_resource_get(in->engine, "quantity_range_separator", "*", key, &delimiter_layer);
+        if (!enabled || strcmp(enabled, "1"))
+            continue;
+        left.length = token->begin;
+        left.token_count = i;
+        first_count = compound_amount(&left, &first);
+        first_scaled = first_count != 0;
+        if (!first_count)
+            first_count = ttf_classify_universal(&left, &first);
+        if (!first_count || (first.type != TTF_SEM_CURRENCY &&
+                             first.type != TTF_SEM_MEASURE && first.type != TTF_SEM_PERCENT) ||
+            skip_spaces(in->text, in->length, first.input_end) != token->begin)
+            continue;
+        next = i + 1;
+        while (next < in->token_count &&
+               in->tokens[next].script == TTF_SCRIPT_WHITESPACE)
+            ++next;
+        if (next == in->token_count)
+            return 0;
+        right.index = next;
+        second_count = compound_amount(&right, &second);
+        second_scaled = second_count != 0;
+        if (!second_count)
+            second_count = ttf_classify_universal(&right, &second);
+        if ((!first_scaled && !second_scaled) || !second_count)
+            continue;
+        /* Retain a chained expression intact; two endpoints are the supported
+           interval contract, even when every written currency matches. */
+        {
+            size_t chain_index = next, chain_end = second.input_end;
+            int chained = 0;
+            while (chain_index < in->token_count) {
+                const char *chain_enabled;
+                size_t chain_width;
+                ttf_semantic_t tail = {0};
+                while (chain_index < in->token_count &&
+                       (in->tokens[chain_index].begin < chain_end ||
+                        in->tokens[chain_index].script == TTF_SCRIPT_WHITESPACE))
+                    ++chain_index;
+                if (chain_index == in->token_count)
+                    break;
+                chain_width = in->tokens[chain_index].end - in->tokens[chain_index].begin;
+                if (chain_width >= sizeof(key))
+                    break;
+                memcpy(key, in->text + in->tokens[chain_index].begin, chain_width);
+                key[chain_width] = '\0';
+                chain_enabled = ttf_resource_get(in->engine, "quantity_range_separator", "*",
+                                                 key, NULL);
+                if (!chain_enabled || strcmp(chain_enabled, "1"))
+                    break;
+                chained = 1;
+                ++chain_index;
+                while (chain_index < in->token_count &&
+                       in->tokens[chain_index].script == TTF_SCRIPT_WHITESPACE)
+                    ++chain_index;
+                if (chain_index == in->token_count)
+                    break;
+                right.index = chain_index;
+                if (!compound_amount(&right, &tail) && !ttf_classify_universal(&right, &tail))
+                    break;
+                if (tail.input_end <= chain_end)
+                    break;
+                chain_end = tail.input_end;
+            }
+            if (chained) {
+                out->value[0] = out->secondary[0] = out->unit[0] = '\0';
+                return classified(in, out, chain_end, TTF_SEM_TEXT,
+                                  "ko:invalid-compound-range");
+            }
+        }
+        if (first.type != TTF_SEM_CURRENCY || second.type != TTF_SEM_CURRENCY ||
+            strcmp(first.unit, second.unit) ||
+            (token->end == token->begin + 1 && in->text[token->begin] == '-' &&
+             in->tokens[next].begin == token->end &&
+             (in->text[token->end] == '-' || in->text[token->end] == '+'))) {
+            out->value[0] = out->secondary[0] = out->unit[0] = '\0';
+            return classified(in, out, second.input_end, TTF_SEM_TEXT,
+                              "ko:invalid-compound-range");
+        }
+        memcpy(out->value, first.value, sizeof(out->value));
+        memcpy(out->secondary, second.value, sizeof(out->secondary));
+        memcpy(out->unit, first.unit, sizeof(out->unit));
+        out->layer = first.layer > second.layer ? first.layer : second.layer;
+        if (delimiter_layer > out->layer)
+            out->layer = delimiter_layer;
+        return classified(in, out, second.input_end, TTF_SEM_RANGE,
+                          "ko:compound-currency-range");
+    }
+    return 0;
+}
+
 /* Pack-specific grammar creates language-neutral IR. */
 static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     const char *text = in->text;
@@ -713,6 +834,9 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             }
         }
     }
+    p = compound_currency_range(in, s);
+    if (p)
+        return p;
     return compound_amount(in, s);
 }
 

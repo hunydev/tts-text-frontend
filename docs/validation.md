@@ -1,4 +1,4 @@
-# Text validation — 0.6.0
+# Text validation — 0.7.0
 
 Validated on Linux on 2026-09-16 with GCC 13.3, Clang 18.1, C11 and CMake 3.28.
 Acceptance uses normalized output text, semantic/language metadata and deterministic
@@ -8,14 +8,18 @@ streaming. Speech synthesis, audio comparison and listening scores are excluded.
 
 | Check | Result |
 | --- | --- |
-| GCC Debug | 34/34 CTest tests passed |
-| Clang Release | 34/34 CTest tests passed |
-| Clang ASan + UBSan + leak detection | 34/34 CTest tests passed |
+| GCC Debug | 39/39 CTest tests passed |
+| Clang Release | 39/39 CTest tests passed |
+| Clang ASan + UBSan + leak detection | 38/38 CTest tests passed |
 | C golden corpus | 346 explicit input/output cases passed |
 | Text regression corpus | 109/109 passed, across 18 categories |
 | Finance/content development corpus | 60/60 passed, previously 47/60 including metadata |
 | Advanced finance/content corpus | 30/30 passed; frozen v0.4 baseline 8/30 |
 | Protected text development corpus | 40/40 passed; frozen v0.5 baseline 4/40 including metadata |
+| Repeated quantity interval corpus | 24/24; frozen v0.6 baseline 0/24 |
+| Content title/vocabulary corpus | 40/40; frozen v0.6 baseline 3/40 including metadata |
+| New interval/content checks | 223 quantity/IR/resource checks + 312 content/stream checks |
+| Web workbench | 37 API/ABI/policy/corpus/early-callback checks; Chromium desktop/mobile flow checks |
 | Historical challenge corpus | 15/15 fixed known references passed |
 | Protected grammar/stream checks | Native parser, flush/cap/cache checks; 316 integration checks |
 | Financial quantity checks | 516 exact-value/unit/endpoint/chunk checks, including 50 Decimal reference amounts |
@@ -23,10 +27,10 @@ streaming. Speech synthesis, audio comparison and listening scores are excluded.
 | Content cue/lexicon checks | 88 checks: title scope, overrides, hyphenated words and bounded long-title commitment |
 | Independent financial value checks | 85 generated amounts, 170 value/span/chunk checks plus 3 word-boundary guards |
 | Context routing checks | 17 cases, 90 text/language/trace checks |
-| Explicit metadata assertions | 75 regression + 33 scenario + 20 advanced + 45 protected span checks passed |
+| Explicit metadata assertions | 75 regression + 33 scenario + 20 advanced + 45 protected + 24 interval + 59 content span checks passed |
 | Evaluation streaming | Each case checked with 1-, 7-, and 64-byte writes |
 | Regression text reference errors | 0 character edits across 1,394 reference codepoints |
-| New semantic/quotation streaming checks | 4,289 exhaustive two-chunk byte splits, including tiny segment targets |
+| New semantic/quotation streaming checks | 4,769 exhaustive two-chunk byte splits, including tiny segment targets |
 | Existing streaming checks | 717 representative comparisons plus spaced-date splits |
 | Generative checks | 200 mixed inputs, 1,000 chunk comparisons, 5,000 scanner probes |
 | Shared-engine concurrency | Eight threads, 800 requests |
@@ -51,7 +55,30 @@ unseen holdout. The implementation remains a bounded lexical frontend, not a
 general document parser. See [protected text contracts](protected-text.md); no
 speech synthesis was used.
 
-## v0.6 changes against the frozen v0.5 baseline
+## v0.7 changes against the frozen v0.6 baseline
+
+The fixed 24-case repeated-quantity interval corpus improved from 0/24 to 24/24.
+Forty fixed title/pronunciation references improved from 3/40 to 40/40 including
+metadata (text-only: 5/40 to 40/40). New vocabulary entries are explicit project
+seed choices; they do not solve unknown-word G2P or establish reviewed pronunciation
+accuracy. See [versioned evidence](evidence/0.7.0-text-results.json),
+[interval contracts](finance-ranges.md), and [content scope](content-v7.md).
+
+The web workbench calls the native ABI, copies callback data within its lifetime,
+and streams actual events to the browser. Its HTTP/ctypes gate runs in ordinary
+GCC/Clang builds. It is excluded from sanitizer builds because the Python host
+has no injected sanitizer runtime; native sanitizer gates remain enabled.
+Browser checks exercise normalization, metadata, overrides, streaming, parity,
+downloads, cancellation, inert HTML text, corpus results and responsive layout.
+See [workbench](web-workbench.md).
+
+Tiny phrase targets can lose surrounding language evidence. The English financial
+range exhaustive test uses a quoted context window; the corresponding unquoted
+English corpus case uses its specified default language. Content tests enforce
+chunk parity at tiny targets without claiming that different segmentation
+configurations have identical readings.
+
+## Historical v0.6 changes against the frozen v0.5 baseline
 
 The v0.5 executable and resources at commit `ff5f847` were copied before changes.
 Forty synthetic protected-text references were fixed before either baseline or
@@ -171,7 +198,7 @@ or called by the test/evaluation workflow.
    paths and quoted source versus speech content).
 2. Extend locale-specific quantities, currency intervals, datetime/time zones and
    ambiguity around unquoted titles, names, short imperatives and identifiers.
-3. Expand reviewed pronunciation data beyond the 163-entry seed lexicon and
+3. Expand reviewed pronunciation data beyond the 203-entry seed lexicon and
    improve prototype G2P/phone mapping. Nonempty fallback is not correct spelling.
 4. Profile large lexicons and worst-case streaming inputs; add a real third language
    pack, Windows/macOS and automated binary ABI compatibility CI.

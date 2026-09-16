@@ -225,14 +225,33 @@ static int ascii_web(char c) {
     unsigned char u = (unsigned char)c;
     return u > 32 && u < 127 && c != '<' && c != '>' && c != '"';
 }
+/* Separator spellings are data; arithmetic and unit identity are universal. */
+static size_t quantity_separator(const ttf_pack_input_t *in, size_t position,
+                                 ttf_resource_layer_t *matched_layer) {
+    const char *value;
+    size_t end;
+    ttf_resource_layer_t layer;
+    if (position < in->length &&
+        resource_prefix(in, "quantity_range_separator", position, &value, &end, &layer) &&
+        !strcmp(value, "1")) {
+        if (matched_layer)
+            *matched_layer = layer;
+        return end;
+    }
+    return 0;
+}
+static int quantity_tail(const ttf_pack_input_t *in, size_t end, int allow_range) {
+    return !structured_tail(in->text, in->length, end) ||
+           (allow_range && quantity_separator(in, skip_space(in->text, in->length, end), NULL));
+}
 /* Trailing quantity units retain their semantic identity in the IR. In
    particular percentage points and basis points are not converted to percent. */
 static int quantity_suffix(const ttf_pack_input_t *in, size_t p, ttf_semantic_t *out, size_t *end,
-                           ttf_semantic_type_t *type) {
+                           ttf_semantic_type_t *type, int allow_range) {
     const char *value;
     ttf_resource_layer_t layer;
     if (resource_prefix(in, "numeric_suffix", p, &value, end, &layer) &&
-        !structured_tail(in->text, in->length, *end)) {
+        quantity_tail(in, *end, allow_range)) {
         const char *colon = strchr(value, ':');
         if (!strncmp(value, "COUNTER:", 8))
             *type = TTF_SEM_COUNTER;
@@ -249,12 +268,95 @@ static int quantity_suffix(const ttf_pack_input_t *in, size_t p, ttf_semantic_t 
         }
     }
     if (p < in->length && in->text[p] == '%' && (p + 1 == in->length || in->text[p + 1] != '%') &&
-        !structured_tail(in->text, in->length, p + 1)) {
+        quantity_tail(in, p + 1, allow_range)) {
         *end = p + 1;
         *type = TTF_SEM_PERCENT;
         return 1;
     }
     return 0;
+}
+
+/* Only explicitly repeated currency/rate/measure units participate. A missing
+   or different second unit must never be inferred as an exchange conversion. */
+static size_t quantity_endpoint(const ttf_pack_input_t *in, size_t start,
+                                ttf_semantic_t *out, int allow_range) {
+    const char *prefix = NULL;
+    size_t number_start = start, p, suffix_end;
+    ttf_resource_layer_t layer = TTF_LAYER_COMMON;
+    ttf_semantic_type_t type;
+    if (resource_prefix(in, "currency_prefix", start, &prefix, &p, &layer))
+        number_start = skip_space(in->text, in->length, p);
+    p = number(in->text, in->length, number_start, out->value);
+    if (p == number_start)
+        return 0;
+    if (quantity_suffix(in, skip_space(in->text, in->length, p), out, &suffix_end, &type,
+                        allow_range)) {
+        if (type != TTF_SEM_CURRENCY && type != TTF_SEM_MEASURE && type != TTF_SEM_PERCENT)
+            return 0;
+        if (type == TTF_SEM_PERCENT)
+            (void)snprintf(out->unit, sizeof(out->unit), "percent");
+        out->type = prefix && (type != TTF_SEM_CURRENCY || strcmp(prefix, out->unit))
+                        ? TTF_SEM_TEXT : type;
+        return suffix_end;
+    }
+    if (prefix && quantity_tail(in, p, allow_range)) {
+        out->type = TTF_SEM_CURRENCY;
+        out->layer = layer;
+        (void)snprintf(out->unit, sizeof(out->unit), "%s", prefix);
+        return p;
+    }
+    return 0;
+}
+static size_t repeated_quantity_range(const ttf_pack_input_t *in, ttf_semantic_t *out) {
+    ttf_semantic_t first = {0}, second = {0};
+    ttf_resource_layer_t delimiter_layer = TTF_LAYER_COMMON;
+    size_t start = in->tokens[in->index].begin;
+    size_t p = quantity_endpoint(in, start, &first, 1), separator, end;
+    if (!p)
+        return 0;
+    separator = skip_space(in->text, in->length, p);
+    p = quantity_separator(in, separator, &delimiter_layer);
+    if (!p)
+        return 0;
+    start = skip_space(in->text, in->length, p);
+    if (start >= in->length)
+        return 0;
+    end = quantity_endpoint(in, start, &second, 0);
+    if (!end) {
+        /* A numeric malformed endpoint remains visible as one TEXT object. */
+        if (!digit(in->text[start]) && in->text[start] != '+' && in->text[start] != '-')
+            return 0;
+        end = atom_end(in->text, in->length, start);
+        return preserve(in, out, end, "syntax.invalid-quantity-range");
+    }
+    /* More than two explicit endpoints are not a supported interval. */
+    {
+        size_t chain = quantity_separator(in, skip_space(in->text, in->length, end), NULL);
+        if (chain) {
+            do {
+                ttf_semantic_t next = {0};
+                size_t next_start = skip_space(in->text, in->length, chain);
+                size_t next_end = quantity_endpoint(in, next_start, &next, 1);
+                if (!next_end)
+                    break;
+                end = next_end;
+                chain = quantity_separator(in, skip_space(in->text, in->length, end), NULL);
+            } while (chain);
+            return preserve(in, out, end, "syntax.invalid-quantity-range");
+        }
+    }
+    if (first.type == TTF_SEM_TEXT || second.type == TTF_SEM_TEXT ||
+        first.type != second.type || strcmp(first.unit, second.unit) ||
+        (in->text[separator] == '-' && p == start &&
+         (in->text[start] == '-' || in->text[start] == '+')))
+        return preserve(in, out, end, "syntax.invalid-quantity-range");
+    memcpy(out->value, first.value, sizeof(out->value));
+    memcpy(out->secondary, second.value, sizeof(out->secondary));
+    memcpy(out->unit, first.unit, sizeof(out->unit));
+    out->layer = first.layer > second.layer ? first.layer : second.layer;
+    if (delimiter_layer > out->layer)
+        out->layer = delimiter_layer;
+    return finish(in, out, end, TTF_SEM_RANGE, "syntax.repeated-quantity-range");
 }
 
 size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
@@ -335,6 +437,10 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
         }
         return 0;
     }
+
+    p = repeated_quantity_range(in, out);
+    if (p)
+        return p;
 
     if (resource_prefix(in, "currency_prefix", b, &rule_value, &end, &layer)) {
         size_t start = skip_space(s, n, end);
@@ -462,7 +568,7 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
         if (end > start) {
             size_t suffix_start = skip_space(s, n, end), suffix_end;
             ttf_semantic_type_t suffix_type;
-            if (quantity_suffix(in, suffix_start, out, &suffix_end, &suffix_type)) {
+            if (quantity_suffix(in, suffix_start, out, &suffix_end, &suffix_type, 0)) {
                 if (suffix_type == TTF_SEM_PERCENT)
                     (void)snprintf(out->unit, sizeof(out->unit), "percent");
                 return finish(in, out, suffix_end, TTF_SEM_RANGE, "syntax.quantity-range");
@@ -498,7 +604,7 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     q = skip_space(s, n, p);
     {
         ttf_semantic_type_t type;
-        if (quantity_suffix(in, q, out, &end, &type))
+        if (quantity_suffix(in, q, out, &end, &type, 0))
             return finish(in, out, end, type,
                           type == TTF_SEM_PERCENT ? "syntax.percent" : "syntax.numeric-suffix");
     }

@@ -25,6 +25,25 @@ WiFi를 사용합니다.           → 와이파이를 사용합니다.
 `Apple → 애플` is pronunciation rendering. Source, context and render languages
 remain distinct in the semantic IR and output metadata.
 
+## Web testing workbench
+
+`tools/web/` provides a Korean web UI backed by the actual C shared library:
+normalization, source/context/render inspection, live sentence/phrase callbacks,
+chunk parity checks, editable user lexicons/customer policies, and corpus reports.
+It evaluates text and metadata only; no speech synthesis is performed.
+
+```sh
+cmake -S . -B build-web -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF
+cmake --build build-web --parallel 2
+python3 tools/web/server.py --host 0.0.0.0 --port 8000 \
+  --library build-web/libtts_text_frontend.so --resources resources
+```
+
+Open port **8000**. See the [web workbench guide](docs/web-workbench.md) for controls,
+report export, deployment, limits and automated browser tests. Python standard
+library only at runtime; no npm build or external CDN is needed.
+
+
 ## Build and test
 
 Linux, CMake 3.16+, and a C11 compiler are required. There are no runtime package
@@ -183,7 +202,7 @@ The text report shows independent expected strings, character differences,
 category scores, resource provenance and fallback paths. The current regression
 suite has 346 golden cases, a 109-case regression corpus, 60 finance/content
 scenarios, 30 advanced finance/content regressions and 40 literal-preservation
-references. These are curated regression checks, not a measurement of accuracy on
+references, plus 24 repeated-quantity range and 40 content-vocabulary cases. These are curated regression checks, not a measurement of accuracy on
 unseen text. A separate 15-case advisory challenge report exposes unsupported
 forms and ambiguous policies. All 15 now pass their fixed references and have
 been adopted into strict development suites; the score is not an unseen-data
@@ -262,3 +281,15 @@ the callback and span APIs; deployment requires text-corpus acceptance for the t
 not synthesize audio.
 
 Private proprietary project. See [LICENSE](LICENSE).
+
+### v0.7 finance and content extensions
+
+- `1만원~2만원` → `만 다시 이만 원`
+- `$10-$20` in English context → `ten to twenty dollars`
+- `1kg~2km` remains unchanged because its units differ.
+- Eight explicit title cues and 40 original seed pronunciation entries are loaded
+  as resources; customer and user pronunciations retain priority.
+
+See [financial interval contracts](docs/finance-ranges.md) and
+[content vocabulary scope](docs/content-v7.md). These are bounded syntax and seed
+vocabulary improvements, not a general pronunciation or production accuracy claim.

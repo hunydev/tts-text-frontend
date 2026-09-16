@@ -1,0 +1,14 @@
+# Original project seed choices; no external dictionary imported.
+# Phonetic readings, never translations; user/customer/domain overrides take priority.
+lexicon	ko-KR	en-US:fintech	핀테크
+lexicon	ko-KR	en-US:portfolio	포트폴리오
+lexicon	ko-KR	en-US:hedge	헤지
+lexicon	ko-KR	en-US:swap	스와프
+lexicon	ko-KR	en-US:spread	스프레드
+lexicon	ko-KR	en-US:broker	브로커
+lexicon	ko-KR	en-US:wallet	월렛
+lexicon	ko-KR	en-US:cashback	캐시백
+lexicon	ko-KR	en-US:credit	크레디트
+lexicon	ko-KR	en-US:debit	데빗
+lexicon	ko-KR	en-US:default	디폴트
+lexicon	ko-KR	en-US:benchmark	벤치마크

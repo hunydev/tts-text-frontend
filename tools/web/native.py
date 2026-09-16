@@ -1,0 +1,338 @@
+"""Small ctypes adapter for ABI v1; all callback data are copied synchronously.
+
+Run only in the isolated worker. No web request can select a library/resource path.
+"""
+
+import ctypes as C
+import tempfile
+from pathlib import Path
+
+Z = C.c_size_t
+I = C.c_int
+P = C.c_void_p
+
+
+class Semantic(C.Structure):
+    _fields_ = [
+        ("struct_size", C.c_uint32),
+        ("type", I),
+        ("lexical_class", I),
+        ("input_begin", Z),
+        ("input_end", Z),
+        ("value", C.c_char * 96),
+        ("secondary", C.c_char * 96),
+        ("unit", C.c_char * 32),
+        ("source_lang", C.c_char * 24),
+        ("context_lang", C.c_char * 24),
+        ("render_lang", C.c_char * 24),
+        ("rule", C.c_char * 64),
+        ("layer", I),
+    ]
+
+
+class Span(C.Structure):
+    _fields_ = [
+        ("begin", Z),
+        ("end", Z),
+        ("input_begin", Z),
+        ("input_end", Z),
+        ("script", I),
+        ("semantic", Semantic),
+        ("context_trace", C.c_char * 192),
+        ("lexicon", C.c_char * 64),
+        ("pronunciation_layer", I),
+        ("verbalizer", C.c_char * 24),
+    ]
+
+
+class Result(C.Structure):
+    _fields_ = [
+        ("text", P),
+        ("length", Z),
+        ("spans", C.POINTER(Span)),
+        ("span_count", Z),
+    ]
+
+
+class Config(C.Structure):
+    _fields_ = [
+        ("struct_size", C.c_uint32),
+        ("abi_version", C.c_uint32),
+        ("resource_root", C.c_char_p),
+        ("default_language", C.c_char_p),
+        ("render_policy", I),
+        ("first_segment_target", Z),
+        ("normal_segment_target", Z),
+        ("max_segment_length", Z),
+        ("max_pending_bytes", Z),
+        ("sentence_split", I),
+        ("phrase_split", I),
+    ]
+
+
+class Segment(C.Structure):
+    _fields_ = Result._fields_ + [("input_begin", Z), ("input_end", Z)]
+
+
+class Token(C.Structure):
+    _fields_ = [("begin", Z), ("end", Z), ("script", I)]
+
+
+Callback = C.CFUNCTYPE(I, C.POINTER(Segment), P)
+
+
+def string(value):
+    return value.decode("utf-8")
+
+
+class Engine:
+    def __init__(self, library, resources, options, overrides=()):
+        self.lib = C.CDLL(str(library))
+        definitions = {
+            "ttf_config_init": (None, [C.POINTER(Config)]),
+            "ttf_engine_create": (I, [C.POINTER(Config), C.POINTER(P)]),
+            "ttf_engine_freeze": (I, [P]),
+            "ttf_engine_destroy": (None, [P]),
+            "ttf_normalize": (I, [P, C.c_char_p, Z, C.POINTER(Result)]),
+            "ttf_result_free": (None, [C.POINTER(Result)]),
+            "ttf_resource_load": (I, [P, C.c_char_p, I]),
+            "ttf_lexicon_add": (
+                I,
+                [P, I, C.c_char_p, C.c_char_p, C.c_char_p, C.c_char_p],
+            ),
+            "ttf_lexicon_remove": (I, [P, I, C.c_char_p, C.c_char_p, C.c_char_p]),
+            "ttf_stream_create": (I, [P, Callback, P, C.POINTER(P)]),
+            "ttf_stream_write": (I, [P, C.c_char_p, Z]),
+            "ttf_stream_flush": (I, [P]),
+            "ttf_stream_destroy": (None, [P]),
+            "ttf_tokenize": (
+                I,
+                [C.c_char_p, Z, C.POINTER(C.POINTER(Token)), C.POINTER(Z)],
+            ),
+            "ttf_tokens_free": (None, [C.POINTER(Token)]),
+            "ttf_status_string": (C.c_char_p, [I]),
+            "ttf_script_name": (C.c_char_p, [I]),
+            "ttf_semantic_type_name": (C.c_char_p, [I]),
+            "ttf_layer_name": (C.c_char_p, [I]),
+        }
+        for name, (result, args) in definitions.items():
+            fn = getattr(self.lib, name)
+            fn.restype = result
+            fn.argtypes = args
+        self.handle = P()
+        cfg = Config()
+        self.lib.ttf_config_init(C.byref(cfg))
+        cfg.resource_root = str(resources).encode()
+        cfg.default_language = options.get("default_language", "ko-KR").encode()
+        cfg.render_policy = {"preserve": 0, "phonetic": 1, "semantic": 2}[
+            options.get("render_policy", "phonetic")
+        ]
+        for key, field in [
+            ("first_target", "first_segment_target"),
+            ("normal_target", "normal_segment_target"),
+            ("max_length", "max_segment_length"),
+            ("max_pending_bytes", "max_pending_bytes"),
+            ("sentence_split", "sentence_split"),
+            ("phrase_split", "phrase_split"),
+        ]:
+            if key in options:
+                setattr(cfg, field, options[key])
+        self.check(self.lib.ttf_engine_create(C.byref(cfg), C.byref(self.handle)))
+        try:
+            if options.get("domain") == "finance":
+                self.load(resources / "domains/finance/ko-KR/rules.tsv", 2)
+            for path, layer in overrides:
+                self.load(path, layer)
+            if options.get("customer_tsv"):
+                with tempfile.TemporaryDirectory(
+                    prefix="ttf-web-resource-"
+                ) as directory:
+                    path = Path(directory) / "customer.tsv"
+                    path.write_text(options["customer_tsv"], encoding="utf-8")
+                    self.load(path, 3)
+            for word in options.get("remove_system_words", []):
+                self.check(
+                    self.lib.ttf_lexicon_remove(
+                        self.handle, 1, b"en-US", b"ko-KR", word.encode()
+                    )
+                )
+            for row in options.get("user_lexicon", []):
+                self.check(
+                    self.lib.ttf_lexicon_add(
+                        self.handle,
+                        4,
+                        b"en-US",
+                        b"ko-KR",
+                        row["word"].encode(),
+                        row["pronunciation"].encode(),
+                    )
+                )
+            self.check(self.lib.ttf_engine_freeze(self.handle))
+        except BaseException:
+            self.close()
+            raise
+
+    def check(self, status):
+        if status:
+            raise ValueError(
+                "Native frontend: " + string(self.lib.ttf_status_string(status))
+            )
+
+    def load(self, path, layer):
+        self.check(self.lib.ttf_resource_load(self.handle, str(path).encode(), layer))
+
+    def close(self):
+        if self.handle:
+            self.lib.ttf_engine_destroy(self.handle)
+            self.handle = P()
+
+    def spans(self, spans, count, source, output):
+        result = []
+        for i in range(count):
+            span = spans[i]
+            sem = span.semantic
+            row = {
+                k: int(getattr(span, k))
+                for k in ["begin", "end", "input_begin", "input_end"]
+            }
+            row.update(
+                script=string(self.lib.ttf_script_name(span.script)),
+                semantic_type=string(self.lib.ttf_semantic_type_name(sem.type)),
+                resource_layer=string(self.lib.ttf_layer_name(sem.layer)),
+                pronunciation_layer=string(
+                    self.lib.ttf_layer_name(span.pronunciation_layer)
+                ),
+                surface=source[span.input_begin : span.input_end].decode(),
+                normalized=output[span.begin : span.end].decode(),
+            )
+            for k in [
+                "source_lang",
+                "context_lang",
+                "render_lang",
+                "value",
+                "secondary",
+                "unit",
+                "rule",
+            ]:
+                row[k] = string(getattr(sem, k))
+            for k in ["context_trace", "lexicon", "verbalizer"]:
+                row[k] = string(getattr(span, k))
+            result.append(row)
+        return result
+
+    def normalize(self, source):
+        result = Result()
+        self.check(
+            self.lib.ttf_normalize(self.handle, source, len(source), C.byref(result))
+        )
+        try:
+            output = C.string_at(result.text, result.length)
+            return {
+                "text": output.decode(),
+                "spans": self.spans(result.spans, result.span_count, source, output),
+            }
+        finally:
+            self.lib.ttf_result_free(C.byref(result))
+
+    def tokens(self, source):
+        tokens = C.POINTER(Token)()
+        count = Z()
+        self.check(
+            self.lib.ttf_tokenize(source, len(source), C.byref(tokens), C.byref(count))
+        )
+        try:
+            return [
+                dict(
+                    begin=tokens[i].begin,
+                    end=tokens[i].end,
+                    script=string(self.lib.ttf_script_name(tokens[i].script)),
+                    surface=source[tokens[i].begin : tokens[i].end].decode(),
+                )
+                for i in range(count.value)
+            ]
+        finally:
+            self.lib.ttf_tokens_free(tokens)
+
+    def stream(self, source, sizes, emit=lambda event: None, delay_ms=0):
+        import time
+
+        started = time.monotonic()
+        segments = []
+        errors = []
+        stream = P()
+        stage = "write"
+        write_index = 0
+
+        def now():
+            return round((time.monotonic() - started) * 1000, 3)
+
+        def collect(pointer, _):
+            try:
+                seg = pointer.contents
+                output = C.string_at(seg.text, seg.length)
+                row = dict(
+                    sequence=len(segments),
+                    input_begin=seg.input_begin,
+                    input_end=seg.input_end,
+                    text=output.decode(),
+                    spans=self.spans(seg.spans, seg.span_count, source, output),
+                )
+                segments.append(row)
+                emit(
+                    dict(
+                        row,
+                        event="segment",
+                        elapsed_ms=now(),
+                        stage=stage,
+                        write_index=write_index,
+                    )
+                )
+                return 0
+            except BaseException as exc:
+                errors.append(exc)
+                return 1
+
+        callback = Callback(collect)  # keep alive until stream destruction
+        self.check(
+            self.lib.ttf_stream_create(self.handle, callback, None, C.byref(stream))
+        )
+        try:
+            at = 0
+            for write_index, size in enumerate(sizes):
+                if at >= len(source):
+                    break
+                end = min(at + size, len(source))
+                emit(
+                    dict(
+                        event="chunk",
+                        sequence=write_index,
+                        begin=at,
+                        end=end,
+                        elapsed_ms=now(),
+                    )
+                )
+                self.check(self.lib.ttf_stream_write(stream, source[at:end], end - at))
+                at = end
+                if delay_ms and at < len(source):
+                    time.sleep(delay_ms / 1000)
+            if at != len(source):
+                raise ValueError("Incomplete test chunk schedule")
+            stage = "flush"
+            self.check(self.lib.ttf_stream_flush(stream))
+            if errors:
+                raise errors[0]
+            return segments
+        finally:
+            self.lib.ttf_stream_destroy(stream)
+
+
+def flatten(segments):
+    offset = 0
+    spans = []
+    for seg in segments:
+        for row in seg["spans"]:
+            spans.append(
+                dict(row, begin=row["begin"] + offset, end=row["end"] + offset)
+            )
+        offset += len(seg["text"].encode())
+    return dict(text="".join(s["text"] for s in segments), spans=spans)

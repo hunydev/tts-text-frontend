@@ -166,3 +166,17 @@ Prose classifiers and rules cannot consume across a literal; pack results are
 validated against this bound. Resource flags and opaque-tag inventories select
 policy without rebuilding. See [protected text](protected-text.md) for exact
 syntax and the distinction from a document renderer or speech policy.
+
+
+## Workbench and interval checkpoint (0.7.0)
+
+The native core classifies repeated explicit quantity endpoints as RANGE, with
+exact decimal endpoint strings and one common unit. Written Korean scale amounts
+stay in the Korean pack. Delimiters, reading separators, title cues and lexicon
+entries remain resource policies. ABI v1 layouts are unchanged.
+
+The optional `tools/web` transport uses Python stdlib HTTP and a disposable process
+per operation. A ctypes adapter calls the native API, copies callback-owned text
+and spans within each callback, and emits NDJSON events. The browser implements
+inspection and test controls; it contains no duplicate normalization algorithm.
+[Workbench contracts](web-workbench.md) document isolation, lifetimes and limits.

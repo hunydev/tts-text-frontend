@@ -91,6 +91,48 @@ static void extend_cue_range(const ttf_engine_t *e, const char *s, size_t n, siz
             *protected_until = end;
     }
 }
+/* A written currency/rate/measure can be the first endpoint of a spaced
+   interval. Keep its following whitespace pending without consulting future
+   bytes, so tiny phrase targets cannot make chunk boundaries change the IR.
+   Reuse pack classification over a bounded prefix; the core knows no unit or
+   language spelling. Counters retain their existing phrase behavior. */
+static int quantity_before_space(const ttf_engine_t *e, const char *s,
+                                 const ttf_token_t *tokens, size_t index, size_t end) {
+    size_t j = index, pack;
+    while (j) {
+        ttf_pack_input_t in;
+        ttf_semantic_t best = {0};
+        --j;
+        if (end - tokens[j].begin > 512)
+            break;
+        if (tokens[j].script == TTF_SCRIPT_WHITESPACE &&
+            memchr(s + tokens[j].begin, '\n', tokens[j].end - tokens[j].begin))
+            break;
+        if (tokens[j].script != TTF_SCRIPT_DIGIT)
+            continue;
+        memset(&in, 0, sizeof(in));
+        in.text = s;
+        in.length = end;
+        in.tokens = tokens;
+        in.token_count = index;
+        in.index = j;
+        in.engine = e;
+        best.struct_size = sizeof(best);
+        (void)ttf_classify_universal(&in, &best);
+        for (pack = 0; pack < e->pack_count; ++pack) {
+            ttf_semantic_t candidate = {0};
+            candidate.struct_size = sizeof(candidate);
+            if (e->packs[pack]->classify && e->packs[pack]->classify(&in, &candidate) &&
+                candidate.input_end > best.input_end && candidate.input_end <= end)
+                best = candidate;
+        }
+        return best.input_end == end &&
+               (best.type == TTF_SEM_CURRENCY || best.type == TTF_SEM_PERCENT ||
+                best.type == TTF_SEM_MEASURE ||
+                (best.type == TTF_SEM_RANGE && best.unit[0]));
+    }
+    return 0;
+}
 static int protected_period(const ttf_engine_t *e, const char *s, size_t at) {
     size_t begin = at, n;
     char key[96];
@@ -269,12 +311,17 @@ ttf_status_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, i
                     at += w;
                     continue;
                 }
+                if (quantity_before_space(e, s, tokens, i, previous)) {
+                    at += w;
+                    continue;
+                }
                 if (i && tokens[i - 1].end - tokens[i - 1].begin < 64) {
                     char key[64];
                     size_t key_length = tokens[i - 1].end - tokens[i - 1].begin;
                     memcpy(key, s + tokens[i - 1].begin, key_length);
                     key[key_length] = 0;
-                    if (ttf_resource_get(e, "currency_prefix", "*", key, NULL)) {
+                    if (ttf_resource_get(e, "currency_prefix", "*", key, NULL) ||
+                        ttf_resource_get(e, "quantity_range_separator", "*", key, NULL)) {
                         at += w;
                         continue;
                     }

@@ -1,0 +1,14 @@
+# Original project seed choices; no external dictionary imported.
+# Phonetic readings, never translations; user/customer/domain overrides take priority.
+lexicon	ko-KR	en-US:podcast	팟캐스트
+lexicon	ko-KR	en-US:thumbnail	섬네일
+lexicon	ko-KR	en-US:storyboard	스토리보드
+lexicon	ko-KR	en-US:timeline	타임라인
+lexicon	ko-KR	en-US:keyframe	키프레임
+lexicon	ko-KR	en-US:bitrate	비트레이트
+lexicon	ko-KR	en-US:codec	코덱
+lexicon	ko-KR	en-US:render	렌더
+lexicon	ko-KR	en-US:webinar	웨비나
+lexicon	ko-KR	en-US:livestream	라이브스트림
+lexicon	ko-KR	en-US:vlog	브이로그
+lexicon	ko-KR	en-US:trailer	트레일러

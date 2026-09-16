@@ -1,0 +1,15 @@
+[Unit]
+Description=TTF text frontend web workbench
+After=network.target
+
+[Service]
+# Edit these absolute paths for your checkout and Python installation.
+WorkingDirectory=/home/exedev/tts-text-frontend
+ExecStart=/usr/bin/python3 /home/exedev/tts-text-frontend/tools/web/server.py --host 0.0.0.0 --port 8000 --library /home/exedev/tts-text-frontend/build-web/libtts_text_frontend.so --resources /home/exedev/tts-text-frontend/resources
+Environment=PYTHONDONTWRITEBYTECODE=1
+Restart=on-failure
+RestartSec=2
+KillMode=control-group
+
+[Install]
+WantedBy=default.target

@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.7.0 — Financial intervals, content vocabulary and web workbench
+
+- Normalize repeated currency/rate/measure endpoints into exact RANGE IR; retain
+  mismatched units and malformed/chained intervals as source text.
+- Extend explicit content title cues and add 40 category-separated pronunciation seeds.
+- Add TTF Lab: actual C ABI integration, normalized text/IR inspection, live output
+  callbacks, chunk parity verification, user/customer resource experiments and corpus reports.
+- Add web API/ABI and Chromium browser gates; keep native ABI v1 and SONAME 1.
+- Freeze 24 interval and 40 content references before baseline execution; document
+  bounded syntax, small-context behavior and synthetic-data limitations.
+
 ## 0.6.0 — Literal code, markup and path preservation
 
 - Resource-driven preservation of opaque HTML-style elements, comments, backtick

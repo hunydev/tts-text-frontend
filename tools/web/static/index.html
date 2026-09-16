@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TTF Lab · Text Frontend Workbench</title>
+    <link rel="stylesheet" href="/style.css" />
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <header class="mast">
+      <a href="/" class="brand"
+        ><span class="brandmark">Tt</span
+        ><span>TTF <b>Lab</b><small>HUNYDEV / TEXT FRONTEND</small></span></a
+      >
+      <div class="mast-right">
+        <span class="live-dot"></span><span id="version">연결 중</span
+        ><span class="tag">TEXT ONLY</span>
+      </div>
+    </header>
+    <main>
+      <section class="intro">
+        <div>
+          <p class="eyebrow">MULTILINGUAL TEXT WORKBENCH</p>
+          <h1>읽히기 전의 텍스트를 검증하세요.</h1>
+          <p class="lead">
+            한국어와 영어, 숫자와 고유명사. 정규화부터 문맥 판단, 출력 콜백까지
+            한곳에서 살펴보세요.
+          </p>
+        </div>
+        <div class="intro-note">
+          <span>01 / 04</span>
+          <p>입력 → 의미 분석 → 정규화 → 콜백</p>
+          <small>같은 입력과 설정은 같은 결과를 만듭니다.</small>
+        </div>
+      </section>
+      <nav class="mode-tabs" aria-label="실험 모드">
+        <button class="active" data-mode="normalize" aria-pressed="true">
+          01 <span>정규화</span></button
+        ><button data-mode="stream" aria-pressed="false">
+          02 <span>스트리밍</span></button
+        ><button data-mode="verify" aria-pressed="false">
+          03 <span>청크 검증</span></button
+        ><button data-mode="corpus" aria-pressed="false">
+          04 <span>코퍼스 검증</span>
+        </button>
+      </nav>
+      <div id="notice" role="status" aria-live="polite" class="notice">
+        실행할 텍스트를 입력하거나 예제를 선택하세요.
+      </div>
+      <section id="playground" class="workspace">
+        <div class="panel input-panel">
+          <div class="panel-heading">
+            <h2>입력 텍스트 <span>Source</span></h2>
+            <span id="input-count" class="small">0 bytes</span>
+          </div>
+          <label class="sr-only" for="sample">예제 선택</label
+          ><select id="sample">
+            <option value="">예제 불러오기</option></select
+          ><label class="sr-only" for="source">입력 텍스트</label
+          ><textarea
+            id="source"
+            spellcheck="false"
+            placeholder="Apple은 사과입니다.&#10;Please go to the 1st floor."
+          ></textarea>
+          <div class="input-footer">
+            <span>UTF-8 · KO / EN · 코드믹스</span
+            ><button id="clear" class="text-button">비우기</button>
+          </div>
+          <details id="expected-details">
+            <summary>기대 출력과 비교</summary>
+            <label for="expected-enabled" class="check"
+              ><input id="expected-enabled" type="checkbox" />정확한 텍스트 일치
+              검사</label
+            ><label class="sr-only" for="expected">기대 출력</label
+            ><textarea
+              id="expected"
+              rows="3"
+              placeholder="공백과 줄바꿈까지 포함한 기대 출력"
+            ></textarea>
+          </details>
+        </div>
+        <div class="panel output-panel">
+          <div class="panel-heading">
+            <h2>정규화 결과 <span>Output</span></h2>
+            <span id="match" class="badge muted">실행 대기</span>
+          </div>
+          <div id="output" class="output empty" tabindex="0">
+            변환 결과가 여기에 표시됩니다.
+          </div>
+          <div class="output-footer">
+            <span id="summary">텍스트 합성·음성 평가는 수행하지 않습니다.</span>
+            <div>
+              <button id="copy" class="text-button" disabled>복사</button
+              ><button id="download" class="text-button" disabled>
+                JSON 저장 ↓
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="corpus-panel" class="panel" hidden>
+        <div class="panel-heading">
+          <h2>고정 정답 코퍼스 <span>Regression</span></h2>
+          <div>
+            <span class="badge muted">합성 개발 데이터</span
+            ><button id="corpus-download" class="text-button" disabled>
+              JSON 저장 ↓
+            </button>
+          </div>
+        </div>
+        <p>
+          등록된 예문의 출력·메타데이터·청크 일치성을 함께 검사합니다. 이 결과는
+          실제 고객 입력의 정확도 지표가 아닙니다.
+        </p>
+        <label for="corpus">검증 세트</label
+        ><select id="corpus"></select>
+        <p class="small">
+          코퍼스에는 각 예문의 고정 언어·리소스 설정이 적용됩니다. 아래 실험
+          설정은 사용하지 않습니다.
+        </p>
+        <div id="corpus-progress" role="status"></div>
+        <div id="corpus-results"></div>
+      </section>
+      <div class="action-bar">
+        <div>
+          <span class="shortcut">⌘ / Ctrl + Enter</span
+          ><span id="mode-description"
+            >정규화된 텍스트와 모든 span을 확인합니다.</span
+          >
+        </div>
+        <div>
+          <button id="cancel" class="secondary" disabled>중단</button
+          ><button id="run" class="primary" disabled>
+            정규화 실행 <span>↗</span>
+          </button>
+        </div>
+      </div>
+      <section id="stream-panel" class="panel" hidden>
+        <div class="panel-heading">
+          <h2>출력 콜백 <span>Live segments</span></h2>
+          <span id="stream-status" class="small">입력 대기</span>
+        </div>
+        <p class="small">
+          실제 native 콜백이 발생하는 순서입니다. 시간은 worker 내부 경과
+          시간이며 네트워크·시작 비용을 제외합니다. 입력 간격을 지정하면 그 대기
+          시간은 포함됩니다.
+        </p>
+        <div id="callbacks" class="callback-list"></div>
+      </section>
+      <section id="verify-panel" class="panel" hidden>
+        <div class="panel-heading">
+          <h2>청크 독립성 검증 <span>Batch ↔ Stream</span></h2>
+          <span id="verify-status" class="badge muted">실행 대기</span>
+        </div>
+        <p class="small">
+          동일한 설정에서 일괄 출력과 고정·무작위 byte 청크의 텍스트, span
+          메타데이터, 콜백 경계를 비교합니다. 모든 가능한 분할의 증명은
+          아닙니다.
+        </p>
+        <div id="verify-results"></div>
+      </section>
+      <section class="panel config-panel" id="config-panel">
+        <div class="panel-heading">
+          <h2>실험 설정 <span>Configuration</span></h2>
+          <button id="reset" class="text-button">기본값으로</button>
+        </div>
+        <div class="config-grid">
+          <label
+            >기본 언어<select id="language">
+              <option value="ko-KR">한국어 · ko-KR</option>
+              <option value="en-US">영어 · en-US</option>
+            </select></label
+          ><label
+            >외국어 읽기 정책<select id="policy">
+              <option value="phonetic">문맥 언어로 발음화</option>
+              <option value="preserve">원래 언어 유지</option>
+              <option value="semantic">의미 현지화 (번역 아님)</option>
+            </select></label
+          ><label
+            >업무 도메인<select id="domain">
+              <option value="none">기본 시스템</option>
+              <option value="finance">금융 예제 정책</option>
+            </select></label
+          >
+          <div class="preset">
+            <span>분할 프리셋</span>
+            <div>
+              <button id="sentence-preset" class="secondary small-button">
+                문장 우선</button
+              ><button id="fast-preset" class="secondary small-button">
+                빠른 첫 구절
+              </button>
+            </div>
+          </div>
+        </div>
+        <details id="stream-settings">
+          <summary>문장 / 구절 · 입력 청크 설정</summary>
+          <div class="config-grid six">
+            <label
+              >첫 구절 목표<input
+                id="first-target"
+                type="number"
+                min="1"
+                max="1000000"
+                value="48" /></label
+            ><label
+              >이후 구절 목표<input
+                id="normal-target"
+                type="number"
+                min="1"
+                max="1000000"
+                value="112" /></label
+            ><label
+              >최대 길이 목표<input
+                id="max-length"
+                type="number"
+                min="1"
+                max="1000000"
+                value="200" /></label
+            ><label
+              >입력 청크 (byte)<input
+                id="chunk-bytes"
+                type="number"
+                min="1"
+                max="65536"
+                value="7" /></label
+            ><label
+              >입력 간격 (ms)<input
+                id="delay-ms"
+                type="number"
+                min="0"
+                max="100"
+                value="0" /></label
+            ><label
+              >Pending 상한 (byte)<input
+                id="max-pending"
+                type="number"
+                min="64"
+                max="1048576"
+                value="1048576"
+            /></label>
+          </div>
+          <div class="checks">
+            <label class="check"
+              ><input id="sentence-split" type="checkbox" checked />문장 경계
+              분할</label
+            ><label class="check"
+              ><input id="phrase-split" type="checkbox" checked />목표 길이에서
+              구절 분할</label
+            >
+          </div>
+          <p class="small">
+            길이 목표는 원문 Unicode 문자 수입니다. 구절 분할을 꺼도 최대 길이에
+            따른 안전 분할은 유지됩니다. 코드·미완성 숫자·인용문은 경계 확정까지
+            대기할 수 있습니다.
+          </p>
+          <div class="config-grid">
+            <label
+              >검증할 청크 크기<input
+                id="verify-chunks"
+                value="1, 7, 64" /></label
+            ><label
+              >무작위 분할 seed<input
+                id="random-seed"
+                type="number"
+                min="0"
+                max="2147483647"
+                value="42"
+            /></label>
+          </div>
+        </details>
+        <details>
+          <summary>발음사전 / 고객 리소스 실험</summary>
+          <div class="config-grid two">
+            <label
+              >사용자 발음사전<textarea
+                id="lexicon"
+                rows="4"
+                spellcheck="false"
+                placeholder="Apple=커스텀애플&#10;Canva=캔바"
+              ></textarea
+              ><span class="small"
+                >한 줄에 단어=발음 또는 탭 구분. User가 System보다
+                우선합니다.</span
+              ></label
+            ><label
+              >고객 리소스 TSV<textarea
+                id="customer-tsv"
+                rows="4"
+                spellcheck="false"
+                placeholder="exact&#9;*&#9;안녕하세요&#9;반갑습니다"
+              ></textarea
+              ><span class="small"
+                >실제 탭으로 구분한 리소스. 이 실행에만 적용되며 서버 파일은
+                변경하지 않습니다.</span
+              ></label
+            >
+          </div>
+          <label class="check"
+            ><input id="remove-wifi" type="checkbox" />WiFi 시스템 발음사전 제외
+            후 fallback 확인</label
+          >
+        </details>
+      </section>
+
+      <section id="inspect-panel" class="panel">
+        <div class="panel-heading">
+          <h2>분석 상세 <span>Inspect</span></h2>
+          <div class="mini-tabs">
+            <button data-view="spans" class="active">의미 · 언어</button
+            ><button data-view="tokens">원문 토큰</button>
+          </div>
+        </div>
+        <p class="small">
+          행을 선택하면 읽기 규칙과 사전 경로를 확인할 수 있습니다. 위치는 UTF-8
+          byte 기준입니다.
+        </p>
+        <div class="inspect-grid">
+          <div class="table-wrap">
+            <table>
+              <thead id="inspect-head"></thead>
+              <tbody id="inspect-body"></tbody>
+            </table>
+            <p id="inspect-empty" class="empty-note">
+              실행 후 분석 결과가 표시됩니다.
+            </p>
+          </div>
+          <div id="span-detail" class="span-detail">
+            <span class="eyebrow">SPAN DETAILS</span>
+            <p>분석할 행을 선택하세요.</p>
+          </div>
+        </div>
+      </section>
+      <footer>
+        <span>HUNYDEV · Deterministic, resource-driven text frontend</span
+        ><a
+          href="https://github.com/hunydev/tts-text-frontend"
+          target="_blank"
+          rel="noopener"
+          >GitHub ↗</a
+        >
+      </footer>
+    </main>
+  </body>
+</html>

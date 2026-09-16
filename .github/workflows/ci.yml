@@ -49,6 +49,10 @@ jobs:
         run: python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources --corpus tests/evaluation/advanced_cases.jsonl --output-dir artifacts/evaluation/advanced
       - name: Verify literal code, markup and path preservation
         run: python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources --corpus tests/evaluation/protected_cases.jsonl --output-dir artifacts/evaluation/protected
+      - name: Verify finance ranges and content vocabulary
+        run: |
+          python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources --corpus tests/evaluation/finance_ranges_v7.jsonl --output-dir artifacts/evaluation/finance-v7
+          python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources --corpus tests/evaluation/content_v7.jsonl --output-dir artifacts/evaluation/content-v7
       - name: Upload evaluation artifact
         uses: actions/upload-artifact@v7.0.1
         with:
@@ -56,3 +60,27 @@ jobs:
           path: artifacts/evaluation/
           retention-days: 14
           if-no-files-found: error
+
+  web-browser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: tests/web/package-lock.json
+      - run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - run: cmake --build build --parallel 2
+      - run: npm ci --prefix tests/web
+      - run: ./tests/web/node_modules/.bin/playwright install --with-deps chromium
+      - name: Exercise web workbench in Chromium
+        run: |
+          python3 tools/web/server.py --port 8000 > /tmp/ttf-web.log 2>&1 &
+          TTF_WEB_PID=$!
+          trap 'kill "$TTF_WEB_PID"' EXIT
+          for i in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:8000/api/health; then break; fi
+            sleep 1
+          done
+          node tests/web/browser.cjs

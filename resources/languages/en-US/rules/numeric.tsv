@@ -187,3 +187,7 @@ time_suffix	*	AM	AM
 time_suffix	*	PM	PM
 meridiem	en-US	AM	a m
 meridiem	en-US	PM	p m
+
+# Delimiters for repeated explicit quantity units.
+quantity_range_separator	*	-	1
+quantity_range_separator	*	~	1
