@@ -88,8 +88,8 @@ and verbalizes a cardinal without editing core code.
 | Milestone | Implemented initial scope | Next work |
 | --- | --- | --- |
 | 1 — Universal Core | UTF-8 tokens, Semantic IR, resource/rule manager, pack API | Richer grammar DSL, indexed compiled resources |
-| 2 — KO / EN | Basic cardinal, ordinal, date/time, currency, percent, units; Korean counters/phone | Coverage for locales, ambiguity and edge cases |
-| 3 — Code Mixed | Pack context scores, attached particle signals, context inheritance, `1st` case | Embedded quotations, longer mixed-language passages |
+| 2 — KO / EN | Basic cardinal, ordinal, date/time, currency, percent, units; Korean counters/phone | Further locales, ambiguity and numeric grammars |
+| 3 — Code Mixed | Pack context scores, local lexical runs, particle scope, English clause signals, `1st` case | Embedded quotations, longer mixed-language passages |
 | 4 — Foreign Pronunciation | Layered lexicons, initialism/acronym data, source dictionary/G2P, phone IR, fallback | Broader reviewed vocabulary and text pronunciation accuracy |
 | 5 — Streaming | Pending/lookahead, shared boundaries, phrase targets, callbacks, frontend benchmarks | More boundary/context cases and reduced repeated scanning |
 | 6 — Extensibility Validation | Synthetic third-pack test, generated build registry | Real third language pack and platform matrix |
@@ -107,3 +107,24 @@ Streaming checks compare multiple byte chunk sizes and must retain that referenc
 
 The audio bridge and listening evaluation were removed from the current scope.
 Runtime callbacks and JSONL remain available for downstream consumers.
+
+## Finance/content checkpoint (0.4.0)
+
+Finance has first priority and content narration is a second reference domain;
+these priorities do not introduce domain names into the core. Numeric policies,
+context roles and pronunciation entries remain resource driven.
+
+Korean compound quantities are parsed as descending groups and major scales. Exact
+decimal arithmetic produces a single canonical Semantic IR value before rendering.
+Malformed compounds and IR overflow are preserved, and ordinary-word boundaries
+are checked separately from numeric morphology.
+
+The KO/EN packs share a language-local lexical-run helper. Pack-specific resources
+supply predicates, particle evidence and weights; the core's pack-scoring interface
+is unchanged. [Routing policy](context-routing.md) documents the clause/noun-phrase
+heuristics and bounded streaming context.
+
+[Scenario evaluation](domain-corpus.md) compares identical references on the frozen
+previous version and current version. Strict regression/development gates and the
+advisory challenge report are kept distinct. This produces evidence of improvement
+and visible limitations without changing expected text to match runtime output.

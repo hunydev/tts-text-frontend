@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.4.0 — Finance and content text quality
+
+* Parse compound Korean amounts into a single canonical semantic value with exact
+  decimal arithmetic; preserve invalid scales, grouping and overflow.
+* Score complete local foreign phrases and English clauses, retaining language
+  identity at clause endings and propagating Korean particle context across nouns.
+* Add finance/content scenario references written before baseline execution,
+  immutable baseline comparisons and a separate advisory challenge report.
+* Add independent amount-value/metadata checks, resource-only routing overrides,
+  and arbitrary byte splits through spaced compound amounts.
+* Keep C ABI v1. Korean scale resources now use atomic exponents; see the migration
+  note in `docs/ko-coverage.md` for old compound scale aliases.
+
 ## 0.3.0 — Text correctness and broader grammar
 
 * Replace synthesis/listening evaluation with independent normalized-text references,

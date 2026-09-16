@@ -30,12 +30,16 @@ $12 → CURRENCY(value="12", unit="USD")
 14:30:05 → TIME(value="14:30:05")
 2026년 6월 1일 → DATE(value="2026-06-01")
 3.5만원 → CURRENCY(value="35000", unit="KRW")
+1억2천3백만원 → CURRENCY(value="123000000", unit="KRW")
 C++ → ALNUM_TERM(source="en-US", lexical_class=ALNUM_TERM)
 11st → TEXT(rule="syntax.invalid-ordinal")
 ```
 
 Numeric values are strings so the interface does not lose digits to floating
-point conversion. Fixed-size fields bound the initial ABI; very long numbers and
+point conversion. The Korean compound parser performs exact decimal array
+arithmetic and emits one span for the complete amount. Tests assert the semantic
+value and source extent as well as the final string; several separate incorrect
+semantic values can accidentally concatenate to the expected text. Fixed-size fields bound the initial ABI; very long numbers and
 unsupported structures are conservatively handled rather than claiming full
 arbitrary precision support. English ordinals exceeding `uint64_t` retain their
 surface form instead of saturating to a different number. Output buffers grow independently of IR fields.

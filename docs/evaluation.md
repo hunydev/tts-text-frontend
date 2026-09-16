@@ -158,3 +158,28 @@ introduces text errors, wrong metadata, and batch/stream divergence to prove the
 gates reject each independently. It also tests codepoint metrics, malformed
 corpora, missing/gapped/invalid UTF-8 spans, safe HTML escaping, and preservation
 of an existing report.
+
+## Finance/content corpus and revision comparison
+
+`tests/evaluation/domain_cases.jsonl` contains 60 original finance/content/customer
+scenarios with frozen reference text. It is a strict CTest and CI gate. The separate
+15-case `challenge_cases.jsonl` is reported as advisory; text mismatches remain
+visible, while malformed protocol or execution errors still fail CI. See
+[corpus provenance and limits](domain-corpus.md). No real customer accuracy is
+inferred from these synthetic examples.
+
+```sh
+python3 tools/evaluation/compare.py \
+  --before artifacts/domain-baseline-0.3.0/report.json \
+  --after artifacts/domain-candidate/report.json \
+  --output-dir artifacts/domain-comparison
+```
+
+The comparison refuses differing case sets, reference strings, metadata assertions,
+languages, resource override configurations or chunk sizes. It records report hashes
+and classifies cases as fixed, regressed, remaining failure or unchanged pass. A
+metadata regression counts even when the string remains correct. Increased text
+edit distance is also reported, even when the case already failed before. Exit 1
+means a newly failing case or increased edit distance; exit 2 means incomparable/malformed evidence. Remaining failures are
+reported and never reclassified as passes. The comparison is an analysis tool, not
+a replacement for the strict evaluator's acceptance exit status.

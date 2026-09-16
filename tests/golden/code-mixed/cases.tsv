@@ -11,3 +11,31 @@ USB CPU GPU AI NASA SQL GIF를 사용합니다.	유에스비 씨피유 지피유
 그는 「Please go to the 1st floor」라고 말했다.	그는 「Please go to the first floor」라고 말했다.
 "Apple은 사과입니다."라고 말했다.	"애플은 사과입니다."라고 말했다.
 21st는 스물한 번째입니다.	트웬티 퍼스트는 스물한 번째입니다.
+# Unquoted clauses retain their predicate signal through the last foreign word.
+한국어로 Please go to the 1st floor라고 말합니다.	한국어로 Please go to the first floor라고 말합니다.
+이번 영상에서는 Please go to the 1st floor라고 말합니다.	이번 영상에서는 Please go to the first floor라고 말합니다.
+화면에는 Enter the 3rd digit라고 나옵니다.	화면에는 Enter the third digit라고 나옵니다.
+한국어 뒤에 We use the database server for customer support라고 씁니다.	한국어 뒤에 We use the database server for customer support라고 씁니다.
+영문 공지에는 Apple released the iPhone.이라고 적혀 있습니다.	영문 공지에는 Apple released the iPhone.이라고 적혀 있습니다.
+한국어 문장 뒤에 Apple released the iPhone.	한국어 문장 뒤에 Apple released the iPhone.
+메시지는 The payment was approved라고 표시됩니다.	메시지는 The payment was approved라고 표시됩니다.
+화면에는 Please verify the 2nd account라고 나옵니다.	화면에는 Please verify the second account라고 나옵니다.
+영상에는 You can subscribe to the channel이라고 표시합니다.	영상에는 You can subscribe to the channel이라고 표시합니다.
+# An attached particle also scopes over the preceding foreign noun phrase.
+GPU and CPU를 사용합니다.	지피유 앤드 씨피유를 사용합니다.
+GPU and CPU are ready라고 표시합니다.	GPU and CPU are ready라고 표시합니다.
+고객은 Apple Watch를 구매했습니다.	고객은 애플 워치를 구매했습니다.
+cloud server를 사용합니다.	클라우드 서버를 사용합니다.
+database backup을 시작합니다.	데이터베이스 백업을 시작합니다.
+오늘 cloud server 3개를 점검합니다.	오늘 클라우드 서버 세 개를 점검합니다.
+고객은 the cloud server를 확인했습니다.	고객은 더 클라우드 서버를 확인했습니다.
+# Neutral prefixes/signs inherit the English sentence even with the KO default.
+The total is $12.	The total is twelve dollars.
+The rate is -3.5%.	The rate is minus three point five percent.
+Please pay ₩12,500.	Please pay twelve thousand five hundred won.
+The number is +3.	The number is plus three.
+The rate is .5%.	The rate is zero point five percent.
+$12,500 is the total.	twelve thousand five hundred dollars is the total.
+-3.5% is the annual rate.	minus three point five percent is the annual rate.
+₩12,500 is the price.	twelve thousand five hundred won is the price.
+32 °C is the temperature.	thirty two degrees Celsius is the temperature.

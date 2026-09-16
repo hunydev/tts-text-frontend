@@ -78,7 +78,13 @@ static int compare(ttf_engine_t *engine, const char *text, size_t n, unsigned ca
     return 0;
 }
 int main(void) {
-    static const char *atoms[] = {"3 kg",
+    static const char *atoms[] = {"1억2천3백만원",
+                                  "1억 2,500만원",
+                                  "2만 3억원",
+                                  "1억2,50만원",
+                                  "Apple Watch를",
+                                  "GPU and CPU를",
+                                  "3 kg",
                                   "3 개",
                                   "₩ 12,500",
                                   "1 / 2",

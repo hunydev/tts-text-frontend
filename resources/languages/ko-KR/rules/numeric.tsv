@@ -89,11 +89,10 @@ currency_prefix	*	₩	KRW
 # Korean scale arithmetic and counter reading policies
 number	ko-KR	fraction_separator	 분의 
 unit	ko-KR	second	초
+scale	ko-KR	십	1
+scale	ko-KR	백	2
 scale	ko-KR	천	3
 scale	ko-KR	만	4
-scale	ko-KR	십만	5
-scale	ko-KR	백만	6
-scale	ko-KR	천만	7
 scale	ko-KR	억	8
 scale	ko-KR	조	12
 counter	ko-KR	년	sino
@@ -154,3 +153,63 @@ numeric_continuation	ko-KR	백만	1
 numeric_continuation	ko-KR	천만	1
 numeric_continuation	ko-KR	억	1
 numeric_continuation	ko-KR	조	1
+
+# Atomic major scales; their reading labels remain in magnitude resources.
+scale	ko-KR	경	16
+numeric_continuation	ko-KR	경	1
+numeric_continuation	ko-KR	십	1
+numeric_continuation	ko-KR	백	1
+
+# Exact attached quantity tails; no arbitrary particle-prefix word matching.
+quantity_tail	ko-KR	이며	1
+quantity_tail	ko-KR	이고	1
+quantity_tail	ko-KR	이면	1
+quantity_tail	ko-KR	이니	1
+quantity_tail	ko-KR	이므로	1
+quantity_tail	ko-KR	이라서	1
+quantity_tail	ko-KR	이라는	1
+quantity_tail	ko-KR	이라고	1
+quantity_tail	ko-KR	입니다만	1
+quantity_tail	ko-KR	이었습니다	1
+quantity_tail	ko-KR	이었으며	1
+quantity_tail	ko-KR	이었다	1
+quantity_tail	ko-KR	이에요	1
+quantity_tail	ko-KR	이네요	1
+quantity_tail	ko-KR	이죠	1
+quantity_tail	ko-KR	이고요	1
+quantity_tail	ko-KR	이지만	1
+quantity_tail	ko-KR	인데	1
+quantity_tail	ko-KR	인지는	1
+quantity_tail	ko-KR	일까요	1
+quantity_tail	ko-KR	으로는	1
+quantity_tail	ko-KR	으로도	1
+quantity_tail	ko-KR	으로만	1
+quantity_tail	ko-KR	로는	1
+quantity_tail	ko-KR	로도	1
+quantity_tail	ko-KR	로만	1
+quantity_tail	ko-KR	에는	1
+quantity_tail	ko-KR	에도	1
+quantity_tail	ko-KR	에만	1
+quantity_tail	ko-KR	에서는	1
+quantity_tail	ko-KR	에서도	1
+quantity_tail	ko-KR	까지는	1
+quantity_tail	ko-KR	까지도	1
+quantity_tail	ko-KR	부터는	1
+quantity_tail	ko-KR	부터도	1
+quantity_tail	ko-KR	까지만	1
+quantity_tail	ko-KR	보다	1
+quantity_tail	ko-KR	까지의	1
+quantity_tail	ko-KR	부터의	1
+quantity_tail	ko-KR	만의	1
+quantity_tail	ko-KR	만으로	1
+quantity_tail	ko-KR	만은	1
+quantity_tail	ko-KR	만도	1
+quantity_tail	ko-KR	처럼	1
+quantity_tail	ko-KR	만큼	1
+quantity_tail	ko-KR	쯤	1
+quantity_tail	ko-KR	가량	1
+quantity_tail	ko-KR	이상	1
+quantity_tail	ko-KR	이하	1
+quantity_tail	ko-KR	초과	1
+quantity_tail	ko-KR	미만	1
+quantity_tail	ko-KR	대	1

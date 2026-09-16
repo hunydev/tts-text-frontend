@@ -181,16 +181,25 @@ Acceptance is based on normalized output text, semantic/language metadata and
 batch/stream equivalence. No speech synthesis or listening comparison is required.
 The text report shows independent expected strings, character differences,
 category scores, resource provenance and fallback paths. The current regression
-suite has 270 golden cases and a separate 109-case text evaluation corpus with
-75 explicit metadata assertions; these are curated regression checks, not a
-measurement of accuracy on unseen text.
+suite has 346 golden cases, a 109-case regression corpus and 60 finance/content
+scenarios. These are curated regression checks, not a measurement of accuracy on
+unseen text. A separate 15-case advisory challenge report exposes unsupported
+forms and ambiguous policies; 12 currently fail.
 
 ```sh
 python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources \
   --corpus tests/evaluation/cases.jsonl --output-dir artifacts/text-evaluation
+python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources \
+  --corpus tests/evaluation/domain_cases.jsonl --output-dir artifacts/domain-evaluation
 build/ttf stream-json examples/code_mixed.txt > segments.jsonl
 build/ttf_bench --iterations 100 --chunk-bytes 64 examples/code_mixed.txt
 ```
+
+The current priority is finance, with content narration and general-purpose
+multilingual text retained as reference domains. Compound amounts such as
+`1억2천3백만원` yield one `CURRENCY` span with value `123000000`, then render as
+`일억이천삼백만 원`. See [scenario evidence](docs/domain-corpus.md) and
+[context routing](docs/context-routing.md) for measured changes and remaining gaps.
 
 Open `artifacts/text-evaluation/report.html` to inspect text failures and metadata.
 Output directories must be new on each run. CI publishes the same text report.

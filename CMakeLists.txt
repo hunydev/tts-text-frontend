@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(tts_text_frontend VERSION 0.3.0 LANGUAGES C)
+project(tts_text_frontend VERSION 0.4.0 LANGUAGES C)
 include(GNUInstallDirs)
 include(CTest)
 option(TTF_ENABLE_ASAN "Enable AddressSanitizer" OFF)
@@ -103,6 +103,17 @@ if(BUILD_TESTING)
       $<TARGET_FILE:ttf_bench> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
     add_test(NAME evaluation_reports COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_evaluation.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
+    add_test(NAME evaluation_comparison COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_compare.py)
+    add_test(NAME domain_text_evaluation COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
+    add_test(NAME compound_amount_values COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_compound_amounts.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
+    add_test(NAME context_language_routes COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_context_routes.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
     add_test(NAME compiled_resources COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_compiled_resources.py

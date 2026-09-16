@@ -1,6 +1,7 @@
 /* Korean reading policy and phonetic realization live in this language pack.
  * The core only dispatches through the versioned language-pack interface. */
 #include "tts_text_frontend/ttf_language_pack.h"
+#include "../context_run.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -304,15 +305,358 @@ static size_t classified(const ttf_pack_input_t *in, ttf_semantic_t *s, size_t e
     return consumed;
 }
 
-/* Pack-specific grammar creates language-neutral IR. Multiplication by a scale
-   is decimal string arithmetic: large amounts never pass through float/double. */
+/* Decimal magnitude arithmetic deliberately avoids binary floating point and
+ * integer overflow. Digits are little endian, with an explicit decimal scale. */
+typedef struct {
+    unsigned char digits[TTF_IR_VALUE_SIZE];
+    size_t count;
+    size_t fraction;
+} ko_decimal_t;
+
+static void decimal_trim(ko_decimal_t *value) {
+    while (value->count > 1 && !value->digits[value->count - 1])
+        --value->count;
+    while (value->fraction && value->count > 1 && !value->digits[0]) {
+        memmove(value->digits, value->digits + 1, --value->count);
+        --value->fraction;
+    }
+    if (value->count == 1 && !value->digits[0])
+        value->fraction = 0;
+}
+
+static void decimal_zero(ko_decimal_t *value) {
+    memset(value, 0, sizeof(*value));
+    value->count = 1;
+}
+
+static int decimal_shift(ko_decimal_t *value, size_t power) {
+    size_t append;
+    if (value->fraction >= power) {
+        value->fraction -= power;
+        return 1;
+    }
+    append = power - value->fraction;
+    value->fraction = 0;
+    if (value->count == 1 && !value->digits[0])
+        return 1;
+    if (append > sizeof(value->digits) - value->count)
+        return 0;
+    memmove(value->digits + append, value->digits, value->count);
+    memset(value->digits, 0, append);
+    value->count += append;
+    return 1;
+}
+
+static int decimal_add(ko_decimal_t *left, const ko_decimal_t *right) {
+    ko_decimal_t sum;
+    size_t scale = left->fraction > right->fraction ? left->fraction : right->fraction;
+    size_t left_offset = scale - left->fraction, right_offset = scale - right->fraction;
+    size_t left_count = left->count + left_offset, right_count = right->count + right_offset;
+    size_t count = left_count > right_count ? left_count : right_count, i;
+    unsigned carry = 0;
+    if (count > sizeof(sum.digits))
+        return 0;
+    decimal_zero(&sum);
+    sum.fraction = scale;
+    for (i = 0; i < count; ++i) {
+        unsigned digit = carry;
+        if (i >= left_offset && i - left_offset < left->count)
+            digit += left->digits[i - left_offset];
+        if (i >= right_offset && i - right_offset < right->count)
+            digit += right->digits[i - right_offset];
+        sum.digits[i] = (unsigned char)(digit % 10);
+        carry = digit / 10;
+    }
+    if (carry) {
+        if (count == sizeof(sum.digits))
+            return 0;
+        sum.digits[count++] = (unsigned char)carry;
+    }
+    sum.count = count;
+    decimal_trim(&sum);
+    *left = sum;
+    return 1;
+}
+
+/* Strictly below 10^power, used to reject overlapping lower components. */
+static int decimal_below_power(const ko_decimal_t *value, size_t power) {
+    return (value->count == 1 && !value->digits[0]) || value->count <= value->fraction + power;
+}
+
+static int decimal_string(const ko_decimal_t *value, int negative, char *out, size_t capacity) {
+    size_t pos = 0, i, width = value->count > value->fraction ? value->count : value->fraction + 1;
+    size_t needed = width + (value->fraction ? 1 : 0) + (negative ? 1 : 0);
+    if (needed >= capacity)
+        return 0;
+    if (negative)
+        out[pos++] = '-';
+    for (i = width; i > 0; --i) {
+        if (i == value->fraction)
+            out[pos++] = '.';
+        out[pos++] = i <= value->count ? (char)('0' + value->digits[i - 1]) : '0';
+    }
+    out[pos] = '\0';
+    return 1;
+}
+
+/* Returns zero for a malformed coefficient while still consuming its numeric
+ * spelling. That lets the caller protect the entire invalid compound surface. */
+static int decimal_parse(const char *text, size_t n, size_t *position, ko_decimal_t *value) {
+    unsigned char forward[TTF_IR_VALUE_SIZE];
+    size_t p = *position, count = 0, group = 0, fraction = 0, i;
+    int valid = 1, grouped = 0, dot = 0, have_digit = 0;
+    decimal_zero(value);
+    if (p < n && (text[p] == '+' || text[p] == '-')) {
+        valid = 0; /* A sign belongs only to the whole compound. */
+        ++p;
+    }
+    while (p < n) {
+        if (text[p] >= '0' && text[p] <= '9') {
+            have_digit = 1;
+            if (count < sizeof(forward))
+                forward[count] = (unsigned char)(text[p] - '0');
+            else
+                valid = 0;
+            ++count;
+            if (dot)
+                ++fraction;
+            else
+                ++group;
+            ++p;
+        } else if (text[p] == ',') {
+            if (dot || (!grouped && (!group || group > 3)) || (grouped && group != 3))
+                valid = 0;
+            grouped = 1;
+            group = 0;
+            ++p;
+        } else if (text[p] == '.' && p + 1 < n &&
+                   ((text[p + 1] >= '0' && text[p + 1] <= '9') || text[p + 1] == '.')) {
+            if (dot || (grouped && group != 3))
+                valid = 0;
+            dot = 1;
+            ++p;
+        } else
+            break;
+    }
+    if (!have_digit || (grouped && group != 3) || (dot && !fraction) || count > sizeof(forward))
+        valid = 0;
+    *position = p;
+    if (!valid)
+        return 0;
+    value->count = count;
+    value->fraction = fraction;
+    for (i = 0; i < count; ++i)
+        value->digits[i] = forward[count - 1 - i];
+    decimal_trim(value);
+    return 1;
+}
+
+/* Scale records are atomic exponents (십=1, 백=2, 천=3, 만=4, ...).
+ * A sequence such as 천만 is parsed as a minor group followed by a major scale. */
+static size_t scale_at(const ttf_pack_input_t *in, size_t position, unsigned *power) {
+    char key[32];
+    size_t width, available = in->length - position;
+    for (width = 1; width < sizeof(key) && width <= available; ++width) {
+        const char *label;
+        char *end;
+        long parsed;
+        memcpy(key, in->text + position, width);
+        key[width] = '\0';
+        label = ttf_resource_get(in->engine, "scale", "ko-KR", key, NULL);
+        if (!label)
+            continue;
+        parsed = strtol(label, &end, 10);
+        if (!*end && parsed > 0 && parsed <= 40 && (parsed < 4 || parsed % 4 == 0)) {
+            *power = (unsigned)parsed;
+            return width;
+        }
+    }
+    return 0;
+}
+
+static const char *quantity_resource_at(const ttf_pack_input_t *in, const char *kind,
+                                        size_t position, size_t *width) {
+    char key[64];
+    size_t available = in->length - position;
+    for (*width = available < sizeof(key) - 1 ? available : sizeof(key) - 1; *width > 0; --*width) {
+        const char *label;
+        memcpy(key, in->text + position, *width);
+        key[*width] = '\0';
+        label = ttf_resource_get(in->engine, kind, "ko-KR", key, NULL);
+        if (label)
+            return label;
+    }
+    return NULL;
+}
+
+/* Numeric morphology may end before an attached particle. Ordinary Hangul
+ * words beginning with a scale (천국, 만들기) do not become numeric multipliers. */
+static int quantity_boundary(const ttf_pack_input_t *in, size_t position) {
+    size_t i, width;
+    char key[64];
+    for (i = in->index; i < in->token_count; ++i) {
+        const ttf_token_t *token = &in->tokens[i];
+        if (token->begin <= position && position < token->end) {
+            if (token->script != TTF_SCRIPT_HANGUL)
+                return token->begin == position && (token->script == TTF_SCRIPT_WHITESPACE ||
+                                                    token->script == TTF_SCRIPT_PUNCTUATION ||
+                                                    token->script == TTF_SCRIPT_SYMBOL);
+            width = token->end - position;
+            if (width >= sizeof(key))
+                return 0;
+            memcpy(key, in->text + position, width);
+            key[width] = '\0';
+            return ttf_resource_get(in->engine, "particle", "ko-KR", key, NULL) != NULL ||
+                   ttf_resource_get(in->engine, "quantity_tail", "ko-KR", key, NULL) != NULL;
+        }
+        if (token->begin >= position)
+            break;
+    }
+    return 1;
+}
+
+static size_t compound_amount(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    const char *text = in->text, *suffix = NULL, *prefix = NULL;
+    size_t begin = in->tokens[in->index].begin, n = in->length, p = begin, q, width, end;
+    ko_decimal_t total, group, pending, term;
+    unsigned power, last_minor = 4, last_major = 41;
+    size_t scales = 0, coefficients = 1;
+    int negative = 0, valid = 1, have_pending = 1, have_group = 0;
+    ttf_semantic_type_t type = TTF_SEM_CARDINAL;
+    decimal_zero(&total);
+    decimal_zero(&group);
+    prefix = quantity_resource_at(in, "currency_prefix", p, &width);
+    if (prefix)
+        p = skip_spaces(text, n, p + width);
+    if (p < n && (text[p] == '-' || text[p] == '+'))
+        negative = text[p++] == '-';
+    if (p >= n || text[p] < '0' || text[p] > '9')
+        return 0;
+    valid = decimal_parse(text, n, &p, &pending);
+    end = p;
+    for (;;) {
+        q = skip_spaces(text, n, p);
+        width = scale_at(in, q, &power);
+        if (width) {
+            ++scales;
+            if (power < 4) {
+                if (!have_pending || power >= last_minor)
+                    valid = 0;
+                if (valid) {
+                    term = pending;
+                    if (!decimal_shift(&term, power) ||
+                        (have_group && !decimal_below_power(&term, last_minor)) ||
+                        !decimal_add(&group, &term))
+                        valid = 0;
+                }
+                have_pending = 0;
+                have_group = 1;
+                last_minor = power;
+            } else {
+                if ((!have_pending && !have_group) || power >= last_major)
+                    valid = 0;
+                if (valid && have_pending) {
+                    if ((have_group && !decimal_below_power(&pending, last_minor)) ||
+                        !decimal_add(&group, &pending))
+                        valid = 0;
+                }
+                if (valid && (!decimal_shift(&group, power) ||
+                              (last_major != 41 && !decimal_below_power(&group, last_major)) ||
+                              !decimal_add(&total, &group)))
+                    valid = 0;
+                decimal_zero(&group);
+                have_pending = 0;
+                have_group = 0;
+                last_minor = 4;
+                last_major = power;
+            }
+            p = q + width;
+            end = p;
+            continue;
+        }
+        if (q < n && ((text[q] >= '0' && text[q] <= '9') || text[q] == '+' || text[q] == '-' ||
+                      (text[q] == '.' && q + 1 < n && text[q + 1] >= '0' && text[q + 1] <= '9'))) {
+            size_t number_end = q;
+            ko_decimal_t next;
+            int number_valid = decimal_parse(text, n, &number_end, &next);
+            /* A separate number without any preceding scale is not compound. */
+            if (!scales)
+                return 0;
+            if (number_end == q)
+                break;
+            if (have_pending || !number_valid || text[q] == '.')
+                valid = 0;
+            pending = next;
+            have_pending = 1;
+            ++coefficients;
+            p = number_end;
+            end = p;
+            continue;
+        }
+        suffix = quantity_resource_at(in, "numeric_suffix", q, &width);
+        if (suffix && (!strncmp(suffix, "CURRENCY:", 9) || !strncmp(suffix, "COUNTER:", 8) ||
+                       !strncmp(suffix, "MEASURE:", 8))) {
+            end = q + width;
+            if (prefix && (strncmp(suffix, "CURRENCY:", 9) || strcmp(prefix, suffix + 9)))
+                valid = 0;
+            if (!quantity_boundary(in, end)) {
+                if (valid && coefficients == 1)
+                    return 0;
+                valid = 0;
+            }
+        } else
+            suffix = NULL;
+        break;
+    }
+    if (!scales)
+        return 0;
+    if (!suffix && !quantity_boundary(in, end)) {
+        if (valid && coefficients == 1)
+            return 0;
+        valid = 0;
+    }
+    if (valid && have_pending) {
+        if ((have_group && !decimal_below_power(&pending, last_minor)) ||
+            !decimal_add(&group, &pending))
+            valid = 0;
+    }
+    if (valid && ((last_major != 41 && !decimal_below_power(&group, last_major)) ||
+                  !decimal_add(&total, &group) ||
+                  !decimal_string(&total, negative, s->value, sizeof(s->value))))
+        valid = 0;
+    if (!valid) {
+        /* Extend through an attached nonnumeric Hangul remainder as well; do
+         * not leave an invalid compound open to a second partial conversion. */
+        size_t i;
+        for (i = in->index; i < in->token_count; ++i)
+            if (in->tokens[i].begin < end && end < in->tokens[i].end) {
+                end = in->tokens[i].end;
+                break;
+            }
+        s->value[0] = '\0';
+        return classified(in, s, end, TTF_SEM_TEXT, "ko:invalid-compound-number");
+    }
+    if (suffix) {
+        if (!strncmp(suffix, "CURRENCY:", 9)) {
+            type = TTF_SEM_CURRENCY;
+            (void)snprintf(s->unit, sizeof(s->unit), "%s", suffix + 9);
+        } else {
+            type = !strncmp(suffix, "COUNTER:", 8) ? TTF_SEM_COUNTER : TTF_SEM_MEASURE;
+            (void)snprintf(s->unit, sizeof(s->unit), "%s", suffix + 8);
+        }
+    } else if (prefix) {
+        type = TTF_SEM_CURRENCY;
+        (void)snprintf(s->unit, sizeof(s->unit), "%s", prefix);
+    }
+    return classified(in, s, end, type,
+                      type == TTF_SEM_CURRENCY ? "ko:compound-currency" : "ko:compound-number");
+}
+
+/* Pack-specific grammar creates language-neutral IR. */
 static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     const char *text = in->text;
-    size_t n = in->length, begin = in->tokens[in->index].begin, p, q, width;
+    size_t n = in->length, begin = in->tokens[in->index].begin, p, q;
     unsigned year, month, day;
-    char value[TTF_IR_VALUE_SIZE], key[32], scaled[TTF_IR_VALUE_SIZE];
-    size_t integer_digits = 0, count = 0, fraction = 0, integer_group = 0;
-    int negative = 0, grouped = 0, power = -1;
     p = unsigned_value(text, n, begin, &year);
     q = skip_spaces(text, n, p);
     if (p - begin == 4 && literal_at(text, n, q, "년")) {
@@ -342,118 +686,7 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             }
         }
     }
-    p = begin;
-    if (p < n && (text[p] == '-' || text[p] == '+'))
-        negative = text[p++] == '-';
-    while (p < n && ((text[p] >= '0' && text[p] <= '9') || text[p] == ',')) {
-        if (text[p] == ',') {
-            if ((!grouped && (integer_group < 1 || integer_group > 3)) ||
-                (grouped && integer_group != 3))
-                return 0;
-            grouped = 1;
-            integer_group = 0;
-            ++p;
-            continue;
-        }
-        if (count + 1 >= sizeof(value))
-            return 0;
-        value[count++] = text[p++];
-        ++integer_group;
-    }
-    if (!count || (grouped && integer_group != 3))
-        return 0;
-    integer_digits = count;
-    if (p < n && text[p] == '.') {
-        ++p;
-        while (p < n && text[p] >= '0' && text[p] <= '9') {
-            if (count + 1 >= sizeof(value))
-                return 0;
-            value[count++] = text[p++];
-            ++fraction;
-        }
-        if (!fraction)
-            return 0;
-    }
-    q = skip_spaces(text, n, p);
-    for (width = n - q < sizeof(key) - 1 ? n - q : sizeof(key) - 1; width > 0; --width) {
-        const char *label;
-        char *end;
-        long parsed;
-        memcpy(key, text + q, width);
-        key[width] = '\0';
-        label = ttf_resource_get(in->engine, "scale", "ko-KR", key, NULL);
-        if (!label)
-            continue;
-        parsed = strtol(label, &end, 10);
-        if (!*end && parsed >= 1 && parsed <= 40) {
-            power = (int)parsed;
-            break;
-        }
-    }
-    if (power < 0)
-        return 0;
-    {
-        size_t end_integer = integer_digits + (size_t)power, pos = 0, i;
-        if (end_integer + fraction + 3 >= sizeof(scaled))
-            return 0;
-        if (negative)
-            scaled[pos++] = '-';
-        for (i = 0; i < count || i < end_integer; ++i) {
-            if (i == end_integer)
-                scaled[pos++] = '.';
-            scaled[pos++] = i < count ? value[i] : '0';
-        }
-        if (end_integer < count) {
-            while (pos && scaled[pos - 1] == '0')
-                --pos;
-            if (pos && scaled[pos - 1] == '.')
-                --pos;
-        }
-        scaled[pos] = '\0';
-        (void)snprintf(s->value, sizeof(s->value), "%s", scaled);
-    }
-    p = q + width;
-    q = skip_spaces(text, n, p);
-    for (width = n - q < sizeof(key) - 1 ? n - q : sizeof(key) - 1; width > 0; --width) {
-        const char *label;
-        memcpy(key, text + q, width);
-        key[width] = '\0';
-        label = ttf_resource_get(in->engine, "numeric_suffix", "ko-KR", key, NULL);
-        if (!label)
-            continue;
-        if (!strncmp(label, "CURRENCY:", 9)) {
-            (void)snprintf(s->unit, sizeof(s->unit), "%s", label + 9);
-            return classified(in, s, q + width, TTF_SEM_CURRENCY, "ko:scaled-currency");
-        }
-        if (!strncmp(label, "COUNTER:", 8)) {
-            (void)snprintf(s->unit, sizeof(s->unit), "%s", label + 8);
-            return classified(in, s, q + width, TTF_SEM_COUNTER, "ko:scaled-counter");
-        }
-    }
-    /* A scale embedded in an ordinary word is not a quantity: 1.5천국 must
-       not become 1500국. Recognized attached particles may continue a scale. */
-    for (q = in->index; q < in->token_count; ++q) {
-        const ttf_token_t *token = &in->tokens[q];
-        if (token->script == TTF_SCRIPT_HANGUL && token->begin < p && p < token->end) {
-            size_t available = token->end - p;
-            int particle = 0;
-            for (width = available < sizeof(key) - 1 ? available : sizeof(key) - 1; width > 0;
-                 --width) {
-                memcpy(key, text + p, width);
-                key[width] = '\0';
-                if (ttf_resource_get(in->engine, "particle", "ko-KR", key, NULL)) {
-                    particle = 1;
-                    break;
-                }
-            }
-            if (!particle)
-                return 0;
-            break;
-        }
-        if (token->begin >= p)
-            break;
-    }
-    return classified(in, s, p, TTF_SEM_CARDINAL, "ko:scaled-number");
+    return compound_amount(in, s);
 }
 
 static int script_score(ttf_script_t script) {
@@ -478,7 +711,7 @@ static int is_particle(const ttf_pack_input_t *in, const ttf_token_t *token) {
 }
 
 static int context_score(const ttf_pack_input_t *in) {
-    size_t i, hangul = 0;
+    size_t i, hangul = 0, begin, end;
     int score;
     for (i = 0; i < in->token_count; ++i)
         if (in->tokens[i].script == TTF_SCRIPT_HANGUL)
@@ -490,29 +723,16 @@ static int context_score(const ttf_pack_input_t *in) {
         if (score < floor)
             score = floor;
     }
-    if (in->index < in->token_count) {
-        const ttf_token_t *current = &in->tokens[in->index];
-        if (current->script == TTF_SCRIPT_HANGUL)
-            score += resource_integer(in->engine, "context", "script_weight", 0, 1000, 1000);
-        if (in->index + 1 < in->token_count) {
-            const ttf_token_t *next = &in->tokens[in->index + 1];
-            if (current->end == next->begin && is_particle(in, next))
-                score += resource_integer(in->engine, "context", "particle_weight", 0, 1000, 200);
-        }
-        /* ORDINAL and ALNUM surfaces span multiple lexical tokens. */
-        for (i = in->index + 1; i < in->token_count && i <= in->index + 5; ++i) {
-            const ttf_token_t *previous = &in->tokens[i - 1];
-            const ttf_token_t *next = &in->tokens[i];
-            if (previous->end != next->begin || next->script == TTF_SCRIPT_WHITESPACE)
-                break;
-            if (is_particle(in, next)) {
-                score += resource_integer(in->engine, "context", "particle_weight", 0, 1000, 200);
-                break;
-            }
-            if (next->script == TTF_SCRIPT_HANGUL)
-                break;
-        }
-    }
+    if (in->index >= in->token_count)
+        return score;
+    if (in->tokens[in->index].script == TTF_SCRIPT_HANGUL)
+        return score + resource_integer(in->engine, "context", "script_weight", 0, 1000, 1000);
+    context_run_bounds(in, &begin, &end);
+    /* A particle scopes over the full preceding foreign noun phrase, including
+       spaces and conjunctions. A stronger source-clause signal can still win. */
+    if (begin < end && end < in->token_count && in->tokens[end - 1].end == in->tokens[end].begin &&
+        is_particle(in, &in->tokens[end]))
+        score += resource_integer(in->engine, "context", "particle_weight", 0, 1000, 200);
     return score;
 }
 

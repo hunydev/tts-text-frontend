@@ -1,0 +1,821 @@
+{
+  "version": "0.4.0",
+  "baseline_commit": "5fb1648d7f3a46cb450551867ae052a51e0ba940",
+  "data_origin": "Original synthetic references authored before baseline execution; no independent human review.",
+  "evaluations": {
+    "development": {
+      "corpus_sha256": "b3a4837a041b99475720fd5566c2e981197282ee0156514b7d73a374fd8882c8",
+      "chunk_bytes": [
+        1,
+        7,
+        64
+      ],
+      "baseline": {
+        "cases": 60,
+        "passed": 47,
+        "failed": 13,
+        "matches": 52,
+        "mismatches": 8,
+        "exact_match_rate": 0.8666666666666667,
+        "metadata_failures": 9,
+        "batch_stream_failures": 0,
+        "character_edit_distance": 36,
+        "reference_characters": 1843,
+        "character_error_rate": 0.019533369506239826,
+        "fallback_spans": 4
+      },
+      "candidate": {
+        "cases": 60,
+        "passed": 60,
+        "failed": 0,
+        "matches": 60,
+        "mismatches": 0,
+        "exact_match_rate": 1.0,
+        "metadata_failures": 0,
+        "batch_stream_failures": 0,
+        "character_edit_distance": 0,
+        "reference_characters": 1843,
+        "character_error_rate": 0.0,
+        "fallback_spans": 0
+      },
+      "comparison": {
+        "fixed": 13,
+        "regressed": 0,
+        "remaining_failure": 0,
+        "unchanged_pass": 47,
+        "text_error_increased": 0
+      },
+      "baseline_binary_sha256": "f00d681e9da6acf0346e257be98517ff8597c58e07e722b971859f71732df969",
+      "candidate_binary_sha256": "479cafe615736991936f65b95024860af5d12daaccb92913b2762ff944233bd4",
+      "cases": [
+        {
+          "id": "content-comparison-initialisms",
+          "category": "content/code-mixed",
+          "status": "fixed",
+          "text": "이번에는 GPU and CPU를 비교합니다.",
+          "expected": "이번에는 지피유 앤드 씨피유를 비교합니다.",
+          "before": "이번에는 GPU and 씨피유를 비교합니다.",
+          "after": "이번에는 지피유 앤드 씨피유를 비교합니다.",
+          "before_errors": 6,
+          "after_errors": 0,
+          "before_metadata_failures": [
+            {
+              "check": 0,
+              "surface": "GPU",
+              "field": "context_lang",
+              "expected": "ko-KR",
+              "actual": "en-US",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "GPU",
+              "field": "normalized",
+              "expected": "지피유",
+              "actual": "GPU",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "GPU",
+              "field": "render_lang",
+              "expected": "ko-KR",
+              "actual": "en-US",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 1,
+              "surface": "and",
+              "field": "context_lang",
+              "expected": "ko-KR",
+              "actual": "en-US",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 1,
+              "surface": "and",
+              "field": "normalized",
+              "expected": "앤드",
+              "actual": "and",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 1,
+              "surface": "and",
+              "field": "render_lang",
+              "expected": "ko-KR",
+              "actual": "en-US",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "GPU",
+              "field": "context_lang",
+              "expected": "ko-KR",
+              "actual": "en-US",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "GPU",
+              "field": "normalized",
+              "expected": "지피유",
+              "actual": "GPU",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "GPU",
+              "field": "render_lang",
+              "expected": "ko-KR",
+              "actual": "en-US",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 1,
+              "surface": "and",
+              "field": "context_lang",
+              "expected": "ko-KR",
+              "actual": "en-US",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 1,
+              "surface": "and",
+              "field": "normalized",
+              "expected": "앤드",
+              "actual": "and",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 1,
+              "surface": "and",
+              "field": "render_lang",
+              "expected": "ko-KR",
+              "actual": "en-US",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "GPU",
+              "field": "context_lang",
+              "expected": "ko-KR",
+              "actual": "en-US",
+              "chunk_bytes": 64
+            },
+            {
+              "check": 0,
+              "surface": "GPU",
+              "field": "normalized",
+              "expected": "지피유",
+              "actual": "GPU",
+              "chunk_bytes": 64
+            },
+            {
+              "check": 0,
+              "surface": "GPU",
+              "field": "render_lang",
+              "expected": "ko-KR",
+              "actual": "en-US",
+              "chunk_bytes": 64
+            },
+            {
+              "check": 1,
+              "surface": "and",
+              "field": "context_lang",
+              "expected": "ko-KR",
+              "actual": "en-US",
+              "chunk_bytes": 64
+            },
+            {
+              "check": 1,
+              "surface": "and",
+              "field": "normalized",
+              "expected": "앤드",
+              "actual": "and",
+              "chunk_bytes": 64
+            },
+            {
+              "check": 1,
+              "surface": "and",
+              "field": "render_lang",
+              "expected": "ko-KR",
+              "actual": "en-US",
+              "chunk_bytes": 64
+            }
+          ],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "content-complete-clause",
+          "category": "content/code-mixed",
+          "status": "fixed",
+          "text": "영문 공지에는 Apple released the iPhone.이라고 적혀 있습니다.",
+          "expected": "영문 공지에는 Apple released the iPhone.이라고 적혀 있습니다.",
+          "before": "영문 공지에는 Apple released the 아이폰.이라고 적혀 있습니다.",
+          "after": "영문 공지에는 Apple released the iPhone.이라고 적혀 있습니다.",
+          "before_errors": 6,
+          "after_errors": 0,
+          "before_metadata_failures": [],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "content-product-watch",
+          "category": "content/code-mixed",
+          "status": "fixed",
+          "text": "오늘은 Apple Watch를 소개합니다.",
+          "expected": "오늘은 애플 워치를 소개합니다.",
+          "before": "오늘은 애플 왜트츠를 소개합니다.",
+          "after": "오늘은 애플 워치를 소개합니다.",
+          "before_errors": 3,
+          "after_errors": 0,
+          "before_metadata_failures": [
+            {
+              "check": 1,
+              "surface": "Watch",
+              "field": "normalized",
+              "expected": "워치",
+              "actual": "왜트츠",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 1,
+              "surface": "Watch",
+              "field": "normalized",
+              "expected": "워치",
+              "actual": "왜트츠",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 1,
+              "surface": "Watch",
+              "field": "normalized",
+              "expected": "워치",
+              "actual": "왜트츠",
+              "chunk_bytes": 64
+            }
+          ],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "content-script-clause",
+          "category": "content/code-mixed",
+          "status": "fixed",
+          "text": "화면에는 Please go to the 2nd floor라고 적혀 있습니다.",
+          "expected": "화면에는 Please go to the second floor라고 적혀 있습니다.",
+          "before": "화면에는 Please go to the second 프루라고 적혀 있습니다.",
+          "after": "화면에는 Please go to the second floor라고 적혀 있습니다.",
+          "before_errors": 5,
+          "after_errors": 0,
+          "before_metadata_failures": [],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "finance-ascending-scale",
+          "category": "finance/invalid",
+          "status": "fixed",
+          "text": "입력 금액 2만3억원을 확인하세요.",
+          "expected": "입력 금액 2만3억원을 확인하세요.",
+          "before": "입력 금액 이만삼억 원을 확인하세요.",
+          "after": "입력 금액 2만3억원을 확인하세요.",
+          "before_errors": 3,
+          "after_errors": 0,
+          "before_metadata_failures": [],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "finance-contract-compound",
+          "category": "finance/amounts",
+          "status": "fixed",
+          "text": "계약 금액은 1억2천3백만원입니다.",
+          "expected": "계약 금액은 일억이천삼백만 원입니다.",
+          "before": "계약 금액은 일억이천삼백만 원입니다.",
+          "after": "계약 금액은 일억이천삼백만 원입니다.",
+          "before_errors": 0,
+          "after_errors": 0,
+          "before_metadata_failures": [
+            {
+              "check": 0,
+              "surface": "1억2천3백만원",
+              "input_begin": 17,
+              "input_end": 35,
+              "error": "no span with these exact source offsets",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "1억2천3백만원",
+              "input_begin": 17,
+              "input_end": 35,
+              "error": "no span with these exact source offsets",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "1억2천3백만원",
+              "input_begin": 17,
+              "input_end": 35,
+              "error": "no span with these exact source offsets",
+              "chunk_bytes": 64
+            }
+          ],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "finance-decimal-component",
+          "category": "finance/amounts",
+          "status": "fixed",
+          "text": "총액은 1억2.5천만원으로 조정됐습니다.",
+          "expected": "총액은 일억이천오백만 원으로 조정됐습니다.",
+          "before": "총액은 일억이천오백만 원으로 조정됐습니다.",
+          "after": "총액은 일억이천오백만 원으로 조정됐습니다.",
+          "before_errors": 0,
+          "after_errors": 0,
+          "before_metadata_failures": [
+            {
+              "check": 0,
+              "surface": "1억2.5천만원",
+              "input_begin": 10,
+              "input_end": 26,
+              "error": "no span with these exact source offsets",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "1억2.5천만원",
+              "input_begin": 10,
+              "input_end": 26,
+              "error": "no span with these exact source offsets",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "1억2.5천만원",
+              "input_begin": 10,
+              "input_end": 26,
+              "error": "no span with these exact source offsets",
+              "chunk_bytes": 64
+            }
+          ],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "finance-large-budget",
+          "category": "finance/amounts",
+          "status": "fixed",
+          "text": "사업 예산은 2조3억4만원입니다.",
+          "expected": "사업 예산은 이조삼억사만 원입니다.",
+          "before": "사업 예산은 이조삼억사만 원입니다.",
+          "after": "사업 예산은 이조삼억사만 원입니다.",
+          "before_errors": 0,
+          "after_errors": 0,
+          "before_metadata_failures": [
+            {
+              "check": 0,
+              "surface": "2조3억4만원",
+              "input_begin": 17,
+              "input_end": 32,
+              "error": "no span with these exact source offsets",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "2조3억4만원",
+              "input_begin": 17,
+              "input_end": 32,
+              "error": "no span with these exact source offsets",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "2조3억4만원",
+              "input_begin": 17,
+              "input_end": 32,
+              "error": "no span with these exact source offsets",
+              "chunk_bytes": 64
+            }
+          ],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "finance-negative-adjustment",
+          "category": "finance/amounts",
+          "status": "fixed",
+          "text": "조정 금액은 -1억2천만원입니다.",
+          "expected": "조정 금액은 마이너스 일억이천만 원입니다.",
+          "before": "조정 금액은 마이너스 일억이천만 원입니다.",
+          "after": "조정 금액은 마이너스 일억이천만 원입니다.",
+          "before_errors": 0,
+          "after_errors": 0,
+          "before_metadata_failures": [
+            {
+              "check": 0,
+              "surface": "-1억2천만원",
+              "input_begin": 17,
+              "input_end": 32,
+              "error": "no span with these exact source offsets",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "-1억2천만원",
+              "input_begin": 17,
+              "input_end": 32,
+              "error": "no span with these exact source offsets",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "-1억2천만원",
+              "input_begin": 17,
+              "input_end": 32,
+              "error": "no span with these exact source offsets",
+              "chunk_bytes": 64
+            }
+          ],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "finance-refund-compound",
+          "category": "finance/amounts",
+          "status": "fixed",
+          "text": "환급액은 2만5천원이며 내일 입금됩니다.",
+          "expected": "환급액은 이만오천 원이며 내일 입금됩니다.",
+          "before": "환급액은 이만오천 원이며 내일 입금됩니다.",
+          "after": "환급액은 이만오천 원이며 내일 입금됩니다.",
+          "before_errors": 0,
+          "after_errors": 0,
+          "before_metadata_failures": [
+            {
+              "check": 0,
+              "surface": "2만5천원",
+              "input_begin": 13,
+              "input_end": 24,
+              "error": "no span with these exact source offsets",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "2만5천원",
+              "input_begin": 13,
+              "input_end": 24,
+              "error": "no span with these exact source offsets",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "2만5천원",
+              "input_begin": 13,
+              "input_end": 24,
+              "error": "no span with these exact source offsets",
+              "chunk_bytes": 64
+            }
+          ],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "finance-repeated-scale",
+          "category": "finance/invalid",
+          "status": "fixed",
+          "text": "입력 금액 1억2억원을 확인하세요.",
+          "expected": "입력 금액 1억2억원을 확인하세요.",
+          "before": "입력 금액 일억이억 원을 확인하세요.",
+          "after": "입력 금액 1억2억원을 확인하세요.",
+          "before_errors": 3,
+          "after_errors": 0,
+          "before_metadata_failures": [],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "finance-spaced-compound",
+          "category": "finance/amounts",
+          "status": "fixed",
+          "text": "보증금은 1억 2,500만원입니다.",
+          "expected": "보증금은 일억이천오백만 원입니다.",
+          "before": "보증금은 일억 이천오백만 원입니다.",
+          "after": "보증금은 일억이천오백만 원입니다.",
+          "before_errors": 1,
+          "after_errors": 0,
+          "before_metadata_failures": [
+            {
+              "check": 0,
+              "surface": "1억 2,500만원",
+              "input_begin": 13,
+              "input_end": 29,
+              "error": "no span with these exact source offsets",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "1억 2,500만원",
+              "input_begin": 13,
+              "input_end": 29,
+              "error": "no span with these exact source offsets",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "1억 2,500만원",
+              "input_begin": 13,
+              "input_end": 29,
+              "error": "no span with these exact source offsets",
+              "chunk_bytes": 64
+            }
+          ],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "technical-backup-nounphrase",
+          "category": "technical/code-mixed",
+          "status": "fixed",
+          "text": "오늘 database backup을 시작합니다.",
+          "expected": "오늘 데이터베이스 백업을 시작합니다.",
+          "before": "오늘 대태배세 배커프을 시작합니다.",
+          "after": "오늘 데이터베이스 백업을 시작합니다.",
+          "before_errors": 9,
+          "after_errors": 0,
+          "before_metadata_failures": [
+            {
+              "check": 0,
+              "surface": "database",
+              "field": "normalized",
+              "expected": "데이터베이스",
+              "actual": "대태배세",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 1,
+              "surface": "backup",
+              "field": "normalized",
+              "expected": "백업",
+              "actual": "배커프",
+              "chunk_bytes": 1
+            },
+            {
+              "check": 0,
+              "surface": "database",
+              "field": "normalized",
+              "expected": "데이터베이스",
+              "actual": "대태배세",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 1,
+              "surface": "backup",
+              "field": "normalized",
+              "expected": "백업",
+              "actual": "배커프",
+              "chunk_bytes": 7
+            },
+            {
+              "check": 0,
+              "surface": "database",
+              "field": "normalized",
+              "expected": "데이터베이스",
+              "actual": "대태배세",
+              "chunk_bytes": 64
+            },
+            {
+              "check": 1,
+              "surface": "backup",
+              "field": "normalized",
+              "expected": "백업",
+              "actual": "배커프",
+              "chunk_bytes": 64
+            }
+          ],
+          "after_metadata_failures": []
+        }
+      ]
+    },
+    "challenge": {
+      "corpus_sha256": "4ae71edddfde98aa4e38c8cbeb83ad1d0b3f1d4fdeef1ce6e297ffa4c62bdf10",
+      "chunk_bytes": [
+        1,
+        7,
+        64
+      ],
+      "baseline": {
+        "cases": 15,
+        "passed": 1,
+        "failed": 14,
+        "matches": 1,
+        "mismatches": 14,
+        "exact_match_rate": 0.06666666666666667,
+        "metadata_failures": 0,
+        "batch_stream_failures": 0,
+        "character_edit_distance": 109,
+        "reference_characters": 405,
+        "character_error_rate": 0.2691358024691358,
+        "fallback_spans": 12
+      },
+      "candidate": {
+        "cases": 15,
+        "passed": 3,
+        "failed": 12,
+        "matches": 3,
+        "mismatches": 12,
+        "exact_match_rate": 0.2,
+        "metadata_failures": 0,
+        "batch_stream_failures": 0,
+        "character_edit_distance": 112,
+        "reference_characters": 405,
+        "character_error_rate": 0.2765432098765432,
+        "fallback_spans": 12
+      },
+      "comparison": {
+        "fixed": 2,
+        "regressed": 0,
+        "remaining_failure": 12,
+        "unchanged_pass": 1,
+        "text_error_increased": 1
+      },
+      "baseline_binary_sha256": "f00d681e9da6acf0346e257be98517ff8597c58e07e722b971859f71732df969",
+      "candidate_binary_sha256": "479cafe615736991936f65b95024860af5d12daaccb92913b2762ff944233bd4",
+      "cases": [
+        {
+          "id": "challenge-content-contraction",
+          "category": "content/code-mixed",
+          "status": "fixed",
+          "text": "자막에는 I can't find the 2nd file이라고 나옵니다.",
+          "expected": "자막에는 I can't find the second file이라고 나옵니다.",
+          "before": "자막에는 I can't find the second 파일이라고 나옵니다.",
+          "after": "자막에는 I can't find the second file이라고 나옵니다.",
+          "before_errors": 4,
+          "after_errors": 0,
+          "before_metadata_failures": [],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "challenge-content-english-clock",
+          "category": "content/english",
+          "status": "remaining_failure",
+          "text": "The webinar starts at 9:05 AM.",
+          "expected": "The webinar starts at nine oh five a m.",
+          "before": "The webinar starts at nine oh five AM.",
+          "after": "The webinar starts at nine oh five AM.",
+          "before_errors": 3,
+          "after_errors": 3,
+          "before_metadata_failures": [],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "challenge-content-hyphenated",
+          "category": "content/code-mixed",
+          "status": "remaining_failure",
+          "text": "새로운 real-time dashboard를 소개합니다.",
+          "expected": "새로운 리얼타임 대시보드를 소개합니다.",
+          "before": "새로운 릴-티메 대스바아르드를 소개합니다.",
+          "after": "새로운 릴-티메 대스바아르드를 소개합니다.",
+          "before_errors": 8,
+          "after_errors": 8,
+          "before_metadata_failures": [],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "challenge-content-mixed-title",
+          "category": "content/code-mixed",
+          "status": "remaining_failure",
+          "text": "제목은 The 1st day입니다.",
+          "expected": "제목은 The first day입니다.",
+          "before": "제목은 The first 데이입니다.",
+          "after": "제목은 더 퍼스트 데이입니다.",
+          "before_errors": 3,
+          "after_errors": 11,
+          "before_metadata_failures": [],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "challenge-content-unknown-word",
+          "category": "content/foreign-pronunciation",
+          "status": "remaining_failure",
+          "text": "이번 영상에서는 quasar를 설명합니다.",
+          "expected": "이번 영상에서는 퀘이사를 설명합니다.",
+          "before": "이번 영상에서는 쾌사를 설명합니다.",
+          "after": "이번 영상에서는 쾌사를 설명합니다.",
+          "before_errors": 2,
+          "after_errors": 2,
+          "before_metadata_failures": [],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "challenge-finance-account",
+          "category": "finance/identifier",
+          "status": "remaining_failure",
+          "text": "입금 계좌는 110-123-456789입니다.",
+          "expected": "입금 계좌는 일일공 일이삼 사오육칠팔구입니다.",
+          "before": "입금 계좌는 110-123-456789입니다.",
+          "after": "입금 계좌는 110-123-456789입니다.",
+          "before_errors": 14,
+          "after_errors": 14,
+          "before_metadata_failures": [],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "challenge-finance-basis-points",
+          "category": "finance/quantities",
+          "status": "remaining_failure",
+          "text": "기준금리를 25bp 인상했습니다.",
+          "expected": "기준금리를 이십오 베이시스포인트 인상했습니다.",
+          "before": "기준금리를 25bp 인상했습니다.",
+          "after": "기준금리를 25bp 인상했습니다.",
+          "before_errors": 11,
+          "after_errors": 11,
+          "before_metadata_failures": [],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "challenge-finance-decimal-range",
+          "category": "finance/quantities",
+          "status": "remaining_failure",
+          "text": "예상 수익률은 1.5-2.5%입니다.",
+          "expected": "예상 수익률은 일 점 오 다시 이 점 오 퍼센트입니다.",
+          "before": "예상 수익률은 1.5-2.5%입니다.",
+          "after": "예상 수익률은 1.5-2.5%입니다.",
+          "before_errors": 18,
+          "after_errors": 18,
+          "before_metadata_failures": [],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "challenge-finance-large-final-group",
+          "category": "finance/amounts",
+          "status": "fixed",
+          "text": "최종 합계는 3억4천5백6십7만8천9백원입니다.",
+          "expected": "최종 합계는 삼억사천오백육십칠만팔천구백 원입니다.",
+          "before": "최종 합계는 삼억사천오백육십칠만팔천구백원입니다.",
+          "after": "최종 합계는 삼억사천오백육십칠만팔천구백 원입니다.",
+          "before_errors": 1,
+          "after_errors": 0,
+          "before_metadata_failures": [],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "challenge-finance-percentage-point",
+          "category": "finance/quantities",
+          "status": "remaining_failure",
+          "text": "금리는 0.25%p 상승했습니다.",
+          "expected": "금리는 영 점 이오 퍼센트포인트 상승했습니다.",
+          "before": "금리는 영 점 이오%프 상승했습니다.",
+          "after": "금리는 영 점 이오%프 상승했습니다.",
+          "before_errors": 7,
+          "after_errors": 7,
+          "before_metadata_failures": [],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "challenge-finance-reference",
+          "category": "finance/identifier",
+          "status": "remaining_failure",
+          "text": "거래 참조 번호는 001204입니다.",
+          "expected": "거래 참조 번호는 공공일이공사입니다.",
+          "before": "거래 참조 번호는 천이백사입니다.",
+          "after": "거래 참조 번호는 천이백사입니다.",
+          "before_errors": 4,
+          "after_errors": 4,
+          "before_metadata_failures": [],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "challenge-finance-scientific",
+          "category": "finance/quantities",
+          "status": "remaining_failure",
+          "text": "표시 금액은 1.2e6원입니다.",
+          "expected": "표시 금액은 백이십만 원입니다.",
+          "before": "표시 금액은 1.2e6원입니다.",
+          "after": "표시 금액은 1.2e6원입니다.",
+          "before_errors": 5,
+          "after_errors": 5,
+          "before_metadata_failures": [],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "challenge-technical-filepath",
+          "category": "technical/protected",
+          "status": "remaining_failure",
+          "text": "설정 파일 /etc/app/config-v2.json을 확인합니다.",
+          "expected": "설정 파일 /etc/app/config-v2.json을 확인합니다.",
+          "before": "설정 파일 /에트크/애프프/칸피그-브이.제이슨을 확인합니다.",
+          "after": "설정 파일 /에트크/애프프/칸피그-브이.제이슨을 확인합니다.",
+          "before_errors": 18,
+          "after_errors": 18,
+          "before_metadata_failures": [],
+          "after_metadata_failures": []
+        },
+        {
+          "id": "challenge-technical-html",
+          "category": "technical/protected",
+          "status": "remaining_failure",
+          "text": "문서의 <code>GPU</code> 태그를 확인합니다.",
+          "expected": "문서의 <code>GPU</code> 태그를 확인합니다.",
+          "before": "문서의 <카데>지피유</카데> 태그를 확인합니다.",
+          "after": "문서의 <카데>지피유</카데> 태그를 확인합니다.",
+          "before_errors": 11,
+          "after_errors": 11,
+          "before_metadata_failures": [],
+          "after_metadata_failures": []
+        }
+      ]
+    }
+  }
+}

@@ -1,4 +1,5 @@
 #include "tts_text_frontend/ttf_language_pack.h"
+#include "../context_run.h"
 #include <ctype.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -188,49 +189,73 @@ static ttf_status_t ordinal(const ttf_engine_t *e, uint64_t n, ttf_buffer_t *b) 
 static int script_score(ttf_script_t s) {
     return s == TTF_SCRIPT_LATIN ? 10 : 0;
 }
+/* Units and ordinal suffixes convey semantics, not independent English words. */
+static int neutral_marker(const ttf_pack_input_t *in, size_t index, const char *lower) {
+    const ttf_token_t *t = &in->tokens[index];
+    size_t previous = index, start, length;
+    char original[96];
+    while (previous && (in->tokens[previous - 1].script == TTF_SCRIPT_WHITESPACE ||
+                        in->tokens[previous - 1].script == TTF_SCRIPT_SYMBOL))
+        --previous;
+    if (!previous || in->tokens[previous - 1].script != TTF_SCRIPT_DIGIT)
+        return 0;
+    if (in->tokens[previous - 1].end == t->begin &&
+        ttf_resource_get(in->engine, "ordinal_suffix", "*", lower, NULL))
+        return 1;
+    start = in->tokens[previous - 1].end;
+    while (start < t->begin && (in->text[start] == ' ' || in->text[start] == '\t'))
+        ++start;
+    length = t->end - start;
+    if (length >= sizeof(original))
+        return 0;
+    memcpy(original, in->text + start, length);
+    original[length] = '\0';
+    return ttf_resource_get(in->engine, "numeric_suffix", "*", original, NULL) != NULL;
+}
 static int context_score(const ttf_pack_input_t *in) {
-    size_t radius = (size_t)weight(res(in->engine, "context", "radius"), 8);
-    size_t i, left = in->index > radius ? in->index - radius : 0, right = in->index + radius + 1;
-    int total = 0;
-    if (right > in->token_count)
-        right = in->token_count;
-    for (i = left; i < right; ++i) {
+    size_t begin, end, i, words = 0;
+    int total = 0, predicate = 0, imperative = 0, subject = 0, polite = 0;
+    int ceiling = weight(res(in->engine, "context", "phrase_ceiling"), 160);
+    int latin = weight(res(in->engine, "context", "latin_weight"), 8);
+    if (in->index >= in->token_count || in->tokens[in->index].script == TTF_SCRIPT_HANGUL)
+        return 0;
+    context_run_bounds(in, &begin, &end);
+    for (i = begin; i < end; ++i) {
         const ttf_token_t *t = &in->tokens[i];
-        if (t->script == TTF_SCRIPT_LATIN) {
-            char key[96];
-            size_t n = t->end - t->begin, j;
-            if (n >= sizeof(key))
-                continue;
-            for (j = 0; j < n; ++j)
-                key[j] = ascii_lower(in->text[t->begin + j]);
-            key[n] = '\0';
-            /* An attached unit is a neutral semantic marker, not an English
-               word signal. Its reading follows the surrounding speech. */
-            {
-                size_t previous = i, start;
-                while (previous && (in->tokens[previous - 1].script == TTF_SCRIPT_WHITESPACE ||
-                                    in->tokens[previous - 1].script == TTF_SCRIPT_SYMBOL))
-                    --previous;
-                if (previous && in->tokens[previous - 1].script == TTF_SCRIPT_DIGIT) {
-                    char original[96];
-                    size_t unit_length;
-                    start = in->tokens[previous - 1].end;
-                    while (start < t->begin && (in->text[start] == ' ' || in->text[start] == '\t'))
-                        ++start;
-                    unit_length = t->end - start;
-                    if (unit_length < sizeof(original)) {
-                        memcpy(original, in->text + start, unit_length);
-                        original[unit_length] = '\0';
-                        if (ttf_resource_get(in->engine, "numeric_suffix", "*", original, NULL))
-                            continue;
-                    }
-                }
-            }
-            total += weight(res(in->engine, "context", "latin_weight"), 8);
-            if (res(in->engine, "context_word", key))
-                total += weight(res(in->engine, "context_word", key), 45);
-        }
+        char key[96];
+        const char *role;
+        size_t n = t->end - t->begin, j;
+        int addition;
+        if (t->script != TTF_SCRIPT_LATIN || n >= sizeof(key))
+            continue;
+        for (j = 0; j < n; ++j)
+            key[j] = ascii_lower(in->text[t->begin + j]);
+        key[n] = '\0';
+        if (neutral_marker(in, i, key))
+            continue;
+        ++words;
+        addition = latin + weight(res(in->engine, "context_word", key), 0);
+        /* Saturation avoids an arbitrarily long noun list defeating an attached
+           particle, and prevents an integer overflow on a large input. */
+        total = addition >= ceiling - total ? ceiling : total + addition;
+        role = res(in->engine, "context_role", key);
+        if (!role)
+            continue;
+        if (!strcmp(role, "finite"))
+            predicate = 1;
+        else if (!strcmp(role, "imperative")) {
+            if (words == 1 || polite || subject)
+                imperative = 1;
+        } else if (!strcmp(role, "subject"))
+            subject = 1;
+        else if (!strcmp(role, "polite"))
+            polite = 1;
     }
+    /* A predicate with another word supplies a clause signal. Bare nouns and
+       a conjunction alone do not. The finite/imperative vocabulary is data. */
+    if ((predicate && words >= 2) ||
+        (imperative && ((words >= 3) || ((polite || subject) && words >= 2))))
+        total += weight(res(in->engine, "context", "clause_weight"), 500);
     return total;
 }
 static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {

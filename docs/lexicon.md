@@ -47,3 +47,8 @@ small to moderate seed data; large dictionaries need memory and collision profil
 Inspect output records hit provenance and layer. The callback/result text is owned
 by the request, so an application can replace entire frozen engines without pointers
 from a completed result depending on lexicon record lifetimes.
+
+The v0.4 seed contains 160 direct foreign-pronunciation entries. Five additions
+support the reviewed phrase cases (`watch`, `and`, `the`, `database`, `backup`).
+Vocabulary coverage is still small; the advisory unknown-word and hyphenated-term
+failures document why a nonempty fallback does not establish correct spelling.
