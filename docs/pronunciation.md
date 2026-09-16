@@ -22,6 +22,12 @@ provenance. The Korean target maps vowels/onsets/codas into Hangul syllables. Ph
 stress variants can be normalized by the mapper. This is a prototype, not a complete
 English pronunciation model or Korean loanword spelling standard.
 
+Compound verbalizations follow the same precedence twice: a full-phrase lexicon
+override wins first, then each word uses the normal source/target pipeline. Thus
+`21st` first becomes English `twenty first`; Korean lexicon entries render
+`트웬티 퍼스트` without sending embedded spaces to the single-word G2P prototype.
+This dispatch remains language-independent and works for future target packs.
+
 The source English pack distinguishes initialisms/acronyms through resource data
 and lexical signals. `USB`, `CPU`, `GPU`, `AI` use letter readings; `NASA` uses its
 lexical pronunciation. Mixed alphanumeric terms are retained as structured lexical
@@ -33,6 +39,12 @@ Hangul for Latin letters and common sequences; directly testing `wifi` gives `�
 while dictionary/lexicon lookup gives `와이파이`. Unknown words remain speakable but
 may be unnatural or wrong. The golden and unit tests separately cover system hits,
 removed lexicon entries, unknown words and direct emergency rendering.
+
+Evaluation compares normalized text, semantic spans, source/context/render language,
+and resource provenance against explicit references. It does not synthesize audio,
+score a voice, or use acoustic similarity. A readable Hangul fallback is a functional
+guarantee; it does not establish pronunciation correctness. Curated word coverage
+and unknown-word spelling accuracy must be measured separately.
 
 The core dispatches source `pronounce` and target `render_phones`; it contains no
 English/Korean pair table. A Japanese target can consume the same pronunciation IR.

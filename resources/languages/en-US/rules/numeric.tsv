@@ -114,3 +114,62 @@ ordinal_suffix	*	nd	en-US
 ordinal_suffix	*	rd	en-US
 ordinal_suffix	*	th	en-US
 currency_prefix	*	$	USD
+# Longest decimal-tail match selects a valid written ordinal suffix.
+ordinal_tail	en-US	11	th
+ordinal_tail	en-US	12	th
+ordinal_tail	en-US	13	th
+ordinal_tail	en-US	0	th
+ordinal_tail	en-US	1	st
+ordinal_tail	en-US	2	nd
+ordinal_tail	en-US	3	rd
+ordinal_tail	en-US	4	th
+ordinal_tail	en-US	5	th
+ordinal_tail	en-US	6	th
+ordinal_tail	en-US	7	th
+ordinal_tail	en-US	8	th
+ordinal_tail	en-US	9	th
+number	en-US	fraction_over	over
+unit	en-US	s.one	second
+unit	en-US	s.many	seconds
+unit	en-US	g.one	gram
+unit	en-US	g.many	grams
+numeric_suffix	*	g	MEASURE:g
+unit	en-US	mg.one	milligram
+unit	en-US	mg.many	milligrams
+numeric_suffix	*	mg	MEASURE:mg
+unit	en-US	mm.one	millimeter
+unit	en-US	mm.many	millimeters
+numeric_suffix	*	mm	MEASURE:mm
+unit	en-US	MB.one	megabyte
+unit	en-US	MB.many	megabytes
+numeric_suffix	*	MB	MEASURE:MB
+unit	en-US	TB.one	terabyte
+unit	en-US	TB.many	terabytes
+numeric_suffix	*	TB	MEASURE:TB
+unit	en-US	MHz.one	megahertz
+unit	en-US	MHz.many	megahertz
+numeric_suffix	*	MHz	MEASURE:MHz
+unit	en-US	Hz.one	hertz
+unit	en-US	Hz.many	hertz
+numeric_suffix	*	Hz	MEASURE:Hz
+unit	en-US	L.one	liter
+unit	en-US	L.many	liters
+numeric_suffix	*	L	MEASURE:L
+unit	en-US	mL.one	milliliter
+unit	en-US	mL.many	milliliters
+numeric_suffix	*	mL	MEASURE:mL
+unit	en-US	°C.one	degree Celsius
+unit	en-US	°C.many	degrees Celsius
+numeric_suffix	*	°C	MEASURE:°C
+unit	en-US	kWh.one	kilowatt hour
+unit	en-US	kWh.many	kilowatt hours
+numeric_suffix	*	kWh	MEASURE:kWh
+unit	en-US	W.one	watt
+unit	en-US	W.many	watts
+numeric_suffix	*	W	MEASURE:W
+unit	en-US	kW.one	kilowatt
+unit	en-US	kW.many	kilowatts
+numeric_suffix	*	kW	MEASURE:kW
+semantic_term	*	C++	ALNUM_TERM:en-US
+semantic_term	*	USB-C	ALNUM_TERM:en-US
+semantic_term	*	3D	ALNUM_TERM:en-US

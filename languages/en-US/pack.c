@@ -97,10 +97,38 @@ static ttf_status_t digits(const ttf_engine_t *e, const char *s, ttf_buffer_t *b
     }
     return TTF_OK;
 }
+static int uint64_value(const char *text, uint64_t *value) {
+    const char *p;
+    *value = 0;
+    if (!*text)
+        return 0;
+    for (p = text; *p; ++p) {
+        unsigned digit_value = (unsigned)(*p - '0');
+        if (digit_value > 9 || *value > (UINT64_MAX - digit_value) / 10)
+            return 0;
+        *value = *value * 10 + digit_value;
+    }
+    return 1;
+}
+static int singular(const char *text) {
+    if (*text == '-' || *text == '+')
+        ++text;
+    while (*text == '0')
+        ++text;
+    if (*text++ != '1')
+        return 0;
+    if (*text == '.') {
+        ++text;
+        while (*text == '0')
+            ++text;
+    }
+    return !*text;
+}
 static ttf_status_t numeric(const ttf_engine_t *e, const char *s, ttf_buffer_t *b) {
     char integral[TTF_IR_VALUE_SIZE];
     const char *dot;
     size_t len;
+    uint64_t value;
     ttf_status_t st;
     if (*s == '-' || *s == '+') {
         if ((st = word(e, b, "number", *s == '-' ? "minus" : "plus")) != TTF_OK)
@@ -115,10 +143,10 @@ static ttf_status_t numeric(const ttf_engine_t *e, const char *s, ttf_buffer_t *
         return TTF_ELIMIT;
     memcpy(integral, s, len);
     integral[len] = '\0';
-    if (len > 18)
-        st = digits(e, integral, b);
+    if (uint64_value(integral, &value))
+        st = card(e, value, b);
     else
-        st = card(e, (uint64_t)strtoull(integral, NULL, 10), b);
+        st = digits(e, integral, b);
     if (st != TTF_OK || !dot)
         return st;
     if ((st = space(b)) != TTF_OK)
@@ -178,13 +206,25 @@ static int context_score(const ttf_pack_input_t *in) {
             key[n] = '\0';
             /* An attached unit is a neutral semantic marker, not an English
                word signal. Its reading follows the surrounding speech. */
-            if (i && in->tokens[i - 1].script == TTF_SCRIPT_DIGIT &&
-                in->tokens[i - 1].end == t->begin) {
-                char original[96];
-                memcpy(original, in->text + t->begin, n);
-                original[n] = '\0';
-                if (ttf_resource_get(in->engine, "numeric_suffix", "*", original, NULL))
-                    continue;
+            {
+                size_t previous = i, start;
+                while (previous && (in->tokens[previous - 1].script == TTF_SCRIPT_WHITESPACE ||
+                                    in->tokens[previous - 1].script == TTF_SCRIPT_SYMBOL))
+                    --previous;
+                if (previous && in->tokens[previous - 1].script == TTF_SCRIPT_DIGIT) {
+                    char original[96];
+                    size_t unit_length;
+                    start = in->tokens[previous - 1].end;
+                    while (start < t->begin && (in->text[start] == ' ' || in->text[start] == '\t'))
+                        ++start;
+                    unit_length = t->end - start;
+                    if (unit_length < sizeof(original)) {
+                        memcpy(original, in->text + start, unit_length);
+                        original[unit_length] = '\0';
+                        if (ttf_resource_get(in->engine, "numeric_suffix", "*", original, NULL))
+                            continue;
+                    }
+                }
             }
             total += weight(res(in->engine, "context", "latin_weight"), 8);
             if (res(in->engine, "context_word", key))
@@ -242,20 +282,15 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     ttf_status_t st;
     char key[48];
     const char *label;
-    unsigned y, m, d, h, min;
+    unsigned y, m, d, h, min, sec;
     switch (s->type) {
     case TTF_SEM_CARDINAL:
     case TTF_SEM_NUMBER:
         return numeric(e, s->value, b);
     case TTF_SEM_ORDINAL: {
-        uint64_t value = 0;
-        const char *p;
-        for (p = s->value; *p; ++p) {
-            unsigned digit_value = (unsigned)(*p - '0');
-            if (digit_value > 9 || value > (UINT64_MAX - digit_value) / 10)
-                return ttf_buffer_append(b, surface, length);
-            value = value * 10 + digit_value;
-        }
+        uint64_t value;
+        if (!uint64_value(s->value, &value))
+            return ttf_buffer_append(b, surface, length);
         return ordinal(e, value, b);
     }
     case TTF_SEM_DIGIT_SEQUENCE:
@@ -274,22 +309,40 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         if ((st = space(b)) != TTF_OK)
             return st;
         return card(e, y, b);
-    case TTF_SEM_TIME:
-        if (sscanf(s->value, "%u:%u", &h, &min) != 2)
+    case TTF_SEM_TIME: {
+        int fields = sscanf(s->value, "%u:%u:%u", &h, &min, &sec);
+        if (fields < 2)
             return TTF_EINVAL;
         if ((st = card(e, h, b)) != TTF_OK)
             return st;
         if ((st = space(b)) != TTF_OK)
             return st;
-        if (!min)
-            return word(e, b, "number", "oclock");
-        if (min < 10) {
-            if ((st = word(e, b, "number", "oh")) != TTF_OK)
+        if (!min) {
+            if ((st = word(e, b, "number", "oclock")) != TTF_OK)
                 return st;
-            if ((st = space(b)) != TTF_OK)
+        } else {
+            if (min < 10) {
+                if ((st = word(e, b, "number", "oh")) != TTF_OK)
+                    return st;
+                if ((st = space(b)) != TTF_OK)
+                    return st;
+            }
+            if ((st = card(e, min, b)) != TTF_OK)
                 return st;
         }
-        return card(e, min, b);
+        if (fields < 3)
+            return TTF_OK;
+        if ((st = space(b)) != TTF_OK || (st = word(e, b, "number", "and")) != TTF_OK ||
+            (st = space(b)) != TTF_OK || (st = card(e, sec, b)) != TTF_OK ||
+            (st = space(b)) != TTF_OK)
+            return st;
+        return word(e, b, "unit", sec == 1 ? "s.one" : "s.many");
+    }
+    case TTF_SEM_FRACTION:
+        if ((st = numeric(e, s->value, b)) != TTF_OK || (st = space(b)) != TTF_OK ||
+            (st = word(e, b, "number", "fraction_over")) != TTF_OK || (st = space(b)) != TTF_OK)
+            return st;
+        return numeric(e, s->secondary, b);
     case TTF_SEM_CURRENCY: {
         const char *dot = strchr(s->value, '.');
         char whole[TTF_IR_VALUE_SIZE];
@@ -300,7 +353,7 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             return st;
         if ((st = space(b)) != TTF_OK)
             return st;
-        (void)snprintf(key, sizeof(key), "%s.%s", s->unit, !strcmp(whole, "1") ? "one" : "many");
+        (void)snprintf(key, sizeof(key), "%s.%s", s->unit, singular(whole) ? "one" : "many");
         if ((st = word(e, b, "currency", key)) != TTF_OK)
             return st;
         if (dot && dot[1] && strlen(dot + 1) <= 2 && strtoul(dot + 1, NULL, 10)) {
@@ -335,7 +388,7 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             return st;
         if ((st = space(b)) != TTF_OK)
             return st;
-        (void)snprintf(key, sizeof(key), "%s.%s", s->unit, !strcmp(s->value, "1") ? "one" : "many");
+        (void)snprintf(key, sizeof(key), "%s.%s", s->unit, singular(s->value) ? "one" : "many");
         label = res(e, "unit", key);
         return ttf_buffer_puts(b, label ? label : s->unit);
     case TTF_SEM_RANGE:

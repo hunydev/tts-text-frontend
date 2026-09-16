@@ -31,6 +31,14 @@ terms can be listed in the manifest without editing C code. Entries include Appl
 Microsoft, Google, YouTube, WiFi, OpenAI and ChatGPT, plus initialism/acronym defaults.
 SQL and GIF readings are policy choices that callers can override.
 
+The seed vocabulary also covers common computing vocabulary (API, SDK, JSON, Docker,
+Chrome, Unicode, C++, USB-C), ordinary loanwords (coffee, computer, server, client),
+and cardinal/ordinal words needed after English verbalization. These are hand-authored
+project defaults, not an imported comprehensive dictionary. Ambiguous product names,
+regional variants, and alternative initialism readings still need customer policies.
+Golden references exercise these entries in Korean context; English context must
+continue to preserve the original English surface.
+
 Runtime records live in an engine-owned hash table. Lookup is independent of the
 storage representation; changing to a trie, double-array trie, DAWG, FST or compiled
 binary index can happen behind that interface. This initial table is suitable for

@@ -1,14 +1,13 @@
-# Text and listening evaluation
+# Text evaluation
 
-This integration checkpoint produces normalized text, inspectable language routes,
-and optional speech audio from the streaming callbacks. It does not assign an
-automatic pronunciation score. Text equality, successful WAV generation, and a
-human assessment of a voice answer different questions.
+The acceptance target is the **normalized output text**. Evaluation checks exact
+reference text, semantic/language metadata, and equality between batch and
+incremental processing. It requires only the native CLI and Python's standard
+library. It never calls a synthesis backend or evaluates generated speech.
 
 ## Reproduce a run
 
-Build the CLI, then run the Python standard-library evaluator from the repository
-root. The output directory must not exist; use a different directory for each run.
+From the repository root:
 
 ```sh
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
@@ -17,72 +16,145 @@ python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources \
   --corpus tests/evaluation/cases.jsonl --output-dir artifacts/evaluation-text
 ```
 
-To create audio, install the optional eSpeak backend described in the TTS bridge
-documentation and add `--synthesize`:
+The output directory must be new. Each case runs once through `ttf normalize` and
+through `ttf stream-json` with **1, 7, and 64 input bytes per write**, including
+splits inside Hangul UTF-8 sequences. Override the sizes with `--chunk-bytes 1 13
+128`. Native streaming tests additionally exercise all single split positions and
+random chunk partitions.
 
-```sh
-python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources \
-  --corpus tests/evaluation/cases.jsonl --output-dir artifacts/evaluation-audio \
-  --synthesize
+A case passes only when:
+
+1. The concatenated streaming output exactly equals its independently specified
+   expected string, including whitespace, punctuation, case, and Unicode form.
+2. Every streaming chunk variant equals the batch output.
+3. Every requested semantic and language metadata check matches.
+4. Protocol events and spans cover the complete input and output, in order, with
+   valid UTF-8 byte boundaries and a completed end event.
+
+A malformed or incomplete protocol is an evaluation error, never a passing case.
+
+## Corpus and coverage
+
+`tests/evaluation/cases.jsonl` contains 109 explicit reference cases in 18
+categories. They include:
+
+| Area | Examples |
+| --- | --- |
+| Korean normalization | Native and Sino counters, spaced units, signed decimals, scaled currency, labelled/dotted dates, leap dates, seconds, fractions, phones |
+| English normalization | Cardinals, ordinal suffixes including 11th/12th/13th/21st, singular quantities, spaced currency/percent/units, dates, seconds, fractions |
+| Code mixing | Both contexts of `1st`, Apple preservation/localization, embedded and quoted English, multiword ordinal rendering |
+| Foreign pronunciation | Brands, initialisms versus acronyms, technical words, an unknown word through prototype G2P |
+| Invalid structured input | Wrong ordinal suffixes, malformed comma groups, impossible dates/times, zero denominators, partial unit matches |
+| Protected syntax | URLs, email, versions, IP addresses |
+| Streaming | Incomplete numbers, empty input, tabs, repeated newlines, CRLF preservation, three chunk sizes for every case |
+| Customization | Default range reading, finance domain, customer overriding domain |
+
+There are 75 explicit span checks. These verify semantic classification and, for
+key code-mixed cases, source/context/render language distinctions. Native tests
+cover additional resource priorities, user lexicon changes, dictionary removal,
+emergency fallback, third-party language packs, and concurrent engine use.
+
+References are authored from the intended reading policy. They must not be
+regenerated from the frontend's current output. When an output differs, determine
+whether the reading policy or implementation is wrong, document the decision,
+and add the smallest regression that captures the failure.
+
+This corpus is a regression set, not a representative estimate of arbitrary
+real-world accuracy. It deliberately overlaps native golden cases while adding
+protocol and routing assertions. No claim of general language coverage follows
+from a 100% result on these cases. Expanding independent customer/domain examples
+and unknown-word references remains necessary.
+
+## Corpus schema
+
+Each JSONL object needs `id`, `text`, and `expected`. Optional fields:
+
+- `category`: stable category label; defaults to `uncategorized`.
+- `default_language`: defaults to `ko-KR`.
+- `notes`: explanation of the intended reading.
+- `expected_spans`: assertions for a source substring and its zero-based
+  non-overlapping `occurrence`. A match must cover exactly the source substring's
+  UTF-8 byte range; substring matching against larger spans is not sufficient.
+- `resource_overrides`: ordered `{ "layer": "domain" | "customer", "path": ... }`
+  entries. Paths are relative to `--resources`; traversal and symlinks escaping
+  that directory are rejected. Runtime resource precedence still applies.
+
+For example:
+
+```json
+{
+  "id": "ordinal-context",
+  "category": "code-mixed",
+  "text": "1st는 첫 번째입니다.",
+  "expected": "퍼스트는 첫 번째입니다.",
+  "expected_spans": [{
+    "surface": "1st",
+    "source_lang": "en-US",
+    "context_lang": "ko-KR",
+    "render_lang": "ko-KR",
+    "semantic_type": "ORDINAL",
+    "value": "1",
+    "normalized": "퍼스트"
+  }]
+}
 ```
 
-The evaluator invokes `ttf stream-json` with one input byte per write, including
-splits inside Hangul UTF-8 sequences. It checks that the event sequence completes,
-that byte offsets cover the input and output, and that concatenated normalized
-segments equal each independently specified expected string. The separate native
-streaming tests exercise batch parity across arbitrary and random chunk sizes.
+Store that object on one line in the JSONL corpus. Span assertions may also check
+`script`, `unit`, `rule`, `resource_layer`, `pronunciation_layer`, `lexicon`,
+`verbalizer`, and `context_trace`. Prefer stable semantic expectations over exact
+heuristic score strings unless testing the scoring policy itself.
 
-The corpus contains the original mixed ordinal acceptance case, Korean and English
-Apple contexts, initialisms, brands, an unknown word, embedded English, counters,
-dates, phone numbers, currency, percent, and measures. Expected strings define
-current deterministic behavior; they are not evidence that a particular acoustic
-model pronounces the result correctly. Dictionary-removal and emergency grapheme
-fallback checks remain in the native API tests because the CLI does not mutate
-the lexicon.
+## Metrics and artifacts
 
-## Artifacts
+- **Exact match rate:** matching canonical streaming strings divided by cases.
+- **Pass/fail:** combines exact text, all chunk variants, and metadata checks.
+  A metadata or parity failure may occur even when exact match rate is 100%.
+- **Character edit distance:** Unicode codepoint Levenshtein distance; insertion,
+  deletion, and substitution each cost one. No normalization or folding is done.
+- **Character error rate (CER):** sum of distances divided by
+  `max(1, sum(reference codepoints))`. Individual cases use the same formula.
+  Rates can exceed one. The denominator convention also covers empty references.
+- **Category summaries:** the same metrics for each category, so easy cases do
+  not hide a failed area.
 
-- `report.json`: exact text matches, per-case source/normalized/expected strings,
-  pronunciation paths, fallback span counts, source/context/render routes, and
-  pending human assessments. It also records the CLI, corpus, and resource SHA-256
-  hashes so input data can be identified later.
-- `report.html`: escaped input text and metadata, audio players when requested,
-  and blank listening score controls. The page contains no executable script.
-- `review.csv`: a blank score sheet to edit and save. Scores in the HTML page are
-  scratch notes and are not automatically persisted.
-- `<case-id>/input.txt` and `segments.jsonl`: exact inputs and protocol events.
-- `<case-id>/audio/`: optional bridge manifest, per-run audio, and `combined.wav`.
+Artifacts:
 
-The CLI prints counts as JSON. Exit status is 0 for all text matches, 1 for text
-mismatches (reports are still written), and 2 for invalid input, failed subprocesses,
-or incomplete protocol/audio artifacts. Existing output directories are refused.
-A failed run may leave partial evidence; it is never presented as a completed report.
+| File | Content |
+| --- | --- |
+| `report.json` | Version 2 report, all input/reference/actual strings, metrics, metadata failures, chunk variants, resource paths, SHA-256 provenance |
+| `report.html` | Static escaped report with failures first, category table, character differences, and inspect metadata |
+| `cases.csv` | Per-case pass status and exact-match/CER/metadata/parity metrics |
+| `<case-id>/input.txt` | Exact UTF-8 input bytes |
+| `<case-id>/segments.jsonl` | Events for the first configured chunk size |
+| `<case-id>/segments-<n>.jsonl` | Events for other chunk sizes |
+
+Display differences use `difflib` alignment and Unicode codepoint offsets. That
+alignment aids inspection; it is not the minimal Levenshtein edit sequence.
+Protocol spans use UTF-8 byte offsets, a different unit.
 
 `fallback_spans` counts paths containing `prototype` or `fallback`. Lexicon hits,
-pronunciation dictionary hits, initialism paths and exact path names remain visible
-in each case. Source/context/render route counts include neutral spans; they are
-not counts of acoustic voice switches. Empty pronunciation paths mean no foreign
-pronunciation transformation was needed. No content is sent to an external API.
+source dictionary hits, initialism paths, and source/context/render routes remain
+visible. A fallback occurrence is a diagnostic, not automatically an error: the
+reference output determines whether the text is correct.
 
-`frontend_process_seconds` measures the entire CLI subprocess, including startup
-and deliberately tiny input writes. It is not a first-audio or production throughput
-benchmark. A real service must measure source arrival, first committed callback,
-backend request, first audio byte, playback, and queue backpressure separately.
+The report records CLI, corpus, and resource SHA-256 hashes. Process timings
+include CLI startup and resource loading; use the native benchmark for committed
+callback latency and throughput. No content is sent to an external API.
 
-## Human review
+## Exit status and failure tests
 
-Listen with the intended Korean and English voices. For each case record reviewer,
-pronunciation correctness, intelligibility and naturalness on a 1–5 scale, plus
-the exact word or boundary that needs work. Leave scores empty until somebody
-has listened. Pay particular attention to the `1st` context change, brand names,
-initialisms, prototype G2P, unit readings, and pauses at language/segment changes.
+The CLI prints its summary as JSON:
 
-eSpeak is a reproducible local integration backend. Its output is useful for
-checking the text/audio handoff and voice routing. Production readiness depends
-on evaluation with the deployment voices and domain corpus; no such quality
-approval is inferred from a passing text test or the existence of generated audio.
+- `0`: every case passes.
+- `1`: text, metadata, or batch/stream mismatch; complete reports are written.
+- `2`: invalid corpus, failed subprocess, invalid protocol, or filesystem error.
 
-Next work should select deployment voices, review this corpus, add real domain
-failure cases, improve pronunciation resources from those findings, and measure
-first-audio latency under sustained input. Preserve the corpus and resource hashes
-with each listening decision so comparisons remain traceable.
+Existing output directories are refused so earlier evidence is preserved. A
+failed run can leave partial files; only a completed `report.json` represents a
+completed evaluation.
+
+`tests/evaluation/test_evaluation.py` runs the reference corpus and deliberately
+introduces text errors, wrong metadata, and batch/stream divergence to prove the
+gates reject each independently. It also tests codepoint metrics, malformed
+corpora, missing/gapped/invalid UTF-8 spans, safe HTML escaping, and preservation
+of an existing report.

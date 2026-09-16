@@ -8,6 +8,43 @@ ttf_status_t ttf_foreign_render(const ttf_engine_t *, const ttf_language_pack_t 
 static void tag(char dest[TTF_LANGUAGE_TAG_SIZE], const char *source) {
     (void)snprintf(dest, TTF_LANGUAGE_TAG_SIZE, "%s", source);
 }
+typedef struct {
+    size_t begin, end;
+} context_scope_t;
+
+/* A complete quotation is an independent context window. Numeric/lexical
+   classification still sees the original token stream and byte offsets. */
+static context_scope_t *quote_scopes(const char *text, size_t length, const ttf_token_t *tokens,
+                                     size_t count) {
+    context_scope_t *scopes;
+    size_t starts[32], depth = 0, i;
+    uint32_t closers[32];
+    if (!count)
+        return NULL;
+    if (count > SIZE_MAX / sizeof(*scopes))
+        return NULL;
+    scopes = (context_scope_t *)calloc(count, sizeof(*scopes));
+    if (!scopes)
+        return NULL;
+    for (i = 0; i < count; ++i) {
+        uint32_t cp, closer;
+        size_t width, j;
+        if (ttf_utf8_decode(text + tokens[i].begin, length - tokens[i].begin, &cp, &width) != 1)
+            continue;
+        if (depth && cp == closers[depth - 1]) {
+            size_t begin = starts[--depth] + 1;
+            for (j = begin; j < i; ++j)
+                if (!scopes[j].end) {
+                    scopes[j].begin = begin;
+                    scopes[j].end = i;
+                }
+        } else if ((closer = ttf_quote_closer(cp)) && depth < 32) {
+            starts[depth] = i;
+            closers[depth++] = closer;
+        }
+    }
+    return scopes;
+}
 static const ttf_language_pack_t *script_pack(const ttf_engine_t *e, ttf_script_t script) {
     const ttf_language_pack_t *best = NULL;
     int score = 0;
@@ -61,6 +98,7 @@ static ttf_status_t add_span(ttf_result_t *r, const ttf_span_t *span, size_t *ca
 ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t length, size_t offset,
                               ttf_result_t *out) {
     ttf_token_t *tokens = NULL;
+    context_scope_t *scopes = NULL;
     size_t count = 0, i = 0, capacity = 0;
     ttf_buffer_t output = {0};
     ttf_status_t st;
@@ -68,6 +106,11 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
     st = ttf_tokenize(text, length, &tokens, &count);
     if (st != TTF_OK)
         return st;
+    scopes = quote_scopes(text, length, tokens, count);
+    if (count && !scopes) {
+        free(tokens);
+        return TTF_ENOMEM;
+    }
     while (i < count) {
         ttf_pack_input_t in;
         ttf_span_t span;
@@ -86,7 +129,15 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
         in.token_count = count;
         in.index = i;
         in.engine = e;
-        context = context_pack(e, &in, span.context_trace);
+        if (scopes[i].end) {
+            ttf_pack_input_t scoped = in;
+            scoped.tokens = tokens + scopes[i].begin;
+            scoped.token_count = scopes[i].end - scopes[i].begin;
+            scoped.index -= scopes[i].begin;
+            snprintf(span.context_trace, sizeof(span.context_trace), "quotation");
+            context = context_pack(e, &scoped, span.context_trace);
+        } else
+            context = context_pack(e, &in, span.context_trace);
         source = script_pack(e, tokens[i].script);
         if (!context) {
             st = TTF_EINVAL;
@@ -208,9 +259,11 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
     out->text = output.data;
     out->length = output.length;
     free(tokens);
+    free(scopes);
     return TTF_OK;
 fail:
     free(tokens);
+    free(scopes);
     ttf_buffer_free(&output);
     ttf_result_free(out);
     return st;

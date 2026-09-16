@@ -81,3 +81,22 @@ sets need indexing and profiling.
 
 Resources are capped by the runtime loader and IR fields have fixed limits. Treat
 resource syntax/version as an initial format until the first stable release.
+
+## Resource-controlled recognition
+
+`numeric_suffix` entries select semantic type/unit for attached or horizontally
+spaced quantities. `ordinal_tail` constrains suffix spellings in the source pack
+(e.g. English `11` → `th`, `1` → `st`, longest decimal tail first). The core knows
+neither English ordinal exceptions nor foreign technical vocabulary.
+
+`semantic_term` entries may span punctuation and script boundaries, for example:
+
+```text
+semantic_term<TAB>*<TAB>C++<TAB>ALNUM_TERM:en-US
+semantic_term<TAB>*<TAB>USB-C<TAB>ALNUM_TERM:en-US
+```
+
+Use actual tab characters in a source resource. The value carries the semantic
+class and source language. Matching requires the complete term, so `C++x` does
+not match `C++`. Rendering remains in the pack and separate pronunciation lexicon;
+this table contains recognition metadata only.

@@ -95,6 +95,6 @@ more repetitions make comparisons more useful.
 
 The smoke test verifies JSON accounting, known normalized output hashes, actual
 callbacks before the last input chunk, one-byte UTF-8 feeds, and invalid input.
-It sets no hardware latency thresholds. Benchmark results establish neither audio
-quality nor a production latency SLA. End-to-end audio TTFB needs a real TTS engine
-and the actual request transport and playback pipeline.
+It sets no hardware latency thresholds. Benchmark results establish neither text
+correctness nor a production latency SLA. Broader performance claims need
+representative workloads, hardware and input-arrival patterns.

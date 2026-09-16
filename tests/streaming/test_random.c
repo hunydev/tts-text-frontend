@@ -78,7 +78,18 @@ static int compare(ttf_engine_t *engine, const char *text, size_t n, unsigned ca
     return 0;
 }
 int main(void) {
-    static const char *atoms[] = {"Apple은",
+    static const char *atoms[] = {"3 kg",
+                                  "3 개",
+                                  "₩ 12,500",
+                                  "1 / 2",
+                                  "14:30:05",
+                                  "12,34",
+                                  "2026-02-30",
+                                  "C++를",
+                                  "USB-C를",
+                                  "3D는",
+                                  "그는 \"Please go to the 1st floor\"라고 말했다",
+                                  "Apple은",
                                   "사과입니다",
                                   "1st는",
                                   "Please go to the 1st floor",

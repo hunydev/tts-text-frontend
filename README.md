@@ -175,38 +175,29 @@ and subsequent segments, maximum length, sentence/phrase splitting and pending
 buffer limit are configurable. Callback pointers live only during the callback.
 See [streaming invariants and latency tradeoffs](docs/streaming.md).
 
-## TTS integration and listening reports
+## Output text evaluation
 
-Version 0.2.0 adds a versioned JSONL stream for engine adapters. It flushes each
-committed segment immediately, preserving render-language metadata and byte offsets.
-The optional bridge selects the acoustic voice using `render_lang` and produces PCM
-WAVs through eSpeak NG or a configurable external adapter process.
+Acceptance is based on normalized output text, semantic/language metadata and
+batch/stream equivalence. No speech synthesis or listening comparison is required.
+The text report shows independent expected strings, character differences,
+category scores, resource provenance and fallback paths. The current regression
+suite has 270 golden cases and a separate 109-case text evaluation corpus with
+75 explicit metadata assertions; these are curated regression checks, not a
+measurement of accuracy on unseen text.
 
 ```sh
-# Optional offline TTS engine on Ubuntu
-sudo apt-get install espeak-ng
 python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources \
-  --corpus tests/evaluation/cases.jsonl --output-dir artifacts/evaluation --synthesize
-```
-
-Open `artifacts/evaluation/report.html` for 21 input/expected/output comparisons,
-audio players and a listening worksheet. `report.json` records text checks, fallback
-paths and resource hashes; `review.csv` holds human scores. A successful synthesis
-is not a pronunciation quality score. Output directories must be new on each run.
-GitHub Actions also publishes this report and audio as an evaluation artifact.
-
-```sh
+  --corpus tests/evaluation/cases.jsonl --output-dir artifacts/text-evaluation
 build/ttf stream-json examples/code_mixed.txt > segments.jsonl
-python3 tools/tts_bridge/bridge.py --input segments.jsonl --output-dir artifacts/demo-audio
 build/ttf_bench --iterations 100 --chunk-bytes 64 examples/code_mixed.txt
 ```
 
-The benchmark reports frontend first-callback latency, total processing time and
-throughput with a warm frozen engine. It does not measure audio TTFB. The bridge
-records time until the first complete audio file separately.
+Open `artifacts/text-evaluation/report.html` to inspect text failures and metadata.
+Output directories must be new on each run. CI publishes the same text report.
+The benchmark measures frontend first-callback latency and throughput only.
 
-See [TTS integration](docs/tts-integration.md), [JSONL protocol](docs/stream-protocol.md),
-[evaluation](docs/evaluation.md), and [benchmark definitions](docs/benchmark.md).
+See [JSONL protocol](docs/stream-protocol.md), [text evaluation](docs/evaluation.md),
+and [benchmark definitions](docs/benchmark.md).
 
 ## Architecture and scope
 
@@ -214,13 +205,14 @@ See [TTS integration](docs/tts-integration.md), [JSONL protocol](docs/stream-pro
 [Architecture](docs/architecture.md) describes the six milestones and decisions.
 [Language pack contract](docs/language-pack.md) explains extension without core
 language branches. [Semantic IR](docs/semantic-ir.md) describes shared types.
-[Korean coverage](docs/ko-coverage.md) records tested readings and linguistic limits.
+[Korean coverage](docs/ko-coverage.md) and [English coverage](docs/en-coverage.md)
+record tested readings and linguistic limits.
 
 Current production work remains: broader context heuristics and corpus, full
 Unicode properties and numeric grammars, larger licensed pronunciation resources,
 higher quality G2P/phonetic mapping, long-input performance profiling, automated ABI compatibility
 checks, and Windows/macOS CI. Integration with a real TTS engine can begin using
-the callback and span APIs; pronunciation quality still requires evaluation for
-each voice/domain. The library does not synthesize audio.
+the callback and span APIs; deployment requires text-corpus acceptance for the target domain. The library does
+not synthesize audio.
 
 Private proprietary project. See [LICENSE](LICENSE).

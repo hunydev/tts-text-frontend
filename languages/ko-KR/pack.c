@@ -187,9 +187,20 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         return digits(e, s->value, 0, out);
     case TTF_SEM_PHONE:
         return digits(e, s->value, 1, out);
-    case TTF_SEM_COUNTER:
+    case TTF_SEM_COUNTER: {
+        const char *month = s->value;
+        if (*month == '+')
+            ++month;
+        while (*month == '0' && month[1])
+            ++month;
+        if (strcmp(s->unit, "월") == 0 && (!strcmp(month, "6") || !strcmp(month, "10"))) {
+            TRY(ttf_buffer_puts(out,
+                                resource(e, "month", month, !strcmp(month, "6") ? "유" : "시")));
+            return ttf_buffer_puts(out, " 월");
+        }
         return quantity(e, s->value, resource(e, "unit", s->unit, s->unit),
                         strcmp(resource(e, "counter", s->unit, "sino"), "native") == 0, out);
+    }
     case TTF_SEM_CURRENCY:
         return quantity(e, s->value, resource(e, "currency", s->unit, s->unit), 0, out);
     case TTF_SEM_PERCENT:
@@ -204,6 +215,16 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             TRY(cardinal(e, s->value, out));
         TRY(ttf_buffer_puts(out, resource(e, "policy", "range_separator", " 다시 ")));
         return digit_mode ? digits(e, s->secondary, 0, out) : cardinal(e, s->secondary, out);
+    }
+    case TTF_SEM_FRACTION: {
+        const char *numerator = s->value;
+        if (*numerator == '-') {
+            TRY(ttf_buffer_puts(out, resource(e, "number", "negative", "마이너스 ")));
+            ++numerator;
+        }
+        TRY(cardinal(e, s->secondary, out));
+        TRY(ttf_buffer_puts(out, resource(e, "number", "fraction_separator", " 분의 ")));
+        return cardinal(e, numerator, out);
     }
     case TTF_SEM_DATE: {
         unsigned year, month, day;
@@ -227,19 +248,212 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         return quantity(e, value, resource(e, "unit", "day", "일"), 0, out);
     }
     case TTF_SEM_TIME: {
-        unsigned hour, minute;
+        unsigned hour, minute, second;
+        int fields;
         char value[16];
-        if (sscanf(s->value, "%u:%u", &hour, &minute) != 2)
+        fields = sscanf(s->value, "%u:%u:%u", &hour, &minute, &second);
+        if (fields < 2)
             return TTF_EINVAL;
         (void)snprintf(value, sizeof(value), "%u", hour);
         TRY(quantity(e, value, resource(e, "unit", "hour", "시"), 1, out));
         TRY(ttf_buffer_puts(out, " "));
         (void)snprintf(value, sizeof(value), "%u", minute);
-        return quantity(e, value, resource(e, "unit", "minute", "분"), 0, out);
+        TRY(quantity(e, value, resource(e, "unit", "minute", "분"), 0, out));
+        if (fields == 3) {
+            TRY(ttf_buffer_puts(out, " "));
+            (void)snprintf(value, sizeof(value), "%u", second);
+            TRY(quantity(e, value, resource(e, "unit", "second", "초"), 0, out));
+        }
+        return TTF_OK;
     }
     default:
         return ttf_buffer_append(out, surface, length);
     }
+}
+
+static size_t skip_spaces(const char *text, size_t n, size_t pos) {
+    while (pos < n && (text[pos] == ' ' || text[pos] == '\t'))
+        ++pos;
+    return pos;
+}
+
+static size_t unsigned_value(const char *text, size_t n, size_t pos, unsigned *value) {
+    size_t start = pos;
+    *value = 0;
+    while (pos < n && text[pos] >= '0' && text[pos] <= '9') {
+        if (pos - start == 4)
+            return start;
+        *value = *value * 10 + (unsigned)(text[pos++] - '0');
+    }
+    return pos;
+}
+
+static int literal_at(const char *text, size_t n, size_t pos, const char *literal) {
+    size_t width = strlen(literal);
+    return pos <= n && width <= n - pos && !memcmp(text + pos, literal, width);
+}
+
+static size_t classified(const ttf_pack_input_t *in, ttf_semantic_t *s, size_t end,
+                         ttf_semantic_type_t type, const char *rule) {
+    size_t consumed = 0;
+    while (in->index + consumed < in->token_count && in->tokens[in->index + consumed].begin < end)
+        ++consumed;
+    s->type = type;
+    s->input_end = end;
+    (void)snprintf(s->rule, sizeof(s->rule), "%s", rule);
+    return consumed;
+}
+
+/* Pack-specific grammar creates language-neutral IR. Multiplication by a scale
+   is decimal string arithmetic: large amounts never pass through float/double. */
+static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    const char *text = in->text;
+    size_t n = in->length, begin = in->tokens[in->index].begin, p, q, width;
+    unsigned year, month, day;
+    char value[TTF_IR_VALUE_SIZE], key[32], scaled[TTF_IR_VALUE_SIZE];
+    size_t integer_digits = 0, count = 0, fraction = 0, integer_group = 0;
+    int negative = 0, grouped = 0, power = -1;
+    p = unsigned_value(text, n, begin, &year);
+    q = skip_spaces(text, n, p);
+    if (p - begin == 4 && literal_at(text, n, q, "년")) {
+        p = skip_spaces(text, n, q + strlen("년"));
+        q = unsigned_value(text, n, p, &month);
+        if (q != p && q - p <= 2) {
+            q = skip_spaces(text, n, q);
+            if (literal_at(text, n, q, "월")) {
+                p = skip_spaces(text, n, q + strlen("월"));
+                q = unsigned_value(text, n, p, &day);
+                if (q != p && q - p <= 2) {
+                    static const unsigned days[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+                    q = skip_spaces(text, n, q);
+                    if (literal_at(text, n, q, "일")) {
+                        unsigned max_day = month >= 1 && month <= 12 ? days[month - 1] : 0;
+                        if (month == 2 && (year % 400 == 0 || (year % 4 == 0 && year % 100)))
+                            ++max_day;
+                        if (!year || !month || month > 12 || !day || day > max_day)
+                            return classified(in, s, q + strlen("일"), TTF_SEM_TEXT,
+                                              "ko:invalid-calendar-date");
+                        (void)snprintf(s->value, sizeof(s->value), "%04u-%02u-%02u", year, month,
+                                       day);
+                        return classified(in, s, q + strlen("일"), TTF_SEM_DATE,
+                                          "ko:calendar-date");
+                    }
+                }
+            }
+        }
+    }
+    p = begin;
+    if (p < n && (text[p] == '-' || text[p] == '+'))
+        negative = text[p++] == '-';
+    while (p < n && ((text[p] >= '0' && text[p] <= '9') || text[p] == ',')) {
+        if (text[p] == ',') {
+            if ((!grouped && (integer_group < 1 || integer_group > 3)) ||
+                (grouped && integer_group != 3))
+                return 0;
+            grouped = 1;
+            integer_group = 0;
+            ++p;
+            continue;
+        }
+        if (count + 1 >= sizeof(value))
+            return 0;
+        value[count++] = text[p++];
+        ++integer_group;
+    }
+    if (!count || (grouped && integer_group != 3))
+        return 0;
+    integer_digits = count;
+    if (p < n && text[p] == '.') {
+        ++p;
+        while (p < n && text[p] >= '0' && text[p] <= '9') {
+            if (count + 1 >= sizeof(value))
+                return 0;
+            value[count++] = text[p++];
+            ++fraction;
+        }
+        if (!fraction)
+            return 0;
+    }
+    q = skip_spaces(text, n, p);
+    for (width = n - q < sizeof(key) - 1 ? n - q : sizeof(key) - 1; width > 0; --width) {
+        const char *label;
+        char *end;
+        long parsed;
+        memcpy(key, text + q, width);
+        key[width] = '\0';
+        label = ttf_resource_get(in->engine, "scale", "ko-KR", key, NULL);
+        if (!label)
+            continue;
+        parsed = strtol(label, &end, 10);
+        if (!*end && parsed >= 1 && parsed <= 40) {
+            power = (int)parsed;
+            break;
+        }
+    }
+    if (power < 0)
+        return 0;
+    {
+        size_t end_integer = integer_digits + (size_t)power, pos = 0, i;
+        if (end_integer + fraction + 3 >= sizeof(scaled))
+            return 0;
+        if (negative)
+            scaled[pos++] = '-';
+        for (i = 0; i < count || i < end_integer; ++i) {
+            if (i == end_integer)
+                scaled[pos++] = '.';
+            scaled[pos++] = i < count ? value[i] : '0';
+        }
+        if (end_integer < count) {
+            while (pos && scaled[pos - 1] == '0')
+                --pos;
+            if (pos && scaled[pos - 1] == '.')
+                --pos;
+        }
+        scaled[pos] = '\0';
+        (void)snprintf(s->value, sizeof(s->value), "%s", scaled);
+    }
+    p = q + width;
+    q = skip_spaces(text, n, p);
+    for (width = n - q < sizeof(key) - 1 ? n - q : sizeof(key) - 1; width > 0; --width) {
+        const char *label;
+        memcpy(key, text + q, width);
+        key[width] = '\0';
+        label = ttf_resource_get(in->engine, "numeric_suffix", "ko-KR", key, NULL);
+        if (!label)
+            continue;
+        if (!strncmp(label, "CURRENCY:", 9)) {
+            (void)snprintf(s->unit, sizeof(s->unit), "%s", label + 9);
+            return classified(in, s, q + width, TTF_SEM_CURRENCY, "ko:scaled-currency");
+        }
+        if (!strncmp(label, "COUNTER:", 8)) {
+            (void)snprintf(s->unit, sizeof(s->unit), "%s", label + 8);
+            return classified(in, s, q + width, TTF_SEM_COUNTER, "ko:scaled-counter");
+        }
+    }
+    /* A scale embedded in an ordinary word is not a quantity: 1.5천국 must
+       not become 1500국. Recognized attached particles may continue a scale. */
+    for (q = in->index; q < in->token_count; ++q) {
+        const ttf_token_t *token = &in->tokens[q];
+        if (token->script == TTF_SCRIPT_HANGUL && token->begin < p && p < token->end) {
+            size_t available = token->end - p;
+            int particle = 0;
+            for (width = available < sizeof(key) - 1 ? available : sizeof(key) - 1; width > 0;
+                 --width) {
+                memcpy(key, text + p, width);
+                key[width] = '\0';
+                if (ttf_resource_get(in->engine, "particle", "ko-KR", key, NULL)) {
+                    particle = 1;
+                    break;
+                }
+            }
+            if (!particle)
+                return 0;
+            break;
+        }
+        if (token->begin >= p)
+            break;
+    }
+    return classified(in, s, p, TTF_SEM_CARDINAL, "ko:scaled-number");
 }
 
 static int script_score(ttf_script_t script) {
@@ -461,7 +675,7 @@ const ttf_language_pack_t ttf_pack_ko_KR = {sizeof(ttf_language_pack_t),
                                             NULL,
                                             script_score,
                                             context_score,
-                                            NULL,
+                                            classify,
                                             verbalize,
                                             NULL,
                                             render_phones,

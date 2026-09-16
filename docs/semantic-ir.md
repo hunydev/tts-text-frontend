@@ -18,13 +18,20 @@ The type vocabulary reserves TEXT, WORD, NUMBER, CARDINAL, ORDINAL,
 DIGIT_SEQUENCE, COUNTER, DATE, TIME, DATETIME, PHONE, CURRENCY, PERCENT, MEASURE,
 FRACTION, RANGE, VERSION, IP_ADDRESS, URL, EMAIL, ABBREVIATION, INITIALISM, ACRONYM,
 ALNUM_TERM, SYMBOL and CUSTOM. An enum value does not imply complete grammar or
-verbalization support. The implemented golden corpus documents supported forms.
+verbalization support. The implemented golden corpus documents supported forms. DATETIME remains reserved;
+a combined date/time expression currently produces separate DATE and TIME spans.
 
 ```text
 1st는 → ORDINAL(value="1", source="en-US", context="ko-KR", render="ko-KR")
 1st floor → ORDINAL(value="1", source="en-US", context="en-US", render="en-US")
 $12 → CURRENCY(value="12", unit="USD")
-3kg → MEASURE(value="3", unit="kg")
+3kg / 3 kg → MEASURE(value="3", unit="kg")
+1 / 2 → FRACTION(value="1", secondary="2")
+14:30:05 → TIME(value="14:30:05")
+2026년 6월 1일 → DATE(value="2026-06-01")
+3.5만원 → CURRENCY(value="35000", unit="KRW")
+C++ → ALNUM_TERM(source="en-US", lexical_class=ALNUM_TERM)
+11st → TEXT(rule="syntax.invalid-ordinal")
 ```
 
 Numeric values are strings so the interface does not lose digits to floating

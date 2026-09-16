@@ -38,6 +38,8 @@ flowchart TD
    semantic syntax. Context uses pack scoring of the stable local unit and attached
    scripts/particles. Render language is selected by policy. For `1st는`, source is
    English, context/render Korean; the source ordinal `first` is rendered `퍼스트`.
+   Complete quotations use an independent pack-scoring window. The shared boundary
+   planner retains that scope across incremental writes.
 4. **Resource precedence is explicit.** Customer > Domain > System > Common;
    pronunciation additionally has User above Customer. TN rules and pronunciation
    lexicons use different resource kinds. Same-priority rules use longest match,
@@ -72,7 +74,7 @@ flowchart TD
 | `languages/*` | Context scoring, classification hooks, verbalizers, G2P/renderers |
 | `resources/*` | Reading policy, numeric/unit data, pronunciation data, overrides |
 | `tools/cli` | Normalize, inspect and JSONL streaming transport |
-| `tools/tts_bridge`, `tools/evaluation` | Optional acoustic engine adapters, PCM validation and listening reports |
+| `tools/evaluation` | Independent text references, diffs, metadata and streaming equivalence checks |
 | `tools/benchmark` | Warm-engine frontend commitment timing through public C API |
 | `tools/resource_compiler` | Validated source resources to versioned runtime envelope |
 
@@ -88,23 +90,20 @@ and verbalizes a cardinal without editing core code.
 | 1 — Universal Core | UTF-8 tokens, Semantic IR, resource/rule manager, pack API | Richer grammar DSL, indexed compiled resources |
 | 2 — KO / EN | Basic cardinal, ordinal, date/time, currency, percent, units; Korean counters/phone | Coverage for locales, ambiguity and edge cases |
 | 3 — Code Mixed | Pack context scores, attached particle signals, context inheritance, `1st` case | Embedded quotations, longer mixed-language passages |
-| 4 — Foreign Pronunciation | Layered lexicons, initialism/acronym data, source dictionary/G2P, phone IR, fallback | Licensed large vocabulary and measured phonetic quality |
-| 5 — Streaming | Pending/lookahead, shared boundaries, phrase targets, callbacks, frontend benchmarks and synchronous adapter backpressure | First-audio benchmarks and persistent engine sessions |
+| 4 — Foreign Pronunciation | Layered lexicons, initialism/acronym data, source dictionary/G2P, phone IR, fallback | Broader reviewed vocabulary and text pronunciation accuracy |
+| 5 — Streaming | Pending/lookahead, shared boundaries, phrase targets, callbacks, frontend benchmarks | More boundary/context cases and reduced repeated scanning |
 | 6 — Extensibility Validation | Synthetic third-pack test, generated build registry | Real third language pack and platform matrix |
 
 These are initial implementation milestones, not claims of complete linguistic
-coverage. The next production priority is to evaluate corpus failures against a
-real TTS voice, improve the relevant pack resources, and enforce ABI v1 compatibility in release automation.
+coverage. Production priorities are text corpus coverage, grammar and context
+accuracy, reviewed pronunciation resources, and ABI compatibility automation.
 
-## Integration checkpoint (0.2.0)
+## Text quality checkpoint (0.3.0)
 
-The C ABI v1, language packs and core normalization behavior are retained. New CLI
-and tooling interfaces consume committed spans. JSONL protocol v1 is independent
-of the native ABI and carries render language for acoustic voice selection. The
-reference adapter uses one external process per language run; a real deployment
-can replace that adapter with a persistent engine or direct C callback integration.
+The C ABI v1 and JSONL v1 layouts are retained. The evaluation contract is exact
+normalized text plus semantic and language metadata. Each reference string is an
+explicit reviewed policy choice, not a snapshot generated from current output.
+Streaming checks compare multiple byte chunk sizes and must retain that reference.
 
-The listening corpus provides exact text checks, real optional WAVs and blank human
-ratings. Text correctness, frontend callback latency, audio availability and perceived
-pronunciation quality are recorded as distinct observations. Backend sessions,
-async cancellation and production voice acceptance remain follow-up work.
+The audio bridge and listening evaluation were removed from the current scope.
+Runtime callbacks and JSONL remain available for downstream consumers.

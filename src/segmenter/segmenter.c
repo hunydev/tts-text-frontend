@@ -27,6 +27,8 @@ size_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, int fin
     size_t count = 0, i, at, chars = 0,
            target = first ? e->config.first_segment_target : e->config.normal_segment_target;
     size_t selected = 0;
+    uint32_t quote_stack[32];
+    size_t quote_depth = 0;
     if (ttf_tokenize(s, n, &tokens, &count) != TTF_OK)
         return 0;
     for (i = 0; i < count; i++) {
@@ -40,7 +42,11 @@ size_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, int fin
             if (ttf_utf8_decode(s + at, n - at, &cp, &w) != 1)
                 goto done;
             chars++;
-            if (e->config.sentence_split) {
+            if (quote_depth && cp == quote_stack[quote_depth - 1])
+                quote_depth--;
+            else if (ttf_quote_closer(cp) && quote_depth < 32)
+                quote_stack[quote_depth++] = ttf_quote_closer(cp);
+            if (e->config.sentence_split && !quote_depth) {
                 if (cp == '\n')
                     sentence = 1;
                 else if (cp == '.' || cp == '!' || cp == '?' || cp == 0x3002 || cp == 0xff01 ||
@@ -58,13 +64,52 @@ size_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, int fin
                 selected = at + w;
                 goto done;
             }
-            if (t->script == TTF_SCRIPT_WHITESPACE &&
+            if (!quote_depth && t->script == TTF_SCRIPT_WHITESPACE &&
                 ((e->config.phrase_split && chars >= target) ||
                  chars >= e->config.max_segment_length)) {
                 size_t previous = at;
                 while (previous && (s[previous - 1] == ' ' || s[previous - 1] == '\t' ||
                                     s[previous - 1] == '\r'))
                     previous--;
+                /* A number, sign, currency prefix or fraction separator may
+                   bind to the following token even across spaces. Retain it
+                   without inspecting unavailable future input. */
+                if (previous &&
+                    ((s[previous - 1] >= '0' && s[previous - 1] <= '9') || s[previous - 1] == '/' ||
+                     s[previous - 1] == ':' || s[previous - 1] == '+' || s[previous - 1] == '-')) {
+                    at += w;
+                    continue;
+                }
+                if (i && tokens[i - 1].end - tokens[i - 1].begin < 64) {
+                    char key[64];
+                    size_t key_length = tokens[i - 1].end - tokens[i - 1].begin;
+                    memcpy(key, s + tokens[i - 1].begin, key_length);
+                    key[key_length] = 0;
+                    if (ttf_resource_get(e, "currency_prefix", "*", key, NULL)) {
+                        at += w;
+                        continue;
+                    }
+                    if (i >= 2) {
+                        size_t previous_token = i - 1, pack;
+                        int continuation = 0;
+                        while (previous_token &&
+                               tokens[previous_token - 1].script == TTF_SCRIPT_WHITESPACE)
+                            previous_token--;
+                        if (previous_token &&
+                            tokens[previous_token - 1].script == TTF_SCRIPT_DIGIT) {
+                            continuation =
+                                ttf_resource_get(e, "numeric_continuation", "*", key, NULL) != NULL;
+                            for (pack = 0; !continuation && pack < e->pack_count; ++pack)
+                                continuation = ttf_resource_get(e, "numeric_continuation",
+                                                                e->packs[pack]->language_tag, key,
+                                                                NULL) != NULL;
+                        }
+                        if (continuation) {
+                            at += w;
+                            continue;
+                        }
+                    }
+                }
                 /* A spaced date or abbreviation may continue after this whitespace.
                    Never freeze its leading number merely to hit a phrase target. */
                 if (!(previous && s[previous - 1] == '.' && protected_period(e, s, previous - 1))) {

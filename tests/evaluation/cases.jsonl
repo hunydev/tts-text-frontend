@@ -1,21 +1,109 @@
-{"id":"mixed-ordinal","text":"1st는 첫 번째라는 뜻입니다.\n영어로는 다음과 같은 예문이 있습니다.\nPlease go to the 1st floor","expected":"퍼스트는 첫 번째라는 뜻입니다.\n영어로는 다음과 같은 예문이 있습니다.\nPlease go to the first floor","notes":"Listen for the same source ordinal in Korean and English context; check the voice transition."}
-{"id":"apple-ko","text":"Apple은 사과입니다.","expected":"애플은 사과입니다.","notes":"Foreign pronunciation rendering, not translation."}
-{"id":"apple-en","text":"Apple released the iPhone.","expected":"Apple released the iPhone.","notes":"English context must preserve the input words."}
-{"id":"gpu","text":"GPU를 사용합니다.","expected":"지피유를 사용합니다.","notes":"Check initialism reading and following Korean particle."}
-{"id":"openai","text":"OpenAI가 발표했습니다.","expected":"오픈에이아이가 발표했습니다.","notes":"Brand pronunciation lexicon and particle."}
-{"id":"wifi","text":"WiFi를 사용합니다.","expected":"와이파이를 사용합니다.","notes":"System lexicon reading. Dictionary-removal fallback is covered separately by the native API tests."}
-{"id":"unknown-foobar","text":"foobar를 사용합니다.","expected":"푸바를 사용합니다.","notes":"Prototype G2P path. Matching this expected text does not establish pronunciation quality."}
-{"id":"nasa","text":"NASA는 기관입니다.","expected":"나사는 기관입니다.","notes":"Word acronym instead of a letter-by-letter initialism."}
-{"id":"alnum-gpt4","text":"GPT-4를 사용합니다.","expected":"지피티포를 사용합니다.","notes":"Alphanumeric term rendering."}
-{"id":"embedded-english","text":"한국어에서 Please go to the 1st floor 예문을 봅니다.","expected":"한국어에서 Please go to the first floor 예문을 봅니다.","notes":"English function-word sequence inside a Korean sentence. Listen for audible voice transitions."}
-{"id":"currency-stream","text":"가격은 12,500원입니다.","expected":"가격은 만이천오백 원입니다.","notes":"Bytewise writes must retain the partial number until it is safe to commit."}
-{"id":"counter","text":"3개 3명 3살 3시 3분 3초","expected":"세 개 세 명 세 살 세 시 삼 분 삼 초","notes":"Native Korean counters compared with Sino-Korean units."}
-{"id":"date-ko","text":"2026-09-16","expected":"이천이십육 년 구 월 십육 일","notes":"Korean date reading."}
-{"id":"time-ko","text":"09:05","expected":"아홉 시 오 분","notes":"Korean hour and minute readings."}
-{"id":"phone-ko","text":"010-1234-5678","expected":"공일공 일이삼사 오육칠팔","notes":"Digit sequence with grouping."}
-{"id":"percent-ko","text":"12.5%","expected":"십이 점 오 퍼센트","notes":"Decimal percent."}
-{"id":"measure-ko","text":"3kg 10km 32GB 2GHz","expected":"삼 킬로그램 십 킬로미터 삼십이 기가바이트 이 기가헤르츠","notes":"Language pack unit readings."}
-{"id":"ordinal-en","text":"Please go to the 1st floor.","expected":"Please go to the first floor.","default_language":"en-US","notes":"English ordinal verbalizer."}
-{"id":"date-en","text":"2026-09-16","expected":"September sixteenth two thousand twenty six","default_language":"en-US","notes":"Same semantic date with an English renderer."}
-{"id":"currency-en","text":"$12.50","expected":"twelve dollars and fifty cents","default_language":"en-US","notes":"Dollars and cents."}
-{"id":"measure-en","text":"3kg","expected":"three kilograms","default_language":"en-US","notes":"English measure verbalization."}
+{"id":"mixed-ordinal","text":"1st는 첫 번째라는 뜻입니다.\n영어로는 다음과 같은 예문이 있습니다.\nPlease go to the 1st floor","expected":"퍼스트는 첫 번째라는 뜻입니다.\n영어로는 다음과 같은 예문이 있습니다.\nPlease go to the first floor","notes":"Identical surface ordinals must follow their Korean and English contexts.","category":"code-mixed","expected_spans":[{"surface":"1st","occurrence":0,"source_lang":"en-US","context_lang":"ko-KR","render_lang":"ko-KR","semantic_type":"ORDINAL","value":"1","normalized":"퍼스트"},{"surface":"1st","occurrence":1,"source_lang":"en-US","context_lang":"en-US","render_lang":"en-US","semantic_type":"ORDINAL","value":"1","normalized":"first"}]}
+{"id":"apple-ko","text":"Apple은 사과입니다.","expected":"애플은 사과입니다.","notes":"Foreign pronunciation rendering, not translation.","category":"code-mixed","expected_spans":[{"surface":"Apple","source_lang":"en-US","context_lang":"ko-KR","render_lang":"ko-KR","semantic_type":"WORD","normalized":"애플"}]}
+{"id":"apple-en","text":"Apple released the iPhone.","expected":"Apple released the iPhone.","notes":"English context must preserve the input words.","category":"code-mixed","expected_spans":[{"surface":"Apple","source_lang":"en-US","context_lang":"en-US","render_lang":"en-US","semantic_type":"WORD","normalized":"Apple"}]}
+{"id":"gpu","text":"GPU를 사용합니다.","expected":"지피유를 사용합니다.","notes":"Check initialism reading and following Korean particle.","category":"foreign-pronunciation","expected_spans":[{"surface":"GPU","semantic_type":"INITIALISM","source_lang":"en-US","context_lang":"ko-KR"}]}
+{"id":"openai","text":"OpenAI가 발표했습니다.","expected":"오픈에이아이가 발표했습니다.","notes":"Brand pronunciation lexicon and particle.","category":"foreign-pronunciation"}
+{"id":"wifi","text":"WiFi를 사용합니다.","expected":"와이파이를 사용합니다.","notes":"System lexicon reading. Dictionary-removal fallback is covered separately by the native API tests.","category":"foreign-pronunciation"}
+{"id":"unknown-foobar","text":"foobar를 사용합니다.","expected":"푸바를 사용합니다.","notes":"Prototype G2P regression; the reference defines text rendering, not general G2P accuracy.","category":"foreign-pronunciation"}
+{"id":"nasa","text":"NASA는 기관입니다.","expected":"나사는 기관입니다.","notes":"Word acronym instead of a letter-by-letter initialism.","category":"foreign-pronunciation","expected_spans":[{"surface":"NASA","semantic_type":"ACRONYM","source_lang":"en-US","context_lang":"ko-KR"}]}
+{"id":"alnum-gpt4","text":"GPT-4를 사용합니다.","expected":"지피티포를 사용합니다.","notes":"Alphanumeric term rendering.","category":"foreign-pronunciation","expected_spans":[{"surface":"GPT-4","semantic_type":"ALNUM_TERM","source_lang":"en-US","context_lang":"ko-KR"}]}
+{"id":"embedded-english","text":"한국어에서 Please go to the 1st floor 예문을 봅니다.","expected":"한국어에서 Please go to the first floor 예문을 봅니다.","notes":"English function-word sequence inside a Korean sentence.","category":"code-mixed"}
+{"id":"currency-stream","text":"가격은 12,500원입니다.","expected":"가격은 만이천오백 원입니다.","notes":"Bytewise writes must retain the partial number until it is safe to commit.","category":"streaming"}
+{"id":"counter","text":"3개 3명 3살 3시 3분 3초","expected":"세 개 세 명 세 살 세 시 삼 분 삼 초","notes":"Native Korean counters compared with Sino-Korean units.","category":"ko/counters"}
+{"id":"date-ko","text":"2026-09-16","expected":"이천이십육 년 구 월 십육 일","notes":"Korean date reading.","category":"ko/date-time"}
+{"id":"time-ko","text":"09:05","expected":"아홉 시 오 분","notes":"Korean hour and minute readings.","category":"ko/date-time"}
+{"id":"phone-ko","text":"010-1234-5678","expected":"공일공 일이삼사 오육칠팔","notes":"Digit sequence with grouping.","category":"ko/phone"}
+{"id":"percent-ko","text":"12.5%","expected":"십이 점 오 퍼센트","notes":"Decimal percent.","category":"ko/quantities"}
+{"id":"measure-ko","text":"3kg 10km 32GB 2GHz","expected":"삼 킬로그램 십 킬로미터 삼십이 기가바이트 이 기가헤르츠","notes":"Language pack unit readings.","category":"ko/quantities"}
+{"id":"ordinal-en","text":"Please go to the 1st floor.","expected":"Please go to the first floor.","default_language":"en-US","notes":"English ordinal verbalizer.","category":"en/ordinal"}
+{"id":"date-en","text":"2026-09-16","expected":"September sixteenth two thousand twenty six","default_language":"en-US","notes":"Same semantic date with an English renderer.","category":"en/date-time"}
+{"id":"currency-en","text":"$12.50","expected":"twelve dollars and fifty cents","default_language":"en-US","notes":"Dollars and cents.","category":"en/quantities"}
+{"id":"measure-en","text":"3kg","expected":"three kilograms","default_language":"en-US","notes":"English measure verbalization.","category":"en/quantities"}
+{"id":"ko-number-zero","category":"ko/numbers","text":"0","expected":"영","expected_spans":[{"surface":"0","semantic_type":"CARDINAL"}]}
+{"id":"ko-number-hundred-one","category":"ko/numbers","text":"101","expected":"백일","expected_spans":[{"surface":"101","semantic_type":"CARDINAL"}]}
+{"id":"ko-number-ten-thousand","category":"ko/numbers","text":"10000","expected":"만","expected_spans":[{"surface":"10000","semantic_type":"CARDINAL"}]}
+{"id":"ko-number-hundred-million","category":"ko/numbers","text":"100000000","expected":"일억","expected_spans":[{"surface":"100000000","semantic_type":"CARDINAL"}]}
+{"id":"ko-number-negative-decimal","category":"ko/numbers","text":"-3.5","expected":"마이너스 삼 점 오","expected_spans":[{"surface":"-3.5","semantic_type":"CARDINAL"}]}
+{"id":"ko-number-grouped","category":"ko/numbers","text":"1,234,567","expected":"백이십삼만사천오백육십칠","expected_spans":[{"surface":"1,234,567","semantic_type":"CARDINAL"}]}
+{"id":"ko-counter-27","category":"ko/counters","text":"20개","expected":"스무 개","expected_spans":[{"surface":"20개","semantic_type":"COUNTER"}]}
+{"id":"ko-counter-28","category":"ko/counters","text":"21개월","expected":"이십일 개월","expected_spans":[{"surface":"21개월","semantic_type":"COUNTER"}]}
+{"id":"ko-counter-29","category":"ko/counters","text":"30마리","expected":"서른 마리","expected_spans":[{"surface":"30마리","semantic_type":"COUNTER"}]}
+{"id":"ko-counter-30","category":"ko/counters","text":"99명","expected":"아흔아홉 명","expected_spans":[{"surface":"99명","semantic_type":"COUNTER"}]}
+{"id":"ko-counter-31","category":"ko/counters","text":"100명","expected":"백 명","expected_spans":[{"surface":"100명","semantic_type":"COUNTER"}]}
+{"id":"ko-counter-32","category":"ko/counters","text":"2시간","expected":"두 시간","expected_spans":[{"surface":"2시간","semantic_type":"COUNTER"}]}
+{"id":"ko-counter-33","category":"ko/counters","text":"3 개","expected":"세 개","expected_spans":[{"surface":"3 개","semantic_type":"COUNTER"}]}
+{"id":"ko-counter-34","category":"ko/counters","text":"3 명","expected":"세 명","expected_spans":[{"surface":"3 명","semantic_type":"COUNTER"}]}
+{"id":"ko-counter-35","category":"ko/counters","text":"3 살","expected":"세 살","expected_spans":[{"surface":"3 살","semantic_type":"COUNTER"}]}
+{"id":"ko-counter-36","category":"ko/counters","text":"3 시","expected":"세 시","expected_spans":[{"surface":"3 시","semantic_type":"COUNTER"}]}
+{"id":"ko-counter-37","category":"ko/counters","text":"3 분","expected":"삼 분","expected_spans":[{"surface":"3 분","semantic_type":"COUNTER"}]}
+{"id":"ko-counter-38","category":"ko/counters","text":"3 초","expected":"삼 초","expected_spans":[{"surface":"3 초","semantic_type":"COUNTER"}]}
+{"id":"ko-quantity-scale-won","category":"ko/quantities","text":"3.5만원","expected":"삼만오천 원"}
+{"id":"ko-quantity-scale-large","category":"ko/quantities","text":"1.25억원","expected":"일억이천오백만 원"}
+{"id":"ko-quantity-scale-negative","category":"ko/quantities","text":"-0.25만원","expected":"마이너스 이천오백 원"}
+{"id":"ko-quantity-scale-spaced","category":"ko/quantities","text":"3천만 원","expected":"삼천만 원"}
+{"id":"ko-quantity-won-prefix-spaced","category":"ko/quantities","text":"₩ 12,500","expected":"만이천오백 원"}
+{"id":"ko-quantity-percent-spaced","category":"ko/quantities","text":"12.5 %","expected":"십이 점 오 퍼센트"}
+{"id":"ko-quantity-kg-spaced","category":"ko/quantities","text":"3 kg","expected":"삼 킬로그램"}
+{"id":"ko-quantity-gb-spaced","category":"ko/quantities","text":"32 GB","expected":"삼십이 기가바이트"}
+{"id":"ko-date-labelled","category":"ko/date-time","text":"2026년 6월 1일","expected":"이천이십육 년 유 월 일 일","expected_spans":[{"surface":"2026년 6월 1일","semantic_type":"DATE"}]}
+{"id":"ko-date-labelled-compact","category":"ko/date-time","text":"2026년10월16일","expected":"이천이십육 년 시 월 십육 일","expected_spans":[{"surface":"2026년10월16일","semantic_type":"DATE"}]}
+{"id":"ko-date-spaced-dots","category":"ko/date-time","text":"2026. 9. 16.","expected":"이천이십육 년 구 월 십육 일","expected_spans":[{"surface":"2026. 9. 16.","semantic_type":"DATE"}]}
+{"id":"ko-leap-date","category":"ko/date-time","text":"2024-02-29","expected":"이천이십사 년 이 월 이십구 일","expected_spans":[{"surface":"2024-02-29","semantic_type":"DATE"}]}
+{"id":"ko-time-seconds","category":"ko/date-time","text":"14:30:05","expected":"열네 시 삼십 분 오 초","expected_spans":[{"surface":"14:30:05","semantic_type":"TIME"}]}
+{"id":"ko-fraction-half","category":"ko/fraction","text":"1/2","expected":"이 분의 일","expected_spans":[{"surface":"1/2","semantic_type":"FRACTION"}]}
+{"id":"ko-fraction-negative-half","category":"ko/fraction","text":"-1/2","expected":"마이너스 이 분의 일","expected_spans":[{"surface":"-1/2","semantic_type":"FRACTION"}]}
+{"id":"ko-fraction-third","category":"ko/fraction","text":"1/3","expected":"삼 분의 일","expected_spans":[{"surface":"1/3","semantic_type":"FRACTION"}]}
+{"id":"en-number-twelve","category":"en/numbers","text":"12","expected":"twelve","default_language":"en-US","expected_spans":[{"surface":"12","semantic_type":"CARDINAL"}]}
+{"id":"en-number-hundred-one","category":"en/numbers","text":"101","expected":"one hundred one","default_language":"en-US","expected_spans":[{"surface":"101","semantic_type":"CARDINAL"}]}
+{"id":"en-number-million","category":"en/numbers","text":"1000000","expected":"one million","default_language":"en-US","expected_spans":[{"surface":"1000000","semantic_type":"CARDINAL"}]}
+{"id":"en-number-negative-decimal","category":"en/numbers","text":"-3.5","expected":"minus three point five","default_language":"en-US","expected_spans":[{"surface":"-3.5","semantic_type":"CARDINAL"}]}
+{"id":"en-ordinal-2nd","category":"en/ordinal","text":"2nd","expected":"second","default_language":"en-US","expected_spans":[{"surface":"2nd","semantic_type":"ORDINAL"}]}
+{"id":"en-ordinal-3rd","category":"en/ordinal","text":"3rd","expected":"third","default_language":"en-US","expected_spans":[{"surface":"3rd","semantic_type":"ORDINAL"}]}
+{"id":"en-ordinal-4th","category":"en/ordinal","text":"4th","expected":"fourth","default_language":"en-US","expected_spans":[{"surface":"4th","semantic_type":"ORDINAL"}]}
+{"id":"en-ordinal-11th","category":"en/ordinal","text":"11th","expected":"eleventh","default_language":"en-US","expected_spans":[{"surface":"11th","semantic_type":"ORDINAL"}]}
+{"id":"en-ordinal-12th","category":"en/ordinal","text":"12th","expected":"twelfth","default_language":"en-US","expected_spans":[{"surface":"12th","semantic_type":"ORDINAL"}]}
+{"id":"en-ordinal-13th","category":"en/ordinal","text":"13th","expected":"thirteenth","default_language":"en-US","expected_spans":[{"surface":"13th","semantic_type":"ORDINAL"}]}
+{"id":"en-ordinal-21st","category":"en/ordinal","text":"21st","expected":"twenty first","default_language":"en-US","expected_spans":[{"surface":"21st","semantic_type":"ORDINAL"}]}
+{"id":"en-ordinal-22nd","category":"en/ordinal","text":"22nd","expected":"twenty second","default_language":"en-US","expected_spans":[{"surface":"22nd","semantic_type":"ORDINAL"}]}
+{"id":"en-ordinal-23rd","category":"en/ordinal","text":"23rd","expected":"twenty third","default_language":"en-US","expected_spans":[{"surface":"23rd","semantic_type":"ORDINAL"}]}
+{"id":"en-ordinal-101st","category":"en/ordinal","text":"101st","expected":"one hundred first","default_language":"en-US","expected_spans":[{"surface":"101st","semantic_type":"ORDINAL"}]}
+{"id":"en-quantity-kg-spaced","category":"en/quantities","text":"3 kg","expected":"three kilograms","default_language":"en-US"}
+{"id":"en-quantity-dollar-spaced","category":"en/quantities","text":"$ 12.50","expected":"twelve dollars and fifty cents","default_language":"en-US"}
+{"id":"en-quantity-percent-spaced","category":"en/quantities","text":"12.5 %","expected":"twelve point five percent","default_language":"en-US"}
+{"id":"en-quantity-decimal-singular-unit","category":"en/quantities","text":"1.0kg","expected":"one point zero kilogram","default_language":"en-US"}
+{"id":"en-half","category":"en/fraction","text":"1/2","expected":"one over two","default_language":"en-US","expected_spans":[{"surface":"1/2","semantic_type":"FRACTION"}]}
+{"id":"en-negative-fraction","category":"en/fraction","text":"-3/4","expected":"minus three over four","default_language":"en-US","expected_spans":[{"surface":"-3/4","semantic_type":"FRACTION"}]}
+{"id":"en-time-seconds","category":"en/date-time","text":"14:30:05","expected":"fourteen thirty and five seconds","default_language":"en-US","expected_spans":[{"surface":"14:30:05","semantic_type":"TIME"}]}
+{"id":"en-time-singular-second","category":"en/date-time","text":"09:00:01","expected":"nine o'clock and one second","default_language":"en-US","expected_spans":[{"surface":"09:00:01","semantic_type":"TIME"}]}
+{"id":"en-leap-date","category":"en/date-time","text":"2024-02-29","expected":"February twenty ninth two thousand twenty four","default_language":"en-US","expected_spans":[{"surface":"2024-02-29","semantic_type":"DATE"}]}
+{"id":"invalid-ordinal-11","category":"invalid-input","text":"11st","expected":"11st","default_language":"en-US","expected_spans":[{"surface":"11st","semantic_type":"TEXT"}]}
+{"id":"invalid-ordinal-12","category":"invalid-input","text":"12nd","expected":"12nd","default_language":"en-US","expected_spans":[{"surface":"12nd","semantic_type":"TEXT"}]}
+{"id":"invalid-ordinal-13","category":"invalid-input","text":"13rd","expected":"13rd","default_language":"en-US","expected_spans":[{"surface":"13rd","semantic_type":"TEXT"}]}
+{"id":"invalid-ordinal-21","category":"invalid-input","text":"21th","expected":"21th","default_language":"en-US","expected_spans":[{"surface":"21th","semantic_type":"TEXT"}]}
+{"id":"invalid-comma-group","category":"invalid-input","text":"12,34","expected":"12,34","default_language":"en-US","expected_spans":[{"surface":"12,34","semantic_type":"TEXT"}]}
+{"id":"invalid-comma-leading-group","category":"invalid-input","text":"1234,567","expected":"1234,567","default_language":"en-US","expected_spans":[{"surface":"1234,567","semantic_type":"TEXT"}]}
+{"id":"invalid-nonleap-date","category":"invalid-input","text":"2026-02-29","expected":"2026-02-29","default_language":"en-US","expected_spans":[{"surface":"2026-02-29","semantic_type":"TEXT"}]}
+{"id":"invalid-month-out-of-range","category":"invalid-input","text":"2026-13-01","expected":"2026-13-01","default_language":"en-US","expected_spans":[{"surface":"2026-13-01","semantic_type":"TEXT"}]}
+{"id":"invalid-hour-out-of-range","category":"invalid-input","text":"24:00","expected":"24:00","default_language":"en-US","expected_spans":[{"surface":"24:00","semantic_type":"TEXT"}]}
+{"id":"invalid-minute-out-of-range","category":"invalid-input","text":"12:60","expected":"12:60","default_language":"en-US","expected_spans":[{"surface":"12:60","semantic_type":"TEXT"}]}
+{"id":"invalid-second-out-of-range","category":"invalid-input","text":"12:30:60","expected":"12:30:60","default_language":"en-US","expected_spans":[{"surface":"12:30:60","semantic_type":"TEXT"}]}
+{"id":"invalid-zero-denominator","category":"invalid-input","text":"1/0","expected":"1/0","default_language":"en-US","expected_spans":[{"surface":"1/0","semantic_type":"TEXT"}]}
+{"id":"invalid-unit-prefix-only","category":"invalid-input","text":"10kmh","expected":"10kmh","default_language":"en-US","expected_spans":[{"surface":"10kmh","semantic_type":"TEXT"}]}
+{"id":"invalid-ko-date","category":"invalid-input","text":"2026년2월29일","expected":"2026년2월29일","expected_spans":[{"surface":"2026년2월29일","semantic_type":"TEXT"}]}
+{"id":"foreign-api","category":"foreign-pronunciation","text":"API를 사용합니다.","expected":"에이피아이를 사용합니다."}
+{"id":"foreign-coffee","category":"foreign-pronunciation","text":"coffee를 마십니다.","expected":"커피를 마십니다."}
+{"id":"foreign-chrome","category":"foreign-pronunciation","text":"Chrome을 실행합니다.","expected":"크롬을 실행합니다."}
+{"id":"foreign-docker","category":"foreign-pronunciation","text":"Docker를 사용합니다.","expected":"도커를 사용합니다."}
+{"id":"foreign-json","category":"foreign-pronunciation","text":"JSON을 읽습니다.","expected":"제이슨을 읽습니다."}
+{"id":"quoted-english","category":"code-mixed","text":"그는 \"Please go to the 1st floor\"라고 말했다.","expected":"그는 \"Please go to the first floor\"라고 말했다.","expected_spans":[{"surface":"1st","source_lang":"en-US","context_lang":"en-US","render_lang":"en-US","semantic_type":"ORDINAL"}]}
+{"id":"compound-ordinal-ko","category":"code-mixed","text":"21st는 순서입니다.","expected":"트웬티 퍼스트는 순서입니다.","expected_spans":[{"surface":"21st","semantic_type":"ORDINAL"}]}
+{"id":"empty-input","category":"streaming","text":"","expected":""}
+{"id":"whitespace-preservation","category":"streaming","text":"  Apple은\t사과입니다.\n\n","expected":"  애플은\t사과입니다.\n\n"}
+{"id":"crlf-preservation","category":"streaming","text":"Apple은 사과입니다.\r\nGPU를 사용합니다.\r\n","expected":"애플은 사과입니다.\r\n지피유를 사용합니다.\r\n"}
+{"id":"url-protection","category":"protected-syntax","text":"https://www.example.com/a?x=12","expected":"https://www.example.com/a?x=12","expected_spans":[{"surface":"https://www.example.com/a?x=12","semantic_type":"URL"}]}
+{"id":"email-protection","category":"protected-syntax","text":"support@example.com","expected":"support@example.com","default_language":"en-US","expected_spans":[{"surface":"support@example.com","semantic_type":"EMAIL"}]}
+{"id":"version-protection","category":"protected-syntax","text":"2.1.3","expected":"2.1.3","expected_spans":[{"surface":"2.1.3","semantic_type":"VERSION"}]}
+{"id":"ip-protection","category":"protected-syntax","text":"192.168.0.1","expected":"192.168.0.1","expected_spans":[{"surface":"192.168.0.1","semantic_type":"IP_ADDRESS"}]}
+{"id":"range-default","category":"domain","text":"123-456","expected":"백이십삼 다시 사백오십육","expected_spans":[{"surface":"123-456","semantic_type":"RANGE"}]}
+{"id":"range-finance","category":"domain","text":"123-456","expected":"일이삼 사오육","expected_spans":[{"surface":"123-456","semantic_type":"RANGE"}],"resource_overrides":[{"layer":"domain","path":"domains/finance/ko-KR/rules.tsv"}]}
+{"id":"range-customer","category":"customer","text":"123-456","expected":"일이삼 번에 사오육","expected_spans":[{"surface":"123-456","semantic_type":"RANGE"}],"resource_overrides":[{"layer":"domain","path":"domains/finance/ko-KR/rules.tsv"},{"layer":"customer","path":"customers/example/ko-KR/rules.tsv"}]}

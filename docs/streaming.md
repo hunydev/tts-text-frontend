@@ -47,7 +47,8 @@ sentence end. `flush` explicitly supplies final-input evidence.
 Context detection is local to stable planned units. Shorter phrase targets can
 change contextual readings compared with longer targets; batch and stream remain
 equal for the same configuration. This bounded context is the initial tradeoff for
-incremental commitment. There is no claimed absolute TTFB target or benchmark yet.
+incremental commitment. [Frontend benchmarks](benchmark.md) measure actual callback
+timing; no absolute latency guarantee is claimed.
 
 Callbacks run synchronously during `write`/`flush`; the caller controls pacing by
 returning from the callback. A nonzero callback return cancels the request with
@@ -60,3 +61,22 @@ Segment text and span arrays are valid only during the callback. Output offsets
 are local to the segment; input offsets refer to the original stream. An error after
 prior callbacks cannot retract already delivered text. Treat a failed stream as a
 failed request and destroy it.
+
+## Semantic spaces and quotation scopes
+
+Horizontal whitespace following numbers, fraction separators, signs or configured
+currency prefixes is retained with lookahead. This allows `3 kg`, `1 / 2` and
+`₩ 12,500` to classify as one semantic span even with a one-character phrase target.
+The scanner does not commit a numeric prefix because a write happened to end there.
+Pack `numeric_continuation` resources also retain calendar/scale markers following
+a number, so even invalid `2026년 2월 29일` remains a complete candidate under tiny
+phrase targets.
+
+Paired ASCII double quotes, curly double quotes, guillemets and corner quotes
+create independent context windows. Their content is retained until the matching
+closer so trailing Korean text cannot change the last English word inside a quote.
+Up to 32 levels of nesting are tracked. ASCII apostrophes remain lexical punctuation
+for English contractions; they do not open a quotation scope. Unclosed quotations
+wait until final flush or the pending-byte limit. This improves text correctness
+but may delay the first callback for long quoted passages; maximum segment length
+is a soft target for these indivisible scopes too.

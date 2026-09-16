@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.3.0 — Text correctness and broader grammar
+
+* Replace synthesis/listening evaluation with independent normalized-text references,
+  exact matches, character edit counts, metadata assertions and byte-chunk parity.
+* Remove the optional audio bridge, synthesis test dependency and audio CI artifacts.
+* Recognize spaced quantities, fractions, seconds in times, Korean calendar forms,
+  scaled Korean currency and resource-declared technical terms.
+* Preserve invalid dates/times, grouped numbers, ordinal spellings and unsupported
+  numeric atoms without partially converting their prefixes.
+* Scope context inside complete quotations and preserve them during commitment.
+* Resolve compound foreign verbalizations through the layered word pipeline.
+* Expand KO/EN/foreign corpora and curated category lexicons. C ABI v1 is unchanged.
+
 ## 0.2.0 — TTS integration and evaluation
 
 * Versioned JSONL streaming transport with language metadata and early pipe output.

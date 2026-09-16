@@ -28,6 +28,8 @@ char *ttf_strndup(const char *s, size_t n);
 int ttf_ascii_equal(const char *a, const char *b);
 int ttf_utf8_decode(const char *s, size_t n, uint32_t *cp, size_t *width);
 ttf_script_t ttf_script_of(uint32_t cp);
+/* Delimited quotation scopes; apostrophes remain lexical punctuation. */
+uint32_t ttf_quote_closer(uint32_t cp);
 ttf_status_t ttf_resource_set(ttf_engine_t *e, const char *kind, const char *lang, const char *key,
                               const char *value, ttf_resource_layer_t layer);
 void ttf_resource_destroy(ttf_engine_t *e);

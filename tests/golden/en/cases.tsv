@@ -21,3 +21,111 @@ $12.50	twelve dollars and fifty cents
 32GB	thirty two gigabytes
 2GHz	two gigahertz
 184467440737095516160th	184467440737095516160th
+# Expanded numeric grammar: expected text is a reviewed reading policy.
+21	twenty one
+999	nine hundred ninety nine
+1001	one thousand one
+1000001	one million one
+-12.05	minus twelve point zero five
++3	plus three
+1,234,567	one million two hundred thirty four thousand five hundred sixty seven
+12,345.67	twelve thousand three hundred forty five point six seven
+11th	eleventh
+12th	twelfth
+13th	thirteenth
+21st	twenty first
+22nd	twenty second
+23rd	twenty third
+101st	one hundred first
+111th	one hundred eleventh
+112th	one hundred twelfth
+113th	one hundred thirteenth
+1000th	one thousandth
+1001st	one thousand first
+2024-02-29	February twenty ninth two thousand twenty four
+2000-02-29	February twenty ninth two thousand
+2026. 9. 16.	September sixteenth two thousand twenty six
+00:00	zero o'clock
+23:59	twenty three fifty nine
+14:30:05	fourteen thirty and five seconds
+09:00:01	nine o'clock and one second
+23:59:59	twenty three fifty nine and fifty nine seconds
+$ 12.50	twelve dollars and fifty cents
+$1	one dollar
+$1.01	one dollar and one cent
+$0.50	zero dollars and fifty cents
+$-1	minus one dollar
+12.5 %	twelve point five percent
+3 kg	three kilograms
+1kg	one kilogram
+1.0kg	one point zero kilogram
+-1 kg	minus one kilogram
+1.25 kg	one point two five kilograms
+10 cm	ten centimeters
+1/2	one over two
+-3/4	minus three over four
+22/7	twenty two over seven
+# Invalid structures must remain unchanged rather than partially normalize.
+11st	11st
+12nd	12nd
+13rd	13rd
+21th	21th
+1th	1th
+-1st	-1st
+1.2nd	1.2nd
+1stfloor	1stfloor
+12,34	12,34
+1234,567	1234,567
+1,234,56	1,234,56
+$12,34	$12,34
+$ 1234,567	$ 1234,567
+2026-02-29	2026-02-29
+1900-02-29	1900-02-29
+2026-13-01	2026-13-01
+2026-04-31	2026-04-31
+2026-09-161	2026-09-161
+2026. 13. 16.	2026. 13. 16.
+2026-09-16T14:30	2026-09-16T14:30
+24:00	24:00
+12:60	12:60
+12:3	12:3
+12:30:60	12:30:60
+12:30:01:02	12:30:01:02
+1/0	1/0
+1/00	1/00
+1/2/3	1/2/3
+1.5/2	1.5/2
+10kmh	10kmh
+123abc	123abc
+3.5.7	3.5.7
+192.168.0.1	192.168.0.1
+1 / 2	one over two
+-3 / 4	minus three over four
+1 / 0	1 / 0
+3 g	three grams
+500mg	five hundred milligrams
+2 mm	two millimeters
+64 MB	sixty four megabytes
+2TB	two terabytes
+2400 MHz	two thousand four hundred megahertz
+60 Hz	sixty hertz
+2L	two liters
+250 mL	two hundred fifty milliliters
+1°C	one degree Celsius
+32 °C	thirty two degrees Celsius
+10 kWh	ten kilowatt hours
+100W	one hundred watts
+2 kW	two kilowatts
+C++	C++
+USB-C	USB-C
+3D	3D
+.5	zero point five
+-.5	minus zero point five
+.5%	zero point five percent
+$ .50	zero dollars and fifty cents
+.5 kg	zero point five kilograms
+1,,234	1,,234
+1..2	1..2
+1--2	1--2
+1000000000000000000	one quintillion
+18446744073709551615	eighteen quintillion four hundred forty six quadrillion seven hundred forty four trillion seventy three billion seven hundred nine million five hundred fifty one thousand six hundred fifteen

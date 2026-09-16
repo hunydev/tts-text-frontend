@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(tts_text_frontend VERSION 0.2.0 LANGUAGES C)
+project(tts_text_frontend VERSION 0.3.0 LANGUAGES C)
 include(GNUInstallDirs)
 include(CTest)
 option(TTF_ENABLE_ASAN "Enable AddressSanitizer" OFF)
@@ -84,6 +84,9 @@ if(BUILD_TESTING)
   target_link_libraries(ttf_test_random PRIVATE tts_text_frontend_static ttf_build_flags)
   target_compile_definitions(ttf_test_random PRIVATE TEST_RESOURCE_ROOT="${CMAKE_CURRENT_SOURCE_DIR}/resources")
   add_test(NAME randomized_streaming COMMAND ttf_test_random)
+  add_executable(ttf_test_boundaries tests/streaming/test_semantic_boundaries.c)
+  target_link_libraries(ttf_test_boundaries PRIVATE tts_text_frontend_static ttf_build_flags)
+  add_test(NAME semantic_boundary_streaming COMMAND ttf_test_boundaries ${CMAKE_CURRENT_SOURCE_DIR}/resources)
   if(UNIX)
     find_package(Threads REQUIRED)
     add_executable(ttf_test_concurrent tests/integration/test_concurrent.c)
@@ -101,15 +104,6 @@ if(BUILD_TESTING)
     add_test(NAME evaluation_reports COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_evaluation.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
-    find_program(ESPEAK_NG_EXECUTABLE espeak-ng)
-    set(TTF_OPTIONAL_ESPEAK)
-    if(ESPEAK_NG_EXECUTABLE)
-      list(APPEND TTF_OPTIONAL_ESPEAK ${ESPEAK_NG_EXECUTABLE})
-    endif()
-    add_test(NAME tts_bridge COMMAND ${Python3_EXECUTABLE}
-      ${CMAKE_CURRENT_SOURCE_DIR}/tests/tts_bridge/test_bridge.py
-      ${CMAKE_CURRENT_SOURCE_DIR} $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources
-      ${TTF_OPTIONAL_ESPEAK})
     add_test(NAME compiled_resources COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_compiled_resources.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/tools/resource_compiler/compile_resources.py

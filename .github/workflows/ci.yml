@@ -30,22 +30,20 @@ jobs:
           ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
           UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
 
-  tts-integration:
+  text-evaluation:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7.0.1
-      - name: Install optional offline TTS engine
-        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends espeak-ng
       - run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
       - run: cmake --build build --parallel 2
-      - name: Verify protocol and real synthesis
-        run: ctest --test-dir build --output-on-failure -R 'cli_stream_json|tts_bridge|evaluation'
-      - name: Build listening report and audio samples
-        run: python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources --corpus tests/evaluation/cases.jsonl --output-dir artifacts/evaluation --synthesize
+      - name: Verify text protocol and evaluation
+        run: ctest --test-dir build --output-on-failure -R 'cli_stream_json|evaluation'
+      - name: Build normalized text report
+        run: python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources --corpus tests/evaluation/cases.jsonl --output-dir artifacts/evaluation
       - name: Upload evaluation artifact
         uses: actions/upload-artifact@v7.0.1
         with:
-          name: tts-listening-evaluation
+          name: frontend-text-evaluation
           path: artifacts/evaluation/
           retention-days: 14
           if-no-files-found: error

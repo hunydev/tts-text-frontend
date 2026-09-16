@@ -34,6 +34,46 @@ ttf_status_t ttf_foreign_render(const ttf_engine_t *e, const ttf_language_pack_t
         snprintf(trace, 64, "preserved:no-renderer");
         return ttf_buffer_append(out, text, n);
     }
+    /* A source verbalizer can produce several words (e.g. an ordinal). Resolve
+       the complete phrase above first, then preserve its whitespace and apply
+       the same layered pipeline to individual words. */
+    if (memchr(text, ' ', n) || memchr(text, '\t', n) || memchr(text, '\n', n)) {
+        unsigned paths = 0;
+        size_t at = 0;
+        *layer = TTF_LAYER_COMMON;
+        while (at < n) {
+            size_t end = at;
+            int whitespace = text[at] == ' ' || text[at] == '\t' || text[at] == '\n';
+            while (end < n &&
+                   ((text[end] == ' ' || text[end] == '\t' || text[end] == '\n') == whitespace))
+                end++;
+            if (whitespace)
+                st = ttf_buffer_append(out, text + at, end - at);
+            else {
+                char part_trace[64] = {0};
+                ttf_resource_layer_t part_layer = TTF_LAYER_COMMON;
+                st = ttf_foreign_render(e, source, target, text + at, end - at, TTF_LEX_WORD, out,
+                                        part_trace, &part_layer);
+                if (part_layer > *layer)
+                    *layer = part_layer;
+                if (strstr(part_trace, "lexicon"))
+                    paths |= 1;
+                else if (strstr(part_trace, "dictionary"))
+                    paths |= 2;
+                else if (strstr(part_trace, "grapheme"))
+                    paths |= 8;
+                else
+                    paths |= 4;
+            }
+            if (st != TTF_OK)
+                return st;
+            at = end;
+        }
+        snprintf(trace, 64, "phrase:%s%s%s%s", paths & 1 ? "lexicon " : "",
+                 paths & 2 ? "dictionary " : "", paths & 4 ? "g2p " : "",
+                 paths & 8 ? "grapheme-fallback" : "");
+        return TTF_OK;
+    }
     memset(&pron, 0, sizeof(pron));
     if (source->pronounce && target->render_phones) {
         st = source->pronounce(e, text, n, lexical, &pron);
