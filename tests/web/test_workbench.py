@@ -14,7 +14,7 @@ root = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(root / "tools/web"))
 import native
 from server import Handler, Server
-from workbench import validate
+from workbench import stream_sizes, validate
 
 # Detect packing/alignment drift before executing any native operation.
 for line in subprocess.check_output([layout], text=True).splitlines():
@@ -99,6 +99,29 @@ try:
     assert result["spans"][0]["lexicon"] != "lexicon:system"
     assert run("")[0]["text"] == ""
     assert run("3개", expected="잘못된 정답")[0]["expected_match"] is False
+    # A supplied sequence describes real native writes, including split UTF-8.
+    text = "Apple은 사과입니다.\nBank of America는 은행입니다."
+    custom = {"chunk_sizes": [1, 5, 2], "chunk_bytes": 65536}
+    result, events = run(text, "stream", custom)
+    writes = [e for e in events if e["event"] == "chunk"]
+    assert [e["end"] - e["begin"] for e in writes] == [1, 5, 2, len(text.encode()) - 8]
+    assert result["text"] == "애플은 사과입니다.\n뱅크 오브 아메리카는 은행입니다."
+    result, events = run(text, "verify", custom)
+    assert result["verification"]["passed"]
+    assert result["verification"]["variants"][-1]["label"] == "custom writes"
+    assert result["verification"]["variants"][-1]["chunk_count"] == 4
+    result, _ = run("Apple", "stream", {"chunk_sizes": [65536, 5]})
+    assert result["text"] == run("Apple")[0]["text"]
+    assert stream_sizes(0, custom) == []
+    # The total delay uses the actual custom schedule and excludes final sleep.
+    validate(
+        dict(
+            mode="stream",
+            text="x" * 81,
+            options={"chunk_sizes": [1] * 81, "delay_ms": 100},
+        )
+    )
+    checks += 1
     # First callback must arrive through HTTP before all simulated writes finish.
     body = dict(
         mode="stream",
@@ -136,12 +159,25 @@ try:
         corpus = [json.loads(x) for x in r]
     assert corpus[-2]["passed"] == 40 and corpus[-2]["failed"] == 0
     checks += 1
+    with post("/api/corpus", {"corpus": "multiword-v8"}) as r:
+        corpus = [json.loads(x) for x in r]
+    assert corpus[-2]["passed"] == 30 and corpus[-2]["failed"] == 0
+    checks += 1
     for body in [
         dict(mode="verify", text="x", options={"chunk_bytes": 0}),
         dict(mode="normalize", text="\0"),
         dict(mode="normalize", text="x" * 16385),
         dict(mode="normalize", text="x", options={"default_language": "../x"}),
         dict(mode="normalize", text="x", options={"user_lexicon": "x"}),
+        dict(mode="stream", text="x", options={"chunk_sizes": [0]}),
+        dict(mode="stream", text="x", options={"chunk_sizes": [True]}),
+        dict(mode="stream", text="x", options={"chunk_sizes": [1] * 257}),
+        dict(mode="stream", text="x", options={"chunk_sizes": "1,2"}),
+        dict(
+            mode="stream",
+            text="x" * 1000,
+            options={"chunk_sizes": [1] * 100, "chunk_bytes": 65536, "delay_ms": 100},
+        ),
     ]:
         try:
             post("/api/run", body)

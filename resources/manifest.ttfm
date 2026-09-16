@@ -14,6 +14,9 @@ languages/ko-KR/lexicon/technology/default.tsv
 languages/ko-KR/lexicon/proper_nouns/default.tsv
 languages/ko-KR/lexicon/content/default.tsv
 languages/ko-KR/lexicon/finance/default.tsv
+languages/ko-KR/lexicon/multiword/finance.tsv
+languages/ko-KR/lexicon/multiword/places_media.tsv
+languages/ko-KR/lexicon/multiword/content.tsv
 languages/ko-KR/rules/context.tsv
 languages/ko-KR/rules/numeric.tsv
 languages/ko-KR/rules/identifiers.tsv

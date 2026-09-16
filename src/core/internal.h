@@ -8,6 +8,8 @@
 #include <limits.h>
 #define TTF_MAX_PACKS 32
 #define TTF_HASH_BUCKETS 1021
+#define TTF_PHRASE_WORDS 8
+#define TTF_PHRASE_INPUT 255
 
 typedef struct ttf_entry {
     char *kind, *lang, *key, *value;
@@ -15,6 +17,7 @@ typedef struct ttf_entry {
     size_t order;
     struct ttf_entry *next;
     struct ttf_entry *boundary_next;
+    struct ttf_entry *phrase_next;
 } ttf_entry_t;
 struct ttf_engine {
     ttf_config_t config;
@@ -24,6 +27,7 @@ struct ttf_engine {
     size_t pack_count, resource_order;
     ttf_entry_t *resources[TTF_HASH_BUCKETS];
     ttf_entry_t *boundary_cues;
+    ttf_entry_t *phrases[TTF_HASH_BUCKETS];
 };
 char *ttf_strdup(const char *s);
 char *ttf_strndup(const char *s, size_t n);
@@ -37,6 +41,15 @@ ttf_status_t ttf_resource_set(ttf_engine_t *e, const char *kind, const char *lan
 void ttf_resource_destroy(ttf_engine_t *e);
 const ttf_language_pack_t *ttf_find_pack(const ttf_engine_t *e, const char *tag);
 ttf_status_t ttf_register_builtins(ttf_engine_t *e);
+/* Bounded multiword pronunciation keys and shared lexical lookahead. */
+ttf_status_t ttf_lexicon_canonical_key(const char *key, char **out);
+void ttf_phrase_index(ttf_engine_t *engine);
+size_t ttf_phrase_protect_until(const ttf_engine_t *engine, const char *text, size_t length,
+                                const ttf_token_t *tokens, size_t index);
+const char *ttf_phrase_match(const ttf_engine_t *engine, const char *source, const char *target,
+                             const char *text, const ttf_token_t *tokens, size_t count,
+                             size_t index, size_t *consumed, char value[TTF_IR_VALUE_SIZE],
+                             ttf_resource_layer_t *layer);
 /* Generic semantic recognition supplied by semantic/classifier.c. */
 size_t ttf_classify_universal(const ttf_pack_input_t *input, ttf_semantic_t *out);
 /* Normalize one stable context unit; shared by batch and streaming. */

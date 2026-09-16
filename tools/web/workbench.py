@@ -8,11 +8,12 @@ ROOT = Path(__file__).resolve().parents[2]
 MAX_TEXT_BYTES = 16384
 CORPORA = {
     "regression": ("기본 회귀 · KO / EN / 코드믹스", "cases.jsonl"),
-    "finance-content": ("금융·콘텐츠 시나리오", "domain_cases.jsonl"),
+    "finance-content": ("금융·콘텐츠 시나리오", "domain_cases_v8.jsonl"),
     "advanced": ("금융 식별자·수치·콘텐츠 확장", "advanced_cases.jsonl"),
     "protected": ("코드·태그·경로 보호", "protected_cases.jsonl"),
     "content-v7": ("제목·고유명사·발음 확장", "content_v7.jsonl"),
     "finance-v7": ("단위가 반복되는 금융 범위", "finance_ranges_v7.jsonl"),
+    "multiword-v8": ("금융·콘텐츠 복합 이름 발음", "multiword_v8.jsonl"),
 }
 DEFAULTS = dict(
     default_language="ko-KR",
@@ -24,6 +25,7 @@ DEFAULTS = dict(
     max_length=200,
     max_pending_bytes=1048576,
     chunk_bytes=7,
+    chunk_sizes=[],
     delay_ms=0,
     domain="none",
     customer_tsv="",
@@ -50,6 +52,22 @@ def integer(value, name, low, high):
     if type(value) is not int or not low <= value <= high:
         raise ValueError(f"{name}: {low}~{high} 범위의 정수가 필요합니다.")
     return value
+
+
+def stream_sizes(length, options):
+    """Explicit write sizes first; fill remaining bytes with the uniform size."""
+    schedule = []
+    for size in options["chunk_sizes"]:
+        if not length:
+            break
+        size = min(size, length)
+        schedule.append(size)
+        length -= size
+    while length:
+        size = min(options["chunk_bytes"], length)
+        schedule.append(size)
+        length -= size
+    return schedule
 
 
 def validate(request, corpus=False):
@@ -98,6 +116,10 @@ def validate(request, corpus=False):
         raise ValueError("검증 청크 크기는 1~6개입니다.")
     for size in opts["verify_chunks"]:
         integer(size, "verify_chunks", 1, 65536)
+    if not isinstance(opts["chunk_sizes"], list) or len(opts["chunk_sizes"]) > 256:
+        raise ValueError("직접 지정 청크는 최대 256개입니다.")
+    for size in opts["chunk_sizes"]:
+        integer(size, "chunk_sizes", 1, 65536)
     rows = opts["user_lexicon"]
     if not isinstance(rows, list) or len(rows) > 100:
         raise ValueError("사용자 사전은 최대 100개입니다.")
@@ -112,7 +134,8 @@ def validate(request, corpus=False):
         raise ValueError("시스템 사전 제외 항목은 최대 32개입니다.")
     for word in words:
         bounded_string(word, "remove_system_words", 128)
-    if (len(result["text"].encode()) // opts["chunk_bytes"]) * opts["delay_ms"] > 8000:
+    writes = len(stream_sizes(len(result["text"].encode()), opts))
+    if result["mode"] == "stream" and max(0, writes - 1) * opts["delay_ms"] > 8000:
         raise ValueError(
             "총 입력 지연은 8초 이내여야 합니다. 청크 크기를 키우거나 지연을 줄이세요."
         )
@@ -192,6 +215,26 @@ def catalog():
             text="Apple은 사과입니다.\n가격은 12,500원입니다.\nPlease go to the 1st floor.",
             expected="애플은 사과입니다.\n가격은 만이천오백 원입니다.\nPlease go to the first floor.",
             options={"chunk_bytes": 7, "delay_ms": 50},
+        ),
+        dict(
+            id="multiword",
+            category="복합 이름",
+            title="단어 사이에서 끊긴 복합 이름",
+            text="After Effects를 사용합니다.\nBank of America는 은행입니다.",
+            expected="애프터 이펙츠를 사용합니다.\n뱅크 오브 아메리카는 은행입니다.",
+            options={"chunk_sizes": [6, 7, 1], "delay_ms": 30},
+        ),
+        dict(
+            id="multiword-user",
+            category="복합 이름",
+            title="복합 이름의 사용자 발음 우선순위",
+            text="After Effects를 사용합니다.",
+            expected="커스텀이펙트를 사용합니다.",
+            options={
+                "user_lexicon": [
+                    {"word": "After Effects", "pronunciation": "커스텀이펙트"}
+                ]
+            },
         ),
         dict(
             id="protected",

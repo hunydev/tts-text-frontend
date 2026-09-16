@@ -77,3 +77,13 @@ rendering. Complete source/output offsets carry the literal, including paths
 longer than a numeric value field. Diagnostic `protected.*` rules and layers
 make the policy observable. These spans are opaque to context routing and further
 TN rules; they do not claim a spoken pronunciation. Public ABI layouts are unchanged.
+
+## Multiword pronunciation spans (v0.8)
+
+An explicit foreign phrase can coalesce several lexical tokens into one `WORD`
+span. `value` contains the canonical phrase key, `rule` is `lexicon.phrase`, and
+`source_lang`, `context_lang`, `render_lang` remain independent. The dictionary
+layer is present in both semantic resource provenance and pronunciation provenance.
+The source extent includes original internal whitespace; the output extent covers
+its exact pronunciation value. This does not change the public struct layout.
+Consumers must not assume a fixed word-to-span count as lexicon resources expand.

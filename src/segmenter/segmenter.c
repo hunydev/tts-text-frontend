@@ -260,6 +260,11 @@ ttf_status_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, i
             continue;
         }
         extend_cue_range(e, s, n, t->begin, title_limit, &protected_until, cue_caches);
+        {
+            size_t phrase_end = ttf_phrase_protect_until(e, s, n, tokens, i);
+            if (phrase_end > protected_until)
+                protected_until = phrase_end;
+        }
         /* The same lexical categories drive routing, semantic recognition and
            safe cuts. Only whitespace cuts can be used for phrase segmentation. */
         for (at = t->begin; at < t->end;) {

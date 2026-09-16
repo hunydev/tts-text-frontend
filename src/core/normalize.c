@@ -121,9 +121,10 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
         ttf_pack_input_t in;
         ttf_span_t span;
         ttf_semantic_t *sem = &span.semantic;
-        size_t consumed = 0, j, end, matched = 0, semantic_limit = length;
+        size_t consumed = 0, j, end, matched = 0, semantic_limit = length, phrase_count = count;
         const ttf_language_pack_t *source, *context, *renderer;
         const ttf_entry_t *rule = NULL;
+        const char *phrase_hit = NULL;
         ttf_buffer_t normalized = {0};
         memset(&span, 0, sizeof(span));
         sem->struct_size = sizeof(*sem);
@@ -182,6 +183,7 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
                     ++classification.token_count;
             }
             semantic_limit = classification.length;
+            phrase_count = classification.token_count;
             consumed = ttf_classify_universal(&classification, sem);
             for (j = 0; j < e->pack_count; j++)
                 if (e->packs[j]->classify) {
@@ -236,6 +238,29 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
                 tokens[i].script == TTF_SCRIPT_LATIN ? TTF_LEX_UNKNOWN_LATIN : TTF_LEX_NONE;
             snprintf(sem->rule, sizeof(sem->rule), "identity");
         }
+        if (!rule && consumed == 1 && source && source != context &&
+            e->config.render_policy == TTF_PHONETIC_LOCALIZE &&
+            (sem->type == TTF_SEM_WORD || sem->type == TTF_SEM_INITIALISM ||
+             sem->type == TTF_SEM_ACRONYM)) {
+            size_t phrase_consumed = 0;
+            char phrase_value[TTF_IR_VALUE_SIZE];
+            ttf_resource_layer_t phrase_layer = TTF_LAYER_COMMON;
+            phrase_hit = ttf_phrase_match(e, source->language_tag, context->language_tag,
+                                          text, tokens, phrase_count, i, &phrase_consumed,
+                                          phrase_value, &phrase_layer);
+            if (phrase_hit) {
+                sem->type = TTF_SEM_WORD;
+                sem->lexical_class = TTF_LEX_WORD;
+                sem->layer = phrase_layer;
+                sem->input_end = tokens[i + phrase_consumed - 1].end;
+                memcpy(sem->value, phrase_value, strlen(phrase_value) + 1);
+                snprintf(sem->rule, sizeof(sem->rule), "lexicon.phrase");
+                consumed = phrase_consumed;
+                snprintf(span.lexicon, sizeof(span.lexicon), "lexicon:%s",
+                         ttf_layer_name(phrase_layer));
+                span.pronunciation_layer = phrase_layer;
+            }
+        }
         if (consumed > count - i) {
             st = TTF_ERESOURCE;
             goto fail;
@@ -271,6 +296,10 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
         tag(span.verbalizer, renderer->language_tag);
         if (rule)
             st = ttf_buffer_puts(&normalized, rule->value);
+        else if (phrase_hit) {
+            tag(span.verbalizer, source->language_tag);
+            st = ttf_buffer_puts(&normalized, phrase_hit);
+        }
         else if (source && source != context && foreign_type(sem->type) &&
                  e->config.render_policy == TTF_PHONETIC_LOCALIZE) {
             ttf_buffer_t spoken = {0};

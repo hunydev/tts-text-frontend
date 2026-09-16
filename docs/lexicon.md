@@ -55,3 +55,17 @@ Adjacent Latin words connected by single hyphens are now one lexical WORD (bound
 to 95 bytes), allowing user/customer whole-term overrides before G2P fallback.
 English context preserves the original spelling. These three curated entries fix
 known vocabulary cases; they do not establish general unknown-word accuracy.
+
+## Multiword names (v0.8)
+
+The same lexicon resource and public add/remove APIs support bounded multiword
+names such as `Bank of America` and `After Effects`. Matching is restricted to
+whole lexical tokens, with ASCII case folding and horizontal whitespace folding.
+Layer priority is evaluated before length, including a higher-layer single-word
+entry competing with a lower-layer phrase. At the same layer, the longest match
+wins. Phrase data stay separate from TN rules.
+
+The segment planner retains matching prefixes, so an input write ending after
+`After ` cannot cause premature single-word rendering. A matched phrase carries
+one semantic span and a pronunciation layer; English context and explicit English
+title cues still preserve the source. See [full contracts and limits](multiword-lexicon.md).

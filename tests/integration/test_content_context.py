@@ -65,7 +65,7 @@ for label in ("제목은", "타이틀은", "영문제목은"):
 
 check("제목은 The 1st day입니다. Apple Watch를 구매했습니다.",
       "제목은 The first day입니다. 애플 워치를 구매했습니다.",
-      (("1st", "first", english), ("Apple", "애플", lexicon), ("Watch", "워치", lexicon)))
+      (("1st", "first", english), ("Apple Watch", "애플 워치", {**lexicon, "rule": "lexicon.phrase"})))
 check("고객은 The 1st day를 확인합니다.", "고객은 더 퍼스트 데이를 확인합니다.",
       (("The", "더", korean), ("1st", "퍼스트", korean)))
 check('제목은 "Apple은 사과입니다."라고 적습니다.',

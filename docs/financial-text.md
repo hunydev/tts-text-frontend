@@ -108,8 +108,9 @@ the second in `secondary`, and an optional shared trailing `unit`. Examples:
 
 Use an ASCII hyphen as the separator. A signed second endpoint requires whitespace
 after that separator: `1--2` remains invalid rather than becoming a signed range.
-This grammar supports one shared trailing unit; it does not infer arbitrary
-prose intervals, inequalities or repeated units on both endpoints.
+The v0.5 grammar supports one shared trailing unit and does not infer arbitrary
+prose intervals or inequalities. Since v0.7, [repeated explicit units](finance-ranges.md)
+such as `1만원~2만원` and `$10-$20` are also recognized when both units agree.
 
 The legacy `range_mode`/`range_separator` policies apply to bare unsigned integer
 ranges. Thus `123-456` is `백이십삼 다시 사백오십육` by default and

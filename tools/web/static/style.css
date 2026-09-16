@@ -655,3 +655,19 @@ footer {
     margin-bottom: 0;
   }
 }
+
+.write-list {
+  max-height: 280px;
+  overflow: auto;
+  margin-top: 12px;
+}
+.write-row {
+  display: grid;
+  gap: 5px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+}
+.write-row code {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}

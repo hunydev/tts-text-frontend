@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(tts_text_frontend VERSION 0.7.0 LANGUAGES C)
+project(tts_text_frontend VERSION 0.8.0 LANGUAGES C)
 include(GNUInstallDirs)
 include(CTest)
 option(TTF_ENABLE_ASAN "Enable AddressSanitizer" OFF)
@@ -76,6 +76,9 @@ if(BUILD_TESTING)
   add_test(NAME api_and_tokenizer COMMAND ttf_tests api)
   add_test(NAME language_pack_extension COMMAND ttf_tests extension)
   add_test(NAME resource_and_lexicon_priority COMMAND ttf_tests resources)
+  add_executable(ttf_test_multiword tests/unit/test_multiword_api.c)
+  target_link_libraries(ttf_test_multiword PRIVATE tts_text_frontend_shared ttf_build_flags)
+  add_test(NAME multiword_lexicon_api COMMAND ttf_test_multiword ${CMAKE_CURRENT_SOURCE_DIR}/resources)
   add_test(NAME arbitrary_chunk_streaming COMMAND ttf_tests streaming)
   add_executable(ttf_test_ko_pack tests/unit/test_ko_pack.c)
   target_link_libraries(ttf_test_ko_pack PRIVATE tts_text_frontend_static ttf_build_flags)
@@ -155,6 +158,15 @@ if(BUILD_TESTING)
         ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_${CORPUS}.py
         $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
     endforeach()
+    add_test(NAME multiword_v8_evaluation COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources multiword_v8.jsonl 30)
+    add_test(NAME multiword_v8_integration COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_multiword.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
+    add_test(NAME multiword_boundary_guards COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_multiword_guards.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
     if(UNIX AND NOT TTF_ENABLE_ASAN AND NOT TTF_ENABLE_UBSAN)
       add_executable(ttf_web_abi tests/web/abi_layout.c)
       target_link_libraries(ttf_web_abi PRIVATE tts_text_frontend_static ttf_build_flags)

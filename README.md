@@ -202,7 +202,8 @@ The text report shows independent expected strings, character differences,
 category scores, resource provenance and fallback paths. The current regression
 suite has 346 golden cases, a 109-case regression corpus, 60 finance/content
 scenarios, 30 advanced finance/content regressions and 40 literal-preservation
-references, plus 24 repeated-quantity range and 40 content-vocabulary cases. These are curated regression checks, not a measurement of accuracy on
+references, plus 24 repeated-quantity range, 40 content-vocabulary and 30 multiword
+pronunciation cases. These are curated regression checks, not a measurement of accuracy on
 unseen text. A separate 15-case advisory challenge report exposes unsupported
 forms and ambiguous policies. All 15 now pass their fixed references and have
 been adopted into strict development suites; the score is not an unseen-data
@@ -212,7 +213,7 @@ result or a general accuracy estimate.
 python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources \
   --corpus tests/evaluation/cases.jsonl --output-dir artifacts/text-evaluation
 python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources \
-  --corpus tests/evaluation/domain_cases.jsonl --output-dir artifacts/domain-evaluation
+  --corpus tests/evaluation/domain_cases_v8.jsonl --output-dir artifacts/domain-evaluation
 python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources \
   --corpus tests/evaluation/advanced_cases.jsonl --output-dir artifacts/advanced-evaluation
 build/ttf stream-json examples/code_mixed.txt > segments.jsonl
@@ -293,3 +294,26 @@ Private proprietary project. See [LICENSE](LICENSE).
 See [financial interval contracts](docs/finance-ranges.md) and
 [content vocabulary scope](docs/content-v7.md). These are bounded syntax and seed
 vocabulary improvements, not a general pronunciation or production accuracy claim.
+
+### v0.8 multiword names and streaming experiments
+
+```text
+Bank of America가 발표했습니다.
+→ 뱅크 오브 아메리카가 발표했습니다.
+
+After Effects를 사용합니다.
+→ 애프터 이펙츠를 사용합니다.
+
+Adobe Premiere Pro를 사용합니다.
+→ 어도비 프리미어 프로를 사용합니다.
+```
+
+Multiword pronunciation entries use the existing lexicon API and layered resources.
+A higher-priority user/customer entry wins before the longest-match comparison.
+Matched phrases retain one source/context/render span. English context and title
+cues preserve English; literal code and paths remain protected.
+
+The [web workbench](docs/web-workbench.md) adds exact write-size schedules, splitting
+at the input cursor, input-byte history, and a 30-case multiword corpus. Try
+`After |Effects를 사용합니다.` to inspect deferred rendering across writes.
+See [multiword contracts](docs/multiword-lexicon.md) for lexical bounds and exceptions.

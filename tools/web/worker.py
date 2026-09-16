@@ -7,7 +7,7 @@ import sys
 import time
 from pathlib import Path
 from native import Engine, flatten
-from workbench import ROOT, corpus_path, validate, version
+from workbench import ROOT, corpus_path, stream_sizes, validate, version
 
 
 def emit(event):
@@ -30,6 +30,8 @@ def compare(engine, source, batch, options):
         schedule.append(n)
         at += n
     schedules.append((f"random seed {options['random_seed']}", schedule))
+    if options["chunk_sizes"]:
+        schedules.append(("custom writes", stream_sizes(len(source), options)))
     for label, schedule in schedules:
         segments = engine.stream(source, schedule)
         flat = flatten(segments)
@@ -64,7 +66,7 @@ def run(request, library, resources):
         emit(dict(event="start", version=version(), mode=mode))
         if mode == "stream":
             segments = engine.stream(
-                source, sizes(len(source), opts["chunk_bytes"]), emit, opts["delay_ms"]
+                source, stream_sizes(len(source), opts), emit, opts["delay_ms"]
             )
             result = flatten(segments)
         else:

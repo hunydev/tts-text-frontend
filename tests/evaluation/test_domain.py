@@ -6,7 +6,7 @@ import sys
 import tempfile
 
 cli, resources = sys.argv[1:3]
-corpus_name = sys.argv[3] if len(sys.argv) > 3 else "domain_cases.jsonl"
+corpus_name = sys.argv[3] if len(sys.argv) > 3 else "domain_cases_v8.jsonl"
 expected_count = int(sys.argv[4]) if len(sys.argv) > 4 else 60
 root = Path(__file__).resolve().parents[2]
 with tempfile.TemporaryDirectory(prefix="ttf-domain-") as directory:

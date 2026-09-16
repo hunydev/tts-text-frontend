@@ -197,3 +197,17 @@ the 109/60/30-case existing corpora. The original 15 historical challenge refere
 are unchanged and now all pass; all are known development material, not a held-out
 measurement. See [protected text provenance](protected-text.md) and versioned
 `docs/evidence/0.6.0-text-results.json` for comparison data.
+
+## v0.8 metadata migration
+
+The current finance/content gate uses `tests/evaluation/domain_cases_v8.jsonl`.
+It preserves all 60 original input and expected output strings. Exactly one case,
+`content-product-watch`, now expects the combined `Apple Watch` pronunciation span.
+The earlier file remains unchanged for historical comparison; applying its exact
+old word-level offsets to v0.8 intentionally fails that metadata check while all
+60 text strings still match. Two focused context tests likewise assert the new
+combined span. This is not a text-accuracy improvement.
+
+The separate frozen `multiword_v8.jsonl` has 30 new text/metadata references,
+including English/title/literal preservation. Before/after comparisons use this
+same file and its hash. No reference is changed to accommodate a candidate result.

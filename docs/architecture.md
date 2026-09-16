@@ -180,3 +180,24 @@ per operation. A ctypes adapter calls the native API, copies callback-owned text
 and spans within each callback, and emits NDJSON events. The browser implements
 inspection and test controls; it contains no duplicate normalization algorithm.
 [Workbench contracts](web-workbench.md) document isolation, lifetimes and limits.
+
+## Multiword pronunciation checkpoint (0.8.0)
+
+At freeze, effective multiword pronunciation entries are indexed by their first
+lexical word. The core matches bounded whole-token sequences without knowing the
+source/target language pair. Language packs continue to decide context. The matched
+surface becomes one WORD IR span before its pronunciation value is rendered.
+Layer priority precedes match length, including single-word overrides. Protected
+syntax and TN rules at the start retain their priority.
+
+The shared batch/stream planner protects candidate prefixes using the same resource
+inventory. Future bytes cannot retroactively invalidate an earlier protected cut;
+this preserves segmentation parity when a later word mismatches. This is bounded
+lexical lookahead, not sentence-level context recovery.
+
+Public ABI v1 layouts and ownership are unchanged. Span granularity can change as
+resource coverage grows: `Apple Watch` is now one pronunciation span instead of two
+word spans and a space. The original 60-case `domain_cases.jsonl` is preserved as
+historical evidence; `domain_cases_v8.jsonl` keeps every input/output reference and
+updates only that case's metadata. Consumers must use byte offsets and semantic
+fields rather than assume one span per word. See [multiword contracts](multiword-lexicon.md).

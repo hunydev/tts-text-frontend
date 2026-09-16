@@ -153,6 +153,7 @@ ttf_status_t ttf_engine_freeze(ttf_engine_t *e) {
             }
         }
     }
+    ttf_phrase_index(e);
     e->frozen = 1;
     return TTF_OK;
 }

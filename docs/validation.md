@@ -1,4 +1,4 @@
-# Text validation — 0.7.0
+# Text validation — 0.8.0
 
 Validated on Linux on 2026-09-16 with GCC 13.3, Clang 18.1, C11 and CMake 3.28.
 Acceptance uses normalized output text, semantic/language metadata and deterministic
@@ -8,26 +8,28 @@ streaming. Speech synthesis, audio comparison and listening scores are excluded.
 
 | Check | Result |
 | --- | --- |
-| GCC Debug | 39/39 CTest tests passed |
-| Clang Release | 39/39 CTest tests passed |
-| Clang ASan + UBSan + leak detection | 38/38 CTest tests passed |
+| GCC Debug | 43/43 CTest tests passed |
+| Clang Release | 43/43 CTest tests passed |
+| Clang ASan + UBSan + leak detection | 42/42 CTest tests passed |
 | C golden corpus | 346 explicit input/output cases passed |
 | Text regression corpus | 109/109 passed, across 18 categories |
-| Finance/content development corpus | 60/60 passed, previously 47/60 including metadata |
+| Finance/content development corpus | 60/60 current v0.8 references; one explicit span migration, all original text references retained |
 | Advanced finance/content corpus | 30/30 passed; frozen v0.4 baseline 8/30 |
 | Protected text development corpus | 40/40 passed; frozen v0.5 baseline 4/40 including metadata |
 | Repeated quantity interval corpus | 24/24; frozen v0.6 baseline 0/24 |
 | Content title/vocabulary corpus | 40/40; frozen v0.6 baseline 3/40 including metadata |
+| Multiword pronunciation corpus | 30/30; frozen v0.7 baseline 15/30 including metadata, 17/30 text |
+| Multiword API/stream/resource checks | 943 native + 270 integration + 245 boundary guards |
 | New interval/content checks | 223 quantity/IR/resource checks + 312 content/stream checks |
-| Web workbench | 37 API/ABI/policy/corpus/early-callback checks; Chromium desktop/mobile flow checks |
+| Web workbench | 50 API/ABI/policy/corpus/early-callback checks; Chromium desktop/mobile and custom-write checks |
 | Historical challenge corpus | 15/15 fixed known references passed |
 | Protected grammar/stream checks | Native parser, flush/cap/cache checks; 316 integration checks |
 | Financial quantity checks | 516 exact-value/unit/endpoint/chunk checks, including 50 Decimal reference amounts |
 | Explicit financial identifier checks | 10 positive + 8 negative cases; 95 text/metadata/chunk/override checks |
 | Content cue/lexicon checks | 88 checks: title scope, overrides, hyphenated words and bounded long-title commitment |
 | Independent financial value checks | 85 generated amounts, 170 value/span/chunk checks plus 3 word-boundary guards |
-| Context routing checks | 17 cases, 90 text/language/trace checks |
-| Explicit metadata assertions | 75 regression + 33 scenario + 20 advanced + 45 protected + 24 interval + 59 content span checks passed |
+| Context routing checks | 17 cases, 87 text/language/trace checks |
+| Explicit metadata assertions | 75 regression + 32 current scenario + 20 advanced + 45 protected + 24 interval + 59 content + 17 multiword span checks passed |
 | Evaluation streaming | Each case checked with 1-, 7-, and 64-byte writes |
 | Regression text reference errors | 0 character edits across 1,394 reference codepoints |
 | New semantic/quotation streaming checks | 4,769 exhaustive two-chunk byte splits, including tiny segment targets |
@@ -55,7 +57,30 @@ unseen holdout. The implementation remains a bounded lexical frontend, not a
 general document parser. See [protected text contracts](protected-text.md); no
 speech synthesis was used.
 
-## v0.7 changes against the frozen v0.6 baseline
+## v0.8 changes against the frozen v0.7 baseline
+
+The fixed 30-case multiword corpus improved from 15/30 to 30/30 when text,
+metadata and chunk parity are combined. Exact output text improved from 17/30 to
+30/30; character edits fell from 71 to zero across 643 reference characters.
+The corpus hash stayed unchanged after its first baseline run. Twelve original
+phrase pronunciation seeds cover finance, places/media and content products.
+See [versioned evidence](evidence/0.8.0-text-results.json) and
+[multiword contracts](multiword-lexicon.md).
+
+There is one intentional metadata migration: `Apple Watch` is now one phrase span.
+The historical `domain_cases.jsonl` remains unchanged and gives 60/60 text matches
+but 59/60 including its old exact word-span references. Current CI uses
+`domain_cases_v8.jsonl`, which changes only that case's metadata; every input and
+expected output string is identical. Public ABI v1 remains unchanged, but consumers
+must not assume a permanent word-to-span mapping.
+
+Adverse checks cover both sides of lexical boundaries, protected syntax, inert
+source/target entries, invalid keys, precedence and source/compiled equivalence.
+The web tool can make explicitly sized native writes and display split UTF-8 bytes;
+custom schedules also join fixed/random batch-stream comparisons. Input cursor
+positions are converted to UTF-8 byte offsets.
+
+## Historical v0.7 changes against the frozen v0.6 baseline
 
 The fixed 24-case repeated-quantity interval corpus improved from 0/24 to 24/24.
 Forty fixed title/pronunciation references improved from 3/40 to 40/40 including
@@ -184,8 +209,9 @@ python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources \
 ```
 
 The report directory must be new. Additional CI reports use
-`tests/evaluation/domain_cases.jsonl`, `advanced_cases.jsonl` and
-`protected_cases.jsonl` (strict), plus
+`tests/evaluation/domain_cases_v8.jsonl`, `advanced_cases.jsonl`,
+`protected_cases.jsonl`, `finance_ranges_v7.jsonl`, `content_v7.jsonl` and
+`multiword_v8.jsonl` (strict), plus
 `challenge_cases.jsonl` (advisory). `report.html` shows text differences and metadata;
 `report.json` contains metrics and hashes; `cases.csv` supports case triage. The CI
 `text-evaluation` job publishes this text-only artifact. No speech backend is installed
@@ -198,7 +224,7 @@ or called by the test/evaluation workflow.
    paths and quoted source versus speech content).
 2. Extend locale-specific quantities, currency intervals, datetime/time zones and
    ambiguity around unquoted titles, names, short imperatives and identifiers.
-3. Expand reviewed pronunciation data beyond the 203-entry seed lexicon and
+3. Expand reviewed pronunciation data beyond the 215-entry seed lexicon and
    improve prototype G2P/phone mapping. Nonempty fallback is not correct spelling.
 4. Profile large lexicons and worst-case streaming inputs; add a real third language
    pack, Windows/macOS and automated binary ABI compatibility CI.

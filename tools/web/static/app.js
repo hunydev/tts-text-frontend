@@ -50,6 +50,12 @@ function badge(id, text, good) {
   e.textContent = text;
   e.className = "badge " + (good === null ? "muted" : good ? "" : "fail");
 }
+function markStale() {
+  if (state.result && !state.controller) {
+    badge("match", "이전 실행 결과", null);
+    badge("verify-status", "이전 실행 결과", null);
+  }
+}
 function settings(options = {}) {
   const o = { ...state.catalog.defaults, ...options };
   const fields = {
@@ -68,6 +74,7 @@ function settings(options = {}) {
   $("sentence-split").checked = o.sentence_split;
   $("phrase-split").checked = o.phrase_split;
   $("verify-chunks").value = o.verify_chunks.join(", ");
+  $("chunk-sizes").value = o.chunk_sizes.join(", ");
   $("lexicon").value = o.user_lexicon
     .map((x) => x.word + "=" + x.pronunciation)
     .join("\n");
@@ -92,6 +99,7 @@ function options() {
         pronunciation: line.slice(at + 1).trim(),
       };
     });
+  const chunkSizes = $("chunk-sizes").value.trim();
   return {
     default_language: $("language").value,
     render_policy: $("policy").value,
@@ -101,6 +109,15 @@ function options() {
     max_length: number("max-length"),
     max_pending_bytes: number("max-pending"),
     chunk_bytes: number("chunk-bytes"),
+    chunk_sizes: chunkSizes
+      ? chunkSizes.split(",").map((x) => {
+          if (!/^\d+$/.test(x.trim()))
+            throw Error(
+              "직접 지정 write 크기는 쉼표로 구분한 양의 정수입니다.",
+            );
+          return Number(x.trim());
+        })
+      : [],
     delay_ms: number("delay-ms"),
     sentence_split: $("sentence-split").checked,
     phrase_split: $("phrase-split").checked,
@@ -237,6 +254,35 @@ function callback(event) {
   $("output").textContent += event.text;
   $("stream-status").textContent = event.sequence + 1 + "회 콜백";
 }
+function inputWrite(event) {
+  const input = new TextEncoder()
+    .encode(state.request.text)
+    .slice(event.begin, event.end);
+  let preview;
+  try {
+    preview = JSON.stringify(
+      new TextDecoder("utf-8", { fatal: true }).decode(input),
+    );
+  } catch {
+    preview =
+      "UTF-8 분할 · hex " +
+      Array.from(input.slice(0, 40), (x) =>
+        x.toString(16).padStart(2, "0"),
+      ).join(" ");
+  }
+  if (preview.length > 160) preview = preview.slice(0, 160) + "…";
+  const row = node("div", undefined, "write-row");
+  row.append(
+    node(
+      "small",
+      `write #${event.sequence + 1} · ${event.begin}–${event.end} bytes · ${event.elapsed_ms} ms`,
+    ),
+    node("code", preview),
+  );
+  $("writes").append(row);
+  if ($("writes").children.length > 128) $("writes").firstElementChild.remove();
+  $("write-count").textContent = event.sequence + 1 + "회";
+}
 function verification(report) {
   badge(
     "verify-status",
@@ -306,9 +352,11 @@ function caseResult(event) {
 function handle(event) {
   state.events.push(event);
   if (event.event === "error") throw Error(event.message);
-  if (event.event === "chunk")
+  if (event.event === "chunk") {
+    inputWrite(event);
     $("stream-status").textContent =
       `입력 ${event.end} bytes 전달 · 콜백 ${state.events.filter((x) => x.event === "segment").length}회`;
+  }
   if (event.event === "segment") callback(event);
   if (event.event === "case") caseResult(event);
   if (event.event === "result") {
@@ -363,6 +411,8 @@ async function execute() {
   document.querySelectorAll("[data-mode]").forEach((x) => (x.disabled = true));
   $("output").textContent = "";
   $("callbacks").replaceChildren();
+  $("writes").replaceChildren();
+  $("write-count").textContent = "0회";
   $("verify-results").replaceChildren();
   $("corpus-results").replaceChildren();
   $("corpus-progress").textContent = "실행 중";
@@ -449,7 +499,7 @@ document
         message(
           "설정 또는 입력이 변경되었습니다. 표시된 결과는 이전 실행입니다. 다시 실행하세요.",
         );
-        badge("match", "이전 실행 결과", null);
+        markStale();
       }
     }),
   );
@@ -459,12 +509,36 @@ $("source").addEventListener("input", count);
 $("clear").addEventListener("click", () => {
   $("source").value = "";
   count();
+  markStale();
 });
-$("reset").addEventListener("click", () => settings());
+$("reset").addEventListener("click", () => {
+  settings();
+  markStale();
+  message("기본 설정을 불러왔습니다. 실행 버튼으로 확인하세요.");
+});
+$("split-cursor").addEventListener("click", () => {
+  const source = $("source");
+  const at = source.selectionStart;
+  if (at <= 0 || at >= source.value.length) {
+    message("입력 텍스트의 처음과 끝 사이에 커서를 놓으세요.", true);
+    return;
+  }
+  if (/^[\uDC00-\uDFFF]/.test(source.value.slice(at))) {
+    message("문자 중간에 커서가 있습니다. 문자 사이를 선택하세요.", true);
+    return;
+  }
+  const first = bytes(source.value.slice(0, at));
+  $("chunk-sizes").value = first + ", " + (bytes(source.value) - first);
+  markStale();
+  message(
+    `write #1: ${first} bytes, write #2: 나머지 입력으로 설정했습니다. 스트리밍 또는 청크 검증을 실행하세요.`,
+  );
+});
 $("sentence-preset").addEventListener("click", () => {
   $("sentence-split").checked = true;
   $("phrase-split").checked = false;
   $("max-length").value = 1000000;
+  markStale();
   message(
     "문장 우선: 길이 기준 강제 분할을 최소화했습니다. 문장 경계 또는 최종 flush에서 출력합니다.",
   );
@@ -474,6 +548,7 @@ $("fast-preset").addEventListener("click", () => {
   $("first-target").value = 24;
   $("normal-target").value = 80;
   $("max-length").value = 200;
+  markStale();
 });
 document
   .querySelectorAll("[data-mode]")
@@ -496,6 +571,7 @@ $("sample").addEventListener("change", () => {
   $("expected-details").open = s.expected !== undefined;
   settings(s.options);
   count();
+  markStale();
   message("예제와 권장 설정을 불러왔습니다. 실행 버튼으로 확인하세요.");
 });
 $("copy").addEventListener("click", async () => {

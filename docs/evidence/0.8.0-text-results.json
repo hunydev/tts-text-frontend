@@ -1,0 +1,420 @@
+{
+  "version": "0.8.0",
+  "baseline_commit": "23eba5ed1531aa9821779f80d69c6ed2c67a8d27",
+  "scope": "Normalized output text, source/context/render metadata and streaming. No audio synthesis or listening evaluation.",
+  "data_origin": "Original synthetic development references. No independent pronunciation review or production accuracy claim.",
+  "multiword": {
+    "corpus_sha256": "5e8b9d4082e33cfbb7e94f4e79546626424a9587a7e35a95b25e9c9d86787544",
+    "chunk_bytes": [
+      1,
+      7,
+      64
+    ],
+    "baseline": {
+      "cases": 30,
+      "passed": 15,
+      "failed": 15,
+      "matches": 17,
+      "mismatches": 13,
+      "exact_match_rate": 0.5666666666666667,
+      "metadata_failures": 15,
+      "batch_stream_failures": 0,
+      "character_edit_distance": 71,
+      "reference_characters": 643,
+      "character_error_rate": 0.1104199066874028,
+      "fallback_spans": 30
+    },
+    "candidate": {
+      "cases": 30,
+      "passed": 30,
+      "failed": 0,
+      "matches": 30,
+      "mismatches": 0,
+      "exact_match_rate": 1.0,
+      "metadata_failures": 0,
+      "batch_stream_failures": 0,
+      "character_edit_distance": 0,
+      "reference_characters": 643,
+      "character_error_rate": 0.0,
+      "fallback_spans": 0
+    },
+    "baseline_binary_sha256": "62c3e417af019cbdac86fb129906a6cf958e645b8da87e899c8d7de9cc808cff",
+    "candidate_binary_sha256": "72dc0bca04d6ee211700413167e5ee011efd91c5111a0936b5773ecb138af94d",
+    "baseline_resources_sha256": {
+      "README.md": "dce1bb7d27a0d7b07b2e44406d26995d69afc2f481a562cddc2e12297b383165",
+      "common/boundaries.tsv": "da089327d5b127fb7de4d053fd8533a60f4a3f1311b2d1e61a7667caca196213",
+      "common/protected.tsv": "fed106b8ce8f2e81a73110e4f86ff352c034458c5f6271ec0d4067a1eb9dd8d1",
+      "customers/example/ko-KR/rules.tsv": "fd32794a3414e420e0e7e84214ef444b2c5af9a401cf494ee170c528e7a70238",
+      "domains/finance/ko-KR/rules.tsv": "ed9ecca8fc7f9f64461f44becd4d46281ead636b26f74af5b16d57abd002c5bf",
+      "languages/en-US/dictionaries/pronunciation.tsv": "10d73f76afda2a5219d8a8a0d03a8bf7d79616032b3ae04c27a28ece39b918ce",
+      "languages/en-US/g2p/graphemes.tsv": "2bd30e83894089ad2947df5a754c55ef0d3c93f311a3ea775fc58d9c2d994e5d",
+      "languages/en-US/rules/context.tsv": "e7ec75d2975fd31b67d771da1382dcaaa9e04c6c5941e737c3de3a89b69239ec",
+      "languages/en-US/rules/numeric.tsv": "bcbdb93d89072111f5599958084c782421c45082ccb993c6b5216b8adab1ee9e",
+      "languages/ko-KR/dictionaries/graphemes.tsv": "2707d81b10c4d91e6cece0466186574df9b52dc7a774c3c64e9c0e4927fc883a",
+      "languages/ko-KR/dictionaries/phones.tsv": "d15c8b0788e0ba134f236a5aeb5129e9f9716a26d8927065b1f52fad63f364db",
+      "languages/ko-KR/lexicon/acronyms/default.tsv": "0c2ee8e11c02c5c02e32ddc8b7b5327ef4d414bd3aac1ac27306726a35614021",
+      "languages/ko-KR/lexicon/brands/default.tsv": "d624494685c9df7b320c72c8ce4e37dbb849971951171960e534c5138cfb9733",
+      "languages/ko-KR/lexicon/common/default.tsv": "e152d9b59bafcb175242a203b507b9a2d3f4ae3ed5db42b9e87d533df1139780",
+      "languages/ko-KR/lexicon/content/default.tsv": "8d37167ac61ceaad062f2aca65cfa930a3450516dce52a40bed48472ed85ad01",
+      "languages/ko-KR/lexicon/finance/default.tsv": "fec6b8304217188ee20314a672640fe692d2466626de3522b16dbab9790857c4",
+      "languages/ko-KR/lexicon/proper_nouns/default.tsv": "48ac54fbec1ff1dff0823b67ae4acf75443b7e520fc1789e108d17eac19c31ab",
+      "languages/ko-KR/lexicon/technology/default.tsv": "1ea75e7d058862e236f4070ddbc0091f3f6494ea189075ee1dca6f3c572caccc",
+      "languages/ko-KR/rules/context.tsv": "72e60833cb3a563dd5a2b511993d787046002325f30a05be017e3db7870ca96d",
+      "languages/ko-KR/rules/identifiers.tsv": "7b5a0fe04a86b7ea1d8db39dba76f17faa878f1b42024be032154f61a5c13ff3",
+      "languages/ko-KR/rules/numeric.tsv": "b2b0a1fa3c1907d2d909ce40cc1b3fa8509726989bc5f22bfba889137ecaea83",
+      "manifest.ttfm": "5234979169f0334a1893f9e4b8ff5cf3213dfe46ebc5742b2e359fe607c46bbb"
+    },
+    "candidate_resources_sha256": {
+      "README.md": "dce1bb7d27a0d7b07b2e44406d26995d69afc2f481a562cddc2e12297b383165",
+      "common/boundaries.tsv": "da089327d5b127fb7de4d053fd8533a60f4a3f1311b2d1e61a7667caca196213",
+      "common/protected.tsv": "fed106b8ce8f2e81a73110e4f86ff352c034458c5f6271ec0d4067a1eb9dd8d1",
+      "customers/example/ko-KR/rules.tsv": "fd32794a3414e420e0e7e84214ef444b2c5af9a401cf494ee170c528e7a70238",
+      "domains/finance/ko-KR/rules.tsv": "ed9ecca8fc7f9f64461f44becd4d46281ead636b26f74af5b16d57abd002c5bf",
+      "languages/en-US/dictionaries/pronunciation.tsv": "10d73f76afda2a5219d8a8a0d03a8bf7d79616032b3ae04c27a28ece39b918ce",
+      "languages/en-US/g2p/graphemes.tsv": "2bd30e83894089ad2947df5a754c55ef0d3c93f311a3ea775fc58d9c2d994e5d",
+      "languages/en-US/rules/context.tsv": "e7ec75d2975fd31b67d771da1382dcaaa9e04c6c5941e737c3de3a89b69239ec",
+      "languages/en-US/rules/numeric.tsv": "bcbdb93d89072111f5599958084c782421c45082ccb993c6b5216b8adab1ee9e",
+      "languages/ko-KR/dictionaries/graphemes.tsv": "2707d81b10c4d91e6cece0466186574df9b52dc7a774c3c64e9c0e4927fc883a",
+      "languages/ko-KR/dictionaries/phones.tsv": "d15c8b0788e0ba134f236a5aeb5129e9f9716a26d8927065b1f52fad63f364db",
+      "languages/ko-KR/lexicon/acronyms/default.tsv": "0c2ee8e11c02c5c02e32ddc8b7b5327ef4d414bd3aac1ac27306726a35614021",
+      "languages/ko-KR/lexicon/brands/default.tsv": "d624494685c9df7b320c72c8ce4e37dbb849971951171960e534c5138cfb9733",
+      "languages/ko-KR/lexicon/common/default.tsv": "e152d9b59bafcb175242a203b507b9a2d3f4ae3ed5db42b9e87d533df1139780",
+      "languages/ko-KR/lexicon/content/default.tsv": "8d37167ac61ceaad062f2aca65cfa930a3450516dce52a40bed48472ed85ad01",
+      "languages/ko-KR/lexicon/finance/default.tsv": "fec6b8304217188ee20314a672640fe692d2466626de3522b16dbab9790857c4",
+      "languages/ko-KR/lexicon/multiword/content.tsv": "7928ca2f4d2d9e16ce413e45690be19b13178a0369edf4e18dd0934919418d4a",
+      "languages/ko-KR/lexicon/multiword/finance.tsv": "cc9e690f4a9c2253c495ebc40523ddcfcdc5d2729f25a5933c510225ecc22671",
+      "languages/ko-KR/lexicon/multiword/places_media.tsv": "e56b07f5d35ed24faf464ad74fbc83310dbf10667bda4cfb3de9290ab9aca33f",
+      "languages/ko-KR/lexicon/proper_nouns/default.tsv": "48ac54fbec1ff1dff0823b67ae4acf75443b7e520fc1789e108d17eac19c31ab",
+      "languages/ko-KR/lexicon/technology/default.tsv": "1ea75e7d058862e236f4070ddbc0091f3f6494ea189075ee1dca6f3c572caccc",
+      "languages/ko-KR/rules/context.tsv": "72e60833cb3a563dd5a2b511993d787046002325f30a05be017e3db7870ca96d",
+      "languages/ko-KR/rules/identifiers.tsv": "7b5a0fe04a86b7ea1d8db39dba76f17faa878f1b42024be032154f61a5c13ff3",
+      "languages/ko-KR/rules/numeric.tsv": "b2b0a1fa3c1907d2d909ce40cc1b3fa8509726989bc5f22bfba889137ecaea83",
+      "manifest.ttfm": "1532f69faef57e31ae9fe80170a823792d0a702d392ba826cb66097a382e6a2c"
+    },
+    "cases": [
+      {
+        "id": "multiword-bank-of-america",
+        "input": "Bank of America가 발표했습니다.",
+        "expected": "뱅크 오브 아메리카가 발표했습니다.",
+        "baseline_text": "밴크 아프 애머이캐가 발표했습니다.",
+        "candidate_text": "뱅크 오브 아메리카가 발표했습니다.",
+        "baseline_passed": false,
+        "candidate_passed": true
+      },
+      {
+        "id": "multiword-goldman-sachs",
+        "input": "Goldman Sachs를 확인합니다.",
+        "expected": "골드만 삭스를 확인합니다.",
+        "baseline_text": "갈드맨 새츠스를 확인합니다.",
+        "candidate_text": "골드만 삭스를 확인합니다.",
+        "baseline_passed": false,
+        "candidate_passed": true
+      },
+      {
+        "id": "multiword-morgan-stanley",
+        "input": "Morgan Stanley가 발표했습니다.",
+        "expected": "모건 스탠리가 발표했습니다.",
+        "baseline_text": "모르갠 스탠레가 발표했습니다.",
+        "candidate_text": "모건 스탠리가 발표했습니다.",
+        "baseline_passed": false,
+        "candidate_passed": true
+      },
+      {
+        "id": "multiword-new-york",
+        "input": "New York으로 갑니다.",
+        "expected": "뉴욕으로 갑니다.",
+        "baseline_text": "네 요르크으로 갑니다.",
+        "candidate_text": "뉴욕으로 갑니다.",
+        "baseline_passed": false,
+        "candidate_passed": true
+      },
+      {
+        "id": "multiword-wall-street",
+        "input": "Wall Street를 소개합니다.",
+        "expected": "월스트리트를 소개합니다.",
+        "baseline_text": "왤르 스트리트를 소개합니다.",
+        "candidate_text": "월스트리트를 소개합니다.",
+        "baseline_passed": false,
+        "candidate_passed": true
+      },
+      {
+        "id": "multiword-after-effects",
+        "input": "After Effects로 편집합니다.",
+        "expected": "애프터 이펙츠로 편집합니다.",
+        "baseline_text": "애프터 에프페크트스로 편집합니다.",
+        "candidate_text": "애프터 이펙츠로 편집합니다.",
+        "baseline_passed": false,
+        "candidate_passed": true
+      },
+      {
+        "id": "multiword-adobe-premiere",
+        "input": "Adobe Premiere를 사용합니다.",
+        "expected": "어도비 프리미어를 사용합니다.",
+        "baseline_text": "어도비 프리미어를 사용합니다.",
+        "candidate_text": "어도비 프리미어를 사용합니다.",
+        "baseline_passed": false,
+        "candidate_passed": true
+      },
+      {
+        "id": "multiword-adobe-premiere-pro",
+        "input": "Adobe Premiere Pro를 사용합니다.",
+        "expected": "어도비 프리미어 프로를 사용합니다.",
+        "baseline_text": "어도비 프리미어 프라를 사용합니다.",
+        "candidate_text": "어도비 프리미어 프로를 사용합니다.",
+        "baseline_passed": false,
+        "candidate_passed": true
+      },
+      {
+        "id": "multiword-final-cut-pro",
+        "input": "Final Cut Pro로 편집합니다.",
+        "expected": "파이널 컷 프로로 편집합니다.",
+        "baseline_text": "피낼 커트 프라로 편집합니다.",
+        "candidate_text": "파이널 컷 프로로 편집합니다.",
+        "baseline_passed": false,
+        "candidate_passed": true
+      },
+      {
+        "id": "multiword-davinci-resolve",
+        "input": "DaVinci Resolve를 사용합니다.",
+        "expected": "다빈치 리졸브를 사용합니다.",
+        "baseline_text": "다빈치 레살베를 사용합니다.",
+        "candidate_text": "다빈치 리졸브를 사용합니다.",
+        "baseline_passed": false,
+        "candidate_passed": true
+      },
+      {
+        "id": "multiword-apple-watch",
+        "input": "Apple Watch를 소개합니다.",
+        "expected": "애플 워치를 소개합니다.",
+        "baseline_text": "애플 워치를 소개합니다.",
+        "candidate_text": "애플 워치를 소개합니다.",
+        "baseline_passed": false,
+        "candidate_passed": true
+      },
+      {
+        "id": "multiword-new-york-times",
+        "input": "New York Times를 읽습니다.",
+        "expected": "뉴욕 타임스를 읽습니다.",
+        "baseline_text": "네 요르크 티메스를 읽습니다.",
+        "candidate_text": "뉴욕 타임스를 읽습니다.",
+        "baseline_passed": false,
+        "candidate_passed": true
+      },
+      {
+        "id": "multiword-casefold",
+        "input": "bAnK oF aMeRiCa가 발표했습니다.",
+        "expected": "뱅크 오브 아메리카가 발표했습니다.",
+        "baseline_text": "밴크 아프 애머이캐가 발표했습니다.",
+        "candidate_text": "뱅크 오브 아메리카가 발표했습니다.",
+        "baseline_passed": false,
+        "candidate_passed": true
+      },
+      {
+        "id": "multiword-spaces",
+        "input": "Bank   of  America가 발표했습니다.",
+        "expected": "뱅크 오브 아메리카가 발표했습니다.",
+        "baseline_text": "밴크   아프  애머이캐가 발표했습니다.",
+        "candidate_text": "뱅크 오브 아메리카가 발표했습니다.",
+        "baseline_passed": false,
+        "candidate_passed": true
+      },
+      {
+        "id": "multiword-tab",
+        "input": "Bank\tof\tAmerica가 발표했습니다.",
+        "expected": "뱅크 오브 아메리카가 발표했습니다.",
+        "baseline_text": "밴크\t아프\t애머이캐가 발표했습니다.",
+        "candidate_text": "뱅크 오브 아메리카가 발표했습니다.",
+        "baseline_passed": false,
+        "candidate_passed": true
+      },
+      {
+        "id": "multiword-en-bank-of-america",
+        "input": "Please check Bank of America.",
+        "expected": "Please check Bank of America.",
+        "baseline_text": "Please check Bank of America.",
+        "candidate_text": "Please check Bank of America.",
+        "baseline_passed": true,
+        "candidate_passed": true
+      },
+      {
+        "id": "multiword-en-goldman-sachs",
+        "input": "Please check Goldman Sachs.",
+        "expected": "Please check Goldman Sachs.",
+        "baseline_text": "Please check Goldman Sachs.",
+        "candidate_text": "Please check Goldman Sachs.",
+        "baseline_passed": true,
+        "candidate_passed": true
+      },
+      {
+        "id": "multiword-en-morgan-stanley",
+        "input": "Please check Morgan Stanley.",
+        "expected": "Please check Morgan Stanley.",
+        "baseline_text": "Please check Morgan Stanley.",
+        "candidate_text": "Please check Morgan Stanley.",
+        "baseline_passed": true,
+        "candidate_passed": true
+      },
+      {
+        "id": "multiword-en-new-york",
+        "input": "Please check New York.",
+        "expected": "Please check New York.",
+        "baseline_text": "Please check New York.",
+        "candidate_text": "Please check New York.",
+        "baseline_passed": true,
+        "candidate_passed": true
+      },
+      {
+        "id": "multiword-en-wall-street",
+        "input": "Please check Wall Street.",
+        "expected": "Please check Wall Street.",
+        "baseline_text": "Please check Wall Street.",
+        "candidate_text": "Please check Wall Street.",
+        "baseline_passed": true,
+        "candidate_passed": true
+      },
+      {
+        "id": "multiword-en-after-effects",
+        "input": "Please check After Effects.",
+        "expected": "Please check After Effects.",
+        "baseline_text": "Please check After Effects.",
+        "candidate_text": "Please check After Effects.",
+        "baseline_passed": true,
+        "candidate_passed": true
+      },
+      {
+        "id": "multiword-en-adobe-premiere",
+        "input": "Please check Adobe Premiere.",
+        "expected": "Please check Adobe Premiere.",
+        "baseline_text": "Please check Adobe Premiere.",
+        "candidate_text": "Please check Adobe Premiere.",
+        "baseline_passed": true,
+        "candidate_passed": true
+      },
+      {
+        "id": "multiword-en-adobe-premiere-pro",
+        "input": "Please check Adobe Premiere Pro.",
+        "expected": "Please check Adobe Premiere Pro.",
+        "baseline_text": "Please check Adobe Premiere Pro.",
+        "candidate_text": "Please check Adobe Premiere Pro.",
+        "baseline_passed": true,
+        "candidate_passed": true
+      },
+      {
+        "id": "multiword-en-final-cut-pro",
+        "input": "Please check Final Cut Pro.",
+        "expected": "Please check Final Cut Pro.",
+        "baseline_text": "Please check Final Cut Pro.",
+        "candidate_text": "Please check Final Cut Pro.",
+        "baseline_passed": true,
+        "candidate_passed": true
+      },
+      {
+        "id": "multiword-en-davinci-resolve",
+        "input": "Please check DaVinci Resolve.",
+        "expected": "Please check DaVinci Resolve.",
+        "baseline_text": "Please check DaVinci Resolve.",
+        "candidate_text": "Please check DaVinci Resolve.",
+        "baseline_passed": true,
+        "candidate_passed": true
+      },
+      {
+        "id": "multiword-title",
+        "input": "제목은 Adobe Premiere Pro입니다.",
+        "expected": "제목은 Adobe Premiere Pro입니다.",
+        "baseline_text": "제목은 Adobe Premiere Pro입니다.",
+        "candidate_text": "제목은 Adobe Premiere Pro입니다.",
+        "baseline_passed": true,
+        "candidate_passed": true
+      },
+      {
+        "id": "multiword-title-finance",
+        "input": "제목은 Bank of America입니다.",
+        "expected": "제목은 Bank of America입니다.",
+        "baseline_text": "제목은 Bank of America입니다.",
+        "candidate_text": "제목은 Bank of America입니다.",
+        "baseline_passed": true,
+        "candidate_passed": true
+      },
+      {
+        "id": "multiword-title-news",
+        "input": "제목은 New York Times입니다.",
+        "expected": "제목은 New York Times입니다.",
+        "baseline_text": "제목은 New York Times입니다.",
+        "candidate_text": "제목은 New York Times입니다.",
+        "baseline_passed": true,
+        "candidate_passed": true
+      },
+      {
+        "id": "multiword-code",
+        "input": "<code>Bank of America</code>를 확인합니다.",
+        "expected": "<code>Bank of America</code>를 확인합니다.",
+        "baseline_text": "<code>Bank of America</code>를 확인합니다.",
+        "candidate_text": "<code>Bank of America</code>를 확인합니다.",
+        "baseline_passed": true,
+        "candidate_passed": true
+      },
+      {
+        "id": "multiword-inline-code",
+        "input": "`Adobe Premiere Pro`를 확인합니다.",
+        "expected": "`Adobe Premiere Pro`를 확인합니다.",
+        "baseline_text": "`Adobe Premiere Pro`를 확인합니다.",
+        "candidate_text": "`Adobe Premiere Pro`를 확인합니다.",
+        "baseline_passed": true,
+        "candidate_passed": true
+      }
+    ]
+  },
+  "metadata_migration": {
+    "note": "Apple Watch intentionally coalesces into one phrase span. Old corpus retained unchanged; new corpus changes only this case metadata, all 60 input/output strings unchanged.",
+    "historical_corpus_sha256": "b3a4837a041b99475720fd5566c2e981197282ee0156514b7d73a374fd8882c8",
+    "current_corpus_sha256": "d3576fe172b36e5aff54c2dc564834337062e344617a640ee11c4c86ec5e0759",
+    "historical_expectations": {
+      "cases": 60,
+      "passed": 59,
+      "failed": 1,
+      "matches": 60,
+      "mismatches": 0,
+      "exact_match_rate": 1.0,
+      "metadata_failures": 1,
+      "batch_stream_failures": 0,
+      "character_edit_distance": 0,
+      "reference_characters": 1843,
+      "character_error_rate": 0.0,
+      "fallback_spans": 0
+    },
+    "current_expectations": {
+      "cases": 60,
+      "passed": 60,
+      "failed": 0,
+      "matches": 60,
+      "mismatches": 0,
+      "exact_match_rate": 1.0,
+      "metadata_failures": 0,
+      "batch_stream_failures": 0,
+      "character_edit_distance": 0,
+      "reference_characters": 1843,
+      "character_error_rate": 0.0,
+      "fallback_spans": 0
+    },
+    "changed_case": "content-product-watch"
+  },
+  "validation": {
+    "gcc_ctest": "43/43",
+    "clang_ctest": "43/43",
+    "asan_ubsan_ctest": "42/42",
+    "native_multiword_checks": 943,
+    "integration_multiword_checks": 270,
+    "boundary_guard_checks": 245,
+    "web_api_checks": 50,
+    "browser": "Chromium desktop/mobile, custom native writes, cursor splitting, UTF-8 partial bytes, text, spans, callbacks, corpora and controls",
+    "public_abi": 1,
+    "unchanged_exported_symbols": 24,
+    "soname": "libtts_text_frontend.so.1"
+  },
+  "limits": [
+    "Multiword keys: 2..8 lexical words, <=95 canonical UTF-8 bytes; <=255 source bytes. ASCII case and horizontal whitespace folding only.",
+    "No open-ended entity recognition or general G2P accuracy claim.",
+    "Different phrase target configurations can still yield different contexts; parity uses identical engine configuration.",
+    "Layer precedence compares candidates at a lexical start."
+  ]
+}

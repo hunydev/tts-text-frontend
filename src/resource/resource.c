@@ -29,7 +29,14 @@ ttf_status_t ttf_resource_set(ttf_engine_t *e, const char *kind, const char *lan
         return TTF_ENOMEM;
     p->kind = ttf_strdup(kind);
     p->lang = ttf_strdup(lang);
-    p->key = ttf_strdup(key);
+    if (!strcmp(kind, "lexicon")) {
+        ttf_status_t key_status = ttf_lexicon_canonical_key(key, &p->key);
+        if (key_status != TTF_OK) {
+            entry_free(p);
+            return key_status == TTF_EINVAL ? TTF_ERESOURCE : key_status;
+        }
+    } else
+        p->key = ttf_strdup(key);
     p->value = ttf_strdup(value);
     p->layer = layer;
     p->order = e->resource_order++;
@@ -37,7 +44,7 @@ ttf_status_t ttf_resource_set(ttf_engine_t *e, const char *kind, const char *lan
         entry_free(p);
         return TTF_ENOMEM;
     }
-    h = bucket(kind, lang, key);
+    h = bucket(kind, lang, p->key);
     p->next = e->resources[h];
     e->resources[h] = p;
     return TTF_OK;
@@ -195,21 +202,28 @@ ttf_status_t ttf_resource_load(ttf_engine_t *e, const char *path, ttf_resource_l
     free(tmp);
     return st;
 }
-static char *lexkey(const char *source, const char *word) {
+static ttf_status_t lexkey(const char *source, const char *word, char **out) {
     size_t a = strlen(source), b = strlen(word), i;
     char *p;
+    *out = NULL;
     if (a > SIZE_MAX - b - 2)
-        return NULL;
+        return TTF_ELIMIT;
     p = (char *)malloc(a + b + 2);
     if (!p)
-        return NULL;
+        return TTF_ENOMEM;
     memcpy(p, source, a);
     p[a] = ':';
     memcpy(p + a + 1, word, b + 1);
     for (i = a + 1; i < a + b + 1; i++)
         if (p[i] >= 'A' && p[i] <= 'Z')
             p[i] += 'a' - 'A';
-    return p;
+    {
+        char *canonical = NULL;
+        ttf_status_t status = ttf_lexicon_canonical_key(p, &canonical);
+        free(p);
+        *out = canonical;
+        return status;
+    }
 }
 static void remove_key(ttf_engine_t *e, ttf_resource_layer_t layer, const char *render,
                        const char *key) {
@@ -228,14 +242,15 @@ static void remove_key(ttf_engine_t *e, ttf_resource_layer_t layer, const char *
 ttf_status_t ttf_lexicon_remove(ttf_engine_t *e, ttf_resource_layer_t layer, const char *source,
                                 const char *render, const char *word) {
     char *key;
+    ttf_status_t status;
     if (!e || !source || !*source || !render || !*render || !word || !*word ||
         (unsigned)layer > TTF_LAYER_USER)
         return TTF_EINVAL;
     if (e->frozen)
         return TTF_ESTATE;
-    key = lexkey(source, word);
-    if (!key)
-        return TTF_ENOMEM;
+    status = lexkey(source, word, &key);
+    if (status != TTF_OK)
+        return status;
     remove_key(e, layer, render, key);
     free(key);
     return TTF_OK;
@@ -260,9 +275,9 @@ ttf_status_t ttf_lexicon_add(ttf_engine_t *e, ttf_resource_layer_t layer, const 
     free(tokens);
     if (st != TTF_OK)
         return st;
-    key = lexkey(source, word);
-    if (!key)
-        return TTF_ENOMEM;
+    st = lexkey(source, word, &key);
+    if (st != TTF_OK)
+        return st;
     /* Allocate the replacement before removing the previous value. */
     {
         ttf_engine_t tmp;

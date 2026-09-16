@@ -15,7 +15,7 @@ cases = [
      "영문 공지에는 Apple released the iPhone.이라고 적혀 있습니다.",
      [("Apple", "en-US", "Apple"), ("iPhone", "en-US", "iPhone")]),
     ("고객은 Apple Watch를 구매했습니다.", "고객은 애플 워치를 구매했습니다.",
-     [("Apple", "ko-KR", "애플"), ("Watch", "ko-KR", "워치")]),
+     [("Apple Watch", "ko-KR", "애플 워치")]),
     ("GPU and CPU를 사용합니다.", "지피유 앤드 씨피유를 사용합니다.",
      [("GPU", "ko-KR", "지피유"), ("and", "ko-KR", "앤드"),
       ("CPU", "ko-KR", "씨피유")]),

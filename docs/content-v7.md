@@ -1,5 +1,8 @@
 # Content titles and pronunciation seeds (v0.7)
 
+For the subsequent bounded multiword name support, see
+[v0.8 multiword lexicons](multiword-lexicon.md). The scope below describes v0.7.
+
 This increment adds data for content production and finance through the existing
 language-pack interfaces. No new public API or C ABI is required. All validation
 uses normalized text, span metadata and batch/stream parity; there is no speech
