@@ -14,6 +14,7 @@ CORPORA = {
     "protected": ("코드·태그·경로 보호", "protected_cases.jsonl"),
     "content-v7": ("제목·고유명사·발음 확장", "content_v7.jsonl"),
     "finance-v7": ("단위가 반복되는 금융 범위", "finance_ranges_v7.jsonl"),
+    "lexicon-v10": ("사전 확장 · 금융·콘텐츠 문맥", "lexicon_v10.jsonl"),
     "multiword-v8": ("금융·콘텐츠 복합 이름 발음", "multiword_v8.jsonl"),
 }
 DEFAULTS = dict(
@@ -96,7 +97,7 @@ def validate(request, corpus=False):
     for key, allowed in [
         ("default_language", ("ko-KR", "en-US")),
         ("render_policy", ("phonetic", "preserve", "semantic")),
-        ("domain", ("none", "finance")),
+        ("domain", ("none", "finance", "finance-vocabulary")),
     ]:
         if opts[key] not in allowed:
             raise ValueError(key + ": 지원하지 않는 값입니다.")
@@ -254,7 +255,7 @@ def catalog():
             category="복합 이름",
             title="단어 사이에서 끊긴 복합 이름",
             text="After Effects를 사용합니다.\nBank of America는 은행입니다.",
-            expected="애프터 이펙츠를 사용합니다.\n뱅크 오브 아메리카는 은행입니다.",
+            expected="애프터 이펙트를 사용합니다.\n뱅크 오브 아메리카는 은행입니다.",
             options={"chunk_sizes": [6, 7, 1], "delay_ms": 30},
         ),
         dict(

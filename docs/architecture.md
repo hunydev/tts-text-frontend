@@ -222,3 +222,21 @@ reference's review class. Changes to incorrect expectations are recorded with
 before/after text and reasons. Historical output agreement is retained as evidence,
 not promoted to linguistic truth. See [v0.9 validation](validation.md) and
 [human resource editing](resource-editing-guide.ko.md).
+
+
+## ADR: managed vocabulary and frozen TN index (v0.10)
+
+Pronunciation authoring uses validated JSONL plus source catalogs. A deterministic
+Python build tool generates the existing C-runtime TSV format; native consumers
+have no JSON dependency. Records distinguish spelling-source verification from
+independent human review, and scopes prevent ambiguous financial initialisms from
+entering the default system manifest. This compiler is an authoring profile for
+en-US→ko-KR; it does not restrict the public language-pack or pronunciation IR ABI.
+
+The engine freeze step indexes only `exact`/`pattern` TN rules separately from
+pronunciation records. Boundary cue indexing also filters kinds before effective
+resource lookup. All indexes are engine-owned and immutable after freeze, preserving
+shared-engine request concurrency and the existing deterministic priority ordering.
+The public ABI is unchanged. This removes a whole-dictionary scan per token;
+fixed hash bucket storage still needs growth/compiled storage work for large data.
+See [source workflow](lexicon-maintenance.ko.md) and [scale experiment](lexicon-scale-v10.md).

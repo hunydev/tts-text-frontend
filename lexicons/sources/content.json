@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "sources": [
+    {
+      "id": "content-adobe-creative-2025",
+      "title": "Adobe Korean: Creative Cloud and Firefly update",
+      "url": "https://blog.adobe.com/ko/publish/2025/06/27/create-ideate-faster-with-new-creative-cloud-firefly-innovations",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-16",
+      "note": "Lightroom, Illustrator, Firefly, Creative Cloud, Lightroom Classic and Camera Raw Korean names occur in the article. Only short names are recorded; article text is not imported."
+    },
+    {
+      "id": "content-adobe-express-2026",
+      "title": "Adobe Korean: Firefly AI Assistant",
+      "url": "https://blog.adobe.com/ko/publish/2026/04/17/introducing-firefly-ai-assistant-new-way-create-with-our-creative-agent",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-16",
+      "note": "The official product announcement pairs Adobe Express with its Korean product spelling."
+    },
+    {
+      "id": "content-adobe-video-2021",
+      "title": "Adobe Korean: Creative Cloud video application release",
+      "url": "https://blog.adobe.com/ko/publish/2021/10/27/cruise-through-creative-work-latest-release-creative-cloud-video-apps",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-16",
+      "note": "Contains the Korean product names Audition, Character Animator and Media Encoder. Also directly identifies After Effects and Lumetri. Product names are facts, not a license to import the article."
+    },
+    {
+      "id": "content-adobe-indesign",
+      "title": "Adobe Korean InDesign topic page",
+      "url": "https://blog.adobe.com/ko/topics/indesign",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-16",
+      "note": "Official InDesign heading and Adobe Fonts mention establish the recorded product and font spellings."
+    },
+    {
+      "id": "content-adobe-acrobat-2026",
+      "title": "Adobe Korean: Photoshop and Firefly image editing",
+      "url": "https://blog.adobe.com/ko/publish/2026/03/12/image-editing-just-got-smarter-with-ai-photoshop-firefly",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-16",
+      "note": "Contains one Korean Acrobat spelling; another official Adobe page uses a variant, so the record remains pending."
+    },
+    {
+      "id": "content-adobe-acrobat-variant",
+      "title": "Adobe Korean: InDesign PDF editing",
+      "url": "https://www.adobe.com/kr/acrobat/roc/blog/how-to-edit-indesign-pdf.html",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-16",
+      "note": "Uses an alternative Acrobat Korean spelling. This records an unresolved official-source disagreement, not approval of either spelling."
+    },
+    {
+      "id": "content-adobe-behance-2020",
+      "title": "Adobe Korean: Creative renaissance",
+      "url": "https://blog.adobe.com/ko/publish/2020/06/16/supporting-a-creative-renaissance",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-16",
+      "note": "Contains the Korean spelling of Behance in the creator portfolio discussion."
+    },
+    {
+      "id": "content-youtube-shorts-2023",
+      "title": "YouTube Korean: Shorts creation tools",
+      "url": "https://blog.youtube/intl/ko-kr/news-and-events/2023_08_6-new-youtube-shorts-creation-tools/",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-16",
+      "note": "Official creator guidance uses Shorts, remix, green screen, sound, timestamp and long-form as Korean loanwords. No prose or creator data is imported."
+    },
+    {
+      "id": "content-adobe-premiere-shortcuts",
+      "title": "Adobe Korean: Premiere keyboard shortcuts",
+      "url": "https://helpx.adobe.com/kr/premiere/desktop/get-started/keyboard-shortcuts/default-keyboard-shortcuts.html",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-16",
+      "note": "Official Korean editing interface terminology. Short factual interface nouns are used as phonetic loanword choices; translated menu labels are excluded."
+    },
+    {
+      "id": "content-adobe-video-editor",
+      "title": "Adobe Korean: AI video editor",
+      "url": "https://www.adobe.com/kr/products/firefly/features/ai-video-editor.html",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-16",
+      "note": "Uses the Korean loanwords voiceover, footage and motion in video editing descriptions."
+    },
+    {
+      "id": "content-adobe-ingest",
+      "title": "Adobe Korean: Premiere ingest settings",
+      "url": "https://helpx.adobe.com/kr/premiere/desktop/organize-media/ingest-proxy-workflow/configure-ingest-settings.html",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-16",
+      "note": "Contains the Korean loanwords proxy and preset in the ingest settings instructions."
+    },
+    {
+      "id": "content-adobe-ae-performance",
+      "title": "Adobe Korean: After Effects performance",
+      "url": "https://helpx.adobe.com/kr/after-effects/desktop/memory-storage-performance/improve-performance/improve-performance.html",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-16",
+      "note": "Contains the Korean loanwords composition and rendering. Does not establish a pronunciation for arbitrary English words."
+    },
+    {
+      "id": "content-adobe-overlay",
+      "title": "Adobe Korean: Photoshop image overlays",
+      "url": "https://www.adobe.com/kr/creativecloud/photography/discover/overlay-images.html",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-16",
+      "note": "Contains overlay, mask and texture loanword spellings."
+    },
+    {
+      "id": "content-adobe-illustrator-teams",
+      "title": "Adobe Korean: Illustrator for teams",
+      "url": "https://www.adobe.com/kr/creativecloud/business/teams/illustrator.html",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-16",
+      "note": "Contains vector, raster, typography, logo and gradient loanword spellings."
+    },
+    {
+      "id": "content-adobe-kerning",
+      "title": "Adobe Korean: Kerning tips",
+      "url": "https://www.adobe.com/kr/creativecloud/roc/blog/design/kerning-typography-tips.html",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-16",
+      "note": "The title and description directly identify the loanword kerning; this is not a translation entry."
+    },
+    {
+      "id": "content-adobe-project-template",
+      "title": "Adobe Korean: Project templates",
+      "url": "https://helpx.adobe.com/kr/premiere/desktop/organize-media/create-projects/create-your-own-project-templates.html",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-16",
+      "note": "Contains template and layout loanword spellings in the project workflow."
+    },
+    {
+      "id": "content-apple-master-effects",
+      "title": "Apple Korean: Logic Pro master effects",
+      "url": "https://support.apple.com/ko-kr/guide/logicpro/lgcp569d595f/mac",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-16",
+      "note": "Contains compressor, limiter, reverb, stereo and plugin loanword spellings."
+    },
+    {
+      "id": "content-apple-logic-guide",
+      "title": "Apple Korean: Logic Pro user guide",
+      "url": "https://support.apple.com/ko-kr/guide/logicpro/welcome/mac",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-16",
+      "note": "The guide table of contents contains crossfade, equalizer and loop loanwords. Latin format labels in this guide do not prove a Korean pronunciation."
+    },
+    {
+      "id": "content-apple-mono",
+      "title": "Apple Korean: Logic Remote step sequencer",
+      "url": "https://support.apple.com/ko-kr/guide/logicremote-logicpro-ipad/chs1218b0ade/ipados",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-16",
+      "note": "Contains the Korean mono-mode label."
+    },
+    {
+      "id": "content-project-policy",
+      "title": "Project content pronunciation editorial policy",
+      "url": "https://github.com/hunydev/tts-text-frontend/blob/main/docs/lexicon-content-v10.md",
+      "kind": "editorial-policy",
+      "checked_at": "2026-09-16",
+      "note": "Developer-authored Korean renderings of format names and unresolved vendor spelling variants. No independent pronunciation review or official Korean pronunciation is claimed."
+    }
+  ]
+}

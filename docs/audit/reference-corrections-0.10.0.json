@@ -1,0 +1,119 @@
+{
+  "version": "0.10.0",
+  "date": "2026-09-16",
+  "policy": "Explicit evidence-based reference changes; never infer reference truth from matching engine output. Historical evidence remains unchanged.",
+  "reference_changes": [
+    {
+      "path": "tests/evaluation/content_v7.jsonl",
+      "id": "content-v7-aftereffects",
+      "before": {
+        "id": "content-v7-aftereffects",
+        "category": "content/proper-name",
+        "text": "AfterEffects를 사용합니다.",
+        "expected": "애프터이펙츠를 사용합니다.",
+        "notes": "Original synthetic project-policy reference authored before baseline and candidate evaluation; not independently reviewed production accuracy.",
+        "expected_spans": [
+          {
+            "surface": "AfterEffects",
+            "source_lang": "en-US",
+            "context_lang": "ko-KR",
+            "render_lang": "ko-KR",
+            "normalized": "애프터이펙츠",
+            "lexicon": "lexicon:system",
+            "pronunciation_layer": "system",
+            "semantic_type": "WORD"
+          }
+        ]
+      },
+      "after": {
+        "id": "content-v7-aftereffects",
+        "category": "content/proper-name",
+        "text": "AfterEffects를 사용합니다.",
+        "expected": "애프터 이펙트를 사용합니다.",
+        "notes": "Original synthetic project-policy reference authored before baseline and candidate evaluation; not independently reviewed production accuracy.",
+        "expected_spans": [
+          {
+            "surface": "AfterEffects",
+            "source_lang": "en-US",
+            "context_lang": "ko-KR",
+            "render_lang": "ko-KR",
+            "normalized": "애프터 이펙트",
+            "lexicon": "lexicon:system",
+            "pronunciation_layer": "system",
+            "semantic_type": "WORD"
+          }
+        ]
+      },
+      "reason": "Official Adobe Korean product spelling supports 애프터 이펙트. Source verification is not independent human approval.",
+      "evidence": "https://blog.adobe.com/ko/publish/2021/10/27/cruise-through-creative-work-latest-release-creative-cloud-video-apps"
+    },
+    {
+      "path": "tests/evaluation/multiword_v8.jsonl",
+      "id": "multiword-after-effects",
+      "before": {
+        "id": "multiword-after-effects",
+        "category": "multiword/ko-pronunciation",
+        "text": "After Effects로 편집합니다.",
+        "expected": "애프터 이펙츠로 편집합니다.",
+        "notes": "Synthetic project pronunciation choices frozen before baseline/candidate execution; not independently reviewed pronunciation data. Multiword lexicon matches only within the Korean foreign-rendering context.",
+        "expected_spans": [
+          {
+            "surface": "After Effects",
+            "source_lang": "en-US",
+            "context_lang": "ko-KR",
+            "render_lang": "ko-KR",
+            "semantic_type": "WORD",
+            "lexicon": "lexicon:system",
+            "pronunciation_layer": "system",
+            "normalized": "애프터 이펙츠"
+          }
+        ]
+      },
+      "after": {
+        "id": "multiword-after-effects",
+        "category": "multiword/ko-pronunciation",
+        "text": "After Effects로 편집합니다.",
+        "expected": "애프터 이펙트로 편집합니다.",
+        "notes": "Synthetic project pronunciation choices frozen before baseline/candidate execution; not independently reviewed pronunciation data. Multiword lexicon matches only within the Korean foreign-rendering context.",
+        "expected_spans": [
+          {
+            "surface": "After Effects",
+            "source_lang": "en-US",
+            "context_lang": "ko-KR",
+            "render_lang": "ko-KR",
+            "semantic_type": "WORD",
+            "lexicon": "lexicon:system",
+            "pronunciation_layer": "system",
+            "normalized": "애프터 이펙트"
+          }
+        ]
+      },
+      "reason": "Official Adobe Korean product spelling supports 애프터 이펙트. Source verification is not independent human approval.",
+      "evidence": "https://blog.adobe.com/ko/publish/2021/10/27/cruise-through-creative-work-latest-release-creative-cloud-video-apps"
+    }
+  ],
+  "pronunciation_changes": [
+    {
+      "keys": [
+        "aftereffects",
+        "after effects"
+      ],
+      "before": "애프터 이펙츠",
+      "after": "애프터 이펙트",
+      "evidence": "content-adobe-video-2021",
+      "review_status": "source-checked"
+    },
+    {
+      "keys": [
+        "postgresql"
+      ],
+      "before": "포스트그레에스큐엘",
+      "after": "포스트그레스큐엘",
+      "evidence": "postgresql-press-pronunciation",
+      "review_status": "pending",
+      "reason": "Official English post-GRES-que-ell; Korean rendering remains an editorial inference."
+    }
+  ],
+  "new_context_references": "tests/evaluation/lexicon_v10.jsonl",
+  "human_approved_cases": 0
+}

@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "sources": [
+    {
+      "id": "finance-editorial-policy",
+      "title": "금융 발음 사전의 프로젝트 편집 정책",
+      "url": "https://github.com/hunydev/tts-text-frontend/blob/main/docs/lexicon-finance-v10.md",
+      "kind": "editorial-policy",
+      "checked_at": "2026-09-16",
+      "note": "개발자가 선택한 발음 표기 정책. 외부 출처 확인이나 사람의 승인을 의미하지 않는다. 모든 pending 항목은 실제 금융 문맥에서 별도 검토해야 한다."
+    },
+    {
+      "id": "finance-molit-reits",
+      "title": "국토교통부 리츠정보시스템: 리츠란",
+      "url": "https://reits.molit.go.kr/pub/intro/info/infoReits01?pmn=4",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-16",
+      "note": "REITs에 대응하는 리츠라는 한글 표기를 확인. 법률 설명이나 투자 정보는 재사용하지 않았다."
+    },
+    {
+      "id": "finance-fsc-spac",
+      "title": "금융위원회: 자본시장 불공정거래에 대한 조사결과 조치",
+      "url": "https://fsc.go.kr/po010106/71445",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-16",
+      "note": "2015-02-04 게시물에서 SPAC과 스팩 대응 표기만 확인."
+    },
+    {
+      "id": "finance-fsc-leverage",
+      "title": "금융위원회 보고영상: 신용카드 대책 설명",
+      "url": "https://www.fsc.go.kr/no010103/24412",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-16",
+      "note": "본문의 Leverage와 레버리지 대응 표기만 확인. 해당 문서의 정책 수치나 현행 여부를 이 사전에서 다루지 않는다."
+    },
+    {
+      "id": "finance-bok-deleveraging",
+      "title": "한국은행: 매크로레버리지 변화의 특징 및 거시경제적 영향",
+      "url": "https://www.bok.or.kr/portal/bbs/P0002353/view.do?menuNo=2004&nttId=10067905",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-16",
+      "note": "2021-12-13 한국은행 이슈노트 소개 본문에서 deleveraging과 디레버리징 대응 표기를 확인."
+    },
+    {
+      "id": "finance-bok-bond-lecture",
+      "title": "한국은행 제981회 금요강좌: 우리나라 채권시장의 이해와 최근 채권시장 동향",
+      "url": "https://www.bok.or.kr/portal/bbs/B0000217/view.do?menuNo=200144&nttId=10088718",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-16",
+      "note": "강좌 텍스트에서 듀레이션 표기를 확인. 정규화 출력은 이 철자를 채택하며 음성 발음 평가를 의미하지 않는다."
+    },
+    {
+      "id": "finance-fsc-rebalancing",
+      "title": "금융위원회: 단일종목 레버리지 상품 관련 관계기관 및 업계 논의",
+      "url": "https://www.fsc.go.kr/no010101/87417",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-16",
+      "note": "2026년 자산운용업계 관련 보도자료에서 리밸런싱 표기를 확인. 정책 내용이나 투자 판단은 인용하지 않는다."
+    },
+    {
+      "id": "finance-fsc-inverse",
+      "title": "금융위원회: 단일종목 레버리지·인버스 상품 투자자 유의사항 안내",
+      "url": "https://www.fsc.go.kr/po010105/86910",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-16",
+      "note": "2026-05-15 상품 안내 제목과 본문의 인버스 표기를 확인."
+    },
+    {
+      "id": "finance-bok-price-terms",
+      "title": "한국은행 인천본부: 디플레이션과 디스인플레이션",
+      "url": "https://www.bok.or.kr/portal/bbs/P0000795/view.do?menuNo=200560&nttId=206970",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-16",
+      "note": "한국은행 인천본부가 제공한 기호일보 경제용어 설명에서 inflation/deflation/disinflation의 한글 대응만 확인. 뜻풀이는 가져오지 않았다."
+    },
+    {
+      "id": "finance-bok-stagflation",
+      "title": "한국은행 인천본부: 스태그플레이션",
+      "url": "https://www.bok.or.kr/portal/bbs/P0000795/view.do?menuNo=200560&nttId=167374",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-16",
+      "note": "본문의 stagflation/스태그플레이션 대응을 확인. 게시물 제목의 스테그플레이션 오기는 근거로 사용하지 않았다."
+    },
+    {
+      "id": "finance-fsc-covered-bond",
+      "title": "금융위원회: 커버드본드 활성화를 위한 제도적 유인 확대",
+      "url": "https://www.fsc.go.kr/po010106/73526",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-16",
+      "note": "2019-01-31 자료의 Covered Bond/커버드본드 대응 표기만 확인."
+    },
+    {
+      "id": "finance-krx-covered-call",
+      "title": "한국거래소 ETF 안내서: 커버드콜 ETF 구조",
+      "url": "https://pdf.krx.co.kr/ebook_new/access/ecatalogt.jsp?Dir=23&callmode=normal&catimage=&eclang=ko&start=123&um=s",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-16",
+      "note": "123쪽의 Covered call/커버드콜 대응 표기만 확인. 과거 상품명, 수수료 및 투자 설명은 재사용하지 않았다."
+    },
+    {
+      "id": "finance-samsung-high-yield",
+      "title": "삼성자산운용: 펀드 유형 상세 II",
+      "url": "https://www.samsungfund.com/fund/insight/guide/view04.do?tab=5",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-16",
+      "note": "High Yield/하이일드 대응 표기만 확인. 의미에 대한 번역이나 정의문은 사전에 포함하지 않았다."
+    },
+    {
+      "id": "finance-kcie-margin-call",
+      "title": "전국투자자교육협의회: 파생상품 투자 교육",
+      "url": "https://www.kcie.or.kr/guide/2/25/web_view?content_idx=1073&series_idx=",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-16",
+      "note": "Margin Call/마진콜 대응 표기를 확인. 붙임 여부는 이 출처 표기를 따르며 다른 자료의 마진 콜 표기도 존재한다."
+    },
+    {
+      "id": "finance-blackrock-name",
+      "title": "BlackRock 한국 공식 홈페이지",
+      "url": "https://www.blackrock.com/kr",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-16",
+      "note": "회사 자체 표기인 블랙록만 확인했다. 제품 정보, 투자 자료, 사전 데이터는 가져오지 않았다."
+    },
+    {
+      "id": "finance-fidelity-name",
+      "title": "피델리티자산운용: 역내설정 펀드 투자설명서 변경 공지",
+      "url": "https://image.kebhana.com/cont/download/disclosure/gong_fidelity_2020313.pdf",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-16",
+      "note": "하나은행이 제공하는 피델리티자산운용 자체 공지 원본(2020-03-12). 발신 법인의 Fidelity/피델리티 이름만 확인했다."
+    },
+    {
+      "id": "finance-jpmorgan-name",
+      "title": "금융투자협회: 제이피모간자산운용코리아 자체 채용 공고",
+      "url": "https://www.kofia.or.kr/brd/m_96/view.do?seq=598",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-16",
+      "note": "2010-11-05 회사 자체 채용 공고의 제이피모간 법인 명칭만 확인. 별칭 JP Morgan의 공백 정규화는 프로젝트 편집 선택이다."
+    },
+    {
+      "id": "finance-fsc-crowdfunding",
+      "title": "금융위원회: 자본시장법 개정안 국무회의 의결",
+      "url": "https://www.fsc.go.kr/po010106/74414",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-16",
+      "note": "금융 용어 설명의 Crowdfunding/크라우드펀딩 대응 표기만 확인. 법령 설명과 뜻풀이는 재사용하지 않았다."
+    }
+  ]
+}

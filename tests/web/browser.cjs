@@ -27,9 +27,16 @@ const path = require("node:path");
   };
   assert.equal(await page.inputValue("#source"), "1~2만 원");
   assert.equal(await page.inputValue("#expected"), "만 원에서 이만 원");
-  assert((await page.locator("#sample-review").textContent()).includes("독립 검토 대기"));
+  assert(
+    (await page.locator("#sample-review").textContent()).includes(
+      "독립 검토 대기",
+    ),
+  );
   await run();
-  assert.equal(await page.locator("#output").textContent(), "만 원에서 이만 원");
+  assert.equal(
+    await page.locator("#output").textContent(),
+    "만 원에서 이만 원",
+  );
   await page.fill("#source", "Apple은 사과입니다.");
   await page.uncheck("#expected-enabled");
   await run();
@@ -69,7 +76,7 @@ const path = require("node:path");
   assert.equal(await page.locator(".write-row").count(), 2);
   assert.equal(
     await page.locator("#output").textContent(),
-    "애프터 이펙츠를 사용합니다.\n뱅크 오브 아메리카는 은행입니다.",
+    "애프터 이펙트를 사용합니다.\n뱅크 오브 아메리카는 은행입니다.",
   );
   await page.click('[data-mode="verify"]');
   await run();
@@ -124,11 +131,23 @@ const path = require("node:path");
   assert.equal(await page.evaluate(() => globalThis.PWNED), undefined);
   assert.equal(await page.locator("#output script").count(), 0);
   await page.click('[data-mode="corpus"]');
-  assert((await page.locator("#reference-summary").textContent()).includes("독립 검토 완료 0건"));
-  assert((await page.locator("#corpus-panel h2").textContent()).includes("기대 출력 코퍼스"));
+  assert(
+    (await page.locator("#reference-summary").textContent()).includes(
+      "독립 검토 완료 0건",
+    ),
+  );
+  assert(
+    (await page.locator("#corpus-panel h2").textContent()).includes(
+      "기대 출력 코퍼스",
+    ),
+  );
   await page.selectOption("#corpus", "protected");
   await run();
-  assert((await page.locator("#corpus-review").textContent()).includes("원문 보존 계약"));
+  assert(
+    (await page.locator("#corpus-review").textContent()).includes(
+      "원문 보존 계약",
+    ),
+  );
   assert(
     (await page.locator("#corpus-progress").textContent()).includes(
       "40건 통과, 0건 실패",
@@ -136,7 +155,11 @@ const path = require("node:path");
   );
   await page.selectOption("#corpus", "multiword-v8");
   await run();
-  assert((await page.locator("#corpus-review").textContent()).includes("임시 발음값"));
+  assert(
+    (await page.locator("#corpus-review").textContent()).includes(
+      "임시 발음값",
+    ),
+  );
   assert(
     (await page.locator("#corpus-progress").textContent()).includes(
       "30건 통과, 0건 실패",
@@ -166,6 +189,109 @@ const path = require("node:path");
       fullPage: true,
     });
   }
+  // Source-backed dictionary browser, isolated native preview and exports.
+  await page.route("**/api/lexicon", async (route) => {
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    await route.continue();
+  });
+  await page.goto((process.argv[2] || "http://127.0.0.1:8000") + "/lexicon");
+  await page.fill("#lex-query", "ETF");
+  await page.waitForFunction(
+    () => document.querySelector("#lex-test-current").disabled === false,
+  );
+  assert(
+    (await page.locator("#lex-summary").textContent()).includes("출처 대조"),
+  );
+  await page.fill("#lex-query", "ETF");
+  await page.locator("#lex-rows button").filter({ hasText: /^ETF$/ }).click();
+  await page.click("#lex-test-current");
+  await page.waitForFunction(
+    () => !document.querySelector("#lex-test-current").disabled,
+  );
+  assert(
+    (await page.locator("#lex-result").textContent()).includes(
+      "이티에프의 발음을 확인합니다.",
+    ),
+  );
+  assert(
+    (await page.locator("#lex-result").textContent()).includes(
+      "lexicon:domain",
+    ),
+  );
+  await page.fill("#lex-pron", "검토발음");
+  await page.click("#lex-test-edit");
+  await page.waitForFunction(
+    () => !document.querySelector("#lex-test-edit").disabled,
+  );
+  assert(
+    (await page.locator("#lex-result").textContent()).includes(
+      "검토발음의 발음을 확인합니다.",
+    ),
+  );
+  const dictionaryDownload = page.waitForEvent("download");
+  await page.click("#lex-export-tsv");
+  assert.equal(
+    (await dictionaryDownload).suggestedFilename(),
+    "customer-pronunciation.tsv",
+  );
+  await page.fill(
+    "#lex-corpus",
+    "Apple의 정보입니다. foobarquux의 정보입니다.",
+  );
+  await page.click("#lex-scan");
+  await page.waitForFunction(
+    () => !document.querySelector("#lex-scan").disabled,
+  );
+  assert(
+    (await page.locator("#lex-coverage-summary").textContent()).includes(
+      "fallback 1",
+    ),
+  );
+  assert(
+    (await page.locator("#lex-coverage").textContent()).includes("foobarquux"),
+  );
+  await page.fill("#lex-corpus", "a".repeat(20000));
+  await page.click("#lex-scan");
+  await page.waitForFunction(
+    () => !document.querySelector("#lex-scan").disabled,
+  );
+  assert.equal(await page.locator("#lex-coverage-summary").textContent(), "");
+  assert(
+    !(await page.locator("#lex-coverage").textContent()).includes("foobarquux"),
+  );
+  assert(await page.locator("#lex-export-coverage").isDisabled());
+  await page.fill(
+    "#lex-corpus",
+    "ETF의 비용과 foobarquux의 정보를 확인합니다.",
+  );
+  await page.selectOption("#lex-scan-domain", "finance-vocabulary");
+  await page.click("#lex-scan");
+  await page.waitForFunction(
+    () => !document.querySelector("#lex-scan").disabled,
+  );
+  assert(
+    (await page.locator("#lex-coverage").textContent()).includes(
+      "lexicon:domain",
+    ),
+  );
+  assert(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth + 1,
+    ),
+    "dictionary mobile overflow",
+  );
+  if (process.env.TTF_SCREENSHOT_DIR)
+    await page.screenshot({
+      path: path.join(process.env.TTF_SCREENSHOT_DIR, "lexicon-mobile.png"),
+      fullPage: true,
+    });
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.evaluate(() => scrollTo(0, 0));
+  if (process.env.TTF_SCREENSHOT_DIR)
+    await page.screenshot({
+      path: path.join(process.env.TTF_SCREENSHOT_DIR, "lexicon-desktop.png"),
+      fullPage: true,
+    });
   assert.deepEqual(errors, []);
   await browser.close();
   console.log(

@@ -3,6 +3,32 @@
 Pronunciation overrides are separate from TN rules. `3개 → 세 개` is semantic
 verbalization; `Apple → 애플` is a pronunciation lookup.
 
+## Authoring and review (v0.10)
+
+`lexicons/ko-KR/*.jsonl` is the managed source of the system/finance foreign
+lexicons. `lexicons/sources/*.json` records evidence and its limits. Run
+`python3 tools/lexicon/manage.py build` to generate deterministic runtime TSV;
+CI uses `build --check` to reject drift, canonical collisions, missing evidence
+and accidental system activation of the scoped finance dictionary. Customer
+overrides can still be authored directly as TSV or loaded through the public API.
+
+The inventory has 374 entries / 376 keys: 328 system entries and 46 optional
+finance entries. The 85 source-checked entries have documented source comparisons;
+289 are pending and none is independently human-reviewed. Source checking and
+test conformance do not approve pronunciation quality. The authoring tool currently
+supports the bounded en-US → ko-KR key grammar; the native language-pack ABI remains
+extensible. [Maintenance guide](lexicon-maintenance.ko.md) covers editing, domain
+selection, overrides, review states and a complete test/deployment workflow.
+
+`tools/lexicon/coverage.py` and the web `/lexicon` page use actual span traces to
+report dictionary hits and fallback candidates. They do not promote generated
+fallback spellings into the source dictionary. All 376 managed keys are exercised
+through the native engine in addition to 40 hand-authored contextual references.
+
+The new immutable TN-rule index prevents pronunciation entries from being scanned
+on every rule lookup. Hash storage still uses a fixed bucket count; see
+[measured scale limits](lexicon-scale-v10.md).
+
 | Priority | Typical owner |
 | --- | --- |
 | User | Per-engine request/profile pronunciation customization |

@@ -102,9 +102,9 @@ for text in negative:
 # Closing punctuation followed by Korean grammar is not a continuation of an
 # English word. Ordinary bounded names still get a complete foreign-word span.
 for text, expected in (
-    ("After Effects를 소개합니다.", "애프터 이펙츠를 소개합니다."),
-    ("'After Effects'를 소개합니다.", "'애프터 이펙츠'를 소개합니다."),
-    ("After Effects’를 소개합니다.", "애프터 이펙츠’를 소개합니다."),
+    ("After Effects를 소개합니다.", "애프터 이펙트를 소개합니다."),
+    ("'After Effects'를 소개합니다.", "'애프터 이펙트'를 소개합니다."),
+    ("After Effects’를 소개합니다.", "애프터 이펙트’를 소개합니다."),
 ):
     for profile in profiles:
         validate(text, profile, expected=expected, phrase="After Effects")

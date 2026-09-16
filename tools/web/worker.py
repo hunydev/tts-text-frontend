@@ -7,7 +7,15 @@ import sys
 import time
 from pathlib import Path
 from native import Engine, flatten
-from workbench import ROOT, corpus_path, reference_audit, reference_case_reviews, stream_sizes, validate, version
+from workbench import (
+    ROOT,
+    corpus_path,
+    reference_audit,
+    reference_case_reviews,
+    stream_sizes,
+    validate,
+    version,
+)
 
 
 def emit(event):
@@ -72,11 +80,17 @@ def run(request, library, resources):
         else:
             result = engine.normalize(source)
         result["tokens"] = engine.tokens(source)
+        sys.path.insert(0, str(ROOT / "tools/lexicon"))
+        from coverage import summarize
+
+        result["lexicon_coverage"] = summarize(result["spans"])
         result["expected_match"] = (
             result["text"] == request["expected"] if "expected" in request else None
         )
         result["reference_review"] = {
-            "reference_source": "request-supplied expectation" if "expected" in request else "no expectation supplied",
+            "reference_source": "request-supplied expectation"
+            if "expected" in request
+            else "no expectation supplied",
             "review_status": "not-independently-reviewed",
             "human_approved": False,
         }

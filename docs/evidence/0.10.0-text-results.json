@@ -1,0 +1,460 @@
+{
+  "version": "0.10.0",
+  "date": "2026-09-16",
+  "scope": "Normalized text, metadata, resource binding, precedence and streaming only. No synthesized speech, listening evaluation or independent human pronunciation approval.",
+  "inventory": {
+    "entries": 374,
+    "runtime_keys": 376,
+    "categories": {
+      "acronyms": 28,
+      "brands": 22,
+      "common": 89,
+      "content": 85,
+      "finance": 98,
+      "multiword_content": 6,
+      "multiword_finance": 3,
+      "multiword_places_media": 3,
+      "proper_nouns": 16,
+      "technology": 24
+    },
+    "review_status": {
+      "pending": 289,
+      "source-checked": 85
+    },
+    "source_count": 40,
+    "scopes": {
+      "finance": 46,
+      "system": 328
+    }
+  },
+  "text_corpus": {
+    "cases": 40,
+    "passed": 40,
+    "failed": 0,
+    "matches": 40,
+    "mismatches": 0,
+    "exact_match_rate": 1.0,
+    "metadata_failures": 0,
+    "batch_stream_failures": 0,
+    "character_edit_distance": 0,
+    "reference_characters": 837,
+    "character_error_rate": 0.0,
+    "fallback_spans": 0
+  },
+  "reference_audit": {
+    "files": 16,
+    "cases": 743,
+    "classifications": {
+      "needs-review": 15,
+      "preservation-contract": 78,
+      "provisional-pronunciation": 123,
+      "reference-policy": 527
+    },
+    "pending_independent_review": 743,
+    "human_approved_cases": 0,
+    "reference_defects": 0,
+    "structural_passed": true,
+    "known_defect_checks_passed": true,
+    "linguistic_accuracy": null
+  },
+  "checks": {
+    "gcc_debug_ctest": {
+      "passed": 54,
+      "total": 54
+    },
+    "clang_release_ctest": {
+      "passed": 54,
+      "total": 54
+    },
+    "clang_asan_ubsan_leak_ctest": {
+      "passed": 53,
+      "total": 53
+    },
+    "source_validation_unittests": 24,
+    "source_runtime_layer_context_chunk_checks": 506,
+    "coverage_cli_checks": 51,
+    "web_api_checks": 55,
+    "chromium_desktop_mobile": "passed",
+    "new_context_cases": 40
+  },
+  "case_results": [
+    {
+      "id": "lexicon-v10-content-illustrator",
+      "text": "Illustrator로 로고를 만듭니다.",
+      "expected": "일러스트레이터로 로고를 만듭니다.",
+      "normalized": "일러스트레이터로 로고를 만듭니다.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    },
+    {
+      "id": "lexicon-v10-content-lightroom",
+      "text": "Lightroom에서 사진을 보정합니다.",
+      "expected": "라이트룸에서 사진을 보정합니다.",
+      "normalized": "라이트룸에서 사진을 보정합니다.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    },
+    {
+      "id": "lexicon-v10-content-media-encoder",
+      "text": "Media Encoder로 영상을 내보냅니다.",
+      "expected": "미디어 인코더로 영상을 내보냅니다.",
+      "normalized": "미디어 인코더로 영상을 내보냅니다.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    },
+    {
+      "id": "lexicon-v10-content-character-animator",
+      "text": "Character Animator로 캐릭터를 움직입니다.",
+      "expected": "캐릭터 애니메이터로 캐릭터를 움직입니다.",
+      "normalized": "캐릭터 애니메이터로 캐릭터를 움직입니다.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    },
+    {
+      "id": "lexicon-v10-content-youtube-shorts",
+      "text": "YouTube Shorts에 영상을 올립니다.",
+      "expected": "유튜브 쇼츠에 영상을 올립니다.",
+      "normalized": "유튜브 쇼츠에 영상을 올립니다.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    },
+    {
+      "id": "lexicon-v10-content-green-screen",
+      "text": "green screen으로 배경을 촬영합니다.",
+      "expected": "그린 스크린으로 배경을 촬영합니다.",
+      "normalized": "그린 스크린으로 배경을 촬영합니다.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    },
+    {
+      "id": "lexicon-v10-content-sequence-clip",
+      "text": "sequence에 clip을 추가합니다.",
+      "expected": "시퀀스에 클립을 추가합니다.",
+      "normalized": "시퀀스에 클립을 추가합니다.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    },
+    {
+      "id": "lexicon-v10-content-clip-audio",
+      "text": "clip의 audio를 확인합니다.",
+      "expected": "클립의 오디오를 확인합니다.",
+      "normalized": "클립의 오디오를 확인합니다.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    },
+    {
+      "id": "lexicon-v10-content-overlay",
+      "text": "overlay를 추가합니다.",
+      "expected": "오버레이를 추가합니다.",
+      "normalized": "오버레이를 추가합니다.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    },
+    {
+      "id": "lexicon-v10-content-compressor",
+      "text": "compressor로 소리의 크기를 조절합니다.",
+      "expected": "컴프레서로 소리의 크기를 조절합니다.",
+      "normalized": "컴프레서로 소리의 크기를 조절합니다.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    },
+    {
+      "id": "lexicon-v10-content-template-layout",
+      "text": "template의 layout을 바꿉니다.",
+      "expected": "템플릿의 레이아웃을 바꿉니다.",
+      "normalized": "템플릿의 레이아웃을 바꿉니다.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    },
+    {
+      "id": "lexicon-v10-content-crossfade",
+      "text": "crossfade로 두 소리를 연결합니다.",
+      "expected": "크로스페이드로 두 소리를 연결합니다.",
+      "normalized": "크로스페이드로 두 소리를 연결합니다.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    },
+    {
+      "id": "lexicon-v10-finance-etf",
+      "text": "ETF의 수수료를 확인하세요.",
+      "expected": "이티에프의 수수료를 확인하세요.",
+      "normalized": "이티에프의 수수료를 확인하세요.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    },
+    {
+      "id": "lexicon-v10-finance-nav",
+      "text": "NAV를 확인하세요.",
+      "expected": "엔에이브이를 확인하세요.",
+      "normalized": "엔에이브이를 확인하세요.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    },
+    {
+      "id": "lexicon-v10-finance-dsr",
+      "text": "DSR을 확인하세요.",
+      "expected": "디에스알을 확인하세요.",
+      "normalized": "디에스알을 확인하세요.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    },
+    {
+      "id": "lexicon-v10-finance-reits",
+      "text": "REITs에 관한 안내입니다.",
+      "expected": "리츠에 관한 안내입니다.",
+      "normalized": "리츠에 관한 안내입니다.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    },
+    {
+      "id": "lexicon-v10-finance-spac",
+      "text": "SPAC을 설명합니다.",
+      "expected": "스팩을 설명합니다.",
+      "normalized": "스팩을 설명합니다.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    },
+    {
+      "id": "lexicon-v10-finance-leverage",
+      "text": "leverage를 낮춥니다.",
+      "expected": "레버리지를 낮춥니다.",
+      "normalized": "레버리지를 낮춥니다.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    },
+    {
+      "id": "lexicon-v10-finance-duration",
+      "text": "duration을 확인하세요.",
+      "expected": "듀레이션을 확인하세요.",
+      "normalized": "듀레이션을 확인하세요.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    },
+    {
+      "id": "lexicon-v10-finance-covered-bond",
+      "text": "covered bond를 안내합니다.",
+      "expected": "커버드본드를 안내합니다.",
+      "normalized": "커버드본드를 안내합니다.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    },
+    {
+      "id": "lexicon-v10-finance-covered-call",
+      "text": "covered call의 구조를 설명합니다.",
+      "expected": "커버드콜의 구조를 설명합니다.",
+      "normalized": "커버드콜의 구조를 설명합니다.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    },
+    {
+      "id": "lexicon-v10-finance-high-yield",
+      "text": "high yield를 설명합니다.",
+      "expected": "하이일드를 설명합니다.",
+      "normalized": "하이일드를 설명합니다.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    },
+    {
+      "id": "lexicon-v10-finance-margin-call",
+      "text": "margin call을 점검합니다.",
+      "expected": "마진콜을 점검합니다.",
+      "normalized": "마진콜을 점검합니다.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    },
+    {
+      "id": "lexicon-v10-finance-blackrock",
+      "text": "BlackRock이 발표했습니다.",
+      "expected": "블랙록이 발표했습니다.",
+      "normalized": "블랙록이 발표했습니다.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    },
+    {
+      "id": "lexicon-v10-finance-rebalancing",
+      "text": "rebalancing을 진행합니다.",
+      "expected": "리밸런싱을 진행합니다.",
+      "normalized": "리밸런싱을 진행합니다.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    },
+    {
+      "id": "lexicon-v10-finance-crowdfunding",
+      "text": "crowdfunding을 설명합니다.",
+      "expected": "크라우드펀딩을 설명합니다.",
+      "normalized": "크라우드펀딩을 설명합니다.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    },
+    {
+      "id": "lexicon-v10-content-english-1",
+      "text": "Please add the clip to the sequence.",
+      "expected": "Please add the clip to the sequence.",
+      "normalized": "Please add the clip to the sequence.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    },
+    {
+      "id": "lexicon-v10-content-english-2",
+      "text": "Use Lightroom to edit the photo.",
+      "expected": "Use Lightroom to edit the photo.",
+      "normalized": "Use Lightroom to edit the photo.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    },
+    {
+      "id": "lexicon-v10-content-english-3",
+      "text": "The audio track is ready.",
+      "expected": "The audio track is ready.",
+      "normalized": "The audio track is ready.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    },
+    {
+      "id": "lexicon-v10-content-english-4",
+      "text": "Open the Media Encoder project.",
+      "expected": "Open the Media Encoder project.",
+      "normalized": "Open the Media Encoder project.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    },
+    {
+      "id": "lexicon-v10-content-english-5",
+      "text": "Please upload the video to YouTube Shorts.",
+      "expected": "Please upload the video to YouTube Shorts.",
+      "normalized": "Please upload the video to YouTube Shorts.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    },
+    {
+      "id": "lexicon-v10-content-english-6",
+      "text": "The compressor and limiter are enabled.",
+      "expected": "The compressor and limiter are enabled.",
+      "normalized": "The compressor and limiter are enabled.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    },
+    {
+      "id": "lexicon-v10-finance-english-1",
+      "text": "Please compare the ETF fees.",
+      "expected": "Please compare the ETF fees.",
+      "normalized": "Please compare the ETF fees.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    },
+    {
+      "id": "lexicon-v10-finance-english-2",
+      "text": "NAV changes every day.",
+      "expected": "NAV changes every day.",
+      "normalized": "NAV changes every day.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    },
+    {
+      "id": "lexicon-v10-finance-english-3",
+      "text": "The REITs market is open.",
+      "expected": "The REITs market is open.",
+      "normalized": "The REITs market is open.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    },
+    {
+      "id": "lexicon-v10-finance-english-4",
+      "text": "BlackRock released the report.",
+      "expected": "BlackRock released the report.",
+      "normalized": "BlackRock released the report.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    },
+    {
+      "id": "lexicon-v10-finance-english-5",
+      "text": "Please explain the covered call strategy.",
+      "expected": "Please explain the covered call strategy.",
+      "normalized": "Please explain the covered call strategy.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    },
+    {
+      "id": "lexicon-v10-finance-english-6",
+      "text": "Fidelity published the fund report.",
+      "expected": "Fidelity published the fund report.",
+      "normalized": "Fidelity published the fund report.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    },
+    {
+      "id": "lexicon-v10-content-premiere-pro",
+      "text": "Premiere Pro에서 After Effects로 이동합니다.",
+      "expected": "프리미어 프로에서 애프터 이펙트로 이동합니다.",
+      "normalized": "프리미어 프로에서 애프터 이펙트로 이동합니다.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    },
+    {
+      "id": "lexicon-v10-content-english-premiere-pro",
+      "text": "Premiere Pro works with After Effects.",
+      "expected": "Premiere Pro works with After Effects.",
+      "normalized": "Premiere Pro works with After Effects.",
+      "passed": true,
+      "metadata_failures": [],
+      "batch_stream_match": true
+    }
+  ],
+  "sha256": {
+    "lexicons/ko-KR/content-additions.jsonl": "a3228efcfb86706684f37da20df0a7ca6fc86a8418f0507db14e094c14d827d3",
+    "lexicons/ko-KR/finance-additions.jsonl": "e3b2039a3185ad0d5764a46b07889c940313880826a3021dc3f0669b4362a01f",
+    "lexicons/ko-KR/seed.jsonl": "845752b45830bedb5721f0e6dee194083e9dda08f1e0d12fc120e7233d4682a0",
+    "lexicons/sources/content.json": "55c7ddad39ef5e216ccf09faa5144aebff489442be368a45734f08fdbb4e615d",
+    "lexicons/sources/finance.json": "1d942e9a852b6ad98534dec37d3c0deb442d7fcec767aefdf8396cf01d0d48e9",
+    "lexicons/sources/project.json": "633faa180571e8b80b96d036d6189a6b6a41bf41d86331e823ee7f6323d0e677",
+    "tests/evaluation/lexicon_v10.jsonl": "f62a5224dea2f6e082ac244f8fcf919b07e560b60de65ddb28e2eb0145f49975",
+    "tools/lexicon/manage.py": "f1c0d034e758a2768ef7adeb51eccdd9f3c535202b69cdf994bb8fbe07b31946",
+    "tools/lexicon/coverage.py": "63158d5323d71f42d99a18951e241f00f2530a24132b96ffc6d684abef8f8068"
+  },
+  "limits": [
+    "The 376-key reachability test checks authored data bindings, not independently correct pronunciation.",
+    "All 743 active references remain pending independent review.",
+    "85 dictionary entries have source comparisons; 289 are pending and none human-reviewed.",
+    "Source dictionary/G2P remain prototypes; lexical coverage is bounded.",
+    "Scale timings are a synthetic workload experiment with concurrent VM activity; see docs/lexicon-scale-v10.md."
+  ]
+}

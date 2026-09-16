@@ -671,3 +671,54 @@ footer {
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
+
+/* Dictionary review view shares the workbench's type, spacing and colors. */
+.lex-workspace {
+  align-items: start;
+  margin-top: 24px;
+}
+.lex-workspace label {
+  display: block;
+  margin-top: 18px;
+  margin-bottom: 8px;
+}
+.lex-workspace input {
+  width: 100%;
+}
+.lex-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 16px 0;
+}
+#lex-evidence {
+  padding-left: 20px;
+  overflow-wrap: anywhere;
+}
+#lex-evidence p {
+  font-size: 12px;
+  color: var(--muted);
+}
+#lex-result,
+#lex-coverage {
+  min-height: 90px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font: inherit;
+}
+#lex-rows button {
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+#lex-rows td {
+  overflow-wrap: anywhere;
+}
+#lex-corpus {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.lex-workspace .table-scroll {
+  max-height: 640px;
+  overflow: auto;
+}

@@ -29,7 +29,7 @@ The existing pronunciation lexicon schema accepts a phrase in its key:
 
 ```text
 lexicon  ko-KR  en-US:bank of america  뱅크 오브 아메리카
-lexicon  ko-KR  en-US:after effects    애프터 이펙츠
+lexicon  ko-KR  en-US:after effects    애프터 이펙트
 ```
 
 Actual files use **tabs between the four columns**. Phrase words in a resource

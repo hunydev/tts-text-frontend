@@ -112,7 +112,7 @@ static int check_first(ttf_engine_t *engine, const char *input, const char *expe
 
 int main(int argc, char **argv) {
     static const char *cases[][2] = {
-        {"After Effects를 사용합니다.", "애프터 이펙츠를 사용합니다."},
+        {"After Effects를 사용합니다.", "애프터 이펙트를 사용합니다."},
         {"Bank of America는 은행입니다.", "뱅크 오브 아메리카는 은행입니다."},
         {"bAnK  of\tAmerica가 발표했습니다.", "뱅크 오브 아메리카가 발표했습니다."},
         {"Adobe Premiere Pro를 사용합니다.", "어도비 프리미어 프로를 사용합니다."},
@@ -139,7 +139,7 @@ int main(int argc, char **argv) {
        entries and single words outrank longer lower-layer entries. */
     for (profile = 0; profile < 4; ++profile) {
         static const char *expected[] = {"사용자이펙트", "고객이펙트", "도메인이펙트",
-                                         "애프터 이펙츠"};
+                                         "애프터 이펙트"};
         static const ttf_resource_layer_t layer[] = {TTF_LAYER_USER, TTF_LAYER_CUSTOMER,
                                                      TTF_LAYER_DOMAIN, TTF_LAYER_SYSTEM};
         ttf_engine_t *engine = NULL;
@@ -204,7 +204,7 @@ int main(int argc, char **argv) {
         REQUIRE(ttf_lexicon_add(engine, TTF_LAYER_USER, "en-US", "ko-KR", oversized,
                                 "너무긴읽기") == TTF_EINVAL);
         REQUIRE(ttf_engine_freeze(engine) == TTF_OK);
-        REQUIRE(!check_first(engine, "After Effects를 사용합니다.", "애프터 이펙츠를 사용합니다.",
+        REQUIRE(!check_first(engine, "After Effects를 사용합니다.", "애프터 이펙트를 사용합니다.",
                              "After Effects", TTF_LAYER_SYSTEM));
         ttf_engine_destroy(engine);
         ++checks;

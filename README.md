@@ -25,6 +25,35 @@ WiFi를 사용합니다.           → 와이파이를 사용합니다.
 `Apple → 애플` is pronunciation rendering. Source, context and render languages
 remain distinct in the semantic IR and output metadata.
 
+## Managed pronunciation dictionaries (v0.10)
+
+The editable source now lives in `lexicons/`: **374 entries / 376 keys**, including
+159 new finance and content entries. Each entry records sources, alternatives,
+scope and review status. Current status is 85 source-checked, 289 pending, and
+zero independently human-reviewed. Dictionary coverage is not pronunciation accuracy.
+
+The web **사전 관리** page at `/lexicon` supports search, evidence inspection, native
+preview of edited pronunciations, customer TSV/review proposal downloads, and
+manuscript reports identifying fallback vocabulary. See the
+[Korean dictionary maintenance guide](docs/lexicon-maintenance.ko.md).
+
+```sh
+python3 tools/lexicon/manage.py validate
+python3 tools/lexicon/manage.py build --check
+build/ttf normalize --domain resources/domains/finance/ko-KR/lexicon.tsv \
+  'ETF의 수수료와 NAV를 확인하세요.'
+# 이티에프의 수수료와 엔에이브이를 확인하세요.
+build/ttf normalize 'Premiere Pro에서 After Effects로 이동합니다.'
+# 프리미어 프로에서 애프터 이펙트로 이동합니다.
+python3 tools/lexicon/coverage.py input.txt --finance --output coverage.json
+```
+
+Forty-six ambiguous financial initialisms are an explicit domain overlay; this
+vocabulary file does not enable the legacy finance numeric policy. Source compilation
+validates canonical collisions, evidence, review fields, runtime generation and
+domain isolation. Native TN rule lookup now uses a frozen rule-only index:
+[50,000-key measurements and remaining storage limits](docs/lexicon-scale-v10.md).
+
 ## Range readings and reference review (v0.9)
 
 ```text

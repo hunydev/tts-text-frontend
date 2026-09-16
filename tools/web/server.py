@@ -12,6 +12,9 @@ from pathlib import Path
 from urllib.parse import urlsplit
 from workbench import ROOT, catalog, validate
 
+sys.path.insert(0, str(ROOT / "tools/lexicon"))
+from manage import inventory
+
 STATIC = Path(__file__).with_name("static")
 SLOTS = threading.BoundedSemaphore(4)
 MAX_BODY = 262144
@@ -52,7 +55,18 @@ class Handler(BaseHTTPRequestHandler):
             return self.json(200, catalog())
         if path == "/api/health":
             return self.json(200, dict(ok=True, version=catalog()["version"]))
-        names = {"/": "index.html", "/app.js": "app.js", "/style.css": "style.css"}
+        if path == "/api/lexicon":
+            try:
+                return self.json(200, inventory(ROOT))
+            except (ValueError, OSError) as error:
+                return self.json(503, {"error": str(error)})
+        names = {
+            "/": "index.html",
+            "/app.js": "app.js",
+            "/style.css": "style.css",
+            "/lexicon": "lexicon.html",
+            "/lexicon.js": "lexicon.js",
+        }
         if path not in names:
             return self.json(404, {"error": "Not found"})
         file = STATIC / names[path]

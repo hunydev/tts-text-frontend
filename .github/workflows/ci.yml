@@ -37,7 +37,7 @@ jobs:
       - run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
       - run: cmake --build build --parallel 2
       - name: Verify text protocol and evaluation
-        run: ctest --test-dir build --output-on-failure -R 'cli_stream_json|evaluation'
+        run: ctest --test-dir build --output-on-failure -R 'cli_stream_json|evaluation|lexicon'
       - name: Build normalized text report
         run: python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources --corpus tests/evaluation/cases.jsonl --output-dir artifacts/evaluation/regression
       - name: Audit expected-text integrity and review classifications
@@ -57,6 +57,11 @@ jobs:
           python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources --corpus tests/evaluation/content_v7.jsonl --output-dir artifacts/evaluation/content-v7
       - name: Verify multiword pronunciation and streaming
         run: python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources --corpus tests/evaluation/multiword_v8.jsonl --output-dir artifacts/evaluation/multiword-v8
+      - name: Verify managed lexicon sources and vocabulary contexts
+        run: |
+          python3 tools/lexicon/manage.py build --check
+          python3 tools/lexicon/manage.py inventory --output artifacts/evaluation/lexicon-inventory.json
+          python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources --corpus tests/evaluation/lexicon_v10.jsonl --output-dir artifacts/evaluation/lexicon-v10
       - name: Upload evaluation artifact
         uses: actions/upload-artifact@v7.0.1
         with:

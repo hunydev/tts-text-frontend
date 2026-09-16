@@ -72,6 +72,22 @@ try:
         )
         assert result["expected_match"] is not False, (sample, result)
         assert result["reference_review"]["human_approved"] is False
+    with urllib.request.urlopen(base + "/api/lexicon") as response:
+        dictionary = json.load(response)
+    assert dictionary["summary"]["entries"] >= 374
+    assert dictionary["summary"]["scopes"]["finance"] == 46
+    assert dictionary["summary"]["review_status"].get("human-reviewed", 0) == 0
+    assert all(row["sources"] and row["source_file"].startswith("lexicons/") for row in dictionary["entries"])
+    checks += 1
+    result, _ = run("Apple의 정보입니다. foobarquux의 정보입니다. Please use foobarquux.")
+    coverage = result["lexicon_coverage"]
+    assert coverage["routes"] == {"direct-lexicon": 1, "fallback": 1}, coverage
+    assert coverage["eligible_foreign_spans"] == 2
+    assert coverage["review_candidates"][0]["canonical_key"] == "foobarquux"
+    result, _ = run("ABS의 정보입니다. 1-2", opts={"domain": "finance-vocabulary"})
+    assert result["text"] == "에이비에스의 정보입니다. 일에서 이"
+    assert any(s["lexicon"] == "lexicon:domain" for s in result["spans"])
+    assert result["lexicon_coverage"]["terms"][0]["entry_id"] == "finance-abs"
     text = "1st는 첫 번째입니다.\nPlease go to the 1st floor"
     result, events = run(text, "verify")
     assert (
@@ -173,8 +189,7 @@ try:
         corpus = [json.loads(x) for x in r]
     assert corpus[-2]["passed"] == 30 and corpus[-2]["failed"] == 0
     assert corpus[-2]["pending_independent_review"] == 30
-    assert any(row["reference_review"]["classification"] == "needs-review"
-               for row in corpus[-2]["cases"])
+    assert next(row for row in corpus[-2]["cases"] if row["id"] == "multiword-after-effects")["reference_review"]["classification"] == "reference-policy"
     checks += 1
     for body in [
         dict(mode="verify", text="x", options={"chunk_bytes": 0}),

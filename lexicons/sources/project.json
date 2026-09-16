@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "sources": [
+    {
+      "id": "project-seed-v09",
+      "title": "Project seed pronunciation choices through v0.9",
+      "url": "https://github.com/hunydev/tts-text-frontend/tree/431423ce73c0eb79cbee42c5a841d34d1140cb0e/resources/languages/ko-KR/lexicon",
+      "kind": "editorial-policy",
+      "checked_at": "2026-09-16",
+      "note": "Authored project policies; no external pronunciation authority or human approval is asserted."
+    },
+    {
+      "id": "postgresql-press-pronunciation",
+      "title": "PostgreSQL Press FAQ: pronunciation",
+      "url": "https://www.postgresql.org/about/press/faq/",
+      "kind": "official-pronunciation",
+      "checked_at": "2026-09-16",
+      "note": "Official English pronunciation guide post-GRES-que-ell; Korean transcription is an editorial inference, not attested here."
+    }
+  ]
+}

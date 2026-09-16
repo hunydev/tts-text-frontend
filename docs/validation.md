@@ -1,10 +1,72 @@
-# Text validation — 0.9.0
+# Text validation — 0.10.0
+
+Validated on Linux on 2026-09-16. Acceptance covers normalized output text,
+metadata, native dictionary lookup, resource precedence and deterministic streaming.
+Audio synthesis and listening comparison are excluded.
+
+| Check | Result |
+| --- | --- |
+| GCC Debug / Clang Release | 54/54 CTest each |
+| Clang ASan + UBSan + leak detection | 53/53 CTest |
+| Source compiler validation | 24 unit tests; deterministic generation and scope isolation |
+| Complete managed vocabulary | 376 keys exercised; 506 lookup/layer/context/chunk checks |
+| Manuscript coverage CLI | 51 checks, including exclusions and finance selection |
+| New finance/content context references | 40/40 text + metadata + 1/7/64-byte streaming |
+| Web API / Chromium | 55 API checks; desktop/mobile dictionary preview/export/coverage pass |
+| Active reference inventory | 16 files / 743 cases; zero known audit defects |
+
+The native ABI remains v1 with SONAME 1 and unchanged public headers. All original
+regression categories pass. Generated resource files are checked against editable
+JSONL, and malformed evidence, duplicate canonical keys, false source-check
+promotion and unintended finance activation are rejected. Authoring metadata cannot
+prove a named reviewer really reviewed a term; the human process remains external.
+
+## Dictionary quality and changes
+
+The v0.10 dictionary contains **374 entries / 376 runtime keys**, adding 159
+finance/content entries to 215 legacy defaults. There are 328 system entries and
+46 optional finance entries. Of the 374 records, 85 are source-checked, 289 await
+review and **none is independently human-reviewed**. Forty source records describe
+evidence and its limits. Lookup conformance does not establish pronunciation accuracy.
+
+Existing After Effects spellings and the PostgreSQL editorial transcription were
+corrected with an explicit [change ledger](audit/reference-corrections-0.10.0.json).
+The README execution also exposed missing whole-phrase `Premiere Pro`; the corrected
+product pronunciation and an English-preservation guard are now contextual references.
+Expected strings were authored from stated policies/source evidence, not copied
+from engine output. Prior evidence documents retain their historical references.
+
+The full expected-text inventory has 527 policy cases, 123 provisional pronunciation
+cases, 78 preservation contracts and 15 needing further review. **All 743 still
+await independent review.** Source checks and mechanical audit success do not change
+that status. [Versioned evidence](evidence/0.10.0-text-results.json) records hashes,
+case results and limits; [maintenance](lexicon-maintenance.ko.md) describes human edits.
+
+## Scale and production boundaries
+
+An immutable TN-only rule index removes a full resource-table scan per token.
+In this VM, the observed median for a fixed 1,000-sentence workload with 50,000
+synthetic keys changed from 5,142.944 ms to 620.581 ms. Every one of the 50,000 keys
+was also checked for exact output/customer lookup. This is a bounded synthetic
+experiment, not a service latency guarantee. Full method and residual fixed-hash
+limits are in [the scale report](lexicon-scale-v10.md).
+
+The library and test workbench support a controlled integration pilot. Production
+pronunciation quality still requires representative finance/content manuscripts,
+independent text review, broader licensed source pronunciation data, ambiguity
+policies and storage capacity measurements. The new `/lexicon` UI supports that
+workflow through evidence inspection, request-local pronunciation previews, customer
+TSV export and fallback vocabulary reports; it does not silently update source data.
+
+---
+
+# Historical validation — 0.9.0
 
 Validation date: 2026-09-16. Acceptance covers output text, semantic/language
 metadata, resource precedence and batch/stream parity. Audio synthesis and
 listening evaluation are excluded.
 
-## Current executed checks
+## Executed checks (v0.9)
 
 | Check | Result |
 |---|---|

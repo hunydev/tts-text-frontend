@@ -121,13 +121,25 @@ ttf_status_t ttf_engine_freeze(ttf_engine_t *e) {
         return TTF_OK;
     if (!ttf_find_pack(e, e->default_language))
         return TTF_EINVAL;
-    /* Index only effective cues once. Boundary planning never scans the whole
-       lexicon, and customer overrides can disable a system cue. */
+    /* Build immutable indexes before sharing the engine. Rules and boundary
+       cues must not scan pronunciation dictionaries during normalization. */
+    e->rules = NULL;
+    e->boundary_cues = NULL;
     for (bucket = 0; bucket < TTF_HASH_BUCKETS; ++bucket) {
         ttf_entry_t *entry;
         for (entry = e->resources[bucket]; entry; entry = entry->next) {
             int active = 0;
             size_t pack;
+            entry->rule_next = NULL;
+            entry->boundary_next = NULL;
+            if (!strcmp(entry->kind, "exact") || !strcmp(entry->kind, "pattern")) {
+                entry->rule_next = e->rules;
+                e->rules = entry;
+            }
+            /* Most resources, especially large lexicons, cannot be boundary
+               cues. Avoid effective-value lookups for those entries. */
+            if (strcmp(entry->kind, "identifier_label") && strcmp(entry->kind, "context_cue"))
+                continue;
             if (strcmp(entry->lang, "*") && !ttf_find_pack(e, entry->lang))
                 continue;
             if (ttf_resource_get(e, entry->kind, entry->lang, entry->key, NULL) != entry->value)

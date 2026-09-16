@@ -131,3 +131,14 @@ See the [Korean resource editing guide](resource-editing-guide.ko.md) for range
 connectors, counter policies, pronunciation data and reference review. Legacy
 `range_mode=digits` is a broad hyphen customization example, not a recommended
 financial default: use labeled identifier resources for actual account identifiers.
+
+
+## Pronunciation authoring boundary (v0.10)
+
+Managed system/finance pronunciation data are edited as `lexicons/` JSONL and
+source catalogs. `tools/lexicon/manage.py build` validates and deterministically
+emits the existing runtime TSV format; `build --check` is a CI gate. The existing
+resource compiler can then compile those TSV files to TTFB. Neither authoring
+metadata nor Python is required by the C runtime. TN rules remain separate TSV
+resources. Domain pronunciation files are explicitly loaded and prohibited from
+the default manifest by the authoring gate. See [maintenance](lexicon-maintenance.ko.md).

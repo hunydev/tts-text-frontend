@@ -216,10 +216,10 @@
           "reason": "Audit found an inappropriate source-particle template; corrected input/reference pairs require a change record and independent pronunciation review."
         },
         "content-v7-aftereffects": {
-          "classification": "needs-review",
+          "classification": "reference-policy",
           "review_status": "pending-independent-review",
-          "reference_source": "developer-authored synthetic fixture",
-          "reason": "Project 애프터이펙츠 differs from Adobe Korean 애프터 이펙트; select and document source-pronunciation versus localized product-name policy."
+          "reference_source": "Adobe Korean product naming; developer-selected rendering policy",
+          "reason": "v0.10 uses the documented vendor name 애프터 이펙트. This source check is not independent human approval."
         },
         "content-v7-literal-untouched": {
           "classification": "preservation-contract",
@@ -291,10 +291,10 @@
       },
       "case_overrides": {
         "multiword-after-effects": {
-          "classification": "needs-review",
+          "classification": "reference-policy",
           "review_status": "pending-independent-review",
-          "reference_source": "developer-authored synthetic fixture",
-          "reason": "Project 애프터 이펙츠 differs from Adobe Korean 애프터 이펙트; matching this seed does not establish authoritative product pronunciation."
+          "reference_source": "Adobe Korean product naming; developer-selected rendering policy",
+          "reason": "v0.10 uses the documented vendor name 애프터 이펙트. This source check is not independent human approval."
         }
       }
     },
@@ -381,6 +381,97 @@
       },
       "category_overrides": {},
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/lexicon_v10.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "provisional-pronunciation",
+        "review_status": "pending-independent-review",
+        "reference_source": "Hand-authored context references and primary sources in docs/lexicon-finance-v10.md and docs/lexicon-content-v10.md",
+        "reason": "Selected pronunciation policy awaiting independent review; source verification and mechanical dictionary conformance are separate from approval."
+      },
+      "category_overrides": {},
+      "case_overrides": {
+        "lexicon-v10-content-english-1": {
+          "classification": "preservation-contract",
+          "review_status": "pending-independent-review",
+          "reference_source": "Hand-authored context references and primary sources in docs/lexicon-finance-v10.md and docs/lexicon-content-v10.md",
+          "reason": "English context preserves the original spelling despite dictionary availability."
+        },
+        "lexicon-v10-content-english-2": {
+          "classification": "preservation-contract",
+          "review_status": "pending-independent-review",
+          "reference_source": "Hand-authored context references and primary sources in docs/lexicon-finance-v10.md and docs/lexicon-content-v10.md",
+          "reason": "English context preserves the original spelling despite dictionary availability."
+        },
+        "lexicon-v10-content-english-3": {
+          "classification": "preservation-contract",
+          "review_status": "pending-independent-review",
+          "reference_source": "Hand-authored context references and primary sources in docs/lexicon-finance-v10.md and docs/lexicon-content-v10.md",
+          "reason": "English context preserves the original spelling despite dictionary availability."
+        },
+        "lexicon-v10-content-english-4": {
+          "classification": "preservation-contract",
+          "review_status": "pending-independent-review",
+          "reference_source": "Hand-authored context references and primary sources in docs/lexicon-finance-v10.md and docs/lexicon-content-v10.md",
+          "reason": "English context preserves the original spelling despite dictionary availability."
+        },
+        "lexicon-v10-content-english-5": {
+          "classification": "preservation-contract",
+          "review_status": "pending-independent-review",
+          "reference_source": "Hand-authored context references and primary sources in docs/lexicon-finance-v10.md and docs/lexicon-content-v10.md",
+          "reason": "English context preserves the original spelling despite dictionary availability."
+        },
+        "lexicon-v10-content-english-6": {
+          "classification": "preservation-contract",
+          "review_status": "pending-independent-review",
+          "reference_source": "Hand-authored context references and primary sources in docs/lexicon-finance-v10.md and docs/lexicon-content-v10.md",
+          "reason": "English context preserves the original spelling despite dictionary availability."
+        },
+        "lexicon-v10-finance-english-1": {
+          "classification": "preservation-contract",
+          "review_status": "pending-independent-review",
+          "reference_source": "Hand-authored context references and primary sources in docs/lexicon-finance-v10.md and docs/lexicon-content-v10.md",
+          "reason": "English context preserves the original spelling despite dictionary availability."
+        },
+        "lexicon-v10-finance-english-2": {
+          "classification": "preservation-contract",
+          "review_status": "pending-independent-review",
+          "reference_source": "Hand-authored context references and primary sources in docs/lexicon-finance-v10.md and docs/lexicon-content-v10.md",
+          "reason": "English context preserves the original spelling despite dictionary availability."
+        },
+        "lexicon-v10-finance-english-3": {
+          "classification": "preservation-contract",
+          "review_status": "pending-independent-review",
+          "reference_source": "Hand-authored context references and primary sources in docs/lexicon-finance-v10.md and docs/lexicon-content-v10.md",
+          "reason": "English context preserves the original spelling despite dictionary availability."
+        },
+        "lexicon-v10-finance-english-4": {
+          "classification": "preservation-contract",
+          "review_status": "pending-independent-review",
+          "reference_source": "Hand-authored context references and primary sources in docs/lexicon-finance-v10.md and docs/lexicon-content-v10.md",
+          "reason": "English context preserves the original spelling despite dictionary availability."
+        },
+        "lexicon-v10-finance-english-5": {
+          "classification": "preservation-contract",
+          "review_status": "pending-independent-review",
+          "reference_source": "Hand-authored context references and primary sources in docs/lexicon-finance-v10.md and docs/lexicon-content-v10.md",
+          "reason": "English context preserves the original spelling despite dictionary availability."
+        },
+        "lexicon-v10-finance-english-6": {
+          "classification": "preservation-contract",
+          "review_status": "pending-independent-review",
+          "reference_source": "Hand-authored context references and primary sources in docs/lexicon-finance-v10.md and docs/lexicon-content-v10.md",
+          "reason": "English context preserves the original spelling despite dictionary availability."
+        },
+        "lexicon-v10-content-english-premiere-pro": {
+          "classification": "preservation-contract",
+          "review_status": "pending-independent-review",
+          "reference_source": "Hand-authored English preservation contract",
+          "reason": "New Korean product phrase must not change English context."
+        }
+      }
     }
   ],
   "excluded": [

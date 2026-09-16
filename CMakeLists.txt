@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(tts_text_frontend VERSION 0.9.0 LANGUAGES C)
+project(tts_text_frontend VERSION 0.10.0 LANGUAGES C)
 include(GNUInstallDirs)
 include(CTest)
 option(TTF_ENABLE_ASAN "Enable AddressSanitizer" OFF)
@@ -79,6 +79,9 @@ if(BUILD_TESTING)
   add_executable(ttf_test_multiword tests/unit/test_multiword_api.c)
   target_link_libraries(ttf_test_multiword PRIVATE tts_text_frontend_shared ttf_build_flags)
   add_test(NAME multiword_lexicon_api COMMAND ttf_test_multiword ${CMAKE_CURRENT_SOURCE_DIR}/resources)
+  add_executable(ttf_test_rule_index tests/unit/test_rule_index.c)
+  target_link_libraries(ttf_test_rule_index PRIVATE tts_text_frontend_static ttf_build_flags)
+  add_test(NAME rule_index_with_large_lexicon COMMAND ttf_test_rule_index ${CMAKE_CURRENT_SOURCE_DIR}/resources)
   add_test(NAME arbitrary_chunk_streaming COMMAND ttf_tests streaming)
   add_executable(ttf_test_ko_pack tests/unit/test_ko_pack.c)
   target_link_libraries(ttf_test_ko_pack PRIVATE tts_text_frontend_static ttf_build_flags)
@@ -107,6 +110,19 @@ if(BUILD_TESTING)
   endif()
   find_package(Python3 COMPONENTS Interpreter QUIET)
   if(Python3_Interpreter_FOUND)
+    add_test(NAME lexicon_generated_resources COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tools/lexicon/manage.py build --check)
+    add_test(NAME lexicon_source_validation COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/unit/test_lexicon_sources.py)
+    add_test(NAME lexicon_inventory_reachability COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_lexicon_inventory.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
+    add_test(NAME lexicon_coverage_report COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_lexicon_coverage.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
+    add_test(NAME lexicon_v10_evaluation COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources lexicon_v10.jsonl 40)
     add_test(NAME english_clock_references COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_english_clock_reference.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)

@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TTF Lab · 발음 사전</title>
+    <link rel="stylesheet" href="/style.css" />
+    <script src="/lexicon.js" defer></script>
+  </head>
+  <body>
+    <header class="mast">
+      <a href="/" class="brand"
+        ><span class="brandmark">Tt</span
+        ><span>TTF <b>Lab</b><small>PRONUNCIATION LIBRARY</small></span></a
+      >
+      <div class="mast-right"><a href="/">텍스트 테스트 ↗</a></div>
+    </header>
+    <main>
+      <section class="intro">
+        <div>
+          <p class="eyebrow">DICTIONARY & REVIEW</p>
+          <h1>발음을 찾고, 근거를 확인하세요.</h1>
+          <p class="lead">
+            금융·콘텐츠 용어의 읽기와 출처를 살펴보고 수정안을 실제 엔진으로
+            시험합니다.
+          </p>
+        </div>
+      </section>
+      <p id="lex-notice" class="notice" role="status" aria-live="polite">
+        사전을 불러오는 중입니다.
+      </p>
+      <section class="panel">
+        <div class="panel-heading">
+          <h2>사전 현황</h2>
+          <span id="lex-total" class="small"></span>
+        </div>
+        <p id="lex-summary"></p>
+        <p class="small">
+          출처 대조는 문서에 있는 표기를 확인한 상태입니다. 독립적인 사람의 발음
+          검수 완료와는 다릅니다. 임시 선택값과 복수의 읽기 가능성도 함께
+          표시합니다.
+        </p>
+        <div class="config-grid">
+          <label for="lex-query"
+            >단어·발음 검색<input
+              id="lex-query"
+              type="search"
+              placeholder="ETF, 레버리지, Premiere…" /></label
+          ><label for="lex-category"
+            >분류<select id="lex-category">
+              <option value="">전체 분류</option>
+            </select></label
+          ><label for="lex-review"
+            >검토 상태<select id="lex-review">
+              <option value="">전체 상태</option>
+              <option value="pending">검토 대기</option>
+              <option value="source-checked">출처 대조</option>
+              <option value="human-reviewed">사람 검수 완료</option>
+            </select></label
+          >
+        </div>
+      </section>
+      <section class="workspace lex-workspace">
+        <div class="panel">
+          <div class="panel-heading">
+            <h2>검색 결과</h2>
+            <span id="lex-count" class="small"></span>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>원어</th>
+                  <th>선택된 발음</th>
+                  <th>검토 상태</th>
+                </tr>
+              </thead>
+              <tbody id="lex-rows"></tbody>
+            </table>
+          </div>
+          <button id="lex-more" class="secondary" hidden>다음 50개 보기</button>
+        </div>
+        <div class="panel">
+          <h2 id="lex-term">항목을 선택하세요</h2>
+          <p id="lex-state" class="small"></p>
+          <p id="lex-notes"></p>
+          <p id="lex-aliases" class="small"></p>
+          <p id="lex-alternatives" class="small"></p>
+          <h3>근거 자료</h3>
+          <ul id="lex-evidence"></ul>
+          <label for="lex-pron">시험할 한국어 발음</label
+          ><input id="lex-pron" disabled placeholder="한국어 발음" />
+          <label for="lex-example">검증 문장</label
+          ><textarea id="lex-example" rows="3" disabled></textarea>
+          <div class="lex-actions">
+            <button id="lex-test-current" class="secondary" disabled>
+              현재 사전으로 검사</button
+            ><button id="lex-test-edit" class="primary" disabled>
+              수정안 시험
+            </button>
+          </div>
+          <pre id="lex-result" class="output" aria-live="polite">
+검사 결과가 여기에 표시됩니다.</pre>
+          <div class="lex-actions">
+            <button id="lex-export-tsv" class="secondary" disabled>
+              고객 TSV 내려받기</button
+            ><button id="lex-export-json" class="secondary" disabled>
+              수정 제안 JSON
+            </button>
+          </div>
+          <p class="small">
+            시험과 다운로드는 서버의 사전을 변경하지 않습니다. 반영할 수정안은
+            <a
+              href="https://github.com/hunydev/tts-text-frontend/blob/main/docs/lexicon-maintenance.ko.md"
+              target="_blank"
+              rel="noopener"
+              >사전 관리 가이드</a
+            >에 따라 원본에 기록하고 검증합니다.
+          </p>
+        </div>
+      </section>
+      <section class="panel">
+        <div class="panel-heading">
+          <h2>입력 문서의 사전 사용 현황</h2>
+          <span class="small">Coverage</span>
+        </div>
+        <p>
+          실제 원고를 넣으면 직접 사전 적중과 fallback에 의존하는 용어를
+          분리합니다. 적중률은 발음 정확도 점수가 아닙니다.
+        </p>
+        <label class="sr-only" for="lex-corpus">검사할 원고</label
+        ><textarea
+          id="lex-corpus"
+          rows="4"
+          placeholder="ETF의 비용과 leverage의 위험을 확인합니다.&#10;Premiere Pro의 프로젝트를 편집합니다."
+        ></textarea
+        ><label for="lex-scan-domain">사용할 사전</label
+        ><select id="lex-scan-domain">
+          <option value="none">기본 시스템</option>
+          <option value="finance-vocabulary">금융 발음사전 포함</option></select
+        ><button id="lex-scan" class="primary">원고 검사</button>
+        <p id="lex-coverage-summary" class="small"></p>
+        <pre id="lex-coverage" class="output">검사할 원고를 입력하세요.</pre>
+        <button id="lex-export-coverage" class="secondary" disabled>
+          사용 현황 JSON
+        </button>
+        <p class="small">
+          영어 문맥·보호된 코드·숫자 정규화는 발음 사전 적중률에서 제외합니다.
+          입력은 서버에서 처리하며 원고를 외부로 보내거나 서버 파일로 저장하지
+          않습니다.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>

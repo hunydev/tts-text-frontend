@@ -139,6 +139,8 @@ class Engine:
                 setattr(cfg, field, options[key])
         self.check(self.lib.ttf_engine_create(C.byref(cfg), C.byref(self.handle)))
         try:
+            if options.get("domain") in ("finance", "finance-vocabulary"):
+                self.load(resources / "domains/finance/ko-KR/lexicon.tsv", 2)
             if options.get("domain") == "finance":
                 self.load(resources / "domains/finance/ko-KR/rules.tsv", 2)
             for path, layer in overrides:

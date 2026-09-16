@@ -1,6 +1,10 @@
 # 사람이 수정하는 읽기 리소스 안내서
 
-이 프로젝트의 읽기 문구와 발음 데이터는 UTF-8 TSV 파일이다. 이미 지원하는 문법의
+이 프로젝트의 런타임 읽기 문구와 발음 데이터는 UTF-8 TSV 파일이다. 관리되는
+기본 발음사전의 원본은 v0.10부터 `lexicons/` JSONL이며 TSV는 생성물이다.
+발음 항목·근거·검토 상태를 수정할 때는 [사전 관리 가이드](lexicon-maintenance.ko.md)를
+따른다. 아래의 고객 TSV overlay와 TN 규칙 편집은 그대로 사용할 수 있다.
+이미 지원하는 문법의
 읽기 정책은 C 소스를 다시 빌드하지 않고 바꿀 수 있다. 먼저 고객 overlay 파일로
 검증한 뒤 저장소에 보관하는 방식을 권한다. 시스템 파일을 직접 덮어쓸 필요는 없다.
 검증 대상은 출력 텍스트, 의미·언어 메타데이터, 스트리밍 일치성이다.
@@ -157,7 +161,7 @@ identifier_render	ko-KR	zero	공
 
 ```tsv
 lexicon	ko-KR	en-US:sql	시퀄
-lexicon	ko-KR	en-US:after effects	애프터 이펙츠
+lexicon	ko-KR	en-US:after effects	애프터 이펙트
 ```
 
 이것은 `SQL`의 음역 선택이며 번역이 아니다. 영어 문맥과 보호된 code/path 안에서는
@@ -167,7 +171,9 @@ lexicon	ko-KR	en-US:after effects	애프터 이펙츠
 자세한 범위는 [다단어 사전 문서](multiword-lexicon.md)를 따른다.
 
 `3개 → 세 개`는 수사+counter 정규화다. 이를 영어 발음사전에 넣어 고치지 않는다.
-시스템 발음 데이터는 `resources/languages/ko-KR/lexicon/`의 분야별 폴더에서 관리한다.
+시스템 발음 원본은 `lexicons/ko-KR/`에서 관리하며,
+`python3 tools/lexicon/manage.py build`가
+`resources/languages/ko-KR/lexicon/`의 분야별 TSV를 생성한다.
 
 ### 6월·10월의 어간
 
