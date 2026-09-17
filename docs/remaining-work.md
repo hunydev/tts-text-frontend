@@ -64,12 +64,17 @@ compiled resource의 **8개 CTest를 다시 실행해 모두 통과**했다. 이
   데이터 안의 separator를 임의로 삭제하거나 의미를 바꾸지 않았다. commit ID는
   해당 변경을 포함하는 후속 release에서 기록한다.
 
-- [ ] **RES-02: resource 의미 검증을 setup 단계에서 완료.** compiler는 일반 TSV
-  field 구조를 검증하며 각 pack policy의 의미까지 검증하지 않는다. 예를 들어
-  날짜의 잘못된 읽기 style은 실제 사용 시 `TTF_ERESOURCE`가 된다.
-  **닫는 증거:** 종류/언어/키별 value schema, 알 수 없는 policy의 명시적 처리,
-  compiler와 load/freeze 검증 일치, 실패 load의 원자성. 확장 pack의 새 resource를
-  core 고정 allowlist 때문에 사용할 수 없게 만들지 않는다.
+- [x] **RES-02: resource 의미 검증을 setup 단계에서 완료.** v0.16에서 공통 및
+  KO/EN pack schema를 별도 validator descriptor로 등록한다. scalar는 transactional
+  load, effective 날짜 범위·필수 label·streaming cue 의존성은 validate/freeze에서
+  검사한다. CLI/compiler/web이 같은 C 검증기를 사용한다. 미등록 namespace는
+  허용하면서 수를 보고하고 strict mode에서 거부하므로 제3언어 확장을 막지 않는다.
+  **증거:** `resource_semantic_validation`, `resource_validation_cli`,
+  `resource_compiler_protocol` 및 웹 진단 테스트. TSV/TTFB 원자성, freeze 실패 후
+  복구, 기존 pack ABI, 제3언어 validator, 선언 순서와 layer, compiler 산출물
+  보존을 검사한다. [계약·편집 가이드](resource-validation.md).
+  **범위:** 알려진 정책의 구조·소비자 제약·의존성 검증이다. 일반 읽기 label의
+  언어학적 정답이나 아직 검증기를 등록하지 않은 외부 namespace를 인증하지 않는다.
 
 - [ ] **TRACE-01: source와 target pronunciation의 실제 선택 경로 전달.**
   **v0.15 source layer 수정:** Customer `pronunciation`이 `common`으로 표시되던
@@ -310,3 +315,15 @@ Unicode grouping과 KO 카운터의 값 보존, source pronunciation layer를 �
 다음 우선순위는 RES-02의 setup 단계 정책 검증, TRACE-01의 target mapper 출처,
 실제 금융/콘텐츠 입력의 독립 검수와 corpus 확대다. 기존 사전의 pending review를
 통과 처리하거나 합성 음성의 품질을 검증했다고 주장하지 않는다.
+
+## v0.16 진행 기록
+
+RES-02 setup-time 정책 검증과 상세 진단을 구현했다. 기존 공개 ABI v1 구조체를
+변경하지 않고 validator registry를 추가했다. 웹 port 8000에서도 고객 TSV 오류의
+파일·행·키 및 미검증 행 수를 확인한다. Compiler는 실제 배포 root/overlay/language
+문맥으로 검사하고 성공한 artifact만 교체한다.
+
+측정과 회귀 결과는 [v0.16 결과](research/resource-validation-v16-results.md)에
+기록한다. 다음 우선순위는 TRACE-01 target mapper/variant별 상세 출처, 외부
+benchmark의 남은 semiotic class 오류, 한국어 금융·콘텐츠 reference의 독립 검수다.
+검사 대상 schema가 완비됐다는 사실로 전체 언어 품질 완료를 선언하지 않는다.

@@ -44,6 +44,19 @@ const path = require("node:path");
     await page.locator("#output").textContent(),
     "애플은 사과입니다.",
   );
+  assert((await page.locator("#resource-validation").textContent()).includes("리소스 정책 검사"));
+  // Invalid editable policy is rejected before output; diagnostics name the row/key.
+  await page.locator("#customer-tsv").evaluate((e) => e.closest("details").open = true);
+  await page.fill("#customer-tsv", "# editable policy\ncontext\tko-KR\tclause_weight\t9999\n");
+  await page.click("#run");
+  await page.waitForFunction(() => !document.querySelector("#run").disabled);
+  assert((await page.locator("#notice").textContent()).includes("customer.tsv:2"));
+  assert((await page.locator("#notice").textContent()).includes("context/ko-KR/clause_weight"));
+  await page.fill("#customer-tsv", "future.policy\t*\tkey\tvalue\n");
+  await run();
+  assert((await page.locator("#resource-validation").textContent()).includes("검사기 미등록 1행"));
+  await page.fill("#customer-tsv", "");
+  await run();
   await page.locator("#inspect-body tr").first().click();
   assert((await page.locator("#span-detail").textContent()).includes("en-US"));
   await page.selectOption("#sample", "layer");

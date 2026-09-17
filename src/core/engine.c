@@ -1,4 +1,5 @@
 #include "internal.h"
+#include "../resource/validation.h"
 #ifndef TTF_DEFAULT_RESOURCE_ROOT
 #define TTF_DEFAULT_RESOURCE_ROOT "resources"
 #endif
@@ -28,7 +29,7 @@ ttf_status_t ttf_engine_register_pack(ttf_engine_t *e, const ttf_language_pack_t
     if (!e || !p || p->struct_size != sizeof(*p) || p->abi_version != TTF_ABI_VERSION ||
         !p->language_tag || strlen(p->language_tag) >= TTF_LANGUAGE_TAG_SIZE || !p->verbalize)
         return TTF_EINVAL;
-    if (e->frozen)
+    if (e->frozen || e->validating)
         return TTF_ESTATE;
     if (ttf_find_pack(e, p->language_tag))
         return TTF_EINVAL;
@@ -37,50 +38,104 @@ ttf_status_t ttf_engine_register_pack(ttf_engine_t *e, const ttf_language_pack_t
     e->packs[e->pack_count++] = p;
     return TTF_OK;
 }
-static ttf_status_t load_manifest(ttf_engine_t *e) {
-    char path[4096], line[2048];
+static ttf_status_t load_manifest(ttf_engine_t *e, ttf_resource_diagnostic_t *d) {
+    char path[4096], manifest[4096], line[2048];
+    size_t line_number = 0;
     FILE *f;
     ttf_status_t st = TTF_OK;
-    if (snprintf(path, sizeof(path), "%s/manifest.ttfm", e->resource_root) >= (int)sizeof(path))
+    if (snprintf(manifest, sizeof(manifest), "%s/manifest.ttfm", e->resource_root) >=
+        (int)sizeof(manifest)) {
+        (void)ttf_validation_error(d, "Manifest path exceeds the path limit");
         return TTF_ELIMIT;
-    f = fopen(path, "rb");
-    if (!f)
+    }
+    ttf_validation_copy(d->path, sizeof(d->path), manifest);
+    f = fopen(manifest, "rb");
+    if (!f) {
+        (void)ttf_validation_error(d, "Cannot open resource manifest");
         return TTF_EIO;
-    while (fgets(line, sizeof(line), f)) {
-        size_t n = strlen(line);
-        if (n == sizeof(line) - 1 && line[n - 1] != '\n') {
-            st = TTF_ERESOURCE;
-            break;
+    }
+    for (;;) {
+        size_t n = 0, at;
+        int byte;
+        ttf_resource_diagnostic_init(d);
+        ttf_validation_copy(d->path, sizeof(d->path), manifest);
+        d->line = line_number + 1;
+        /* Read bounded bytes explicitly: fgets plus strlen would silently hide
+           an embedded NUL and could load a different path than the file shows. */
+        while ((byte = fgetc(f)) != EOF && byte != '\n') {
+            if (!byte) {
+                st = ttf_validation_error(d, "Manifest must not contain embedded NUL");
+                break;
+            }
+            if (n + 1 >= sizeof(line)) {
+                st = ttf_validation_error(d, "Manifest line exceeds the line limit");
+                break;
+            }
+            line[n++] = (char)byte;
         }
-        while (n && (line[n - 1] == '\n' || line[n - 1] == '\r'))
-            line[--n] = 0;
+        if (st != TTF_OK || (byte == EOF && !n))
+            break;
+        ++line_number;
+        if (n && line[n - 1] == '\r')
+            --n;
+        line[n] = 0;
+        for (at = 0; at < n;) {
+            uint32_t cp;
+            size_t width;
+            if (ttf_utf8_decode(line + at, n - at, &cp, &width) != 1 || cp < 32 || cp == 127) {
+                st = ttf_validation_error(d,
+                                          "Manifest line must be UTF-8 without control characters");
+                break;
+            }
+            at += width;
+        }
+        if (st != TTF_OK)
+            break;
         if (!n || line[0] == '#')
             continue;
         if (line[0] == '/' || strstr(line, "..") || strchr(line, '\\') || strchr(line, ':')) {
-            st = TTF_ERESOURCE;
+            st = ttf_validation_error(d, "Manifest requires relative paths without traversal");
             break;
         }
         if (snprintf(path, sizeof(path), "%s/%s", e->resource_root, line) >= (int)sizeof(path)) {
+            (void)ttf_validation_error(d, "Manifest resource path exceeds the path limit");
             st = TTF_ELIMIT;
             break;
         }
-        st = ttf_resource_load(e, path,
-                               !strncmp(line, "common/", 7) ? TTF_LAYER_COMMON : TTF_LAYER_SYSTEM);
+        st = ttf_resource_load_ex(
+            e, path, !strncmp(line, "common/", 7) ? TTF_LAYER_COMMON : TTF_LAYER_SYSTEM, d);
         if (st != TTF_OK)
             break;
     }
-    if (ferror(f))
+    if (ferror(f)) {
+        ttf_resource_diagnostic_init(d);
+        ttf_validation_copy(d->path, sizeof(d->path), manifest);
+        d->line = line_number;
+        (void)ttf_validation_error(d, "Cannot read resource manifest");
         st = TTF_EIO;
+    }
     fclose(f);
+    if (st == TTF_OK)
+        ttf_resource_diagnostic_init(d);
     return st;
 }
 ttf_status_t ttf_engine_create(const ttf_config_t *cfg, ttf_engine_t **out) {
+    return ttf_engine_create_ex(cfg, out, NULL);
+}
+ttf_status_t ttf_engine_create_ex(const ttf_config_t *cfg, ttf_engine_t **out,
+                                  ttf_resource_diagnostic_t *diagnostic) {
     ttf_config_t defaults;
+    ttf_resource_diagnostic_t local;
     ttf_engine_t *e;
     ttf_status_t st;
     if (!out)
         return TTF_EINVAL;
     *out = NULL;
+    if (diagnostic && diagnostic->struct_size != sizeof(*diagnostic))
+        return TTF_EINVAL;
+    if (!diagnostic)
+        diagnostic = &local;
+    ttf_resource_diagnostic_init(diagnostic);
     if (!cfg) {
         ttf_config_init(&defaults);
         cfg = &defaults;
@@ -103,9 +158,11 @@ ttf_status_t ttf_engine_create(const ttf_config_t *cfg, ttf_engine_t **out) {
     }
     e->config.resource_root = e->resource_root;
     e->config.default_language = e->default_language;
-    st = ttf_register_builtins(e);
+    st = ttf_engine_register_resource_validator(e, &ttf_resource_validator_core);
     if (st == TTF_OK)
-        st = load_manifest(e);
+        st = ttf_register_builtins(e);
+    if (st == TTF_OK)
+        st = load_manifest(e, diagnostic);
     if (st != TTF_OK) {
         ttf_engine_destroy(e);
         return st;
@@ -115,12 +172,18 @@ ttf_status_t ttf_engine_create(const ttf_config_t *cfg, ttf_engine_t **out) {
 }
 ttf_status_t ttf_engine_freeze(ttf_engine_t *e) {
     size_t bucket;
+    ttf_status_t status;
     if (!e)
         return TTF_EINVAL;
+    if (e->validating)
+        return TTF_ESTATE;
     if (e->frozen)
         return TTF_OK;
     if (!ttf_find_pack(e, e->default_language))
         return TTF_EINVAL;
+    status = ttf_engine_validate_resources(e, NULL, NULL);
+    if (status != TTF_OK)
+        return status;
     /* Build immutable indexes before sharing the engine. Rules and boundary
        cues must not scan pronunciation dictionaries during normalization. */
     e->rules = NULL;
@@ -146,8 +209,8 @@ ttf_status_t ttf_engine_freeze(ttf_engine_t *e) {
                 continue;
             if (!strcmp(entry->lang, "*")) {
                 for (pack = 0; pack < e->pack_count; ++pack)
-                    if (ttf_resource_get(e, entry->kind, e->packs[pack]->language_tag,
-                                         entry->key, NULL) == entry->value)
+                    if (ttf_resource_get(e, entry->kind, e->packs[pack]->language_tag, entry->key,
+                                         NULL) == entry->value)
                         break;
                 if (pack == e->pack_count)
                     continue;

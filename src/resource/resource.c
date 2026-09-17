@@ -1,4 +1,5 @@
 #include "../core/internal.h"
+#include "validation.h"
 #define RESOURCE_LIMIT (16u * 1024u * 1024u)
 static uint32_t hash_bytes(uint32_t h, const char *s) {
     while (*s) {
@@ -24,7 +25,10 @@ static void entry_free(ttf_entry_t *p) {
 ttf_status_t ttf_resource_set(ttf_engine_t *e, const char *kind, const char *lang, const char *key,
                               const char *value, ttf_resource_layer_t layer) {
     size_t h;
-    ttf_entry_t *p = (ttf_entry_t *)calloc(1, sizeof(*p));
+    ttf_entry_t *p;
+    if (e->resource_order == SIZE_MAX)
+        return TTF_ELIMIT;
+    p = (ttf_entry_t *)calloc(1, sizeof(*p));
     if (!p)
         return TTF_ENOMEM;
     p->kind = ttf_strdup(kind);
@@ -90,15 +94,25 @@ void ttf_resource_destroy(ttf_engine_t *e) {
 static uint32_t read_u32(const unsigned char *s) {
     return (uint32_t)s[0] | ((uint32_t)s[1] << 8) | ((uint32_t)s[2] << 16) | ((uint32_t)s[3] << 24);
 }
-static ttf_status_t parse_tsv(ttf_engine_t *e, char *data, size_t n, ttf_resource_layer_t layer) {
-    size_t pos = 0, i, w;
+static ttf_status_t parse_tsv(ttf_engine_t *e, const ttf_engine_t *owner, char *data, size_t n,
+                              ttf_resource_layer_t layer, ttf_resource_diagnostic_t *d) {
+    size_t pos = 0, i, w, line = 1;
     uint32_t cp;
-    for (i = 0; i < n; i += w)
-        if (ttf_utf8_decode(data + i, n - i, &cp, &w) != 1)
-            return TTF_ERESOURCE;
+    for (i = 0; i < n; i += w) {
+        if (!data[i] || ttf_utf8_decode(data + i, n - i, &cp, &w) != 1) {
+            d->line = line;
+            return ttf_validation_error(d, "Resource must be valid UTF-8 without embedded NUL");
+        }
+        if (cp == '\n')
+            ++line;
+    }
+    line = 0;
     while (pos < n) {
-        char *f[4];
+        char *f[4] = {NULL, NULL, NULL, NULL};
         size_t start = pos, end, k = 0;
+        int extra_field = 0;
+        d->kind[0] = d->language[0] = d->key[0] = 0;
+        d->line = ++line;
         while (pos < n && data[pos] != '\n')
             pos++;
         end = pos;
@@ -112,16 +126,30 @@ static ttf_status_t parse_tsv(ttf_engine_t *e, char *data, size_t n, ttf_resourc
         f[0] = data + start;
         for (i = start; i < end; i++)
             if (data[i] == '\t') {
-                if (k == 3)
-                    return TTF_ERESOURCE;
+                if (k == 3) {
+                    data[i] = 0;
+                    extra_field = 1;
+                    break;
+                }
                 data[i] = '\0';
                 f[++k] = data + i + 1;
             }
-        if (k != 3 || !f[0][0] || !f[1][0] || !f[2][0] || !f[3][0] ||
+        if (f[0])
+            ttf_validation_copy(d->kind, sizeof(d->kind), f[0]);
+        if (f[1])
+            ttf_validation_copy(d->language, sizeof(d->language), f[1]);
+        if (f[2])
+            ttf_validation_copy(d->key, sizeof(d->key), f[2]);
+        if (extra_field || k != 3 || !f[0][0] || !f[1][0] || !f[2][0] || !f[3][0] ||
             strlen(f[1]) >= TTF_LANGUAGE_TAG_SIZE)
-            return TTF_ERESOURCE;
+            return ttf_validation_error(d,
+                                        "Expected four nonempty fields and a bounded language tag");
         {
-            ttf_status_t st = ttf_resource_set(e, f[0], f[1], f[2], f[3], layer);
+            ttf_resource_record_t row = {sizeof(row), f[0], f[1], f[2], f[3], layer};
+            int validated;
+            ttf_status_t st = ttf_validate_resource_record(owner, &row, &validated, d);
+            if (st == TTF_OK)
+                st = ttf_resource_set(e, f[0], f[1], f[2], f[3], layer);
             if (st != TTF_OK)
                 return st;
         }
@@ -129,23 +157,36 @@ static ttf_status_t parse_tsv(ttf_engine_t *e, char *data, size_t n, ttf_resourc
     return TTF_OK;
 }
 ttf_status_t ttf_resource_load(ttf_engine_t *e, const char *path, ttf_resource_layer_t layer) {
+    return ttf_resource_load_ex(e, path, layer, NULL);
+}
+ttf_status_t ttf_resource_load_ex(ttf_engine_t *e, const char *path, ttf_resource_layer_t layer,
+                                  ttf_resource_diagnostic_t *diagnostic) {
     FILE *f;
     long size;
     char *data;
     size_t n, offset = 0, i;
     ttf_status_t st;
     ttf_engine_t *tmp;
-    if (!e || !path || (unsigned)layer > TTF_LAYER_USER)
+    ttf_resource_diagnostic_t local;
+    if (!e || !path || (unsigned)layer > TTF_LAYER_USER ||
+        (diagnostic && diagnostic->struct_size != sizeof(*diagnostic)))
         return TTF_EINVAL;
-    if (e->frozen)
+    if (e->frozen || e->validating)
         return TTF_ESTATE;
+    if (!diagnostic)
+        diagnostic = &local;
+    ttf_resource_diagnostic_init(diagnostic);
+    ttf_validation_copy(diagnostic->path, sizeof(diagnostic->path), path);
+    diagnostic->layer = layer;
     f = fopen(path, "rb");
-    if (!f)
+    if (!f) {
+        (void)ttf_validation_error(diagnostic, "Cannot open resource file");
         return TTF_EIO;
+    }
     if (fseek(f, 0, SEEK_END) || ((size = ftell(f)) < 0) || size > (long)RESOURCE_LIMIT ||
         fseek(f, 0, SEEK_SET)) {
         fclose(f);
-        return TTF_ERESOURCE;
+        return ttf_validation_error(diagnostic, "Resource size is invalid or exceeds 16 MiB");
     }
     n = (size_t)size;
     data = (char *)malloc(n + 1);
@@ -156,6 +197,7 @@ ttf_status_t ttf_resource_load(ttf_engine_t *e, const char *path, ttf_resource_l
     if (fread(data, 1, n, f) != n) {
         fclose(f);
         free(data);
+        (void)ttf_validation_error(diagnostic, "Cannot read resource file");
         return TTF_EIO;
     }
     fclose(f);
@@ -165,7 +207,7 @@ ttf_status_t ttf_resource_load(ttf_engine_t *e, const char *path, ttf_resource_l
         if (n < 16 || memcmp(data, "TTFB\1\0\0\0", 8) ||
             read_u32((unsigned char *)data + 8) != n - 16) {
             free(data);
-            return TTF_ERESOURCE;
+            return ttf_validation_error(diagnostic, "Invalid TTFB version or payload size");
         }
         for (i = 16; i < n; i++) {
             h ^= (unsigned char)data[i];
@@ -173,7 +215,7 @@ ttf_status_t ttf_resource_load(ttf_engine_t *e, const char *path, ttf_resource_l
         }
         if (h != read_u32((unsigned char *)data + 12)) {
             free(data);
-            return TTF_ERESOURCE;
+            return ttf_validation_error(diagnostic, "TTFB checksum mismatch");
         }
         offset = 16;
     }
@@ -182,8 +224,12 @@ ttf_status_t ttf_resource_load(ttf_engine_t *e, const char *path, ttf_resource_l
         free(data);
         return TTF_ENOMEM;
     }
-    st = parse_tsv(tmp, data + offset, n - offset, layer);
+    e->validating = 1;
+    st = parse_tsv(tmp, e, data + offset, n - offset, layer, diagnostic);
+    e->validating = 0;
     free(data);
+    if (st == TTF_OK && tmp->resource_order > SIZE_MAX - e->resource_order)
+        st = TTF_ELIMIT;
     if (st == TTF_OK) {
         for (i = 0; i < TTF_HASH_BUCKETS; i++) {
             ttf_entry_t *p = tmp->resources[i];
@@ -197,6 +243,7 @@ ttf_status_t ttf_resource_load(ttf_engine_t *e, const char *path, ttf_resource_l
             tmp->resources[i] = NULL;
         }
         e->resource_order += tmp->resource_order;
+        ttf_resource_diagnostic_init(diagnostic);
     }
     ttf_resource_destroy(tmp);
     free(tmp);
@@ -246,7 +293,7 @@ ttf_status_t ttf_lexicon_remove(ttf_engine_t *e, ttf_resource_layer_t layer, con
     if (!e || !source || !*source || !render || !*render || !word || !*word ||
         (unsigned)layer > TTF_LAYER_USER)
         return TTF_EINVAL;
-    if (e->frozen)
+    if (e->frozen || e->validating)
         return TTF_ESTATE;
     status = lexkey(source, word, &key);
     if (status != TTF_OK)
@@ -265,8 +312,10 @@ ttf_status_t ttf_lexicon_add(ttf_engine_t *e, ttf_resource_layer_t layer, const 
         strlen(source) >= TTF_LANGUAGE_TAG_SIZE || strlen(render) >= TTF_LANGUAGE_TAG_SIZE ||
         (unsigned)layer > TTF_LAYER_USER)
         return TTF_EINVAL;
-    if (e->frozen)
+    if (e->frozen || e->validating)
         return TTF_ESTATE;
+    if (e->resource_order == SIZE_MAX)
+        return TTF_ELIMIT;
     st = ttf_tokenize(pron, strlen(pron), &tokens, &count);
     free(tokens);
     if (st != TTF_OK)

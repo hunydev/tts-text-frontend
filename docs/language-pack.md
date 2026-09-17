@@ -45,3 +45,12 @@ grammars are separate modules, discovered by the same recursive CMake source glo
 classifier/verbalizer/G2P code into subdirectories as they grow; CMake already
 includes pack source files recursively. Pronunciation and TN data are separate
 under `resources/languages/<tag>/`.
+
+## Optional policy validators (v0.16)
+
+A pack may add `validate.c` exporting `ttf_resource_validator_<tag_with_underscores>`.
+CMake registers this descriptor after its language pack. The separate additive
+validation API preserves the original pack ABI. Row validators own language policy
+schemas, final callbacks check effective dependencies, and unknown namespaces remain
+explicitly unvalidated. See [resource validation](resource-validation.md) for ownership,
+callback purity, priority and extension tests.

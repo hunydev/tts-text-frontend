@@ -125,3 +125,12 @@ pin/hashes before parsing. Tests may call parser/bundle helpers on explicit
 synthetic fixtures without representing them as pinned CMU content.
 
 See [source, license and mapper research](../../../docs/research/pronunciation-sources.md).
+
+## Native validation dependency (v0.16)
+
+Native TTFB export now uses the same C resource validators as runtime loading.
+Build `ttf` first (`cmake -S . -B build && cmake --build build`) or set `TTF_CLI` to
+the current executable. The standalone compiler accepts `--resources`, `--language`
+and ordered `--domain`/`--customer` overlays to match deployment. Importing the
+pronunciation archive itself does not require the native executable. See
+[resource validation](../../../docs/resource-validation.md).

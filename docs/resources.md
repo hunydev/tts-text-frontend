@@ -63,8 +63,14 @@ input does not partially mutate the engine. Loads after freeze return `TTF_ESTAT
 ## Compiler/runtime boundary
 
 ```sh
-python3 tools/resource_compiler/compile_resources.py finance.tsv finance.ttfb
+python3 tools/resource_compiler/compile_resources.py finance.tsv finance.ttfb --ttf build/ttf --resources resources
 ```
+
+Since v0.16 the compiler invokes the same C policy validators as runtime loading.
+Build the CLI first or pass `--ttf`; `--syntax-only` is an explicit unvalidated
+bootstrap option. `ttf validate-resource` reports file/line/key diagnostics, and
+`--require-complete-validation` rejects unhandled namespaces. See the
+[policy validation and editing workflow](resource-validation.md).
 
 The initial compiled envelope contains `TTFB`, little-endian version 1, payload
 length, FNV-1a integrity checksum, then validated UTF-8 TSV. The C runtime accepts

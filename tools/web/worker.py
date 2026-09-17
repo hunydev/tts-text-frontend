@@ -80,6 +80,7 @@ def run(request, library, resources):
         else:
             result = engine.normalize(source)
         result["tokens"] = engine.tokens(source)
+        result["resource_validation"] = engine.resource_validation
         sys.path.insert(0, str(ROOT / "tools/lexicon"))
         from coverage import summarize
 

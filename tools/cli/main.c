@@ -1,4 +1,5 @@
 #include "tts_text_frontend/ttf.h"
+#include "tts_text_frontend/ttf_resource_validation.h"
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,6 +18,9 @@ typedef struct {
 static void usage(FILE *out) {
     fputs("Usage: ttf normalize|inspect [options] TEXT\n"
           "       ttf stream|stream-json [options] FILE|-\n"
+          "       ttf validate-resource [options] FILE\n"
+          "Validation: --resource-layer common|system|domain|customer|user\n"
+          "            --require-complete-validation (reject unknown namespaces)\n"
           "Options: --resources DIR --language TAG --domain FILE --customer FILE\n"
           "         --first-target N --normal-target N --max-length N\n"
           "Stream options: --chunk-bytes N (default 4096)\n",
@@ -69,6 +73,31 @@ static void escaped(const char *s, size_t n) {
 static void json_string_field(const char *name, const char *value) {
     printf(",\"%s\":", name);
     escaped(value, strlen(value));
+}
+static void validation_json(ttf_status_t status, const ttf_resource_validation_report_t *result,
+                            const ttf_resource_diagnostic_t *diagnostic) {
+    fputs("{\"version\":1,\"event\":\"resource-validation\"", stdout);
+    json_string_field("status", ttf_status_string(status));
+    printf(",\"records\":%zu,\"validated_records\":%zu,\"unvalidated_records\":%zu,\"diagnostic\":{"
+           "\"line\":%zu",
+           result->records, result->validated_records, result->unvalidated_records,
+           diagnostic->line);
+    json_string_field("path", diagnostic->path);
+    json_string_field("kind", diagnostic->kind);
+    json_string_field("language", diagnostic->language);
+    json_string_field("key", diagnostic->key);
+    json_string_field("layer", ttf_layer_name(diagnostic->layer));
+    json_string_field("message", diagnostic->message);
+    fputs("}}\n", stdout);
+}
+static int resource_report(const char *operation, ttf_status_t status,
+                           const ttf_resource_diagnostic_t *diagnostic) {
+    int result = report(operation, status);
+    if (diagnostic->message[0])
+        fprintf(stderr, "ttf: %s:%zu [%s %s %s; %s] %s\n", diagnostic->path, diagnostic->line,
+                diagnostic->kind, diagnostic->language, diagnostic->key,
+                ttf_layer_name(diagnostic->layer), diagnostic->message);
+    return result;
 }
 static int emit_json(const ttf_segment_t *segment, void *user_data) {
     json_output_t *output = (json_output_t *)user_data;
@@ -156,11 +185,17 @@ int main(int argc, char **argv) {
     ttf_config_t config;
     ttf_engine_t *engine = NULL;
     ttf_status_t status;
+    ttf_resource_diagnostic_t diagnostic;
+    ttf_resource_validation_report_t validation;
+    ttf_resource_layer_t validation_layer = TTF_LAYER_CUSTOMER;
     const char *command, *input = NULL;
     const char **overrides;
     ttf_resource_layer_t *layers;
     size_t count = 0, j, chunk_bytes = 4096;
-    int i, is_stream, is_json, positional_only = 0, exit_code = EXIT_SUCCESS;
+    int i, is_stream, is_json, is_validation, require_complete = 0;
+    int positional_only = 0, exit_code = EXIT_SUCCESS;
+    ttf_resource_diagnostic_init(&diagnostic);
+    ttf_resource_validation_report_init(&validation);
     if (argc < 2) {
         usage(stderr);
         return EXIT_FAILURE;
@@ -170,9 +205,11 @@ int main(int argc, char **argv) {
         return EXIT_SUCCESS;
     }
     command = argv[1];
+    is_validation = !strcmp(command, "validate-resource");
     is_json = !strcmp(command, "stream-json");
     is_stream = is_json || !strcmp(command, "stream");
-    if (strcmp(command, "normalize") && strcmp(command, "inspect") && !is_stream) {
+    if (strcmp(command, "normalize") && strcmp(command, "inspect") && !is_stream &&
+        !is_validation) {
         usage(stderr);
         return EXIT_FAILURE;
     }
@@ -188,6 +225,26 @@ int main(int argc, char **argv) {
         const char *arg = argv[i];
         if (!positional_only && !strcmp(arg, "--")) {
             positional_only = 1;
+        } else if (!positional_only && !strcmp(arg, "--require-complete-validation") &&
+                   is_validation) {
+            require_complete = 1;
+        } else if (!positional_only && !strcmp(arg, "--resource-layer") && is_validation) {
+            int layer, found = 0;
+            if (++i == argc) {
+                usage(stderr);
+                exit_code = EXIT_FAILURE;
+                goto done;
+            }
+            for (layer = TTF_LAYER_COMMON; layer <= TTF_LAYER_USER; ++layer)
+                if (!strcmp(argv[i], ttf_layer_name((ttf_resource_layer_t)layer))) {
+                    validation_layer = (ttf_resource_layer_t)layer;
+                    found = 1;
+                }
+            if (!found) {
+                fprintf(stderr, "ttf: invalid resource layer: %s\n", argv[i]);
+                exit_code = EXIT_FAILURE;
+                goto done;
+            }
         } else if (!positional_only &&
                    (!strcmp(arg, "--chunk-bytes") || !strcmp(arg, "--first-target") ||
                     !strcmp(arg, "--normal-target") || !strcmp(arg, "--max-length"))) {
@@ -239,21 +296,50 @@ int main(int argc, char **argv) {
         exit_code = EXIT_FAILURE;
         goto done;
     }
-    status = ttf_engine_create(&config, &engine);
+    status = ttf_engine_create_ex(&config, &engine, &diagnostic);
     if (status != TTF_OK) {
-        exit_code = report("create engine", status);
+        if (is_validation)
+            validation_json(status, &validation, &diagnostic);
+        exit_code = resource_report("create engine", status, &diagnostic);
         goto done;
     }
     for (j = 0; j < count; ++j) {
-        status = ttf_resource_load(engine, overrides[j], layers[j]);
+        status = ttf_resource_load_ex(engine, overrides[j], layers[j], &diagnostic);
         if (status != TTF_OK) {
-            exit_code = report(overrides[j], status);
+            if (is_validation)
+                validation_json(status, &validation, &diagnostic);
+            exit_code = resource_report(overrides[j], status, &diagnostic);
             goto done;
         }
     }
-    status = ttf_engine_freeze(engine);
+    if (is_validation) {
+        status = ttf_resource_load_ex(engine, input, validation_layer, &diagnostic);
+        if (status == TTF_OK)
+            status = ttf_engine_validate_resources(engine, &validation, &diagnostic);
+        if (status == TTF_OK && require_complete && validation.unvalidated_records) {
+            status = TTF_ERESOURCE;
+            snprintf(diagnostic.message, sizeof(diagnostic.message),
+                     "unknown resource records require a registered validator");
+        }
+        if (status == TTF_OK) {
+            status = ttf_engine_freeze(engine);
+            if (status != TTF_OK)
+                snprintf(diagnostic.message, sizeof(diagnostic.message),
+                         "Engine freeze failed after resource validation; check language and "
+                         "engine configuration");
+        }
+        validation_json(status, &validation, &diagnostic);
+        if (status != TTF_OK)
+            exit_code = resource_report("validate resource", status, &diagnostic);
+        else if (ferror(stdout) || fflush(stdout))
+            exit_code = report("write validation report", TTF_EIO);
+        goto done;
+    }
+    status = ttf_engine_validate_resources(engine, &validation, &diagnostic);
+    if (status == TTF_OK)
+        status = ttf_engine_freeze(engine);
     if (status != TTF_OK) {
-        exit_code = report("freeze engine", status);
+        exit_code = resource_report("freeze engine", status, &diagnostic);
         goto done;
     }
     if (is_stream) {

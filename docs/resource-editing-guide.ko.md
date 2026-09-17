@@ -358,3 +358,12 @@ TSV 문구만 바꿀 때 C core 재컴파일은 필요 없다. 새로운 classif
 뒤의 오른쪽 문맥이 필요하면 `quantity_lookahead_tail`을 등록합니다. 웹의
 ‘한국어 서수·횟수·번호’ 코퍼스와 작은 분절/입력 chunk 설정으로 확인합니다.
 이 항목은 TN 정책이며 foreign pronunciation lexicon에 넣지 않습니다.
+
+## 적용 전에 정책 검사하기 (v0.16)
+
+`build/ttf validate-resource --resources resources --require-complete-validation customer.tsv`로
+파일·행·키별 오류를 먼저 확인하세요. 컴파일러도 같은 C 검증기를 사용합니다.
+웹 고객 TSV 실험은 실패 위치와 검사 행 수를 표시합니다. 값 범위, enum, 날짜 범위,
+통화 label, 스트리밍 cue 의존성, 새 pack 확장 방법은
+[리소스 검증 가이드](resource-validation.md)에 정리했습니다. 이 검사는 읽기 정답의
+사람 검토를 대신하지 않습니다.

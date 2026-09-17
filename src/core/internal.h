@@ -1,12 +1,14 @@
 #ifndef TTF_INTERNAL_H
 #define TTF_INTERNAL_H
 #include "tts_text_frontend/ttf_language_pack.h"
+#include "tts_text_frontend/ttf_resource_validation.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 #include <ctype.h>
 #include <limits.h>
 #define TTF_MAX_PACKS 32
+#define TTF_MAX_RESOURCE_VALIDATORS 64
 #define TTF_HASH_BUCKETS 1021
 #define TTF_PHRASE_WORDS 8
 #define TTF_PHRASE_INPUT 255
@@ -23,9 +25,11 @@ typedef struct ttf_entry {
 struct ttf_engine {
     ttf_config_t config;
     char *resource_root, *default_language;
-    int frozen;
+    int frozen, validating;
     const ttf_language_pack_t *packs[TTF_MAX_PACKS];
     size_t pack_count, resource_order;
+    const ttf_resource_validator_t *validators[TTF_MAX_RESOURCE_VALIDATORS];
+    size_t validator_count;
     ttf_entry_t *resources[TTF_HASH_BUCKETS];
     ttf_entry_t *boundary_cues;
     ttf_entry_t *rules;
@@ -41,12 +45,16 @@ uint32_t ttf_quote_closer(uint32_t cp);
 ttf_status_t ttf_resource_set(ttf_engine_t *e, const char *kind, const char *lang, const char *key,
                               const char *value, ttf_resource_layer_t layer);
 void ttf_resource_destroy(ttf_engine_t *e);
+void ttf_validation_copy(char *destination, size_t capacity, const char *source);
+ttf_status_t ttf_validate_resource_record(const ttf_engine_t *engine,
+                                          const ttf_resource_record_t *record, int *validated,
+                                          ttf_resource_diagnostic_t *diagnostic);
 const ttf_language_pack_t *ttf_find_pack(const ttf_engine_t *e, const char *tag);
 /* Lookup only, before a source verbalizer can replace the original spelling.
    A NULL hit is a normal miss; a hit remains engine-owned. */
-ttf_status_t ttf_foreign_lookup(const ttf_engine_t *engine, const char *source,
-                               const char *target, const char *text, size_t length,
-                               const char **hit, ttf_resource_layer_t *layer);
+ttf_status_t ttf_foreign_lookup(const ttf_engine_t *engine, const char *source, const char *target,
+                                const char *text, size_t length, const char **hit,
+                                ttf_resource_layer_t *layer);
 const ttf_entry_t *ttf_rule_match(const ttf_engine_t *e, const char *lang, const char *text,
                                   size_t length, size_t *matched_length);
 ttf_status_t ttf_register_builtins(ttf_engine_t *e);

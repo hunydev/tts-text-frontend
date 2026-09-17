@@ -66,3 +66,12 @@ No global mutable language state is needed. To update resources during service,
 create and freeze a replacement engine, route new requests to it, and retain the
 old engine until its streams/requests finish. Callback data must be copied before
 queueing asynchronous TTS work.
+
+## Resource validation extension (v0.16)
+
+Include `tts_text_frontend/ttf_resource_validation.h` for additive `ttf_engine_create_ex`,
+`ttf_resource_load_ex`, `ttf_engine_validate_resources`, and
+`ttf_engine_register_resource_validator`. Existing ABI v1 layouts are unchanged.
+File loads check row schemas transactionally; freeze checks effective dependencies
+and constraints. Initialize optional caller-owned diagnostic/report outputs using
+the corresponding init helpers. See [contracts and C example](resource-validation.md).

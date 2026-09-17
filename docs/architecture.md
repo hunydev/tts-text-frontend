@@ -400,3 +400,28 @@ Pronunciation source provenance now carries an optional validated envelope throu
 the existing ABI. The core reports the consumed source resource layer, and retains
 the prior path strings. The target mapper layer is still a separate, unreported
 concern; see [trace contract](pronunciation-trace.md).
+
+### v0.16 setup-time resource validation
+
+The core registers language-neutral resource validators; optional pack-owned
+`validate.c` modules define language policy schemas and effective dependencies.
+This separate versioned descriptor/API leaves existing language pack and span ABI
+layouts unchanged. Unknown namespaces are counted, with opt-in strict CLI/compiler
+checks. Transactional row validation precedes resource merge; final effective checks
+precede freeze/indexing. All stored rows, including shadowed rows, are checked in
+declaration order. CLI, compiler and web use the C implementation.
+
+```mermaid
+flowchart LR
+  TSV[Editable TSV or TTFB] --> Parse[Temporary parse + row validators]
+  Parse --> Merge[Atomic resource merge]
+  Merge --> Final[Effective layered dependencies]
+  Final --> Freeze[Freeze + request indexes]
+  Final --> Diagnostic[File/line or effective-key diagnostic]
+  Compiler[Resource compiler] --> CLI[CLI validate-resource]
+  CLI --> Parse
+  Web[Web customer overlay] --> Parse
+```
+
+Schemas validate usability and constraints, not linguistic correctness. The full
+contracts, extension hooks and edit workflow are in [resource validation](resource-validation.md).

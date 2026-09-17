@@ -494,3 +494,30 @@ trace remains a documented limitation.
 
 See [Unicode numbers](docs/unicode-numbers.md), [Korean counters and customization](docs/korean-counters.md),
 [pronunciation trace](docs/pronunciation-trace.md), and [v0.15 measurements](docs/research/numeric-counters-v15-results.md).
+
+### v0.16 resource policy validation
+
+C runtime, CLI, compiler and web now share setup-time policy checks. Invalid enums,
+weights, phone indices, date bounds and missing effective reading dependencies are
+rejected before serving requests. Failed file loads preserve the existing engine.
+
+```sh
+build/ttf validate-resource --resources resources --require-complete-validation \
+  resources/customers/example/ko-KR/rules.tsv
+python3 tools/resource_compiler/compile_resources.py \
+  resources/customers/example/ko-KR/rules.tsv /tmp/customer.ttfb \
+  --ttf build/ttf --resources resources --require-complete-validation
+```
+
+Diagnostics include file, physical line and resource key. The web customer TSV editor
+shows the same errors; successful output reports validated and unhandled row counts.
+New language packs can register validators through an additive API while retaining
+ABI v1. Unknown namespaces remain loadable and explicitly counted; strict checking
+is available for deployment gates. Compiler validation accepts the deployment's
+ordered domain/customer overlays and language setting.
+
+See the [Korean editing and validation guide](docs/resource-validation.md) and
+[verification results](docs/research/resource-validation-v16-results.md).
+These checks verify policy structure and dependencies. Pronunciation correctness
+and production language coverage still need independent reference review and the
+work tracked in [remaining requirements](docs/remaining-work.md).

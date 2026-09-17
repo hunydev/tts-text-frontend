@@ -172,3 +172,11 @@ JSON 다운로드, 중단, 원문 HTML 미실행, 코퍼스 및 모바일 가로
 프로필이며 기존 **금융 도메인** 예제의 숫자 정책은 바꾸지 않는다. 실제 운영은
 문서 도메인에 맞게 선택한다. 원본 편집과 반영 순서는
 [사전 관리 가이드](lexicon-maintenance.ko.md)를 참고한다.
+
+## Resource policy checks (v0.16)
+
+Customer TSV is checked by the native pack/core validators before any output callback.
+Errors identify the file, physical row and resource key. Successful results show
+validated and unhandled row counts, also present in downloaded JSON. These are policy
+schema checks; reference correctness still requires independent review.
+See [editable policy guide](resource-validation.md).

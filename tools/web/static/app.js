@@ -411,6 +411,10 @@ function handle(event) {
     );
     $("summary").textContent =
       `${event.spans.length} spans · ${bytes(event.text).toLocaleString()} bytes · ${event.elapsed_ms} ms`;
+    const resourceCheck = event.resource_validation;
+    $("resource-validation").textContent = resourceCheck
+      ? `리소스 정책 검사 ${resourceCheck.validated_records}/${resourceCheck.records}행 · 검사기 미등록 ${resourceCheck.unvalidated_records}행 · 발음 정답 검토는 별도`
+      : "";
     if (event.verification) verification(event.verification);
     inspect();
   }
@@ -433,6 +437,7 @@ async function execute() {
   state.request = body;
   state.events = [];
   state.result = null;
+  $("resource-validation").textContent = "";
   state.controller = new AbortController();
   $("run").disabled = true;
   $("cancel").disabled = false;

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(tts_text_frontend VERSION 0.15.0 LANGUAGES C)
+project(tts_text_frontend VERSION 0.16.0 LANGUAGES C)
 include(GNUInstallDirs)
 include(CTest)
 option(TTF_ENABLE_ASAN "Enable AddressSanitizer" OFF)
@@ -22,10 +22,14 @@ foreach(PACK_DIR IN LISTS TTF_PACK_DIRS)
     list(APPEND TTF_PACK_SOURCES ${PACK_SOURCES})
     string(APPEND TTF_REGISTRY_DECLARATIONS "extern const ttf_language_pack_t ttf_pack_${PACK_SYMBOL};\n")
     string(APPEND TTF_REGISTRY_CALLS "    status = ttf_engine_register_pack(e, &ttf_pack_${PACK_SYMBOL});\n    if (status != TTF_OK) return status;\n")
+    if(EXISTS "${PACK_DIR}/validate.c")
+      string(APPEND TTF_REGISTRY_DECLARATIONS "extern const ttf_resource_validator_t ttf_resource_validator_${PACK_SYMBOL};\n")
+      string(APPEND TTF_REGISTRY_CALLS "    status = ttf_engine_register_resource_validator(e, &ttf_resource_validator_${PACK_SYMBOL});\n    if (status != TTF_OK) return status;\n")
+    endif()
   endif()
 endforeach()
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/builtin_registry.c"
-  "#include \"internal.h\"\n${TTF_REGISTRY_DECLARATIONS}\nttf_status_t ttf_register_builtins(ttf_engine_t *e) {\n    ttf_status_t status = TTF_OK;\n${TTF_REGISTRY_CALLS}    return status;\n}\n")
+  "#include \"internal.h\"\n#include \"tts_text_frontend/ttf_resource_validation.h\"\n${TTF_REGISTRY_DECLARATIONS}\nttf_status_t ttf_register_builtins(ttf_engine_t *e) {\n    ttf_status_t status = TTF_OK;\n${TTF_REGISTRY_CALLS}    return status;\n}\n")
 set(TTF_ALL_SOURCES ${TTF_CORE_SOURCES} ${TTF_PACK_SOURCES} "${CMAKE_CURRENT_BINARY_DIR}/builtin_registry.c")
 
 add_library(ttf_build_flags INTERFACE)
@@ -76,6 +80,11 @@ if(BUILD_TESTING)
   add_test(NAME api_and_tokenizer COMMAND ttf_tests api)
   add_test(NAME language_pack_extension COMMAND ttf_tests extension)
   add_test(NAME resource_and_lexicon_priority COMMAND ttf_tests resources)
+  add_executable(ttf_test_resource_validation tests/unit/test_resource_validation.c)
+  target_link_libraries(ttf_test_resource_validation PRIVATE tts_text_frontend_static ttf_build_flags)
+  file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/resource-validation-test")
+  add_test(NAME resource_semantic_validation COMMAND ttf_test_resource_validation
+    ${CMAKE_CURRENT_SOURCE_DIR}/resources ${CMAKE_CURRENT_BINARY_DIR}/resource-validation-test)
   add_executable(ttf_test_multiword tests/unit/test_multiword_api.c)
   target_link_libraries(ttf_test_multiword PRIVATE tts_text_frontend_shared ttf_build_flags)
   add_test(NAME multiword_lexicon_api COMMAND ttf_test_multiword ${CMAKE_CURRENT_SOURCE_DIR}/resources)
@@ -292,10 +301,20 @@ if(BUILD_TESTING)
         $<TARGET_FILE:tts_text_frontend_shared> ${CMAKE_CURRENT_SOURCE_DIR}/resources
         $<TARGET_FILE:ttf> $<TARGET_FILE:ttf_web_abi>)
     endif()
+    add_test(NAME resource_validation_cli COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_resource_validation.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources
+      ${CMAKE_CURRENT_SOURCE_DIR}/tools/resource_compiler/compile_resources.py)
+    add_test(NAME resource_compiler_protocol COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_resource_compiler_protocol.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources
+      ${CMAKE_CURRENT_SOURCE_DIR}/tools/resource_compiler/compile_resources.py)
     add_test(NAME compiled_resources COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_compiled_resources.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/tools/resource_compiler/compile_resources.py
       ${CMAKE_CURRENT_SOURCE_DIR}/resources ${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/domain.tsv)
+    set_tests_properties(compiled_resources external_cmudict_importer resource_validation_cli resource_compiler_protocol
+      PROPERTIES ENVIRONMENT "TTF_CLI=$<TARGET_FILE:ttf>")
   endif()
   add_test(NAME cli_normalize COMMAND ttf normalize "Apple은 사과입니다.")
   set_tests_properties(cli_normalize PROPERTIES PASS_REGULAR_EXPRESSION "애플은 사과입니다.")

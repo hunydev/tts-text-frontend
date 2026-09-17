@@ -406,13 +406,15 @@ ttf_status_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, i
                     size_t key_length = tokens[i - 1].end - tokens[i - 1].begin;
                     memcpy(key, s + tokens[i - 1].begin, key_length);
                     key[key_length] = 0;
+                    const char *range_flag =
+                        ttf_resource_get(e, "quantity_range_separator", "*", key, NULL);
                     if (ttf_resource_get(e, "currency_prefix", "*", key, NULL) ||
-                        ttf_resource_get(e, "quantity_range_separator", "*", key, NULL)) {
+                        (range_flag && !strcmp(range_flag, "1"))) {
                         at += w;
                         continue;
                     }
                     if (i >= 2) {
-                        size_t previous_token = i - 1, pack;
+                        size_t previous_token = i - 1;
                         int continuation = 0;
                         while (previous_token &&
                                tokens[previous_token - 1].script == TTF_SCRIPT_WHITESPACE)
@@ -420,13 +422,8 @@ ttf_status_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, i
                         if (previous_token &&
                             tokens[previous_token - 1].script == TTF_SCRIPT_DIGIT) {
                             continuation =
-                                ttf_resource_get(e, "numeric_continuation", "*", key, NULL) !=
-                                    NULL ||
+                                boundary_resource(e, "numeric_continuation", key) ||
                                 ttf_resource_get(e, "currency_scale", "*", key, NULL) != NULL;
-                            for (pack = 0; !continuation && pack < e->pack_count; ++pack)
-                                continuation = ttf_resource_get(e, "numeric_continuation",
-                                                                e->packs[pack]->language_tag, key,
-                                                                NULL) != NULL;
                         }
                         if (continuation) {
                             at += w;

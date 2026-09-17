@@ -178,6 +178,24 @@ try:
     assert errors[-1]["event"] == "error" and not any(
         x["event"] == "end" for x in errors
     )
+    # The worker exposes actionable C policy diagnostics before normalization.
+    with post("/api/run", dict(mode="normalize", text="3번 반복합니다.", options={
+        "customer_tsv": "# editable policy\ncontext\tko-KR\tclause_weight\t9999\n"
+    })) as response:
+        invalid = [json.loads(line) for line in response]
+    assert invalid[-1]["event"] == "error", invalid
+    assert "customer.tsv:2" in invalid[-1]["message"], invalid
+    assert "context/ko-KR/clause_weight" in invalid[-1]["message"], invalid
+    assert not any(event["event"] in ("result", "end", "segment") for event in invalid)
+    baseline, _ = run("Apple은 사과입니다.")
+    unknown, _ = run("Apple은 사과입니다.", opts={
+        "customer_tsv": "future.policy\t*\tkey\tvalue\n"
+    })
+    report = unknown["resource_validation"]
+    assert report["records"] == report["validated_records"] + report["unvalidated_records"]
+    assert report["unvalidated_records"] == baseline["resource_validation"]["unvalidated_records"] + 1
+    assert unknown["text"] == baseline["text"] == "애플은 사과입니다."
+    checks += 2
     with post("/api/corpus", {"corpus": "protected"}) as r:
         corpus = [json.loads(x) for x in r]
     assert corpus[-2]["passed"] == 40 and corpus[-2]["failed"] == 0

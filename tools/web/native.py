@@ -70,6 +70,22 @@ class Config(C.Structure):
     ]
 
 
+class ResourceDiagnostic(C.Structure):
+    _fields_ = [
+        ("struct_size", C.c_uint32), ("layer", I), ("line", Z),
+        ("path", C.c_char * 512), ("kind", C.c_char * 64),
+        ("language", C.c_char * 24), ("key", C.c_char * 256),
+        ("message", C.c_char * 256),
+    ]
+
+
+class ResourceValidationReport(C.Structure):
+    _fields_ = [
+        ("struct_size", C.c_uint32), ("records", Z),
+        ("validated_records", Z), ("unvalidated_records", Z),
+    ]
+
+
 class Segment(C.Structure):
     _fields_ = Result._fields_ + [("input_begin", Z), ("input_end", Z)]
 
@@ -115,6 +131,17 @@ class Engine:
             "ttf_semantic_type_name": (C.c_char_p, [I]),
             "ttf_layer_name": (C.c_char_p, [I]),
         }
+        # Older baseline libraries remain usable for benchmark comparisons.
+        self.has_resource_validation = hasattr(self.lib, "ttf_engine_create_ex")
+        self.resource_validation = None
+        if self.has_resource_validation:
+            definitions.update({
+                "ttf_resource_diagnostic_init": (None, [C.POINTER(ResourceDiagnostic)]),
+                "ttf_resource_validation_report_init": (None, [C.POINTER(ResourceValidationReport)]),
+                "ttf_engine_create_ex": (I, [C.POINTER(Config), C.POINTER(P), C.POINTER(ResourceDiagnostic)]),
+                "ttf_resource_load_ex": (I, [P, C.c_char_p, I, C.POINTER(ResourceDiagnostic)]),
+                "ttf_engine_validate_resources": (I, [P, C.POINTER(ResourceValidationReport), C.POINTER(ResourceDiagnostic)]),
+            })
         for name, (result, args) in definitions.items():
             fn = getattr(self.lib, name)
             fn.restype = result
@@ -137,7 +164,12 @@ class Engine:
         ]:
             if key in options:
                 setattr(cfg, field, options[key])
-        self.check(self.lib.ttf_engine_create(C.byref(cfg), C.byref(self.handle)))
+        if self.has_resource_validation:
+            diagnostic = self.diagnostic()
+            self.check(self.lib.ttf_engine_create_ex(C.byref(cfg), C.byref(self.handle),
+                                                     C.byref(diagnostic)), diagnostic)
+        else:
+            self.check(self.lib.ttf_engine_create(C.byref(cfg), C.byref(self.handle)))
         try:
             if options.get("domain") in ("finance", "finance-vocabulary"):
                 self.load(resources / "domains/finance/ko-KR/lexicon.tsv", 2)
@@ -169,19 +201,45 @@ class Engine:
                         row["pronunciation"].encode(),
                     )
                 )
+            if self.has_resource_validation:
+                diagnostic = self.diagnostic()
+                report = ResourceValidationReport()
+                self.lib.ttf_resource_validation_report_init(C.byref(report))
+                self.check(self.lib.ttf_engine_validate_resources(self.handle,
+                           C.byref(report), C.byref(diagnostic)), diagnostic)
+                self.resource_validation = {key: int(getattr(report, key)) for key in
+                    ("records", "validated_records", "unvalidated_records")}
             self.check(self.lib.ttf_engine_freeze(self.handle))
         except BaseException:
             self.close()
             raise
 
-    def check(self, status):
+    def diagnostic(self):
+        diagnostic = ResourceDiagnostic()
+        self.lib.ttf_resource_diagnostic_init(C.byref(diagnostic))
+        return diagnostic
+
+    def check(self, status, diagnostic=None):
         if status:
-            raise ValueError(
-                "Native frontend: " + string(self.lib.ttf_status_string(status))
-            )
+            message = "Native frontend: " + string(self.lib.ttf_status_string(status))
+            if diagnostic is not None:
+                location = string(diagnostic.path) or "effective resources"
+                # Worker paths are temporary implementation details; file and line
+                # identify the editable resource without exposing VM directories.
+                location = Path(location).name
+                message += f" · {location}:{diagnostic.line}"
+                identity = "/".join(string(getattr(diagnostic, key))
+                                    for key in ("kind", "language", "key"))
+                message += f" [{identity}] {string(diagnostic.message)}"
+            raise ValueError(message)
 
     def load(self, path, layer):
-        self.check(self.lib.ttf_resource_load(self.handle, str(path).encode(), layer))
+        if self.has_resource_validation:
+            diagnostic = self.diagnostic()
+            self.check(self.lib.ttf_resource_load_ex(self.handle, str(path).encode(),
+                                                     layer, C.byref(diagnostic)), diagnostic)
+        else:
+            self.check(self.lib.ttf_resource_load(self.handle, str(path).encode(), layer))
 
     def close(self):
         if self.handle:
