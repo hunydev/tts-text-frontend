@@ -6,6 +6,7 @@
 #include "identifiers.h"
 #include "counters.h"
 #include "../context_run.h"
+#include "../../src/language/context_memo.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -1086,8 +1087,8 @@ static int is_particle(const ttf_pack_input_t *in, const ttf_token_t *token) {
     return 0;
 }
 
-static int context_score(const ttf_pack_input_t *in) {
-    size_t i, hangul = 0, begin, end;
+static int scope_context_score(const ttf_pack_input_t *in) {
+    size_t i, hangul = 0;
     int score;
     for (i = 0; i < in->token_count; ++i)
         if (in->tokens[i].script == TTF_SCRIPT_HANGUL)
@@ -1099,17 +1100,75 @@ static int context_score(const ttf_pack_input_t *in) {
         if (score < floor)
             score = floor;
     }
+    return score;
+}
+static int run_particle_score(const ttf_pack_input_t *in, size_t begin, size_t end) {
+    /* A particle scopes over the full preceding foreign noun phrase, including
+       spaces and conjunctions. A stronger source-clause signal can still win. */
+    return begin < end && end < in->token_count &&
+                   in->tokens[end - 1].end == in->tokens[end].begin &&
+                   is_particle(in, &in->tokens[end])
+               ? resource_integer(in->engine, "context", "particle_weight", 0, 1000, 200)
+               : 0;
+}
+
+typedef struct {
+    int base;
+    int scores[];
+} context_scores_t;
+static const char context_memo_identity = 0;
+static ttf_status_t build_context_scores(const ttf_pack_input_t *in, void **out) {
+    ttf_pack_input_t cursor = *in;
+    context_scores_t *scores;
+    size_t i, last_begin = SIZE_MAX, last_end = SIZE_MAX;
+    int particle = 0;
+    int script_bonus = resource_integer(in->engine, "context", "script_weight", 0, 1000, 1000);
+    *out = NULL;
+    if (in->token_count > (SIZE_MAX - sizeof(*scores)) / sizeof(scores->scores[0]))
+        return TTF_ELIMIT;
+    scores =
+        (context_scores_t *)malloc(sizeof(*scores) + in->token_count * sizeof(scores->scores[0]));
+    if (!scores)
+        return TTF_ENOMEM;
+    scores->base = scope_context_score(in);
+    for (i = 0; i < in->token_count; ++i) {
+        size_t begin, end;
+        if (in->tokens[i].script == TTF_SCRIPT_HANGUL) {
+            scores->scores[i] = scores->base + script_bonus;
+            continue;
+        }
+        cursor.index = i;
+        context_run_bounds(&cursor, &begin, &end);
+        if (begin != last_begin || end != last_end) {
+            particle = run_particle_score(&cursor, begin, end);
+            last_begin = begin;
+            last_end = end;
+        }
+        scores->scores[i] = scores->base + particle;
+    }
+    *out = scores;
+    return TTF_OK;
+}
+static void dispose_context_scores(void *scores) {
+    free(scores);
+}
+static int context_score(const ttf_pack_input_t *in) {
+    context_scores_t *scores = NULL;
+    size_t begin, end;
+    int score;
+    if (ttf_context_memo_enabled(in))
+        scores = (context_scores_t *)ttf_context_memo_get(
+            in, &context_memo_identity, build_context_scores, dispose_context_scores);
+    if (scores)
+        return in->index < in->token_count ? scores->scores[in->index] : scores->base;
+    /* Direct callback users and reference tests retain the uncached policy. */
+    score = scope_context_score(in);
     if (in->index >= in->token_count)
         return score;
     if (in->tokens[in->index].script == TTF_SCRIPT_HANGUL)
         return score + resource_integer(in->engine, "context", "script_weight", 0, 1000, 1000);
     context_run_bounds(in, &begin, &end);
-    /* A particle scopes over the full preceding foreign noun phrase, including
-       spaces and conjunctions. A stronger source-clause signal can still win. */
-    if (begin < end && end < in->token_count && in->tokens[end - 1].end == in->tokens[end].begin &&
-        is_particle(in, &in->tokens[end]))
-        score += resource_integer(in->engine, "context", "particle_weight", 0, 1000, 200);
-    return score;
+    return score + run_particle_score(in, begin, end);
 }
 
 static ttf_status_t put_syllable(ttf_buffer_t *out, int onset, int vowel, int coda) {

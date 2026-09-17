@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(tts_text_frontend VERSION 0.18.0 LANGUAGES C)
+project(tts_text_frontend VERSION 0.19.0 LANGUAGES C)
 include(GNUInstallDirs)
 include(CTest)
 option(TTF_ENABLE_ASAN "Enable AddressSanitizer" OFF)
@@ -71,6 +71,9 @@ add_executable(ttf_example examples/basic.c)
 target_link_libraries(ttf_example PRIVATE tts_text_frontend_static ttf_build_flags)
 
 if(BUILD_TESTING)
+  add_executable(ttf_test_context_cache tests/unit/test_context_cache.c)
+  target_link_libraries(ttf_test_context_cache PRIVATE tts_text_frontend_static ttf_build_flags)
+  add_test(NAME context_score_cache COMMAND ttf_test_context_cache ${CMAKE_CURRENT_SOURCE_DIR}/resources)
   add_executable(ttf_test_phone_scan tests/unit/test_phone_scan.c)
   target_link_libraries(ttf_test_phone_scan PRIVATE tts_text_frontend_static ttf_build_flags)
   add_test(NAME phone_scanner_bounds COMMAND ttf_test_phone_scan ${CMAKE_CURRENT_SOURCE_DIR}/resources)
@@ -135,10 +138,15 @@ if(BUILD_TESTING)
     target_link_libraries(ttf_test_concurrent PRIVATE tts_text_frontend_shared ttf_build_flags Threads::Threads)
     target_link_libraries(ttf_test_pronunciation_trace PRIVATE Threads::Threads)
     target_compile_definitions(ttf_test_pronunciation_trace PRIVATE TTF_TEST_HAVE_THREADS=1)
+    target_link_libraries(ttf_test_context_cache PRIVATE Threads::Threads)
+    target_compile_definitions(ttf_test_context_cache PRIVATE TTF_TEST_HAVE_THREADS=1)
     add_test(NAME concurrent_shared_engine COMMAND ttf_test_concurrent ${CMAKE_CURRENT_SOURCE_DIR}/resources)
   endif()
   find_package(Python3 COMPONENTS Interpreter QUIET)
   if(Python3_Interpreter_FOUND)
+    add_test(NAME context_cache_compatibility COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_context_cache.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
     add_test(NAME phone_value_contracts COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_phone_contracts.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
@@ -288,6 +296,10 @@ if(BUILD_TESTING)
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_multiword_guards.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
     if(UNIX AND NOT TTF_ENABLE_ASAN AND NOT TTF_ENABLE_UBSAN)
+      add_test(NAME context_cache_byte_splits COMMAND ${Python3_EXECUTABLE}
+        ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_context_cache.py
+        $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources
+        --library $<TARGET_FILE:tts_text_frontend_shared>)
       add_test(NAME phone_arbitrary_byte_splits COMMAND ${Python3_EXECUTABLE}
         ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_phone_contracts.py
         $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources

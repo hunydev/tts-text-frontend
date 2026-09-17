@@ -1,4 +1,5 @@
 #include "internal.h"
+#include "../language/context_memo.h"
 #include "../pronunciation/trace.h"
 ttf_status_t ttf_trace_foreign_lexicon(const ttf_engine_t *, const char *, const char *,
                                        const char *, size_t, const char *);
@@ -121,6 +122,9 @@ static ttf_status_t add_span(ttf_result_t *r, const ttf_span_t *span, size_t *ca
 }
 ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t length, size_t offset,
                               ttf_result_t *out) {
+    ttf_context_memo_t memo = {0};
+    ttf_engine_t context_view = *e;
+    unsigned context_invalidations = 0;
     ttf_token_t *tokens = NULL;
     context_scope_t *scopes = NULL;
     ttf_protected_region_t *regions = NULL;
@@ -128,6 +132,7 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
     size_t count = 0, i = 0, capacity = 0;
     ttf_buffer_t output = {0};
     ttf_status_t st;
+    context_view.context_memo = &memo;
     memset(out, 0, sizeof(*out));
     st = ttf_tokenize_protected(e, text, length, 1, &tokens, &count, &regions, &region_count);
     if (st != TTF_OK)
@@ -181,15 +186,25 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
         in.token_count = count;
         in.index = i;
         in.engine = e;
+        /* Only context callbacks receive this borrowed request view. Other pack
+           callbacks retain their original engine and the public ABI is unchanged. */
         if (scopes[i].end) {
             ttf_pack_input_t scoped = in;
+            scoped.engine = &context_view;
             scoped.tokens = tokens + scopes[i].begin;
             scoped.token_count = scopes[i].end - scopes[i].begin;
             scoped.index -= scopes[i].begin;
             snprintf(span.context_trace, sizeof(span.context_trace), "quotation");
             context = context_pack(e, &scoped, span.context_trace);
-        } else
-            context = context_pack(e, &in, span.context_trace);
+        } else {
+            ttf_pack_input_t scoped = in;
+            scoped.engine = &context_view;
+            context = context_pack(e, &scoped, span.context_trace);
+        }
+        if (memo.status != TTF_OK) {
+            st = memo.status;
+            goto fail;
+        }
         source = script_pack(e, tokens[i].script);
         if (!context) {
             st = TTF_EINVAL;
@@ -423,6 +438,16 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
         j = i + consumed - 1;
         if (end < tokens[j].end) {
             tokens[j].begin = end;
+            /* A partial semantic match changes the evidence seen by later
+               context callbacks, even though the token array address is stable. */
+            if (context_view.context_memo) {
+                ttf_context_memo_clear(&memo);
+                /* Repeated partial matches would rebuild every scope for each
+                   suffix. Bound this extra work to two memo generations, then
+                   use the same uncached pack policy for the rest of this unit. */
+                if (++context_invalidations >= 2)
+                    context_view.context_memo = NULL;
+            }
             i = j;
         } else
             i = j + 1;
@@ -432,11 +457,13 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
         goto fail;
     out->text = output.data;
     out->length = output.length;
+    ttf_context_memo_clear(&memo);
     free(tokens);
     free(scopes);
     free(regions);
     return TTF_OK;
 fail:
+    ttf_context_memo_clear(&memo);
     free(tokens);
     free(scopes);
     free(regions);

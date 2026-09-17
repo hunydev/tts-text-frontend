@@ -225,8 +225,14 @@ compiled resource의 **8개 CTest를 다시 실행해 모두 통과**했다. 이
   closer 또는 flush까지 보류하며 일부 delimiter가 많은 입력은 반복 scan한다.
   v0.18 검토에서 30,000개의 한 자리 수를 공백으로 나열하고 분절 target을 입력
   전체로 크게 설정하면 v0.17 Release도 30초 안에 끝나지 않음을 재현했다.
-  새 전화 후보 scanner의 탐색 범위는 제한했지만 전체 frontend의 긴 단위 처리
-  비용은 별도 미해결 항목이다. 기본 target에서의 지연 수치로 일반화하지 않는다.
+  v0.19는 동일 단위/인용 scope의 run 경계와 KO/EN 점수를 요청 내부에서 재사용한다.
+  30,000개 수의 전체 단위가 완료되고 기존 텍스트·metadata·context trace와 같음을
+  검사한다. 부분 semantic 소비로 token이 변경되면 캐시를 무효화하며, 두 번
+  무효화된 단위는 기존 비캐시 경로로 전환해 반복 재구축 비용을 막는다.
+  이 경로에서는 여전히 문맥을 반복 순회하므로 최악 비용은 남아 있다.
+  [검증 보고서](research/context-cache-v19-results.md)의 전체 입력 처리 시간은
+  기본 target의 TTFB로 일반화하지 않는다. 열린/중첩 scope와 delimiter 입력까지
+  해결했다는 의미도 아니다.
   **닫는 증거:** 1-byte 입력, 긴 무구분 문자열, 열린/중첩 인용, delimiter 집중 입력,
   다수 rule/resource에 대한 시간·memory 증가율과 실제 callback 시점; 초과 시 일관된
   오류; metadata까지 동일한 batch/stream 결과. 첫 callback 전 전체 TN을 하는

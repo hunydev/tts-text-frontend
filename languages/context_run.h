@@ -1,6 +1,7 @@
 #ifndef TTF_LANGUAGE_CONTEXT_RUN_H
 #define TTF_LANGUAGE_CONTEXT_RUN_H
 #include "tts_text_frontend/ttf_language_pack.h"
+#include "../src/language/context_memo.h"
 #include <string.h>
 
 /* A lexical run is local to the already committed context window. It crosses
@@ -75,6 +76,8 @@ static int context_run_member(const ttf_pack_input_t *in, size_t index) {
     return 0;
 }
 static void context_run_bounds(const ttf_pack_input_t *in, size_t *begin, size_t *end) {
+    if (ttf_context_run_cached(in, begin, end))
+        return;
     *begin = *end = in->index;
     if (in->index >= in->token_count || !context_run_member(in, in->index))
         return;

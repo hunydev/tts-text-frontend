@@ -30,8 +30,13 @@ typedef struct {
     size_t length;
     const ttf_token_t *tokens;
     size_t token_count, index;
+    /* Borrowed callback engine; may be a request-local view. See callback contract below. */
     const ttf_engine_t *engine;
 } ttf_pack_input_t;
+/* Callback engine arguments are borrowed. Ordinary context_score and traced
+   callbacks may receive request-local views: never retain/destroy their engine
+   pointer or use its address as a persistent engine identity. Resource strings
+   remain owned by the underlying engine. Public ABI v1 layouts are unchanged. */
 typedef struct ttf_language_pack {
     uint32_t struct_size, abi_version;
     const char *language_tag;
@@ -53,8 +58,10 @@ typedef struct ttf_language_pack {
 TTF_API ttf_status_t ttf_engine_register_pack(ttf_engine_t *engine,
                                               const ttf_language_pack_t *pack);
 /* Resource kind/lang/key lookup. Resources are immutable after freeze. Returned
-   strings are engine-owned; setup mutations may invalidate them. After freeze,
-   they remain valid until engine destruction. NULL indicates miss. '*' language is fallback. */
+   strings belong to the underlying engine, including when queried through a
+   borrowed callback view. Setup mutations may invalidate them. After freeze,
+   they remain valid until that engine is destroyed, beyond callback return.
+   NULL indicates miss. '*' language is fallback. */
 TTF_API const char *ttf_resource_get(const ttf_engine_t *engine, const char *kind,
                                      const char *language, const char *key,
                                      ttf_resource_layer_t *layer);

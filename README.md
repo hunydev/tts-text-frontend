@@ -573,3 +573,21 @@ validate real subscriber allocation or reachability. See the [Korean editing gui
 for labels, extension hints, limits, zero/separator overrides and precedence.
 The [measured iteration](docs/research/phone-v18-results.md) records the same-reference
 comparison, external regression checks, reference correction and remaining limits.
+
+### v0.19 context scoring for long inputs
+
+Context callbacks now reuse lexical-run boundaries and KO/EN evidence within an
+unchanged request scope. Partial token consumption invalidates that evidence;
+quotation views and nested requests remain separate. Reading resources, context
+scores, segmentation and public ABI v1 layouts retain their previous contracts.
+
+New gates compare 34 authored cases with v0.18 text/span/context traces, exercise
+3,000 and 30,000 numerals and repeated partial counters in one unit, and check
+arbitrary byte splits, concurrent requests, mutation and error cleanup. The same external development corpus has
+identical result files across versions. This is a runtime improvement, with no
+claim of improved linguistic accuracy.
+
+See the [measurements and reproduction commands](docs/research/context-cache-v19-results.md)
+and [callback ownership contract](docs/language-pack.md#callback-engine-ownership).
+Repeated partial token changes and pending scans still need worst-case performance
+work; [STREAM-01](docs/remaining-work.md) remains open.

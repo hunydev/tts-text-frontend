@@ -76,7 +76,10 @@ TTF_API const char *ttf_trace_stage_name(ttf_trace_stage_t stage);
 TTF_API const char *ttf_trace_disposition_name(ttf_trace_disposition_t disposition);
 /* Optional instrumentation for language packs, within the current core-selected
    span/stage/part. A pack receives a borrowed request engine: never retain or
-   destroy it. These calls are no-ops during ordinary, untraced normalization.
+   destroy it, or use its pointer as a persistent engine identity. Resource
+   strings remain owned by the underlying frozen engine. Ordinary context_score
+   callbacks may also receive borrowed views. These calls are no-ops during
+   ordinary, untraced normalization.
    Failure is sticky and prevents delivery of an incomplete traced segment. */
 TTF_API ttf_status_t ttf_trace_record(const ttf_engine_t *engine, const ttf_trace_note_t *note);
 TTF_API ttf_status_t ttf_trace_record_resource(const ttf_engine_t *engine, const char *kind,

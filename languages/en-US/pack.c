@@ -4,6 +4,7 @@
 #include "abbreviation.h"
 #include "identifiers.h"
 #include "../../src/semantic/phone.h"
+#include "../../src/language/context_memo.h"
 #include "../context_run.h"
 #include <ctype.h>
 #include <stdint.h>
@@ -432,26 +433,13 @@ static int context_cue_score(const ttf_pack_input_t *in, size_t begin) {
     key[n] = '\0';
     return weight(res(in->engine, "context_cue", key), 0);
 }
-static int context_score(const ttf_pack_input_t *in) {
-    size_t begin, end, i, words = 0;
-    int total = 0, predicate = 0, imperative = 0, subject = 0, polite = 0, numeric_label = 0;
+/* Shared run evidence is index-independent. The source order of lexical roles
+ * remains significant (for example an imperative following a subject). */
+static int run_context_score(const ttf_pack_input_t *in, size_t begin, size_t end) {
+    size_t i, words = 0;
+    int total = 0, predicate = 0, imperative = 0, subject = 0, polite = 0;
     int ceiling = weight(res(in->engine, "context", "phrase_ceiling"), 160);
     int latin = weight(res(in->engine, "context", "latin_weight"), 8);
-    if (in->index >= in->token_count || in->tokens[in->index].script == TTF_SCRIPT_HANGUL)
-        return 0;
-    {
-        const ttf_token_t *current = &in->tokens[in->index];
-        size_t width = current->end - current->begin;
-        int numeric_start =
-            current->script == TTF_SCRIPT_DIGIT ||
-            (width == 1 && (in->text[current->begin] == '+' || in->text[current->begin] == '-' ||
-                            in->text[current->begin] == '('));
-        if (numeric_start &&
-            (ttf_phone_preceding_label(in, current->begin, "phone_label", EN, NULL, NULL) ||
-             ttf_phone_preceding_label(in, current->begin, "identifier_label", EN, NULL, NULL)))
-            numeric_label = weight(res(in->engine, "context", "numeric_label_weight"), 24);
-    }
-    context_run_bounds(in, &begin, &end);
     for (i = begin; i < end; ++i) {
         const ttf_token_t *t = &in->tokens[i];
         char key[96];
@@ -490,8 +478,76 @@ static int context_score(const ttf_pack_input_t *in) {
         total += weight(res(in->engine, "context", "clause_weight"), 500);
     /* An ordinal alone is a quantity title and keeps the surrounding speech
        language. At least one lexical word is required for a foreign title. */
-    return total + numeric_label + (words ? context_cue_score(in, begin) : 0);
+    return total + (words ? context_cue_score(in, begin) : 0);
 }
+
+static int numeric_label_context_score(const ttf_pack_input_t *in) {
+    const ttf_token_t *current = &in->tokens[in->index];
+    size_t width = current->end - current->begin;
+    int numeric_start =
+        current->script == TTF_SCRIPT_DIGIT ||
+        (width == 1 && (in->text[current->begin] == '+' || in->text[current->begin] == '-' ||
+                        in->text[current->begin] == '('));
+    if (numeric_start &&
+        (ttf_phone_preceding_label(in, current->begin, "phone_label", EN, NULL, NULL) ||
+         ttf_phone_preceding_label(in, current->begin, "identifier_label", EN, NULL, NULL)))
+        return weight(res(in->engine, "context", "numeric_label_weight"), 24);
+    return 0;
+}
+
+static const char context_memo_identity = 0;
+static ttf_status_t build_context_scores(const ttf_pack_input_t *in, void **out) {
+    ttf_pack_input_t cursor = *in;
+    size_t i, last_begin = SIZE_MAX, last_end = SIZE_MAX;
+    int *scores, last_score = 0;
+    *out = NULL;
+    if (in->token_count > SIZE_MAX / sizeof(*scores))
+        return TTF_ELIMIT;
+    scores = (int *)malloc(in->token_count * sizeof(*scores));
+    if (!scores)
+        return TTF_ENOMEM;
+    for (i = 0; i < in->token_count; ++i) {
+        size_t begin, end;
+        if (in->tokens[i].script == TTF_SCRIPT_HANGUL) {
+            scores[i] = 0;
+            continue;
+        }
+        cursor.index = i;
+        context_run_bounds(&cursor, &begin, &end);
+        /* Leading/trailing whitespace can share one trimmed run. Each distinct
+         * contiguous run is evaluated once, without changing its extent. */
+        if (begin != last_begin || end != last_end) {
+            last_score = run_context_score(&cursor, begin, end);
+            last_begin = begin;
+            last_end = end;
+        }
+        scores[i] = last_score;
+    }
+    *out = scores;
+    return TTF_OK;
+}
+static void dispose_context_scores(void *scores) {
+    free(scores);
+}
+static int context_score(const ttf_pack_input_t *in) {
+    int *scores = NULL, run_score;
+    size_t begin, end;
+    if (in->index >= in->token_count || in->tokens[in->index].script == TTF_SCRIPT_HANGUL)
+        return 0;
+    if (ttf_context_memo_enabled(in))
+        scores = (int *)ttf_context_memo_get(in, &context_memo_identity, build_context_scores,
+                                             dispose_context_scores);
+    if (scores)
+        run_score = scores[in->index];
+    else {
+        /* Direct pack callbacks retain an uncached reference path. Memo errors
+         * remain sticky on the request and are propagated by the core. */
+        context_run_bounds(in, &begin, &end);
+        run_score = run_context_score(in, begin, end);
+    }
+    return run_score + numeric_label_context_score(in);
+}
+
 static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     const ttf_token_t *t = &in->tokens[in->index];
     char key[96];

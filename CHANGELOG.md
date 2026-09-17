@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.19.0
+
+- Reuse request-local lexical-run boundaries and KO/EN context evidence while
+  preserving scores, resource priority, quotations and full output metadata.
+- Invalidate cached evidence after partial token consumption; isolate nested and
+  concurrent requests; propagate factory failures with deterministic cleanup.
+- Add native score/ownership checks, v0.18 metadata compatibility cases, arbitrary
+  streaming splits and whole-unit 3,000/30,000-number regression gates.
+- Add a reproducible context-scaling comparison tool and document borrowed pack
+  engine views without changing public ABI v1 layouts.
+- Retain identical results on the existing external English development sample.
+  Repeated token mutations, pending scans and linguistic coverage remain open work.
+
 ## 0.7.0 — Financial intervals, content vocabulary and web workbench
 
 - Normalize repeated currency/rate/measure endpoints into exact RANGE IR; retain

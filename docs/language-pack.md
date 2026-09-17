@@ -20,6 +20,21 @@ The `ttf_pack_input_t` view provides input bytes, lexical tokens, current index 
 immutable engine resources. Output goes through dynamically growing
 `ttf_buffer_append`/`ttf_buffer_puts`, returning allocation errors to the caller.
 
+## Callback engine ownership
+
+Engine arguments supplied to pack callbacks are borrowed. Ordinary `context_score`
+callbacks, as well as callbacks during traced normalization, may receive a
+request-local engine view. Do not retain or destroy that pointer, or use its address
+as a persistent engine identity. Pass it to resource lookup and other supported
+engine operations only within the callback. The application retains ownership of
+the original engine and must keep it alive until its requests and streams finish.
+
+Strings returned by `ttf_resource_get` belong to the underlying engine, not to the
+temporary view. Once the engine is frozen, those strings remain valid until the
+underlying engine is destroyed. Input text and token views remain borrowed callback
+data. These internal views do not change public function signatures or ABI v1
+structure layouts.
+
 ## Add a pack
 
 1. Add `languages/ja-JP/pack.c`, exporting
@@ -60,8 +75,8 @@ callback purity, priority and extension tests.
 `ttf_trace.h` adds `ttf_trace_record_resource` for actually consumed effective rows
 and `ttf_trace_record` for generated decisions. Instrument `pronounce`,
 `render_phones` and `render_graphemes` callbacks at consumption sites; do not record
-speculative lookups as selected rows. Core supplies span/stage/part scope. A traced
-callback receives a borrowed request-local engine view: never retain or destroy it.
+speculative lookups as selected rows. Core supplies span/stage/part scope. Traced
+callbacks follow the borrowed engine ownership contract above.
 Ordinary normalization records no events. Instrumentation errors remain sticky and
 must not be hidden by a successful fallback. Existing pack descriptors need no change.
 See [trace contracts](detailed-pronunciation-trace.md) for ownership and limits.

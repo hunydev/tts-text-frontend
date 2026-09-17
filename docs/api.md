@@ -37,7 +37,7 @@ comparison in release CI remains future work.
 | `ttf_stream_flush` | Final commit; closes logical request |
 | `ttf_tokenize`, `ttf_tokens_free` | Caller frees allocated token array |
 | `ttf_engine_register_pack` | Descriptor/callbacks/userdata caller-owned, outlive engine |
-| `ttf_resource_get` | Engine-owned; setup mutations may invalidate pointers; after freeze valid until engine destruction |
+| `ttf_resource_get` | Underlying engine owns returned strings; setup mutations may invalidate pointers; after freeze valid until that engine is destroyed |
 | `ttf_buffer_append`, `ttf_buffer_puts`, `ttf_buffer_free` | Helpers for pack output |
 
 `ttf_result_t` should be zero-initialized. Free a result before reusing its storage.
@@ -66,6 +66,21 @@ No global mutable language state is needed. To update resources during service,
 create and freeze a replacement engine, route new requests to it, and retain the
 old engine until its streams/requests finish. Callback data must be copied before
 queueing asynchronous TTS work.
+
+## Language-pack callback ownership
+
+The engine pointer supplied to a pack callback is borrowed. Ordinary
+`context_score` callbacks and callbacks during traced normalization may receive a
+request-local view rather than the application's original handle. Do not retain
+or destroy the callback's engine pointer, or use its address as a persistent
+identity. The application must keep the underlying engine alive for every active
+request and stream.
+
+This view does not own the resource strings returned by `ttf_resource_get`. After
+freeze, those strings remain valid until the underlying engine is destroyed,
+including after the callback returns. Input text and token pointers remain borrowed
+callback data. Public signatures and ABI v1 layouts are unchanged; request caches
+are internal and do not mutate the shared frozen engine.
 
 ## Resource validation extension (v0.16)
 

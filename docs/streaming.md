@@ -1,5 +1,24 @@
 # Streaming and stable commitment
 
+## Context evidence lifetime (v0.19)
+
+Each committed unit owns its context memo. Token runs and pack evidence are reused
+within the same unchanged scope; resources remain owned by the frozen engine.
+Quotation token views have distinct entries. If semantic classification consumes
+only part of a token, its changed begin offset invalidates the memo before further
+context scoring. After two invalidations, the remaining unit uses the existing
+uncached pack policy. A nested normalization never inherits this request state.
+
+This optimization preserves segmentation, context scores, metadata and callbacks;
+it does not shorten lookahead or commit incomplete quantities. Errors destroy the
+unit memo and follow the existing stream error contract. Very large units with
+many partial token changes can still repeat scope work through the uncached path.
+Open literals/quotes and
+delimiter-heavy pending scans remain separate performance work; see the
+[measured scope and regression checks](research/context-cache-v19-results.md).
+
+## Commitment contract
+
 An engine is immutable after freeze. Every stream owns a pending byte buffer,
 commit cursor and first/subsequent segment state. `write` accepts arbitrary bytes,
 including incomplete UTF-8 code points. `flush` validates and commits the remaining

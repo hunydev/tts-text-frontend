@@ -63,6 +63,19 @@ flowchart TD
    Sentence punctuation is checked against lexical patterns and abbreviation data.
    Phrase segmentation waits for safe token boundaries. Maximum segment length is
    a soft bound for indivisible tokens; pending byte limits provide the hard cap.
+9. **Request-local context evidence (v0.19).** A stable unit owns an internal memo
+   shared by its context callbacks. The key identifies the text, token view and
+   pack evidence factory; the token index is deliberately excluded. Common run
+   boundaries are calculated once per view, while each pack owns its scoring
+   policy. KO scope evidence and EN lexical-run evidence retain the previous
+   resource values, traversal order, saturation and quotation scope. Partial
+   semantic consumption changes a token's begin offset and invalidates the memo
+   before the next callback. After two such invalidations, the remaining unit uses
+   the existing uncached policy, bounding extra memo construction to two generations
+   for suffix-heavy inputs. The memo is destroyed on success and every error;
+   nested requests get independent state. Allocation/factory errors propagate
+   instead of publishing an incompletely scored unit. No public ABI field or
+   language-specific core branch was added.
 
 ## Components
 
@@ -72,6 +85,7 @@ flowchart TD
 | `src/protected` | Shared literal grammar, neutral token view, pending lookahead |
 | `src/semantic` | Universal structured token recognition and semantic values |
 | `src/core` | Engine lifecycle, pack routing, result assembly |
+| `src/language` | Request-local context memo and shared lexical-run boundaries |
 | `src/rule`, `src/resource` | Exact/pattern rules, layered lookup, transactional load |
 | `src/pronunciation` | Lexicon priority, source/target pronunciation dispatch |
 | `src/segmenter`, `src/stream` | Deterministic safe boundary and callbacks |

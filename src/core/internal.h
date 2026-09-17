@@ -27,6 +27,7 @@ struct ttf_engine {
     char *resource_root, *default_language;
     int frozen, validating;
     struct ttf_trace_state *trace_state; /* Request view only; frozen owner stays NULL. */
+    struct ttf_context_memo *context_memo; /* Unit-local context callback view only. */
     const ttf_language_pack_t *packs[TTF_MAX_PACKS];
     size_t pack_count, resource_order;
     const ttf_resource_validator_t *validators[TTF_MAX_RESOURCE_VALIDATORS];

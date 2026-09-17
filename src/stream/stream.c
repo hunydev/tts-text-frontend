@@ -128,7 +128,7 @@ static ttf_status_t stream_create(const ttf_engine_t *e, ttf_callback_fn cb,
     /* Immutable resources are borrowed. A nested ordinary normalization from a
        pack receives an independent, untraced view instead of changing its parent
        request's evidence. Never call engine_destroy on this shallow view. */
-    if (traced_cb || e->trace_state) {
+    if (traced_cb || e->trace_state || e->context_memo) {
         s->engine_view = (ttf_engine_t *)malloc(sizeof(*s->engine_view));
         if (!s->engine_view) {
             free(s);
@@ -136,6 +136,7 @@ static ttf_status_t stream_create(const ttf_engine_t *e, ttf_callback_fn cb,
         }
         *s->engine_view = *e;
         s->engine_view->trace_state = NULL;
+        s->engine_view->context_memo = NULL;
         s->engine = s->engine_view;
     }
     if (traced_cb) {
