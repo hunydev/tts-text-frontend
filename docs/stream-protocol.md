@@ -111,3 +111,17 @@ rule starts with `protected.`. Text and delimiters are byte-identical to the
 source interval. Consumers can apply a downstream policy for these literal spans;
 the frontend does not define spoken-code/path rendering. No JSONL schema or native
 ABI version change is required. See [protected text](protected-text.md).
+
+## Optional detailed pronunciation events (v0.17)
+
+`ttf stream-json --trace` adds `trace_version: 1` and a `trace` array to each segment.
+Omitting the flag preserves the original protocol fields. Events contain consumed
+source/target resource rows, selected/rejected disposition, and generated decisions
+with explicit unknown provenance. Input offsets are absolute; output offsets are
+relative to the segment and cover the whole normalized span, not individual phones.
+
+`--trace-max-events N` and `--trace-max-bytes N` require `--trace` and positive sizes.
+They bound cumulative request evidence, including rejected attempts and previously
+committed segments. Overflow fails without an end event; earlier callbacks remain
+committed. The byte limit measures logical event/string payload, not peak allocation.
+See [the trace schema and ownership guide](detailed-pronunciation-trace.md).

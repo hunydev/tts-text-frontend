@@ -156,12 +156,15 @@ compiled resource의 **8개 CTest를 다시 실행해 모두 통과**했다. 이
   검사, 실제 문장 내 도달성, customer/user 우선순위, 독립 holdout coverage.
   source에 단어가 있다는 사실을 한국어 발음 검증으로 표시하지 않는다.
 
-- [ ] **LEX-02: CMU 복수 발음의 runtime 선택.**
-  [importer](../benchmark/importers/cmudict/README.md)는 stress와 모든 variant를 보존하나
-  runtime export는 명시적으로 `base` 하나만 고른다. 빈도/POS 의미를 제공하지 않는
-  순번으로 우선순위를 발명하지 않는다. **닫는 증거:** 수동/context 정책을 포함한
-  deterministic variant 선택, `read`/`lead` 같은 대조, 모든 variant 보존과 출처 trace,
-  user/customer target lexicon이 언제나 source fallback보다 우선하는 검사.
+- [ ] **LEX-02: CMU 복수 발음의 runtime 선택.** v0.17에서 명시적인 수동 선택을
+  구현했다. `--variant-policy all`은 base와 numbered variant를 runtime에 보존하고,
+  `pronunciation_choice`로 선택한 ID·이유·실제 행을 상세 trace로 전달한다.
+  상위 base와 user/customer target lexicon 우선순위, missing variant freeze 실패,
+  pinned CMU 전체 export를 검사했다. [편집 가이드](detailed-pronunciation-trace.md).
+  **남은 범위:** `read`/`lead` 같은 이형동음·동형이음 단어의 문맥별 선택 정책과
+  독립 reference 검수. 현재 ID 순서에서 빈도/POS 의미를 발명하지 않으며, 명시적
+  choice가 없으면 기존 base/default fallback을 사용한다. 수동 선택이 작동한다는
+  사실을 자동 문맥별 발음 선택의 완료로 간주하지 않는다.
 
 - [ ] **PRON-01: unknown Latin fallback의 텍스트 정확도.** 현재 greedy G2P는 최대
   4글자 resource match이고 KO mapper는 제한된 음절화 및 stress 무시 경로다.
