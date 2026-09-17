@@ -1,4 +1,5 @@
 #include "tts_text_frontend/ttf.h"
+#include "tts_text_frontend/ttf_trace.h"
 #include "tts_text_frontend/ttf_resource_validation.h"
 #include <errno.h>
 #include <stdio.h>
@@ -23,6 +24,7 @@ static void usage(FILE *out) {
           "            --require-complete-validation (reject unknown namespaces)\n"
           "Options: --resources DIR --language TAG --domain FILE --customer FILE\n"
           "         --first-target N --normal-target N --max-length N\n"
+          "Trace: --trace (inspect or stream-json), --trace-max-events N --trace-max-bytes N\n"
           "Stream options: --chunk-bytes N (default 4096)\n",
           out);
 }
@@ -99,7 +101,43 @@ static int resource_report(const char *operation, ttf_status_t status,
                 ttf_layer_name(diagnostic->layer), diagnostic->message);
     return result;
 }
-static int emit_json(const ttf_segment_t *segment, void *user_data) {
+static void optional_size(const char *name, size_t value) {
+    printf(",\"%s\":", name);
+    if (value == SIZE_MAX)
+        fputs("null", stdout);
+    else
+        printf("%zu", value);
+}
+static void trace_events_json(const ttf_trace_event_t *events, size_t count) {
+    size_t i;
+    putchar('[');
+    for (i = 0; i < count; ++i) {
+        const ttf_trace_event_t *event = events + i;
+        if (i)
+            putchar(',');
+        printf("{\"input_begin\":%zu,\"input_end\":%zu,\"output_begin\":%zu,\"output_end\":%zu",
+               event->input_begin, event->input_end, event->output_begin, event->output_end);
+        optional_size("part_begin", event->part_begin);
+        optional_size("part_end", event->part_end);
+        optional_size("phone_index", event->phone_index);
+        optional_size("declaration_order", event->declaration_order);
+        json_string_field("stage", ttf_trace_stage_name(event->stage));
+        json_string_field("disposition", ttf_trace_disposition_name(event->disposition));
+        printf(",\"layer_known\":%s", event->layer_known ? "true" : "false");
+        json_string_field("layer", event->layer_known ? ttf_layer_name(event->layer) : "unknown");
+        json_string_field("language", event->language);
+        json_string_field("resource_language", event->resource_language);
+        json_string_field("kind", event->kind);
+        json_string_field("key", event->key);
+        json_string_field("value", event->value);
+        json_string_field("text", event->text);
+        json_string_field("detail", event->detail);
+        putchar('}');
+    }
+    putchar(']');
+}
+static int emit_json_detail(const ttf_segment_t *segment, void *user_data,
+                            const ttf_trace_event_t *events, size_t count, int traced) {
     json_output_t *output = (json_output_t *)user_data;
     size_t i;
     printf("{\"version\":1,\"event\":\"segment\",\"sequence\":%zu,"
@@ -130,11 +168,22 @@ static int emit_json(const ttf_segment_t *segment, void *user_data) {
         json_string_field("context_trace", span->context_trace);
         putchar('}');
     }
-    fputs("]}\n", stdout);
+    putchar(']');
+    if (traced) {
+        fputs(",\"trace_version\":1,\"trace\":", stdout);
+        trace_events_json(events, count);
+    }
+    fputs("}\n", stdout);
     if (ferror(stdout) || fflush(stdout) != 0)
         return 1;
     output->segment_count++;
     return 0;
+}
+static int emit_json(const ttf_segment_t *segment, void *userdata) {
+    return emit_json_detail(segment, userdata, NULL, 0, 0);
+}
+static int emit_json_traced(const ttf_traced_segment_t *segment, void *userdata) {
+    return emit_json_detail(&segment->segment, userdata, segment->events, segment->event_count, 1);
 }
 static int positive_size(const char *text, size_t *out) {
     size_t value = 0;
@@ -183,6 +232,8 @@ static ttf_status_t read_input(FILE *file, char *buffer, size_t capacity, size_t
 }
 int main(int argc, char **argv) {
     ttf_config_t config;
+    ttf_trace_options_t trace_options;
+    int is_trace = 0, trace_limit_set = 0;
     ttf_engine_t *engine = NULL;
     ttf_status_t status;
     ttf_resource_diagnostic_t diagnostic;
@@ -221,9 +272,24 @@ int main(int argc, char **argv) {
         return report("allocate", TTF_ENOMEM);
     }
     ttf_config_init(&config);
+    ttf_trace_options_init(&trace_options);
     for (i = 2; i < argc; ++i) {
         const char *arg = argv[i];
-        if (!positional_only && !strcmp(arg, "--")) {
+        if (!positional_only && !strcmp(arg, "--trace")) {
+            is_trace = 1;
+        } else if (!positional_only &&
+                   (!strcmp(arg, "--trace-max-events") || !strcmp(arg, "--trace-max-bytes"))) {
+            size_t value;
+            if (++i == argc || !positive_size(argv[i], &value)) {
+                exit_code = report("trace limit", TTF_EINVAL);
+                goto done;
+            }
+            if (!strcmp(arg, "--trace-max-events"))
+                trace_options.max_events = value;
+            else
+                trace_options.max_bytes = value;
+            trace_limit_set = 1;
+        } else if (!positional_only && !strcmp(arg, "--")) {
             positional_only = 1;
         } else if (!positional_only && !strcmp(arg, "--require-complete-validation") &&
                    is_validation) {
@@ -291,7 +357,8 @@ int main(int argc, char **argv) {
             goto done;
         }
     }
-    if (!input) {
+    if (!input || (trace_limit_set && !is_trace) ||
+        (is_trace && strcmp(command, "inspect") && !is_json)) {
         usage(stderr);
         exit_code = EXIT_FAILURE;
         goto done;
@@ -364,8 +431,12 @@ int main(int argc, char **argv) {
             goto done;
         }
 #endif
-        status = ttf_stream_create(engine, is_json ? emit_json : emit,
-                                   is_json ? (void *)&json_output : (void *)stdout, &stream);
+        if (is_trace)
+            status = ttf_stream_create_traced(engine, &trace_options, emit_json_traced,
+                                              &json_output, &stream);
+        else
+            status = ttf_stream_create(engine, is_json ? emit_json : emit,
+                                       is_json ? (void *)&json_output : (void *)stdout, &stream);
         while (status == TTF_OK) {
             status = read_input(file, buffer, chunk_bytes, &n);
             if (status != TTF_OK || !n)
@@ -392,7 +463,12 @@ int main(int argc, char **argv) {
             exit_code = report("stream", status);
     } else {
         ttf_result_t result = {0};
-        status = ttf_normalize(engine, input, strlen(input), &result);
+        ttf_traced_result_t traced = {0};
+        if (is_trace) {
+            status = ttf_normalize_traced(engine, input, strlen(input), &trace_options, &traced);
+            result = traced.result;
+        } else
+            status = ttf_normalize(engine, input, strlen(input), &result);
         if (status != TTF_OK) {
             exit_code = report("normalize", status);
             goto done;
@@ -430,7 +506,15 @@ int main(int argc, char **argv) {
             escaped(result.text, result.length);
             putchar('\n');
         }
-        ttf_result_free(&result);
+        if (is_trace) {
+            fputs("trace=", stdout);
+            trace_events_json(traced.events, traced.event_count);
+            putchar('\n');
+            ttf_traced_result_free(&traced);
+        } else
+            ttf_result_free(&result);
+        if (ferror(stdout) || fflush(stdout))
+            exit_code = report("write output", TTF_EIO);
     }
 done:
     ttf_engine_destroy(engine);

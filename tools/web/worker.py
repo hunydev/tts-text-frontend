@@ -52,13 +52,14 @@ def compare(engine, source, batch, options):
                 chunk_count=len(schedule),
                 match=flat["text"] == batch["text"],
                 span_match=flat["spans"] == batch["spans"],
+                trace_match=flat.get("trace", []) == batch.get("trace", []),
                 segments_match=segments == canonical,
                 segment_count=len(segments),
             )
         )
     return dict(
         passed=all(
-            v["match"] and v["span_match"] and v["segments_match"] for v in variants
+            v["match"] and v["span_match"] and v["trace_match"] and v["segments_match"] for v in variants
         ),
         variants=variants,
     )
@@ -79,6 +80,9 @@ def run(request, library, resources):
             result = flatten(segments)
         else:
             result = engine.normalize(source)
+        if engine.detailed_trace:
+            result.setdefault("trace_version", 1)
+            result.setdefault("trace", [])
         result["tokens"] = engine.tokens(source)
         result["resource_validation"] = engine.resource_validation
         sys.path.insert(0, str(ROOT / "tools/lexicon"))

@@ -64,8 +64,8 @@ static const ttf_entry_t *find_entry(const ttf_engine_t *e, const char *kind, co
     }
     return best;
 }
-const char *ttf_resource_get(const ttf_engine_t *e, const char *kind, const char *lang,
-                             const char *key, ttf_resource_layer_t *layer) {
+const ttf_entry_t *ttf_resource_entry(const ttf_engine_t *e, const char *kind, const char *lang,
+                                      const char *key) {
     const ttf_entry_t *a, *b;
     if (!e || !kind || !lang || !key)
         return NULL;
@@ -73,6 +73,11 @@ const char *ttf_resource_get(const ttf_engine_t *e, const char *kind, const char
     b = strcmp(lang, "*") ? find_entry(e, kind, "*", key) : NULL;
     if (b && (!a || b->layer > a->layer))
         a = b;
+    return a;
+}
+const char *ttf_resource_get(const ttf_engine_t *e, const char *kind, const char *lang,
+                             const char *key, ttf_resource_layer_t *layer) {
+    const ttf_entry_t *a = ttf_resource_entry(e, kind, lang, key);
     if (!a)
         return NULL;
     if (layer)

@@ -54,3 +54,14 @@ validation API preserves the original pack ABI. Row validators own language poli
 schemas, final callbacks check effective dependencies, and unknown namespaces remain
 explicitly unvalidated. See [resource validation](resource-validation.md) for ownership,
 callback purity, priority and extension tests.
+
+## Optional pronunciation instrumentation (v0.17)
+
+`ttf_trace.h` adds `ttf_trace_record_resource` for actually consumed effective rows
+and `ttf_trace_record` for generated decisions. Instrument `pronounce`,
+`render_phones` and `render_graphemes` callbacks at consumption sites; do not record
+speculative lookups as selected rows. Core supplies span/stage/part scope. A traced
+callback receives a borrowed request-local engine view: never retain or destroy it.
+Ordinary normalization records no events. Instrumentation errors remain sticky and
+must not be hidden by a successful fallback. Existing pack descriptors need no change.
+See [trace contracts](detailed-pronunciation-trace.md) for ownership and limits.

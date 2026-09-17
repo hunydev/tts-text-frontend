@@ -23,8 +23,8 @@ SYMBOLS = "AE\nAE0\nAE1\nAE2\nAH\nAH0\nAH1\nAH2\nB\nK\nS\n"
 DICTIONARY = (
     ";;; hand-authored test fixture\n"
     "zorbax AE1 B AH0 K S # parser note\n"
-    "zorbax(2) AE2 B AH1 K S\n"
-    "zorbax(10) AE2 B AH1 K S\n"
+    "zorbax(2) AH2 B AH1 K S\n"
+    "zorbax(10) AH2 B AH1 K S\n"
     "apple AH1\n"
     "zorbax's AE1 S\n"
     "zorbax-alpha AE1\n"
@@ -86,6 +86,34 @@ def native_check(cli: Path, resources: Path, bundle: Path):
                 rendered = raw[span["begin"] : span["end"]].decode("utf-8")
                 assert rendered and all("가" <= c <= "힣" for c in rendered), rendered
     # No assertion of this mapper prototype's spelling as a reviewed TTS gold.
+
+
+def native_variants(cli: Path, resources: Path, bundle: Path, directory: Path):
+    """Explicit selection changes the source phones; source labels do not rank variants."""
+    def normalize(*overlays):
+        command = [str(cli), "normalize", "--resources", str(resources)]
+        for layer, path in overlays:
+            command.extend(["--" + layer, str(path)])
+        command.append("zorbax의 결과입니다.")
+        result = subprocess.run(command, capture_output=True, timeout=30)
+        assert result.returncode == 0, result.stderr.decode()
+        return result.stdout.decode()
+
+    pronunciation = bundle / "pronunciation.bin"
+    choose = directory / "choose.tsv"
+    choose.write_text("pronunciation_choice\ten-US\tzorbax\t2\n", encoding="utf-8")
+    reset = directory / "reset.tsv"
+    reset.write_text("pronunciation_choice\ten-US\tzorbax\tbase\n", encoding="utf-8")
+    reference = directory / "alternate-as-base.tsv"
+    reference.write_text("pronunciation\ten-US\tzorbax\tAH2 B AH1 K S\n", encoding="utf-8")
+    base = normalize(("domain", pronunciation))
+    alternate = normalize(("domain", pronunciation), ("customer", choose))
+    assert alternate == normalize(("customer", reference))
+    assert alternate != base
+    assert normalize(("domain", pronunciation), ("domain", choose), ("customer", reset)) == base
+    # A customer base must dominate a lower-domain policy, even when its variant
+    # is stored with the higher-priority dictionary resource.
+    assert normalize(("domain", choose), ("customer", pronunciation)) == base
 
 
 def pinned_source_check(source: Path, directory: Path):
@@ -186,7 +214,25 @@ def main():
     assert stats["unselected_runtime_alternatives"] == 2, stats
     assert stats["stress_preserved"] is True
     assert "pronunciation\ten-US\tzorbax\tAE1 B AH0 K S\n" in payload
-    assert "AE2 B AH1 K S" not in payload
+    assert "AH2 B AH1 K S" not in payload
+    all_payload, all_stats = importer.runtime_payload(records, "all")
+    assert "pronunciation_variant\ten-US\tzorbax#2\tAH2 B AH1 K S\n" in all_payload
+    assert "pronunciation_variant\ten-US\tzorbax#10\tAH2 B AH1 K S\n" in all_payload
+    assert "pronunciation_choice" not in all_payload
+    assert all_stats["exported_runtime_alternatives"] == 2
+    assert all_stats["unselected_runtime_alternatives"] == 0
+    assert all_stats["runtime_choice_installed"] is False
+    assert all_stats["skipped_runtime_alternatives_by_reason"] == {}
+    # One unreachable alternate must not discard its valid base or a sibling.
+    import copy
+    overlong = copy.deepcopy(records)
+    overlong[1]["pronunciations"][1]["arpabet"] = ["AH1"] * 129
+    bounded_payload, bounded_stats = importer.runtime_payload(overlong, "all")
+    assert "zorbax#2" not in bounded_payload and "zorbax#10" in bounded_payload
+    assert bounded_stats["exported_runtime_alternatives"] == 1
+    assert bounded_stats["skipped_runtime_alternatives_by_reason"] == {
+        "pronunciation-exceeds-current-ir": 1
+    }
     with tempfile.TemporaryDirectory(prefix="ttf-cmudict-test-") as scratch:
         directory = Path(scratch)
         output = directory / "bundle"
@@ -240,8 +286,14 @@ def main():
                 check=False,
             )
             assert result.returncode != 0 and result.stderr and not bad_output.exists()
+        all_output = directory / "all-variants"
+        all_manifest = importer.write_bundle(records, all_output, b"license", {}, "all")
+        assert (all_output / "pronunciation.tsv").read_text() == all_payload
+        assert all_manifest["runtime_export"]["exported_runtime_alternatives"] == 2
         if args.ttf:
             native_check(args.ttf.resolve(), args.resources.resolve(), output)
+            native_check(args.ttf.resolve(), args.resources.resolve(), all_output)
+            native_variants(args.ttf.resolve(), args.resources.resolve(), all_output, directory)
         if args.source:
             pinned = pinned_source_check(args.source.resolve(), directory)
             if args.ttf:

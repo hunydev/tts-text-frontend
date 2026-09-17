@@ -1,4 +1,5 @@
 #include "tts_text_frontend/ttf_language_pack.h"
+#include "../../src/pronunciation/trace.h"
 #include "date.h"
 #include "abbreviation.h"
 #include "../context_run.h"
@@ -143,7 +144,7 @@ static int thousand_or_larger(const char *text) {
    Recover its written coefficient by moving the decimal point, never through
    floating point. Only named cardinal scales can be rendered this way. */
 static ttf_status_t currency_coefficient(const ttf_semantic_t *s, char *coefficient,
-                                          char *scale_key) {
+                                         char *scale_key) {
     char digits_text[TTF_IR_VALUE_SIZE], raw[TTF_IR_VALUE_SIZE + 20];
     const char *p = s->secondary, *value = s->value;
     size_t n = 0, integral = 0, used = 0, i, start;
@@ -364,8 +365,8 @@ static int neutral_marker(const ttf_pack_input_t *in, size_t index, const char *
        initials inherit the configured/surrounding language, while ordinary
        words alongside them still contribute their independent evidence. */
     if (dotted_neutral && strcmp(dotted_neutral, "0") && t->end == t->begin + 1 &&
-        in->text[t->begin] >= 'A' && in->text[t->begin] <= 'Z' &&
-        t->end < in->length && in->text[t->end] == '.')
+        in->text[t->begin] >= 'A' && in->text[t->begin] <= 'Z' && t->end < in->length &&
+        in->text[t->end] == '.')
         return 1;
     /* The exponent marker inside scientific numeric syntax is not an English
        word. The universal classifier remains responsible for validation. */
@@ -373,8 +374,7 @@ static int neutral_marker(const ttf_pack_input_t *in, size_t index, const char *
         in->tokens[index - 1].end == t->begin) {
         size_t next = index + 1, end = t->end;
         if (next < in->token_count && in->tokens[next].begin == end &&
-            in->tokens[next].end == end + 1 &&
-            (in->text[end] == '+' || in->text[end] == '-'))
+            in->tokens[next].end == end + 1 && (in->text[end] == '+' || in->text[end] == '-'))
             end = in->tokens[next++].end;
         if (next < in->token_count && in->tokens[next].begin == end &&
             in->tokens[next].script == TTF_SCRIPT_DIGIT)
@@ -414,8 +414,7 @@ static int context_cue_score(const ttf_pack_input_t *in, size_t begin) {
                 if (in->text[i] == '\r' || in->text[i] == '\n')
                     return 0;
             --begin;
-        } else if (!colon && token->end == token->begin + 1 &&
-                   in->text[token->begin] == ':') {
+        } else if (!colon && token->end == token->begin + 1 && in->text[token->begin] == ':') {
             colon = 1;
             --begin;
         } else
@@ -541,7 +540,7 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     }
     if (out->type == TTF_SEM_INITIALISM)
         ttf_en_initialism_policy(in->engine, out, in->text + t->begin, n,
-                                  kind ? "known" : "inferred");
+                                 kind ? "known" : "inferred");
     if (consumed == 1 && t->end < in->length && in->text[t->end] == '.' &&
         res(in->engine, "abbreviation", key)) {
         out->type = TTF_SEM_ABBREVIATION;
@@ -601,8 +600,7 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             return st;
         if (!min) {
             /* The project keeps 24-hour values; do not attach o'clock to 13..23. */
-            st = h <= 12 ? word(e, b, "number", "oclock") :
-                           word(e, b, "clock", "h24_full_hour");
+            st = h <= 12 ? word(e, b, "number", "oclock") : word(e, b, "clock", "h24_full_hour");
             if (st != TTF_OK)
                 return st;
         } else {
@@ -758,12 +756,27 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         return ttf_buffer_append(b, surface, length);
     }
 }
+static size_t phone_count(const char *text) {
+    size_t count = 0;
+    int in_token = 0;
+    for (; *text; ++text) {
+        if (*text == ' ')
+            in_token = 0;
+        else if (!in_token) {
+            ++count;
+            in_token = 1;
+        }
+    }
+    return count;
+}
+
 static ttf_status_t pronounce(const ttf_engine_t *e, const char *word_text, size_t n,
                               ttf_lexical_class_t lexical, ttf_pronunciation_t *out) {
-    char key[TTF_IR_VALUE_SIZE];
-    size_t i, p = 0;
-    const char *phones;
+    char key[TTF_IR_VALUE_SIZE], variant_key_text[TTF_IR_VALUE_SIZE + 32];
+    size_t i, p = 0, phone_index = 0;
+    const char *phones, *dictionary_kind, *dictionary_key, *selection_reason = "default-base";
     ttf_resource_layer_t layer = TTF_LAYER_COMMON, part_layer = TTF_LAYER_COMMON;
+    ttf_status_t status;
     /* Long unknown words bypass this bounded prototype and reach the target's
        streaming grapheme fallback; they must not fail the entire request. */
     if (n >= sizeof(key))
@@ -776,26 +789,57 @@ static ttf_status_t pronounce(const ttf_engine_t *e, const char *word_text, size
     /* A lowercase dictionary headword such as "us" is not evidence for the
        letter sequence U.S. Explicit initialism pronunciations have their own
        namespace; otherwise construct letter phones below. */
-    phones = ttf_resource_get(e, lexical == TTF_LEX_INITIALISM ? "initialism_pronunciation" :
-                                                                "pronunciation", EN, key, &layer);
+    dictionary_kind = lexical == TTF_LEX_INITIALISM ? "initialism_pronunciation" : "pronunciation";
+    dictionary_key = key;
+    phones = ttf_resource_get(e, dictionary_kind, EN, key, &layer);
+    if (lexical != TTF_LEX_INITIALISM) {
+        ttf_resource_layer_t choice_layer = TTF_LAYER_COMMON;
+        const char *choice = ttf_resource_get(e, "pronunciation_choice", EN, key, &choice_layer);
+        if (choice && phones && choice_layer < layer)
+            selection_reason = "higher-layer-base";
+        else if (choice) {
+            selection_reason = !strcmp(choice, "base") ? "explicit-base" : "explicit-choice";
+            if ((status = ttf_trace_resource(e, "pronunciation_choice", EN, key, choice,
+                                             selection_reason, SIZE_MAX)) != TTF_OK)
+                return status;
+            if (strcmp(choice, "base")) {
+                (void)snprintf(variant_key_text, sizeof(variant_key_text), "%s#%s", key, choice);
+                dictionary_kind = "pronunciation_variant";
+                dictionary_key = variant_key_text;
+                phones = ttf_resource_get(e, dictionary_kind, EN, dictionary_key, &layer);
+                if (!phones)
+                    return TTF_ERESOURCE; /* Freeze normally reports this dependency. */
+            }
+        }
+    }
     if (phones) {
         if (strlen(phones) >= sizeof(out->phones))
             return TTF_ELIMIT;
         (void)snprintf(out->phones, sizeof(out->phones), "%s", phones);
-        (void)snprintf(out->provenance, sizeof(out->provenance), "ttf-pron-v1:%s:pronunciation-dictionary",
-                       ttf_layer_name(layer));
-        return TTF_OK;
+        (void)snprintf(out->provenance, sizeof(out->provenance),
+                       "ttf-pron-v1:%s:pronunciation-dictionary", ttf_layer_name(layer));
+        return ttf_trace_resource(e, dictionary_kind, EN, dictionary_key, phones, selection_reason,
+                                  0);
     }
     if (lexical == TTF_LEX_INITIALISM) {
         for (i = 0; i < n; ++i) {
+            char symbolic[16], spelling[2];
             int written;
             if (key[i] < 'a' || key[i] > 'z')
                 continue;
-            written = snprintf(out->phones + p, sizeof(out->phones) - p, "%sletter.%c",
-                               p ? " " : "", (char)toupper((unsigned char)key[i]));
+            (void)snprintf(symbolic, sizeof(symbolic), "letter.%c",
+                           (char)toupper((unsigned char)key[i]));
+            written =
+                snprintf(out->phones + p, sizeof(out->phones) - p, "%s%s", p ? " " : "", symbolic);
             if (written < 0 || (size_t)written >= sizeof(out->phones) - p)
                 return TTF_ELIMIT;
             p += (size_t)written;
+            spelling[0] = word_text[i];
+            spelling[1] = '\0';
+            if ((status = ttf_trace_emit(e, TTF_TRACE_SELECTED, TTF_LAYER_COMMON, 0, EN,
+                                         "algorithm", "initialism-letter", symbolic, spelling,
+                                         "generated-letter-phone", phone_index++)) != TTF_OK)
+                return status;
         }
         (void)snprintf(out->provenance, sizeof(out->provenance), "ttf-pron-v1:common:initialism");
         return p ? TTF_OK : TTF_EINVAL;
@@ -806,7 +850,7 @@ static ttf_status_t pronounce(const ttf_engine_t *e, const char *word_text, size
             ++upper;
         if (upper >= 2) {
             for (i = 0; i < n; ++i) {
-                char symbolic[16];
+                char symbolic[16], digit_key[2] = {key[i], '\0'};
                 int written;
                 if (word_text[i] == '-')
                     continue;
@@ -815,7 +859,6 @@ static ttf_status_t pronounce(const ttf_engine_t *e, const char *word_text, size
                                    (char)toupper((unsigned char)key[i]));
                     phones = symbolic;
                 } else if (key[i] >= '0' && key[i] <= '9') {
-                    char digit_key[2] = {key[i], '\0'};
                     phones = ttf_resource_get(e, "digit_pronunciation", EN, digit_key, &part_layer);
                     if (phones && part_layer > layer)
                         layer = part_layer;
@@ -828,9 +871,19 @@ static ttf_status_t pronounce(const ttf_engine_t *e, const char *word_text, size
                 if (written < 0 || (size_t)written >= sizeof(out->phones) - p)
                     return TTF_EINVAL;
                 p += (size_t)written;
+                if (key[i] >= '0' && key[i] <= '9')
+                    status = ttf_trace_resource(e, "digit_pronunciation", EN, digit_key, phones,
+                                                "alnum-digit", phone_index);
+                else
+                    status = ttf_trace_emit(e, TTF_TRACE_SELECTED, TTF_LAYER_COMMON, 0, EN,
+                                            "algorithm", "alnum-letter", phones, digit_key,
+                                            "generated-letter-phone", phone_index);
+                if (status != TTF_OK)
+                    return status;
+                phone_index += phone_count(phones);
             }
-            (void)snprintf(out->provenance, sizeof(out->provenance), "ttf-pron-v1:%s:alnum-initialism",
-                           ttf_layer_name(layer));
+            (void)snprintf(out->provenance, sizeof(out->provenance),
+                           "ttf-pron-v1:%s:alnum-initialism", ttf_layer_name(layer));
             return p ? TTF_OK : TTF_EINVAL;
         }
     }
@@ -857,10 +910,14 @@ static ttf_status_t pronounce(const ttf_engine_t *e, const char *word_text, size
         if (written < 0 || (size_t)written >= sizeof(out->phones) - p)
             return TTF_ELIMIT;
         p += (size_t)written;
+        if ((status = ttf_trace_resource(e, "g2p", EN, chunk, phones, "longest-grapheme-rule",
+                                         phone_index)) != TTF_OK)
+            return status;
+        phone_index += phone_count(phones);
         i += take;
     }
-    (void)snprintf(out->provenance, sizeof(out->provenance), "ttf-pron-v1:%s:grapheme-g2p-prototype",
-                   ttf_layer_name(layer));
+    (void)snprintf(out->provenance, sizeof(out->provenance),
+                   "ttf-pron-v1:%s:grapheme-g2p-prototype", ttf_layer_name(layer));
     return p ? TTF_OK : TTF_EINVAL;
 }
 

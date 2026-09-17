@@ -26,6 +26,7 @@ struct ttf_engine {
     ttf_config_t config;
     char *resource_root, *default_language;
     int frozen, validating;
+    struct ttf_trace_state *trace_state; /* Request view only; frozen owner stays NULL. */
     const ttf_language_pack_t *packs[TTF_MAX_PACKS];
     size_t pack_count, resource_order;
     const ttf_resource_validator_t *validators[TTF_MAX_RESOURCE_VALIDATORS];
@@ -45,6 +46,8 @@ uint32_t ttf_quote_closer(uint32_t cp);
 ttf_status_t ttf_resource_set(ttf_engine_t *e, const char *kind, const char *lang, const char *key,
                               const char *value, ttf_resource_layer_t layer);
 void ttf_resource_destroy(ttf_engine_t *e);
+const ttf_entry_t *ttf_resource_entry(const ttf_engine_t *e, const char *kind,
+                                      const char *lang, const char *key);
 void ttf_validation_copy(char *destination, size_t capacity, const char *source);
 ttf_status_t ttf_validate_resource_record(const ttf_engine_t *engine,
                                           const ttf_resource_record_t *record, int *validated,

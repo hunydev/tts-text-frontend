@@ -1,4 +1,5 @@
 #include "tts_text_frontend/ttf.h"
+#include "tts_text_frontend/ttf_trace.h"
 #include "tts_text_frontend/ttf_resource_validation.h"
 #include <stdio.h>
 #define RECORD(type, name) printf("%s %zu\n", name, sizeof(type))
@@ -31,5 +32,16 @@ int main(void) {
     RECORD(ttf_resource_validation_report_t, "ResourceValidationReport");
     FIELD(ttf_resource_validation_report_t, "ResourceValidationReport", records);
     FIELD(ttf_resource_validation_report_t, "ResourceValidationReport", unvalidated_records);
+    RECORD(ttf_trace_options_t, "TraceOptions");
+    RECORD(ttf_trace_event_t, "TraceEvent");
+    RECORD(ttf_traced_result_t, "TracedResult");
+    RECORD(ttf_traced_segment_t, "TracedSegment");
+    FIELD(ttf_trace_event_t, "TraceEvent", input_begin);
+    FIELD(ttf_trace_event_t, "TraceEvent", phone_index);
+    FIELD(ttf_trace_event_t, "TraceEvent", layer);
+    FIELD(ttf_trace_event_t, "TraceEvent", declaration_order);
+    FIELD(ttf_trace_event_t, "TraceEvent", language);
+    FIELD(ttf_trace_event_t, "TraceEvent", detail);
+    FIELD(ttf_traced_segment_t, "TracedSegment", events);
     return 0;
 }

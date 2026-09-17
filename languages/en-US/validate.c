@@ -81,6 +81,25 @@ static int phone_sequence(const char *text) {
     return count != 0;
 }
 
+/* Choice IDs are opaque stable labels, not frequency or POS rankings. */
+static int variant_id(const char *text) {
+    size_t n;
+    if (!text[0] || !((text[0] >= 'a' && text[0] <= 'z') || (text[0] >= '0' && text[0] <= '9')))
+        return 0;
+    for (n = 0; text[n]; ++n)
+        if (n >= 31 || !((text[n] >= 'a' && text[n] <= 'z') || (text[n] >= '0' && text[n] <= '9') ||
+                         text[n] == '.' || text[n] == '_' || text[n] == '-'))
+            return 0;
+    return 1;
+}
+
+static int variant_key(const char *key) {
+    const char *separator = strchr(key, '#');
+    return separator && separator != key && (size_t)(separator - key) < TTF_IR_VALUE_SIZE &&
+           !strchr(separator + 1, '#') && folded_key(key) && variant_id(separator + 1) &&
+           !SAME(separator + 1, "base");
+}
+
 static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                            ttf_resource_diagnostic_t *d, void *userdata) {
     const char *k = r->kind, *key = r->key, *v = r->value;
@@ -180,6 +199,27 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
         return ttf_validation_enum(v, "0|1")
                    ? TTF_OK
                    : ttf_validation_error(d, "date cue value must be 0 or 1");
+    }
+    if (SAME(k, "pronunciation_choice")) {
+        *handled = 1;
+        if (!*key || strlen(key) >= TTF_IR_VALUE_SIZE || strchr(key, '#') || !folded_key(key))
+            return ttf_validation_error(
+                d, "pronunciation choice key must be a bounded folded headword without #");
+        return variant_id(v)
+                   ? TTF_OK
+                   : ttf_validation_error(
+                         d,
+                         "pronunciation choice must be base or a 1..31-byte lowercase variant ID");
+    }
+    if (SAME(k, "pronunciation_variant")) {
+        *handled = 1;
+        if (!variant_key(key))
+            return ttf_validation_error(
+                d, "pronunciation variant key must be headword#id; base is reserved");
+        return phone_sequence(v)
+                   ? TTF_OK
+                   : ttf_validation_error(d, "expected at most 128 bounded uppercase phone tokens "
+                                             "with stress 0..2 or letter.A");
     }
     if (SAME(k, "pronunciation") || SAME(k, "initialism_pronunciation") ||
         SAME(k, "digit_pronunciation") || SAME(k, "g2p")) {
@@ -373,6 +413,23 @@ static ttf_status_t engine(const ttf_engine_t *e, ttf_resource_diagnostic_t *d, 
         for (entry = e->resources[bucket]; entry; entry = entry->next) {
             const char *value;
             char identity[32];
+            if (SAME(entry->kind, "pronunciation_choice") &&
+                (SAME(entry->lang, EN) || SAME(entry->lang, "*"))) {
+                ttf_resource_layer_t choice_layer = TTF_LAYER_COMMON, base_layer = TTF_LAYER_COMMON;
+                const char *base;
+                char variant[TTF_IR_VALUE_SIZE + 32];
+                value = ttf_resource_get(e, entry->kind, EN, entry->key, &choice_layer);
+                if (value != entry->value || SAME(value, "base"))
+                    continue;
+                base = ttf_resource_get(e, "pronunciation", EN, entry->key, &base_layer);
+                /* A lower policy cannot redirect an explicit higher base. */
+                if (base && base_layer > choice_layer)
+                    continue;
+                snprintf(variant, sizeof(variant), "%s#%s", entry->key, value);
+                if (!ttf_resource_get(e, "pronunciation_variant", EN, variant, NULL))
+                    return final_error(d, "pronunciation_choice", entry->key,
+                                       "selected pronunciation variant is missing");
+            }
             if (SAME(entry->kind, "abbreviation_expansion") &&
                 (SAME(entry->lang, EN) || SAME(entry->lang, "*"))) {
                 value = ttf_resource_get(e, entry->kind, EN, entry->key, NULL);

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Import pinned CMUdict without losing stress or pronunciation alternatives.
 
-The optional runtime export selects the unnumbered pronunciation explicitly.
+The optional runtime export keeps the unnumbered pronunciation as its default.
 It never installs data in the frontend's default resource manifest.
 """
 
@@ -176,8 +176,8 @@ def runtime_payload(records: list, variant_policy: str) -> tuple[str, dict]:
     Base is a deterministic source label, not a preferred/frequent pronunciation.
     Every alternate remains in pronunciations.jsonl. Stress stays in the payload.
     """
-    if variant_policy != "base":
-        raise ValueError("runtime export requires explicit variant policy 'base'")
+    if variant_policy not in {"base", "all"}:
+        raise ValueError("runtime export requires explicit variant policy 'base' or 'all'")
     lines = [
         "# CMUdict opt-in source pronunciation resource; see COPYING and manifest.json"
     ]
@@ -185,6 +185,8 @@ def runtime_payload(records: list, variant_policy: str) -> tuple[str, dict]:
     skipped = {}
     skipped_pronunciations = 0
     unselected = 0
+    exported_alternatives = 0
+    skipped_alternatives = {}
     for record in records:
         word = record["word"]
         # Restrict to words known to enter the current native WORD route. Keep
@@ -208,18 +210,43 @@ def runtime_payload(records: list, variant_policy: str) -> tuple[str, dict]:
             continue
         lines.append(f"pronunciation\ten-US\t{word}\t{phones}")
         exported += 1
-        unselected += len(record["pronunciations"]) - 1
+        for pronunciation in record["pronunciations"]:
+            variant = pronunciation["variant_label"]
+            if variant is None:
+                continue
+            if variant_policy == "base":
+                unselected += 1
+                continue
+            alternate = " ".join(pronunciation["arpabet"])
+            reason = None
+            if not re.fullmatch(r"[0-9]{1,31}", variant):
+                reason = "variant-id-exceeds-current-ir"
+            elif len(pronunciation["arpabet"]) > 128 or len(alternate.encode("ascii")) >= 1024:
+                reason = "pronunciation-exceeds-current-ir"
+            if reason:
+                skipped_alternatives[reason] = skipped_alternatives.get(reason, 0) + 1
+                skipped_pronunciations += 1
+                continue
+            lines.append(f"pronunciation_variant\ten-US\t{word}#{variant}\t{alternate}")
+            exported_alternatives += 1
     if not exported:
         raise ValueError(
             "no words are reachable by the conservative current-runtime adapter"
         )
     return "\n".join(lines) + "\n", {
         "variant_policy": variant_policy,
-        "variant_policy_meaning": "unnumbered source entry, not frequency/POS ranking",
+        "variant_policy_meaning": (
+            "unnumbered source entry, not frequency/POS ranking"
+            if variant_policy == "base"
+            else "unnumbered default plus explicit numbered alternatives; no frequency/POS ranking"
+        ),
         "stress_preserved": True,
         "alternatives_preserved_in": "pronunciations.jsonl",
         "exported_headwords": exported,
         "unselected_runtime_alternatives": unselected,
+        "exported_runtime_alternatives": exported_alternatives,
+        "skipped_runtime_alternatives_by_reason": skipped_alternatives,
+        "runtime_choice_installed": False,
         "skipped_headwords": sum(skipped.values()),
         "skipped_pronunciations": skipped_pronunciations,
         "skipped_by_reason": skipped,
@@ -288,7 +315,7 @@ def write_bundle(
             "Revision: " + records[0]["provenance"]["revision"] + "\n"
             "Retain COPYING with redistributed source or binary resources.\n"
             "Dictionary pronunciations are not reviewed Korean TTS references.\n"
-            "Runtime export, if present, selects base variants without POS disambiguation.\n",
+            "Runtime export, if present, defaults to base variants without POS disambiguation.\n",
             encoding="utf-8",
         )
         if payload is not None:
@@ -325,13 +352,13 @@ def main(argv: list | None = None) -> int:
     )
     parser.add_argument(
         "--variant-policy",
-        choices=["base"],
+        choices=["base", "all"],
         help="required when exporting runtime data",
     )
     args = parser.parse_args(argv)
     if args.export_runtime != bool(args.variant_policy):
         parser.error(
-            "--export-runtime and --variant-policy base must be supplied together"
+            "--export-runtime and --variant-policy base|all must be supplied together"
         )
     try:
         source_hashes = verify_source(args.source)

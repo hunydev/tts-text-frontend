@@ -490,7 +490,7 @@ Korean ordinals, count/identifier roles, attached particles and ranges have sepa
 IR contracts and editable resource policies. The web workbench includes a 28-case
 counter corpus and Unicode amount samples. Pronunciation dictionary/G2P source
 layers are reported through ABI-compatible provenance; target mapper row/layer
-trace remains a documented limitation.
+trace is available through the additive v0.17 API described below.
 
 See [Unicode numbers](docs/unicode-numbers.md), [Korean counters and customization](docs/korean-counters.md),
 [pronunciation trace](docs/pronunciation-trace.md), and [v0.15 measurements](docs/research/numeric-counters-v15-results.md).
@@ -521,3 +521,29 @@ See the [Korean editing and validation guide](docs/resource-validation.md) and
 These checks verify policy structure and dependencies. Pronunciation correctness
 and production language coverage still need independent reference review and the
 work tracked in [remaining requirements](docs/remaining-work.md).
+
+### v0.17 detailed pronunciation trace and explicit variants
+
+`inspect --trace` and `stream-json --trace` now report each consumed source
+pronunciation/G2P row and target phone/grapheme mapping row separately, including
+layer, key, value and declaration order. Rejected phone attempts remain visible
+alongside the selected fallback. Generated decisions explicitly report unknown
+resource provenance. The existing text/span ABI and default readings are unchanged.
+
+```sh
+build/ttf inspect --trace 'foobar를 사용합니다.'
+printf '%s' 'Apple은 사과입니다. foobar를 사용합니다.' | build/ttf stream-json --trace -
+```
+
+The web workbench displays **발음 상세 경로** for a selected span and compares trace
+as well as text and metadata across input chunk boundaries. `pronunciation_variant`
+and `pronunciation_choice` resources allow explicit pronunciation selection; CMUdict
+`--variant-policy all` preserves numbered alternatives without selecting one
+implicitly. Target pronunciation lexicons retain priority over source dictionaries.
+
+See the [Korean trace and variant editing guide](docs/detailed-pronunciation-trace.md)
+for CLI/C API examples, ownership, resource precedence, offset meanings and limits.
+The [verification report](docs/research/pronunciation-trace-v17-results.md) records
+the regression checks and fixed-source CMU export counts.
+This feature provides evidence for reviewing readings; it does not certify their
+linguistic accuracy or automatically resolve heteronyms from context.

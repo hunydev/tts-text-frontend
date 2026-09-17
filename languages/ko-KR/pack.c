@@ -1,6 +1,7 @@
 /* Korean reading policy and phonetic realization live in this language pack.
  * The core only dispatches through the versioned language-pack interface. */
 #include "tts_text_frontend/ttf_language_pack.h"
+#include "../../src/pronunciation/trace.h"
 #include "../../src/core/internal.h" /* Builtin scalar grammar reuse; not public ABI. */
 #include "identifiers.h"
 #include "counters.h"
@@ -1078,10 +1079,27 @@ static int vowel(const ttf_engine_t *e, const char *phone) {
     return resource_integer(e, "phone_vowel", phone, 0, 20, -1);
 }
 
+/* A trace is evidence of a consumed decision, not every resource lookup probe. */
+static ttf_status_t traced_algorithm(const ttf_engine_t *e, const char *key, const char *text,
+                                     const char *detail, size_t phone_index) {
+    return ttf_trace_emit(e, TTF_TRACE_SELECTED, TTF_LAYER_COMMON, 0, "ko-KR", "algorithm", key, "",
+                          text, detail, phone_index);
+}
+
+static ttf_status_t flush_onset(const ttf_engine_t *e, ttf_buffer_t *out, int pending,
+                                const char *phone, size_t phone_index) {
+    size_t begin = out->length;
+    TRY(put_syllable(out, pending, 18, 0));
+    TRY(ttf_trace_resource(e, "phone_onset", "ko-KR", phone, out->data + begin, "consumed-onset",
+                           phone_index));
+    return traced_algorithm(e, "epenthetic-vowel", out->data + begin, "eu-without-following-vowel",
+                            phone_index);
+}
+
 static ttf_status_t render_phones(const ttf_engine_t *e, const ttf_pronunciation_t *p,
                                   ttf_buffer_t *out) {
     char phones[128][24];
-    size_t count = 0, pos = 0, i;
+    size_t count = 0, pos = 0, i, pending_index = SIZE_MAX, glide_index = SIZE_MAX;
     int pending = -1, glide = 0;
     if (strcmp(p->alphabet, "ttf-phones-v1") != 0 && strcmp(p->alphabet, "ARPABET") != 0 &&
         strcmp(p->alphabet, "arpabet") != 0)
@@ -1109,16 +1127,20 @@ static ttf_status_t render_phones(const ttf_engine_t *e, const ttf_pronunciation
         const char *letter = ttf_resource_get(e, "phone_letter", "ko-KR", phone, NULL);
         if (letter) {
             if (pending >= 0)
-                TRY(put_syllable(out, pending, 18, 0));
+                TRY(flush_onset(e, out, pending, phones[pending_index], pending_index));
             pending = -1;
             TRY(ttf_buffer_puts(out, letter));
+            TRY(ttf_trace_resource(e, "phone_letter", "ko-KR", phone, letter, "direct-letter-name",
+                                   i));
             continue;
         }
         if (strcmp(phone, "W") == 0 || strcmp(phone, "Y") == 0) {
             glide = strcmp(phone, "W") == 0 ? 1 : 2;
+            glide_index = i;
             continue;
         }
         if (v >= 0) {
+            size_t phone_index = i, coda_index = SIZE_MAX, begin = out->length;
             int cod = 0;
             if (glide == 1) {
                 if (v == 0)
@@ -1144,27 +1166,51 @@ static ttf_status_t render_phones(const ttf_engine_t *e, const ttf_pronunciation
                 int close = resource_integer(e, "phone_coda", phones[i + 1], 0, 27, -1);
                 if (close >= 0) {
                     cod = close;
-                    ++i;
+                    coda_index = ++i;
                 }
             }
             TRY(put_syllable(out, pending >= 0 ? pending : 11, v, cod));
-            if (strcmp(phone, "AY") == 0 || strcmp(phone, "EY") == 0 || strcmp(phone, "OY") == 0)
+            if (pending >= 0)
+                TRY(ttf_trace_resource(e, "phone_onset", "ko-KR", phones[pending_index],
+                                       out->data + begin, "consumed-onset", pending_index));
+            else
+                TRY(traced_algorithm(e, "vowel-initial-onset", out->data + begin,
+                                     "silent-ieung-onset", phone_index));
+            TRY(ttf_trace_resource(e, "phone_vowel", "ko-KR", phone, out->data + begin,
+                                   "consumed-vowel", phone_index));
+            if (glide)
+                TRY(traced_algorithm(e, "glide", out->data + begin,
+                                     glide == 1 ? "w-before-vowel" : "y-before-vowel",
+                                     glide_index));
+            if (coda_index != SIZE_MAX)
+                TRY(ttf_trace_resource(e, "phone_coda", "ko-KR", phones[coda_index],
+                                       out->data + begin, "consumed-coda", coda_index));
+            begin = out->length;
+            if (strcmp(phone, "AY") == 0 || strcmp(phone, "EY") == 0 || strcmp(phone, "OY") == 0) {
                 TRY(put_syllable(out, 11, 20, 0));
-            else if (strcmp(phone, "AW") == 0)
+                TRY(traced_algorithm(e, "diphthong-tail", out->data + begin, "i-tail",
+                                     phone_index));
+            } else if (strcmp(phone, "AW") == 0) {
                 TRY(put_syllable(out, 11, 13, 0));
+                TRY(traced_algorithm(e, "diphthong-tail", out->data + begin, "u-tail",
+                                     phone_index));
+            }
             pending = -1;
             glide = 0;
         } else if (c >= 0) {
-            if (strcmp(phone, "R") == 0 && i + 1 == count)
+            if (strcmp(phone, "R") == 0 && i + 1 == count) {
+                TRY(traced_algorithm(e, "trailing-r", "", "prototype-r-suppression", i));
                 continue;
+            }
             if (pending >= 0)
-                TRY(put_syllable(out, pending, 18, 0));
+                TRY(flush_onset(e, out, pending, phones[pending_index], pending_index));
             pending = c;
+            pending_index = i;
         } else
             return TTF_EINVAL;
     }
     if (pending >= 0)
-        TRY(put_syllable(out, pending, 18, 0));
+        TRY(flush_onset(e, out, pending, phones[pending_index], pending_index));
     return out->length ? TTF_OK : TTF_EINVAL;
 }
 
@@ -1188,26 +1234,48 @@ static ttf_status_t render_graphemes(const ttf_engine_t *e, const char *word, si
         }
         if (mapped) {
             TRY(ttf_buffer_puts(out, mapped));
+            TRY(ttf_trace_resource(e, "grapheme", "ko-KR", key, mapped, "longest-grapheme",
+                                   SIZE_MAX));
             i += width;
         } else if (word[i] >= '0' && word[i] <= '9') {
+            char digit_key[2] = {word[i], '\0'};
+            size_t begin = out->length;
             TRY(digit(e, (unsigned)(word[i] - '0'), 0, out));
+            if (ttf_resource_get(e, "digit", "ko-KR", digit_key, NULL))
+                TRY(ttf_trace_resource(e, "digit", "ko-KR", digit_key, out->data + begin,
+                                       "digit-fallback", SIZE_MAX));
+            else
+                TRY(traced_algorithm(e, "digit-fallback", out->data + begin, "builtin-digit",
+                                     SIZE_MAX));
             ++i;
         } else {
             /* A letter-name fallback always speaks unfamiliar Latin letters. */
             char letter[16] = "letter.A";
             const char *name;
             unsigned char c = (unsigned char)word[i];
+            size_t begin = out->length;
             letter[7] = (char)(c >= 'a' && c <= 'z' ? c - ('a' - 'A') : c);
             name = ttf_resource_get(e, "phone_letter", "ko-KR", letter, NULL);
-            if (name)
+            if (name) {
                 TRY(ttf_buffer_puts(out, name));
-            else if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
-                TRY(ttf_buffer_puts(out, "으"));
-            else if (c < 128)
-                TRY(ttf_buffer_append(out, word + i, 1));
-            /* Accented Latin codepoints use a speakable escape when not mapped. */
-            else if ((c & 0xc0) != 0x80)
-                TRY(ttf_buffer_puts(out, "으"));
+                TRY(ttf_trace_resource(e, "phone_letter", "ko-KR", letter, name,
+                                       "letter-name-fallback", SIZE_MAX));
+            } else {
+                if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
+                    TRY(ttf_buffer_puts(out, "으"));
+                else if (c < 128)
+                    TRY(ttf_buffer_append(out, word + i, 1));
+                /* Accented Latin codepoints use a speakable escape when not mapped. */
+                else if ((c & 0xc0) != 0x80)
+                    TRY(ttf_buffer_puts(out, "으"));
+                if (out->length != begin)
+                    TRY(traced_algorithm(e, "unmapped-grapheme", out->data + begin,
+                                         c < 128 &&
+                                                 !((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
+                                             ? "preserved-ascii"
+                                             : "speakable-escape",
+                                         SIZE_MAX));
+            }
             ++i;
         }
     }

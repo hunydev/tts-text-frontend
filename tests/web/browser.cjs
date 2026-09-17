@@ -59,6 +59,28 @@ const path = require("node:path");
   await run();
   await page.locator("#inspect-body tr").first().click();
   assert((await page.locator("#span-detail").textContent()).includes("en-US"));
+  assert((await page.locator("#pronunciation-trace").textContent()).includes("lexicon/en-US:apple"));
+  assert((await page.locator("#pronunciation-trace").textContent()).includes("선택"));
+  // Editable target mapping reports its own source separately from English G2P.
+  await page.fill("#source", "baba는 표기입니다.");
+  await page.fill("#customer-tsv", "phone_vowel\tko-KR\tAE\t4\nphone_onset\tko-KR\tAE\t0\n");
+  await run();
+  assert.equal(await page.locator("#output").textContent(), "버버는 표기입니다.");
+  await page.locator("#inspect-body tr").first().click();
+  let pronunciation = await page.locator("#pronunciation-trace").textContent();
+  assert(pronunciation.includes("source-pronunciation") && pronunciation.includes("target-phonetic"));
+  assert(pronunciation.includes("en-US · system · g2p/b"));
+  assert(pronunciation.includes("ko-KR · customer · phone_vowel/AE"));
+  assert(!pronunciation.includes("phone_onset/AE"));
+  // Rejected mapper work remains inspectable alongside the selected fallback.
+  await page.fill("#customer-tsv", "pronunciation\ten-US\tbaba\tAH UNMAPPED\n");
+  await run();
+  assert.equal(await page.locator("#output").textContent(), "브아브아는 표기입니다.");
+  await page.locator("#inspect-body tr").first().click();
+  pronunciation = await page.locator("#pronunciation-trace").textContent();
+  assert(pronunciation.includes("폐기") && pronunciation.includes("target-phonetic-failed"));
+  assert(pronunciation.includes("선택 · target-grapheme"));
+  await page.fill("#customer-tsv", "");
   await page.selectOption("#sample", "layer");
   await run();
   assert.equal(

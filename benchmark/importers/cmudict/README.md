@@ -84,7 +84,7 @@ build/ttf inspect --resources resources \
 
 This adds `pronunciation.tsv` and its existing TTFB v1 compiled container
 `pronunciation.bin`. The current container embeds checked TSV; it is not a compact
-indexed dictionary. Rows use `pronunciation`, `en-US`, headword and spaced ARPABET.
+indexed dictionary. Base rows use `pronunciation`, `en-US`, headword and spaced ARPABET.
 Stress tokens remain intact. The C English pack returns them in Pronunciation IR;
 the Korean renderer currently ignores stress when rendering.
 
@@ -94,6 +94,44 @@ alternatives. The conservative adapter exports only lowercase ASCII letter words
 shorter than 96 bytes, with at most 128 phones and less than 1024 pronunciation
 bytes. Apostrophes, hyphens, digits and other forms remain in JSONL; skip reasons
 are reported. This filter claims no reachability for unsupported token shapes.
+
+### Explicit alternate export and selection (v0.17)
+
+Use `--export-runtime --variant-policy all` to include bounded numbered alternatives
+as `pronunciation_variant` rows alongside every eligible base:
+
+```text
+pronunciation         en-US  read    R EH1 D
+pronunciation_variant en-US  read#2  R IY1 D
+```
+
+The displayed columns represent **tabs**, not spaces. No choice policy is installed
+by the importer: loading this resource preserves the existing base default. A
+separate deployment overlay can explicitly select the variant:
+
+```text
+pronunciation_choice  en-US  read    2
+```
+
+`base` restores base/default fallback selection. Variant IDs are opaque 1..31-byte
+lowercase ASCII labels (`[a-z0-9][a-z0-9._-]*`); `base` is reserved. This importer
+preserves CMUdict's numbered source IDs without renumbering or merging identical
+phone sequences. IDs carry no POS, frequency or context ranking.
+
+A choice applies only when its layer is at least the effective base pronunciation's
+layer. For example, a domain choice cannot redirect an explicit customer base. An
+eligible customer choice can select a system/domain variant; the trace reports the
+choice policy and selected source row separately. At freeze, a missing selected
+variant is an error. A lower choice shadowed by a higher base does not create an
+unreachable dependency. Choices affect ordinary `pronunciation`, not the separate
+`initialism_pronunciation` namespace; direct target-language lexicons still win.
+
+`exported_runtime_alternatives` counts written numbered rows.
+`unselected_runtime_alternatives` counts alternatives excluded by the `base` export
+policy, not an automatic runtime ranking. Per-alternate size failures are reported
+in `skipped_runtime_alternatives_by_reason` and do not remove an eligible base or
+sibling alternate. All original alternatives remain in archival JSONL, including
+those excluded from native export. `runtime_choice_installed` remains false.
 
 Direct User/Customer/Domain/System target-language lexicons still take precedence
 over source pronunciation lookup. A loaded customer pronunciation resource may
@@ -114,8 +152,9 @@ python3 tests/benchmark/test_cmudict.py --ttf build/ttf --resources resources \
 
 The first command is offline and uses hand-authored parser fixtures. It verifies
 stress, alternatives without deduplication, validation failures, reproducibility,
-license/provenance packaging, opt-in behavior, native dictionary routing, direct
-lexicon precedence and English preservation. The second additionally imports real
+license/provenance packaging, opt-in behavior, bounded numbered runtime export,
+explicit selection/reset, higher-layer base protection, native dictionary routing,
+direct lexicon precedence and English preservation. The second additionally imports real
 pinned source data and loads a compiled subset into the native CLI. Neither test
 generates a Korean expected spelling from the candidate mapper output.
 

@@ -76,18 +76,18 @@ compiled resource의 **8개 CTest를 다시 실행해 모두 통과**했다. 이
   **범위:** 알려진 정책의 구조·소비자 제약·의존성 검증이다. 일반 읽기 label의
   언어학적 정답이나 아직 검증기를 등록하지 않은 외부 namespace를 인증하지 않는다.
 
-- [ ] **TRACE-01: source와 target pronunciation의 실제 선택 경로 전달.**
-  **v0.15 source layer 수정:** Customer `pronunciation`이 `common`으로 표시되던
-  재현 오류를 수정했다. 일반/initialism 사전, G2P, alnum 숫자 음소에서 실제 소비한
-  source layer를 ABI v1의 선택적 provenance envelope로 전달한다. Target lexicon
-  우선순위, 미사용 고위 layer 제외, 실패 source의 fallback layer 초기화를 검사했다.
-  [발음 trace 계약](pronunciation-trace.md), native protocol 147건, CLI/native 정책
-  102건 및 모든 두 조각 byte split 746건이 근거다. 구조체 layout은 변경하지 않았다.
-  **남은 범위:** target phone/grapheme mapper의 개별 행·layer, 복수 발음 variant ID와
-  선택 이유, compound/phrase 단어별 출처 목록. 현재 scalar layer는 source와 target
-  전체 경로의 합산값이 아니며 legacy/generated 경로의 `common`은 미보고 기본값일 수
-  있다. **닫는 증거:** source와 target을 별개로 노출하는 버전 있는 상세 trace API,
-  compound와 variant 선택까지 보존하는 contract 검사. 이 상위 항목은 열린 상태다.
+- [x] **TRACE-01: source와 target pronunciation의 실제 선택 경로 전달.**
+  v0.17의 additive trace API가 실제 정규화 중 선택한 lexicon/source G2P/target
+  phone·grapheme 행의 key/value/layer/선언 순서를 분리해 복사한다. 생성 결정은
+  출처 미상으로 표시하고, 실패한 phone 시도는 rejected로 남긴다. 복합 발음의
+  부분 범위와 명시적인 variant ID/선택 이유도 보존한다. 기존 ABI v1은 유지한다.
+  **증거:** `detailed_pronunciation_trace`와 `detailed_pronunciation_trace_cli`의
+  source/target 계층·미사용 probe 제외·부분 offset·variant·임의 byte 분할·동시 요청·
+  callback 수명·누적 제한 검사. 웹은 batch/stream trace까지 비교한다.
+  [API 및 편집 가이드](detailed-pronunciation-trace.md).
+  **범위:** built-in 발음 경로와 instrumentation을 호출하는 외부 pack에 해당한다.
+  외부 pack 내부의 미보고 행, TN 전체의 자동 resource trace, 원본 파일 경로·행 번호,
+  음절별 정렬, heteronym 자동 문맥 선택과 언어학적 정답 검수는 포함하지 않는다.
 
 - [ ] **DOC-01: 실제 출력과 문서 예제의 정합성.** 감사 기준 README의 금융 예제에는
   `1.5-2.5%`와 `1만원~2만원`을 아직 `다시`로 읽는 구문이 있으나 실제 출력은

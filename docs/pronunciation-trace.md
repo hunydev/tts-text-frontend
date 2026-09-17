@@ -2,8 +2,9 @@
 
 v0.15는 **source 발음 리소스 layer**를 기존 ABI 안에서 전달한다.
 Customer `pronunciation` 사전으로 만든 음소가 `common`으로 표시되던 오류를 수정한다.
-이 문서는 source 단어→음소와 target 음소→표기를 구분한다. Target mapper의 개별
-규칙 출처나 사전 행 번호까지 제공하는 전체 trace는 아직 구현하지 않았다.
+이 문서는 기존 scalar source 요약 계약을 설명한다. v0.17의 별도
+[상세 trace API](detailed-pronunciation-trace.md)는 실제 소비한 source/target 행,
+layer, 선언 순서와 variant 선택을 제공한다. 선언 순서는 파일의 행 번호가 아니다.
 
 ## inspect 필드의 의미
 

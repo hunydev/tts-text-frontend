@@ -75,3 +75,19 @@ Include `tts_text_frontend/ttf_resource_validation.h` for additive `ttf_engine_c
 File loads check row schemas transactionally; freeze checks effective dependencies
 and constraints. Initialize optional caller-owned diagnostic/report outputs using
 the corresponding init helpers. See [contracts and C example](resource-validation.md).
+
+## Detailed pronunciation trace extension (v0.17)
+
+Include `tts_text_frontend/ttf_trace.h`. `ttf_normalize_traced` returns owned text,
+spans and copied events; `ttf_traced_result_free` releases all of them together.
+`ttf_stream_create_traced` uses the existing write/flush/destroy API and passes
+borrowed text/spans/events to the callback. Copy these before returning if retained.
+The original engine must remain frozen and alive for the request/stream lifetime.
+
+Options default to 65,536 events and 16 MiB logical event/string payload per request,
+including rejected attempts and already committed segments. Limits fail explicitly
+without a partially described current segment. Earlier callbacks remain committed.
+These limits do not cap peak allocator memory. Existing ABI v1 layouts are unchanged.
+Source/target resource events and generated decisions have distinct provenance;
+output offsets identify whole spans, not syllable alignments. See the
+[detailed contract and runnable examples](detailed-pronunciation-trace.md).

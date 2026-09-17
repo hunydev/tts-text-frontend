@@ -217,6 +217,23 @@ function details(row) {
     }
   });
   target.append(dl);
+  const events = (state.result?.trace || []).filter((event) =>
+    event.input_begin === row.input_begin && event.input_end === row.input_end);
+  if (events.length) {
+    const section = node("details");
+    section.id = "pronunciation-trace";
+    section.open = true;
+    section.append(node("summary", `발음 상세 경로 · ${events.length}개 결정`));
+    events.forEach((event) => {
+      const item = node("div", undefined, "trace-event");
+      item.append(node("strong", `${event.disposition === "selected" ? "선택" : "폐기"} · ${event.stage}`));
+      item.append(node("p", `${event.language} · ${event.layer_known ? event.layer : "코드 생성 / 미보고"} · ${event.kind}/${event.key}`));
+      item.append(node("pre", event.value || event.text || "—"));
+      item.append(node("small", `${event.detail} · part ${event.part_begin ?? "—"}–${event.part_end ?? "—"} · phone ${event.phone_index ?? "—"} · row ${event.declaration_order ?? "—"}`));
+      section.append(item);
+    });
+    target.append(section);
+  }
 }
 function inspect() {
   const tokens = state.view === "tokens";
@@ -326,6 +343,7 @@ function verification(report) {
     "입력 분할",
     "출력 텍스트",
     "Span 메타데이터",
+    "발음 trace",
     "콜백 경계",
     "콜백 수",
   ].forEach((x) => head.append(node("th", x)));
@@ -336,6 +354,7 @@ function verification(report) {
       v.label,
       v.match ? "일치" : "불일치",
       v.span_match ? "일치" : "불일치",
+      v.trace_match ? "일치" : "불일치",
       v.segments_match ? "일치" : "불일치",
       String(v.segment_count),
     ].forEach((x) => tr.append(node("td", x)));

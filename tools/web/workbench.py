@@ -26,6 +26,7 @@ DEFAULTS = dict(
     render_policy="phonetic",
     sentence_split=True,
     phrase_split=True,
+    detailed_trace=True,
     first_target=48,
     normal_target=112,
     max_length=200,
@@ -105,7 +106,7 @@ def validate(request, corpus=False):
     ]:
         if opts[key] not in allowed:
             raise ValueError(key + ": 지원하지 않는 값입니다.")
-    for key in ("sentence_split", "phrase_split"):
+    for key in ("sentence_split", "phrase_split", "detailed_trace"):
         if type(opts[key]) is not bool:
             raise ValueError(key + ": boolean이 필요합니다.")
     for key in ("first_target", "normal_target", "max_length"):
@@ -224,6 +225,17 @@ def catalog():
             title="WiFi 시스템 사전 제외",
             text="WiFi를 사용합니다.",
             options={"remove_system_words": ["wifi"]},
+        ),
+        dict(
+            id="pronunciation-variant",
+            category="발음",
+            title="복수 발음의 명시적 선택과 상세 출처",
+            text="read는 예시입니다.",
+            options={"customer_tsv": (
+                "pronunciation\ten-US\tread\tR IY D\n"
+                "pronunciation_variant\ten-US\tread#past\tR EH D\n"
+                "pronunciation_choice\ten-US\tread\tpast\n"
+            )},
         ),
         dict(
             id="range-layer",

@@ -1,4 +1,7 @@
 #include "internal.h"
+#include "../pronunciation/trace.h"
+ttf_status_t ttf_trace_foreign_lexicon(const ttf_engine_t *, const char *, const char *,
+                                       const char *, size_t, const char *);
 #include "../protected/protected.h"
 const ttf_entry_t *ttf_rule_match(const ttf_engine_t *, const char *, const char *, size_t,
                                   size_t *);
@@ -13,7 +16,8 @@ static void tag(char dest[TTF_LANGUAGE_TAG_SIZE], const char *source) {
    system exact spelling must not shadow a user's canonical pronunciation. */
 static ttf_status_t pronunciation_candidate(const ttf_engine_t *engine, const char *source,
                                             const char *target, const char *text, size_t length,
-                                            const char **best, ttf_resource_layer_t *layer) {
+                                            const char **best, ttf_resource_layer_t *layer,
+                                            const char **selected_text, size_t *selected_length) {
     const char *candidate = NULL;
     ttf_resource_layer_t candidate_layer = TTF_LAYER_COMMON;
     ttf_status_t status =
@@ -21,6 +25,8 @@ static ttf_status_t pronunciation_candidate(const ttf_engine_t *engine, const ch
     if (status == TTF_OK && candidate && (!*best || candidate_layer > *layer)) {
         *best = candidate;
         *layer = candidate_layer;
+        *selected_text = text;
+        *selected_length = length;
     }
     return status;
 }
@@ -336,15 +342,21 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
         span.input_end = sem->input_end;
         span.script = tokens[i].script;
         tag(span.verbalizer, renderer->language_tag);
+        ttf_trace_span_begin(e, span.input_begin, span.input_end);
         if (rule)
             st = ttf_buffer_puts(&normalized, rule->value);
         else if (phrase_hit) {
             tag(span.verbalizer, source->language_tag);
-            st = ttf_buffer_puts(&normalized, phrase_hit);
+            ttf_trace_stage(e, TTF_TRACE_LEXICON, 0, strlen(sem->value));
+            st = ttf_trace_foreign_lexicon(e, source->language_tag, context->language_tag,
+                                           sem->value, strlen(sem->value), "multiword-lexicon");
+            if (st == TTF_OK)
+                st = ttf_buffer_puts(&normalized, phrase_hit);
         } else if (source && source != context && foreign_type(sem->type) &&
                    e->config.render_policy == TTF_PHONETIC_LOCALIZE) {
             ttf_buffer_t spoken = {0};
-            const char *original_hit = NULL;
+            const char *original_hit = NULL, *selected_text = NULL;
+            size_t selected_length = 0;
             tag(span.verbalizer, source->language_tag);
             /* An abbreviation may share its final period with sentence
                punctuation. Keep punctuation as its own output span while
@@ -354,25 +366,33 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
                 end < length && text[end] == '.')
                 st = pronunciation_candidate(e, source->language_tag, context->language_tag,
                                              text + tokens[i].begin, end + 1 - tokens[i].begin,
-                                             &original_hit, &span.pronunciation_layer);
+                                             &original_hit, &span.pronunciation_layer,
+                                             &selected_text, &selected_length);
             if (st == TTF_OK)
                 st = pronunciation_candidate(e, source->language_tag, context->language_tag,
                                              text + tokens[i].begin, end - tokens[i].begin,
-                                             &original_hit, &span.pronunciation_layer);
+                                             &original_hit, &span.pronunciation_layer,
+                                             &selected_text, &selected_length);
             if (st == TTF_OK && (!original_hit || span.pronunciation_layer < TTF_LAYER_USER)) {
                 ttf_status_t verbalized = source->verbalize(e, sem, text + tokens[i].begin,
                                                             end - tokens[i].begin, &spoken);
                 if (verbalized == TTF_OK)
                     st = pronunciation_candidate(e, source->language_tag, context->language_tag,
                                                  spoken.data ? spoken.data : "", spoken.length,
-                                                 &original_hit, &span.pronunciation_layer);
+                                                 &original_hit, &span.pronunciation_layer,
+                                                 &selected_text, &selected_length);
                 else if (!original_hit || verbalized == TTF_ENOMEM || verbalized == TTF_ELIMIT)
                     st = verbalized;
             }
             if (st == TTF_OK && original_hit) {
                 snprintf(span.lexicon, sizeof(span.lexicon), "lexicon:%s",
                          ttf_layer_name(span.pronunciation_layer));
-                st = ttf_buffer_puts(&normalized, original_hit);
+                ttf_trace_stage(e, TTF_TRACE_LEXICON, 0, selected_length);
+                st = ttf_trace_foreign_lexicon(
+                    e, source->language_tag, context->language_tag, selected_text, selected_length,
+                    selected_text == spoken.data ? "verbalized-alias" : "surface-alias");
+                if (st == TTF_OK)
+                    st = ttf_buffer_puts(&normalized, original_hit);
             } else if (st == TTF_OK) {
                 st = ttf_foreign_render(e, source, context, spoken.data ? spoken.data : "",
                                         spoken.length, sem->lexical_class, &normalized,
@@ -384,6 +404,8 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
         } else
             st = renderer->verbalize(e, sem, text + tokens[i].begin, end - tokens[i].begin,
                                      &normalized);
+        if (st == TTF_OK)
+            st = ttf_trace_status(e);
         if (st != TTF_OK) {
             ttf_buffer_free(&normalized);
             goto fail;
@@ -391,6 +413,7 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
         span.begin = output.length;
         st = ttf_buffer_append(&output, normalized.data, normalized.length);
         span.end = output.length;
+        ttf_trace_span_finish(e, span.begin, span.end);
         ttf_buffer_free(&normalized);
         if (st != TTF_OK)
             goto fail;

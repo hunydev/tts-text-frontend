@@ -90,6 +90,31 @@ class Segment(C.Structure):
     _fields_ = Result._fields_ + [("input_begin", Z), ("input_end", Z)]
 
 
+class TraceOptions(C.Structure):
+    _fields_ = [("struct_size", C.c_uint32), ("max_events", Z), ("max_bytes", Z)]
+
+
+class TraceEvent(C.Structure):
+    _fields_ = [
+        ("struct_size", C.c_uint32), ("stage", I), ("disposition", I),
+        ("input_begin", Z), ("input_end", Z), ("output_begin", Z), ("output_end", Z),
+        ("part_begin", Z), ("part_end", Z), ("phone_index", Z),
+        ("layer", I), ("layer_known", I), ("declaration_order", Z),
+    ] + [(key, C.c_char_p) for key in
+         ("language", "resource_language", "kind", "key", "value", "text", "detail")]
+
+
+class TracedResult(C.Structure):
+    _fields_ = [("result", Result), ("events", C.POINTER(TraceEvent)), ("event_count", Z)]
+
+
+class TracedSegment(C.Structure):
+    _fields_ = [("segment", Segment), ("events", C.POINTER(TraceEvent)), ("event_count", Z)]
+
+
+TracedCallback = C.CFUNCTYPE(I, C.POINTER(TracedSegment), P)
+
+
 class Token(C.Structure):
     _fields_ = [("begin", Z), ("end", Z), ("script", I)]
 
@@ -141,6 +166,19 @@ class Engine:
                 "ttf_engine_create_ex": (I, [C.POINTER(Config), C.POINTER(P), C.POINTER(ResourceDiagnostic)]),
                 "ttf_resource_load_ex": (I, [P, C.c_char_p, I, C.POINTER(ResourceDiagnostic)]),
                 "ttf_engine_validate_resources": (I, [P, C.POINTER(ResourceValidationReport), C.POINTER(ResourceDiagnostic)]),
+            })
+        self.detailed_trace = bool(options.get("detailed_trace", False))
+        self.has_trace = hasattr(self.lib, "ttf_normalize_traced")
+        if self.detailed_trace and not self.has_trace:
+            raise ValueError("This native library does not support detailed pronunciation trace")
+        if self.has_trace:
+            definitions.update({
+                "ttf_trace_options_init": (None, [C.POINTER(TraceOptions)]),
+                "ttf_normalize_traced": (I, [P, C.c_char_p, Z, C.POINTER(TraceOptions), C.POINTER(TracedResult)]),
+                "ttf_traced_result_free": (None, [C.POINTER(TracedResult)]),
+                "ttf_stream_create_traced": (I, [P, C.POINTER(TraceOptions), TracedCallback, P, C.POINTER(P)]),
+                "ttf_trace_stage_name": (C.c_char_p, [I]),
+                "ttf_trace_disposition_name": (C.c_char_p, [I]),
             })
         for name, (result, args) in definitions.items():
             fn = getattr(self.lib, name)
@@ -280,19 +318,48 @@ class Engine:
             result.append(row)
         return result
 
+    def trace_events(self, events, count):
+        rows = []
+        for index in range(count):
+            event = events[index]
+            row = {key: int(getattr(event, key)) for key in
+                   ("input_begin", "input_end", "output_begin", "output_end")}
+            for key in ("part_begin", "part_end", "phone_index", "declaration_order"):
+                value = int(getattr(event, key))
+                row[key] = None if value == Z(-1).value else value
+            row.update(stage=string(self.lib.ttf_trace_stage_name(event.stage)),
+                       disposition=string(self.lib.ttf_trace_disposition_name(event.disposition)),
+                       layer_known=bool(event.layer_known),
+                       layer=string(self.lib.ttf_layer_name(event.layer)) if event.layer_known else "unknown")
+            for key in ("language", "resource_language", "kind", "key", "value", "text", "detail"):
+                row[key] = string(getattr(event, key) or b"")
+            rows.append(row)
+        return rows
+
     def normalize(self, source):
         result = Result()
-        self.check(
-            self.lib.ttf_normalize(self.handle, source, len(source), C.byref(result))
-        )
+        traced = TracedResult()
+        if self.detailed_trace:
+            self.check(self.lib.ttf_normalize_traced(self.handle, source, len(source),
+                                                    None, C.byref(traced)))
+            result = traced.result
+        else:
+            self.check(self.lib.ttf_normalize(self.handle, source, len(source), C.byref(result)))
         try:
             output = C.string_at(result.text, result.length)
-            return {
+            row = {
                 "text": output.decode(),
                 "spans": self.spans(result.spans, result.span_count, source, output),
             }
+            if self.detailed_trace:
+                row["trace_version"] = 1
+                row["trace"] = self.trace_events(traced.events, traced.event_count)
+            return row
         finally:
-            self.lib.ttf_result_free(C.byref(result))
+            if self.detailed_trace:
+                self.lib.ttf_traced_result_free(C.byref(traced))
+            else:
+                self.lib.ttf_result_free(C.byref(result))
 
     def tokens(self, source):
         tokens = C.POINTER(Token)()
@@ -328,7 +395,8 @@ class Engine:
 
         def collect(pointer, _):
             try:
-                seg = pointer.contents
+                detail = pointer.contents
+                seg = detail.segment if self.detailed_trace else detail
                 output = C.string_at(seg.text, seg.length)
                 row = dict(
                     sequence=len(segments),
@@ -337,6 +405,9 @@ class Engine:
                     text=output.decode(),
                     spans=self.spans(seg.spans, seg.span_count, source, output),
                 )
+                if self.detailed_trace:
+                    row["trace_version"] = 1
+                    row["trace"] = self.trace_events(detail.events, detail.event_count)
                 segments.append(row)
                 emit(
                     dict(
@@ -352,10 +423,11 @@ class Engine:
                 errors.append(exc)
                 return 1
 
-        callback = Callback(collect)  # keep alive until stream destruction
-        self.check(
-            self.lib.ttf_stream_create(self.handle, callback, None, C.byref(stream))
-        )
+        callback = (TracedCallback if self.detailed_trace else Callback)(collect)
+        if self.detailed_trace:
+            self.check(self.lib.ttf_stream_create_traced(self.handle, None, callback, None, C.byref(stream)))
+        else:
+            self.check(self.lib.ttf_stream_create(self.handle, callback, None, C.byref(stream)))
         try:
             at = 0
             for write_index, size in enumerate(sizes):
@@ -389,10 +461,17 @@ class Engine:
 def flatten(segments):
     offset = 0
     spans = []
+    trace = []
     for seg in segments:
         for row in seg["spans"]:
             spans.append(
                 dict(row, begin=row["begin"] + offset, end=row["end"] + offset)
             )
+        for event in seg.get("trace", []):
+            trace.append(dict(event, output_begin=event["output_begin"] + offset,
+                              output_end=event["output_end"] + offset))
         offset += len(seg["text"].encode())
-    return dict(text="".join(s["text"] for s in segments), spans=spans)
+    result = dict(text="".join(s["text"] for s in segments), spans=spans)
+    if any("trace" in seg for seg in segments):
+        result.update(trace_version=1, trace=trace)
+    return result

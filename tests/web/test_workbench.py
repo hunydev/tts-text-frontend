@@ -60,6 +60,7 @@ try:
     with urllib.request.urlopen(base + "/api/catalog") as response:
         catalog = json.load(response)
     assert catalog["abi_version"] == 1 and len(catalog["samples"]) >= 8
+    assert catalog["defaults"]["detailed_trace"] is True
     assert catalog["reference_summary"]["human_approved_cases"] == 0
     assert catalog["reference_summary"]["pending_independent_review"] == catalog["reference_summary"]["cases"]
     assert all(item["reference_review"]["review_status"] == "pending-independent-review"
@@ -122,6 +123,72 @@ try:
     assert result["spans"][0]["lexicon"] != "lexicon:system"
     assert run("")[0]["text"] == ""
     assert run("3개", expected="잘못된 정답")[0]["expected_match"] is False
+    # Detailed evidence is enabled by default. Disabling it preserves the old
+    # text/span transport, without trace fields or pointers leaking into JSON.
+    trace_text = "Apple은 사과입니다. baba는 표기입니다."
+    traced, _ = run(trace_text)
+    legacy, _ = run(trace_text, opts={"detailed_trace": False})
+    assert traced["trace_version"] == 1 and traced["trace"]
+    assert "trace" not in legacy and "trace_version" not in legacy
+    assert traced["text"] == legacy["text"] and traced["spans"] == legacy["spans"]
+    assert any(event["stage"] == "lexicon" and event["key"] == "en-US:apple"
+               and event["layer"] == "system" for event in traced["trace"])
+    trace_options = {"customer_tsv": (
+        "phone_vowel\tko-KR\tAE\t4\n"
+        "phone_onset\tko-KR\tAE\t0\n"
+        "g2p\ten-US\tbxxx\tB IY\n"
+    ), "chunk_bytes": 1, "chunk_sizes": [1, 2, 3]}
+    traced, _ = run("baba는 표기입니다.", opts=trace_options)
+    assert traced["text"] == "버버는 표기입니다."
+    source_rows = [event for event in traced["trace"] if event["kind"] == "g2p"]
+    assert len(source_rows) == 4 and all(event["layer"] == "system" and
+                                       event["stage"] == "source-pronunciation" and
+                                       event["key"] in ("b", "a") for event in source_rows), traced
+    target_rows = [event for event in traced["trace"] if event["kind"] == "phone_vowel"]
+    assert len(target_rows) == 2 and all(event["layer"] == "customer" and
+                                       event["stage"] == "target-phonetic" and
+                                       event["key"] == "AE" for event in target_rows), traced
+    assert not any(event["kind"] == "phone_onset" and event["key"] == "AE"
+                   for event in traced["trace"]), traced
+    streamed, stream_events = run("baba는 표기입니다.", "stream", trace_options)
+    assert streamed["text"] == traced["text"] and streamed["spans"] == traced["spans"]
+    assert streamed["trace"] == traced["trace"]
+    assert all(event["trace_version"] == 1 and isinstance(event["trace"], list)
+               for event in stream_events if event["event"] == "segment")
+    verified, _ = run("baba는 표기입니다.", "verify", trace_options)
+    assert verified["verification"]["passed"] and all(
+        item["trace_match"] for item in verified["verification"]["variants"]), verified
+    legacy, legacy_events = run(trace_text, "stream", {"detailed_trace": False, "chunk_bytes": 1})
+    assert "trace" not in legacy and "trace_version" not in legacy
+    assert all("trace" not in event and "trace_version" not in event
+               for event in legacy_events if event["event"] == "segment")
+    variant_rows = ("pronunciation\ten-US\tabacus\tAH S\n"
+                    "pronunciation_variant\ten-US\tabacus#alternate\tB IY\n"
+                    "pronunciation_choice\ten-US\tabacus\talternate\n")
+    variant, _ = run("abacus는 표기입니다.", opts={"customer_tsv": variant_rows})
+    assert variant["text"] == "비는 표기입니다."
+    selected = [event for event in variant["trace"] if event["kind"] == "pronunciation_variant"]
+    assert len(selected) == 1 and selected[0]["key"] == "abacus#alternate" and \
+        selected[0]["layer"] == "customer" and selected[0]["value"] == "B IY", variant
+    assert any(event["kind"] == "pronunciation_choice" and event["value"] == "alternate"
+               for event in variant["trace"]), variant
+    for invalid_choice in ("", "missing"):
+        with post("/api/run", dict(mode="normalize", text="abacus는 표기입니다.", options={
+            "customer_tsv": "pronunciation\ten-US\tabacus\tAH S\n"
+                            f"pronunciation_choice\ten-US\tabacus\t{invalid_choice}\n"
+        })) as response:
+            invalid = [json.loads(line) for line in response]
+        assert invalid[-1]["event"] == "error" and "invalid resource" in invalid[-1]["message"], invalid
+        assert not any(event["event"] in ("result", "segment", "end") for event in invalid), invalid
+        checks += 1
+    fallback, _ = run("baba는 표기입니다.", opts={
+        "customer_tsv": "pronunciation\ten-US\tbaba\tAH UNMAPPED\n"
+    })
+    assert fallback["text"] == "브아브아는 표기입니다."
+    assert any(event["detail"] == "target-phonetic-failed" and event["disposition"] == "rejected"
+               for event in fallback["trace"]), fallback
+    assert any(event["stage"] == "target-grapheme" and event["disposition"] == "selected"
+               for event in fallback["trace"]), fallback
     # A supplied sequence describes real native writes, including split UTF-8.
     text = "Apple은 사과입니다.\nBank of America는 은행입니다."
     custom = {"chunk_sizes": [1, 5, 2], "chunk_bytes": 65536}
@@ -215,6 +282,8 @@ try:
         dict(mode="normalize", text="x" * 16385),
         dict(mode="normalize", text="x", options={"default_language": "../x"}),
         dict(mode="normalize", text="x", options={"user_lexicon": "x"}),
+        dict(mode="normalize", text="x", options={"detailed_trace": "false"}),
+        dict(mode="normalize", text="x", options={"detailed_trace": 1}),
         dict(mode="stream", text="x", options={"chunk_sizes": [0]}),
         dict(mode="stream", text="x", options={"chunk_sizes": [True]}),
         dict(mode="stream", text="x", options={"chunk_sizes": [1] * 257}),

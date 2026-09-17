@@ -425,3 +425,23 @@ flowchart LR
 
 Schemas validate usability and constraints, not linguistic correctness. The full
 contracts, extension hooks and edit workflow are in [resource validation](resource-validation.md).
+
+### v0.17 request-local pronunciation evidence
+
+The additive `ttf_trace.h` API captures decisions during the actual normalization
+pass. A traced stream owns a shallow read-only engine view that borrows the frozen
+resources and carries its own event collector. No shared engine mutation, global
+trace state or second normalization is needed. Ordinary streams keep their existing
+allocation path. Batch collection copies events and rebases segment output offsets.
+
+Built-in source and target packs record rows only when consumed. Resource events
+copy the selected namespace/key/value/layer/declaration; generated decisions report
+unknown provenance. Rejected phone attempts are retained separately from the final
+fallback. Per-request event/payload limits include committed and rejected events;
+an exceeded limit fails the current segment instead of silently truncating evidence.
+
+Explicit source pronunciation variants are separate from target lexicons. A
+`pronunciation_choice` resource may choose a named `pronunciation_variant` while
+higher-layer base overrides and target lexicon precedence remain deterministic.
+Without a choice, existing defaults remain. This is not a POS/heteronym predictor.
+See [detailed trace and selection contracts](detailed-pronunciation-trace.md).
