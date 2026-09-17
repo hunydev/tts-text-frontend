@@ -319,3 +319,30 @@ currency identities to reference wording. No audio evaluation is introduced.
 Public ABI v1 signatures, struct layouts and ownership remain unchanged. This
 extends supported semantics in existing fields. See [currency contracts](scaled-currency.md),
 [resource policy and sources](currency-resources.md) and [IR field meanings](semantic-ir.md).
+
+## ADR: calendar precision and deterministic continuation (v0.13)
+
+English named-date grammar lives in `languages/en-US/date.c`. Month aliases,
+contextual year cues, following quantity guards, and year reading styles are
+resource data. Classification emits Gregorian values and precision (full date,
+month/day, year/month or year) before either language pack renders the output.
+Named input order is retained separately from its numeric value. Missing fields
+are never filled with today's year. Numeric-only contextual years retain neutral
+source language; a month name establishes English source language.
+
+For equal source extents, an explicitly classified pack DATE outranks a generic
+CARDINAL/NUMBER. Longer semantic objects and exact/pattern resource overrides
+retain their existing precedence. This rule is language independent and does not
+grant dates priority over currency, identifiers or protected literals.
+
+The segmenter uses pack-declared `boundary_word` and `boundary_period` hints.
+It retains possible continuations after month aliases, year cues, ordinal suffixes
+and numeric commas, using only the prefix before a candidate cut. It does not
+decide a cut from future bytes that might arrive in a later input write. These
+hints can lengthen a segment; configured length targets remain soft at semantic
+boundaries. The hard pending-byte limit still bounds request memory.
+
+Existing ISO date readings remain stable, while named dates and explicit year
+cues use a documented calendar-year policy. An external reference's lowercase
+month or different date order does not override the product policy. Diagnostic
+casefold and alignment counts are reported separately from exact-match accuracy.

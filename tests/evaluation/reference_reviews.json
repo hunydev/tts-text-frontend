@@ -491,6 +491,31 @@
         }
       },
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/english_dates_v13.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "developer-authored synthetic fixture; docs/english-dates.md",
+        "reason": "Independent date reading contracts with Gregorian value checks; engine agreement is not independent human linguistic approval."
+      },
+      "category_overrides": {
+        "guard/date-preservation": {
+          "classification": "preservation-contract",
+          "review_status": "pending-independent-review",
+          "reference_source": "developer-authored synthetic fixture; docs/english-dates.md",
+          "reason": "Whole malformed dates and literal content are preserved rather than partially verbalized."
+        },
+        "guard/protected-literal": {
+          "classification": "preservation-contract",
+          "review_status": "pending-independent-review",
+          "reference_source": "developer-authored synthetic fixture; docs/english-dates.md",
+          "reason": "Whole malformed dates and literal content are preserved rather than partially verbalized."
+        }
+      },
+      "case_overrides": {}
     }
   ],
   "excluded": [

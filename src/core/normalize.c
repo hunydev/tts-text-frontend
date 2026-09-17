@@ -207,8 +207,13 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
                          sem->type == TTF_SEM_PHONE || sem->type == TTF_SEM_RANGE ||
                          sem->type == TTF_SEM_DATE ||
                          sem->type == TTF_SEM_TEXT);
+                    /* A pack may establish a calendar meaning using explicit
+                       context. A bare generic cardinal has no such evidence. */
+                    int contextual_date = n && n == consumed &&
+                        candidate.input_end == sem->input_end && candidate.type == TTF_SEM_DATE &&
+                        (sem->type == TTF_SEM_CARDINAL || sem->type == TTF_SEM_NUMBER);
                     if (n > consumed || (n && n == consumed && sem->type == TTF_SEM_WORD) ||
-                        labeled_identifier) {
+                        labeled_identifier || contextual_date) {
                         *sem = candidate;
                         consumed = n;
                     }

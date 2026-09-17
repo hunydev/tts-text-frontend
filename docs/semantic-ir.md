@@ -90,6 +90,21 @@ The source extent includes original internal whitespace; the output extent cover
 its exact pronunciation value. This does not change the public struct layout.
 Consumers must not assume a fixed word-to-span count as lexicon resources expand.
 
+## Named and partial dates (v0.13)
+
+`DATE.value` may hold a full `YYYY-MM-DD`, partial `YYYY-MM` (`unit=year-month`),
+`--MM-DD` (`unit=month-day`), or a contextual `YYYY` (`unit=year`). The partial
+forms are this API's documented canonical strings; no missing field is inferred.
+`secondary=mdy|dmy` records named-date input order. Existing numeric dates retain
+empty unit/secondary. Consumers must examine `unit` before assuming three fields.
+See [the complete date contract](english-dates.md).
+
+Named months establish an English source language. A contextual year whose
+source span contains only digits has source `und`; context and render language
+remain independent. Calendar values render through the selected language pack,
+so Korean date speech uses Korean year/month/day readings directly. The C ABI
+layout is unchanged; this extends the accepted semantic values.
+
 ## Currency scale metadata (v0.12)
 
 For an individual `CURRENCY` span, `value` always contains the exact amount in

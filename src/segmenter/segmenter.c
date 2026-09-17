@@ -3,6 +3,40 @@
 static int horizontal_space(char c) {
     return c == ' ' || c == '\t';
 }
+/* Packs declare lexical prefixes which require a following field. Decisions
+   use only the available prefix, so an arriving chunk cannot undo a cut. */
+static int boundary_resource(const ttf_engine_t *e, const char *kind, const char *key) {
+    size_t pack;
+    const char *value = ttf_resource_get(e, kind, "*", key, NULL);
+    if (value && !strcmp(value, "1"))
+        return 1;
+    for (pack = 0; pack < e->pack_count; ++pack) {
+        value = ttf_resource_get(e, kind, e->packs[pack]->language_tag, key, NULL);
+        if (value && !strcmp(value, "1"))
+            return 1;
+    }
+    return 0;
+}
+static int pending_word(const ttf_engine_t *e, const char *s, const ttf_token_t *tokens,
+                         size_t index, size_t end) {
+    char key[96];
+    size_t begin, j;
+    if (end && (s[end - 1] == ',' || s[end - 1] == '.'))
+        --end;
+    while (index && tokens[index - 1].begin >= end)
+        --index;
+    if (!index)
+        return 0;
+    begin = tokens[index - 1].begin;
+    if (end <= begin || end - begin >= sizeof(key))
+        return 0;
+    for (j = 0; j < end - begin; ++j) {
+        char c = s[begin + j];
+        key[j] = c >= 'A' && c <= 'Z' ? (char)(c + ('a' - 'A')) : c;
+    }
+    key[j] = 0;
+    return boundary_resource(e, "boundary_word", key);
+}
 /* Cue decisions depend only on the prefix before a candidate cut. A complete
    input lets us compute protection ranges in advance, but a key mismatch must
    still protect earlier matching prefixes: the same cut must be chosen when
@@ -150,6 +184,8 @@ static int protected_period(const ttf_engine_t *e, const char *s, size_t at) {
     for (begin = 0; begin < n; begin++)
         if (key[begin] >= 'A' && key[begin] <= 'Z')
             key[begin] += 'a' - 'A';
+    if (boundary_resource(e, "boundary_period", key))
+        return 1;
     if (ttf_resource_get(e, "abbreviation", "*", key, NULL))
         return 1;
     for (begin = 0; begin < e->pack_count; begin++)
@@ -308,6 +344,12 @@ ttf_status_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, i
                 while (previous && (s[previous - 1] == ' ' || s[previous - 1] == '\t' ||
                                     s[previous - 1] == '\r'))
                     previous--;
+                if (pending_word(e, s, tokens, i, previous) ||
+                    (previous >= 2 && s[previous - 1] == ',' &&
+                     s[previous - 2] >= '0' && s[previous - 2] <= '9')) {
+                    at += w;
+                    continue;
+                }
                 /* A number, sign, currency prefix or fraction separator may
                    bind to the following token even across spaces. Retain it
                    without inspecting unavailable future input. */

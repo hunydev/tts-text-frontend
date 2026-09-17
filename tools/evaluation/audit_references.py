@@ -16,7 +16,7 @@ import sys
 ACTIVE_JSONL = (
     "cases", "domain_cases_v8", "advanced_cases", "challenge_cases",
     "protected_cases", "content_v7", "finance_ranges_v7", "multiword_v8", "lexicon_v10",
-    "scaled_currency_v12",
+    "scaled_currency_v12", "english_dates_v13",
 )
 CLASSIFICATIONS = {
     "reference-policy", "provisional-pronunciation", "preservation-contract", "needs-review",

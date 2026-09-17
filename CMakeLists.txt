@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(tts_text_frontend VERSION 0.12.0 LANGUAGES C)
+project(tts_text_frontend VERSION 0.13.0 LANGUAGES C)
 include(GNUInstallDirs)
 include(CTest)
 option(TTF_ENABLE_ASAN "Enable AddressSanitizer" OFF)
@@ -110,6 +110,12 @@ if(BUILD_TESTING)
   endif()
   find_package(Python3 COMPONENTS Interpreter QUIET)
   if(Python3_Interpreter_FOUND)
+    add_test(NAME english_date_values COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_english_dates.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
+    add_test(NAME english_dates_v13_evaluation COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources english_dates_v13.jsonl 20)
     add_test(NAME scaled_currency_values COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_scaled_currency.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
@@ -117,6 +123,8 @@ if(BUILD_TESTING)
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources scaled_currency_v12.jsonl 16)
     # Offline, original fixtures only: external corpora are explicit local inputs.
+    add_test(NAME external_benchmark_diagnostics COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/benchmark/test_diagnose.py)
     add_test(NAME external_sproat_importer COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/benchmark/importers/sproat/test_import_sproat.py)
     add_test(NAME external_korean_importers COMMAND ${Python3_EXECUTABLE}
@@ -218,6 +226,10 @@ if(BUILD_TESTING)
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_multiword_guards.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
     if(UNIX AND NOT TTF_ENABLE_ASAN AND NOT TTF_ENABLE_UBSAN)
+      add_test(NAME english_date_byte_splits COMMAND ${Python3_EXECUTABLE}
+        ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_english_dates.py
+        $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources
+        --library $<TARGET_FILE:tts_text_frontend_shared>)
       add_test(NAME scaled_currency_byte_splits COMMAND ${Python3_EXECUTABLE}
         ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_scaled_currency.py
         $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources

@@ -257,13 +257,36 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         return cardinal(e, numerator, out);
     }
     case TTF_SEM_DATE: {
-        unsigned year, month, day;
+        unsigned year = 0, month = 0, day = 0;
+        int consumed = 0, has_year = 1, has_month = 1, has_day = 1;
         char value[16];
-        if (sscanf(s->value, "%u-%u-%u", &year, &month, &day) != 3)
+        if (!strcmp(s->unit, "year")) {
+            has_month = has_day = 0;
+            if (sscanf(s->value, "%u%n", &year, &consumed) != 1)
+                return TTF_EINVAL;
+        } else if (!strcmp(s->unit, "year-month")) {
+            has_day = 0;
+            if (sscanf(s->value, "%u-%u%n", &year, &month, &consumed) != 2)
+                return TTF_EINVAL;
+        } else if (!strcmp(s->unit, "month-day")) {
+            has_year = 0;
+            if (sscanf(s->value, "--%u-%u%n", &month, &day, &consumed) != 2)
+                return TTF_EINVAL;
+        } else if (!s->unit[0]) {
+            if (sscanf(s->value, "%u-%u-%u%n", &year, &month, &day, &consumed) != 3)
+                return TTF_EINVAL;
+        } else
             return TTF_EINVAL;
-        (void)snprintf(value, sizeof(value), "%u", year);
-        TRY(quantity(e, value, resource(e, "unit", "year", "년"), 0, out));
-        TRY(ttf_buffer_puts(out, " "));
+        if (s->value[consumed] || (has_year && (!year || year > 9999)) ||
+            (has_month && (!month || month > 12)) || (has_day && (!day || day > 31)))
+            return TTF_EINVAL;
+        if (has_year) {
+            (void)snprintf(value, sizeof(value), "%u", year);
+            TRY(quantity(e, value, resource(e, "unit", "year", "년"), 0, out));
+            if (!has_month)
+                return TTF_OK;
+            TRY(ttf_buffer_puts(out, " "));
+        }
         if (month == 6 || month == 10) {
             TRY(ttf_buffer_puts(
                 out, resource(e, "month", month == 6 ? "6" : "10", month == 6 ? "유" : "시")));
@@ -272,6 +295,8 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             (void)snprintf(value, sizeof(value), "%u", month);
             TRY(quantity(e, value, resource(e, "unit", "month", "월"), 0, out));
         }
+        if (!has_day)
+            return TTF_OK;
         TRY(ttf_buffer_puts(out, " "));
         (void)snprintf(value, sizeof(value), "%u", day);
         return quantity(e, value, resource(e, "unit", "day", "일"), 0, out);

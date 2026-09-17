@@ -64,6 +64,8 @@ jobs:
           python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources --corpus tests/evaluation/lexicon_v10.jsonl --output-dir artifacts/evaluation/lexicon-v10
       - name: Verify exact scaled currency and context contracts
         run: python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources --corpus tests/evaluation/scaled_currency_v12.jsonl --output-dir artifacts/evaluation/scaled-currency-v12
+      - name: Verify named dates, partial dates and contextual years
+        run: python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources --corpus tests/evaluation/english_dates_v13.jsonl --output-dir artifacts/evaluation/english-dates-v13
       - name: Upload evaluation artifact
         uses: actions/upload-artifact@v7.0.1
         with:

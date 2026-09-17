@@ -1,4 +1,5 @@
 #include "tts_text_frontend/ttf_language_pack.h"
+#include "date.h"
 #include "../context_run.h"
 #include <ctype.h>
 #include <stdint.h>
@@ -266,6 +267,88 @@ static ttf_status_t ordinal(const ttf_engine_t *e, uint64_t n, ttf_buffer_t *b) 
         return st;
     return word(e, b, "ordinal", "suffix");
 }
+/* Calendar readings are a language policy. The stored year remains the exact
+   numeric value, and ISO input retains the existing cardinal default. */
+static ttf_status_t date_year(const ttf_engine_t *e, unsigned year, const char *policy,
+                              ttf_buffer_t *b) {
+    const char *style = res(e, "date_policy", policy);
+    ttf_status_t st;
+    unsigned century, remainder;
+    if (!style)
+        style = !strcmp(policy, "numeric_year_style") ? "cardinal" : "calendar";
+    if (!strcmp(style, "cardinal"))
+        return card(e, year, b);
+    if (strcmp(style, "calendar"))
+        return TTF_ERESOURCE;
+    if (year < 1000 || (year >= 2000 && year <= 2009) || year % 1000 == 0)
+        return card(e, year, b);
+    century = year / 100;
+    remainder = year % 100;
+    if ((st = card(e, century, b)) != TTF_OK || (st = space(b)) != TTF_OK)
+        return st;
+    if (!remainder)
+        return word(e, b, "number", "100");
+    if (remainder < 10) {
+        if ((st = word(e, b, "number", "oh")) != TTF_OK || (st = space(b)) != TTF_OK)
+            return st;
+    }
+    return card(e, remainder, b);
+}
+static ttf_status_t date(const ttf_engine_t *e, const ttf_semantic_t *s, ttf_buffer_t *b) {
+    unsigned year = 0, month = 0, day = 0;
+    int consumed = 0, fields, has_year = 1, has_month = 1, has_day = 1;
+    int day_first = !strcmp(s->secondary, "dmy");
+    char key[16];
+    const char *policy = s->secondary[0] ? "named_year_style" : "numeric_year_style";
+    ttf_status_t st;
+    if (s->secondary[0] && strcmp(s->secondary, "mdy") && !day_first)
+        return TTF_EINVAL;
+    if (!strcmp(s->unit, "year")) {
+        fields = sscanf(s->value, "%u%n", &year, &consumed);
+        has_month = has_day = 0;
+        if (fields != 1)
+            return TTF_EINVAL;
+        policy = "year_style";
+    } else if (!strcmp(s->unit, "year-month")) {
+        fields = sscanf(s->value, "%u-%u%n", &year, &month, &consumed);
+        has_day = 0;
+        if (fields != 2)
+            return TTF_EINVAL;
+    } else if (!strcmp(s->unit, "month-day")) {
+        fields = sscanf(s->value, "--%u-%u%n", &month, &day, &consumed);
+        has_year = 0;
+        if (fields != 2)
+            return TTF_EINVAL;
+    } else if (!s->unit[0]) {
+        if (sscanf(s->value, "%u-%u-%u%n", &year, &month, &day, &consumed) != 3)
+            return TTF_EINVAL;
+    } else
+        return TTF_EINVAL;
+    if (s->value[consumed] || (has_year && (!year || year > 9999)) ||
+        (has_month && (!month || month > 12)) || (has_day && (!day || day > 31)))
+        return TTF_EINVAL;
+    if (!has_month)
+        return date_year(e, year, policy, b);
+    if (day_first && has_day) {
+        if ((st = word(e, b, "date_word", "the")) != TTF_OK || (st = space(b)) != TTF_OK ||
+            (st = ordinal(e, day, b)) != TTF_OK || (st = space(b)) != TTF_OK ||
+            (st = word(e, b, "date_word", "of")) != TTF_OK || (st = space(b)) != TTF_OK)
+            return st;
+    }
+    (void)snprintf(key, sizeof(key), "%u", month);
+    if ((st = word(e, b, "month", key)) != TTF_OK)
+        return st;
+    if (has_day && !day_first) {
+        if ((st = space(b)) != TTF_OK || (st = ordinal(e, day, b)) != TTF_OK)
+            return st;
+    }
+    if (has_year) {
+        if ((st = space(b)) != TTF_OK)
+            return st;
+        return date_year(e, year, policy, b);
+    }
+    return TTF_OK;
+}
 static int script_score(ttf_script_t s) {
     return s == TTF_SCRIPT_LATIN ? 10 : 0;
 }
@@ -391,7 +474,10 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     const ttf_token_t *t = &in->tokens[in->index];
     char key[96];
     size_t n = t->end - t->begin, j, consumed = 1, end = t->end;
+    size_t date_tokens = ttf_en_classify_date(in, out);
     const char *kind;
+    if (date_tokens)
+        return date_tokens;
     if (t->script != TTF_SCRIPT_LATIN || n >= sizeof(key))
         return 0;
     /* Treat an adjacent hyphenated word as one lexical unit so the existing
@@ -459,7 +545,7 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     ttf_status_t st;
     char key[48];
     const char *label;
-    unsigned y, m, d, h, min, sec;
+    unsigned h, min, sec;
     switch (s->type) {
     case TTF_SEM_CARDINAL:
     case TTF_SEM_NUMBER:
@@ -474,18 +560,7 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     case TTF_SEM_PHONE:
         return digits(e, s->value, b);
     case TTF_SEM_DATE:
-        if (sscanf(s->value, "%u-%u-%u", &y, &m, &d) != 3)
-            return TTF_EINVAL;
-        (void)snprintf(key, sizeof(key), "%u", m);
-        if ((st = word(e, b, "month", key)) != TTF_OK)
-            return st;
-        if ((st = space(b)) != TTF_OK)
-            return st;
-        if ((st = ordinal(e, d, b)) != TTF_OK)
-            return st;
-        if ((st = space(b)) != TTF_OK)
-            return st;
-        return card(e, y, b);
+        return date(e, s, b);
     case TTF_SEM_TIME: {
         int fields = sscanf(s->value, "%u:%u:%u", &h, &min, &sec);
         if (fields < 2)

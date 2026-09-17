@@ -172,6 +172,13 @@ const path = require("node:path");
       "16건 통과, 0건 실패",
     ),
   );
+  await page.selectOption("#corpus", "english-dates-v13");
+  await run();
+  assert(
+    (await page.locator("#corpus-progress").textContent()).includes(
+      "20건 통과, 0건 실패",
+    ),
+  );
   await page.click('[data-mode="normalize"]');
   await page.selectOption("#sample", "mixed");
   await run();

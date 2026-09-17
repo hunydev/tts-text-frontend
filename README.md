@@ -25,6 +25,28 @@ WiFi를 사용합니다.           → 와이파이를 사용합니다.
 `Apple → 애플` is pronunciation rendering. Source, context and render languages
 remain distinct in the semantic IR and output metadata.
 
+## Named dates and contextual years (v0.13)
+
+The English pack now recognizes month-first and day-first named dates, partial
+month/day and year/month values, and resource-cued years. Calendar validation
+rejects impossible dates; missing fields remain absent in Semantic IR.
+
+```text
+September 17, 2026 → September seventeenth twenty twenty six
+17 September 2026 → the seventeenth of September twenty twenty six
+September 2026 → September twenty twenty six
+in 1905 → in nineteen oh five
+in 2026 copies → in two thousand twenty six copies
+마감은 September 17, 2026입니다.
+→ 마감은 이천이십육 년 구 월 십칠 일입니다.
+```
+
+Bare numbers remain cardinals. Existing ISO date readings keep their previous
+policy. The web workbench's **영어 날짜·연도·코드믹스** corpus contains 20 original
+text/metadata contracts. See [date resources and limits](docs/english-dates.md)
+and the [measured iteration](docs/research/english-dates-v13-results.md).
+References still require independent human review.
+
 ## Exact scaled currency amounts (v0.12)
 
 Currency scales, explicit currency identities and English minor-unit policies

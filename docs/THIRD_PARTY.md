@@ -1,6 +1,7 @@
 # 외부 자료와 이용 조건 기록
 
-확인일: **2026-09-16**. 이 문서는 외부 코드, 데이터, 논문, 표기 규정을 구분하여
+최초 확인일: **2026-09-16**; 통화·영어 날짜 참고자료 추가 확인일: **2026-09-17**.
+이 문서는 외부 코드, 데이터, 논문, 표기 규정을 구분하여
 확인한 이용 조건과 현재 저장소의 사용 범위를 기록한다. 라이선스 허가서나 개별
 배포에 대한 법률 판단은 아니다. 논문의 라이선스, 저장소 코드의 라이선스,
 연결된 데이터의 이용 조건을 서로 대신 적용하지 않는다.
@@ -172,7 +173,21 @@ TTS 정답으로 자동 승격하지 않는다.
 명칭의 사실 확인으로 다른 금융 데이터셋·benchmark의 상업 이용, 변경 또는 재배포
 라이선스를 일괄 승인하지 않는다.
 
-### 출처 변경 시 확인
+### Cambridge 영어 날짜 읽기 참고 (v0.13)
+
+2026-09-17에 Cambridge Dictionary의
+[English Grammar Today: Dates](https://dictionary.cambridge.org/grammar/british-grammar/dates)와
+[How to say years](https://dictionaryblog.cambridge.org/2017/10/04/1066-and-all-that-how-to-say-years/)
+(게시일 2017-10-04)를 직접 열람했다. 전자는 확인 시점의 웹페이지이며 고정 revision은
+없다. 서수 일자, 영미 날짜 순서, 허용되는 연도 읽기 차이의 사실 확인용으로만 사용했다.
+
+두 문서의 저작권을 별도 오픈 라이선스로 취급하지 않는다. 원문·표·코드의 상업적
+복사·재배포 허가는 이번 조사에서 확인하지 않았으며 저장소에 vendoring하지 않는다.
+제품의 alias·읽기 정책과 테스트 문장은 독립 작성했다. 출처 URL·조회일은 위와
+[날짜 가이드](english-dates.md)에 기록했으며, 이것이 원문 재사용 허가나 모든
+attribution 요건을 대신하지 않는다.
+
+### 출처 변경 절차
 
 근거·형식·기술적 한계는 [NeMo/Sproat](research/nemo-sproat.md),
 [한국어 코퍼스](research/korean-sources.md), [CMU/국립국어원](research/pronunciation-sources.md)에 있다.

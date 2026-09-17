@@ -150,6 +150,19 @@ backend가 같은지 확인한다. 변경한 engine/resource 해시는 양쪽 �
 class별 fixed/regressed/unchanged를 계산하므로 전체 비율 상승이 퇴행을 가리지 않는다.
 실패를 보고 수정한 개발 표본과 이후 새로 확보한 held-out test는 별도로 보고한다.
 
+완료된 보고서의 실패 원인은 다음 명령으로 집계한다.
+
+```sh
+python3 benchmark/evaluators/diagnose.py benchmark/generated/after \
+  > benchmark/generated/after-diagnostics.json
+```
+
+`exact`, `casefold-only-difference`, `unaligned`, `engine-error`,
+`other-text-difference`, `unlabeled`를 class/reference status별로 구분한다.
+대소문자만 다른 항목도 원래 exact 지표에서는 계속 실패다. Semantic class 일치는
+값이 옳다는 증명이 아니며, 이 도구는 그 카테고리 분포도 따로 표시한다.
+출력에는 원문·reference 문장이 들어가지 않는다.
+
 ## 공통 TN JSONL schema v1
 
 `schema_version`, `id`, `dataset`, `split`, `language`, `text`, `expected`,
