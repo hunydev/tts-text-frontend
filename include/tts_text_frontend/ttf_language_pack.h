@@ -17,6 +17,12 @@ TTF_API void ttf_buffer_free(ttf_buffer_t *b);
 typedef struct {
     char phones[1024];
     char alphabet[24];
+    /* Optional ABI v1 source-resource metadata: ttf-pron-v1:LAYER:PATH.
+       LAYER is common/system/domain/customer/user; PATH is a nonempty ASCII
+       identifier [a-z0-9][a-z0-9._-]*. Reserved prefix ttf-pron- must use this
+       exact envelope. Invalid/unterminated metadata returns TTF_ERESOURCE.
+       Legacy unprefixed paths remain valid with unknown layer (common).
+       See docs/pronunciation-trace.md. This does not report target mapper data. */
     char provenance[64];
 } ttf_pronunciation_t;
 typedef struct {

@@ -1,4 +1,52 @@
 #include "../core/internal.h"
+
+/* ABI v1 keeps provenance in the existing fixed-size field. The reserved
+   envelope reports SOURCE phone resources, never the target phone mapper. */
+static ttf_status_t pronunciation_provenance(const ttf_pronunciation_t *pron,
+                                             char trace[64],
+                                             ttf_resource_layer_t *layer) {
+    static const char reserved[] = "ttf-pron-";
+    static const char version[] = "ttf-pron-v1:";
+    const char *path = pron->provenance;
+    const char *separator;
+    size_t i, length;
+    int found = 0;
+    *layer = TTF_LAYER_COMMON;
+    if (!memchr(pron->provenance, 0, sizeof(pron->provenance)) ||
+        !memchr(pron->phones, 0, sizeof(pron->phones)) ||
+        !memchr(pron->alphabet, 0, sizeof(pron->alphabet)))
+        return TTF_ERESOURCE;
+    if (!strncmp(path, reserved, sizeof(reserved) - 1)) {
+        if (strncmp(path, version, sizeof(version) - 1))
+            return TTF_ERESOURCE;
+        path += sizeof(version) - 1;
+        separator = strchr(path, ':');
+        if (!separator)
+            return TTF_ERESOURCE;
+        length = (size_t)(separator - path);
+        for (i = TTF_LAYER_COMMON; i <= TTF_LAYER_USER; ++i) {
+            const char *name = ttf_layer_name((ttf_resource_layer_t)i);
+            if (strlen(name) == length && !memcmp(name, path, length)) {
+                *layer = (ttf_resource_layer_t)i;
+                found = 1;
+                break;
+            }
+        }
+        if (!found)
+            return TTF_ERESOURCE;
+        path = separator + 1;
+        if (!*path)
+            return TTF_ERESOURCE;
+        /* Paths are stable identifiers, not another metadata serialization. */
+        for (i = 0; path[i]; ++i)
+            if (!((path[i] >= 'a' && path[i] <= 'z') ||
+                  (path[i] >= '0' && path[i] <= '9') ||
+                  (i && (path[i] == '-' || path[i] == '_' || path[i] == '.'))))
+                return TTF_ERESOURCE;
+    }
+    (void)snprintf(trace, 64, "%s", path);
+    return TTF_OK;
+}
 ttf_status_t ttf_foreign_lookup(const ttf_engine_t *e, const char *source,
                                const char *target, const char *text, size_t n,
                                const char **hit, ttf_resource_layer_t *layer) {
@@ -42,6 +90,7 @@ ttf_status_t ttf_foreign_render(const ttf_engine_t *e, const ttf_language_pack_t
         snprintf(trace, 64, "lexicon:%s", ttf_layer_name(*layer));
         return ttf_buffer_puts(out, hit);
     }
+    *layer = TTF_LAYER_COMMON;
     st = TTF_EINVAL;
     if (!target->render_phones && !target->render_graphemes) {
         snprintf(trace, 64, "preserved:no-renderer");
@@ -73,7 +122,7 @@ ttf_status_t ttf_foreign_render(const ttf_engine_t *e, const ttf_language_pack_t
                     paths |= 1;
                 else if (strstr(part_trace, "dictionary"))
                     paths |= 2;
-                else if (strstr(part_trace, "grapheme"))
+                else if (strstr(part_trace, "grapheme-fallback"))
                     paths |= 8;
                 else
                     paths |= 4;
@@ -89,11 +138,18 @@ ttf_status_t ttf_foreign_render(const ttf_engine_t *e, const ttf_language_pack_t
     }
     memset(&pron, 0, sizeof(pron));
     if (source->pronounce && target->render_phones) {
+        char source_trace[64];
+        ttf_resource_layer_t source_layer = TTF_LAYER_COMMON;
         st = source->pronounce(e, text, n, lexical, &pron);
-        if (st == TTF_OK)
+        if (st == TTF_OK) {
+            st = pronunciation_provenance(&pron, source_trace, &source_layer);
+            if (st != TTF_OK)
+                return st;
             st = target->render_phones(e, &pron, out);
+        }
         if (st == TTF_OK && out->length > before) {
-            snprintf(trace, 64, "%.63s", pron.provenance);
+            snprintf(trace, 64, "%s", source_trace);
+            *layer = source_layer;
             return TTF_OK;
         }
         out->length = before;

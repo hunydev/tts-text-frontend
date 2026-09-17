@@ -186,6 +186,31 @@ const path = require("node:path");
       "24건 통과, 0건 실패",
     ),
   );
+  await page.selectOption("#corpus", "korean-counters-v15");
+  assert((await page.locator("#corpus-review").textContent()).includes("독립 검토 완료 0건"));
+  await run();
+  assert(
+    (await page.locator("#corpus-progress").textContent()).includes(
+      "28건 통과, 0건 실패",
+    ),
+  );
+  await page.click('[data-mode="normalize"]');
+  for (const [sample, expected, semantic] of [
+    ["unicode-grouping-currency", "천이백오십 원", "CURRENCY"],
+    ["unicode-grouping-percent", "마이너스 천이백오십 점 오영 퍼센트", "PERCENT"],
+    ["unicode-grouping-malformed", "1\u200925원", "TEXT"],
+    ["unicode-grouping-range", "천이백오십 원에서 이천오백 원", "RANGE"],
+  ]) {
+    await page.selectOption("#sample", sample);
+    assert.equal(await page.inputValue("#language"), "ko-KR");
+    assert((await page.locator("#sample-review").textContent()).includes("독립 검토 대기"));
+    await run();
+    assert.equal(await page.locator("#output").textContent(), expected);
+    assert((await page.locator("#inspect-body").textContent()).includes(semantic));
+  }
+  await page.click('[data-mode="verify"]');
+  await run();
+  assert.equal(await page.locator("#verify-status").textContent(), "모든 분할 일치");
   await page.click('[data-mode="normalize"]');
   await page.selectOption("#sample", "mixed");
   await run();

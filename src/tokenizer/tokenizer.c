@@ -52,7 +52,8 @@ ttf_script_t ttf_script_of(uint32_t c) {
         return TTF_SCRIPT_LATIN;
     if (c >= '0' && c <= '9')
         return TTF_SCRIPT_DIGIT;
-    if (c == ' ' || (c >= 9 && c <= 13) || c == 0xa0 || c == 0x3000 || (c >= 0x2000 && c <= 0x200a))
+    if (c == ' ' || (c >= 9 && c <= 13) || c == 0xa0 || c == 0x202f || c == 0x3000 ||
+        (c >= 0x2000 && c <= 0x200a))
         return TTF_SCRIPT_WHITESPACE;
     if (c == '.' || c == ',' || c == '!' || c == '?' || c == ':' || c == ';' || c == '-' ||
         c == '\'' || c == '"' || c == '(' || c == ')' || c == '[' || c == ']' || c == '{' ||

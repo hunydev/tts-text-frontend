@@ -19,6 +19,7 @@ CORPORA = {
     "scaled-currency-v12": ("금융 금액 배수·통화·범위", "scaled_currency_v12.jsonl"),
     "english-dates-v13": ("영어 날짜·연도·코드믹스", "english_dates_v13.jsonl"),
     "english-forms-v14": ("영어 통화명·약어·이니셜", "english_forms_v14.jsonl"),
+    "korean-counters-v15": ("한국어 서수·횟수·번호", "korean_counters_v15.jsonl"),
 }
 DEFAULTS = dict(
     default_language="ko-KR",
@@ -281,7 +282,27 @@ def catalog():
             expected="<code>GPU 3개</code> 예제는 세 개입니다.\n설정 파일 /etc/app/config-v2.json을 확인합니다.",
         ),
     ]
-    for key in ("advanced", "content-v7", "finance-v7", "scaled-currency-v12", "english-dates-v13", "english-forms-v14"):
+    for sample_id, title, text, expected, classification in (
+        ("unicode-grouping-currency", "금액의 NBSP 묶음 (U+00A0)",
+         "1\u00a0250원", "천이백오십 원", "reference-policy"),
+        ("unicode-grouping-percent", "부호·소수·좁은 NBSP (U+202F)",
+         "-1\u202f250.50%", "마이너스 천이백오십 점 오영 퍼센트", "reference-policy"),
+        ("unicode-grouping-malformed", "잘못된 얇은 공백 묶음 보존 (U+2009)",
+         "1\u200925원", "1\u200925원", "preservation-contract"),
+        ("unicode-grouping-range", "금액 범위의 얇은 공백 묶음 (U+2009)",
+         "1\u2009250~2\u2009500원", "천이백오십 원에서 이천오백 원", "reference-policy"),
+    ):
+        samples.append(dict(
+            id=sample_id, category="숫자·Unicode", title=title, text=text, expected=expected,
+            options={"default_language": "ko-KR", "chunk_bytes": 1},
+            reference_review={
+                "classification": classification,
+                "review_status": "pending-independent-review",
+                "reference_source": "developer-authored workbench example; tests/integration/test_unicode_grouping.py",
+                "reason": "Explicit grouping/value or malformed-input preservation contract; no independent linguistic approval.",
+            },
+        ))
+    for key in ("advanced", "content-v7", "finance-v7", "scaled-currency-v12", "english-dates-v13", "english-forms-v14", "korean-counters-v15"):
         if corpus_path(key).exists():
             for row in [
                 json.loads(x)
@@ -291,7 +312,8 @@ def catalog():
                 samples.append(
                     dict(
                         id=key + "-" + row["id"],
-                        category="금융" if key != "content-v7" else "콘텐츠",
+                        category=("한국어" if key == "korean-counters-v15" else
+                                  "콘텐츠" if key == "content-v7" else "금융"),
                         title=row["text"][:45],
                         text=row["text"],
                         expected=row["expected"],

@@ -763,6 +763,7 @@ static ttf_status_t pronounce(const ttf_engine_t *e, const char *word_text, size
     char key[TTF_IR_VALUE_SIZE];
     size_t i, p = 0;
     const char *phones;
+    ttf_resource_layer_t layer = TTF_LAYER_COMMON, part_layer = TTF_LAYER_COMMON;
     /* Long unknown words bypass this bounded prototype and reach the target's
        streaming grapheme fallback; they must not fail the entire request. */
     if (n >= sizeof(key))
@@ -775,13 +776,14 @@ static ttf_status_t pronounce(const ttf_engine_t *e, const char *word_text, size
     /* A lowercase dictionary headword such as "us" is not evidence for the
        letter sequence U.S. Explicit initialism pronunciations have their own
        namespace; otherwise construct letter phones below. */
-    phones = res(e, lexical == TTF_LEX_INITIALISM ? "initialism_pronunciation" :
-                                                   "pronunciation", key);
+    phones = ttf_resource_get(e, lexical == TTF_LEX_INITIALISM ? "initialism_pronunciation" :
+                                                                "pronunciation", EN, key, &layer);
     if (phones) {
         if (strlen(phones) >= sizeof(out->phones))
             return TTF_ELIMIT;
         (void)snprintf(out->phones, sizeof(out->phones), "%s", phones);
-        (void)snprintf(out->provenance, sizeof(out->provenance), "pronunciation-dictionary");
+        (void)snprintf(out->provenance, sizeof(out->provenance), "ttf-pron-v1:%s:pronunciation-dictionary",
+                       ttf_layer_name(layer));
         return TTF_OK;
     }
     if (lexical == TTF_LEX_INITIALISM) {
@@ -795,7 +797,7 @@ static ttf_status_t pronounce(const ttf_engine_t *e, const char *word_text, size
                 return TTF_ELIMIT;
             p += (size_t)written;
         }
-        (void)snprintf(out->provenance, sizeof(out->provenance), "initialism");
+        (void)snprintf(out->provenance, sizeof(out->provenance), "ttf-pron-v1:common:initialism");
         return p ? TTF_OK : TTF_EINVAL;
     }
     if (lexical == TTF_LEX_ALNUM_TERM) {
@@ -814,7 +816,9 @@ static ttf_status_t pronounce(const ttf_engine_t *e, const char *word_text, size
                     phones = symbolic;
                 } else if (key[i] >= '0' && key[i] <= '9') {
                     char digit_key[2] = {key[i], '\0'};
-                    phones = res(e, "digit_pronunciation", digit_key);
+                    phones = ttf_resource_get(e, "digit_pronunciation", EN, digit_key, &part_layer);
+                    if (phones && part_layer > layer)
+                        layer = part_layer;
                     if (!phones)
                         return TTF_EINVAL;
                 } else
@@ -825,7 +829,8 @@ static ttf_status_t pronounce(const ttf_engine_t *e, const char *word_text, size
                     return TTF_EINVAL;
                 p += (size_t)written;
             }
-            (void)snprintf(out->provenance, sizeof(out->provenance), "alnum-initialism");
+            (void)snprintf(out->provenance, sizeof(out->provenance), "ttf-pron-v1:%s:alnum-initialism",
+                           ttf_layer_name(layer));
             return p ? TTF_OK : TTF_EINVAL;
         }
     }
@@ -839,9 +844,12 @@ static ttf_status_t pronounce(const ttf_engine_t *e, const char *word_text, size
         for (; take; --take) {
             memcpy(chunk, key + i, take);
             chunk[take] = '\0';
-            phones = res(e, "g2p", chunk);
-            if (phones)
+            phones = ttf_resource_get(e, "g2p", EN, chunk, &part_layer);
+            if (phones) {
+                if (part_layer > layer)
+                    layer = part_layer;
                 break;
+            }
         }
         if (!phones)
             return TTF_EINVAL;
@@ -851,7 +859,8 @@ static ttf_status_t pronounce(const ttf_engine_t *e, const char *word_text, size
         p += (size_t)written;
         i += take;
     }
-    (void)snprintf(out->provenance, sizeof(out->provenance), "grapheme-g2p-prototype");
+    (void)snprintf(out->provenance, sizeof(out->provenance), "ttf-pron-v1:%s:grapheme-g2p-prototype",
+                   ttf_layer_name(layer));
     return p ? TTF_OK : TTF_EINVAL;
 }
 

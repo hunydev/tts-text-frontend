@@ -116,7 +116,10 @@ typedef struct {
     ttf_semantic_t semantic;
     char context_trace[192]; /* deterministic per-pack context scores */
     char lexicon[64];
-    ttf_resource_layer_t pronunciation_layer; /* independent of semantic rule layer */
+    /* Target lexicon layer on direct hit; otherwise source phone resource layer.
+       Common can mean generated/unreported. Target mapper layers are not included.
+       Independent of semantic.layer; see docs/pronunciation-trace.md. */
+    ttf_resource_layer_t pronunciation_layer;
     char verbalizer[TTF_LANGUAGE_TAG_SIZE];
 } ttf_span_t;
 typedef struct {

@@ -206,3 +206,18 @@ title 표기는 별도 검수 대기 상태로 관리한다.
 출처 revision이 바뀌거나 실제 파일을 제품에 복사할 때에는 해당 파일의 이용 조건,
 원저작권 표시, 변경 내용, 동봉 고지를 다시 기록한다. 기존 research-only 검토를
 새로운 vendor 승인이나 사람의 정답 검수로 재사용하지 않는다.
+
+### v0.15 Unicode 숫자 grouping / 한국어 서수 조사
+
+조회일 2026-09-17. 다음 자료는 사실·설계 참고로 사용했으며 원문 표, 데이터셋,
+코드, 예문을 제품 resource로 복사하지 않았다. 프로젝트 테스트는 독립 작성했다.
+
+| Source / revision | License and permitted use considered | Redistribution / attribution / vendoring |
+|---|---|---|
+| [Unicode Standard 17.0, chapter 6](https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-6/) | [Unicode Terms of Use](https://www.unicode.org/copyright.html) distinguishes specification text from licensed data/software. Internal business reference is permitted under its terms; this is not a claim of unrestricted specification redistribution. | No specification text/table vendored. Public redistribution would require the applicable version-specific permission and notices; this repository records URL/version/date. |
+| [UTS #35 Numbers, observed version 48.2](https://www.unicode.org/reports/tr35/tr35-numbers.html) | Technical report reference under Unicode terms. No CLDR data/code import. Software/data Unicode License v3 must not be automatically applied to all report text. | No report/data vendoring. URL/version/date attribution; actual future data import requires file-specific license and copyright notice. |
+| [NIKL 329611](https://www.korean.go.kr/front/onlineQna/onlineQnaView.do?mn_id=216&pageIndex=1&qna_seq=329611), [325931](https://www.korean.go.kr/front/onlineQna/onlineQnaView.do?mn_id=27&pageIndex=1&qna_seq=325931), [306013](https://www.korean.go.kr/front/onlineQna/onlineQnaView.do?mn_id=216&pageIndex=1&qna_seq=306013); web answers, no fixed commit | Facts about ordinal/count readings only. A blanket commercial reuse/open license for these entire pages was not established in this review. | No Q&A text/examples vendored; commercial copying/redistribution requires source-specific terms review. Links/date recorded; this is not institutional endorsement of project outputs. |
+
+The implementation is original C and original policy TSV. The large-number ordinal
+choice and finite context cues are project policy, separately documented and not
+presented as uniquely prescribed answers. No new external benchmark corpus was committed.

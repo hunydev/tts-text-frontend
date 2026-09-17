@@ -96,6 +96,17 @@ with tempfile.TemporaryDirectory(prefix="ttf-evaluation-") as temporary:
     summary = json.loads(process.stdout)
     assert summary["mismatches"] == 0 and summary["metadata_failures"] == 1 and summary["failed"] == 1
 
+    # Secondary carries range endpoints and contextual counter roles. Identical
+    # output must not conceal a wrong value in this semantic field either.
+    write_case(corpus, {"id": "secondary", "text": "Apple은 사과입니다.", "expected": "애플은 사과입니다.",
+                        "expected_spans": [{"surface": "Apple", "secondary": "frequency"}]})
+    process = run(directory / "secondary-run", corpus)
+    assert process.returncode == 1, process.stderr
+    summary = json.loads(process.stdout)
+    assert summary["mismatches"] == 0 and summary["metadata_failures"] == 1 and summary["failed"] == 1
+    report_secondary = json.loads((directory / "secondary-run" / "report.json").read_text(encoding="utf-8"))
+    assert {failure["field"] for failure in report_secondary["cases"][0]["metadata_failures"]} == {"secondary"}
+
     # Batch output alone cannot satisfy the gate if a stream variant differs.
     payload = (output / "apple-ko" / "segments.jsonl").read_text(encoding="utf-8")
     write_case(corpus, {"id": "parity", "text": "Apple은 사과입니다.", "expected": "애플은 사과입니다."})
@@ -135,7 +146,8 @@ with tempfile.TemporaryDirectory(prefix="ttf-evaluation-") as temporary:
     original_segment = json.loads(lines[0])
     for field, bad_value in (("end", 1),  # inside Hangul UTF-8
                              ("input_end", 4),  # source coverage gap
-                             ("input_begin", 1), ("begin", True), ("context_lang", None)):
+                             ("input_begin", 1), ("begin", True), ("context_lang", None),
+                             ("secondary", None)):
         segment = copy.deepcopy(original_segment)
         segment["spans"][0][field] = bad_value
         rejected(lambda: module.parse_stream(json.dumps(segment) + "\n" + "\n".join(lines[1:]), apple["text"]))

@@ -376,3 +376,27 @@ result rows, checks reference fields/order and exact flags, and hashes report
 files before and after use. [Remaining work](remaining-work.md) separates verified
 contracts from unclosed production gaps, including source pronunciation layer
 trace, Unicode numeric grouping, Korean counter roles and independent references.
+
+### v0.15 classifier specificity and shared numeric grammar
+
+Universal syntax and language-pack candidates compete over the same token view.
+Greater token/byte extent wins. At identical extent a pack may declare
+`classifier_priority <language> <rule> <integer>` (default 0, supported -1000..1000).
+Higher specificity wins; remaining ties retain established pack registration order.
+The existing explicit identifier/date refinements and lexical WORD refinement remain.
+This lets Korean ordinal/count morphology refine a generic numeric suffix without
+adding language IDs to the core. Exact/pattern TN replacements retain their later,
+separate resource-layer priority. Invalid priority values fail with `TTF_ERESOURCE`.
+
+The built-in packs share the exact decimal scanner through an internal interface;
+public language-pack ABI v1 is unchanged. Unicode group separators are validated
+without rewriting source text. KO ordinals use the same scanner so `제1 250호`
+cannot become two independent numbers. Unsupported forms preserve their complete
+candidate text. The prefix-stable segment planner keeps numeric grouping spaces,
+registered ordinal/count cues and declared quantity tails pending. Both batch and
+streaming therefore classify the same committed text.
+
+Pronunciation source provenance now carries an optional validated envelope through
+the existing ABI. The core reports the consumed source resource layer, and retains
+the prior path strings. The target mapper layer is still a separate, unreported
+concern; see [trace contract](pronunciation-trace.md).

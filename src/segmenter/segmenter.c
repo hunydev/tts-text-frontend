@@ -1,5 +1,6 @@
 #include "../core/internal.h"
 #include "../protected/protected.h"
+#include "../semantic/numeric_grouping.h"
 static int horizontal_space(char c) {
     return c == ' ' || c == '\t';
 }
@@ -18,7 +19,7 @@ static int boundary_resource(const ttf_engine_t *e, const char *kind, const char
     return 0;
 }
 static int pending_word(const ttf_engine_t *e, const char *s, const ttf_token_t *tokens,
-                         size_t index, size_t end) {
+                        size_t index, size_t end) {
     char key[96];
     size_t begin, j;
     if (end && (s[end - 1] == ',' || s[end - 1] == '.'))
@@ -36,6 +37,24 @@ static int pending_word(const ttf_engine_t *e, const char *s, const ttf_token_t 
     }
     key[j] = 0;
     return boundary_resource(e, "boundary_word", key);
+}
+/* Whitespace token prefixes after digits must remain pending even if several
+   grouping separators arrive in separate chunks. Retain the whole whitespace
+   token; never decide using a not-yet-arrived following digit. */
+static int numeric_space_prefix(const ttf_engine_t *e, const char *s, size_t length,
+                                const ttf_token_t *tokens, size_t index) {
+    size_t at = tokens[index].begin;
+    while (at) {
+        size_t previous = at - 1;
+        while (previous && ((unsigned char)s[previous] & 0xc0u) == 0x80u)
+            --previous;
+        if (at == previous + 1 && s[previous] >= '0' && s[previous] <= '9')
+            return 1;
+        if (ttf_numeric_group_separator(e, s, length, previous, NULL, NULL) != at - previous)
+            return 0;
+        at = previous;
+    }
+    return 0;
 }
 /* Cue decisions depend only on the prefix before a candidate cut. A complete
    input lets us compute protection ranges in advance, but a key mismatch must
@@ -64,7 +83,7 @@ typedef struct {
     int valid;
 } cue_scope_cache_t;
 static size_t cue_scope_end(const char *s, size_t begin, size_t end, int identifier,
-                             cue_scope_cache_t *cache) {
+                            cue_scope_cache_t *cache) {
     size_t p = begin;
     /* A dot is only a continuation after a digit inside the same scope. */
     if (begin < end && s[begin] == '.')
@@ -81,9 +100,8 @@ static size_t cue_scope_end(const char *s, size_t begin, size_t end, int identif
             ++p;
         else if (p + 3 <= end && !memcmp(s + p, "\xef\xbc\x9a", 3))
             p += 3;
-        else if (!identifier && ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
-                                 c == '\'' || (c == '.' && p > begin &&
-                                 s[p - 1] >= '0' && s[p - 1] <= '9')))
+        else if (!identifier && ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '\'' ||
+                                 (c == '.' && p > begin && s[p - 1] >= '0' && s[p - 1] <= '9')))
             ++p;
         else
             break;
@@ -110,8 +128,8 @@ static size_t title_scope_limit(const char *s, size_t n, size_t maximum) {
    labels overlap, instead of scanning back over the entire title at every
    whitespace. This planner state is local to a single scan. */
 static void extend_cue_range(const ttf_engine_t *e, const char *s, size_t n, size_t begin,
-                              size_t title_limit, size_t *protected_until,
-                              cue_scope_cache_t caches[2]) {
+                             size_t title_limit, size_t *protected_until,
+                             cue_scope_cache_t caches[2]) {
     const ttf_entry_t *cue;
     for (cue = e->boundary_cues; cue; cue = cue->boundary_next) {
         size_t after, end;
@@ -130,8 +148,8 @@ static void extend_cue_range(const ttf_engine_t *e, const char *s, size_t n, siz
    bytes, so tiny phrase targets cannot make chunk boundaries change the IR.
    Reuse pack classification over a bounded prefix; the core knows no unit or
    language spelling. Counter and clock endpoints need the same lookahead. */
-static int quantity_before_space(const ttf_engine_t *e, const char *s,
-                                 const ttf_token_t *tokens, size_t index, size_t end) {
+static int quantity_before_space(const ttf_engine_t *e, const char *s, const ttf_token_t *tokens,
+                                 size_t index, size_t end) {
     size_t j = index, pack;
     while (j) {
         ttf_pack_input_t in;
@@ -160,10 +178,17 @@ static int quantity_before_space(const ttf_engine_t *e, const char *s,
                 candidate.input_end > best.input_end && candidate.input_end <= end)
                 best = candidate;
         }
+        if (best.input_end < end && end - best.input_end < 96) {
+            char tail[96];
+            memcpy(tail, s + best.input_end, end - best.input_end);
+            tail[end - best.input_end] = 0;
+            if (boundary_resource(e, "quantity_lookahead_tail", tail))
+                best.input_end = end;
+        }
         return best.input_end == end &&
                (best.type == TTF_SEM_CURRENCY || best.type == TTF_SEM_PERCENT ||
-                best.type == TTF_SEM_COUNTER || best.type == TTF_SEM_TIME ||
-                best.type == TTF_SEM_MEASURE ||
+                best.type == TTF_SEM_COUNTER || best.type == TTF_SEM_ORDINAL ||
+                best.type == TTF_SEM_TIME || best.type == TTF_SEM_MEASURE ||
                 (best.type == TTF_SEM_RANGE && best.unit[0]));
     }
     return 0;
@@ -185,8 +210,7 @@ static int protected_period(const ttf_engine_t *e, const char *s, size_t at) {
     if ((n & 1u) && boundary_resource(e, "boundary_syntax", "dotted_initials")) {
         size_t j;
         for (j = 0; j < n; ++j)
-            if ((j & 1u) ? s[begin + j] != '.' :
-                (s[begin + j] < 'A' || s[begin + j] > 'Z'))
+            if ((j & 1u) ? s[begin + j] != '.' : (s[begin + j] < 'A' || s[begin + j] > 'Z'))
                 break;
         if (j == n)
             return 1;
@@ -228,9 +252,8 @@ static int quoted_path_prefix(const char *s, size_t n, size_t begin) {
         return n - p >= 2 && s[p] == ':' && (s[p + 1] == '/' || s[p + 1] == '\\');
     return 0;
 }
-static void incomplete_literal_hint(const char *s, size_t n,
-                                     const ttf_protected_region_t *region,
-                                     ttf_boundary_wait_t *wait) {
+static void incomplete_literal_hint(const char *s, size_t n, const ttf_protected_region_t *region,
+                                    ttf_boundary_wait_t *wait) {
     size_t p = region->begin;
     char quote = 0;
     wait->begin = p;
@@ -309,6 +332,9 @@ ttf_status_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, i
             continue;
         }
         extend_cue_range(e, s, n, t->begin, title_limit, &protected_until, cue_caches);
+        if (t->script == TTF_SCRIPT_WHITESPACE && numeric_space_prefix(e, s, n, tokens, i) &&
+            t->end > protected_until)
+            protected_until = t->end;
         {
             size_t phrase_end = ttf_phrase_protect_until(e, s, n, tokens, i);
             if (phrase_end > protected_until)
@@ -357,8 +383,8 @@ ttf_status_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, i
                                     s[previous - 1] == '\r'))
                     previous--;
                 if (pending_word(e, s, tokens, i, previous) ||
-                    (previous >= 2 && s[previous - 1] == ',' &&
-                     s[previous - 2] >= '0' && s[previous - 2] <= '9')) {
+                    (previous >= 2 && s[previous - 1] == ',' && s[previous - 2] >= '0' &&
+                     s[previous - 2] <= '9')) {
                     at += w;
                     continue;
                 }
@@ -394,7 +420,8 @@ ttf_status_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, i
                         if (previous_token &&
                             tokens[previous_token - 1].script == TTF_SCRIPT_DIGIT) {
                             continuation =
-                                ttf_resource_get(e, "numeric_continuation", "*", key, NULL) != NULL ||
+                                ttf_resource_get(e, "numeric_continuation", "*", key, NULL) !=
+                                    NULL ||
                                 ttf_resource_get(e, "currency_scale", "*", key, NULL) != NULL;
                             for (pack = 0; !continuation && pack < e->pack_count; ++pack)
                                 continuation = ttf_resource_get(e, "numeric_continuation",

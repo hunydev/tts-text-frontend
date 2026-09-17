@@ -535,6 +535,25 @@
         }
       },
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/korean_counters_v15.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "developer-authored synthetic fixture; tests/integration/test_korean_counters.py",
+        "reason": "Original Korean ordinal, frequency and identifier reading contracts; ambiguous counter decisions are editable project policy, pending independent linguistic review."
+      },
+      "category_overrides": {
+        "ko/invalid-ordinal": {
+          "classification": "preservation-contract",
+          "review_status": "pending-independent-review",
+          "reference_source": "developer-authored synthetic fixture; tests/integration/test_korean_counters.py",
+          "reason": "Zero, negative and fractional ordinal candidates are preserved as complete text; test agreement does not supply independent approval."
+        }
+      },
+      "case_overrides": {}
     }
   ],
   "excluded": [

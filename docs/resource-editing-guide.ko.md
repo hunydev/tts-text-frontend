@@ -347,3 +347,14 @@ TSV 문구만 바꿀 때 C core 재컴파일은 필요 없다. 새로운 classif
 검증하세요. 예시와 한계는 [날짜 편집 가이드](english-dates.md)에 있습니다.
 웹의 **영어 날짜·연도·코드믹스** 코퍼스는 20개 개발자 작성 계약을 검사합니다.
 이 통과 여부는 독립적인 사람의 정답 검수를 대신하지 않습니다.
+
+## Unicode 숫자와 서수·횟수 정책
+
+- 금액의 NBSP/좁은 NBSP/thin space 묶음: [Unicode 숫자 가이드](unicode-numbers.md)
+- `번째`, 횟수/번호 `번`, `제3장`, 조사와 범위: [한국어 카운터 가이드](korean-counters.md)
+- 발음 사전/G2P의 실제 source layer 확인: [발음 trace 가이드](pronunciation-trace.md)
+
+`counter_role_before`를 추가하면 `boundary_word`도 함께 등록합니다. 새 조사
+뒤의 오른쪽 문맥이 필요하면 `quantity_lookahead_tail`을 등록합니다. 웹의
+‘한국어 서수·횟수·번호’ 코퍼스와 작은 분절/입력 chunk 설정으로 확인합니다.
+이 항목은 TN 정책이며 foreign pronunciation lexicon에 넣지 않습니다.

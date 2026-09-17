@@ -87,11 +87,16 @@ lexicon이 source 발음 사전보다 우선하며, 영어 문맥은 영어를 �
 기존 source pronunciation과 같은 키를 높은 layer로 명시적으로 읽으면 기존
 resource precedence대로 대체된다.
 
-현재 inspect는 `pronunciation-dictionary` 경로까지 보여 주며 CMU 행 번호나 변형 ID는
-표시하지 않는다. source dictionary를 customer layer로 읽어도 `pronunciation_layer`가
-`common`으로 남는 기존 trace 한계도 실제 실행에서 확인했다. 정확한 출처와 선택 정책은
-JSONL 및 manifest를 함께 확인해야 한다. 향후 request별 발음 선택 및
-trace 확장에는 별도의 버전이 있는 API가 필요하며, 기존 C ABI를 몰래 바꾸지 않는다.
+v0.15의 inspect는 `pronunciation-dictionary` 경로와 **선택된 source resource layer**를
+함께 보여 준다. Customer source dictionary가 `pronunciation_layer=common`으로 남던
+오류를 수정했다. `initialism_pronunciation`도 동일하게 추적하며 G2P와 alnum 숫자 음소는
+실제로 소비한 source 행 중 가장 높은 layer를 보고한다. 자세한 ABI 호환 계약과
+`common` 기본값의 의미는 [발음 trace 가이드](../pronunciation-trace.md)에 있다.
+
+이 값에 target phone/grapheme mapper의 layer를 섞지 않는다. CMU 행 번호·변형 ID와
+선택 이유, target mapper의 개별 리소스 출처는 여전히 표시하지 않으므로 정확한 출처와
+선택 정책은 JSONL 및 manifest를 함께 확인해야 한다. 향후 request별 발음 선택 및
+상세 trace에는 별도의 버전이 있는 API가 필요하며, 기존 C ABI layout을 바꾸지 않는다.
 TTFB v1은 TSV를 검증해 감싸는 포맷이므로 대규모 사전용 압축 인덱스로 간주하지 않는다.
 
 ## 3. 국립국어원 공식 원문 확인

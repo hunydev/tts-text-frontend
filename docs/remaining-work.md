@@ -32,21 +32,23 @@ compiled resource의 **8개 CTest를 다시 실행해 모두 통과**했다. 이
 
 ## P0 — 값과 출처를 잘못 전달하는 경로
 
-- [ ] **NUM-01: Unicode 숫자 묶음의 부분 정규화 방지.** 실제 CLI에서
-  `금액은 1\u202f250원입니다.`의 U+202F를 문자로 넣으면
-  `금액은 일 이백오십 원입니다.`가 된다. [tokenizer](../src/tokenizer/tokenizer.c)는
-  U+202F를 whitespace로 분류하지 않는다. 숫자 구분자 정책과 유효한 묶음 문법을
-  정하고 하나의 정확한 `1250/KRW` IR로 인식하거나 의심 구간 전체를 보존해야 한다.
-  공백을 무조건 지워 서로 다른 수를 합치지 않는다. **닫는 증거:** NBSP, NNBSP,
-  thin space, ASCII space의 정상/비정상 grouping, 통화·단위·identifier 조합에 대한
-  독립 값 검사와 모든 두 조각 UTF-8 byte 분할 검사.
+- [x] **NUM-01: Unicode grouping으로 금액·수량 값이 조용히 바뀌는 문제.**
+  v0.15에서 NBSP/NNBSP/thin space를 resource-driven 동일 3자리 정수 묶음으로
+  처리한다. 통화·단위·퍼센트·범위·지수와 조합하며 손상·혼합 그룹 및 지원하지
+  않는 날짜/전화/IP 그룹은 전체 보존한다. ASCII 공백은 별개 숫자로 유지한다.
+  고정 원문 57건에서 v0.14 text/value exact 0→57, 독립 Decimal 90값 및 전체
+  두 조각 byte 분할이 근거다. [숫자 가이드](unicode-numbers.md).
+  **범위:** locale 전체, 소수/지수부 grouping, 모든 Unicode digit 지원은 별도
+  확장 과제이며 이 체크가 해당 범위까지 완료했다는 뜻은 아니다.
 
-- [ ] **KO-01: 한국어 서수·횟수·번호 counter를 분리.** 현재
-  `1번째 2번째 3번째 20번째입니다.` → `일 번째 이 번째 삼 번째 이십 번째입니다.`.
-  [counter resource](../resources/languages/ko-KR/rules/numeric.tsv)의 `번=sino`가
-  `번째`에 적용된다. `번째`, 횟수의 `번`, 식별번호의 `번`, `제N`의 의미를 분리하고
-  읽기 정책을 resource로 기록한다. **닫는 증거:** 첫/두/세/스무 계열과 큰 수,
-  조사 결합, 번호·횟수 최소 대조 문장, 범위, invalid input, streaming IR 검사.
+- [x] **KO-01: 한국어 서수·횟수·번호 counter의 기본 의미 분리.**
+  v0.15에서 `번째`, 명시적으로 단서가 있는 횟수/번호 `번`, `제N`을 분리했다.
+  첫/두/세/스무 계열, 100 이상 Sino 정책, 쉼표/Unicode 묶음, 조사, 범위 및
+  malformed 전체 보존을 독립 원문 계약과 기본/짧은 분절에서 확인한다.
+  [카운터 정책](korean-counters.md), [전후 측정](research/numeric-counters-v15-results.md)이 근거다.
+  **범위:** 문맥 없는 `번`은 기존 Sino 기본값이고 한국어 형태소/어미 전체를
+  이해하는 것은 아니다. 접두 서수 범위는 현재 전체 원문 보존으로 처리한다.
+  새 동사·조사·업무별 번호 문맥의 확대와 독립 사람 검수는 계속 필요하다.
 
 - [x] **RES-01: resource compiler/runtime 행 구분 문법 일치.**
   [compiler](../tools/resource_compiler/compile_resources.py)는 `str.splitlines()`를
@@ -69,14 +71,18 @@ compiled resource의 **8개 CTest를 다시 실행해 모두 통과**했다. 이
   compiler와 load/freeze 검증 일치, 실패 load의 원자성. 확장 pack의 새 resource를
   core 고정 allowlist 때문에 사용할 수 없게 만들지 않는다.
 
-- [ ] **TRACE-01: source dictionary/G2P의 실제 layer와 선택 경로 전달.**
-  임시 customer resource `pronunciation\ten-US\tabacus\tAE B AH K AH S`를 읽히면
-  `abacus를 읽습니다.`의 inspect는 `pronunciation-dictionary`와
-  `pronunciation_layer=common`을 출력한다. [EN pronounce](../languages/en-US/pack.c)의
-  resource 조회가 layer를 반환하지 않고 [foreign processor](../src/pronunciation/foreign.c)는
-  직접 lexicon hit에만 layer를 전달한다. **닫는 증거:** common/system/domain/customer/user
-  source dictionary 선택과 target mapper 선택을 구분하는 정확한 trace; compound
-  발음도 출처를 잃지 않는 검사. 기존 ABI v1 layout을 조용히 바꾸지 않는다.
+- [ ] **TRACE-01: source와 target pronunciation의 실제 선택 경로 전달.**
+  **v0.15 source layer 수정:** Customer `pronunciation`이 `common`으로 표시되던
+  재현 오류를 수정했다. 일반/initialism 사전, G2P, alnum 숫자 음소에서 실제 소비한
+  source layer를 ABI v1의 선택적 provenance envelope로 전달한다. Target lexicon
+  우선순위, 미사용 고위 layer 제외, 실패 source의 fallback layer 초기화를 검사했다.
+  [발음 trace 계약](pronunciation-trace.md), native protocol 147건, CLI/native 정책
+  102건 및 모든 두 조각 byte split 746건이 근거다. 구조체 layout은 변경하지 않았다.
+  **남은 범위:** target phone/grapheme mapper의 개별 행·layer, 복수 발음 variant ID와
+  선택 이유, compound/phrase 단어별 출처 목록. 현재 scalar layer는 source와 target
+  전체 경로의 합산값이 아니며 legacy/generated 경로의 `common`은 미보고 기본값일 수
+  있다. **닫는 증거:** source와 target을 별개로 노출하는 버전 있는 상세 trace API,
+  compound와 variant 선택까지 보존하는 contract 검사. 이 상위 항목은 열린 상태다.
 
 - [ ] **DOC-01: 실제 출력과 문서 예제의 정합성.** 감사 기준 README의 금융 예제에는
   `1.5-2.5%`와 `1만원~2만원`을 아직 `다시`로 읽는 구문이 있으나 실제 출력은
@@ -292,3 +298,15 @@ compiled resource의 **8개 CTest를 다시 실행해 모두 통과**했다. 이
 측정 수치와 regression 원인은 [v0.14 결과](research/english-forms-v14-results.md)에
 기록한다. 다음 작업은 NUM-01/KO-01의 실제 값·counter 오류와 TRACE-01의 출처
 계약을 우선하며, 독립 검수·holdout·권리 확보 조건을 임의로 완료 처리하지 않는다.
+
+## v0.15 진행 기록
+
+Unicode grouping과 KO 카운터의 값 보존, source pronunciation layer를 보강했다.
+`secondary`가 평가기 metadata 계약에서 빠져 있던 부분도 수정하여 범위의 오른쪽
+값과 count/identifier 역할을 검사한다. 웹에 한국어 카운터 28건과 Unicode 예제를
+추가했다. 지표·compiler/sanitizer/byte-split 검증은
+[v0.15 결과](research/numeric-counters-v15-results.md)에 기록한다.
+
+다음 우선순위는 RES-02의 setup 단계 정책 검증, TRACE-01의 target mapper 출처,
+실제 금융/콘텐츠 입력의 독립 검수와 corpus 확대다. 기존 사전의 pending review를
+통과 처리하거나 합성 음성의 품질을 검증했다고 주장하지 않는다.

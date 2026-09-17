@@ -1,4 +1,5 @@
 #include "date.h"
+#include "../../src/semantic/numeric_grouping.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -70,8 +71,8 @@ static size_t month_at(const ttf_pack_input_t *in, size_t p, unsigned *month,
         ++end;
     if (end == p || end - p >= sizeof(key))
         return p;
-    if (end < in->length && (unicode_tail(in, end) || ascii_digit(in->text[end]) ||
-                            in->text[end] == '_'))
+    if (end < in->length &&
+        (unicode_tail(in, end) || ascii_digit(in->text[end]) || in->text[end] == '_'))
         return p;
     for (i = p; i < end; ++i)
         key[i - p] = ascii_lower(in->text[i]);
@@ -104,16 +105,30 @@ static int attached_tail(const ttf_pack_input_t *in, size_t p) {
     if (p >= length)
         return 0;
     c = text[p];
-    if (ascii_alpha(c) || ascii_digit(c) || unicode_tail(in, p) || c == '_' ||
-        c == '/' || c == '\\' || c == '-' || c == '+' || c == '%' || c == '$' || c == '#')
+    /* A calendar field cannot end at the first group of a typographic number.
+       Commas remain the named-date day/year delimiter; only Unicode numeric
+       spaces extend this malformed-field guard. */
+    if ((unsigned char)c >= 128 && ttf_numeric_group_link(in->engine, text, length, p))
+        return 1;
+    if (ascii_alpha(c) || ascii_digit(c) || unicode_tail(in, p) || c == '_' || c == '/' ||
+        c == '\\' || c == '-' || c == '+' || c == '%' || c == '$' || c == '#')
         return 1;
     return c == '.' && p + 1 < length &&
            (ascii_alpha(text[p + 1]) || ascii_digit(text[p + 1]) || text[p + 1] == '_');
 }
 
 static size_t malformed_end(const ttf_pack_input_t *in, size_t p) {
-    while (p < in->length && attached_tail(in, p))
-        ++p;
+    while (p < in->length) {
+        size_t linked = (unsigned char)in->text[p] >= 128
+                            ? ttf_numeric_group_link(in->engine, in->text, in->length, p)
+                            : 0;
+        if (linked)
+            p = linked;
+        else if (attached_tail(in, p))
+            ++p;
+        else
+            break;
+    }
     return p;
 }
 
@@ -169,8 +184,8 @@ static int valid_day(unsigned year, unsigned month, unsigned day) {
     return day <= maximum;
 }
 
-static size_t finish(const ttf_pack_input_t *in, ttf_semantic_t *out, size_t end,
-                     int valid, ttf_resource_layer_t layer, const char *rule) {
+static size_t finish(const ttf_pack_input_t *in, ttf_semantic_t *out, size_t end, int valid,
+                     ttf_resource_layer_t layer, const char *rule) {
     size_t i = in->index;
     out->type = valid ? TTF_SEM_DATE : TTF_SEM_TEXT;
     out->input_end = end;
@@ -195,8 +210,8 @@ static int left_boundary(const ttf_pack_input_t *in, size_t start) {
     if (c >= 128)
         return in->index && in->tokens[in->index - 1].end == start &&
                in->tokens[in->index - 1].script == TTF_SCRIPT_PUNCTUATION;
-    return !ascii_alpha((char)c) && !ascii_digit((char)c) && c < 128 && c != '_' &&
-           c != '-' && c != '+' && c != '$' && c != '#' && c != '/' && c != '\\' && c != '.';
+    return !ascii_alpha((char)c) && !ascii_digit((char)c) && c < 128 && c != '_' && c != '-' &&
+           c != '+' && c != '$' && c != '#' && c != '/' && c != '\\' && c != '.';
 }
 
 /* Returns an optional numeric year after a day or month. A comma is not part
@@ -261,8 +276,8 @@ static size_t named_date(const ttf_pack_input_t *in, ttf_semantic_t *out, size_t
     valid = valid && valid_day(year_value, month, day.value);
     if (valid) {
         if (has_year)
-            (void)snprintf(out->value, sizeof(out->value), "%04u-%02u-%02u", year_value,
-                           month, day.value);
+            (void)snprintf(out->value, sizeof(out->value), "%04u-%02u-%02u", year_value, month,
+                           day.value);
         else {
             (void)snprintf(out->value, sizeof(out->value), "--%02u-%02u", month, day.value);
             (void)snprintf(out->unit, sizeof(out->unit), "month-day");
@@ -287,8 +302,7 @@ static unsigned policy_year(const ttf_pack_input_t *in, const char *key, unsigne
     return (unsigned)value;
 }
 
-static int preceding_cue(const ttf_pack_input_t *in, size_t start,
-                          ttf_resource_layer_t *layer) {
+static int preceding_cue(const ttf_pack_input_t *in, size_t start, ttf_resource_layer_t *layer) {
     char key[65];
     size_t end = start, begin, p, used;
     ttf_resource_layer_t found_layer;
@@ -303,9 +317,8 @@ static int preceding_cue(const ttf_pack_input_t *in, size_t start,
         --begin;
     for (; begin < end; ++begin) {
         if (!ascii_alpha(in->text[begin]) ||
-            (begin && (ascii_alpha(in->text[begin - 1]) ||
-                       ascii_digit(in->text[begin - 1]) || in->text[begin - 1] == '_' ||
-                       in->text[begin - 1] == '-')))
+            (begin && (ascii_alpha(in->text[begin - 1]) || ascii_digit(in->text[begin - 1]) ||
+                       in->text[begin - 1] == '_' || in->text[begin - 1] == '-')))
             continue;
         used = 0;
         for (p = begin; p < end; ++p) {
@@ -352,8 +365,8 @@ static size_t contextual_year(const ttf_pack_input_t *in, ttf_semantic_t *out, s
     if (!number.valid || number.digits != 4 || following_quantity(in, number.end) ||
         !preceding_cue(in, start, &layer))
         return 0;
-    if (number.end < in->length && in->text[number.end] == ',' &&
-        number.end + 1 < in->length && ascii_digit(in->text[number.end + 1]))
+    if (number.end < in->length && in->text[number.end] == ',' && number.end + 1 < in->length &&
+        ascii_digit(in->text[number.end + 1]))
         return 0;
     minimum = policy_year(in, "min_year", 1000, &layer);
     maximum = policy_year(in, "max_year", 2099, &layer);

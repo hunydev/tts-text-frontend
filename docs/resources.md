@@ -142,3 +142,20 @@ resource compiler can then compile those TSV files to TTFB. Neither authoring
 metadata nor Python is required by the C runtime. TN rules remain separate TSV
 resources. Domain pronunciation files are explicitly loaded and prohibited from
 the default manifest by the authoring gate. See [maintenance](lexicon-maintenance.ko.md).
+
+## Unicode grouping and Korean counter policy (v0.15)
+
+[Unicode numeric grouping](unicode-numbers.md) defines editable grouping separators
+and whole-object preservation. [Korean counter policy](korean-counters.md) documents
+`번째`, count/identifier `번`, `제N`, context cues and customer examples. The resource
+kind `native_ordinal_suffix` is separate from universal English `ordinal_suffix`.
+
+`classifier_priority <language> <matched-rule> <integer>` adds specificity for
+identical extents. Default is 0; only -1000..1000 is accepted. It does not beat a
+longer candidate or the separate exact/pattern TN rule layer. This is a classifier
+policy resource; it is not a pronunciation dictionary entry.
+
+When adding count context, pair a new left cue with `boundary_word`. A particle
+which may require right context also needs `quantity_lookahead_tail` so a short
+phrase target cannot commit its number early. Match preservation, exact values,
+IR secondary fields and byte-split invariance after any such change.

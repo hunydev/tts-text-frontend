@@ -21,7 +21,7 @@ class EvaluationError(ValueError):
 
 
 SPAN_FIELDS = ("script", "source_lang", "context_lang", "render_lang", "semantic_type",
-               "value", "unit", "rule", "resource_layer", "pronunciation_layer", "lexicon",
+               "value", "secondary", "unit", "rule", "resource_layer", "pronunciation_layer", "lexicon",
                "verbalizer", "context_trace")
 CHECK_FIELDS = set(SPAN_FIELDS) | {"normalized"}
 

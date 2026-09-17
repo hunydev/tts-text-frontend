@@ -11,14 +11,13 @@ static void tag(char dest[TTF_LANGUAGE_TAG_SIZE], const char *source) {
 }
 /* Aliases share the normal layer order; an exact spelling wins ties, but a
    system exact spelling must not shadow a user's canonical pronunciation. */
-static ttf_status_t pronunciation_candidate(const ttf_engine_t *engine,
-                                             const char *source, const char *target,
-                                             const char *text, size_t length,
-                                             const char **best, ttf_resource_layer_t *layer) {
+static ttf_status_t pronunciation_candidate(const ttf_engine_t *engine, const char *source,
+                                            const char *target, const char *text, size_t length,
+                                            const char **best, ttf_resource_layer_t *layer) {
     const char *candidate = NULL;
     ttf_resource_layer_t candidate_layer = TTF_LAYER_COMMON;
-    ttf_status_t status = ttf_foreign_lookup(engine, source, target, text, length,
-                                             &candidate, &candidate_layer);
+    ttf_status_t status =
+        ttf_foreign_lookup(engine, source, target, text, length, &candidate, &candidate_layer);
     if (status == TTF_OK && candidate && (!*best || candidate_layer > *layer)) {
         *best = candidate;
         *layer = candidate_layer;
@@ -138,6 +137,7 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
         ttf_span_t span;
         ttf_semantic_t *sem = &span.semantic;
         size_t consumed = 0, j, end, matched = 0, semantic_limit = length, phrase_count = count;
+        long classifier_priority = 0;
         const ttf_language_pack_t *source, *context, *renderer;
         const ttf_entry_t *rule = NULL;
         const char *phrase_hit = NULL;
@@ -205,6 +205,7 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
                 if (e->packs[j]->classify) {
                     ttf_semantic_t candidate;
                     size_t n;
+                    long candidate_priority = 0;
                     memset(&candidate, 0, sizeof(candidate));
                     candidate.struct_size = sizeof(candidate);
                     candidate.layer = TTF_LAYER_SYSTEM;
@@ -214,24 +215,44 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
                         st = TTF_ERESOURCE;
                         goto fail;
                     }
+                    if (n) {
+                        const char *priority =
+                            ttf_resource_get(e, "classifier_priority", e->packs[j]->language_tag,
+                                             candidate.rule, NULL);
+                        if (priority) {
+                            char *end_priority;
+                            candidate_priority = strtol(priority, &end_priority, 10);
+                            if (!*priority || *end_priority || candidate_priority < -1000 ||
+                                candidate_priority > 1000) {
+                                st = TTF_ERESOURCE;
+                                goto fail;
+                            }
+                        }
+                    }
                     /* An explicit pack identifier cue is more specific than
                        generic numeric syntax over the identical byte extent. */
-                    int labeled_identifier = n && n == consumed &&
-                        candidate.input_end == sem->input_end &&
+                    int labeled_identifier =
+                        n && n == consumed && candidate.input_end == sem->input_end &&
                         candidate.type == TTF_SEM_DIGIT_SEQUENCE &&
                         (sem->type == TTF_SEM_CARDINAL || sem->type == TTF_SEM_NUMBER ||
                          sem->type == TTF_SEM_PHONE || sem->type == TTF_SEM_RANGE ||
-                         sem->type == TTF_SEM_DATE ||
-                         sem->type == TTF_SEM_TEXT);
+                         sem->type == TTF_SEM_DATE || sem->type == TTF_SEM_TEXT);
                     /* A pack may establish a calendar meaning using explicit
                        context. A bare generic cardinal has no such evidence. */
-                    int contextual_date = n && n == consumed &&
-                        candidate.input_end == sem->input_end && candidate.type == TTF_SEM_DATE &&
+                    int contextual_date =
+                        n && n == consumed && candidate.input_end == sem->input_end &&
+                        candidate.type == TTF_SEM_DATE &&
                         (sem->type == TTF_SEM_CARDINAL || sem->type == TTF_SEM_NUMBER);
-                    if (n > consumed || (n && n == consumed && sem->type == TTF_SEM_WORD) ||
-                        labeled_identifier || contextual_date) {
+                    if (n > consumed ||
+                        (n && n == consumed &&
+                         (candidate.input_end > sem->input_end ||
+                          (candidate.input_end == sem->input_end &&
+                           candidate_priority > classifier_priority))) ||
+                        (n && n == consumed && sem->type == TTF_SEM_WORD) || labeled_identifier ||
+                        contextual_date) {
                         *sem = candidate;
                         consumed = n;
+                        classifier_priority = candidate_priority;
                     }
                 }
             rule = ttf_rule_match(e, context->language_tag, text + tokens[i].begin,
@@ -266,9 +287,9 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
             size_t phrase_consumed = 0;
             char phrase_value[TTF_IR_VALUE_SIZE];
             ttf_resource_layer_t phrase_layer = TTF_LAYER_COMMON;
-            phrase_hit = ttf_phrase_match(e, source->language_tag, context->language_tag,
-                                          text, tokens, phrase_count, i, &phrase_consumed,
-                                          phrase_value, &phrase_layer);
+            phrase_hit =
+                ttf_phrase_match(e, source->language_tag, context->language_tag, text, tokens,
+                                 phrase_count, i, &phrase_consumed, phrase_value, &phrase_layer);
             if (phrase_hit) {
                 sem->type = TTF_SEM_WORD;
                 sem->lexical_class = TTF_LEX_WORD;
@@ -320,9 +341,8 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
         else if (phrase_hit) {
             tag(span.verbalizer, source->language_tag);
             st = ttf_buffer_puts(&normalized, phrase_hit);
-        }
-        else if (source && source != context && foreign_type(sem->type) &&
-                 e->config.render_policy == TTF_PHONETIC_LOCALIZE) {
+        } else if (source && source != context && foreign_type(sem->type) &&
+                   e->config.render_policy == TTF_PHONETIC_LOCALIZE) {
             ttf_buffer_t spoken = {0};
             const char *original_hit = NULL;
             tag(span.verbalizer, source->language_tag);
@@ -333,19 +353,19 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
             if ((sem->type == TTF_SEM_INITIALISM || sem->type == TTF_SEM_ABBREVIATION) &&
                 end < length && text[end] == '.')
                 st = pronunciation_candidate(e, source->language_tag, context->language_tag,
-                                         text + tokens[i].begin, end + 1 - tokens[i].begin,
-                                         &original_hit, &span.pronunciation_layer);
+                                             text + tokens[i].begin, end + 1 - tokens[i].begin,
+                                             &original_hit, &span.pronunciation_layer);
             if (st == TTF_OK)
                 st = pronunciation_candidate(e, source->language_tag, context->language_tag,
-                                     text + tokens[i].begin, end - tokens[i].begin,
-                                     &original_hit, &span.pronunciation_layer);
+                                             text + tokens[i].begin, end - tokens[i].begin,
+                                             &original_hit, &span.pronunciation_layer);
             if (st == TTF_OK && (!original_hit || span.pronunciation_layer < TTF_LAYER_USER)) {
                 ttf_status_t verbalized = source->verbalize(e, sem, text + tokens[i].begin,
                                                             end - tokens[i].begin, &spoken);
                 if (verbalized == TTF_OK)
                     st = pronunciation_candidate(e, source->language_tag, context->language_tag,
-                                                   spoken.data ? spoken.data : "", spoken.length,
-                                                   &original_hit, &span.pronunciation_layer);
+                                                 spoken.data ? spoken.data : "", spoken.length,
+                                                 &original_hit, &span.pronunciation_layer);
                 else if (!original_hit || verbalized == TTF_ENOMEM || verbalized == TTF_ELIMIT)
                     st = verbalized;
             }

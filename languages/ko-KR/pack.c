@@ -3,6 +3,7 @@
 #include "tts_text_frontend/ttf_language_pack.h"
 #include "../../src/core/internal.h" /* Builtin scalar grammar reuse; not public ABI. */
 #include "identifiers.h"
+#include "counters.h"
 #include "../context_run.h"
 #include <stdint.h>
 #include <stdio.h>
@@ -86,8 +87,10 @@ static ttf_status_t cardinal(const ttf_engine_t *e, const char *value, ttf_buffe
     if (*p == '-') {
         TRY(ttf_buffer_puts(out, resource(e, "number", "negative", "마이너스 ")));
         ++p;
-    } else if (*p == '+')
+    } else if (*p == '+') {
+        TRY(ttf_buffer_puts(out, resource(e, "number", "positive", "플러스 ")));
         ++p;
+    }
     while (*p && *p != '.') {
         if (*p >= '0' && *p <= '9') {
             if (n + 1 >= sizeof(integer))
@@ -184,8 +187,31 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     case TTF_SEM_CARDINAL:
         return cardinal(e, s->value, out);
     case TTF_SEM_ORDINAL:
+        if (ttf_resource_get(e, "native_ordinal_suffix", "ko-KR", s->unit, NULL)) {
+            const char *value = s->value, *first;
+            const char *policy = resource(e, "ordinal_policy", "large", "sino");
+            const char *reading = resource(e, "native_ordinal_suffix", s->unit, "native");
+            if (strcmp(policy, "sino") || (strcmp(reading, "native") && strcmp(reading, "sino")))
+                return TTF_ERESOURCE;
+            while (*value == '0' && value[1])
+                ++value;
+            first = ttf_resource_get(e, "ordinal_first", "ko-KR", value, NULL);
+            if (first)
+                TRY(ttf_buffer_puts(out, first));
+            else if (!strcmp(reading, "native"))
+                TRY(native_number(e, value, out));
+            else
+                TRY(cardinal(e, value, out));
+            TRY(ttf_buffer_puts(out, " "));
+            return ttf_buffer_puts(out, resource(e, "unit", s->unit, s->unit));
+        }
         TRY(ttf_buffer_puts(out, resource(e, "number", "ordinal_prefix", "제")));
-        return cardinal(e, s->value, out);
+        TRY(cardinal(e, s->value, out));
+        if (!strcmp(s->secondary, "prefix") && s->unit[0]) {
+            TRY(ttf_buffer_puts(out, " "));
+            TRY(ttf_buffer_puts(out, resource(e, "unit", s->unit, s->unit)));
+        }
+        return TTF_OK;
     case TTF_SEM_DIGIT_SEQUENCE:
         if (strcmp(s->unit, "financial_identifier") == 0)
             return ttf_ko_render_identifier(e, s->value, out);
@@ -205,7 +231,10 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             return ttf_buffer_puts(out, "월");
         }
         return quantity(e, s->value, resource(e, "unit", s->unit, s->unit),
-                        strcmp(resource(e, "counter", s->unit, "sino"), "native") == 0, out);
+                        !strcmp(s->secondary, "frequency") ||
+                            (strcmp(s->secondary, "identifier") &&
+                             strcmp(resource(e, "counter", s->unit, "sino"), "native") == 0),
+                        out);
     }
     case TTF_SEM_CURRENCY:
         return quantity(e, s->value, resource(e, "currency", s->unit, s->unit), 0, out);
@@ -215,17 +244,19 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         TRY(ttf_buffer_puts(out, resource(e, "quantity_prefix", s->unit, "")));
         return quantity(e, s->value, resource(e, "unit", s->unit, s->unit), 0, out);
     case TTF_SEM_RANGE: {
-        int quantity_range = strcmp(s->rule, "syntax.range") != 0 ||
-                             s->unit[0] || strchr(s->value, '.') || strchr(s->secondary, '.') ||
-                             s->value[0] == '-' || s->value[0] == '+' ||
-                             s->secondary[0] == '-' || s->secondary[0] == '+';
+        int quantity_range = strcmp(s->rule, "syntax.range") != 0 || s->unit[0] ||
+                             strchr(s->value, '.') || strchr(s->secondary, '.') ||
+                             s->value[0] == '-' || s->value[0] == '+' || s->secondary[0] == '-' ||
+                             s->secondary[0] == '+';
         int digit_mode = !quantity_range && !strcmp(s->rule, "syntax.range") &&
                          strcmp(resource(e, "policy", "range_mode", "cardinal"), "digits") == 0;
         const char *suffix = resource(e, "policy", "quantity_range_suffix", "none");
         int repeat_unit = strcmp(resource(e, "policy", "quantity_range_repeat_unit", "1"), "0");
         ttf_semantic_t endpoint = *s;
         endpoint.secondary[0] = '\0';
-        if (!strcmp(s->unit, "time"))
+        if (ttf_resource_get(e, "native_ordinal_suffix", "ko-KR", s->unit, NULL))
+            endpoint.type = TTF_SEM_ORDINAL;
+        else if (!strcmp(s->unit, "time"))
             endpoint.type = TTF_SEM_TIME;
         else if (ttf_resource_get(e, "currency", "ko-KR", s->unit, NULL))
             endpoint.type = TTF_SEM_CURRENCY;
@@ -233,13 +264,18 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             endpoint.type = TTF_SEM_COUNTER;
         else
             endpoint.type = digit_mode ? TTF_SEM_DIGIT_SEQUENCE : TTF_SEM_CARDINAL;
+        if (!strcmp(s->rule, "ko:frequency-range"))
+            snprintf(endpoint.secondary, sizeof(endpoint.secondary), "frequency");
+        else if (!strcmp(s->rule, "ko:identifier-range"))
+            snprintf(endpoint.secondary, sizeof(endpoint.secondary), "identifier");
         if (repeat_unit || !s->unit[0] || !strcmp(s->unit, "time"))
             TRY(verbalize(e, &endpoint, surface, length, out));
         else
             TRY(cardinal(e, s->value, out));
-        TRY(ttf_buffer_puts(out, resource(e, "policy", quantity_range ? "quantity_range_separator"
-                                                                    : "range_separator",
-                                         "에서 ")));
+        TRY(ttf_buffer_puts(
+            out,
+            resource(e, "policy", quantity_range ? "quantity_range_separator" : "range_separator",
+                     "에서 ")));
         memcpy(endpoint.value, s->secondary, sizeof(endpoint.value));
         TRY(verbalize(e, &endpoint, surface, length, out));
         if (quantity_range && strcmp(suffix, "none"))
@@ -751,8 +787,8 @@ static size_t compound_amount(const ttf_pack_input_t *in, ttf_semantic_t *s) {
 static size_t compound_currency_range(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     size_t begin = in->tokens[in->index].begin, i;
     if (in->tokens[in->index].script != TTF_SCRIPT_DIGIT &&
-        in->tokens[in->index].script != TTF_SCRIPT_SYMBOL &&
-        in->text[begin] != '-' && in->text[begin] != '+')
+        in->tokens[in->index].script != TTF_SCRIPT_SYMBOL && in->text[begin] != '-' &&
+        in->text[begin] != '+')
         return 0;
     for (i = in->index + 1; i < in->token_count; ++i) {
         const ttf_token_t *token = &in->tokens[i];
@@ -774,7 +810,8 @@ static size_t compound_currency_range(const ttf_pack_input_t *in, ttf_semantic_t
             continue;
         memcpy(key, in->text + token->begin, width);
         key[width] = '\0';
-        enabled = ttf_resource_get(in->engine, "quantity_range_separator", "*", key, &delimiter_layer);
+        enabled =
+            ttf_resource_get(in->engine, "quantity_range_separator", "*", key, &delimiter_layer);
         if (!enabled || strcmp(enabled, "1"))
             continue;
         left.length = token->begin;
@@ -783,14 +820,14 @@ static size_t compound_currency_range(const ttf_pack_input_t *in, ttf_semantic_t
         first_scaled = first_count != 0;
         if (!first_count)
             first_count = ttf_classify_universal(&left, &first);
-        if (!first_count || (first.type != TTF_SEM_CARDINAL && first.type != TTF_SEM_NUMBER &&
-                             first.type != TTF_SEM_CURRENCY && first.type != TTF_SEM_COUNTER &&
-                             first.type != TTF_SEM_MEASURE && first.type != TTF_SEM_PERCENT) ||
+        if (!first_count ||
+            (first.type != TTF_SEM_CARDINAL && first.type != TTF_SEM_NUMBER &&
+             first.type != TTF_SEM_CURRENCY && first.type != TTF_SEM_COUNTER &&
+             first.type != TTF_SEM_MEASURE && first.type != TTF_SEM_PERCENT) ||
             skip_spaces(in->text, in->length, first.input_end) != token->begin)
             continue;
         next = i + 1;
-        while (next < in->token_count &&
-               in->tokens[next].script == TTF_SCRIPT_WHITESPACE) {
+        while (next < in->token_count && in->tokens[next].script == TTF_SCRIPT_WHITESPACE) {
             if (!horizontal_space(in->text, in->tokens[next].begin, in->tokens[next].end))
                 return 0;
             ++next;
@@ -814,7 +851,8 @@ static size_t compound_currency_range(const ttf_pack_input_t *in, ttf_semantic_t
                     ++guard_index;
                 }
                 suffix = quantity_resource_at(in, "numeric_suffix",
-                    skip_spaces(in->text, in->length, guard_end), &suffix_width);
+                                              skip_spaces(in->text, in->length, guard_end),
+                                              &suffix_width);
                 if (suffix)
                     guard_end = skip_spaces(in->text, in->length, guard_end) + suffix_width;
                 out->value[0] = out->secondary[0] = out->unit[0] = '\0';
@@ -833,8 +871,8 @@ static size_t compound_currency_range(const ttf_pack_input_t *in, ttf_semantic_t
             unsigned exponent = 0, power;
             int negative = first.value[0] == '-';
             ko_decimal_t coefficient, ignored;
-            const char *first_number = first.value +
-                (first.value[0] == '-' || first.value[0] == '+');
+            const char *first_number =
+                first.value + (first.value[0] == '-' || first.value[0] == '+');
             if (in->text[p] == '-' || in->text[p] == '+')
                 ++p;
             if (!decimal_parse(in->text, in->length, &p, &ignored))
@@ -881,8 +919,8 @@ static size_t compound_currency_range(const ttf_pack_input_t *in, ttf_semantic_t
                     break;
                 memcpy(key, in->text + in->tokens[chain_index].begin, chain_width);
                 key[chain_width] = '\0';
-                chain_enabled = ttf_resource_get(in->engine, "quantity_range_separator", "*",
-                                                 key, NULL);
+                chain_enabled =
+                    ttf_resource_get(in->engine, "quantity_range_separator", "*", key, NULL);
                 if (!chain_enabled || strcmp(chain_enabled, "1"))
                     break;
                 chained = 1;
@@ -906,18 +944,15 @@ static size_t compound_currency_range(const ttf_pack_input_t *in, ttf_semantic_t
             }
             if (chained) {
                 out->value[0] = out->secondary[0] = out->unit[0] = '\0';
-                return classified(in, out, chain_end, TTF_SEM_TEXT,
-                                  "ko:invalid-compound-range");
+                return classified(in, out, chain_end, TTF_SEM_TEXT, "ko:invalid-compound-range");
             }
         }
-        if (first.type != second.type ||
-            strcmp(first.unit, second.unit) ||
+        if (first.type != second.type || strcmp(first.unit, second.unit) ||
             (token->end == token->begin + 1 && in->text[token->begin] == '-' &&
              in->tokens[next].begin == token->end &&
              (in->text[token->end] == '-' || in->text[token->end] == '+'))) {
             out->value[0] = out->secondary[0] = out->unit[0] = '\0';
-            return classified(in, out, second.input_end, TTF_SEM_TEXT,
-                              "ko:invalid-compound-range");
+            return classified(in, out, second.input_end, TTF_SEM_TEXT, "ko:invalid-compound-range");
         }
         memcpy(out->value, first.value, sizeof(out->value));
         memcpy(out->secondary, second.value, sizeof(out->secondary));
@@ -926,9 +961,9 @@ static size_t compound_currency_range(const ttf_pack_input_t *in, ttf_semantic_t
         if (delimiter_layer > out->layer)
             out->layer = delimiter_layer;
         return classified(in, out, second.input_end, TTF_SEM_RANGE,
-                          shared_scale ? "ko:shared-scale-range" :
-                          first.type == TTF_SEM_CURRENCY ? "ko:compound-currency-range" :
-                                                         "ko:compound-quantity-range");
+                          shared_scale                     ? "ko:shared-scale-range"
+                          : first.type == TTF_SEM_CURRENCY ? "ko:compound-currency-range"
+                                                           : "ko:compound-quantity-range");
     }
     return 0;
 }
@@ -939,6 +974,9 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     size_t n = in->length, begin = in->tokens[in->index].begin, p, q;
     unsigned year, month, day;
     size_t identifier = ttf_ko_classify_identifier(in, s);
+    if (identifier)
+        return identifier;
+    identifier = ttf_ko_classify_counter(in, s);
     if (identifier)
         return identifier;
     p = unsigned_value(text, n, begin, &year);

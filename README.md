@@ -468,3 +468,29 @@ The checklist preserves the full project objective: unclosed items are not treat
 as complete because a selected corpus passes. Current references and four new
 Korean title pronunciations remain pending independent review. Audio synthesis
 and audio comparison are outside the evaluation scope.
+
+### v0.15 Unicode numeric grouping, Korean counters and source trace
+
+| Input | Normalized text |
+|---|---|
+| `1 250원` (U+202F separator) | `천이백오십 원` |
+| `1 250~2 500원` | `천이백오십 원에서 이천오백 원` |
+| `1 25원` (invalid grouping) | `1 25원` |
+| `1번째 / 11번째 / 20번째` | `첫 번째 / 열한 번째 / 스무 번째` |
+| `총 3번` | `총 세 번` |
+| `3번 출구` | `삼 번 출구` |
+| `제1,001호` | `제천일 호` |
+
+The same exact decimal parser now handles comma, NBSP, narrow NBSP and thin-space
+integer grouping without changing source byte offsets. ASCII whitespace still
+separates independent numbers. Malformed groups and unsupported ordinal forms
+remain whole text. Explicit positive Korean numbers retain `플러스`.
+
+Korean ordinals, count/identifier roles, attached particles and ranges have separate
+IR contracts and editable resource policies. The web workbench includes a 28-case
+counter corpus and Unicode amount samples. Pronunciation dictionary/G2P source
+layers are reported through ABI-compatible provenance; target mapper row/layer
+trace remains a documented limitation.
+
+See [Unicode numbers](docs/unicode-numbers.md), [Korean counters and customization](docs/korean-counters.md),
+[pronunciation trace](docs/pronunciation-trace.md), and [v0.15 measurements](docs/research/numeric-counters-v15-results.md).

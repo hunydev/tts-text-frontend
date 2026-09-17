@@ -1,0 +1,8 @@
+# Integer grouping policy. Literal separator keys; 3 enables uniform three-digit groups.
+# 0 disables recognition while retaining numeric-looking objects without partial normalization.
+# ASCII spaces and tabs are never grouping separators.
+# Rows below: U+002C COMMA, U+00A0 NBSP, U+202F NNBSP, U+2009 THIN SPACE.
+numeric_group_separator	*	,	3
+numeric_group_separator	*	 	3
+numeric_group_separator	*	 	3
+numeric_group_separator	*	 	3

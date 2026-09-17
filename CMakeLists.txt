@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(tts_text_frontend VERSION 0.14.0 LANGUAGES C)
+project(tts_text_frontend VERSION 0.15.0 LANGUAGES C)
 include(GNUInstallDirs)
 include(CTest)
 option(TTF_ENABLE_ASAN "Enable AddressSanitizer" OFF)
@@ -79,6 +79,9 @@ if(BUILD_TESTING)
   add_executable(ttf_test_multiword tests/unit/test_multiword_api.c)
   target_link_libraries(ttf_test_multiword PRIVATE tts_text_frontend_shared ttf_build_flags)
   add_test(NAME multiword_lexicon_api COMMAND ttf_test_multiword ${CMAKE_CURRENT_SOURCE_DIR}/resources)
+  add_executable(ttf_test_pronunciation_provenance tests/unit/test_pronunciation_provenance.c)
+  target_link_libraries(ttf_test_pronunciation_provenance PRIVATE tts_text_frontend_static ttf_build_flags)
+  add_test(NAME pronunciation_provenance_protocol COMMAND ttf_test_pronunciation_provenance ${CMAKE_CURRENT_SOURCE_DIR}/resources)
   add_executable(ttf_test_rule_index tests/unit/test_rule_index.c)
   target_link_libraries(ttf_test_rule_index PRIVATE tts_text_frontend_static ttf_build_flags)
   add_test(NAME rule_index_with_large_lexicon COMMAND ttf_test_rule_index ${CMAKE_CURRENT_SOURCE_DIR}/resources)
@@ -110,6 +113,18 @@ if(BUILD_TESTING)
   endif()
   find_package(Python3 COMPONENTS Interpreter QUIET)
   if(Python3_Interpreter_FOUND)
+    add_test(NAME pronunciation_source_trace COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_pronunciation_trace.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
+    add_test(NAME unicode_grouping_values COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_unicode_grouping.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
+    add_test(NAME korean_counter_values COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_korean_counters.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
+    add_test(NAME korean_counters_v15_evaluation COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources korean_counters_v15.jsonl 28)
     add_test(NAME pronunciation_alias_precedence COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_pronunciation_aliases.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
@@ -238,6 +253,18 @@ if(BUILD_TESTING)
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_multiword_guards.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
     if(UNIX AND NOT TTF_ENABLE_ASAN AND NOT TTF_ENABLE_UBSAN)
+      add_test(NAME pronunciation_trace_byte_splits COMMAND ${Python3_EXECUTABLE}
+        ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_pronunciation_trace.py
+        $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources
+        --library $<TARGET_FILE:tts_text_frontend_shared>)
+      add_test(NAME unicode_grouping_byte_splits COMMAND ${Python3_EXECUTABLE}
+        ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_unicode_grouping.py
+        $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources
+        --library $<TARGET_FILE:tts_text_frontend_shared>)
+      add_test(NAME korean_counter_byte_splits COMMAND ${Python3_EXECUTABLE}
+        ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_korean_counters.py
+        $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources
+        --library $<TARGET_FILE:tts_text_frontend_shared>)
       add_test(NAME pronunciation_alias_byte_splits COMMAND ${Python3_EXECUTABLE}
         ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_pronunciation_aliases.py
         $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources

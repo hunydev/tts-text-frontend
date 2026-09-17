@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "benchmark": "original-korean-counter-development-contracts",
+  "reference_status": "pending-independent-review",
+  "held_out": false,
+  "reference_sha256": "8014a1b2a76fb7a14e88d3026c2207dceba0c85ccb462754e9806c750eb94c6e",
+  "reference_code_sha256": "78853f94553c65a1ea4f8d87180813b4d84e75ff2e33b3d3a7428704e9ec3e4f",
+  "snapshots": {
+    "before": {
+      "library_sha256": "7bd5fedd2ba6c5e1a72a81b3ffb2c6dbb56168102733b42036d34aaabdcd0b1b",
+      "resources_sha256": "2654b6aa0b61cf9152e7d8389c39259254aaee8f9f2868c27568abc952930d88"
+    },
+    "after": {
+      "library_sha256": "73f5d42191b265a0dee3f5af6b562aa55a3a06963f0c4ddf8389a92a4a4a0847",
+      "resources_sha256": "3a3b94a9cc979b21e9c0e8b9d49c23c872cd52dede6252ab5fd3506feb331b65"
+    }
+  },
+  "metrics": {
+    "ORDINAL": {
+      "total": 164,
+      "before_text_exact": 24,
+      "after_text_exact": 164,
+      "before_contract_exact": 0,
+      "after_contract_exact": 164,
+      "text_fixed": 140,
+      "text_regressed": 0
+    },
+    "ALL": {
+      "total": 295,
+      "before_text_exact": 80,
+      "after_text_exact": 295,
+      "before_contract_exact": 29,
+      "after_contract_exact": 295,
+      "text_fixed": 215,
+      "text_regressed": 0
+    },
+    "RANGE": {
+      "total": 4,
+      "before_text_exact": 0,
+      "after_text_exact": 4,
+      "before_contract_exact": 0,
+      "after_contract_exact": 4,
+      "text_fixed": 4,
+      "text_regressed": 0
+    },
+    "COUNTER": {
+      "total": 100,
+      "before_text_exact": 53,
+      "after_text_exact": 100,
+      "before_contract_exact": 28,
+      "after_contract_exact": 100,
+      "text_fixed": 47,
+      "text_regressed": 0
+    },
+    "CARDINAL": {
+      "total": 1,
+      "before_text_exact": 1,
+      "after_text_exact": 1,
+      "before_contract_exact": 1,
+      "after_contract_exact": 1,
+      "text_fixed": 0,
+      "text_regressed": 0
+    },
+    "TEXT": {
+      "total": 26,
+      "before_text_exact": 2,
+      "after_text_exact": 26,
+      "before_contract_exact": 0,
+      "after_contract_exact": 26,
+      "text_fixed": 24,
+      "text_regressed": 0
+    }
+  },
+  "note": "Contract exact includes text and declared span class/value/unit/secondary/language metadata. Counts are development coverage, not population accuracy."
+}

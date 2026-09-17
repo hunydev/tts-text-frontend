@@ -1,0 +1,305 @@
+{
+  "schema_version": 1,
+  "status": "completed",
+  "cases": 57,
+  "reference_source": "tests/integration/test_unicode_grouping.py:references",
+  "reference_status": "authored-development-reference; pending independent review",
+  "sample_policy": "Every fixed authored reference for NBSP, NNBSP and thin space, once; default language from each reference, default segment configuration. No Decimal-generated cases, invalid-input guards or chunk repetitions.",
+  "metric_policy": {
+    "text_exact": "Literal normalized text equals authored complete reference.",
+    "semantic_class_exact": "One span covers all original UTF-8 bytes and has the reference class.",
+    "ir_value_exact": "One whole-input span has exact value, secondary and unit strings, regardless of class.",
+    "ir_exact": "Both whole-object class and value tuple match; no float or case normalization.",
+    "failure_policy": "Errors and unaligned/multiple spans remain failures in the denominator."
+  },
+  "reference_cases_sha256": "01d885347e0167799b19a302e382336622670ba857befc36564d6894480b9471",
+  "provenance": {
+    "reference_module_sha256": "43fd27dbe98dc755d0be747432c3c9f81ad702764fc6964316a783ade51f4a4a",
+    "evaluator_sha256": "5306618a1acb76fd697ecde925c0fb3b6434b864e41dddc38739a620dfc20cb0",
+    "native_adapter_sha256": "bbf4d4a725cd0e91ea630717f3ba780a2905ec55b3db1ef1b5e4854d5dbc25e0",
+    "baseline": {
+      "library_sha256": "7bd5fedd2ba6c5e1a72a81b3ffb2c6dbb56168102733b42036d34aaabdcd0b1b",
+      "resources_sha256": "eb918481cab3c9e575081e5d4f408621dbeeda201782629c586cac560f780694"
+    },
+    "candidate": {
+      "library_sha256": "73f5d42191b265a0dee3f5af6b562aa55a3a06963f0c4ddf8389a92a4a4a0847",
+      "resources_sha256": "143da2c5cb326f546bc7b5a263b06d8035bb381fb1cfb0fe4a44316dd6323f57"
+    }
+  },
+  "before": {
+    "metrics": {
+      "total": 57,
+      "engine_errors": 0,
+      "whole_object_aligned": 0,
+      "text_exact": 0,
+      "semantic_class_exact": 0,
+      "ir_value_exact": 0,
+      "ir_exact": 0
+    },
+    "by_reference_class": {
+      "CARDINAL": {
+        "total": 6,
+        "engine_errors": 0,
+        "whole_object_aligned": 0,
+        "text_exact": 0,
+        "semantic_class_exact": 0,
+        "ir_value_exact": 0,
+        "ir_exact": 0
+      },
+      "CURRENCY": {
+        "total": 24,
+        "engine_errors": 0,
+        "whole_object_aligned": 0,
+        "text_exact": 0,
+        "semantic_class_exact": 0,
+        "ir_value_exact": 0,
+        "ir_exact": 0
+      },
+      "MEASURE": {
+        "total": 12,
+        "engine_errors": 0,
+        "whole_object_aligned": 0,
+        "text_exact": 0,
+        "semantic_class_exact": 0,
+        "ir_value_exact": 0,
+        "ir_exact": 0
+      },
+      "PERCENT": {
+        "total": 3,
+        "engine_errors": 0,
+        "whole_object_aligned": 0,
+        "text_exact": 0,
+        "semantic_class_exact": 0,
+        "ir_value_exact": 0,
+        "ir_exact": 0
+      },
+      "RANGE": {
+        "total": 12,
+        "engine_errors": 0,
+        "whole_object_aligned": 0,
+        "text_exact": 0,
+        "semantic_class_exact": 0,
+        "ir_value_exact": 0,
+        "ir_exact": 0
+      }
+    },
+    "by_language": {
+      "en-US": {
+        "total": 21,
+        "engine_errors": 0,
+        "whole_object_aligned": 0,
+        "text_exact": 0,
+        "semantic_class_exact": 0,
+        "ir_value_exact": 0,
+        "ir_exact": 0
+      },
+      "ko-KR": {
+        "total": 36,
+        "engine_errors": 0,
+        "whole_object_aligned": 0,
+        "text_exact": 0,
+        "semantic_class_exact": 0,
+        "ir_value_exact": 0,
+        "ir_exact": 0
+      }
+    },
+    "by_separator": {
+      "U+00A0": {
+        "total": 19,
+        "engine_errors": 0,
+        "whole_object_aligned": 0,
+        "text_exact": 0,
+        "semantic_class_exact": 0,
+        "ir_value_exact": 0,
+        "ir_exact": 0
+      },
+      "U+2009": {
+        "total": 19,
+        "engine_errors": 0,
+        "whole_object_aligned": 0,
+        "text_exact": 0,
+        "semantic_class_exact": 0,
+        "ir_value_exact": 0,
+        "ir_exact": 0
+      },
+      "U+202F": {
+        "total": 19,
+        "engine_errors": 0,
+        "whole_object_aligned": 0,
+        "text_exact": 0,
+        "semantic_class_exact": 0,
+        "ir_value_exact": 0,
+        "ir_exact": 0
+      }
+    },
+    "actual_span_class_sequences": {
+      "CARDINAL+TEXT+CARDINAL": 2,
+      "CARDINAL+TEXT+CARDINAL+TEXT+CARDINAL": 2,
+      "CARDINAL+TEXT+CARDINAL+TEXT+INITIALISM+TEXT+WORD": 2,
+      "CARDINAL+TEXT+CARDINAL+TEXT+SYMBOL+TEXT+CARDINAL+TEXT+CURRENCY": 2,
+      "CARDINAL+TEXT+CARDINAL+TEXT+WORD": 2,
+      "CARDINAL+TEXT+CURRENCY": 6,
+      "CARDINAL+TEXT+MEASURE": 6,
+      "CARDINAL+TEXT+PERCENT": 2,
+      "CARDINAL+TEXT+RANGE+TEXT+CURRENCY": 2,
+      "CARDINAL+TEXT+TEXT+TEXT+MEASURE": 2,
+      "CARDINAL+WORD+CARDINAL": 1,
+      "CARDINAL+WORD+CARDINAL+WORD+CARDINAL": 1,
+      "CARDINAL+WORD+CARDINAL+WORD+INITIALISM+TEXT+WORD": 1,
+      "CARDINAL+WORD+CARDINAL+WORD+SYMBOL+WORD+CARDINAL+WORD+CURRENCY": 1,
+      "CARDINAL+WORD+CARDINAL+WORD+WORD": 1,
+      "CARDINAL+WORD+CURRENCY": 3,
+      "CARDINAL+WORD+MEASURE": 3,
+      "CARDINAL+WORD+PERCENT": 1,
+      "CARDINAL+WORD+RANGE+WORD+CURRENCY": 1,
+      "CARDINAL+WORD+TEXT+WORD+MEASURE": 1,
+      "CURRENCY+TEXT+CARDINAL": 6,
+      "CURRENCY+TEXT+CARDINAL+SYMBOL+CURRENCY+TEXT+CARDINAL": 2,
+      "CURRENCY+WORD+CARDINAL": 3,
+      "CURRENCY+WORD+CARDINAL+SYMBOL+CURRENCY+WORD+CARDINAL": 1,
+      "SYMBOL+TEXT+CARDINAL+TEXT+CARDINAL": 2,
+      "SYMBOL+WORD+CARDINAL+WORD+CARDINAL": 1
+    }
+  },
+  "after": {
+    "metrics": {
+      "total": 57,
+      "engine_errors": 0,
+      "whole_object_aligned": 57,
+      "text_exact": 57,
+      "semantic_class_exact": 57,
+      "ir_value_exact": 57,
+      "ir_exact": 57
+    },
+    "by_reference_class": {
+      "CARDINAL": {
+        "total": 6,
+        "engine_errors": 0,
+        "whole_object_aligned": 6,
+        "text_exact": 6,
+        "semantic_class_exact": 6,
+        "ir_value_exact": 6,
+        "ir_exact": 6
+      },
+      "CURRENCY": {
+        "total": 24,
+        "engine_errors": 0,
+        "whole_object_aligned": 24,
+        "text_exact": 24,
+        "semantic_class_exact": 24,
+        "ir_value_exact": 24,
+        "ir_exact": 24
+      },
+      "MEASURE": {
+        "total": 12,
+        "engine_errors": 0,
+        "whole_object_aligned": 12,
+        "text_exact": 12,
+        "semantic_class_exact": 12,
+        "ir_value_exact": 12,
+        "ir_exact": 12
+      },
+      "PERCENT": {
+        "total": 3,
+        "engine_errors": 0,
+        "whole_object_aligned": 3,
+        "text_exact": 3,
+        "semantic_class_exact": 3,
+        "ir_value_exact": 3,
+        "ir_exact": 3
+      },
+      "RANGE": {
+        "total": 12,
+        "engine_errors": 0,
+        "whole_object_aligned": 12,
+        "text_exact": 12,
+        "semantic_class_exact": 12,
+        "ir_value_exact": 12,
+        "ir_exact": 12
+      }
+    },
+    "by_language": {
+      "en-US": {
+        "total": 21,
+        "engine_errors": 0,
+        "whole_object_aligned": 21,
+        "text_exact": 21,
+        "semantic_class_exact": 21,
+        "ir_value_exact": 21,
+        "ir_exact": 21
+      },
+      "ko-KR": {
+        "total": 36,
+        "engine_errors": 0,
+        "whole_object_aligned": 36,
+        "text_exact": 36,
+        "semantic_class_exact": 36,
+        "ir_value_exact": 36,
+        "ir_exact": 36
+      }
+    },
+    "by_separator": {
+      "U+00A0": {
+        "total": 19,
+        "engine_errors": 0,
+        "whole_object_aligned": 19,
+        "text_exact": 19,
+        "semantic_class_exact": 19,
+        "ir_value_exact": 19,
+        "ir_exact": 19
+      },
+      "U+2009": {
+        "total": 19,
+        "engine_errors": 0,
+        "whole_object_aligned": 19,
+        "text_exact": 19,
+        "semantic_class_exact": 19,
+        "ir_value_exact": 19,
+        "ir_exact": 19
+      },
+      "U+202F": {
+        "total": 19,
+        "engine_errors": 0,
+        "whole_object_aligned": 19,
+        "text_exact": 19,
+        "semantic_class_exact": 19,
+        "ir_value_exact": 19,
+        "ir_exact": 19
+      }
+    },
+    "actual_span_class_sequences": {
+      "CARDINAL": 6,
+      "CURRENCY": 24,
+      "MEASURE": 12,
+      "PERCENT": 3,
+      "RANGE": 12
+    }
+  },
+  "comparison": {
+    "text_exact": {
+      "fixed": 57,
+      "regressed": 0,
+      "unchanged_correct": 0,
+      "unchanged_incorrect": 0
+    },
+    "semantic_class_exact": {
+      "fixed": 57,
+      "regressed": 0,
+      "unchanged_correct": 0,
+      "unchanged_incorrect": 0
+    },
+    "ir_value_exact": {
+      "fixed": 57,
+      "regressed": 0,
+      "unchanged_correct": 0,
+      "unchanged_incorrect": 0
+    },
+    "ir_exact": {
+      "fixed": 57,
+      "regressed": 0,
+      "unchanged_correct": 0,
+      "unchanged_incorrect": 0
+    }
+  },
+  "limitations": "Selected feature development references, authored in this project; not held-out, not independently approved and not a production accuracy estimate. This aggregate contains no third-party corpus or input/output strings."
+}
