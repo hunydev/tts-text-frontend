@@ -472,6 +472,25 @@
           "reason": "New Korean product phrase must not change English context."
         }
       }
+    },
+    {
+      "path": "tests/evaluation/scaled_currency_v12.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "developer-authored synthetic fixture; docs/scaled-currency.md",
+        "reason": "Original currency normalization, exact magnitude, context and minor-unit policy references; agreement with the engine is not independent linguistic approval."
+      },
+      "category_overrides": {
+        "finance/currency-preservation": {
+          "classification": "preservation-contract",
+          "review_status": "pending-independent-review",
+          "reference_source": "developer-authored synthetic fixture; docs/scaled-currency.md",
+          "reason": "Contradictory currency identifiers are preserved as one span; this verifies a defensive contract rather than recommending the malformed source as prose."
+        }
+      },
+      "case_overrides": {}
     }
   ],
   "excluded": [

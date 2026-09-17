@@ -340,7 +340,8 @@ ttf_status_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, i
                         if (previous_token &&
                             tokens[previous_token - 1].script == TTF_SCRIPT_DIGIT) {
                             continuation =
-                                ttf_resource_get(e, "numeric_continuation", "*", key, NULL) != NULL;
+                                ttf_resource_get(e, "numeric_continuation", "*", key, NULL) != NULL ||
+                                ttf_resource_get(e, "currency_scale", "*", key, NULL) != NULL;
                             for (pack = 0; !continuation && pack < e->pack_count; ++pack)
                                 continuation = ttf_resource_get(e, "numeric_continuation",
                                                                 e->packs[pack]->language_tag, key,

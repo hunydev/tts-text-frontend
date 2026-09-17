@@ -182,7 +182,8 @@ static size_t atom_end(const char *s, size_t n, size_t p) {
     size_t end = p;
     while (end < n &&
            (digit(s[end]) || ascii_letter(s[end]) || s[end] == '.' || s[end] == ',' ||
-            s[end] == '-' || s[end] == '+' || s[end] == ':' || s[end] == '/' || s[end] == '%'))
+            s[end] == '-' || s[end] == '+' || s[end] == ':' || s[end] == '/' || s[end] == '%' ||
+            s[end] == '_'))
         ++end;
     while (end > p && (s[end - 1] == '.' || s[end - 1] == ',' || s[end - 1] == ':'))
         --end;
@@ -196,7 +197,7 @@ static int structured_tail(const char *s, size_t n, size_t p) {
         ++next;
     if (next > p + 1 && next < n && digit(s[next]))
         return 1;
-    return ascii_letter(s[p]) || digit(s[p]) || s[p] == ':' || s[p] == '/' ||
+    return ascii_letter(s[p]) || digit(s[p]) || s[p] == ':' || s[p] == '/' || s[p] == '_' ||
            (s[p] == '%' && p + 1 < n &&
             (ascii_letter(s[p + 1]) || digit(s[p + 1]) || s[p + 1] == '%')) ||
            ((s[p] == '.' || s[p] == ',' || s[p] == '-') && p + 1 < n && digit(s[p + 1]));
@@ -316,42 +317,117 @@ static size_t clock_endpoint(const ttf_pack_input_t *in, size_t start,
     return end;
 }
 
-/* Explicitly repeated currency/rate/measure/counter/clock units participate. A missing
-   or different second unit must never be inferred as an exchange conversion. */
+/* Scaling inventories are data. The bounded decimal shift is shared with
+   scientific notation; no floating-point approximation reaches Semantic IR. */
+static int scale_power(const char *value) {
+    char *tail;
+    long power = strtol(value, &tail, 10);
+    return *value && !*tail && power >= 3 && power <= 18 && power % 3 == 0
+               ? (int)power : 0;
+}
 static size_t quantity_endpoint(const ttf_pack_input_t *in, size_t start,
                                 ttf_semantic_t *out, int allow_range) {
-    const char *prefix = NULL;
-    size_t number_start = start, p, suffix_end;
-    ttf_resource_layer_t layer = TTF_LAYER_COMMON;
+    const char *prefix = NULL, *scale = NULL;
+    const char *s = in->text;
+    size_t n = in->length, number_start = start, p, suffix_end, scale_end = 0, q;
+    ttf_resource_layer_t layer = TTF_LAYER_COMMON, scale_layer = TTF_LAYER_COMMON;
     ttf_semantic_type_t type;
+    int power = 0, scaled = 0, valid = 1;
+    char leading_sign = 0;
     p = clock_endpoint(in, start, out, allow_range);
     if (p)
         return p;
     if (resource_prefix(in, "currency_prefix", start, &prefix, &p, &layer))
-        number_start = skip_space(in->text, in->length, p);
-    p = number(in->text, in->length, number_start, out->value);
+        number_start = skip_space(s, n, p);
+    else if (start + 1 < n && (s[start] == '-' || s[start] == '+') &&
+             resource_prefix(in, "currency_prefix", start + 1, &prefix, &p, &layer)) {
+        leading_sign = s[start];
+        number_start = skip_space(s, n, p);
+    }
+    p = number(s, n, number_start, out->value);
     if (p == number_start)
         return 0;
-    if (quantity_suffix(in, skip_space(in->text, in->length, p), out, &suffix_end, &type,
-                        allow_range)) {
-        if (type != TTF_SEM_CURRENCY && type != TTF_SEM_MEASURE && type != TTF_SEM_PERCENT &&
-            type != TTF_SEM_COUNTER)
-            return 0;
+    if (leading_sign) {
+        size_t length = strlen(out->value);
+        if (out->value[0] == '-' || out->value[0] == '+' || length + 1 >= sizeof(out->value))
+            valid = 0;
+        else {
+            memmove(out->value + 1, out->value, length + 1);
+            out->value[0] = leading_sign;
+        }
+    }
+    q = skip_space(s, n, p);
+    if (resource_prefix(in, "currency_scale", q, &scale, &scale_end, &scale_layer)) {
+        ttf_semantic_t probe = {0};
+        ttf_semantic_type_t probe_type;
+        size_t probe_end;
+        int has_suffix = quantity_suffix(in, skip_space(s, n, scale_end), &probe,
+                                         &probe_end, &probe_type, allow_range);
+        int currency_suffix = has_suffix && probe_type == TTF_SEM_CURRENCY;
+        /* Bare m remains a meter, including mixed-unit ranges. A scale only
+           takes precedence when a currency prefix or trailing currency exists. */
+        int ordinary_unit = !prefix && !currency_suffix &&
+                            quantity_suffix(in, q, &probe, &probe_end, &probe_type, allow_range);
+        /* Across whitespace a scale cannot be the initial letters of prose:
+           t in "to" and b in "bcm" remain ordinary text. A marker followed by
+           structured punctuation still enters whole-object preservation. */
+        int scale_boundary = q == p || scale_end == n || !ascii_letter(s[scale_end]) ||
+                             currency_suffix;
+        if (!ordinary_unit && scale_boundary && (prefix || currency_suffix || allow_range)) {
+            scaled = 1;
+            power = scale_power(scale);
+            valid = valid && power && (quantity_tail(in, scale_end, allow_range) || has_suffix);
+            p = scale_end;
+            q = skip_space(s, n, p);
+        }
+    }
+    if (quantity_suffix(in, q, out, &suffix_end, &type, allow_range)) {
         if (type == TTF_SEM_PERCENT)
             (void)snprintf(out->unit, sizeof(out->unit), "percent");
-        if (prefix && layer > out->layer)
-            out->layer = layer;
-        out->type = prefix && (type != TTF_SEM_CURRENCY || strcmp(prefix, out->unit))
-                        ? TTF_SEM_TEXT : type;
-        return suffix_end;
-    }
-    if (prefix && quantity_tail(in, p, allow_range)) {
+        valid = valid && (!prefix || (type == TTF_SEM_CURRENCY && !strcmp(prefix, out->unit)));
+        /* A monetary scale must not reinterpret a physical unit. */
+        if (scaled && type != TTF_SEM_CURRENCY)
+            valid = 0;
+        out->type = type;
+        p = suffix_end;
+    } else if (prefix && (quantity_tail(in, p, allow_range) || scaled)) {
         out->type = TTF_SEM_CURRENCY;
-        out->layer = layer;
         (void)snprintf(out->unit, sizeof(out->unit), "%s", prefix);
-        return p;
+    } else if (allow_range && quantity_tail(in, p, allow_range)) {
+        /* Internal provisional endpoint only. The range planner must establish
+           an explicit currency before such a bare endpoint can be promoted. */
+        out->type = TTF_SEM_CARDINAL;
+    } else
+        return 0;
+    if (layer > out->layer)
+        out->layer = layer;
+    if (scaled) {
+        const char *next_scale;
+        size_t next_end, next = skip_space(s, n, p);
+        ttf_resource_layer_t next_layer;
+        if (scale_layer > out->layer)
+            out->layer = scale_layer;
+        /* Multiple scale multipliers are not this grammar. Keep the entire
+           recognized chain rather than reading only a misleading prefix. */
+        while (resource_prefix(in, "currency_scale", next, &next_scale, &next_end, &next_layer) &&
+               quantity_tail(in, next_end, allow_range)) {
+            valid = 0;
+            p = next_end;
+            next = skip_space(s, n, p);
+        }
+        if ((structured_tail(s, n, p) || (p < n && (s[p] == '+' || s[p] == '-'))) &&
+            !(allow_range && quantity_separator(in, p, NULL))) {
+            valid = 0;
+            p = atom_end(s, n, p);
+        }
+        if (valid && !expand_exponent(out->value, power))
+            valid = 0;
+        if (valid)
+            (void)snprintf(out->secondary, sizeof(out->secondary), "%d", power);
     }
-    return 0;
+    if (!valid)
+        out->type = TTF_SEM_TEXT;
+    return p;
 }
 /* Preserve unsupported chains through each numeric endpoint, rather than
    verbalizing their last number after retaining only an invalid prefix. */
@@ -394,6 +470,12 @@ static size_t repeated_quantity_range(const ttf_pack_input_t *in, ttf_semantic_t
     if (start >= in->length)
         return 0;
     end = quantity_endpoint(in, start, &second, 1);
+    /* Preserve the established non-currency range grammar. Bare provisional
+       endpoints are only promoted by explicit currency evidence. */
+    if (first.type == TTF_SEM_CARDINAL &&
+        (!end || second.type != TTF_SEM_CURRENCY ||
+         (!first.secondary[0] && !second.secondary[0])))
+        return 0;
     if (!end) {
         /* A numeric malformed endpoint remains visible as one TEXT object. */
         if (!digit(in->text[start]) && in->text[start] != '+' && in->text[start] != '-')
@@ -403,6 +485,20 @@ static size_t repeated_quantity_range(const ttf_pack_input_t *in, ttf_semantic_t
     }
     if (quantity_separator(in, skip_space(in->text, in->length, end), NULL))
         return preserve(in, out, range_chain_end(in, end), "syntax.invalid-quantity-range");
+    if ((first.type == TTF_SEM_CURRENCY && second.type == TTF_SEM_CARDINAL) ||
+        (first.type == TTF_SEM_CARDINAL && second.type == TTF_SEM_CURRENCY)) {
+        ttf_semantic_t *bare = first.type == TTF_SEM_CARDINAL ? &first : &second;
+        ttf_semantic_t *money = first.type == TTF_SEM_CURRENCY ? &first : &second;
+        /* A trailing scale shared by an unscaled first endpoint applies to both
+           values. Explicit currency on both endpoints prevents this inference. */
+        if (!first.secondary[0] && second.secondary[0]) {
+            if (!expand_exponent(first.value, scale_power(second.secondary)))
+                return preserve(in, out, end, "syntax.invalid-quantity-range");
+        } else if (first.secondary[0] && !second.secondary[0])
+            return preserve(in, out, end, "syntax.invalid-quantity-range");
+        memcpy(bare->unit, money->unit, sizeof(bare->unit));
+        bare->type = TTF_SEM_CURRENCY;
+    }
     if (first.type == TTF_SEM_TEXT || second.type == TTF_SEM_TEXT ||
         first.type != second.type || strcmp(first.unit, second.unit) ||
         (in->text[separator] == '-' && p == start &&
@@ -505,7 +601,9 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     if (p)
         return p;
 
-    if (resource_prefix(in, "currency_prefix", b, &rule_value, &end, &layer)) {
+    if (resource_prefix(in, "currency_prefix", b, &rule_value, &end, &layer) ||
+        (b + 1 < n && (s[b] == '-' || s[b] == '+') &&
+         resource_prefix(in, "currency_prefix", b + 1, &rule_value, &end, &layer))) {
         size_t start = skip_space(s, n, end);
         ttf_semantic_t quantity = {0};
         p = quantity_endpoint(in, b, &quantity, 0);
@@ -517,11 +615,27 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
                 return preserve(in, out, p, "syntax.invalid-currency");
             memcpy(out->value, quantity.value, sizeof(out->value));
             memcpy(out->unit, quantity.unit, sizeof(out->unit));
+            memcpy(out->secondary, quantity.secondary, sizeof(out->secondary));
             out->layer = quantity.layer;
-            return finish(in, out, p, TTF_SEM_CURRENCY, "syntax.currency-prefix");
+            return finish(in, out, p, TTF_SEM_CURRENCY,
+                          out->secondary[0] ? "syntax.scaled-currency" : "syntax.currency-prefix");
         }
         if (start < n && (digit(s[start]) || s[start] == '+' || s[start] == '-'))
             return preserve(in, out, atom_end(s, n, start), "syntax.invalid-currency");
+    }
+    {
+        ttf_semantic_t quantity = {0};
+        p = quantity_endpoint(in, b, &quantity, 0);
+        if (p && quantity.type == TTF_SEM_CURRENCY && quantity.secondary[0]) {
+            memcpy(out->value, quantity.value, sizeof(out->value));
+            memcpy(out->unit, quantity.unit, sizeof(out->unit));
+            memcpy(out->secondary, quantity.secondary, sizeof(out->secondary));
+            out->layer = quantity.layer;
+            return finish(in, out, p, TTF_SEM_CURRENCY, "syntax.scaled-currency");
+        }
+        if (p && quantity.type == TTF_SEM_TEXT && quantity.unit[0] &&
+            strcmp(quantity.unit, "time"))
+            return preserve(in, out, p, "syntax.invalid-currency");
     }
     p = b;
     if (s[p] == '-' || s[p] == '+')

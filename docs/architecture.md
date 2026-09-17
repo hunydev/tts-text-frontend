@@ -284,3 +284,38 @@ The first feedback iteration adds generic unit/currency resources and makes Lati
 currency prefixes use the universal numeric grammar. Single currency amounts now
 use the same prefix/suffix consistency check as interval endpoints. No language-pair
 branch, copied corpus-specific rule, or public ABI change is introduced.
+
+## ADR: exact currency scale arithmetic and reading policy (v0.12)
+
+Currency scale recognition is shared syntax whose vocabulary is supplied by
+`currency_scale`, `currency_prefix` and `numeric_suffix` resources. A recognized
+currency establishes monetary meaning before scale expansion; an unqualified
+measurement such as `3m` keeps its existing unit. Explicit prefix/suffix currencies
+must agree. Adjacent signs belong to the amount, and invalid sign combinations,
+conflicting identities and values exceeding the bounded IR are preserved.
+
+The classifier shifts decimal digits without binary floating point. An individual
+`CURRENCY` stores the expanded amount in `value`, its ISO-style currency identity
+in `unit`, and the recognized written scale exponent in `secondary`. English
+reconstructs a coefficient and named scale for text output; Korean reads the
+expanded value with its own numeral system. A currency `RANGE` continues to use
+`value` and `secondary` for its two exact endpoints. Consumers dispatch on semantic
+type, rather than treating every `secondary` field as a second number or scale.
+
+Currency labels and English fractional-reading precision are editable resources.
+`currency_minor_digits` distinguishes minor-unit rendering from an exact decimal
+major-unit reading; it never authorizes rounding or validates a payment's legal
+precision. Parser code does not contain a list of currency names. Korean written
+scales remain pack grammar, while the generic parser handles resource-defined
+English financial scale spellings in either context language.
+
+The batch and stream boundary planner use the same classifications and scale
+continuation inventory. They retain incomplete monetary expressions until the
+required input is available. Original references, exact Decimal arithmetic checks
+and arbitrary chunk tests validate text, metadata and commit behavior. External
+benchmark re-evaluation uses the unchanged source references rather than fitting
+currency identities to reference wording. No audio evaluation is introduced.
+
+Public ABI v1 signatures, struct layouts and ownership remain unchanged. This
+extends supported semantics in existing fields. See [currency contracts](scaled-currency.md),
+[resource policy and sources](currency-resources.md) and [IR field meanings](semantic-ir.md).

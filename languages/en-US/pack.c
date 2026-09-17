@@ -125,6 +125,86 @@ static int singular(const char *text) {
     }
     return !*text;
 }
+static int thousand_or_larger(const char *text) {
+    size_t integral = 0;
+    if (*text == '-' || *text == '+')
+        ++text;
+    while (*text == '0')
+        ++text;
+    while (*text >= '0' && *text <= '9') {
+        ++integral;
+        ++text;
+    }
+    return integral >= 4;
+}
+/* A scaled currency keeps the exact expanded amount in the universal IR.
+   Recover its written coefficient by moving the decimal point, never through
+   floating point. Only named cardinal scales can be rendered this way. */
+static ttf_status_t currency_coefficient(const ttf_semantic_t *s, char *coefficient,
+                                          char *scale_key) {
+    char digits_text[TTF_IR_VALUE_SIZE], raw[TTF_IR_VALUE_SIZE + 20];
+    const char *p = s->secondary, *value = s->value;
+    size_t n = 0, integral = 0, used = 0, i, start;
+    unsigned exponent = 0;
+    uint64_t scale = 1;
+    int decimal = 0;
+    char sign = '\0';
+    if (!*p)
+        return TTF_ERESOURCE;
+    for (; *p; ++p) {
+        if (*p < '0' || *p > '9' || exponent > 18)
+            return TTF_ERESOURCE;
+        exponent = exponent * 10 + (unsigned)(*p - '0');
+    }
+    if (exponent < 3 || exponent > 18 || exponent % 3)
+        return TTF_ERESOURCE;
+    if (*value == '-' || *value == '+')
+        sign = *value++;
+    for (p = value; *p; ++p) {
+        if (*p == '.' && !decimal && n) {
+            integral = n;
+            decimal = 1;
+        } else if (*p >= '0' && *p <= '9' && n < sizeof(digits_text) - 1) {
+            digits_text[n++] = *p;
+        } else
+            return TTF_EINVAL;
+    }
+    if (!n || (decimal && integral == n))
+        return TTF_EINVAL;
+    if (!decimal)
+        integral = n;
+    if (integral <= exponent) {
+        raw[used++] = '0';
+        raw[used++] = '.';
+        for (i = integral; i < exponent; ++i)
+            raw[used++] = '0';
+        memcpy(raw + used, digits_text, n);
+        used += n;
+    } else {
+        size_t before = integral - exponent;
+        memcpy(raw, digits_text, before);
+        used = before;
+        raw[used++] = '.';
+        memcpy(raw + used, digits_text + before, n - before);
+        used += n - before;
+    }
+    while (used && raw[used - 1] == '0')
+        --used;
+    if (used && raw[used - 1] == '.')
+        --used;
+    raw[used] = '\0';
+    start = 0;
+    while (raw[start] == '0' && raw[start + 1] && raw[start + 1] != '.')
+        ++start;
+    used = 0;
+    if (sign)
+        coefficient[used++] = sign;
+    memcpy(coefficient + used, raw + start, strlen(raw + start) + 1);
+    for (i = 0; i < exponent; ++i)
+        scale *= 10;
+    (void)snprintf(scale_key, 24, "%llu", (unsigned long long)scale);
+    return TTF_OK;
+}
 static ttf_status_t numeric(const ttf_engine_t *e, const char *s, ttf_buffer_t *b) {
     char integral[TTF_IR_VALUE_SIZE];
     const char *dot;
@@ -189,7 +269,8 @@ static ttf_status_t ordinal(const ttf_engine_t *e, uint64_t n, ttf_buffer_t *b) 
 static int script_score(ttf_script_t s) {
     return s == TTF_SCRIPT_LATIN ? 10 : 0;
 }
-/* Units and ordinal suffixes convey semantics, not independent English words. */
+/* Units, scale markers and ordinal suffixes convey semantics, not independent
+   English words. */
 static int neutral_marker(const ttf_pack_input_t *in, size_t index, const char *lower) {
     const ttf_token_t *t = &in->tokens[index];
     size_t previous = index, start, length;
@@ -223,7 +304,8 @@ static int neutral_marker(const ttf_pack_input_t *in, size_t index, const char *
         return 0;
     memcpy(original, in->text + start, length);
     original[length] = '\0';
-    return ttf_resource_get(in->engine, "numeric_suffix", "*", original, NULL) != NULL;
+    return ttf_resource_get(in->engine, "numeric_suffix", "*", original, NULL) != NULL ||
+           ttf_resource_get(in->engine, "currency_scale", "*", original, NULL) != NULL;
 }
 /* An explicit label selects the speech language of its immediately following
    lexical run. The labels and their weights are resource data, and a zero
@@ -461,18 +543,42 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         return numeric(e, s->secondary, b);
     case TTF_SEM_CURRENCY: {
         const char *dot = strchr(s->value, '.');
+        const char *minor_policy = res(e, "currency_minor_digits", s->unit);
         char whole[TTF_IR_VALUE_SIZE];
         size_t len = dot ? (size_t)(dot - s->value) : strlen(s->value);
+        size_t fractional_digits = dot ? strlen(dot + 1) : 0;
+        unsigned minor_digits = 2;
+        int decimal_major;
+        if (s->secondary[0]) {
+            char coefficient[TTF_IR_VALUE_SIZE + 20], scale_key[24];
+            if ((st = currency_coefficient(s, coefficient, scale_key)) != TTF_OK)
+                return st;
+            if ((st = numeric(e, coefficient, b)) != TTF_OK || (st = space(b)) != TTF_OK ||
+                (st = word(e, b, "number", scale_key)) != TTF_OK || (st = space(b)) != TTF_OK)
+                return st;
+            /* A scale phrase takes a plural currency noun even when a tiny
+               coefficient happens to produce one expanded monetary unit. */
+            (void)snprintf(key, sizeof(key), "%s.many", s->unit);
+            return word(e, b, "currency", key);
+        }
+        if (minor_policy) {
+            if (!strcmp(minor_policy, "0"))
+                minor_digits = 0;
+            else if (strcmp(minor_policy, "2"))
+                return TTF_ERESOURCE;
+        }
+        decimal_major = !minor_digits || fractional_digits > minor_digits;
         memcpy(whole, s->value, len);
         whole[len] = '\0';
-        if ((st = numeric(e, dot && strlen(dot + 1) > 2 ? s->value : whole, b)) != TTF_OK)
+        if ((st = numeric(e, decimal_major ? s->value : whole, b)) != TTF_OK)
             return st;
         if ((st = space(b)) != TTF_OK)
             return st;
-        (void)snprintf(key, sizeof(key), "%s.%s", s->unit, singular(whole) ? "one" : "many");
+        (void)snprintf(key, sizeof(key), "%s.%s", s->unit,
+                       singular(decimal_major ? s->value : whole) ? "one" : "many");
         if ((st = word(e, b, "currency", key)) != TTF_OK)
             return st;
-        if (dot && dot[1] && strlen(dot + 1) <= 2 && strtoul(dot + 1, NULL, 10)) {
+        if (dot && !decimal_major && fractional_digits && strtoul(dot + 1, NULL, 10)) {
             unsigned cents = (unsigned)strtoul(dot + 1, NULL, 10);
             if (!dot[2])
                 cents *= 10;
@@ -513,6 +619,22 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             endpoint.type = TTF_SEM_TIME;
             endpoint.secondary[0] = '\0';
             endpoint.unit[0] = '\0';
+            if ((st = verbalize(e, &endpoint, surface, length, b)) != TTF_OK ||
+                (st = space(b)) != TTF_OK || (st = word(e, b, "number", "range")) != TTF_OK ||
+                (st = space(b)) != TTF_OK)
+                return st;
+            (void)snprintf(endpoint.value, sizeof(endpoint.value), "%s", s->secondary);
+            return verbalize(e, &endpoint, surface, length, b);
+        }
+        /* Sharing "million dollars" in "two to three million dollars" can
+           incorrectly imply a million-scale left endpoint. Repeat currency
+           labels when only one endpoint reaches a named cardinal scale. */
+        (void)snprintf(key, sizeof(key), "%s.many", s->unit);
+        if (s->unit[0] && res(e, "currency", key) &&
+            thousand_or_larger(s->value) != thousand_or_larger(s->secondary)) {
+            ttf_semantic_t endpoint = *s;
+            endpoint.type = TTF_SEM_CURRENCY;
+            endpoint.secondary[0] = '\0';
             if ((st = verbalize(e, &endpoint, surface, length, b)) != TTF_OK ||
                 (st = space(b)) != TTF_OK || (st = word(e, b, "number", "range")) != TTF_OK ||
                 (st = space(b)) != TTF_OK)

@@ -9,6 +9,14 @@
 검증한 뒤 저장소에 보관하는 방식을 권한다. 시스템 파일을 직접 덮어쓸 필요는 없다.
 검증 대상은 출력 텍스트, 의미·언어 메타데이터, 스트리밍 일치성이다.
 
+v0.12의 금융 배수·통화명·영어 보조단위 정책은
+[`currencies.tsv` 수정 안내](currency-resources.md)에 설명되어 있다.
+`currency_scale`은 `million` 등의 인식 표기를 10의 지수와 연결하고,
+`currency`는 의미를 유지한 채 통화 읽기를 바꾼다. `currency_minor_digits`는
+영어의 소수 금액 읽기 정책이며 반올림이나 환산 설정이 아니다.
+[지원 문법과 IR 예제](scaled-currency.md)를 함께 확인하고, 웹의
+**금융 금액 배수·통화·범위** 코퍼스로 출력·금액 값·통화 단위를 검증한다.
+
 v0.11의 추가 단위·통화 규칙은
 `resources/languages/en-US/rules/measurements.tsv`와
 `resources/languages/ko-KR/rules/measurements.tsv`에 있다. `numeric_suffix`는

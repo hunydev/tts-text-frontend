@@ -25,6 +25,28 @@ WiFi를 사용합니다.           → 와이파이를 사용합니다.
 `Apple → 애플` is pronunciation rendering. Source, context and render languages
 remain distinct in the semantic IR and output metadata.
 
+## Exact scaled currency amounts (v0.12)
+
+Currency scales, explicit currency identities and English minor-unit policies
+now have dedicated resources. Amounts are expanded exactly in Semantic IR;
+English can retain a named scale while Korean reads its expanded numeric value.
+
+```text
+$2.75million                  → two point seven five million dollars
+예산은 $2.75million입니다.       → 예산은 이백칠십오만 달러입니다.
+A$3M                          → three million Australian dollars
+1.25JPY                       → one point two five yen
+```
+
+See [scaled currency contracts](docs/scaled-currency.md) and
+[currency resource editing and sources](docs/currency-resources.md). In the web
+workbench, select **금융 금액 배수·통화·범위** (`scaled-currency-v12`) to run the
+[original text and metadata corpus](tests/evaluation/scaled_currency_v12.jsonl).
+References remain pending independent review. This extends supported reading
+contracts; it does not establish general financial-text accuracy.
+The [same-corpus measurement](docs/research/scaled-currency-v12-results.md)
+records the improvement, regression checks and remaining coverage gaps.
+
 ## External benchmark pipeline (v0.11)
 
 The [external benchmark guide](benchmark/README.md) adds Sproat sentence/span/class

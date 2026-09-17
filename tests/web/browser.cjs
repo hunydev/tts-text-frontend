@@ -165,6 +165,13 @@ const path = require("node:path");
       "30건 통과, 0건 실패",
     ),
   );
+  await page.selectOption("#corpus", "scaled-currency-v12");
+  await run();
+  assert(
+    (await page.locator("#corpus-progress").textContent()).includes(
+      "16건 통과, 0건 실패",
+    ),
+  );
   await page.click('[data-mode="normalize"]');
   await page.selectOption("#sample", "mixed");
   await run();

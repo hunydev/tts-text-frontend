@@ -16,6 +16,7 @@ CORPORA = {
     "finance-v7": ("단위가 반복되는 금융 범위", "finance_ranges_v7.jsonl"),
     "lexicon-v10": ("사전 확장 · 금융·콘텐츠 문맥", "lexicon_v10.jsonl"),
     "multiword-v8": ("금융·콘텐츠 복합 이름 발음", "multiword_v8.jsonl"),
+    "scaled-currency-v12": ("금융 금액 배수·통화·범위", "scaled_currency_v12.jsonl"),
 }
 DEFAULTS = dict(
     default_language="ko-KR",
@@ -278,7 +279,7 @@ def catalog():
             expected="<code>GPU 3개</code> 예제는 세 개입니다.\n설정 파일 /etc/app/config-v2.json을 확인합니다.",
         ),
     ]
-    for key in ("advanced", "content-v7", "finance-v7"):
+    for key in ("advanced", "content-v7", "finance-v7", "scaled-currency-v12"):
         if corpus_path(key).exists():
             for row in [
                 json.loads(x)

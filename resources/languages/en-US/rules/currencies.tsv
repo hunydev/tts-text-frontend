@@ -1,0 +1,80 @@
+# Currency identity and reading policy; source notes: docs/currency-resources.md.
+# Currency scales are consulted only after an explicit currency was recognized.
+# Bare 3m remains a measurement; these are decimal exponents, not floating values.
+currency_scale	*	thousand	3
+currency_scale	*	Thousand	3
+currency_scale	*	THOUSAND	3
+currency_scale	*	k	3
+currency_scale	*	K	3
+currency_scale	*	million	6
+currency_scale	*	Million	6
+currency_scale	*	MILLION	6
+currency_scale	*	m	6
+currency_scale	*	M	6
+currency_scale	*	mn	6
+currency_scale	*	billion	9
+currency_scale	*	Billion	9
+currency_scale	*	BILLION	9
+currency_scale	*	b	9
+currency_scale	*	B	9
+currency_scale	*	bn	9
+currency_scale	*	trillion	12
+currency_scale	*	Trillion	12
+currency_scale	*	TRILLION	12
+currency_scale	*	t	12
+currency_scale	*	T	12
+currency_scale	*	tn	12
+
+# Explicit ISO suffixes preserve the currency code in semantic IR.
+numeric_suffix	*	USD	CURRENCY:USD
+numeric_suffix	*	EUR	CURRENCY:EUR
+numeric_suffix	*	AUD	CURRENCY:AUD
+numeric_suffix	*	CAD	CURRENCY:CAD
+numeric_suffix	*	GBP	CURRENCY:GBP
+numeric_suffix	*	CHF	CURRENCY:CHF
+numeric_suffix	*	NOK	CURRENCY:NOK
+numeric_suffix	*	JPY	CURRENCY:JPY
+numeric_suffix	*	KRW	CURRENCY:KRW
+
+# Existing $, US$, euro sign and won sign aliases remain in earlier resources.
+# A$ and C$ must not be reduced to USD by stripping their leading letters.
+currency_prefix	*	A$	AUD
+currency_prefix	*	AU$	AUD
+currency_prefix	*	C$	CAD
+currency_prefix	*	CA$	CAD
+currency_prefix	*	£	GBP
+
+currency	en-US	AUD.one	Australian dollar
+currency	en-US	AUD.many	Australian dollars
+currency	en-US	AUD.minor.one	cent
+currency	en-US	AUD.minor.many	cents
+currency	en-US	CAD.one	Canadian dollar
+currency	en-US	CAD.many	Canadian dollars
+currency	en-US	CAD.minor.one	cent
+currency	en-US	CAD.minor.many	cents
+currency	en-US	GBP.one	pound
+currency	en-US	GBP.many	pounds
+currency	en-US	GBP.minor.one	penny
+currency	en-US	GBP.minor.many	pence
+currency	en-US	CHF.one	Swiss franc
+currency	en-US	CHF.many	Swiss francs
+currency	en-US	CHF.minor.one	centime
+currency	en-US	CHF.minor.many	centimes
+currency	en-US	NOK.one	Norwegian krone
+currency	en-US	NOK.many	Norwegian kroner
+currency	en-US	NOK.minor.one	øre
+currency	en-US	NOK.minor.many	øre
+currency	en-US	JPY.one	yen
+currency	en-US	JPY.many	yen
+
+# 0 reads a fractional value in major units; 2 enables cent-style rendering.
+# This never rounds the input or validates payment/settlement granularity.
+currency_minor_digits	en-US	USD	2
+currency_minor_digits	en-US	EUR	2
+currency_minor_digits	en-US	AUD	2
+currency_minor_digits	en-US	CAD	2
+currency_minor_digits	en-US	GBP	2
+currency_minor_digits	en-US	CHF	2
+currency_minor_digits	en-US	NOK	2
+currency_minor_digits	en-US	JPY	0
+currency_minor_digits	en-US	KRW	0

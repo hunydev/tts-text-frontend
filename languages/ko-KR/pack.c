@@ -567,17 +567,40 @@ static size_t compound_amount(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     unsigned power, last_minor = 4, last_major = 41;
     size_t scales = 0, coefficients = 1;
     int negative = 0, valid = 1, have_pending = 1, have_group = 0;
+    int sign_before_prefix = 0;
     ttf_semantic_type_t type = TTF_SEM_CARDINAL;
     decimal_zero(&total);
     decimal_zero(&group);
-    prefix = quantity_resource_at(in, "currency_prefix", p, &width);
+    /* An adjacent sign may precede a resource-defined currency prefix.
+       Keep it attached to the complete amount, including Korean scales. */
+    if (p + 1 < n && (text[p] == '-' || text[p] == '+')) {
+        prefix = quantity_resource_at(in, "currency_prefix", p + 1, &width);
+        if (prefix) {
+            sign_before_prefix = 1;
+            negative = text[p++] == '-';
+        }
+    }
+    if (!prefix)
+        prefix = quantity_resource_at(in, "currency_prefix", p, &width);
     if (prefix)
         p = skip_spaces(text, n, p + width);
-    if (p < n && (text[p] == '-' || text[p] == '+'))
-        negative = text[p++] == '-';
+    if (p < n && (text[p] == '-' || text[p] == '+')) {
+        if (sign_before_prefix)
+            valid = 0;
+        else
+            negative = text[p] == '-';
+        ++p;
+        /* Consume an invalid sign run so it cannot expose a valid-looking
+           unsigned tail to another classifier. */
+        while (prefix && p < n && (text[p] == '-' || text[p] == '+')) {
+            valid = 0;
+            ++p;
+        }
+    }
     if (p >= n || text[p] < '0' || text[p] > '9')
         return 0;
-    valid = decimal_parse(text, n, &p, &pending);
+    if (!decimal_parse(text, n, &p, &pending))
+        valid = 0;
     end = p;
     for (;;) {
         q = skip_spaces(text, n, p);

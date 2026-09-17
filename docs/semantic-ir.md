@@ -33,6 +33,8 @@ $12 → CURRENCY(value="12", unit="USD")
 25bp → MEASURE(value="25", unit="basis_point")
 1.5-2.5% → RANGE(value="1.5", secondary="2.5", unit="percent")
 1.2e6원 → CURRENCY(value="1200000", unit="KRW")
+$2.75million → CURRENCY(value="2750000", secondary="6", unit="USD")
+$2M~$3M → RANGE(value="2000000", secondary="3000000", unit="USD")
 계좌는 001-204 → DIGIT_SEQUENCE(value="001-204", secondary="계좌는", unit="financial_identifier")
 2026년 6월 1일 → DATE(value="2026-06-01")
 3.5만원 → CURRENCY(value="35000", unit="KRW")
@@ -87,3 +89,20 @@ layer is present in both semantic resource provenance and pronunciation provenan
 The source extent includes original internal whitespace; the output extent covers
 its exact pronunciation value. This does not change the public struct layout.
 Consumers must not assume a fixed word-to-span count as lexicon resources expand.
+
+## Currency scale metadata (v0.12)
+
+For an individual `CURRENCY` span, `value` always contains the exact amount in
+major currency units. A nonempty `secondary` is the base-ten exponent of a
+recognized written currency scale, not another amount: `$2.75million` has value
+`2750000` and scale hint `6`. The English renderer reconstructs the coefficient
+from these exact strings; the Korean renderer reads the expanded value. Ordinary
+unscaled currencies keep `secondary` empty.
+
+Interpret `secondary` by semantic type. In a `RANGE` it remains the exact second
+endpoint, including currency ranges; it is never a scale hint. Fraction and time
+uses are likewise unchanged. The signed amount and explicit currency code are
+independent of the selected spoken form. Invalid conflicting currencies and
+unrepresentable scale operations remain literal `TEXT` instead of exposing a
+truncated financial value. Existing public ABI v1 fields and layouts are unchanged.
+See [the complete contract](scaled-currency.md).

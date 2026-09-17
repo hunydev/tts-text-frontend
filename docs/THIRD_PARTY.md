@@ -147,6 +147,33 @@ TTS 정답으로 자동 승격하지 않는다.
 
 ## 상세 조사와 변경 절차
 
+### SIX 통화 코드 사실 확인 자료 (v0.12)
+
+2026-09-17에 SIX의 [금융 데이터 표준 안내](https://www.six-group.com/en/products-services/financial-information/market-reference-data/data-standards.html)와
+공식 [Current Currency & Funds List One XML](https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml)을
+직접 확인했다. USD, EUR, AUD, CAD, GBP, CHF, NOK, JPY, KRW의 코드·명칭 연결과
+보조단위 자릿수만 구현 정책의 사실 확인 근거로 사용했다.
+
+| 항목 | 기록 |
+| --- | --- |
+| Source | SIX, ISO 4217 maintenance agency, List One XML |
+| Version | XML의 `Pblshd="2026-01-01"`; 조회일은 2026-09-17 |
+| SHA-256 | `838dfb991648cf36df939edd5fe3811737962b75a32252847d239cedd1e291c9` |
+| License | 이번 사실 확인에서 XML 전체의 별도 재배포 라이선스를 확정하지 않음 |
+| Commercial use / redistribution | 공식 파일 전체를 상업 데이터 리소스로 재배포할 권한을 추정하지 않음 |
+| Attribution | 위 원문 URL·게시일·조회일·hash를 출처 추적용으로 기록. 이것을 원본 재배포 허가나 고지 요건의 전부로 간주하지 않음 |
+| Vendoring | XML·웹페이지·ISO 표준 문서 자체를 저장소나 제품에 포함하지 않음 |
+
+제품에는 기존 TSV 형식으로 직접 작성한 소규모 통화 인식·읽기 정책이 들어간다.
+전체 ISO 목록을 수입한 데이터베이스가 아니며, 한국어 읽기와 scale 별칭은 프로젝트
+정책이다. 보조단위 자릿수는 TTS 읽기를 고르는 데 사용하며 결제 유효성이나 현금
+반올림을 판단하지 않는다. 통화명과 영문 보조단위명의 추가 근거는
+[통화 리소스 문서](currency-resources.md)에 기록했다. 공개 열람 가능성이나 코드
+명칭의 사실 확인으로 다른 금융 데이터셋·benchmark의 상업 이용, 변경 또는 재배포
+라이선스를 일괄 승인하지 않는다.
+
+### 출처 변경 시 확인
+
 근거·형식·기술적 한계는 [NeMo/Sproat](research/nemo-sproat.md),
 [한국어 코퍼스](research/korean-sources.md), [CMU/국립국어원](research/pronunciation-sources.md)에 있다.
 출처 revision이 바뀌거나 실제 파일을 제품에 복사할 때에는 해당 파일의 이용 조건,

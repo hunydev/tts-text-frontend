@@ -1,0 +1,7 @@
+# Korean labels for shared currency semantics. See docs/currency-resources.md.
+# USD/EUR/JPY/KRW labels remain in numeric.tsv.
+currency	ko-KR	AUD	호주 달러
+currency	ko-KR	CAD	캐나다 달러
+currency	ko-KR	GBP	파운드
+currency	ko-KR	CHF	스위스 프랑
+currency	ko-KR	NOK	노르웨이 크로네
