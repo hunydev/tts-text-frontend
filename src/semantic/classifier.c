@@ -1,5 +1,6 @@
 #include "../core/internal.h"
 #include "numeric_grouping.h"
+#include "phone.h"
 
 /* Syntax is universal; suffix and prefix inventories are resource data. A match
    may finish inside a script token (3개입니다); input_end retains that boundary. */
@@ -909,6 +910,12 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
         if (p && quantity.type == TTF_SEM_TEXT && quantity.unit[0] && strcmp(quantity.unit, "time"))
             return preserve(in, out, p, "syntax.invalid-currency");
     }
+    /* Phone syntax and its pending-prefix grammar share one bounded scanner. */
+    {
+        size_t phone = ttf_classify_phone(in, out);
+        if (phone)
+            return phone;
+    }
     p = b;
     if (s[p] == '-' || s[p] == '+')
         ++p;
@@ -981,19 +988,6 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
             return finish(in, out, end, TTF_SEM_TIME, "syntax.time");
         }
         return preserve(in, out, ttf_numeric_atom_end(in, end), "syntax.invalid-time");
-    }
-    if (a_end > b && a_end < n && s[a_end] == '-') {
-        p = a_end + 1;
-        q = integer(s, n, p);
-        if (q > p && q < n && s[q] == '-') {
-            r = q + 1;
-            end = integer(s, n, r);
-            if (a_end - b >= 2 && a_end - b <= 4 && q - p >= 2 && q - p <= 4 && end - r >= 3 &&
-                end - r <= 4 && !structured_tail(in, end) &&
-                copy_value(out->value, sizeof(out->value), s + b, end - b))
-                return finish(in, out, end, TTF_SEM_PHONE, "syntax.phone");
-            return preserve(in, out, ttf_numeric_atom_end(in, b), "syntax.invalid-phone");
-        }
     }
     if (a_end > b && a_end < n && s[a_end] == '.') {
         unsigned parts = 1;

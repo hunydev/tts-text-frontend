@@ -1,0 +1,1090 @@
+{
+  "version": "0.18.0",
+  "date": "2026-09-17",
+  "baseline_commit": "8b01eca3f2914662aef082a97157431891243f63",
+  "scope": "Normalized text and Semantic IR only; no synthesized audio.",
+  "phone": {
+    "before": {
+      "cases": 55,
+      "passed": 20,
+      "failed": 35,
+      "matches": 21,
+      "mismatches": 34,
+      "exact_match_rate": 0.38181818181818183,
+      "metadata_failures": 35,
+      "batch_stream_failures": 0,
+      "character_edit_distance": 1487,
+      "reference_characters": 2003,
+      "character_error_rate": 0.7423864203694458,
+      "fallback_spans": 0
+    },
+    "after": {
+      "cases": 55,
+      "passed": 55,
+      "failed": 0,
+      "matches": 55,
+      "mismatches": 0,
+      "exact_match_rate": 1.0,
+      "metadata_failures": 0,
+      "batch_stream_failures": 0,
+      "character_edit_distance": 0,
+      "reference_characters": 2003,
+      "character_error_rate": 0.0,
+      "fallback_spans": 0
+    },
+    "changes": {
+      "fixed": 35,
+      "regressed": 0,
+      "remaining_failure": 0,
+      "unchanged_pass": 20,
+      "text_error_increased": 0
+    },
+    "categories": {
+      "phone/identifier": {
+        "before": {
+          "cases": 3,
+          "passed": 1,
+          "failed": 2,
+          "matches": 2,
+          "mismatches": 1,
+          "exact_match_rate": 0.6666666666666666,
+          "metadata_failures": 2,
+          "batch_stream_failures": 0,
+          "character_edit_distance": 25,
+          "reference_characters": 127,
+          "character_error_rate": 0.1968503937007874,
+          "fallback_spans": 0
+        },
+        "after": {
+          "cases": 3,
+          "passed": 3,
+          "failed": 0,
+          "matches": 3,
+          "mismatches": 0,
+          "exact_match_rate": 1.0,
+          "metadata_failures": 0,
+          "batch_stream_failures": 0,
+          "character_edit_distance": 0,
+          "reference_characters": 127,
+          "character_error_rate": 0.0,
+          "fallback_spans": 0
+        }
+      },
+      "phone/international": {
+        "before": {
+          "cases": 18,
+          "passed": 0,
+          "failed": 18,
+          "matches": 0,
+          "mismatches": 18,
+          "exact_match_rate": 0.0,
+          "metadata_failures": 18,
+          "batch_stream_failures": 0,
+          "character_edit_distance": 699,
+          "reference_characters": 1034,
+          "character_error_rate": 0.6760154738878144,
+          "fallback_spans": 0
+        },
+        "after": {
+          "cases": 18,
+          "passed": 18,
+          "failed": 0,
+          "matches": 18,
+          "mismatches": 0,
+          "exact_match_rate": 1.0,
+          "metadata_failures": 0,
+          "batch_stream_failures": 0,
+          "character_edit_distance": 0,
+          "reference_characters": 1034,
+          "character_error_rate": 0.0,
+          "fallback_spans": 0
+        }
+      },
+      "phone/national": {
+        "before": {
+          "cases": 11,
+          "passed": 3,
+          "failed": 8,
+          "matches": 3,
+          "mismatches": 8,
+          "exact_match_rate": 0.2727272727272727,
+          "metadata_failures": 8,
+          "batch_stream_failures": 0,
+          "character_edit_distance": 164,
+          "reference_characters": 363,
+          "character_error_rate": 0.45179063360881544,
+          "fallback_spans": 0
+        },
+        "after": {
+          "cases": 11,
+          "passed": 11,
+          "failed": 0,
+          "matches": 11,
+          "mismatches": 0,
+          "exact_match_rate": 1.0,
+          "metadata_failures": 0,
+          "batch_stream_failures": 0,
+          "character_edit_distance": 0,
+          "reference_characters": 363,
+          "character_error_rate": 0.0,
+          "fallback_spans": 0
+        }
+      },
+      "phone/negative": {
+        "before": {
+          "cases": 13,
+          "passed": 13,
+          "failed": 0,
+          "matches": 13,
+          "mismatches": 0,
+          "exact_match_rate": 1.0,
+          "metadata_failures": 0,
+          "batch_stream_failures": 0,
+          "character_edit_distance": 0,
+          "reference_characters": 294,
+          "character_error_rate": 0.0,
+          "fallback_spans": 0
+        },
+        "after": {
+          "cases": 13,
+          "passed": 13,
+          "failed": 0,
+          "matches": 13,
+          "mismatches": 0,
+          "exact_match_rate": 1.0,
+          "metadata_failures": 0,
+          "batch_stream_failures": 0,
+          "character_edit_distance": 0,
+          "reference_characters": 294,
+          "character_error_rate": 0.0,
+          "fallback_spans": 0
+        }
+      },
+      "phone/negative-malformed": {
+        "before": {
+          "cases": 10,
+          "passed": 3,
+          "failed": 7,
+          "matches": 3,
+          "mismatches": 7,
+          "exact_match_rate": 0.3,
+          "metadata_failures": 7,
+          "batch_stream_failures": 0,
+          "character_edit_distance": 599,
+          "reference_characters": 185,
+          "character_error_rate": 3.2378378378378376,
+          "fallback_spans": 0
+        },
+        "after": {
+          "cases": 10,
+          "passed": 10,
+          "failed": 0,
+          "matches": 10,
+          "mismatches": 0,
+          "exact_match_rate": 1.0,
+          "metadata_failures": 0,
+          "batch_stream_failures": 0,
+          "character_edit_distance": 0,
+          "reference_characters": 185,
+          "character_error_rate": 0.0,
+          "fallback_spans": 0
+        }
+      }
+    },
+    "provenance": {
+      "before": {
+        "ttf": "/home/exedev/tts-text-frontend/benchmark/generated/baseline-0.17.0/ttf",
+        "ttf_sha256": "4172d0bd581ce7cd33d08d02160b898850e63fd5b6490ad423928293998ddb9b",
+        "corpus": "/home/exedev/tts-text-frontend/tests/evaluation/phone_cases_v18.jsonl",
+        "corpus_sha256": "48fc445de0c7eb78958306fd2ba89cd2e9d2bb344e32907cadacaf6b6a1e48d0",
+        "resources": "/home/exedev/tts-text-frontend/benchmark/generated/baseline-0.17.0/resources",
+        "resource_sha256": {
+          "README.md": "dce1bb7d27a0d7b07b2e44406d26995d69afc2f481a562cddc2e12297b383165",
+          "common/boundaries.tsv": "da089327d5b127fb7de4d053fd8533a60f4a3f1311b2d1e61a7667caca196213",
+          "common/numeric-grouping.tsv": "56ac68847d6d3c131130910ab1bda819326d09cb7b6945da57054f5b8d96be81",
+          "common/protected.tsv": "fed106b8ce8f2e81a73110e4f86ff352c034458c5f6271ec0d4067a1eb9dd8d1",
+          "customers/example/ko-KR/rules.tsv": "fd32794a3414e420e0e7e84214ef444b2c5af9a401cf494ee170c528e7a70238",
+          "domains/finance/ko-KR/lexicon.tsv": "5074bf302f2c180b7716ef6b6f1e0308904a1ac0be2d9e07c4496aec245469bb",
+          "domains/finance/ko-KR/rules.tsv": "ed9ecca8fc7f9f64461f44becd4d46281ead636b26f74af5b16d57abd002c5bf",
+          "languages/en-US/dictionaries/pronunciation.tsv": "10d73f76afda2a5219d8a8a0d03a8bf7d79616032b3ae04c27a28ece39b918ce",
+          "languages/en-US/g2p/graphemes.tsv": "2bd30e83894089ad2947df5a754c55ef0d3c93f311a3ea775fc58d9c2d994e5d",
+          "languages/en-US/rules/abbreviations.tsv": "fee445d7bf583dc44ee70bd5a051e751b73683f04a8f5efb33d4129e2b21aeda",
+          "languages/en-US/rules/context.tsv": "e7ec75d2975fd31b67d771da1382dcaaa9e04c6c5941e737c3de3a89b69239ec",
+          "languages/en-US/rules/currencies.tsv": "7296ba081ae775f7cfdfe4c8382156118234aa2bee5aaeb9ff51d637e812929f",
+          "languages/en-US/rules/currency-names.tsv": "d8d1f3203e2b897ea6afe0f21aa564dd4d43147bd4a225fd8684582e1b82919f",
+          "languages/en-US/rules/dates.tsv": "1df33206132bed6e035e13ef37ec7cdf2fff8cbac952481d513904eee5989b15",
+          "languages/en-US/rules/measurements.tsv": "74326bc77e753f3454a9da73a0c39c3b9c65a8180a2fd5a5016aa462f4a4277b",
+          "languages/en-US/rules/numeric.tsv": "39861afa90af60fb1ea40e90d7b254736e5d1b10596a7ed1f73397ff7d65e4d7",
+          "languages/ko-KR/dictionaries/graphemes.tsv": "2707d81b10c4d91e6cece0466186574df9b52dc7a774c3c64e9c0e4927fc883a",
+          "languages/ko-KR/dictionaries/phones.tsv": "d15c8b0788e0ba134f236a5aeb5129e9f9716a26d8927065b1f52fad63f364db",
+          "languages/ko-KR/lexicon/acronyms/default.tsv": "61d1fc1cab0377d840a975c847402fc6568eb8a0ab708102795ba62e2e0a656b",
+          "languages/ko-KR/lexicon/brands/default.tsv": "0dd8ca9d1c938d7d0b1c2c526208f6fad5bbd94aa868eb2738943a03db5b2487",
+          "languages/ko-KR/lexicon/common/default.tsv": "f81e2e6da9ff0d166d04faadcb32531f6faee92a26f93f678749c3603ee9cc43",
+          "languages/ko-KR/lexicon/content/default.tsv": "0d97103ff1284999b832f578226bc0f669d3f3911f1e06a794be83a5583eb4bb",
+          "languages/ko-KR/lexicon/finance/default.tsv": "44755f59bb288de1bd47c2935f5210c14caf47b678620c0d6df1d7c002be0564",
+          "languages/ko-KR/lexicon/multiword/content.tsv": "9086985bca107444aa93fbe523c1776f614643d76bff227651a1bf4ab4901e2c",
+          "languages/ko-KR/lexicon/multiword/finance.tsv": "979c397c958e6161de2e3d856045c6ac9b72d27ac3fb6622fc7f3d05749a109e",
+          "languages/ko-KR/lexicon/multiword/places_media.tsv": "39938fc8068744217c67fa75102975da38ad33424a049aa15d3c0c4e3b6e7473",
+          "languages/ko-KR/lexicon/proper_nouns/default.tsv": "969786762b545592189b0a5e1538fad12a87bb520cf0c8e94b7dd76b8d226af1",
+          "languages/ko-KR/lexicon/technology/default.tsv": "4a9f13dc495b0b19240608b3a9ce9cd2212b3c7d74727bc0160c3db82e1f0e41",
+          "languages/ko-KR/rules/context.tsv": "72e60833cb3a563dd5a2b511993d787046002325f30a05be017e3db7870ca96d",
+          "languages/ko-KR/rules/counters.tsv": "0976ad53394175afd0860afce0159fb01ee8dee702354e9dff8091a41050e303",
+          "languages/ko-KR/rules/currencies.tsv": "7740431809fe325514d5b687e285fda928a28ae118fca7204589decde7c7aee6",
+          "languages/ko-KR/rules/identifiers.tsv": "7b5a0fe04a86b7ea1d8db39dba76f17faa878f1b42024be032154f61a5c13ff3",
+          "languages/ko-KR/rules/measurements.tsv": "1084602509c9e96696f07e31705cbaffe2c51affb378636584c5e6b2e052f5da",
+          "languages/ko-KR/rules/numeric.tsv": "619cbb409c9c2a1deefb0b1f7ef3d2eb503a942f7e15dadcd5e077de6075a92e",
+          "manifest.ttfm": "470b8f78f1108780393ca480ddc82a9b44817db8f87b5a2acbf06c8409de2828"
+        },
+        "chunk_bytes": [
+          1,
+          7,
+          64
+        ],
+        "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]"
+      },
+      "after": {
+        "ttf": "/home/exedev/tts-text-frontend/build-web/ttf",
+        "ttf_sha256": "64c4004e78e5962fd8fb98ca6a3a487f43ae54c0d3d5eddf7f35bd58fa4698bf",
+        "corpus": "/home/exedev/tts-text-frontend/tests/evaluation/phone_cases_v18.jsonl",
+        "corpus_sha256": "48fc445de0c7eb78958306fd2ba89cd2e9d2bb344e32907cadacaf6b6a1e48d0",
+        "resources": "/home/exedev/tts-text-frontend/resources",
+        "resource_sha256": {
+          "README.md": "dce1bb7d27a0d7b07b2e44406d26995d69afc2f481a562cddc2e12297b383165",
+          "common/boundaries.tsv": "da089327d5b127fb7de4d053fd8533a60f4a3f1311b2d1e61a7667caca196213",
+          "common/numeric-grouping.tsv": "56ac68847d6d3c131130910ab1bda819326d09cb7b6945da57054f5b8d96be81",
+          "common/phone.tsv": "0b4173f929d71ba284fba7056a310047bd4005fac285133da5a01c33f8a7c104",
+          "common/protected.tsv": "fed106b8ce8f2e81a73110e4f86ff352c034458c5f6271ec0d4067a1eb9dd8d1",
+          "customers/example/ko-KR/rules.tsv": "fd32794a3414e420e0e7e84214ef444b2c5af9a401cf494ee170c528e7a70238",
+          "domains/finance/ko-KR/lexicon.tsv": "5074bf302f2c180b7716ef6b6f1e0308904a1ac0be2d9e07c4496aec245469bb",
+          "domains/finance/ko-KR/rules.tsv": "ed9ecca8fc7f9f64461f44becd4d46281ead636b26f74af5b16d57abd002c5bf",
+          "languages/en-US/dictionaries/pronunciation.tsv": "10d73f76afda2a5219d8a8a0d03a8bf7d79616032b3ae04c27a28ece39b918ce",
+          "languages/en-US/g2p/graphemes.tsv": "2bd30e83894089ad2947df5a754c55ef0d3c93f311a3ea775fc58d9c2d994e5d",
+          "languages/en-US/rules/abbreviations.tsv": "fee445d7bf583dc44ee70bd5a051e751b73683f04a8f5efb33d4129e2b21aeda",
+          "languages/en-US/rules/context.tsv": "e7ec75d2975fd31b67d771da1382dcaaa9e04c6c5941e737c3de3a89b69239ec",
+          "languages/en-US/rules/currencies.tsv": "7296ba081ae775f7cfdfe4c8382156118234aa2bee5aaeb9ff51d637e812929f",
+          "languages/en-US/rules/currency-names.tsv": "d8d1f3203e2b897ea6afe0f21aa564dd4d43147bd4a225fd8684582e1b82919f",
+          "languages/en-US/rules/dates.tsv": "1df33206132bed6e035e13ef37ec7cdf2fff8cbac952481d513904eee5989b15",
+          "languages/en-US/rules/identifiers.tsv": "c5b98bc1a014e3a7ee73681cec038eb89eea23e3b3558d7bb3bab84e1046d1d1",
+          "languages/en-US/rules/measurements.tsv": "74326bc77e753f3454a9da73a0c39c3b9c65a8180a2fd5a5016aa462f4a4277b",
+          "languages/en-US/rules/numeric.tsv": "39861afa90af60fb1ea40e90d7b254736e5d1b10596a7ed1f73397ff7d65e4d7",
+          "languages/en-US/rules/phone.tsv": "80c7d2b91e7d2cdec4879f2064432d0bd1b1eef069c4688799c6fd2462325cf4",
+          "languages/ko-KR/dictionaries/graphemes.tsv": "2707d81b10c4d91e6cece0466186574df9b52dc7a774c3c64e9c0e4927fc883a",
+          "languages/ko-KR/dictionaries/phones.tsv": "d15c8b0788e0ba134f236a5aeb5129e9f9716a26d8927065b1f52fad63f364db",
+          "languages/ko-KR/lexicon/acronyms/default.tsv": "61d1fc1cab0377d840a975c847402fc6568eb8a0ab708102795ba62e2e0a656b",
+          "languages/ko-KR/lexicon/brands/default.tsv": "0dd8ca9d1c938d7d0b1c2c526208f6fad5bbd94aa868eb2738943a03db5b2487",
+          "languages/ko-KR/lexicon/common/default.tsv": "f81e2e6da9ff0d166d04faadcb32531f6faee92a26f93f678749c3603ee9cc43",
+          "languages/ko-KR/lexicon/content/default.tsv": "0d97103ff1284999b832f578226bc0f669d3f3911f1e06a794be83a5583eb4bb",
+          "languages/ko-KR/lexicon/finance/default.tsv": "44755f59bb288de1bd47c2935f5210c14caf47b678620c0d6df1d7c002be0564",
+          "languages/ko-KR/lexicon/multiword/content.tsv": "9086985bca107444aa93fbe523c1776f614643d76bff227651a1bf4ab4901e2c",
+          "languages/ko-KR/lexicon/multiword/finance.tsv": "979c397c958e6161de2e3d856045c6ac9b72d27ac3fb6622fc7f3d05749a109e",
+          "languages/ko-KR/lexicon/multiword/places_media.tsv": "39938fc8068744217c67fa75102975da38ad33424a049aa15d3c0c4e3b6e7473",
+          "languages/ko-KR/lexicon/proper_nouns/default.tsv": "969786762b545592189b0a5e1538fad12a87bb520cf0c8e94b7dd76b8d226af1",
+          "languages/ko-KR/lexicon/technology/default.tsv": "4a9f13dc495b0b19240608b3a9ce9cd2212b3c7d74727bc0160c3db82e1f0e41",
+          "languages/ko-KR/rules/context.tsv": "72e60833cb3a563dd5a2b511993d787046002325f30a05be017e3db7870ca96d",
+          "languages/ko-KR/rules/counters.tsv": "0976ad53394175afd0860afce0159fb01ee8dee702354e9dff8091a41050e303",
+          "languages/ko-KR/rules/currencies.tsv": "7740431809fe325514d5b687e285fda928a28ae118fca7204589decde7c7aee6",
+          "languages/ko-KR/rules/identifiers.tsv": "7b5a0fe04a86b7ea1d8db39dba76f17faa878f1b42024be032154f61a5c13ff3",
+          "languages/ko-KR/rules/measurements.tsv": "1084602509c9e96696f07e31705cbaffe2c51affb378636584c5e6b2e052f5da",
+          "languages/ko-KR/rules/numeric.tsv": "619cbb409c9c2a1deefb0b1f7ef3d2eb503a942f7e15dadcd5e077de6075a92e",
+          "languages/ko-KR/rules/phone.tsv": "f572181c1b2a274b3aa96a2f90082e5674385d06783c2d6c128a37ee187d5f70",
+          "manifest.ttfm": "dea80d6e1c43c57dc5c6169af9000e26fb2de9ce1091d12181d2f08df591d2d1"
+        },
+        "chunk_bytes": [
+          1,
+          7,
+          64
+        ],
+        "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]"
+      }
+    },
+    "comparison_integrity": {
+      "before_sha256": "7acabb1d9af5583a8db3b6e251f47bdac3537abe01ce1966fe8bcb9d689e38e7",
+      "after_sha256": "551b1a8440876b6b9e13c973ec332523d4d452123787cb58bc345da202e6e70b"
+    }
+  },
+  "reference_note": "55 original developer-authored policy contracts, 0 independently human approved. The extension-x input was explicitly prefixed with Phone: after policy review and candidate execution to disambiguate multiplication; original digits/extension unchanged. Both revisions rerun against this same final corpus. Other 54 references were fixed before candidate execution.",
+  "external": {
+    "before": {
+      "cases": 3785,
+      "engine_errors": 0,
+      "unlabeled_spans": 0,
+      "sentence": {
+        "dataset-reference": {
+          "total": 3785,
+          "exact": 4,
+          "unaligned": 0,
+          "accuracy": 0.0010568031704095112
+        }
+      },
+      "spoken_projection": {
+        "dataset-reference": {
+          "total": 3785,
+          "exact": 2197,
+          "unaligned": 63,
+          "accuracy": 0.5804491413474241,
+          "unavailable": 63,
+          "available": 3722,
+          "coverage": 0.9833553500660502,
+          "unavailable_reasons": {
+            "unaligned-reference-span": 63
+          }
+        }
+      },
+      "spans": {
+        "dataset-reference": {
+          "total": 46213,
+          "exact": 34978,
+          "unaligned": 167,
+          "accuracy": 0.7568865903533638
+        }
+      },
+      "semiotic_classes": {
+        "PLAIN": {
+          "dataset-reference": {
+            "total": 34001,
+            "exact": 33860,
+            "unaligned": 40,
+            "accuracy": 0.9958530631452016
+          }
+        },
+        "PUNCT": {
+          "dataset-reference": {
+            "total": 8919,
+            "exact": 0,
+            "unaligned": 10,
+            "accuracy": 0.0
+          }
+        },
+        "LETTERS": {
+          "dataset-reference": {
+            "total": 712,
+            "exact": 174,
+            "unaligned": 0,
+            "accuracy": 0.2443820224719101
+          }
+        },
+        "DATE": {
+          "dataset-reference": {
+            "total": 1463,
+            "exact": 319,
+            "unaligned": 27,
+            "accuracy": 0.21804511278195488
+          }
+        },
+        "CARDINAL": {
+          "dataset-reference": {
+            "total": 536,
+            "exact": 440,
+            "unaligned": 79,
+            "accuracy": 0.8208955223880597
+          }
+        },
+        "MEASURE": {
+          "dataset-reference": {
+            "total": 92,
+            "exact": 76,
+            "unaligned": 3,
+            "accuracy": 0.8260869565217391
+          }
+        },
+        "DECIMAL": {
+          "dataset-reference": {
+            "total": 35,
+            "exact": 26,
+            "unaligned": 2,
+            "accuracy": 0.7428571428571429
+          }
+        },
+        "VERBATIM": {
+          "dataset-reference": {
+            "total": 295,
+            "exact": 0,
+            "unaligned": 0,
+            "accuracy": 0.0
+          }
+        },
+        "MONEY": {
+          "dataset-reference": {
+            "total": 33,
+            "exact": 30,
+            "unaligned": 0,
+            "accuracy": 0.9090909090909091
+          }
+        },
+        "ORDINAL": {
+          "dataset-reference": {
+            "total": 47,
+            "exact": 42,
+            "unaligned": 0,
+            "accuracy": 0.8936170212765957
+          }
+        },
+        "DIGIT": {
+          "dataset-reference": {
+            "total": 35,
+            "exact": 10,
+            "unaligned": 4,
+            "accuracy": 0.2857142857142857
+          }
+        },
+        "ELECTRONIC": {
+          "dataset-reference": {
+            "total": 22,
+            "exact": 0,
+            "unaligned": 0,
+            "accuracy": 0.0
+          }
+        },
+        "TELEPHONE": {
+          "dataset-reference": {
+            "total": 13,
+            "exact": 0,
+            "unaligned": 0,
+            "accuracy": 0.0
+          }
+        },
+        "TIME": {
+          "dataset-reference": {
+            "total": 4,
+            "exact": 1,
+            "unaligned": 0,
+            "accuracy": 0.25
+          }
+        },
+        "ADDRESS": {
+          "dataset-reference": {
+            "total": 4,
+            "exact": 0,
+            "unaligned": 2,
+            "accuracy": 0.0
+          }
+        },
+        "FRACTION": {
+          "dataset-reference": {
+            "total": 2,
+            "exact": 0,
+            "unaligned": 0,
+            "accuracy": 0.0
+          }
+        }
+      },
+      "class_to_engine_semantics": {
+        "PLAIN": {
+          "WORD": 33601,
+          "INITIALISM": 127,
+          "WORD+TEXT+WORD": 206,
+          "INITIALISM+TEXT": 2,
+          "RANGE": 35,
+          "WORD+TEXT": 18,
+          "TEXT": 4,
+          "INITIALISM+TEXT+WORD": 2,
+          "DATE": 1,
+          "CURRENCY": 3,
+          "ACRONYM": 2
+        },
+        "PUNCT": {
+          "TEXT": 8908,
+          "RANGE": 7,
+          "TEXT+TEXT": 1,
+          "FRACTION": 3
+        },
+        "LETTERS": {
+          "INITIALISM": 487,
+          "WORD+TEXT": 91,
+          "WORD": 103,
+          "INITIALISM+TEXT": 17,
+          "INITIALISM+TEXT+WORD": 3,
+          "WORD+TEXT+WORD+TEXT+WORD+TEXT": 2,
+          "WORD+TEXT+WORD": 3,
+          "WORD+TEXT+WORD+TEXT": 3,
+          "WORD+SYMBOL+WORD": 2,
+          "INITIALISM+SYMBOL+WORD": 1
+        },
+        "DATE": {
+          "CARDINAL": 457,
+          "DATE": 944,
+          "TEXT": 35,
+          "DATE+TEXT": 1,
+          "RANGE": 22,
+          "DATE+TEXT+WORD": 1,
+          "CARDINAL+TEXT+INITIALISM": 1,
+          "WORD+TEXT+DATE": 1,
+          "VERSION": 1
+        },
+        "CARDINAL": {
+          "CARDINAL": 440,
+          "RANGE": 62,
+          "TEXT": 6,
+          "CARDINAL+TEXT": 6,
+          "INITIALISM": 9,
+          "DATE": 2,
+          "CARDINAL+TEXT+CARDINAL": 1,
+          "WORD": 2,
+          "CARDINAL+TEXT+TEXT": 2,
+          "FRACTION": 5,
+          "CURRENCY": 1
+        },
+        "MEASURE": {
+          "MEASURE": 45,
+          "TEXT+WORD": 7,
+          "PERCENT": 33,
+          "RANGE": 3,
+          "CARDINAL+TEXT": 1,
+          "CARDINAL+TEXT+WORD": 1,
+          "CARDINAL+TEXT+WORD+TEXT+WORD": 2
+        },
+        "DECIMAL": {
+          "CARDINAL": 32,
+          "CARDINAL+TEXT+WORD": 1,
+          "CURRENCY": 2
+        },
+        "VERBATIM": {
+          "TEXT": 60,
+          "WORD": 186,
+          "SYMBOL": 46,
+          "CARDINAL+TEXT+WORD": 2,
+          "CARDINAL": 1
+        },
+        "MONEY": {
+          "CURRENCY": 33
+        },
+        "ORDINAL": {
+          "ORDINAL": 42,
+          "CARDINAL+WORD": 1,
+          "INITIALISM": 2,
+          "WORD+TEXT": 1,
+          "WORD": 1
+        },
+        "DIGIT": {
+          "DATE": 1,
+          "CARDINAL": 27,
+          "CARDINAL+TEXT": 4,
+          "RANGE": 1,
+          "CARDINAL+TEXT+TEXT": 1,
+          "FRACTION": 1
+        },
+        "ELECTRONIC": {
+          "WORD+TEXT+WORD": 11,
+          "URL": 8,
+          "WORD+TEXT+WORD+TEXT+WORD": 1,
+          "INITIALISM+TEXT+WORD": 1,
+          "TEXT+TEXT": 1
+        },
+        "TELEPHONE": {
+          "CARDINAL": 3,
+          "TEXT": 5,
+          "RANGE": 3,
+          "TEXT+CARDINAL+TEXT+TEXT+CARDINAL": 1,
+          "CARDINAL+TEXT+CARDINAL+TEXT+CARDINAL+TEXT+CARDINAL+TEXT+RANGE+TEXT+CARDINAL": 1
+        },
+        "TIME": {
+          "CARDINAL+TEXT+WORD": 2,
+          "TIME": 1,
+          "CARDINAL+TEXT+WORD+TEXT+WORD+TEXT": 1
+        },
+        "ADDRESS": {
+          "ALNUM_TERM": 2,
+          "ALNUM_TERM+TEXT": 2
+        },
+        "FRACTION": {
+          "FRACTION": 2
+        }
+      },
+      "chunk_comparisons": 11355,
+      "chunk_failures": 0,
+      "all_reference_spans": {
+        "total": 46213,
+        "exact": 34978,
+        "micro_accuracy": 0.7568865903533638,
+        "macro_class_accuracy": 0.3866588772654874
+      },
+      "tn_only_reference_spans": {
+        "total": 3293,
+        "exact": 1118,
+        "micro_accuracy": 0.33950804737321594,
+        "macro_class_accuracy": 0.37076349807875697
+      }
+    },
+    "after": {
+      "cases": 3785,
+      "engine_errors": 0,
+      "unlabeled_spans": 0,
+      "sentence": {
+        "dataset-reference": {
+          "total": 3785,
+          "exact": 4,
+          "unaligned": 0,
+          "accuracy": 0.0010568031704095112
+        }
+      },
+      "spoken_projection": {
+        "dataset-reference": {
+          "total": 3785,
+          "exact": 2197,
+          "unaligned": 65,
+          "accuracy": 0.5804491413474241,
+          "unavailable": 65,
+          "available": 3720,
+          "coverage": 0.9828269484808454,
+          "unavailable_reasons": {
+            "unaligned-reference-span": 65
+          }
+        }
+      },
+      "spans": {
+        "dataset-reference": {
+          "total": 46213,
+          "exact": 34978,
+          "unaligned": 171,
+          "accuracy": 0.7568865903533638
+        }
+      },
+      "semiotic_classes": {
+        "PLAIN": {
+          "dataset-reference": {
+            "total": 34001,
+            "exact": 33860,
+            "unaligned": 40,
+            "accuracy": 0.9958530631452016
+          }
+        },
+        "PUNCT": {
+          "dataset-reference": {
+            "total": 8919,
+            "exact": 0,
+            "unaligned": 10,
+            "accuracy": 0.0
+          }
+        },
+        "LETTERS": {
+          "dataset-reference": {
+            "total": 712,
+            "exact": 174,
+            "unaligned": 0,
+            "accuracy": 0.2443820224719101
+          }
+        },
+        "DATE": {
+          "dataset-reference": {
+            "total": 1463,
+            "exact": 319,
+            "unaligned": 27,
+            "accuracy": 0.21804511278195488
+          }
+        },
+        "CARDINAL": {
+          "dataset-reference": {
+            "total": 536,
+            "exact": 440,
+            "unaligned": 79,
+            "accuracy": 0.8208955223880597
+          }
+        },
+        "MEASURE": {
+          "dataset-reference": {
+            "total": 92,
+            "exact": 76,
+            "unaligned": 3,
+            "accuracy": 0.8260869565217391
+          }
+        },
+        "DECIMAL": {
+          "dataset-reference": {
+            "total": 35,
+            "exact": 26,
+            "unaligned": 2,
+            "accuracy": 0.7428571428571429
+          }
+        },
+        "VERBATIM": {
+          "dataset-reference": {
+            "total": 295,
+            "exact": 0,
+            "unaligned": 2,
+            "accuracy": 0.0
+          }
+        },
+        "MONEY": {
+          "dataset-reference": {
+            "total": 33,
+            "exact": 30,
+            "unaligned": 0,
+            "accuracy": 0.9090909090909091
+          }
+        },
+        "ORDINAL": {
+          "dataset-reference": {
+            "total": 47,
+            "exact": 42,
+            "unaligned": 0,
+            "accuracy": 0.8936170212765957
+          }
+        },
+        "DIGIT": {
+          "dataset-reference": {
+            "total": 35,
+            "exact": 10,
+            "unaligned": 4,
+            "accuracy": 0.2857142857142857
+          }
+        },
+        "ELECTRONIC": {
+          "dataset-reference": {
+            "total": 22,
+            "exact": 0,
+            "unaligned": 0,
+            "accuracy": 0.0
+          }
+        },
+        "TELEPHONE": {
+          "dataset-reference": {
+            "total": 13,
+            "exact": 0,
+            "unaligned": 2,
+            "accuracy": 0.0
+          }
+        },
+        "TIME": {
+          "dataset-reference": {
+            "total": 4,
+            "exact": 1,
+            "unaligned": 0,
+            "accuracy": 0.25
+          }
+        },
+        "ADDRESS": {
+          "dataset-reference": {
+            "total": 4,
+            "exact": 0,
+            "unaligned": 2,
+            "accuracy": 0.0
+          }
+        },
+        "FRACTION": {
+          "dataset-reference": {
+            "total": 2,
+            "exact": 0,
+            "unaligned": 0,
+            "accuracy": 0.0
+          }
+        }
+      },
+      "class_to_engine_semantics": {
+        "PLAIN": {
+          "WORD": 33601,
+          "INITIALISM": 127,
+          "WORD+TEXT+WORD": 206,
+          "INITIALISM+TEXT": 2,
+          "RANGE": 35,
+          "WORD+TEXT": 18,
+          "TEXT": 4,
+          "INITIALISM+TEXT+WORD": 2,
+          "DATE": 1,
+          "CURRENCY": 3,
+          "ACRONYM": 2
+        },
+        "PUNCT": {
+          "TEXT": 8908,
+          "RANGE": 7,
+          "TEXT+TEXT": 1,
+          "FRACTION": 3
+        },
+        "LETTERS": {
+          "INITIALISM": 487,
+          "WORD+TEXT": 91,
+          "WORD": 103,
+          "INITIALISM+TEXT": 17,
+          "INITIALISM+TEXT+WORD": 3,
+          "WORD+TEXT+WORD+TEXT+WORD+TEXT": 2,
+          "WORD+TEXT+WORD": 3,
+          "WORD+TEXT+WORD+TEXT": 3,
+          "WORD+SYMBOL+WORD": 2,
+          "INITIALISM+SYMBOL+WORD": 1
+        },
+        "DATE": {
+          "CARDINAL": 457,
+          "DATE": 944,
+          "TEXT": 35,
+          "DATE+TEXT": 1,
+          "RANGE": 22,
+          "DATE+TEXT+WORD": 1,
+          "CARDINAL+TEXT+INITIALISM": 1,
+          "WORD+TEXT+DATE": 1,
+          "VERSION": 1
+        },
+        "CARDINAL": {
+          "CARDINAL": 440,
+          "RANGE": 62,
+          "TEXT": 6,
+          "CARDINAL+TEXT": 6,
+          "INITIALISM": 9,
+          "DATE": 2,
+          "CARDINAL+TEXT+CARDINAL": 1,
+          "WORD": 2,
+          "CARDINAL+TEXT+TEXT": 2,
+          "FRACTION": 5,
+          "CURRENCY": 1
+        },
+        "MEASURE": {
+          "MEASURE": 45,
+          "TEXT+WORD": 7,
+          "PERCENT": 33,
+          "RANGE": 3,
+          "CARDINAL+TEXT": 1,
+          "CARDINAL+TEXT+WORD": 1,
+          "CARDINAL+TEXT+WORD+TEXT+WORD": 2
+        },
+        "DECIMAL": {
+          "CARDINAL": 32,
+          "CARDINAL+TEXT+WORD": 1,
+          "CURRENCY": 2
+        },
+        "VERBATIM": {
+          "TEXT": 60,
+          "WORD": 186,
+          "SYMBOL": 46,
+          "CARDINAL+TEXT+WORD": 2,
+          "CARDINAL": 1
+        },
+        "MONEY": {
+          "CURRENCY": 33
+        },
+        "ORDINAL": {
+          "ORDINAL": 42,
+          "CARDINAL+WORD": 1,
+          "INITIALISM": 2,
+          "WORD+TEXT": 1,
+          "WORD": 1
+        },
+        "DIGIT": {
+          "DATE": 1,
+          "CARDINAL": 27,
+          "CARDINAL+TEXT": 4,
+          "RANGE": 1,
+          "CARDINAL+TEXT+TEXT": 1,
+          "FRACTION": 1
+        },
+        "ELECTRONIC": {
+          "WORD+TEXT+WORD": 11,
+          "URL": 8,
+          "WORD+TEXT+WORD+TEXT+WORD": 1,
+          "INITIALISM+TEXT+WORD": 1,
+          "TEXT+TEXT": 1
+        },
+        "TELEPHONE": {
+          "CARDINAL": 3,
+          "TEXT": 5,
+          "RANGE": 3,
+          "TEXT+CARDINAL+TEXT+TEXT+CARDINAL": 1,
+          "CARDINAL+TEXT+CARDINAL+TEXT+CARDINAL+TEXT+CARDINAL+TEXT+RANGE+TEXT+CARDINAL": 1
+        },
+        "TIME": {
+          "CARDINAL+TEXT+WORD": 2,
+          "TIME": 1,
+          "CARDINAL+TEXT+WORD+TEXT+WORD+TEXT": 1
+        },
+        "ADDRESS": {
+          "ALNUM_TERM": 2,
+          "ALNUM_TERM+TEXT": 2
+        },
+        "FRACTION": {
+          "FRACTION": 2
+        }
+      },
+      "chunk_comparisons": 11355,
+      "chunk_failures": 0,
+      "all_reference_spans": {
+        "total": 46213,
+        "exact": 34978,
+        "micro_accuracy": 0.7568865903533638,
+        "macro_class_accuracy": 0.3866588772654874
+      },
+      "tn_only_reference_spans": {
+        "total": 3293,
+        "exact": 1118,
+        "micro_accuracy": 0.33950804737321594,
+        "macro_class_accuracy": 0.37076349807875697
+      }
+    },
+    "changes": {
+      "ADDRESS/dataset-reference": {
+        "unchanged-wrong": 4
+      },
+      "CARDINAL/dataset-reference": {
+        "unchanged-correct": 440,
+        "unchanged-wrong": 96
+      },
+      "DATE/dataset-reference": {
+        "unchanged-wrong": 1144,
+        "unchanged-correct": 319
+      },
+      "DECIMAL/dataset-reference": {
+        "unchanged-correct": 26,
+        "unchanged-wrong": 9
+      },
+      "DIGIT/dataset-reference": {
+        "unchanged-wrong": 25,
+        "unchanged-correct": 10
+      },
+      "ELECTRONIC/dataset-reference": {
+        "unchanged-wrong": 22
+      },
+      "FRACTION/dataset-reference": {
+        "unchanged-wrong": 2
+      },
+      "LETTERS/dataset-reference": {
+        "unchanged-correct": 174,
+        "unchanged-wrong": 538
+      },
+      "MEASURE/dataset-reference": {
+        "unchanged-correct": 76,
+        "unchanged-wrong": 16
+      },
+      "MONEY/dataset-reference": {
+        "unchanged-wrong": 3,
+        "unchanged-correct": 30
+      },
+      "ORDINAL/dataset-reference": {
+        "unchanged-correct": 42,
+        "unchanged-wrong": 5
+      },
+      "PLAIN/dataset-reference": {
+        "unchanged-correct": 33860,
+        "unchanged-wrong": 141
+      },
+      "PUNCT/dataset-reference": {
+        "unchanged-wrong": 8919
+      },
+      "TELEPHONE/dataset-reference": {
+        "unchanged-wrong": 13
+      },
+      "TIME/dataset-reference": {
+        "unchanged-wrong": 3,
+        "unchanged-correct": 1
+      },
+      "VERBATIM/dataset-reference": {
+        "unchanged-wrong": 295
+      }
+    },
+    "provenance": {
+      "before": {
+        "corpus_sha256": "6b0a0a56a4955166ca1786dc6778ab744e372219cc4d8ab6bcf4d51943c2dd51",
+        "program_sha256": "ea5649b043c32cc30b2a22c289daf9351c011001dd02c162cb4012c8d5118dec",
+        "resources_sha256": "143da2c5cb326f546bc7b5a263b06d8035bb381fb1cfb0fe4a44316dd6323f57",
+        "overrides": [],
+        "evaluator_sha256": "ceb6315b79b02c835691ad37ad21ae040d08dfc1cf4d6edcf3bdf80bb19e8edc",
+        "schema_sha256": "ff7abef7a5f6553fd8a87f9dbce26b7afc0632f94bfb0c09a6badf20bdb2b749",
+        "adapter_sha256": {
+          "tools/web/native.py": "bb7ebdbdb8d52fa8cc790f3ea3b3e40ac050238bc3ca92b24156ed53dbff9d26"
+        },
+        "evaluated_records_sha256": "c7e89e25dcc3e613983069062a50b79c4f76d5b0a373223e42cc5fab0e64d764",
+        "limit": 0,
+        "backend": "native-batch",
+        "input_stability": "sha256-before-after-identical",
+        "chunk_bytes": [
+          1,
+          7,
+          64
+        ],
+        "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+        "datasets": {
+          "sproat/train": 3785
+        },
+        "usage": {
+          "benchmark-only": 3785
+        }
+      },
+      "after": {
+        "corpus_sha256": "6b0a0a56a4955166ca1786dc6778ab744e372219cc4d8ab6bcf4d51943c2dd51",
+        "program_sha256": "f4e960a6f803428e14394cdb1460d7e897ec07d402edf7548e09f4cd82064399",
+        "resources_sha256": "b44a9b577f1273eca874bc5b6188c6daff3af8dd8b33983e9c218d0d90223bf9",
+        "overrides": [],
+        "evaluator_sha256": "ceb6315b79b02c835691ad37ad21ae040d08dfc1cf4d6edcf3bdf80bb19e8edc",
+        "schema_sha256": "ff7abef7a5f6553fd8a87f9dbce26b7afc0632f94bfb0c09a6badf20bdb2b749",
+        "adapter_sha256": {
+          "tools/web/native.py": "bb7ebdbdb8d52fa8cc790f3ea3b3e40ac050238bc3ca92b24156ed53dbff9d26"
+        },
+        "evaluated_records_sha256": "c7e89e25dcc3e613983069062a50b79c4f76d5b0a373223e42cc5fab0e64d764",
+        "limit": 0,
+        "backend": "native-batch",
+        "input_stability": "sha256-before-after-identical",
+        "chunk_bytes": [
+          1,
+          7,
+          64
+        ],
+        "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+        "datasets": {
+          "sproat/train": 3785
+        },
+        "usage": {
+          "benchmark-only": 3785
+        }
+      }
+    },
+    "report_integrity": {
+      "verified_cases": 3785,
+      "before_results_sha256": "7b0dec1b708dbcc5677ecbd423814bf8273283e0f36705e5490f91d4886d18c7",
+      "after_results_sha256": "2de855736e266e6c2e29e33d99de013b6d1bb85a425ba43b39aa5ee95b7f60ef",
+      "validation": "counts, text exact flags, reference fields/order, all summary metrics, stable files"
+    },
+    "note": "Same references, cases, metric policy and backend required. Known development improvements are not held-out accuracy. Source-use restrictions apply to both reports."
+  },
+  "external_changed_sentence_outputs": 0,
+  "external_sampling": "Previously examined Sproat training prefix; development regression, not held-out. All 13 TELEPHONE references remain wrong under literal dataset policy; no claim of external telephone accuracy improvement.",
+  "iteration_audit": {
+    "initial_external_regressions_caught": 69,
+    "restored_classes": {
+      "CARDINAL": 31,
+      "DATE": 11,
+      "MEASURE": 20,
+      "ORDINAL": 7
+    },
+    "additional_changed_wrong_outputs_reviewed_and_restored": 3,
+    "reason": "Parentheses alone and long unlabelled hyphenated identifiers are insufficient telephone evidence."
+  },
+  "reference_audit": {
+    "files": 21,
+    "cases": 886,
+    "classifications": {
+      "needs-review": 15,
+      "preservation-contract": 89,
+      "provisional-pronunciation": 123,
+      "reference-policy": 659
+    },
+    "pending_independent_review": 886,
+    "human_approved_cases": 0,
+    "reference_defects": 0,
+    "structural_passed": true,
+    "known_defect_checks_passed": true,
+    "linguistic_accuracy": null
+  },
+  "data_vendored": false,
+  "verification": {
+    "gcc_ctest": {
+      "passed": 90,
+      "total": 90
+    },
+    "local_clang_asan_ubsan": {
+      "passed": 14,
+      "total": 14,
+      "executions": "13 adjacent tests + dedicated scanner rerun"
+    },
+    "phone_contract_checks": 1673,
+    "native_split_comparisons": 2480,
+    "native_scanner_checks": 110003,
+    "sanitizer_scanner_checks": 40003,
+    "web_api_checks": 101,
+    "chromium": "passed",
+    "scanner_debug_cpu_seconds": {
+      "10000": 0.968,
+      "100000": 10.025
+    },
+    "ci_configured_tests": {
+      "gcc": 90,
+      "clang": 90,
+      "asan_ubsan": 80
+    },
+    "sanitizer_note": "100k scanner at 60s timed out under concurrent work; full scale remains in ordinary compiler jobs. Instrumented scanner uses 10k/30k with 120s timeout and passed in 10.34s. No memory diagnostic suppressed."
+  }
+}

@@ -1,0 +1,7 @@
+# An explicit label selects digit reading, without checking institution/checksum validity.
+identifier_label	en-US	account	digits
+identifier_label	en-US	account number	digits
+identifier_label	en-US	reference	digits
+identifier_label	en-US	transaction id	digits
+identifier_render	en-US	zero	zero
+identifier_render	en-US	separator	 

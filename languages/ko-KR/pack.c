@@ -46,6 +46,56 @@ static ttf_status_t digit(const ttf_engine_t *e, unsigned value, int telephone, 
     return ttf_buffer_puts(out, resource(e, "digit", key, standard[value]));
 }
 
+static const char *phone_zero(const ttf_engine_t *e) {
+    ttf_resource_layer_t current_layer = TTF_LAYER_COMMON, legacy_layer = TTF_LAYER_COMMON;
+    const char *current = ttf_resource_get(e, "phone_render", "ko-KR", "zero", &current_layer);
+    const char *legacy = ttf_resource_get(e, "number", "ko-KR", "phone_zero", &legacy_layer);
+    /* Keep higher-layer pre-v0.18 phone_zero overrides effective. */
+    if (legacy && (!current || legacy_layer > current_layer))
+        return legacy;
+    return current ? current : "공"; /* Existing phone digit fallback. */
+}
+static ttf_status_t phone_digits(const ttf_engine_t *e, const char *value, ttf_buffer_t *out) {
+    for (; *value; ++value) {
+        const char *label;
+        if (*value == '-') {
+            label = ttf_resource_get(e, "phone_render", "ko-KR", "separator", NULL);
+            if (!label)
+                label = " "; /* Legacy phone group separator. */
+        } else if (*value >= '0' && *value <= '9') {
+            if (*value != '0') {
+                TRY(digit(e, (unsigned)(*value - '0'), 0, out));
+                continue;
+            }
+            label = phone_zero(e);
+        } else
+            return TTF_EINVAL;
+        if (!label)
+            return TTF_ERESOURCE;
+        TRY(ttf_buffer_puts(out, label));
+    }
+    return TTF_OK;
+}
+static ttf_status_t phone(const ttf_engine_t *e, const ttf_semantic_t *s, ttf_buffer_t *out) {
+    const char *value = s->value, *label;
+    if (*value == '+') {
+        label = ttf_resource_get(e, "phone_render", "ko-KR", "plus", NULL);
+        if (!label)
+            return TTF_ERESOURCE;
+        TRY(ttf_buffer_puts(out, label));
+        ++value;
+    }
+    TRY(phone_digits(e, value, out));
+    if (s->secondary[0]) {
+        label = ttf_resource_get(e, "phone_render", "ko-KR", "extension", NULL);
+        if (!label)
+            return TTF_ERESOURCE;
+        TRY(ttf_buffer_puts(out, label));
+        TRY(phone_digits(e, s->secondary, out));
+    }
+    return TTF_OK;
+}
+
 static ttf_status_t digits(const ttf_engine_t *e, const char *value, int telephone,
                            ttf_buffer_t *out) {
     for (; *value; ++value) {
@@ -218,7 +268,7 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             return ttf_ko_render_identifier(e, s->value, out);
         return digits(e, s->value, 0, out);
     case TTF_SEM_PHONE:
-        return digits(e, s->value, 1, out);
+        return phone(e, s, out);
     case TTF_SEM_COUNTER: {
         const char *month = s->value;
         TRY(ttf_buffer_puts(out, resource(e, "quantity_prefix", s->unit, "")));

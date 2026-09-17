@@ -201,7 +201,8 @@ ttf_status_t ttf_engine_freeze(ttf_engine_t *e) {
             }
             /* Most resources, especially large lexicons, cannot be boundary
                cues. Avoid effective-value lookups for those entries. */
-            if (strcmp(entry->kind, "identifier_label") && strcmp(entry->kind, "context_cue"))
+            if (strcmp(entry->kind, "identifier_label") && strcmp(entry->kind, "context_cue") &&
+                strcmp(entry->kind, "phone_label"))
                 continue;
             if (strcmp(entry->lang, "*") && !ttf_find_pack(e, entry->lang))
                 continue;
@@ -216,7 +217,11 @@ ttf_status_t ttf_engine_freeze(ttf_engine_t *e) {
                     continue;
             }
             if (!strcmp(entry->kind, "identifier_label"))
-                active = !strcmp(entry->value, "digits");
+                /* A disabled longer cue still blocks an enabled suffix. Keep
+                   its scope intact until classification resolves precedence. */
+                active = !strcmp(entry->value, "digits") || !strcmp(entry->value, "disabled");
+            else if (!strcmp(entry->kind, "phone_label"))
+                active = !strcmp(entry->value, "1") || !strcmp(entry->value, "0");
             else if (!strcmp(entry->kind, "context_cue")) {
                 char *end;
                 long score = strtol(entry->value, &end, 10);

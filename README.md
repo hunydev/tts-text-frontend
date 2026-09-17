@@ -547,3 +547,29 @@ The [verification report](docs/research/pronunciation-trace-v17-results.md) reco
 the regression checks and fixed-source CMU export counts.
 This feature provides evidence for reviewing readings; it does not certify their
 linguistic accuracy or automatically resolve heteronyms from context.
+
+### v0.18 telephone numbers, extensions and financial identifiers
+
+Phone recognition preserves the leading `+`, every digit including zeros, explicit
+groups and the extension in Semantic IR. English account/reference labels select
+`DIGIT_SEQUENCE` separately from `PHONE`. Phone and extension reading labels are
+editable resources; generic signed quantities and numeric ranges retain their roles.
+
+| Input | Normalized text |
+|---|---|
+| `Call me at +1 212 555 0100.` | `Call me at plus one two one two five five five zero one zero zero.` |
+| `전화: 02-123-4567 내선 0042.` | `전화: 공이 일이삼 사오육칠 내선 공공사이.` |
+| `Account: 0012-0034.` (en-US) | `Account: zero zero one two zero zero three four.` |
+
+```sh
+build/ttf inspect --language en-US 'Phone: +1 (212) 555-0100 ext. 0042'
+build/ttf normalize '전화: 02-123-4567 내선 0042.'
+```
+
+The workbench includes **국제전화·내선·계좌번호 구분**, an independently authored
+55-case text/IR corpus with editable policies and byte-chunk verification. These
+references remain pending independent linguistic review. Recognition does not
+validate real subscriber allocation or reachability. See the [Korean editing guide](docs/phone-resources.md)
+for labels, extension hints, limits, zero/separator overrides and precedence.
+The [measured iteration](docs/research/phone-v18-results.md) records the same-reference
+comparison, external regression checks, reference correction and remaining limits.

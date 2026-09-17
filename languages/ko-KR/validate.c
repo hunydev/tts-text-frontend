@@ -41,6 +41,49 @@ static ttf_status_t bounded_key(const ttf_resource_record_t *r, size_t capacity,
                : ttf_validation_error(d, "Korean policy key exceeds its lookup capacity");
 }
 
+static int phone_cue_key(const char *key, int extension) {
+    size_t i, n = strlen(key);
+    if (!n || n >= (extension ? 32u : (size_t)TTF_IR_VALUE_SIZE) || key[0] == ' ' ||
+        key[n - 1] == ' ' || (extension && key[0] == '.'))
+        return 0;
+    for (i = 0; i < n; ++i) {
+        unsigned char c = (unsigned char)key[i];
+        if (c < 32 || c == 127 || (c >= 'A' && c <= 'Z'))
+            return 0;
+        if (c == ' ' && (extension || (i && key[i - 1] == ' ')))
+            return 0;
+        if (c < 128 && c != ' ' && !(c >= 'a' && c <= 'z') &&
+            !(extension && c == '.' && i + 1 == n))
+            return 0;
+    }
+    return 1;
+}
+
+static ttf_status_t phone_dependencies(const ttf_engine_t *e, ttf_resource_diagnostic_t *d) {
+    static const char *const policies[] = {"international_min_digits", "international_max_digits",
+                                           "national_min_digits", "national_max_digits",
+                                           "extension_max_digits"};
+    static const char *const labels[] = {"plus", "extension", "separator", "zero"};
+    size_t i;
+    int configured = 0;
+    for (i = 0; i < sizeof(policies) / sizeof(policies[0]); ++i)
+        if (ttf_resource_get(e, "phone_policy", "*", policies[i], NULL))
+            configured = 1;
+    if (!configured)
+        return TTF_OK; /* Old resource roots keep their legacy phone contract. */
+    for (i = 0; i < sizeof(labels) / sizeof(labels[0]); ++i)
+        if (!ttf_resource_get(e, "phone_render", KO, labels[i], NULL)) {
+            if (d) {
+                snprintf(d->kind, sizeof(d->kind), "phone_render");
+                snprintf(d->language, sizeof(d->language), "%s", KO);
+                snprintf(d->key, sizeof(d->key), "%s", labels[i]);
+            }
+            return ttf_validation_error(
+                d, "configured phone policy requires plus/extension/separator/zero reading labels");
+        }
+    return TTF_OK;
+}
+
 static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                            ttf_resource_diagnostic_t *d, void *userdata) {
     const char *k = r->kind, *key = r->key, *v = r->value;
@@ -51,6 +94,24 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     *handled = 0;
     if (!wildcard && !SAME(r->language, KO))
         return TTF_OK;
+    if (SAME(k, "phone_label") || SAME(k, "phone_extension") || SAME(k, "phone_extension_hint")) {
+        *handled = 1;
+        if (!phone_cue_key(key, !SAME(k, "phone_label")))
+            return ttf_validation_error(d, "phone cue must use bounded canonical words with "
+                                           "lowercase ASCII; extension may end in a period");
+        return ttf_validation_enum(v, "0|1")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "phone cue flag must be 0 or 1");
+    }
+    if (SAME(k, "phone_render")) {
+        *handled = 1;
+        if (!ttf_validation_enum(key, "plus|extension|separator|zero"))
+            return ttf_validation_error(d, "unknown phone_render key");
+        return label(v) && strlen(v) < TTF_IR_VALUE_SIZE
+                   ? TTF_OK
+                   : ttf_validation_error(d, "phone reading label must be nonempty, bounded and "
+                                             "contain no ASCII controls");
+    }
     if (SAME(k, "context")) {
         if (!ttf_validation_enum(key, "hangul_weight|particle_weight|clause_floor|script_weight")) {
             if (wildcard)
@@ -234,6 +295,8 @@ static ttf_status_t engine(const ttf_engine_t *e, ttf_resource_diagnostic_t *d, 
     (void)userdata;
     if (!ttf_find_pack(e, KO))
         return TTF_OK;
+    if ((status = phone_dependencies(e, d)) != TTF_OK)
+        return status;
     marker = ttf_resource_get(e, "ordinal_marker", KO, "prefix", NULL);
     if (marker && (status = cue_boundaries(e, marker, d)) != TTF_OK)
         return status;

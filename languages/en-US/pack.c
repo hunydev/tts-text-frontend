@@ -2,6 +2,8 @@
 #include "../../src/pronunciation/trace.h"
 #include "date.h"
 #include "abbreviation.h"
+#include "identifiers.h"
+#include "../../src/semantic/phone.h"
 #include "../context_run.h"
 #include <ctype.h>
 #include <stdint.h>
@@ -432,11 +434,23 @@ static int context_cue_score(const ttf_pack_input_t *in, size_t begin) {
 }
 static int context_score(const ttf_pack_input_t *in) {
     size_t begin, end, i, words = 0;
-    int total = 0, predicate = 0, imperative = 0, subject = 0, polite = 0;
+    int total = 0, predicate = 0, imperative = 0, subject = 0, polite = 0, numeric_label = 0;
     int ceiling = weight(res(in->engine, "context", "phrase_ceiling"), 160);
     int latin = weight(res(in->engine, "context", "latin_weight"), 8);
     if (in->index >= in->token_count || in->tokens[in->index].script == TTF_SCRIPT_HANGUL)
         return 0;
+    {
+        const ttf_token_t *current = &in->tokens[in->index];
+        size_t width = current->end - current->begin;
+        int numeric_start =
+            current->script == TTF_SCRIPT_DIGIT ||
+            (width == 1 && (in->text[current->begin] == '+' || in->text[current->begin] == '-' ||
+                            in->text[current->begin] == '('));
+        if (numeric_start &&
+            (ttf_phone_preceding_label(in, current->begin, "phone_label", EN, NULL, NULL) ||
+             ttf_phone_preceding_label(in, current->begin, "identifier_label", EN, NULL, NULL)))
+            numeric_label = weight(res(in->engine, "context", "numeric_label_weight"), 24);
+    }
     context_run_bounds(in, &begin, &end);
     for (i = begin; i < end; ++i) {
         const ttf_token_t *t = &in->tokens[i];
@@ -476,14 +490,17 @@ static int context_score(const ttf_pack_input_t *in) {
         total += weight(res(in->engine, "context", "clause_weight"), 500);
     /* An ordinal alone is a quantity title and keeps the surrounding speech
        language. At least one lexical word is required for a foreign title. */
-    return total + (words ? context_cue_score(in, begin) : 0);
+    return total + numeric_label + (words ? context_cue_score(in, begin) : 0);
 }
 static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     const ttf_token_t *t = &in->tokens[in->index];
     char key[96];
     size_t n = t->end - t->begin, j, consumed = 1, end = t->end;
-    size_t date_tokens = ttf_en_classify_date(in, out);
+    size_t date_tokens = ttf_en_classify_identifier(in, out);
     const char *kind;
+    if (date_tokens)
+        return date_tokens;
+    date_tokens = ttf_en_classify_date(in, out);
     if (date_tokens)
         return date_tokens;
     date_tokens = ttf_en_classify_abbreviation(in, out);
@@ -554,6 +571,51 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     (void)snprintf(out->source_lang, sizeof(out->source_lang), "%s", EN);
     return consumed;
 }
+static ttf_status_t phone_digits(const ttf_engine_t *e, const char *value, ttf_buffer_t *out) {
+    int previous_digit = 0;
+    for (; *value; ++value) {
+        const char *label;
+        ttf_status_t status;
+        if (*value == '-') {
+            label = res(e, "phone_render", "separator");
+            if (!label)
+                label = " "; /* Legacy phone group separator. */
+            previous_digit = 0;
+        } else if (*value >= '0' && *value <= '9') {
+            char key[2] = {*value, '\0'};
+            label = *value == '0' ? res(e, "phone_render", "zero") : res(e, "number", key);
+            if (!label && *value == '0')
+                label = res(e, "number", "0");
+            if (previous_digit && (status = space(out)) != TTF_OK)
+                return status;
+            previous_digit = 1;
+        } else
+            return TTF_EINVAL;
+        if (!label)
+            return TTF_ERESOURCE;
+        if ((status = ttf_buffer_puts(out, label)) != TTF_OK)
+            return status;
+    }
+    return TTF_OK;
+}
+static ttf_status_t phone(const ttf_engine_t *e, const ttf_semantic_t *s, ttf_buffer_t *out) {
+    const char *value = s->value;
+    ttf_status_t status;
+    if (*value == '+') {
+        if ((status = word(e, out, "phone_render", "plus")) != TTF_OK)
+            return status;
+        ++value;
+    }
+    if ((status = phone_digits(e, value, out)) != TTF_OK)
+        return status;
+    if (s->secondary[0]) {
+        if ((status = word(e, out, "phone_render", "extension")) != TTF_OK)
+            return status;
+        return phone_digits(e, s->secondary, out);
+    }
+    return TTF_OK;
+}
+
 static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, const char *surface,
                               size_t length, ttf_buffer_t *b) {
     ttf_status_t st;
@@ -574,8 +636,11 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         return ordinal(e, value, b);
     }
     case TTF_SEM_DIGIT_SEQUENCE:
-    case TTF_SEM_PHONE:
+        if (!strcmp(s->unit, "financial_identifier"))
+            return ttf_en_render_identifier(e, s->value, b);
         return digits(e, s->value, b);
+    case TTF_SEM_PHONE:
+        return phone(e, s, b);
     case TTF_SEM_DATE:
         return date(e, s, b);
     case TTF_SEM_TIME: {

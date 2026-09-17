@@ -279,6 +279,14 @@ static ttf_status_t core_record(const ttf_resource_record_t *r, int *handled,
             !ttf_validation_integer(value, -1000, 1000, NULL))
             return ttf_validation_error(
                 d, "classifier_priority requires a rule ID under 64 bytes and integer -1000..1000");
+    } else if (!strcmp(kind, "phone_policy")) {
+        long maximum = !strcmp(key, "extension_max_digits") ? TTF_IR_VALUE_SIZE - 1 : 15;
+        if (strcmp(r->language, "*") ||
+            !ttf_validation_enum(key, "international_min_digits|international_max_digits|"
+                                      "national_min_digits|national_max_digits|extension_max_digits") ||
+            !ttf_validation_integer(value, 1, maximum, NULL))
+            return ttf_validation_error(d, "phone_policy requires common '*' namespace, a known "
+                                           "digit limit and integer 1..15 (extension 1..95)");
     } else if (!strcmp(kind, "numeric_group_separator")) {
         uint32_t cp;
         size_t width, n = strlen(key);
@@ -425,9 +433,35 @@ static ttf_status_t core_record(const ttf_resource_record_t *r, int *handled,
         *handled = 0;
     return TTF_OK;
 }
+static ttf_status_t core_engine(const ttf_engine_t *e, ttf_resource_diagnostic_t *d,
+                                void *userdata) {
+    static const char *const minima[] = {"international_min_digits", "national_min_digits"};
+    static const char *const maxima[] = {"international_max_digits", "national_max_digits"};
+    size_t i;
+    (void)userdata;
+    for (i = 0; i < 2; ++i) {
+        long minimum = 7, maximum = 15;
+        ttf_resource_layer_t low_layer = TTF_LAYER_COMMON, high_layer = TTF_LAYER_COMMON;
+        const char *low = ttf_resource_get(e, "phone_policy", "*", minima[i], &low_layer);
+        const char *high = ttf_resource_get(e, "phone_policy", "*", maxima[i], &high_layer);
+        if (low)
+            (void)ttf_validation_integer(low, 1, 15, &minimum);
+        if (high)
+            (void)ttf_validation_integer(high, 1, 15, &maximum);
+        if (minimum > maximum) {
+            int report_low = low && (!high || low_layer >= high_layer);
+            ttf_validation_copy(d->kind, sizeof(d->kind), "phone_policy");
+            ttf_validation_copy(d->language, sizeof(d->language), "*");
+            ttf_validation_copy(d->key, sizeof(d->key), report_low ? minima[i] : maxima[i]);
+            d->layer = report_low ? low_layer : high_layer;
+            return ttf_validation_error(d, "effective phone minimum exceeds maximum");
+        }
+    }
+    return TTF_OK;
+}
 const ttf_resource_validator_t ttf_resource_validator_core = {sizeof(ttf_resource_validator_t),
                                                               TTF_RESOURCE_VALIDATOR_ABI_VERSION,
                                                               "ttf.core",
                                                               NULL,
                                                               core_record,
-                                                              NULL};
+                                                              core_engine};

@@ -554,6 +554,17 @@
         }
       },
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/phone_cases_v18.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Original independently authored phone/identifier text and value contracts; tests/integration/test_phone_contracts.py",
+        "reason": "Digit identity and leading zero preservation are explicit contracts; plus/zero/extension/group readings are editable project policy, not independent linguistic approval."
+      },
+      "case_overrides": {}
     }
   ],
   "excluded": [

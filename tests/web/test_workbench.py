@@ -67,6 +67,9 @@ try:
                for item in catalog["samples"] + catalog["corpora"])
     assert catalog["samples"][0]["text"] == "1~2만 원"
     assert catalog["samples"][0]["expected"] == "만 원에서 이만 원"
+    phone_samples = [sample for sample in catalog["samples"] if sample["id"].startswith("phone-v18-")]
+    assert len(phone_samples) >= 4 and all(sample["options"]["default_language"] == "en-US"
+                                          for sample in phone_samples[:4])
     for sample in catalog["samples"]:
         result, _ = run(
             sample["text"], opts=sample.get("options"), expected=sample.get("expected")
@@ -104,6 +107,29 @@ try:
         for s in result["spans"]
     )
     assert result["tokens"][0]["surface"] == "1"
+    phone_text = "Call +1 (212) 555-0100 ext. 0042."
+    phone_expected = ("Call plus one two one two five five five zero one zero zero "
+                      "extension zero zero four two.")
+    phone_result, _ = run(phone_text, "verify", {"default_language": "en-US", "chunk_bytes": 1}, phone_expected)
+    assert phone_result["expected_match"] and phone_result["verification"]["passed"], phone_result
+    phone_spans = [span for span in phone_result["spans"] if span["semantic_type"] == "PHONE"]
+    assert len(phone_spans) == 1, phone_result
+    assert (phone_spans[0]["value"], phone_spans[0]["secondary"], phone_spans[0]["unit"]) == (
+        "+1-212-555-0100", "0042", "international"), phone_spans
+    assert phone_text.encode()[phone_spans[0]["input_begin"]:phone_spans[0]["input_end"]].decode() == \
+        "+1 (212) 555-0100 ext. 0042", phone_spans
+    phone_result, _ = run("문의: 1588-0000", "verify", expected="문의: 일오팔팔 공공공공")
+    assert phone_result["expected_match"] and phone_result["verification"]["passed"], phone_result
+    assert any(span["semantic_type"] == "PHONE" and span["value"] == "1588-0000"
+               and span["unit"] == "national" for span in phone_result["spans"]), phone_result
+    account, _ = run("Account: 212-555-0100", opts={"default_language": "en-US"})
+    assert any(span["semantic_type"] == "DIGIT_SEQUENCE" and span["unit"] == "financial_identifier"
+               for span in account["spans"]) and not any(span["semantic_type"] == "PHONE"
+                                                        for span in account["spans"]), account
+    amount, _ = run("+1250000 x 2", opts={"default_language": "en-US"})
+    assert any(span["semantic_type"] == "CARDINAL" and span["value"] == "+1250000"
+               for span in amount["spans"]) and not any(span["semantic_type"] == "PHONE"
+                                                       for span in amount["spans"]), amount
     result, _ = run(
         "Apple은 사과입니다.",
         opts={
@@ -275,6 +301,11 @@ try:
     assert corpus[-2]["passed"] == 30 and corpus[-2]["failed"] == 0
     assert corpus[-2]["pending_independent_review"] == 30
     assert next(row for row in corpus[-2]["cases"] if row["id"] == "multiword-after-effects")["reference_review"]["classification"] == "reference-policy"
+    checks += 1
+    with post("/api/corpus", {"corpus": "phone-v18"}) as response:
+        corpus = [json.loads(line) for line in response]
+    assert corpus[-2]["passed"] == 55 and corpus[-2]["failed"] == 0, corpus[-2]
+    assert corpus[-2]["pending_independent_review"] == 55 and corpus[-2]["human_approved_cases"] == 0
     checks += 1
     for body in [
         dict(mode="verify", text="x", options={"chunk_bytes": 0}),

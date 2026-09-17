@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(tts_text_frontend VERSION 0.17.0 LANGUAGES C)
+project(tts_text_frontend VERSION 0.18.0 LANGUAGES C)
 include(GNUInstallDirs)
 include(CTest)
 option(TTF_ENABLE_ASAN "Enable AddressSanitizer" OFF)
@@ -71,6 +71,16 @@ add_executable(ttf_example examples/basic.c)
 target_link_libraries(ttf_example PRIVATE tts_text_frontend_static ttf_build_flags)
 
 if(BUILD_TESTING)
+  add_executable(ttf_test_phone_scan tests/unit/test_phone_scan.c)
+  target_link_libraries(ttf_test_phone_scan PRIVATE tts_text_frontend_static ttf_build_flags)
+  add_test(NAME phone_scanner_bounds COMMAND ttf_test_phone_scan ${CMAKE_CURRENT_SOURCE_DIR}/resources)
+  set_tests_properties(phone_scanner_bounds PROPERTIES TIMEOUT 60)
+  if(TTF_ENABLE_ASAN OR TTF_ENABLE_UBSAN)
+    # The 100k scaling gate runs in both ordinary compiler jobs. Instrumented
+    # jobs exercise the same allocation and candidate paths at a smaller size.
+    target_compile_definitions(ttf_test_phone_scan PRIVATE TTF_PHONE_SCAN_LARGE=30000)
+    set_tests_properties(phone_scanner_bounds PROPERTIES TIMEOUT 120)
+  endif()
   add_executable(ttf_tests tests/integration/test_frontend.c)
   target_link_libraries(ttf_tests PRIVATE tts_text_frontend_shared ttf_build_flags)
   target_compile_definitions(ttf_tests PRIVATE TTF_TEST_ROOT="${CMAKE_CURRENT_SOURCE_DIR}/tests" TTF_RESOURCE_ROOT="${CMAKE_CURRENT_SOURCE_DIR}/resources")
@@ -129,6 +139,12 @@ if(BUILD_TESTING)
   endif()
   find_package(Python3 COMPONENTS Interpreter QUIET)
   if(Python3_Interpreter_FOUND)
+    add_test(NAME phone_value_contracts COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_phone_contracts.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
+    add_test(NAME phone_v18_evaluation COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources phone_cases_v18.jsonl 55)
     add_test(NAME detailed_pronunciation_trace_cli COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_detailed_pronunciation_trace.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
@@ -272,6 +288,10 @@ if(BUILD_TESTING)
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_multiword_guards.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
     if(UNIX AND NOT TTF_ENABLE_ASAN AND NOT TTF_ENABLE_UBSAN)
+      add_test(NAME phone_arbitrary_byte_splits COMMAND ${Python3_EXECUTABLE}
+        ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_phone_contracts.py
+        $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources
+        --library $<TARGET_FILE:tts_text_frontend_shared>)
       add_test(NAME pronunciation_trace_byte_splits COMMAND ${Python3_EXECUTABLE}
         ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_pronunciation_trace.py
         $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources

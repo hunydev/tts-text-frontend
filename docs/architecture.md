@@ -445,3 +445,18 @@ Explicit source pronunciation variants are separate from target lexicons. A
 higher-layer base overrides and target lexicon precedence remain deterministic.
 Without a choice, existing defaults remain. This is not a POS/heteronym predictor.
 See [detailed trace and selection contracts](detailed-pronunciation-trace.md).
+
+### v0.18 phone recognition and boundary commitments
+
+A language-neutral phone scanner shares structured body/extension recognition and
+prefix-only pending decisions with the segmenter. Country allocations and language
+pairs are not embedded in the core. Pack resources supply telephone labels,
+identifier labels, extension markers and explicit hint strength; common resources
+supply bounded digit policies. KO/EN packs render the resulting PHONE IR.
+
+The planner sees only the prefix through a proposed cut, including clipped token
+ends. It retains incomplete parenthesized groups and anchored extension periods,
+including malformed numeric prefixes that could otherwise be split and reinterpreted
+as quantities. Newlines terminate extension scope. Literal protection and established
+calendar ownership remain ahead of phone inference. Explicit financial identifiers
+veto phone inference, and bare signed quantities retain numeric meaning.

@@ -110,13 +110,15 @@ compiled resource의 **8개 CTest를 다시 실행해 모두 통과**했다. 이
   값·통화 ID까지 확인한다. **닫는 증거:** 독립 decimal oracle, 큰 수·부호·정밀도·
   잘못된 혼합 표기의 보존 계약, 같은 표본의 비교 및 streaming metadata 일치.
 
-- [ ] **TN-01: 전화·digit·주소·electronic text의 명시적 읽기 정책.** 외부 표본의
-  TELEPHONE 0/13, ELECTRONIC 0/22, ADDRESS 0/4를 원문 보존 정책과 인식 실패로
-  분리해야 한다. 현재 `Call me at +1 212 555 0100.`은
-  `Call me at plus one two hundred twelve five hundred fifty five one hundred.`가 된다.
-  **닫는 증거:** 국제/국내 전화, extension, 계좌/번호와 숫자 수량의 최소 대조;
-  digit order·leading zero 보존; URL/email/IP/version의 preserve/spoken 정책과 trace.
-  Sproat 표기를 맞추기 위해 제품의 원문 보존 계약을 몰래 바꾸지 않는다.
+- [ ] **TN-01: 전화·digit·주소·electronic text의 명시적 읽기 정책.** v0.18에서
+  국가 표기·괄호·공백 그룹·내선과 영어 금융 식별자 cue를 보강했다. 본번호와 내선을
+  분리한 IR, 선행 0, resource override, 잘못된 전화 표기의 보존 및 작은 segment
+  target의 임의 byte 분할을 검사한다. `+1250000` 수량과 `x` 연산자를 전화로
+  만들지 않도록 명시적 label/extension hint를 구분했다. [전화 편집 가이드](phone-resources.md).
+  **남은 범위:** locale별 추가 전화 표기·shortcode·모호한 문맥, 주소와
+  URL/email/IP/version의 명시적인 preserve/spoken 정책 및 class별 독립 reference다.
+  전화 문법의 통과가 실제 번호 할당/연결 가능성을 보장하지는 않는다. Sproat 표기를
+  맞추기 위해 제품의 원문 보존 계약을 몰래 바꾸지 않는다.
 
 - [ ] **TN-02: 날짜·시간의 남은 문법.** 현재 `09/17/2026`, ISO datetime
   `2026-09-17T14:30:00Z`는 전체 literal로 남는다. 날짜 범위, era/decade, relative date,
@@ -221,6 +223,10 @@ compiled resource의 **8개 CTest를 다시 실행해 모두 통과**했다. 이
 
 - [ ] **STREAM-01: 최악 조건의 pending·CPU 비용.** 현재 열린 인용/코드/opaque literal은
   closer 또는 flush까지 보류하며 일부 delimiter가 많은 입력은 반복 scan한다.
+  v0.18 검토에서 30,000개의 한 자리 수를 공백으로 나열하고 분절 target을 입력
+  전체로 크게 설정하면 v0.17 Release도 30초 안에 끝나지 않음을 재현했다.
+  새 전화 후보 scanner의 탐색 범위는 제한했지만 전체 frontend의 긴 단위 처리
+  비용은 별도 미해결 항목이다. 기본 target에서의 지연 수치로 일반화하지 않는다.
   **닫는 증거:** 1-byte 입력, 긴 무구분 문자열, 열린/중첩 인용, delimiter 집중 입력,
   다수 rule/resource에 대한 시간·memory 증가율과 실제 callback 시점; 초과 시 일관된
   오류; metadata까지 동일한 batch/stream 결과. 첫 callback 전 전체 TN을 하는

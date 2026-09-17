@@ -1,0 +1,17 @@
+# Editable telephone cues and text readings. Spaces in render values are intentional.
+phone_label	ko-KR	전화	1
+phone_label	ko-KR	전화번호	1
+phone_label	ko-KR	문의	1
+phone_label	ko-KR	연락처	1
+phone_extension	ko-KR	내선	1
+phone_render	ko-KR	plus	플러스 
+phone_render	ko-KR	extension	 내선 
+phone_render	ko-KR	separator	 
+phone_render	ko-KR	zero	공
+phone_label	ko-KR	대표전화	1
+phone_label	ko-KR	대표 전화	1
+phone_label	ko-KR	문의전화	1
+phone_label	ko-KR	문의 전화	1
+phone_label	ko-KR	전화번호는	1
+phone_label	ko-KR	연락처는	1
+phone_extension_hint	ko-KR	내선	1

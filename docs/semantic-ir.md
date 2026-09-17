@@ -121,3 +121,27 @@ independent of the selected spoken form. Invalid conflicting currencies and
 unrepresentable scale operations remain literal `TEXT` instead of exposing a
 truncated financial value. Existing public ABI v1 fields and layouts are unchanged.
 See [the complete contract](scaled-currency.md).
+
+## Telephone and extension values (v0.18)
+
+`PHONE.value` contains the written digits, optional leading `+`, and canonical `-`
+between explicit groups. Parentheses and horizontal ASCII whitespace become group
+boundaries; no country code or implicit grouping is guessed for compact input.
+`secondary` holds extension digits including all leading zeros. New phone forms use
+`unit=international` or `national`; established three-group hyphen phones retain the
+legacy empty unit when no extension is present. Labels lie outside the phone span;
+an accepted extension marker and its digits lie inside it. Numbers are never parsed
+as integers for this representation.
+
+```text
++1 (212) 555-0100 ext. 0042
+  → PHONE(value="+1-212-555-0100", secondary="0042", unit="international")
+Account: 212-555-0100
+  → DIGIT_SEQUENCE(value="212-555-0100", secondary="account", unit="financial_identifier")
+```
+
+An explicit active identifier cue suppresses phone inference before the generic
+phone candidate can outgrow the identifier. Existing pack specificity still governs
+other numeric candidates. Compact signed numbers need an explicit telephone cue or
+a declared strong extension hint; `+1250000` remains a cardinal and multiplication
+`x` does not supply a strong phone cue by default. See [reading policies](phone-resources.md).

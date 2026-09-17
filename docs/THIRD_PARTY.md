@@ -221,3 +221,18 @@ title 표기는 별도 검수 대기 상태로 관리한다.
 The implementation is original C and original policy TSV. The large-number ordinal
 choice and finite context cues are project policy, separately documented and not
 presented as uniquely prescribed answers. No new external benchmark corpus was committed.
+
+### v0.18 telephone syntax references
+
+Reviewed 2026-09-17. These sources informed numeric limits and fictional test-number
+selection only. No standard text, numbering table, allocated-number dataset or code
+was copied into runtime resources; tests and C implementation are original.
+
+| Source / version | License / commercial-use assessment | Redistribution / attribution / vendoring |
+|---|---|---|
+| [ITU-T E.164 (02/2026), edition 7.0](https://www.itu.int/rec/T-REC-E.164-202602-I) | The publication states © ITU 2026 and requires prior written permission for reproduction. This review does not establish a commercial redistribution license for the publication or certify implementation conformance. | No PDF/text/table vendored. Source/version/date are attributed here. Any future copying requires permission review; the default 15-digit bound is project recognition policy informed by the geographic-number limit. |
+| [NANPA, 555 Line Numbers](https://nanpa.com/numbering/555-line-numbers), accessed 2026-09-17, no fixed commit | Public reference on the reserved fictional 555-0100–555-0199 range. No open license for commercial copying of the entire webpage was established. | No webpage/data copied. Independently authored examples use the documented fictional range; source/date attributed. Other synthetic phone-shaped fixtures test parsing and do not claim real allocation or reachability. |
+
+The frontend does not validate subscriber reachability or country allocations.
+Seven-digit minimums, extension limits, and spoken labels are editable project
+choices, not claims that E.164 defines TTS reading or every supported local format.

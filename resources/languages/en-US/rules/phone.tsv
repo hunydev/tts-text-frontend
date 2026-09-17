@@ -1,0 +1,22 @@
+# Editable telephone cues and text readings. Spaces in render values are intentional.
+phone_label	en-US	phone	1
+phone_label	en-US	tel	1
+phone_label	en-US	telephone	1
+phone_label	en-US	call	1
+phone_extension	en-US	ext.	1
+phone_extension	en-US	ext	1
+phone_extension	en-US	x	1
+phone_render	en-US	plus	plus 
+phone_render	en-US	extension	 extension 
+phone_render	en-US	separator	 
+phone_render	en-US	zero	zero
+phone_label	en-US	call me at	1
+phone_label	en-US	call us at	1
+phone_label	en-US	contact	1
+phone_label	en-US	telephone number	1
+# Weak neutral-number inheritance; Korean clause/particle signals can still win.
+context	en-US	numeric_label_weight	24
+# Only explicit extension words anchor an otherwise ambiguous compact +number.
+phone_extension_hint	en-US	ext.	1
+phone_extension_hint	en-US	ext	1
+phone_extension_hint	en-US	x	0

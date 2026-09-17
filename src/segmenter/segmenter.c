@@ -1,6 +1,10 @@
 #include "../core/internal.h"
 #include "../protected/protected.h"
 #include "../semantic/numeric_grouping.h"
+#include "../semantic/phone.h"
+static char ascii_fold(char c) {
+    return c >= 'A' && c <= 'Z' ? (char)(c + ('a' - 'A')) : c;
+}
 static int horizontal_space(char c) {
     return c == ' ' || c == '\t';
 }
@@ -61,7 +65,7 @@ static int numeric_space_prefix(const ttf_engine_t *e, const char *s, size_t len
    still protect earlier matching prefixes: the same cut must be chosen when
    the mismatch arrives in a later write. */
 static int cue_match_prefix(const char *s, size_t begin, size_t end, const char *key,
-                            size_t *after) {
+                            int fold, size_t *after) {
     size_t p = begin, k = 0;
     while (p < end && key[k]) {
         if (horizontal_space(s[p]) && key[k] == ' ') {
@@ -69,7 +73,7 @@ static int cue_match_prefix(const char *s, size_t begin, size_t end, const char 
                 ++p;
             while (key[k] == ' ')
                 ++k;
-        } else if (s[p] == key[k]) {
+        } else if (s[p] == key[k] || (fold && ascii_fold(s[p]) == ascii_fold(key[k]))) {
             ++p;
             ++k;
         } else
@@ -82,7 +86,7 @@ typedef struct {
     size_t begin, end;
     int valid;
 } cue_scope_cache_t;
-static size_t cue_scope_end(const char *s, size_t begin, size_t end, int identifier,
+static size_t cue_scope_end(const char *s, size_t begin, size_t end, int kind,
                             cue_scope_cache_t *cache) {
     size_t p = begin;
     /* A dot is only a continuation after a digit inside the same scope. */
@@ -100,7 +104,9 @@ static size_t cue_scope_end(const char *s, size_t begin, size_t end, int identif
             ++p;
         else if (p + 3 <= end && !memcmp(s + p, "\xef\xbc\x9a", 3))
             p += 3;
-        else if (!identifier && ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '\'' ||
+        else if (kind == 2 && (c == '+' || c == '(' || c == ')'))
+            ++p;
+        else if (kind != 1 && ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '\'' ||
                                  (c == '.' && p > begin && s[p - 1] >= '0' && s[p - 1] <= '9')))
             ++p;
         else
@@ -129,16 +135,18 @@ static size_t title_scope_limit(const char *s, size_t n, size_t maximum) {
    whitespace. This planner state is local to a single scan. */
 static void extend_cue_range(const ttf_engine_t *e, const char *s, size_t n, size_t begin,
                              size_t title_limit, size_t *protected_until,
-                             cue_scope_cache_t caches[2]) {
+                             cue_scope_cache_t caches[3]) {
     const ttf_entry_t *cue;
     for (cue = e->boundary_cues; cue; cue = cue->boundary_next) {
         size_t after, end;
-        int complete, identifier = !strcmp(cue->kind, "identifier_label");
-        size_t limit = identifier ? n : title_limit;
-        if (begin >= limit || s[begin] != cue->key[0])
+        int complete, kind = !strcmp(cue->kind, "identifier_label") ? 1
+                             : !strcmp(cue->kind, "phone_label") ? 2 : 0;
+        size_t limit = kind == 1 ? n : title_limit;
+        if (begin >= limit || (s[begin] != cue->key[0] &&
+                              (!kind || ascii_fold(s[begin]) != ascii_fold(cue->key[0]))))
             continue;
-        complete = cue_match_prefix(s, begin, limit, cue->key, &after);
-        end = complete ? cue_scope_end(s, after, limit, identifier, &caches[identifier]) : after;
+        complete = cue_match_prefix(s, begin, limit, cue->key, kind != 0, &after);
+        end = complete ? cue_scope_end(s, after, limit, kind, &caches[kind]) : after;
         if (end > *protected_until)
             *protected_until = end;
     }
@@ -299,7 +307,7 @@ ttf_status_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, i
     size_t count = 0, i, at, chars = 0,
            target = first ? e->config.first_segment_target : e->config.normal_segment_target;
     size_t selected = 0, protected_until = 0, title_limit;
-    cue_scope_cache_t cue_caches[2] = {{0, 0, 0}, {0, 0, 0}};
+    cue_scope_cache_t cue_caches[3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
     uint32_t quote_stack[32];
     size_t quote_depth = 0;
     ttf_status_t status =
@@ -365,6 +373,9 @@ ttf_status_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, i
                         sentence = 1;
                     if (cp == '.' && protected_period(e, s, at))
                         sentence = 0;
+                    if (cp == '.' && sentence &&
+                        ttf_phone_boundary_pending(e, s, at + w, tokens, i + 1))
+                        sentence = 0;
                 }
             }
             if (sentence) {
@@ -376,6 +387,10 @@ ttf_status_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, i
                  chars >= e->config.max_segment_length)) {
                 size_t previous = at;
                 if (at < protected_until) {
+                    at += w;
+                    continue;
+                }
+                if (ttf_phone_boundary_pending(e, s, at + w, tokens, i + 1)) {
                     at += w;
                     continue;
                 }

@@ -229,6 +229,31 @@ const path = require("node:path");
       "28건 통과, 0건 실패",
     ),
   );
+  await page.selectOption("#corpus", "phone-v18");
+  await run();
+  assert((await page.locator("#corpus-progress").textContent()).includes("55건 통과, 0건 실패"));
+  assert((await page.locator("#corpus-review").textContent()).includes("독립 검토 완료 0건"));
+  await page.click('[data-mode="verify"]');
+  await page.selectOption("#sample", "phone-v18-phone-v18-en-international-spaces");
+  assert.equal(await page.inputValue("#language"), "en-US");
+  await run();
+  assert.equal(await page.locator("#output").textContent(),
+    "Call me at plus one two one two five five five zero one zero zero.");
+  assert.equal(await page.locator("#verify-status").textContent(), "모든 분할 일치");
+  await page.locator("#inspect-body tr").filter({
+    has: page.getByRole("cell", { name: "PHONE", exact: true }),
+  }).first().click();
+  assert((await page.locator("#span-detail").textContent()).includes("+1-212-555-0100"));
+  assert((await page.locator("#span-detail").textContent()).includes("international"));
+  await page.fill("#source", "Call +1 (212) 555-0100 ext. 0042.");
+  await page.uncheck("#expected-enabled");
+  await run();
+  assert.equal(await page.locator("#output").textContent(),
+    "Call plus one two one two five five five zero one zero zero extension zero zero four two.");
+  await page.locator("#inspect-body tr").filter({
+    has: page.getByRole("cell", { name: "PHONE", exact: true }),
+  }).first().click();
+  assert((await page.locator("#span-detail").textContent()).includes("0042"));
   await page.click('[data-mode="normalize"]');
   for (const [sample, expected, semantic] of [
     ["unicode-grouping-currency", "천이백오십 원", "CURRENCY"],

@@ -70,6 +70,8 @@ jobs:
         run: python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources --corpus tests/evaluation/english_forms_v14.jsonl --output-dir artifacts/evaluation/english-forms-v14
       - name: Verify Korean ordinal, frequency and identifier contracts
         run: python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources --corpus tests/evaluation/korean_counters_v15.jsonl --output-dir artifacts/evaluation/korean-counters-v15
+      - name: Verify telephone, extension and financial identifier contracts
+        run: python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources --corpus tests/evaluation/phone_cases_v18.jsonl --output-dir artifacts/evaluation/phone-v18
       - name: Upload evaluation artifact
         uses: actions/upload-artifact@v7.0.1
         with:

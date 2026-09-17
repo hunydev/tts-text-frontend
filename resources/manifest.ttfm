@@ -29,3 +29,7 @@ languages/ko-KR/rules/counters.tsv
 languages/ko-KR/rules/measurements.tsv
 languages/ko-KR/rules/currencies.tsv
 languages/ko-KR/rules/identifiers.tsv
+common/phone.tsv
+languages/en-US/rules/phone.tsv
+languages/en-US/rules/identifiers.tsv
+languages/ko-KR/rules/phone.tsv

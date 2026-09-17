@@ -100,6 +100,49 @@ static int variant_key(const char *key) {
            !SAME(separator + 1, "base");
 }
 
+static int phone_cue_key(const char *key, int extension) {
+    size_t i, n = strlen(key);
+    if (!n || n >= (extension ? 32u : (size_t)TTF_IR_VALUE_SIZE) || key[0] == ' ' ||
+        key[n - 1] == ' ' || (extension && key[0] == '.'))
+        return 0;
+    for (i = 0; i < n; ++i) {
+        unsigned char c = (unsigned char)key[i];
+        if (c < 32 || c == 127 || (c >= 'A' && c <= 'Z'))
+            return 0;
+        if (c == ' ' && (extension || (i && key[i - 1] == ' ')))
+            return 0;
+        if (c < 128 && c != ' ' && !(c >= 'a' && c <= 'z') &&
+            !(extension && c == '.' && i + 1 == n))
+            return 0;
+    }
+    return 1;
+}
+
+static ttf_status_t phone_dependencies(const ttf_engine_t *e, ttf_resource_diagnostic_t *d) {
+    static const char *const policies[] = {"international_min_digits", "international_max_digits",
+                                           "national_min_digits", "national_max_digits",
+                                           "extension_max_digits"};
+    static const char *const labels[] = {"plus", "extension", "separator", "zero"};
+    size_t i;
+    int configured = 0;
+    for (i = 0; i < sizeof(policies) / sizeof(policies[0]); ++i)
+        if (ttf_resource_get(e, "phone_policy", "*", policies[i], NULL))
+            configured = 1;
+    if (!configured)
+        return TTF_OK; /* Old resource roots keep their legacy phone contract. */
+    for (i = 0; i < sizeof(labels) / sizeof(labels[0]); ++i)
+        if (!ttf_resource_get(e, "phone_render", EN, labels[i], NULL)) {
+            if (d) {
+                snprintf(d->kind, sizeof(d->kind), "phone_render");
+                snprintf(d->language, sizeof(d->language), "%s", EN);
+                snprintf(d->key, sizeof(d->key), "%s", labels[i]);
+            }
+            return ttf_validation_error(
+                d, "configured phone policy requires plus/extension/separator/zero reading labels");
+        }
+    return TTF_OK;
+}
+
 static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                            ttf_resource_diagnostic_t *d, void *userdata) {
     const char *k = r->kind, *key = r->key, *v = r->value;
@@ -108,6 +151,42 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     *handled = 0;
     if (!wildcard && !SAME(r->language, EN))
         return TTF_OK;
+    if (SAME(k, "phone_label") || SAME(k, "phone_extension") || SAME(k, "phone_extension_hint")) {
+        *handled = 1;
+        if (!phone_cue_key(key, !SAME(k, "phone_label")))
+            return ttf_validation_error(d, "phone cue must use bounded canonical words with "
+                                           "lowercase ASCII; extension may end in a period");
+        return ttf_validation_enum(v, "0|1")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "phone cue flag must be 0 or 1");
+    }
+    if (SAME(k, "phone_render")) {
+        *handled = 1;
+        if (!ttf_validation_enum(key, "plus|extension|separator|zero"))
+            return ttf_validation_error(d, "unknown phone_render key");
+        return label(v) && strlen(v) < TTF_IR_VALUE_SIZE
+                   ? TTF_OK
+                   : ttf_validation_error(d, "phone reading label must be nonempty, bounded and "
+                                             "contain no ASCII controls");
+    }
+    if (SAME(k, "identifier_label")) {
+        *handled = 1;
+        if (!phone_cue_key(key, 0))
+            return ttf_validation_error(
+                d, "identifier label must use bounded canonical words with lowercase ASCII");
+        return ttf_validation_enum(v, "digits|disabled")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "identifier_label must be digits or disabled");
+    }
+    if (SAME(k, "identifier_render")) {
+        *handled = 1;
+        if (!ttf_validation_enum(key, "zero|separator"))
+            return ttf_validation_error(d, "unknown identifier_render key");
+        return label(v) && strlen(v) < TTF_IR_VALUE_SIZE
+                   ? TTF_OK
+                   : ttf_validation_error(d, "identifier reading label must be nonempty, bounded "
+                                             "and contain no ASCII controls");
+    }
     if (SAME(k, "date_policy")) {
         *handled = 1;
         if (ttf_validation_enum(key, "named_year_style|numeric_year_style|year_style"))
@@ -140,7 +219,8 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    : ttf_validation_error(d, "currency_minor_digits must be 0 or 2");
     }
     if (SAME(k, "context")) {
-        if (!ttf_validation_enum(key, "latin_weight|phrase_ceiling|clause_weight")) {
+        if (!ttf_validation_enum(
+                key, "latin_weight|phrase_ceiling|clause_weight|numeric_label_weight")) {
             if (wildcard)
                 return TTF_OK; /* A different pack may own this wildcard key. */
             *handled = 1;
@@ -368,6 +448,8 @@ static ttf_status_t engine(const ttf_engine_t *e, ttf_resource_diagnostic_t *d, 
     (void)userdata;
     if (!ttf_find_pack(e, EN))
         return TTF_OK;
+    if ((status = phone_dependencies(e, d)) != TTF_OK)
+        return status;
     minimum = ttf_resource_get(e, "date_policy", EN, "min_year", NULL);
     maximum = ttf_resource_get(e, "date_policy", EN, "max_year", NULL);
     if (minimum)

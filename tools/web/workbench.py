@@ -20,6 +20,7 @@ CORPORA = {
     "english-dates-v13": ("영어 날짜·연도·코드믹스", "english_dates_v13.jsonl"),
     "english-forms-v14": ("영어 통화명·약어·이니셜", "english_forms_v14.jsonl"),
     "korean-counters-v15": ("한국어 서수·횟수·번호", "korean_counters_v15.jsonl"),
+    "phone-v18": ("국제전화·내선·계좌번호 구분", "phone_cases_v18.jsonl"),
 }
 DEFAULTS = dict(
     default_language="ko-KR",
@@ -314,7 +315,7 @@ def catalog():
                 "reason": "Explicit grouping/value or malformed-input preservation contract; no independent linguistic approval.",
             },
         ))
-    for key in ("advanced", "content-v7", "finance-v7", "scaled-currency-v12", "english-dates-v13", "english-forms-v14", "korean-counters-v15"):
+    for key in ("advanced", "content-v7", "finance-v7", "scaled-currency-v12", "english-dates-v13", "english-forms-v14", "korean-counters-v15", "phone-v18"):
         if corpus_path(key).exists():
             for row in [
                 json.loads(x)

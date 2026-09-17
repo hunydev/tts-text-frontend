@@ -50,6 +50,24 @@ equal for the same configuration. This bounded context is the initial tradeoff f
 incremental commitment. [Frontend benchmarks](benchmark.md) measure actual callback
 timing; no absolute latency guarantee is claimed.
 
+## Telephone and identifier commitment (v0.18)
+
+The classifier and boundary planner share a language-neutral phone scanner. At a
+possible cut the planner examines only the available prefix; later bytes in a
+larger write cannot retroactively justify a different earlier cut. Telephone
+groups, parentheses and configured extension markers remain pending together,
+including the period in `ext.`. A newline ends extension scope. Incomplete or
+malformed phone-shaped input is preserved instead of reading its first digits as
+a quantity and its remainder as another semantic value.
+
+Resource-defined phone and identifier labels retain their scope across phrase
+targets. Disabled longer labels also retain scope so a cut cannot expose and
+reactivate an enabled shorter suffix. A label being retained does not enable it.
+Ordinary parentheses around quantities or dates do not establish a phone number.
+See [phone policies](phone-resources.md) for the supported forms and editable
+reading labels. These atomic spans can exceed a soft segment target; the pending
+byte limit still applies.
+
 Callbacks run synchronously during `write`/`flush`; the caller controls pacing by
 returning from the callback. A nonzero callback return cancels the request with
 `TTF_ECALLBACK`. A real TTS queue should copy segment data if synthesis continues

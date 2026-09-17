@@ -1,0 +1,6 @@
+# Bounded digit counts; these are recognition policy, not numbering-plan validation.
+phone_policy	*	international_min_digits	7
+phone_policy	*	international_max_digits	15
+phone_policy	*	national_min_digits	7
+phone_policy	*	national_max_digits	15
+phone_policy	*	extension_max_digits	8
