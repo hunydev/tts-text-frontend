@@ -179,6 +179,13 @@ const path = require("node:path");
       "20건 통과, 0건 실패",
     ),
   );
+  await page.selectOption("#corpus", "english-forms-v14");
+  await run();
+  assert(
+    (await page.locator("#corpus-progress").textContent()).includes(
+      "24건 통과, 0건 실패",
+    ),
+  );
   await page.click('[data-mode="normalize"]');
   await page.selectOption("#sample", "mixed");
   await run();

@@ -187,6 +187,18 @@ TTS 정답으로 자동 승격하지 않는다.
 [날짜 가이드](english-dates.md)에 기록했으며, 이것이 원문 재사용 허가나 모든
 attribution 요건을 대신하지 않는다.
 
+### 영어 약어·통화명 사실 확인 (v0.14)
+
+2026-09-17 확인한 publisher 원문은 [Cambridge Dr](https://dictionary.cambridge.org/dictionary/english/dr),
+[Cambridge pound](https://dictionary.cambridge.org/dictionary/english/pound),
+[Dictionary.com Mr./Mrs.](https://www.dictionary.com/articles/mr-mrs)다. 고정 commit 없는
+조회 시점 웹 문서이며 Dr.의 확장, Mr./Mrs.의 읽기, pound의 통화/무게 다의성만 참고했다.
+웹 페이지/정의/예문/발음 표의 open license, 상업적 복사 및 재배포 허가는 확인하지
+않았다. 원문 data/resource는 vendoring하지 않았고 위 URL과 조회일을 사실 근거로
+기록한다. 문서 attribution 기록이 원본 사용 허가를 대신하지 않는다. 제품의 alias,
+문맥 조건, 한국어 표기 및 synthetic test 문장은 프로젝트가 직접 작성했다. 한국어
+title 표기는 별도 검수 대기 상태로 관리한다.
+
 ### 출처 변경 절차
 
 근거·형식·기술적 한계는 [NeMo/Sproat](research/nemo-sproat.md),

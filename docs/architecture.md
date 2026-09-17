@@ -346,3 +346,33 @@ Existing ISO date readings remain stable, while named dates and explicit year
 cues use a documented calendar-year policy. An external reference's lowercase
 month or different date order does not override the product policy. Diagnostic
 casefold and alignment counts are reported separately from exact-match accuracy.
+
+## Written currency and abbreviation checkpoint (0.14.0)
+
+Written currency names use a separate word-alias resource namespace. Recognition
+folds ASCII case and horizontal whitespace, checks complete boundaries, resolves
+unit identity before verbalization and reuses the exact decimal/range parser.
+Ambiguous aliases require explicit syntax or resource context cues. A contradictory
+or malformed suffix is retained as one TEXT object. Source language metadata is
+carried by the alias while speech language remains the router's decision.
+
+Dotted initial and title grammar resides in the EN pack. Initialism IR stores a
+canonical letter sequence and a resource-selected reading policy; a terminal
+period can remain independent punctuation. Generic boundary syntax retains an
+incomplete initial period without relying on unavailable future chunks. Ordinary
+word pronunciations and explicit initialism pronunciations use separate source
+resource namespaces, preventing a dictionary pronoun from overriding a letter
+sequence. Four Korean title readings pass through managed target lexicons.
+
+Foreign pronunciation selects among original and canonical spelling aliases by
+resource layer first and exact spelling second. This retains user overrides for
+ordinals and dotted initials after source verbalization. No public ABI layout or
+source-target language-pair branch is introduced. Token, semantic and output
+byte offsets remain tied to the original text.
+
+The source resource compiler now uses exactly the runtime's LF/CRLF record
+boundaries. Benchmark comparison independently reconstructs summary metrics from
+result rows, checks reference fields/order and exact flags, and hashes report
+files before and after use. [Remaining work](remaining-work.md) separates verified
+contracts from unclosed production gaps, including source pronunciation layer
+trace, Unicode numeric grouping, Korean counter roles and independent references.

@@ -1,0 +1,944 @@
+{
+  "schema_version": 1,
+  "before": {
+    "cases": 3785,
+    "engine_errors": 0,
+    "unlabeled_spans": 0,
+    "sentence": {
+      "dataset-reference": {
+        "total": 3785,
+        "exact": 4,
+        "unaligned": 0,
+        "accuracy": 0.0010568031704095112
+      }
+    },
+    "spoken_projection": {
+      "dataset-reference": {
+        "total": 3785,
+        "exact": 2146,
+        "unaligned": 61,
+        "accuracy": 0.5669749009247028,
+        "unavailable": 61,
+        "available": 3724,
+        "coverage": 0.983883751651255,
+        "unavailable_reasons": {
+          "unaligned-reference-span": 61
+        }
+      }
+    },
+    "spans": {
+      "dataset-reference": {
+        "total": 46213,
+        "exact": 34845,
+        "unaligned": 161,
+        "accuracy": 0.7540086122952416
+      }
+    },
+    "semiotic_classes": {
+      "PLAIN": {
+        "dataset-reference": {
+          "total": 34001,
+          "exact": 33863,
+          "unaligned": 37,
+          "accuracy": 0.9959412958442398
+        }
+      },
+      "PUNCT": {
+        "dataset-reference": {
+          "total": 8919,
+          "exact": 0,
+          "unaligned": 10,
+          "accuracy": 0.0
+        }
+      },
+      "LETTERS": {
+        "dataset-reference": {
+          "total": 712,
+          "exact": 35,
+          "unaligned": 0,
+          "accuracy": 0.04915730337078652
+        }
+      },
+      "DATE": {
+        "dataset-reference": {
+          "total": 1463,
+          "exact": 319,
+          "unaligned": 27,
+          "accuracy": 0.21804511278195488
+        }
+      },
+      "CARDINAL": {
+        "dataset-reference": {
+          "total": 536,
+          "exact": 441,
+          "unaligned": 78,
+          "accuracy": 0.8227611940298507
+        }
+      },
+      "MEASURE": {
+        "dataset-reference": {
+          "total": 92,
+          "exact": 76,
+          "unaligned": 3,
+          "accuracy": 0.8260869565217391
+        }
+      },
+      "DECIMAL": {
+        "dataset-reference": {
+          "total": 35,
+          "exact": 28,
+          "unaligned": 0,
+          "accuracy": 0.8
+        }
+      },
+      "VERBATIM": {
+        "dataset-reference": {
+          "total": 295,
+          "exact": 0,
+          "unaligned": 0,
+          "accuracy": 0.0
+        }
+      },
+      "MONEY": {
+        "dataset-reference": {
+          "total": 33,
+          "exact": 30,
+          "unaligned": 0,
+          "accuracy": 0.9090909090909091
+        }
+      },
+      "ORDINAL": {
+        "dataset-reference": {
+          "total": 47,
+          "exact": 42,
+          "unaligned": 0,
+          "accuracy": 0.8936170212765957
+        }
+      },
+      "DIGIT": {
+        "dataset-reference": {
+          "total": 35,
+          "exact": 10,
+          "unaligned": 4,
+          "accuracy": 0.2857142857142857
+        }
+      },
+      "ELECTRONIC": {
+        "dataset-reference": {
+          "total": 22,
+          "exact": 0,
+          "unaligned": 0,
+          "accuracy": 0.0
+        }
+      },
+      "TELEPHONE": {
+        "dataset-reference": {
+          "total": 13,
+          "exact": 0,
+          "unaligned": 0,
+          "accuracy": 0.0
+        }
+      },
+      "TIME": {
+        "dataset-reference": {
+          "total": 4,
+          "exact": 1,
+          "unaligned": 0,
+          "accuracy": 0.25
+        }
+      },
+      "ADDRESS": {
+        "dataset-reference": {
+          "total": 4,
+          "exact": 0,
+          "unaligned": 2,
+          "accuracy": 0.0
+        }
+      },
+      "FRACTION": {
+        "dataset-reference": {
+          "total": 2,
+          "exact": 0,
+          "unaligned": 0,
+          "accuracy": 0.0
+        }
+      }
+    },
+    "class_to_engine_semantics": {
+      "PLAIN": {
+        "WORD": 33604,
+        "INITIALISM": 127,
+        "WORD+TEXT+WORD": 206,
+        "INITIALISM+TEXT": 2,
+        "RANGE": 35,
+        "WORD+TEXT": 18,
+        "TEXT": 4,
+        "INITIALISM+TEXT+WORD": 2,
+        "DATE": 1,
+        "ACRONYM": 2
+      },
+      "PUNCT": {
+        "TEXT": 8908,
+        "RANGE": 7,
+        "TEXT+TEXT": 1,
+        "FRACTION": 3
+      },
+      "LETTERS": {
+        "WORD+TEXT+TEXT+WORD+TEXT": 28,
+        "INITIALISM": 348,
+        "WORD+TEXT": 145,
+        "WORD+TEXT+WORD+TEXT+WORD+TEXT": 7,
+        "WORD": 103,
+        "WORD+TEXT+WORD+TEXT": 52,
+        "INITIALISM+TEXT": 16,
+        "INITIALISM+TEXT+WORD": 3,
+        "WORD+TEXT+WORD": 3,
+        "WORD+TEXT+TEXT+WORD+TEXT+TEXT+WORD+TEXT": 2,
+        "WORD+SYMBOL+WORD": 2,
+        "INITIALISM+SYMBOL+WORD": 1,
+        "WORD+TEXT+WORD+TEXT+WORD+TEXT+TEXT": 1,
+        "WORD+TEXT+WORD+TEXT+WORD+TEXT+WORD+TEXT": 1
+      },
+      "DATE": {
+        "CARDINAL": 457,
+        "DATE": 944,
+        "TEXT": 35,
+        "DATE+TEXT": 1,
+        "RANGE": 22,
+        "DATE+TEXT+WORD": 1,
+        "CARDINAL+TEXT+INITIALISM": 1,
+        "WORD+TEXT+DATE": 1,
+        "VERSION": 1
+      },
+      "CARDINAL": {
+        "CARDINAL": 441,
+        "RANGE": 62,
+        "TEXT": 6,
+        "CARDINAL+TEXT": 6,
+        "INITIALISM": 9,
+        "DATE": 2,
+        "CARDINAL+TEXT+CARDINAL": 1,
+        "WORD": 2,
+        "CARDINAL+TEXT+TEXT": 2,
+        "FRACTION": 5
+      },
+      "MEASURE": {
+        "MEASURE": 45,
+        "TEXT+WORD": 7,
+        "PERCENT": 33,
+        "RANGE": 3,
+        "CARDINAL+TEXT": 1,
+        "CARDINAL+TEXT+WORD": 1,
+        "CARDINAL+TEXT+WORD+TEXT+WORD": 2
+      },
+      "DECIMAL": {
+        "CARDINAL": 34,
+        "CARDINAL+TEXT+WORD": 1
+      },
+      "VERBATIM": {
+        "TEXT": 60,
+        "WORD": 186,
+        "SYMBOL": 46,
+        "CARDINAL+TEXT+WORD": 2,
+        "CARDINAL": 1
+      },
+      "MONEY": {
+        "CURRENCY": 33
+      },
+      "ORDINAL": {
+        "ORDINAL": 42,
+        "CARDINAL+WORD": 1,
+        "INITIALISM": 2,
+        "WORD+TEXT": 1,
+        "WORD": 1
+      },
+      "DIGIT": {
+        "DATE": 1,
+        "CARDINAL": 27,
+        "CARDINAL+TEXT": 4,
+        "RANGE": 1,
+        "CARDINAL+TEXT+TEXT": 1,
+        "FRACTION": 1
+      },
+      "ELECTRONIC": {
+        "WORD+TEXT+WORD": 11,
+        "URL": 8,
+        "WORD+TEXT+WORD+TEXT+WORD": 1,
+        "INITIALISM+TEXT+WORD": 1,
+        "TEXT+TEXT": 1
+      },
+      "TELEPHONE": {
+        "CARDINAL": 3,
+        "TEXT": 5,
+        "RANGE": 3,
+        "TEXT+CARDINAL+TEXT+TEXT+CARDINAL": 1,
+        "CARDINAL+TEXT+CARDINAL+TEXT+CARDINAL+TEXT+CARDINAL+TEXT+RANGE+TEXT+CARDINAL": 1
+      },
+      "TIME": {
+        "CARDINAL+TEXT+WORD": 2,
+        "TIME": 1,
+        "CARDINAL+TEXT+WORD+TEXT+WORD+TEXT": 1
+      },
+      "ADDRESS": {
+        "ALNUM_TERM": 2,
+        "ALNUM_TERM+TEXT": 2
+      },
+      "FRACTION": {
+        "FRACTION": 2
+      }
+    },
+    "chunk_comparisons": 11355,
+    "chunk_failures": 0,
+    "all_reference_spans": {
+      "total": 46213,
+      "exact": 34845,
+      "micro_accuracy": 0.7540086122952416,
+      "macro_class_accuracy": 0.3781508799143976
+    },
+    "tn_only_reference_spans": {
+      "total": 3293,
+      "exact": 982,
+      "micro_accuracy": 0.2982083206802308,
+      "macro_class_accuracy": 0.3610337701990087
+    }
+  },
+  "after": {
+    "cases": 3785,
+    "engine_errors": 0,
+    "unlabeled_spans": 0,
+    "sentence": {
+      "dataset-reference": {
+        "total": 3785,
+        "exact": 4,
+        "unaligned": 0,
+        "accuracy": 0.0010568031704095112
+      }
+    },
+    "spoken_projection": {
+      "dataset-reference": {
+        "total": 3785,
+        "exact": 2197,
+        "unaligned": 63,
+        "accuracy": 0.5804491413474241,
+        "unavailable": 63,
+        "available": 3722,
+        "coverage": 0.9833553500660502,
+        "unavailable_reasons": {
+          "unaligned-reference-span": 63
+        }
+      }
+    },
+    "spans": {
+      "dataset-reference": {
+        "total": 46213,
+        "exact": 34978,
+        "unaligned": 167,
+        "accuracy": 0.7568865903533638
+      }
+    },
+    "semiotic_classes": {
+      "PLAIN": {
+        "dataset-reference": {
+          "total": 34001,
+          "exact": 33860,
+          "unaligned": 40,
+          "accuracy": 0.9958530631452016
+        }
+      },
+      "PUNCT": {
+        "dataset-reference": {
+          "total": 8919,
+          "exact": 0,
+          "unaligned": 10,
+          "accuracy": 0.0
+        }
+      },
+      "LETTERS": {
+        "dataset-reference": {
+          "total": 712,
+          "exact": 174,
+          "unaligned": 0,
+          "accuracy": 0.2443820224719101
+        }
+      },
+      "DATE": {
+        "dataset-reference": {
+          "total": 1463,
+          "exact": 319,
+          "unaligned": 27,
+          "accuracy": 0.21804511278195488
+        }
+      },
+      "CARDINAL": {
+        "dataset-reference": {
+          "total": 536,
+          "exact": 440,
+          "unaligned": 79,
+          "accuracy": 0.8208955223880597
+        }
+      },
+      "MEASURE": {
+        "dataset-reference": {
+          "total": 92,
+          "exact": 76,
+          "unaligned": 3,
+          "accuracy": 0.8260869565217391
+        }
+      },
+      "DECIMAL": {
+        "dataset-reference": {
+          "total": 35,
+          "exact": 26,
+          "unaligned": 2,
+          "accuracy": 0.7428571428571429
+        }
+      },
+      "VERBATIM": {
+        "dataset-reference": {
+          "total": 295,
+          "exact": 0,
+          "unaligned": 0,
+          "accuracy": 0.0
+        }
+      },
+      "MONEY": {
+        "dataset-reference": {
+          "total": 33,
+          "exact": 30,
+          "unaligned": 0,
+          "accuracy": 0.9090909090909091
+        }
+      },
+      "ORDINAL": {
+        "dataset-reference": {
+          "total": 47,
+          "exact": 42,
+          "unaligned": 0,
+          "accuracy": 0.8936170212765957
+        }
+      },
+      "DIGIT": {
+        "dataset-reference": {
+          "total": 35,
+          "exact": 10,
+          "unaligned": 4,
+          "accuracy": 0.2857142857142857
+        }
+      },
+      "ELECTRONIC": {
+        "dataset-reference": {
+          "total": 22,
+          "exact": 0,
+          "unaligned": 0,
+          "accuracy": 0.0
+        }
+      },
+      "TELEPHONE": {
+        "dataset-reference": {
+          "total": 13,
+          "exact": 0,
+          "unaligned": 0,
+          "accuracy": 0.0
+        }
+      },
+      "TIME": {
+        "dataset-reference": {
+          "total": 4,
+          "exact": 1,
+          "unaligned": 0,
+          "accuracy": 0.25
+        }
+      },
+      "ADDRESS": {
+        "dataset-reference": {
+          "total": 4,
+          "exact": 0,
+          "unaligned": 2,
+          "accuracy": 0.0
+        }
+      },
+      "FRACTION": {
+        "dataset-reference": {
+          "total": 2,
+          "exact": 0,
+          "unaligned": 0,
+          "accuracy": 0.0
+        }
+      }
+    },
+    "class_to_engine_semantics": {
+      "PLAIN": {
+        "WORD": 33601,
+        "INITIALISM": 127,
+        "WORD+TEXT+WORD": 206,
+        "INITIALISM+TEXT": 2,
+        "RANGE": 35,
+        "WORD+TEXT": 18,
+        "TEXT": 4,
+        "INITIALISM+TEXT+WORD": 2,
+        "DATE": 1,
+        "CURRENCY": 3,
+        "ACRONYM": 2
+      },
+      "PUNCT": {
+        "TEXT": 8908,
+        "RANGE": 7,
+        "TEXT+TEXT": 1,
+        "FRACTION": 3
+      },
+      "LETTERS": {
+        "INITIALISM": 487,
+        "WORD+TEXT": 91,
+        "WORD": 103,
+        "INITIALISM+TEXT": 17,
+        "INITIALISM+TEXT+WORD": 3,
+        "WORD+TEXT+WORD+TEXT+WORD+TEXT": 2,
+        "WORD+TEXT+WORD": 3,
+        "WORD+TEXT+WORD+TEXT": 3,
+        "WORD+SYMBOL+WORD": 2,
+        "INITIALISM+SYMBOL+WORD": 1
+      },
+      "DATE": {
+        "CARDINAL": 457,
+        "DATE": 944,
+        "TEXT": 35,
+        "DATE+TEXT": 1,
+        "RANGE": 22,
+        "DATE+TEXT+WORD": 1,
+        "CARDINAL+TEXT+INITIALISM": 1,
+        "WORD+TEXT+DATE": 1,
+        "VERSION": 1
+      },
+      "CARDINAL": {
+        "CARDINAL": 440,
+        "RANGE": 62,
+        "TEXT": 6,
+        "CARDINAL+TEXT": 6,
+        "INITIALISM": 9,
+        "DATE": 2,
+        "CARDINAL+TEXT+CARDINAL": 1,
+        "WORD": 2,
+        "CARDINAL+TEXT+TEXT": 2,
+        "FRACTION": 5,
+        "CURRENCY": 1
+      },
+      "MEASURE": {
+        "MEASURE": 45,
+        "TEXT+WORD": 7,
+        "PERCENT": 33,
+        "RANGE": 3,
+        "CARDINAL+TEXT": 1,
+        "CARDINAL+TEXT+WORD": 1,
+        "CARDINAL+TEXT+WORD+TEXT+WORD": 2
+      },
+      "DECIMAL": {
+        "CARDINAL": 32,
+        "CARDINAL+TEXT+WORD": 1,
+        "CURRENCY": 2
+      },
+      "VERBATIM": {
+        "TEXT": 60,
+        "WORD": 186,
+        "SYMBOL": 46,
+        "CARDINAL+TEXT+WORD": 2,
+        "CARDINAL": 1
+      },
+      "MONEY": {
+        "CURRENCY": 33
+      },
+      "ORDINAL": {
+        "ORDINAL": 42,
+        "CARDINAL+WORD": 1,
+        "INITIALISM": 2,
+        "WORD+TEXT": 1,
+        "WORD": 1
+      },
+      "DIGIT": {
+        "DATE": 1,
+        "CARDINAL": 27,
+        "CARDINAL+TEXT": 4,
+        "RANGE": 1,
+        "CARDINAL+TEXT+TEXT": 1,
+        "FRACTION": 1
+      },
+      "ELECTRONIC": {
+        "WORD+TEXT+WORD": 11,
+        "URL": 8,
+        "WORD+TEXT+WORD+TEXT+WORD": 1,
+        "INITIALISM+TEXT+WORD": 1,
+        "TEXT+TEXT": 1
+      },
+      "TELEPHONE": {
+        "CARDINAL": 3,
+        "TEXT": 5,
+        "RANGE": 3,
+        "TEXT+CARDINAL+TEXT+TEXT+CARDINAL": 1,
+        "CARDINAL+TEXT+CARDINAL+TEXT+CARDINAL+TEXT+CARDINAL+TEXT+RANGE+TEXT+CARDINAL": 1
+      },
+      "TIME": {
+        "CARDINAL+TEXT+WORD": 2,
+        "TIME": 1,
+        "CARDINAL+TEXT+WORD+TEXT+WORD+TEXT": 1
+      },
+      "ADDRESS": {
+        "ALNUM_TERM": 2,
+        "ALNUM_TERM+TEXT": 2
+      },
+      "FRACTION": {
+        "FRACTION": 2
+      }
+    },
+    "chunk_comparisons": 11355,
+    "chunk_failures": 0,
+    "all_reference_spans": {
+      "total": 46213,
+      "exact": 34978,
+      "micro_accuracy": 0.7568865903533638,
+      "macro_class_accuracy": 0.3866588772654874
+    },
+    "tn_only_reference_spans": {
+      "total": 3293,
+      "exact": 1118,
+      "micro_accuracy": 0.33950804737321594,
+      "macro_class_accuracy": 0.37076349807875697
+    }
+  },
+  "changes": {
+    "ADDRESS/dataset-reference": {
+      "unchanged-wrong": 4
+    },
+    "CARDINAL/dataset-reference": {
+      "unchanged-correct": 440,
+      "unchanged-wrong": 95,
+      "regressed": 1
+    },
+    "DATE/dataset-reference": {
+      "unchanged-wrong": 1144,
+      "unchanged-correct": 319
+    },
+    "DECIMAL/dataset-reference": {
+      "unchanged-correct": 26,
+      "unchanged-wrong": 7,
+      "regressed": 2
+    },
+    "DIGIT/dataset-reference": {
+      "unchanged-wrong": 25,
+      "unchanged-correct": 10
+    },
+    "ELECTRONIC/dataset-reference": {
+      "unchanged-wrong": 22
+    },
+    "FRACTION/dataset-reference": {
+      "unchanged-wrong": 2
+    },
+    "LETTERS/dataset-reference": {
+      "fixed": 139,
+      "unchanged-wrong": 538,
+      "unchanged-correct": 35
+    },
+    "MEASURE/dataset-reference": {
+      "unchanged-correct": 76,
+      "unchanged-wrong": 16
+    },
+    "MONEY/dataset-reference": {
+      "unchanged-wrong": 3,
+      "unchanged-correct": 30
+    },
+    "ORDINAL/dataset-reference": {
+      "unchanged-correct": 42,
+      "unchanged-wrong": 5
+    },
+    "PLAIN/dataset-reference": {
+      "unchanged-correct": 33860,
+      "unchanged-wrong": 138,
+      "regressed": 3
+    },
+    "PUNCT/dataset-reference": {
+      "unchanged-wrong": 8919
+    },
+    "TELEPHONE/dataset-reference": {
+      "unchanged-wrong": 13
+    },
+    "TIME/dataset-reference": {
+      "unchanged-wrong": 3,
+      "unchanged-correct": 1
+    },
+    "VERBATIM/dataset-reference": {
+      "unchanged-wrong": 295
+    }
+  },
+  "provenance": {
+    "before": {
+      "corpus_sha256": "6b0a0a56a4955166ca1786dc6778ab744e372219cc4d8ab6bcf4d51943c2dd51",
+      "program_sha256": "e1a048ac0be7592d850767bff4f8a30578629a79affa0e05b31585596709c8e4",
+      "resources_sha256": "c23f22d16381cfbd773d93a5f232f40922a4196553abc7ffcf5e0c8967877976",
+      "overrides": [],
+      "evaluator_sha256": "ceb6315b79b02c835691ad37ad21ae040d08dfc1cf4d6edcf3bdf80bb19e8edc",
+      "schema_sha256": "ff7abef7a5f6553fd8a87f9dbce26b7afc0632f94bfb0c09a6badf20bdb2b749",
+      "adapter_sha256": {
+        "tools/web/native.py": "bbf4d4a725cd0e91ea630717f3ba780a2905ec55b3db1ef1b5e4854d5dbc25e0"
+      },
+      "evaluated_records_sha256": "c7e89e25dcc3e613983069062a50b79c4f76d5b0a373223e42cc5fab0e64d764",
+      "limit": 0,
+      "backend": "native-batch",
+      "input_stability": "sha256-before-after-identical",
+      "chunk_bytes": [
+        1,
+        7,
+        64
+      ],
+      "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+      "datasets": {
+        "sproat/train": 3785
+      },
+      "usage": {
+        "benchmark-only": 3785
+      }
+    },
+    "after": {
+      "corpus_sha256": "6b0a0a56a4955166ca1786dc6778ab744e372219cc4d8ab6bcf4d51943c2dd51",
+      "program_sha256": "a04e0229da1d38153849795000686958c0b189d07b50695baf874f7a9f58b78f",
+      "resources_sha256": "eb918481cab3c9e575081e5d4f408621dbeeda201782629c586cac560f780694",
+      "overrides": [],
+      "evaluator_sha256": "ceb6315b79b02c835691ad37ad21ae040d08dfc1cf4d6edcf3bdf80bb19e8edc",
+      "schema_sha256": "ff7abef7a5f6553fd8a87f9dbce26b7afc0632f94bfb0c09a6badf20bdb2b749",
+      "adapter_sha256": {
+        "tools/web/native.py": "bbf4d4a725cd0e91ea630717f3ba780a2905ec55b3db1ef1b5e4854d5dbc25e0"
+      },
+      "evaluated_records_sha256": "c7e89e25dcc3e613983069062a50b79c4f76d5b0a373223e42cc5fab0e64d764",
+      "limit": 0,
+      "backend": "native-batch",
+      "input_stability": "sha256-before-after-identical",
+      "chunk_bytes": [
+        1,
+        7,
+        64
+      ],
+      "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+      "datasets": {
+        "sproat/train": 3785
+      },
+      "usage": {
+        "benchmark-only": 3785
+      }
+    }
+  },
+  "report_integrity": {
+    "verified_cases": 3785,
+    "before_results_sha256": "b40fe899e8140b0defbb1d0a19a9c3cf1d1cb616b0e24567a09359ae0719b919",
+    "after_results_sha256": "7b0dec1b708dbcc5677ecbd423814bf8273283e0f36705e5490f91d4886d18c7",
+    "validation": "counts, text exact flags, reference fields/order, all summary metrics, stable files"
+  },
+  "note": "Same references, cases, metric policy and backend required. Known development improvements are not held-out accuracy. Source-use restrictions apply to both reports.",
+  "diagnostics": {
+    "schema_version": 1,
+    "cases": 3785,
+    "results_sha256": "7b0dec1b708dbcc5677ecbd423814bf8273283e0f36705e5490f91d4886d18c7",
+    "metric_policy": "v2-exact-context-complete-output",
+    "reasons": {
+      "ADDRESS/dataset-reference": {
+        "other-text-difference": 2,
+        "unaligned": 2
+      },
+      "CARDINAL/dataset-reference": {
+        "exact": 440,
+        "unaligned": 79,
+        "other-text-difference": 17
+      },
+      "DATE/dataset-reference": {
+        "other-text-difference": 419,
+        "casefold-only-difference": 698,
+        "exact": 319,
+        "unaligned": 27
+      },
+      "DECIMAL/dataset-reference": {
+        "exact": 26,
+        "other-text-difference": 7,
+        "unaligned": 2
+      },
+      "DIGIT/dataset-reference": {
+        "unaligned": 4,
+        "other-text-difference": 21,
+        "exact": 10
+      },
+      "ELECTRONIC/dataset-reference": {
+        "other-text-difference": 22
+      },
+      "FRACTION/dataset-reference": {
+        "other-text-difference": 2
+      },
+      "LETTERS/dataset-reference": {
+        "exact": 174,
+        "other-text-difference": 538
+      },
+      "MEASURE/dataset-reference": {
+        "exact": 76,
+        "other-text-difference": 13,
+        "unaligned": 3
+      },
+      "MONEY/dataset-reference": {
+        "other-text-difference": 2,
+        "exact": 30,
+        "casefold-only-difference": 1
+      },
+      "ORDINAL/dataset-reference": {
+        "exact": 42,
+        "other-text-difference": 5
+      },
+      "PLAIN/dataset-reference": {
+        "exact": 33860,
+        "other-text-difference": 101,
+        "unaligned": 40
+      },
+      "PUNCT/dataset-reference": {
+        "other-text-difference": 8909,
+        "unaligned": 10
+      },
+      "TELEPHONE/dataset-reference": {
+        "other-text-difference": 13
+      },
+      "TIME/dataset-reference": {
+        "other-text-difference": 3,
+        "exact": 1
+      },
+      "VERBATIM/dataset-reference": {
+        "other-text-difference": 295
+      }
+    },
+    "engine_semantics": {
+      "ADDRESS/dataset-reference": {
+        "ALNUM_TERM": 2,
+        "ALNUM_TERM+TEXT": 2
+      },
+      "CARDINAL/dataset-reference": {
+        "CARDINAL": 440,
+        "RANGE": 62,
+        "TEXT": 6,
+        "CARDINAL+TEXT": 6,
+        "INITIALISM": 9,
+        "DATE": 2,
+        "CARDINAL+TEXT+CARDINAL": 1,
+        "WORD": 2,
+        "CARDINAL+TEXT+TEXT": 2,
+        "FRACTION": 5,
+        "CURRENCY": 1
+      },
+      "DATE/dataset-reference": {
+        "CARDINAL": 457,
+        "DATE": 944,
+        "TEXT": 35,
+        "DATE+TEXT": 1,
+        "RANGE": 22,
+        "DATE+TEXT+WORD": 1,
+        "CARDINAL+TEXT+INITIALISM": 1,
+        "WORD+TEXT+DATE": 1,
+        "VERSION": 1
+      },
+      "DECIMAL/dataset-reference": {
+        "CARDINAL": 32,
+        "CARDINAL+TEXT+WORD": 1,
+        "CURRENCY": 2
+      },
+      "DIGIT/dataset-reference": {
+        "DATE": 1,
+        "CARDINAL": 27,
+        "CARDINAL+TEXT": 4,
+        "RANGE": 1,
+        "CARDINAL+TEXT+TEXT": 1,
+        "FRACTION": 1
+      },
+      "ELECTRONIC/dataset-reference": {
+        "WORD+TEXT+WORD": 11,
+        "URL": 8,
+        "WORD+TEXT+WORD+TEXT+WORD": 1,
+        "INITIALISM+TEXT+WORD": 1,
+        "TEXT+TEXT": 1
+      },
+      "FRACTION/dataset-reference": {
+        "FRACTION": 2
+      },
+      "LETTERS/dataset-reference": {
+        "INITIALISM": 487,
+        "WORD+TEXT": 91,
+        "WORD": 103,
+        "INITIALISM+TEXT": 17,
+        "INITIALISM+TEXT+WORD": 3,
+        "WORD+TEXT+WORD+TEXT+WORD+TEXT": 2,
+        "WORD+TEXT+WORD": 3,
+        "WORD+TEXT+WORD+TEXT": 3,
+        "WORD+SYMBOL+WORD": 2,
+        "INITIALISM+SYMBOL+WORD": 1
+      },
+      "MEASURE/dataset-reference": {
+        "MEASURE": 45,
+        "TEXT+WORD": 7,
+        "PERCENT": 33,
+        "RANGE": 3,
+        "CARDINAL+TEXT": 1,
+        "CARDINAL+TEXT+WORD": 1,
+        "CARDINAL+TEXT+WORD+TEXT+WORD": 2
+      },
+      "MONEY/dataset-reference": {
+        "CURRENCY": 33
+      },
+      "ORDINAL/dataset-reference": {
+        "ORDINAL": 42,
+        "CARDINAL+WORD": 1,
+        "INITIALISM": 2,
+        "WORD+TEXT": 1,
+        "WORD": 1
+      },
+      "PLAIN/dataset-reference": {
+        "WORD": 33601,
+        "INITIALISM": 127,
+        "WORD+TEXT+WORD": 206,
+        "INITIALISM+TEXT": 2,
+        "RANGE": 35,
+        "WORD+TEXT": 18,
+        "TEXT": 4,
+        "INITIALISM+TEXT+WORD": 2,
+        "DATE": 1,
+        "CURRENCY": 3,
+        "ACRONYM": 2
+      },
+      "PUNCT/dataset-reference": {
+        "TEXT": 8908,
+        "RANGE": 7,
+        "TEXT+TEXT": 1,
+        "FRACTION": 3
+      },
+      "TELEPHONE/dataset-reference": {
+        "CARDINAL": 3,
+        "TEXT": 5,
+        "RANGE": 3,
+        "TEXT+CARDINAL+TEXT+TEXT+CARDINAL": 1,
+        "CARDINAL+TEXT+CARDINAL+TEXT+CARDINAL+TEXT+CARDINAL+TEXT+RANGE+TEXT+CARDINAL": 1
+      },
+      "TIME/dataset-reference": {
+        "CARDINAL+TEXT+WORD": 2,
+        "TIME": 1,
+        "CARDINAL+TEXT+WORD+TEXT+WORD+TEXT": 1
+      },
+      "VERBATIM/dataset-reference": {
+        "TEXT": 60,
+        "WORD": 186,
+        "SYMBOL": 46,
+        "CARDINAL+TEXT+WORD": 2,
+        "CARDINAL": 1
+      }
+    },
+    "note": "Diagnostic counts only. Casefold differences remain exact-match failures. A matching semantic category does not prove a correct value or reading. Reference statuses are kept separate; no case text is exported."
+  },
+  "development_sample": true,
+  "baseline_commit": "ea0de28c0accc3ec7d9e701da820658e9ef1ebad",
+  "observed_regressions": {
+    "total": 6,
+    "classes": {
+      "CARDINAL": 1,
+      "DECIMAL": 2,
+      "PLAIN": 3
+    },
+    "cause": "Three amount/name pairs now represented by single CURRENCY spans cross separate reference annotations. Two affected complete normalized sentence strings are identical before and after. Losses remain in exact metrics.",
+    "affected_sentences": 2
+  }
+}

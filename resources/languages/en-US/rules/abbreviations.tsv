@@ -1,0 +1,40 @@
+# Editable reading policy; titles require an immediately following capitalized name.
+# Ambiguous terminal/street Dr., St., and a lone A. are deliberately preserved.
+abbreviation_expansion	en-US	dr	Doctor
+abbreviation_expansion	en-US	mr	Mister
+abbreviation_expansion	en-US	mrs	Missus
+abbreviation_expansion	en-US	prof	Professor
+# Existing undotted initialisms keep their text spelling by default.
+# Options: preserve, letters (g p u), names (gee pee you).
+# Unknown ALL-CAPS words never acquire an English spelling pronunciation by default.
+initialism_policy	en-US	dotted	letters
+initialism_policy	en-US	known	preserve
+initialism_policy	en-US	inferred	preserve
+letter_name	en-US	a	ay
+letter_name	en-US	b	bee
+letter_name	en-US	c	see
+letter_name	en-US	d	dee
+letter_name	en-US	e	ee
+letter_name	en-US	f	ef
+letter_name	en-US	g	gee
+letter_name	en-US	h	aitch
+letter_name	en-US	i	eye
+letter_name	en-US	j	jay
+letter_name	en-US	k	kay
+letter_name	en-US	l	el
+letter_name	en-US	m	em
+letter_name	en-US	n	en
+letter_name	en-US	o	oh
+letter_name	en-US	p	pee
+letter_name	en-US	q	cue
+letter_name	en-US	r	ar
+letter_name	en-US	s	ess
+letter_name	en-US	t	tee
+letter_name	en-US	u	you
+letter_name	en-US	v	vee
+letter_name	en-US	w	double you
+letter_name	en-US	x	ex
+letter_name	en-US	y	why
+letter_name	en-US	z	zee
+boundary_syntax	en-US	dotted_initials	1
+context_neutral	en-US	dotted_initials	1

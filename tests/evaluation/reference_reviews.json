@@ -516,6 +516,25 @@
         }
       },
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/english_forms_v14.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "developer-authored synthetic fixture; docs/english-forms.md",
+        "reason": "Written currency identity and abbreviation reading policies, with independent original references; test agreement is not human linguistic approval."
+      },
+      "category_overrides": {
+        "guard/preservation": {
+          "classification": "preservation-contract",
+          "review_status": "pending-independent-review",
+          "reference_source": "developer-authored synthetic fixture; docs/english-forms.md",
+          "reason": "Preserve ambiguous spelling, ordinary capitalization and explicit literal code."
+        }
+      },
+      "case_overrides": {}
     }
   ],
   "excluded": [

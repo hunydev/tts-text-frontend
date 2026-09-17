@@ -179,6 +179,18 @@ static int protected_period(const ttf_engine_t *e, const char *s, size_t at) {
     n = at - begin;
     if (!n || n >= sizeof(key))
         return 0;
+    /* A single capital followed by a period can still be the first part of
+       initials. Retain this prefix even when the next chunk is not present.
+       Packs opt into the syntax; the core owns no language abbreviation list. */
+    if ((n & 1u) && boundary_resource(e, "boundary_syntax", "dotted_initials")) {
+        size_t j;
+        for (j = 0; j < n; ++j)
+            if ((j & 1u) ? s[begin + j] != '.' :
+                (s[begin + j] < 'A' || s[begin + j] > 'Z'))
+                break;
+        if (j == n)
+            return 1;
+    }
     memcpy(key, s + begin, n);
     key[n] = 0;
     for (begin = 0; begin < n; begin++)

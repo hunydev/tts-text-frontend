@@ -1,35 +1,48 @@
 #include "../core/internal.h"
-ttf_status_t ttf_foreign_render(const ttf_engine_t *e, const ttf_language_pack_t *source,
-                                const ttf_language_pack_t *target, const char *text, size_t n,
-                                ttf_lexical_class_t lexical, ttf_buffer_t *out, char trace[64],
-                                ttf_resource_layer_t *layer) {
+ttf_status_t ttf_foreign_lookup(const ttf_engine_t *e, const char *source,
+                               const char *target, const char *text, size_t n,
+                               const char **hit, ttf_resource_layer_t *layer) {
     char *key;
     size_t a, i;
-    const char *hit;
-    ttf_status_t st = TTF_EINVAL;
-    ttf_pronunciation_t pron;
-    size_t before = out->length;
-    if (!source || !target)
+    if (!e || !source || !target || !hit || !layer || (!text && n))
         return TTF_EINVAL;
-    a = strlen(source->language_tag);
+    *hit = NULL;
+    a = strlen(source);
     if (n > SIZE_MAX - a - 2)
         return TTF_ELIMIT;
     key = (char *)malloc(a + n + 2);
     if (!key)
         return TTF_ENOMEM;
-    memcpy(key, source->language_tag, a);
+    memcpy(key, source, a);
     key[a] = ':';
-    memcpy(key + a + 1, text, n);
+    if (n)
+        memcpy(key + a + 1, text, n);
     key[a + n + 1] = 0;
     for (i = a + 1; i < a + n + 1; i++)
         if (key[i] >= 'A' && key[i] <= 'Z')
             key[i] += 'a' - 'A';
-    hit = ttf_resource_get(e, "lexicon", target->language_tag, key, layer);
+    *hit = ttf_resource_get(e, "lexicon", target, key, layer);
     free(key);
+    return TTF_OK;
+}
+ttf_status_t ttf_foreign_render(const ttf_engine_t *e, const ttf_language_pack_t *source,
+                                const ttf_language_pack_t *target, const char *text, size_t n,
+                                ttf_lexical_class_t lexical, ttf_buffer_t *out, char trace[64],
+                                ttf_resource_layer_t *layer) {
+    const char *hit;
+    ttf_status_t st;
+    ttf_pronunciation_t pron;
+    size_t before = out->length;
+    if (!source || !target)
+        return TTF_EINVAL;
+    st = ttf_foreign_lookup(e, source->language_tag, target->language_tag, text, n, &hit, layer);
+    if (st != TTF_OK)
+        return st;
     if (hit) {
         snprintf(trace, 64, "lexicon:%s", ttf_layer_name(*layer));
         return ttf_buffer_puts(out, hit);
     }
+    st = TTF_EINVAL;
     if (!target->render_phones && !target->render_graphemes) {
         snprintf(trace, 64, "preserved:no-renderer");
         return ttf_buffer_append(out, text, n);

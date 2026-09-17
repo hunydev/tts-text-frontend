@@ -40,7 +40,8 @@ The test `language_pack_extension` uses the public API to register `xx-Test`, ro
 an Other Unicode script context, and verbalizes a universal number. It proves the
 extension mechanism without claiming a complete Japanese pack.
 
-The initial packs keep their compact implementation in one `pack.c` each. Split
+Each pack exports its descriptor from `pack.c`. English date and abbreviation
+grammars are separate modules, discovered by the same recursive CMake source glob. Split
 classifier/verbalizer/G2P code into subdirectories as they grow; CMake already
 includes pack source files recursively. Pronunciation and TN data are separate
 under `resources/languages/<tag>/`.

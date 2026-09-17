@@ -245,12 +245,166 @@ static int quantity_tail(const ttf_pack_input_t *in, size_t end, int allow_range
     return !structured_tail(in->text, in->length, end) ||
            (allow_range && quantity_separator(in, skip_space(in->text, in->length, end), NULL));
 }
+/* Written unit names are words, rather than adjacent identifier suffixes.
+   Resource keys are lowercase ASCII words separated by one space. Matching
+   folds ASCII case and horizontal whitespace, but never crosses a line. */
+static int currency_name_tail(const ttf_pack_input_t *in, size_t end, int allow_range) {
+    uint32_t cp;
+    size_t width;
+    if (!quantity_tail(in, end, allow_range))
+        return 0;
+    if (end == in->length)
+        return 1;
+    if ((in->text[end] == '-' || in->text[end] == '+') &&
+        !(allow_range && quantity_separator(in, end, NULL)))
+        return 0;
+    if ((unsigned char)in->text[end] >= 128 &&
+        ttf_utf8_decode(in->text + end, in->length - end, &cp, &width) == 1 &&
+        (ttf_script_of(cp) == TTF_SCRIPT_LATIN || ttf_script_of(cp) == TTF_SCRIPT_OTHER))
+        return 0;
+    if (ttf_utf8_decode(in->text + end, in->length - end, &cp, &width) == 1 &&
+        ttf_script_of(cp) == TTF_SCRIPT_SYMBOL &&
+        !(allow_range && quantity_separator(in, end, NULL)))
+        return 0;
+    return 1;
+}
+static int currency_name_context(const ttf_pack_input_t *in, size_t end, const char *unit,
+                                ttf_resource_layer_t *layer) {
+    const char *value;
+    char key[64];
+    size_t start = in->tokens[in->index].begin, p = start, begin, i, prefix_end;
+    ttf_resource_layer_t matched;
+    /* Any explicit monetary prefix supplies a currency interpretation. The
+       endpoint parser separately rejects conflicting prefix/suffix identities. */
+    if (resource_prefix(in, "currency_prefix", start, &value, &prefix_end, &matched) ||
+        (start + 1 < in->length && (in->text[start] == '+' || in->text[start] == '-') &&
+         resource_prefix(in, "currency_prefix", start + 1, &value, &prefix_end, &matched))) {
+        if (matched > *layer)
+            *layer = matched;
+        return 1;
+    }
+    while (p && (in->text[p - 1] == ' ' || in->text[p - 1] == '\t'))
+        --p;
+    begin = p;
+    while (begin && ascii_letter(in->text[begin - 1]))
+        --begin;
+    if (begin == p || p - begin >= sizeof(key) ||
+        (begin && (ascii_letter(in->text[begin - 1]) || digit(in->text[begin - 1]) ||
+                   in->text[begin - 1] == '_' || in->text[begin - 1] == '-' ||
+                   in->text[begin - 1] == '/')))
+        return 0;
+    for (i = 0; i < p - begin; ++i) {
+        char c = in->text[begin + i];
+        key[i] = c >= 'A' && c <= 'Z' ? (char)(c + ('a' - 'A')) : c;
+    }
+    key[i] = '\0';
+    value = ttf_resource_get(in->engine, "currency_name_cue", "*", key, &matched);
+    if (!value || (strcmp(value, "1") && strcmp(value, unit)))
+        return 0;
+    if (matched > *layer)
+        *layer = matched;
+    /* A mass complement vetoes a weak money cue: "paid 3 pounds of flour"
+       must not acquire a currency identity from the verb alone. */
+    begin = skip_space(in->text, in->length, end);
+    p = begin;
+    while (p < in->length && ascii_letter(in->text[p]))
+        ++p;
+    if (p - begin < sizeof(key)) {
+        for (i = 0; i < p - begin; ++i) {
+            char c = in->text[begin + i];
+            key[i] = c >= 'A' && c <= 'Z' ? (char)(c + ('a' - 'A')) : c;
+        }
+        key[i] = '\0';
+        value = ttf_resource_get(in->engine, "currency_name_mass_tail", "*", key, NULL);
+        if (value && !strcmp(value, "1"))
+            return 0;
+    }
+    return 1;
+}
+static size_t currency_name_invalid_end(const ttf_pack_input_t *in, size_t end) {
+    /* Retain a malformed attached identifier with a recognizable unit name;
+       do not emit the prefix-only amount and then repeat the broken unit. */
+    while (end < in->length) {
+        uint32_t cp;
+        size_t width, next = atom_end(in->text, in->length, end);
+        ttf_script_t script;
+        if (next > end) {
+            end = next;
+            continue;
+        }
+        if (ttf_utf8_decode(in->text + end, in->length - end, &cp, &width) != 1)
+            break;
+        script = ttf_script_of(cp);
+        if (script != TTF_SCRIPT_LATIN && script != TTF_SCRIPT_OTHER &&
+            script != TTF_SCRIPT_SYMBOL)
+            break;
+        end += width;
+    }
+    return end;
+}
+static int currency_name_suffix(const ttf_pack_input_t *in, size_t start,
+                                ttf_semantic_t *out, size_t *end, int allow_range) {
+    char key[96];
+    size_t p = start, k = 0;
+    int found = 0;
+    if (!start || (in->text[start - 1] != ' ' && in->text[start - 1] != '\t'))
+        return 0;
+    while (p < in->length && k + 1 < sizeof(key)) {
+        const char *value, *colon, *ambiguous;
+        ttf_resource_layer_t layer, guard_layer;
+        if (!ascii_letter(in->text[p]))
+            break;
+        do {
+            char c = in->text[p++];
+            if (k + 1 >= sizeof(key))
+                return found;
+            key[k++] = c >= 'A' && c <= 'Z' ? (char)(c + ('a' - 'A')) : c;
+        } while (p < in->length && ascii_letter(in->text[p]));
+        key[k] = '\0';
+        value = ttf_resource_get(in->engine, "currency_name", "*", key, &layer);
+        colon = value ? strchr(value, ':') : NULL;
+        if (colon && colon > value && (size_t)(colon - value) < sizeof(out->unit) &&
+            colon[1] && strlen(colon + 1) < sizeof(out->source_lang)) {
+            char unit[sizeof(out->unit)];
+            memcpy(unit, value, (size_t)(colon - value));
+            unit[colon - value] = '\0';
+            if (!currency_name_tail(in, p, allow_range)) {
+                memcpy(out->unit, unit, strlen(unit) + 1);
+                out->layer = layer;
+                *end = currency_name_invalid_end(in, p);
+                return -1;
+            }
+            ambiguous = ttf_resource_get(in->engine, "currency_name_ambiguous", "*", key,
+                                         &guard_layer);
+            if (!ambiguous || strcmp(ambiguous, "1") ||
+                currency_name_context(in, p, unit, &layer)) {
+                if (ambiguous && guard_layer > layer)
+                    layer = guard_layer;
+                memcpy(out->unit, unit, strlen(unit) + 1);
+                memcpy(out->source_lang, colon + 1, strlen(colon + 1) + 1);
+                out->layer = layer;
+                *end = p;
+                found = 1;
+            }
+        }
+        if (p == in->length || (in->text[p] != ' ' && in->text[p] != '\t'))
+            break;
+        p = skip_space(in->text, in->length, p);
+        key[k++] = ' ';
+    }
+    return found;
+}
 /* Trailing quantity units retain their semantic identity in the IR. In
    particular percentage points and basis points are not converted to percent. */
 static int quantity_suffix(const ttf_pack_input_t *in, size_t p, ttf_semantic_t *out, size_t *end,
                            ttf_semantic_type_t *type, int allow_range) {
     const char *value;
     ttf_resource_layer_t layer;
+    int name = currency_name_suffix(in, p, out, end, allow_range);
+    if (name) {
+        *type = name > 0 ? TTF_SEM_CURRENCY : TTF_SEM_TEXT;
+        return 1;
+    }
     if (resource_prefix(in, "numeric_suffix", p, &value, end, &layer) &&
         quantity_tail(in, *end, allow_range)) {
         const char *colon = strchr(value, ':');
@@ -507,6 +661,9 @@ static size_t repeated_quantity_range(const ttf_pack_input_t *in, ttf_semantic_t
     memcpy(out->value, first.value, sizeof(out->value));
     memcpy(out->secondary, second.value, sizeof(out->secondary));
     memcpy(out->unit, first.unit, sizeof(out->unit));
+    if (first.source_lang[0] || second.source_lang[0])
+        memcpy(out->source_lang, first.source_lang[0] ? first.source_lang : second.source_lang,
+               sizeof(out->source_lang));
     out->layer = first.layer > second.layer ? first.layer : second.layer;
     if (delimiter_layer > out->layer)
         out->layer = delimiter_layer;
@@ -616,6 +773,7 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
             memcpy(out->value, quantity.value, sizeof(out->value));
             memcpy(out->unit, quantity.unit, sizeof(out->unit));
             memcpy(out->secondary, quantity.secondary, sizeof(out->secondary));
+            memcpy(out->source_lang, quantity.source_lang, sizeof(out->source_lang));
             out->layer = quantity.layer;
             return finish(in, out, p, TTF_SEM_CURRENCY,
                           out->secondary[0] ? "syntax.scaled-currency" : "syntax.currency-prefix");
@@ -626,12 +784,14 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     {
         ttf_semantic_t quantity = {0};
         p = quantity_endpoint(in, b, &quantity, 0);
-        if (p && quantity.type == TTF_SEM_CURRENCY && quantity.secondary[0]) {
+        if (p && quantity.type == TTF_SEM_CURRENCY) {
             memcpy(out->value, quantity.value, sizeof(out->value));
             memcpy(out->unit, quantity.unit, sizeof(out->unit));
             memcpy(out->secondary, quantity.secondary, sizeof(out->secondary));
+            memcpy(out->source_lang, quantity.source_lang, sizeof(out->source_lang));
             out->layer = quantity.layer;
-            return finish(in, out, p, TTF_SEM_CURRENCY, "syntax.scaled-currency");
+            return finish(in, out, p, TTF_SEM_CURRENCY,
+                          quantity.secondary[0] ? "syntax.scaled-currency" : "syntax.numeric-suffix");
         }
         if (p && quantity.type == TTF_SEM_TEXT && quantity.unit[0] &&
             strcmp(quantity.unit, "time"))
@@ -760,6 +920,8 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
                 size_t suffix_start = skip_space(s, n, end), suffix_end;
                 ttf_semantic_type_t suffix_type;
                 if (quantity_suffix(in, suffix_start, out, &suffix_end, &suffix_type, 1)) {
+                    if (suffix_type == TTF_SEM_TEXT)
+                        return preserve(in, out, suffix_end, "syntax.invalid-range");
                     if (suffix_type == TTF_SEM_PERCENT)
                         (void)snprintf(out->unit, sizeof(out->unit), "percent");
                     if (quantity_separator(in, skip_space(s, n, suffix_end), NULL))

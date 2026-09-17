@@ -431,6 +431,37 @@ class EvaluatorTests(unittest.TestCase):
             self.assertEqual(
                 report["changes"]["CARDINAL/dataset-reference"]["unchanged-correct"], 1
             )
+            self.assertEqual(report["report_integrity"]["verified_cases"], 3)
+            # Two equally truncated reports used to pass zip_longest while
+            # still advertising the original, larger denominator.
+            paths = [root / name / "results.jsonl" for name in ("before", "after")]
+            contents = [path.read_text() for path in paths]
+            for path, content in zip(paths, contents):
+                path.write_text("\n".join(content.splitlines()[:-1]) + "\n")
+            with self.assertRaisesRegex(ValueError, "result count"):
+                COMPARE.compare(root / "before", root / "after")
+            for path, content in zip(paths, contents):
+                path.write_text(content)
+            original = [json.loads(line) for line in contents[1].splitlines()]
+            altered = deepcopy(original)
+            altered[0]["spans"][2]["exact"] = False
+            paths[1].write_text("".join(json.dumps(row) + "\n" for row in altered))
+            with self.assertRaisesRegex(ValueError, "exact flag"):
+                COMPARE.compare(root / "before", root / "after")
+            altered = deepcopy(original)
+            altered[0]["spans"][2]["semiotic_class"] = "PLAIN"
+            paths[1].write_text("".join(json.dumps(row) + "\n" for row in altered))
+            with self.assertRaisesRegex(ValueError, "reference span fields"):
+                COMPARE.compare(root / "before", root / "after")
+            paths[1].write_text(contents[1])
+            summary_path = root / "after/summary.json"
+            saved_summary = summary_path.read_text()
+            altered_summary = json.loads(saved_summary)
+            altered_summary["summary"]["chunk_failures"] = 999
+            summary_path.write_text(json.dumps(altered_summary))
+            with self.assertRaisesRegex(ValueError, "result metrics"):
+                COMPARE.compare(root / "before", root / "after")
+            summary_path.write_text(saved_summary)
             bad = json.loads((root / "after/summary.json").read_text())
             bad["provenance"]["corpus_sha256"] = "changed"
             (root / "after/summary.json").write_text(json.dumps(bad))

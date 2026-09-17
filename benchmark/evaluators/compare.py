@@ -2,6 +2,7 @@
 """Compare two evaluations of exactly the same benchmark records and policy."""
 
 import argparse
+import hashlib
 import json
 import sys
 from collections import Counter, defaultdict
@@ -9,10 +10,39 @@ from itertools import zip_longest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from common import ensure_output
+from common import ensure_output, sha256
+from evaluators.evaluate import Summary
+
+
+def validate_row(row):
+    """Do not trust stored exact flags independently of their text evidence."""
+    for span in row["spans"]:
+        expected = None if span["spoken"] is None else span["actual"] == span["spoken"]
+        if span["exact"] is not expected:
+            raise ValueError("span exact flag does not match text evidence")
+    expected = None if row["expected"] is None else (
+        not row["engine_error"] and row["actual"] == row["expected"]
+    )
+    if row["sentence_exact"] is not expected:
+        raise ValueError("sentence exact flag does not match text evidence")
+    projected = None if row["expected"] is None else (
+        row["spoken_projection_error"] is None
+        and row["spoken_projection"] == row["expected"]
+    )
+    if row["spoken_projection_exact"] is not projected:
+        raise ValueError("projection exact flag does not match text evidence")
+
+
+def reference_span(span):
+    return {key: span.get(key) for key in (
+        "begin", "end", "written", "spoken", "semiotic_class", "reference_status"
+    )}
 
 
 def compare(before, after):
+    files = [directory / name for directory in (before, after)
+             for name in ("summary.json", "results.jsonl")]
+    hashes = [sha256(path) for path in files]
     left = json.loads((before / "summary.json").read_text())
     right = json.loads((after / "summary.json").read_text())
     if left.get("status") != "completed" or right.get("status") != "completed":
@@ -33,6 +63,9 @@ def compare(before, after):
             raise ValueError(f"cannot compare different {field}")
     changes = defaultdict(Counter)
     samples = defaultdict(list)
+    totals = [Summary(), Summary()]
+    digests = [hashlib.sha256(), hashlib.sha256()]
+    count = 0
     with (
         (before / "results.jsonl").open() as one,
         (after / "results.jsonl").open() as two,
@@ -41,14 +74,24 @@ def compare(before, after):
             if old is None or new is None:
                 raise ValueError("result counts differ")
             old, new = json.loads(old), json.loads(new)
+            count += 1
+            for index, row in enumerate((old, new)):
+                validate_row(row)
+                totals[index].add(row)
+                digests[index].update((row["reference_digest"] + "\n").encode())
             if (
                 old["id"] != new["id"]
                 or old["reference_digest"] != new["reference_digest"]
             ):
                 raise ValueError("case order or references changed")
+            for field in ("text", "expected", "reference_status", "dataset", "split", "language", "usage"):
+                if old[field] != new[field]:
+                    raise ValueError(f"case reference field changed: {field}")
             for a, b in zip_longest(old["spans"], new["spans"]):
                 if a is None or b is None:
                     raise ValueError("reference span count changed")
+                if reference_span(a) != reference_span(b):
+                    raise ValueError("reference span fields changed")
                 key = a["semiotic_class"] + "/" + a["reference_status"]
                 if a["exact"] is None:
                     changes[key]["unlabeled"] += 1
@@ -71,6 +114,15 @@ def compare(before, after):
                             "reference_status": a["reference_status"],
                         }
                     )
+    for index, report in enumerate((left, right)):
+        if count != report["summary"]["cases"]:
+            raise ValueError("result count does not match completed summary")
+        if totals[index].finish() != report["summary"]:
+            raise ValueError("result metrics do not match completed summary")
+        if digests[index].hexdigest() != report["provenance"]["evaluated_records_sha256"]:
+            raise ValueError("result reference order does not match evaluated records")
+    if hashes != [sha256(path) for path in files]:
+        raise ValueError("report files changed during comparison")
     return {
         "schema_version": 1,
         "before": left["summary"],
@@ -78,6 +130,12 @@ def compare(before, after):
         "changes": {k: dict(v) for k, v in sorted(changes.items())},
         "examples": dict(samples),
         "provenance": {"before": left["provenance"], "after": right["provenance"]},
+        "report_integrity": {
+            "verified_cases": count,
+            "before_results_sha256": hashes[1],
+            "after_results_sha256": hashes[3],
+            "validation": "counts, text exact flags, reference fields/order, all summary metrics, stable files",
+        },
         "note": "Same references, cases, metric policy and backend required. Known development improvements are not held-out accuracy. Source-use restrictions apply to both reports.",
     }
 

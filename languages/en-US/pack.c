@@ -1,5 +1,6 @@
 #include "tts_text_frontend/ttf_language_pack.h"
 #include "date.h"
+#include "abbreviation.h"
 #include "../context_run.h"
 #include <ctype.h>
 #include <stdint.h>
@@ -358,6 +359,14 @@ static int neutral_marker(const ttf_pack_input_t *in, size_t index, const char *
     const ttf_token_t *t = &in->tokens[index];
     size_t previous = index, start, length;
     char original[96];
+    const char *dotted_neutral = res(in->engine, "context_neutral", "dotted_initials");
+    /* Letter labels do not establish an English clause by themselves. Dotted
+       initials inherit the configured/surrounding language, while ordinary
+       words alongside them still contribute their independent evidence. */
+    if (dotted_neutral && strcmp(dotted_neutral, "0") && t->end == t->begin + 1 &&
+        in->text[t->begin] >= 'A' && in->text[t->begin] <= 'Z' &&
+        t->end < in->length && in->text[t->end] == '.')
+        return 1;
     /* The exponent marker inside scientific numeric syntax is not an English
        word. The universal classifier remains responsible for validation. */
     if (!strcmp(lower, "e") && index && in->tokens[index - 1].script == TTF_SCRIPT_DIGIT &&
@@ -478,6 +487,9 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     const char *kind;
     if (date_tokens)
         return date_tokens;
+    date_tokens = ttf_en_classify_abbreviation(in, out);
+    if (date_tokens)
+        return date_tokens;
     if (t->script != TTF_SCRIPT_LATIN || n >= sizeof(key))
         return 0;
     /* Treat an adjacent hyphenated word as one lexical unit so the existing
@@ -527,6 +539,9 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
             out->lexical_class = TTF_LEX_INITIALISM;
         }
     }
+    if (out->type == TTF_SEM_INITIALISM)
+        ttf_en_initialism_policy(in->engine, out, in->text + t->begin, n,
+                                  kind ? "known" : "inferred");
     if (consumed == 1 && t->end < in->length && in->text[t->end] == '.' &&
         res(in->engine, "abbreviation", key)) {
         out->type = TTF_SEM_ABBREVIATION;
@@ -547,6 +562,9 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     const char *label;
     unsigned h, min, sec;
     switch (s->type) {
+    case TTF_SEM_ABBREVIATION:
+    case TTF_SEM_INITIALISM:
+        return ttf_en_verbalize_abbreviation(e, s, surface, length, b);
     case TTF_SEM_CARDINAL:
     case TTF_SEM_NUMBER:
         return numeric(e, s->value, b);
@@ -754,7 +772,11 @@ static ttf_status_t pronounce(const ttf_engine_t *e, const char *word_text, size
     for (i = 0; i < n; ++i)
         key[i] = ascii_lower(word_text[i]);
     key[n] = '\0';
-    phones = res(e, "pronunciation", key);
+    /* A lowercase dictionary headword such as "us" is not evidence for the
+       letter sequence U.S. Explicit initialism pronunciations have their own
+       namespace; otherwise construct letter phones below. */
+    phones = res(e, lexical == TTF_LEX_INITIALISM ? "initialism_pronunciation" :
+                                                   "pronunciation", key);
     if (phones) {
         if (strlen(phones) >= sizeof(out->phones))
             return TTF_ELIMIT;

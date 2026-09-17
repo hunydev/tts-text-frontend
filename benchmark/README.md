@@ -147,6 +147,10 @@ python3 benchmark/evaluators/compare.py \
 
 비교기는 corpus, 실제 선택 record, reference, metric policy, evaluator/adapter와
 backend가 같은지 확인한다. 변경한 engine/resource 해시는 양쪽 모두 남긴다.
+완료 summary의 건수·전체 지표를 결과 행에서 다시 계산하고, text와 exact flag,
+reference 필드·순서 digest 및 비교 전후 파일 해시를 검사한다. 같은 크기로 잘린 두
+결과 파일도 완전한 비교로 인정하지 않는다. 이는 로컬 artifact 일관성 검사이며
+외부 corpus의 언어적 정답 여부나 신뢰할 수 있는 전자서명을 대신하지 않는다.
 class별 fixed/regressed/unchanged를 계산하므로 전체 비율 상승이 퇴행을 가리지 않는다.
 실패를 보고 수정한 개발 표본과 이후 새로 확보한 held-out test는 별도로 보고한다.
 

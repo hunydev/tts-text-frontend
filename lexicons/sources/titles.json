@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "sources": [
+    {
+      "id": "project-titles-v14",
+      "title": "Project English title pronunciation policy v0.14",
+      "url": "https://github.com/hunydev/tts-text-frontend/tree/main/lexicons/ko-KR/title-additions.jsonl",
+      "kind": "editorial-policy",
+      "checked_at": "2026-09-17",
+      "note": "Original target-language reading choices for the title expansion pipeline; not independent pronunciation verification or a bulk dictionary import."
+    }
+  ]
+}

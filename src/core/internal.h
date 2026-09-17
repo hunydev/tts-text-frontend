@@ -42,6 +42,11 @@ ttf_status_t ttf_resource_set(ttf_engine_t *e, const char *kind, const char *lan
                               const char *value, ttf_resource_layer_t layer);
 void ttf_resource_destroy(ttf_engine_t *e);
 const ttf_language_pack_t *ttf_find_pack(const ttf_engine_t *e, const char *tag);
+/* Lookup only, before a source verbalizer can replace the original spelling.
+   A NULL hit is a normal miss; a hit remains engine-owned. */
+ttf_status_t ttf_foreign_lookup(const ttf_engine_t *engine, const char *source,
+                               const char *target, const char *text, size_t length,
+                               const char **hit, ttf_resource_layer_t *layer);
 const ttf_entry_t *ttf_rule_match(const ttf_engine_t *e, const char *lang, const char *text,
                                   size_t length, size_t *matched_length);
 ttf_status_t ttf_register_builtins(ttf_engine_t *e);

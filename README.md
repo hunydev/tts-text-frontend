@@ -354,7 +354,7 @@ The v0.5 finance and content additions include:
 | --- | --- |
 | `계좌는 110-123-456789입니다.` | `계좌는 일일공 일이삼 사오육칠팔구입니다.` |
 | `금리는 0.25%p 상승했습니다.` | `금리는 영 점 이오 퍼센트포인트 상승했습니다.` |
-| `예상 수익률은 1.5-2.5%입니다.` | `예상 수익률은 일 점 오 다시 이 점 오 퍼센트입니다.` |
+| `예상 수익률은 1.5-2.5%입니다.` | `예상 수익률은 일 점 오 퍼센트에서 이 점 오 퍼센트입니다.` |
 | `표시 금액은 1.2e6원입니다.` | `표시 금액은 백이십만 원입니다.` |
 | `제목은 The 1st day입니다.` | `제목은 The first day입니다.` |
 | `새로운 real-time dashboard를 소개합니다.` | `새로운 리얼타임 대시보드를 소개합니다.` |
@@ -407,7 +407,7 @@ Private proprietary project. See [LICENSE](LICENSE).
 
 ### v0.7 finance and content extensions
 
-- `1만원~2만원` → `만 다시 이만 원`
+- `1만원~2만원` → `만 원에서 이만 원`
 - `$10-$20` in English context → `ten to twenty dollars`
 - `1kg~2km` remains unchanged because its units differ.
 - Eight explicit title cues and 40 original seed pronunciation entries are loaded
@@ -439,3 +439,32 @@ The [web workbench](docs/web-workbench.md) adds exact write-size schedules, spli
 at the input cursor, input-byte history, and a 30-case multiword corpus. Try
 `After |Effects를 사용합니다.` to inspect deferred rendering across writes.
 See [multiword contracts](docs/multiword-lexicon.md) for lexical bounds and exceptions.
+
+### v0.14 written currency names, abbreviations and pronunciation overrides
+
+| Input | Normalized text |
+| --- | --- |
+| `The budget is 2.5 million dollars.` | `The budget is two point five million dollars.` |
+| `제작비는 2.5 million dollars입니다.` | `제작비는 이백오십만 달러입니다.` |
+| `Dr. Rowan spoke.` | `Doctor Rowan spoke.` |
+| `The U.S. market opened.` | `The u s market opened.` |
+| `U.S.를 확인합니다.` | `유에스를 확인합니다.` |
+
+Written money retains exact value and currency identity; ambiguous bare `pounds`
+is not automatically assigned GBP. Dotted initials have an editable text policy,
+while ordinary uppercase words retain their existing default. Original-surface
+pronunciation overrides survive ordinal/title/initial transformations, with the
+same User > Customer > Domain > System order across aliases. Generic word
+pronunciations cannot override initialism letter reading without an explicit
+initialism pronunciation entry.
+
+The port-8000 workbench includes **영어 통화명·약어·이니셜** (24 original text/IR
+contracts). See [abbreviation and alias editing](docs/english-forms.md),
+[written currency editing](docs/written-currencies.md),
+[measured changes](docs/research/english-forms-v14-results.md), and the
+[evidence-based remaining-work checklist](docs/remaining-work.md).
+
+The checklist preserves the full project objective: unclosed items are not treated
+as complete because a selected corpus passes. Current references and four new
+Korean title pronunciations remain pending independent review. Audio synthesis
+and audio comparison are outside the evaluation scope.

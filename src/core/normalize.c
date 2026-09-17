@@ -9,6 +9,22 @@ ttf_status_t ttf_foreign_render(const ttf_engine_t *, const ttf_language_pack_t 
 static void tag(char dest[TTF_LANGUAGE_TAG_SIZE], const char *source) {
     (void)snprintf(dest, TTF_LANGUAGE_TAG_SIZE, "%s", source);
 }
+/* Aliases share the normal layer order; an exact spelling wins ties, but a
+   system exact spelling must not shadow a user's canonical pronunciation. */
+static ttf_status_t pronunciation_candidate(const ttf_engine_t *engine,
+                                             const char *source, const char *target,
+                                             const char *text, size_t length,
+                                             const char **best, ttf_resource_layer_t *layer) {
+    const char *candidate = NULL;
+    ttf_resource_layer_t candidate_layer = TTF_LAYER_COMMON;
+    ttf_status_t status = ttf_foreign_lookup(engine, source, target, text, length,
+                                             &candidate, &candidate_layer);
+    if (status == TTF_OK && candidate && (!*best || candidate_layer > *layer)) {
+        *best = candidate;
+        *layer = candidate_layer;
+    }
+    return status;
+}
 typedef struct {
     size_t begin, end;
 } context_scope_t;
@@ -308,12 +324,40 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
         else if (source && source != context && foreign_type(sem->type) &&
                  e->config.render_policy == TTF_PHONETIC_LOCALIZE) {
             ttf_buffer_t spoken = {0};
+            const char *original_hit = NULL;
             tag(span.verbalizer, source->language_tag);
-            st = source->verbalize(e, sem, text + tokens[i].begin, end - tokens[i].begin, &spoken);
+            /* An abbreviation may share its final period with sentence
+               punctuation. Keep punctuation as its own output span while
+               still honoring the user's complete dotted spelling. */
+            st = TTF_OK;
+            if ((sem->type == TTF_SEM_INITIALISM || sem->type == TTF_SEM_ABBREVIATION) &&
+                end < length && text[end] == '.')
+                st = pronunciation_candidate(e, source->language_tag, context->language_tag,
+                                         text + tokens[i].begin, end + 1 - tokens[i].begin,
+                                         &original_hit, &span.pronunciation_layer);
             if (st == TTF_OK)
+                st = pronunciation_candidate(e, source->language_tag, context->language_tag,
+                                     text + tokens[i].begin, end - tokens[i].begin,
+                                     &original_hit, &span.pronunciation_layer);
+            if (st == TTF_OK && (!original_hit || span.pronunciation_layer < TTF_LAYER_USER)) {
+                ttf_status_t verbalized = source->verbalize(e, sem, text + tokens[i].begin,
+                                                            end - tokens[i].begin, &spoken);
+                if (verbalized == TTF_OK)
+                    st = pronunciation_candidate(e, source->language_tag, context->language_tag,
+                                                   spoken.data ? spoken.data : "", spoken.length,
+                                                   &original_hit, &span.pronunciation_layer);
+                else if (!original_hit || verbalized == TTF_ENOMEM || verbalized == TTF_ELIMIT)
+                    st = verbalized;
+            }
+            if (st == TTF_OK && original_hit) {
+                snprintf(span.lexicon, sizeof(span.lexicon), "lexicon:%s",
+                         ttf_layer_name(span.pronunciation_layer));
+                st = ttf_buffer_puts(&normalized, original_hit);
+            } else if (st == TTF_OK) {
                 st = ttf_foreign_render(e, source, context, spoken.data ? spoken.data : "",
                                         spoken.length, sem->lexical_class, &normalized,
                                         span.lexicon, &span.pronunciation_layer);
+            }
             ttf_buffer_free(&spoken);
             if (st == TTF_OK && !strcmp(span.lexicon, "preserved:no-renderer"))
                 tag(sem->render_lang, source->language_tag);

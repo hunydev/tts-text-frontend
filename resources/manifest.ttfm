@@ -7,7 +7,9 @@ languages/en-US/rules/context.tsv
 languages/en-US/rules/numeric.tsv
 languages/en-US/rules/measurements.tsv
 languages/en-US/rules/currencies.tsv
+languages/en-US/rules/currency-names.tsv
 languages/en-US/rules/dates.tsv
+languages/en-US/rules/abbreviations.tsv
 languages/ko-KR/dictionaries/graphemes.tsv
 languages/ko-KR/dictionaries/phones.tsv
 languages/ko-KR/lexicon/acronyms/default.tsv

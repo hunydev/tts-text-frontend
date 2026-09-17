@@ -15,7 +15,14 @@ def compile_resource(source: pathlib.Path, destination: pathlib.Path) -> None:
     text = raw.decode("utf-8")
     if "\0" in text:
         raise ValueError("NUL is not permitted")
-    for number, line in enumerate(text.splitlines(), 1):
+    # Match src/resource/resource.c:parse_tsv exactly: LF ends a record and
+    # one CR immediately before that boundary (or EOF) is removed. Python's
+    # splitlines() also treats VT, FF, NEL and Unicode line separators as record
+    # boundaries; accepting those could produce a binary the runtime rejects.
+    # Those characters remain field/comment content, as they do in the runtime.
+    for number, line in enumerate(text.split("\n"), 1):
+        if line.endswith("\r"):
+            line = line[:-1]
         if not line or line.startswith("#"):
             continue
         fields = line.split("\t")

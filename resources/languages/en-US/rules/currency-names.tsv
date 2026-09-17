@@ -1,0 +1,100 @@
+# Written currency aliases: original policy data; see docs/currency-resources.md.
+# Lowercase keys; ASCII case and horizontal whitespace fold during recognition.
+# Names require whitespace after the amount/scale. Values retain ISO identity
+# and written source language. Bare dollar defaults to USD like the existing $.
+currency_name	*	dollar	USD:en-US
+currency_name	*	dollars	USD:en-US
+currency_name	*	us dollar	USD:en-US
+currency_name	*	us dollars	USD:en-US
+currency_name	*	united states dollar	USD:en-US
+currency_name	*	united states dollars	USD:en-US
+currency_name	*	american dollar	USD:en-US
+currency_name	*	american dollars	USD:en-US
+currency_name	*	euro	EUR:en-US
+currency_name	*	euros	EUR:en-US
+currency_name	*	australian dollar	AUD:en-US
+currency_name	*	australian dollars	AUD:en-US
+currency_name	*	canadian dollar	CAD:en-US
+currency_name	*	canadian dollars	CAD:en-US
+currency_name	*	pound	GBP:en-US
+currency_name	*	pounds	GBP:en-US
+currency_name	*	british pound	GBP:en-US
+currency_name	*	british pounds	GBP:en-US
+currency_name	*	pound sterling	GBP:en-US
+currency_name	*	pounds sterling	GBP:en-US
+currency_name	*	swiss franc	CHF:en-US
+currency_name	*	swiss francs	CHF:en-US
+currency_name	*	norwegian krone	NOK:en-US
+currency_name	*	norwegian kroner	NOK:en-US
+currency_name	*	yen	JPY:en-US
+currency_name	*	japanese yen	JPY:en-US
+currency_name	*	south korean won	KRW:en-US
+currency_name	*	korean won	KRW:en-US
+
+# Ambiguous pound(s) needs explicit currency syntax or an adjacent monetary
+# cue. Weight complements veto the weak cue; a qualified name is unambiguous.
+currency_name_ambiguous	*	pound	1
+currency_name_ambiguous	*	pounds	1
+currency_name_cue	*	cost	GBP
+currency_name_cue	*	costs	GBP
+currency_name_cue	*	costing	GBP
+currency_name_cue	*	paid	GBP
+currency_name_cue	*	pay	GBP
+currency_name_cue	*	pays	GBP
+currency_name_cue	*	paying	GBP
+currency_name_cue	*	spent	GBP
+currency_name_cue	*	spend	GBP
+currency_name_cue	*	spends	GBP
+currency_name_cue	*	spending	GBP
+currency_name_cue	*	priced	GBP
+currency_name_cue	*	price	GBP
+currency_name_cue	*	owe	GBP
+currency_name_cue	*	owes	GBP
+currency_name_cue	*	owing	GBP
+currency_name_cue	*	refund	GBP
+currency_name_cue	*	refunded	GBP
+currency_name_cue	*	charge	GBP
+currency_name_cue	*	charges	GBP
+currency_name_cue	*	charged	GBP
+currency_name_mass_tail	*	of	1
+currency_name_mass_tail	*	weight	1
+currency_name_mass_tail	*	weighed	1
+currency_name_mass_tail	*	weighing	1
+currency_name_mass_tail	*	heavy	1
+
+# Prefix-only continuation hints keep whitespace cuts independent of chunks.
+boundary_word	*	american	1
+boundary_word	*	australian	1
+boundary_word	*	british	1
+boundary_word	*	canadian	1
+boundary_word	*	charge	1
+boundary_word	*	charged	1
+boundary_word	*	charges	1
+boundary_word	*	cost	1
+boundary_word	*	costing	1
+boundary_word	*	costs	1
+boundary_word	*	japanese	1
+boundary_word	*	korean	1
+boundary_word	*	norwegian	1
+boundary_word	*	owe	1
+boundary_word	*	owes	1
+boundary_word	*	owing	1
+boundary_word	*	paid	1
+boundary_word	*	pay	1
+boundary_word	*	paying	1
+boundary_word	*	pays	1
+boundary_word	*	pound	1
+boundary_word	*	pounds	1
+boundary_word	*	price	1
+boundary_word	*	priced	1
+boundary_word	*	refund	1
+boundary_word	*	refunded	1
+boundary_word	*	south	1
+boundary_word	*	spend	1
+boundary_word	*	spending	1
+boundary_word	*	spends	1
+boundary_word	*	spent	1
+boundary_word	*	states	1
+boundary_word	*	swiss	1
+boundary_word	*	united	1
+boundary_word	*	us	1
