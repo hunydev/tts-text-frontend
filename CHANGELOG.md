@@ -2,6 +2,12 @@
 
 ## Unreleased — speech final gate
 
+- Read a lone lowercase letter in Korean text as its letter name (`x 값` → `엑스 값`,
+  `n번째` → `엔번째`) and hyphen-joined single letters as one spelling
+  (`x-y 좌표` → `엑스와이 좌표`, `A-B 테스트` → `에이비 테스트`).
+- `<` and `>` outside an expression are silent separators in speech
+  (`설정>일반` → `설정 일반`); `3>2` is still read as a comparison.
+- Add 20 contracts; external English results are identical.
 - Read basement floors `B1층`/`B1F` as `지하 일 층` and ranges `B1~B3층` as
   `지하 일 층에서 지하 삼 층`; add `지하`/`주차장` floor cues (`지하 2F` → `지하 이 층`).
   Bare `B2`, `B2B` and vitamin `B1` stay identifiers.

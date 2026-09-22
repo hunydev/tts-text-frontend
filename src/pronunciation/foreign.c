@@ -114,8 +114,8 @@ static ttf_status_t render_at(const ttf_engine_t *e, const ttf_language_pack_t *
     char *trace_text = NULL;
     if (!source || !target)
         return TTF_EINVAL;
-    /* A lone capital in another language's sentence names its letter (A 학점, K팝). */
-    if (n == 1 && text[0] >= 'A' && text[0] <= 'Z')
+    /* A lone letter in another language's sentence names its letter (A 학점, x 값). */
+    if (n == 1 && ((text[0] >= 'A' && text[0] <= 'Z') || (text[0] >= 'a' && text[0] <= 'z')))
         lexical = TTF_LEX_INITIALISM;
     ttf_trace_stage(e, TTF_TRACE_LEXICON, part_begin, part_begin + n);
     st = ttf_foreign_lookup(e, source->language_tag, target->language_tag, text, n, &hit, layer);

@@ -101,6 +101,12 @@ build/ttf normalize --input-format annotated --output-mode speech 'ABC{@alphabet
 
 한국어 `#`는 `샵`이다 (`#해시태그` → `샵 해시태그`, `번호#123` → `번호 샵 백이십삼`). `C#`은 기술 용어(`semantic_term`)와 사전(`씨샵`)으로 읽는다. 영어는 단어 앞 `#`를 `speech_symbol_prefix`로 `hashtag`라 읽고, 다른 `#`는 `hash`다.
 
+## 소문자 한 글자와 메뉴 경로
+
+다른 언어 문장 안의 영문 한 글자는 대소문자와 관계없이 글자 이름이다 (`x 값` → `엑스 값`, `a, b, c` → `에이, 비, 씨`). 한 글자끼리 `-`로 이으면 한 철자다 (`x-y` → `엑스와이`); 이런 표기는 영어 문맥 증거로 쓰지 않는다 (`context_neutral en-US joined_letters 1`). 영어 문장의 `a`, `x`는 영어 본문이다.
+
+수식이 아닌 `<`, `>`는 `speech_silent`로 읽지 않고 양쪽 단어를 한 칸 띄운다 (`설정>일반` → `설정 일반`, `<공지>` → `공지`). 수식 `3>2`는 먼저 `math_relation`으로 읽는다. Text 모드는 원문을 둔다.
+
 ## 최종 관문 (speech 출력)
 
 규칙 문법이 소비하지 않은 문자는 speech 최종 패스에서 다음 순서로 처리한다.

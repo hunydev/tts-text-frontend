@@ -52,3 +52,7 @@ url_tld	*	xyz	1
 url_tld	*	shop	1
 url_tld	*	site	1
 url_tld	*	online	1
+# Outside an expression, angle marks separate menu paths or quote a label; they are
+# not read. Expressions (3>2) are read by math_relation first.
+speech_silent	*	>	1
+speech_silent	*	<	1

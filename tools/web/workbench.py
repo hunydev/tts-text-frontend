@@ -28,6 +28,7 @@ CORPORA = {
     "math-hashtag-v21": ("수식·비교·해시태그", "math_hashtag_v21.jsonl"),
     "counter-band-v21": ("대: 연령·가격대와 대수", "counter_band_v21.jsonl"),
     "floor-v21": ("층·지하층 표기", "floor_v21.jsonl"),
+    "letters-paths-v21": ("소문자 한 글자 · 메뉴 경로 >", "letters_paths_v21.jsonl"),
 }
 DEFAULTS = dict(
     default_language="ko-KR",

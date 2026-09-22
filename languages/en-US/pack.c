@@ -372,6 +372,25 @@ static int neutral_marker(const ttf_pack_input_t *in, size_t index, const char *
         in->text[t->begin] >= 'A' && in->text[t->begin] <= 'Z' && t->end < in->length &&
         in->text[t->end] == '.')
         return 1;
+    /* A-B, x-y: joined single letters label something; they are not the
+       English article or a word of an English clause. */
+    if (t->end == t->begin + 1) {
+        const char *joined_neutral = res(in->engine, "context_neutral", "joined_letters");
+        int after = index + 2 < in->token_count && in->tokens[index + 1].begin == t->end &&
+                    in->tokens[index + 1].end == t->end + 1 &&
+                    (in->text[t->end] == '-' || in->text[t->end] == '&') &&
+                    in->tokens[index + 2].begin == t->end + 1 &&
+                    in->tokens[index + 2].script == TTF_SCRIPT_LATIN &&
+                    in->tokens[index + 2].end == t->end + 2;
+        int before = index >= 2 && in->tokens[index - 1].end == t->begin &&
+                     in->tokens[index - 1].begin + 1 == t->begin &&
+                     (in->text[t->begin - 1] == '-' || in->text[t->begin - 1] == '&') &&
+                     in->tokens[index - 2].script == TTF_SCRIPT_LATIN &&
+                     in->tokens[index - 2].end + 1 == t->begin &&
+                     in->tokens[index - 2].begin + 2 == t->begin;
+        if (joined_neutral && !strcmp(joined_neutral, "1") && (after || before))
+            return 1;
+    }
     if (!strcmp(lower, "www") && t->end < in->length && in->text[t->end] == '.') {
         const char *web_neutral = res(in->engine, "context_neutral", "web_initialism");
         size_t after = t->end + 1;
@@ -613,6 +632,47 @@ static size_t ampersand_initialism(const ttf_pack_input_t *in, ttf_semantic_t *o
     return index - in->index + 1;
 }
 
+static int single_letter(const ttf_pack_input_t *in, size_t index) {
+    const ttf_token_t *t = &in->tokens[index];
+    char c = in->text[t->begin];
+    return t->script == TTF_SCRIPT_LATIN && t->end == t->begin + 1 &&
+           ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'));
+}
+static int joiner_char(char c) {
+    return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c == '-' ||
+           c == '&' || c == '_';
+}
+/* x-y, A-B: single letters joined by hyphens spell one letter sequence. */
+static size_t hyphen_letters(const ttf_pack_input_t *in, ttf_semantic_t *out) {
+    size_t index = in->index, used = 0, end;
+    if (!single_letter(in, index) ||
+        (in->tokens[index].begin && joiner_char(in->text[in->tokens[index].begin - 1])))
+        return 0;
+    out->value[used++] = (char)toupper((unsigned char)in->text[in->tokens[index].begin]);
+    while (index + 2 < in->token_count && used + 1 < sizeof(out->value)) {
+        const ttf_token_t *dash = &in->tokens[index + 1];
+        if (dash->begin != in->tokens[index].end || dash->end != dash->begin + 1 ||
+            in->text[dash->begin] != '-' || in->tokens[index + 2].begin != dash->end ||
+            !single_letter(in, index + 2))
+            break;
+        index += 2;
+        out->value[used++] = (char)toupper((unsigned char)in->text[in->tokens[index].begin]);
+    }
+    end = in->tokens[index].end;
+    if (index == in->index || (end < in->length && joiner_char(in->text[end]))) {
+        out->value[0] = '\0';
+        return 0;
+    }
+    out->value[used] = '\0';
+    out->type = TTF_SEM_INITIALISM;
+    out->lexical_class = TTF_LEX_INITIALISM;
+    ttf_en_initialism_policy(in->engine, out, out->value, used, "inferred");
+    out->input_end = end;
+    (void)snprintf(out->rule, sizeof(out->rule), "pack.hyphen-letters");
+    (void)snprintf(out->source_lang, sizeof(out->source_lang), "%s", EN);
+    return index - in->index + 1;
+}
+
 static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     const ttf_token_t *t = &in->tokens[in->index];
     char key[96];
@@ -630,6 +690,9 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     if (t->script != TTF_SCRIPT_LATIN || n >= sizeof(key))
         return 0;
     date_tokens = ampersand_initialism(in, out);
+    if (date_tokens)
+        return date_tokens;
+    date_tokens = hyphen_letters(in, out);
     if (date_tokens)
         return date_tokens;
     /* Treat an adjacent hyphenated word as one lexical unit so the existing

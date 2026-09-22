@@ -219,6 +219,12 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "electronic_separator supports version|ip readings");
     }
+    if (SAME(k, "speech_silent")) {
+        *handled = 1;
+        return symbol_key(key) && ttf_validation_enum(v, "0|1")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "speech_silent requires one symbol and 0|1 flag");
+    }
     if (SAME(k, "speech_lengthening")) {
         *handled = 1;
         return symbol_key(key) && ttf_validation_enum(v, "0|1")
@@ -358,7 +364,7 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     }
     if (SAME(k, "context_neutral")) {
         *handled = 1;
-        if (!ttf_validation_enum(key, "dotted_initials|web_initialism|alnum_label"))
+        if (!ttf_validation_enum(key, "dotted_initials|web_initialism|alnum_label|joined_letters"))
             return ttf_validation_error(d, "unknown English context_neutral key");
         return ttf_validation_enum(v, "0|1")
                    ? TTF_OK

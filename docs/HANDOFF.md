@@ -73,7 +73,16 @@
   외부 영어 결과 파일 동일(`benchmark/generated/sproat-v21-floor`).
 - 새로 발견: 조사 교정 규칙군(`3F로` → `삼 층로`, `5kg로`, `1+1는`). remaining-work에 기록.
 
-다음 순서(재현 완료, 미착수): D 잔여 `x-y 좌표`·`설정>일반`, 이어서 조사 교정 후보.
+### D 잔여: 소문자 한 글자·메뉴 경로 (2026-09-22, 커밋·미배포)
+
+- 변경: `src/pronunciation/foreign.c`(소문자 한 글자), `languages/en-US/pack.c`(`hyphen_letters`,
+  `joined_letters` 문맥 중립), `src/core/speech_output.c`(`speech_silent`), 리소스·validator.
+- 계약 `tests/evaluation/letters_paths_v21.jsonl` 20건. cycle fixed 14 / unchanged-pass 6 /
+  regressed 0 (`artifacts/tn/letters-paths/comparison/cycle.json`). Debug 103/103,
+  ASan/UBSan 91/91(단독), 외부 영어 결과 파일 동일.
+- 결정 필요: `Z` 한국어 이름 `지` vs `제트`(`Z세대`).
+
+다음 순서(후보): 조사 교정(`3F로` → `삼 층로`, `5kg로`, `1+1는`), `#1` 읽기 정책.
 한 번에 한 규칙군씩 진행한다.
 
 ## v0.20에서 마무리한 범위
