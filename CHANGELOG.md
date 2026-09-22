@@ -2,6 +2,15 @@
 
 ## Unreleased — speech final gate
 
+- Read email/URL labels as words when a resource supports it (`electronic_word`,
+  then the pronunciation lexicon) and spell the rest: `help@naver.co.kr` →
+  `에이치이엘피 앳 네이버 닷 씨오 닷 케이알`, `.com` → `닷 컴`. This replaces the
+  v0.20 all-letter spelling contract. Add 11 pending mail/portal lexicon entries.
+- Recognize bare hosts ending in a declared lowercase `url_tld` (`naver.com에서`);
+  text output preserves them.
+- Read versions and IP addresses in speech output (`2.1.3` → `이 점 일 점 삼`,
+  `v1.10.2`, `192.168.0.1` → `일구이 점 일육팔 점 영 점 일`); text keeps the surface.
+- Add 34 electronic contracts; external English text output is unchanged.
 - Spell short capital runs joined by an unspaced ampersand as one initialism
   (`R&D` → `알앤디`, `AT&T` → `에이티앤티`); speech reads the joiner from
   `speech_symbol &`, text keeps the written `&`. Lowercase words keep word grammar.

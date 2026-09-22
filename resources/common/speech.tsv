@@ -27,3 +27,28 @@ speech_preserve	*	·	1
 # After a word and before a pause, these mark lengthening rather than a word.
 speech_lengthening	*	~	1
 speech_lengthening	*	～	1
+# Top-level domains that make a bare host (naver.com) an address. Lowercase only,
+# so ASP.NET or file names such as report.txt keep their word grammar.
+url_tld	*	com	1
+url_tld	*	net	1
+url_tld	*	org	1
+url_tld	*	edu	1
+url_tld	*	gov	1
+url_tld	*	mil	1
+url_tld	*	int	1
+url_tld	*	kr	1
+url_tld	*	jp	1
+url_tld	*	cn	1
+url_tld	*	io	1
+url_tld	*	ai	1
+url_tld	*	co	1
+url_tld	*	me	1
+url_tld	*	tv	1
+url_tld	*	info	1
+url_tld	*	biz	1
+url_tld	*	app	1
+url_tld	*	dev	1
+url_tld	*	xyz	1
+url_tld	*	shop	1
+url_tld	*	site	1
+url_tld	*	online	1

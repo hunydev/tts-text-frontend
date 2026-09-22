@@ -24,8 +24,8 @@ Input syntax and output purpose are independent:
 | `unreadable=preserve` | Keep unsupported characters in speech output |
 | `unreadable=drop` | Remove unsupported characters from speech output |
 
-For example, Korean speech output spells `a1@b2.com` as
-`에이일 앳 비이 닷 씨오엠`; text output preserves `a1@b2.com`. Speech mode does
+For example, Korean speech output reads `a1@b2.com` as
+`에이일 앳 비이 닷 컴`; text output preserves `a1@b2.com`. Speech mode does
 not synthesize audio. The unreadable policy is used only by speech output;
 protected code and explicit literal aliases retain their supplied text.
 

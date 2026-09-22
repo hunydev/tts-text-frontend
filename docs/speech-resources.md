@@ -8,7 +8,7 @@ v0.20의 `speech` 출력은 TTS에 전달할 **텍스트**다. 합성음 비교�
 
 ```sh
 build/ttf normalize --output-mode speech 'a1@b2.com'
-# 에이일 앳 비이 닷 씨오엠
+# 에이일 앳 비이 닷 컴
 build/ttf normalize --output-mode text 'a1@b2.com'
 # a1@b2.com
 build/ttf normalize --output-mode speech '유&미'
@@ -100,12 +100,28 @@ build/ttf normalize --input-format annotated --output-mode speech 'ABC{@alphabet
 
 ## 이메일·URL 읽기
 
-`EMAIL`과 `URL` Semantic IR을 대상 언어팩이 읽는다. Text 모드는 원문을 보존한다. Speech 모드는 ASCII 문자·숫자를 철자로 읽고, 기호 앞뒤를 공백으로 구분한다. 한국어의 연속 영문자·숫자는 기본적으로 붙여 읽는다.
+`EMAIL`과 `URL` Semantic IR은 text 모드에서 원문을 보존한다. Speech 모드는 주소를 기호와 영문자·숫자 묶음으로 나눈다. 기호는 `speech_symbol` 이름으로 앞뒤를 띄워 읽는다. 순수 영문자 묶음은 다음 순서로 읽는다.
 
-- KO: `a1@b2.com` → `에이일 앳 비이 닷 씨오엠`
-- EN: `a1@b2.com` → `ay one at bee two dot see oh em`
+1. 대상 언어의 `electronic_word` (KO `com` → `컴`, `net` → `넷`)
+2. 원어 → 대상 언어 발음 사전(`lexicon`, 사용자·고객 사전 포함; `naver` → `네이버`, `gmail` → `지메일`)
+3. 그 밖에는 철자 (`help` → `에이치이엘피`)
 
-도메인 이름을 번역하거나 URL에 접속하지 않는다. 이 방식은 계정명·경로의 철자를 전달하는 보수적인 초기 정책이다. IDNA/국제화 이메일·의미 단위 도메인 발음은 지원 범위 밖이며, 일반 단어 G2P의 품질과 동일시하면 안 된다.
+숫자가 섞인 묶음은 항상 철자로 읽는다. G2P로 추측하지 않는 이유는 계정명과 모르는 호스트를 정확히 전달해야 하기 때문이다. 자주 쓰는 계정·회사명은 고객 사전에 `lexicon ko-KR en-US:<단어> <읽기>`로 추가한다.
+
+- KO: `a1@b2.com` → `에이일 앳 비이 닷 컴`, `help@naver.co.kr` → `에이치이엘피 앳 네이버 닷 씨오 닷 케이알`
+- EN: `abc@example.com` → `ay bee see at example dot com`
+
+`www.`나 `http(s)://`가 없어도 공통 `url_tld` 목록의 소문자 최상위 도메인으로 끝나는 호스트는 주소다 (`naver.com에서` → `네이버 닷 컴에서`). `ASP.NET`, `report.txt`처럼 대문자이거나 목록에 없는 끝부분은 주소로 보지 않는다. IDNA/국제화 이메일은 지원 범위 밖이다.
+
+## 버전·IP 주소
+
+Speech 모드에서 점으로 이어진 세 부분 이상의 수는 버전, 0..255 네 부분은 IP다. Text 모드는 원문을 보존한다. 부분 읽기(`electronic_number version|ip cardinal|digits`)와 구분자(`electronic_separator`)는 리소스로 바꿀 수 있다. 선행 0이 있는 부분은 자릿수로 읽고, `v2.1`처럼 `v` 접두가 있으면 두 부분부터 버전이다.
+
+| 입력 | KO speech | EN speech |
+|---|---|---|
+| `2.1.3` | `이 점 일 점 삼` | `two point one point three` |
+| `v1.10.2` | `브이 일 점 십 점 이` | `vee one point ten point two` |
+| `192.168.0.1` | `일구이 점 일육팔 점 영 점 일` | `one nine two dot one six eight dot zero dot one` |
 
 ## 사람이 수정하는 TSV
 

@@ -311,6 +311,49 @@ static int ascii_web(char c) {
     unsigned char u = (unsigned char)c;
     return u > 32 && u < 127 && c != '<' && c != '>' && c != '"';
 }
+/* A bare host such as naver.com: ASCII labels whose final label is a declared
+   lowercase top-level domain. Returns the end offset, or `begin` when absent. */
+static size_t bare_domain_end(const ttf_pack_input_t *in, size_t begin) {
+    const char *s = in->text;
+    size_t n = in->length, p = begin, label = begin, labels = 0;
+    char tld[32];
+    if (begin &&
+        (ascii_letter(s[begin - 1]) || digit(s[begin - 1]) || s[begin - 1] == '.' ||
+         s[begin - 1] == '@' || s[begin - 1] == '_' || s[begin - 1] == '-' || s[begin - 1] == '/'))
+        return begin;
+    for (;;) {
+        label = p;
+        while (p < n && (ascii_letter(s[p]) || digit(s[p]) || s[p] == '-'))
+            ++p;
+        if (p == label || s[label] == '-' || s[p - 1] == '-')
+            return begin;
+        ++labels;
+        if (p + 1 < n && s[p] == '.' && (ascii_letter(s[p + 1]) || digit(s[p + 1])))
+            ++p;
+        else
+            break;
+    }
+    if (labels < 2 || p - label >= sizeof(tld) || p - label < 2)
+        return begin;
+    for (size_t i = label; i < p; ++i) {
+        if (s[i] < 'a' || s[i] > 'z')
+            return begin;
+        tld[i - label] = s[i];
+    }
+    tld[p - label] = '\0';
+    if (!ttf_resource_get(in->engine, "url_tld", "*", tld, NULL) ||
+        strcmp(ttf_resource_get(in->engine, "url_tld", "*", tld, NULL), "1"))
+        return begin;
+    if (p < n && (s[p] == '_' || s[p] == '@'))
+        return begin;
+    if (p < n && s[p] == '/')
+        while (p < n && ascii_web(s[p]))
+            ++p;
+    while (p > begin && (s[p - 1] == '.' || s[p - 1] == ',' || s[p - 1] == '!' || s[p - 1] == '?' ||
+                         s[p - 1] == ')'))
+        --p;
+    return p;
+}
 /* Separator spellings are data; arithmetic and unit identity are universal. */
 static size_t quantity_separator(const ttf_pack_input_t *in, size_t position,
                                  ttf_resource_layer_t *matched_layer) {
@@ -907,6 +950,27 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
             --q;
         if (at && dot)
             return finish(in, out, q, TTF_SEM_EMAIL, "syntax.email");
+        if (!at && (q = bare_domain_end(in, b)) > b)
+            return finish(in, out, q, TTF_SEM_URL, "syntax.bare-domain");
+        if ((s[b] == 'v' || s[b] == 'V') && in->tokens[in->index].end == b + 1 &&
+            (!b || !(ascii_letter(s[b - 1]) || digit(s[b - 1]) || s[b - 1] == '.'))) {
+            unsigned parts = 0;
+            q = b + 1;
+            while (q < n && digit(s[q])) {
+                q = integer(s, n, q);
+                ++parts;
+                if (q + 1 < n && s[q] == '.' && digit(s[q + 1]))
+                    ++q;
+                else
+                    break;
+            }
+            if (parts >= 2 && !(q < n && (ascii_letter(s[q]) || s[q] == '_' || s[q] == '-' ||
+                                          (s[q] == '.' && q + 1 < n && ascii_letter(s[q + 1]))))) {
+                out->secondary[0] = s[b];
+                out->secondary[1] = '\0';
+                return finish(in, out, q, TTF_SEM_VERSION, "syntax.prefixed-version");
+            }
+        }
         q = in->tokens[in->index].end;
         if (q < n && s[q] == '-' && q + 1 < n && digit(s[q + 1])) {
             q = integer(s, n, q + 1);

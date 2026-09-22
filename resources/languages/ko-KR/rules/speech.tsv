@@ -113,3 +113,15 @@ speech_symbol	ko-KR	±	플러스마이너스
 speech_symbol	ko-KR	×	곱하기
 speech_symbol	ko-KR	÷	나누기
 speech_symbol	ko-KR	㈜	주식회사
+
+# Address words read as words inside email/URL; other alphabetic runs use the
+# pronunciation lexicon, then letter spelling. Provisional, pending review.
+electronic_word	ko-KR	com	컴
+electronic_word	ko-KR	net	넷
+electronic_word	ko-KR	info	인포
+electronic_word	ko-KR	biz	비즈
+electronic_word	ko-KR	shop	샵
+electronic_number	ko-KR	version	cardinal
+electronic_number	ko-KR	ip	digits
+electronic_separator	ko-KR	version	점
+electronic_separator	ko-KR	ip	점

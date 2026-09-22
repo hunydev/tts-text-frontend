@@ -598,6 +598,17 @@
         "reason": "Ampersand initialism and single-capital letter-name readings in Korean context are editable project policy; engine agreement does not supply independent linguistic approval."
       },
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/electronic_v21.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Original developer-authored email/URL/version/IP contracts fixed before executing the candidate; docs/speech-resources.md",
+        "reason": "Address word evidence, spelling fallback, bare-domain TLD inventory and version/IP part readings are editable project policy; engine agreement does not supply independent linguistic approval."
+      },
+      "case_overrides": {}
     }
   ],
   "excluded": [

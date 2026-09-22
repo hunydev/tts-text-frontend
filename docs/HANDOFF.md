@@ -30,8 +30,20 @@
   (`benchmark/generated/sproat-v21-letters-comparison.json`).
 - 남음: `Johnson&Johnson` → `Johnson앤Johnson` 혼합 렌더, 단독 2글자 대문자 단어 충돌.
 
-다음 순서(재현 완료, 미착수): B 이메일/URL 단어
-읽기(`naver`→엔에이브이이알)·`v2.1.3`·IP의 점, D `a+b`→aplusb·`3-1=2`·`#해시태그`,
+### B. 이메일·URL 단어·버전·IP (2026-09-22, 커밋·미배포)
+
+- 변경: `src/pronunciation/electronic.c`(주소 렌더러), `src/semantic/classifier.c`
+  (`bare_domain_end`, `v` 접두 버전), ko/en `dotted_numbers`, validator 4종
+  (`url_tld`, `electronic_word|number|separator`), 사전 11항목(pending).
+- 계약 `tests/evaluation/electronic_v21.jsonl` 34건. `test@`는 기존 사전 항목이라
+  `테스트`가 맞다는 작성 오류를 커밋 전에 바로잡고 notes에 기록했다.
+  v0.20 이메일 계약 2건은 정책 변경으로 갱신했다(`닷 씨오엠` → `닷 컴`).
+- 결과: cycle fixed 26 / unchanged-pass 8 / regressed 0
+  (`artifacts/tn/electronic/comparison/cycle.json`). Debug 99/99(+신규 gate 통과),
+  ASan/UBSan 88/88(단독), Release text-evaluation 35/35, browser gate 통과. 외부 영어 출력 동일
+  (`benchmark/generated/sproat-v21-electronic-comparison.json`).
+
+다음 순서(재현 완료, 미착수): D `a+b`→aplusb·`3-1=2`·`#해시태그`,
 E `1~2억대`→일억 대에서 이억 대, F `지하 2F`·`B1층`. 한 번에 한 규칙군씩 진행한다.
 
 ## v0.20에서 마무리한 범위

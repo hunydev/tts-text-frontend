@@ -201,7 +201,7 @@ def cli_checks(args):
             assert actual["text"] == row["expected"], actual
             checks += 1
         path.write_text("speech_symbol\tko-KR\t@\t골뱅이\n", encoding="utf-8")
-        row = row_for("a1@b2.com", "에이일 골뱅이 비이 닷 씨오엠", annotated=False)
+        row = row_for("a1@b2.com", "에이일 골뱅이 비이 닷 컴", annotated=False)
         assert stream(args.cli, args.resources, row, 1, extra=("--customer", str(path)))["text"] == row["expected"]
         checks += 1
     return checks + final_trace_checks(args)
@@ -257,7 +257,7 @@ def final_trace_checks(args):
                         "native_standalone\tko-KR\t20\t스물\n"
                         "phone_letter\tko-KR\tletter.A\t에이\n", encoding="utf-8")
         for text, expected, kind, key, part in (
-            ("a1@b2.com", "에이일 골뱅이 비이 닷 씨오엠", "speech_symbol", "@", (2, 3)),
+            ("a1@b2.com", "에이일 골뱅이 비이 닷 컴", "speech_symbol", "@", (2, 3)),
             ("21{@native}", "스물하나", "native_standalone", "20", None),
             ("ABC{@alphabet}", "에이비씨", "phone_letter", "letter.A", (0, 1)),
         ):

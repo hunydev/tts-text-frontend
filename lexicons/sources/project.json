@@ -24,6 +24,14 @@
       "kind": "editorial-policy",
       "checked_at": "2026-09-17",
       "note": "Developer-authored provisional pronunciation policy for top + number composition. No external source or independent human pronunciation approval is asserted."
+    },
+    {
+      "id": "project-electronic-policy-v021",
+      "title": "Project email/URL word reading policy v0.21",
+      "url": "https://github.com/hunydev/tts-text-frontend",
+      "kind": "editorial-policy",
+      "checked_at": "2026-09-22",
+      "note": "Developer-authored provisional Korean readings for common mail/portal host labels and the reserved example domain. No external source or independent human pronunciation approval is asserted."
     }
   ]
 }

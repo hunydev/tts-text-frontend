@@ -58,6 +58,9 @@ ttf_status_t ttf_validate_resource_record(const ttf_engine_t *engine,
 const ttf_language_pack_t *ttf_find_pack(const ttf_engine_t *e, const char *tag);
 /* Lookup only, before a source verbalizer can replace the original spelling.
    A NULL hit is a normal miss; a hit remains engine-owned. */
+ttf_status_t ttf_electronic_render(const ttf_engine_t *engine, const ttf_language_pack_t *source,
+                                   const ttf_language_pack_t *target, const char *text,
+                                   size_t length, ttf_buffer_t *out);
 ttf_status_t ttf_foreign_lookup(const ttf_engine_t *engine, const char *source, const char *target,
                                 const char *text, size_t length, const char **hit,
                                 ttf_resource_layer_t *layer);

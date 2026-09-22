@@ -53,7 +53,7 @@ const path = require("node:path");
     ["user-v20-native-twenty-one", "스물하나"],
     ["user-v20-sino-negative", "마이너스 십이"],
     ["user-v20-alphabet-store", "에이비씨마트"],
-    ["user-v20-email-digits", "에이일 앳 비이 닷 씨오엠"],
+    ["user-v20-email-digits", "에이일 앳 비이 닷 컴"],
     ["user-v20-email-text-digits", "a1@b2.com"],
     ["user-v20-emoji-zwj-drop", "가 나"],
   ]) {

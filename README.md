@@ -50,9 +50,9 @@ build/ttf normalize --output-mode speech '오늘의 top100'
 build/ttf normalize --output-mode speech '1+1은 귀요미'
 # 일 더하기 일은 귀요미
 build/ttf normalize --output-mode speech '이메일 abc@example.com'
-# 이메일 에이비씨 앳 이엑스에이엠피엘이 닷 씨오엠
+# 이메일 에이비씨 앳 이그잼플 닷 컴
 build/ttf normalize --output-mode speech --unreadable drop '가漢🙂나'
-# 가나
+# 가 나
 build/ttf normalize --input-format annotated --output-mode speech '1{첫}번째 1{@native} 1{@sino} ABC{@alphabet}마트'
 # 첫번째 하나 일 에이비씨마트
 ```

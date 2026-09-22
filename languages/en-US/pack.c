@@ -812,6 +812,55 @@ static ttf_status_t spoken_alnum(const ttf_engine_t *e, const char *text, size_t
 }
 
 static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, const char *surface,
+                              size_t length, ttf_buffer_t *out);
+/* 2.1.3 and 192.168.0.1: dotted numeric parts with an editable part reading and
+   separator. A leading-zero part keeps its digits; a v prefix is spelled. */
+static ttf_status_t dotted_numbers(const ttf_engine_t *e, const ttf_semantic_t *s,
+                                   const char *surface, size_t length, ttf_buffer_t *out) {
+    const char *kind = s->type == TTF_SEM_IP_ADDRESS ? "ip" : "version";
+    const char *policy = ttf_resource_get(e, "electronic_number", EN, kind, NULL);
+    const char *separator = ttf_resource_get(e, "electronic_separator", EN, kind, NULL);
+    size_t at = 0;
+    ttf_status_t status;
+    if (!policy || !separator)
+        return TTF_ERESOURCE;
+    if (s->secondary[0]) {
+        if (!length || surface[0] != s->secondary[0])
+            return TTF_EINVAL;
+        if ((status = ttf_en_speech_spelling(e, surface, 1, 0, out)) != TTF_OK ||
+            (status = ttf_buffer_puts(out, " ")) != TTF_OK)
+            return status;
+        at = 1;
+    }
+    while (at < length) {
+        ttf_semantic_t part = {0};
+        size_t end = at;
+        while (end < length && surface[end] >= '0' && surface[end] <= '9')
+            ++end;
+        if (end == at || end - at >= sizeof(part.value))
+            return TTF_EINVAL;
+        part.struct_size = sizeof(part);
+        part.type = !strcmp(policy, "digits") || (end - at > 1 && surface[at] == '0')
+                        ? TTF_SEM_DIGIT_SEQUENCE
+                        : TTF_SEM_CARDINAL;
+        memcpy(part.value, surface + at, end - at);
+        if ((status = verbalize(e, &part, surface + at, end - at, out)) != TTF_OK)
+            return status;
+        at = end;
+        if (at < length) {
+            if (surface[at] != '.')
+                return TTF_EINVAL;
+            if ((status = ttf_buffer_puts(out, " ")) != TTF_OK ||
+                (status = ttf_buffer_puts(out, separator)) != TTF_OK ||
+                (status = ttf_buffer_puts(out, " ")) != TTF_OK)
+                return status;
+            ++at;
+        }
+    }
+    return TTF_OK;
+}
+
+static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, const char *surface,
                               size_t length, ttf_buffer_t *b) {
     ttf_status_t st;
     char key[48];
@@ -837,6 +886,9 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         if (!strcmp(s->unit, "@alphabet"))
             return ttf_en_speech_spelling(e, s->value, strlen(s->value), 0, b);
         return TTF_EINVAL;
+    case TTF_SEM_VERSION:
+    case TTF_SEM_IP_ADDRESS:
+        return dotted_numbers(e, s, surface, length, b);
     case TTF_SEM_EMAIL:
     case TTF_SEM_URL:
         return ttf_en_speech_spelling(e, surface, length, 1, b);

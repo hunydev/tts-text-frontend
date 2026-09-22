@@ -86,6 +86,16 @@ static ttf_status_t phone_dependencies(const ttf_engine_t *e, ttf_resource_diagn
 
 /* One code point that is neither a letter/digit of a supported script nor
    whitespace: the final speech pass reads such a character as its own word. */
+static int lower_ascii_key(const char *key, size_t min, size_t max) {
+    size_t n = strlen(key), i;
+    if (n < min || n > max)
+        return 0;
+    for (i = 0; i < n; ++i)
+        if (key[i] < 'a' || key[i] > 'z')
+            return 0;
+    return 1;
+}
+
 static int symbol_key(const char *key) {
     uint32_t cp;
     size_t width, length = strlen(key);
@@ -108,6 +118,34 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     *handled = 0;
     if (!wildcard && !SAME(r->language, KO))
         return TTF_OK;
+    if (SAME(k, "url_tld")) {
+        *handled = 1;
+        return wildcard && lower_ascii_key(key, 2, 24) && ttf_validation_enum(v, "0|1")
+                   ? TTF_OK
+                   : ttf_validation_error(
+                         d, "url_tld requires language *, a 2..24 lowercase ASCII key and 0|1");
+    }
+    if (SAME(k, "electronic_word")) {
+        *handled = 1;
+        return lower_ascii_key(key, 1, 63) && label(v) && strlen(v) < 256
+                   ? TTF_OK
+                   : ttf_validation_error(
+                         d, "electronic_word requires a lowercase ASCII key and a reading");
+    }
+    if (SAME(k, "electronic_number")) {
+        *handled = 1;
+        return (SAME(key, "version") || SAME(key, "ip")) &&
+                       ttf_validation_enum(v, "cardinal|digits")
+                   ? TTF_OK
+                   : ttf_validation_error(d,
+                                          "electronic_number supports version|ip=cardinal|digits");
+    }
+    if (SAME(k, "electronic_separator")) {
+        *handled = 1;
+        return (SAME(key, "version") || SAME(key, "ip")) && label(v) && strlen(v) < 64
+                   ? TTF_OK
+                   : ttf_validation_error(d, "electronic_separator supports version|ip readings");
+    }
     if (SAME(k, "speech_lengthening")) {
         *handled = 1;
         return symbol_key(key) && ttf_validation_enum(v, "0|1")

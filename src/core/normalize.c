@@ -540,7 +540,12 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
             if (st == TTF_OK && !strcmp(span.lexicon, "preserved:no-renderer"))
                 tag(sem->render_lang, source->language_tag);
         } else if ((sem->type == TTF_SEM_EMAIL || sem->type == TTF_SEM_URL) &&
-                   e->frontend_options.output_mode == TTF_OUTPUT_TEXT)
+                   e->frontend_options.output_mode == TTF_OUTPUT_SPEECH)
+            st = ttf_electronic_render(e, source, renderer, text + tokens[i].begin,
+                                       end - tokens[i].begin, &normalized);
+        else if ((sem->type == TTF_SEM_EMAIL || sem->type == TTF_SEM_URL ||
+                  sem->type == TTF_SEM_VERSION || sem->type == TTF_SEM_IP_ADDRESS) &&
+                 e->frontend_options.output_mode == TTF_OUTPUT_TEXT)
             st = ttf_buffer_append(&normalized, text + tokens[i].begin, end - tokens[i].begin);
         else if (sem->type == TTF_SEM_SYMBOL && !sem->unit[0] &&
                  ttf_speech_lengthening_span(e, renderer->language_tag, output.data, output.length,
