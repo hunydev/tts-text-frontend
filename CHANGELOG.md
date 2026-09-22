@@ -2,6 +2,12 @@
 
 ## Unreleased — speech final gate
 
+- Read Korean `대` after a decade or a large scaled amount as a band: `20대 남성` →
+  `이십 대 남성` (was `스무 대`), `1~2억대` → `일억에서 이억 대`. Adjacent cues
+  (`차량 20대`, `20대 차량`) keep the machine count `스무 대`.
+- Read `1억~2억 원` as an ascending interval when both endpoints are scaled; the
+  descending `1억-2천만원` stays verbatim.
+- Add 25 band/count contracts; external English results are identical.
 - Read arithmetic expressions with a relation or an unambiguous operator:
   `3-1=2` → `삼 빼기 일은 이`, `3>2` → `삼은 이보다 크다`, `a+b는` → `에이 더하기 비는`.
   `math_relation` templates pick 은/는 from the left side; bare `5-3` ranges,

@@ -620,6 +620,17 @@
         "reason": "Operator names, relation templates, particle choice and hashtag prefix readings are editable project policy; engine agreement does not supply independent linguistic approval."
       },
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/counter_band_v21.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Original developer-authored Korean 대 band/count contracts fixed before executing the candidate; docs/korean-counters.md",
+        "reason": "Decade/scaled band defaults, cue inventories and single final 대 in band ranges are editable project policy; engine agreement does not supply independent linguistic approval."
+      },
+      "case_overrides": {}
     }
   ],
   "excluded": [

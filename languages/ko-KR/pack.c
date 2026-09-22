@@ -567,6 +567,9 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             snprintf(endpoint.secondary, sizeof(endpoint.secondary), "frequency");
         else if (!strcmp(s->rule, "ko:identifier-range"))
             snprintf(endpoint.secondary, sizeof(endpoint.secondary), "identifier");
+        if (s->unit[0] && ttf_resource_get(e, "range_repeat_unit", "ko-KR", s->unit, NULL) &&
+            !strcmp(ttf_resource_get(e, "range_repeat_unit", "ko-KR", s->unit, NULL), "0"))
+            repeat_unit = 0;
         if (repeat_unit || !s->unit[0] || !strcmp(s->unit, "time"))
             TRY(verbalize(e, &endpoint, surface, length, out));
         else
@@ -1107,6 +1110,19 @@ static size_t compound_amount(const ttf_pack_input_t *in, ttf_semantic_t *s) {
 /* Scaled Korean currency endpoints reuse the exact compound arithmetic above.
  * A bounded first-endpoint view stops the scale grammar at a resource delimiter;
  * the resulting RANGE remains language-neutral and can use any pack renderer. */
+/* Unsigned integer strings: left < right. A descending pair such as
+   1억-2천만 is not an interval and must stay verbatim. */
+static int ascending_integers(const char *left, const char *right) {
+    size_t a = strlen(left), b = strlen(right);
+    for (const char *p = left; *p; ++p)
+        if (*p < '0' || *p > '9')
+            return 0;
+    for (const char *p = right; *p; ++p)
+        if (*p < '0' || *p > '9')
+            return 0;
+    return a < b || (a == b && strcmp(left, right) < 0);
+}
+
 static size_t compound_currency_range(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     size_t begin = in->tokens[in->index].begin, i;
     if (in->tokens[in->index].script != TTF_SCRIPT_DIGIT &&
@@ -1221,6 +1237,15 @@ static size_t compound_currency_range(const ttf_pack_input_t *in, ttf_semantic_t
             first.type = second.type;
             memcpy(first.unit, second.unit, sizeof(first.unit));
             shared_scale = 1;
+        } else if (first_scaled && second_scaled && ascending_integers(first.value, second.value) &&
+                   (first.type == TTF_SEM_CARDINAL || first.type == TTF_SEM_NUMBER) &&
+                   (second.type == TTF_SEM_CURRENCY || second.type == TTF_SEM_COUNTER ||
+                    second.type == TTF_SEM_MEASURE)) {
+            /* 1억~2억 원: both endpoints carry a scale and only the last carries
+               the unit, which then applies to the whole interval. */
+            first.type = second.type;
+            memcpy(first.unit, second.unit, sizeof(first.unit));
+            shared_scale = 1;
         }
         /* Retain a chained expression intact; two endpoints are the supported
            interval contract, even when every written currency matches. */
@@ -1291,8 +1316,90 @@ static size_t compound_currency_range(const ttf_pack_input_t *in, ttf_semantic_t
     return 0;
 }
 
+/* Longest resource key that is a prefix of the Hangul word at `p`. */
+static const char *band_cue(const ttf_pack_input_t *in, const char *kind, size_t begin,
+                            size_t end) {
+    char key[64];
+    const char *best = NULL;
+    for (size_t width = 1; width <= end - begin && width < sizeof(key); ++width) {
+        const char *value;
+        if (begin + width < end && ((unsigned char)in->text[begin + width] & 0xc0u) == 0x80u)
+            continue;
+        memcpy(key, in->text + begin, width);
+        key[width] = 0;
+        value = ttf_resource_get(in->engine, kind, "ko-KR", key, NULL);
+        if (value)
+            best = value;
+    }
+    return best;
+}
+static int band_value(const char *value) {
+    size_t n = strlen(value);
+    return (n == 2 && value[0] >= '1' && value[0] <= '9' && value[1] == '0') || n >= 5;
+}
+/* 대 counts machines, but after a decade number (20대) or a large scaled
+   amount (5억대) it names a band. Adjacent resource cues decide first. */
+static int band_role(const ttf_pack_input_t *in, const ttf_semantic_t *s) {
+    size_t begin = in->tokens[in->index].begin, end = s->input_end, i;
+    const char *cue = NULL;
+    for (i = in->index; i > 0 && !cue; --i) {
+        const ttf_token_t *t = &in->tokens[i - 1];
+        if (t->script == TTF_SCRIPT_WHITESPACE && t->end == begin &&
+            horizontal_space(in->text, t->begin, t->end)) {
+            begin = t->begin;
+            continue;
+        }
+        if (t->end == begin && t->script == TTF_SCRIPT_HANGUL)
+            cue = band_cue(in, "counter_band_before", t->begin, t->end);
+        break;
+    }
+    if (!cue) {
+        size_t p = skip_spaces(in->text, in->length, end);
+        for (i = in->index; i < in->token_count; ++i) {
+            const ttf_token_t *t = &in->tokens[i];
+            if (t->begin <= p && p < t->end) {
+                if (t->script == TTF_SCRIPT_HANGUL && t->begin == p)
+                    cue = band_cue(in, "counter_band_after", t->begin, t->end);
+                break;
+            }
+        }
+    }
+    if (cue)
+        return !strcmp(cue, "band");
+    return band_value(s->value) && (s->type != TTF_SEM_RANGE || band_value(s->secondary));
+}
+
+static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s);
 /* Pack-specific grammar creates language-neutral IR. */
 static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    size_t n = classify_grammar(in, s);
+    int universal = 0;
+    char c = in->text[in->tokens[in->index].begin];
+    if (!n && c >= '0' && c <= '9') {
+        ttf_semantic_t candidate = *s;
+        n = ttf_classify_universal(in, &candidate);
+        if (n) {
+            *s = candidate;
+            universal = 1;
+        }
+    }
+    if (n && (s->type == TTF_SEM_COUNTER || s->type == TTF_SEM_RANGE) && !strcmp(s->unit, "대") &&
+        band_role(in, s)) {
+        snprintf(s->unit, sizeof(s->unit), "band");
+        snprintf(s->rule, sizeof(s->rule), "%s",
+                 s->type == TTF_SEM_RANGE ? "ko:band-range" : "ko:band-counter");
+        return n;
+    }
+    if (universal) {
+        memset(s, 0, sizeof(*s));
+        s->struct_size = sizeof(*s);
+        s->layer = TTF_LAYER_SYSTEM;
+        return 0;
+    }
+    return n;
+}
+
+static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     const char *text = in->text;
     size_t n = in->length, begin = in->tokens[in->index].begin, p, q;
     unsigned year, month, day;

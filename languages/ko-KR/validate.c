@@ -134,6 +134,18 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    : ttf_validation_error(d,
                                           "speech_symbol_prefix requires one symbol and a reading");
     }
+    if (SAME(k, "counter_band_before") || SAME(k, "counter_band_after")) {
+        *handled = 1;
+        return label(key) && strlen(key) < 64 && ttf_validation_enum(v, "band|count")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "counter band cue requires a word and band|count");
+    }
+    if (SAME(k, "range_repeat_unit")) {
+        *handled = 1;
+        return label(key) && strlen(key) < 32 && ttf_validation_enum(v, "0|1")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "range_repeat_unit requires a unit and 0|1");
+    }
     if (SAME(k, "url_tld")) {
         *handled = 1;
         return wildcard && lower_ascii_key(key, 2, 24) && ttf_validation_enum(v, "0|1")

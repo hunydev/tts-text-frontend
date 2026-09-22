@@ -55,8 +55,18 @@
   Release text-evaluation 36/36, browser gate 통과. 외부 영어 결과 파일 동일
   (`benchmark/generated/sproat-v21-math-comparison.json`).
 
-다음 순서(재현 완료, 미착수):
-E `1~2억대`→일억 대에서 이억 대, F `지하 2F`·`B1층`. 한 번에 한 규칙군씩 진행한다.
+### E. `대` 구간·대수, 양끝 배수 범위 (2026-09-22, 커밋·미배포)
+
+- 변경: `languages/ko-KR/pack.c`(`classify` → `band_role` 후처리, `ascending_integers` 범위 상속,
+  `range_repeat_unit`), `counters.tsv` cue·band 리소스, validator.
+- 재현 중 `20대 남성` → `스무 대`(연령이 대수로 읽힘) 값 오류를 발견해 같은 규칙군으로 처리했다.
+  기존 golden `1억-2천만원` 보존 계약을 지키도록 오름차순일 때만 범위로 만든다.
+- 계약 `tests/evaluation/counter_band_v21.jsonl` 25건. cycle fixed 14 / unchanged-pass 11 /
+  regressed 0 (`artifacts/tn/band/comparison2/cycle.json`). Debug 101/101, ASan/UBSan 89/89(단독),
+  외부 영어 결과 파일 동일(`benchmark/generated/sproat-v21-band`).
+
+다음 순서(재현 완료, 미착수): F `지하 2F`·`B1층`, D 잔여 `x-y 좌표`·`설정>일반`.
+한 번에 한 규칙군씩 진행한다.
 
 ## v0.20에서 마무리한 범위
 
