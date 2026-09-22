@@ -568,6 +568,51 @@ static int context_score(const ttf_pack_input_t *in) {
     return run_score + numeric_label_context_score(in);
 }
 
+static int upper_run(const ttf_pack_input_t *in, size_t index) {
+    const ttf_token_t *t = &in->tokens[index];
+    size_t i;
+    if (t->script != TTF_SCRIPT_LATIN || t->end - t->begin > 4)
+        return 0;
+    for (i = t->begin; i < t->end; ++i)
+        if (in->text[i] < 'A' || in->text[i] > 'Z')
+            return 0;
+    return 1;
+}
+
+/* R&D, AT&T: short capital runs joined by an unspaced ampersand spell their
+   letters. Lowercase words (rock&roll) and longer runs keep word grammar. */
+static size_t ampersand_initialism(const ttf_pack_input_t *in, ttf_semantic_t *out) {
+    size_t index = in->index, end;
+    if (!upper_run(in, index) ||
+        (in->tokens[index].begin && ((in->text[in->tokens[index].begin - 1] >= 'a' &&
+                                      in->text[in->tokens[index].begin - 1] <= 'z') ||
+                                     (in->text[in->tokens[index].begin - 1] >= '0' &&
+                                      in->text[in->tokens[index].begin - 1] <= '9') ||
+                                     in->text[in->tokens[index].begin - 1] == '&')))
+        return 0;
+    while (index + 2 < in->token_count) {
+        const ttf_token_t *amp = &in->tokens[index + 1], *next = &in->tokens[index + 2];
+        if (amp->begin != in->tokens[index].end || amp->end != amp->begin + 1 ||
+            in->text[amp->begin] != '&' || next->begin != amp->end || !upper_run(in, index + 2))
+            break;
+        index += 2;
+    }
+    end = in->tokens[index].end;
+    if (index == in->index || end - in->tokens[in->index].begin >= sizeof(out->value) ||
+        (end < in->length && ((in->text[end] >= '0' && in->text[end] <= '9') ||
+                              in->text[end] == '&' || in->text[end] == '_')))
+        return 0;
+    memcpy(out->value, in->text + in->tokens[in->index].begin, end - in->tokens[in->index].begin);
+    out->value[end - in->tokens[in->index].begin] = '\0';
+    out->type = TTF_SEM_INITIALISM;
+    out->lexical_class = TTF_LEX_INITIALISM;
+    ttf_en_initialism_policy(in->engine, out, out->value, strlen(out->value), "inferred");
+    out->input_end = end;
+    (void)snprintf(out->rule, sizeof(out->rule), "pack.ampersand-initialism");
+    (void)snprintf(out->source_lang, sizeof(out->source_lang), "%s", EN);
+    return index - in->index + 1;
+}
+
 static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     const ttf_token_t *t = &in->tokens[in->index];
     char key[96];
@@ -584,6 +629,9 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
         return date_tokens;
     if (t->script != TTF_SCRIPT_LATIN || n >= sizeof(key))
         return 0;
+    date_tokens = ampersand_initialism(in, out);
+    if (date_tokens)
+        return date_tokens;
     /* Treat an adjacent hyphenated word as one lexical unit so the existing
        layered lexicon can choose a pronunciation for the complete spelling.
        Spaces, doubled hyphens and numeric terms are separate grammar. */

@@ -360,3 +360,12 @@ TN-03/UNICODE-01의 일부를 진전시켰다. 원형 숫자·로마 숫자·분
 독립 작성 40건 계약(`tests/evaluation/speech_final_gate_v21.jsonl`)이 근거다. 외부 영어
 개발 표본은 v0.20과 결과 파일이 동일하다. 연산자 IR(`3-1=2`, `a+b`), hashtag
 역할, fullwidth 숫자 정규화는 남아 있다.
+
+## v0.21 후속(미릴리스) — `&` 이니셜과 대문자 한 글자 (EN-01 일부)
+
+`R&D`/`AT&T` 같은 `&` 결합 이니셜과 한국어 문맥의 대문자 한 글자를 글자 이름으로
+읽는다. 독립 작성 26건 계약(`tests/evaluation/letters_v21.jsonl`)이 근거다. 외부
+영어 표본은 출력 텍스트·exact 수가 동일하고 3개 span의 IR만 INITIALISM이 됐다.
+`Johnson&Johnson`처럼 영어 단어를 잇는 `&`는 한국어 렌더러로 `앤`이 되는 혼합
+출력이 남아 있으며, 두 글자 대문자가 일반 단어(`AT`, `US`)와 겹치는 단독 표기는
+기존 lexical 정책을 따른다.

@@ -2,6 +2,13 @@
 
 ## Unreleased — speech final gate
 
+- Spell short capital runs joined by an unspaced ampersand as one initialism
+  (`R&D` → `알앤디`, `AT&T` → `에이티앤티`); speech reads the joiner from
+  `speech_symbol &`, text keeps the written `&`. Lowercase words keep word grammar.
+- Read a lone capital letter inside a Korean sentence as its letter name
+  (`A 학점` → `에이 학점`, `K팝` → `케이팝`, `X세대` → `엑스세대`).
+- Add 26 letter-name contracts. External English outputs are unchanged; three
+  `A&M`/`DP&I`/`D&D` spans now carry INITIALISM IR.
 - Read registered symbol and number-form characters as their own words in speech
   output: circled numbers, Roman numerals, vulgar fractions, `±`, `×`, `÷`, `㈜`.
   `speech_symbol` now accepts one non-ASCII symbol code point; `speech_join

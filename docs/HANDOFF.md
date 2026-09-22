@@ -20,7 +20,17 @@
   외부 영어 3,785문장 results SHA `2de85573…` v0.20과 동일
   (`benchmark/generated/sproat-v21-final-gate`). `build-web` 배포 library는 바꾸지 않았다.
 
-다음 순서(재현 완료, 미착수): A `R&D`→르앤드·`AT&T`→애트앤트, B 이메일/URL 단어
+### A. `&` 이니셜·대문자 한 글자 (2026-09-22, 커밋·미배포)
+
+- 변경: `languages/en-US/pack.c`(`ampersand_initialism` 분류), `src/pronunciation/foreign.c`
+  (`&` 분해 렌더링, 대문자 한 글자 이니셜). 계약 `tests/evaluation/letters_v21.jsonl` 26건.
+- 결과: cycle fixed 20 / unchanged-pass 6 / regressed 0
+  (`artifacts/tn/amp-initialism/comparison/cycle.json`). Debug 99/99, ASan/UBSan 86/86(단독).
+  외부 영어 출력·exact 동일, `A&M`/`DP&I`/`D&D` IR만 INITIALISM
+  (`benchmark/generated/sproat-v21-letters-comparison.json`).
+- 남음: `Johnson&Johnson` → `Johnson앤Johnson` 혼합 렌더, 단독 2글자 대문자 단어 충돌.
+
+다음 순서(재현 완료, 미착수): B 이메일/URL 단어
 읽기(`naver`→엔에이브이이알)·`v2.1.3`·IP의 점, D `a+b`→aplusb·`3-1=2`·`#해시태그`,
 E `1~2억대`→일억 대에서 이억 대, F `지하 2F`·`B1층`. 한 번에 한 규칙군씩 진행한다.
 

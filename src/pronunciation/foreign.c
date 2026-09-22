@@ -114,6 +114,9 @@ static ttf_status_t render_at(const ttf_engine_t *e, const ttf_language_pack_t *
     char *trace_text = NULL;
     if (!source || !target)
         return TTF_EINVAL;
+    /* A lone capital in another language's sentence names its letter (A 학점, K팝). */
+    if (n == 1 && text[0] >= 'A' && text[0] <= 'Z')
+        lexical = TTF_LEX_INITIALISM;
     ttf_trace_stage(e, TTF_TRACE_LEXICON, part_begin, part_begin + n);
     st = ttf_foreign_lookup(e, source->language_tag, target->language_tag, text, n, &hit, layer);
     if (st != TTF_OK)
@@ -123,6 +126,42 @@ static ttf_status_t render_at(const ttf_engine_t *e, const ttf_language_pack_t *
         st = ttf_trace_foreign_lexicon(e, source->language_tag, target->language_tag, text, n,
                                        "whole-part-lexicon");
         return st == TTF_OK ? ttf_buffer_puts(out, hit) : st;
+    }
+    /* R&D: letter runs keep initialism phones; the joiner follows the output
+       mode, a target symbol name in speech and the written mark in text. */
+    if (lexical == TTF_LEX_INITIALISM && n > 1 && memchr(text, '&', n)) {
+        size_t pos = 0;
+        const char *joiner =
+            e->frontend_options.output_mode == TTF_OUTPUT_SPEECH
+                ? ttf_resource_get(e, "speech_symbol", target->language_tag, "&", NULL)
+                : "&";
+        *layer = TTF_LAYER_COMMON;
+        while (pos < n) {
+            size_t end = pos;
+            if (text[pos] == '&') {
+                ttf_trace_stage(e, TTF_TRACE_POLICY, part_begin + pos, part_begin + pos + 1);
+                st = ttf_trace_emit(e, TTF_TRACE_SELECTED, TTF_LAYER_COMMON, 0,
+                                    target->language_tag, "decision", "initialism-joiner", "&",
+                                    joiner ? joiner : "&", "ampersand-initialism", SIZE_MAX);
+                if (st == TTF_OK)
+                    st = ttf_buffer_puts(out, joiner ? joiner : "&");
+                end = pos + 1;
+            } else {
+                char part_trace[64] = {0};
+                ttf_resource_layer_t part_layer = TTF_LAYER_COMMON;
+                while (end < n && text[end] != '&')
+                    ++end;
+                st = render_at(e, source, target, text + pos, end - pos, TTF_LEX_INITIALISM, out,
+                               part_trace, &part_layer, part_begin + pos);
+                if (part_layer > *layer)
+                    *layer = part_layer;
+            }
+            if (st != TTF_OK)
+                return st;
+            pos = end;
+        }
+        snprintf(trace, 64, "initialism:ampersand");
+        return TTF_OK;
     }
     /* Preserve whole-term overrides above. Otherwise an alphanumeric label
        consists of spoken word/letter runs and target-language numeric runs. */

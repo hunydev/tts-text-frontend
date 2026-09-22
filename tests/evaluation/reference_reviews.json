@@ -587,6 +587,17 @@
         "reason": "Symbol-name, number-form, lengthening-mark, compatibility-unit and unreadable-removal readings are editable project policy; engine agreement does not supply independent linguistic approval."
       },
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/letters_v21.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Original developer-authored letter-name contracts fixed before executing the candidate; docs/speech-resources.md",
+        "reason": "Ampersand initialism and single-capital letter-name readings in Korean context are editable project policy; engine agreement does not supply independent linguistic approval."
+      },
+      "case_overrides": {}
     }
   ],
   "excluded": [
