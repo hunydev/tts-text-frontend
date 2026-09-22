@@ -239,6 +239,13 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    : ttf_validation_error(d, "phone reading label must be nonempty, bounded and "
                                              "contain no ASCII controls");
     }
+    if (SAME(k, "floor_basement_prefix")) {
+        *handled = 1;
+        return strlen(key) == 1 && key[0] >= 'A' && key[0] <= 'Z' && SAME(v, "basement_floor")
+                   ? TTF_OK
+                   : ttf_validation_error(
+                         d, "floor_basement_prefix requires uppercase ASCII and basement_floor");
+    }
     if (SAME(k, "floor_alias")) {
         *handled = 1;
         return strlen(key) == 1 && key[0] >= 'A' && key[0] <= 'Z' && SAME(v, "floor")

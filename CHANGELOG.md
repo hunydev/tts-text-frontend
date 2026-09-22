@@ -2,6 +2,10 @@
 
 ## Unreleased — speech final gate
 
+- Read basement floors `B1층`/`B1F` as `지하 일 층` and ranges `B1~B3층` as
+  `지하 일 층에서 지하 삼 층`; add `지하`/`주차장` floor cues (`지하 2F` → `지하 이 층`).
+  Bare `B2`, `B2B` and vitamin `B1` stay identifiers.
+- Add 19 floor contracts; external English results are identical.
 - Read Korean `대` after a decade or a large scaled amount as a band: `20대 남성` →
   `이십 대 남성` (was `스무 대`), `1~2억대` → `일억에서 이억 대`. Adjacent cues
   (`차량 20대`, `20대 차량`) keep the machine count `스무 대`.

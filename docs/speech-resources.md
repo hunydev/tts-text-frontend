@@ -183,6 +183,7 @@ build/ttf inspect --trace --customer customer-speech.tsv --output-mode speech 'a
 - `floor_alias`의 대문자 `F`는 semantic unit `floor`다. `floor_cue_before` 또는 `floor_cue_after`에 등록된 바로 옆 단어가 있어야 한다. 수와 F 사이에는 공백을 허용하지 않고, 문맥 단어와 숫자 사이에는 가로 공백을 허용한다. 줄바꿈을 넘어 문맥을 가져오지 않는다.
 - `floor_cue_before_suffix`의 `타워`/`빌딩`은 `대륭포스트타워` 같은 건물 이름의 명사형 접미사를 인정한다. 완전한 토큰 cue가 먼저이며, 없을 때 가장 긴 등록 suffix를 찾는다. `0`으로 지정한 완전한 cue나 긴 suffix는 더 짧은 suffix로 우회하지 않는다.
 - cue 값은 `1`/`0`이다. Streaming planner도 같은 floor cue 리소스를 참조하여 작은 segment에서 문맥이 먼저 확정되지 않게 한다. 기본 exact cue에는 일반 문장 분할에 사용할 `boundary_word` 항목도 포함되어 있다.
+- `floor_basement_prefix ko-KR B basement_floor`: `B1층`, `B1F` → `지하 일 층`, 범위 `B1~B3층` → `지하 일 층에서 지하 삼 층`. 층 단위(`F` 또는 `층`)가 있어야 하며 `B2`, `B2B`, `비타민 B1`은 식별자로 둔다. `quantity_prefix ko-KR basement_floor 지하 `가 읽기를 정한다.
 - `unit ko-KR floor 층`이 실제 출력 단위를 정한다. `°F`는 공통 measurement 문법을 쓰므로 `F`의 층 표기와 구별된다.
 
 정답 검토는 독립적으로 작성한 텍스트 코퍼스를 기준으로 한다. 구현 결과에 맞춰 기대값을 자동 수정하지 않는다. 사용자와 고객의 실제 문장, 부정 예, resource override, 임의 바이트 분할 streaming을 함께 검증해야 한다.

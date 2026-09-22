@@ -86,3 +86,85 @@ size_t ttf_ko_classify_floor(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     out->layer = layer > cue_layer ? layer : cue_layer;
     return consumed;
 }
+
+/* B1층, B1F and B1~B3층: a declared basement prefix, digits and an explicit
+   floor unit (a floor alias or the unit word). Bare B1 stays an identifier. */
+static size_t basement_endpoint(const ttf_pack_input_t *in, size_t p, char *value, size_t capacity,
+                                int *unit) {
+    char prefix[2] = {0, 0}, alias[2] = {0, 0};
+    const char *word = ttf_resource_get(in->engine, "unit", "ko-KR", "floor", NULL);
+    size_t start;
+    *unit = 0;
+    if (p >= in->length)
+        return 0;
+    prefix[0] = in->text[p];
+    if (!ttf_resource_get(in->engine, "floor_basement_prefix", "ko-KR", prefix, NULL))
+        return 0;
+    start = ++p;
+    while (p < in->length && in->text[p] >= '0' && in->text[p] <= '9')
+        ++p;
+    if (p == start || p - start >= capacity || in->text[start] == '0')
+        return 0;
+    memcpy(value, in->text + start, p - start);
+    value[p - start] = 0;
+    if (p < in->length) {
+        alias[0] = in->text[p];
+        if (ttf_resource_get(in->engine, "floor_alias", "ko-KR", alias, NULL) &&
+            !(p + 1 < in->length && ((in->text[p + 1] >= 'A' && in->text[p + 1] <= 'Z') ||
+                                     (in->text[p + 1] >= 'a' && in->text[p + 1] <= 'z') ||
+                                     (in->text[p + 1] >= '0' && in->text[p + 1] <= '9')))) {
+            *unit = 1;
+            return p + 1;
+        }
+        if (word && !strncmp(in->text + p, word, strlen(word))) {
+            *unit = 1;
+            return p + strlen(word);
+        }
+    }
+    if (p < in->length &&
+        ((in->text[p] >= 'A' && in->text[p] <= 'Z') || (in->text[p] >= 'a' && in->text[p] <= 'z')))
+        return 0;
+    return p;
+}
+
+size_t ttf_ko_classify_basement(const ttf_pack_input_t *in, ttf_semantic_t *out) {
+    size_t start = in->tokens[in->index].begin, end, second_end = 0, next;
+    char first[32], second[32];
+    int first_unit, second_unit = 0;
+    if (in->tokens[in->index].end != start + 1 ||
+        (start && ((in->text[start - 1] >= 'A' && in->text[start - 1] <= 'Z') ||
+                   (in->text[start - 1] >= 'a' && in->text[start - 1] <= 'z') ||
+                   (in->text[start - 1] >= '0' && in->text[start - 1] <= '9'))))
+        return 0;
+    end = basement_endpoint(in, start, first, sizeof(first), &first_unit);
+    if (!end)
+        return 0;
+    if (end < in->length) {
+        size_t width = 0;
+        if (in->text[end] == '~' || in->text[end] == '-')
+            width = 1;
+        else if (in->length - end >= 3 && !memcmp(in->text + end, "\xef\xbd\x9e", 3))
+            width = 3;
+        if (width)
+            second_end = basement_endpoint(in, end + width, second, sizeof(second), &second_unit);
+    }
+    if (second_end && second_unit) {
+        snprintf(out->value, sizeof(out->value), "%s", first);
+        snprintf(out->secondary, sizeof(out->secondary), "%s", second);
+        snprintf(out->unit, sizeof(out->unit), "basement_floor");
+        snprintf(out->rule, sizeof(out->rule), "ko:basement-floor-range");
+        out->type = TTF_SEM_RANGE;
+        end = second_end;
+    } else if (first_unit) {
+        snprintf(out->value, sizeof(out->value), "%s", first);
+        snprintf(out->unit, sizeof(out->unit), "basement_floor");
+        snprintf(out->rule, sizeof(out->rule), "ko:basement-floor");
+        out->type = TTF_SEM_MEASURE;
+    } else
+        return 0;
+    out->input_end = end;
+    for (next = in->index; next < in->token_count && in->tokens[next].begin < end; ++next)
+        if (in->tokens[next].end > end)
+            return 0;
+    return next - in->index;
+}

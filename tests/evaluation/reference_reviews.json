@@ -631,6 +631,17 @@
         "reason": "Decade/scaled band defaults, cue inventories and single final 대 in band ranges are editable project policy; engine agreement does not supply independent linguistic approval."
       },
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/floor_v21.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Original developer-authored floor/basement contracts fixed before executing the candidate; docs/speech-resources.md",
+        "reason": "Basement prefix, floor cues and range readings are editable project policy; engine agreement does not supply independent linguistic approval."
+      },
+      "case_overrides": {}
     }
   ],
   "excluded": [

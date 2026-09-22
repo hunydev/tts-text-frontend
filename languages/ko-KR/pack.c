@@ -1403,7 +1403,10 @@ static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     const char *text = in->text;
     size_t n = in->length, begin = in->tokens[in->index].begin, p, q;
     unsigned year, month, day;
-    size_t identifier = ttf_ko_classify_floor(in, s);
+    size_t identifier = ttf_ko_classify_basement(in, s);
+    if (identifier)
+        return identifier;
+    identifier = ttf_ko_classify_floor(in, s);
     if (identifier)
         return identifier;
     identifier = ttf_ko_classify_identifier(in, s);

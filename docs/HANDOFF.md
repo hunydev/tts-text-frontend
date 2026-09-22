@@ -65,7 +65,15 @@
   regressed 0 (`artifacts/tn/band/comparison2/cycle.json`). Debug 101/101, ASan/UBSan 89/89(단독),
   외부 영어 결과 파일 동일(`benchmark/generated/sproat-v21-band`).
 
-다음 순서(재현 완료, 미착수): F `지하 2F`·`B1층`, D 잔여 `x-y 좌표`·`설정>일반`.
+### F. 층·지하층 (2026-09-22, 커밋·미배포)
+
+- 변경: `languages/ko-KR/patterns.c`(`ttf_ko_classify_basement`), patterns.tsv cue·리소스, validator.
+- 계약 `tests/evaluation/floor_v21.jsonl` 19건. cycle fixed 11 / unchanged-pass 8 / regressed 0
+  (`artifacts/tn/floor/comparison/cycle.json`). Debug 102/102, ASan/UBSan 90/90(단독),
+  외부 영어 결과 파일 동일(`benchmark/generated/sproat-v21-floor`).
+- 새로 발견: 조사 교정 규칙군(`3F로` → `삼 층로`, `5kg로`, `1+1는`). remaining-work에 기록.
+
+다음 순서(재현 완료, 미착수): D 잔여 `x-y 좌표`·`설정>일반`, 이어서 조사 교정 후보.
 한 번에 한 규칙군씩 진행한다.
 
 ## v0.20에서 마무리한 범위

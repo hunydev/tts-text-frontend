@@ -10,15 +10,26 @@ floor_cue_before	ko-KR	건물	1
 floor_cue_before	ko-KR	엘리베이터	1
 floor_cue_before	ko-KR	로비	1
 floor_cue_before	ko-KR	사무실	1
+floor_cue_before	ko-KR	지하	1
+floor_cue_before	ko-KR	주차장	1
 boundary_word	ko-KR	층	1
 boundary_word	ko-KR	층수	1
 boundary_word	ko-KR	건물	1
 boundary_word	ko-KR	엘리베이터	1
 boundary_word	ko-KR	로비	1
 boundary_word	ko-KR	사무실	1
+boundary_word	ko-KR	지하	1
+boundary_word	ko-KR	주차장	1
 floor_cue_after	ko-KR	로비	1
 floor_cue_after	ko-KR	사무실	1
 floor_cue_after	ko-KR	회의실	1
 boundary_word	ko-KR	회의실	1
 floor_cue_before_suffix	ko-KR	타워	1
 floor_cue_before_suffix	ko-KR	빌딩	1
+
+# B1층, B1F: basement floors read with the 지하 prefix. Bare B1 stays verbatim.
+floor_basement_prefix	ko-KR	B	basement_floor
+unit	ko-KR	basement_floor	층
+quantity_prefix	ko-KR	basement_floor	지하 
+classifier_priority	ko-KR	ko:basement-floor	10
+classifier_priority	ko-KR	ko:basement-floor-range	10
