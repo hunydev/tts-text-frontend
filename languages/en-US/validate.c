@@ -175,6 +175,22 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     *handled = 0;
     if (!wildcard && !SAME(r->language, EN))
         return TTF_OK;
+    if (SAME(k, "math_relation")) {
+        *handled = 1;
+        return (SAME(key, "=") || SAME(key, "<") || SAME(key, ">") || SAME(key, "≤") ||
+                SAME(key, "≥")) &&
+                       label(v) && strstr(v, "{L}") && strstr(v, "{R}") && strlen(v) < 256
+                   ? TTF_OK
+                   : ttf_validation_error(
+                         d, "math_relation supports = < > ≤ ≥ with a {L}...{R} template");
+    }
+    if (SAME(k, "speech_symbol_prefix")) {
+        *handled = 1;
+        return symbol_key(key) && label(v) && strlen(v) < 256
+                   ? TTF_OK
+                   : ttf_validation_error(d,
+                                          "speech_symbol_prefix requires one symbol and a reading");
+    }
     if (SAME(k, "url_tld")) {
         *handled = 1;
         return wildcard && lower_ascii_key(key, 2, 24) && ttf_validation_enum(v, "0|1")
@@ -239,8 +255,9 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
         if (SAME(k, "speech_symbol") && !symbol_key(key))
             return ttf_validation_error(
                 d, "speech_symbol key must be one punctuation, symbol or number-form code point");
-        if (SAME(k, "math_operator") && !SAME(key, "+"))
-            return ttf_validation_error(d, "math_operator currently supports binary + only");
+        if (SAME(k, "math_operator") && !SAME(key, "+") && !SAME(key, "-") && !SAME(key, "*") &&
+            !SAME(key, "/") && !SAME(key, "×") && !SAME(key, "÷"))
+            return ttf_validation_error(d, "math_operator supports + - * / × ÷");
         if (SAME(k, "speech_character") && (!label(key) || strlen(key) >= 96))
             return ttf_validation_error(
                 d, "speech_character key must contain 1..95 printable UTF-8 bytes");

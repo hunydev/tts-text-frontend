@@ -448,8 +448,10 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
                 if (source)
                     break;
             }
-        if (!rule && e->frontend_options.output_mode == TTF_OUTPUT_SPEECH &&
-            (sem->type == TTF_SEM_EMAIL || sem->type == TTF_SEM_URL)) {
+        /* An address or an expression's own letters are not language evidence. */
+        if (!rule && ((e->frontend_options.output_mode == TTF_OUTPUT_SPEECH &&
+                       (sem->type == TTF_SEM_EMAIL || sem->type == TTF_SEM_URL)) ||
+                      (sem->type == TTF_SEM_SYMBOL && !strcmp(sem->unit, "@expression")))) {
             ttf_pack_input_t electronic_input = in;
             if (scopes[i].end && consumed <= scopes[i].end - i) {
                 electronic_input.tokens = tokens + scopes[i].begin;

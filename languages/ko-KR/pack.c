@@ -306,6 +306,118 @@ static ttf_status_t quantity(const ttf_engine_t *e, const char *value, const cha
 
 static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, const char *surface,
                               size_t length, ttf_buffer_t *out);
+static ttf_status_t expression_number(const ttf_engine_t *e, const char *value, ttf_buffer_t *out);
+static ttf_status_t expression_letter(const ttf_engine_t *e, char letter, ttf_buffer_t *out) {
+    char key[16];
+    const char *label;
+    snprintf(key, sizeof(key), "letter.%c",
+             letter >= 'a' && letter <= 'z' ? letter - 'a' + 'A' : letter);
+    label = ttf_resource_get(e, "phone_letter", "ko-KR", key, NULL);
+    return label ? ttf_buffer_puts(out, label) : TTF_ERESOURCE;
+}
+/* A canonical expression ("3 - 1 = 2") read with editable operator names and a
+   relation template: {L} and {R} are the two sides, and {A/B} picks A after a
+   final consonant (Korean particle), otherwise B. */
+static ttf_status_t expression_side(const ttf_engine_t *e, const char *value, size_t length,
+                                    ttf_buffer_t *out) {
+    size_t at = 0;
+    ttf_status_t st;
+    while (at < length) {
+        char part[48];
+        size_t end = at;
+        while (end < length && value[end] != ' ')
+            ++end;
+        if (end == at || end - at >= sizeof(part))
+            return TTF_EINVAL;
+        memcpy(part, value + at, end - at);
+        part[end - at] = 0;
+        if (at && (st = ttf_buffer_puts(out, " ")) != TTF_OK)
+            return st;
+        if ((part[0] >= '0' && part[0] <= '9') || (part[0] == '-' && part[1]))
+            st = expression_number(e, part, out);
+        else if (!part[1] &&
+                 ((part[0] >= 'a' && part[0] <= 'z') || (part[0] >= 'A' && part[0] <= 'Z')))
+            st = expression_letter(e, part[0], out);
+        else {
+            const char *label = ttf_resource_get(e, "math_operator", "ko-KR", part, NULL);
+            if (!label)
+                return TTF_ERESOURCE;
+            st = ttf_trace_resource(e, "math_operator", "ko-KR", part, part, "expression-operator",
+                                    SIZE_MAX);
+            if (st == TTF_OK)
+                st = ttf_buffer_puts(out, label);
+        }
+        if (st != TTF_OK)
+            return st;
+        at = end < length ? end + 1 : end;
+    }
+    return TTF_OK;
+}
+static int final_consonant(const ttf_buffer_t *out) {
+    size_t start = out->length;
+    uint32_t cp;
+    size_t width;
+    while (start && ((unsigned char)out->data[start - 1] & 0xc0) == 0x80)
+        --start;
+    if (!start || ttf_utf8_decode(out->data + start - 1, out->length - start + 1, &cp, &width) != 1)
+        return 0;
+    return cp >= 0xac00 && cp <= 0xd7a3 && (cp - 0xac00) % 28;
+}
+static ttf_status_t expression(const ttf_engine_t *e, const char *value, ttf_buffer_t *out) {
+    const char *relation = NULL, *template, *p;
+    size_t length = strlen(value), left = length, right = length;
+    ttf_status_t st;
+    static const char *const relations[] = {" = ", " < ", " > ", " ≤ ", " ≥ "};
+    for (size_t i = 0; i < sizeof(relations) / sizeof(relations[0]); ++i) {
+        const char *hit = strstr(value, relations[i]);
+        if (hit) {
+            relation = relations[i];
+            left = (size_t)(hit - value);
+            right = left + strlen(relations[i]);
+        }
+    }
+    if (!relation)
+        return expression_side(e, value, length, out);
+    {
+        char key[8];
+        size_t w = strlen(relation) - 2;
+        memcpy(key, relation + 1, w);
+        key[w] = 0;
+        template = ttf_resource_get(e, "math_relation", "ko-KR", key, NULL);
+        if (!template)
+            return TTF_ERESOURCE;
+        if ((st = ttf_trace_resource(e, "math_relation", "ko-KR", key, key, "expression-relation",
+                                     SIZE_MAX)) != TTF_OK)
+            return st;
+    }
+    for (p = template; *p;) {
+        if (!strncmp(p, "{L}", 3)) {
+            st = expression_side(e, value, left, out);
+            p += 3;
+        } else if (!strncmp(p, "{R}", 3)) {
+            st = expression_side(e, value + right, length - right, out);
+            p += 3;
+        } else if (*p == '{' && strchr(p, '/') && strchr(p, '}') &&
+                   strchr(p, '/') < strchr(p, '}')) {
+            const char *slash = strchr(p, '/'), *close = strchr(p, '}');
+            st = final_consonant(out)
+                     ? ttf_buffer_append(out, p + 1, (size_t)(slash - p - 1))
+                     : ttf_buffer_append(out, slash + 1, (size_t)(close - slash - 1));
+            p = close + 1;
+        } else {
+            st = ttf_buffer_append(out, p, 1);
+            ++p;
+        }
+        if (st != TTF_OK)
+            return st;
+    }
+    return TTF_OK;
+}
+
+static ttf_status_t expression_number(const ttf_engine_t *e, const char *value, ttf_buffer_t *out) {
+    return cardinal(e, value, out);
+}
+
 /* 2.1.3 and 192.168.0.1: dotted numeric parts with an editable part reading and
    separator. A leading-zero part keeps its digits; a v prefix is spelled. */
 static ttf_status_t dotted_numbers(const ttf_engine_t *e, const ttf_semantic_t *s,
@@ -549,6 +661,8 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     }
     case TTF_SEM_SYMBOL: {
         char key[16];
+        if (!strcmp(s->unit, "@expression"))
+            return expression(e, s->value, out);
         if (!strcmp(s->unit, "@math")) {
             const char *label = ttf_resource_get(e, "math_operator", "ko-KR", s->value, NULL);
             if (!label)

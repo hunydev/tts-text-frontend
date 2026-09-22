@@ -609,6 +609,17 @@
         "reason": "Address word evidence, spelling fallback, bare-domain TLD inventory and version/IP part readings are editable project policy; engine agreement does not supply independent linguistic approval."
       },
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/math_hashtag_v21.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Original developer-authored expression/hashtag contracts fixed before executing the candidate; Korean # reading chosen by the project owner; docs/speech-resources.md",
+        "reason": "Operator names, relation templates, particle choice and hashtag prefix readings are editable project policy; engine agreement does not supply independent linguistic approval."
+      },
+      "case_overrides": {}
     }
   ],
   "excluded": [

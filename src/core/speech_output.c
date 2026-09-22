@@ -67,6 +67,21 @@ int ttf_speech_lengthening_span(const ttf_engine_t *e, const char *language, con
     return at == span_length;
 }
 
+/* A word letter (Hangul or Latin) starts right after the symbol. */
+static int word_follows(const char *s, size_t n, const char *right, size_t right_length) {
+    uint32_t cp;
+    size_t width;
+    ttf_script_t script;
+    if (!n) {
+        s = right;
+        n = right_length;
+    }
+    if (!n || ttf_utf8_decode(s, n, &cp, &width) != 1)
+        return 0;
+    script = ttf_script_of(cp);
+    return script == TTF_SCRIPT_HANGUL || script == TTF_SCRIPT_LATIN;
+}
+
 /* `speech_join symbol.<char>` overrides `speech_join symbol`; the default
    separates a symbol name from neighboring words. */
 static int symbol_spaced(const ttf_engine_t *e, const char *language, const char *key) {
@@ -152,6 +167,13 @@ ttf_status_t ttf_speech_output(const ttf_engine_t *e, const ttf_language_pack_t 
                 status = ttf_buffer_append(&out, key, width);
         } else if ((mapped = ttf_resource_get(e, "speech_symbol", lang, key, NULL))) {
             int spaced = symbol_spaced(e, lang, key);
+            const char *prefix = word_follows(text->data + at + width, text->length - at - width,
+                                              right, right_length) &&
+                                         !PREV_SPOKEN()
+                                     ? ttf_resource_get(e, "speech_symbol_prefix", lang, key, NULL)
+                                     : NULL;
+            if (prefix)
+                mapped = prefix;
             status = ttf_trace_resource(e, "speech_symbol", lang, key, key, "final-symbol-mapped",
                                         SIZE_MAX);
             if (status == TTF_OK && spaced && PREV_SPOKEN())

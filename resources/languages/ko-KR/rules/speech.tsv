@@ -4,6 +4,17 @@ speech_join	ko-KR	alphabet	none
 speech_join	ko-KR	symbol	space
 speech_join	ko-KR	symbol.&	none
 math_operator	ko-KR	+	더하기
+math_operator	ko-KR	-	빼기
+math_operator	ko-KR	*	곱하기
+math_operator	ko-KR	×	곱하기
+math_operator	ko-KR	/	나누기
+math_operator	ko-KR	÷	나누기
+# Relation templates; {은/는} follows the final consonant of the left side.
+math_relation	ko-KR	=	{L}{은/는} {R}
+math_relation	ko-KR	<	{L}{은/는} {R}보다 작다
+math_relation	ko-KR	>	{L}{은/는} {R}보다 크다
+math_relation	ko-KR	≤	{L}{은/는} {R}보다 작거나 같다
+math_relation	ko-KR	≥	{L}{은/는} {R}보다 크거나 같다
 speech_symbol	ko-KR	.	닷
 speech_symbol	ko-KR	@	앳
 speech_symbol	ko-KR	-	하이픈
@@ -13,7 +24,8 @@ speech_symbol	ko-KR	/	슬래시
 speech_symbol	ko-KR	?	물음표
 speech_symbol	ko-KR	=	이퀄
 speech_symbol	ko-KR	&	앤
-speech_symbol	ko-KR	#	해시
+# Korean usage reads # as 샵 (project-owner decision 2026-09-22).
+speech_symbol	ko-KR	#	샵
 speech_symbol	ko-KR	%	퍼센트
 speech_symbol	ko-KR	+	플러스
 speech_symbol	ko-KR	~	물결

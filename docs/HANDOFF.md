@@ -43,7 +43,19 @@
   ASan/UBSan 88/88(단독), Release text-evaluation 35/35, browser gate 통과. 외부 영어 출력 동일
   (`benchmark/generated/sproat-v21-electronic-comparison.json`).
 
-다음 순서(재현 완료, 미착수): D `a+b`→aplusb·`3-1=2`·`#해시태그`,
+### D. 수식·비교·해시태그 (2026-09-22, 커밋·미배포)
+
+- 변경: `src/semantic/classifier.c`(`math_expression_end`), ko/en `expression` 렌더러,
+  `src/core/normalize.c`(식의 문맥 중립), `src/core/speech_output.c`(`speech_symbol_prefix`),
+  `C#` semantic_term·사전, `tools/lexicon/manage.py`(`c#` 키 허용).
+- 계약 `tests/evaluation/math_hashtag_v21.jsonl` 37건. 한국어 `#`=샵은 사용자 결정이며
+  final-gate 계약 1건(`해시 해시태그`)을 같은 결정으로 갱신했다.
+- 결과: cycle fixed 28 / unchanged-pass 9 / regressed 0
+  (`artifacts/tn/math-hashtag/comparison/cycle.json`). Debug 101/101, ASan/UBSan 89/89(단독),
+  Release text-evaluation 36/36, browser gate 통과. 외부 영어 결과 파일 동일
+  (`benchmark/generated/sproat-v21-math-comparison.json`).
+
+다음 순서(재현 완료, 미착수):
 E `1~2억대`→일억 대에서 이억 대, F `지하 2F`·`B1층`. 한 번에 한 규칙군씩 진행한다.
 
 ## v0.20에서 마무리한 범위

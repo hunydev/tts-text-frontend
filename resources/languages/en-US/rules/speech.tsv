@@ -2,6 +2,18 @@
 speech_join	en-US	alphabet	space
 speech_join	en-US	symbol	space
 math_operator	en-US	+	plus
+math_operator	en-US	-	minus
+math_operator	en-US	*	times
+math_operator	en-US	×	times
+math_operator	en-US	/	divided by
+math_operator	en-US	÷	divided by
+math_relation	en-US	=	{L} equals {R}
+math_relation	en-US	<	{L} is less than {R}
+math_relation	en-US	>	{L} is greater than {R}
+math_relation	en-US	≤	{L} is less than or equal to {R}
+math_relation	en-US	≥	{L} is greater than or equal to {R}
+# A # directly before a word marks a hashtag.
+speech_symbol_prefix	en-US	#	hashtag
 speech_symbol	en-US	.	dot
 speech_symbol	en-US	@	at
 speech_symbol	en-US	-	hyphen

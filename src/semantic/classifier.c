@@ -311,6 +311,119 @@ static int ascii_web(char c) {
     unsigned char u = (unsigned char)c;
     return u > 32 && u < 127 && c != '<' && c != '>' && c != '"';
 }
+/* Math operators and relations: ASCII or the UTF-8 signs × ÷ − ≤ ≥. Returns
+   the byte width and writes the canonical operator, or 0 when absent. */
+static size_t math_operator_at(const char *s, size_t n, size_t p, const char **op) {
+    static const struct {
+        const char *text, *canonical;
+    } table[] = {{"\xc3\x97", "×"},
+                 {"\xc3\xb7", "÷"},
+                 {"\xe2\x88\x92", "-"},
+                 {"\xe2\x89\xa4", "≤"},
+                 {"\xe2\x89\xa5", "≥"},
+                 {"+", "+"},
+                 {"-", "-"},
+                 {"*", "*"},
+                 {"/", "/"},
+                 {"=", "="},
+                 {"<", "<"},
+                 {">", ">"}};
+    for (size_t i = 0; i < sizeof(table) / sizeof(table[0]); ++i) {
+        size_t w = strlen(table[i].text);
+        if (n - p >= w && !memcmp(s + p, table[i].text, w)) {
+            *op = table[i].canonical;
+            return w;
+        }
+    }
+    return 0;
+}
+static int math_relation(const char *op) {
+    return !strcmp(op, "=") || !strcmp(op, "<") || !strcmp(op, ">") || !strcmp(op, "≤") ||
+           !strcmp(op, "≥");
+}
+/* 3-1=2, 2×3, a+b=c: operands are numbers or single ASCII letters. A plain
+   hyphen or slash is also a range, date or fraction, so without a relation only
+   ×, ÷, * or a letter operand with + make an expression. The canonical form is
+   stored in the value with single spaces between operands and operators. */
+static size_t math_expression_end(const ttf_pack_input_t *in, size_t b, ttf_semantic_t *out) {
+    const char *s = in->text, *op = NULL;
+    size_t n = in->length, p = b, end = b, used = 0, operands = 0, width;
+    int relations = 0, letters = 0, strong = 0, weak = 0;
+    char value[TTF_IR_VALUE_SIZE];
+    if (b && (ascii_letter(s[b - 1]) || digit(s[b - 1]) || s[b - 1] == '.' ||
+              math_operator_at(s, n, b - 1, &op)))
+        return 0;
+    for (;;) {
+        size_t start = p;
+        char operand[48];
+        size_t length = 0;
+        if (p < n && (width = math_operator_at(s, n, p, &op)) && !strcmp(op, "-") &&
+            p + width < n && digit(s[p + width])) {
+            operand[length++] = '-';
+            p += width;
+        }
+        if (p < n && digit(s[p])) {
+            size_t q = integer(s, n, p);
+            if (q < n && s[q] == '.' && q + 1 < n && digit(s[q + 1]))
+                q = integer(s, n, q + 1);
+            if (q - p + length >= sizeof(operand))
+                return 0;
+            memcpy(operand + length, s + p, q - p);
+            length += q - p;
+            p = q;
+        } else if (length == 0 && p < n && ascii_letter(s[p]) &&
+                   !(p + 1 < n && (ascii_letter(s[p + 1]) || digit(s[p + 1])))) {
+            operand[length++] = s[p++];
+            letters = 1;
+        } else
+            return 0;
+        (void)start;
+        if (used + length + 2 >= sizeof(value))
+            return 0;
+        if (used)
+            value[used++] = ' ';
+        memcpy(value + used, operand, length);
+        used += length;
+        ++operands;
+        end = p;
+        p = skip_space(s, n, p);
+        if (p >= n || !(width = math_operator_at(s, n, p, &op)))
+            break;
+        {
+            size_t next = skip_space(s, n, p + width);
+            const char *second = NULL;
+            if (next >= n || (math_operator_at(s, n, next, &second) &&
+                              !(!strcmp(second, "-") && next + 1 < n && digit(s[next + 1]))))
+                break;
+            if (!digit(s[next]) && !ascii_letter(s[next]) && strcmp(second ? second : "", "-"))
+                break;
+            if (math_relation(op))
+                ++relations;
+            else if (!strcmp(op, "*") || !strcmp(op, "×") || !strcmp(op, "÷"))
+                strong = 1;
+            else if (!strcmp(op, "-") || !strcmp(op, "/"))
+                weak = 1;
+            if (used + strlen(op) + 2 >= sizeof(value))
+                return 0;
+            value[used++] = ' ';
+            memcpy(value + used, op, strlen(op));
+            used += strlen(op);
+            p = next;
+        }
+    }
+    if (operands < 2 || relations > 1)
+        return 0;
+    if (!relations && !(strong && !weak) && !(letters && !weak))
+        return 0;
+    if (end < n &&
+        (ascii_letter(s[end]) || digit(s[end]) || s[end] == '%' || s[end] == '$' || s[end] == '_' ||
+         s[end] == '@' || (s[end] == '.' && end + 1 < n && digit(s[end + 1])) ||
+         math_operator_at(s, n, end, &op)))
+        return 0;
+    value[used] = '\0';
+    memcpy(out->value, value, used + 1);
+    return end;
+}
 /* A bare host such as naver.com: ASCII labels whose final label is a declared
    lowercase top-level domain. Returns the end offset, or `begin` when absent. */
 static size_t bare_domain_end(const ttf_pack_input_t *in, size_t begin) {
@@ -902,6 +1015,11 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
         out->lexical_class = TTF_LEX_INITIALISM;
         return finish(in, out, consumed_end, TTF_SEM_INITIALISM, "syntax.web-initialism");
     }
+    if ((q = math_expression_end(in, b, out)) > b) {
+        snprintf(out->unit, sizeof(out->unit), "@expression");
+        return finish(in, out, q, TTF_SEM_SYMBOL, "syntax.math-expression");
+    }
+    out->value[0] = '\0';
     /* Binary plus is distinct from a unary sign. Keep the operator as its
        own IR span; target pack resources decide its reading. */
     if (s[b] == '+') {

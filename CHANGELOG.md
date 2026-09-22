@@ -2,6 +2,14 @@
 
 ## Unreleased — speech final gate
 
+- Read arithmetic expressions with a relation or an unambiguous operator:
+  `3-1=2` → `삼 빼기 일은 이`, `3>2` → `삼은 이보다 크다`, `a+b는` → `에이 더하기 비는`.
+  `math_relation` templates pick 은/는 from the left side; bare `5-3` ranges,
+  `2+1`, dates and phone numbers are unchanged. The expression's own letters are
+  not language evidence.
+- Korean `#` reads `샵` (`#해시태그` → `샵 해시태그`, `C#` → `씨샵`); English uses
+  `speech_symbol_prefix` for hashtags (`#hashtag` → `hashtag hashtag`).
+- Add 37 expression/hashtag contracts; external English results are identical.
 - Read email/URL labels as words when a resource supports it (`electronic_word`,
   then the pronunciation lexicon) and spell the rest: `help@naver.co.kr` →
   `에이치이엘피 앳 네이버 닷 씨오 닷 케이알`, `.com` → `닷 컴`. This replaces the
