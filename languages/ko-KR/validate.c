@@ -140,6 +140,15 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    : ttf_validation_error(d,
                                           "speech_symbol_prefix requires one symbol and a reading");
     }
+    if (SAME(k, "particle_form")) {
+        const char *bar = strchr(v, '|');
+        *handled = 1;
+        return label(key) && strlen(key) < 32 && bar && bar != v && bar[1] && strlen(v) < 96
+                   ? TTF_OK
+                   : ttf_validation_error(
+                         d, "particle_form requires a written particle and consonant|vowel[|rieul] "
+                            "forms");
+    }
     if (SAME(k, "counter_band_before") || SAME(k, "counter_band_after")) {
         *handled = 1;
         return label(key) && strlen(key) < 64 && ttf_validation_enum(v, "band|count")
