@@ -1,0 +1,40 @@
+# Authored deterministic spelling defaults, not independent pronunciation gold.
+speech_join	en-US	alphabet	space
+math_operator	en-US	+	plus
+speech_symbol	en-US	.	dot
+speech_symbol	en-US	@	at
+speech_symbol	en-US	-	hyphen
+speech_symbol	en-US	_	underscore
+speech_symbol	en-US	:	colon
+speech_symbol	en-US	/	slash
+speech_symbol	en-US	?	question mark
+speech_symbol	en-US	=	equals
+speech_symbol	en-US	&	and
+speech_symbol	en-US	#	hash
+speech_symbol	en-US	%	percent
+speech_symbol	en-US	+	plus
+speech_symbol	en-US	~	tilde
+speech_symbol	en-US	!	exclamation mark
+speech_symbol	en-US	$	dollar
+speech_symbol	en-US	*	asterisk
+speech_symbol	en-US	,	comma
+speech_symbol	en-US	;	semicolon
+speech_symbol	en-US	'	apostrophe
+speech_symbol	en-US	(	open parenthesis
+speech_symbol	en-US	)	close parenthesis
+speech_symbol	en-US	[	open bracket
+speech_symbol	en-US	]	close bracket
+speech_symbol	en-US	{	open brace
+speech_symbol	en-US	}	close brace
+speech_symbol	en-US	|	vertical bar
+speech_symbol	en-US	\	backslash
+speech_symbol	en-US	^	caret
+speech_symbol	en-US	`	backtick
+speech_symbol	en-US	<	less than
+speech_symbol	en-US	>	greater than
+speech_symbol	en-US	"	quotation mark
+context_neutral	en-US	web_initialism	1
+unit	en-US	floor.one	floor
+unit	en-US	floor.many	floors
+context_neutral	en-US	alnum_label	1
+alnum_number	en-US	initialism	target-cardinal

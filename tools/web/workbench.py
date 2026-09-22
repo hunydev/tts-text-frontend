@@ -21,10 +21,15 @@ CORPORA = {
     "english-forms-v14": ("영어 통화명·약어·이니셜", "english_forms_v14.jsonl"),
     "korean-counters-v15": ("한국어 서수·횟수·번호", "korean_counters_v15.jsonl"),
     "phone-v18": ("국제전화·내선·계좌번호 구분", "phone_cases_v18.jsonl"),
+    "user-patterns-v20": ("읽기 제어·발화용 출력", "user_patterns_v20.jsonl"),
 }
 DEFAULTS = dict(
     default_language="ko-KR",
     render_policy="phonetic",
+    input_format="plain",
+    output_mode="speech",
+    unreadable="preserve",
+    max_control_bytes=4096,
     sentence_split=True,
     phrase_split=True,
     detailed_trace=True,
@@ -103,6 +108,9 @@ def validate(request, corpus=False):
     for key, allowed in [
         ("default_language", ("ko-KR", "en-US")),
         ("render_policy", ("phonetic", "preserve", "semantic")),
+        ("input_format", ("plain", "annotated")),
+        ("output_mode", ("text", "speech")),
+        ("unreadable", ("preserve", "drop")),
         ("domain", ("none", "finance", "finance-vocabulary")),
     ]:
         if opts[key] not in allowed:
@@ -113,6 +121,7 @@ def validate(request, corpus=False):
     for key in ("first_target", "normal_target", "max_length"):
         integer(opts[key], key, 1, 1000000)
     integer(opts["max_pending_bytes"], "max_pending_bytes", 64, 1048576)
+    integer(opts["max_control_bytes"], "max_control_bytes", 1, MAX_TEXT_BYTES)
     integer(opts["chunk_bytes"], "chunk_bytes", 1, 65536)
     integer(opts["delay_ms"], "delay_ms", 0, 100)
     integer(opts["random_seed"], "random_seed", 0, 2147483647)
@@ -331,13 +340,38 @@ def catalog():
                         text=row["text"],
                         expected=row["expected"],
                         options={
-                            "default_language": row.get("default_language", "ko-KR")
+                            "default_language": row.get("default_language", "ko-KR"),
+                            "output_mode": row.get("output_mode", "text"),
                         },
                         reference_review=reviewed_cases[
                             (corpus_path(key).relative_to(ROOT).as_posix(), row["id"])
                         ],
                     )
                 )
+    control_titles = {
+        "user-v20-literal-ordinal": "지정한 발음으로 치환 · 1{첫}번째",
+        "user-v20-literal-phrase": "띄어쓰기를 포함하는 지정 발음",
+        "user-v20-native-twenty-one": "고유어 수사 · 21{@native}",
+        "user-v20-sino-negative": "한자어 수사 · -12{@sino}",
+        "user-v20-alphabet-store": "영문자 이름 · ABC{@alphabet}마트",
+        "user-v20-email-digits": "이메일의 영문자·숫자 발화",
+        "user-v20-email-text-digits": "이메일 원문 보존과 비교",
+        "user-v20-emoji-zwj-drop": "읽을 수 없는 문자 제거",
+    }
+    if corpus_path("user-patterns-v20").exists():
+        relative = corpus_path("user-patterns-v20").relative_to(ROOT).as_posix()
+        for line in corpus_path("user-patterns-v20").read_text().splitlines():
+            row = json.loads(line)
+            if row["id"] not in control_titles:
+                continue
+            samples.append(dict(
+                id=row["id"], category="읽기 제어·출력", title=control_titles[row["id"]],
+                text=row["text"], expected=row["expected"],
+                options={key: row[key] for key in (
+                    "default_language", "input_format", "output_mode", "unreadable"
+                ) if key in row},
+                reference_review=reviewed_cases[(relative, row["id"])],
+            ))
     example_references = {
         "amount-range": ("finance-v7", "range-krw"),
         "mixed": ("regression", "mixed-ordinal"),

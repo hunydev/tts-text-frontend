@@ -151,6 +151,44 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     *handled = 0;
     if (!wildcard && !SAME(r->language, EN))
         return TTF_OK;
+    if (SAME(k, "speech_preserve")) {
+        *handled = 1;
+        return label(key) && strlen(key) < 96 && ttf_validation_enum(v, "0|1")
+                   ? TTF_OK
+                   : ttf_validation_error(
+                         d,
+                         "speech_preserve requires a 1..95-byte printable UTF-8 key and 0|1 flag");
+    }
+    if (SAME(k, "alnum_number")) {
+        *handled = 1;
+        return SAME(key, "initialism") && ttf_validation_enum(v, "source-digits|target-cardinal")
+                   ? TTF_OK
+                   : ttf_validation_error(
+                         d, "alnum_number supports initialism=source-digits|target-cardinal");
+    }
+    if (SAME(k, "speech_join")) {
+        *handled = 1;
+        return SAME(key, "alphabet") && ttf_validation_enum(v, "none|space")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "speech_join supports alphabet=none|space");
+    }
+    if (SAME(k, "speech_symbol") || SAME(k, "speech_character") || SAME(k, "math_operator")) {
+        *handled = 1;
+        if (SAME(k, "speech_symbol") &&
+            (strlen(key) != 1 || (unsigned char)key[0] <= 32 || (unsigned char)key[0] >= 127 ||
+             (key[0] >= '0' && key[0] <= '9') || (key[0] >= 'A' && key[0] <= 'Z') ||
+             (key[0] >= 'a' && key[0] <= 'z')))
+            return ttf_validation_error(d, "speech_symbol key must be one ASCII punctuation");
+        if (SAME(k, "math_operator") && !SAME(key, "+"))
+            return ttf_validation_error(d, "math_operator currently supports binary + only");
+        if (SAME(k, "speech_character") && (!label(key) || strlen(key) >= 96))
+            return ttf_validation_error(
+                d, "speech_character key must contain 1..95 printable UTF-8 bytes");
+        return label(v) && strlen(v) < 1024
+                   ? TTF_OK
+                   : ttf_validation_error(
+                         d, "speech reading must contain 1..1023 printable UTF-8 bytes");
+    }
     if (SAME(k, "phone_label") || SAME(k, "phone_extension") || SAME(k, "phone_extension_hint")) {
         *handled = 1;
         if (!phone_cue_key(key, !SAME(k, "phone_label")))
@@ -243,7 +281,7 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     }
     if (SAME(k, "context_neutral")) {
         *handled = 1;
-        if (!SAME(key, "dotted_initials"))
+        if (!ttf_validation_enum(key, "dotted_initials|web_initialism|alnum_label"))
             return ttf_validation_error(d, "unknown English context_neutral key");
         return ttf_validation_enum(v, "0|1")
                    ? TTF_OK

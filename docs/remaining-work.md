@@ -342,3 +342,13 @@ RES-02 setup-time 정책 검증과 상세 진단을 구현했다. 기존 공개 
 기록한다. 다음 우선순위는 TRACE-01 target mapper/variant별 상세 출처, 외부
 benchmark의 남은 semiotic class 오류, 한국어 금융·콘텐츠 reference의 독립 검수다.
 검사 대상 schema가 완비됐다는 사실로 전체 언어 품질 완료를 선언하지 않는다.
+
+## v0.20 후속 적용 기록
+
+사용자 사례를 계기로 코드믹스 ALNUM, 공유 금액 범위의 가격대 조사,
+층수 단서, 이항 더하기, 약어 www., 이메일 철자 읽기를 보강했다.
+옵션형 annotated 입력, 최종 문자 처리, 기본 미지원 문자 보존 및 명시적
+제거, trace와 웹 검증 도구를 추가했다. 새 51건 참조와 임의 바이트
+검증은 [실행 기록](research/speech-controls-v20-results.md)에 남긴다.
+이는 사전 coverage, 사람 검수, Unicode 전체 지원이나 운영 성능 과제를
+완료한 것으로 처리하지 않는다.

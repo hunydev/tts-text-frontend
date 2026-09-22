@@ -565,6 +565,17 @@
         "reason": "Digit identity and leading zero preservation are explicit contracts; plus/zero/extension/group readings are editable project policy, not independent linguistic approval."
       },
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/user_patterns_v20.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Original developer-authored written-output contracts; tests/integration/test_user_patterns.py and docs/input-format.md",
+        "reason": "Explicit frontend modes, aliases, pattern values and speech rendering policies fixed before candidate execution; engine agreement does not supply independent linguistic approval."
+      },
+      "case_overrides": {}
     }
   ],
   "excluded": [

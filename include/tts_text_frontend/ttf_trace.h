@@ -24,7 +24,8 @@ typedef struct {
     ttf_trace_disposition_t disposition;
     size_t input_begin, input_end;   /* Absolute original UTF-8 byte offsets. */
     size_t output_begin, output_end; /* Whole span; batch or segment relative. */
-    size_t part_begin, part_end;     /* Chosen pronunciation input part (surface/canonical/verbalized), or SIZE_MAX. */
+    size_t part_begin, part_end;     /* Pronunciation input part, or pre-filter rendered text for
+                                        final-* policy details; SIZE_MAX if absent. */
     size_t phone_index;              /* Phone ordinal, or SIZE_MAX when inapplicable. */
     ttf_resource_layer_t layer;
     int layer_known;

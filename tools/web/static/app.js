@@ -92,6 +92,10 @@ function settings(options = {}) {
   const fields = {
     default_language: "language",
     render_policy: "policy",
+    input_format: "input-format",
+    output_mode: "output-mode",
+    unreadable: "unreadable",
+    max_control_bytes: "max-control",
     domain: "domain",
     first_target: "first-target",
     normal_target: "normal-target",
@@ -134,6 +138,10 @@ function options() {
   return {
     default_language: $("language").value,
     render_policy: $("policy").value,
+    input_format: $("input-format").value,
+    output_mode: $("output-mode").value,
+    unreadable: $("unreadable").value,
+    max_control_bytes: number("max-control"),
     domain: $("domain").value,
     first_target: number("first-target"),
     normal_target: number("normal-target"),

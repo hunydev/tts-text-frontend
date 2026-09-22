@@ -40,7 +40,31 @@ static int pending_word(const ttf_engine_t *e, const char *s, const ttf_token_t 
         key[j] = c >= 'A' && c <= 'Z' ? (char)(c + ('a' - 'A')) : c;
     }
     key[j] = 0;
-    return boundary_resource(e, "boundary_word", key);
+    if (boundary_resource(e, "boundary_word", key))
+        return 1;
+    /* Product/building names may carry a declared cue as their suffix. Keep
+       the whole preceding token until its numeric field can arrive. Exact
+       floor policy, including an explicit zero, takes precedence per pack. */
+    for (size_t pack = 0; pack < e->pack_count; ++pack) {
+        const char *language = e->packs[pack]->language_tag;
+        const char *value = ttf_resource_get(e, "floor_cue_before", language, key, NULL);
+        if (value) {
+            if (!strcmp(value, "1"))
+                return 1;
+            continue;
+        }
+        for (size_t suffix = 0; suffix < j; ++suffix) {
+            if (((unsigned char)key[suffix] & 0xc0u) == 0x80u)
+                continue;
+            value = ttf_resource_get(e, "floor_cue_before_suffix", language, key + suffix, NULL);
+            if (value) {
+                if (!strcmp(value, "1"))
+                    return 1;
+                break;
+            }
+        }
+    }
+    return 0;
 }
 /* Whitespace token prefixes after digits must remain pending even if several
    grouping separators arrive in separate chunks. Retain the whole whitespace
@@ -60,12 +84,34 @@ static int numeric_space_prefix(const ttf_engine_t *e, const char *s, size_t len
     }
     return 0;
 }
+/* A floor alias may obtain its building cue from the following lexical token.
+   Retain its whitespace before that token exists; consulting future cue bytes
+   here would make a one-byte stream choose a different earlier boundary. */
+static int floor_before_space(const ttf_engine_t *e, const char *s, const ttf_token_t *tokens,
+                              size_t index) {
+    const ttf_token_t *alias, *number;
+    char key[2];
+    size_t pack;
+    if (index < 2)
+        return 0;
+    alias = &tokens[index - 1];
+    number = &tokens[index - 2];
+    if (alias->end - alias->begin != 1 || number->script != TTF_SCRIPT_DIGIT ||
+        number->end != alias->begin || number->end - number->begin >= TTF_IR_VALUE_SIZE)
+        return 0;
+    key[0] = s[alias->begin];
+    key[1] = 0;
+    for (pack = 0; pack < e->pack_count; ++pack)
+        if (ttf_resource_get(e, "floor_alias", e->packs[pack]->language_tag, key, NULL))
+            return 1;
+    return 0;
+}
 /* Cue decisions depend only on the prefix before a candidate cut. A complete
    input lets us compute protection ranges in advance, but a key mismatch must
    still protect earlier matching prefixes: the same cut must be chosen when
    the mismatch arrives in a later write. */
-static int cue_match_prefix(const char *s, size_t begin, size_t end, const char *key,
-                            int fold, size_t *after) {
+static int cue_match_prefix(const char *s, size_t begin, size_t end, const char *key, int fold,
+                            size_t *after) {
     size_t p = begin, k = 0;
     while (p < end && key[k]) {
         if (horizontal_space(s[p]) && key[k] == ' ') {
@@ -107,7 +153,7 @@ static size_t cue_scope_end(const char *s, size_t begin, size_t end, int kind,
         else if (kind == 2 && (c == '+' || c == '(' || c == ')'))
             ++p;
         else if (kind != 1 && ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '\'' ||
-                                 (c == '.' && p > begin && s[p - 1] >= '0' && s[p - 1] <= '9')))
+                               (c == '.' && p > begin && s[p - 1] >= '0' && s[p - 1] <= '9')))
             ++p;
         else
             break;
@@ -140,10 +186,11 @@ static void extend_cue_range(const ttf_engine_t *e, const char *s, size_t n, siz
     for (cue = e->boundary_cues; cue; cue = cue->boundary_next) {
         size_t after, end;
         int complete, kind = !strcmp(cue->kind, "identifier_label") ? 1
-                             : !strcmp(cue->kind, "phone_label") ? 2 : 0;
+                             : !strcmp(cue->kind, "phone_label")    ? 2
+                                                                    : 0;
         size_t limit = kind == 1 ? n : title_limit;
-        if (begin >= limit || (s[begin] != cue->key[0] &&
-                              (!kind || ascii_fold(s[begin]) != ascii_fold(cue->key[0]))))
+        if (begin >= limit ||
+            (s[begin] != cue->key[0] && (!kind || ascii_fold(s[begin]) != ascii_fold(cue->key[0]))))
             continue;
         complete = cue_match_prefix(s, begin, limit, cue->key, kind != 0, &after);
         end = complete ? cue_scope_end(s, after, limit, kind, &caches[kind]) : after;
@@ -323,7 +370,17 @@ ttf_status_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, i
         const ttf_token_t *t = &tokens[i];
         if (region_index < region_count && regions[region_index].begin == t->begin) {
             if (!regions[region_index].match.complete) {
-                incomplete_literal_hint(s, n, &regions[region_index], wait);
+                if (regions[region_index].match.control.kind != TTF_CONTROL_NONE) {
+                    wait->kind = TTF_WAIT_QUOTED;
+                    wait->begin = t->begin;
+                    wait->control_limit = e->frontend_options.max_control_bytes;
+                    wait->quote = regions[region_index].match.control.wait_quote;
+                    /* A trailing escape must be rechecked on the next byte,
+                       regardless of which reserved character follows it. */
+                    if (regions[region_index].match.control.kind == TTF_CONTROL_ESCAPE)
+                        wait->kind = TTF_WAIT_NONE;
+                } else
+                    incomplete_literal_hint(s, n, &regions[region_index], wait);
                 goto done;
             }
             ++region_index;
@@ -398,6 +455,7 @@ ttf_status_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, i
                                     s[previous - 1] == '\r'))
                     previous--;
                 if (pending_word(e, s, tokens, i, previous) ||
+                    floor_before_space(e, s, tokens, i) ||
                     (previous >= 2 && s[previous - 1] == ',' && s[previous - 2] >= '0' &&
                      s[previous - 2] <= '9')) {
                     at += w;

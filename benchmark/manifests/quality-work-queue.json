@@ -1,0 +1,319 @@
+{
+  "schema_version": 1,
+  "baseline_release": "0.20.0",
+  "measurement_date": "2026-09-17",
+  "mode": "legacy plain/text; these are not speech-mode accuracy scores",
+  "corpus_sha256": "6b0a0a56a4955166ca1786dc6778ab744e372219cc4d8ab6bcf4d51943c2dd51",
+  "local_report": "benchmark/generated/sproat-v20-final",
+  "results_sha256": "2de855736e266e6c2e29e33d99de013b6d1bb85a425ba43b39aa5ee95b7f60ef",
+  "source": "Sproat development subset; dataset-reference, not independently approved production gold",
+  "class_counts": {
+    "PLAIN": {
+      "dataset-reference": {
+        "total": 34001,
+        "exact": 33860,
+        "unaligned": 40,
+        "accuracy": 0.9958530631452016
+      }
+    },
+    "PUNCT": {
+      "dataset-reference": {
+        "total": 8919,
+        "exact": 0,
+        "unaligned": 10,
+        "accuracy": 0.0
+      }
+    },
+    "LETTERS": {
+      "dataset-reference": {
+        "total": 712,
+        "exact": 174,
+        "unaligned": 0,
+        "accuracy": 0.2443820224719101
+      }
+    },
+    "DATE": {
+      "dataset-reference": {
+        "total": 1463,
+        "exact": 319,
+        "unaligned": 27,
+        "accuracy": 0.21804511278195488
+      }
+    },
+    "CARDINAL": {
+      "dataset-reference": {
+        "total": 536,
+        "exact": 440,
+        "unaligned": 79,
+        "accuracy": 0.8208955223880597
+      }
+    },
+    "MEASURE": {
+      "dataset-reference": {
+        "total": 92,
+        "exact": 76,
+        "unaligned": 3,
+        "accuracy": 0.8260869565217391
+      }
+    },
+    "DECIMAL": {
+      "dataset-reference": {
+        "total": 35,
+        "exact": 26,
+        "unaligned": 2,
+        "accuracy": 0.7428571428571429
+      }
+    },
+    "VERBATIM": {
+      "dataset-reference": {
+        "total": 295,
+        "exact": 0,
+        "unaligned": 2,
+        "accuracy": 0.0
+      }
+    },
+    "MONEY": {
+      "dataset-reference": {
+        "total": 33,
+        "exact": 30,
+        "unaligned": 0,
+        "accuracy": 0.9090909090909091
+      }
+    },
+    "ORDINAL": {
+      "dataset-reference": {
+        "total": 47,
+        "exact": 42,
+        "unaligned": 0,
+        "accuracy": 0.8936170212765957
+      }
+    },
+    "DIGIT": {
+      "dataset-reference": {
+        "total": 35,
+        "exact": 10,
+        "unaligned": 4,
+        "accuracy": 0.2857142857142857
+      }
+    },
+    "ELECTRONIC": {
+      "dataset-reference": {
+        "total": 22,
+        "exact": 0,
+        "unaligned": 0,
+        "accuracy": 0.0
+      }
+    },
+    "TELEPHONE": {
+      "dataset-reference": {
+        "total": 13,
+        "exact": 0,
+        "unaligned": 2,
+        "accuracy": 0.0
+      }
+    },
+    "TIME": {
+      "dataset-reference": {
+        "total": 4,
+        "exact": 1,
+        "unaligned": 0,
+        "accuracy": 0.25
+      }
+    },
+    "ADDRESS": {
+      "dataset-reference": {
+        "total": 4,
+        "exact": 0,
+        "unaligned": 2,
+        "accuracy": 0.0
+      }
+    },
+    "FRACTION": {
+      "dataset-reference": {
+        "total": 2,
+        "exact": 0,
+        "unaligned": 0,
+        "accuracy": 0.0
+      }
+    }
+  },
+  "failure_reasons": {
+    "ADDRESS/dataset-reference": {
+      "other-text-difference": 2,
+      "unaligned": 2
+    },
+    "CARDINAL/dataset-reference": {
+      "exact": 440,
+      "unaligned": 79,
+      "other-text-difference": 17
+    },
+    "DATE/dataset-reference": {
+      "other-text-difference": 419,
+      "casefold-only-difference": 698,
+      "exact": 319,
+      "unaligned": 27
+    },
+    "DECIMAL/dataset-reference": {
+      "exact": 26,
+      "other-text-difference": 7,
+      "unaligned": 2
+    },
+    "DIGIT/dataset-reference": {
+      "unaligned": 4,
+      "other-text-difference": 21,
+      "exact": 10
+    },
+    "ELECTRONIC/dataset-reference": {
+      "other-text-difference": 22
+    },
+    "FRACTION/dataset-reference": {
+      "other-text-difference": 2
+    },
+    "LETTERS/dataset-reference": {
+      "exact": 174,
+      "other-text-difference": 538
+    },
+    "MEASURE/dataset-reference": {
+      "exact": 76,
+      "other-text-difference": 13,
+      "unaligned": 3
+    },
+    "MONEY/dataset-reference": {
+      "other-text-difference": 2,
+      "exact": 30,
+      "casefold-only-difference": 1
+    },
+    "ORDINAL/dataset-reference": {
+      "exact": 42,
+      "other-text-difference": 5
+    },
+    "PLAIN/dataset-reference": {
+      "exact": 33860,
+      "other-text-difference": 101,
+      "unaligned": 40
+    },
+    "PUNCT/dataset-reference": {
+      "other-text-difference": 8909,
+      "unaligned": 10
+    },
+    "TELEPHONE/dataset-reference": {
+      "other-text-difference": 11,
+      "unaligned": 2
+    },
+    "TIME/dataset-reference": {
+      "other-text-difference": 3,
+      "exact": 1
+    },
+    "VERBATIM/dataset-reference": {
+      "other-text-difference": 293,
+      "unaligned": 2
+    }
+  },
+  "queue": [
+    {
+      "id": "FIN-VALUES",
+      "priority": 1,
+      "classes": [
+        "MONEY",
+        "MEASURE",
+        "DECIMAL",
+        "CARDINAL"
+      ],
+      "task": "Inspect monetary/quantity numeric value and alignment first; work on one confirmed parser family.",
+      "start_files": [
+        "src/semantic/classifier.c",
+        "languages/ko-KR/pack.c",
+        "languages/en-US/pack.c"
+      ],
+      "gate": "Existing finance/value/range tests plus authored positive/negative cases; no changed numeric value."
+    },
+    {
+      "id": "KO-REAL-INPUT",
+      "priority": 2,
+      "classes": [
+        "CURRENCY",
+        "RANGE",
+        "COUNTER",
+        "DATE",
+        "TIME",
+        "PHONE"
+      ],
+      "task": "Collect anonymized finance notices and content scripts; select one recurring morphology/unit pattern, not exact sentence patches.",
+      "start_files": [
+        "tests/evaluation",
+        "languages/ko-KR",
+        "resources/languages/ko-KR"
+      ],
+      "gate": "Independent expected text, value/unit IR and byte streaming parity; rights verified before promotion."
+    },
+    {
+      "id": "EN-DATE",
+      "priority": 3,
+      "classes": [
+        "DATE"
+      ],
+      "task": "Separate 698 case-only mismatches from 419 other text differences and27 alignment failures; inspect uncued year vs cardinal ambiguity.",
+      "start_files": [
+        "languages/en-US/date.c",
+        "resources/languages/en-US/rules/dates.tsv"
+      ],
+      "gate": "Dates and ordinary cardinals both retain correct semantics; case folding never replaces exact score."
+    },
+    {
+      "id": "EN-LETTERS",
+      "priority": 4,
+      "classes": [
+        "LETTERS",
+        "VERBATIM",
+        "DIGIT"
+      ],
+      "task": "Group initialisms, dotted forms, letter+number labels and identifier cues; decide text/speech policy before changing resources.",
+      "start_files": [
+        "languages/en-US/abbreviation.c",
+        "languages/en-US/speech.c",
+        "src/pronunciation/foreign.c"
+      ],
+      "gate": "Preserve words, conventional names and User/Customer overrides; measure selected mode separately."
+    },
+    {
+      "id": "EN-ELECTRONIC-PHONE",
+      "priority": 5,
+      "classes": [
+        "ELECTRONIC",
+        "TELEPHONE",
+        "TIME",
+        "ADDRESS",
+        "FRACTION"
+      ],
+      "task": "Inspect one syntax family per change; re-baseline new speech mode before treating text-mode identity as a speech regression.",
+      "start_files": [
+        "src/semantic/phone.c",
+        "src/semantic/classifier.c",
+        "languages/en-US/speech.c"
+      ],
+      "gate": "Complete span, value, context and streaming parity; unsupported ambiguous objects remain explicit."
+    },
+    {
+      "id": "LEX-CONTENT",
+      "priority": 6,
+      "classes": [
+        "WORD",
+        "INITIALISM",
+        "ALNUM_TERM"
+      ],
+      "task": "Collect frequency-ranked fallback words from real finance/content requests; review batches of20-40 pronunciations with source evidence.",
+      "start_files": [
+        "tools/lexicon/manage.py",
+        "tools/lexicon/coverage.py",
+        "lexicons/ko-KR"
+      ],
+      "gate": "Managed source/build check, real context positives/negatives, no auto-promotion of G2P to gold."
+    }
+  ],
+  "not_automatic_fixes": [
+    "PUNCT8919 failures mostlyreflectreference-vs-preservationpolicy",
+    "CASE differences are not pronunciationvalueerrors",
+    "NC or unavailable Korean data must not enter shipped resources",
+    "All937 localreferences still pending independentreview"
+  ]
+}

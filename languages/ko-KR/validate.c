@@ -94,6 +94,44 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     *handled = 0;
     if (!wildcard && !SAME(r->language, KO))
         return TTF_OK;
+    if (SAME(k, "speech_preserve")) {
+        *handled = 1;
+        return label(key) && strlen(key) < 96 && ttf_validation_enum(v, "0|1")
+                   ? TTF_OK
+                   : ttf_validation_error(
+                         d,
+                         "speech_preserve requires a 1..95-byte printable UTF-8 key and 0|1 flag");
+    }
+    if (SAME(k, "alnum_number")) {
+        *handled = 1;
+        return SAME(key, "initialism") && ttf_validation_enum(v, "source-digits|target-cardinal")
+                   ? TTF_OK
+                   : ttf_validation_error(
+                         d, "alnum_number supports initialism=source-digits|target-cardinal");
+    }
+    if (SAME(k, "speech_join")) {
+        *handled = 1;
+        return SAME(key, "alphabet") && ttf_validation_enum(v, "none|space")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "speech_join supports alphabet=none|space");
+    }
+    if (SAME(k, "speech_symbol") || SAME(k, "speech_character") || SAME(k, "math_operator")) {
+        *handled = 1;
+        if (SAME(k, "speech_symbol") &&
+            (strlen(key) != 1 || (unsigned char)key[0] <= 32 || (unsigned char)key[0] >= 127 ||
+             (key[0] >= '0' && key[0] <= '9') || (key[0] >= 'A' && key[0] <= 'Z') ||
+             (key[0] >= 'a' && key[0] <= 'z')))
+            return ttf_validation_error(d, "speech_symbol key must be one ASCII punctuation");
+        if (SAME(k, "math_operator") && !SAME(key, "+"))
+            return ttf_validation_error(d, "math_operator currently supports binary + only");
+        if (SAME(k, "speech_character") && (!label(key) || strlen(key) >= 96))
+            return ttf_validation_error(
+                d, "speech_character key must contain 1..95 printable UTF-8 bytes");
+        return label(v) && strlen(v) < 1024
+                   ? TTF_OK
+                   : ttf_validation_error(
+                         d, "speech reading must contain 1..1023 printable UTF-8 bytes");
+    }
     if (SAME(k, "phone_label") || SAME(k, "phone_extension") || SAME(k, "phone_extension_hint")) {
         *handled = 1;
         if (!phone_cue_key(key, !SAME(k, "phone_label")))
@@ -111,6 +149,30 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "phone reading label must be nonempty, bounded and "
                                              "contain no ASCII controls");
+    }
+    if (SAME(k, "floor_alias")) {
+        *handled = 1;
+        return strlen(key) == 1 && key[0] >= 'A' && key[0] <= 'Z' && SAME(v, "floor")
+                   ? TTF_OK
+                   : ttf_validation_error(
+                         d, "floor_alias requires uppercase ASCII alias and floor identity");
+    }
+    if (SAME(k, "floor_cue_before") || SAME(k, "floor_cue_after") ||
+        SAME(k, "floor_cue_before_suffix")) {
+        *handled = 1;
+        return label(key) && strlen(key) < 96 && !strchr(key, ' ') && ttf_validation_enum(v, "0|1")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "floor cue requires one bounded token and flag 0|1");
+    }
+    if (SAME(k, "native_standalone")) {
+        *handled = 1;
+        if (!decimal_key(key, 2) || !ttf_validation_integer(key, 0, 99, NULL) ||
+            (key[0] == '0' && key[1]))
+            return ttf_validation_error(d, "native_standalone key must be canonical 0..99");
+        return label(v) && strlen(v) < 96
+                   ? TTF_OK
+                   : ttf_validation_error(
+                         d, "native standalone label must contain 1..95 printable bytes");
     }
     if (SAME(k, "context")) {
         if (!ttf_validation_enum(key, "hangul_weight|particle_weight|clause_floor|script_weight")) {
@@ -209,7 +271,7 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
         if (!decimal_key(key, TTF_IR_VALUE_SIZE - 1) || (key[0] == '0' && key[1]))
             return ttf_validation_error(
                 d, "ordinal_first key must be a canonical decimal integer without leading zeros");
-    } else if (SAME(k, "particle") || SAME(k, "quantity_tail")) {
+    } else if (SAME(k, "particle") || SAME(k, "quantity_tail") || SAME(k, "quantity_tail_head")) {
         *handled = 1;
         if ((status = bounded_key(r, SAME(k, "particle") ? 64 : 128, d)) != TTF_OK)
             return status;

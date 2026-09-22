@@ -12,9 +12,9 @@ CI uses `build --check` to reject drift, canonical collisions, missing evidence
 and accidental system activation of the scoped finance dictionary. Customer
 overrides can still be authored directly as TSV or loaded through the public API.
 
-The inventory has 374 entries / 376 keys: 328 system entries and 46 optional
+The inventory has 379 entries / 381 keys: 333 system entries and 46 optional
 finance entries. The 85 source-checked entries have documented source comparisons;
-289 are pending and none is independently human-reviewed. Source checking and
+294 are pending and none is independently human-reviewed. Source checking and
 test conformance do not approve pronunciation quality. The authoring tool currently
 supports the bounded en-US → ko-KR key grammar; the native language-pack ABI remains
 extensible. [Maintenance guide](lexicon-maintenance.ko.md) covers editing, domain
@@ -22,7 +22,7 @@ selection, overrides, review states and a complete test/deployment workflow.
 
 `tools/lexicon/coverage.py` and the web `/lexicon` page use actual span traces to
 report dictionary hits and fallback candidates. They do not promote generated
-fallback spellings into the source dictionary. All 376 managed keys are exercised
+fallback spellings into the source dictionary. All 381 managed keys are exercised
 through the native engine in addition to 40 hand-authored contextual references.
 
 The new immutable TN-rule index prevents pronunciation entries from being scanned

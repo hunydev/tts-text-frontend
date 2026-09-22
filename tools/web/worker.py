@@ -126,7 +126,15 @@ def corpus(request, library, resources):
             dict(
                 mode="verify",
                 text=row["text"],
-                options={"default_language": row["default_language"]},
+                # Historical references describe text mode. New corpus rows
+                # explicitly opt into speech output and annotation parsing.
+                options={
+                    "default_language": row["default_language"],
+                    "input_format": row.get("input_format", "plain"),
+                    "output_mode": row.get("output_mode", "text"),
+                    "unreadable": row.get("unreadable", "preserve"),
+                    "max_control_bytes": row.get("max_control_bytes", 4096),
+                },
             )
         )["options"]
         overrides = [

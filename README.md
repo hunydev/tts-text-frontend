@@ -25,6 +25,54 @@ WiFi를 사용합니다.           → 와이파이를 사용합니다.
 `Apple → 애플` is pronunciation rendering. Source, context and render languages
 remain distinct in the semantic IR and output metadata.
 
+## Continue quality work with another model
+
+Start with [HANDOFF](docs/HANDOFF.md) and the [TN improvement playbook](docs/tn-improvement-playbook.ko.md).
+`python3 tools/quality/tn_cycle.py --help` provides case intake, immutable artifact
+snapshots and same-reference before/after evaluation without an LLM dependency.
+The [measured work queue](benchmark/manifests/quality-work-queue.json) prioritizes
+finance value errors and recurring finance/content input patterns. Work on one
+rule family at a time; pending human review and operating limits remain explicit.
+
+## Explicit readings and final speech text (v0.20)
+
+The web workbench defaults to **speech text**, with unknown Han characters and
+emoji **preserved**. Choose **제거** to drop unregistered characters. This is still
+text output; no speech synthesis or audio evaluation is involved. Legacy C engine
+creation and CLI commands retain `text` mode for compatibility; use
+`--output-mode speech` for electronic-address spelling and the final character pass.
+
+```sh
+build/ttf normalize --output-mode speech 'k7 타고 다닌다'
+# 케이칠 타고 다닌다
+build/ttf normalize --output-mode speech '오늘의 top100'
+# 오늘의 탑백
+build/ttf normalize --output-mode speech '1+1은 귀요미'
+# 일 더하기 일은 귀요미
+build/ttf normalize --output-mode speech '이메일 abc@example.com'
+# 이메일 에이비씨 앳 이엑스에이엠피엘이 닷 씨오엠
+build/ttf normalize --output-mode speech --unreadable drop '가漢🙂나'
+# 가나
+build/ttf normalize --input-format annotated --output-mode speech '1{첫}번째 1{@native} 1{@sino} ABC{@alphabet}마트'
+# 첫번째 하나 일 에이비씨마트
+```
+
+Annotated input is explicit: plain input never interprets reading controls.
+Literal aliases take precedence over lexicons, and grouped aliases such as
+`[[1+1]]{원플러스원}` can cover a phrase or expression. Unknown/malformed patterns
+fail with an error. Streaming retains incomplete controls until they can be
+validated. `inspect --trace` records override and final preserve/drop decisions.
+Protected code, literal aliases and intentionally ambiguous semantic objects
+remain explicit preservation contracts, including in drop mode.
+
+The workbench includes a **읽기 제어·기호·이메일** corpus with 51 independently
+written development references, plus direct controls and arbitrary-byte streaming
+tests. These references still require independent linguistic review.
+See the [input grammar](docs/input-format.md),
+[editable speech resources and reading policies](docs/speech-resources.md),
+[API options](docs/api.md#frontend-input-and-output-options), and
+[verification scope](docs/research/speech-controls-v20-results.md).
+
 ## Named dates and contextual years (v0.13)
 
 The English pack now recognizes month-first and day-first named dates, partial
@@ -98,9 +146,9 @@ build/ttf normalize '금액은 US$15달러입니다.'
 
 ## Managed pronunciation dictionaries (v0.10)
 
-The editable source now lives in `lexicons/`: **374 entries / 376 keys**, including
+The editable source now lives in `lexicons/`: **379 entries / 381 keys**, including
 159 new finance and content entries. Each entry records sources, alternatives,
-scope and review status. Current status is 85 source-checked, 289 pending, and
+scope and review status. Current status is 85 source-checked, 294 pending, and
 zero independently human-reviewed. Dictionary coverage is not pronunciation accuracy.
 
 The web **사전 관리** page at `/lexicon` supports search, evidence inspection, native
@@ -263,7 +311,7 @@ The same `123-456` input has resource-selected behavior:
 
 | Resources | Output |
 | --- | --- |
-| System | 백이십삼 다시 사백오십육 |
+| System | 백이십삼에서 사백오십육 |
 | Finance domain | 일이삼 사오육 |
 | Example customer | 일이삼 번에 사오육 |
 
@@ -322,7 +370,7 @@ Acceptance is based on normalized output text, semantic/language metadata and
 batch/stream equivalence. No speech synthesis or listening comparison is required.
 The text report shows independent expected strings, character differences,
 category scores, resource provenance and fallback paths. The current regression
-suite has 346 golden cases, a 109-case regression corpus, 60 finance/content
+suite has 355 golden cases, a 109-case regression corpus, 60 finance/content
 scenarios, 30 advanced finance/content regressions and 40 literal-preservation
 references, plus 24 repeated-quantity range, 40 content-vocabulary and 30 multiword
 pronunciation cases. These are curated regression checks, not a measurement of accuracy on
@@ -424,7 +472,7 @@ Bank of America가 발표했습니다.
 → 뱅크 오브 아메리카가 발표했습니다.
 
 After Effects를 사용합니다.
-→ 애프터 이펙츠를 사용합니다.
+→ 애프터 이펙트를 사용합니다.
 
 Adobe Premiere Pro를 사용합니다.
 → 어도비 프리미어 프로를 사용합니다.

@@ -33,3 +33,7 @@ currency	en-US	EUR.one	euro
 currency	en-US	EUR.many	euros
 currency	en-US	EUR.minor.one	cent
 currency	en-US	EUR.minor.many	cents
+# Explicit degree mark disambiguates temperature from contextual building F.
+numeric_suffix	*	°F	MEASURE:°F
+unit	en-US	°F.one	degree Fahrenheit
+unit	en-US	°F.many	degrees Fahrenheit

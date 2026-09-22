@@ -211,6 +211,32 @@
             </div>
           </div>
         </div>
+        <div class="config-grid">
+          <label>입력 형식<select id="input-format">
+            <option value="plain">일반 텍스트</option>
+            <option value="annotated">발음 제어 표기 사용</option>
+          </select></label>
+          <label>출력 목적<select id="output-mode">
+            <option value="speech">발화용 텍스트</option>
+            <option value="text">표기 보존 텍스트</option>
+          </select></label>
+          <label>읽을 수 없는 문자<select id="unreadable">
+            <option value="preserve">원문 유지</option>
+            <option value="drop">제거</option>
+          </select></label>
+          <label>제어 표기 상한 (byte)<input id="max-control" type="number"
+            min="1" max="16384" value="4096" /></label>
+        </div>
+        <p class="small" id="frontend-help">
+          발음 제어 표기를 켜면 <code>1{첫}번째</code>, <code>21{@native}</code>,
+          <code>-12{@sino}</code>, <code>ABC{@alphabet}마트</code>를 사용할 수 있습니다.
+          여러 단어는 <code>[[source phrase]]{지정 발음}</code>으로 묶습니다.
+          중괄호 자체는 <code>\{</code>, <code>\}</code>로 입력합니다.
+          발화용 출력은 이메일·URL을 읽을 수 있는 텍스트로 바꾸며,
+          문자 제거 설정은 발화용 출력에서만 적용합니다. 코드·태그·경로는 보호됩니다.
+          <a href="https://github.com/hunydev/tts-text-frontend/blob/main/docs/input-format.md"
+            target="_blank" rel="noopener">입력 문법·오류·출력 정책 안내 ↗</a>
+        </p>
         <details id="stream-settings">
           <summary>문장 / 구절 · 입력 청크 설정</summary>
           <div class="config-grid six">
@@ -271,6 +297,7 @@
             길이 목표는 원문 Unicode 문자 수입니다. 구절 분할을 꺼도 최대 길이에
             따른 안전 분할은 유지됩니다. 코드·미완성 숫자·인용문은 경계 확정까지
             대기할 수 있습니다.
+            발음 제어 표기는 닫는 중괄호까지 기다리며, 미완성 표기는 마지막 flush에서 오류가 됩니다.
           </p>
           <div class="config-grid">
             <label

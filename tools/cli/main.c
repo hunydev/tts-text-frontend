@@ -1,4 +1,5 @@
 #include "tts_text_frontend/ttf.h"
+#include "tts_text_frontend/ttf_frontend_options.h"
 #include "tts_text_frontend/ttf_trace.h"
 #include "tts_text_frontend/ttf_resource_validation.h"
 #include <errno.h>
@@ -25,6 +26,8 @@ static void usage(FILE *out) {
           "Options: --resources DIR --language TAG --domain FILE --customer FILE\n"
           "         --first-target N --normal-target N --max-length N\n"
           "Trace: --trace (inspect or stream-json), --trace-max-events N --trace-max-bytes N\n"
+          "Frontend: --input-format plain|annotated --output-mode text|speech\n"
+          "          --unreadable preserve|drop --max-control-bytes N\n"
           "Stream options: --chunk-bytes N (default 4096)\n",
           out);
 }
@@ -232,6 +235,7 @@ static ttf_status_t read_input(FILE *file, char *buffer, size_t capacity, size_t
 }
 int main(int argc, char **argv) {
     ttf_config_t config;
+    ttf_frontend_options_t frontend;
     ttf_trace_options_t trace_options;
     int is_trace = 0, trace_limit_set = 0;
     ttf_engine_t *engine = NULL;
@@ -272,10 +276,38 @@ int main(int argc, char **argv) {
         return report("allocate", TTF_ENOMEM);
     }
     ttf_config_init(&config);
+    ttf_frontend_options_init(&frontend);
+    frontend.output_mode = TTF_OUTPUT_TEXT;
     ttf_trace_options_init(&trace_options);
     for (i = 2; i < argc; ++i) {
         const char *arg = argv[i];
-        if (!positional_only && !strcmp(arg, "--trace")) {
+        if (!positional_only &&
+            (!strcmp(arg, "--input-format") || !strcmp(arg, "--output-mode") ||
+             !strcmp(arg, "--unreadable") || !strcmp(arg, "--max-control-bytes"))) {
+            int valid = 1;
+            if (++i == argc) {
+                exit_code = report("frontend option", TTF_EINVAL);
+                goto done;
+            }
+            if (!strcmp(arg, "--input-format")) {
+                valid = !strcmp(argv[i], "plain") || !strcmp(argv[i], "annotated");
+                frontend.input_format =
+                    !strcmp(argv[i], "annotated") ? TTF_INPUT_ANNOTATED : TTF_INPUT_PLAIN;
+            } else if (!strcmp(arg, "--output-mode")) {
+                valid = !strcmp(argv[i], "text") || !strcmp(argv[i], "speech");
+                frontend.output_mode =
+                    !strcmp(argv[i], "speech") ? TTF_OUTPUT_SPEECH : TTF_OUTPUT_TEXT;
+            } else if (!strcmp(arg, "--unreadable")) {
+                valid = !strcmp(argv[i], "preserve") || !strcmp(argv[i], "drop");
+                frontend.unreadable_policy =
+                    !strcmp(argv[i], "drop") ? TTF_UNREADABLE_DROP : TTF_UNREADABLE_PRESERVE;
+            } else
+                valid = positive_size(argv[i], &frontend.max_control_bytes);
+            if (!valid) {
+                exit_code = report("frontend option", TTF_EINVAL);
+                goto done;
+            }
+        } else if (!positional_only && !strcmp(arg, "--trace")) {
             is_trace = 1;
         } else if (!positional_only &&
                    (!strcmp(arg, "--trace-max-events") || !strcmp(arg, "--trace-max-bytes"))) {
@@ -368,6 +400,11 @@ int main(int argc, char **argv) {
         if (is_validation)
             validation_json(status, &validation, &diagnostic);
         exit_code = resource_report("create engine", status, &diagnostic);
+        goto done;
+    }
+    status = ttf_engine_set_frontend_options(engine, &frontend);
+    if (status != TTF_OK) {
+        exit_code = report("frontend options", status);
         goto done;
     }
     for (j = 0; j < count; ++j) {

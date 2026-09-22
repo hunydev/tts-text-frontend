@@ -792,6 +792,19 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     if (b >= n)
         return 0;
 
+    /* A numeric-looking keycap is one pictographic object, not a cardinal.
+       Preserve its complete source bytes for the configurable character pass. */
+    if (digit(s[b]) || s[b] == '#' || s[b] == '*') {
+        size_t cluster_end = b + 1;
+        if (n - cluster_end >= 3 && !memcmp(s + cluster_end, "\xef\xb8\x8f", 3))
+            cluster_end += 3;
+        if (n - cluster_end >= 3 && !memcmp(s + cluster_end, "\xe2\x83\xa3", 3)) {
+            cluster_end += 3;
+            snprintf(out->unit, sizeof(out->unit), "@unreadable-cluster");
+            copy_value(out->value, sizeof(out->value), s + b, cluster_end - b);
+            return finish(in, out, cluster_end, TTF_SEM_SYMBOL, "syntax.keycap-cluster");
+        }
+    }
     /* Resource-declared technical spellings may cross script/punctuation
        boundaries. The inventory and source tag belong to language data. */
     if (resource_prefix(in, "semantic_term", b, &rule_value, &end, &layer) &&
@@ -818,6 +831,47 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
             out->layer = layer > out->layer ? layer : out->layer;
             (void)snprintf(out->source_lang, sizeof(out->source_lang), "%s", colon + 1);
             return finish(in, out, end, type, "resource.semantic-term");
+        }
+    }
+    /* A bare web prefix is an initialism. A following ASCII host still takes
+       the complete URL path below. Its dot is an abbreviation marker before an
+       attached declared particle, otherwise it remains sentence punctuation. */
+    if (n - b >= 4 && (s[b] == 'w' || s[b] == 'W') && (s[b + 1] == 'w' || s[b + 1] == 'W') &&
+        (s[b + 2] == 'w' || s[b + 2] == 'W') && s[b + 3] == '.' &&
+        (b + 4 == n || !ascii_web(s[b + 4]))) {
+        size_t consumed_end = b + 3, token = in->index;
+        while (token < in->token_count && in->tokens[token].begin < b + 4)
+            ++token;
+        if (token < in->token_count && in->tokens[token].begin == b + 4 &&
+            in->tokens[token].end - in->tokens[token].begin < 64) {
+            char tail[64];
+            size_t width = in->tokens[token].end - in->tokens[token].begin;
+            memcpy(tail, s + b + 4, width);
+            tail[width] = 0;
+            for (size_t pack = 0; pack < in->engine->pack_count; ++pack)
+                if (ttf_resource_get(in->engine, "particle", in->engine->packs[pack]->language_tag,
+                                     tail, NULL)) {
+                    consumed_end = b + 4;
+                    break;
+                }
+        }
+        snprintf(out->value, sizeof(out->value), "www");
+        out->lexical_class = TTF_LEX_INITIALISM;
+        return finish(in, out, consumed_end, TTF_SEM_INITIALISM, "syntax.web-initialism");
+    }
+    /* Binary plus is distinct from a unary sign. Keep the operator as its
+       own IR span; target pack resources decide its reading. */
+    if (s[b] == '+') {
+        size_t left = b, right = skip_space(s, n, b + 1);
+        while (left && (s[left - 1] == ' ' || s[left - 1] == '\t'))
+            --left;
+        if (right < n && (s[right] == '+' || s[right] == '-'))
+            ++right;
+        if (left && digit(s[left - 1]) && right < n &&
+            (digit(s[right]) || (s[right] == '.' && right + 1 < n && digit(s[right + 1])))) {
+            snprintf(out->value, sizeof(out->value), "+");
+            snprintf(out->unit, sizeof(out->unit), "@math");
+            return finish(in, out, b + 1, TTF_SEM_SYMBOL, "syntax.binary-operator");
         }
     }
     /* Protected lexical objects: retaining their entire surface also prevents

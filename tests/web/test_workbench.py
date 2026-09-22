@@ -61,6 +61,10 @@ try:
         catalog = json.load(response)
     assert catalog["abi_version"] == 1 and len(catalog["samples"]) >= 8
     assert catalog["defaults"]["detailed_trace"] is True
+    assert {key: catalog["defaults"][key] for key in (
+        "input_format", "output_mode", "unreadable", "max_control_bytes"
+    )} == dict(input_format="plain", output_mode="speech", unreadable="preserve", max_control_bytes=4096)
+    assert next(item for item in catalog["corpora"] if item["id"] == "user-patterns-v20")["count"] == 51
     assert catalog["reference_summary"]["human_approved_cases"] == 0
     assert catalog["reference_summary"]["pending_independent_review"] == catalog["reference_summary"]["cases"]
     assert all(item["reference_review"]["review_status"] == "pending-independent-review"
@@ -148,6 +152,34 @@ try:
     assert result["text"] and "WiFi" not in result["text"]
     assert result["spans"][0]["lexicon"] != "lexicon:system"
     assert run("")[0]["text"] == ""
+    # Frontend options traverse HTTP -> worker -> native, and remain request-local.
+    for source, expected in (
+        ("1{첫}번째", "첫번째"), ("21{@native}", "스물하나"),
+        ("-12{@sino}", "마이너스 십이"), ("ABC{@alphabet}마트", "에이비씨마트"),
+        ("[[Bank of America]]{지정 이름}", "지정 이름"),
+        (r"A{\{이름\}}", "{이름}"), (r"\{첫\}", "{첫}"),
+    ):
+        result, _ = run(source, "verify", {"input_format": "annotated", "chunk_bytes": 1}, expected)
+        assert result["expected_match"] and result["verification"]["passed"], result
+    assert run("a1@b2.com")[0]["text"] == "에이일 앳 비이 닷 씨오엠"
+    assert run("a1@b2.com", opts={"output_mode": "text"})[0]["text"] == "a1@b2.com"
+    assert run("가👨‍👩‍👧‍👦漢나", opts={"unreadable": "drop"})[0]["text"] == "가나"
+    assert run("가👨‍👩‍👧‍👦漢나")[0]["text"] == "가👨‍👩‍👧‍👦漢나"
+    assert run("가🙂나", opts={"output_mode": "text", "unreadable": "drop"})[0]["text"] == "가🙂나"
+    for source, extra, message in (
+        ("1{", {}, "invalid argument"),
+        ("1{@unknown}", {}, "invalid argument"),
+        ("A{a{b}}", {}, "invalid argument"),
+        (r"A{\q}", {}, "invalid argument"),
+        ("1{첫}", {"max_control_bytes": 4}, "limit"),
+    ):
+        with post("/api/run", dict(mode="stream", text=source, options={
+            "input_format": "annotated", "chunk_bytes": 1, **extra
+        })) as response:
+            invalid = [json.loads(line) for line in response]
+        assert invalid[-1]["event"] == "error" and message in invalid[-1]["message"], invalid
+        assert not any(event["event"] in ("result", "segment", "end") for event in invalid), invalid
+        checks += 1
     assert run("3개", expected="잘못된 정답")[0]["expected_match"] is False
     # Detailed evidence is enabled by default. Disabling it preserves the old
     # text/span transport, without trace fields or pointers leaking into JSON.
@@ -307,6 +339,11 @@ try:
     assert corpus[-2]["passed"] == 55 and corpus[-2]["failed"] == 0, corpus[-2]
     assert corpus[-2]["pending_independent_review"] == 55 and corpus[-2]["human_approved_cases"] == 0
     checks += 1
+    with post("/api/corpus", {"corpus": "user-patterns-v20"}) as response:
+        corpus = [json.loads(line) for line in response]
+    assert corpus[-2]["passed"] == 51 and corpus[-2]["failed"] == 0, corpus[-2]
+    assert corpus[-2]["pending_independent_review"] == 51 and corpus[-2]["human_approved_cases"] == 0
+    checks += 1
     for body in [
         dict(mode="verify", text="x", options={"chunk_bytes": 0}),
         dict(mode="normalize", text="\0"),
@@ -315,6 +352,12 @@ try:
         dict(mode="normalize", text="x", options={"user_lexicon": "x"}),
         dict(mode="normalize", text="x", options={"detailed_trace": "false"}),
         dict(mode="normalize", text="x", options={"detailed_trace": 1}),
+        dict(mode="normalize", text="x", options={"input_format": "html"}),
+        dict(mode="normalize", text="x", options={"output_mode": "audio"}),
+        dict(mode="normalize", text="x", options={"unreadable": "guess"}),
+        dict(mode="normalize", text="x", options={"max_control_bytes": 0}),
+        dict(mode="normalize", text="x", options={"max_control_bytes": True}),
+        dict(mode="normalize", text="x", options={"max_control_bytes": 16385}),
         dict(mode="stream", text="x", options={"chunk_sizes": [0]}),
         dict(mode="stream", text="x", options={"chunk_sizes": [True]}),
         dict(mode="stream", text="x", options={"chunk_sizes": [1] * 257}),

@@ -45,6 +45,39 @@ Normalize reports status separately from the result. Byte lengths are explicit;
 text is UTF-8. Span boundaries are byte offsets, never character indexes. Output
 text is NUL-terminated in addition to carrying its byte length.
 
+## Frontend input and output options
+
+Include `tts_text_frontend/ttf_frontend_options.h`. This is an additive API;
+`ttf_config_t`, result, span, trace and language-pack ABI v1 layouts are unchanged.
+Initialize `ttf_frontend_options_t` with `ttf_frontend_options_init`, edit the
+fields and call `ttf_engine_set_frontend_options` **before freeze**. The setter
+copies the fields; no caller pointers are retained. Setup requires caller
+synchronization. Frozen engines reject changes with `TTF_ESTATE`.
+
+| Field | Initializer default | Other choice |
+|---|---|---|
+| `input_format` | `TTF_INPUT_PLAIN` | `TTF_INPUT_ANNOTATED` |
+| `output_mode` | `TTF_OUTPUT_SPEECH` | `TTF_OUTPUT_TEXT` |
+| `unreadable_policy` | `TTF_UNREADABLE_PRESERVE` | `TTF_UNREADABLE_DROP` |
+| `max_control_bytes` | 4096 | Positive total bytes per annotated control |
+
+An engine without the setter retains legacy plain/text/preserve behavior. CLI
+also defaults to text; the web workbench selects speech explicitly. Unknown Han
+and emoji preservation is the default in every mode. Drop applies only to the
+speech character pass. Protected literals and explicit aliases retain their
+literal contract; malformed/ambiguous semantic objects remain visible with a
+trace reason instead of being reinterpreted digit by digit.
+
+Annotated controls produce `CUSTOM` spans over the complete original syntax,
+including braces. Literal aliases are decoded once and are not normalized again.
+Pattern source values fit the existing 95-byte IR value; literal aliases may
+be longer within the configured control and pending-buffer limits. Dropped
+characters retain source spans with zero output length. Trace `final-*` policy
+part offsets refer to the pre-filter rendered text within that span; original
+`input_begin/end` and final `output_begin/end` remain the span boundaries.
+
+See [input format](input-format.md) and [speech resources](speech-resources.md).
+
 ## Errors
 
 `TTF_OK` indicates success. Other statuses describe invalid arguments, allocation

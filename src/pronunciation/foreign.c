@@ -124,6 +124,79 @@ static ttf_status_t render_at(const ttf_engine_t *e, const ttf_language_pack_t *
                                        "whole-part-lexicon");
         return st == TTF_OK ? ttf_buffer_puts(out, hit) : st;
     }
+    /* Preserve whole-term overrides above. Otherwise an alphanumeric label
+       consists of spoken word/letter runs and target-language numeric runs. */
+    if (lexical == TTF_LEX_ALNUM_TERM) {
+        size_t pos = 0;
+        int valid = 1, digits = 0;
+        size_t prefix = 0;
+        const char *initialism_policy =
+            ttf_resource_get(e, "alnum_number", target->language_tag, "initialism", NULL);
+        while (prefix < n && text[prefix] >= 'A' && text[prefix] <= 'Z')
+            ++prefix;
+        if (prefix >= 2 && prefix < n &&
+            (text[prefix] == '-' || (text[prefix] >= '0' && text[prefix] <= '9')) &&
+            initialism_policy && !strcmp(initialism_policy, "source-digits"))
+            valid = 0;
+        for (size_t k = 0; k < n; ++k) {
+            unsigned char c = (unsigned char)text[k];
+            if (c >= '0' && c <= '9')
+                digits = 1;
+            else if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '-'))
+                valid = 0;
+        }
+        if (valid && digits) {
+            *layer = TTF_LAYER_COMMON;
+            while (pos < n) {
+                size_t end = pos;
+                if (text[pos] == '-') {
+                    /* The hyphen is a label joiner, not a negative sign. */
+                    ++pos;
+                    continue;
+                }
+                if (text[pos] >= '0' && text[pos] <= '9') {
+                    ttf_semantic_t sem = {0};
+                    while (end < n && text[end] >= '0' && text[end] <= '9')
+                        ++end;
+                    if (end - pos >= sizeof(sem.value))
+                        return TTF_ELIMIT;
+                    sem.struct_size = sizeof(sem);
+                    sem.type = end - pos > 1 && text[pos] == '0' ? TTF_SEM_DIGIT_SEQUENCE
+                                                                 : TTF_SEM_CARDINAL;
+                    memcpy(sem.value, text + pos, end - pos);
+                    ttf_trace_stage(e, TTF_TRACE_POLICY, part_begin + pos, part_begin + end);
+                    st = target->verbalize(e, &sem, text + pos, end - pos, out);
+                    if (st == TTF_OK)
+                        st = ttf_trace_emit(
+                            e, TTF_TRACE_SELECTED, TTF_LAYER_COMMON, 0, target->language_tag,
+                            "decision", "alnum-number", sem.value, sem.value,
+                            sem.type == TTF_SEM_DIGIT_SEQUENCE ? "leading-zero-digits"
+                                                               : "cardinal-label",
+                            SIZE_MAX);
+                } else {
+                    int upper = 1;
+                    char part_trace[64] = {0};
+                    ttf_resource_layer_t part_layer = TTF_LAYER_COMMON;
+                    while (end < n && ((text[end] >= 'a' && text[end] <= 'z') ||
+                                       (text[end] >= 'A' && text[end] <= 'Z'))) {
+                        if (text[end] >= 'a' && text[end] <= 'z')
+                            upper = 0;
+                        ++end;
+                    }
+                    st = render_at(e, source, target, text + pos, end - pos,
+                                   (upper || end - pos == 1) ? TTF_LEX_INITIALISM : TTF_LEX_WORD,
+                                   out, part_trace, &part_layer, part_begin + pos);
+                    if (part_layer > *layer)
+                        *layer = part_layer;
+                }
+                if (st != TTF_OK)
+                    return st;
+                pos = end;
+            }
+            snprintf(trace, 64, "alnum:composed");
+            return TTF_OK;
+        }
+    }
     *layer = TTF_LAYER_COMMON;
     st = TTF_EINVAL;
     if (!target->render_phones && !target->render_graphemes) {

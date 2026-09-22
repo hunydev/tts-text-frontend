@@ -3,6 +3,7 @@
 #include "date.h"
 #include "abbreviation.h"
 #include "identifiers.h"
+#include "speech.h"
 #include "../../src/semantic/phone.h"
 #include "../../src/language/context_memo.h"
 #include "../context_run.h"
@@ -371,6 +372,25 @@ static int neutral_marker(const ttf_pack_input_t *in, size_t index, const char *
         in->text[t->begin] >= 'A' && in->text[t->begin] <= 'Z' && t->end < in->length &&
         in->text[t->end] == '.')
         return 1;
+    if (!strcmp(lower, "www") && t->end < in->length && in->text[t->end] == '.') {
+        const char *web_neutral = res(in->engine, "context_neutral", "web_initialism");
+        size_t after = t->end + 1;
+        if (web_neutral && !strcmp(web_neutral, "1") &&
+            (after == in->length || (unsigned char)in->text[after] <= 32 ||
+             (unsigned char)in->text[after] >= 127))
+            return 1;
+    }
+    if (in->engine->frontend_options.output_mode == TTF_OUTPUT_SPEECH) {
+        const char *alnum_neutral = res(in->engine, "context_neutral", "alnum_label");
+        size_t next = t->end;
+        int after_digit = index && in->tokens[index - 1].end == t->begin &&
+                          in->tokens[index - 1].script == TTF_SCRIPT_DIGIT;
+        if (next + 1 < in->length && in->text[next] == '-')
+            ++next;
+        if (alnum_neutral && !strcmp(alnum_neutral, "1") &&
+            (after_digit || (next < in->length && in->text[next] >= '0' && in->text[next] <= '9')))
+            return 1;
+    }
     /* The exponent marker inside scientific numeric syntax is not an English
        word. The universal classifier remains responsible for validation. */
     if (!strcmp(lower, "e") && index && in->tokens[index - 1].script == TTF_SCRIPT_DIGIT &&
@@ -672,6 +692,77 @@ static ttf_status_t phone(const ttf_engine_t *e, const ttf_semantic_t *s, ttf_bu
     return TTF_OK;
 }
 
+/* Same-language spoken labels keep ordinary words and spell isolated letters
+   or uppercase initialisms. Source verbalization for a foreign target must
+   retain its original atom so the generic composition pipeline can split it. */
+static ttf_status_t spoken_alnum(const ttf_engine_t *e, const char *text, size_t length,
+                                 ttf_buffer_t *out) {
+    size_t pos = 0;
+    int has_digit = 0, emitted = 0, initialism = 0;
+    for (size_t i = 0; i < length; ++i) {
+        unsigned char c = (unsigned char)text[i];
+        if (c >= '0' && c <= '9')
+            has_digit = 1;
+        else if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '-'))
+            return ttf_buffer_append(out, text, length);
+    }
+    if (!has_digit)
+        return ttf_buffer_append(out, text, length);
+    while (pos < length) {
+        size_t end = pos;
+        ttf_status_t status;
+        if (text[pos] == '-') {
+            ++pos;
+            continue;
+        }
+        if (emitted && (status = space(out)) != TTF_OK)
+            return status;
+        if (text[pos] >= '0' && text[pos] <= '9') {
+            char value[TTF_IR_VALUE_SIZE];
+            const char *policy = initialism ? res(e, "alnum_number", "initialism") : NULL;
+            int digit_mode;
+            while (end < length && text[end] >= '0' && text[end] <= '9')
+                ++end;
+            if (end - pos >= sizeof(value))
+                return TTF_ELIMIT;
+            memcpy(value, text + pos, end - pos);
+            value[end - pos] = 0;
+            digit_mode =
+                (end - pos > 1 && text[pos] == '0') || (policy && !strcmp(policy, "source-digits"));
+            ttf_trace_stage(e, TTF_TRACE_POLICY, pos, end);
+            if (policy) {
+                status = ttf_trace_resource(e, "alnum_number", EN, "initialism", value,
+                                            "english-alnum-number-policy", SIZE_MAX);
+                if (status != TTF_OK)
+                    return status;
+            }
+            status = digit_mode ? digits(e, value, out) : numeric(e, value, out);
+            if (status == TTF_OK)
+                status = ttf_trace_emit(e, TTF_TRACE_SELECTED, TTF_LAYER_COMMON, 0, EN, "decision",
+                                        "alnum-number", value, value,
+                                        digit_mode ? "digit-label" : "cardinal-label", SIZE_MAX);
+        } else {
+            int upper = 1;
+            while (end < length && ((text[end] >= 'a' && text[end] <= 'z') ||
+                                    (text[end] >= 'A' && text[end] <= 'Z'))) {
+                if (text[end] >= 'a' && text[end] <= 'z')
+                    upper = 0;
+                ++end;
+            }
+            initialism = upper && end - pos >= 2;
+            if (upper || end - pos == 1)
+                status = ttf_en_speech_spelling(e, text + pos, end - pos, 0, out);
+            else
+                status = ttf_buffer_append(out, text + pos, end - pos);
+        }
+        if (status != TTF_OK)
+            return status;
+        emitted = 1;
+        pos = end;
+    }
+    return TTF_OK;
+}
+
 static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, const char *surface,
                               size_t length, ttf_buffer_t *b) {
     ttf_status_t st;
@@ -679,8 +770,32 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     const char *label;
     unsigned h, min, sec;
     switch (s->type) {
+    case TTF_SEM_ALNUM_TERM:
+        if (e->frontend_options.output_mode == TTF_OUTPUT_SPEECH && !strcmp(s->render_lang, EN))
+            return spoken_alnum(e, surface, length, b);
+        return ttf_buffer_append(b, surface, length);
+    case TTF_SEM_SYMBOL:
+        if (!strcmp(s->unit, "@math")) {
+            label = res(e, "math_operator", s->value);
+            if (!label)
+                return TTF_ERESOURCE;
+            ttf_trace_stage(e, TTF_TRACE_POLICY, 0, strlen(s->value));
+            st = ttf_trace_resource(e, "math_operator", EN, s->value, s->value,
+                                    "binary-operator-reading", SIZE_MAX);
+            return st == TTF_OK ? ttf_buffer_puts(b, label) : st;
+        }
+        return ttf_buffer_append(b, surface, length);
+    case TTF_SEM_CUSTOM:
+        if (!strcmp(s->unit, "@alphabet"))
+            return ttf_en_speech_spelling(e, s->value, strlen(s->value), 0, b);
+        return TTF_EINVAL;
+    case TTF_SEM_EMAIL:
+    case TTF_SEM_URL:
+        return ttf_en_speech_spelling(e, surface, length, 1, b);
     case TTF_SEM_ABBREVIATION:
     case TTF_SEM_INITIALISM:
+        if (!strcmp(s->rule, "syntax.web-initialism"))
+            return ttf_buffer_puts(b, s->value);
         return ttf_en_verbalize_abbreviation(e, s, surface, length, b);
     case TTF_SEM_CARDINAL:
     case TTF_SEM_NUMBER:

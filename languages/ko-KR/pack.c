@@ -4,6 +4,8 @@
 #include "../../src/pronunciation/trace.h"
 #include "../../src/core/internal.h" /* Builtin scalar grammar reuse; not public ABI. */
 #include "identifiers.h"
+#include "speech.h"
+#include "patterns.h"
 #include "counters.h"
 #include "../context_run.h"
 #include "../../src/language/context_memo.h"
@@ -222,6 +224,76 @@ static ttf_status_t native_number(const ttf_engine_t *e, const char *value, ttf_
     return TTF_OK;
 }
 
+/* Explicit controls are deliberately narrower than general TN syntax. */
+static int controlled_decimal(const char *value) {
+    size_t i = 0, digits = 0, first;
+    if (value[i] == '+' || value[i] == '-')
+        ++i;
+    first = i;
+    while (value[i] >= '0' && value[i] <= '9') {
+        ++i;
+        ++digits;
+    }
+    if (!digits)
+        return 0;
+    while (first + 1 < i && value[first] == '0')
+        ++first;
+    if (i - first > 44)
+        return 0;
+    if (value[i] == '.') {
+        size_t first = ++i;
+        while (value[i] >= '0' && value[i] <= '9')
+            ++i;
+        if (i == first)
+            return 0;
+    }
+    return !value[i] && i < TTF_IR_VALUE_SIZE;
+}
+static ttf_status_t standalone_native(const ttf_engine_t *e, const char *value, ttf_buffer_t *out) {
+    unsigned number = 0;
+    size_t i;
+    char key[8];
+    const char *label;
+    if (!*value || strlen(value) > 2)
+        return TTF_EINVAL;
+    for (i = 0; value[i]; ++i) {
+        if (value[i] < '0' || value[i] > '9')
+            return TTF_EINVAL;
+        number = number * 10 + (unsigned)(value[i] - '0');
+    }
+    if (number > 99)
+        return TTF_EINVAL;
+    snprintf(key, sizeof(key), "%u", number);
+    label = ttf_resource_get(e, "native_standalone", "ko-KR", key, NULL);
+    ttf_trace_stage(e, TTF_TRACE_POLICY, 0, strlen(value));
+    if (label) {
+        TRY(ttf_trace_resource(e, "native_standalone", "ko-KR", key, value,
+                               "standalone-native-exact", SIZE_MAX));
+        return ttf_buffer_puts(out, label);
+    }
+    if (!number)
+        return TTF_ERESOURCE;
+    if (number >= 10) {
+        snprintf(key, sizeof(key), "%u", number / 10 * 10);
+        label = ttf_resource_get(e, "native_standalone", "ko-KR", key, NULL);
+        if (!label)
+            return TTF_ERESOURCE;
+        TRY(ttf_trace_resource(e, "native_standalone", "ko-KR", key, value,
+                               "standalone-native-tens", SIZE_MAX));
+        TRY(ttf_buffer_puts(out, label));
+    }
+    if (number % 10) {
+        snprintf(key, sizeof(key), "%u", number % 10);
+        label = ttf_resource_get(e, "native_standalone", "ko-KR", key, NULL);
+        if (!label)
+            return TTF_ERESOURCE;
+        TRY(ttf_trace_resource(e, "native_standalone", "ko-KR", key, value,
+                               "standalone-native-ones", SIZE_MAX));
+        TRY(ttf_buffer_puts(out, label));
+    }
+    return TTF_OK;
+}
+
 static ttf_status_t quantity(const ttf_engine_t *e, const char *value, const char *unit, int native,
                              ttf_buffer_t *out) {
     if (native)
@@ -235,6 +307,17 @@ static ttf_status_t quantity(const ttf_engine_t *e, const char *value, const cha
 static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, const char *surface,
                               size_t length, ttf_buffer_t *out) {
     switch (s->type) {
+    case TTF_SEM_CUSTOM:
+        if (!strcmp(s->unit, "@native"))
+            return standalone_native(e, s->value, out);
+        if (!strcmp(s->unit, "@sino"))
+            return controlled_decimal(s->value) ? cardinal(e, s->value, out) : TTF_EINVAL;
+        if (!strcmp(s->unit, "@alphabet"))
+            return ttf_ko_speech_spelling(e, s->value, strlen(s->value), 0, out);
+        return TTF_EINVAL;
+    case TTF_SEM_EMAIL:
+    case TTF_SEM_URL:
+        return ttf_ko_speech_spelling(e, surface, length, 1, out);
     case TTF_SEM_NUMBER:
     case TTF_SEM_CARDINAL:
         return cardinal(e, s->value, out);
@@ -414,6 +497,15 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     }
     case TTF_SEM_SYMBOL: {
         char key[16];
+        if (!strcmp(s->unit, "@math")) {
+            const char *label = ttf_resource_get(e, "math_operator", "ko-KR", s->value, NULL);
+            if (!label)
+                return TTF_ERESOURCE;
+            ttf_trace_stage(e, TTF_TRACE_POLICY, 0, strlen(s->value));
+            TRY(ttf_trace_resource(e, "math_operator", "ko-KR", s->value, s->value,
+                                   "binary-operator-reading", SIZE_MAX));
+            return ttf_buffer_puts(out, label);
+        }
         if (length < sizeof(key)) {
             memcpy(key, surface, length);
             key[length] = '\0';
@@ -664,8 +756,21 @@ static int quantity_boundary(const ttf_pack_input_t *in, size_t position) {
                 return 0;
             memcpy(key, in->text + position, width);
             key[width] = '\0';
-            return ttf_resource_get(in->engine, "particle", "ko-KR", key, NULL) != NULL ||
-                   ttf_resource_get(in->engine, "quantity_tail", "ko-KR", key, NULL) != NULL;
+            if (ttf_resource_get(in->engine, "particle", "ko-KR", key, NULL) ||
+                ttf_resource_get(in->engine, "quantity_tail", "ko-KR", key, NULL))
+                return 1;
+            /* Productive tails, e.g. price-band 대 + 면/는/입니다, are data.
+               Both parts must be declared; arbitrary word prefixes never qualify. */
+            for (size_t split = 1; split < width; ++split) {
+                char head[64];
+                memcpy(head, key, split);
+                head[split] = 0;
+                if (ttf_resource_get(in->engine, "quantity_tail_head", "ko-KR", head, NULL) &&
+                    (ttf_resource_get(in->engine, "particle", "ko-KR", key + split, NULL) ||
+                     ttf_resource_get(in->engine, "quantity_tail", "ko-KR", key + split, NULL)))
+                    return 1;
+            }
+            return 0;
         }
         if (token->begin >= position)
             break;
@@ -1025,7 +1130,10 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     const char *text = in->text;
     size_t n = in->length, begin = in->tokens[in->index].begin, p, q;
     unsigned year, month, day;
-    size_t identifier = ttf_ko_classify_identifier(in, s);
+    size_t identifier = ttf_ko_classify_floor(in, s);
+    if (identifier)
+        return identifier;
+    identifier = ttf_ko_classify_identifier(in, s);
     if (identifier)
         return identifier;
     identifier = ttf_ko_classify_counter(in, s);

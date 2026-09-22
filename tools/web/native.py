@@ -70,6 +70,12 @@ class Config(C.Structure):
     ]
 
 
+class FrontendOptions(C.Structure):
+    _fields_ = [("struct_size", C.c_uint32), ("abi_version", C.c_uint32),
+                ("input_format", I), ("output_mode", I), ("unreadable_policy", I),
+                ("max_control_bytes", Z)]
+
+
 class ResourceDiagnostic(C.Structure):
     _fields_ = [
         ("struct_size", C.c_uint32), ("layer", I), ("line", Z),
@@ -167,6 +173,15 @@ class Engine:
                 "ttf_resource_load_ex": (I, [P, C.c_char_p, I, C.POINTER(ResourceDiagnostic)]),
                 "ttf_engine_validate_resources": (I, [P, C.POINTER(ResourceValidationReport), C.POINTER(ResourceDiagnostic)]),
             })
+        frontend_keys = {"input_format", "output_mode", "unreadable", "max_control_bytes"}
+        has_frontend = hasattr(self.lib, "ttf_engine_set_frontend_options")
+        if frontend_keys.intersection(options) and not has_frontend:
+            raise ValueError("This native library does not support frontend output/input options")
+        if has_frontend:
+            definitions.update({
+                "ttf_frontend_options_init": (None, [C.POINTER(FrontendOptions)]),
+                "ttf_engine_set_frontend_options": (I, [P, C.POINTER(FrontendOptions)]),
+            })
         self.detailed_trace = bool(options.get("detailed_trace", False))
         self.has_trace = hasattr(self.lib, "ttf_normalize_traced")
         if self.detailed_trace and not self.has_trace:
@@ -209,6 +224,14 @@ class Engine:
         else:
             self.check(self.lib.ttf_engine_create(C.byref(cfg), C.byref(self.handle)))
         try:
+            if has_frontend:
+                frontend = FrontendOptions()
+                self.lib.ttf_frontend_options_init(C.byref(frontend))
+                frontend.input_format = {"plain": 0, "annotated": 1}[options.get("input_format", "plain")]
+                frontend.output_mode = {"text": 0, "speech": 1}[options.get("output_mode", "text")]
+                frontend.unreadable_policy = {"preserve": 0, "drop": 1}[options.get("unreadable", "preserve")]
+                frontend.max_control_bytes = options.get("max_control_bytes", 4096)
+                self.check(self.lib.ttf_engine_set_frontend_options(self.handle, C.byref(frontend)))
             if options.get("domain") in ("finance", "finance-vocabulary"):
                 self.load(resources / "domains/finance/ko-KR/lexicon.tsv", 2)
             if options.get("domain") == "finance":

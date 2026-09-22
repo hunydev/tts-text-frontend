@@ -67,6 +67,7 @@ with tempfile.TemporaryDirectory(prefix="ttf-evaluation-") as temporary:
         assert case["passed"] and case["batch_stream_match"]
         assert len(case["stream_variants"]) == 3
         assert case["batch_normalized"] == case["expected"]
+        assert {key: case[key] for key in module.FRONTEND_DEFAULTS} == module.FRONTEND_DEFAULTS
     apple = next(case for case in report["cases"] if case["id"] == "apple-ko")
     assert apple["metadata"]["lexicon_hit_spans"] == 1
     assert {"source": "en-US", "context": "ko-KR", "render": "ko-KR", "spans": 1} in apple["metadata"]["language_routes"]
@@ -119,6 +120,30 @@ with tempfile.TemporaryDirectory(prefix="ttf-evaluation-") as temporary:
         module.frontend = actual_frontend
     assert summary["mismatches"] == 0 and summary["batch_stream_failures"] == 1 and summary["failed"] == 1
 
+    # Forward explicit frontend controls to BOTH normalization paths and record
+    # their effective values. Legacy rows must not send new flags to old CLIs.
+    control_fields = dict(output_mode="speech", input_format="annotated",
+                          unreadable="drop", max_control_bytes=32)
+    write_case(corpus, dict(id="controlled", text="Apple은 사과입니다.",
+                           expected="애플은 사과입니다.", **control_fields))
+    commands = []
+    def controlled_frontend(command, _):
+        commands.append(command)
+        for field, value in control_fields.items():
+            flag = "--" + field.replace("_", "-")
+            assert command[command.index(flag) + 1] == str(value), command
+        return ("애플은 사과입니다.\n" if command[1] == "normalize" else payload, 0.0)
+    try:
+        module.frontend = controlled_frontend
+        summary = module.evaluate(Namespace(corpus=corpus, ttf=Path(cli), resources=Path(resource_root),
+                                            output_dir=directory / "controlled-run", chunk_bytes=[1]))
+    finally:
+        module.frontend = actual_frontend
+    assert summary["failed"] == 0 and len(commands) == 2
+    controlled = json.loads((directory / "controlled-run/report.json").read_text(encoding="utf-8"))["cases"][0]
+    assert {key: controlled[key] for key in control_fields} == control_fields
+    assert module.frontend_flags({"id": "legacy"}) == []
+
     for bad in ("{", "[]", '{"id":"../escape","text":"a","expected":"a"}',
                 '{"id":"a","text":1,"expected":"a"}',
                 '{"id":"a","text":"a","expected":"a","default_language":null}',
@@ -133,6 +158,10 @@ with tempfile.TemporaryDirectory(prefix="ttf-evaluation-") as temporary:
                     {"expected_spans": [{"surface": "Apple", "unknown_field": "x"}]},
                     {"expected_spans": [{"surface": "Apple", "context_lang": None}]},
                     {"resource_overrides": {}},
+                    {"output_mode": None}, {"output_mode": "phonemes"},
+                    {"input_format": "ssml"}, {"unreadable": "guess"},
+                    {"max_control_bytes": 0}, {"max_control_bytes": True},
+                    {"max_control_bytes": -1}, {"max_control_bytes": "4096"},
                     {"resource_overrides": [{"layer": "invalid", "path": "test.tsv"}]},
                     {"resource_overrides": [{"layer": "domain", "path": "../outside.tsv"}]}):
         write_case(corpus, dict(base, **invalid))

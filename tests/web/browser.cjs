@@ -27,6 +27,10 @@ const path = require("node:path");
   };
   assert.equal(await page.inputValue("#source"), "1~2만 원");
   assert.equal(await page.inputValue("#expected"), "만 원에서 이만 원");
+  assert.equal(await page.inputValue("#input-format"), "plain");
+  assert.equal(await page.inputValue("#output-mode"), "speech");
+  assert.equal(await page.inputValue("#unreadable"), "preserve");
+  assert.equal(await page.inputValue("#max-control"), "4096");
   assert(
     (await page.locator("#sample-review").textContent()).includes(
       "독립 검토 대기",
@@ -37,6 +41,37 @@ const path = require("node:path");
     await page.locator("#output").textContent(),
     "만 원에서 이만 원",
   );
+  // The displayed settings drive the native request; examples select their
+  // required grammar instead of interpreting braces silently in plain mode.
+  await page.selectOption("#sample", "user-v20-literal-ordinal");
+  assert.equal(await page.inputValue("#input-format"), "annotated");
+  await page.click('[data-mode="verify"]');
+  await run();
+  assert.equal(await page.locator("#output").textContent(), "첫번째");
+  assert.equal(await page.locator("#verify-status").textContent(), "모든 분할 일치");
+  for (const [sample, expected] of [
+    ["user-v20-native-twenty-one", "스물하나"],
+    ["user-v20-sino-negative", "마이너스 십이"],
+    ["user-v20-alphabet-store", "에이비씨마트"],
+    ["user-v20-email-digits", "에이일 앳 비이 닷 씨오엠"],
+    ["user-v20-email-text-digits", "a1@b2.com"],
+    ["user-v20-emoji-zwj-drop", "가나"],
+  ]) {
+    await page.selectOption("#sample", sample);
+    await run();
+    assert.equal(await page.locator("#output").textContent(), expected);
+  }
+  await page.selectOption("#input-format", "annotated");
+  await page.fill("#source", "1{@unknown}");
+  await page.click("#run");
+  await page.waitForFunction(() => !document.querySelector("#run").disabled);
+  assert(await page.locator("#notice").evaluate((e) => e.classList.contains("error")));
+  assert((await page.locator("#notice").textContent()).includes("invalid argument"));
+  await page.click('[data-mode="normalize"]');
+  await page.click("#reset");
+  assert.equal(await page.inputValue("#input-format"), "plain");
+  assert.equal(await page.inputValue("#output-mode"), "speech");
+  assert.equal(await page.inputValue("#unreadable"), "preserve");
   await page.fill("#source", "Apple은 사과입니다.");
   await page.uncheck("#expected-enabled");
   await run();
@@ -233,6 +268,10 @@ const path = require("node:path");
   await run();
   assert((await page.locator("#corpus-progress").textContent()).includes("55건 통과, 0건 실패"));
   assert((await page.locator("#corpus-review").textContent()).includes("독립 검토 완료 0건"));
+  await page.selectOption("#corpus", "user-patterns-v20");
+  await run();
+  assert((await page.locator("#corpus-progress").textContent()).includes("51건 통과, 0건 실패"));
+  assert((await page.locator("#corpus-review").textContent()).includes("독립 검토 완료 0건"));
   await page.click('[data-mode="verify"]');
   await page.selectOption("#sample", "phone-v18-phone-v18-en-international-spaces");
   assert.equal(await page.inputValue("#language"), "en-US");
@@ -401,7 +440,7 @@ const path = require("node:path");
   assert.deepEqual(errors, []);
   await browser.close();
   console.log(
-    "Browser: normalize, trace, user lexicon, parity, custom writes, split UTF-8, live callbacks, download, cancel, XSS text, corpora and mobile passed.",
+    "Browser: frontend modes, aliases/patterns, strict errors, speech/email, trace, lexicon, parity, custom writes, split UTF-8, live callbacks, download, cancel, XSS text, corpora and mobile passed.",
   );
 })().catch((e) => {
   console.error(e);

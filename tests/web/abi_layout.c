@@ -1,11 +1,17 @@
 #include "tts_text_frontend/ttf.h"
 #include "tts_text_frontend/ttf_trace.h"
 #include "tts_text_frontend/ttf_resource_validation.h"
+#include "tts_text_frontend/ttf_frontend_options.h"
 #include <stdio.h>
 #define RECORD(type, name) printf("%s %zu\n", name, sizeof(type))
 #define FIELD(type, name, field) printf("%s.%s %zu\n", name, #field, offsetof(type, field))
 int main(void) {
     RECORD(ttf_config_t, "Config");
+    RECORD(ttf_frontend_options_t, "FrontendOptions");
+    FIELD(ttf_frontend_options_t, "FrontendOptions", input_format);
+    FIELD(ttf_frontend_options_t, "FrontendOptions", output_mode);
+    FIELD(ttf_frontend_options_t, "FrontendOptions", unreadable_policy);
+    FIELD(ttf_frontend_options_t, "FrontendOptions", max_control_bytes);
     RECORD(ttf_semantic_t, "Semantic");
     RECORD(ttf_span_t, "Span");
     RECORD(ttf_result_t, "Result");

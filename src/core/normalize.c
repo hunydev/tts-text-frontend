@@ -1,4 +1,5 @@
 #include "internal.h"
+#include "speech_output.h"
 #include "../language/context_memo.h"
 #include "../pronunciation/trace.h"
 ttf_status_t ttf_trace_foreign_lexicon(const ttf_engine_t *, const char *, const char *,
@@ -120,6 +121,92 @@ static ttf_status_t add_span(ttf_result_t *r, const ttf_span_t *span, size_t *ca
     r->spans[r->span_count++] = *span;
     return TTF_OK;
 }
+/* An electronic address is neutral context evidence. Hide its internal Latin
+   tokens for this one routing decision; do not mutate the shared token cache. */
+static const ttf_language_pack_t *electronic_context(const ttf_engine_t *e,
+                                                     const ttf_pack_input_t *in, size_t consumed,
+                                                     char trace[192]) {
+    ttf_pack_input_t neutral = *in;
+    ttf_engine_t view = *e;
+    ttf_token_t *tokens;
+    const ttf_language_pack_t *pack;
+    size_t after = in->index + consumed;
+    if (in->token_count > SIZE_MAX / sizeof(*tokens))
+        return NULL;
+    tokens = malloc(in->token_count * sizeof(*tokens));
+    if (!tokens)
+        return NULL;
+    memcpy(tokens, in->tokens, in->index * sizeof(*tokens));
+    tokens[in->index] = in->tokens[in->index];
+    tokens[in->index].end = in->tokens[after - 1].end;
+    tokens[in->index].script = TTF_SCRIPT_OTHER;
+    memcpy(tokens + in->index + 1, in->tokens + after, (in->token_count - after) * sizeof(*tokens));
+    neutral.tokens = tokens;
+    neutral.token_count -= consumed - 1;
+    view.context_memo = NULL;
+    neutral.engine = &view;
+    snprintf(trace, 192, "electronic-neutral ");
+    pack = context_pack(e, &neutral, trace);
+    free(tokens);
+    return pack;
+}
+static ttf_status_t render_control(const ttf_engine_t *e, const ttf_pack_input_t *in,
+                                   const ttf_control_match_t *control, size_t offset,
+                                   ttf_span_t *span, ttf_buffer_t *output) {
+    const ttf_language_pack_t *context, *source = NULL;
+    ttf_semantic_t *sem = &span->semantic;
+    ttf_token_t *base_tokens = NULL;
+    size_t base_count = 0, base_length = control->base_end - control->base_begin;
+    ttf_buffer_t decoded = {0};
+    ttf_status_t status;
+    context = context_pack(e, in, span->context_trace);
+    if (!context)
+        return TTF_EINVAL;
+    status = ttf_tokenize(in->text + control->base_begin, base_length, &base_tokens, &base_count);
+    if (status != TTF_OK)
+        return status;
+    for (size_t k = 0; k < base_count && !source; ++k)
+        source = script_pack(e, base_tokens[k].script);
+    span->script = base_count ? base_tokens[0].script : TTF_SCRIPT_SYMBOL;
+    free(base_tokens);
+    sem->type = TTF_SEM_CUSTOM;
+    sem->input_begin = span->input_begin = offset + control->begin;
+    sem->input_end = span->input_end = offset + control->end;
+    tag(sem->source_lang, source ? source->language_tag : "und");
+    tag(sem->context_lang, context->language_tag);
+    tag(sem->render_lang, context->language_tag);
+    tag(span->verbalizer, context->language_tag);
+    snprintf(sem->rule, sizeof(sem->rule), "control.%s",
+             control->kind == TTF_CONTROL_PATTERN ? "pattern" : "literal");
+    if (base_length < sizeof(sem->value))
+        memcpy(sem->value, in->text + control->base_begin, base_length);
+    else if (control->kind == TTF_CONTROL_PATTERN)
+        return TTF_ELIMIT;
+    status = ttf_control_decode(in->text, control->payload_begin, control->payload_end, &decoded);
+    if (status != TTF_OK)
+        goto done;
+    ttf_trace_span_begin(e, span->input_begin, span->input_end);
+    ttf_trace_stage(e, TTF_TRACE_POLICY, 0, control->end - control->begin);
+    if (control->kind == TTF_CONTROL_PATTERN) {
+        if (decoded.length >= sizeof(sem->unit)) {
+            status = TTF_ELIMIT;
+            goto done;
+        }
+        memcpy(sem->unit, decoded.data, decoded.length);
+        status = context->verbalize(e, sem, in->text + control->base_begin, base_length, output);
+    } else {
+        snprintf(sem->unit, sizeof(sem->unit), "@literal");
+        status = ttf_buffer_append(output, decoded.data, decoded.length);
+    }
+    ttf_trace_stage(e, TTF_TRACE_POLICY, 0, control->end - control->begin);
+    if (status == TTF_OK)
+        status = ttf_trace_emit(e, TTF_TRACE_SELECTED, TTF_LAYER_USER, 0, context->language_tag,
+                                "input-control", sem->unit, decoded.data ? decoded.data : "",
+                                sem->value, "explicit-input-reading", SIZE_MAX);
+done:
+    ttf_buffer_free(&decoded);
+    return status;
+}
 ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t length, size_t offset,
                               ttf_result_t *out) {
     ttf_context_memo_t memo = {0};
@@ -159,6 +246,25 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
         sem->layer = TTF_LAYER_COMMON;
         if (region_index < region_count && regions[region_index].begin == tokens[i].begin) {
             const ttf_protected_match_t *literal = &regions[region_index++].match;
+            if (literal->control.kind != TTF_CONTROL_NONE) {
+                ttf_pack_input_t control_input = {text, length, tokens, count, i, e};
+                if (scopes[i].end) {
+                    control_input.tokens = tokens + scopes[i].begin;
+                    control_input.token_count = scopes[i].end - scopes[i].begin;
+                    control_input.index -= scopes[i].begin;
+                    snprintf(span.context_trace, sizeof(span.context_trace), "quotation");
+                }
+                span.begin = output.length;
+                st = render_control(e, &control_input, &literal->control, offset, &span, &output);
+                span.end = output.length;
+                ttf_trace_span_finish(e, span.begin, span.end);
+                if (st == TTF_OK)
+                    st = add_span(out, &span, &capacity);
+                if (st != TTF_OK)
+                    goto fail;
+                ++i;
+                continue;
+            }
             sem->input_begin = span.input_begin = tokens[i].begin + offset;
             sem->input_end = span.input_end = literal->end + offset;
             sem->layer = literal->layer;
@@ -223,7 +329,7 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
             phrase_count = classification.token_count;
             consumed = ttf_classify_universal(&classification, sem);
             for (j = 0; j < e->pack_count; j++)
-                if (e->packs[j]->classify) {
+                if (e->packs[j]->classify && strcmp(sem->unit, "@math")) {
                     ttf_semantic_t candidate;
                     size_t n;
                     long candidate_priority = 0;
@@ -339,6 +445,20 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
                 if (source)
                     break;
             }
+        if (!rule && e->frontend_options.output_mode == TTF_OUTPUT_SPEECH &&
+            (sem->type == TTF_SEM_EMAIL || sem->type == TTF_SEM_URL)) {
+            ttf_pack_input_t electronic_input = in;
+            if (scopes[i].end && consumed <= scopes[i].end - i) {
+                electronic_input.tokens = tokens + scopes[i].begin;
+                electronic_input.token_count = scopes[i].end - scopes[i].begin;
+                electronic_input.index -= scopes[i].begin;
+            }
+            context = electronic_context(e, &electronic_input, consumed, span.context_trace);
+            if (!context) {
+                st = TTF_ENOMEM;
+                goto fail;
+            }
+        }
         /* Numeric units convey semantics; an attached unit does not change the
            source language of a neutral number. Ordinal suffixes do carry source. */
         if (sem->type != TTF_SEM_ORDINAL && !foreign_type(sem->type) && !rule)
@@ -416,9 +536,63 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
             ttf_buffer_free(&spoken);
             if (st == TTF_OK && !strcmp(span.lexicon, "preserved:no-renderer"))
                 tag(sem->render_lang, source->language_tag);
-        } else
+        } else if ((sem->type == TTF_SEM_EMAIL || sem->type == TTF_SEM_URL) &&
+                   e->frontend_options.output_mode == TTF_OUTPUT_TEXT)
+            st = ttf_buffer_append(&normalized, text + tokens[i].begin, end - tokens[i].begin);
+        else
             st = renderer->verbalize(e, sem, text + tokens[i].begin, end - tokens[i].begin,
                                      &normalized);
+        if (st == TTF_OK && !strcmp(sem->unit, "@math")) {
+            ttf_buffer_t spaced = {0};
+            size_t begin = tokens[i].begin;
+            if (begin && text[begin - 1] != ' ' && text[begin - 1] != '\t' &&
+                text[begin - 1] != '\n')
+                st = ttf_buffer_puts(&spaced, " ");
+            if (st == TTF_OK)
+                st = ttf_buffer_append(&spaced, normalized.data, normalized.length);
+            if (st == TTF_OK && end < length && text[end] != ' ' && text[end] != '\t' &&
+                text[end] != '\n')
+                st = ttf_buffer_puts(&spaced, " ");
+            ttf_buffer_free(&normalized);
+            normalized = spaced;
+        }
+        if (st == TTF_OK && e->frontend_options.output_mode == TTF_OUTPUT_SPEECH && !rule &&
+            strncmp(span.lexicon, "lexicon:", 8)) {
+            if (sem->type == TTF_SEM_TEXT && strcmp(sem->rule, "identity")) {
+                ttf_trace_stage(e, TTF_TRACE_POLICY, 0, normalized.length);
+                st = ttf_trace_emit(e, TTF_TRACE_SELECTED, TTF_LAYER_COMMON, 0,
+                                    renderer->language_tag, "decision", "semantic-guard", "",
+                                    sem->value, "ambiguous-semantic-preserved", SIZE_MAX);
+            } else if (!strcmp(sem->unit, "@unreadable-cluster")) {
+                ttf_trace_stage(e, TTF_TRACE_POLICY, 0, normalized.length);
+                const char *cluster = normalized.data ? ttf_resource_get(e, "speech_character",
+                                                                         renderer->language_tag,
+                                                                         normalized.data, NULL)
+                                                      : NULL;
+                if (cluster) {
+                    st = ttf_trace_resource(e, "speech_character", renderer->language_tag,
+                                            normalized.data, normalized.data,
+                                            "final-cluster-mapped", SIZE_MAX);
+                    ttf_buffer_free(&normalized);
+                    if (st == TTF_OK)
+                        st = ttf_buffer_puts(&normalized, cluster);
+                } else {
+                    st = ttf_trace_emit(e, TTF_TRACE_SELECTED, TTF_LAYER_COMMON, 0,
+                                        renderer->language_tag, "decision", "unreadable-cluster",
+                                        "", normalized.data,
+                                        e->frontend_options.unreadable_policy == TTF_UNREADABLE_DROP
+                                            ? "final-unreadable-dropped"
+                                            : "final-unreadable-preserved",
+                                        SIZE_MAX);
+                    if (e->frontend_options.unreadable_policy == TTF_UNREADABLE_DROP) {
+                        normalized.length = 0;
+                        if (normalized.data)
+                            normalized.data[0] = 0;
+                    }
+                }
+            } else
+                st = ttf_speech_output(e, renderer, &normalized);
+        }
         if (st == TTF_OK)
             st = ttf_trace_status(e);
         if (st != TTF_OK) {

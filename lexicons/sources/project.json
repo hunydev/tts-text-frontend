@@ -16,6 +16,14 @@
       "kind": "official-pronunciation",
       "checked_at": "2026-09-16",
       "note": "Official English pronunciation guide post-GRES-que-ell; Korean transcription is an editorial inference, not attested here."
+    },
+    {
+      "id": "project-pattern-policy-v020",
+      "title": "Project general lexical/numeric pattern policy v0.20",
+      "url": "https://github.com/hunydev/tts-text-frontend",
+      "kind": "editorial-policy",
+      "checked_at": "2026-09-17",
+      "note": "Developer-authored provisional pronunciation policy for top + number composition. No external source or independent human pronunciation approval is asserted."
     }
   ]
 }

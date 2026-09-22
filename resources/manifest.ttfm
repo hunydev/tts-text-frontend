@@ -33,3 +33,8 @@ common/phone.tsv
 languages/en-US/rules/phone.tsv
 languages/en-US/rules/identifiers.tsv
 languages/ko-KR/rules/phone.tsv
+languages/ko-KR/rules/speech.tsv
+languages/en-US/rules/speech.tsv
+languages/ko-KR/rules/patterns.tsv
+
+common/speech.tsv

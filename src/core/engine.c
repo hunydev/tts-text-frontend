@@ -149,6 +149,9 @@ ttf_status_t ttf_engine_create_ex(const ttf_config_t *cfg, ttf_engine_t **out,
     if (!e)
         return TTF_ENOMEM;
     e->config = *cfg;
+    ttf_frontend_options_init(&e->frontend_options);
+    e->frontend_options.output_mode = TTF_OUTPUT_TEXT;
+    e->frontend_options.unreadable_policy = TTF_UNREADABLE_PRESERVE;
     e->resource_root =
         ttf_strdup(cfg->resource_root ? cfg->resource_root : TTF_DEFAULT_RESOURCE_ROOT);
     e->default_language = ttf_strdup(cfg->default_language);

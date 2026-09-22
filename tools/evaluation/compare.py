@@ -8,7 +8,7 @@ import json
 from pathlib import Path
 import sys
 
-from evaluate import EvaluationError, sha256, summarize, write_json
+from evaluate import EvaluationError, frontend_settings, sha256, summarize, write_json
 
 
 REFERENCE_FIELDS = ("text", "expected", "category", "default_language", "resource_overrides",
@@ -30,6 +30,7 @@ def read_report(path: Path) -> dict:
         if not isinstance(case, dict) or not isinstance(case.get("id"), str) or case["id"] in ids:
             raise EvaluationError(f"{path}: invalid or duplicate case id")
         ids.add(case["id"])
+        frontend_settings(case)
         for field in REFERENCE_FIELDS + ("normalized", "passed", "matches_expected",
                                          "batch_stream_match", "metadata_failures", "difference", "metadata"):
             if field not in case:
@@ -64,12 +65,14 @@ def compare(before: dict, after: dict) -> dict:
     rows = []
     for key in sorted(old):
         first, second = old[key], new[key]
-        if any(first[field] != second[field] for field in REFERENCE_FIELDS):
+        if (any(first[field] != second[field] for field in REFERENCE_FIELDS) or
+                frontend_settings(first) != frontend_settings(second)):
             raise EvaluationError(f"{key}: references or configuration changed; comparison refused")
         status = ("unchanged_pass" if first["passed"] and second["passed"] else
                   "regressed" if first["passed"] else
                   "fixed" if second["passed"] else "remaining_failure")
         rows.append({"id": key, "category": second["category"], "status": status,
+                     "frontend_settings": frontend_settings(second),
                      "text": second["text"], "expected": second["expected"],
                      "before": first["normalized"], "after": second["normalized"],
                      "before_errors": first["difference"]["character_edit_distance"],

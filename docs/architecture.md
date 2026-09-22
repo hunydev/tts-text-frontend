@@ -474,3 +474,35 @@ including malformed numeric prefixes that could otherwise be split and reinterpr
 as quantities. Newlines terminate extension scope. Literal protection and established
 calendar ownership remain ahead of phone inference. Explicit financial identifiers
 veto phone inference, and bare signed quantities retain numeric meaning.
+
+## v0.20 reading controls and final text policy
+
+```mermaid
+flowchart TD
+  A[UTF-8 input] --> B[Plain or annotated scanner]
+  B --> C[Shared token and protected-region view]
+  C --> D[Context router and semantic classifier]
+  D --> E[Semantic IR]
+  E --> F[Language-pack verbalizer and pronunciation pipeline]
+  E --> G[Explicit literal alias]
+  F --> H[Speech character policy]
+  H --> I[Text spans and trace]
+  G --> I
+  I --> J[Committed segment callback]
+```
+
+The opt-in annotated grammar produces language-independent CUSTOM IR; pattern
+names are dispatched to the context pack. Literal aliases are exact output.
+Their payload never becomes context evidence. Electronic addresses and configured
+alphanumeric labels inherit context in speech mode. Whole pronunciation lexicons
+precede compositional label fallback; word/single-letter prefixes and numeric
+parts then use existing pack callbacks.
+
+The optional speech pass is a resource consumer, with no language-pair branches.
+Supported scripts and prosodic punctuation survive; declared characters/symbols
+have explicit readings; unregistered characters preserve by default or drop by
+request. This is not a full Unicode grapheme segmenter. Keycap emoji are protected
+as a complete semantic object so their digit is never separately spoken.
+Intentional semantic guards and protected literals stay visible. The pass does
+not certify linguistic accuracy or silently turn an ambiguous identifier into a
+quantity. See [reading policies](speech-resources.md) and [grammar](input-format.md).

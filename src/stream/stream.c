@@ -40,6 +40,13 @@ static int waiting_for_literal(ttf_stream_t *s, size_t valid) {
     s->wait_scanned = valid;
     return 1;
 }
+static int control_limit_exceeded(const ttf_stream_t *s) {
+    /* Count raw input bytes, including an incomplete UTF-8 suffix. Subtraction
+       avoids overflow for caller-selected SIZE_MAX limits. Only a known-open
+       control owns this bound; closed controls may precede arbitrary text. */
+    return s->wait.control_limit && s->wait.begin <= s->pending.length &&
+           s->pending.length - s->wait.begin > s->wait.control_limit;
+}
 static ttf_status_t drain(ttf_stream_t *s, int final) {
     while (s->pending.length) {
         size_t valid = s->validated, w, boundary;
@@ -60,14 +67,14 @@ static ttf_status_t drain(ttf_stream_t *s, int final) {
         if (final && valid < s->pending.length)
             return TTF_EUTF8;
         if (!final && waiting_for_literal(s, valid))
-            return TTF_OK;
+            return control_limit_exceeded(s) ? TTF_ELIMIT : TTF_OK;
         st = ttf_next_boundary(s->engine, s->pending.data, valid, final, s->segments == 0,
                                &boundary, &s->wait);
         s->wait_scanned = valid;
         if (st != TTF_OK)
             return st;
         if (!boundary)
-            return TTF_OK;
+            return control_limit_exceeded(s) ? TTF_ELIMIT : TTF_OK;
         st = ttf_process_unit(s->engine, s->pending.data, boundary, s->input_offset, &result);
         if (st == TTF_OK)
             st = ttf_trace_status(s->engine);

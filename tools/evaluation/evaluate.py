@@ -24,6 +24,33 @@ SPAN_FIELDS = ("script", "source_lang", "context_lang", "render_lang", "semantic
                "value", "secondary", "unit", "rule", "resource_layer", "pronunciation_layer", "lexicon",
                "verbalizer", "context_trace")
 CHECK_FIELDS = set(SPAN_FIELDS) | {"normalized"}
+FRONTEND_DEFAULTS = {"output_mode": "text", "input_format": "plain",
+                     "unreadable": "preserve", "max_control_bytes": 4096}
+
+
+def frontend_settings(case: dict) -> dict:
+    """Effective legacy-compatible settings; missing fields keep old reports valid."""
+    result = dict(FRONTEND_DEFAULTS)
+    for field, choices in (("output_mode", ("text", "speech")),
+                           ("input_format", ("plain", "annotated")),
+                           ("unreadable", ("preserve", "drop"))):
+        if field in case:
+            if not isinstance(case[field], str) or case[field] not in choices:
+                raise EvaluationError(f"{field}: expected {'|'.join(choices)}")
+            result[field] = case[field]
+    if "max_control_bytes" in case:
+        value = case["max_control_bytes"]
+        if type(value) is not int or value <= 0:
+            raise EvaluationError("max_control_bytes: expected a positive integer")
+        result["max_control_bytes"] = value
+    return result
+
+
+def frontend_flags(case: dict) -> list[str]:
+    """Only explicit options are sent, so old corpora still run on old CLIs."""
+    settings = frontend_settings(case)
+    return [value for field in FRONTEND_DEFAULTS if field in case
+            for value in ("--" + field.replace("_", "-"), str(settings[field]))]
 
 
 def integer(value: object, field: str) -> int:
@@ -69,6 +96,7 @@ def read_corpus(path: Path) -> list[dict]:
         case.setdefault("default_language", "ko-KR")
         case.setdefault("notes", "")
         case.setdefault("category", "uncategorized")
+        frontend_settings(case)
         if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_/-]{0,79}", case["category"]):
             raise EvaluationError(f"corpus line {number}: invalid category")
         if not re.fullmatch(r"[A-Za-z]{2,8}(?:-[A-Za-z0-9]{1,8})*", case["default_language"]):
@@ -337,7 +365,8 @@ def evaluate(args: argparse.Namespace) -> dict:
         directory.mkdir()
         input_file = directory / "input.txt"
         input_file.write_bytes(case["text"].encode("utf-8"))
-        flags = ["--resources", str(resources), "--language", case["default_language"]]
+        flags = ["--resources", str(resources), "--language", case["default_language"],
+                 *frontend_flags(case)]
         for override in case["resource_overrides"]:
             resource_path = (resources / override["path"]).resolve(strict=True)
             try:
@@ -369,7 +398,8 @@ def evaluate(args: argparse.Namespace) -> dict:
         normalized = variants[0]["normalized"]
         parity = all(variant["matches_batch"] for variant in variants)
         matches = normalized == case["expected"]
-        results.append(dict(case, normalized=normalized, batch_normalized=batch, matches_expected=matches,
+        recorded_case = dict(case, **frontend_settings(case))
+        results.append(dict(recorded_case, normalized=normalized, batch_normalized=batch, matches_expected=matches,
                             batch_stream_match=parity, metadata_failures=metadata_failures,
                             passed=matches and parity and not metadata_failures,
                             difference=text_difference(case["expected"], normalized),

@@ -11,3 +11,5 @@ unit	ko-KR	MW	메가와트
 unit	ko-KR	Wh_per_km	와트시
 quantity_prefix	ko-KR	Wh_per_km	킬로미터당 
 unit	ko-KR	square_km	제곱킬로미터
+unit	ko-KR	°F	도
+quantity_prefix	ko-KR	°F	화씨 

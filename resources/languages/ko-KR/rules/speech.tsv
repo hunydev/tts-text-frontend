@@ -1,0 +1,55 @@
+# Authored deterministic spelling defaults, not independent pronunciation gold.
+speech_join	ko-KR	alphabet	none
+math_operator	ko-KR	+	더하기
+speech_symbol	ko-KR	.	닷
+speech_symbol	ko-KR	@	앳
+speech_symbol	ko-KR	-	하이픈
+speech_symbol	ko-KR	_	언더스코어
+speech_symbol	ko-KR	:	콜론
+speech_symbol	ko-KR	/	슬래시
+speech_symbol	ko-KR	?	물음표
+speech_symbol	ko-KR	=	이퀄
+speech_symbol	ko-KR	&	앤
+speech_symbol	ko-KR	#	해시
+speech_symbol	ko-KR	%	퍼센트
+speech_symbol	ko-KR	+	플러스
+speech_symbol	ko-KR	~	물결
+speech_symbol	ko-KR	!	느낌표
+speech_symbol	ko-KR	$	달러
+speech_symbol	ko-KR	*	별표
+speech_symbol	ko-KR	,	쉼표
+speech_symbol	ko-KR	;	세미콜론
+speech_symbol	ko-KR	'	작은따옴표
+speech_symbol	ko-KR	(	여는 괄호
+speech_symbol	ko-KR	)	닫는 괄호
+speech_symbol	ko-KR	[	여는 대괄호
+speech_symbol	ko-KR	]	닫는 대괄호
+speech_symbol	ko-KR	{	여는 중괄호
+speech_symbol	ko-KR	}	닫는 중괄호
+speech_symbol	ko-KR	|	버티컬바
+speech_symbol	ko-KR	\	백슬래시
+speech_symbol	ko-KR	^	캐럿
+speech_symbol	ko-KR	`	백틱
+speech_symbol	ko-KR	<	작다
+speech_symbol	ko-KR	>	크다
+speech_symbol	ko-KR	"	큰따옴표
+native_standalone	ko-KR	0	영
+native_standalone	ko-KR	1	하나
+native_standalone	ko-KR	2	둘
+native_standalone	ko-KR	3	셋
+native_standalone	ko-KR	4	넷
+native_standalone	ko-KR	5	다섯
+native_standalone	ko-KR	6	여섯
+native_standalone	ko-KR	7	일곱
+native_standalone	ko-KR	8	여덟
+native_standalone	ko-KR	9	아홉
+native_standalone	ko-KR	10	열
+native_standalone	ko-KR	20	스물
+native_standalone	ko-KR	30	서른
+native_standalone	ko-KR	40	마흔
+native_standalone	ko-KR	50	쉰
+native_standalone	ko-KR	60	예순
+native_standalone	ko-KR	70	일흔
+native_standalone	ko-KR	80	여든
+native_standalone	ko-KR	90	아흔
+alnum_number	ko-KR	initialism	source-digits
