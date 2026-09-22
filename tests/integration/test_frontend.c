@@ -224,10 +224,12 @@ static void resources(void) {
         CHECK(!strcmp(result.spans[0].verbalizer, "en-US"));
     }
     ttf_result_free(&result);
-    expect(engine, "alpha는 단어입니다.", "고객는 단어입니다.");
+        /* Particle agreement (2026-09-22): a particle written against a reading
+       takes the form that reading requires. */
+    expect(engine, "alpha는 단어입니다.", "고객은 단어입니다.");
     expect(engine, "beta gamma는 단어입니다.", "긴일치는 단어입니다.");
-    expect(engine, "X12는 값입니다.", "정확는 값입니다.");
-    expect(engine, "X99는 값입니다.", "패턴는 값입니다.");
+    expect(engine, "X12는 값입니다.", "정확은 값입니다.");
+    expect(engine, "X99는 값입니다.", "패턴은 값입니다.");
     ttf_engine_destroy(engine);
     engine = make_engine("ko-KR", 0);
     if (!engine)

@@ -51,7 +51,7 @@ SCENARIOS = (
     # Target pronunciation lexicons still precede every source phone dictionary.
     ("Apple은 사과입니다.", "Apple", "애플은 사과입니다.", "lexicon:system", "system",
      ((3, "pronunciation\ten-US\tapple\tAH S\n"),)),
-    ("abacus는 표기입니다.", "abacus", "관용형는 표기입니다.", "lexicon:domain", "domain",
+    ("abacus는 표기입니다.", "abacus", "관용형은 표기입니다.", "lexicon:domain", "domain",
      ((2, "lexicon\tko-KR\ten-US:abacus\t관용형\n"),
       (3, "pronunciation\ten-US\tabacus\tAH S\n"))),
 )

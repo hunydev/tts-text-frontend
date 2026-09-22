@@ -968,11 +968,32 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
         size_t value_end = integer(s, n, b + 1);
         uint32_t cp;
         size_t width;
-        if (value_end - b - 1 < sizeof(out->value) &&
-            (value_end == n ||
-             (ttf_utf8_decode(s + value_end, n - value_end, &cp, &width) == 1 &&
-              ttf_script_of(cp) != TTF_SCRIPT_HANGUL && ttf_script_of(cp) != TTF_SCRIPT_LATIN &&
-              ttf_script_of(cp) != TTF_SCRIPT_DIGIT))) {
+        int tail_ok = value_end == n;
+        if (!tail_ok && ttf_utf8_decode(s + value_end, n - value_end, &cp, &width) == 1) {
+            ttf_script_t script = ttf_script_of(cp);
+            tail_ok = script != TTF_SCRIPT_HANGUL && script != TTF_SCRIPT_LATIN &&
+                      script != TTF_SCRIPT_DIGIT;
+            /* A declared particle attached to the position is still the tail. */
+            if (!tail_ok && script == TTF_SCRIPT_HANGUL) {
+                size_t token = in->index;
+                while (token < in->token_count && in->tokens[token].begin < value_end)
+                    ++token;
+                if (token < in->token_count && in->tokens[token].begin == value_end &&
+                    in->tokens[token].end - value_end < 32) {
+                    char tail[32];
+                    size_t width_tail = in->tokens[token].end - value_end;
+                    memcpy(tail, s + value_end, width_tail);
+                    tail[width_tail] = 0;
+                    for (size_t pack = 0; pack < in->engine->pack_count; ++pack)
+                        if (ttf_resource_get(in->engine, "particle",
+                                             in->engine->packs[pack]->language_tag, tail, NULL)) {
+                            tail_ok = 1;
+                            break;
+                        }
+                }
+            }
+        }
+        if (value_end - b - 1 < sizeof(out->value) && tail_ok) {
             copy_value(out->value, sizeof(out->value), s + b + 1, value_end - b - 1);
             snprintf(out->unit, sizeof(out->unit), "@number-sign");
             return finish(in, out, value_end, TTF_SEM_SYMBOL, "syntax.number-sign");

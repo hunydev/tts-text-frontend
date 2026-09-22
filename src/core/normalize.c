@@ -207,6 +207,78 @@ done:
     ttf_buffer_free(&decoded);
     return status;
 }
+/* A declared particle written against the reading stays attached to it. */
+static int following_particle(const ttf_engine_t *e, const ttf_language_pack_t *renderer,
+                              const char *text, size_t n) {
+    char key[32];
+    size_t width = 0;
+    while (width < n && width + 1 < sizeof(key)) {
+        uint32_t cp;
+        size_t step;
+        if (ttf_utf8_decode(text + width, n - width, &cp, &step) != 1 ||
+            ttf_script_of(cp) != TTF_SCRIPT_HANGUL || width + step + 1 >= sizeof(key))
+            break;
+        width += step;
+    }
+    if (!width)
+        return 0;
+    memcpy(key, text, width);
+    key[width] = 0;
+    return ttf_resource_get(e, "particle", renderer->language_tag, key, NULL) != NULL;
+}
+
+/* Korean-style particle agreement: a written particle that stands alone after a
+   normalized reading takes the form the spoken text requires. The alternation
+   table and forms are resources, so the mechanism stays language independent. */
+static ttf_status_t particle_agreement(const ttf_engine_t *e, const ttf_language_pack_t *renderer,
+                                       const char *source, size_t source_length,
+                                       const ttf_buffer_t *output, ttf_buffer_t *normalized) {
+    char key[32], forms[96], *vowel, *rieul;
+    const char *value;
+    uint32_t cp;
+    size_t width, start = output->length;
+    int final;
+    if (!source_length || source_length >= sizeof(key) || !output->length)
+        return TTF_OK;
+    memcpy(key, source, source_length);
+    key[source_length] = 0;
+    if (normalized->length != source_length || memcmp(normalized->data, source, source_length))
+        return TTF_OK;
+    value = ttf_resource_get(e, "particle_form", renderer->language_tag, key, NULL);
+
+    if (!value || strlen(value) >= sizeof(forms))
+        return TTF_OK;
+    memcpy(forms, value, strlen(value) + 1);
+    vowel = strchr(forms, '|');
+    if (!vowel)
+        return TTF_OK;
+    *vowel++ = 0;
+    rieul = strchr(vowel, '|');
+    if (rieul)
+        *rieul++ = 0;
+    while (start && ((unsigned char)output->data[start - 1] & 0xc0) == 0x80)
+        --start;
+    if (!start ||
+        ttf_utf8_decode(output->data + start - 1, output->length - start + 1, &cp, &width) != 1 ||
+        cp < 0xac00 || cp > 0xd7a3)
+        return TTF_OK;
+    final = (int)((cp - 0xac00) % 28);
+    value = !final ? vowel : final == 8 && rieul ? rieul : forms;
+    if (!strcmp(value, key))
+        return TTF_OK;
+    ttf_trace_stage(e, TTF_TRACE_POLICY, 0, source_length);
+    {
+        ttf_status_t status = ttf_trace_resource(e, "particle_form", renderer->language_tag, key,
+                                                 value, "particle-agreement", SIZE_MAX);
+        if (status != TTF_OK)
+            return status;
+    }
+    normalized->length = 0;
+    if (normalized->data)
+        normalized->data[0] = 0;
+    return ttf_buffer_puts(normalized, value);
+}
+
 ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t length, size_t offset,
                               ttf_result_t *out) {
     ttf_context_memo_t memo = {0};
@@ -574,7 +646,8 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
                 st = ttf_buffer_append(&spaced, normalized.data, normalized.length);
             /* Punctuation after the reading needs no separating space. */
             if (st == TTF_OK && end < length &&
-                ttf_speech_spoken_after(e, renderer->language_tag, text + end, length - end))
+                ttf_speech_spoken_after(e, renderer->language_tag, text + end, length - end) &&
+                !following_particle(e, renderer, text + end, length - end))
                 st = ttf_buffer_puts(&spaced, " ");
             ttf_buffer_free(&normalized);
             normalized = spaced;
@@ -624,6 +697,13 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
                 st = ttf_speech_output(e, renderer, &normalized, output.data, output.length,
                                        text + end, length - end);
         }
+        /* Only a particle written directly against the previous reading, with no
+           space, is part of that phrase; a separate word keeps its own text. */
+        if (st == TTF_OK && output.length && tokens[i].begin &&
+            !(text[tokens[i].begin - 1] == ' ' || text[tokens[i].begin - 1] == '\t' ||
+              text[tokens[i].begin - 1] == '\n'))
+            st = particle_agreement(e, renderer, text + tokens[i].begin, end - tokens[i].begin,
+                                    &output, &normalized);
         if (st == TTF_OK && e->frontend_options.output_mode == TTF_OUTPUT_SPEECH) {
             /* A removed span leaves its neighboring spaces behind. Keep one. */
             size_t b = 0;

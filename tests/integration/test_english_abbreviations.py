@@ -143,7 +143,7 @@ def main():
             ({"default_language": "ko-KR", "render_policy": "preserve"},
              "U.S.를 사용합니다.", "u s를 사용합니다.", None),
             ({"default_language": "ko-KR", "user_lexicon": [{"word": "U.S.", "pronunciation": "유에스커스텀"}]},
-             "U.S.를 사용합니다.", "유에스커스텀를 사용합니다.", "user"),
+             "U.S.를 사용합니다.", "유에스커스텀을 사용합니다.", "user"),
             ({"default_language": "ko-KR", "user_lexicon": [{"word": "U.S.", "pronunciation": "커스텀"}]},
              "표기는 U.S.", "표기는 커스텀.", "user"),
             ({"default_language": "ko-KR", "user_lexicon": [{"word": "Dr.", "pronunciation": "닥터커스텀"}]},

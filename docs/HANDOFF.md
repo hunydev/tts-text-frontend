@@ -91,7 +91,17 @@
   결정으로 갱신했다. cycle fixed 10 / unchanged-pass 7 / regressed 0. Debug 104/104,
   ASan/UBSan 92/92(단독), 외부 영어 결과 파일 동일.
 
-다음 순서(후보): 조사 교정(`3F로` → `삼 층로`, `5kg로` → `오 킬로그램로`, `1+1는`).
+### 조사 교정 (2026-09-22, 커밋·미배포)
+
+- 변경: `src/core/normalize.c`(`particle_agreement`, `following_particle`),
+  `src/semantic/classifier.c`(`#N` 뒤 조사 허용), `context.tsv`의 `particle_form`, validator.
+- 공백 없이 붙은 조사 span만 대상으로 한다. `이며/며` 같은 선택적 축약은 표에서 제외했다.
+- 계약 `tests/evaluation/particle_v21.jsonl` 20건. cycle fixed 8 / unchanged-pass 12 /
+  regressed 0. Debug 105/105, ASan/UBSan 93/93(단독), 외부 영어 결과 파일 동일.
+- 기존 fixture 4곳(`고객는`, `정확는`, `패턴는`, `관용형는`, `유에스커스텀를`)은 비문이라
+  교정형으로 갱신했고, alias 테스트는 조사 규칙을 테스트 안에서 따로 구현해 비교한다.
+
+다음 순서(후보): `2x`·`x²`·괄호 식, URL 경로 단어, `20대의 차량`처럼 조사 너머 cue.
 한 번에 한 규칙군씩 진행한다.
 
 ## v0.20에서 마무리한 범위

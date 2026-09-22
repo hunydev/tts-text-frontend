@@ -2,6 +2,13 @@
 
 ## Unreleased — speech final gate
 
+- Agree a Korean particle written against a reading with the spoken form:
+  `5kg로` → `오 킬로그램으로`, `1+1는` → `일 더하기 일은`, `7월는` → `칠 월은`,
+  `B과` → `비와`. The `particle_form` table lists obligatory allomorphs only
+  (은/는, 이/가, 을/를, 과/와, 로/으로 with the ㄹ exception); optional copula
+  contractions keep their text. A particle after a space is a separate word.
+- Add 20 particle contracts. Four fixtures that recorded the earlier
+  ungrammatical output (`고객는`, `유에스커스텀를`) now record the agreed form.
 - Korean letter name for `Z` is `제트`, keeping it distinct from `G` = `지`
   (`Z세대` → `제트세대`). English `zee` is unchanged.
 - A number sign before digits names a position through a `number_sign` template:

@@ -205,7 +205,7 @@ static void test_failed_attempt_and_aliases(void) {
     load(engine, TTF_LAYER_DOMAIN, "lexicon\tko-KR\ten-US:u.s.\t도메인\n");
     load(engine, TTF_LAYER_CUSTOMER, "lexicon\tko-KR\ten-US:us\t고객\n");
     STATUS(ttf_engine_freeze(engine), TTF_OK);
-    result = normalized(engine, "U.S.는 표기입니다.", "고객는 표기입니다.");
+    result = normalized(engine, "U.S.는 표기입니다.", "고객은 표기입니다.");
     event = find_event(&result, TTF_TRACE_LEXICON, "lexicon", "en-US:us", &count);
     EXPECT(event && count == 1);
     if (event)

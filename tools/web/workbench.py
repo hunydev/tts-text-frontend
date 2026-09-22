@@ -30,6 +30,7 @@ CORPORA = {
     "floor-v21": ("층·지하층 표기", "floor_v21.jsonl"),
     "letters-paths-v21": ("소문자 한 글자 · 메뉴 경로 >", "letters_paths_v21.jsonl"),
     "letter-number-sign-v21": ("Z 읽기 · #숫자", "letter_number_sign_v21.jsonl"),
+    "particle-v21": ("조사 교정 (은/는, 로/으로)", "particle_v21.jsonl"),
 }
 DEFAULTS = dict(
     default_language="ko-KR",

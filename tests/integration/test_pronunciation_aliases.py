@@ -20,10 +20,10 @@ PROFILES = ({}, {"first_target": 1, "normal_target": 3, "max_length": 12})
 CASES = (
     {"id": "ordinal", "text": "1st는 첫 번째입니다.", "surface": "1st",
      "raw": "1st", "canonical": "first", "type": "ORDINAL", "value": "1",
-     "secondary": "", "prefix": "", "suffix": "는 첫 번째입니다."},
+     "secondary": "", "prefix": "", "suffix": "{은/는} 첫 번째입니다."},
     {"id": "dotted-particle", "text": "U.S.는 표기입니다.", "surface": "U.S.",
      "raw": "U.S.", "canonical": "US", "type": "INITIALISM", "value": "US",
-     "secondary": "dotted", "prefix": "", "suffix": "는 표기입니다."},
+     "secondary": "dotted", "prefix": "", "suffix": "{은/는} 표기입니다."},
     {"id": "dotted-terminal", "text": "표기는 U.S.", "surface": "U.S",
      "raw": "U.S.", "canonical": "US", "type": "INITIALISM", "value": "US",
      "secondary": "dotted", "prefix": "표기는 ", "suffix": "."},
@@ -93,8 +93,18 @@ def selected_span(result, case):
     return span
 
 
+def particle(text, suffix):
+    # A particle written against a reading follows that reading: 은 after a final
+    # consonant, 는 after a vowel. Applied here independently of the engine.
+    if "{은/는}" not in suffix:
+        return suffix
+    last = text[-1]
+    consonant = "가" <= last <= "힣" and (ord(last) - 0xAC00) % 28
+    return suffix.replace("{은/는}", "은" if consonant else "는")
+
+
 def verify(result, case, pronunciation, layer, baseline):
-    expected = case["prefix"] + pronunciation + case["suffix"]
+    expected = case["prefix"] + pronunciation + particle(pronunciation, case["suffix"])
     assert result["text"] == expected, (case["id"], expected, result)
     span = selected_span(result, case)
     assert span["lexicon"] == "lexicon:" + layer, span

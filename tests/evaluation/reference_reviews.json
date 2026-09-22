@@ -664,6 +664,17 @@
         "reason": "Letter names and number-sign templates are editable project policy; engine agreement does not supply independent linguistic approval."
       },
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/particle_v21.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Original developer-authored Korean particle-agreement contracts fixed before executing the candidate; docs/korean-counters.md",
+        "reason": "The alternation inventory and the attached-only scope are editable project policy; engine agreement does not supply independent linguistic approval."
+      },
+      "case_overrides": {}
     }
   ],
   "excluded": [
