@@ -217,6 +217,7 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
     ttf_protected_region_t *regions = NULL;
     size_t region_count = 0, region_index = 0;
     size_t count = 0, i = 0, capacity = 0;
+    int removed_before = 0;
     ttf_buffer_t output = {0};
     ttf_status_t st;
     context_view.context_memo = &memo;
@@ -262,6 +263,7 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
                     st = add_span(out, &span, &capacity);
                 if (st != TTF_OK)
                     goto fail;
+                removed_before = 0;
                 ++i;
                 continue;
             }
@@ -283,6 +285,7 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
                 st = add_span(out, &span, &capacity);
             if (st != TTF_OK)
                 goto fail;
+            removed_before = 0;
             ++i;
             continue;
         }
@@ -539,7 +542,18 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
         } else if ((sem->type == TTF_SEM_EMAIL || sem->type == TTF_SEM_URL) &&
                    e->frontend_options.output_mode == TTF_OUTPUT_TEXT)
             st = ttf_buffer_append(&normalized, text + tokens[i].begin, end - tokens[i].begin);
-        else
+        else if (sem->type == TTF_SEM_SYMBOL && !sem->unit[0] &&
+                 ttf_speech_lengthening_span(e, renderer->language_tag, output.data, output.length,
+                                             text + tokens[i].begin, end - tokens[i].begin,
+                                             text + end, length - end)) {
+            /* Text keeps the written mark; speech drops it as prosody. */
+            ttf_trace_stage(e, TTF_TRACE_POLICY, 0, end - tokens[i].begin);
+            st = ttf_trace_emit(e, TTF_TRACE_SELECTED, TTF_LAYER_COMMON, 0, renderer->language_tag,
+                                "decision", "lengthening-mark", "", "", "word-final-lengthening",
+                                SIZE_MAX);
+            if (st == TTF_OK && e->frontend_options.output_mode == TTF_OUTPUT_TEXT)
+                st = ttf_buffer_append(&normalized, text + tokens[i].begin, end - tokens[i].begin);
+        } else
             st = renderer->verbalize(e, sem, text + tokens[i].begin, end - tokens[i].begin,
                                      &normalized);
         if (st == TTF_OK && !strcmp(sem->unit, "@math")) {
@@ -585,13 +599,37 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
                                             : "final-unreadable-preserved",
                                         SIZE_MAX);
                     if (e->frontend_options.unreadable_policy == TTF_UNREADABLE_DROP) {
+                        /* Removing a cluster between two words must not join them. */
+                        int gap = ttf_speech_spoken_before(e, renderer->language_tag, output.data,
+                                                           output.length) &&
+                                  ttf_speech_spoken_after(e, renderer->language_tag, text + end,
+                                                          length - end);
                         normalized.length = 0;
                         if (normalized.data)
                             normalized.data[0] = 0;
+                        if (gap)
+                            st = ttf_buffer_puts(&normalized, " ");
                     }
                 }
             } else
-                st = ttf_speech_output(e, renderer, &normalized);
+                st = ttf_speech_output(e, renderer, &normalized, output.data, output.length,
+                                       text + end, length - end);
+        }
+        if (st == TTF_OK && e->frontend_options.output_mode == TTF_OUTPUT_SPEECH) {
+            /* A removed span leaves its neighboring spaces behind. Keep one. */
+            size_t b = 0;
+            while (b < normalized.length &&
+                   (normalized.data[b] == ' ' || normalized.data[b] == '\t'))
+                ++b;
+            if (!normalized.length)
+                removed_before = end > tokens[i].begin;
+            else if (b == normalized.length && removed_before &&
+                     (!output.length || output.data[output.length - 1] == ' ' ||
+                      output.data[output.length - 1] == '\t')) {
+                normalized.length = 0;
+                normalized.data[0] = 0;
+            } else
+                removed_before = 0;
         }
         if (st == TTF_OK)
             st = ttf_trace_status(e);

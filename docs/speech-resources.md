@@ -74,6 +74,18 @@ build/ttf normalize --input-format annotated --output-mode speech 'ABC{@alphabet
 
 `@native`는 독립형 `하나/둘/셋/넷/스물`을 사용한다. 기존 `3개 → 세 개`의 관형형 정책과 사전을 공유하지 않는다. EN 팩의 `@native`, `@sino`와 알 수 없는 제어는 `TTF_EINVAL`을 반환한다. `@alphabet`은 pronunciation lexicon이나 English G2P를 호출하지 않는다.
 
+## 최종 관문 (speech 출력)
+
+규칙 문법이 소비하지 않은 문자는 speech 최종 패스에서 다음 순서로 처리한다.
+
+1. `speech_character`: 제자리 치환. 앞뒤와 붙여 쓴다 (`漢` → `한`).
+2. 공백·`speech_preserve` 문장 부호·렌더러 문자 체계는 그대로 둔다.
+3. `speech_symbol`: 기호 이름. 이웃한 발화 문자와 띄운다 (`±5%` → `플러스마이너스 오 퍼센트`, `①②③` → `일 이 삼`, `㈜삼성` → `주식회사 삼성`).
+4. ASCII 영문자·숫자는 철자로 읽는다.
+5. 나머지(등록되지 않은 한자, 이모지, ★ ♥ → ™ 같은 장식 기호)는 `unreadable` 정책에 따른다. 기본 보존, `drop`이면 제거하며 제거로 생긴 앞/중복 공백 한 칸을 정리한다. 두 단어 사이에서 제거하면 한 칸을 남겨 단어가 붙지 않게 한다 (`가🙂나` → `가 나`, `가→나` → `가 나`). v0.20의 붙임 계약은 2026-09-22 결정으로 바뀌었다.
+
+장식 기호를 기본 이름으로 읽지 않는 것은 의도한 정책이다. `★ 별점`을 `별 별점`으로 읽으면 대본의 뜻이 바뀐다. 필요하면 고객 TSV에 `speech_symbol` 행을 추가한다. `~`는 단어 뒤에서 휴지 앞일 때만 늘임표이고, 단독 `~`는 `물결`, 수량 범위는 기존 `에서`를 유지한다. `℃`·`㎏` 같은 호환 단위 문자는 `numeric_suffix`로 기존 단위에 연결하므로 숫자 문법이 읽는다 (`50℃` → `섭씨 오십 도`).
+
 ## 이메일·URL 읽기
 
 `EMAIL`과 `URL` Semantic IR을 대상 언어팩이 읽는다. Text 모드는 원문을 보존한다. Speech 모드는 ASCII 문자·숫자를 철자로 읽고, 기호 앞뒤를 공백으로 구분한다. 한국어의 연속 영문자·숫자는 기본적으로 붙여 읽는다.
@@ -89,10 +101,11 @@ build/ttf normalize --input-format annotated --output-mode speech 'ABC{@alphabet
 
 | 리소스 종류 | 역할 / 예 |
 |---|---|
-| `speech_symbol` | 주소의 ASCII 구두점 이름: `ko-KR`, `@`, `앳` |
+| `speech_symbol` | 기호 이름. 주소의 ASCII 구두점(`@` → `앳`)과 최종 패스의 비ASCII 기호·숫자형 문자 한 code point(`①` → `일`, `±` → `플러스마이너스`) |
 | `speech_character` | 최종 문자 처리의 등록된 UTF-8 문자열: `ko-KR`, `漢`, `한` |
 | `speech_preserve` | 읽지 않고 남길 문장 부호 등: `*`, `.`, `1`; `0`이면 그 보존 규칙 해제 |
-| `speech_join` | `alphabet` 키에 `none` 또는 `space`: 연속 글자 이름의 결합 |
+| `speech_join` | `alphabet` 키에 `none` 또는 `space`: 연속 글자 이름의 결합. `symbol` / `symbol.<문자>`: 최종 패스의 기호 이름을 이웃 단어와 띄울지 (`space` 기본, KO `symbol.&`=`none`으로 `유앤미`) |
+| `speech_lengthening` | 공통 `*`, 기호 한 글자, `0`/`1`: 단어 뒤·휴지 앞에서 늘임표로 처리 (`좋아요~`) |
 | `phone_letter` | KO `letter.A` → `에이`; 강제 알파벳 읽기에도 사용 |
 | `letter_name` | EN `a` → `ay` |
 | `digit` / `number` | KO/EN 숫자 한 자리 읽기 |

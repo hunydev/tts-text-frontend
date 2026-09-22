@@ -55,7 +55,7 @@ const path = require("node:path");
     ["user-v20-alphabet-store", "에이비씨마트"],
     ["user-v20-email-digits", "에이일 앳 비이 닷 씨오엠"],
     ["user-v20-email-text-digits", "a1@b2.com"],
-    ["user-v20-emoji-zwj-drop", "가나"],
+    ["user-v20-emoji-zwj-drop", "가 나"],
   ]) {
     await page.selectOption("#sample", sample);
     await run();

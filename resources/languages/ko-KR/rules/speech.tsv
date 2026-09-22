@@ -1,5 +1,8 @@
 # Authored deterministic spelling defaults, not independent pronunciation gold.
 speech_join	ko-KR	alphabet	none
+# Symbol names are separate words; & joins names as a conjunction (유앤미).
+speech_join	ko-KR	symbol	space
+speech_join	ko-KR	symbol.&	none
 math_operator	ko-KR	+	더하기
 speech_symbol	ko-KR	.	닷
 speech_symbol	ko-KR	@	앳
@@ -53,3 +56,60 @@ native_standalone	ko-KR	70	일흔
 native_standalone	ko-KR	80	여든
 native_standalone	ko-KR	90	아흔
 alnum_number	ko-KR	initialism	source-digits
+
+# Symbol and number-form names read as their own word in speech output.
+# Provisional project policy, pending independent review. Decorative marks
+# (stars, hearts, arrows, emoji, trademark signs) stay unreadable on purpose.
+speech_symbol	ko-KR	①	일
+speech_symbol	ko-KR	②	이
+speech_symbol	ko-KR	③	삼
+speech_symbol	ko-KR	④	사
+speech_symbol	ko-KR	⑤	오
+speech_symbol	ko-KR	⑥	육
+speech_symbol	ko-KR	⑦	칠
+speech_symbol	ko-KR	⑧	팔
+speech_symbol	ko-KR	⑨	구
+speech_symbol	ko-KR	⑩	십
+speech_symbol	ko-KR	⑪	십일
+speech_symbol	ko-KR	⑫	십이
+speech_symbol	ko-KR	⑬	십삼
+speech_symbol	ko-KR	⑭	십사
+speech_symbol	ko-KR	⑮	십오
+speech_symbol	ko-KR	⑯	십육
+speech_symbol	ko-KR	⑰	십칠
+speech_symbol	ko-KR	⑱	십팔
+speech_symbol	ko-KR	⑲	십구
+speech_symbol	ko-KR	⑳	이십
+speech_symbol	ko-KR	Ⅰ	일
+speech_symbol	ko-KR	Ⅱ	이
+speech_symbol	ko-KR	Ⅲ	삼
+speech_symbol	ko-KR	Ⅳ	사
+speech_symbol	ko-KR	Ⅴ	오
+speech_symbol	ko-KR	Ⅵ	육
+speech_symbol	ko-KR	Ⅶ	칠
+speech_symbol	ko-KR	Ⅷ	팔
+speech_symbol	ko-KR	Ⅸ	구
+speech_symbol	ko-KR	Ⅹ	십
+speech_symbol	ko-KR	Ⅺ	십일
+speech_symbol	ko-KR	Ⅻ	십이
+speech_symbol	ko-KR	ⅰ	일
+speech_symbol	ko-KR	ⅱ	이
+speech_symbol	ko-KR	ⅲ	삼
+speech_symbol	ko-KR	ⅳ	사
+speech_symbol	ko-KR	ⅴ	오
+speech_symbol	ko-KR	ⅵ	육
+speech_symbol	ko-KR	ⅶ	칠
+speech_symbol	ko-KR	ⅷ	팔
+speech_symbol	ko-KR	ⅸ	구
+speech_symbol	ko-KR	ⅹ	십
+speech_symbol	ko-KR	ⅺ	십일
+speech_symbol	ko-KR	ⅻ	십이
+speech_symbol	ko-KR	½	이분의 일
+speech_symbol	ko-KR	⅓	삼분의 일
+speech_symbol	ko-KR	⅔	삼분의 이
+speech_symbol	ko-KR	¼	사분의 일
+speech_symbol	ko-KR	¾	사분의 삼
+speech_symbol	ko-KR	±	플러스마이너스
+speech_symbol	ko-KR	×	곱하기
+speech_symbol	ko-KR	÷	나누기
+speech_symbol	ko-KR	㈜	주식회사

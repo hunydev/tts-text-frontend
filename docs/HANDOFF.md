@@ -2,7 +2,29 @@
 
 갱신: 2026-09-22. Release **0.20.0**, public ABI **v1**.
 
-## 이번에 마무리한 범위
+## 최근 작업: speech 최종 관문 (2026-09-22, 커밋·미배포)
+
+사용자 사례(www., 가격대, k7, top100, 20F, 유&미, 1+1, 이메일, 제어 문법)는 v0.20에서
+이미 기대대로 나옴을 재현했다. 변형 50여 건에서 찾은 약점 중 **C. 최종 관문**을 처리했다.
+
+- 변경: `src/core/speech_output.c`(기호 이름 띄어쓰기, 늘임표, 문맥 인자),
+  `src/core/normalize.c`(TN 단계 늘임표, drop 뒤 공백), ko/en validator,
+  `resources/{common,languages/*/rules}/speech.tsv`, en `numeric.tsv` 호환 단위 alias.
+- 계약: `tests/evaluation/speech_final_gate_v21.jsonl` 40건. 구현 전에 작성했다.
+  단어 사이 제거는 사용자 결정(2026-09-22)으로 한 칸을 남긴다 (`가🙂나` → `가 나`).
+  v0.20 corpus 4건과 통합·웹·browser 기대값을 같은 결정으로 갱신하고 notes에 기록했다.
+- 결과: `tn_cycle cycle` fixed 31 / unchanged-pass 9 / regressed 0
+  (`artifacts/tn/final-gate/comparison/cycle.json`, 40건). 단어 사이 제거 결정 반영 후
+  Debug CTest 98/98, ASan/UBSan 86/86(단독), Release text-evaluation 33/33,
+  browser gate 통과(임시 port 8123, `/tmp/ttf-web-browser`의 Node 22·Playwright).
+  외부 영어 3,785문장 results SHA `2de85573…` v0.20과 동일
+  (`benchmark/generated/sproat-v21-final-gate`). `build-web` 배포 library는 바꾸지 않았다.
+
+다음 순서(재현 완료, 미착수): A `R&D`→르앤드·`AT&T`→애트앤트, B 이메일/URL 단어
+읽기(`naver`→엔에이브이이알)·`v2.1.3`·IP의 점, D `a+b`→aplusb·`3-1=2`·`#해시태그`,
+E `1~2억대`→일억 대에서 이억 대, F `지하 2F`·`B1층`. 한 번에 한 규칙군씩 진행한다.
+
+## v0.20에서 마무리한 범위
 
 - `speech` 텍스트: www. initialism, 가격대 범위, letter/word+number,
   층수 문맥, 이항 더하기, & 및 이메일·URL 철자 읽기.

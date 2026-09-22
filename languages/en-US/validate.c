@@ -143,6 +143,20 @@ static ttf_status_t phone_dependencies(const ttf_engine_t *e, ttf_resource_diagn
     return TTF_OK;
 }
 
+/* One code point that is neither a letter/digit of a supported script nor
+   whitespace: the final speech pass reads such a character as its own word. */
+static int symbol_key(const char *key) {
+    uint32_t cp;
+    size_t width, length = strlen(key);
+    ttf_script_t script;
+    if (!length || ttf_utf8_decode(key, length, &cp, &width) != 1 || width != length || cp < 33 ||
+        cp == 127)
+        return 0;
+    script = ttf_script_of(cp);
+    return script == TTF_SCRIPT_PUNCTUATION || script == TTF_SCRIPT_SYMBOL ||
+           (script == TTF_SCRIPT_OTHER && cp >= 128);
+}
+
 static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                            ttf_resource_diagnostic_t *d, void *userdata) {
     const char *k = r->kind, *key = r->key, *v = r->value;
@@ -151,6 +165,13 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     *handled = 0;
     if (!wildcard && !SAME(r->language, EN))
         return TTF_OK;
+    if (SAME(k, "speech_lengthening")) {
+        *handled = 1;
+        return symbol_key(key) && ttf_validation_enum(v, "0|1")
+                   ? TTF_OK
+                   : ttf_validation_error(
+                         d, "speech_lengthening requires one symbol code point and 0|1 flag");
+    }
     if (SAME(k, "speech_preserve")) {
         *handled = 1;
         return label(key) && strlen(key) < 96 && ttf_validation_enum(v, "0|1")
@@ -168,17 +189,18 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     }
     if (SAME(k, "speech_join")) {
         *handled = 1;
-        return SAME(key, "alphabet") && ttf_validation_enum(v, "none|space")
+        return (SAME(key, "alphabet") || SAME(key, "symbol") ||
+                (!strncmp(key, "symbol.", 7) && symbol_key(key + 7))) &&
+                       ttf_validation_enum(v, "none|space")
                    ? TTF_OK
-                   : ttf_validation_error(d, "speech_join supports alphabet=none|space");
+                   : ttf_validation_error(
+                         d, "speech_join supports alphabet|symbol|symbol.<char>=none|space");
     }
     if (SAME(k, "speech_symbol") || SAME(k, "speech_character") || SAME(k, "math_operator")) {
         *handled = 1;
-        if (SAME(k, "speech_symbol") &&
-            (strlen(key) != 1 || (unsigned char)key[0] <= 32 || (unsigned char)key[0] >= 127 ||
-             (key[0] >= '0' && key[0] <= '9') || (key[0] >= 'A' && key[0] <= 'Z') ||
-             (key[0] >= 'a' && key[0] <= 'z')))
-            return ttf_validation_error(d, "speech_symbol key must be one ASCII punctuation");
+        if (SAME(k, "speech_symbol") && !symbol_key(key))
+            return ttf_validation_error(
+                d, "speech_symbol key must be one punctuation, symbol or number-form code point");
         if (SAME(k, "math_operator") && !SAME(key, "+"))
             return ttf_validation_error(d, "math_operator currently supports binary + only");
         if (SAME(k, "speech_character") && (!label(key) || strlen(key) >= 96))

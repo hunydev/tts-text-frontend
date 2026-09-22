@@ -22,6 +22,7 @@ CORPORA = {
     "korean-counters-v15": ("한국어 서수·횟수·번호", "korean_counters_v15.jsonl"),
     "phone-v18": ("국제전화·내선·계좌번호 구분", "phone_cases_v18.jsonl"),
     "user-patterns-v20": ("읽기 제어·발화용 출력", "user_patterns_v20.jsonl"),
+    "speech-final-gate-v21": ("발화 최종 관문 · 기호·숫자형 문자", "speech_final_gate_v21.jsonl"),
 }
 DEFAULTS = dict(
     default_language="ko-KR",

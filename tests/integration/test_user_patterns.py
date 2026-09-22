@@ -41,7 +41,7 @@ EXTRA_PATTERNS = (
 )
 EXTRA_CHARACTERS = (
     ("가1️⃣나", "preserve", "가1️⃣나"),
-    ("가1️⃣나", "drop", "가나"),
+    ("가1️⃣나", "drop", "가 나"),
     ("🙂", "drop", ""),
 )
 EXACT_ALIAS_WITH_DROP = ("A{🙂漢}", "🙂漢")
@@ -213,7 +213,8 @@ def final_trace_checks(args):
         for policy in ("preserve", "drop"):
             row = row_for("가" + cluster + "나", annotated=False)
             row["unreadable"] = policy
-            row["expected"] = "가" + (cluster if policy == "preserve" else "") + "나"
+            # A removed character between two words leaves one separating space.
+            row["expected"] = "가" + (cluster if policy == "preserve" else " ") + "나"
             for profile in PROFILES:
                 reference = stream(args.cli, args.resources, row, 4096, profile, traced=True)
                 assert reference["text"] == row["expected"]
@@ -223,7 +224,7 @@ def final_trace_checks(args):
                 event = selected[0]
                 width = len(cluster.encode())
                 assert (event["input_begin"], event["input_end"]) == (3, 3 + width), event
-                assert (event["output_begin"], event["output_end"]) == (3, 3 + (width if policy == "preserve" else 0)), event
+                assert (event["output_begin"], event["output_end"]) == (3, 3 + (width if policy == "preserve" else 1)), event
                 assert (event["part_begin"], event["part_end"]) == (0, width), event
                 assert event["stage"] == "policy" and event["disposition"] == "selected", event
                 assert not event["layer_known"] and event["declaration_order"] is None, event

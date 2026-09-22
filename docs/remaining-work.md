@@ -352,3 +352,11 @@ benchmark의 남은 semiotic class 오류, 한국어 금융·콘텐츠 reference
 검증은 [실행 기록](research/speech-controls-v20-results.md)에 남긴다.
 이는 사전 coverage, 사람 검수, Unicode 전체 지원이나 운영 성능 과제를
 완료한 것으로 처리하지 않는다.
+
+## v0.21 후속(미릴리스) 적용 기록 — speech 최종 관문
+
+TN-03/UNICODE-01의 일부를 진전시켰다. 원형 숫자·로마 숫자·분수·`± × ÷ ㈜`의
+기호 이름, 단어 뒤 늘임표 `~`, 호환 단위 문자, drop 뒤 공백 정리를 추가했다.
+독립 작성 40건 계약(`tests/evaluation/speech_final_gate_v21.jsonl`)이 근거다. 외부 영어
+개발 표본은 v0.20과 결과 파일이 동일하다. 연산자 IR(`3-1=2`, `a+b`), hashtag
+역할, fullwidth 숫자 정규화는 남아 있다.

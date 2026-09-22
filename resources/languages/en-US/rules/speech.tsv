@@ -1,5 +1,6 @@
 # Authored deterministic spelling defaults, not independent pronunciation gold.
 speech_join	en-US	alphabet	space
+speech_join	en-US	symbol	space
 math_operator	en-US	+	plus
 speech_symbol	en-US	.	dot
 speech_symbol	en-US	@	at
@@ -38,3 +39,59 @@ unit	en-US	floor.one	floor
 unit	en-US	floor.many	floors
 context_neutral	en-US	alnum_label	1
 alnum_number	en-US	initialism	target-cardinal
+
+# Symbol and number-form names read as their own word in speech output.
+# Provisional project policy, pending independent review. Decorative marks
+# (stars, hearts, arrows, emoji, trademark signs) stay unreadable on purpose.
+speech_symbol	en-US	①	one
+speech_symbol	en-US	②	two
+speech_symbol	en-US	③	three
+speech_symbol	en-US	④	four
+speech_symbol	en-US	⑤	five
+speech_symbol	en-US	⑥	six
+speech_symbol	en-US	⑦	seven
+speech_symbol	en-US	⑧	eight
+speech_symbol	en-US	⑨	nine
+speech_symbol	en-US	⑩	ten
+speech_symbol	en-US	⑪	eleven
+speech_symbol	en-US	⑫	twelve
+speech_symbol	en-US	⑬	thirteen
+speech_symbol	en-US	⑭	fourteen
+speech_symbol	en-US	⑮	fifteen
+speech_symbol	en-US	⑯	sixteen
+speech_symbol	en-US	⑰	seventeen
+speech_symbol	en-US	⑱	eighteen
+speech_symbol	en-US	⑲	nineteen
+speech_symbol	en-US	⑳	twenty
+speech_symbol	en-US	Ⅰ	one
+speech_symbol	en-US	Ⅱ	two
+speech_symbol	en-US	Ⅲ	three
+speech_symbol	en-US	Ⅳ	four
+speech_symbol	en-US	Ⅴ	five
+speech_symbol	en-US	Ⅵ	six
+speech_symbol	en-US	Ⅶ	seven
+speech_symbol	en-US	Ⅷ	eight
+speech_symbol	en-US	Ⅸ	nine
+speech_symbol	en-US	Ⅹ	ten
+speech_symbol	en-US	Ⅺ	eleven
+speech_symbol	en-US	Ⅻ	twelve
+speech_symbol	en-US	ⅰ	one
+speech_symbol	en-US	ⅱ	two
+speech_symbol	en-US	ⅲ	three
+speech_symbol	en-US	ⅳ	four
+speech_symbol	en-US	ⅴ	five
+speech_symbol	en-US	ⅵ	six
+speech_symbol	en-US	ⅶ	seven
+speech_symbol	en-US	ⅷ	eight
+speech_symbol	en-US	ⅸ	nine
+speech_symbol	en-US	ⅹ	ten
+speech_symbol	en-US	ⅺ	eleven
+speech_symbol	en-US	ⅻ	twelve
+speech_symbol	en-US	½	one half
+speech_symbol	en-US	⅓	one third
+speech_symbol	en-US	⅔	two thirds
+speech_symbol	en-US	¼	one quarter
+speech_symbol	en-US	¾	three quarters
+speech_symbol	en-US	±	plus or minus
+speech_symbol	en-US	×	times
+speech_symbol	en-US	÷	divided by

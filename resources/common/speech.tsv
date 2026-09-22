@@ -22,3 +22,8 @@ speech_preserve	*	、	1
 speech_preserve	*	。	1
 speech_preserve	*	！	1
 speech_preserve	*	？	1
+# Middle dot separates listed words; keep it as a pause mark.
+speech_preserve	*	·	1
+# After a word and before a pause, these mark lengthening rather than a word.
+speech_lengthening	*	~	1
+speech_lengthening	*	～	1

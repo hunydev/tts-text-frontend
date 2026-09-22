@@ -1,5 +1,21 @@
 # Changelog
 
+## Unreleased — speech final gate
+
+- Read registered symbol and number-form characters as their own words in speech
+  output: circled numbers, Roman numerals, vulgar fractions, `±`, `×`, `÷`, `㈜`.
+  `speech_symbol` now accepts one non-ASCII symbol code point; `speech_join
+  symbol|symbol.<char>` sets separation per language (KO `&` stays joined).
+- Treat `~`/`～` after a word and before a pause as a lengthening mark
+  (`speech_lengthening`): speech drops it, text keeps the written mark instead of
+  the former `물결`. Standalone tildes and numeric ranges keep their readings.
+- Map compatibility unit signs (`℃`, `㎏`, `㎞`, `㎝`, `㎜`, `㎎`, `㎖`, `ℓ`, `㎾`, `㎓`,
+  `㎒`, `㎐`) to the existing canonical units; keep middle dot `·` as a pause mark.
+- Speech output no longer leaves a doubled or leading space where an unreadable
+  span was removed. Removal between two words now leaves one space (`가🙂나` → `가 나`), replacing the v0.20 joining contract by project-owner decision.
+- Add 40 independent final-gate contracts; the external English development
+  sample remains byte-identical to v0.20.
+
 ## 0.19.0
 
 - Reuse request-local lexical-run boundaries and KO/EN context evidence while

@@ -576,6 +576,17 @@
         "reason": "Explicit frontend modes, aliases, pattern values and speech rendering policies fixed before candidate execution; engine agreement does not supply independent linguistic approval."
       },
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/speech_final_gate_v21.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Original developer-authored speech final-gate contracts fixed before executing the candidate; docs/speech-resources.md",
+        "reason": "Symbol-name, number-form, lengthening-mark, compatibility-unit and unreadable-removal readings are editable project policy; engine agreement does not supply independent linguistic approval."
+      },
+      "case_overrides": {}
     }
   ],
   "excluded": [
