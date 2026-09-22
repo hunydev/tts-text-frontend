@@ -653,6 +653,17 @@
         "reason": "Lone-letter names, hyphen-joined letters and silent angle marks outside expressions are editable project policy; engine agreement does not supply independent linguistic approval."
       },
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/letter_number_sign_v21.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Readings chosen by the project owner on 2026-09-22 (Z=제트, #N=일 번 / number N); docs/speech-resources.md",
+        "reason": "Letter names and number-sign templates are editable project policy; engine agreement does not supply independent linguistic approval."
+      },
+      "case_overrides": {}
     }
   ],
   "excluded": [

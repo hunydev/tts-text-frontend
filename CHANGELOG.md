@@ -2,6 +2,12 @@
 
 ## Unreleased — speech final gate
 
+- Korean letter name for `Z` is `제트`, keeping it distinct from `G` = `지`
+  (`Z세대` → `제트세대`). English `zee` is unchanged.
+- A number sign before digits names a position through a `number_sign` template:
+  `#1` → `일 번` / `number one`. Hashtags (`#해시태그`), `C#` and text output are
+  unchanged, and the reading is not padded before punctuation.
+- Add 17 contracts; external English results are identical.
 - Read a lone lowercase letter in Korean text as its letter name (`x 값` → `엑스 값`,
   `n번째` → `엔번째`) and hyphen-joined single letters as one spelling
   (`x-y 좌표` → `엑스와이 좌표`, `A-B 테스트` → `에이비 테스트`).

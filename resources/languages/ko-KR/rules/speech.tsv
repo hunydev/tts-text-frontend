@@ -137,3 +137,5 @@ electronic_number	ko-KR	version	cardinal
 electronic_number	ko-KR	ip	digits
 electronic_separator	ko-KR	version	점
 electronic_separator	ko-KR	ip	점
+# #1 → 일 번 (project-owner decision 2026-09-22).
+number_sign	ko-KR	#	{N} 번

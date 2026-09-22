@@ -99,7 +99,7 @@ build/ttf normalize --input-format annotated --output-mode speech 'ABC{@alphabet
 
 `math_operator`는 연산자 이름, `math_relation`은 `{L}`·`{R}` 템플릿이다. `{은/는}`처럼 `{A/B}`는 바로 앞 글자에 받침이 있으면 A를 쓴다. 식 안의 영문 변수는 문맥 언어 판정에 쓰지 않는다.
 
-한국어 `#`는 `샵`이다 (`#해시태그` → `샵 해시태그`, `번호#123` → `번호 샵 백이십삼`). `C#`은 기술 용어(`semantic_term`)와 사전(`씨샵`)으로 읽는다. 영어는 단어 앞 `#`를 `speech_symbol_prefix`로 `hashtag`라 읽고, 다른 `#`는 `hash`다.
+`#`가 숫자 바로 앞에 있으면 순번이다. `number_sign` 템플릿이 어순을 정한다 (KO `{N} 번` → `#1` = `일 번`, EN `number {N}` → `number one`). 그 밖의 한국어 `#`는 `샵`이다 (`#해시태그` → `샵 해시태그`, `번호#123` → `번호 샵 백이십삼`). `C#`은 기술 용어(`semantic_term`)와 사전(`씨샵`)으로 읽는다. 영어는 단어 앞 `#`를 `speech_symbol_prefix`로 `hashtag`라 읽고, 다른 `#`는 `hash`다.
 
 ## 소문자 한 글자와 메뉴 경로
 

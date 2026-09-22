@@ -546,7 +546,8 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
             st = ttf_electronic_render(e, source, renderer, text + tokens[i].begin,
                                        end - tokens[i].begin, &normalized);
         else if ((sem->type == TTF_SEM_EMAIL || sem->type == TTF_SEM_URL ||
-                  sem->type == TTF_SEM_VERSION || sem->type == TTF_SEM_IP_ADDRESS) &&
+                  sem->type == TTF_SEM_VERSION || sem->type == TTF_SEM_IP_ADDRESS ||
+                  !strcmp(sem->unit, "@number-sign")) &&
                  e->frontend_options.output_mode == TTF_OUTPUT_TEXT)
             st = ttf_buffer_append(&normalized, text + tokens[i].begin, end - tokens[i].begin);
         else if (sem->type == TTF_SEM_SYMBOL && !sem->unit[0] &&
@@ -563,7 +564,7 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
         } else
             st = renderer->verbalize(e, sem, text + tokens[i].begin, end - tokens[i].begin,
                                      &normalized);
-        if (st == TTF_OK && !strcmp(sem->unit, "@math")) {
+        if (st == TTF_OK && (!strcmp(sem->unit, "@math") || !strcmp(sem->unit, "@number-sign"))) {
             ttf_buffer_t spaced = {0};
             size_t begin = tokens[i].begin;
             if (begin && text[begin - 1] != ' ' && text[begin - 1] != '\t' &&
@@ -571,8 +572,9 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
                 st = ttf_buffer_puts(&spaced, " ");
             if (st == TTF_OK)
                 st = ttf_buffer_append(&spaced, normalized.data, normalized.length);
-            if (st == TTF_OK && end < length && text[end] != ' ' && text[end] != '\t' &&
-                text[end] != '\n')
+            /* Punctuation after the reading needs no separating space. */
+            if (st == TTF_OK && end < length &&
+                ttf_speech_spoken_after(e, renderer->language_tag, text + end, length - end))
                 st = ttf_buffer_puts(&spaced, " ");
             ttf_buffer_free(&normalized);
             normalized = spaced;

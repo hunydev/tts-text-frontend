@@ -961,6 +961,23 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
             return finish(in, out, cluster_end, TTF_SEM_SYMBOL, "syntax.keycap-cluster");
         }
     }
+    /* #1: a number sign before digits names an ordinal position. The target
+       pack supplies the word order; a hashtag or C# keeps its symbol name. */
+    if (s[b] == '#' && b + 1 < n && digit(s[b + 1]) && s[b + 1] != '0' &&
+        (!b || !(ascii_letter(s[b - 1]) || digit(s[b - 1]) || s[b - 1] == '#'))) {
+        size_t value_end = integer(s, n, b + 1);
+        uint32_t cp;
+        size_t width;
+        if (value_end - b - 1 < sizeof(out->value) &&
+            (value_end == n ||
+             (ttf_utf8_decode(s + value_end, n - value_end, &cp, &width) == 1 &&
+              ttf_script_of(cp) != TTF_SCRIPT_HANGUL && ttf_script_of(cp) != TTF_SCRIPT_LATIN &&
+              ttf_script_of(cp) != TTF_SCRIPT_DIGIT))) {
+            copy_value(out->value, sizeof(out->value), s + b + 1, value_end - b - 1);
+            snprintf(out->unit, sizeof(out->unit), "@number-sign");
+            return finish(in, out, value_end, TTF_SEM_SYMBOL, "syntax.number-sign");
+        }
+    }
     /* Resource-declared technical spellings may cross script/punctuation
        boundaries. The inventory and source tag belong to language data. */
     if (resource_prefix(in, "semantic_term", b, &rule_value, &end, &layer) &&

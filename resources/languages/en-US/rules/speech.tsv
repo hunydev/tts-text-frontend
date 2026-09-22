@@ -131,3 +131,4 @@ electronic_separator	en-US	version	point
 electronic_separator	en-US	ip	dot
 # x-y, A-B: joined single letters are labels, not English article/clause evidence.
 context_neutral	en-US	joined_letters	1
+number_sign	en-US	#	number {N}

@@ -664,6 +664,28 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     }
     case TTF_SEM_SYMBOL: {
         char key[16];
+        if (!strcmp(s->unit, "@number-sign")) {
+            const char *template = ttf_resource_get(e, "number_sign", "ko-KR", "#", NULL), *p;
+            ttf_status_t status;
+            if (!template)
+                return TTF_ERESOURCE;
+            status = ttf_trace_resource(e, "number_sign", "ko-KR", "#", "#", "number-sign-reading",
+                                        SIZE_MAX);
+            if (status != TTF_OK)
+                return status;
+            for (p = template; *p;) {
+                if (!strncmp(p, "{N}", 3)) {
+                    status = cardinal(e, s->value, out);
+                    p += 3;
+                } else {
+                    status = ttf_buffer_append(out, p, 1);
+                    ++p;
+                }
+                if (status != TTF_OK)
+                    return status;
+            }
+            return TTF_OK;
+        }
         if (!strcmp(s->unit, "@expression"))
             return expression(e, s->value, out);
         if (!strcmp(s->unit, "@math")) {

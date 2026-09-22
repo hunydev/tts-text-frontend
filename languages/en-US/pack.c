@@ -1044,6 +1044,28 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             return spoken_alnum(e, surface, length, b);
         return ttf_buffer_append(b, surface, length);
     case TTF_SEM_SYMBOL:
+        if (!strcmp(s->unit, "@number-sign")) {
+            const char *template = ttf_resource_get(e, "number_sign", EN, "#", NULL), *p;
+            ttf_status_t status;
+            if (!template)
+                return TTF_ERESOURCE;
+            status =
+                ttf_trace_resource(e, "number_sign", EN, "#", "#", "number-sign-reading", SIZE_MAX);
+            if (status != TTF_OK)
+                return status;
+            for (p = template; *p;) {
+                if (!strncmp(p, "{N}", 3)) {
+                    status = numeric(e, s->value, b);
+                    p += 3;
+                } else {
+                    status = ttf_buffer_append(b, p, 1);
+                    ++p;
+                }
+                if (status != TTF_OK)
+                    return status;
+            }
+            return TTF_OK;
+        }
         if (!strcmp(s->unit, "@expression"))
             return expression(e, s->value, b);
         if (!strcmp(s->unit, "@math")) {

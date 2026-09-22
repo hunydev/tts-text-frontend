@@ -118,6 +118,12 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     *handled = 0;
     if (!wildcard && !SAME(r->language, KO))
         return TTF_OK;
+    if (SAME(k, "number_sign")) {
+        *handled = 1;
+        return SAME(key, "#") && label(v) && strstr(v, "{N}") && strlen(v) < 64
+                   ? TTF_OK
+                   : ttf_validation_error(d, "number_sign requires key # and a {N} template");
+    }
     if (SAME(k, "math_relation")) {
         *handled = 1;
         return (SAME(key, "=") || SAME(key, "<") || SAME(key, ">") || SAME(key, "≤") ||

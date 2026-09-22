@@ -82,7 +82,16 @@
   ASan/UBSan 91/91(단독), 외부 영어 결과 파일 동일.
 - 결정 필요: `Z` 한국어 이름 `지` vs `제트`(`Z세대`).
 
-다음 순서(후보): 조사 교정(`3F로` → `삼 층로`, `5kg로`, `1+1는`), `#1` 읽기 정책.
+### Z 읽기와 `#`숫자 (2026-09-22, 커밋·미배포)
+
+- 사용자 결정: `Z`=제트(G=지와 구분), `#1`=일 번 / number one.
+- 변경: `phones.tsv` letter.Z, `src/semantic/classifier.c`(`syntax.number-sign`), ko/en
+  `number_sign` 템플릿, 구두점 앞 공백을 넣지 않도록 `@math`/`@number-sign` 간격 규칙 보완.
+- 계약 `tests/evaluation/letter_number_sign_v21.jsonl` 17건. D의 `번호#123` 기대값을 같은
+  결정으로 갱신했다. cycle fixed 10 / unchanged-pass 7 / regressed 0. Debug 104/104,
+  ASan/UBSan 92/92(단독), 외부 영어 결과 파일 동일.
+
+다음 순서(후보): 조사 교정(`3F로` → `삼 층로`, `5kg로` → `오 킬로그램로`, `1+1는`).
 한 번에 한 규칙군씩 진행한다.
 
 ## v0.20에서 마무리한 범위
