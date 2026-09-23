@@ -27,7 +27,8 @@ static void usage(FILE *out) {
           "         --first-target N --normal-target N --max-length N\n"
           "Trace: --trace (inspect or stream-json), --trace-max-events N --trace-max-bytes N\n"
           "Frontend: --input-format plain|annotated --output-mode text|speech\n"
-          "          --unreadable preserve|drop --max-control-bytes N\n"
+          "          --unreadable preserve|drop --brackets read|skip|preserve\n"
+          "          --max-control-bytes N\n"
           "Stream options: --chunk-bytes N (default 4096)\n",
           out);
 }
@@ -236,6 +237,7 @@ static ttf_status_t read_input(FILE *file, char *buffer, size_t capacity, size_t
 int main(int argc, char **argv) {
     ttf_config_t config;
     ttf_frontend_options_t frontend;
+    const char *bracket_policy = NULL;
     ttf_trace_options_t trace_options;
     int is_trace = 0, trace_limit_set = 0;
     ttf_engine_t *engine = NULL;
@@ -281,9 +283,9 @@ int main(int argc, char **argv) {
     ttf_trace_options_init(&trace_options);
     for (i = 2; i < argc; ++i) {
         const char *arg = argv[i];
-        if (!positional_only &&
-            (!strcmp(arg, "--input-format") || !strcmp(arg, "--output-mode") ||
-             !strcmp(arg, "--unreadable") || !strcmp(arg, "--max-control-bytes"))) {
+        if (!positional_only && (!strcmp(arg, "--input-format") || !strcmp(arg, "--output-mode") ||
+                                 !strcmp(arg, "--unreadable") || !strcmp(arg, "--brackets") ||
+                                 !strcmp(arg, "--max-control-bytes"))) {
             int valid = 1;
             if (++i == argc) {
                 exit_code = report("frontend option", TTF_EINVAL);
@@ -301,6 +303,10 @@ int main(int argc, char **argv) {
                 valid = !strcmp(argv[i], "preserve") || !strcmp(argv[i], "drop");
                 frontend.unreadable_policy =
                     !strcmp(argv[i], "drop") ? TTF_UNREADABLE_DROP : TTF_UNREADABLE_PRESERVE;
+            } else if (!strcmp(arg, "--brackets")) {
+                valid = !strcmp(argv[i], "read") || !strcmp(argv[i], "skip") ||
+                        !strcmp(argv[i], "preserve");
+                bracket_policy = argv[i];
             } else
                 valid = positive_size(argv[i], &frontend.max_control_bytes);
             if (!valid) {
@@ -403,6 +409,8 @@ int main(int argc, char **argv) {
         goto done;
     }
     status = ttf_engine_set_frontend_options(engine, &frontend);
+    if (status == TTF_OK && bracket_policy)
+        status = ttf_engine_set_option(engine, "brackets", bracket_policy);
     if (status != TTF_OK) {
         exit_code = report("frontend options", status);
         goto done;

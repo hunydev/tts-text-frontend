@@ -2,6 +2,14 @@
 
 ## Unreleased — speech final gate
 
+- Add a bracket policy: `read` (default), `skip` or `preserve` decides whether a
+  bracketed aside is read, left out of the reading, or kept exactly as written
+  (`설명(참고: 3kg)입니다` → `설명입니다` / `설명(참고: 3kg)입니다`). Declared pairs live
+  in `bracket_pair`; quotation marks keep their own scope and an unclosed bracket
+  is read as before. The option arrives through the new
+  `ttf_engine_set_option(engine, "brackets", …)`, the CLI `--brackets` flag and the
+  workbench selector, so no published structure changes.
+- Add 11 contracts.
 - Let the streaming planner read a declared year cue the way it reads a floor
   cue, so a cue word keeps its number in the same segment without becoming a
   general boundary word. Determiners (`the`, `a`, `an`, `this`, `that`) are cues

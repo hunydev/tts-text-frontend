@@ -60,7 +60,8 @@ for item in explicit["cases"]:
     item.update(output_mode="text", input_format="plain", unreadable="preserve", max_control_bytes=4096)
 assert compare.compare(before, explicit)["summary"] == result["summary"]
 assert compare.compare(before, explicit)["cases"][0]["frontend_settings"] == {
-    "output_mode": "text", "input_format": "plain", "unreadable": "preserve", "max_control_bytes": 4096}
+    "output_mode": "text", "input_format": "plain", "unreadable": "preserve",
+    "brackets": "read", "max_control_bytes": 4096}
 altered = copy.deepcopy(after)
 altered["cases"].pop()
 rejected(lambda: compare.compare(before, altered))

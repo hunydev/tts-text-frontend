@@ -23,6 +23,9 @@ Input syntax and output purpose are independent:
 | `output_mode=speech` | Also render electronic addresses and configured characters for speech |
 | `unreadable=preserve` | Keep unsupported characters in speech output |
 | `unreadable=drop` | Remove unsupported characters from speech output |
+| `brackets=read` | Read a bracketed aside (default) |
+| `brackets=skip` | Leave a bracketed aside out of the reading |
+| `brackets=preserve` | Keep a bracketed aside exactly as written |
 
 For example, Korean speech output reads `a1@b2.com` as
 `에이일 앳 비이 닷 컴`; text output preserves `a1@b2.com`. Speech mode does
@@ -163,3 +166,15 @@ parser separately retains source and payload ranges; output offsets cover the
 rendered replacement. Applications should preserve the original input alongside
 these offsets. A literal alias is not re-tokenized to manufacture additional
 source spans.
+
+## Bracket policy
+
+`bracket_pair` in the common resources declares the pairs this policy covers:
+`()`, `[]`, `{}`, `（）`, `〈〉` and `《》`. Quotation marks are a separate scope and are
+not affected. `skip` removes the whole aside, including its brackets, and keeps one
+separating space; `preserve` copies the source bytes without normalizing them. An
+unclosed bracket has no region, so the text is read as before. The policy is set
+with `ttf_engine_set_option(engine, "brackets", "read|skip|preserve")` before the
+engine is frozen, by the CLI flag `--brackets`, or by the workbench selector. Named
+options are functions rather than new structure fields, so a consumer built against
+an older header keeps its layout and its defaults.

@@ -56,3 +56,10 @@ url_tld	*	online	1
 # not read. Expressions (3>2) are read by math_relation first.
 speech_silent	*	>	1
 speech_silent	*	<	1
+# Bracket pairs whose content the bracket policy reads, skips or preserves.
+bracket_pair	*	(	)
+bracket_pair	*	[	]
+bracket_pair	*	{	}
+bracket_pair	*	（	）
+bracket_pair	*	〈	〉
+bracket_pair	*	《	》

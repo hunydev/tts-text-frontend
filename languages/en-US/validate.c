@@ -231,6 +231,13 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "speech_range_mark requires one symbol and a reading");
     }
+    if (SAME(k, "bracket_pair")) {
+        *handled = 1;
+        return wildcard && symbol_key(key) && symbol_key(v)
+                   ? TTF_OK
+                   : ttf_validation_error(
+                         d, "bracket_pair requires language * and one opening and closing symbol");
+    }
     if (SAME(k, "speech_silent")) {
         *handled = 1;
         return symbol_key(key) && ttf_validation_enum(v, "0|1")

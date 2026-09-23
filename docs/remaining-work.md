@@ -487,3 +487,10 @@ CARDINAL 변화 없음(`benchmark/generated/sproat-v21-planner-comparison.json`)
 `context_trace` 점수는 분절이 넓어져 갱신했고 텍스트·offset·의미·언어는 그대로다.
 남은 범위: `to`/`and`/`by` 자체를 단서로 쓰는 문맥(현재는 앞 끝 연도 근거 필요), 대소문자만
 다른 DATE 불일치 698건, `9/25/2026` 같은 locale 모호 표기.
+
+## v0.21 후속(미릴리스) — 괄호 처리 옵션 (WEB-01/사용자 요청)
+
+괄호 안을 읽기/건너뛰기/원문 유지로 고르는 옵션을 추가했다. 공개 구조체를 늘리지 않고
+`ttf_engine_set_option` 함수로 전달한다(예전 헤더로 빌드한 소비자의 배치를 지키기 위함).
+독립 작성 11건(`tests/evaluation/bracket_v21.jsonl`). 사용자가 요청한 남은 옵션:
+미등록 외국어 단어 정책(철자/추측/원문), 장식 문자 이름 읽기, 대문자 약어 읽기 방식.

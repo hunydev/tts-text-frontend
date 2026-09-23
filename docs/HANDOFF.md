@@ -198,8 +198,19 @@ push한 `30b6b98`의 CI sanitizer 작업에서 `context_cache_compatibility`의 
 - v0.18 호환 참조(`context_cache_v18_reference.json`, `..._partial_...`) 4+1건의 `context_trace`만
   갱신하고 사유를 파일 purpose에 적었다. 텍스트·offset·의미·render 언어는 동일하다.
 
-다음 순서(후보): 24시간 표기의 오전·오후, `2x`·괄호 식, `SAVE20` 숫자 읽기 정책,
-대소문자만 다른 DATE 698건의 진단 지표. 한 번에 한 규칙군씩 진행한다.
+### 사용자 옵션 1: 괄호 안 처리 (2026-09-23, 커밋·미배포)
+
+- 사용자가 요청한 옵션 네 가지(괄호 처리, 미등록 외국어 단어, 장식 문자, 대문자 약어) 중 첫 번째.
+- 공개 구조체 `ttf_frontend_options_t`에 필드를 더하면 예전 헤더로 빌드한 소비자가 깨진다
+  (`ttf_frontend_options_init`이 더 큰 구조체를 기존 버퍼에 쓴다; 실제로 native 테스트가 SEGFAULT).
+  그래서 **새 함수** `ttf_engine_set_option(engine, name, value)`로 전달한다.
+- 변경: `src/core/frontend_options.c`, `src/core/internal.h`(엔진 내부 필드),
+  `src/core/normalize.c`(괄호 구간 처리), CLI `--brackets`, 웹 선택기, `bracket_pair` 리소스.
+- 계약 `tests/evaluation/bracket_v21.jsonl` 11건. Debug 116/116, ASan/UBSan 104/104(단독),
+  외부 영어 결과 파일 동일, browser gate 통과.
+
+다음 순서: 사용자 옵션 2~4 — 미등록 외국어 단어 정책(철자/추측/원문), 장식 문자 이름 읽기,
+대문자 약어 읽기 방식. 이후 후보: `SAVE20` 숫자 읽기 정책, 대소문자만 다른 DATE 698건 지표.
 
 ## v0.20에서 마무리한 범위
 

@@ -27,3 +27,22 @@ ttf_status_t ttf_engine_set_frontend_options(ttf_engine_t *engine,
     engine->frontend_options = *options;
     return TTF_OK;
 }
+
+ttf_status_t ttf_engine_set_option(ttf_engine_t *engine, const char *name, const char *value) {
+    if (!engine || !name || !value)
+        return TTF_EINVAL;
+    if (engine->frozen || engine->validating)
+        return TTF_ESTATE;
+    if (!strcmp(name, "brackets")) {
+        if (!strcmp(value, "read"))
+            engine->bracket_policy = TTF_BRACKET_READ;
+        else if (!strcmp(value, "skip"))
+            engine->bracket_policy = TTF_BRACKET_SKIP;
+        else if (!strcmp(value, "preserve"))
+            engine->bracket_policy = TTF_BRACKET_PRESERVE;
+        else
+            return TTF_EINVAL;
+        return TTF_OK;
+    }
+    return TTF_EINVAL;
+}

@@ -173,7 +173,8 @@ class Engine:
                 "ttf_resource_load_ex": (I, [P, C.c_char_p, I, C.POINTER(ResourceDiagnostic)]),
                 "ttf_engine_validate_resources": (I, [P, C.POINTER(ResourceValidationReport), C.POINTER(ResourceDiagnostic)]),
             })
-        frontend_keys = {"input_format", "output_mode", "unreadable", "max_control_bytes"}
+        frontend_keys = {"input_format", "output_mode", "unreadable", "brackets",
+                         "max_control_bytes"}
         has_frontend = hasattr(self.lib, "ttf_engine_set_frontend_options")
         if frontend_keys.intersection(options) and not has_frontend:
             raise ValueError("This native library does not support frontend output/input options")
@@ -231,7 +232,11 @@ class Engine:
                 frontend.output_mode = {"text": 0, "speech": 1}[options.get("output_mode", "text")]
                 frontend.unreadable_policy = {"preserve": 0, "drop": 1}[options.get("unreadable", "preserve")]
                 frontend.max_control_bytes = options.get("max_control_bytes", 4096)
+
                 self.check(self.lib.ttf_engine_set_frontend_options(self.handle, C.byref(frontend)))
+            if hasattr(self.lib, "ttf_engine_set_option") and options.get("brackets", "read") != "read":
+                self.check(self.lib.ttf_engine_set_option(
+                    self.handle, b"brackets", options["brackets"].encode()))
             if options.get("domain") in ("finance", "finance-vocabulary"):
                 self.load(resources / "domains/finance/ko-KR/lexicon.tsv", 2)
             if options.get("domain") == "finance":

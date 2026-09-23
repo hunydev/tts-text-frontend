@@ -282,6 +282,42 @@ static ttf_status_t particle_agreement(const ttf_engine_t *e, const ttf_language
     return ttf_buffer_puts(normalized, value);
 }
 
+/* Declared bracket pairs mark an aside. The policy decides whether its content
+   is read, left out of the reading, or kept exactly as written. */
+static uint32_t bracket_closer(const ttf_engine_t *e, const char *text, size_t length) {
+    char key[8];
+    uint32_t cp, closer;
+    size_t width;
+    const char *value;
+    if (ttf_utf8_decode(text, length, &cp, &width) != 1 || width >= sizeof(key))
+        return 0;
+    memcpy(key, text, width);
+    key[width] = 0;
+    value = ttf_resource_get(e, "bracket_pair", "*", key, NULL);
+    if (!value || ttf_utf8_decode(value, strlen(value), &closer, &width) != 1)
+        return 0;
+    return closer;
+}
+
+static size_t bracket_region(const ttf_engine_t *e, const char *text, size_t length,
+                             const ttf_token_t *tokens, size_t count, size_t index) {
+    uint32_t closer = bracket_closer(e, text + tokens[index].begin, length - tokens[index].begin);
+    size_t i, depth = 1;
+    if (!closer || tokens[index].end != tokens[index].begin + 1)
+        return 0;
+    for (i = index + 1; i < count; ++i) {
+        uint32_t cp;
+        size_t width;
+        if (ttf_utf8_decode(text + tokens[i].begin, length - tokens[i].begin, &cp, &width) != 1)
+            continue;
+        if (cp == closer && !--depth)
+            return i;
+        if (bracket_closer(e, text + tokens[i].begin, length - tokens[i].begin) == closer)
+            ++depth;
+    }
+    return 0;
+}
+
 ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t length, size_t offset,
                               ttf_result_t *out) {
     ttf_context_memo_t memo = {0};
@@ -321,6 +357,44 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
         sem->struct_size = sizeof(*sem);
         sem->type = TTF_SEM_TEXT;
         sem->layer = TTF_LAYER_COMMON;
+        if (e->bracket_policy != TTF_BRACKET_READ) {
+            size_t close = bracket_region(e, text, length, tokens, count, i);
+            if (close) {
+                size_t end_offset = tokens[close].end;
+                span.input_begin = tokens[i].begin + offset;
+                span.input_end = end_offset + offset;
+                sem->input_begin = span.input_begin;
+                sem->input_end = span.input_end;
+                snprintf(sem->rule, sizeof(sem->rule), "%s",
+                         e->bracket_policy == TTF_BRACKET_SKIP ? "policy.bracket-skipped"
+                                                               : "policy.bracket-preserved");
+                snprintf(sem->unit, sizeof(sem->unit), "@bracket");
+                tag(sem->source_lang, "und");
+                tag(sem->context_lang, "und");
+                tag(sem->render_lang, "und");
+                tag(span.verbalizer, "identity");
+                span.script = TTF_SCRIPT_PUNCTUATION;
+                span.begin = output.length;
+                ttf_trace_span_begin(e, span.input_begin, span.input_end);
+                ttf_trace_stage(e, TTF_TRACE_POLICY, 0, end_offset - tokens[i].begin);
+                st = ttf_trace_emit(e, TTF_TRACE_SELECTED, TTF_LAYER_COMMON, 0, "und", "decision",
+                                    "bracket", "", sem->rule, sem->rule, SIZE_MAX);
+                if (st == TTF_OK && e->bracket_policy == TTF_BRACKET_PRESERVE)
+                    st = ttf_buffer_append(&output, text + tokens[i].begin,
+                                           end_offset - tokens[i].begin);
+                span.end = output.length;
+                ttf_trace_span_finish(e, span.begin, span.end);
+                if (st == TTF_OK)
+                    st = add_span(out, &span, &capacity);
+                if (st != TTF_OK)
+                    goto fail;
+                removed_before = e->bracket_policy == TTF_BRACKET_SKIP;
+                while (region_index < region_count && regions[region_index].begin < end_offset)
+                    ++region_index;
+                i = close + 1;
+                continue;
+            }
+        }
         if (region_index < region_count && regions[region_index].begin == tokens[i].begin) {
             const ttf_protected_match_t *literal = &regions[region_index++].match;
             if (literal->control.kind != TTF_CONTROL_NONE) {
