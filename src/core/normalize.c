@@ -526,7 +526,8 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
             }
         /* An address or an expression's own letters are not language evidence. */
         if (!rule && ((e->frontend_options.output_mode == TTF_OUTPUT_SPEECH &&
-                       (sem->type == TTF_SEM_EMAIL || sem->type == TTF_SEM_URL)) ||
+                       (sem->type == TTF_SEM_EMAIL || sem->type == TTF_SEM_URL ||
+                        !strcmp(sem->unit, "@handle"))) ||
                       (sem->type == TTF_SEM_SYMBOL && !strcmp(sem->unit, "@expression")))) {
             ttf_pack_input_t electronic_input = in;
             if (scopes[i].end && consumed <= scopes[i].end - i) {
@@ -617,13 +618,14 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
             ttf_buffer_free(&spoken);
             if (st == TTF_OK && !strcmp(span.lexicon, "preserved:no-renderer"))
                 tag(sem->render_lang, source->language_tag);
-        } else if ((sem->type == TTF_SEM_EMAIL || sem->type == TTF_SEM_URL) &&
+        } else if ((sem->type == TTF_SEM_EMAIL || sem->type == TTF_SEM_URL ||
+                    !strcmp(sem->unit, "@handle")) &&
                    e->frontend_options.output_mode == TTF_OUTPUT_SPEECH)
             st = ttf_electronic_render(e, source, renderer, text + tokens[i].begin,
                                        end - tokens[i].begin, &normalized);
         else if ((sem->type == TTF_SEM_EMAIL || sem->type == TTF_SEM_URL ||
                   sem->type == TTF_SEM_VERSION || sem->type == TTF_SEM_IP_ADDRESS ||
-                  !strcmp(sem->unit, "@number-sign")) &&
+                  !strcmp(sem->unit, "@number-sign") || !strcmp(sem->unit, "@handle")) &&
                  e->frontend_options.output_mode == TTF_OUTPUT_TEXT)
             st = ttf_buffer_append(&normalized, text + tokens[i].begin, end - tokens[i].begin);
         else if ((sem->type == TTF_SEM_SYMBOL || sem->type == TTF_SEM_TEXT ||

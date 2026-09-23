@@ -169,9 +169,16 @@ push한 `30b6b98`의 CI sanitizer 작업에서 `context_cache_compatibility`의 
   regressed 0. Debug 112/112, ASan/UBSan 100/100(단독), 외부 영어 결과 파일 동일.
   기존 `1시~2분` 보존 계약은 앞 단어 근거 요구로 유지된다.
 
-다음 순서(후보): 아이디/핸들(`abc_123`, `@daily_log`), 24시간 표기의 오전·오후,
-`2x`·괄호 식, `SAVE20` 숫자 읽기 정책, 공백 범위(`3월 1일 ~ 3월 5일`).
-한 번에 한 규칙군씩 진행한다.
+### 아이디·핸들 (2026-09-23, 커밋·미배포)
+
+- 변경: `src/semantic/classifier.c`의 `@handle` 분류(글자/밑줄 시작, 밑줄 필요),
+  `src/core/normalize.c`에서 주소 렌더러 사용·text 보존·문맥 중립.
+- 계약 `tests/evaluation/handle_v21.jsonl` 11건. cycle fixed 8 / unchanged-pass 3 /
+  regressed 0. Debug 113/113, ASan/UBSan 101/101(단독), 외부 영어 결과 파일 동일.
+  숫자로 시작하는 `2millionUSD_foo`의 기존 보존 계약은 글자 시작 조건으로 유지된다.
+
+다음 순서(후보): 24시간 표기의 오전·오후, `2x`·괄호 식, `SAVE20` 숫자 읽기 정책,
+공백 범위(`3월 1일 ~ 3월 5일`), camelCase 식별자. 한 번에 한 규칙군씩 진행한다.
 
 ## v0.20에서 마무리한 범위
 

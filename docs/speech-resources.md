@@ -134,6 +134,14 @@ build/ttf normalize --input-format annotated --output-mode speech 'ABC{@alphabet
 
 `www.`나 `http(s)://`가 없어도 공통 `url_tld` 목록의 소문자 최상위 도메인으로 끝나는 호스트는 주소다 (`naver.com에서` → `네이버 닷 컴에서`). `ASP.NET`, `report.txt`처럼 대문자이거나 목록에 없는 끝부분은 주소로 보지 않는다. IDNA/국제화 이메일은 지원 범위 밖이다.
 
+## 아이디와 핸들
+
+밑줄이 들어간 식별자(`abc_123`, `user_name`)와 `@`로 시작하는 핸들(`@daily_log`)은 주소와 같은
+방식으로 전달한다. 영문 묶음은 `electronic_word`·발음 사전에 있으면 단어로, 없으면 철자로 읽고
+숫자는 철자로 읽는다. 자주 쓰는 계정·단어는 고객 사전에 넣으면 단어로 읽힌다. Text 모드는 원문을
+보존하며, 식별자의 글자는 문맥 언어 판정에 쓰지 않는다. 밑줄이 없는 일반 단어와 숫자로 시작하는
+표기는 기존 문법을 따른다.
+
 ## 버전·IP 주소
 
 Speech 모드에서 점으로 이어진 세 부분 이상의 수는 버전, 0..255 네 부분은 IP다. Text 모드는 원문을 보존한다. 부분 읽기(`electronic_number version|ip cardinal|digits`)와 구분자(`electronic_separator`)는 리소스로 바꿀 수 있다. 선행 0이 있는 부분은 자릿수로 읽고, `v2.1`처럼 `v` 접두가 있으면 두 부분부터 버전이다.

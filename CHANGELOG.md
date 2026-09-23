@@ -2,6 +2,13 @@
 
 ## Unreleased — speech final gate
 
+- Transmit an identifier or handle the way an address is transmitted:
+  `abc_123` → `에이비씨 언더스코어 일이삼`, `@daily_log`, `user_name`. Declared
+  lexicon words still read as words (`test_case` → `테스트 언더스코어 …`), text
+  output preserves the identifier, and the identifier's own letters are not
+  English context evidence. A word without an underscore or handle mark, an
+  email address and a digit-leading form such as `2millionUSD_foo` are unchanged.
+- Add 11 contracts; external English results are identical.
 - Read a range written across several tokens: `3월 1일~3월 5일` →
   `삼 월 일 일에서 삼 월 오 일`, `10시 30분~11시` → `열 시 삼십 분에서 열한 시`.
   When neighbouring endpoints carry different units of one declared

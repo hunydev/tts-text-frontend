@@ -38,6 +38,7 @@ CORPORA = {
     "slash-date-v21": ("9/25 같은 슬래시 날짜", "slash_date_v21.jsonl"),
     "range-mark-v21": ("붙여 쓴 ~ 범위 표시", "range_mark_v21.jsonl"),
     "multi-range-v21": ("3월 1일~3월 5일 구간", "multi_range_v21.jsonl"),
+    "handle-v21": ("아이디·핸들 (abc_123, @handle)", "handle_v21.jsonl"),
 }
 DEFAULTS = dict(
     default_language="ko-KR",

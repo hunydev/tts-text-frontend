@@ -1078,6 +1078,39 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
             return finish(in, out, cluster_end, TTF_SEM_SYMBOL, "syntax.keycap-cluster");
         }
     }
+    /* abc_123, @daily_log: an identifier is transmitted like an address, so the
+       target reads declared words and spells the rest. A bare word without an
+       underscore or handle mark keeps ordinary lexical grammar. */
+    {
+        size_t p = b, letters = 0, digits_seen = 0, underscores = 0;
+        int handle = s[b] == '@' && (!b || !(ascii_letter(s[b - 1]) || digit(s[b - 1]) ||
+                                             s[b - 1] == '_' || s[b - 1] == '@'));
+        if (handle)
+            ++p;
+        if ((handle || !b ||
+             !(ascii_letter(s[b - 1]) || digit(s[b - 1]) || s[b - 1] == '_' || s[b - 1] == '@' ||
+               s[b - 1] == '.')) &&
+            p < n && (ascii_letter(s[p]) || s[p] == '_')) {
+            size_t start = p;
+            while (p < n && (ascii_letter(s[p]) || digit(s[p]) || s[p] == '_')) {
+                if (s[p] == '_')
+                    ++underscores;
+                else if (digit(s[p]))
+                    ++digits_seen;
+                else
+                    ++letters;
+                ++p;
+            }
+            (void)digits_seen;
+            if (underscores && letters && p - start < TTF_IR_VALUE_SIZE &&
+                !(p < n && (s[p] == '.' || s[p] == '@' || s[p] == '-'))) {
+                copy_value(out->value, sizeof(out->value), s + start, p - start);
+                snprintf(out->unit, sizeof(out->unit), "@handle");
+                return finish(in, out, p, TTF_SEM_CUSTOM,
+                              handle ? "syntax.handle" : "syntax.identifier");
+            }
+        }
+    }
     /* #1: a number sign before digits names an ordinal position. The target
        pack supplies the word order; a hashtag or C# keeps its symbol name. */
     if (s[b] == '#' && b + 1 < n && digit(s[b + 1]) && s[b + 1] != '0' &&

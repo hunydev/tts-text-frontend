@@ -752,6 +752,17 @@
         "reason": "The unit-family inventory and the surrounding-unit evidence are editable project policy; engine agreement does not supply independent linguistic approval."
       },
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/handle_v21.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Original developer-authored identifier/handle contracts fixed before executing the candidate; docs/speech-resources.md",
+        "reason": "Transmitting an identifier like an address (declared word, otherwise spelled) is editable project policy; engine agreement does not supply independent linguistic approval."
+      },
+      "case_overrides": {}
     }
   ],
   "excluded": [
