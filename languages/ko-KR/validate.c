@@ -242,6 +242,12 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    : ttf_validation_error(
                          d, "speech reading must contain 1..1023 printable UTF-8 bytes");
     }
+    if (SAME(k, "phone_service_prefix")) {
+        *handled = 1;
+        return decimal_key(key, 4) && strlen(key) == 4 && ttf_validation_enum(v, "0|1")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "phone_service_prefix requires four digits and 0|1");
+    }
     if (SAME(k, "phone_label") || SAME(k, "phone_extension") || SAME(k, "phone_extension_hint")) {
         *handled = 1;
         if (!phone_cue_key(key, !SAME(k, "phone_label")))
