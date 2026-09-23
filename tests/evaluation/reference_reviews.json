@@ -730,6 +730,17 @@
         "reason": "Which slash forms count as unambiguous dates is editable project policy; engine agreement does not supply independent linguistic approval."
       },
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/range_mark_v21.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Original developer-authored range-mark contracts fixed before executing the candidate; docs/speech-resources.md",
+        "reason": "Reading an attached ~ as the range word is editable project policy (speech_range_mark); engine agreement does not supply independent linguistic approval."
+      },
+      "case_overrides": {}
     }
   ],
   "excluded": [

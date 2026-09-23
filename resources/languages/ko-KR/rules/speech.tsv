@@ -139,3 +139,6 @@ electronic_separator	ko-KR	version	점
 electronic_separator	ko-KR	ip	점
 # #1 → 일 번 (project-owner decision 2026-09-22).
 number_sign	ko-KR	#	{N} 번
+# 서울~부산: an attached range mark reads as the range word and keeps the left word.
+speech_range_mark	ko-KR	~	에서 
+speech_range_mark	ko-KR	～	에서 

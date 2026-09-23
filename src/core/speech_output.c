@@ -42,6 +42,40 @@ static int lengthening(const ttf_engine_t *e, const char *language, const char *
     return flag && !strcmp(flag, "1");
 }
 
+/* A range mark written against both neighbours ("서울~부산") joins them; with a
+   space on either side it keeps its symbol name. */
+const char *ttf_speech_range_mark(const ttf_engine_t *e, const char *language, const char *left,
+                                  size_t left_length, const char *span, size_t span_length,
+                                  const char *right, size_t right_length) {
+    char key[8];
+    size_t width;
+    if (!span_length || span_length >= sizeof(key) ||
+        !ttf_speech_spoken_before(e, language, left, left_length) ||
+        !spoken_at(e, language, right, right_length))
+        return NULL;
+    memcpy(key, span, span_length);
+    key[span_length] = 0;
+    /* A repeated mark is a lengthening run, not a range between two words. */
+    if (lengthening(e, language, right, right_length, &width) ||
+        (right_length >= span_length && !memcmp(right, key, span_length)))
+        return NULL;
+    {
+        size_t start = left_length;
+        while (start && ((unsigned char)left[start - 1] & 0xc0) == 0x80)
+            --start;
+        if (start && left_length - start + 1 >= span_length &&
+            !memcmp(left + left_length - span_length, key, span_length))
+            return NULL;
+    }
+    /* A customer who disabled this mark as a range separator keeps its name. */
+    {
+        const char *separator = ttf_resource_get(e, "quantity_range_separator", "*", key, NULL);
+        if (separator && !strcmp(separator, "0"))
+            return NULL;
+    }
+    return ttf_resource_get(e, "speech_range_mark", language, key, NULL);
+}
+
 int ttf_speech_lengthening_span(const ttf_engine_t *e, const char *language, const char *left,
                                 size_t left_length, const char *span, size_t span_length,
                                 const char *right, size_t right_length) {

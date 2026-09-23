@@ -153,8 +153,16 @@ push한 `30b6b98`의 CI sanitizer 작업에서 `context_cache_compatibility`의 
   regressed 0. Debug 110/110, ASan/UBSan 98/98(단독), 외부 영어 결과 파일 동일.
   슬래시 약어 corpus의 `2026/09/23` 부정 예를 이 변경에 맞춰 갱신했다.
 
-다음 순서(후보): 날짜 범위 `9/25~9/30`, 24시간 표기의 오전·오후, `2x`·괄호 식,
-아이디/핸들 표기(`abc_123`, `@daily_log`), `SAVE20` 숫자 읽기 정책.
+### 붙여 쓴 범위 표시 (2026-09-23, 커밋·미배포)
+
+- 변경: `src/core/speech_output.c`의 `ttf_speech_range_mark`, `src/core/normalize.c` TN 단계 적용,
+  ko/en `speech_range_mark` 리소스, validator. 반복 마크·공백·고객이 끈 구분자는 제외한다.
+- 계약 `tests/evaluation/range_mark_v21.jsonl` 15건. cycle fixed 8 / unchanged-pass 7 /
+  regressed 0. Debug 111/111, ASan/UBSan 99/99(단독), 외부 영어 결과 파일 동일.
+- `1~2`·`1%~2%`의 기존 고객 계약은 `quantity_range_separator ~ 0`을 존중해 그대로 유지된다.
+
+다음 순서(후보): 여러 토큰 범위(`3월 1일~3월 5일`), 아이디/핸들(`abc_123`, `@daily_log`),
+24시간 표기의 오전·오후, `2x`·괄호 식, `SAVE20` 숫자 읽기 정책.
 한 번에 한 규칙군씩 진행한다.
 
 ## v0.20에서 마무리한 범위

@@ -2,6 +2,11 @@
 
 ## Unreleased — speech final gate
 
+- Speak an attached `~` between two readings as the range word instead of the
+  symbol name: `서울~부산` → `서울에서 부산`, `9/25~9/30`, `오전 10시~오후 9시`,
+  `월~금`. A spaced `~`, a repeated run (`진짜~~~`), a word-final lengthening mark
+  and a customer-disabled separator keep their previous reading.
+- Add 15 contracts; external English results are identical.
 - Read an unambiguous slash date instead of a fraction: `9/25` → `구 월 이십오 일`
   (`September twenty fifth` in English), `2026/9/25`, and `5/8(수)` through the
   bracketed weekday cue. `1/2 컵`, `3/4`, `16/9`, `10/10` and the locale-ambiguous
