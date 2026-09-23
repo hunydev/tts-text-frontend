@@ -472,3 +472,15 @@ TN-03/UNICODE-01의 일부를 진전시켰다. 원형 숫자·로마 숫자·분
 밑줄 식별자와 `@` 핸들을 주소와 같은 정책으로 읽는다. 독립 작성 11건
 (`tests/evaluation/handle_v21.jsonl`). 남은 범위: `my_file.txt`처럼 점이 붙은 파일명,
 밑줄 없는 camelCase 식별자, 그리고 근본 원인인 미등록 영어 단어의 G2P 품질(PRON-01).
+
+## v0.21 후속(미릴리스) — 영어 연도 문맥 (EVAL-02/TN-02 일부)
+
+`date_year_cue`에 전치사·구간어를 추가했다. 외부 영어 표본에서 DATE exact 319 → 343,
+회귀 0, CARDINAL 변화 없음(`benchmark/generated/sproat-v21-yearcue-final-comparison.json`).
+독립 작성 13건(`tests/evaluation/year_cue_v21.jsonl`).
+
+**막힌 지점:** `the`, `a`, `an`, `and`, `to`, `by`, `on`을 단서로 추가하면 DATE exact가 401까지
+올라가지만(+82), 이 단어들은 `boundary_word`로도 등록해야 하고 그러면 `context_cache_compatibility`와
+`phone_value_contracts`에서 chunk 크기에 따라 span 경계가 달라진다. 즉 스트리밍 planner가
+흔한 기능어를 경계로 쓸 때 batch와 다른 분절을 만든다. 이 계약을 지키려면 planner의
+pending 경계 처리를 먼저 고쳐야 한다. 측정 결과는 위 비교 파일에 남겼다.

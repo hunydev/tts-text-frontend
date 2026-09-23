@@ -2,6 +2,13 @@
 
 ## Unreleased — speech final gate
 
+- Recognize more English year contexts (`from`, `between`, `around`, `about`,
+  `circa`, `late`, `early`, `mid`, `through`, `till`, `post`, `pre`, `this`,
+  `versus`): `from 1965 to 1970` → `from nineteen sixty five to …`. The existing
+  quantity guard still keeps `page 1965` and `the 1965 people` cardinal. On the
+  external English development sample DATE exact rises 319 → 343 with no
+  regression; determiners and conjunctions are left out (see remaining-work).
+- Add 13 contracts.
 - Transmit an identifier or handle the way an address is transmitted:
   `abc_123` → `에이비씨 언더스코어 일이삼`, `@daily_log`, `user_name`. Declared
   lexicon words still read as words (`test_case` → `테스트 언더스코어 …`), text

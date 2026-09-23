@@ -177,8 +177,17 @@ push한 `30b6b98`의 CI sanitizer 작업에서 `context_cache_compatibility`의 
   regressed 0. Debug 113/113, ASan/UBSan 101/101(단독), 외부 영어 결과 파일 동일.
   숫자로 시작하는 `2millionUSD_foo`의 기존 보존 계약은 글자 시작 조건으로 유지된다.
 
-다음 순서(후보): 24시간 표기의 오전·오후, `2x`·괄호 식, `SAVE20` 숫자 읽기 정책,
-공백 범위(`3월 1일 ~ 3월 5일`), camelCase 식별자. 한 번에 한 규칙군씩 진행한다.
+### 영어 연도 문맥 (2026-09-23, 커밋·미배포)
+
+- 프로젝트의 측정 데이터(외부 영어 표본)에서 가장 큰 실제 오류가 연도 읽기였다
+  (`1965` → `one thousand nine hundred sixty five`).
+- 변경: `date_year_cue`/`boundary_word`에 전치사·구간어 15개 추가(리소스만).
+  DATE exact 319 → 343, 회귀 0. 계약 13건, Debug 114/114, ASan/UBSan 102/102(단독).
+- 흔한 기능어(the/a/and/to/by/on)를 넣으면 DATE 401까지 오르지만 boundary_word 등록이
+  chunk 크기에 따른 span 불일치를 만든다. remaining-work에 측정치와 함께 기록했다.
+
+다음 순서(후보): 스트리밍 planner의 기능어 경계 처리(위 막힌 지점), 24시간 표기의 오전·오후,
+`2x`·괄호 식, `SAVE20` 숫자 읽기 정책. 한 번에 한 규칙군씩 진행한다.
 
 ## v0.20에서 마무리한 범위
 
