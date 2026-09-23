@@ -103,7 +103,7 @@ build/ttf normalize --input-format annotated --output-mode speech 'ABC{@alphabet
 
 ## 소문자 한 글자와 메뉴 경로
 
-다른 언어 문장 안의 영문 한 글자는 대소문자와 관계없이 글자 이름이다 (`x 값` → `엑스 값`, `a, b, c` → `에이, 비, 씨`). 한 글자끼리 `-`로 이으면 한 철자다 (`x-y` → `엑스와이`); 이런 표기는 영어 문맥 증거로 쓰지 않는다 (`context_neutral en-US joined_letters 1`). 영어 문장의 `a`, `x`는 영어 본문이다.
+다른 언어 문장 안의 영문 한 글자는 대소문자와 관계없이 글자 이름이다 (`x 값` → `엑스 값`, `a, b, c` → `에이, 비, 씨`). 한 글자끼리 `-`나 `/`로 이으면 한 철자다 (`x-y` → `엑스와이`, `A/S` → `에이에스`); 이런 표기는 영어 문맥 증거로 쓰지 않는다 (`context_neutral en-US joined_letters 1`). 영어 문장의 `a`, `x`는 영어 본문이다.
 
 수식이 아닌 `<`, `>`는 `speech_silent`로 읽지 않고 양쪽 단어를 한 칸 띄운다 (`설정>일반` → `설정 일반`, `<공지>` → `공지`). 수식 `3>2`는 먼저 `math_relation`으로 읽는다. Text 모드는 원문을 둔다.
 

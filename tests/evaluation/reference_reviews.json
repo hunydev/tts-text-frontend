@@ -697,6 +697,17 @@
         "reason": "The service-prefix inventory and bracket handling are editable project policy; engine agreement does not supply independent linguistic approval."
       },
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/slash_letters_v21.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Original developer-authored slash-abbreviation contracts fixed before executing the candidate; docs/speech-resources.md",
+        "reason": "Treating slash-joined single letters as one spelling is editable project policy; engine agreement does not supply independent linguistic approval."
+      },
+      "case_overrides": {}
     }
   ],
   "excluded": [

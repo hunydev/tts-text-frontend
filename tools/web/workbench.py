@@ -33,6 +33,7 @@ CORPORA = {
     "particle-v21": ("조사 교정 (은/는, 로/으로)", "particle_v21.jsonl"),
     "mixed-case-v21": ("iOS·5G 같은 혼합 표기", "mixed_case_v21.jsonl"),
     "phone-service-v21": ("대표번호·괄호 전화번호", "phone_service_v21.jsonl"),
+    "slash-letters-v21": ("A/S 같은 슬래시 약어", "slash_letters_v21.jsonl"),
 }
 DEFAULTS = dict(
     default_language="ko-KR",

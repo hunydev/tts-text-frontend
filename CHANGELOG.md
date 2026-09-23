@@ -2,6 +2,10 @@
 
 ## Unreleased — speech final gate
 
+- Spell single letters joined by a slash as one sequence, like the hyphen form:
+  `A/S 문의` → `에이에스 문의`, `I/O 포트` → `아이오 포트`. Fractions, units
+  (`km/h`), URLs, dates and Hangul pairs keep their grammar.
+- Add 13 contracts; external English results are identical.
 - Keep the 30,000-number streaming gate inside its time limit: the Korean pack
   only re-runs the shared classifier when a 대 can follow, and particle
   agreement checks the span shape before any resource lookup.

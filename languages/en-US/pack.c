@@ -376,15 +376,17 @@ static int neutral_marker(const ttf_pack_input_t *in, size_t index, const char *
        English article or a word of an English clause. */
     if (t->end == t->begin + 1) {
         const char *joined_neutral = res(in->engine, "context_neutral", "joined_letters");
-        int after = index + 2 < in->token_count && in->tokens[index + 1].begin == t->end &&
-                    in->tokens[index + 1].end == t->end + 1 &&
-                    (in->text[t->end] == '-' || in->text[t->end] == '&') &&
-                    in->tokens[index + 2].begin == t->end + 1 &&
-                    in->tokens[index + 2].script == TTF_SCRIPT_LATIN &&
-                    in->tokens[index + 2].end == t->end + 2;
+        int after =
+            index + 2 < in->token_count && in->tokens[index + 1].begin == t->end &&
+            in->tokens[index + 1].end == t->end + 1 &&
+            (in->text[t->end] == '-' || in->text[t->end] == '&' || in->text[t->end] == '/') &&
+            in->tokens[index + 2].begin == t->end + 1 &&
+            in->tokens[index + 2].script == TTF_SCRIPT_LATIN &&
+            in->tokens[index + 2].end == t->end + 2;
         int before = index >= 2 && in->tokens[index - 1].end == t->begin &&
                      in->tokens[index - 1].begin + 1 == t->begin &&
-                     (in->text[t->begin - 1] == '-' || in->text[t->begin - 1] == '&') &&
+                     (in->text[t->begin - 1] == '-' || in->text[t->begin - 1] == '&' ||
+                      in->text[t->begin - 1] == '/') &&
                      in->tokens[index - 2].script == TTF_SCRIPT_LATIN &&
                      in->tokens[index - 2].end + 1 == t->begin &&
                      in->tokens[index - 2].begin + 2 == t->begin;
@@ -652,8 +654,8 @@ static size_t hyphen_letters(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     while (index + 2 < in->token_count && used + 1 < sizeof(out->value)) {
         const ttf_token_t *dash = &in->tokens[index + 1];
         if (dash->begin != in->tokens[index].end || dash->end != dash->begin + 1 ||
-            in->text[dash->begin] != '-' || in->tokens[index + 2].begin != dash->end ||
-            !single_letter(in, index + 2))
+            (in->text[dash->begin] != '-' && in->text[dash->begin] != '/') ||
+            in->tokens[index + 2].begin != dash->end || !single_letter(in, index + 2))
             break;
         index += 2;
         out->value[used++] = (char)toupper((unsigned char)in->text[in->tokens[index].begin]);

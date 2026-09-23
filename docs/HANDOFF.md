@@ -128,8 +128,16 @@ push한 `30b6b98`의 CI sanitizer 작업에서 `context_cache_compatibility`의 
 한글 받침 검사를 먼저 한다. 제한은 바꾸지 않았다. 로컬 ASan 단독 실행 80초→50.9초
 (기존 기록 48.5초), Debug 108/108, ASan/UBSan 96/96, 외부 영어 결과 파일 동일.
 
-다음 순서(후보): 슬래시 약어(`A/S`)와 영문+숫자 코드(`SAVE20`), 시각의 `영 분`,
-`2x`·괄호 식, URL 경로 단어. 한 번에 한 규칙군씩 진행한다.
+### 슬래시 약어 (2026-09-23, 커밋·미배포)
+
+- 변경: `languages/en-US/pack.c`의 `hyphen_letters`/`joined_letters` 중립 판정에 `/` 추가.
+- 계약 `tests/evaluation/slash_letters_v21.jsonl` 13건. cycle fixed 7 / unchanged-pass 6 /
+  regressed 0. Debug 108/108, ASan/UBSan 96/96(단독), 외부 영어 결과 파일 동일.
+- `SAVE20` → `에스에이브이이투지로`는 영어 발음 경로에서 여러 자리 숫자를 자릿수 영어
+  이름으로 읽기 때문이며, 읽기 정책 결정이 필요해 보류했다.
+
+다음 순서(후보): 시각의 `영 분`(`09:00`), `2x`·괄호 식, URL 경로 단어,
+`SAVE20` 숫자 읽기 정책. 한 번에 한 규칙군씩 진행한다.
 
 ## v0.20에서 마무리한 범위
 
