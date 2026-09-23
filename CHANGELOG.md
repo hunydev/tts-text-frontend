@@ -2,6 +2,13 @@
 
 ## Unreleased — speech final gate
 
+- Read Korean service numbers with a declared four-digit prefix as telephones
+  (`1588-0000` → `일오팔팔 공공공공`, previously the range `천오백팔십팔에서 영`).
+  `phone_service_prefix` lists the prefixes; an undeclared pair such as
+  `1500-1600` stays a range. The v0.18 contract for `1588-0000` is updated.
+- Read a phone number written inside brackets (`연락처(010-1234-5678)`); the
+  brackets stay as text and `(02) 1234-5678` keeps its area-code grammar.
+- Add 17 contracts; external English results are identical.
 - Add managed lexicon readings for mixed-case product names (`iOS` → `아이오에스`,
   `macOS`, `iPad`, `iPadOS`, `watchOS`, `iMac`, `AirPods`, `TikTok`, `eSIM`,
   `eBook`, `eSports`) and declare digit-leading labels `5G`, `4G`, `3G`, `2D` as

@@ -15,3 +15,23 @@ phone_label	ko-KR	문의 전화	1
 phone_label	ko-KR	전화번호는	1
 phone_label	ko-KR	연락처는	1
 phone_extension_hint	ko-KR	내선	1
+
+# Korean service numbers: a declared four-digit prefix plus four digits is a
+# telephone, not a numeric range. Customers can add or disable prefixes.
+phone_service_prefix	ko-KR	1588	1
+phone_service_prefix	ko-KR	1577	1
+phone_service_prefix	ko-KR	1566	1
+phone_service_prefix	ko-KR	1544	1
+phone_service_prefix	ko-KR	1644	1
+phone_service_prefix	ko-KR	1661	1
+phone_service_prefix	ko-KR	1670	1
+phone_service_prefix	ko-KR	1599	1
+phone_service_prefix	ko-KR	1600	1
+phone_service_prefix	ko-KR	1666	1
+phone_service_prefix	ko-KR	1668	1
+phone_service_prefix	ko-KR	1522	1
+phone_service_prefix	ko-KR	1533	1
+phone_service_prefix	ko-KR	1555	1
+phone_service_prefix	ko-KR	1551	1
+phone_service_prefix	ko-KR	1688	1
+phone_service_prefix	ko-KR	1899	1

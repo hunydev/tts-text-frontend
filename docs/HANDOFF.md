@@ -108,8 +108,19 @@
 - 계약 `tests/evaluation/mixed_case_v21.jsonl` 20건. cycle fixed 13 / unchanged-pass 7 /
   regressed 0. Debug 106/106, ASan/UBSan 94/94(단독), 외부 영어 결과 파일 동일.
 
-다음 순서(후보): `2x`·`x²`·괄호 식, URL 경로 단어, `20대의 차량`처럼 조사 너머 cue,
-`4K` 읽기 결정. 한 번에 한 규칙군씩 진행한다.
+### 대표번호·괄호 전화번호 (2026-09-23, 커밋·미배포)
+
+- 실제 문장 훑기에서 `1588-0000` → `천오백팔십팔에서 영`(값 오독), `연락처(010-...)` 미읽기를 발견.
+- 변경: `src/semantic/phone.c`(`service_number`, `bracketed_number`, 닫는 괄호 tail 허용),
+  ko `phone_service_prefix` 16개, validator.
+- 계약 `tests/evaluation/phone_service_v21.jsonl` 17건. v0.18 `1588-0000` 범위 계약을 전화로
+  갱신하고 사유를 기록했다. cycle fixed 9 / unchanged-pass 8 / regressed 0.
+  Debug 107/107, ASan/UBSan 95/95(단독), 외부 영어 결과 파일 동일.
+- 같은 훑기에서 발견한 남은 문제: `A/S` → `A slash S`, `SAVE20을` → `에스에이브이이투지로를`,
+  `09:00` → `아홉 시 영 분`, `13.6인치` 띄어쓰기.
+
+다음 순서(후보): 슬래시 약어(`A/S`)와 영문+숫자 코드(`SAVE20`), 시각의 `영 분`,
+`2x`·괄호 식, URL 경로 단어. 한 번에 한 규칙군씩 진행한다.
 
 ## v0.20에서 마무리한 범위
 

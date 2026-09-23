@@ -399,10 +399,49 @@ static void body(const ttf_pack_input_t *in, size_t begin, phone_body_t *out) {
     if (p == n && n < in->length)
         out->truncated = 1;
 }
+/* "(010-1234-5678)": digits and hyphens between brackets, with no inner
+   parenthesis, are one number wearing punctuation. */
+static int bracketed_number(const ttf_pack_input_t *in, size_t begin) {
+    size_t p = begin + 1, end = in->length, groups = 0, hyphens = 0;
+    if (end - begin > PHONE_SCAN_LIMIT)
+        end = begin + PHONE_SCAN_LIMIT;
+    while (p < end) {
+        if (digit(in->text[p])) {
+            while (p < end && digit(in->text[p]))
+                ++p;
+            ++groups;
+        } else if (in->text[p] == '-') {
+            ++hyphens;
+            ++p;
+        } else
+            break;
+    }
+    return p < end && in->text[p] == ')' && groups >= 2 && hyphens >= 1;
+}
+
+/* A declared service number (1588-0000) has a four-digit prefix and a
+   four-digit subscriber group; every other bare hyphen pair is a range. */
+static int service_number(const ttf_pack_input_t *in, const phone_body_t *parsed, size_t begin,
+                          ttf_resource_layer_t *layer) {
+    char key[8];
+    const char *value;
+    ttf_resource_layer_t found = TTF_LAYER_COMMON;
+    if (parsed->lengths[0] != 4 || parsed->lengths[1] != 4 || parsed->spaced ||
+        parsed->international || parsed->negative || begin + 4 > in->length)
+        return 0;
+    memcpy(key, in->text + begin, 4);
+    key[4] = 0;
+    value = lookup(in->engine, "phone_service_prefix", NULL, key, &found);
+    if (!value || strcmp(value, "1"))
+        return 0;
+    promote(layer, found);
+    return 1;
+}
+
 static size_t classify_phone(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     const char *s;
     size_t begin, end, ext_end, p, ext_digits = 0, minimum, maximum;
-    int labeled, legacy, candidate;
+    int labeled, legacy, candidate, service;
     ttf_resource_layer_t layer = TTF_LAYER_COMMON;
     phone_body_t parsed;
     if (!in || !out || in->index >= in->token_count)
@@ -415,20 +454,25 @@ static size_t classify_phone(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     if (ttf_phone_preceding_label(in, begin, "identifier_label", NULL, NULL, NULL))
         return 0;
     labeled = ttf_phone_preceding_label(in, begin, "phone_label", NULL, NULL, &layer);
-    if (s[begin] == '(' && !labeled && !parenthesized_shape(in, begin))
-        return 0;
+    if (s[begin] == '(' && !parenthesized_shape(in, begin)) {
+        /* Brackets around a complete number are punctuation, not an area code:
+           the number classifies on its own and the brackets stay as text. */
+        if (bracketed_number(in, begin) || !labeled)
+            return 0;
+    }
     body(in, begin, &parsed);
+    service = service_number(in, &parsed, begin, &layer);
     /* Keep valid and invalid year-first dates under the established date grammar. */
     if (!parsed.international && !parsed.negative && !parsed.parenthesis && parsed.groups == 3 &&
         parsed.hyphens == 2 && parsed.lengths[0] == 4)
         return 0;
     /* Two hyphen endpoints are a numeric range unless explicit phone context
        disambiguates them; a leading '+' alone is not a telephone label. */
-    if (!labeled && !parsed.parenthesis && parsed.groups == 2 && parsed.hyphens == 1)
+    if (!labeled && !parsed.parenthesis && parsed.groups == 2 && parsed.hyphens == 1 && !service)
         return 0;
     legacy = !parsed.international && !parsed.negative && !parsed.parenthesis && !parsed.spaced &&
              parsed.groups == 3 && parsed.hyphens == 2;
-    candidate = labeled || parsed.international || s[begin] == '(' || legacy ||
+    candidate = labeled || parsed.international || s[begin] == '(' || legacy || service ||
                 (parsed.hyphens >= 2 && !parsed.spaced && !parsed.parenthesis);
     if (!candidate)
         return 0;
@@ -514,7 +558,7 @@ static size_t classify_phone(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     } else if (end < in->length) {
         uint32_t cp;
         size_t width;
-        if (letter(s[end]) || s[end] == ')' || s[end] == '+' ||
+        if (letter(s[end]) || (s[end] == ')' && !(begin && s[begin - 1] == '(')) || s[end] == '+' ||
             (ttf_utf8_decode(s + end, in->length - end, &cp, &width) == 1 && cp >= 128 &&
              ttf_script_of(cp) == TTF_SCRIPT_WHITESPACE && cp != 0x2028 && cp != 0x2029 &&
              end + width < in->length && digit(s[end + width])))

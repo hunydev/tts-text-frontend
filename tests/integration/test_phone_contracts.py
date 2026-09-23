@@ -105,9 +105,11 @@ GUARDS = [
     dict(id="en-generic-range", category="phone/negative", default_language="en-US",
          text="3-5", expected="three to five", expected_spans=[
              dict(surface="3-5", semantic_type="RANGE", value="3", secondary="5")]),
-    dict(id="ko-unlabeled-two-group-range", category="phone/negative", default_language="ko-KR",
-         text="1588-0000", expected="천오백팔십팔에서 영", expected_spans=[
-             dict(surface="1588-0000", semantic_type="RANGE", value="1588", secondary="0000")]),
+    # A declared service prefix is an explicit cue (2026-09-23); an undeclared
+    # pair such as 1500-1600 remains a range.
+    dict(id="ko-unlabeled-two-group-range", category="phone/national", default_language="ko-KR",
+         text="1588-0000", expected="일오팔팔 공공공공", expected_spans=[
+             dict(surface="1588-0000", semantic_type="PHONE", value="1588-0000", unit="national")]),
     dict(id="ko-calendar", category="phone/negative", default_language="ko-KR",
          text="2026-09-17", expected="이천이십육 년 구 월 십칠 일", expected_spans=[
              dict(surface="2026-09-17", semantic_type="DATE", value="2026-09-17")]),
