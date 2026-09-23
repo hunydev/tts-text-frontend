@@ -202,6 +202,14 @@ semantic_term	*	c++	ALNUM_TERM:en-US
 semantic_term	*	C#	ALNUM_TERM:en-US
 semantic_term	*	c#	ALNUM_TERM:en-US
 semantic_term	*	3d	ALNUM_TERM:en-US
+semantic_term	*	5G	ALNUM_TERM:en-US
+semantic_term	*	5g	ALNUM_TERM:en-US
+semantic_term	*	4G	ALNUM_TERM:en-US
+semantic_term	*	4g	ALNUM_TERM:en-US
+semantic_term	*	3G	ALNUM_TERM:en-US
+semantic_term	*	3g	ALNUM_TERM:en-US
+semantic_term	*	2D	ALNUM_TERM:en-US
+semantic_term	*	2d	ALNUM_TERM:en-US
 # Unicode compatibility unit signs map to the same canonical unit.
 numeric_suffix	*	℃	MEASURE:°C
 numeric_suffix	*	㎏	MEASURE:kg

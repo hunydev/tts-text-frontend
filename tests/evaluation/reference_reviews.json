@@ -675,6 +675,17 @@
         "reason": "The alternation inventory and the attached-only scope are editable project policy; engine agreement does not supply independent linguistic approval."
       },
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/mixed_case_v21.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "provisional-pronunciation",
+        "review_status": "pending-independent-review",
+        "reference_source": "Original developer-authored readings for mixed-case product names and declared alphanumeric labels; lexicons/ko-KR/pattern-additions.jsonl",
+        "reason": "Each name's Korean reading is an editable project choice recorded in the managed lexicon; engine agreement does not supply independent pronunciation approval."
+      },
+      "case_overrides": {}
     }
   ],
   "excluded": [

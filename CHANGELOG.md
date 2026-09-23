@@ -2,6 +2,12 @@
 
 ## Unreleased — speech final gate
 
+- Add managed lexicon readings for mixed-case product names (`iOS` → `아이오에스`,
+  `macOS`, `iPad`, `iPadOS`, `watchOS`, `iMac`, `AirPods`, `TikTok`, `eSIM`,
+  `eBook`, `eSports`) and declare digit-leading labels `5G`, `4G`, `3G`, `2D` as
+  alphanumeric terms with their own readings (`5G 요금제` → `오지 요금제`).
+  `3D`, `K7`, `GPT-4` and undeclared labels such as `4K` are unchanged.
+- Add 20 contracts; external English results are identical.
 - Agree a Korean particle written against a reading with the spoken form:
   `5kg로` → `오 킬로그램으로`, `1+1는` → `일 더하기 일은`, `7월는` → `칠 월은`,
   `B과` → `비와`. The `particle_form` table lists obligatory allomorphs only

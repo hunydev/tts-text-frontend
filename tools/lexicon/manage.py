@@ -70,11 +70,13 @@ def canonical(term: str) -> str:
                 "multiword keys require 2..8 alphabetic words in the current native grammar"
             )
     elif not (
-        key in {"c++", "c#", "3d"}
+        key in {"c++", "c#"}
         or re.fullmatch(r"[a-z]+[0-9]*(?:-[a-z]+[0-9]*|-[0-9]+)?", key)
+        # A declared alnum label such as 5g or 3d reads as one term.
+        or re.fullmatch(r"[0-9]+[a-z]+", key)
     ):
         raise ValueError(
-            "key is not a supported single lexical word, alphanumeric, hyphenated word, C++ or C# shape"
+            "key is not a supported single lexical word, alphanumeric, hyphenated word, alnum label, C++ or C# shape"
         )
     if not re.search("[a-z]", key):
         raise ValueError(
