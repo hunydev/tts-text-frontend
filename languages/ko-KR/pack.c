@@ -1391,13 +1391,33 @@ static int band_role(const ttf_pack_input_t *in, const ttf_semantic_t *s) {
     return band_value(s->value) && (s->type != TTF_SEM_RANGE || band_value(s->secondary));
 }
 
+/* Re-running the shared classifier is only worth it when a 대 can still be
+   part of this numeric object; a bare number never becomes a band. */
+static int band_unit_ahead(const ttf_pack_input_t *in) {
+    const char *unit = ttf_resource_get(in->engine, "unit", "ko-KR", "band", NULL);
+    size_t p = in->tokens[in->index].begin, end = p + 32, width;
+    if (!unit)
+        return 0;
+    width = strlen(unit);
+    if (end > in->length)
+        end = in->length;
+    while (p < end) {
+        if (in->text[p] == ' ' || in->text[p] == '\t' || in->text[p] == '\n')
+            return 0;
+        if (p + width <= end && !memcmp(in->text + p, unit, width))
+            return 1;
+        ++p;
+    }
+    return 0;
+}
+
 static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s);
 /* Pack-specific grammar creates language-neutral IR. */
 static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     size_t n = classify_grammar(in, s);
     int universal = 0;
     char c = in->text[in->tokens[in->index].begin];
-    if (!n && c >= '0' && c <= '9') {
+    if (!n && c >= '0' && c <= '9' && band_unit_ahead(in)) {
         ttf_semantic_t candidate = *s;
         n = ttf_classify_universal(in, &candidate);
         if (n) {

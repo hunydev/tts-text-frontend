@@ -2,6 +2,9 @@
 
 ## Unreleased — speech final gate
 
+- Keep the 30,000-number streaming gate inside its time limit: the Korean pack
+  only re-runs the shared classifier when a 대 can follow, and particle
+  agreement checks the span shape before any resource lookup.
 - Read Korean service numbers with a declared four-digit prefix as telephones
   (`1588-0000` → `일오팔팔 공공공공`, previously the range `천오백팔십팔에서 영`).
   `phone_service_prefix` lists the prefixes; an undeclared pair such as

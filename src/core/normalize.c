@@ -238,12 +238,22 @@ static ttf_status_t particle_agreement(const ttf_engine_t *e, const ttf_language
     uint32_t cp;
     size_t width, start = output->length;
     int final;
-    if (!source_length || source_length >= sizeof(key) || !output->length)
+    /* Cheap shape tests first: a particle is a short non-ASCII span left as
+       written, and it can only agree after a syllable of the same script. */
+    if (!source_length || source_length >= sizeof(key) || !output->length ||
+        !((unsigned char)source[0] & 0x80))
         return TTF_OK;
-    memcpy(key, source, source_length);
-    key[source_length] = 0;
     if (normalized->length != source_length || memcmp(normalized->data, source, source_length))
         return TTF_OK;
+    while (start && ((unsigned char)output->data[start - 1] & 0xc0) == 0x80)
+        --start;
+    if (!start ||
+        ttf_utf8_decode(output->data + start - 1, output->length - start + 1, &cp, &width) != 1 ||
+        cp < 0xac00 || cp > 0xd7a3)
+        return TTF_OK;
+    final = (int)((cp - 0xac00) % 28);
+    memcpy(key, source, source_length);
+    key[source_length] = 0;
     value = ttf_resource_get(e, "particle_form", renderer->language_tag, key, NULL);
 
     if (!value || strlen(value) >= sizeof(forms))
@@ -256,13 +266,6 @@ static ttf_status_t particle_agreement(const ttf_engine_t *e, const ttf_language
     rieul = strchr(vowel, '|');
     if (rieul)
         *rieul++ = 0;
-    while (start && ((unsigned char)output->data[start - 1] & 0xc0) == 0x80)
-        --start;
-    if (!start ||
-        ttf_utf8_decode(output->data + start - 1, output->length - start + 1, &cp, &width) != 1 ||
-        cp < 0xac00 || cp > 0xd7a3)
-        return TTF_OK;
-    final = (int)((cp - 0xac00) % 28);
     value = !final ? vowel : final == 8 && rieul ? rieul : forms;
     if (!strcmp(value, key))
         return TTF_OK;
