@@ -404,9 +404,11 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "month_alias value must be an integer in 1..12");
     }
-    if (SAME(k, "date_year_cue") || SAME(k, "date_year_quantity")) {
+    if (SAME(k, "date_year_cue") || SAME(k, "date_year_quantity") ||
+        SAME(k, "date_year_interval")) {
         *handled = 1;
-        if (SAME(k, "date_year_cue") ? !lowercase_words(key, 64) : !lowercase_letters(key, 63))
+        if (SAME(k, "date_year_cue") || SAME(k, "date_year_interval") ? !lowercase_words(key, 64)
+                                                                      : !lowercase_letters(key, 63))
             return ttf_validation_error(d,
                                         "date cue must be bounded canonical lowercase ASCII words");
         return ttf_validation_enum(v, "0|1")
@@ -528,11 +530,16 @@ static int boundary_hint(const ttf_engine_t *e, const char *key) {
     return 0;
 }
 
-/* A multiword cue needs every intermediate word kept pending. Checking only
- * the last word would still let a small segment target cut inside the cue. */
+/* The streaming planner reads a one-word year cue from the cue resource itself,
+ * the way it reads a floor cue, so such a word need not be a general boundary
+ * word. Every other cue, and every multiword cue, still needs its words kept
+ * pending: the planner only inspects the token before the number, so a small
+ * target could otherwise cut inside the cue. */
 static ttf_status_t cue_boundaries(const ttf_engine_t *e, const char *cue,
-                                   ttf_resource_diagnostic_t *d) {
+                                   ttf_resource_diagnostic_t *d, int planner_reads_cue) {
     size_t p = 0;
+    if (planner_reads_cue && !strchr(cue, ' '))
+        return TTF_OK;
     while (cue[p]) {
         char key[96];
         size_t n = 0;
@@ -541,7 +548,7 @@ static ttf_status_t cue_boundaries(const ttf_engine_t *e, const char *cue,
         key[n] = 0;
         if (!boundary_hint(e, key))
             return final_error(d, "boundary_word", key,
-                               "enabled English date cue needs boundary_word=1 for every word");
+                               "a multiword English date cue needs boundary_word=1 for every word");
         if (cue[p])
             ++p;
     }
@@ -660,7 +667,8 @@ static ttf_status_t engine(const ttf_engine_t *e, ttf_resource_diagnostic_t *d, 
                 (SAME(entry->lang, EN) || SAME(entry->lang, "*"))) {
                 value = ttf_resource_get(e, entry->kind, EN, entry->key, NULL);
                 if (value == entry->value && !SAME(value, "0") &&
-                    (status = cue_boundaries(e, entry->key, d)) != TTF_OK)
+                    (status = cue_boundaries(e, entry->key, d,
+                                             SAME(entry->kind, "date_year_cue"))) != TTF_OK)
                     return status;
             }
             if (SAME(entry->kind, "initialism_text") &&

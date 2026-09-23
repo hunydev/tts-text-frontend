@@ -2,7 +2,7 @@
   "baseline_version": "0.18.0",
   "source_commit": "f00948be1657413f58ecfa76214bdc96bfaca35c",
   "baseline_cli_sha256": "a6309567e5850d4f73189d3c337e5733ea91f9d2af227f2186541697547ad99e",
-  "purpose": "Exact v0.18 implementation compatibility, not independent linguistic gold. Input text and expected normalized text authored separately before v0.19 execution.",
+  "purpose": "Exact v0.18 implementation compatibility, not independent linguistic gold. Input text and expected normalized text authored separately before v0.19 execution. Updated 2026-09-23: the streaming planner now keeps a declared year cue with its number, so the small-target segments for four English clauses cover more words and their context_trace scores changed. Output text, span offsets, semantic types and render languages are unchanged.",
   "cases": {
     "ordinal-context": {
       "input": {
@@ -719,7 +719,7 @@
               "pronunciation_layer": "common",
               "lexicon": "",
               "verbalizer": "en-US",
-              "context_trace": "en-US=53 ko-KR=0"
+              "context_trace": "en-US=61 ko-KR=0"
             },
             {
               "begin": 50,
@@ -739,7 +739,7 @@
               "pronunciation_layer": "common",
               "lexicon": "",
               "verbalizer": "en-US",
-              "context_trace": "en-US=53 ko-KR=0"
+              "context_trace": "en-US=61 ko-KR=0"
             },
             {
               "begin": 51,
@@ -759,7 +759,7 @@
               "pronunciation_layer": "common",
               "lexicon": "",
               "verbalizer": "en-US",
-              "context_trace": "en-US=8 ko-KR=0"
+              "context_trace": "en-US=61 ko-KR=0"
             },
             {
               "begin": 56,
@@ -779,7 +779,7 @@
               "pronunciation_layer": "common",
               "lexicon": "",
               "verbalizer": "en-US",
-              "context_trace": "en-US=8 ko-KR=0"
+              "context_trace": "en-US=61 ko-KR=0"
             },
             {
               "begin": 57,
@@ -799,7 +799,7 @@
               "pronunciation_layer": "common",
               "lexicon": "",
               "verbalizer": "en-US",
-              "context_trace": "en-US=8 ko-KR=0"
+              "context_trace": "en-US=61 ko-KR=0"
             },
             {
               "begin": 62,
@@ -1340,7 +1340,7 @@
               "pronunciation_layer": "common",
               "lexicon": "",
               "verbalizer": "en-US",
-              "context_trace": "en-US=53 ko-KR=0"
+              "context_trace": "en-US=61 ko-KR=0"
             },
             {
               "begin": 45,
@@ -1360,7 +1360,7 @@
               "pronunciation_layer": "common",
               "lexicon": "",
               "verbalizer": "en-US",
-              "context_trace": "en-US=53 ko-KR=0"
+              "context_trace": "en-US=61 ko-KR=0"
             },
             {
               "begin": 46,
@@ -1380,7 +1380,7 @@
               "pronunciation_layer": "common",
               "lexicon": "",
               "verbalizer": "en-US",
-              "context_trace": "en-US=8 ko-KR=0"
+              "context_trace": "en-US=61 ko-KR=0"
             },
             {
               "begin": 52,
@@ -3104,7 +3104,7 @@
               "pronunciation_layer": "common",
               "lexicon": "",
               "verbalizer": "en-US",
-              "context_trace": "en-US=53 ko-KR=0"
+              "context_trace": "en-US=61 ko-KR=0"
             },
             {
               "begin": 43,
@@ -3124,7 +3124,7 @@
               "pronunciation_layer": "common",
               "lexicon": "",
               "verbalizer": "en-US",
-              "context_trace": "en-US=53 ko-KR=0"
+              "context_trace": "en-US=61 ko-KR=0"
             },
             {
               "begin": 44,
@@ -3144,7 +3144,7 @@
               "pronunciation_layer": "common",
               "lexicon": "",
               "verbalizer": "en-US",
-              "context_trace": "en-US=8 ko-KR=0"
+              "context_trace": "en-US=61 ko-KR=0"
             },
             {
               "begin": 49,
@@ -3164,7 +3164,7 @@
               "pronunciation_layer": "common",
               "lexicon": "",
               "verbalizer": "en-US",
-              "context_trace": "en-US=8 ko-KR=0"
+              "context_trace": "en-US=61 ko-KR=0"
             },
             {
               "begin": 50,
@@ -3184,7 +3184,7 @@
               "pronunciation_layer": "common",
               "lexicon": "",
               "verbalizer": "en-US",
-              "context_trace": "en-US=8 ko-KR=0"
+              "context_trace": "en-US=61 ko-KR=0"
             },
             {
               "begin": 55,
@@ -5047,7 +5047,7 @@
               "pronunciation_layer": "common",
               "lexicon": "",
               "verbalizer": "en-US",
-              "context_trace": "en-US=53 ko-KR=0"
+              "context_trace": "en-US=61 ko-KR=0"
             },
             {
               "begin": 43,
@@ -5067,7 +5067,7 @@
               "pronunciation_layer": "common",
               "lexicon": "",
               "verbalizer": "en-US",
-              "context_trace": "en-US=53 ko-KR=0"
+              "context_trace": "en-US=61 ko-KR=0"
             },
             {
               "begin": 44,
@@ -5087,7 +5087,7 @@
               "pronunciation_layer": "common",
               "lexicon": "",
               "verbalizer": "en-US",
-              "context_trace": "en-US=8 ko-KR=0"
+              "context_trace": "en-US=61 ko-KR=0"
             },
             {
               "begin": 49,
@@ -5107,7 +5107,7 @@
               "pronunciation_layer": "common",
               "lexicon": "",
               "verbalizer": "en-US",
-              "context_trace": "en-US=8 ko-KR=0"
+              "context_trace": "en-US=61 ko-KR=0"
             },
             {
               "begin": 50,
@@ -5127,7 +5127,7 @@
               "pronunciation_layer": "common",
               "lexicon": "",
               "verbalizer": "en-US",
-              "context_trace": "en-US=8 ko-KR=0"
+              "context_trace": "en-US=61 ko-KR=0"
             },
             {
               "begin": 55,

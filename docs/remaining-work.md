@@ -479,8 +479,11 @@ TN-03/UNICODE-01의 일부를 진전시켰다. 원형 숫자·로마 숫자·분
 회귀 0, CARDINAL 변화 없음(`benchmark/generated/sproat-v21-yearcue-final-comparison.json`).
 독립 작성 13건(`tests/evaluation/year_cue_v21.jsonl`).
 
-**막힌 지점:** `the`, `a`, `an`, `and`, `to`, `by`, `on`을 단서로 추가하면 DATE exact가 401까지
-올라가지만(+82), 이 단어들은 `boundary_word`로도 등록해야 하고 그러면 `context_cache_compatibility`와
-`phone_value_contracts`에서 chunk 크기에 따라 span 경계가 달라진다. 즉 스트리밍 planner가
-흔한 기능어를 경계로 쓸 때 batch와 다른 분절을 만든다. 이 계약을 지키려면 planner의
-pending 경계 처리를 먼저 고쳐야 한다. 측정 결과는 위 비교 파일에 남겼다.
+**후속 해결(2026-09-23):** planner가 `date_year_cue`를 층 단서처럼 직접 읽게 해서 단서 단어를
+일반 `boundary_word`로 만들지 않아도 되게 했다. 관사류를 단서로 되돌리고, `from X to Y` /
+`between X and Y`는 `date_year_interval`로 처리하되 **앞 끝이 단서로 확인된 연도일 때만** 적용한다.
+그래서 `rose to 1965`, `( 2003 and 2005 )`는 수량으로 남는다. DATE exact 343 → 394, 회귀 0,
+CARDINAL 변화 없음(`benchmark/generated/sproat-v21-planner-comparison.json`). v0.18 호환 참조 4건의
+`context_trace` 점수는 분절이 넓어져 갱신했고 텍스트·offset·의미·언어는 그대로다.
+남은 범위: `to`/`and`/`by` 자체를 단서로 쓰는 문맥(현재는 앞 끝 연도 근거 필요), 대소문자만
+다른 DATE 불일치 698건, `9/25/2026` 같은 locale 모호 표기.

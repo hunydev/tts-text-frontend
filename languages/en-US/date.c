@@ -354,6 +354,46 @@ static int following_quantity(const ttf_pack_input_t *in, size_t end) {
     return value && strcmp(value, "0");
 }
 
+/* "from 1965 to 1970", "between 1914 and 1918": the joining word alone is not
+   evidence, but a four-digit year immediately before it is. */
+static int interval_continuation(const ttf_pack_input_t *in, size_t start,
+                                 ttf_resource_layer_t *layer) {
+    size_t end = start, begin, digits = 0, p;
+    char key[32];
+    ttf_resource_layer_t found = TTF_LAYER_COMMON;
+    const char *value;
+    while (end && horizontal(in->text[end - 1]))
+        --end;
+    begin = end;
+    while (begin && ascii_alpha(in->text[begin - 1]) && end - begin < sizeof(key) - 1)
+        --begin;
+    if (begin == end || end - begin >= sizeof(key))
+        return 0;
+    for (p = begin; p < end; ++p)
+        key[p - begin] = ascii_lower(in->text[p]);
+    key[end - begin] = 0;
+    value = ttf_resource_get(in->engine, "date_year_interval", EN, key, &found);
+    if (!value || strcmp(value, "1"))
+        return 0;
+    end = begin;
+    while (end && horizontal(in->text[end - 1]))
+        --end;
+    begin = end;
+    while (begin && ascii_digit(in->text[begin - 1])) {
+        --begin;
+        ++digits;
+    }
+    if (digits != 4 || (begin && (ascii_alpha(in->text[begin - 1]) || in->text[begin - 1] == '.' ||
+                                  in->text[begin - 1] == ',')))
+        return 0;
+    /* The first endpoint must itself be a cued year; two bare numbers in a list
+       stay cardinals. */
+    if (!preceding_cue(in, begin, layer))
+        return 0;
+    merge_layer(layer, found);
+    return 1;
+}
+
 static size_t contextual_year(const ttf_pack_input_t *in, ttf_semantic_t *out, size_t start) {
     date_number_t number;
     size_t consumed;
@@ -363,7 +403,7 @@ static size_t contextual_year(const ttf_pack_input_t *in, ttf_semantic_t *out, s
         return 0;
     number = number_at(in, start, 0);
     if (!number.valid || number.digits != 4 || following_quantity(in, number.end) ||
-        !preceding_cue(in, start, &layer))
+        (!preceding_cue(in, start, &layer) && !interval_continuation(in, start, &layer)))
         return 0;
     if (number.end < in->length && in->text[number.end] == ',' && number.end + 1 < in->length &&
         ascii_digit(in->text[number.end + 1]))

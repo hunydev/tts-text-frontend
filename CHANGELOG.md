@@ -2,6 +2,14 @@
 
 ## Unreleased — speech final gate
 
+- Let the streaming planner read a declared year cue the way it reads a floor
+  cue, so a cue word keeps its number in the same segment without becoming a
+  general boundary word. Determiners (`the`, `a`, `an`, `this`, `that`) are cues
+  again, and `from 1965 to 1970` / `between 1914 and 1918` work through a new
+  `date_year_interval` rule that requires the first endpoint to be a cued year,
+  so `rose to 1965` and `( 2003 and 2005 )` stay cardinals. On the external
+  English sample DATE exact rises 343 → 394 with no regression and no CARDINAL
+  change. Four v0.18 compatibility references record the new segment scores.
 - Recognize more English year contexts (`from`, `between`, `around`, `about`,
   `circa`, `late`, `early`, `mid`, `through`, `till`, `post`, `pre`, `this`,
   `versus`): `from 1965 to 1970` → `from nineteen sixty five to …`. The existing

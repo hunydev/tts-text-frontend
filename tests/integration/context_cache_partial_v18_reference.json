@@ -2,7 +2,7 @@
   "baseline_version": "0.18.0",
   "captured_utc": "2026-09-17T04:56:45.985827+00:00",
   "baseline_cli_sha256": "64c4004e78e5962fd8fb98ca6a3a487f43ae54c0d3d5eddf7f35bd58fa4698bf",
-  "purpose": "Separate original multi-partial inputs with independently authored expected text; v0.18 full metadata is a compatibility oracle, frozen before executing the adaptive-cache candidate.",
+  "purpose": "Separate original multi-partial inputs with independently authored expected text; v0.18 full metadata is a compatibility oracle, frozen before executing the adaptive-cache candidate. Updated 2026-09-23: a declared year cue now stays with its number in the streaming planner, so small-target segments for these English remainders cover more words and their context_trace scores changed; text, offsets, semantic types and render languages are unchanged.",
   "cases": {
     "repeated-counter-ko-remainder": {
       "input": {
@@ -2241,7 +2241,7 @@
               "pronunciation_layer": "common",
               "lexicon": "",
               "verbalizer": "en-US",
-              "context_trace": "en-US=53 ko-KR=0"
+              "context_trace": "en-US=61 ko-KR=0"
             },
             {
               "begin": 51,
@@ -2261,7 +2261,7 @@
               "pronunciation_layer": "common",
               "lexicon": "",
               "verbalizer": "en-US",
-              "context_trace": "en-US=53 ko-KR=0"
+              "context_trace": "en-US=61 ko-KR=0"
             },
             {
               "begin": 52,
@@ -2281,7 +2281,7 @@
               "pronunciation_layer": "common",
               "lexicon": "",
               "verbalizer": "en-US",
-              "context_trace": "en-US=8 ko-KR=0"
+              "context_trace": "en-US=61 ko-KR=0"
             },
             {
               "begin": 58,

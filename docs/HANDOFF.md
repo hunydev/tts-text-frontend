@@ -186,8 +186,20 @@ push한 `30b6b98`의 CI sanitizer 작업에서 `context_cache_compatibility`의 
 - 흔한 기능어(the/a/and/to/by/on)를 넣으면 DATE 401까지 오르지만 boundary_word 등록이
   chunk 크기에 따른 span 불일치를 만든다. remaining-work에 측정치와 함께 기록했다.
 
-다음 순서(후보): 스트리밍 planner의 기능어 경계 처리(위 막힌 지점), 24시간 표기의 오전·오후,
-`2x`·괄호 식, `SAVE20` 숫자 읽기 정책. 한 번에 한 규칙군씩 진행한다.
+### planner의 연도 단서 처리와 구간 연속 (2026-09-23, 커밋·미배포)
+
+- 앞선 "막힌 지점"을 해결했다. `src/segmenter/segmenter.c`가 `date_year_cue`를 floor cue처럼
+  직접 읽는다. en validator는 한 단어 연도 단서에 한해 `boundary_word` 요구를 해제하고,
+  다른 단서와 여러 단어 단서에는 그대로 요구한다.
+- `languages/en-US/date.c`에 `interval_continuation`을 추가했다. `from X to Y`/`between X and Y`는
+  **앞 끝이 단서로 확인된 연도**일 때만 뒤 끝을 연도로 본다.
+- 결과: DATE exact 343 → 394(기준 319 대비 +75), CARDINAL 변화 없음, chunk 불일치 0.
+  Debug 115/115, ASan/UBSan 103/103(단독). 계약 14건.
+- v0.18 호환 참조(`context_cache_v18_reference.json`, `..._partial_...`) 4+1건의 `context_trace`만
+  갱신하고 사유를 파일 purpose에 적었다. 텍스트·offset·의미·render 언어는 동일하다.
+
+다음 순서(후보): 24시간 표기의 오전·오후, `2x`·괄호 식, `SAVE20` 숫자 읽기 정책,
+대소문자만 다른 DATE 698건의 진단 지표. 한 번에 한 규칙군씩 진행한다.
 
 ## v0.20에서 마무리한 범위
 

@@ -47,7 +47,12 @@ static int pending_word(const ttf_engine_t *e, const char *s, const ttf_token_t 
        floor policy, including an explicit zero, takes precedence per pack. */
     for (size_t pack = 0; pack < e->pack_count; ++pack) {
         const char *language = e->packs[pack]->language_tag;
-        const char *value = ttf_resource_get(e, "floor_cue_before", language, key, NULL);
+        /* A declared year cue keeps its number in the same segment without
+           making the word a general boundary for ordinary phrases. */
+        const char *value = ttf_resource_get(e, "date_year_cue", language, key, NULL);
+        if (value && !strcmp(value, "1"))
+            return 1;
+        value = ttf_resource_get(e, "floor_cue_before", language, key, NULL);
         if (value) {
             if (!strcmp(value, "1"))
                 return 1;

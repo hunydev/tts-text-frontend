@@ -43,6 +43,12 @@ date_year_cue	en-US	during	1
 date_year_cue	en-US	before	1
 date_year_cue	en-US	after	1
 date_year_cue	en-US	year	1
+date_year_cue	en-US	the	1
+date_year_cue	en-US	a	1
+date_year_cue	en-US	an	1
+date_year_cue	en-US	that	1
+date_year_cue	en-US	these	1
+date_year_cue	en-US	those	1
 # Determiners, prepositions and interval words also introduce a year; a
 # following quantity noun (date_year_quantity) still keeps the cardinal.
 date_year_cue	en-US	this	1
@@ -210,18 +216,10 @@ boundary_period	en-US	oct	1
 boundary_period	en-US	nov	1
 boundary_period	en-US	dec	1
 # Streaming boundary words for the new year cues.
-boundary_word	en-US	this	1
-boundary_word	en-US	from	1
-boundary_word	en-US	between	1
-boundary_word	en-US	around	1
-boundary_word	en-US	about	1
-boundary_word	en-US	circa	1
-boundary_word	en-US	late	1
-boundary_word	en-US	early	1
-boundary_word	en-US	mid	1
-boundary_word	en-US	through	1
-boundary_word	en-US	till	1
-boundary_word	en-US	post	1
-boundary_word	en-US	pre	1
-boundary_word	en-US	versus	1
-boundary_word	en-US	vs	1
+# A second endpoint continues an interval whose first endpoint is a year.
+date_year_interval	en-US	to	1
+date_year_interval	en-US	and	1
+date_year_interval	en-US	or	1
+date_year_interval	en-US	through	1
+date_year_interval	en-US	until	1
+date_year_interval	en-US	till	1
