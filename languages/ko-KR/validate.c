@@ -201,6 +201,12 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "electronic_separator supports version|ip readings");
     }
+    if (SAME(k, "speech_range_mark")) {
+        *handled = 1;
+        return symbol_key(key) && label(v) && strlen(v) < 64
+                   ? TTF_OK
+                   : ttf_validation_error(d, "speech_range_mark requires one symbol and a reading");
+    }
     if (SAME(k, "speech_silent")) {
         *handled = 1;
         return symbol_key(key) && ttf_validation_enum(v, "0|1")
