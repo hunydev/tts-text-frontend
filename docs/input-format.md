@@ -26,6 +26,9 @@ Input syntax and output purpose are independent:
 | `brackets=read` | Read a bracketed aside (default) |
 | `brackets=skip` | Leave a bracketed aside out of the reading |
 | `brackets=preserve` | Keep a bracketed aside exactly as written |
+| `unknown_foreign=guess` | Guess a target-language pronunciation for an undeclared Latin word (default) |
+| `unknown_foreign=spell` | Spell such a word letter by letter |
+| `unknown_foreign=preserve` | Keep such a word as written |
 
 For example, Korean speech output reads `a1@b2.com` as
 `에이일 앳 비이 닷 컴`; text output preserves `a1@b2.com`. Speech mode does
@@ -178,3 +181,13 @@ with `ttf_engine_set_option(engine, "brackets", "read|skip|preserve")` before th
 engine is frozen, by the CLI flag `--brackets`, or by the workbench selector. Named
 options are functions rather than new structure fields, so a consumer built against
 an older header keeps its layout and its defaults.
+
+## Unknown foreign words
+
+A Latin word reaches the target language through the pronunciation lexicon, then
+the source pronunciation dictionary, and otherwise through a guess. `spell` and
+`preserve` replace that last step only: a declared reading, an initialism
+(`R&D`), an alphanumeric label (`k7`), an address and an identifier keep their own
+contracts. `preserve` also leaves the word out of the final character pass, so the
+source spelling survives in speech output. Customers who prefer a word reading add
+the term to a lexicon layer instead of changing this policy.

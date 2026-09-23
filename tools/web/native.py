@@ -234,9 +234,11 @@ class Engine:
                 frontend.max_control_bytes = options.get("max_control_bytes", 4096)
 
                 self.check(self.lib.ttf_engine_set_frontend_options(self.handle, C.byref(frontend)))
-            if hasattr(self.lib, "ttf_engine_set_option") and options.get("brackets", "read") != "read":
-                self.check(self.lib.ttf_engine_set_option(
-                    self.handle, b"brackets", options["brackets"].encode()))
+            if hasattr(self.lib, "ttf_engine_set_option"):
+                for name, default in (("brackets", "read"), ("unknown_foreign", "guess")):
+                    if options.get(name, default) != default:
+                        self.check(self.lib.ttf_engine_set_option(
+                            self.handle, name.encode(), options[name].encode()))
             if options.get("domain") in ("finance", "finance-vocabulary"):
                 self.load(resources / "domains/finance/ko-KR/lexicon.tsv", 2)
             if options.get("domain") == "finance":

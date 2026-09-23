@@ -17,7 +17,7 @@ ACTIVE_JSONL = (
     "cases", "domain_cases_v8", "advanced_cases", "challenge_cases",
     "protected_cases", "content_v7", "finance_ranges_v7", "multiword_v8", "lexicon_v10",
     "scaled_currency_v12", "english_dates_v13", "english_forms_v14", "korean_counters_v15", "phone_cases_v18",
-    "user_patterns_v20", "speech_final_gate_v21", "letters_v21", "electronic_v21", "math_hashtag_v21", "counter_band_v21", "floor_v21", "letters_paths_v21", "letter_number_sign_v21", "particle_v21", "mixed_case_v21", "phone_service_v21", "slash_letters_v21", "clock_v21", "slash_date_v21", "range_mark_v21", "multi_range_v21", "handle_v21", "year_cue_v21", "bracket_v21",
+    "user_patterns_v20", "speech_final_gate_v21", "letters_v21", "electronic_v21", "math_hashtag_v21", "counter_band_v21", "floor_v21", "letters_paths_v21", "letter_number_sign_v21", "particle_v21", "mixed_case_v21", "phone_service_v21", "slash_letters_v21", "clock_v21", "slash_date_v21", "range_mark_v21", "multi_range_v21", "handle_v21", "year_cue_v21", "bracket_v21", "unknown_foreign_v21",
 )
 CLASSIFICATIONS = {
     "reference-policy", "provisional-pronunciation", "preservation-contract", "needs-review",

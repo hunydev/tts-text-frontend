@@ -750,7 +750,8 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
             normalized = spaced;
         }
         if (st == TTF_OK && e->frontend_options.output_mode == TTF_OUTPUT_SPEECH && !rule &&
-            strncmp(span.lexicon, "lexicon:", 8)) {
+            strncmp(span.lexicon, "lexicon:", 8) &&
+            strcmp(span.lexicon, "unknown-foreign-preserved")) {
             if (sem->type == TTF_SEM_TEXT && strcmp(sem->rule, "identity")) {
                 ttf_trace_stage(e, TTF_TRACE_POLICY, 0, normalized.length);
                 st = ttf_trace_emit(e, TTF_TRACE_SELECTED, TTF_LAYER_COMMON, 0,

@@ -44,5 +44,16 @@ ttf_status_t ttf_engine_set_option(ttf_engine_t *engine, const char *name, const
             return TTF_EINVAL;
         return TTF_OK;
     }
+    if (!strcmp(name, "unknown_foreign")) {
+        if (!strcmp(value, "guess"))
+            engine->unknown_foreign_policy = TTF_UNKNOWN_FOREIGN_GUESS;
+        else if (!strcmp(value, "spell"))
+            engine->unknown_foreign_policy = TTF_UNKNOWN_FOREIGN_SPELL;
+        else if (!strcmp(value, "preserve"))
+            engine->unknown_foreign_policy = TTF_UNKNOWN_FOREIGN_PRESERVE;
+        else
+            return TTF_EINVAL;
+        return TTF_OK;
+    }
     return TTF_EINVAL;
 }

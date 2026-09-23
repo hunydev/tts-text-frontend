@@ -2,6 +2,14 @@
 
 ## Unreleased — speech final gate
 
+- Add an unknown-foreign-word policy: `guess` (default, the existing
+  pronunciation guess), `spell` (`daily 업데이트` → `디에이아이엘와이 업데이트`) or
+  `preserve` (`daily 업데이트`). A word with a lexicon or dictionary entry keeps its
+  declared reading under every policy, and initialisms, alphanumeric labels,
+  addresses and identifiers are unaffected. Set through
+  `ttf_engine_set_option(engine, "unknown_foreign", …)`, `--unknown-foreign` or the
+  workbench selector.
+- Add 15 contracts; external English results are identical.
 - Add a bracket policy: `read` (default), `skip` or `preserve` decides whether a
   bracketed aside is read, left out of the reading, or kept exactly as written
   (`설명(참고: 3kg)입니다` → `설명입니다` / `설명(참고: 3kg)입니다`). Declared pairs live

@@ -41,6 +41,7 @@ CORPORA = {
     "handle-v21": ("아이디·핸들 (abc_123, @handle)", "handle_v21.jsonl"),
     "year-cue-v21": ("영어 연도 문맥", "year_cue_v21.jsonl"),
     "bracket-v21": ("괄호 안 처리 옵션", "bracket_v21.jsonl"),
+    "unknown-foreign-v21": ("미등록 외국어 단어 정책", "unknown_foreign_v21.jsonl"),
 }
 DEFAULTS = dict(
     default_language="ko-KR",
@@ -49,6 +50,7 @@ DEFAULTS = dict(
     output_mode="speech",
     unreadable="preserve",
     brackets="read",
+    unknown_foreign="guess",
     max_control_bytes=4096,
     sentence_split=True,
     phrase_split=True,
@@ -132,6 +134,7 @@ def validate(request, corpus=False):
         ("output_mode", ("text", "speech")),
         ("unreadable", ("preserve", "drop")),
         ("brackets", ("read", "skip", "preserve")),
+        ("unknown_foreign", ("guess", "spell", "preserve")),
         ("domain", ("none", "finance", "finance-vocabulary")),
     ]:
         if opts[key] not in allowed:
@@ -389,7 +392,7 @@ def catalog():
                 id=row["id"], category="읽기 제어·출력", title=control_titles[row["id"]],
                 text=row["text"], expected=row["expected"],
                 options={key: row[key] for key in (
-                    "default_language", "input_format", "output_mode", "unreadable", "brackets"
+                    "default_language", "input_format", "output_mode", "unreadable", "brackets", "unknown_foreign"
                 ) if key in row},
                 reference_review=reviewed_cases[(relative, row["id"])],
             ))

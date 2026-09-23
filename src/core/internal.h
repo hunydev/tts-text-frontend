@@ -27,6 +27,7 @@ struct ttf_engine {
     ttf_config_t config;
     ttf_frontend_options_t frontend_options;
     ttf_bracket_policy_t bracket_policy; /* Named options live here, not in the public struct. */
+    ttf_unknown_foreign_policy_t unknown_foreign_policy;
     char *resource_root, *default_language;
     int frozen, validating;
     struct ttf_trace_state *trace_state;   /* Request view only; frozen owner stays NULL. */

@@ -494,3 +494,10 @@ CARDINAL 변화 없음(`benchmark/generated/sproat-v21-planner-comparison.json`)
 `ttf_engine_set_option` 함수로 전달한다(예전 헤더로 빌드한 소비자의 배치를 지키기 위함).
 독립 작성 11건(`tests/evaluation/bracket_v21.jsonl`). 사용자가 요청한 남은 옵션:
 미등록 외국어 단어 정책(철자/추측/원문), 장식 문자 이름 읽기, 대문자 약어 읽기 방식.
+
+## v0.21 후속(미릴리스) — 미등록 외국어 단어 정책 (PRON-01/사용자 요청)
+
+추측 발음 대신 철자 읽기나 원문 유지를 고를 수 있다(`unknown_foreign`). 근본적인 G2P 품질
+문제(PRON-01)를 해결한 것이 아니라, 고객이 추측을 끌 수 있게 한 것이다. 독립 작성 15건
+(`tests/evaluation/unknown_foreign_v21.jsonl`). 남은 사용자 옵션: 장식 문자 이름 읽기,
+대문자 약어 읽기 방식.

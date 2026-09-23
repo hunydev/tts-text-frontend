@@ -785,6 +785,17 @@
         "reason": "Which pairs count as brackets and what each policy emits are editable project policy; engine agreement does not supply independent approval."
       },
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/unknown_foreign_v21.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Original developer-authored unknown-foreign-word policy contracts fixed before implementing the option; docs/input-format.md",
+        "reason": "What counts as a declared reading and what each policy emits are editable project policy; engine agreement does not supply independent approval."
+      },
+      "case_overrides": {}
     }
   ],
   "excluded": [

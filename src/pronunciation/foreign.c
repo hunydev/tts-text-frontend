@@ -103,6 +103,24 @@ ttf_status_t ttf_trace_foreign_lexicon(const ttf_engine_t *e, const char *source
     free(word);
     return status;
 }
+/* A declared reading is one the source pack takes from its pronunciation
+   dictionary; a generated/grapheme guess is not. */
+static int declared_pronunciation(const ttf_engine_t *e, const ttf_language_pack_t *source,
+                                  const char *text, size_t n, ttf_lexical_class_t lexical) {
+    ttf_pronunciation_t probe;
+    size_t attempt = ttf_trace_mark(e);
+    int declared = 0;
+    if (!source->pronounce)
+        return 0;
+    memset(&probe, 0, sizeof(probe));
+    if (source->pronounce(e, text, n, lexical, &probe) == TTF_OK &&
+        memchr(probe.provenance, 0, sizeof(probe.provenance)) &&
+        strstr(probe.provenance, "pronunciation-dictionary"))
+        declared = 1;
+    ttf_trace_reject_since(e, attempt);
+    return declared;
+}
+
 static ttf_status_t render_at(const ttf_engine_t *e, const ttf_language_pack_t *source,
                               const ttf_language_pack_t *target, const char *text, size_t n,
                               ttf_lexical_class_t lexical, ttf_buffer_t *out, char trace[64],
@@ -238,6 +256,38 @@ static ttf_status_t render_at(const ttf_engine_t *e, const ttf_language_pack_t *
     }
     *layer = TTF_LAYER_COMMON;
     st = TTF_EINVAL;
+    /* A word with no declared reading follows the caller's policy: guess it,
+       spell its letters, or keep the source text. Letter labels and declared
+       spellings above are unaffected. */
+    if (e->unknown_foreign_policy != TTF_UNKNOWN_FOREIGN_GUESS && lexical != TTF_LEX_INITIALISM &&
+        lexical != TTF_LEX_ALNUM_TERM && !declared_pronunciation(e, source, text, n, lexical)) {
+        const char *detail = e->unknown_foreign_policy == TTF_UNKNOWN_FOREIGN_SPELL
+                                 ? "unknown-foreign-spelled"
+                                 : "unknown-foreign-preserved";
+        ttf_trace_stage(e, TTF_TRACE_POLICY, part_begin, part_begin + n);
+        st = ttf_trace_emit(e, TTF_TRACE_SELECTED, TTF_LAYER_COMMON, 0, target->language_tag,
+                            "decision", "unknown-foreign", "", detail, detail, SIZE_MAX);
+        if (st != TTF_OK)
+            return st;
+        snprintf(trace, 64, "%s", detail);
+        if (e->unknown_foreign_policy == TTF_UNKNOWN_FOREIGN_PRESERVE)
+            return ttf_buffer_append(out, text, n);
+        {
+            ttf_semantic_t sem = {0};
+            size_t i;
+            if (n >= sizeof(sem.value))
+                return ttf_buffer_append(out, text, n);
+            for (i = 0; i < n; ++i)
+                if (!((text[i] >= 'a' && text[i] <= 'z') || (text[i] >= 'A' && text[i] <= 'Z') ||
+                      (text[i] >= '0' && text[i] <= '9')))
+                    return ttf_buffer_append(out, text, n);
+            sem.struct_size = sizeof(sem);
+            sem.type = TTF_SEM_CUSTOM;
+            snprintf(sem.unit, sizeof(sem.unit), "@alphabet");
+            memcpy(sem.value, text, n);
+            return target->verbalize(e, &sem, sem.value, n, out);
+        }
+    }
     if (!target->render_phones && !target->render_graphemes) {
         snprintf(trace, 64, "preserved:no-renderer");
         ttf_trace_stage(e, TTF_TRACE_POLICY, part_begin, part_begin + n);

@@ -209,8 +209,19 @@ push한 `30b6b98`의 CI sanitizer 작업에서 `context_cache_compatibility`의 
 - 계약 `tests/evaluation/bracket_v21.jsonl` 11건. Debug 116/116, ASan/UBSan 104/104(단독),
   외부 영어 결과 파일 동일, browser gate 통과.
 
-다음 순서: 사용자 옵션 2~4 — 미등록 외국어 단어 정책(철자/추측/원문), 장식 문자 이름 읽기,
-대문자 약어 읽기 방식. 이후 후보: `SAVE20` 숫자 읽기 정책, 대소문자만 다른 DATE 698건 지표.
+### 사용자 옵션 2: 미등록 외국어 단어 (2026-09-23, 커밋·미배포)
+
+- `ttf_engine_set_option(engine, "unknown_foreign", "guess|spell|preserve")`, CLI `--unknown-foreign`,
+  웹 선택기. 기본 `guess`는 기존 동작이다.
+- 변경: `src/pronunciation/foreign.c`(`declared_pronunciation` 확인 후 정책 적용),
+  `src/core/normalize.c`(보존된 단어는 최종 문자 패스를 건너뜀), 옵션 배선.
+- 사전·발음 사전에 있는 단어(`Apple`, `Google`, `Hello`), 이니셜(`R&D`), 라벨(`k7`), 주소·식별자는
+  정책과 무관하게 기존 계약을 유지한다.
+- 계약 `tests/evaluation/unknown_foreign_v21.jsonl` 15건. Debug 117/117, ASan/UBSan 104/104(단독),
+  외부 영어 결과 파일 동일, browser gate 통과. 기본 정책 사례는 cycle에서 회귀 0.
+
+다음 순서: 사용자 옵션 3(장식 문자 이름 읽기), 4(대문자 약어 읽기 방식).
+이후 후보: `SAVE20` 숫자 읽기 정책, 대소문자만 다른 DATE 698건 지표.
 
 ## v0.20에서 마무리한 범위
 

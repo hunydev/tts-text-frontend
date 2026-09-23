@@ -15,6 +15,13 @@ typedef enum {
     TTF_BRACKET_SKIP = 1,
     TTF_BRACKET_PRESERVE = 2
 } ttf_bracket_policy_t;
+/* A Latin word with no lexicon or dictionary entry: guess its target-language
+   pronunciation, spell its letters, or keep the source text. */
+typedef enum {
+    TTF_UNKNOWN_FOREIGN_GUESS = 0,
+    TTF_UNKNOWN_FOREIGN_SPELL = 1,
+    TTF_UNKNOWN_FOREIGN_PRESERVE = 2
+} ttf_unknown_foreign_policy_t;
 
 /* Additive options: the ABI v1 config, result and language-pack layouts stay
    unchanged. Initialize before editing fields. Apply before engine freeze.
@@ -32,7 +39,8 @@ typedef struct {
 /* Named policies are added as functions, not as new fields, so a consumer built
    against an older header keeps its structure layout and its defaults. Apply
    before engine freeze. Unknown names and values return TTF_EINVAL.
-   Currently: "brackets" = read|skip|preserve. */
+   Currently: "brackets" = read|skip|preserve,
+   "unknown_foreign" = guess|spell|preserve. */
 TTF_API ttf_status_t ttf_engine_set_option(ttf_engine_t *engine, const char *name,
                                            const char *value);
 
