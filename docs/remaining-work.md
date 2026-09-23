@@ -507,3 +507,10 @@ CARDINAL 변화 없음(`benchmark/generated/sproat-v21-planner-comparison.json`)
 `decorative` 옵션으로 선언된 장식 문자를 이름으로 읽는다. 기본값은 기존 동작이다.
 독립 작성 13건(`tests/evaluation/decorative_v21.jsonl`). 이름 목록은 검수 대기이며 이모지에는
 이름을 주지 않았다. 남은 사용자 옵션: 대문자 약어 읽기 방식.
+
+## v0.21 후속(미릴리스) — 대문자 약어 읽기 방식 (사용자 요청)
+
+`initialism` 옵션(기본 `spell`)으로 `IT`/`AT`/`BE`처럼 영어 단어와 겹치는 대문자 약어도 철자로
+읽는다. 선언된 acronym·고유명사·사전 항목은 그대로다. 독립 작성 15건
+(`tests/evaluation/initialism_v21.jsonl`). 외부 영어 출력은 동일하고 span 10건의 IR만 바뀌었다.
+사용자가 요청한 옵션 네 가지(괄호, 미등록 외국어, 장식 문자, 대문자 약어)를 모두 구현했다.

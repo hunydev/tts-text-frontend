@@ -43,6 +43,7 @@ CORPORA = {
     "bracket-v21": ("괄호 안 처리 옵션", "bracket_v21.jsonl"),
     "unknown-foreign-v21": ("미등록 외국어 단어 정책", "unknown_foreign_v21.jsonl"),
     "decorative-v21": ("장식 문자 이름 읽기", "decorative_v21.jsonl"),
+    "initialism-v21": ("대문자 약어 읽기 방식", "initialism_v21.jsonl"),
 }
 DEFAULTS = dict(
     default_language="ko-KR",
@@ -52,6 +53,8 @@ DEFAULTS = dict(
     unreadable="preserve",
     brackets="read",
     unknown_foreign="guess",
+    decorative="follow",
+    initialism="spell",
     max_control_bytes=4096,
     sentence_split=True,
     phrase_split=True,
@@ -136,6 +139,8 @@ def validate(request, corpus=False):
         ("unreadable", ("preserve", "drop")),
         ("brackets", ("read", "skip", "preserve")),
         ("unknown_foreign", ("guess", "spell", "preserve")),
+        ("decorative", ("follow", "read")),
+        ("initialism", ("spell", "word")),
         ("domain", ("none", "finance", "finance-vocabulary")),
     ]:
         if opts[key] not in allowed:
@@ -393,7 +398,8 @@ def catalog():
                 id=row["id"], category="읽기 제어·출력", title=control_titles[row["id"]],
                 text=row["text"], expected=row["expected"],
                 options={key: row[key] for key in (
-                    "default_language", "input_format", "output_mode", "unreadable", "brackets", "unknown_foreign"
+                    "default_language", "input_format", "output_mode", "unreadable", "brackets", "unknown_foreign",
+                    "decorative", "initialism"
                 ) if key in row},
                 reference_review=reviewed_cases[(relative, row["id"])],
             ))

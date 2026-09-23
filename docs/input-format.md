@@ -31,6 +31,8 @@ Input syntax and output purpose are independent:
 | `unknown_foreign=preserve` | Keep such a word as written |
 | `decorative=follow` | Stars, hearts, arrows and emoji follow the unreadable policy (default) |
 | `decorative=read` | Speak the declared name of such a character |
+| `initialism=spell` | An all-uppercase run of two or more letters spells its letters (default) |
+| `initialism=word` | Such a run keeps its ordinary word reading |
 
 For example, Korean speech output reads `a1@b2.com` as
 `에이일 앳 비이 닷 컴`; text output preserves `a1@b2.com`. Speech mode does
@@ -202,3 +204,13 @@ the term to a lexicon layer instead of changing this policy.
 declared name like any other symbol name, separated from neighbouring words, and
 leaves an undeclared character, emoji included, to the unreadable policy. Text
 output is unaffected; add a customer row to name more characters.
+
+## Uppercase abbreviations
+
+`IT`, `AT`, `BE` and `IN` spell ordinary English words, so they used to reach the
+word path while `KBS` or `OECD` were spelled. Under the default `spell` policy an
+all-uppercase run of two or more letters is an abbreviation regardless, and under
+`word` it keeps the word reading. A term the resources declare as an acronym
+(`NASA`), a proper noun, or an explicit pronunciation lexicon entry outranks both,
+and single letters, mixed-case names (`iPhone`) and English-context text are
+unaffected.

@@ -807,6 +807,17 @@
         "reason": "Each decorative name is an editable project choice; engine agreement does not supply independent approval."
       },
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/initialism_v21.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Original developer-authored uppercase-abbreviation contracts fixed before implementing the option; docs/input-format.md",
+        "reason": "Whether an all-uppercase run that spells an ordinary word is an abbreviation is editable project policy; engine agreement does not supply independent approval."
+      },
+      "case_overrides": {}
     }
   ],
   "excluded": [

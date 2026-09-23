@@ -228,8 +228,16 @@ push한 `30b6b98`의 CI sanitizer 작업에서 `context_cache_compatibility`의 
 - 계약 `tests/evaluation/decorative_v21.jsonl` 13건. Debug 117/117, ASan/UBSan 105/105(단독),
   외부 영어 결과 파일 동일.
 
-다음 순서: 사용자 옵션 4(대문자 약어 읽기 방식).
-이후 후보: `SAVE20` 숫자 읽기 정책, 대소문자만 다른 DATE 698건 지표.
+### 사용자 옵션 4: 대문자 약어 읽기 방식 (2026-09-23, 커밋·미배포)
+
+- `ttf_engine_set_option(engine, "initialism", "spell|word")`, CLI `--initialism`, 웹 선택기.
+- 변경: `languages/en-US/pack.c`의 lexical 분류에서 전부 대문자 2글자 이상이면 약어로 본다.
+  선언된 ACRONYM/PROPER_NOUN/INITIALISM과 사전 항목은 제외한다(NASA → 나사 유지).
+- 계약 `tests/evaluation/initialism_v21.jsonl` 15건. Debug 118/118, ASan/UBSan 106/106(단독),
+  외부 영어 출력 동일(IR 10건만 INITIALISM). 사용자 옵션 네 가지를 모두 마쳤다.
+
+이후 후보: `SAVE20` 숫자 읽기 정책(결정 필요), 대소문자만 다른 DATE 698건의 진단 지표,
+한국어 측정 corpus 마련, PRON-01 미등록 단어 발음 품질.
 
 ## v0.20에서 마무리한 범위
 

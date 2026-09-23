@@ -26,6 +26,10 @@ typedef enum {
    `read` speaks the declared name of such a character and leaves the rest to the
    unreadable policy. */
 typedef enum { TTF_DECORATIVE_FOLLOW = 0, TTF_DECORATIVE_READ = 1 } ttf_decorative_policy_t;
+/* An all-uppercase run of two or more letters: spell its letters even when the
+   same spelling is an ordinary lowercase word, or let the word reading win.
+   A pronunciation lexicon entry (NASA) outranks both. */
+typedef enum { TTF_INITIALISM_SPELL = 0, TTF_INITIALISM_WORD = 1 } ttf_initialism_policy_t;
 
 /* Additive options: the ABI v1 config, result and language-pack layouts stay
    unchanged. Initialize before editing fields. Apply before engine freeze.
@@ -44,7 +48,8 @@ typedef struct {
    against an older header keeps its structure layout and its defaults. Apply
    before engine freeze. Unknown names and values return TTF_EINVAL.
    Currently: "brackets" = read|skip|preserve,
-   "unknown_foreign" = guess|spell|preserve, "decorative" = follow|read. */
+   "unknown_foreign" = guess|spell|preserve, "decorative" = follow|read,
+   "initialism" = spell|word. */
 TTF_API ttf_status_t ttf_engine_set_option(ttf_engine_t *engine, const char *name,
                                            const char *value);
 

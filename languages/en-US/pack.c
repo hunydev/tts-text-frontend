@@ -723,6 +723,18 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     kind = res(in->engine, "lexical", key);
     out->type = TTF_SEM_WORD;
     out->lexical_class = TTF_LEX_UNKNOWN_LATIN;
+    /* IT, AT, BE: an all-uppercase run whose spelling is also an ordinary word
+       is an abbreviation under the spelling policy. A lexicon entry still wins
+       later, because it is an explicit reading for the term. */
+    if (kind && in->engine->initialism_policy == TTF_INITIALISM_SPELL && consumed == 1 && n > 1 &&
+        strcmp(kind, "ACRONYM") && strcmp(kind, "INITIALISM") && strcmp(kind, "PROPER_NOUN")) {
+        size_t upper;
+        for (upper = 0; upper < n; ++upper)
+            if (in->text[t->begin + upper] < 'A' || in->text[t->begin + upper] > 'Z')
+                break;
+        if (upper == n)
+            kind = "INITIALISM";
+    }
     if (kind) {
         if (!strcmp(kind, "INITIALISM")) {
             out->type = TTF_SEM_INITIALISM;

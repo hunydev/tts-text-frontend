@@ -44,6 +44,15 @@ ttf_status_t ttf_engine_set_option(ttf_engine_t *engine, const char *name, const
             return TTF_EINVAL;
         return TTF_OK;
     }
+    if (!strcmp(name, "initialism")) {
+        if (!strcmp(value, "spell"))
+            engine->initialism_policy = TTF_INITIALISM_SPELL;
+        else if (!strcmp(value, "word"))
+            engine->initialism_policy = TTF_INITIALISM_WORD;
+        else
+            return TTF_EINVAL;
+        return TTF_OK;
+    }
     if (!strcmp(name, "decorative")) {
         if (!strcmp(value, "follow"))
             engine->decorative_policy = TTF_DECORATIVE_FOLLOW;

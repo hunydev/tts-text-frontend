@@ -2,6 +2,14 @@
 
 ## Unreleased — speech final gate
 
+- Add an initialism policy: `spell` (default) reads an all-uppercase run of two
+  or more letters as an abbreviation even when the same spelling is an ordinary
+  word (`IT 업계` → `아이티 업계`, previously `이트`), while `word` keeps the word
+  reading. A declared acronym (`NASA` → `나사`), proper noun or lexicon entry wins
+  under both. Set through `ttf_engine_set_option(engine, "initialism", …)`,
+  `--initialism` or the workbench selector.
+- Add 15 contracts; external English output is unchanged (ten spans now carry
+  INITIALISM instead of WORD).
 - Add a decorative policy: `follow` (default) keeps stars, hearts, arrows and
   emoji under the unreadable policy, while `read` speaks a declared name
   (`★ 별점` → `별 별점`, `삼성™` → `삼성 상표`). Undeclared characters, including
