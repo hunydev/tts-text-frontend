@@ -136,7 +136,15 @@ push한 `30b6b98`의 CI sanitizer 작업에서 `context_cache_compatibility`의 
 - `SAVE20` → `에스에이브이이투지로`는 영어 발음 경로에서 여러 자리 숫자를 자릿수 영어
   이름으로 읽기 때문이며, 읽기 정책 결정이 필요해 보류했다.
 
-다음 순서(후보): 시각의 `영 분`(`09:00`), `2x`·괄호 식, URL 경로 단어,
+### 정시 읽기 (2026-09-23, 커밋·미배포)
+
+- 변경: ko `TTF_SEM_TIME` 렌더러에서 0분·0초 생략, `clock zero_minutes` 리소스, validator.
+- 계약 `tests/evaluation/clock_v21.jsonl` 13건. 기존 fixture 3곳(`golden_ko`, `range_semantics`,
+  `semantic_boundary_streaming`)의 `영 분`/`영 초` 기대값을 사유와 함께 갱신했다.
+  cycle fixed 10 / unchanged-pass 3 / regressed 0. Debug 109/109, ASan/UBSan 97/97(단독),
+  외부 영어 결과 파일 동일. push한 `9767c5f`의 CI는 성공이다.
+
+다음 순서(후보): 24시간 표기의 오전·오후, `2x`·괄호 식, URL 경로 단어,
 `SAVE20` 숫자 읽기 정책. 한 번에 한 규칙군씩 진행한다.
 
 ## v0.20에서 마무리한 범위

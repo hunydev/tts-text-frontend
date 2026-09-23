@@ -140,6 +140,12 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    : ttf_validation_error(d,
                                           "speech_symbol_prefix requires one symbol and a reading");
     }
+    if (SAME(k, "clock")) {
+        *handled = 1;
+        return SAME(key, "zero_minutes") && ttf_validation_enum(v, "omit|read")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "clock supports zero_minutes=omit|read");
+    }
     if (SAME(k, "particle_form")) {
         const char *bar = strchr(v, '|');
         *handled = 1;

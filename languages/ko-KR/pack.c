@@ -652,10 +652,15 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         }
         (void)snprintf(value, sizeof(value), "%u", hour);
         TRY(quantity(e, value, resource(e, "unit", "hour", "시"), 1, out));
-        TRY(ttf_buffer_puts(out, " "));
-        (void)snprintf(value, sizeof(value), "%u", minute);
-        TRY(quantity(e, value, resource(e, "unit", "minute", "분"), 0, out));
-        if (fields == 3) {
+        /* An exact hour is spoken without its zero minutes unless a resource
+           asks for them; seconds still need the minute they belong to. */
+        if (minute || (fields == 3 && second) ||
+            strcmp(resource(e, "clock", "zero_minutes", "omit"), "omit")) {
+            TRY(ttf_buffer_puts(out, " "));
+            (void)snprintf(value, sizeof(value), "%u", minute);
+            TRY(quantity(e, value, resource(e, "unit", "minute", "분"), 0, out));
+        }
+        if (fields == 3 && second) {
             TRY(ttf_buffer_puts(out, " "));
             (void)snprintf(value, sizeof(value), "%u", second);
             TRY(quantity(e, value, resource(e, "unit", "second", "초"), 0, out));

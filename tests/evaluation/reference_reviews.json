@@ -708,6 +708,17 @@
         "reason": "Treating slash-joined single letters as one spelling is editable project policy; engine agreement does not supply independent linguistic approval."
       },
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/clock_v21.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Original developer-authored Korean clock contracts fixed before executing the candidate; resources/languages/ko-KR/rules/numeric.tsv",
+        "reason": "Dropping zero minutes is an editable project policy (clock zero_minutes); engine agreement does not supply independent linguistic approval."
+      },
+      "case_overrides": {}
     }
   ],
   "excluded": [

@@ -234,3 +234,6 @@ quantity_prefix	ko-KR	°C	섭씨
 numeric_suffix	*	달러	CURRENCY:USD
 numeric_suffix	*	유로	CURRENCY:EUR
 numeric_suffix	*	엔	CURRENCY:JPY
+
+# An exact hour drops its zero minutes (09:00 → 아홉 시); set read to keep them.
+clock	ko-KR	zero_minutes	omit

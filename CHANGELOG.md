@@ -2,6 +2,11 @@
 
 ## Unreleased — speech final gate
 
+- Speak an exact hour without its zero minutes in Korean: `09:00` → `아홉 시`,
+  `09:00부터 18:00까지` → `아홉 시부터 열여덟 시까지`. A zero second is dropped the
+  same way, `13:30` and `09:00:01` are unchanged, and `clock zero_minutes read`
+  restores the old wording. Three fixtures recorded the earlier `영 분` text.
+- Add 13 clock contracts; external English results are identical.
 - Spell single letters joined by a slash as one sequence, like the hyphen form:
   `A/S 문의` → `에이에스 문의`, `I/O 포트` → `아이오 포트`. Fractions, units
   (`km/h`), URLs, dates and Hangul pairs keep their grammar.
