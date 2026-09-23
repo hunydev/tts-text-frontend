@@ -2,6 +2,12 @@
 
 ## Unreleased — speech final gate
 
+- Read a range written across several tokens: `3월 1일~3월 5일` →
+  `삼 월 일 일에서 삼 월 오 일`, `10시 30분~11시` → `열 시 삼십 분에서 열한 시`.
+  When neighbouring endpoints carry different units of one declared
+  `range_unit_family` and the preceding word is a unit of that family, each side
+  is read on its own. `1시~2분`, `1kg~2m` and same-unit intervals are unchanged.
+- Add 11 contracts; external English results are identical.
 - Speak an attached `~` between two readings as the range word instead of the
   symbol name: `서울~부산` → `서울에서 부산`, `9/25~9/30`, `오전 10시~오후 9시`,
   `월~금`. A spaced `~`, a repeated run (`진짜~~~`), a word-final lengthening mark

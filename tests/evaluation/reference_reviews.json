@@ -741,6 +741,17 @@
         "reason": "Reading an attached ~ as the range word is editable project policy (speech_range_mark); engine agreement does not supply independent linguistic approval."
       },
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/multi_range_v21.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Original developer-authored multi-token range contracts fixed before executing the candidate; resources/languages/ko-KR/rules/numeric.tsv",
+        "reason": "The unit-family inventory and the surrounding-unit evidence are editable project policy; engine agreement does not supply independent linguistic approval."
+      },
+      "case_overrides": {}
     }
   ],
   "excluded": [

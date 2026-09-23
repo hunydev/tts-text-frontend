@@ -140,6 +140,12 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    : ttf_validation_error(d,
                                           "speech_symbol_prefix requires one symbol and a reading");
     }
+    if (SAME(k, "range_unit_family")) {
+        *handled = 1;
+        return label(key) && strlen(key) < 32 && label(v) && strlen(v) < 32
+                   ? TTF_OK
+                   : ttf_validation_error(d, "range_unit_family requires a unit and a family name");
+    }
     if (SAME(k, "weekday_label")) {
         *handled = 1;
         return label(key) && strlen(key) < 32 && ttf_validation_enum(v, "0|1")

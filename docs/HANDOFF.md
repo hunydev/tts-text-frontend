@@ -161,8 +161,16 @@ push한 `30b6b98`의 CI sanitizer 작업에서 `context_cache_compatibility`의 
   regressed 0. Debug 111/111, ASan/UBSan 99/99(단독), 외부 영어 결과 파일 동일.
 - `1~2`·`1%~2%`의 기존 고객 계약은 `quantity_range_separator ~ 0`을 존중해 그대로 유지된다.
 
-다음 순서(후보): 여러 토큰 범위(`3월 1일~3월 5일`), 아이디/핸들(`abc_123`, `@daily_log`),
-24시간 표기의 오전·오후, `2x`·괄호 식, `SAVE20` 숫자 읽기 정책.
+### 여러 토큰 구간 (2026-09-23, 커밋·미배포)
+
+- 변경: `src/semantic/classifier.c`의 `same_unit_family`/`preceding_family_unit`,
+  ko `range_unit_family` 리소스, validator. 앞 단어가 같은 계열 단위일 때만 각 끝을 읽는다.
+- 계약 `tests/evaluation/multi_range_v21.jsonl` 11건. cycle fixed 4 / unchanged-pass 7 /
+  regressed 0. Debug 112/112, ASan/UBSan 100/100(단독), 외부 영어 결과 파일 동일.
+  기존 `1시~2분` 보존 계약은 앞 단어 근거 요구로 유지된다.
+
+다음 순서(후보): 아이디/핸들(`abc_123`, `@daily_log`), 24시간 표기의 오전·오후,
+`2x`·괄호 식, `SAVE20` 숫자 읽기 정책, 공백 범위(`3월 1일 ~ 3월 5일`).
 한 번에 한 규칙군씩 진행한다.
 
 ## v0.20에서 마무리한 범위

@@ -878,6 +878,47 @@ static size_t invalid_numeric_end(const ttf_pack_input_t *in, size_t start) {
         start = skip_quantity_space(in, separator);
     }
 }
+/* Units declared in the same `range_unit_family` (calendar, clock) describe one
+   scale written across several tokens rather than two comparable quantities. */
+static int same_unit_family(const ttf_pack_input_t *in, const char *left, const char *right) {
+    const char *first = NULL, *second = NULL;
+    size_t pack;
+    if (!left[0] || !right[0])
+        return 0;
+    for (pack = 0; pack < in->engine->pack_count && !first; ++pack)
+        first = ttf_resource_get(in->engine, "range_unit_family",
+                                 in->engine->packs[pack]->language_tag, left, NULL);
+    for (pack = 0; pack < in->engine->pack_count && !second; ++pack)
+        second = ttf_resource_get(in->engine, "range_unit_family",
+                                  in->engine->packs[pack]->language_tag, right, NULL);
+    return first && second && !strcmp(first, second);
+}
+
+/* Evidence that this endpoint continues a larger written scale: the word just
+   before it is a unit of the same family (10시 30분~11시, 3월 1일~3월 5일). */
+static int preceding_family_unit(const ttf_pack_input_t *in, size_t begin, const char *unit) {
+    size_t p = begin, end, start;
+    char key[16];
+    while (p && (in->text[p - 1] == ' ' || in->text[p - 1] == '\t'))
+        --p;
+    end = p;
+    while (p && (unsigned char)in->text[p - 1] >= 128 && end - p + 1 < sizeof(key))
+        --p;
+    while (p < end && ((unsigned char)in->text[p] & 0xc0) == 0x80)
+        ++p;
+    if (p == end || end - p >= sizeof(key))
+        return 0;
+    for (start = p; start < end; ++start) {
+        if (((unsigned char)in->text[start] & 0xc0) == 0x80)
+            continue;
+        memcpy(key, in->text + start, end - start);
+        key[end - start] = 0;
+        if (same_unit_family(in, key, unit))
+            return 1;
+    }
+    return 0;
+}
+
 static size_t repeated_quantity_range(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     ttf_semantic_t first = {0}, second = {0};
     ttf_resource_layer_t delimiter_layer = TTF_LAYER_COMMON;
@@ -921,6 +962,13 @@ static size_t repeated_quantity_range(const ttf_pack_input_t *in, ttf_semantic_t
         memcpy(bare->unit, money->unit, sizeof(bare->unit));
         bare->type = TTF_SEM_CURRENCY;
     }
+    /* 3월 1일~3월 5일: neighbouring units of one declared family belong to
+       different objects, so each side is read on its own instead of the whole
+       span staying verbatim. Unrelated units keep the preserved contract. */
+    if (first.type == second.type && first.type != TTF_SEM_TEXT &&
+        strcmp(first.unit, second.unit) && same_unit_family(in, first.unit, second.unit) &&
+        preceding_family_unit(in, in->tokens[in->index].begin, first.unit))
+        return 0;
     if (first.type == TTF_SEM_TEXT || second.type == TTF_SEM_TEXT || first.type != second.type ||
         strcmp(first.unit, second.unit) ||
         (in->text[separator] == '-' && p == start &&

@@ -253,3 +253,13 @@ weekday_label	ko-KR	목요일	1
 weekday_label	ko-KR	금요일	1
 weekday_label	ko-KR	토요일	1
 weekday_label	ko-KR	일요일	1
+
+# Calendar and clock units written across tokens (3월 1일~3월 5일) are one scale;
+# a range between two of them is not a quantity interval.
+range_unit_family	ko-KR	년	calendar
+range_unit_family	ko-KR	월	calendar
+range_unit_family	ko-KR	일	calendar
+range_unit_family	ko-KR	주	calendar
+range_unit_family	ko-KR	시	clock
+range_unit_family	ko-KR	분	clock
+range_unit_family	ko-KR	초	clock
