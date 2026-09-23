@@ -2,6 +2,13 @@
 
 ## Unreleased — speech final gate
 
+- Add a decorative policy: `follow` (default) keeps stars, hearts, arrows and
+  emoji under the unreadable policy, while `read` speaks a declared name
+  (`★ 별점` → `별 별점`, `삼성™` → `삼성 상표`). Undeclared characters, including
+  emoji, still follow preserve/drop, and `speech_decorative` holds the names.
+  Set through `ttf_engine_set_option(engine, "decorative", …)`, `--decorative` or
+  the workbench selector.
+- Add 13 contracts; external English results are identical.
 - Add an unknown-foreign-word policy: `guess` (default, the existing
   pronunciation guess), `spell` (`daily 업데이트` → `디에이아이엘와이 업데이트`) or
   `preserve` (`daily 업데이트`). A word with a lexicon or dictionary entry keeps its

@@ -42,6 +42,7 @@ CORPORA = {
     "year-cue-v21": ("영어 연도 문맥", "year_cue_v21.jsonl"),
     "bracket-v21": ("괄호 안 처리 옵션", "bracket_v21.jsonl"),
     "unknown-foreign-v21": ("미등록 외국어 단어 정책", "unknown_foreign_v21.jsonl"),
+    "decorative-v21": ("장식 문자 이름 읽기", "decorative_v21.jsonl"),
 }
 DEFAULTS = dict(
     default_language="ko-KR",

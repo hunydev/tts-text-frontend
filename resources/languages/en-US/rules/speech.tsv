@@ -134,3 +134,26 @@ context_neutral	en-US	joined_letters	1
 number_sign	en-US	#	number {N}
 speech_range_mark	en-US	~	 to 
 speech_range_mark	en-US	～	 to 
+
+# Decorative names, read only when the decorative policy asks for them.
+speech_decorative	en-US	★	star
+speech_decorative	en-US	☆	star
+speech_decorative	en-US	♥	heart
+speech_decorative	en-US	♡	heart
+speech_decorative	en-US	※	reference mark
+speech_decorative	en-US	→	arrow
+speech_decorative	en-US	←	arrow
+speech_decorative	en-US	↑	arrow
+speech_decorative	en-US	↓	arrow
+speech_decorative	en-US	◆	diamond
+speech_decorative	en-US	◇	diamond
+speech_decorative	en-US	●	circle
+speech_decorative	en-US	○	circle
+speech_decorative	en-US	■	square
+speech_decorative	en-US	□	square
+speech_decorative	en-US	▶	play
+speech_decorative	en-US	✓	check
+speech_decorative	en-US	✔	check
+speech_decorative	en-US	™	trademark
+speech_decorative	en-US	©	copyright
+speech_decorative	en-US	®	registered

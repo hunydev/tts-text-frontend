@@ -796,6 +796,17 @@
         "reason": "What counts as a declared reading and what each policy emits are editable project policy; engine agreement does not supply independent approval."
       },
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/decorative_v21.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "provisional-pronunciation",
+        "review_status": "pending-independent-review",
+        "reference_source": "Original developer-authored decorative names fixed before implementing the option; resources/languages/*/rules/speech.tsv",
+        "reason": "Each decorative name is an editable project choice; engine agreement does not supply independent approval."
+      },
+      "case_overrides": {}
     }
   ],
   "excluded": [

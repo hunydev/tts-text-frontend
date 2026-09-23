@@ -142,3 +142,27 @@ number_sign	ko-KR	#	{N} 번
 # 서울~부산: an attached range mark reads as the range word and keeps the left word.
 speech_range_mark	ko-KR	~	에서 
 speech_range_mark	ko-KR	～	에서 
+
+# Names used only when the decorative policy asks for them; otherwise these
+# characters follow the unreadable policy. Provisional, pending review.
+speech_decorative	ko-KR	★	별
+speech_decorative	ko-KR	☆	별
+speech_decorative	ko-KR	♥	하트
+speech_decorative	ko-KR	♡	하트
+speech_decorative	ko-KR	※	참고표
+speech_decorative	ko-KR	→	화살표
+speech_decorative	ko-KR	←	화살표
+speech_decorative	ko-KR	↑	화살표
+speech_decorative	ko-KR	↓	화살표
+speech_decorative	ko-KR	◆	마름모
+speech_decorative	ko-KR	◇	마름모
+speech_decorative	ko-KR	●	동그라미
+speech_decorative	ko-KR	○	동그라미
+speech_decorative	ko-KR	■	네모
+speech_decorative	ko-KR	□	네모
+speech_decorative	ko-KR	▶	재생
+speech_decorative	ko-KR	✓	체크
+speech_decorative	ko-KR	✔	체크
+speech_decorative	ko-KR	™	상표
+speech_decorative	ko-KR	©	저작권
+speech_decorative	ko-KR	®	등록상표

@@ -501,3 +501,9 @@ CARDINAL 변화 없음(`benchmark/generated/sproat-v21-planner-comparison.json`)
 문제(PRON-01)를 해결한 것이 아니라, 고객이 추측을 끌 수 있게 한 것이다. 독립 작성 15건
 (`tests/evaluation/unknown_foreign_v21.jsonl`). 남은 사용자 옵션: 장식 문자 이름 읽기,
 대문자 약어 읽기 방식.
+
+## v0.21 후속(미릴리스) — 장식 문자 이름 읽기 (사용자 요청)
+
+`decorative` 옵션으로 선언된 장식 문자를 이름으로 읽는다. 기본값은 기존 동작이다.
+독립 작성 13건(`tests/evaluation/decorative_v21.jsonl`). 이름 목록은 검수 대기이며 이모지에는
+이름을 주지 않았다. 남은 사용자 옵션: 대문자 약어 읽기 방식.

@@ -225,6 +225,13 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "electronic_separator supports version|ip readings");
     }
+    if (SAME(k, "speech_decorative")) {
+        *handled = 1;
+        return label(key) && strlen(key) < 96 && label(v) && strlen(v) < 256
+                   ? TTF_OK
+                   : ttf_validation_error(
+                         d, "speech_decorative requires a printable key and a reading");
+    }
     if (SAME(k, "speech_range_mark")) {
         *handled = 1;
         return symbol_key(key) && label(v) && strlen(v) < 64

@@ -220,7 +220,15 @@ push한 `30b6b98`의 CI sanitizer 작업에서 `context_cache_compatibility`의 
 - 계약 `tests/evaluation/unknown_foreign_v21.jsonl` 15건. Debug 117/117, ASan/UBSan 104/104(단독),
   외부 영어 결과 파일 동일, browser gate 통과. 기본 정책 사례는 cycle에서 회귀 0.
 
-다음 순서: 사용자 옵션 3(장식 문자 이름 읽기), 4(대문자 약어 읽기 방식).
+### 사용자 옵션 3: 장식 문자 이름 읽기 (2026-09-23, 커밋·미배포)
+
+- `ttf_engine_set_option(engine, "decorative", "follow|read")`, CLI `--decorative`, 웹 선택기.
+- 변경: `src/core/speech_output.c`(선언된 이름 읽기), `src/core/normalize.c`(이모지 cluster 경로),
+  `speech_decorative` 리소스 ko/en 21개, validator.
+- 계약 `tests/evaluation/decorative_v21.jsonl` 13건. Debug 117/117, ASan/UBSan 105/105(단독),
+  외부 영어 결과 파일 동일.
+
+다음 순서: 사용자 옵션 4(대문자 약어 읽기 방식).
 이후 후보: `SAVE20` 숫자 읽기 정책, 대소문자만 다른 DATE 698건 지표.
 
 ## v0.20에서 마무리한 범위

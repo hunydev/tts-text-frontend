@@ -44,6 +44,15 @@ ttf_status_t ttf_engine_set_option(ttf_engine_t *engine, const char *name, const
             return TTF_EINVAL;
         return TTF_OK;
     }
+    if (!strcmp(name, "decorative")) {
+        if (!strcmp(value, "follow"))
+            engine->decorative_policy = TTF_DECORATIVE_FOLLOW;
+        else if (!strcmp(value, "read"))
+            engine->decorative_policy = TTF_DECORATIVE_READ;
+        else
+            return TTF_EINVAL;
+        return TTF_OK;
+    }
     if (!strcmp(name, "unknown_foreign")) {
         if (!strcmp(value, "guess"))
             engine->unknown_foreign_policy = TTF_UNKNOWN_FOREIGN_GUESS;

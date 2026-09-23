@@ -22,6 +22,10 @@ typedef enum {
     TTF_UNKNOWN_FOREIGN_SPELL = 1,
     TTF_UNKNOWN_FOREIGN_PRESERVE = 2
 } ttf_unknown_foreign_policy_t;
+/* Decorative marks (stars, hearts, arrows, emoji) have no reading by default.
+   `read` speaks the declared name of such a character and leaves the rest to the
+   unreadable policy. */
+typedef enum { TTF_DECORATIVE_FOLLOW = 0, TTF_DECORATIVE_READ = 1 } ttf_decorative_policy_t;
 
 /* Additive options: the ABI v1 config, result and language-pack layouts stay
    unchanged. Initialize before editing fields. Apply before engine freeze.
@@ -40,7 +44,7 @@ typedef struct {
    against an older header keeps its structure layout and its defaults. Apply
    before engine freeze. Unknown names and values return TTF_EINVAL.
    Currently: "brackets" = read|skip|preserve,
-   "unknown_foreign" = guess|spell|preserve. */
+   "unknown_foreign" = guess|spell|preserve, "decorative" = follow|read. */
 TTF_API ttf_status_t ttf_engine_set_option(ttf_engine_t *engine, const char *name,
                                            const char *value);
 

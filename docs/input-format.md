@@ -29,6 +29,8 @@ Input syntax and output purpose are independent:
 | `unknown_foreign=guess` | Guess a target-language pronunciation for an undeclared Latin word (default) |
 | `unknown_foreign=spell` | Spell such a word letter by letter |
 | `unknown_foreign=preserve` | Keep such a word as written |
+| `decorative=follow` | Stars, hearts, arrows and emoji follow the unreadable policy (default) |
+| `decorative=read` | Speak the declared name of such a character |
 
 For example, Korean speech output reads `a1@b2.com` as
 `에이일 앳 비이 닷 컴`; text output preserves `a1@b2.com`. Speech mode does
@@ -191,3 +193,12 @@ the source pronunciation dictionary, and otherwise through a guess. `spell` and
 contracts. `preserve` also leaves the word out of the final character pass, so the
 source spelling survives in speech output. Customers who prefer a word reading add
 the term to a lexicon layer instead of changing this policy.
+
+## Decorative characters
+
+`speech_decorative` holds the names this policy may speak: `★ 별`, `♥ 하트`,
+`※ 참고표`, `→ 화살표`, `™ 상표` and similar, with English equivalents. The default
+`follow` speaks none of them, so a script keeps reading as before. `read` speaks a
+declared name like any other symbol name, separated from neighbouring words, and
+leaves an undeclared character, emoji included, to the unreadable policy. Text
+output is unaffected; add a customer row to name more characters.

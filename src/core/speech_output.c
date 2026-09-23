@@ -251,6 +251,16 @@ ttf_status_t ttf_speech_output(const ttf_engine_t *e, const ttf_language_pack_t 
                 ttf_trace_reject_since(e, attempt);
                 goto unknown;
             }
+        } else if (e->decorative_policy == TTF_DECORATIVE_READ &&
+                   (mapped = ttf_resource_get(e, "speech_decorative", lang, key, NULL))) {
+            /* A declared decorative name is spoken like any other symbol name. */
+            status = ttf_trace_resource(e, "speech_decorative", lang, key, key, "decorative-name",
+                                        SIZE_MAX);
+            if (status == TTF_OK && PREV_SPOKEN())
+                status = ttf_buffer_puts(&out, " ");
+            if (status == TTF_OK)
+                status = ttf_buffer_puts(&out, mapped);
+            pending_space = 1;
         } else {
         unknown:
             status = ttf_trace_emit(e, TTF_TRACE_SELECTED, TTF_LAYER_COMMON, 0, lang, "decision",

@@ -763,6 +763,9 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
                                                                          renderer->language_tag,
                                                                          normalized.data, NULL)
                                                       : NULL;
+                if (!cluster && e->decorative_policy == TTF_DECORATIVE_READ && normalized.data)
+                    cluster = ttf_resource_get(e, "speech_decorative", renderer->language_tag,
+                                               normalized.data, NULL);
                 if (cluster) {
                     st = ttf_trace_resource(e, "speech_character", renderer->language_tag,
                                             normalized.data, normalized.data,
