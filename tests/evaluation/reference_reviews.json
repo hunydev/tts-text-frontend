@@ -719,6 +719,17 @@
         "reason": "Dropping zero minutes is an editable project policy (clock zero_minutes); engine agreement does not supply independent linguistic approval."
       },
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/slash_date_v21.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Original developer-authored slash-date contracts fixed before executing the candidate; docs/remaining-work.md TN-02",
+        "reason": "Which slash forms count as unambiguous dates is editable project policy; engine agreement does not supply independent linguistic approval."
+      },
+      "case_overrides": {}
     }
   ],
   "excluded": [

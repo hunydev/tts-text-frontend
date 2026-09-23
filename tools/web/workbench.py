@@ -35,6 +35,7 @@ CORPORA = {
     "phone-service-v21": ("대표번호·괄호 전화번호", "phone_service_v21.jsonl"),
     "slash-letters-v21": ("A/S 같은 슬래시 약어", "slash_letters_v21.jsonl"),
     "clock-v21": ("정시 표기 (09:00)", "clock_v21.jsonl"),
+    "slash-date-v21": ("9/25 같은 슬래시 날짜", "slash_date_v21.jsonl"),
 }
 DEFAULTS = dict(
     default_language="ko-KR",

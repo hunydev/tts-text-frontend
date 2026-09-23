@@ -237,3 +237,19 @@ numeric_suffix	*	엔	CURRENCY:JPY
 
 # An exact hour drops its zero minutes (09:00 → 아홉 시); set read to keep them.
 clock	ko-KR	zero_minutes	omit
+
+# A bracketed weekday marks a slash date: 5/8(수). Used only as a date cue.
+weekday_label	ko-KR	월	1
+weekday_label	ko-KR	화	1
+weekday_label	ko-KR	수	1
+weekday_label	ko-KR	목	1
+weekday_label	ko-KR	금	1
+weekday_label	ko-KR	토	1
+weekday_label	ko-KR	일	1
+weekday_label	ko-KR	월요일	1
+weekday_label	ko-KR	화요일	1
+weekday_label	ko-KR	수요일	1
+weekday_label	ko-KR	목요일	1
+weekday_label	ko-KR	금요일	1
+weekday_label	ko-KR	토요일	1
+weekday_label	ko-KR	일요일	1

@@ -940,6 +940,75 @@ static size_t repeated_quantity_range(const ttf_pack_input_t *in, ttf_semantic_t
                                              : "syntax.repeated-quantity-range");
 }
 
+/* 9/25, 2026/9/25: a slash date is only unambiguous when the day cannot be a
+   month, a four-digit year leads, or a declared weekday follows in brackets.
+   Everything else stays the fraction grammar. */
+static int calendar_day(unsigned month, unsigned day) {
+    static const unsigned days[] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    return month >= 1 && month <= 12 && day >= 1 && day <= days[month - 1];
+}
+static int weekday_bracket(const ttf_pack_input_t *in, size_t p) {
+    const char *s = in->text;
+    size_t n = in->length, end;
+    char key[32];
+    if (p >= n || s[p] != '(')
+        return 0;
+    end = ++p;
+    while (end < n && s[end] != ')' && end - p + 1 < sizeof(key))
+        ++end;
+    if (end >= n || s[end] != ')' || end == p)
+        return 0;
+    memcpy(key, s + p, end - p);
+    key[end - p] = 0;
+    for (size_t pack = 0; pack < in->engine->pack_count; ++pack) {
+        const char *value = ttf_resource_get(in->engine, "weekday_label",
+                                             in->engine->packs[pack]->language_tag, key, NULL);
+        if (value && strcmp(value, "0"))
+            return 1;
+    }
+    return 0;
+}
+static size_t slash_date(const ttf_pack_input_t *in, size_t b, ttf_semantic_t *out) {
+    const char *s = in->text;
+    size_t n = in->length, p = b, first_end, second_end, third_end;
+    unsigned first, second, third;
+    if (b && (digit(s[b - 1]) || s[b - 1] == '/' || s[b - 1] == '.' || ascii_letter(s[b - 1])))
+        return 0;
+    first_end = integer(s, n, p);
+    if (first_end == p || first_end - p > 4 || first_end >= n || s[first_end] != '/')
+        return 0;
+    first = small_uint(s + p, first_end - p);
+    p = first_end + 1;
+    second_end = integer(s, n, p);
+    if (second_end == p || second_end - p > 2)
+        return 0;
+    second = small_uint(s + p, second_end - p);
+    if (first_end - b == 4) {
+        if (second_end >= n || s[second_end] != '/')
+            return 0;
+        p = second_end + 1;
+        third_end = integer(s, n, p);
+        if (third_end == p || third_end - p > 2 || !first || first > 9999 ||
+            !calendar_day(second, third = small_uint(s + p, third_end - p)))
+            return 0;
+        if (third_end < n && (digit(s[third_end]) || s[third_end] == '/' ||
+                              ascii_letter(s[third_end]) || s[third_end] == '.'))
+            return 0;
+        snprintf(out->value, sizeof(out->value), "%04u-%02u-%02u", first, second, third);
+        return finish(in, out, third_end, TTF_SEM_DATE, "syntax.slash-date");
+    }
+    if (first_end - b > 2 || !calendar_day(first, second))
+        return 0;
+    if (second_end < n && (digit(s[second_end]) || s[second_end] == '/' ||
+                           ascii_letter(s[second_end]) || s[second_end] == '.'))
+        return 0;
+    if (second <= 12 && !weekday_bracket(in, second_end))
+        return 0;
+    snprintf(out->value, sizeof(out->value), "--%02u-%02u", first, second);
+    snprintf(out->unit, sizeof(out->unit), "month-day");
+    return finish(in, out, second_end, TTF_SEM_DATE, "syntax.slash-date");
+}
+
 size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     const char *s = in->text, *rule_value = NULL;
     size_t n = in->length, b = in->tokens[in->index].begin;
@@ -1331,6 +1400,9 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     }
     if (q < n && s[q] == '/') {
         int nonzero = 0;
+        size_t dated = slash_date(in, b, out);
+        if (dated)
+            return dated;
         size_t start = skip_quantity_space(in, q + 1);
         end = integer(s, n, start);
         for (r = start; r < end; ++r)

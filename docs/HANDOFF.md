@@ -144,8 +144,18 @@ push한 `30b6b98`의 CI sanitizer 작업에서 `context_cache_compatibility`의 
   cycle fixed 10 / unchanged-pass 3 / regressed 0. Debug 109/109, ASan/UBSan 97/97(단독),
   외부 영어 결과 파일 동일. push한 `9767c5f`의 CI는 성공이다.
 
-다음 순서(후보): 24시간 표기의 오전·오후, `2x`·괄호 식, URL 경로 단어,
-`SAVE20` 숫자 읽기 정책. 한 번에 한 규칙군씩 진행한다.
+### 슬래시 날짜 (2026-09-23, 커밋·미배포)
+
+- 실제 문장 훑기에서 `9/25(목)까지` → `이십오 분의 구`(분수 오독)를 발견했다.
+- 변경: `src/semantic/classifier.c`의 `slash_date`(연도 우선, 일>12, 괄호 요일 단서),
+  ko `weekday_label` 리소스, validator. 영어도 `9/25` → `September twenty fifth`가 된다.
+- 계약 `tests/evaluation/slash_date_v21.jsonl` 16건. cycle fixed 9 / unchanged-pass 7 /
+  regressed 0. Debug 110/110, ASan/UBSan 98/98(단독), 외부 영어 결과 파일 동일.
+  슬래시 약어 corpus의 `2026/09/23` 부정 예를 이 변경에 맞춰 갱신했다.
+
+다음 순서(후보): 날짜 범위 `9/25~9/30`, 24시간 표기의 오전·오후, `2x`·괄호 식,
+아이디/핸들 표기(`abc_123`, `@daily_log`), `SAVE20` 숫자 읽기 정책.
+한 번에 한 규칙군씩 진행한다.
 
 ## v0.20에서 마무리한 범위
 
