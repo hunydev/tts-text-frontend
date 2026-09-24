@@ -24,7 +24,7 @@
 ```sh
 python3 tools/quality/tn_cycle.py case \
   --id content-k7 --category content/alnum --text 'k7 타고 다닌다' \
-  --expected '케이칠 타고 다닌다' --source user-report \
+  --expected '케이세븐 타고 다닌다' --source user-report \
   --reason '한 글자 이름과 정수, 차종 관용형은 사용자 override' \
   --out artifacts/tn/k7/case.jsonl
 ```

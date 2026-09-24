@@ -2,6 +2,13 @@
 
 ## Unreleased — speech final gate
 
+- Read a single digit after a letter label with the source numeral: `k7` →
+  `케이세븐`, `A4` → `에이포`, `F1` → `에프원`, `i5` → `아이파이브`, `B2` → `비투`.
+  Two or more digits keep the target numeral (`G80` → `지팔십`, `S23` → `에스이십삼`),
+  a leading zero keeps its digits (`k007` → `케이영영칠`), and two-letter uppercase
+  labels keep the initialism policy (`MP3`, `GPT-4`). Ten contracts across the
+  v0.20 and v0.21 corpora record the new readings.
+- Add 15 contracts; external English results are identical.
 - Read a label whose letters have a declared word reading as that word plus the
   source-language numeral, spaced: `top10` → `탑 텐`, `best5` → `베스트 파이브`,
   `SAVE20` → `세이브 트웬티`. An idiomatic spelling is declared whole instead:

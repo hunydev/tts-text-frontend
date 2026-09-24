@@ -829,6 +829,17 @@
         "reason": "Which uppercase runs count as code words depends on the managed lexicon, an editable project choice; engine agreement does not supply independent approval."
       },
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/letter_label_v21.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Reading chosen by the project owner on 2026-09-24 (k7 → 케이세븐); docs/speech-resources.md",
+        "reason": "Where the source numeral applies is editable project policy; engine agreement does not supply independent approval."
+      },
+      "case_overrides": {}
     }
   ],
   "excluded": [

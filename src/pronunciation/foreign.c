@@ -263,9 +263,10 @@ static ttf_status_t render_at(const ttf_engine_t *e, const ttf_language_pack_t *
                                                                  : TTF_SEM_CARDINAL;
                     memcpy(sem.value, text + pos, end - pos);
                     ttf_trace_stage(e, TTF_TRACE_POLICY, part_begin + pos, part_begin + end);
-                    /* A word label keeps the source numeral (SAVE20 → 세이브 트웬티);
-                       the target numeral belongs to letter labels such as k7. */
-                    if (word_label)
+                    /* A word label keeps the source numeral (SAVE20 → 세이브 트웬티),
+                       and so does a single digit after letters (k7 → 케이세븐).
+                       Longer digit runs stay in the target language (G80 → 지팔십). */
+                    if (word_label || (sem.type == TTF_SEM_CARDINAL && end - pos == 1))
                         st = source_numeral(e, source, target, &sem, text + pos, end - pos, out,
                                             layer, part_begin + pos);
                     else
