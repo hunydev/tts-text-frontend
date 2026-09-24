@@ -68,6 +68,12 @@ static int phone_sequence(const char *text) {
                 return 0;
             continue;
         }
+        /* "." is a syllable boundary, not a phone: up.loading stays 업로딩. */
+        if (end - start == 1 && text[start] == '.') {
+            if (++count > 128)
+                return 0;
+            continue;
+        }
         if (text[end - 1] >= '0' && text[end - 1] <= '2')
             --end;
         if (end == start)
@@ -462,7 +468,7 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
         return phone_sequence(v)
                    ? TTF_OK
                    : ttf_validation_error(d, "expected at most 128 bounded uppercase phone tokens "
-                                             "with stress 0..2 or letter.A");
+                                             "with stress 0..2, letter.A or the boundary .");
     }
     if (SAME(k, "pronunciation") || SAME(k, "initialism_pronunciation") ||
         SAME(k, "digit_pronunciation") || SAME(k, "g2p")) {
@@ -477,7 +483,7 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
         return phone_sequence(v)
                    ? TTF_OK
                    : ttf_validation_error(d, "expected at most 128 bounded uppercase phone tokens "
-                                             "with stress 0..2 or letter.A");
+                                             "with stress 0..2, letter.A or the boundary .");
     }
     if (SAME(k, "letter_name")) {
         *handled = 1;

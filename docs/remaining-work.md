@@ -174,10 +174,11 @@ compiled resource의 **8개 CTest를 다시 실행해 모두 통과**했다. 이
   **닫는 증거:** 사전에서 의도적으로 제외한 독립 어휘의 한국어 reference, known-hit와
   OOV 성능 분리, NIKL 원칙/관용형의 적용 이유, 다중 음절·자음군·모음·강세 변형과
   장문 단어 검사. 오류를 시스템 사전에 하나씩 추가한 뒤 OOV 개선으로 세지 않는다.
-  **진행 (2026-09-24):** 사전에서 제외한 28단어 측정 세트가 0/28 → 28/28이 됐고 그대로
-  회귀 게이트가 됐다(`tests/evaluation/oov_guess_regression_v21.jsonl`,
-  `docs/research/oov-guess-v21-results.md`). 28단어는 2~3음절 명사에 치우쳐 있어 자음군,
-  강세 이동, 4음절 이상, 동사·형용사 파생형은 아직 표본이 없다. 이 항목은 열어 둔다.
+  **진행 (2026-09-24):** 사전에서 제외한 측정 세트가 76단어로 늘었고 75건이 맞는다
+  (28 + 30 + 18, 게이트는 75건). 세트마다 규칙 변경 **전에** 작성했고, 3차 세트는 새 규칙의
+  이웃 단어만 모아 과적합을 잡는 용도다(`docs/research/oov-guess-v21-results.md`).
+  남은 실패는 national(강세에 따른 모음 축소)이고, 동사 활용·고유명사·축약형·하이픈
+  합성어·6음절 이상은 아직 표본이 없다. 이 항목은 열어 둔다.
 
 - [ ] **PRON-02: 확장 가능한 pronunciation IR 검증.** 현재 public phone buffer는
   1024 bytes, alphabet 24, provenance 64의 고정 구조이며 초기 ARPABET subset이다.

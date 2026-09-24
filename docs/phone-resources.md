@@ -116,6 +116,12 @@ key는 96 byte 미만이다.
 
 `phone_vowel_length`의 key는 음운 이름이고, 선언하지 않은 음운은 `long`으로 본다.
 
+매퍼가 자원 없이 적용하는 표기 규칙도 있다. 활음(`W`, `Y`) 앞 자음은 받침이 아니라
+다음 음절의 초성이고(security 시큐리티), 지운 `r`는 앞 모음을 길게 만들어 뒤의 파열음이
+받침이 되지 못하게 하며(smart 스마트), 어말 성절 자음은 `으` 음절의 받침이 된다
+(simple 심플, prism 프리즘). g2p 데이터의 `.` token은 형태소 경계이며 앞 자음을 받침으로
+닫는다(uploading 업로딩, personalized 퍼스널라이즈드).
+
 ### 숫자 개수 제한
 
 `phone_policy`는 `language=*`만 허용한다.

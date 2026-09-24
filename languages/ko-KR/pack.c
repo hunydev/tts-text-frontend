@@ -1695,7 +1695,15 @@ static ttf_status_t render_phones(const ttf_engine_t *e, const ttf_pronunciation
     }
     for (i = 0; i < count; ++i) {
         const char *phone = phones[i];
-        int v = vowel(e, phone), c = onset(e, phone);
+        int v, c;
+        if (!strcmp(phone, ".")) {
+            if (pending >= 0)
+                TRY(flush_onset(e, out, pending, phones[pending_index], pending_index));
+            pending = -1;
+            continue;
+        }
+        v = vowel(e, phone);
+        c = onset(e, phone);
         const char *letter = ttf_resource_get(e, "phone_letter", "ko-KR", phone, NULL);
         if (letter) {
             if (pending >= 0)
@@ -1718,16 +1726,18 @@ static ttf_status_t render_phones(const ttf_engine_t *e, const ttf_pronunciation
         }
         if (v >= 0) {
             size_t phone_index = i, coda_index = SIZE_MAX, begin = out->length;
-            int cod = 0;
+            int cod = 0, lengthened = 0;
             if (glide == 1) {
                 if (v == 0)
                     v = 9;
-                else if (v == 4 || v == 6)
+                else if (v == 4 || v == 6 || v == 8)
                     v = 14;
                 else if (v == 1)
                     v = 10;
                 else if (v == 20)
                     v = 16;
+                else if (v == 5)
+                    v = 15;
             } else if (glide == 2) {
                 if (v == 0)
                     v = 2;
@@ -1737,6 +1747,8 @@ static ttf_status_t render_phones(const ttf_engine_t *e, const ttf_pronunciation
                     v = 12;
                 else if (v == 13)
                     v = 17;
+                else if (v == 5)
+                    v = 7;
             }
             /* Korean loanword spelling drops the r-colouring after a vowel:
                market is 마켓, not 마르케트. The policy is a resource flag. */
@@ -1745,20 +1757,28 @@ static ttf_status_t render_phones(const ttf_engine_t *e, const ttf_pronunciation
                 !strcmp(resource(e, "phone_mapping", "coda_r", "drop"), "drop")) {
                 TRY(traced_algorithm(e, "coda-r", "", "dropped-coda-r", i + 1));
                 ++i;
+                /* The vowel keeps the length of the r it absorbed, so the stop
+                   after it is written with its own vowel: smart 스마트. */
+                lengthened = 1;
             }
             /* Nasals/laterals close syllables before a consonant or word end. */
-            if (i + 1 < count && (i + 2 == count || vowel(e, phones[i + 2]) < 0)) {
+            if (i + 1 < count && (i + 2 == count || vowel(e, phones[i + 2]) < 0) &&
+                (i + 2 == count || (strcmp(phones[i + 2], "W") && strcmp(phones[i + 2], "Y")))) {
+                /* An explicit boundary from the data closes the syllable whatever
+                   the phonological default is: up.loading 업로딩. */
+                int boundary = i + 2 < count && !strcmp(phones[i + 2], ".");
                 int close = resource_integer(e, "phone_coda", phones[i + 1], 0, 27, -1);
                 int stop = !strcmp(phones[i + 1], "P") || !strcmp(phones[i + 1], "T") ||
                            !strcmp(phones[i + 1], "K");
                 /* A stop closes the syllable only after a short vowel (market 마켓,
                    not 업데잇) and never before a nasal or liquid (partner 파트너). */
-                if (stop && (!short_vowel(e, phone) ||
-                             (i + 2 < count && onset(e, phones[i + 2]) >= 0 &&
-                              vowel(e, phones[i + 2]) < 0 &&
-                              (!strcmp(phones[i + 2], "N") || !strcmp(phones[i + 2], "M") ||
-                               !strcmp(phones[i + 2], "NG") || !strcmp(phones[i + 2], "L") ||
-                               !strcmp(phones[i + 2], "R")))))
+                if (!boundary && stop &&
+                    (lengthened || !short_vowel(e, phone) ||
+                     (i + 2 < count && onset(e, phones[i + 2]) >= 0 &&
+                      vowel(e, phones[i + 2]) < 0 &&
+                      (!strcmp(phones[i + 2], "N") || !strcmp(phones[i + 2], "M") ||
+                       !strcmp(phones[i + 2], "NG") || !strcmp(phones[i + 2], "L") ||
+                       !strcmp(phones[i + 2], "R")))))
                     close = -1;
                 if (close >= 0) {
                     cod = close;
@@ -1812,6 +1832,20 @@ static ttf_status_t render_phones(const ttf_engine_t *e, const ttf_pronunciation
                 pending = -1;
             glide = 0;
         } else if (c >= 0) {
+            /* 심플, 프리즘: a sonorant that ends a word after another consonant is
+               the coda of the inserted vowel, not a syllable of its own. */
+            if (pending >= 0 && i + 1 == count) {
+                int close = resource_integer(e, "phone_coda", phone, 0, 27, -1);
+                if (close >= 0 && (!strcmp(phone, "L") || !strcmp(phone, "M") ||
+                                   !strcmp(phone, "N") || !strcmp(phone, "NG"))) {
+                    size_t begin = out->length;
+                    TRY(put_syllable(out, pending, 18, close));
+                    TRY(ttf_trace_resource(e, "phone_coda", "ko-KR", phone, out->data + begin,
+                                           "syllabic-sonorant", i));
+                    pending = -1;
+                    continue;
+                }
+            }
             if (strcmp(phone, "R") == 0 && i + 1 == count) {
                 TRY(traced_algorithm(e, "trailing-r", "", "prototype-r-suppression", i));
                 continue;

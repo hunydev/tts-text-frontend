@@ -36,6 +36,8 @@ phone_vowel	ko-KR	OW	8
 phone_vowel	ko-KR	OY	8
 phone_vowel	ko-KR	UH	13
 phone_vowel	ko-KR	UW	13
+# AX is the reduced vowel Korean writes as ㅡ: person 퍼슨, season 시즌.
+phone_vowel	ko-KR	AX	18
 phone_coda	ko-KR	N	4
 phone_coda	ko-KR	M	16
 phone_coda	ko-KR	NG	21

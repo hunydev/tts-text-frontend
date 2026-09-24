@@ -19,6 +19,23 @@
   (`point` → `포인트`). The 28-word set now matches exactly, 0 → 28.
 - Add `phone_vowel_length` (`short|long`) and the `phone_mapping` keys `onset_l`
   (`double|single`) and `linking_r` (`link|drop`).
+- Widen the guess to consonant clusters, longer words and derived forms, measured
+  on two further authored sets (30 words, then 18 neighbour words written to catch
+  rules overfitted to one word). A dropped coda `r` lengthens its vowel so the next
+  stop keeps its own vowel (`smart` → `스마트`), a word-final sonorant after a
+  consonant is the coda of the inserted vowel (`simple` → `심플`), a consonant
+  before a glide is an onset rather than a coda (`security` → `시큐리티`), and a
+  palatal takes `ㅖ` (`sharing` → `셰어링`). `W` now carries to `ㅞ` and `ㅝ`
+  (`west` → `웨스트`, `water` → `워터`).
+- Let a g2p mapping carry `.` as a morpheme boundary, which closes the syllable
+  whichever way the phonology would fall: `^up` → `AH P .` reads `uploading` as
+  `업로딩` rather than `어플로딩`. Generalising the same position phonologically
+  would misread `application`, so the boundary stays data, not a rule.
+- Add the reduced vowel `AX` (ㅡ) to the Korean phone map: `person` → `퍼슨`,
+  `lesson` → `레슨`.
+- Add three gates: 30 wide words, 17 neighbour words, and the earlier 28. The
+  open case is `national` (the prototype reads `네이셔널`; the standard `내셔널`
+  needs stress-driven vowel reduction) and it stays recorded as a failure.
 - Add a 28-word measurement set and promote all 28 into the regression gate.
 - Update three earlier references whose expectation recorded the prototype's own
   output, now that the guess is the standard spelling: `snake` 스내크 → 스네이크,

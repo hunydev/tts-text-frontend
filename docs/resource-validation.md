@@ -122,7 +122,11 @@ apostrophe나 hyphen 등을 일괄 금지하지는 않는다. `native`, `native_
 
 Pronunciation 검사 대상은 `pronunciation`, `initialism_pronunciation`,
 `digit_pronunciation`, `g2p`다. source lookup key는 255 bytes 이하이며
-`g2p`는 4 bytes 이하, `digit_pronunciation`은 `0`..`9` 한 자리다. 고정된
+`g2p`는 4 bytes 이하(앞의 `^`와 뒤의 `$` 문맥 표시는 길이에서 제외),
+`digit_pronunciation`은 `0`..`9` 한 자리다. phone 열에는 `.` 한 글자를 형태소
+경계로 쓸 수 있다. 음소가 아니라 KO mapper에게 "여기서 음절을 끊으라"는
+표시이며, 앞 자음이 받침이 된다(`^up` → `AH P .`, uploading 업로딩).
+경계를 모르는 mapper는 이 token을 무시하면 된다. 고정된
 CMU phone 목록만 허용하는 검사는 아니므로 추가 대문자 phone symbol도
 받아들인다. 따라서 통과해도 KO mapper가 모든 phone을 지원한다는 뜻은 아니다.
 행의 128-token 제한은 현재 builtin KO mapper 용량에 맞춘 것이다. 모르는

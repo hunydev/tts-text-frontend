@@ -98,7 +98,8 @@ g2p	en-US	^mo	M OW
 
 # Second pass: common English word shapes in Korean scripts.
 g2p	en-US	^sy	S IH
-g2p	en-US	^up	AH P
+# A "." is a morpheme boundary: up+loading keeps 업, not 어플.
+g2p	en-US	^up	AH P .
 g2p	en-US	^co	K AA
 g2p	en-US	^sh	SH
 g2p	en-US	ager	IH JH ER
@@ -121,6 +122,48 @@ g2p	en-US	^con	K AO N
 g2p	en-US	nnel	N AH L
 g2p	en-US	^lice	L AY S AH
 g2p	en-US	nse$	N S
-g2p	en-US	ersi	ER ZH
+g2p	en-US	ersi	ER S IH
 g2p	en-US	on$	AH N
 g2p	en-US	ake$	EY K
+# A word-final syllabic l has no vowel of its own: simple 심플, enable 이네이블.
+g2p	en-US	ple$	P L
+g2p	en-US	ble$	B L
+g2p	en-US	al$	AH L
+g2p	en-US	bile	B AY L
+g2p	en-US	ong$	AO NG
+g2p	en-US	ory$	AO R IY
+g2p	en-US	gy$	JH IY
+g2p	en-US	ted$	T IH D
+g2p	en-US	fied$	F AY D
+# -ation: 인포메이션, 애플리케이션.
+g2p	en-US	atio	EY SH AH
+g2p	en-US	^comm	K AH M
+g2p	en-US	unit	Y UW N IH T
+g2p	en-US	secu	S IH K Y UW
+g2p	en-US	ateg	AA T EH G
+g2p	en-US	^tech	T EH K
+g2p	en-US	nolo	N OW L OW
+g2p	en-US	univ	Y UW N IH V
+g2p	en-US	^vers	V ER ZH
+g2p	en-US	shar	SH EH ER
+g2p	en-US	^conn	K AH N
+g2p	en-US	veri	V EH R IH
+g2p	en-US	digi	D IH JH IH
+g2p	en-US	^glo	G L OW
+g2p	en-US	^ena	IH N EY
+g2p	en-US	^per	P ER
+g2p	en-US	onal	N AH L
+g2p	en-US	ized$	AY Z D
+# Neighbours of the rules above, so one word does not own a rule.
+g2p	en-US	ate	EY T
+g2p	en-US	ade$	EY D
+g2p	en-US	son$	S AX N
+g2p	en-US	^dou	D AH
+g2p	en-US	able	EY B L
+g2p	en-US	fy$	F AY
+g2p	en-US	ed$	D
+g2p	en-US	re$	ER
+g2p	en-US	ater	EY T ER
+g2p	en-US	tion	SH AH N
+g2p	en-US	^wat	W AO T
+g2p	en-US	sson	S AX N
