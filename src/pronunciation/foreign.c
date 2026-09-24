@@ -103,6 +103,32 @@ ttf_status_t ttf_trace_foreign_lexicon(const ttf_engine_t *e, const char *source
     free(word);
     return status;
 }
+static ttf_status_t render_at(const ttf_engine_t *, const ttf_language_pack_t *,
+                              const ttf_language_pack_t *, const char *, size_t,
+                              ttf_lexical_class_t, ttf_buffer_t *, char[64], ttf_resource_layer_t *,
+                              size_t);
+
+/* The source language's own numeral, rendered into the target language, so a
+   word label reads SAVE20 as 세이브 트웬티 rather than 세이브 이십. */
+static ttf_status_t source_numeral(const ttf_engine_t *e, const ttf_language_pack_t *source,
+                                   const ttf_language_pack_t *target, const ttf_semantic_t *sem,
+                                   const char *text, size_t n, ttf_buffer_t *out,
+                                   ttf_resource_layer_t *layer, size_t part_begin) {
+    ttf_buffer_t spoken = {0};
+    char part_trace[64] = {0};
+    ttf_resource_layer_t part_layer = TTF_LAYER_COMMON;
+    ttf_status_t st = source->verbalize(e, sem, text, n, &spoken);
+    if (st == TTF_OK && spoken.length)
+        st = render_at(e, source, target, spoken.data, spoken.length, TTF_LEX_WORD, out, part_trace,
+                       &part_layer, part_begin);
+    else if (st == TTF_OK)
+        st = target->verbalize(e, sem, text, n, out);
+    ttf_buffer_free(&spoken);
+    if (st == TTF_OK && part_layer > *layer)
+        *layer = part_layer;
+    return st;
+}
+
 /* A declared word reading: the target lexicon knows the spelling, so an
    uppercase run such as SAVE is a word rather than spelled letters. */
 static int declared_word(const ttf_engine_t *e, const ttf_language_pack_t *source,
@@ -204,10 +230,7 @@ static ttf_status_t render_at(const ttf_engine_t *e, const ttf_language_pack_t *
             ttf_resource_get(e, "alnum_number", target->language_tag, "initialism", NULL);
         while (prefix < n && text[prefix] >= 'A' && text[prefix] <= 'Z')
             ++prefix;
-        /* SAVE20: an uppercase run with a declared word reading is a code word,
-           not an initialism, so its digits use the target language numeral. */
         int code_word = prefix >= 2 && prefix < n && declared_word(e, source, target, text, prefix);
-        (void)code_word;
         if (prefix >= 2 && prefix < n && !code_word &&
             (text[prefix] == '-' || (text[prefix] >= '0' && text[prefix] <= '9')) &&
             initialism_policy && !strcmp(initialism_policy, "source-digits"))
@@ -220,7 +243,7 @@ static ttf_status_t render_at(const ttf_engine_t *e, const ttf_language_pack_t *
                 valid = 0;
         }
         if (valid && digits) {
-            int separate = 0;
+            int separate = 0, word_label = 0;
             *layer = TTF_LAYER_COMMON;
             while (pos < n) {
                 size_t end = pos;
@@ -240,7 +263,13 @@ static ttf_status_t render_at(const ttf_engine_t *e, const ttf_language_pack_t *
                                                                  : TTF_SEM_CARDINAL;
                     memcpy(sem.value, text + pos, end - pos);
                     ttf_trace_stage(e, TTF_TRACE_POLICY, part_begin + pos, part_begin + end);
-                    st = target->verbalize(e, &sem, text + pos, end - pos, out);
+                    /* A word label keeps the source numeral (SAVE20 → 세이브 트웬티);
+                       the target numeral belongs to letter labels such as k7. */
+                    if (word_label)
+                        st = source_numeral(e, source, target, &sem, text + pos, end - pos, out,
+                                            layer, part_begin + pos);
+                    else
+                        st = target->verbalize(e, &sem, text + pos, end - pos, out);
                     if (st == TTF_OK)
                         st = ttf_trace_emit(
                             e, TTF_TRACE_SELECTED, TTF_LAYER_COMMON, 0, target->language_tag,
@@ -260,8 +289,10 @@ static ttf_status_t render_at(const ttf_engine_t *e, const ttf_language_pack_t *
                     }
                     /* A label whose letters have a declared word reading is a
                        word followed by a number, so the two stand apart. */
-                    if (end < n && declared_word(e, source, target, text + pos, end - pos))
-                        separate = 1;
+                    if (declared_word(e, source, target, text + pos, end - pos)) {
+                        word_label = 1;
+                        separate = end < n;
+                    }
                     st = render_at(e, source, target, text + pos, end - pos,
                                    (upper || end - pos == 1) ? TTF_LEX_INITIALISM : TTF_LEX_WORD,
                                    out, part_trace, &part_layer, part_begin + pos);

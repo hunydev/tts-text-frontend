@@ -2,15 +2,15 @@
 
 ## Unreleased — speech final gate
 
-- Space a label whose letters have a declared word reading from its number, in
-  both cases: `top100` → `탑 백`, `top10` → `탑 십`, alongside `SAVE20` → `세이브 이십`.
-  Spelled letter labels (`k7`, `MP3`, `GPT-4`, `A4`) stay attached. Two v0.20
-  contracts record the new spacing.
+- Read a label whose letters have a declared word reading as that word plus the
+  source-language numeral, spaced: `top10` → `탑 텐`, `best5` → `베스트 파이브`,
+  `SAVE20` → `세이브 트웬티`. An idiomatic spelling is declared whole instead:
+  `top100` → `탑백`. Spelled letter labels (`k7`, `MP3`, `GPT-4`, `A4`) keep the
+  target numeral attached. Two v0.20 contracts record the new readings.
 - Read an uppercase promotion code whose letters have a declared word reading as
-  that word plus a target-language numeral: `SAVE20` → `세이브 이십`, `SALE50` →
-  `세일 오십` (previously `에스에이브이이투지로`). An uppercase run with no declared
-  reading keeps the initialism digits policy, so `GPT-4` → `지피티포`, `MP3`, `KBS`
-  and lowercase `top100` → `탑백` are unchanged. Add seven pending code words.
+  a word label (previously `에스에이브이이투지로`). An uppercase run with no declared
+  reading keeps the initialism digits policy, so `GPT-4` → `지피티포`, `MP3` and `KBS`
+  are unchanged. Add seven pending code words.
 - Add 10 contracts; external English results are identical.
 - Add an initialism policy: `spell` (default) reads an all-uppercase run of two
   or more letters as an abbreviation even when the same spelling is an ordinary

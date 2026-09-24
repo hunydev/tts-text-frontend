@@ -40,7 +40,7 @@ ttf_status_t status = ttf_engine_set_frontend_options(engine, &options);
 | `www.` | `더블유더블유더블유.` | 마지막 점은 문장 부호로 유지 |
 | `k7` | `케이칠` | 한 글자 이름 + 수사 |
 | `k007` | `케이영영칠` | 선행 0이 있는 식별 숫자는 자릿수 보존 |
-| `top100` | `탑 백` | 단어 발음 + 수사 |
+| `top100` | `탑백` | 관용 표기(사전 등록) |
 | `1~2만 원대면` | `만 원에서 이만 원대면` | 공유 배율 범위 + 생산적인 조사 경계 |
 | `건물 20F` | `건물 이십 층` | 명시적인 건물 문맥 |
 | `20F 로비` | `이십 층 로비` | 뒤따르는 건물 문맥 |
@@ -49,7 +49,7 @@ ttf_status_t status = ttf_engine_set_frontend_options(engine, &options);
 | `1+1` | `일 더하기 일` | 두 수 사이의 이항 연산자 |
 | `+1` | `플러스 일` | 단항 부호 |
 
-글자 묶음이 발음 사전에 단어로 등록돼 있으면 단어 + 대상 언어 수사로 띄어 읽는다 (`top100` → `탑 백`, `SAVE20` → `세이브 이십`, `SALE50` → `세일 오십`). 등록이 없으면 철자로 붙여 읽고(`k7` → `케이칠`, `MP3` → `엠피쓰리`) 아래 initialism 숫자 정책을 따른다. 두 글자 이상 대문자 initialism의 기존 모델명 읽기는 별도 정책이다. 기본 `alnum_number ko-KR initialism source-digits`에서 `GPT-4`는 기존 `지피티포`를 유지한다. 고객이 `target-cardinal`을 선택하면 대상 언어 수사로 바꿀 수 있다. 한 글자 `K7`과 단어 `top100`은 이 initialism 숫자 정책 대상이 아니다.
+글자 묶음이 발음 사전에 단어로 등록돼 있으면 **단어 + 원어 수사**로 띄어 읽는다 (`top10` → `탑 텐`, `best5` → `베스트 파이브`, `SAVE20` → `세이브 트웬티`). 관용 표기는 전체를 사전에 등록해 예외로 둔다 (`top100` → `탑백`). 등록이 없으면 철자로 붙여 읽고(`k7` → `케이칠`, `MP3` → `엠피쓰리`) 아래 initialism 숫자 정책을 따른다. 두 글자 이상 대문자 initialism의 기존 모델명 읽기는 별도 정책이다. 기본 `alnum_number ko-KR initialism source-digits`에서 `GPT-4`는 기존 `지피티포`를 유지한다. 고객이 `target-cardinal`을 선택하면 대상 언어 수사로 바꿀 수 있다. 한 글자 `K7`과 단어 `top100`은 이 initialism 숫자 정책 대상이 아니다.
 
 영어 문맥의 speech 출력은 `k7 → kay seven`, `top100 → top one hundred`, `top007 → top zero zero seven`처럼 단어와 숫자를 공백으로 구분한다. 대문자 initialism `GPT-4`는 `gee pee tee four`다. EN의 기본 `alnum_number initialism`은 `target-cardinal`이며, `source-digits`로 설정하면 숫자 부분을 영어 한 자리 이름으로 읽는다. Text 모드에서는 기존 영문 표기를 유지한다.
 

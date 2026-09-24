@@ -202,6 +202,8 @@ semantic_term	*	c++	ALNUM_TERM:en-US
 semantic_term	*	C#	ALNUM_TERM:en-US
 semantic_term	*	c#	ALNUM_TERM:en-US
 semantic_term	*	3d	ALNUM_TERM:en-US
+semantic_term	*	top100	ALNUM_TERM:en-US
+semantic_term	*	TOP100	ALNUM_TERM:en-US
 semantic_term	*	5G	ALNUM_TERM:en-US
 semantic_term	*	5g	ALNUM_TERM:en-US
 semantic_term	*	4G	ALNUM_TERM:en-US
