@@ -207,6 +207,7 @@ static ttf_status_t render_at(const ttf_engine_t *e, const ttf_language_pack_t *
         /* SAVE20: an uppercase run with a declared word reading is a code word,
            not an initialism, so its digits use the target language numeral. */
         int code_word = prefix >= 2 && prefix < n && declared_word(e, source, target, text, prefix);
+        (void)code_word;
         if (prefix >= 2 && prefix < n && !code_word &&
             (text[prefix] == '-' || (text[prefix] >= '0' && text[prefix] <= '9')) &&
             initialism_policy && !strcmp(initialism_policy, "source-digits"))
@@ -257,8 +258,9 @@ static ttf_status_t render_at(const ttf_engine_t *e, const ttf_language_pack_t *
                             upper = 0;
                         ++end;
                     }
-                    /* An uppercase code word stands apart from its number. */
-                    if (upper && end - pos > 1 && end < n && code_word)
+                    /* A label whose letters have a declared word reading is a
+                       word followed by a number, so the two stand apart. */
+                    if (end < n && declared_word(e, source, target, text + pos, end - pos))
                         separate = 1;
                     st = render_at(e, source, target, text + pos, end - pos,
                                    (upper || end - pos == 1) ? TTF_LEX_INITIALISM : TTF_LEX_WORD,

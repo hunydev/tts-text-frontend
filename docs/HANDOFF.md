@@ -242,6 +242,8 @@ push한 `30b6b98`의 CI sanitizer 작업에서 `context_cache_compatibility`의 
 - 변경: `src/pronunciation/foreign.c`의 ALNUM 경로에 `declared_word` 판정 추가. 사전 근거가 있으면
   코드 단어로 보고 대상 언어 수사와 띄어쓰기를 쓴다. 사전 7항목(save/sale/best/event/summer/winter)
   추가, `coupon`은 기존 금융 항목과 충돌해 제외했다.
+- 띄어쓰기는 사용자 결정으로 대소문자 구분 없이 맞췄다: 사전 단어 + 수사면 띄고(`top100` → `탑 백`),
+  철자 라벨은 붙인다(`k7`, `MP3`). v0.20 계약 2건(`top100`, `top10`)을 같은 사유로 갱신했다.
 - 계약 `tests/evaluation/code_word_v21.jsonl` 10건. cycle fixed 3 / regressed 0.
   Debug 119/119, ASan/UBSan 107/107(단독), 외부 영어 결과 파일 동일.
 

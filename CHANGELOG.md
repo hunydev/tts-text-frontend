@@ -2,6 +2,10 @@
 
 ## Unreleased — speech final gate
 
+- Space a label whose letters have a declared word reading from its number, in
+  both cases: `top100` → `탑 백`, `top10` → `탑 십`, alongside `SAVE20` → `세이브 이십`.
+  Spelled letter labels (`k7`, `MP3`, `GPT-4`, `A4`) stay attached. Two v0.20
+  contracts record the new spacing.
 - Read an uppercase promotion code whose letters have a declared word reading as
   that word plus a target-language numeral: `SAVE20` → `세이브 이십`, `SALE50` →
   `세일 오십` (previously `에스에이브이이투지로`). An uppercase run with no declared
