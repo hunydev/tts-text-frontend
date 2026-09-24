@@ -840,6 +840,28 @@
         "reason": "Where the source numeral applies is editable project policy; engine agreement does not supply independent approval."
       },
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/oov_guess_v21.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "provisional-pronunciation",
+        "review_status": "pending-independent-review",
+        "reference_source": "Independently authored Korean loanword spellings, 2026-09-24; docs/research/oov-guess-v21-results.md",
+        "reason": "Aspirational Korean loanword spellings for words deliberately absent from the lexicon; half of them still fail and the file is a measurement record, not a gate."
+      },
+      "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/oov_guess_regression_v21.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "provisional-pronunciation",
+        "review_status": "pending-independent-review",
+        "reference_source": "Independently authored Korean loanword spellings, 2026-09-24; docs/research/oov-guess-v21-results.md",
+        "reason": "The subset the current guess already reaches, kept as a regression gate; adding the failing words to a lexicon would not count as progress."
+      },
+      "case_overrides": {}
     }
   ],
   "excluded": [

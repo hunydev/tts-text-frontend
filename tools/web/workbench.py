@@ -46,6 +46,7 @@ CORPORA = {
     "initialism-v21": ("대문자 약어 읽기 방식", "initialism_v21.jsonl"),
     "code-word-v21": ("SAVE20 같은 대문자 코드", "code_word_v21.jsonl"),
     "letter-label-v21": ("k7 같은 글자+숫자 라벨", "letter_label_v21.jsonl"),
+    "oov-guess-v21": ("미등록 영어 단어 추측 (측정용)", "oov_guess_v21.jsonl"),
 }
 DEFAULTS = dict(
     default_language="ko-KR",

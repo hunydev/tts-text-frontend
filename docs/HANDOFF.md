@@ -252,8 +252,17 @@ push한 `30b6b98`의 CI sanitizer 작업에서 `context_cache_compatibility`의 
 - 계약 `tests/evaluation/code_word_v21.jsonl` 10건. cycle fixed 3 / regressed 0.
   Debug 119/119, ASan/UBSan 107/107(단독), 외부 영어 결과 파일 동일.
 
-이후 후보: 대소문자만 다른 DATE 698건의 진단 지표, 한국어 측정 corpus 마련,
-PRON-01 미등록 단어 발음 품질, 코드 단어 사전 검수.
+### 미등록 단어 추측 발음 (2026-09-24, 커밋·미배포)
+
+- 측정 우선. 사전에 없는 28단어의 기대 표기를 독립 작성하고 0/28을 기록한 뒤 고쳤다.
+- 변경: `languages/en-US/pack.c`(g2p 앵커 `^`/`$`, 묵음 `-`), `graphemes.tsv` 규칙 추가,
+  `languages/ko-KR/pack.c`(모음 뒤 `r` 삭제)와 `phone_mapping coda_r` 리소스, validator.
+- 결과 0/28 → 14/28. 남은 14건과 원인은 `docs/research/oov-guess-v21-results.md`.
+  사전 추가로 통과시키지 않았다. Debug 121/121, 외부 영어 결과 파일 동일.
+- 기존 corpus 5건의 추측 발음 기대값(`레포르트`→`리포트`, `델이`→`데이리` 등)을 갱신했다.
+
+이후 후보: 남은 14건의 원인(모음 질·어말 받침), 대소문자만 다른 DATE 698건의 진단 지표,
+한국어 측정 corpus 확대, 코드 단어 사전 검수.
 
 ## v0.20에서 마무리한 범위
 

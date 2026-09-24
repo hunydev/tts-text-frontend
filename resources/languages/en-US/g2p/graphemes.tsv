@@ -48,3 +48,74 @@ g2p	en-US	w	W
 g2p	en-US	x	K S
 g2p	en-US	y	Y
 g2p	en-US	z	Z
+
+# Context rules: ^ marks a word start, $ a word end, and - a silent grapheme.
+# Deterministic prototype only; a declared pronunciation always outranks it.
+g2p	en-US	ss	S
+g2p	en-US	tt	T
+g2p	en-US	pp	P
+g2p	en-US	ll	L
+g2p	en-US	mm	M
+g2p	en-US	nn	N
+g2p	en-US	ff	F
+g2p	en-US	dd	D
+g2p	en-US	bb	B
+g2p	en-US	gg	G
+g2p	en-US	cc	K
+g2p	en-US	rr	R
+g2p	en-US	ssio	SH AH
+g2p	en-US	sion	SH AH N
+g2p	en-US	ci	S IH
+g2p	en-US	cy	S IY
+g2p	en-US	ce	S EH
+g2p	en-US	ce$	S
+g2p	en-US	ge$	JH
+g2p	en-US	age$	IH JH
+g2p	en-US	ate$	EY T
+g2p	en-US	ive$	IH V
+g2p	en-US	ure$	ER
+g2p	en-US	e$	-
+g2p	en-US	y$	IY
+g2p	en-US	ing$	IH NG
+g2p	en-US	le$	AH L
+g2p	en-US	ew	UW
+g2p	en-US	oa	OW
+g2p	en-US	ie	IY
+g2p	en-US	ue$	UW
+g2p	en-US	ode$	OW D
+g2p	en-US	ome$	AH M
+g2p	en-US	one$	OW N
+g2p	en-US	sign	Z AY N
+g2p	en-US	view	V Y UW
+g2p	en-US	ight	AY T
+g2p	en-US	^pre	P R IY
+g2p	en-US	^pro	P R OW
+g2p	en-US	^de	D IH
+g2p	en-US	^re	R IH
+g2p	en-US	^no	N OW
+g2p	en-US	^sho	SH OW
+g2p	en-US	^mo	M OW
+
+# Second pass: common English word shapes in Korean scripts.
+g2p	en-US	^sy	S IH
+g2p	en-US	^up	AH P
+g2p	en-US	^co	K AA
+g2p	en-US	^con	K AA N
+g2p	en-US	^sh	SH
+g2p	en-US	ager	IH JH ER
+g2p	en-US	^deli	D IH L IH
+g2p	en-US	very$	V ER IY
+g2p	en-US	ket$	K EH T
+g2p	en-US	cen	S EH N
+g2p	en-US	form	F AO R M
+g2p	en-US	nnel	N EH L
+g2p	en-US	oint	OY N T
+g2p	en-US	ssi	SH
+g2p	en-US	ion	AH N
+g2p	en-US	sage	S IH JH
+g2p	en-US	kage	K IH JH
+g2p	en-US	dard	D ER D
+g2p	en-US	tom$	T AH M
+g2p	en-US	lice	L AY S
+g2p	en-US	rsio	ZH AH
+g2p	en-US	ile$	IH L

@@ -528,3 +528,10 @@ CARDINAL 변화 없음(`benchmark/generated/sproat-v21-planner-comparison.json`)
 대상 언어 수사(`G80` → `지팔십`), 선행 0은 자릿수 유지(`k007` → `케이영영칠`)다.
 독립 작성 15건(`tests/evaluation/letter_label_v21.jsonl`). v0.20 포함 기존 계약 10건을 같은
 사유로 갱신했다. 남은 범위: `S23`·`G80`처럼 두 자리인데 원어 수사로 읽는 관용 표기는 사전 등록 필요.
+
+## v0.21 후속(미릴리스) — 미등록 단어 추측 발음 (PRON-01 일부)
+
+영어 G2P에 단어 경계 문맥과 묵음 표시를 넣고, 한국어 매퍼가 모음 뒤 `r`를 지운다. 독립 작성
+28단어에서 정확 일치 0 → 14이며 남은 14건은 `docs/research/oov-guess-v21-results.md`에 남겼다.
+사전 추가로 통과시키지 않았다. 남은 범위: 모음 질(`o` → AA 고정), 어말 파열음 받침(`마켓`),
+`-tion`/`-sion` 밖의 접미사, 그리고 known-hit와 OOV를 분리한 더 큰 표본.

@@ -66,3 +66,6 @@ phone_letter	ko-KR	letter.W	더블유
 phone_letter	ko-KR	letter.X	엑스
 phone_letter	ko-KR	letter.Y	와이
 phone_letter	ko-KR	letter.Z	제트
+
+# Korean loanword spelling drops r after a vowel (market 마켓, partner 파트너).
+phone_mapping	ko-KR	coda_r	drop

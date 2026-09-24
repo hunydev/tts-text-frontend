@@ -2,6 +2,13 @@
 
 ## Unreleased — speech final gate
 
+- Improve the guess for an undeclared English word in Korean text: the grapheme
+  prototype now understands word-start and word-end context and a silent marker,
+  and the Korean mapper drops coda `r` the way loanword spelling does
+  (`report.txt` → `리포트`, `market` → `마케트`, `center` → `센터`). On an authored
+  set of 28 out-of-vocabulary words the exact match rises 0 → 14; the remaining
+  failures stay recorded rather than being added to a lexicon.
+- Add a 28-word measurement set and a 14-case regression gate.
 - Read a single digit after a letter label with the source numeral: `k7` →
   `케이세븐`, `A4` → `에이포`, `F1` → `에프원`, `i5` → `아이파이브`, `B2` → `비투`.
   Two or more digits keep the target numeral (`G80` → `지팔십`, `S23` → `에스이십삼`),

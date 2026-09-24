@@ -167,6 +167,20 @@ static int symbol_key(const char *key) {
            (script == TTF_SCRIPT_OTHER && cp >= 128);
 }
 
+/* A g2p key may carry a leading ^ (word start) and a trailing $ (word end). */
+static const char *g2p_key_body(const char *key) {
+    static char body[TTF_IR_VALUE_SIZE];
+    size_t n;
+    snprintf(body, sizeof(body), "%s", key + (key[0] == '^'));
+    n = strlen(body);
+    if (n && body[n - 1] == '$')
+        body[n - 1] = 0;
+    return body;
+}
+static size_t g2p_key_length(const char *key) {
+    return strlen(g2p_key_body(key));
+}
+
 static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                            ttf_resource_diagnostic_t *d, void *userdata) {
     const char *k = r->kind, *key = r->key, *v = r->value;
@@ -453,11 +467,13 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     if (SAME(k, "pronunciation") || SAME(k, "initialism_pronunciation") ||
         SAME(k, "digit_pronunciation") || SAME(k, "g2p")) {
         *handled = 1;
-        if (strlen(key) >= TTF_IR_VALUE_SIZE || (SAME(k, "g2p") && strlen(key) > 4) ||
+        if (strlen(key) >= TTF_IR_VALUE_SIZE || (SAME(k, "g2p") && g2p_key_length(key) > 4) ||
             (SAME(k, "digit_pronunciation") && (strlen(key) != 1 || key[0] < '0' || key[0] > '9')))
             return ttf_validation_error(d, "pronunciation key exceeds its source lookup grammar");
-        if (!folded_key(key))
+        if (!folded_key(SAME(k, "g2p") ? g2p_key_body(key) : key))
             return ttf_validation_error(d, "pronunciation key must use lowercase ASCII spelling");
+        if (SAME(k, "g2p") && SAME(v, "-"))
+            return TTF_OK;
         return phone_sequence(v)
                    ? TTF_OK
                    : ttf_validation_error(d, "expected at most 128 bounded uppercase phone tokens "

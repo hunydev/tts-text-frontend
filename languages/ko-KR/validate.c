@@ -152,6 +152,12 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "weekday_label requires a word and 0|1");
     }
+    if (SAME(k, "phone_mapping")) {
+        *handled = 1;
+        return SAME(key, "coda_r") && ttf_validation_enum(v, "drop|keep")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "phone_mapping supports coda_r=drop|keep");
+    }
     if (SAME(k, "clock")) {
         *handled = 1;
         return SAME(key, "zero_minutes") && ttf_validation_enum(v, "omit|read")

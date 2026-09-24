@@ -1441,9 +1441,31 @@ static ttf_status_t pronounce(const ttf_engine_t *e, const char *word_text, size
             take = 4;
         phones = NULL;
         for (; take; --take) {
+            /* Anchored keys let the data express word-initial and word-final
+               context (^pre, e$) without a second matcher. */
+            char anchored[10];
+            const char *forms[3];
+            size_t form, count_forms = 0;
             memcpy(chunk, key + i, take);
             chunk[take] = '\0';
-            phones = ttf_resource_get(e, "g2p", EN, chunk, &part_layer);
+            if (!i && i + take == n) {
+                snprintf(anchored, sizeof(anchored), "^%s$", chunk);
+                forms[count_forms++] = anchored;
+            }
+            if (i + take == n) {
+                static char final_key[10];
+                snprintf(final_key, sizeof(final_key), "%s$", chunk);
+                forms[count_forms++] = final_key;
+            }
+            if (!i) {
+                static char initial_key[10];
+                snprintf(initial_key, sizeof(initial_key), "^%s", chunk);
+                forms[count_forms++] = initial_key;
+            }
+            for (form = 0; form < count_forms && !phones; ++form)
+                phones = ttf_resource_get(e, "g2p", EN, forms[form], &part_layer);
+            if (!phones)
+                phones = ttf_resource_get(e, "g2p", EN, chunk, &part_layer);
             if (phones) {
                 if (part_layer > layer)
                     layer = part_layer;
@@ -1452,10 +1474,14 @@ static ttf_status_t pronounce(const ttf_engine_t *e, const char *word_text, size
         }
         if (!phones)
             return TTF_EINVAL;
-        written = snprintf(out->phones + p, sizeof(out->phones) - p, "%s%s", p ? " " : "", phones);
-        if (written < 0 || (size_t)written >= sizeof(out->phones) - p)
-            return TTF_ELIMIT;
-        p += (size_t)written;
+        /* "-" marks a silent grapheme such as a word-final e. */
+        if (strcmp(phones, "-")) {
+            written =
+                snprintf(out->phones + p, sizeof(out->phones) - p, "%s%s", p ? " " : "", phones);
+            if (written < 0 || (size_t)written >= sizeof(out->phones) - p)
+                return TTF_ELIMIT;
+            p += (size_t)written;
+        }
         if ((status = ttf_trace_resource(e, "g2p", EN, chunk, phones, "longest-grapheme-rule",
                                          phone_index)) != TTF_OK)
             return status;

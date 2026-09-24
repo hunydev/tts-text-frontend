@@ -1701,6 +1701,14 @@ static ttf_status_t render_phones(const ttf_engine_t *e, const ttf_pronunciation
                 else if (v == 13)
                     v = 17;
             }
+            /* Korean loanword spelling drops the r-colouring after a vowel:
+               market is 마켓, not 마르케트. The policy is a resource flag. */
+            if (i + 1 < count && !strcmp(phones[i + 1], "R") &&
+                (i + 2 == count || vowel(e, phones[i + 2]) < 0) &&
+                !strcmp(resource(e, "phone_mapping", "coda_r", "drop"), "drop")) {
+                TRY(traced_algorithm(e, "coda-r", "", "dropped-coda-r", i + 1));
+                ++i;
+            }
             /* Nasals/laterals close syllables before a consonant or word end. */
             if (i + 1 < count && (i + 2 == count || vowel(e, phones[i + 2]) < 0)) {
                 int close = resource_integer(e, "phone_coda", phones[i + 1], 0, 27, -1);
