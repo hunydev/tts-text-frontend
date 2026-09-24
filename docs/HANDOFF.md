@@ -236,8 +236,17 @@ push한 `30b6b98`의 CI sanitizer 작업에서 `context_cache_compatibility`의 
 - 계약 `tests/evaluation/initialism_v21.jsonl` 15건. Debug 118/118, ASan/UBSan 106/106(단독),
   외부 영어 출력 동일(IR 10건만 INITIALISM). 사용자 옵션 네 가지를 모두 마쳤다.
 
-이후 후보: `SAVE20` 숫자 읽기 정책(결정 필요), 대소문자만 다른 DATE 698건의 진단 지표,
-한국어 측정 corpus 마련, PRON-01 미등록 단어 발음 품질.
+### 대문자 코드 단어 (2026-09-24, 커밋·미배포)
+
+- 사용자 결정: `SAVE20` = `세이브 이십`.
+- 변경: `src/pronunciation/foreign.c`의 ALNUM 경로에 `declared_word` 판정 추가. 사전 근거가 있으면
+  코드 단어로 보고 대상 언어 수사와 띄어쓰기를 쓴다. 사전 7항목(save/sale/best/event/summer/winter)
+  추가, `coupon`은 기존 금융 항목과 충돌해 제외했다.
+- 계약 `tests/evaluation/code_word_v21.jsonl` 10건. cycle fixed 3 / regressed 0.
+  Debug 119/119, ASan/UBSan 107/107(단독), 외부 영어 결과 파일 동일.
+
+이후 후보: 대소문자만 다른 DATE 698건의 진단 지표, 한국어 측정 corpus 마련,
+PRON-01 미등록 단어 발음 품질, 코드 단어 사전 검수.
 
 ## v0.20에서 마무리한 범위
 

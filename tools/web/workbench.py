@@ -44,6 +44,7 @@ CORPORA = {
     "unknown-foreign-v21": ("미등록 외국어 단어 정책", "unknown_foreign_v21.jsonl"),
     "decorative-v21": ("장식 문자 이름 읽기", "decorative_v21.jsonl"),
     "initialism-v21": ("대문자 약어 읽기 방식", "initialism_v21.jsonl"),
+    "code-word-v21": ("SAVE20 같은 대문자 코드", "code_word_v21.jsonl"),
 }
 DEFAULTS = dict(
     default_language="ko-KR",

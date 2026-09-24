@@ -2,6 +2,7 @@
 # Review status and provenance are in lexicons/; matching a default is not linguistic approval.
 lexicon	ko-KR	en-US:and	앤드
 lexicon	ko-KR	en-US:backend	백엔드
+lexicon	ko-KR	en-US:best	베스트
 lexicon	ko-KR	en-US:client	클라이언트
 lexicon	ko-KR	en-US:cloud	클라우드
 lexicon	ko-KR	en-US:coffee	커피
@@ -17,6 +18,7 @@ lexicon	ko-KR	en-US:eightieth	에이티스
 lexicon	ko-KR	en-US:eighty	에이티
 lexicon	ko-KR	en-US:eleven	일레븐
 lexicon	ko-KR	en-US:eleventh	일레븐스
+lexicon	ko-KR	en-US:event	이벤트
 lexicon	ko-KR	en-US:example	이그잼플
 lexicon	ko-KR	en-US:fifteen	피프틴
 lexicon	ko-KR	en-US:fifteenth	피프틴스
@@ -53,7 +55,9 @@ lexicon	ko-KR	en-US:one	원
 lexicon	ko-KR	en-US:online	온라인
 lexicon	ko-KR	en-US:professor	프로페서
 lexicon	ko-KR	en-US:quasar	퀘이사
+lexicon	ko-KR	en-US:sale	세일
 lexicon	ko-KR	en-US:sample	샘플
+lexicon	ko-KR	en-US:save	세이브
 lexicon	ko-KR	en-US:second	세컨드
 lexicon	ko-KR	en-US:server	서버
 lexicon	ko-KR	en-US:service	서비스
@@ -70,6 +74,7 @@ lexicon	ko-KR	en-US:sixth	식스스
 lexicon	ko-KR	en-US:sixtieth	식스티스
 lexicon	ko-KR	en-US:sixty	식스티
 lexicon	ko-KR	en-US:stream	스트림
+lexicon	ko-KR	en-US:summer	서머
 lexicon	ko-KR	en-US:ten	텐
 lexicon	ko-KR	en-US:tenth	텐스
 lexicon	ko-KR	en-US:test	테스트
@@ -92,5 +97,6 @@ lexicon	ko-KR	en-US:two	투
 lexicon	ko-KR	en-US:upload	업로드
 lexicon	ko-KR	en-US:voice	보이스
 lexicon	ko-KR	en-US:watch	워치
+lexicon	ko-KR	en-US:winter	윈터
 lexicon	ko-KR	en-US:world	월드
 lexicon	ko-KR	en-US:zero	제로

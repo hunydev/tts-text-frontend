@@ -103,6 +103,19 @@ ttf_status_t ttf_trace_foreign_lexicon(const ttf_engine_t *e, const char *source
     free(word);
     return status;
 }
+/* A declared word reading: the target lexicon knows the spelling, so an
+   uppercase run such as SAVE is a word rather than spelled letters. */
+static int declared_word(const ttf_engine_t *e, const ttf_language_pack_t *source,
+                         const ttf_language_pack_t *target, const char *text, size_t n) {
+    const char *hit = NULL;
+    ttf_resource_layer_t layer = TTF_LAYER_COMMON;
+    if (!source || !target || source == target || n < 2)
+        return 0;
+    return ttf_foreign_lookup(e, source->language_tag, target->language_tag, text, n, &hit,
+                              &layer) == TTF_OK &&
+           hit != NULL;
+}
+
 /* A declared reading is one the source pack takes from its pronunciation
    dictionary; a generated/grapheme guess is not. */
 static int declared_pronunciation(const ttf_engine_t *e, const ttf_language_pack_t *source,
@@ -191,7 +204,10 @@ static ttf_status_t render_at(const ttf_engine_t *e, const ttf_language_pack_t *
             ttf_resource_get(e, "alnum_number", target->language_tag, "initialism", NULL);
         while (prefix < n && text[prefix] >= 'A' && text[prefix] <= 'Z')
             ++prefix;
-        if (prefix >= 2 && prefix < n &&
+        /* SAVE20: an uppercase run with a declared word reading is a code word,
+           not an initialism, so its digits use the target language numeral. */
+        int code_word = prefix >= 2 && prefix < n && declared_word(e, source, target, text, prefix);
+        if (prefix >= 2 && prefix < n && !code_word &&
             (text[prefix] == '-' || (text[prefix] >= '0' && text[prefix] <= '9')) &&
             initialism_policy && !strcmp(initialism_policy, "source-digits"))
             valid = 0;
@@ -203,6 +219,7 @@ static ttf_status_t render_at(const ttf_engine_t *e, const ttf_language_pack_t *
                 valid = 0;
         }
         if (valid && digits) {
+            int separate = 0;
             *layer = TTF_LAYER_COMMON;
             while (pos < n) {
                 size_t end = pos;
@@ -240,6 +257,9 @@ static ttf_status_t render_at(const ttf_engine_t *e, const ttf_language_pack_t *
                             upper = 0;
                         ++end;
                     }
+                    /* An uppercase code word stands apart from its number. */
+                    if (upper && end - pos > 1 && end < n && code_word)
+                        separate = 1;
                     st = render_at(e, source, target, text + pos, end - pos,
                                    (upper || end - pos == 1) ? TTF_LEX_INITIALISM : TTF_LEX_WORD,
                                    out, part_trace, &part_layer, part_begin + pos);
@@ -249,6 +269,12 @@ static ttf_status_t render_at(const ttf_engine_t *e, const ttf_language_pack_t *
                 if (st != TTF_OK)
                     return st;
                 pos = end;
+                if (separate && pos < n) {
+                    st = ttf_buffer_puts(out, " ");
+                    if (st != TTF_OK)
+                        return st;
+                    separate = 0;
+                }
             }
             snprintf(trace, 64, "alnum:composed");
             return TTF_OK;

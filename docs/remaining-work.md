@@ -514,3 +514,10 @@ CARDINAL 변화 없음(`benchmark/generated/sproat-v21-planner-comparison.json`)
 읽는다. 선언된 acronym·고유명사·사전 항목은 그대로다. 독립 작성 15건
 (`tests/evaluation/initialism_v21.jsonl`). 외부 영어 출력은 동일하고 span 10건의 IR만 바뀌었다.
 사용자가 요청한 옵션 네 가지(괄호, 미등록 외국어, 장식 문자, 대문자 약어)를 모두 구현했다.
+
+## v0.21 후속(미릴리스) — 대문자 코드 단어 (사용자 결정)
+
+`SAVE20` → `세이브 이십`. 대문자 묶음이 발음 사전에 단어로 있으면 코드 단어로 보고 대상 언어
+수사를 쓴다. 사전 근거가 없으면 기존 initialism 정책(`GPT-4` → `지피티포`)이 그대로다.
+독립 작성 10건(`tests/evaluation/code_word_v21.jsonl`), 사전 7항목 추가(검수 대기).
+남은 범위: 코드 단어 사전의 실제 검수, 소문자 합성어(`top100` → `탑백`)와의 띄어쓰기 차이.

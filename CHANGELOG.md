@@ -2,6 +2,12 @@
 
 ## Unreleased — speech final gate
 
+- Read an uppercase promotion code whose letters have a declared word reading as
+  that word plus a target-language numeral: `SAVE20` → `세이브 이십`, `SALE50` →
+  `세일 오십` (previously `에스에이브이이투지로`). An uppercase run with no declared
+  reading keeps the initialism digits policy, so `GPT-4` → `지피티포`, `MP3`, `KBS`
+  and lowercase `top100` → `탑백` are unchanged. Add seven pending code words.
+- Add 10 contracts; external English results are identical.
 - Add an initialism policy: `spell` (default) reads an all-uppercase run of two
   or more letters as an abbreviation even when the same spelling is an ordinary
   word (`IT 업계` → `아이티 업계`, previously `이트`), while `word` keeps the word
