@@ -154,9 +154,18 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     }
     if (SAME(k, "phone_mapping")) {
         *handled = 1;
-        return SAME(key, "coda_r") && ttf_validation_enum(v, "drop|keep")
+        if (SAME(key, "coda_r"))
+            return ttf_validation_enum(v, "drop|keep")
+                       ? TTF_OK
+                       : ttf_validation_error(d, "phone_mapping coda_r takes drop|keep");
+        if (SAME(key, "linking_r"))
+            return ttf_validation_enum(v, "link|drop")
+                       ? TTF_OK
+                       : ttf_validation_error(d, "phone_mapping linking_r takes link|drop");
+        return SAME(key, "onset_l") && ttf_validation_enum(v, "double|single")
                    ? TTF_OK
-                   : ttf_validation_error(d, "phone_mapping supports coda_r=drop|keep");
+                   : ttf_validation_error(
+                         d, "phone_mapping supports coda_r=drop|keep and onset_l=double|single");
     }
     if (SAME(k, "clock")) {
         *handled = 1;
@@ -385,6 +394,14 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
         return ttf_validation_enum(v, "0|1")
                    ? TTF_OK
                    : ttf_validation_error(d, "counter unit flag must be 0 or 1");
+    }
+    if (SAME(k, "phone_vowel_length")) {
+        *handled = 1;
+        if (!phone_key(key))
+            return ttf_validation_error(d, "phone map key must be 1..23 uppercase ASCII letters");
+        return ttf_validation_enum(v, "short|long")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "phone_vowel_length takes short|long");
     }
     if (SAME(k, "phone_onset") || SAME(k, "phone_vowel") || SAME(k, "phone_coda")) {
         int maximum = SAME(k, "phone_onset") ? 18 : SAME(k, "phone_vowel") ? 20 : 27;

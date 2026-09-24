@@ -227,7 +227,7 @@ if(BUILD_TESTING)
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources letter_label_v21.jsonl 15)
     add_test(NAME oov_guess_regression_v21_evaluation COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
-      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources oov_guess_regression_v21.jsonl 14)
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources oov_guess_regression_v21.jsonl 28)
     add_test(NAME context_cache_compatibility COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_context_cache.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)

@@ -8,7 +8,22 @@
   (`report.txt` → `리포트`, `market` → `마케트`, `center` → `센터`). On an authored
   set of 28 out-of-vocabulary words the exact match rises 0 → 14; the remaining
   failures stay recorded rather than being added to a lexicon.
-- Add a 28-word measurement set and a 14-case regression gate.
+- Take the guess further with three declared Korean spelling rules: a voiceless
+  stop closes the preceding syllable only after a short vowel and never before a
+  nasal or liquid (`market` → `마켓`, but `update` → `업데이트`, `partner` →
+  `파트너`), an `l` after a vowel is written twice (`platform` → `플랫폼`,
+  `delivery` → `딜리버리`, `daily` → `데일리`), and the r of `ER` becomes the onset
+  of a following vowel instead of disappearing (`battery` → `배터리`). A palatal
+  takes `이` as its inserted vowel and palatalises a following vowel (`package` →
+  `패키지`, `shopping` → `쇼핑`), and a diphthong's tail syllable carries the coda
+  (`point` → `포인트`). The 28-word set now matches exactly, 0 → 28.
+- Add `phone_vowel_length` (`short|long`) and the `phone_mapping` keys `onset_l`
+  (`double|single`) and `linking_r` (`link|drop`).
+- Add a 28-word measurement set and promote all 28 into the regression gate.
+- Update three earlier references whose expectation recorded the prototype's own
+  output, now that the guess is the standard spelling: `snake` 스내크 → 스네이크,
+  `daily` 데이리 → 데일리, and the `IT` word policy 이트 → 잇. Each case records
+  the reason in its notes; the policy each case measures is unchanged.
 - Read a single digit after a letter label with the source numeral: `k7` →
   `케이세븐`, `A4` → `에이포`, `F1` → `에프원`, `i5` → `아이파이브`, `B2` → `비투`.
   Two or more digits keep the target numeral (`G80` → `지팔십`, `S23` → `에스이십삼`),

@@ -105,6 +105,17 @@ key는 96 byte 미만이다.
 `phone_onset`, `phone_vowel`, `phone_coda`는 외국어 pronunciation의 음운을
 한국어로 옮기는 별도 리소스다. 전화번호 읽기를 바꾸려고 수정하지 않는다.
 
+같은 묶음에 표기 관행을 선언하는 key가 더 있다. 전화번호와 무관하다.
+
+| key | 값 | 뜻 |
+| --- | --- | --- |
+| `phone_vowel_length` | `short` \| `long` | 짧은 모음 뒤에서만 어말 `P T K`가 받침이 된다 (market 마켓, update 업데이트) |
+| `phone_mapping coda_r` | `drop` \| `keep` | 자음 앞·어말의 `r`를 지운다 (market 마켓) |
+| `phone_mapping onset_l` | `double` \| `single` | 모음 뒤 `l`을 받침 ㄹ + 초성 ㄹ로 겹쳐 적는다 (platform 플랫폼) |
+| `phone_mapping linking_r` | `link` \| `drop` | `ER` 뒤에 모음이 오면 r를 다음 음절 초성으로 남긴다 (battery 배터리) |
+
+`phone_vowel_length`의 key는 음운 이름이고, 선언하지 않은 음운은 `long`으로 본다.
+
 ### 숫자 개수 제한
 
 `phone_policy`는 `language=*`만 허용한다.

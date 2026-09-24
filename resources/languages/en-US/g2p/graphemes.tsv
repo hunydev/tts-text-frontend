@@ -100,7 +100,6 @@ g2p	en-US	^mo	M OW
 g2p	en-US	^sy	S IH
 g2p	en-US	^up	AH P
 g2p	en-US	^co	K AA
-g2p	en-US	^con	K AA N
 g2p	en-US	^sh	SH
 g2p	en-US	ager	IH JH ER
 g2p	en-US	^deli	D IH L IH
@@ -108,7 +107,6 @@ g2p	en-US	very$	V ER IY
 g2p	en-US	ket$	K EH T
 g2p	en-US	cen	S EH N
 g2p	en-US	form	F AO R M
-g2p	en-US	nnel	N EH L
 g2p	en-US	oint	OY N T
 g2p	en-US	ssi	SH
 g2p	en-US	ion	AH N
@@ -119,3 +117,10 @@ g2p	en-US	tom$	T AH M
 g2p	en-US	lice	L AY S
 g2p	en-US	rsio	ZH AH
 g2p	en-US	ile$	IH L
+g2p	en-US	^con	K AO N
+g2p	en-US	nnel	N AH L
+g2p	en-US	^lice	L AY S AH
+g2p	en-US	nse$	N S
+g2p	en-US	ersi	ER ZH
+g2p	en-US	on$	AH N
+g2p	en-US	ake$	EY K

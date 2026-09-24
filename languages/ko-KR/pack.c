@@ -1619,6 +1619,32 @@ static int vowel(const ttf_engine_t *e, const char *phone) {
     return resource_integer(e, "phone_vowel", phone, 0, 20, -1);
 }
 
+static int short_vowel(const ttf_engine_t *e, const char *phone) {
+    const char *length = ttf_resource_get(e, "phone_vowel_length", "ko-KR", phone, NULL);
+    return length && !strcmp(length, "short");
+}
+
+/* 플랫폼, 딜리버리: an l after a vowel is written twice, as the coda of the
+   syllable before it and again as its own onset. */
+static int double_previous_l(ttf_buffer_t *out, size_t end, size_t word_begin) {
+    unsigned char *tail;
+    uint32_t cp;
+    if (end < word_begin + 3)
+        return 0;
+    tail = (unsigned char *)out->data + end - 3;
+    if ((tail[0] & 0xf0u) != 0xe0u || (tail[1] & 0xc0u) != 0x80u || (tail[2] & 0xc0u) != 0x80u)
+        return 0;
+    cp = ((uint32_t)(tail[0] & 0x0fu) << 12) | ((uint32_t)(tail[1] & 0x3fu) << 6) |
+         (uint32_t)(tail[2] & 0x3fu);
+    if (cp < 0xac00u || cp > 0xd7a3u || (cp - 0xac00u) % 28u)
+        return 0;
+    cp += 8u;
+    tail[0] = (unsigned char)(0xe0u | (cp >> 12));
+    tail[1] = (unsigned char)(0x80u | ((cp >> 6) & 0x3fu));
+    tail[2] = (unsigned char)(0x80u | (cp & 0x3fu));
+    return 1;
+}
+
 /* A trace is evidence of a consumed decision, not every resource lookup probe. */
 static ttf_status_t traced_algorithm(const ttf_engine_t *e, const char *key, const char *text,
                                      const char *detail, size_t phone_index) {
@@ -1629,7 +1655,12 @@ static ttf_status_t traced_algorithm(const ttf_engine_t *e, const char *key, con
 static ttf_status_t flush_onset(const ttf_engine_t *e, ttf_buffer_t *out, int pending,
                                 const char *phone, size_t phone_index) {
     size_t begin = out->length;
-    TRY(put_syllable(out, pending, 18, 0));
+    /* Korean writes 이 rather than 으 after a palatal: package 패키지. */
+    int filler =
+        !strcmp(phone, "JH") || !strcmp(phone, "CH") || !strcmp(phone, "SH") || !strcmp(phone, "ZH")
+            ? 20
+            : 18;
+    TRY(put_syllable(out, pending, filler, 0));
     TRY(ttf_trace_resource(e, "phone_onset", "ko-KR", phone, out->data + begin, "consumed-onset",
                            phone_index));
     return traced_algorithm(e, "epenthetic-vowel", out->data + begin, "eu-without-following-vowel",
@@ -1640,6 +1671,7 @@ static ttf_status_t render_phones(const ttf_engine_t *e, const ttf_pronunciation
                                   ttf_buffer_t *out) {
     char phones[128][24];
     size_t count = 0, pos = 0, i, pending_index = SIZE_MAX, glide_index = SIZE_MAX;
+    size_t word_begin = out->length;
     int pending = -1, glide = 0;
     if (strcmp(p->alphabet, "ttf-phones-v1") != 0 && strcmp(p->alphabet, "ARPABET") != 0 &&
         strcmp(p->alphabet, "arpabet") != 0)
@@ -1673,6 +1705,11 @@ static ttf_status_t render_phones(const ttf_engine_t *e, const ttf_pronunciation
             TRY(ttf_trace_resource(e, "phone_letter", "ko-KR", phone, letter, "direct-letter-name",
                                    i));
             continue;
+        }
+        if (!strcmp(phone, "SH") && i + 1 < count && vowel(e, phones[i + 1]) >= 0) {
+            /* 셔, 쇼: a palatal fricative palatalises the following vowel. */
+            glide = 2;
+            glide_index = i;
         }
         if (strcmp(phone, "W") == 0 || strcmp(phone, "Y") == 0) {
             glide = strcmp(phone, "W") == 0 ? 1 : 2;
@@ -1712,12 +1749,33 @@ static ttf_status_t render_phones(const ttf_engine_t *e, const ttf_pronunciation
             /* Nasals/laterals close syllables before a consonant or word end. */
             if (i + 1 < count && (i + 2 == count || vowel(e, phones[i + 2]) < 0)) {
                 int close = resource_integer(e, "phone_coda", phones[i + 1], 0, 27, -1);
+                int stop = !strcmp(phones[i + 1], "P") || !strcmp(phones[i + 1], "T") ||
+                           !strcmp(phones[i + 1], "K");
+                /* A stop closes the syllable only after a short vowel (market 마켓,
+                   not 업데잇) and never before a nasal or liquid (partner 파트너). */
+                if (stop && (!short_vowel(e, phone) ||
+                             (i + 2 < count && onset(e, phones[i + 2]) >= 0 &&
+                              vowel(e, phones[i + 2]) < 0 &&
+                              (!strcmp(phones[i + 2], "N") || !strcmp(phones[i + 2], "M") ||
+                               !strcmp(phones[i + 2], "NG") || !strcmp(phones[i + 2], "L") ||
+                               !strcmp(phones[i + 2], "R")))))
+                    close = -1;
                 if (close >= 0) {
                     cod = close;
                     coda_index = ++i;
                 }
             }
-            TRY(put_syllable(out, pending >= 0 ? pending : 11, v, cod));
+            {
+                int tail = !strcmp(phone, "AY") || !strcmp(phone, "EY") || !strcmp(phone, "OY") ||
+                           !strcmp(phone, "AW");
+                /* 포인트: the coda closes the tail syllable, not the nucleus. */
+                TRY(put_syllable(out, pending >= 0 ? pending : 11, v, tail ? 0 : cod));
+            }
+            if (pending == onset(e, "L") && pending_index != SIZE_MAX &&
+                !strcmp(phones[pending_index], "L") &&
+                !strcmp(resource(e, "phone_mapping", "onset_l", "single"), "double") &&
+                double_previous_l(out, begin, word_begin))
+                TRY(traced_algorithm(e, "doubled-l", "", "l-after-vowel", pending_index));
             if (pending >= 0)
                 TRY(ttf_trace_resource(e, "phone_onset", "ko-KR", phones[pending_index],
                                        out->data + begin, "consumed-onset", pending_index));
@@ -1735,15 +1793,23 @@ static ttf_status_t render_phones(const ttf_engine_t *e, const ttf_pronunciation
                                        out->data + begin, "consumed-coda", coda_index));
             begin = out->length;
             if (strcmp(phone, "AY") == 0 || strcmp(phone, "EY") == 0 || strcmp(phone, "OY") == 0) {
-                TRY(put_syllable(out, 11, 20, 0));
+                TRY(put_syllable(out, 11, 20, cod));
                 TRY(traced_algorithm(e, "diphthong-tail", out->data + begin, "i-tail",
                                      phone_index));
             } else if (strcmp(phone, "AW") == 0) {
-                TRY(put_syllable(out, 11, 13, 0));
+                TRY(put_syllable(out, 11, 13, cod));
                 TRY(traced_algorithm(e, "diphthong-tail", out->data + begin, "u-tail",
                                      phone_index));
             }
-            pending = -1;
+            /* 딜리버리, 배터리: the r-colouring of ER becomes the onset of the
+               following syllable rather than disappearing with the vowel. */
+            if (!strcmp(phone, "ER") && i + 1 < count && vowel(e, phones[i + 1]) >= 0 &&
+                !strcmp(resource(e, "phone_mapping", "linking_r", "drop"), "link")) {
+                pending = onset(e, "R");
+                pending_index = i;
+                TRY(traced_algorithm(e, "linking-r", "", "r-before-vowel", i));
+            } else
+                pending = -1;
             glide = 0;
         } else if (c >= 0) {
             if (strcmp(phone, "R") == 0 && i + 1 == count) {

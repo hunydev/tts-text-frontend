@@ -261,8 +261,23 @@ push한 `30b6b98`의 CI sanitizer 작업에서 `context_cache_compatibility`의 
   사전 추가로 통과시키지 않았다. Debug 121/121, 외부 영어 결과 파일 동일.
 - 기존 corpus 5건의 추측 발음 기대값(`레포르트`→`리포트`, `델이`→`데이리` 등)을 갱신했다.
 
-이후 후보: 남은 14건의 원인(모음 질·어말 받침), 대소문자만 다른 DATE 698건의 진단 지표,
-한국어 측정 corpus 확대, 코드 단어 사전 검수.
+### 미등록 단어 추측 발음 2차 (2026-09-24, 커밋·미배포)
+
+- 남은 14건을 표기 규칙 세 가지로 처리해 **28/28**이 됐다. 규칙은 모두 리소스로 선언한다.
+  - 어말 `P T K`는 짧은 모음 뒤에서만 받침이 된다(`phone_vowel_length`, market 마켓 /
+    update 업데이트). 비음·유음 앞에서도 닫지 않는다(partner 파트너).
+  - 모음 뒤 `l`은 겹쳐 적는다(`phone_mapping onset_l double`, platform 플랫폼).
+  - `ER` 뒤 모음이 오면 r가 다음 음절 초성이 된다(`phone_mapping linking_r link`, 배터리).
+  - 구개음 뒤 삽입 모음은 `이`, `SH`는 뒤 모음을 구개음화, 이중모음 꼬리가 받침을 가져간다.
+- 변경: `languages/ko-KR/pack.c`, `validate.c`, `phones.tsv`, `graphemes.tsv`
+  (`^con`, `nnel`, `^lice`, `nse$`, `ersi`, `on$`, `ake$`), 회귀 게이트 14 → 28건.
+- 기존 참조 3건(`snake` 스내크→스네이크, `daily` 데이리→데일리, `IT` word 정책 이트→잇)의
+  기대값을 갱신하고 사유를 각 notes에 남겼다. 프로토타입 출력을 적어 둔 값이었다.
+- 결과: Debug CTest 122/122, 외부 영어 표본 수치 동일(`sproat-v21-oovguess`, DATE 394).
+  자세한 기록은 `docs/research/oov-guess-v21-results.md`.
+
+이후 후보: 대소문자만 다른 DATE 698건의 진단 지표, 한국어 측정 corpus 확대,
+코드 단어 사전 검수, 추측 발음 측정 세트를 28단어 밖으로 넓히기.
 
 ## v0.20에서 마무리한 범위
 

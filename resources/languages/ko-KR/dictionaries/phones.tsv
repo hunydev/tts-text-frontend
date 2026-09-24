@@ -69,3 +69,18 @@ phone_letter	ko-KR	letter.Z	제트
 
 # Korean loanword spelling drops r after a vowel (market 마켓, partner 파트너).
 phone_mapping	ko-KR	coda_r	drop
+# A voiceless stop closes the syllable after a short vowel (market 마켓) but not
+# after a long one (update 업데이트) nor before a nasal or liquid (partner 파트너).
+phone_coda	ko-KR	P	17
+phone_coda	ko-KR	T	19
+phone_coda	ko-KR	K	1
+phone_vowel_length	ko-KR	AA	short
+phone_vowel_length	ko-KR	AE	short
+phone_vowel_length	ko-KR	AH	short
+phone_vowel_length	ko-KR	EH	short
+phone_vowel_length	ko-KR	IH	short
+phone_vowel_length	ko-KR	UH	short
+# Korean doubles an l that follows a vowel: platform 플랫폼, delivery 딜리버리.
+phone_mapping	ko-KR	onset_l	double
+# A vowel after er keeps the r as its onset: delivery 딜리버리, battery 배터리.
+phone_mapping	ko-KR	linking_r	link
