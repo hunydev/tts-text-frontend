@@ -32,6 +32,13 @@
   resources. Text output is untouched, a value that is not letters alone keeps
   its own reading (`R&D` → `R and D`), and the speech defaults are the new
   `initialism_policy` keys `inferred_speech` and `pronounceable_speech`.
+- Read the unit symbols that reached the synthesizer as written: `20°` →
+  `twenty degrees` / `이십 도`, `5m²` and `5㎡` → `five square meters` /
+  `오 제곱미터`, `5㎢` → `오 제곱킬로미터`, `5kcal` and `5㎉` → `five kilocalories` /
+  `오 킬로칼로리`, `5‰` → `five per mille` / `오 퍼밀`. A degree with a scale keeps
+  winning (`20°C` → `섭씨 이십 도`). `′`, `″`, `¢` and a superscript `²` stay as
+  written: they are ambiguous between feet and minutes, a minor currency unit and
+  a footnote mark.
 - Stop a phone cue from swallowing what is not a phone number: `문의 12` →
   `문의 십이`, `문의 3-5` → `문의 삼에서 오`, `문의 1+1` → `문의 일 더하기 일`.
   A candidate with too few digits and no international or parenthesised shape no

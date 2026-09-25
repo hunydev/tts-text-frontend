@@ -52,3 +52,20 @@ unit	en-US	degrees_fahrenheit.one	degree Fahrenheit
 unit	en-US	degrees_fahrenheit.many	degrees Fahrenheit
 # The lowercase spelling maps to the declared mL unit rather than a second id.
 numeric_suffix	*	ml	MEASURE:mL
+# Symbols that reached the synthesizer as written. A scale keeps winning over the
+# bare degree because the longest declared suffix matches first.
+numeric_suffix	*	°	MEASURE:degree
+unit	en-US	degree.one	degree
+unit	en-US	degree.many	degrees
+numeric_suffix	*	m²	MEASURE:square_m
+numeric_suffix	*	㎡	MEASURE:square_m
+unit	en-US	square_m.one	square meter
+unit	en-US	square_m.many	square meters
+numeric_suffix	*	㎢	MEASURE:square_km
+numeric_suffix	*	kcal	MEASURE:kcal
+numeric_suffix	*	㎉	MEASURE:kcal
+unit	en-US	kcal.one	kilocalorie
+unit	en-US	kcal.many	kilocalories
+numeric_suffix	*	‰	MEASURE:per_mille
+unit	en-US	per_mille.one	per mille
+unit	en-US	per_mille.many	per mille

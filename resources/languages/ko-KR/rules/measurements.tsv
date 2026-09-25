@@ -13,3 +13,7 @@ quantity_prefix	ko-KR	Wh_per_km	킬로미터당
 unit	ko-KR	square_km	제곱킬로미터
 unit	ko-KR	°F	도
 quantity_prefix	ko-KR	°F	화씨 
+unit	ko-KR	degree	도
+unit	ko-KR	square_m	제곱미터
+unit	ko-KR	kcal	킬로칼로리
+unit	ko-KR	per_mille	퍼밀
