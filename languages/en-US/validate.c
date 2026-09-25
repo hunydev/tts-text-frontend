@@ -441,10 +441,14 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     if (SAME(k, "date_year_cue") || SAME(k, "date_year_quantity") ||
         SAME(k, "date_year_interval")) {
         *handled = 1;
-        if (SAME(k, "date_year_cue") || SAME(k, "date_year_interval") ? !lowercase_words(key, 64)
-                                                                      : !lowercase_letters(key, 63))
-            return ttf_validation_error(d,
-                                        "date cue must be bounded canonical lowercase ASCII words");
+        /* An opening bracket introduces a year the way a determiner does, so the
+           cue table also holds the bracket itself: "( 1965 )". */
+        if (!(SAME(k, "date_year_cue") && key[0] && !key[1] && strchr("([{", key[0])) &&
+            (SAME(k, "date_year_cue") || SAME(k, "date_year_interval")
+                 ? !lowercase_words(key, 64)
+                 : !lowercase_letters(key, 63)))
+            return ttf_validation_error(
+                d, "date cue must be bounded canonical lowercase ASCII words, or ( [ { for a year");
         return ttf_validation_enum(v, "0|1")
                    ? TTF_OK
                    : ttf_validation_error(d, "date cue value must be 0 or 1");
@@ -575,6 +579,9 @@ static ttf_status_t cue_boundaries(const ttf_engine_t *e, const char *cue,
                                    ttf_resource_diagnostic_t *d, int planner_reads_cue) {
     size_t p = 0;
     if (planner_reads_cue && !strchr(cue, ' '))
+        return TTF_OK;
+    /* A bracket is punctuation the tokenizer already separates. */
+    if (cue[0] && !cue[1] && strchr("([{", cue[0]))
         return TTF_OK;
     while (cue[p]) {
         char key[96];

@@ -2,6 +2,25 @@
 
 ## Unreleased — speech final gate
 
+- Read a four-digit number that a bracket holds on its own as a year, which is
+  the citation shape: `( 1965 )` → `( nineteen sixty five )`, `(1965)`, and
+  `Bright , William ( 1965 ) .`. An ordinary parenthesis keeps its cardinals
+  (`( 2003 and 2005 )`), and the quantity noun and year range still decide
+  (`( 1965 copies )`, `( 2100 )`). `date_year_cue` now takes `(`, `[` and `{`
+  besides words, and `born` joins the word cues. Two rows of the phone-negative
+  contract list that expected `CARDINAL` for `( 2024 )` and `1385 ( 2006 )` now
+  expect `DATE`; the rationale is recorded in
+  `docs/research/date-diagnostic-v21-results.md`.
+- Name why a benchmark span missed, so a dataset convention is no longer read as
+  an error: the evaluator reports `mismatch_kinds` (case-only, space-only,
+  case-and-space, alignment, no-output, different) and a per-class
+  `diagnostic_case_insensitive` count. Both are diagnostics; the accuracy still
+  compares bytes and folds nothing. They showed that 698 of the 1,144 English
+  DATE misses differ only in the capitalisation of a month name, which the
+  project keeps.
+- External English sample: DATE 394 → 504 exact and 35,053 → 35,163 exact spans,
+  with every other class unchanged.
+
 - Improve the guess for an undeclared English word in Korean text: the grapheme
   prototype now understands word-start and word-end context and a silent marker,
   and the Korean mapper drops coda `r` the way loanword spelling does

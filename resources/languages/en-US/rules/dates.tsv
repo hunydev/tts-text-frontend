@@ -66,6 +66,11 @@ date_year_cue	en-US	post	1
 date_year_cue	en-US	pre	1
 date_year_cue	en-US	versus	1
 date_year_cue	en-US	vs	1
+# A bare year in brackets is the citation shape: ( 1965 ). The quantity noun
+# and the year range still decide, so ( 1965 copies ) stays a cardinal.
+date_year_cue	en-US	(	1
+date_year_cue	en-US	[	1
+date_year_cue	en-US	born	1
 # A following quantity noun blocks the contextual-year interpretation.
 date_year_quantity	en-US	copy	1
 date_year_quantity	en-US	copies	1

@@ -468,6 +468,59 @@ class EvaluatorTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "corpus_sha256"):
                 COMPARE.compare(root / "before", root / "after")
 
+    def test_mismatch_kind_separates_convention_from_error(self):
+        """A diagnostic only: case and spacing never enter the accuracy itself."""
+        kind = EVALUATE.mismatch_kind
+        self.assertIsNone(kind("january third", "january third", None))
+        self.assertEqual(kind("january third", "January third", None), "case-only")
+        self.assertEqual(kind("january third", "january  third", None), "space-only")
+        self.assertEqual(kind("january third", "January  third", None), "case-and-space")
+        self.assertEqual(kind("january third", "january fourth", None), "different")
+        self.assertEqual(kind("january third", None, None), "no-output")
+        self.assertEqual(kind("january third", "January third", "unaligned"), "alignment")
+
+    def test_summary_reports_case_insensitive_diagnostic_without_changing_accuracy(self):
+        row = case()
+        row["spans"][2]["spoken"] = "twenty one"
+        summary = EVALUATE.Summary()
+        scored = {
+            "engine_error": None,
+            "sentence_exact": None,
+            "spoken_projection_exact": None,
+            "spoken_projection_error": None,
+            "streaming": [],
+            "spans": [
+                dict(
+                    row["spans"][0],
+                    actual="I",
+                    alignment_error=None,
+                    exact=True,
+                    engine_semantics=["WORD"],
+                    rules=["identity"],
+                    lexicon_routes=[],
+                    mismatch_kind=None,
+                ),
+                dict(
+                    row["spans"][2],
+                    actual="Twenty one",
+                    alignment_error=None,
+                    exact=False,
+                    engine_semantics=["CARDINAL"],
+                    rules=["cardinal"],
+                    lexicon_routes=[],
+                    mismatch_kind="case-only",
+                ),
+            ],
+        }
+        summary.add(scored)
+        data = summary.data
+        classes = data["semiotic_classes"]
+        self.assertEqual(classes["CARDINAL"]["dataset-reference"]["exact"], 0)
+        self.assertEqual(data["mismatch_kinds"]["CARDINAL"], {"case-only": 1})
+        diagnostic = data["diagnostic_case_insensitive"]["CARDINAL"]
+        self.assertEqual((diagnostic["exact"], diagnostic["total"]), (1, 1))
+        self.assertEqual(data["diagnostic_case_insensitive"]["PLAIN"]["exact"], 1)
+
     def test_noncommercial_execution_requires_opt_in(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

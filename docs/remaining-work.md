@@ -204,6 +204,11 @@ compiled resource의 **8개 CTest를 다시 실행해 모두 통과**했다. 이
   새 손실의 원인과 처리. 경계가 합쳐졌다는 설명만으로 실패를 지우지 않는다.
   DATE의 casefold-only 698건도 exact에서는 계속 실패다. 진단용 대소문자 허용 지표를
   추가할 때는 별도 이름·분모로 보고한다.
+  **진행 (2026-09-25):** 진단 지표를 넣었다. `mismatch_kinds`(case-only / space-only /
+  case-and-space / alignment / no-output / different)와 클래스별
+  `diagnostic_case_insensitive`를 별도 이름·분모로 보고하고, 정확도는 그대로 byte 비교다
+  (`docs/research/date-diagnostic-v21-results.md`). 이 항목이 요구하는 adjudication 전체와
+  불변 hash 보고는 아직 남아 있다.
 
 - [ ] **EVAL-03: 개발 표본과 분리된 held-out 평가.** 현재 외부 3,785문장은
   Sproat training-prefix 개발 표본이며 MONEY 33, TIME 4, FRACTION 2처럼 불균형하다.
@@ -491,8 +496,16 @@ TN-03/UNICODE-01의 일부를 진전시켰다. 원형 숫자·로마 숫자·분
 그래서 `rose to 1965`, `( 2003 and 2005 )`는 수량으로 남는다. DATE exact 343 → 394, 회귀 0,
 CARDINAL 변화 없음(`benchmark/generated/sproat-v21-planner-comparison.json`). v0.18 호환 참조 4건의
 `context_trace` 점수는 분절이 넓어져 갱신했고 텍스트·offset·의미·언어는 그대로다.
-남은 범위: `to`/`and`/`by` 자체를 단서로 쓰는 문맥(현재는 앞 끝 연도 근거 필요), 대소문자만
-다른 DATE 불일치 698건, `9/25/2026` 같은 locale 모호 표기.
+**후속 해결(2026-09-25):** 진단 지표로 맨 연도 실패 258건의 앞 문맥을 세었더니 108건이
+`( 1965 )` 인용 형태였다. `date_year_cue`가 여는 괄호도 key로 받게 하되, 괄호가 숫자만 감싸고
+바로 닫힐 때만 단서로 본다. `( 2003 and 2005 )`는 위에 적은 대로 계속 수량이다.
+DATE exact 394 → 504, 다른 클래스 동일(`benchmark/generated/sproat-v21-yearbracket`).
+phone-negative 계약 2건의 기대를 CARDINAL → DATE로 바꾼 정책 변경과 되돌릴 조건은
+`docs/research/date-diagnostic-v21-results.md`에 있다.
+
+남은 범위: `to`/`and`/`by` 자체를 단서로 쓰는 문맥(현재는 앞 끝 연도 근거 필요), 괄호 밖의
+맨 연도 150건, 연대 표기(`1960s`) 33건, ISO 날짜 어순 46건(관행 차이), `9/25/2026` 같은
+locale 모호 표기. 대소문자만 다른 698건은 관행이며 진단 지표로 따로 센다.
 
 ## v0.21 후속(미릴리스) — 괄호 처리 옵션 (WEB-01/사용자 요청)
 

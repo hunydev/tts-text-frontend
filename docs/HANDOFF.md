@@ -303,8 +303,23 @@ push한 `30b6b98`의 CI sanitizer 작업에서 `context_cache_compatibility`의 
   michael(고유명사는 사전 대상), visit(기대값 다툼)이며 사전에 넣지 않고 기록했다.
 - Debug CTest 126/126. 자세한 기록은 `docs/research/oov-guess-v21-results.md`.
 
-이후 후보: 대소문자만 다른 DATE 698건의 진단 지표, 한국어 측정 corpus 확대,
-코드 단어 사전 검수, 축약형·하이픈 합성어 추측 발음.
+### DATE 진단 지표와 괄호 연도 단서 (2026-09-25, 커밋·미배포)
+
+- 평가기에 `mismatch_kinds`와 `diagnostic_case_insensitive`를 넣었다. 정확도는 그대로
+  byte 비교이고 이 둘은 진단이다. DATE 불일치 1,144건 중 698건이 월 이름 대소문자 관행임이
+  드러났고, 프로젝트는 입력 대소문자를 계속 보존한다.
+- 실제 오류 344건의 갈래: 맨 연도 258, ISO 어순 46, 연대 표기 33, 기타 7.
+  맨 연도 중 108건이 `( 1965 )` 인용 형태였다.
+- `date_year_cue`가 여는 괄호도 key로 받는다. 단 **괄호가 숫자만 감싸고 바로 닫힐 때만**
+  단서다(`( 2003 and 2005 )`는 그대로 cardinal). `born`도 추가했다. 계약 10건을 구현 전에
+  작성했다(`year_cue_v21.jsonl` 14 → 24건).
+- 기존 phone-negative 계약 2건(`( 2024 )`, `1385 ( 2006 )`)의 기대를 CARDINAL → DATE로
+  바꿨다. **정책 변경**이며 근거와 되돌릴 조건을 `docs/research/date-diagnostic-v21-results.md`에
+  남겼다.
+- 외부 영어: DATE 394 → 504, span 35,053 → 35,163, 다른 클래스 동일. Debug 126/126.
+
+이후 후보: 연대 표기(`1960s` → nineteen sixties, 33건, 지금은 미정규화),
+한국어 측정 corpus 확대, 코드 단어 사전 검수, 축약형·하이픈 합성어 추측 발음.
 
 ## v0.20에서 마무리한 범위
 

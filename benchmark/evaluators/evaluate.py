@@ -181,6 +181,26 @@ def spoken_projection(record, scored, result, error):
     return " ".join(words), None
 
 
+def mismatch_kind(reference, actual, alignment_error):
+    """Name why a span missed, so a dataset convention is not read as an error.
+
+    This is a diagnostic. The accuracy above compares bytes and folds nothing.
+    """
+    if alignment_error:
+        return "alignment"
+    if actual is None:
+        return "no-output"
+    if actual == reference:
+        return None
+    if actual.lower() == reference.lower():
+        return "case-only"
+    if actual.split() == reference.split():
+        return "space-only"
+    if actual.lower().split() == reference.lower().split():
+        return "case-and-space"
+    return "different"
+
+
 def score_case(record, result, error=None):
     if not error:
         try:
@@ -199,6 +219,9 @@ def score_case(record, result, error=None):
                 actual=actual,
                 alignment_error=alignment,
                 exact=None if target is None else actual == target,
+                mismatch_kind=None
+                if target is None or actual == target
+                else mismatch_kind(target, actual, alignment),
                 engine_semantics=[s["semantic_type"] for s in native],
                 rules=[s["rule"] for s in native],
                 lexicon_routes=[
@@ -253,6 +276,9 @@ class Summary:
             "spans": {},
             "semiotic_classes": {},
             "class_to_engine_semantics": {},
+            # Diagnostics. They never enter the accuracy above.
+            "mismatch_kinds": {},
+            "diagnostic_case_insensitive": {},
             "chunk_comparisons": 0,
             "chunk_failures": 0,
         }
@@ -291,6 +317,12 @@ class Summary:
                 span["exact"],
                 bool(span["alignment_error"]),
             )
+            kind = span.get("mismatch_kind")
+            if kind:
+                kinds = d["mismatch_kinds"].setdefault(label, {})
+                kinds[kind] = kinds.get(kind, 0) + 1
+            folded = d["diagnostic_case_insensitive"].setdefault(label, {})
+            increment(folded, span["exact"] is True or kind == "case-only")
             observed = "+".join(span["engine_semantics"]) or "NONE"
             confusion = d["class_to_engine_semantics"].setdefault(label, {})
             confusion[observed] = confusion.get(observed, 0) + 1
@@ -450,7 +482,7 @@ def evaluate(args):
             usage=dict(use_counts),
         ),
         "metric_policy": "v2-exact-context-complete-output",
-        "note": "Exact UTF-8 text equality: no case, whitespace or punctuation folding. Full native input/output coverage is required. Unaligned reference spans count as failures. Secondary spoken projection omits only unchanged PUNCT with an explicit empty reference, requires whitespace-only output for uncovered whitespace input, and joins complete source spans with spaces. Every labeled sentence is in the projection denominator; unavailable projections count as failures and coverage/reasons are reported separately. Candidate agreement is separate from reference accuracy. Input, resource, program and adapter hashes must match before and after execution. No audio or independent human correctness claim. Failures/reports inherit source usage restrictions and must stay outside product resources.",
+        "note": "Exact UTF-8 text equality: no case, whitespace or punctuation folding. Full native input/output coverage is required. Unaligned reference spans count as failures. Secondary spoken projection omits only unchanged PUNCT with an explicit empty reference, requires whitespace-only output for uncovered whitespace input, and joins complete source spans with spaces. Every labeled sentence is in the projection denominator; unavailable projections count as failures and coverage/reasons are reported separately. Candidate agreement is separate from reference accuracy. `mismatch_kinds` and `diagnostic_case_insensitive` are diagnostics that name why a span missed (case, spacing, alignment or a different reading); they never enter the accuracy, which still folds nothing. Input, resource, program and adapter hashes must match before and after execution. No audio or independent human correctness claim. Failures/reports inherit source usage restrictions and must stay outside product resources.",
     }
     write_json(args.output_dir / "summary.json", report)
     return report

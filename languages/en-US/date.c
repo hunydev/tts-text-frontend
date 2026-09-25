@@ -302,11 +302,42 @@ static unsigned policy_year(const ttf_pack_input_t *in, const char *key, unsigne
     return (unsigned)value;
 }
 
-static int preceding_cue(const ttf_pack_input_t *in, size_t start, ttf_resource_layer_t *layer) {
+/* "( 1965 )" is the citation shape: a bracket holding the number and nothing
+   else introduces a year. "( 2003 and 2005 )" is an ordinary parenthesis and
+   keeps its cardinals, so the closing bracket has to follow the number. */
+static int bracket_cue(const ttf_pack_input_t *in, size_t start, size_t stop,
+                       ttf_resource_layer_t *layer) {
+    static const char *const pairs[] = {"()", "[]", "{}"};
+    char key[2];
+    size_t p = start, q = skip_horizontal(in->text, in->length, stop), i;
+    ttf_resource_layer_t found_layer;
+    const char *value;
+    while (p && horizontal(in->text[p - 1]))
+        --p;
+    if (!p || q >= in->length)
+        return 0;
+    key[0] = in->text[p - 1];
+    key[1] = '\0';
+    for (i = 0; i < sizeof(pairs) / sizeof(pairs[0]); ++i)
+        if (key[0] == pairs[i][0] && in->text[q] == pairs[i][1])
+            break;
+    if (i == sizeof(pairs) / sizeof(pairs[0]))
+        return 0;
+    value = ttf_resource_get(in->engine, "date_year_cue", EN, key, &found_layer);
+    if (!value || !strcmp(value, "0"))
+        return 0;
+    merge_layer(layer, found_layer);
+    return 1;
+}
+
+static int preceding_cue(const ttf_pack_input_t *in, size_t start, size_t stop,
+                         ttf_resource_layer_t *layer) {
     char key[65];
     size_t end = start, begin, p, used;
     ttf_resource_layer_t found_layer;
     const char *value;
+    if (bracket_cue(in, start, stop, layer))
+        return 1;
     if (!start || !horizontal(in->text[start - 1]))
         return 0;
     while (end && horizontal(in->text[end - 1]))
@@ -388,7 +419,7 @@ static int interval_continuation(const ttf_pack_input_t *in, size_t start,
         return 0;
     /* The first endpoint must itself be a cued year; two bare numbers in a list
        stay cardinals. */
-    if (!preceding_cue(in, begin, layer))
+    if (!preceding_cue(in, begin, end, layer))
         return 0;
     merge_layer(layer, found);
     return 1;
@@ -403,7 +434,8 @@ static size_t contextual_year(const ttf_pack_input_t *in, ttf_semantic_t *out, s
         return 0;
     number = number_at(in, start, 0);
     if (!number.valid || number.digits != 4 || following_quantity(in, number.end) ||
-        (!preceding_cue(in, start, &layer) && !interval_continuation(in, start, &layer)))
+        (!preceding_cue(in, start, number.end, &layer) &&
+         !interval_continuation(in, start, &layer)))
         return 0;
     if (number.end < in->length && in->text[number.end] == ',' && number.end + 1 < in->length &&
         ascii_digit(in->text[number.end + 1]))
