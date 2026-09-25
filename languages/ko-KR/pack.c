@@ -1720,6 +1720,13 @@ static ttf_status_t render_phones(const ttf_engine_t *e, const ttf_pronunciation
             glide_index = i;
         }
         if (strcmp(phone, "W") == 0 || strcmp(phone, "Y") == 0) {
+            /* 스위트, 트윈: a glide starts its own syllable after most consonants.
+               A velar keeps it (퀵), so the pack asks the data which it is. */
+            if (pending >= 0 && !strcmp(phone, "W") &&
+                strcmp(resource(e, "phone_glide", phones[pending_index], "split"), "merge")) {
+                TRY(flush_onset(e, out, pending, phones[pending_index], pending_index));
+                pending = -1;
+            }
             glide = strcmp(phone, "W") == 0 ? 1 : 2;
             glide_index = i;
             continue;

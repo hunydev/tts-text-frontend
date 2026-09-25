@@ -82,6 +82,12 @@ phone_vowel_length	ko-KR	AH	short
 phone_vowel_length	ko-KR	EH	short
 phone_vowel_length	ko-KR	IH	short
 phone_vowel_length	ko-KR	UH	short
+# A velar keeps a following w in one syllable (quick 퀵, white 화이트); other
+# consonants let it start its own (sweet 스위트, twin 트윈). A y always merges
+# (review 리뷰, community 커뮤니티), so only w consults this table.
+phone_glide	ko-KR	K	merge
+phone_glide	ko-KR	G	merge
+phone_glide	ko-KR	HH	merge
 # Korean doubles an l that follows a vowel: platform 플랫폼, delivery 딜리버리.
 phone_mapping	ko-KR	onset_l	double
 # A vowel after er keeps the r as its onset: delivery 딜리버리, battery 배터리.

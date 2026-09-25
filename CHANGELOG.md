@@ -36,6 +36,22 @@
 - Add three gates: 30 wide words, 17 neighbour words, and the earlier 28. The
   open case is `national` (the prototype reads `네이셔널`; the standard `내셔널`
   needs stress-driven vowel reduction) and it stays recorded as a failure.
+- Read a `w` after a consonant as its own syllable, which is what Korean writes
+  (`sweet` → `스위트`, `twin` → `트윈`), while a velar keeps it (`quick` → `퀵`).
+  The choice is the new `phone_glide` resource (`merge|split`, default `split`);
+  `y` always merges (`review` → `리뷰`) and does not consult it.
+- Read `o` as `오` by default, and an `s` between vowels as `z`: `logging` →
+  `로깅`, `boston` → `보스턴`, `season` → `시즌`, `music` → `뮤직`, `easy` → `이지`.
+- Raise the g2p key bound from four letters to five, so an English suffix or stem
+  fits in one row (`^reaso`, `ator$`, `^music`). Longer keys also overfit less: a
+  four-letter `^chic` for `chicago` would have misread `chicken`.
+- Add two more measured sets, again authored before the rules: 27 words for verb
+  forms, `w` clusters, voiced `s`, proper nouns and long words (5/27 → 25/27), and
+  24 neighbour words for the rules that set motivated (15/24 → 24/24). The
+  measurement is now 127 words with 124 exact and 124 gated. The three open cases
+  are `national` (stress-driven vowel reduction), `michael` (a proper noun's
+  vowels are lexicon knowledge) and `visit` (its expectation is contested: the
+  rule behind `market` `마켓` gives `비짓`).
 - Add a 28-word measurement set and promote all 28 into the regression gate.
 - Update three earlier references whose expectation recorded the prototype's own
   output, now that the guess is the standard spelling: `snake` 스내크 → 스네이크,

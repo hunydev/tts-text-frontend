@@ -1437,8 +1437,10 @@ static ttf_status_t pronounce(const ttf_engine_t *e, const char *word_text, size
         size_t take = n - i;
         char chunk[8];
         int written;
-        if (take > 4)
-            take = 4;
+        /* Five letters is what an English suffix needs to be written whole
+           (-ation, -reaso-); the validator holds consumers to the same bound. */
+        if (take > 5)
+            take = 5;
         phones = NULL;
         for (; take; --take) {
             /* Anchored keys let the data express word-initial and word-final

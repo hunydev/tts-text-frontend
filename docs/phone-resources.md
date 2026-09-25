@@ -113,6 +113,7 @@ key는 96 byte 미만이다.
 | `phone_mapping coda_r` | `drop` \| `keep` | 자음 앞·어말의 `r`를 지운다 (market 마켓) |
 | `phone_mapping onset_l` | `double` \| `single` | 모음 뒤 `l`을 받침 ㄹ + 초성 ㄹ로 겹쳐 적는다 (platform 플랫폼) |
 | `phone_mapping linking_r` | `link` \| `drop` | `ER` 뒤에 모음이 오면 r를 다음 음절 초성으로 남긴다 (battery 배터리) |
+| `phone_glide` | `merge` \| `split` | 자음 뒤 `W`가 같은 음절에 붙는지 (quick 퀵) 끊는지 (sweet 스위트). key는 앞 자음의 음운이고 기본값은 `split`이다. `Y`는 항상 붙으므로 이 표를 보지 않는다 |
 
 `phone_vowel_length`의 key는 음운 이름이고, 선언하지 않은 음운은 `long`으로 본다.
 

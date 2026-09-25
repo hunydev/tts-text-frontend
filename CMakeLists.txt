@@ -235,6 +235,14 @@ if(BUILD_TESTING)
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources
       oov_guess_neighbour_regression_v21.jsonl 17)
+    add_test(NAME oov_guess_form_v21_evaluation COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources
+      oov_guess_form_regression_v21.jsonl 25)
+    add_test(NAME oov_guess_neighbour2_v21_evaluation COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources
+      oov_guess_neighbour2_v21.jsonl 24)
     add_test(NAME context_cache_compatibility COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_context_cache.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)

@@ -122,7 +122,9 @@ apostrophe나 hyphen 등을 일괄 금지하지는 않는다. `native`, `native_
 
 Pronunciation 검사 대상은 `pronunciation`, `initialism_pronunciation`,
 `digit_pronunciation`, `g2p`다. source lookup key는 255 bytes 이하이며
-`g2p`는 4 bytes 이하(앞의 `^`와 뒤의 `$` 문맥 표시는 길이에서 제외),
+`g2p`는 5 bytes 이하(앞의 `^`와 뒤의 `$` 문맥 표시는 길이에서 제외.
+2026-09-25에 4에서 5로 늘렸다. `-ation`, `^reaso`처럼 영어 접미사·어간을 한 행으로
+적으려면 5자가 필요하고, matcher도 같은 상한으로 가장 긴 조각부터 찾는다),
 `digit_pronunciation`은 `0`..`9` 한 자리다. phone 열에는 `.` 한 글자를 형태소
 경계로 쓸 수 있다. 음소가 아니라 KO mapper에게 "여기서 음절을 끊으라"는
 표시이며, 앞 자음이 받침이 된다(`^up` → `AH P .`, uploading 업로딩).

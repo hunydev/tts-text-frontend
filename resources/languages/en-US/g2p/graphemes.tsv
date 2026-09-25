@@ -36,7 +36,7 @@ g2p	en-US	k	K
 g2p	en-US	l	L
 g2p	en-US	m	M
 g2p	en-US	n	N
-g2p	en-US	o	AA
+g2p	en-US	o	OW
 g2p	en-US	p	P
 g2p	en-US	q	K
 g2p	en-US	r	R
@@ -167,3 +167,33 @@ g2p	en-US	ater	EY T ER
 g2p	en-US	tion	SH AH N
 g2p	en-US	^wat	W AO T
 g2p	en-US	sson	S AX N
+# An s between vowels is voiced: season 시즌, music 뮤직, easy 이지.
+g2p	en-US	easo	IY Z AX
+g2p	en-US	easy	IY Z IY
+g2p	en-US	busy	B IH Z IY
+g2p	en-US	^music	M Y UW Z IH K
+g2p	en-US	ic$	IH K
+g2p	en-US	visi	V IH Z IH
+g2p	en-US	clos	K L OW Z
+g2p	en-US	savi	S EY V IH
+g2p	en-US	crea	K R IY EY
+g2p	en-US	dele	D IH L IY
+g2p	en-US	^walk	W AO K
+g2p	en-US	^wol	W UH L
+g2p	en-US	^oxf	AO K . S F
+g2p	en-US	ord$	ER D
+g2p	en-US	unic	Y UW N IH K
+g2p	en-US	^adm	AH D M
+# Five-letter keys let a whole suffix or stem be written at once.
+g2p	en-US	^reaso	R IY Z AX
+g2p	en-US	^chica	SH IH K AA
+g2p	en-US	go$	G OW
+# -or and -ator are 어/에이터, not 오/애토: visitor 비지터, creator 크리에이터.
+g2p	en-US	or$	ER
+g2p	en-US	ator$	EY T ER
+g2p	en-US	^muse	M Y UW Z IH
+g2p	en-US	um$	AH M
+g2p	en-US	ves$	V S
+g2p	en-US	^oxid	AO K . S AY D
+g2p	en-US	icke	IH K IH
+g2p	en-US	^color	K AH L ER

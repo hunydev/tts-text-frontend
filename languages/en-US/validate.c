@@ -473,7 +473,7 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     if (SAME(k, "pronunciation") || SAME(k, "initialism_pronunciation") ||
         SAME(k, "digit_pronunciation") || SAME(k, "g2p")) {
         *handled = 1;
-        if (strlen(key) >= TTF_IR_VALUE_SIZE || (SAME(k, "g2p") && g2p_key_length(key) > 4) ||
+        if (strlen(key) >= TTF_IR_VALUE_SIZE || (SAME(k, "g2p") && g2p_key_length(key) > 5) ||
             (SAME(k, "digit_pronunciation") && (strlen(key) != 1 || key[0] < '0' || key[0] > '9')))
             return ttf_validation_error(d, "pronunciation key exceeds its source lookup grammar");
         if (!folded_key(SAME(k, "g2p") ? g2p_key_body(key) : key))

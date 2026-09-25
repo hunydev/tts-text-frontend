@@ -395,6 +395,14 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "counter unit flag must be 0 or 1");
     }
+    if (SAME(k, "phone_glide")) {
+        *handled = 1;
+        if (!phone_key(key))
+            return ttf_validation_error(d, "phone map key must be 1..23 uppercase ASCII letters");
+        return ttf_validation_enum(v, "merge|split")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "phone_glide takes merge|split");
+    }
     if (SAME(k, "phone_vowel_length")) {
         *handled = 1;
         if (!phone_key(key))
