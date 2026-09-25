@@ -228,3 +228,19 @@ date_year_interval	en-US	or	1
 date_year_interval	en-US	through	1
 date_year_interval	en-US	until	1
 date_year_interval	en-US	till	1
+
+# A decade is read as a plural year: 1960s nineteen sixties, 1900s nineteen
+# hundreds, 2000s two thousands, 80s eighties.
+decade_plural	en-US	10	tens
+decade_plural	en-US	20	twenties
+decade_plural	en-US	30	thirties
+decade_plural	en-US	40	forties
+decade_plural	en-US	50	fifties
+decade_plural	en-US	60	sixties
+decade_plural	en-US	70	seventies
+decade_plural	en-US	80	eighties
+decade_plural	en-US	90	nineties
+decade_plural	en-US	100	hundreds
+decade_plural	en-US	1000	thousands
+# A decade is more specific than the generic "digits with a tail" fallback.
+classifier_priority	en-US	en.date.decade	10

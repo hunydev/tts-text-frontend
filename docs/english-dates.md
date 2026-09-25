@@ -89,7 +89,8 @@ has four tab-separated columns: `kind`, `language`, `key`, `value`.
 | `date_policy` / `year_style` | `calendar` by default; `cardinal` also accepted |
 | `date_policy` / `min_year`, `max_year` | Default contextual-year recognition window `1000`–`2099` |
 | `date_word` | DMY connective labels `the` and `of` |
-| `date_year_cue` | Lowercase preceding contextual cue, enabled with `1` |
+| `date_year_cue` | Lowercase preceding contextual cue, enabled with `1`. An opening bracket (`(`, `[`, `{`) is also a valid key; the pack reads it as a cue only when the bracket holds the number and nothing else, so `( 1965 )` is a year while `( 2003 and 2005 )` keeps its cardinals |
+| `decade_plural` | Plural decade word for a tens value `10`–`90`, or `100` and `1000` for a round decade (`nineteen hundreds`, `two thousands`) |
 | `date_year_quantity` | Lowercase following quantity noun that prevents a bare-year match, enabled with `1` |
 | `boundary_word` | Keep a possible continuation after this word, enabled with `1` |
 | `boundary_period` | Permit and retain the period after a date alias inside its candidate, enabled with `1` |
@@ -136,8 +137,11 @@ catalog numbers, document identifiers and prose ellipses require additional
 coverage. Invalid or unsupported date-shaped input is retained rather than
 silently repairing a day or changing its year.
 
-This work does not add BC/AD eras, decades, relative dates, date ranges, holidays,
-or ambiguous locale-dependent numeric forms. Existing universal numeric-date
+This work does not add BC/AD eras, relative dates, date ranges, holidays,
+or ambiguous locale-dependent numeric forms. A plural decade (`the 1960s`, `the
+80s`, `the '90s`) was added on 2026-09-25: the digits must end in a zero and
+carry nothing after the `s`, so `the 1965s`, `787s` and `MP3s` keep their text
+and a model-number plural is still out of scope. Existing universal numeric-date
 grammar remains in place. Text exact match can also differ because a reference
 uses a valid alternative year reading, different capitalization, or a different
 date order. Report these differences separately from calendar/value errors.

@@ -318,8 +318,16 @@ push한 `30b6b98`의 CI sanitizer 작업에서 `context_cache_compatibility`의 
   남겼다.
 - 외부 영어: DATE 394 → 504, span 35,053 → 35,163, 다른 클래스 동일. Debug 126/126.
 
-이후 후보: 연대 표기(`1960s` → nineteen sixties, 33건, 지금은 미정규화),
-한국어 측정 corpus 확대, 코드 단어 사전 검수, 축약형·하이픈 합성어 추측 발음.
+### 영어 연대 표기 (2026-09-25, 커밋·미배포)
+
+- `1960s`는 미정규화 상태였다. `en.date.decade` 분류 + `decade_plural` 자원 + 
+  `classifier_priority en.date.decade 10`으로 처리한다. 계약 13건을 구현 전에 작성했다
+  (`tests/evaluation/decade_v21.jsonl`).
+- 0으로 끝나는 네 자리/두 자리 + `s`만 잡으므로 `1965s`·`787s`·`MP3s`는 그대로다.
+- 외부 영어: DATE 504 → 532, span 35,163 → 35,191, 다른 클래스 동일. Debug 127/127.
+
+이후 후보: 괄호 밖 맨 연도 150건, 한국어 측정 corpus 확대, 코드 단어 사전 검수,
+축약형·하이픈 합성어 추측 발음. ISO 어순 46건과 대소문자 698건은 관행 차이로 남긴다.
 
 ## v0.20에서 마무리한 범위
 

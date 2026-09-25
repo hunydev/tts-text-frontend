@@ -300,6 +300,33 @@ static ttf_status_t date_year(const ttf_engine_t *e, unsigned year, const char *
     }
     return card(e, remainder, b);
 }
+/* A decade is the plural of the year reading: 1960s nineteen sixties, 1900s
+   nineteen hundreds, 2000s two thousands, 80s eighties. The plural words are
+   data because they are English morphology, not arithmetic. */
+static ttf_status_t date_decade(const ttf_engine_t *e, unsigned value, ttf_buffer_t *b) {
+    char key[16];
+    ttf_status_t st;
+    unsigned century = value / 100, remainder = value % 100;
+    if (value < 100) {
+        (void)snprintf(key, sizeof(key), "%u", value);
+        return word(e, b, "decade_plural", key);
+    }
+    if (!remainder) {
+        if (!(value % 1000)) {
+            if ((st = card(e, value / 1000, b)) != TTF_OK || (st = space(b)) != TTF_OK)
+                return st;
+            return word(e, b, "decade_plural", "1000");
+        }
+        if ((st = card(e, century, b)) != TTF_OK || (st = space(b)) != TTF_OK)
+            return st;
+        return word(e, b, "decade_plural", "100");
+    }
+    if ((st = card(e, century, b)) != TTF_OK || (st = space(b)) != TTF_OK)
+        return st;
+    (void)snprintf(key, sizeof(key), "%u", remainder);
+    return word(e, b, "decade_plural", key);
+}
+
 static ttf_status_t date(const ttf_engine_t *e, const ttf_semantic_t *s, ttf_buffer_t *b) {
     unsigned year = 0, month = 0, day = 0;
     int consumed = 0, fields, has_year = 1, has_month = 1, has_day = 1;
@@ -309,6 +336,11 @@ static ttf_status_t date(const ttf_engine_t *e, const ttf_semantic_t *s, ttf_buf
     ttf_status_t st;
     if (s->secondary[0] && strcmp(s->secondary, "mdy") && !day_first)
         return TTF_EINVAL;
+    if (!strcmp(s->unit, "decade")) {
+        if (sscanf(s->value, "%u%n", &year, &consumed) != 1 || s->value[consumed])
+            return TTF_EINVAL;
+        return date_decade(e, year, b);
+    }
     if (!strcmp(s->unit, "year")) {
         fields = sscanf(s->value, "%u%n", &year, &consumed);
         has_month = has_day = 0;

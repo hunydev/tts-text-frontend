@@ -425,6 +425,35 @@ static int interval_continuation(const ttf_pack_input_t *in, size_t start,
     return 1;
 }
 
+/* "the 1960s", "the 80s", "the '90s": a decade is a plural year. The digits end
+   in a zero, so 1965s and a model-number plural such as 787s are left alone. */
+static size_t decade(const ttf_pack_input_t *in, ttf_semantic_t *out, size_t start) {
+    size_t p = start, digits = 0;
+    unsigned value = 0, minimum, maximum;
+    ttf_resource_layer_t layer = TTF_LAYER_COMMON;
+    if (p < in->length && in->text[p] == '\'')
+        ++p;
+    while (p + digits < in->length && ascii_digit(in->text[p + digits])) {
+        value = value * 10 + (unsigned)(in->text[p + digits] - '0');
+        ++digits;
+    }
+    if ((digits != 4 && digits != 2) || value % 10 || p + digits >= in->length ||
+        in->text[p + digits] != 's')
+        return 0;
+    if (p + digits + 1 < in->length &&
+        (ascii_alpha(in->text[p + digits + 1]) || ascii_digit(in->text[p + digits + 1])))
+        return 0;
+    if (digits == 4) {
+        minimum = policy_year(in, "min_year", 1000, &layer);
+        maximum = policy_year(in, "max_year", 2099, &layer);
+        if (value < minimum || value > maximum)
+            return 0;
+    }
+    (void)snprintf(out->value, sizeof(out->value), "%u", value);
+    (void)snprintf(out->unit, sizeof(out->unit), "decade");
+    return finish(in, out, p + digits + 1, 1, layer, "en.date.decade");
+}
+
 static size_t contextual_year(const ttf_pack_input_t *in, ttf_semantic_t *out, size_t start) {
     date_number_t number;
     size_t consumed;
@@ -459,5 +488,8 @@ size_t ttf_en_classify_date(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     if (start >= in->length || !left_boundary(in, start))
         return 0;
     named = named_date(in, out, start);
+    if (named)
+        return named;
+    named = decade(in, out, start);
     return named ? named : contextual_year(in, out, start);
 }

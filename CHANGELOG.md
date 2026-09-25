@@ -18,7 +18,14 @@
   compares bytes and folds nothing. They showed that 698 of the 1,144 English
   DATE misses differ only in the capitalisation of a month name, which the
   project keeps.
-- External English sample: DATE 394 → 504 exact and 35,053 → 35,163 exact spans,
+- Read a decade, which was left as digits for the synthesizer before: `the
+  1960s` → `the nineteen sixties`, `the 1900s` → `the nineteen hundreds`, `the
+  2000s` → `the two thousands`, `the 80s` → `the eighties`, `the '90s` → `the
+  nineties`. The digits must end in a zero and carry nothing after the `s`, so
+  `the 1965s`, `787s` and `MP3s` keep their text. The plural words are the new
+  `decade_plural` resource, and `classifier_priority en.date.decade` lets the
+  rule win over the generic "digits with a tail" fallback across the same bytes.
+- External English sample: DATE 394 → 532 exact and 35,053 → 35,191 exact spans,
   with every other class unchanged.
 
 - Improve the guess for an undeclared English word in Korean text: the grapheme

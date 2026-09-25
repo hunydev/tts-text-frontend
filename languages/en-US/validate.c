@@ -354,6 +354,15 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    : ttf_validation_error(d, "identifier reading label must be nonempty, bounded "
                                              "and contain no ASCII controls");
     }
+    if (SAME(k, "decade_plural")) {
+        *handled = 1;
+        if (!ttf_validation_enum(key, "10|20|30|40|50|60|70|80|90|100|1000"))
+            return ttf_validation_error(
+                d, "decade_plural key is a tens value 10..90, or 100 or 1000 for a round decade");
+        return label(v) && strlen(v) < 32
+                   ? TTF_OK
+                   : ttf_validation_error(d, "decade_plural value must be a bounded word");
+    }
     if (SAME(k, "date_policy")) {
         *handled = 1;
         if (ttf_validation_enum(key, "named_year_style|numeric_year_style|year_style"))
