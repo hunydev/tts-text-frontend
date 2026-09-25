@@ -2,6 +2,7 @@
 
 import importlib.util
 import json
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -467,6 +468,24 @@ class EvaluatorTests(unittest.TestCase):
             (root / "after/summary.json").write_text(json.dumps(bad))
             with self.assertRaisesRegex(ValueError, "corpus_sha256"):
                 COMPARE.compare(root / "before", root / "after")
+
+    def test_speech_mode_is_a_separate_report(self):
+        """A speech run must be recognisable as one, never mistaken for the text baseline."""
+        with tempfile.TemporaryDirectory(prefix="ttf-speech-report-") as directory:
+            corpus = Path(directory) / "corpus.jsonl"
+            corpus.write_text(json.dumps(case(), ensure_ascii=False) + "\n", encoding="utf-8")
+            report_dir = ensure_output(ROOT / "benchmark/generated/speech-mode-test")
+            shutil.rmtree(report_dir, ignore_errors=True)
+            subprocess.run(
+                [sys.executable, str(ROOT / "benchmark/evaluators/evaluate.py"),
+                 "--corpus", str(corpus), "--ttf", str(CLI), "--resources", str(RESOURCES),
+                 "--output-dir", str(report_dir), "--output-mode", "speech"],
+                check=True, capture_output=True, text=True)
+            report = json.loads((report_dir / "summary.json").read_text("utf-8"))
+            shutil.rmtree(report_dir, ignore_errors=True)
+        self.assertEqual(report["provenance"]["frontend_options"], {"output_mode": "speech"})
+        self.assertIn("speech", report["metric_policy"])
+        self.assertNotEqual(report["metric_policy"], "v2-exact-context-complete-output")
 
     def test_mismatch_kind_separates_convention_from_error(self):
         """A diagnostic only: case and spacing never enter the accuracy itself."""

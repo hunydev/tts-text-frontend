@@ -116,6 +116,9 @@ candidate의 처음 20건은 `failed-traces/`에 inspect trace를 저장한다.
    읽기 정책과 실제 오인식을 분리한다.
 5. ELECTRONIC/TELEPHONE/TIME/ADDRESS/FRACTION: 한 syntax군씩 다룬다. 새 speech
    모드는 별도 baseline을 만든다. 낮은 표본 수를 전체 언어 성능으로 일반화하지 않는다.
+   speech baseline은 `evaluate.py --output-mode speech`로 만든다(2026-09-25 추가).
+   리포트의 `metric_policy`가 `...-speech`로 끝나고 `provenance.frontend_options`에 옵션이
+   적히므로 text 리포트와 섞이지 않는다. 두 수치를 같은 표에 나란히 놓지 않는다.
 6. 금융/콘텐츠 OOV: 실제 빈도 상위 20~40개씩 managed lexicon을 검토한다.
    User/Customer override를 유지하고 출처·대안·pending review를 남긴다.
 

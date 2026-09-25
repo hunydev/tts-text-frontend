@@ -1,18 +1,27 @@
 #include "abbreviation.h"
+#include "../../src/core/internal.h"
 #include <stdio.h>
 #include <string.h>
 
 #define EN "en-US"
-static int upper(char c) { return c >= 'A' && c <= 'Z'; }
-static int alpha(char c) { return upper(c) || (c >= 'a' && c <= 'z'); }
-static char lower(char c) { return upper(c) ? (char)(c + 'a' - 'A') : c; }
-static int horizontal(char c) { return c == ' ' || c == '\t'; }
+static int upper(char c) {
+    return c >= 'A' && c <= 'Z';
+}
+static int alpha(char c) {
+    return upper(c) || (c >= 'a' && c <= 'z');
+}
+static char lower(char c) {
+    return upper(c) ? (char)(c + 'a' - 'A') : c;
+}
+static int horizontal(char c) {
+    return c == ' ' || c == '\t';
+}
 static void merge_layer(ttf_semantic_t *s, ttf_resource_layer_t layer) {
     if (layer > s->layer)
         s->layer = layer;
 }
 static const char *lookup(const ttf_engine_t *engine, const char *kind, const char *key,
-                           ttf_semantic_t *semantic) {
+                          ttf_semantic_t *semantic) {
     ttf_resource_layer_t layer;
     const char *value = ttf_resource_get(engine, kind, EN, key, &layer);
     if (value && semantic)
@@ -26,8 +35,8 @@ static int left_boundary(const ttf_pack_input_t *in, size_t start) {
     c = in->text[start - 1];
     if ((unsigned char)c >= 128)
         return in->index && in->tokens[in->index - 1].script != TTF_SCRIPT_LATIN;
-    return !alpha(c) && !(c >= '0' && c <= '9') && c != '_' && c != '.' &&
-           c != '/' && c != '\\' && c != '-' && c != '@';
+    return !alpha(c) && !(c >= '0' && c <= '9') && c != '_' && c != '.' && c != '/' && c != '\\' &&
+           c != '-' && c != '@';
 }
 static size_t token_count(const ttf_pack_input_t *in, size_t end) {
     size_t i = in->index;
@@ -41,8 +50,8 @@ static int following_name(const ttf_pack_input_t *in, size_t end) {
     size_t p = end;
     while (p < in->length && horizontal(in->text[p]))
         ++p;
-    return p > end && p < in->length && upper(in->text[p]) &&
-           p + 1 < in->length && (alpha(in->text[p + 1]) || in->text[p + 1] == '.');
+    return p > end && p < in->length && upper(in->text[p]) && p + 1 < in->length &&
+           (alpha(in->text[p + 1]) || in->text[p + 1] == '.');
 }
 /* Preserve a terminal punctuation mark at a complete unit's end, newline, or
    closing quotation. The segmenter protects initial periods until safe input
@@ -52,9 +61,8 @@ static int terminal_period(const ttf_pack_input_t *in, size_t end) {
     size_t p = end, i;
     while (p < in->length && horizontal(in->text[p]))
         ++p;
-    if (p == in->length || in->text[p] == '\r' || in->text[p] == '\n' ||
-        in->text[p] == '"' || in->text[p] == '\'' || in->text[p] == ')' ||
-        in->text[p] == ']' || in->text[p] == '}')
+    if (p == in->length || in->text[p] == '\r' || in->text[p] == '\n' || in->text[p] == '"' ||
+        in->text[p] == '\'' || in->text[p] == ')' || in->text[p] == ']' || in->text[p] == '}')
         return 1;
     for (i = 0; i < sizeof(closing_quotes) / sizeof(closing_quotes[0]); ++i) {
         size_t n = strlen(closing_quotes[i]);
@@ -64,8 +72,8 @@ static int terminal_period(const ttf_pack_input_t *in, size_t end) {
     return 0;
 }
 
-void ttf_en_initialism_policy(const ttf_engine_t *engine, ttf_semantic_t *s,
-                              const char *surface, size_t length, const char *kind) {
+void ttf_en_initialism_policy(const ttf_engine_t *engine, ttf_semantic_t *s, const char *surface,
+                              size_t length, const char *kind) {
     char key[TTF_IR_VALUE_SIZE];
     size_t i, used = 0;
     for (i = 0; i < length && used + 1 < sizeof(key); ++i)
@@ -134,10 +142,10 @@ size_t ttf_en_classify_abbreviation(const ttf_pack_input_t *in, ttf_semantic_t *
     }
     /* Do not consume the prefix of an identifier such as U.S.Beta, U.S.2,
        or U.S.-C. Bare Korean particles are a normal code-mixed boundary. */
-    if (end < in->length && (alpha(in->text[end]) ||
-        (in->text[end] >= '0' && in->text[end] <= '9') || in->text[end] == '_' ||
-        in->text[end] == '-' || in->text[end] == '/' || in->text[end] == '\\' ||
-        in->text[end] == '@')) {
+    if (end < in->length &&
+        (alpha(in->text[end]) || (in->text[end] >= '0' && in->text[end] <= '9') ||
+         in->text[end] == '_' || in->text[end] == '-' || in->text[end] == '/' ||
+         in->text[end] == '\\' || in->text[end] == '@')) {
         out->value[0] = '\0';
         return 0;
     }
@@ -153,10 +161,57 @@ size_t ttf_en_classify_abbreviation(const ttf_pack_input_t *in, ttf_semantic_t *
     return token_count(in, out->input_end);
 }
 
-ttf_status_t ttf_en_verbalize_abbreviation(const ttf_engine_t *engine,
-                                           const ttf_semantic_t *s,
-                                           const char *surface, size_t length,
-                                           ttf_buffer_t *out) {
+/* An uppercase run that reads as an English word keeps its written form in
+   speech (NASA, FIFA, EXCEL); one that cannot be pronounced is spelled (FBI).
+   The clusters that may start or end a syllable are resources. */
+static int cluster(const ttf_engine_t *engine, const char *kind, const char *text, size_t length) {
+    char key[8];
+    if (length == 1)
+        return 1;
+    if (length >= sizeof(key))
+        return 0;
+    memcpy(key, text, length);
+    key[length] = '\0';
+    return lookup(engine, kind, key, NULL) != NULL;
+}
+
+static int pronounceable(const ttf_engine_t *engine, const char *word, size_t length) {
+    size_t i = 0, vowels = 0, split;
+    if (length < 3)
+        return 0;
+    for (i = 0; i < length; ++i)
+        if (strchr("aeiouy", word[i]))
+            ++vowels;
+    if (!vowels)
+        return 0;
+    for (i = 0; i < length;) {
+        size_t run = i;
+        if (strchr("aeiouy", word[i])) {
+            ++i;
+            continue;
+        }
+        while (i < length && !strchr("aeiouy", word[i]))
+            ++i;
+        if (i - run == 1 && run && i != length)
+            continue; /* a single consonant between vowels always divides */
+        if (!run && cluster(engine, "syllable_onset", word + run, i - run))
+            continue;
+        if (i == length && cluster(engine, "syllable_coda", word + run, i - run))
+            continue;
+        if (!run || i == length)
+            return 0;
+        for (split = 1; split < i - run; ++split)
+            if (cluster(engine, "syllable_coda", word + run, split) &&
+                cluster(engine, "syllable_onset", word + run + split, i - run - split))
+                break;
+        if (split >= i - run)
+            return 0;
+    }
+    return 1;
+}
+
+ttf_status_t ttf_en_verbalize_abbreviation(const ttf_engine_t *engine, const ttf_semantic_t *s,
+                                           const char *surface, size_t length, ttf_buffer_t *out) {
     const char *value, *style;
     char key[TTF_IR_VALUE_SIZE];
     size_t i, used = 0;
@@ -174,13 +229,22 @@ ttf_status_t ttf_en_verbalize_abbreviation(const ttf_engine_t *engine,
     /* Foreign pronunciation receives the canonical spelling, not English
        letter-name words. This keeps letter phones and Korean lexicon hits. */
     if (strcmp(s->render_lang, EN))
-        return s->value[0] ? ttf_buffer_puts(out, s->value) :
-                             ttf_buffer_append(out, surface, length);
+        return s->value[0] ? ttf_buffer_puts(out, s->value)
+                           : ttf_buffer_append(out, surface, length);
     for (i = 0; s->value[i] && used + 1 < sizeof(key); ++i)
         if (alpha(s->value[i]))
             key[used++] = lower(s->value[i]);
     key[used] = '\0';
     style = lookup(engine, "initialism_text", key, NULL);
+    /* A value that is not letters alone carries its own reading, such as the
+       ampersand of R&D; the speech default must not swallow it. */
+    if (!style && used == strlen(s->value) &&
+        engine->frontend_options.output_mode == TTF_OUTPUT_SPEECH) {
+        char speech_key[TTF_IR_VALUE_SIZE + 24];
+        (void)snprintf(speech_key, sizeof(speech_key), "%s_speech",
+                       pronounceable(engine, key, used) ? "pronounceable" : s->secondary);
+        style = lookup(engine, "initialism_policy", speech_key, NULL);
+    }
     if (!style)
         style = lookup(engine, "initialism_policy", s->secondary, NULL);
     if (!style || !strcmp(style, "preserve"))

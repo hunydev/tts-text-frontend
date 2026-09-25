@@ -88,7 +88,8 @@ TTFB에서도 payload의 원래 행 번호를 사용한다. CLI stderr에는 같
 | EN `date_policy` | `named_year_style`, `numeric_year_style`, `year_style`: `calendar`/`cardinal`; `min_year`/`max_year`: 1..9999, min <= max |
 | EN `month_alias` | key는 소문자 ASCII 알파벳 1..31자, 값은 정수 1..12 |
 | EN `date_year_cue`, `date_year_quantity` | 값은 `0`/`1`; cue key는 소문자 ASCII 단어를 한 칸으로 연결한 1..64 bytes, quantity key는 알파벳 단어 1..63자 |
-| EN `initialism_policy` | key는 `dotted`, `known`, `inferred`; 값은 `preserve`, `letters`, `names` |
+| EN `initialism_policy` | key는 `dotted`, `known`, `inferred`와 speech 전용 `dotted_speech`, `known_speech`, `inferred_speech`, `pronounceable_speech`; 값은 `preserve`, `letters`, `names` |
+| EN `syllable_onset`, `syllable_coda` | key는 2..4자 소문자 자음군, 값은 `0` 또는 `1`. 대문자 연속이 영어 단어처럼 읽히는지 판단한다 |
 | EN `initialism_text`, `letter_name` | key는 각각 소문자 ASCII 알파벳 1..255자 / 1자; initialism 값은 위와 같은 3개 정책 |
 | EN `currency_minor_digits` | 0 또는 2 |
 | EN pronunciation/G2P | phone 문자열 1023 bytes 이하, 최대 128 tokens; 공백으로 구분한 token은 stress 포함 23 bytes 이하; 대문자 알파벳 phone 뒤에 선택적 stress 0..2 또는 `letter.A`..`letter.Z` |
@@ -161,8 +162,8 @@ EN pack이 등록되어 있으면 freeze 전에 다음 effective label을 검사
 정책 자체가 없어서 기본값 2를 사용하면 `<ID>.minor.one`, `<ID>.minor.many`도
 필요하다. 낮은 layer에 가려진 currency identity는 의존성을 추가하지 않는다.
 
-세 `initialism_policy` 중 하나가 `names`이면 `letter_name`의 `a`..`z` 전체가
-필요하다. 특정 `initialism_text`만 `names`이면 그 key에 포함된 글자만 요구한다.
+`initialism_policy`(speech 전용 key 포함) 중 하나가 `names`이면 `letter_name`의
+`a`..`z` 전체가 필요하다. 특정 `initialism_text`만 `names`이면 그 key에 포함된 글자만 요구한다.
 선택적인 pronunciation/G2P 사전은 없어도 기존 fallback 경로를 사용할 수 있다.
 KO의 코드 fallback이 있는 label을 EN과 같은 필수 테이블로 강제하지 않는다.
 

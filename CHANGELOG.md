@@ -25,8 +25,20 @@
   `the 1965s`, `787s` and `MP3s` keep their text. The plural words are the new
   `decade_plural` resource, and `classifier_priority en.date.decade` lets the
   rule win over the generic "digits with a tail" fallback across the same bytes.
-- External English sample: DATE 394 → 532 exact and 35,053 → 35,191 exact spans,
-  with every other class unchanged.
+- Spell an inferred initialism in speech output, which was previously handed to
+  the synthesizer unchanged: `FBI` → `f b i`, `NJ` → `n j`, `UK` → `u k`. An
+  uppercase run that reads as an English word keeps its form (`NASA`, `FIFA`,
+  `EXCEL`, `UNESCO`), decided by the new `syllable_onset` and `syllable_coda`
+  resources. Text output is untouched, a value that is not letters alone keeps
+  its own reading (`R&D` → `R and D`), and the speech defaults are the new
+  `initialism_policy` keys `inferred_speech` and `pronounceable_speech`.
+- Run the benchmark in speech mode: `evaluate.py --output-mode speech` records
+  the options in `provenance.frontend_options` and names its own
+  `metric_policy`, so a speech report is never compared with the text baseline.
+- External English sample, text mode: DATE 394 → 532 exact and 35,053 → 35,191
+  exact spans, every other class unchanged. Speech mode, against its own new
+  baseline: 35,236 → 35,501 exact spans, LETTERS 174 → 471, PLAIN 33,860 →
+  33,827. The trade is measured in `docs/research/initialism-speech-v21-results.md`.
 
 - Improve the guess for an undeclared English word in Korean text: the grapheme
   prototype now understands word-start and word-end context and a silent marker,

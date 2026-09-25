@@ -70,6 +70,8 @@ class Backend:
             "--chunk-bytes",
             str(chunk or max(1, len(raw))),
         ]
+        if self.options.get("output_mode"):
+            command += ["--output-mode", self.options["output_mode"]]
         for path in self.overrides:
             command += ["--domain", str(path)]
         completed = subprocess.run(
@@ -391,7 +393,10 @@ def evaluate(args):
     args.output_dir = ensure_output(args.output_dir)
     args.output_dir.mkdir(parents=True, exist_ok=False)
     before = fingerprint(corpus, program, resources, overrides, args.library)
-    options = {}  # Native defaults are stable ABI v1; record the exact backend.
+    # Native defaults are stable ABI v1; record the exact backend and any option
+    # that changes what the engine is asked to produce.
+    mode = getattr(args, "output_mode", "text")
+    options = {"output_mode": mode} if mode != "text" else {}
     backend = Backend(
         program if args.library else None,
         program if not args.library else None,
@@ -480,9 +485,13 @@ def evaluate(args):
             python=sys.version,
             datasets=dict(datasets),
             usage=dict(use_counts),
+            frontend_options=dict(options),
         ),
-        "metric_policy": "v2-exact-context-complete-output",
-        "note": "Exact UTF-8 text equality: no case, whitespace or punctuation folding. Full native input/output coverage is required. Unaligned reference spans count as failures. Secondary spoken projection omits only unchanged PUNCT with an explicit empty reference, requires whitespace-only output for uncovered whitespace input, and joins complete source spans with spaces. Every labeled sentence is in the projection denominator; unavailable projections count as failures and coverage/reasons are reported separately. Candidate agreement is separate from reference accuracy. `mismatch_kinds` and `diagnostic_case_insensitive` are diagnostics that name why a span missed (case, spacing, alignment or a different reading); they never enter the accuracy, which still folds nothing. Input, resource, program and adapter hashes must match before and after execution. No audio or independent human correctness claim. Failures/reports inherit source usage restrictions and must stay outside product resources.",
+        # A speech run answers a different question than the text baseline, so it
+        # carries its own policy name and is never compared with one.
+        "metric_policy": "v2-exact-context-complete-output"
+        + ("-speech" if options.get("output_mode") == "speech" else ""),
+        "note": "A speech-mode run (metric_policy ...-speech) reads its references as speakable text and is not comparable with a text-mode report. Exact UTF-8 text equality: no case, whitespace or punctuation folding. Full native input/output coverage is required. Unaligned reference spans count as failures. Secondary spoken projection omits only unchanged PUNCT with an explicit empty reference, requires whitespace-only output for uncovered whitespace input, and joins complete source spans with spaces. Every labeled sentence is in the projection denominator; unavailable projections count as failures and coverage/reasons are reported separately. Candidate agreement is separate from reference accuracy. `mismatch_kinds` and `diagnostic_case_insensitive` are diagnostics that name why a span missed (case, spacing, alignment or a different reading); they never enter the accuracy, which still folds nothing. Input, resource, program and adapter hashes must match before and after execution. No audio or independent human correctness claim. Failures/reports inherit source usage restrictions and must stay outside product resources.",
     }
     write_json(args.output_dir / "summary.json", report)
     return report
@@ -504,6 +513,7 @@ def main():
         help="deterministic prefix; 0 means all records",
     )
     parser.add_argument("--chunk-bytes", type=int, nargs="*", default=[])
+    parser.add_argument("--output-mode", choices=("text", "speech"), default="text")
     parser.add_argument("--allow-noncommercial", action="store_true")
     args = parser.parse_args()
     if args.limit < 0 or any(n <= 0 for n in args.chunk_bytes):

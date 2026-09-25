@@ -79,8 +79,14 @@ build/ttf normalize --resources resources --language en-US \
 
 Expected: `Doc Rowan uses g p u in the you ess market.`
 
-`initialism_policy` keys are `dotted`, `known`, `inferred`. Values are `preserve`,
-`letters` or `names`. `initialism_text` supplies the same policy for an individual
+`initialism_policy` keys are `dotted`, `known`, `inferred`, and the speech-mode
+variants `dotted_speech`, `known_speech`, `inferred_speech` and
+`pronounceable_speech`. A speech key is consulted only in speech output mode and
+only when `initialism_text` says nothing; `pronounceable_speech` covers an
+uppercase run that reads as an English word (`NASA`, `FIFA`), which the
+`syllable_onset` and `syllable_coda` cluster tables decide. The system defaults
+spell an inferred initialism in speech (`FBI` → `f b i`) and keep a pronounceable
+run as written. Values are `preserve`, `letters` or `names`. `initialism_text` supplies the same policy for an individual
 lowercase canonical key. `letter_name` supplies the names used by `names`.
 `abbreviation_expansion` can use `preserve` to disable a title expansion.
 Invalid initialism policy values fail explicitly when used. Semantic validation

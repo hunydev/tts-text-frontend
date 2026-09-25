@@ -363,6 +363,14 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "decade_plural value must be a bounded word");
     }
+    if (SAME(k, "syllable_onset") || SAME(k, "syllable_coda")) {
+        *handled = 1;
+        if (!lowercase_letters(key, 4) || strlen(key) < 2)
+            return ttf_validation_error(d, "syllable cluster key is 2..4 lowercase ASCII letters");
+        return ttf_validation_enum(v, "0|1")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "syllable cluster value must be 0 or 1");
+    }
     if (SAME(k, "date_policy")) {
         *handled = 1;
         if (ttf_validation_enum(key, "named_year_style|numeric_year_style|year_style"))
@@ -377,7 +385,11 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     }
     if (SAME(k, "initialism_policy") || SAME(k, "initialism_text")) {
         *handled = 1;
-        if (SAME(k, "initialism_policy") && !ttf_validation_enum(key, "dotted|known|inferred"))
+        /* The _speech keys apply in speech output mode only; pronounceable_speech
+           covers a run that reads as an English word (NASA). */
+        if (SAME(k, "initialism_policy") &&
+            !ttf_validation_enum(key, "dotted|known|inferred|dotted_speech|known_speech|"
+                                      "inferred_speech|pronounceable_speech"))
             return ttf_validation_error(d, "unknown initialism_policy key");
         if (SAME(k, "initialism_text") && !lowercase_letters(key, TTF_IR_VALUE_SIZE - 1))
             return ttf_validation_error(d, "initialism_text key must be lowercase ASCII letters");
@@ -630,7 +642,13 @@ static ttf_status_t engine(const ttf_engine_t *e, ttf_resource_diagnostic_t *d, 
                   {"clock", "midnight"}, {"clock", "after"},   {"clock", "h24_full_hour"},
                   {"unit", "s.one"},     {"unit", "s.many"},   {"meridiem", "AM"},
                   {"meridiem", "PM"}};
-    static const char *const policies[] = {"dotted", "known", "inferred"};
+    static const char *const policies[] = {"dotted",
+                                           "known",
+                                           "inferred",
+                                           "dotted_speech",
+                                           "known_speech",
+                                           "inferred_speech",
+                                           "pronounceable_speech"};
     const char *minimum, *maximum;
     long low = 1000, high = 2099;
     size_t i, bucket;

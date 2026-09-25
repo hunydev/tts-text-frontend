@@ -326,8 +326,23 @@ push한 `30b6b98`의 CI sanitizer 작업에서 `context_cache_compatibility`의 
 - 0으로 끝나는 네 자리/두 자리 + `s`만 잡으므로 `1965s`·`787s`·`MP3s`는 그대로다.
 - 외부 영어: DATE 504 → 532, span 35,163 → 35,191, 다른 클래스 동일. Debug 127/127.
 
-이후 후보: 괄호 밖 맨 연도 150건, 한국어 측정 corpus 확대, 코드 단어 사전 검수,
-축약형·하이픈 합성어 추측 발음. ISO 어순 46건과 대소문자 698건은 관행 차이로 남긴다.
+### speech 모드 측정과 영어 이니셜 읽기 (2026-09-25, 커밋·미배포)
+
+- 평가기에 `--output-mode speech`를 넣었다. 리포트는 `provenance.frontend_options`와
+  `metric_policy`(`...-speech`)로 자기 정체를 밝히고, text baseline과 섞이지 않는다.
+  speech baseline은 span 35,236이다(text 35,191과 비교할 수치가 아니다).
+- LETTERS 538건 실패가 전부 `unchanged`였다. speech 모드에서 `FBI`를 그대로 내보내고 있었다.
+- 전부 철자로 읽으면 PLAIN이 124건 퇴행한다(`EXCEL` → `e x c e l`). 판별식 5개를 결과
+  파일로 오프라인 평가해 "2자 이하 또는 발음 불가"(+297/−36)를 골랐다. 음소배열 표
+  `syllable_onset`/`syllable_coda`는 자원이다.
+- `initialism_policy`에 `inferred_speech`(letters), `pronounceable_speech`(preserve) 추가.
+  글자만이 아닌 값(`R&D`)은 제외 — 이 규칙이 없으면 `R and D`가 `r d`가 된다(기존 계약이 잡음).
+- speech span 35,236 → 35,501, LETTERS 174 → 471, PLAIN −33. **text 모드는 35,191로 동일.**
+  Debug 128/128. 기록은 `docs/research/initialism-speech-v21-results.md`.
+
+이후 후보: 한국어도 같은 결함(`FIFA` → 에프아이에프에이)이므로 발음 가능성 판별을 분류
+단계로 올려 ACRONYM으로 돌리기, 괄호 밖 맨 연도 150건, 한국어 측정 corpus 확대,
+코드 단어 사전 검수. ISO 어순 46건과 대소문자 698건은 관행 차이로 남긴다.
 
 ## v0.20에서 마무리한 범위
 

@@ -210,6 +210,12 @@ compiled resource의 **8개 CTest를 다시 실행해 모두 통과**했다. 이
   (`docs/research/date-diagnostic-v21-results.md`). 이 항목이 요구하는 adjudication 전체와
   불변 hash 보고는 아직 남아 있다.
 
+- [ ] **EVAL-04: speech 모드의 외부 평가 범위.** 2026-09-25에 `--output-mode speech`를
+  넣어 speech baseline(span 35,236)을 만들었고 이니셜 읽기를 그 위에서 측정했다. 다만
+  데이터셋의 참조는 자기 표기 관행(월 이름 소문자, `n j` 형태의 글자 나열, 구두점 생략)을
+  따르므로 speech 정확도를 그대로 발화 품질로 읽으면 안 된다. **닫는 증거:** 관행별 진단
+  분리(현재 `mismatch_kinds`로 일부), 한국어 speech 표본, 합성 결과에 대한 독립 검수.
+
 - [ ] **EVAL-03: 개발 표본과 분리된 held-out 평가.** 현재 외부 3,785문장은
   Sproat training-prefix 개발 표본이며 MONEY 33, TIME 4, FRACTION 2처럼 불균형하다.
   **닫는 증거:** corpus/source/reference hashes, source split과 overlap 검사,
