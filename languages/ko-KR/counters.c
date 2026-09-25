@@ -203,7 +203,12 @@ size_t ttf_ko_classify_counter(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     end = p;
     q = spaces(in, p);
     if (prefix) {
+        /* 제 written against the number is the ordinal prefix ("제0" stays as
+           written); 제 with a space may be the ordinary word, so a candidate
+           there is only kept when it actually met an ordinal unit. */
+        int attached = start == begin + strlen(prefix_key), had_unit;
         width = match(in, "ordinal_prefix_unit", q, unit, sizeof(unit), &s->layer);
+        had_unit = width != 0;
         if (width)
             end = q + width;
         p = spaces(in, end);
@@ -218,12 +223,23 @@ size_t ttf_ko_classify_counter(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                 q = spaces(in, p);
                 width =
                     match(in, "ordinal_prefix_unit", q, right_unit, sizeof(right_unit), &s->layer);
+                /* 제 is also an ordinary word: "제 3-5" is 제 plus a range. Only a
+                   candidate that met an ordinal unit is preserved. */
+                if (!had_unit && !width && !attached)
+                    return 0;
                 return finish(in, s, attached_end(in, width ? q + width : p), TTF_SEM_TEXT,
                               "ko:invalid-ordinal");
             }
         }
+        /* 제 is also an ordinary word, so a number after it that carries a
+           measure is not a malformed ordinal: "제 10kg" is 제 plus 십 킬로그램.
+           Only a candidate that already matched an ordinal unit is preserved. */
         if (!tail(in, end))
-            return finish(in, s, attached_end(in, end), TTF_SEM_TEXT, "ko:invalid-ordinal");
+            return had_unit || attached
+                       ? finish(in, s, attached_end(in, end), TTF_SEM_TEXT, "ko:invalid-ordinal")
+                       : 0;
+        if (!valid && !had_unit && !attached)
+            return 0;
         snprintf(s->unit, sizeof(s->unit), "%s", unit);
         snprintf(s->secondary, sizeof(s->secondary), "prefix");
         return finish(in, s, end, valid ? TTF_SEM_ORDINAL : TTF_SEM_TEXT,

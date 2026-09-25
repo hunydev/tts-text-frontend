@@ -40,6 +40,14 @@
       "kind": "editorial-policy",
       "checked_at": "2026-09-25",
       "note": "Standard Korean loanword spellings for acronyms that Korean reads as words, authored by the project after the runtime spelled them letter by letter. No external pronunciation authority, no human approval and no synthesized audio."
+    },
+    {
+      "id": "project-authored-v21-units",
+      "title": "Project Korean readings for bare unit abbreviations, v0.21",
+      "url": "https://github.com/hunydev/tts-text-frontend/blob/main/docs/research/ko-unit-word-v21-results.md",
+      "kind": "editorial-policy",
+      "checked_at": "2026-09-25",
+      "note": "Standard Korean unit names for abbreviations that appear without a number. No external pronunciation authority, no human approval and no synthesized audio."
     }
   ]
 }

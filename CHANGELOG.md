@@ -32,6 +32,27 @@
   resources. Text output is untouched, a value that is not letters alone keeps
   its own reading (`R&D` → `R and D`), and the speech defaults are the new
   `initialism_policy` keys `inferred_speech` and `pronounceable_speech`.
+- Stop a phone cue from swallowing what is not a phone number: `문의 12` →
+  `문의 십이`, `문의 3-5` → `문의 삼에서 오`, `문의 1+1` → `문의 일 더하기 일`.
+  A candidate with too few digits and no international or parenthesised shape no
+  longer claims the number, while `+123 456` and a malformed number with enough
+  digits are still preserved.
+- Add a Korean sayability sweep: 1,770 generated inputs whose speech output must
+  hold no Latin letter or digit outside the preserve contracts that
+  docs/speech-resources.md records. It is a property, not an expected reading, so
+  a wrong Korean reading still passes.
+- Read a unit abbreviation that stands on its own in Korean text instead of
+  guessing a pronunciation for it: `kg 단위` → `킬로그램 단위`, and the same for
+  cm, km, mm, mg, ml, kW, Hz, kHz and KB, which used to come out as 크그, 큼 and
+  므. A number in front still takes the measure path (`5kg` → `오 킬로그램`).
+- Stop the Korean 제 prefix from swallowing a measure, a range or a decimal:
+  `제 10kg` was preserved whole and reached the synthesizer as digits and
+  letters. 제 written against its number stays the ordinal prefix, so `제0` keeps
+  its text, but 제 with a space may be the ordinary word, so `제 10kg` is `제 십
+  킬로그램`, `제 10개` is `제 열 개`, `제 3-5` is `제 삼에서 오` and `제 0.5` is
+  `제 영 점 오`. A malformed ordinal that met an ordinal unit, such as `0번째` or
+  `제 1.5회`, is still preserved.
+- Declare the lowercase `ml` spelling, which mapped to nothing while `mL` did.
 - Spell a lone initial whose period is followed by a mark that carries the
   sentence on: `Cossette , M. , Lecomte` → `Cossette , m , Lecomte`,
   `Chang , Shirley L. ( 1992 )` → `Chang , Shirley l ( nineteen ninety two )`.

@@ -50,3 +50,5 @@ unit	en-US	degrees_celsius.many	degrees Celsius
 numeric_suffix	*	degrees F	MEASURE:degrees_fahrenheit
 unit	en-US	degrees_fahrenheit.one	degree Fahrenheit
 unit	en-US	degrees_fahrenheit.many	degrees Fahrenheit
+# The lowercase spelling maps to the declared mL unit rather than a second id.
+numeric_suffix	*	ml	MEASURE:mL

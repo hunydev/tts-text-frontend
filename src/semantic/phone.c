@@ -570,6 +570,12 @@ static size_t classify_phone(const ttf_pack_input_t *in, ttf_semantic_t *out) {
         (legacy && !(parsed.lengths[0] >= 2 && parsed.lengths[0] <= 4 && parsed.lengths[1] >= 2 &&
                      parsed.lengths[1] <= 4 && parsed.lengths[2] >= 3 && parsed.lengths[2] <= 4))) {
         size_t whole = invalid_end(in, begin);
+        /* A cue does not make a short number a phone number: "문의 12" is 십이 and
+           "문의 3-5" is a range. Preservation is for something that has the digits
+           of a real phone number and a broken shape. */
+        if (!parsed.negative && !parsed.overflow && !parsed.international && !parsed.parenthesis &&
+            parsed.digits < minimum)
+            return 0;
         if (whole < end)
             whole = end;
         return preserve(in, out, whole, layer);
