@@ -340,9 +340,20 @@ push한 `30b6b98`의 CI sanitizer 작업에서 `context_cache_compatibility`의 
 - speech span 35,236 → 35,501, LETTERS 174 → 471, PLAIN −33. **text 모드는 35,191로 동일.**
   Debug 128/128. 기록은 `docs/research/initialism-speech-v21-results.md`.
 
-이후 후보: 한국어도 같은 결함(`FIFA` → 에프아이에프에이)이므로 발음 가능성 판별을 분류
-단계로 올려 ACRONYM으로 돌리기, 괄호 밖 맨 연도 150건, 한국어 측정 corpus 확대,
-코드 단어 사전 검수. ISO 어순 46건과 대소문자 698건은 관행 차이로 남긴다.
+### 한국어 대문자 약어 (2026-09-25, 커밋·미배포)
+
+- `FIFA` → 에프아이에프에이처럼 단어로 읽어야 할 약어를 글자로 읽고 있었다. 계약 20건을
+  먼저 작성했다(`tests/evaluation/ko_acronym_v21.jsonl`, 기준선 13/20).
+- 영어 speech에서 쓴 음소배열 판별을 한국어 분류에 올리는 안을 이 세트로 먼저 채점했다:
+  18/20이지만 틀리는 `CEO`·`LED`의 손해가 크다(영어는 보존일 뿐이지만 한국어는 `시오` 같은
+  오독이 된다). 그래서 **분류를 건드리지 않았다**.
+- 런타임은 이미 사전이 글자 읽기를 덮어쓴다(`RAM` → 램). 빠져 있던 것은 항목이었다.
+  `lexicons/ko-KR/acronym-additions.jsonl`에 7건(피파·유네스코·나토·오펙·우에파·엑셀·심)을
+  넣고 `tools/lexicon/manage.py build`로 다시 빌드했다. 출처는 `project-authored-v21-acronyms`,
+  `review_status`는 pending이다. 20/20. 기록은 `docs/research/ko-acronym-v21-results.md`.
+
+이후 후보: 괄호 밖 맨 연도 150건, 한국어 측정 corpus 확대, 코드 단어 사전 검수,
+빈도 높은 약어 사전 확대. ISO 어순 46건과 대소문자 698건은 관행 차이로 남긴다.
 
 ## v0.20에서 마무리한 범위
 

@@ -180,6 +180,9 @@ compiled resource의 **8개 CTest를 다시 실행해 모두 통과**했다. 이
   (`docs/research/oov-guess-v21-results.md`). 남은 실패 3건은 national(강세에 따른 모음 축소),
   michael(고유명사는 사전 지식), visit(기대값 자체가 다툼의 여지). 축약형·하이픈 합성어·
   6음절 이상 파생형은 아직 표본이 적다. 이 항목은 열어 둔다.
+  **약어 구분 (2026-09-25):** 한국어가 단어로 읽는 약어(피파·나토·유네스코)는 추측 대상이
+  아니라 사전 대상이다. 7건을 `lexicons/ko-KR/acronym-additions.jsonl`에 넣었고, 이 추가를
+  추측 발음 개선으로 세지 않는다(`docs/research/ko-acronym-v21-results.md`).
 
 - [ ] **PRON-02: 확장 가능한 pronunciation IR 검증.** 현재 public phone buffer는
   1024 bytes, alphabet 24, provenance 64의 고정 구조이며 초기 ARPABET subset이다.

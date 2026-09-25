@@ -57,6 +57,12 @@ terms can be listed in the manifest without editing C code. Entries include Appl
 Microsoft, Google, YouTube, WiFi, OpenAI and ChatGPT, plus initialism/acronym defaults.
 SQL and GIF readings are policy choices that callers can override.
 
+An uppercase run with no lexicon entry is spelled letter by letter, which is the
+safe default: a new acronym becomes 에스엔에스 rather than an invented word. The
+acronyms Korean reads as words (나사, 램, 피파, 나토, 유네스코) are lexicon
+entries precisely because spelling cannot tell them apart — CEO and OPEC share
+their shape. Adding one is curation with provenance, not a rule change.
+
 The seed vocabulary also covers common computing vocabulary (API, SDK, JSON, Docker,
 Chrome, Unicode, C++, USB-C), ordinary loanwords (coffee, computer, server, client),
 and cardinal/ordinal words needed after English verbalization. These are hand-authored

@@ -32,6 +32,14 @@
       "kind": "editorial-policy",
       "checked_at": "2026-09-22",
       "note": "Developer-authored provisional Korean readings for common mail/portal host labels and the reserved example domain. No external source or independent human pronunciation approval is asserted."
+    },
+    {
+      "id": "project-authored-v21-acronyms",
+      "title": "Project acronym word-readings authored for v0.21",
+      "url": "https://github.com/hunydev/tts-text-frontend/blob/main/docs/research/ko-acronym-v21-results.md",
+      "kind": "editorial-policy",
+      "checked_at": "2026-09-25",
+      "note": "Standard Korean loanword spellings for acronyms that Korean reads as words, authored by the project after the runtime spelled them letter by letter. No external pronunciation authority, no human approval and no synthesized audio."
     }
   ]
 }

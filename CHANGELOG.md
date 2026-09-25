@@ -32,6 +32,14 @@
   resources. Text output is untouched, a value that is not letters alone keeps
   its own reading (`R&D` → `R and D`), and the speech defaults are the new
   `initialism_policy` keys `inferred_speech` and `pronounceable_speech`.
+- Read the acronyms Korean says as words instead of spelling them: `FIFA` →
+  `피파`, `UNESCO` → `유네스코`, `NATO` → `나토`, `OPEC` → `오펙`, `UEFA` →
+  `우에파`, `EXCEL` → `엑셀`, `SIM` → `심`. The runtime already lets a lexicon
+  entry override the letter reading (`RAM` → `램`), so these are seven curated
+  entries with provenance, not a rule: which uppercase runs Korean reads as
+  words is lexical knowledge, and an unknown one is still spelled, which is the
+  safe default. A twenty-case contract records the boundary (`CEO` → `씨이오`
+  stays spelled).
 - Run the benchmark in speech mode: `evaluate.py --output-mode speech` records
   the options in `provenance.frontend_options` and names its own
   `metric_policy`, so a speech report is never compared with the text baseline.
