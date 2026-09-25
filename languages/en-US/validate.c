@@ -363,6 +363,16 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "decade_plural value must be a bounded word");
     }
+    if (SAME(k, "initial_continuation")) {
+        *handled = 1;
+        if (!key[0] || key[1] || (unsigned char)key[0] >= 128 || key[0] <= ' ' ||
+            strchr(".!?", key[0]))
+            return ttf_validation_error(
+                d, "initial_continuation key is one ASCII mark that is not a sentence end");
+        return ttf_validation_enum(v, "0|1")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "initial_continuation value must be 0 or 1");
+    }
     if (SAME(k, "abbreviation_bare")) {
         *handled = 1;
         if (!lowercase_letters(key, 31))

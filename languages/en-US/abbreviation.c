@@ -44,6 +44,23 @@ static size_t token_count(const ttf_pack_input_t *in, size_t end) {
         ++i;
     return i - in->index;
 }
+/* "Cossette , M. , Lecomte": the period belongs to the initial, and what follows
+   carries the sentence on. A period that ends a sentence is left alone, because
+   dropping it would take the boundary with it. The marks are resources. */
+static int initial_continuation(const ttf_pack_input_t *in, size_t end) {
+    char key[2];
+    size_t p = end;
+    const char *value;
+    while (p < in->length && horizontal(in->text[p]))
+        ++p;
+    if (p >= in->length || (unsigned char)in->text[p] >= 128)
+        return 0;
+    key[0] = in->text[p];
+    key[1] = '\0';
+    value = ttf_resource_get(in->engine, "initial_continuation", EN, key, NULL);
+    return value && strcmp(value, "0");
+}
+
 /* A title is recognized only before an ASCII-capitalized name. The guard is
    deliberate: terminal 'Dr.' and street-address suffixes are not Doctor. */
 static int following_name(const ttf_pack_input_t *in, size_t end) {
@@ -157,7 +174,7 @@ size_t ttf_en_classify_abbreviation(const ttf_pack_input_t *in, ttf_semantic_t *
         while (p < in->length && horizontal(in->text[p]))
             ++p;
     }
-    if (!used || (used == 1 && !following_name(in, end))) {
+    if (!used || (used == 1 && !following_name(in, end) && !initial_continuation(in, end))) {
         out->value[0] = '\0';
         return 0;
     }

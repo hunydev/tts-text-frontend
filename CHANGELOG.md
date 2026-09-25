@@ -32,6 +32,14 @@
   resources. Text output is untouched, a value that is not letters alone keeps
   its own reading (`R&D` → `R and D`), and the speech defaults are the new
   `initialism_policy` keys `inferred_speech` and `pronounceable_speech`.
+- Spell a lone initial whose period is followed by a mark that carries the
+  sentence on: `Cossette , M. , Lecomte` → `Cossette , m , Lecomte`,
+  `Chang , Shirley L. ( 1992 )` → `Chang , Shirley l ( nineteen ninety two )`.
+  A dotted run already did this (`U.S. Army` → `u s Army`); a single letter was
+  only recognised before a name. A period that ends a sentence is still left
+  alone, because dropping it would take the sentence boundary with it, and the
+  marks that count as a continuation are the new `initial_continuation`
+  resource.
 - Read a per-unit and two units the sample left as raw symbols: `193.5/km²` →
   `one hundred ninety three point five per square kilometers`, `-2011 kl` →
   `minus two thousand eleven kiloliters`, `20 degrees C` → `twenty degrees
@@ -60,8 +68,8 @@
   the options in `provenance.frontend_options` and names its own
   `metric_policy`, so a speech report is never compared with the text baseline.
 - External English sample, text mode: DATE 394 → 532 exact, PLAIN 33,860 →
-  33,881, MEASURE 76 → 83 and 35,053 → 35,219 exact spans, every other class
-  unchanged. Speech mode, against its own new
+  33,881, MEASURE 76 → 83, LETTERS 174 → 242 and 35,053 → 35,287 exact spans,
+  every other class unchanged. Speech mode, against its own new
   baseline: 35,236 → 35,501 exact spans, LETTERS 174 → 471, PLAIN 33,860 →
   33,827. The trade is measured in `docs/research/initialism-speech-v21-results.md`.
 

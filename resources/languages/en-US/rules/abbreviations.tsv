@@ -122,3 +122,12 @@ abbreviation_bare	en-US	vs	versus
 abbreviation_bare	en-US	etc	etcetera
 abbreviation_bare	en-US	jr	junior
 abbreviation_bare	en-US	mr	Mister
+
+# Marks that carry a sentence on after an initial, so the initial's own period
+# can be dropped: "Cossette , M. , Lecomte". A sentence end is not listed.
+initial_continuation	en-US	,	1
+initial_continuation	en-US	;	1
+initial_continuation	en-US	(	1
+initial_continuation	en-US	"	1
+initial_continuation	en-US	&	1
+initial_continuation	en-US	:	1

@@ -89,6 +89,11 @@ spell an inferred initialism in speech (`FBI` → `f b i`) and keep a pronouncea
 run as written. Values are `preserve`, `letters` or `names`. `initialism_text` supplies the same policy for an individual
 lowercase canonical key. `letter_name` supplies the names used by `names`.
 `abbreviation_expansion` can use `preserve` to disable a title expansion.
+`initial_continuation` lists the marks that carry a sentence on after a single
+initial (`,`, `;`, `(`, `"`, `&`, `:`). Before one of them the initial is read as
+a letter and its own period is dropped (`Cossette , M. , Lecomte` →
+`Cossette , m , Lecomte`); a sentence-ending period is kept, and a key that is
+`.`, `!` or `?` is rejected.
 `abbreviation_bare` expands a token that carries no period at all (`vol 1` →
 `volume one`, `Records ltd` → `Records limited`); it is only for abbreviations
 with a single reading, and `preserve` disables one. `st`, `dr`, `sr`, `no` and
