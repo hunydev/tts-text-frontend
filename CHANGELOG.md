@@ -32,6 +32,14 @@
   resources. Text output is untouched, a value that is not letters alone keeps
   its own reading (`R&D` → `R and D`), and the speech defaults are the new
   `initialism_policy` keys `inferred_speech` and `pronounceable_speech`.
+- Expand an abbreviation written without its period when the reading is not
+  contested: `vol 1` → `volume one`, `Records ltd` → `Records limited`,
+  `Sadako vs Kayako` → `Sadako versus Kayako`, `etc` → `etcetera`, `jr` →
+  `junior`, `mr Smith` → `Mister Smith`. The keys come from the external English
+  sample, which reads each of them one way only; `st`, `dr`, `sr`, `no` and `pp`
+  stay untouched because the same sample reads `st` as both saint and street and
+  `dr` as both doctor and drive. The new `abbreviation_bare` resource holds the
+  expansions, and `preserve` disables one.
 - Read the acronyms Korean says as words instead of spelling them: `FIFA` →
   `피파`, `UNESCO` → `유네스코`, `NATO` → `나토`, `OPEC` → `오펙`, `UEFA` →
   `우에파`, `EXCEL` → `엑셀`, `SIM` → `심`. The runtime already lets a lexicon
@@ -43,8 +51,8 @@
 - Run the benchmark in speech mode: `evaluate.py --output-mode speech` records
   the options in `provenance.frontend_options` and names its own
   `metric_policy`, so a speech report is never compared with the text baseline.
-- External English sample, text mode: DATE 394 → 532 exact and 35,053 → 35,191
-  exact spans, every other class unchanged. Speech mode, against its own new
+- External English sample, text mode: DATE 394 → 532 exact, PLAIN 33,860 →
+  33,881 and 35,053 → 35,212 exact spans, every other class unchanged. Speech mode, against its own new
   baseline: 35,236 → 35,501 exact spans, LETTERS 174 → 471, PLAIN 33,860 →
   33,827. The trade is measured in `docs/research/initialism-speech-v21-results.md`.
 

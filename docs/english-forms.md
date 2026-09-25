@@ -89,6 +89,11 @@ spell an inferred initialism in speech (`FBI` → `f b i`) and keep a pronouncea
 run as written. Values are `preserve`, `letters` or `names`. `initialism_text` supplies the same policy for an individual
 lowercase canonical key. `letter_name` supplies the names used by `names`.
 `abbreviation_expansion` can use `preserve` to disable a title expansion.
+`abbreviation_bare` expands a token that carries no period at all (`vol 1` →
+`volume one`, `Records ltd` → `Records limited`); it is only for abbreviations
+with a single reading, and `preserve` disables one. `st`, `dr`, `sr`, `no` and
+`pp` are deliberately absent, because a bare token there could be saint or
+street, doctor or drive.
 Invalid initialism policy values fail explicitly when used. Semantic validation
 of every resource during setup remains tracked in [remaining work](remaining-work.md).
 

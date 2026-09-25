@@ -89,6 +89,7 @@ TTFB에서도 payload의 원래 행 번호를 사용한다. CLI stderr에는 같
 | EN `month_alias` | key는 소문자 ASCII 알파벳 1..31자, 값은 정수 1..12 |
 | EN `date_year_cue`, `date_year_quantity` | 값은 `0`/`1`; cue key는 소문자 ASCII 단어를 한 칸으로 연결한 1..64 bytes, quantity key는 알파벳 단어 1..63자 |
 | EN `initialism_policy` | key는 `dotted`, `known`, `inferred`와 speech 전용 `dotted_speech`, `known_speech`, `inferred_speech`, `pronounceable_speech`; 값은 `preserve`, `letters`, `names` |
+| EN `abbreviation_bare` | key는 1..31자 소문자, 값은 확장 낱말 또는 `preserve`. 마침표 없는 약어를 확장한다 |
 | EN `syllable_onset`, `syllable_coda` | key는 2..4자 소문자 자음군, 값은 `0` 또는 `1`. 대문자 연속이 영어 단어처럼 읽히는지 판단한다 |
 | EN `initialism_text`, `letter_name` | key는 각각 소문자 ASCII 알파벳 1..255자 / 1자; initialism 값은 위와 같은 3개 정책 |
 | EN `currency_minor_digits` | 0 또는 2 |

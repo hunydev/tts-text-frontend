@@ -121,6 +121,27 @@ size_t ttf_en_classify_abbreviation(const ttf_pack_input_t *in, ttf_semantic_t *
             return token_count(in, out->input_end);
         }
     }
+    /* A few abbreviations are unambiguous without their period, so the data may
+       declare an expansion that applies to the bare token: "vol 1", "Records
+       ltd". A token whose bare reading is contested, such as st or dr, is not
+       declared and keeps its text. */
+    if (n < sizeof(key) && (token->end == in->length || in->text[token->end] != '.')) {
+        for (i = 0; i < n; ++i)
+            key[i] = lower(in->text[start + i]);
+        key[n] = '\0';
+        expansion = lookup(in->engine, "abbreviation_bare", key, NULL);
+        if (expansion && strlen(expansion) < sizeof(out->value)) {
+            out->type = TTF_SEM_ABBREVIATION;
+            out->lexical_class = TTF_LEX_WORD;
+            out->input_end = token->end;
+            (void)lookup(in->engine, "abbreviation_bare", key, out);
+            (void)snprintf(out->value, sizeof(out->value), "%s", key);
+            (void)snprintf(out->secondary, sizeof(out->secondary), "bare");
+            (void)snprintf(out->source_lang, sizeof(out->source_lang), "%s", EN);
+            (void)snprintf(out->rule, sizeof(out->rule), "en.abbreviation.bare");
+            return token_count(in, out->input_end);
+        }
+    }
     if (n != 1 || !upper(in->text[start]))
         return 0;
     p = start;
@@ -217,6 +238,11 @@ ttf_status_t ttf_en_verbalize_abbreviation(const ttf_engine_t *engine, const ttf
     size_t i, used = 0;
     ttf_status_t status;
     if (s->type == TTF_SEM_ABBREVIATION) {
+        if (!strcmp(s->secondary, "bare")) {
+            value = lookup(engine, "abbreviation_bare", s->value, NULL);
+            return value && strcmp(value, "preserve") ? ttf_buffer_puts(out, value)
+                                                      : ttf_buffer_append(out, surface, length);
+        }
         if (strcmp(s->secondary, "title"))
             return ttf_buffer_append(out, surface, length);
         value = lookup(engine, "abbreviation_expansion", s->value, NULL);

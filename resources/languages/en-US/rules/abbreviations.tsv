@@ -113,3 +113,12 @@ syllable_coda	en-US	sk	1
 syllable_coda	en-US	sp	1
 syllable_coda	en-US	st	1
 syllable_coda	en-US	th	1
+
+# An abbreviation that is unambiguous without its period. st, dr, sr, no and pp
+# are deliberately absent: the same sample reads st as saint and as street.
+abbreviation_bare	en-US	vol	volume
+abbreviation_bare	en-US	ltd	limited
+abbreviation_bare	en-US	vs	versus
+abbreviation_bare	en-US	etc	etcetera
+abbreviation_bare	en-US	jr	junior
+abbreviation_bare	en-US	mr	Mister

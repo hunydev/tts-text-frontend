@@ -363,6 +363,15 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "decade_plural value must be a bounded word");
     }
+    if (SAME(k, "abbreviation_bare")) {
+        *handled = 1;
+        if (!lowercase_letters(key, 31))
+            return ttf_validation_error(d,
+                                        "abbreviation_bare key is 1..31 lowercase ASCII letters");
+        return label(v) && strlen(v) < 64
+                   ? TTF_OK
+                   : ttf_validation_error(d, "abbreviation_bare value is a word or preserve");
+    }
     if (SAME(k, "syllable_onset") || SAME(k, "syllable_coda")) {
         *handled = 1;
         if (!lowercase_letters(key, 4) || strlen(key) < 2)

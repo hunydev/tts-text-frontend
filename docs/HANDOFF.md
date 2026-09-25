@@ -352,6 +352,16 @@ push한 `30b6b98`의 CI sanitizer 작업에서 `context_cache_compatibility`의 
   넣고 `tools/lexicon/manage.py build`로 다시 빌드했다. 출처는 `project-authored-v21-acronyms`,
   `review_status`는 pending이다. 20/20. 기록은 `docs/research/ko-acronym-v21-results.md`.
 
+### 마침표 없는 약어 (2026-09-25, 커밋·미배포)
+
+- PLAIN 실패 101건을 갈래로 나누니 약 40건이 마침표 없는 약어(`vol 1`, `Records ltd`)였고
+  나머지는 영국식→미국식 철자 변환(데이터셋 관행, 따르지 않는다)이었다.
+- 후보 key마다 표본의 참조 읽기를 세어 **한 가지로만 읽히는 것**만 declare했다:
+  vol·ltd·vs·etc·jr·mr. `st`(saint 8 / street 1), `dr`(doctor 3 / drive 1), `sr`, `no`, `pp`는
+  제외했다. 새 자원은 `abbreviation_bare`이고 `preserve`로 끌 수 있다.
+- 계약 13건을 구현 전에 작성했다(`tests/evaluation/bare_abbreviation_v21.jsonl`).
+- 외부 영어 text: PLAIN 33,860 → 33,881, span 35,191 → 35,212. Debug 130/130.
+
 이후 후보: 괄호 밖 맨 연도 150건, 한국어 측정 corpus 확대, 코드 단어 사전 검수,
 빈도 높은 약어 사전 확대. ISO 어순 46건과 대소문자 698건은 관행 차이로 남긴다.
 
