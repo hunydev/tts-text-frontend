@@ -41,6 +41,12 @@ The core contains numeric scanning, grammatical boundary validation, and semanti
 classification algorithms. Written unit inventories and labels remain resources:
 `numeric_suffix`, `currency_prefix`, `ordinal_suffix`, and `ordinal_tail`.
 
+A `numeric_suffix` key may carry a slash (`km/h`) and may begin with one
+(`/km²`). A leading slash only applies when the number is written against it,
+because a slash after a space belongs to the protected-path reading, and it only
+applies when what follows the slash is not a number, so `5/6` stays a fraction.
+A key may also contain a space (`degrees C`).
+
 `ordinal_tail` is a source-pack policy. Lookup tries the longest suffix of the
 numeric value first: tails `11`, `12`, `13` require `th`; the final decimal digits
 supply the remaining endings. The core does not hardcode English suffix strings.

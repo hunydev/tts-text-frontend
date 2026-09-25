@@ -32,6 +32,14 @@
   resources. Text output is untouched, a value that is not letters alone keeps
   its own reading (`R&D` → `R and D`), and the speech defaults are the new
   `initialism_policy` keys `inferred_speech` and `pronounceable_speech`.
+- Read a per-unit and two units the sample left as raw symbols: `193.5/km²` →
+  `one hundred ninety three point five per square kilometers`, `-2011 kl` →
+  `minus two thousand eleven kiloliters`, `20 degrees C` → `twenty degrees
+  Celsius`. A slash whose denominator is not a number may now carry a declared
+  unit, while a numeric denominator stays a fraction (`5/6` → `five over six`)
+  and a space before the slash keeps the protected-path reading. The units are
+  the new `numeric_suffix` rows `/km²`, `kl`, `degrees C` and `degrees F`; a
+  per-form the sample does not attest, such as `/kg`, stays undeclared.
 - Expand an abbreviation written without its period when the reading is not
   contested: `vol 1` → `volume one`, `Records ltd` → `Records limited`,
   `Sadako vs Kayako` → `Sadako versus Kayako`, `etc` → `etcetera`, `jr` →
@@ -52,7 +60,8 @@
   the options in `provenance.frontend_options` and names its own
   `metric_policy`, so a speech report is never compared with the text baseline.
 - External English sample, text mode: DATE 394 → 532 exact, PLAIN 33,860 →
-  33,881 and 35,053 → 35,212 exact spans, every other class unchanged. Speech mode, against its own new
+  33,881, MEASURE 76 → 83 and 35,053 → 35,219 exact spans, every other class
+  unchanged. Speech mode, against its own new
   baseline: 35,236 → 35,501 exact spans, LETTERS 174 → 471, PLAIN 33,860 →
   33,827. The trade is measured in `docs/research/initialism-speech-v21-results.md`.
 

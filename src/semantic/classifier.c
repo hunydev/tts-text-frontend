@@ -1491,6 +1491,16 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
         if (!strchr(out->value, '.') && end > start && nonzero && !structured_tail(in, end) &&
             copy_value(out->secondary, sizeof(out->secondary), s + start, end - start))
             return finish(in, out, end, TTF_SEM_FRACTION, "syntax.fraction");
+        /* "193.5/km²": a denominator that is not a number may still be a
+           declared per-unit. A numeric denominator stays a fraction. */
+        if (end == start) {
+            ttf_semantic_type_t suffix_type;
+            size_t suffix_end;
+            if (quantity_suffix(in, q, out, &suffix_end, &suffix_type, 0))
+                return finish(in, out, suffix_end, suffix_type,
+                              suffix_type == TTF_SEM_PERCENT ? "syntax.percent"
+                                                             : "syntax.numeric-suffix");
+        }
         if (end > start || q == p)
             return preserve(in, out, ttf_numeric_atom_end(in, end), "syntax.invalid-fraction");
     }

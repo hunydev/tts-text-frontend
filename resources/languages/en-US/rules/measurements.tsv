@@ -37,3 +37,16 @@ currency	en-US	EUR.minor.many	cents
 numeric_suffix	*	°F	MEASURE:°F
 unit	en-US	°F.one	degree Fahrenheit
 unit	en-US	°F.many	degrees Fahrenheit
+# Per-forms and units the external English sample leaves unnormalized today.
+numeric_suffix	*	/km²	MEASURE:per_square_km
+unit	en-US	per_square_km.one	per square kilometer
+unit	en-US	per_square_km.many	per square kilometers
+numeric_suffix	*	kl	MEASURE:kl
+unit	en-US	kl.one	kiloliter
+unit	en-US	kl.many	kiloliters
+numeric_suffix	*	degrees C	MEASURE:degrees_celsius
+unit	en-US	degrees_celsius.one	degree Celsius
+unit	en-US	degrees_celsius.many	degrees Celsius
+numeric_suffix	*	degrees F	MEASURE:degrees_fahrenheit
+unit	en-US	degrees_fahrenheit.one	degree Fahrenheit
+unit	en-US	degrees_fahrenheit.many	degrees Fahrenheit
