@@ -71,6 +71,9 @@ date_year_cue	en-US	vs	1
 date_year_cue	en-US	(	1
 date_year_cue	en-US	[	1
 date_year_cue	en-US	born	1
+# A colon after a four-digit number is the timeline shape: "1830 : The first
+# Constitution". The year range and the quantity noun still decide.
+date_year_cue_after	en-US	:	1
 # A following quantity noun blocks the contextual-year interpretation.
 date_year_quantity	en-US	copy	1
 date_year_quantity	en-US	copies	1

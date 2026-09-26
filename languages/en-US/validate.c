@@ -478,6 +478,14 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "month_alias value must be an integer in 1..12");
     }
+    if (SAME(k, "date_year_cue_after")) {
+        *handled = 1;
+        if (!key[0] || key[1] || (unsigned char)key[0] >= 128 || key[0] <= ' ')
+            return ttf_validation_error(d, "date_year_cue_after key is one ASCII mark");
+        return ttf_validation_enum(v, "0|1")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "date_year_cue_after value must be 0 or 1");
+    }
     if (SAME(k, "date_year_cue") || SAME(k, "date_year_quantity") ||
         SAME(k, "date_year_interval")) {
         *handled = 1;

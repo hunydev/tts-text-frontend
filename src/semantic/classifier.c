@@ -254,7 +254,10 @@ static int structured_tail(const ttf_pack_input_t *in, size_t p) {
         ++next;
     if (next > p + 1 && next < n && digit(s[next]))
         return 1;
-    return ascii_letter(s[p]) || digit(s[p]) || s[p] == ':' || s[p] == '/' || s[p] == '_' ||
+    /* A colon is structure only when digits follow it (3:4, 09:30). "Chapter 12:"
+       is a number before a mark, and its number is read. */
+    return ascii_letter(s[p]) || digit(s[p]) || (s[p] == ':' && p + 1 < n && digit(s[p + 1])) ||
+           s[p] == '/' || s[p] == '_' ||
            (s[p] == '%' && p + 1 < n &&
             (ascii_letter(s[p + 1]) || digit(s[p + 1]) || s[p + 1] == '%')) ||
            ((s[p] == '.' || s[p] == ',' || s[p] == '-') && p + 1 < n && digit(s[p + 1]));
@@ -1375,7 +1378,9 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
             }
         }
     }
-    if (a_end > b && a_end < n && s[a_end] == ':') {
+    /* A colon with no digits after it is not a time attempt at all: "1912:"
+       is a timeline year and "12:" is a number before a mark. */
+    if (a_end > b && a_end < n && s[a_end] == ':' && integer(s, n, a_end + 1) > a_end + 1) {
         unsigned hour = a_end - b <= 2 ? small_uint(s + b, a_end - b) : 24;
         unsigned minute, second = 0;
         int has_seconds = 0, valid;

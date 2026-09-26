@@ -330,6 +330,24 @@ static int bracket_cue(const ttf_pack_input_t *in, size_t start, size_t stop,
     return 1;
 }
 
+/* "1830 : The first Constitution": a colon after a four-digit number is the
+   timeline shape, so the mark itself introduces the year. The marks are data. */
+static int following_cue(const ttf_pack_input_t *in, size_t end, ttf_resource_layer_t *layer) {
+    char key[2];
+    size_t p = skip_horizontal(in->text, in->length, end);
+    ttf_resource_layer_t found_layer;
+    const char *value;
+    if (p >= in->length)
+        return 0;
+    key[0] = in->text[p];
+    key[1] = '\0';
+    value = ttf_resource_get(in->engine, "date_year_cue_after", EN, key, &found_layer);
+    if (!value || !strcmp(value, "0"))
+        return 0;
+    merge_layer(layer, found_layer);
+    return 1;
+}
+
 static int preceding_cue(const ttf_pack_input_t *in, size_t start, size_t stop,
                          ttf_resource_layer_t *layer) {
     char key[65];
@@ -463,7 +481,7 @@ static size_t contextual_year(const ttf_pack_input_t *in, ttf_semantic_t *out, s
         return 0;
     number = number_at(in, start, 0);
     if (!number.valid || number.digits != 4 || following_quantity(in, number.end) ||
-        (!preceding_cue(in, start, number.end, &layer) &&
+        (!preceding_cue(in, start, number.end, &layer) && !following_cue(in, number.end, &layer) &&
          !interval_continuation(in, start, &layer)))
         return 0;
     if (number.end < in->length && in->text[number.end] == ',' && number.end + 1 < in->length &&
