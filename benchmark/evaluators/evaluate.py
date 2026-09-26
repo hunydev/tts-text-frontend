@@ -150,6 +150,25 @@ def align_span(reference, result):
     return actual, None, selected
 
 
+def merged_agreement(reference, covered, result):
+    """Name an unaligned span whose engine reading is what the references say.
+
+    A reference set can split "6 - 5" into CARDINAL, "to", CARDINAL while the
+    engine emits one RANGE over the same bytes. The accuracy still counts every
+    reference span as a miss, because the boundaries differ; this only says why,
+    so an alignment count is not read as a value error.
+    """
+    if not covered or reference not in covered:
+        return None
+    start, end = covered[0]["begin"], covered[-1]["end"]
+    spans = [s for s in result["spans"] if s["input_begin"] < end and s["input_end"] > start]
+    if not spans or spans[0]["input_begin"] != start or spans[-1]["input_end"] != end:
+        return None
+    actual = result["text"].encode()[spans[0]["begin"] : spans[-1]["end"]].decode()
+    expected = " ".join(s["spoken"] for s in covered if s.get("spoken"))
+    return "merged-agreement" if " ".join(actual.split()) == expected else None
+
+
 def spoken_projection(record, scored, result, error):
     """Project complete references, rejecting any unaccounted lexical output."""
     if error:
@@ -231,6 +250,21 @@ def score_case(record, result, error=None):
                 ],
             )
         )
+    # An engine span may cover several reference spans and still say exactly what
+    # they say; name that case rather than leaving it in the alignment bucket.
+    if not error:
+        for span in result["spans"]:
+            covered = [
+                s for s in scored
+                if s["begin"] >= span["input_begin"] and s["end"] <= span["input_end"]
+                and s["alignment_error"] == "crossed-or-missing-input-boundary"
+            ]
+            if len(covered) < 2:
+                continue
+            for reference in covered:
+                kind = merged_agreement(reference, covered, result)
+                if kind:
+                    reference["mismatch_kind"] = kind
     expected = record.get("expected")
     projection, projected_exact, projection_error = None, None, None
     # The secondary projection removes only unchanged punctuation with an explicit
@@ -491,7 +525,7 @@ def evaluate(args):
         # carries its own policy name and is never compared with one.
         "metric_policy": "v2-exact-context-complete-output"
         + ("-speech" if options.get("output_mode") == "speech" else ""),
-        "note": "A speech-mode run (metric_policy ...-speech) reads its references as speakable text and is not comparable with a text-mode report. Exact UTF-8 text equality: no case, whitespace or punctuation folding. Full native input/output coverage is required. Unaligned reference spans count as failures. Secondary spoken projection omits only unchanged PUNCT with an explicit empty reference, requires whitespace-only output for uncovered whitespace input, and joins complete source spans with spaces. Every labeled sentence is in the projection denominator; unavailable projections count as failures and coverage/reasons are reported separately. Candidate agreement is separate from reference accuracy. `mismatch_kinds` and `diagnostic_case_insensitive` are diagnostics that name why a span missed (case, spacing, alignment or a different reading); they never enter the accuracy, which still folds nothing. Input, resource, program and adapter hashes must match before and after execution. No audio or independent human correctness claim. Failures/reports inherit source usage restrictions and must stay outside product resources.",
+        "note": "A speech-mode run (metric_policy ...-speech) reads its references as speakable text and is not comparable with a text-mode report. Exact UTF-8 text equality: no case, whitespace or punctuation folding. Full native input/output coverage is required. Unaligned reference spans count as failures. Secondary spoken projection omits only unchanged PUNCT with an explicit empty reference, requires whitespace-only output for uncovered whitespace input, and joins complete source spans with spaces. Every labeled sentence is in the projection denominator; unavailable projections count as failures and coverage/reasons are reported separately. Candidate agreement is separate from reference accuracy. `mismatch_kinds` and `diagnostic_case_insensitive` are diagnostics that name why a span missed (case, spacing, alignment, a different reading, or `merged-agreement` for an engine span that covers several reference spans and says exactly what they say); they never enter the accuracy, which still folds nothing and still counts every unaligned reference span as a failure. Input, resource, program and adapter hashes must match before and after execution. No audio or independent human correctness claim. Failures/reports inherit source usage restrictions and must stay outside product resources.",
     }
     write_json(args.output_dir / "summary.json", report)
     return report

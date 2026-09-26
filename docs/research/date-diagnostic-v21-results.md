@@ -93,6 +93,31 @@ CARDINAL·PLAIN 등 다른 클래스의 수치는 바뀌지 않았다. Debug CTe
 
 CARDINAL·PLAIN·LETTERS·VERBATIM은 세 단계 모두 수치가 같다. Debug CTest 127/127.
 
+## 합쳐진 span을 alignment 실패와 구분 (2026-09-26)
+
+작업 큐의 1순위(FIN-VALUES)가 "값 오류와 alignment를 먼저 갈라 보라"고 지목한 자리다.
+CARDINAL의 alignment 실패 79건을 열어 보니 이런 모양이었다.
+
+```
+text  : The Expos win , 6 - 5 , on Hunt's ...
+참조  : '6' → 'six' | '-' → 'to' | '5' → 'five'   (세 span)
+엔진  : '6 - 5' → 'six to five'                    (한 span)
+```
+
+읽기는 **똑같고** span 경계만 다르다. 그래서 평가기에 `merged-agreement` 진단을 넣었다.
+정렬에 실패한 참조 span들이 하나의 엔진 span 안에 들어 있고, 그 엔진 span의 텍스트가 참조
+읽기들을 이어 붙인 것과 같으면 그렇게 이름 붙인다. 정확도는 그대로다 — 경계가 다르므로
+참조 span은 여전히 실패로 센다.
+
+| 클래스 | alignment (이전) | alignment | merged-agreement |
+|---|---:|---:|---:|
+| CARDINAL | 79 | 35 | 44 |
+| PLAIN | 40 | 14 | 26 |
+| MEASURE | 3 | 0 | 3 |
+
+남은 35건은 진짜 확인 대상이다: `1988 - 93`처럼 연도 스타일이 다른 것, `p . 57 - 58`처럼
+구두점이 끼어든 것, 그리고 데이터셋 쪽 토큰화(`19 67,`처럼 연도가 쪼개진 것)가 섞여 있다.
+
 ## 다음
 
 남은 DATE `different` 206건 중 괄호 밖 맨 연도가 150건으로 가장 크고, 그다음이 ISO 날짜

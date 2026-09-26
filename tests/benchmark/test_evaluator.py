@@ -469,6 +469,22 @@ class EvaluatorTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "corpus_sha256"):
                 COMPARE.compare(root / "before", root / "after")
 
+    def test_merged_span_agreement_is_named_not_hidden(self):
+        """An engine span covering several reference spans whose readings it says."""
+        row = case()
+        # "21" and "cats" as one engine span reading "twenty one cats".
+        merged = {
+            "text": "twenty one cats",
+            "spans": [dict(native_span(9, 16, 0, 15), semantic_type="RANGE", rule="merged")],
+        }
+        covered = [dict(row["spans"][2]), dict(row["spans"][3])]
+        covered[0].update(begin=9, end=11, written="21", spoken="twenty one")
+        covered[1].update(begin=12, end=16, written="cats", spoken="cats")
+        kinds = [EVALUATE.merged_agreement(span, covered, merged) for span in covered]
+        self.assertEqual(kinds, ["merged-agreement", "merged-agreement"])
+        disagreeing = dict(merged, text="twenty two cats")
+        self.assertIsNone(EVALUATE.merged_agreement(covered[0], covered, disagreeing))
+
     def test_speech_mode_is_a_separate_report(self):
         """A speech run must be recognisable as one, never mistaken for the text baseline."""
         with tempfile.TemporaryDirectory(prefix="ttf-speech-report-") as directory:

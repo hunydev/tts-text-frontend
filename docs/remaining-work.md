@@ -212,6 +212,9 @@ compiled resource의 **8개 CTest를 다시 실행해 모두 통과**했다. 이
   `diagnostic_case_insensitive`를 별도 이름·분모로 보고하고, 정확도는 그대로 byte 비교다
   (`docs/research/date-diagnostic-v21-results.md`). 이 항목이 요구하는 adjudication 전체와
   불변 hash 보고는 아직 남아 있다.
+  **진행 (2026-09-26):** `merged-agreement`를 추가했다. 참조가 `6 - 5`를 세 span으로 나누고
+  엔진이 하나의 RANGE로 묶지만 읽기가 같은 경우를 alignment 실패와 구분한다. CARDINAL 79 →
+  alignment 35 + merged 44, PLAIN 40 → 14 + 26, MEASURE 3 → 0 + 3. 정확도는 바뀌지 않는다.
 
 - [ ] **EVAL-04: speech 모드의 외부 평가 범위.** 2026-09-25에 `--output-mode speech`를
   넣어 speech baseline(span 35,236)을 만들었고 이니셜 읽기를 그 위에서 측정했다. 다만

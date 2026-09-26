@@ -11,6 +11,13 @@
   contract list that expected `CARDINAL` for `( 2024 )` and `1385 ( 2006 )` now
   expect `DATE`; the rationale is recorded in
   `docs/research/date-diagnostic-v21-results.md`.
+- Separate a merged span from a real alignment failure in the benchmark, which is
+  what the work queue's first item asked for: the reference splits `6 - 5` into
+  `six`, `to`, `five` while the engine emits one RANGE reading `six to five`, so
+  the readings agree and only the boundaries differ. Those are now reported as
+  `merged-agreement`, which takes CARDINAL from 79 alignment failures to 35 plus
+  44 merges, PLAIN from 40 to 14 plus 26, and MEASURE from 3 to 0 plus 3. The
+  accuracy is unchanged: an unaligned reference span still counts as a failure.
 - Name why a benchmark span missed, so a dataset convention is no longer read as
   an error: the evaluator reports `mismatch_kinds` (case-only, space-only,
   case-and-space, alignment, no-output, different) and a per-class
