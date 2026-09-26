@@ -1283,6 +1283,21 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         label = res(e, "unit", key);
         return ttf_buffer_puts(b, label ? label : s->unit);
     case TTF_SEM_RANGE:
+        if (!strcmp(s->unit, "year")) {
+            /* Each endpoint is a year, so "1988 - 93" is nineteen eighty eight
+               to ninety three rather than a pair of plain cardinals. */
+            ttf_semantic_t endpoint = *s;
+            endpoint.type = TTF_SEM_DATE;
+            endpoint.secondary[0] = '\0';
+            if ((st = verbalize(e, &endpoint, surface, length, b)) != TTF_OK ||
+                (st = space(b)) != TTF_OK || (st = word(e, b, "number", "range")) != TTF_OK ||
+                (st = space(b)) != TTF_OK)
+                return st;
+            (void)snprintf(endpoint.value, sizeof(endpoint.value), "%s", s->secondary);
+            if (strlen(s->secondary) != 4)
+                endpoint.type = TTF_SEM_CARDINAL, endpoint.unit[0] = '\0';
+            return verbalize(e, &endpoint, surface, length, b);
+        }
         if (!strcmp(s->unit, "time")) {
             ttf_semantic_t endpoint = *s;
             endpoint.type = TTF_SEM_TIME;

@@ -97,6 +97,12 @@ has four tab-separated columns: `kind`, `language`, `key`, `value`.
 | `boundary_word` | Keep a possible continuation after this word, enabled with `1` |
 | `boundary_period` | Permit and retain the period after a date alias inside its candidate, enabled with `1` |
 
+A cued year followed by a hyphen and a two- or four-digit number is one RANGE
+span with `unit=year`, so both endpoints read in the year style (`the 1988 -
+1993 period` → `nineteen eighty eight to nineteen ninety three`). The cue rule is
+the one bare years already use, which keeps an uncued pair and a page range in
+cardinals, and an ISO date is matched before it.
+
 An invalid year style returns `TTF_ERESOURCE` when that style is used. Do not put
 spoken month labels into `month_alias`; change the existing `month` resources
 for output labels instead. A new input month alias should have the corresponding

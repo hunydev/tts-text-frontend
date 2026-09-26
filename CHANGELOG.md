@@ -48,6 +48,13 @@
   `eighteen thirty : …`, through the new `date_year_cue_after` resource. The year
   range and the quantity-noun block still decide, so `2500 : list` and
   `Room 12 : open` keep their cardinals.
+- Read a hyphen year range with the year style, which the word form already
+  did: `the 1988 - 1993 period` was `one thousand nine hundred eighty eight to
+  one thousand nine hundred ninety three` and is now `nineteen eighty eight to
+  nineteen ninety three`, and `From 1988 - 93` reads `nineteen eighty eight to
+  ninety three`. The cue rule is unchanged, so an uncued pair and a page range
+  keep their cardinals, and an ISO date is untouched. The reading is one RANGE
+  span carrying `unit=year`, which the verbalizer reads endpoint by endpoint.
 - Read the citation shape as a year: `University of Wales Press , 1992 .` →
   `… , nineteen ninety two .`. The bracket rule became the `date_year_enclosure`
   resource, where each opening mark declares the closing marks that complete it

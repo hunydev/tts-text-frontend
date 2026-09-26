@@ -251,3 +251,4 @@ decade_plural	en-US	100	hundreds
 decade_plural	en-US	1000	thousands
 # A decade is more specific than the generic "digits with a tail" fallback.
 classifier_priority	en-US	en.date.decade	10
+classifier_priority	en-US	en.date.year-range	10

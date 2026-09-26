@@ -517,6 +517,54 @@ static size_t contextual_year(const ttf_pack_input_t *in, ttf_semantic_t *out, s
     return consumed;
 }
 
+/* "from 1988 - 93", "the 1988 - 1993 period": the word form already reads both
+   endpoints as years, and the hyphen form should too. The cue rule is unchanged,
+   so an uncued pair and a page range keep their cardinals. */
+static size_t year_range(const ttf_pack_input_t *in, ttf_semantic_t *out, size_t start) {
+    date_number_t first, second;
+    size_t p, consumed;
+    unsigned minimum, maximum;
+    ttf_resource_layer_t layer = TTF_LAYER_COMMON;
+    if (!ascii_digit(in->text[start]))
+        return 0;
+    /* number_at treats an attached hyphen as a malformed field, which is exactly
+       the shape here, so the first endpoint is read directly. */
+    first.end = start;
+    first.value = 0;
+    first.digits = 0;
+    first.valid = 1;
+    first.ordinal = 0;
+    while (first.end < in->length && ascii_digit(in->text[first.end])) {
+        first.value = first.value * 10 + (unsigned)(in->text[first.end] - '0');
+        ++first.digits;
+        ++first.end;
+    }
+    if (first.digits != 4 || !preceding_cue(in, start, first.end, &layer))
+        return 0;
+    p = skip_horizontal(in->text, in->length, first.end);
+    if (p >= in->length || in->text[p] != '-')
+        return 0;
+    p = skip_horizontal(in->text, in->length, p + 1);
+    second = number_at(in, p, 0);
+    if (!second.valid || (second.digits != 2 && second.digits != 4) ||
+        following_quantity(in, second.end))
+        return 0;
+    minimum = policy_year(in, "min_year", 1000, &layer);
+    maximum = policy_year(in, "max_year", 2099, &layer);
+    if (first.value < minimum || first.value > maximum)
+        return 0;
+    if (second.digits == 4 && (second.value < minimum || second.value > maximum))
+        return 0;
+    (void)snprintf(out->value, sizeof(out->value), "%04u", first.value);
+    (void)snprintf(out->secondary, sizeof(out->secondary), "%0*u", (int)second.digits,
+                   second.value);
+    (void)snprintf(out->unit, sizeof(out->unit), "year");
+    consumed = finish(in, out, second.end, 1, layer, "en.date.year-range");
+    out->type = TTF_SEM_RANGE;
+    (void)snprintf(out->source_lang, sizeof(out->source_lang), "und");
+    return consumed;
+}
+
 size_t ttf_en_classify_date(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     size_t start, named;
     if (!in || !out || in->index >= in->token_count)
@@ -528,5 +576,8 @@ size_t ttf_en_classify_date(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     if (named)
         return named;
     named = decade(in, out, start);
+    if (named)
+        return named;
+    named = year_range(in, out, start);
     return named ? named : contextual_year(in, out, start);
 }
