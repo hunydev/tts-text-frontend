@@ -143,6 +143,12 @@ build/ttf normalize --input-format annotated --output-mode speech 'ABC{@alphabet
 
 `www.`나 `http(s)://`가 없어도 공통 `url_tld` 목록의 소문자 최상위 도메인으로 끝나는 호스트는 주소다 (`naver.com에서` → `네이버 닷 컴에서`). `ASP.NET`, `report.txt`처럼 대문자이거나 목록에 없는 끝부분은 주소로 보지 않는다. IDNA/국제화 이메일은 지원 범위 밖이다.
 
+목록에는 ISO 3166 국가 코드 200개가 들어 있다(2026-09-26 추가). **영어 낱말과 겹치는 코드는
+일부러 뺐다**: `no`, `it`, `in`, `at`, `is`, `us`, `me`, `so`, `to`, `by`, `do`, `am`, `as`, `be`,
+`re`, `st`, `sh`, `pm`, `la`, `tv`, `id`, `go` 등이다. 이 코드들을 넣으면 문장 끝 마침표 뒤에
+공백이 빠진 `fig.no`가 도메인이 된다. 외부 영어 표본은 전부 넣어도 수치가 그대로였으므로,
+이 위험은 표본이 보여 주지 못한다. 고객이 필요하면 overlay로 되살릴 수 있다.
+
 ## 아이디와 핸들
 
 밑줄이 들어간 식별자(`abc_123`, `user_name`)와 `@`로 시작하는 핸들(`@daily_log`)은 주소와 같은

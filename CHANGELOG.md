@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased — speech final gate
+## Unreleased — speech output, measurement and the final gate
 
 - Read a four-digit number that a bracket holds on its own as a year, which is
   the citation shape: `( 1965 )` → `( nineteen sixty five )`, `(1965)`, and
@@ -32,6 +32,12 @@
   resources. Text output is untouched, a value that is not letters alone keeps
   its own reading (`R&D` → `R and D`), and the speech defaults are the new
   `initialism_policy` keys `inferred_speech` and `pronounceable_speech`.
+- Recognise a country-code domain, which no rule did: `Vecernji.hr` and
+  `Amazon.co.uk` reached the synthesizer with their dots. 200 ISO 3166 codes join
+  `url_tld`. A code that is also an ordinary English word (`no`, `it`, `in`,
+  `at`, `is`, `us`, `me`, …) is deliberately left out, because a missing space
+  after a sentence period would otherwise read `fig.no` as a domain — a failure
+  the external sample cannot show, since adding every code changed nothing there.
 - Add `--unreadable read` (`TTF_UNREADABLE_READ`), a third policy for callers who
   need every segment sayable. The semantic layer still refuses to interpret an
   ambiguous object, so `20F` is not turned into a floor, but the final gate says
