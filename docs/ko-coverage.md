@@ -39,10 +39,12 @@ English context and rendering. English source text in an English sentence is
 preserved.
 
 A counter that no `counter` row declares falls through to the Sino-Korean
-reading, which is why 19 more native counters were declared on 2026-09-26
-(쌍 통 판 척 알 조각 묶음 상자 봉지 갑 채 그루 그릇 접시 군데 가지 줄 칸 끼):
-`2쌍` read `이쌍` before and reads `두 쌍` now. 회, 배, 박, 층, 호 and 인분 take
-Sino-Korean readings and are unchanged. A counter that is also the first syllable
+reading, which is why 44 more native counters were declared on 2026-09-26.
+The first batch was 쌍 통 판 척 알 조각 묶음 상자 봉지 갑 채 그루 그릇 접시 군데
+가지 줄 칸 끼; the second, found in prescriptions and notices, was 정 자 곡 편 컷
+방 캡슐 포 첩 술 모금 발 자리 바퀴 걸음 쪽 캔 팩 세트 다발 근 관 짝 사발 공기.
+`2쌍` read `이쌍` before and reads `두 쌍`; `1정` read `일정` and reads `한 정`.
+회, 배, 박, 층, 호, 인분, 점 and 건 take Sino-Korean readings and are unchanged. A counter that is also the first syllable
 of a longer word is claimed the same way it always was (`2장미` → `두 장미`), so
 declaring more counters widens that known limit; a customer overlay can disable a
 row.
