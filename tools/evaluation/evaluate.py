@@ -34,7 +34,7 @@ def frontend_settings(case: dict) -> dict:
     result = dict(FRONTEND_DEFAULTS)
     for field, choices in (("output_mode", ("text", "speech")),
                            ("input_format", ("plain", "annotated")),
-                           ("unreadable", ("preserve", "drop")),
+                           ("unreadable", ("preserve", "drop", "read")),
                            ("brackets", ("read", "skip", "preserve")),
                            ("decorative", ("follow", "read")),
                            ("initialism", ("spell", "word")),

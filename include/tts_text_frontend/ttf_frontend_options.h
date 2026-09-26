@@ -7,7 +7,13 @@ extern "C" {
 
 typedef enum { TTF_INPUT_PLAIN = 0, TTF_INPUT_ANNOTATED = 1 } ttf_input_format_t;
 typedef enum { TTF_OUTPUT_TEXT = 0, TTF_OUTPUT_SPEECH = 1 } ttf_output_mode_t;
-typedef enum { TTF_UNREADABLE_PRESERVE = 0, TTF_UNREADABLE_DROP = 1 } ttf_unreadable_policy_t;
+/* READ keeps the semantic refusal but lets the final speech gate say the text,
+   character by character, so every segment is sayable. Text mode is unaffected. */
+typedef enum {
+    TTF_UNREADABLE_PRESERVE = 0,
+    TTF_UNREADABLE_DROP = 1,
+    TTF_UNREADABLE_READ = 2
+} ttf_unreadable_policy_t;
 /* Bracketed asides: read them, leave them out of the reading, or keep their
    source text unnormalized. Quotation marks are a separate scope. */
 typedef enum {

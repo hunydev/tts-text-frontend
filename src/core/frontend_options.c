@@ -19,7 +19,8 @@ ttf_status_t ttf_engine_set_frontend_options(ttf_engine_t *engine,
          options->input_format != TTF_INPUT_ANNOTATED) ||
         (options->output_mode != TTF_OUTPUT_TEXT && options->output_mode != TTF_OUTPUT_SPEECH) ||
         (options->unreadable_policy != TTF_UNREADABLE_PRESERVE &&
-         options->unreadable_policy != TTF_UNREADABLE_DROP) ||
+         options->unreadable_policy != TTF_UNREADABLE_DROP &&
+         options->unreadable_policy != TTF_UNREADABLE_READ) ||
         !options->max_control_bytes)
         return TTF_EINVAL;
     if (engine->frozen || engine->validating)

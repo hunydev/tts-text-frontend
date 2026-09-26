@@ -27,7 +27,7 @@ static void usage(FILE *out) {
           "         --first-target N --normal-target N --max-length N\n"
           "Trace: --trace (inspect or stream-json), --trace-max-events N --trace-max-bytes N\n"
           "Frontend: --input-format plain|annotated --output-mode text|speech\n"
-          "          --unreadable preserve|drop --brackets read|skip|preserve\n"
+          "          --unreadable preserve|drop|read --brackets read|skip|preserve\n"
           "          --unknown-foreign guess|spell|preserve --decorative follow|read\n"
           "          --initialism spell|word\n"
           "          --max-control-bytes N\n"
@@ -305,9 +305,11 @@ int main(int argc, char **argv) {
                 frontend.output_mode =
                     !strcmp(argv[i], "speech") ? TTF_OUTPUT_SPEECH : TTF_OUTPUT_TEXT;
             } else if (!strcmp(arg, "--unreadable")) {
-                valid = !strcmp(argv[i], "preserve") || !strcmp(argv[i], "drop");
-                frontend.unreadable_policy =
-                    !strcmp(argv[i], "drop") ? TTF_UNREADABLE_DROP : TTF_UNREADABLE_PRESERVE;
+                valid = !strcmp(argv[i], "preserve") || !strcmp(argv[i], "drop") ||
+                        !strcmp(argv[i], "read");
+                frontend.unreadable_policy = !strcmp(argv[i], "drop")   ? TTF_UNREADABLE_DROP
+                                             : !strcmp(argv[i], "read") ? TTF_UNREADABLE_READ
+                                                                        : TTF_UNREADABLE_PRESERVE;
             } else if (!strcmp(arg, "--initialism")) {
                 valid = !strcmp(argv[i], "spell") || !strcmp(argv[i], "word");
                 initialism = argv[i];

@@ -139,7 +139,7 @@ def validate(request, corpus=False):
         ("render_policy", ("phonetic", "preserve", "semantic")),
         ("input_format", ("plain", "annotated")),
         ("output_mode", ("text", "speech")),
-        ("unreadable", ("preserve", "drop")),
+        ("unreadable", ("preserve", "drop", "read")),
         ("brackets", ("read", "skip", "preserve")),
         ("unknown_foreign", ("guess", "spell", "preserve")),
         ("decorative", ("follow", "read")),

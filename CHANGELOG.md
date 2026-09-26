@@ -32,6 +32,16 @@
   resources. Text output is untouched, a value that is not letters alone keeps
   its own reading (`R&D` → `R and D`), and the speech defaults are the new
   `initialism_policy` keys `inferred_speech` and `pronounceable_speech`.
+- Add `--unreadable read` (`TTF_UNREADABLE_READ`), a third policy for callers who
+  need every segment sayable. The semantic layer still refuses to interpret an
+  ambiguous object, so `20F` is not turned into a floor, but the final gate says
+  the text it kept: `20F` → `이영에프` / `two zero F`, `11st` → `일일에스티`.
+  Digits follow the identifier reading the project already uses (`k007` →
+  `케이영영칠`), English letters stay because English speech reads them, a
+  character with no declared name is removed as under `drop`, and punctuation
+  stays. The default is unchanged and text mode is unaffected.
+- Space spelled characters by the declared `speech_join` alphabet value, which
+  the final gate ignored: English now reads `two zero F` rather than `twozeroF`.
 - Read the unit symbols that reached the synthesizer as written: `20°` →
   `twenty degrees` / `이십 도`, `5m²` and `5㎡` → `five square meters` /
   `오 제곱미터`, `5㎢` → `오 제곱킬로미터`, `5kcal` and `5㎉` → `five kilocalories` /

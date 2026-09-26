@@ -457,8 +457,10 @@ def native_error_checks(args):
         assert setter(None, C.byref(engine.opts)) == 1
         assert setter(engine.handle, None) == 1
         checks += 2
+        # unreadable_policy 2 became the read policy on 2026-09-25, so the
+        # out-of-range value this check needs is now 3.
         for field, value in (("struct_size", 0), ("abi_version", 99), ("input_format", -1),
-                             ("output_mode", 2), ("unreadable_policy", 2), ("max_control_bytes", 0)):
+                             ("output_mode", 2), ("unreadable_policy", 3), ("max_control_bytes", 0)):
             saved = getattr(engine.opts, field)
             setattr(engine.opts, field, value)
             assert setter(engine.handle, C.byref(engine.opts)) == 1, field

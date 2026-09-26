@@ -251,6 +251,13 @@ ttf_status_t ttf_speech_output(const ttf_engine_t *e, const ttf_language_pack_t 
                 ttf_trace_reject_since(e, attempt);
                 goto unknown;
             }
+            /* Spelled characters follow the declared alphabet join, so English
+               reads "two zero f" while Korean keeps 이영에프 in one piece. */
+            {
+                const char *join = ttf_resource_get(e, "speech_join", lang, "alphabet", NULL);
+                if (join && !strcmp(join, "space"))
+                    pending_space = 1;
+            }
         } else if (e->decorative_policy == TTF_DECORATIVE_READ &&
                    (mapped = ttf_resource_get(e, "speech_decorative", lang, key, NULL))) {
             /* A declared decorative name is spoken like any other symbol name. */

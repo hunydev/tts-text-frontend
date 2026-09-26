@@ -23,6 +23,7 @@ Input syntax and output purpose are independent:
 | `output_mode=speech` | Also render electronic addresses and configured characters for speech |
 | `unreadable=preserve` | Keep unsupported characters in speech output |
 | `unreadable=drop` | Remove unsupported characters from speech output |
+| `unreadable=read` | Say every segment: an object the engine refused to interpret (`20F`, `11st`) is spelled by the final gate, a character with no name is removed, punctuation stays |
 | `brackets=read` | Read a bracketed aside (default) |
 | `brackets=skip` | Leave a bracketed aside out of the reading |
 | `brackets=preserve` | Keep a bracketed aside exactly as written |
