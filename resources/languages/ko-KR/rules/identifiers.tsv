@@ -14,5 +14,73 @@ identifier_label	ko-KR	거래번호는	digits
 identifier_label	ko-KR	거래번호	digits
 identifier_label	ko-KR	거래 번호는	digits
 identifier_label	ko-KR	거래 번호	digits
+# Identifier labels beyond the finance set. Without a row the digits are read as
+# a quantity, so 우편번호 06236 became 육천이백삼십육 and lost its leading zero.
+identifier_label	ko-KR	우편번호	digits
+identifier_label	ko-KR	우편번호는	digits
+identifier_label	ko-KR	우편 번호	digits
+identifier_label	ko-KR	우편 번호는	digits
+identifier_label	ko-KR	주문번호	digits
+identifier_label	ko-KR	주문번호는	digits
+identifier_label	ko-KR	주문 번호	digits
+identifier_label	ko-KR	주문 번호는	digits
+identifier_label	ko-KR	송장번호	digits
+identifier_label	ko-KR	송장번호는	digits
+identifier_label	ko-KR	송장 번호	digits
+identifier_label	ko-KR	송장 번호는	digits
+identifier_label	ko-KR	운송장번호	digits
+identifier_label	ko-KR	운송장번호는	digits
+identifier_label	ko-KR	운송장 번호	digits
+identifier_label	ko-KR	운송장 번호는	digits
+identifier_label	ko-KR	회원번호	digits
+identifier_label	ko-KR	회원번호는	digits
+identifier_label	ko-KR	회원 번호	digits
+identifier_label	ko-KR	회원 번호는	digits
+identifier_label	ko-KR	사업자번호	digits
+identifier_label	ko-KR	사업자번호는	digits
+identifier_label	ko-KR	사업자 번호	digits
+identifier_label	ko-KR	사업자 번호는	digits
+identifier_label	ko-KR	사업자등록번호	digits
+identifier_label	ko-KR	사업자등록번호는	digits
+identifier_label	ko-KR	사업자등록 번호	digits
+identifier_label	ko-KR	사업자등록 번호는	digits
+identifier_label	ko-KR	예약번호	digits
+identifier_label	ko-KR	예약번호는	digits
+identifier_label	ko-KR	예약 번호	digits
+identifier_label	ko-KR	예약 번호는	digits
+identifier_label	ko-KR	인증번호	digits
+identifier_label	ko-KR	인증번호는	digits
+identifier_label	ko-KR	인증 번호	digits
+identifier_label	ko-KR	인증 번호는	digits
+identifier_label	ko-KR	승인번호	digits
+identifier_label	ko-KR	승인번호는	digits
+identifier_label	ko-KR	승인 번호	digits
+identifier_label	ko-KR	승인 번호는	digits
+identifier_label	ko-KR	카드번호	digits
+identifier_label	ko-KR	카드번호는	digits
+identifier_label	ko-KR	카드 번호	digits
+identifier_label	ko-KR	카드 번호는	digits
+identifier_label	ko-KR	등록번호	digits
+identifier_label	ko-KR	등록번호는	digits
+identifier_label	ko-KR	등록 번호	digits
+identifier_label	ko-KR	등록 번호는	digits
+identifier_label	ko-KR	문서번호	digits
+identifier_label	ko-KR	문서번호는	digits
+identifier_label	ko-KR	문서 번호	digits
+identifier_label	ko-KR	문서 번호는	digits
+identifier_label	ko-KR	고객번호	digits
+identifier_label	ko-KR	고객번호는	digits
+identifier_label	ko-KR	고객 번호	digits
+identifier_label	ko-KR	고객 번호는	digits
+identifier_label	ko-KR	접수번호	digits
+identifier_label	ko-KR	접수번호는	digits
+identifier_label	ko-KR	접수 번호	digits
+identifier_label	ko-KR	접수 번호는	digits
+identifier_label	ko-KR	학번	digits
+identifier_label	ko-KR	학번은	digits
+identifier_label	ko-KR	사번	digits
+identifier_label	ko-KR	사번은	digits
+identifier_label	ko-KR	군번	digits
+identifier_label	ko-KR	군번은	digits
 identifier_render	ko-KR	zero	공
 identifier_render	ko-KR	separator	 

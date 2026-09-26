@@ -11,7 +11,12 @@ synthesis or listening tests.
 The Korean pack recognizes a digit string immediately after an enabled
 `identifier_label` resource. System labels include `계좌는`, `계좌번호는`,
 `계좌 번호는`, `참조번호는`, `참조 번호는`, `거래번호는` and `거래 번호는`,
-plus forms without `는`. A colon is optional between the label and value.
+plus forms without `는`. On 2026-09-26 the set grew past finance, because an
+identifier with no label is read as a quantity and loses its leading zero
+(`우편번호 06236` was `육천이백삼십육`): 우편, 주문, 송장, 운송장, 회원, 사업자,
+사업자등록, 예약, 인증, 승인, 카드, 등록, 문서, 고객 and 접수 번호, each with its
+spaced and `는` forms, and 학번, 사번 and 군번 with `은`. A customer overlay can
+disable any of them with `disabled`. A colon is optional between the label and value.
 Internal spaces/tabs in a label are normalized to one space for lookup; newlines
 end the scope. Recognition starts at a tokenizer boundary, so `계좌는` does not
 match inside `내계좌는`.

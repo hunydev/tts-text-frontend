@@ -137,6 +137,14 @@
   stay untouched because the same sample reads `st` as both saint and street and
   `dr` as both doctor and drive. The new `abbreviation_bare` resource holds the
   expansions, and `preserve` disables one.
+- Read an identifier after its Korean label digit by digit, which only the
+  finance labels (계좌, 참조, 거래) reached before: `우편번호 06236` was
+  `육천이백삼십육`, losing the leading zero, and is `공육이삼육`; `주문번호
+  20260926-0001` was read as a range and is `이공이육공구이육 공공공일`;
+  `송장번호 123456789012` was a twelve-digit quantity. 66 label rows cover 우편,
+  주문, 송장, 운송장, 회원, 사업자, 사업자등록, 예약, 인증, 승인, 카드, 등록,
+  문서, 고객, 접수 plus 학번, 사번 and 군번. A digit run with no label keeps its
+  quantity reading.
 - Read 19 more Korean counters with native numerals, which the resource table
   did not declare: `2쌍` was `이쌍` and is `두 쌍`, and the same for 통, 판, 척,
   알, 조각, 묶음, 상자, 봉지, 갑, 채, 그루, 그릇, 접시, 군데, 가지, 줄, 칸 and 끼.
