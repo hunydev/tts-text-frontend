@@ -54,10 +54,11 @@
   A candidate with too few digits and no international or parenthesised shape no
   longer claims the number, while `+123 456` and a malformed number with enough
   digits are still preserved.
-- Add a Korean sayability sweep: 1,770 generated inputs whose speech output must
-  hold no Latin letter or digit outside the preserve contracts that
-  docs/speech-resources.md records. It is a property, not an expected reading, so
-  a wrong Korean reading still passes.
+- Add a sayability sweep over 4,392 generated inputs. Under `--unreadable read`
+  nothing is exempt, in both languages, which is what that policy promises; under
+  the default policy the Korean pass allows only the inputs whose preserve
+  contract docs/speech-resources.md records. It is a property, not an expected
+  reading, so a wrong reading still passes.
 - Read a unit abbreviation that stands on its own in Korean text instead of
   guessing a pronunciation for it: `kg 단위` → `킬로그램 단위`, and the same for
   cm, km, mm, mg, ml, kW, Hz, kHz and KB, which used to come out as 크그, 큼 and
