@@ -145,15 +145,19 @@
   주문, 송장, 운송장, 회원, 사업자, 사업자등록, 예약, 인증, 승인, 카드, 등록,
   문서, 고객, 접수 plus 학번, 사번 and 군번. A digit run with no label keeps its
   quantity reading.
-- Read 44 more Korean counters with native numerals, which the resource table
+- Read 59 more Korean counters with native numerals, which the resource table
   did not declare, so the numeral itself was wrong: `2쌍` was `이쌍` and is `두 쌍`,
   `1정` was `일정` and is `한 정`, `8자` was `팔자` and is `여덟 자`. The first
   batch covers 통, 판, 척, 알, 조각, 묶음, 상자, 봉지, 갑, 채, 그루, 그릇, 접시,
   군데, 가지, 줄, 칸, 끼 and 쌍; the second covers 정, 자, 곡, 편, 컷, 방, 캡슐,
   포, 첩, 술, 모금, 발, 자리, 바퀴, 걸음, 쪽, 캔, 팩, 세트, 다발, 근, 관, 짝, 사발
   and 공기. Counters that take Sino-Korean readings (회, 배, 박, 층, 호, 인분, 점,
-  건) are unchanged. Found by reading realistic Korean commerce, prescription and
-  notice phrasings rather than a corpus.
+  건) are unchanged. The third batch (톨, 마디, 뼘, 아름, 줌, 손, 모, 뿌리, 폭,
+  갈래, 종류, 구획, 평, 되, 말) came from sweeping 120 counters at once, and it also
+  drew the boundary: 단계, 부, 매, 동, 차선, 학년, 교시 and 회차 read with
+  Sino-Korean numerals, so 단, 부, 매 and 동 stay undeclared and the corpus locks
+  that. Found by reading realistic Korean commerce, prescription and notice
+  phrasings rather than a corpus.
 - Read the acronyms Korean says as words instead of spelling them: `FIFA` →
   `피파`, `UNESCO` → `유네스코`, `NATO` → `나토`, `OPEC` → `오펙`, `UEFA` →
   `우에파`, `EXCEL` → `엑셀`, `SIM` → `심`. The runtime already lets a lexicon

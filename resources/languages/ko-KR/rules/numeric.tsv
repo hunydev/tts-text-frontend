@@ -231,6 +231,36 @@ counter	ko-KR	사발	native
 numeric_suffix	*	사발	COUNTER:사발
 counter	ko-KR	공기	native
 numeric_suffix	*	공기	COUNTER:공기
+counter	ko-KR	톨	native
+numeric_suffix	*	톨	COUNTER:톨
+counter	ko-KR	마디	native
+numeric_suffix	*	마디	COUNTER:마디
+counter	ko-KR	뼘	native
+numeric_suffix	*	뼘	COUNTER:뼘
+counter	ko-KR	아름	native
+numeric_suffix	*	아름	COUNTER:아름
+counter	ko-KR	줌	native
+numeric_suffix	*	줌	COUNTER:줌
+counter	ko-KR	손	native
+numeric_suffix	*	손	COUNTER:손
+counter	ko-KR	모	native
+numeric_suffix	*	모	COUNTER:모
+counter	ko-KR	뿌리	native
+numeric_suffix	*	뿌리	COUNTER:뿌리
+counter	ko-KR	폭	native
+numeric_suffix	*	폭	COUNTER:폭
+counter	ko-KR	갈래	native
+numeric_suffix	*	갈래	COUNTER:갈래
+counter	ko-KR	종류	native
+numeric_suffix	*	종류	COUNTER:종류
+counter	ko-KR	구획	native
+numeric_suffix	*	구획	COUNTER:구획
+counter	ko-KR	평	native
+numeric_suffix	*	평	COUNTER:평
+counter	ko-KR	되	native
+numeric_suffix	*	되	COUNTER:되
+counter	ko-KR	말	native
+numeric_suffix	*	말	COUNTER:말
 numeric_suffix	*	달	COUNTER:달
 
 # Keep numeric calendar/scale markers pending across phrase boundaries.

@@ -44,7 +44,16 @@ The first batch was 쌍 통 판 척 알 조각 묶음 상자 봉지 갑 채 그�
 가지 줄 칸 끼; the second, found in prescriptions and notices, was 정 자 곡 편 컷
 방 캡슐 포 첩 술 모금 발 자리 바퀴 걸음 쪽 캔 팩 세트 다발 근 관 짝 사발 공기.
 `2쌍` read `이쌍` before and reads `두 쌍`; `1정` read `일정` and reads `한 정`.
-회, 배, 박, 층, 호, 인분, 점 and 건 take Sino-Korean readings and are unchanged. A counter that is also the first syllable
+A third batch on the same day added 톨 마디 뼘 아름 줌 손 모 뿌리 폭 갈래 종류
+구획 평 되 말, found by sweeping 120 counters at once rather than reading sentences
+one at a time, which takes the table to 85 declarations.
+
+회, 배, 박, 층, 호, 인분, 점 and 건 take Sino-Korean readings and are unchanged,
+and so do 단계, 부, 매, 동, 차선, 학년, 교시 and 회차: `2단계` is 이단계, not
+두 단계, so 단, 부, 매 and 동 stay undeclared on purpose and the corpus locks that
+boundary. Archaic counters (쾌, 축, 꿰미, 바리, 짐, 두름, 접, 코, 마당, 섬, 홉) are
+left out too, because every declaration widens the prefix collision a counter
+carries. A counter that is also the first syllable
 of a longer word is claimed the same way it always was (`2장미` → `두 장미`), so
 declaring more counters widens that known limit; a customer overlay can disable a
 row.
