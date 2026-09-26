@@ -38,6 +38,11 @@ ttf_status_t status = ttf_engine_set_frontend_options(engine, &options);
 이름이 없는 문자는 `drop`처럼 제거하고(읽을 수 없으므로), 문장 부호는 `speech_preserve`대로
 남는다. 기본값은 `preserve`이며 text 모드는 영향을 받지 않는다.
 
+`unknown_foreign=preserve`와는 요구가 부딪힌다. 그 옵션은 미등록 외국어 낱말을 원문 그대로
+두라는 뜻이고(이중 언어 음성이 읽을 때 쓰는 설정), 그래서 그 낱말은 `read`에서도 라틴 문자로
+남는다. `read`는 구간의 나머지를 계속 읽는다. 이 조합은 계약으로 고정했고 옵션 행렬 게이트가
+216가지 조합을 모두 돌린다.
+
 ## 일반 패턴과 제어 읽기
 
 다음은 한국어 기본 언어와 `speech` 출력에서의 프로젝트 기본값이다. 단어마다 완성 문자열을 사전에 넣는 대신 lexical 부분·숫자·조사·연산자·단위를 분리해 처리한다.

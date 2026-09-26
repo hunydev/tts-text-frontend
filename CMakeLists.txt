@@ -236,7 +236,7 @@ if(BUILD_TESTING)
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources unit_symbol_v21.jsonl 16)
     add_test(NAME unreadable_read_v21_evaluation COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
-      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources unreadable_read_v21.jsonl 10)
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources unreadable_read_v21.jsonl 13)
     add_test(NAME cctld_v21_evaluation COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources cctld_v21.jsonl 9)
@@ -356,6 +356,10 @@ if(BUILD_TESTING)
     add_test(NAME english_clock_references COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_english_clock_reference.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
+    add_test(NAME option_matrix COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_option_matrix.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
+    set_tests_properties(option_matrix PROPERTIES TIMEOUT 300)
     add_test(NAME speakable_sweep COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_speakable.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)

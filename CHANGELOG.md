@@ -90,6 +90,12 @@
   A candidate with too few digits and no international or parenthesised shape no
   longer claims the number, while `+123 456` and a malformed number with enough
   digits are still preserved.
+- Add an option-matrix gate: all 216 combinations of the six frontend options
+  run, and a byte-by-byte stream produces what one call produces, in both
+  languages. It also pins where `--unreadable read` stops — a property sweep
+  found that `--unknown-foreign preserve` keeps its word as written even there,
+  because that is what the option asks for, and the interaction is now
+  documented and contracted rather than discovered.
 - Add a sayability sweep over 4,392 generated inputs. Under `--unreadable read`
   nothing is exempt, in both languages, which is what that policy promises; under
   the default policy the Korean pass allows only the inputs whose preserve

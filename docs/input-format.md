@@ -24,6 +24,12 @@ Input syntax and output purpose are independent:
 | `unreadable=preserve` | Keep unsupported characters in speech output |
 | `unreadable=drop` | Remove unsupported characters from speech output |
 | `unreadable=read` | Say every segment: an object the engine refused to interpret (`20F`, `11st`) is spelled by the final gate, a character with no name is removed, punctuation stays |
+
+Two options can ask for opposite things. `unknown_foreign=preserve` keeps an
+unregistered foreign word exactly as written, which is what a caller does when a
+bilingual voice will read it, so that word stays Latin even under
+`unreadable=read`; `read` still says everything else in the segment. The pairing
+is pinned by contract and walked by the option-matrix gate.
 | `brackets=read` | Read a bracketed aside (default) |
 | `brackets=skip` | Leave a bracketed aside out of the reading |
 | `brackets=preserve` | Keep a bracketed aside exactly as written |
