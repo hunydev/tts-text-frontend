@@ -66,10 +66,14 @@ date_year_cue	en-US	post	1
 date_year_cue	en-US	pre	1
 date_year_cue	en-US	versus	1
 date_year_cue	en-US	vs	1
-# A bare year in brackets is the citation shape: ( 1965 ). The quantity noun
-# and the year range still decide, so ( 1965 copies ) stays a cardinal.
-date_year_cue	en-US	(	1
-date_year_cue	en-US	[	1
+# A bare year between matching marks is the citation shape: ( 1965 ) and
+# "Press , 1992 .". The value lists the closing marks, and $ allows the end of
+# the text. The quantity noun and the year range still decide, so
+# ( 1965 copies ) and "scores were 1200 , 1400 and 1600 ." stay cardinals.
+date_year_enclosure	en-US	(	)
+date_year_enclosure	en-US	[	]
+date_year_enclosure	en-US	{	}
+date_year_enclosure	en-US	,	.;$
 date_year_cue	en-US	born	1
 # A colon after a four-digit number is the timeline shape: "1830 : The first
 # Constitution". The year range and the quantity noun still decide.

@@ -478,6 +478,18 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "month_alias value must be an integer in 1..12");
     }
+    if (SAME(k, "date_year_enclosure")) {
+        size_t i;
+        *handled = 1;
+        if (!key[0] || key[1] || (unsigned char)key[0] >= 128 || key[0] <= ' ')
+            return ttf_validation_error(d, "date_year_enclosure key is one ASCII mark");
+        if (!v[0] || strlen(v) > 8)
+            return ttf_validation_error(d, "date_year_enclosure value is 1..8 closing marks");
+        for (i = 0; v[i]; ++i)
+            if ((unsigned char)v[i] >= 128 || v[i] <= ' ')
+                return ttf_validation_error(d, "a closing mark is one printable ASCII character");
+        return TTF_OK;
+    }
     if (SAME(k, "date_year_cue_after")) {
         *handled = 1;
         if (!key[0] || key[1] || (unsigned char)key[0] >= 128 || key[0] <= ' ')

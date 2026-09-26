@@ -41,6 +41,13 @@
   `eighteen thirty : …`, through the new `date_year_cue_after` resource. The year
   range and the quantity-noun block still decide, so `2500 : list` and
   `Room 12 : open` keep their cardinals.
+- Read the citation shape as a year: `University of Wales Press , 1992 .` →
+  `… , nineteen ninety two .`. The bracket rule became the `date_year_enclosure`
+  resource, where each opening mark declares the closing marks that complete it
+  and `$` allows the end of the text, so the comma joins `(`, `[` and `{` as
+  data rather than code. Both marks have to match, which keeps a quantity list
+  (`scores were 1200 , 1400 and 1600 .`) in cardinals. The streaming planner
+  reads the same resource, so batch and stream agree.
 - Recognise a country-code domain, which no rule did: `Vecernji.hr` and
   `Amazon.co.uk` reached the synthesizer with their dots. 200 ISO 3166 codes join
   `url_tld`. A code that is also an ordinary English word (`no`, `it`, `in`,
@@ -121,8 +128,8 @@
 - Run the benchmark in speech mode: `evaluate.py --output-mode speech` records
   the options in `provenance.frontend_options` and names its own
   `metric_policy`, so a speech report is never compared with the text baseline.
-- External English sample, text mode: DATE 394 → 538 exact, PLAIN 33,860 →
-  33,881, MEASURE 76 → 83, LETTERS 174 → 242 and 35,053 → 35,293 exact spans,
+- External English sample, text mode: DATE 394 → 558 exact, PLAIN 33,860 →
+  33,881, MEASURE 76 → 83, LETTERS 174 → 242 and 35,053 → 35,313 exact spans,
   every other class unchanged. Speech mode, against its own baseline: 35,236 →
   35,597 exact spans with LETTERS 174 → 539. Speech mode, against its own new
   baseline: 35,236 → 35,501 exact spans, LETTERS 174 → 471, PLAIN 33,860 →

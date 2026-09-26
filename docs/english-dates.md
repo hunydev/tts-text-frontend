@@ -89,7 +89,8 @@ has four tab-separated columns: `kind`, `language`, `key`, `value`.
 | `date_policy` / `year_style` | `calendar` by default; `cardinal` also accepted |
 | `date_policy` / `min_year`, `max_year` | Default contextual-year recognition window `1000`–`2099` |
 | `date_word` | DMY connective labels `the` and `of` |
-| `date_year_cue` | Lowercase preceding contextual cue, enabled with `1`. An opening bracket (`(`, `[`, `{`) is also a valid key; the pack reads it as a cue only when the bracket holds the number and nothing else, so `( 1965 )` is a year while `( 2003 and 2005 )` keeps its cardinals |
+| `date_year_cue` | Lowercase preceding contextual cue, enabled with `1` |
+| `date_year_enclosure` | Opening mark that introduces a year when the matching closing mark follows the number; the value lists those closing marks and `$` allows the end of the text. `(`→`)`, `[`→`]`, `{`→`}` and `,`→`.;$` are declared, so `( 1965 )` and `Press , 1992 .` are years while `( 2003 and 2005 )` and `1200 , 1400 and 1600` keep their cardinals |
 | `date_year_cue_after` | One ASCII mark that follows a four-digit number and introduces a year, enabled with `1`. `:` is declared, for the timeline shape `1830 : The first Constitution` |
 | `decade_plural` | Plural decade word for a tens value `10`–`90`, or `100` and `1000` for a round decade (`nineteen hundreds`, `two thousands`) |
 | `date_year_quantity` | Lowercase following quantity noun that prevents a bare-year match, enabled with `1` |

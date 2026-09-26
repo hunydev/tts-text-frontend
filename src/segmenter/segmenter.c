@@ -52,6 +52,10 @@ static int pending_word(const ttf_engine_t *e, const char *s, const ttf_token_t 
         const char *value = ttf_resource_get(e, "date_year_cue", language, key, NULL);
         if (value && !strcmp(value, "1"))
             return 1;
+        /* An enclosure mark introduces a year the same way, so the planner must
+           keep the number with it or batch and stream would disagree. */
+        if (ttf_resource_get(e, "date_year_enclosure", language, key, NULL))
+            return 1;
         value = ttf_resource_get(e, "floor_cue_before", language, key, NULL);
         if (value) {
             if (!strcmp(value, "1"))

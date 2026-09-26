@@ -302,27 +302,46 @@ static unsigned policy_year(const ttf_pack_input_t *in, const char *key, unsigne
     return (unsigned)value;
 }
 
-/* "( 1965 )" is the citation shape: a bracket holding the number and nothing
-   else introduces a year. "( 2003 and 2005 )" is an ordinary parenthesis and
-   keeps its cardinals, so the closing bracket has to follow the number. */
-static int bracket_cue(const ttf_pack_input_t *in, size_t start, size_t stop,
-                       ttf_resource_layer_t *layer) {
-    static const char *const pairs[] = {"()", "[]", "{}"};
+/* "( 1965 )" and "Press , 1992 ." are the citation shapes: the marks on both
+   sides of the number introduce a year together. "( 2003 and 2005 )" and a
+   quantity list keep their cardinals, because the closing mark has to match.
+   Each opening mark declares its closing set, and "$" in that set means the
+   number may end the text instead. */
+static int enclosure_cue(const ttf_pack_input_t *in, size_t start, size_t stop,
+                         ttf_resource_layer_t *layer) {
     char key[2];
-    size_t p = start, q = skip_horizontal(in->text, in->length, stop), i;
+    size_t p = start, q = skip_horizontal(in->text, in->length, stop);
     ttf_resource_layer_t found_layer;
     const char *value;
     while (p && horizontal(in->text[p - 1]))
         --p;
-    if (!p || q >= in->length)
+    if (!p)
         return 0;
     key[0] = in->text[p - 1];
     key[1] = '\0';
-    for (i = 0; i < sizeof(pairs) / sizeof(pairs[0]); ++i)
-        if (key[0] == pairs[i][0] && in->text[q] == pairs[i][1])
-            break;
-    if (i == sizeof(pairs) / sizeof(pairs[0]))
+    value = ttf_resource_get(in->engine, "date_year_enclosure", EN, key, &found_layer);
+    if (!value || !*value)
         return 0;
+    if (q >= in->length ? !strchr(value, '$') : !strchr(value, in->text[q]))
+        return 0;
+    merge_layer(layer, found_layer);
+    return 1;
+}
+
+static int bracket_cue(const ttf_pack_input_t *in, size_t start, size_t stop,
+                       ttf_resource_layer_t *layer) {
+    char key[2];
+    size_t p = start;
+    ttf_resource_layer_t found_layer;
+    const char *value;
+    if (enclosure_cue(in, start, stop, layer))
+        return 1;
+    while (p && horizontal(in->text[p - 1]))
+        --p;
+    if (!p)
+        return 0;
+    key[0] = in->text[p - 1];
+    key[1] = '\0';
     value = ttf_resource_get(in->engine, "date_year_cue", EN, key, &found_layer);
     if (!value || !strcmp(value, "0"))
         return 0;
