@@ -137,6 +137,11 @@
   stay untouched because the same sample reads `st` as both saint and street and
   `dr` as both doctor and drive. The new `abbreviation_bare` resource holds the
   expansions, and `preserve` disables one.
+- Read 19 more Korean counters with native numerals, which the resource table
+  did not declare: `2쌍` was `이쌍` and is `두 쌍`, and the same for 통, 판, 척,
+  알, 조각, 묶음, 상자, 봉지, 갑, 채, 그루, 그릇, 접시, 군데, 가지, 줄, 칸 and 끼.
+  Counters that take Sino-Korean readings (회, 배, 박, 층, 호, 인분) are unchanged.
+  Found by reading realistic Korean commerce phrasings rather than a corpus.
 - Read the acronyms Korean says as words instead of spelling them: `FIFA` →
   `피파`, `UNESCO` → `유네스코`, `NATO` → `나토`, `OPEC` → `오펙`, `UEFA` →
   `우에파`, `EXCEL` → `엑셀`, `SIM` → `심`. The runtime already lets a lexicon

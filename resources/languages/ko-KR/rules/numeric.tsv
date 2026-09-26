@@ -141,6 +141,46 @@ unit	ko-KR	W	와트
 unit	ko-KR	kW	킬로와트
 unit	ko-KR	mg	밀리그램
 counter	ko-KR	달	native
+# Counters that take native numerals in standard Korean. Without a row the
+# number falls through to the sino numeral, so 2쌍 read 이쌍 instead of 두 쌍.
+counter	ko-KR	쌍	native
+numeric_suffix	*	쌍	COUNTER:쌍
+counter	ko-KR	통	native
+numeric_suffix	*	통	COUNTER:통
+counter	ko-KR	판	native
+numeric_suffix	*	판	COUNTER:판
+counter	ko-KR	척	native
+numeric_suffix	*	척	COUNTER:척
+counter	ko-KR	알	native
+numeric_suffix	*	알	COUNTER:알
+counter	ko-KR	조각	native
+numeric_suffix	*	조각	COUNTER:조각
+counter	ko-KR	묶음	native
+numeric_suffix	*	묶음	COUNTER:묶음
+counter	ko-KR	상자	native
+numeric_suffix	*	상자	COUNTER:상자
+counter	ko-KR	봉지	native
+numeric_suffix	*	봉지	COUNTER:봉지
+counter	ko-KR	갑	native
+numeric_suffix	*	갑	COUNTER:갑
+counter	ko-KR	채	native
+numeric_suffix	*	채	COUNTER:채
+counter	ko-KR	그루	native
+numeric_suffix	*	그루	COUNTER:그루
+counter	ko-KR	그릇	native
+numeric_suffix	*	그릇	COUNTER:그릇
+counter	ko-KR	접시	native
+numeric_suffix	*	접시	COUNTER:접시
+counter	ko-KR	군데	native
+numeric_suffix	*	군데	COUNTER:군데
+counter	ko-KR	가지	native
+numeric_suffix	*	가지	COUNTER:가지
+counter	ko-KR	줄	native
+numeric_suffix	*	줄	COUNTER:줄
+counter	ko-KR	칸	native
+numeric_suffix	*	칸	COUNTER:칸
+counter	ko-KR	끼	native
+numeric_suffix	*	끼	COUNTER:끼
 numeric_suffix	*	달	COUNTER:달
 
 # Keep numeric calendar/scale markers pending across phrase boundaries.
