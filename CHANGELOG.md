@@ -78,6 +78,14 @@
   stays. The default is unchanged and text mode is unaffected.
 - Space spelled characters by the declared `speech_join` alphabet value, which
   the final gate ignored: English now reads `two zero F` rather than `twozeroF`.
+- Declare 33 unit abbreviations that reached the synthesizer as written, found
+  by sweeping 77 of them at once: 54 were unnormalized. `5ms`, `5hr`, `5px`,
+  `5pt`, `5dB`, `5rpm`, `5Pa`, `5kV`, `5mAh`, `5lb`, `5oz`, `5inch`, `5mile`,
+  `5ha`, `5Ω` and the rest now read in both languages. A single-letter
+  abbreviation (`A`, `V`, `B`, `t`, `s`, `l`) stays undeclared on purpose,
+  because `5A` is the ambiguous identifier shape the project keeps alongside
+  `20F` and `4K`, and the bps family is left out because its Korean reading is
+  not settled. The negatives pin both decisions.
 - Read the unit symbols that reached the synthesizer as written: `20°` →
   `twenty degrees` / `이십 도`, `5m²` and `5㎡` → `five square meters` /
   `오 제곱미터`, `5㎢` → `오 제곱킬로미터`, `5kcal` and `5㎉` → `five kilocalories` /

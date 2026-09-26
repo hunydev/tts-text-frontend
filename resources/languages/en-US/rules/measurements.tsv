@@ -69,3 +69,104 @@ unit	en-US	kcal.many	kilocalories
 numeric_suffix	*	‰	MEASURE:per_mille
 unit	en-US	per_mille.one	per mille
 unit	en-US	per_mille.many	per mille
+# Unit abbreviations the sweep found unnormalized. A single letter (A, V, B,
+# t, s, l) stays undeclared: that is the ambiguous identifier shape.
+numeric_suffix	*	inch	MEASURE:inch
+unit	en-US	inch.one	inch
+unit	en-US	inch.many	inches
+numeric_suffix	*	yd	MEASURE:yd
+unit	en-US	yd.one	yard
+unit	en-US	yd.many	yards
+numeric_suffix	*	mile	MEASURE:mile
+unit	en-US	mile.one	mile
+unit	en-US	mile.many	miles
+numeric_suffix	*	lb	MEASURE:lb
+unit	en-US	lb.one	pound
+unit	en-US	lb.many	pounds
+numeric_suffix	*	oz	MEASURE:oz
+unit	en-US	oz.one	ounce
+unit	en-US	oz.many	ounces
+numeric_suffix	*	gal	MEASURE:gal
+unit	en-US	gal.one	gallon
+unit	en-US	gal.many	gallons
+numeric_suffix	*	ha	MEASURE:ha
+unit	en-US	ha.one	hectare
+unit	en-US	ha.many	hectares
+numeric_suffix	*	ms	MEASURE:ms
+unit	en-US	ms.one	millisecond
+unit	en-US	ms.many	milliseconds
+numeric_suffix	*	sec	MEASURE:sec
+unit	en-US	sec.one	second
+unit	en-US	sec.many	seconds
+numeric_suffix	*	min	MEASURE:min
+unit	en-US	min.one	minute
+unit	en-US	min.many	minutes
+numeric_suffix	*	hr	MEASURE:hr
+unit	en-US	hr.one	hour
+unit	en-US	hr.many	hours
+numeric_suffix	*	kHz	MEASURE:kHz
+unit	en-US	kHz.one	kilohertz
+unit	en-US	kHz.many	kilohertz
+numeric_suffix	*	GW	MEASURE:GW
+unit	en-US	GW.one	gigawatt
+unit	en-US	GW.many	gigawatts
+numeric_suffix	*	Wh	MEASURE:Wh
+unit	en-US	Wh.one	watt hour
+unit	en-US	Wh.many	watt hours
+numeric_suffix	*	mAh	MEASURE:mAh
+unit	en-US	mAh.one	milliampere hour
+unit	en-US	mAh.many	milliampere hours
+numeric_suffix	*	kV	MEASURE:kV
+unit	en-US	kV.one	kilovolt
+unit	en-US	kV.many	kilovolts
+numeric_suffix	*	mA	MEASURE:mA
+unit	en-US	mA.one	milliampere
+unit	en-US	mA.many	milliamperes
+numeric_suffix	*	PB	MEASURE:PB
+unit	en-US	PB.one	petabyte
+unit	en-US	PB.many	petabytes
+numeric_suffix	*	dpi	MEASURE:dpi
+unit	en-US	dpi.one	dot per inch
+unit	en-US	dpi.many	dots per inch
+numeric_suffix	*	px	MEASURE:px
+unit	en-US	px.one	pixel
+unit	en-US	px.many	pixels
+numeric_suffix	*	pt	MEASURE:pt
+unit	en-US	pt.one	point
+unit	en-US	pt.many	points
+numeric_suffix	*	cal	MEASURE:cal
+unit	en-US	cal.one	calorie
+unit	en-US	cal.many	calories
+numeric_suffix	*	kJ	MEASURE:kJ
+unit	en-US	kJ.one	kilojoule
+unit	en-US	kJ.many	kilojoules
+numeric_suffix	*	Pa	MEASURE:Pa
+unit	en-US	Pa.one	pascal
+unit	en-US	Pa.many	pascals
+numeric_suffix	*	hPa	MEASURE:hPa
+unit	en-US	hPa.one	hectopascal
+unit	en-US	hPa.many	hectopascals
+numeric_suffix	*	kPa	MEASURE:kPa
+unit	en-US	kPa.one	kilopascal
+unit	en-US	kPa.many	kilopascals
+numeric_suffix	*	atm	MEASURE:atm
+unit	en-US	atm.one	atmosphere
+unit	en-US	atm.many	atmospheres
+numeric_suffix	*	psi	MEASURE:psi
+unit	en-US	psi.one	psi
+unit	en-US	psi.many	psi
+numeric_suffix	*	mol	MEASURE:mol
+unit	en-US	mol.one	mole
+unit	en-US	mol.many	moles
+numeric_suffix	*	lux	MEASURE:lux
+unit	en-US	lux.one	lux
+unit	en-US	lux.many	lux
+numeric_suffix	*	dB	MEASURE:dB
+unit	en-US	dB.one	decibel
+unit	en-US	dB.many	decibels
+numeric_suffix	*	rpm	MEASURE:rpm
+unit	en-US	rpm.one	rpm
+unit	en-US	rpm.many	rpm
+numeric_suffix	*	Ω	MEASURE:Ω
+unit	en-US	Ω.one	ohm
+unit	en-US	Ω.many	ohms
