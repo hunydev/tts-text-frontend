@@ -78,6 +78,12 @@
   stays. The default is unchanged and text mode is unaffected.
 - Space spelled characters by the declared `speech_join` alphabet value, which
   the final gate ignored: English now reads `two zero F` rather than `twozeroF`.
+- Read the remaining vulgar fractions and the parenthesised numbers, which a
+  numeral-character sweep found unread while `½`, `⅓`, `¼`, `①`..`⑳` and `Ⅰ`..`Ⅹ`
+  already worked: `⅕` → `오분의 일` / `one fifth`, `⑴` → `일` / `one`, and the rest
+  of ⅖⅗⅘⅙⅚⅐⅛⅜⅝⅞⅑⅒ and ⑴..⑽. CJK numerals stay unread under the documented hanja
+  policy, and fullwidth digits are recorded as an open limitation (NUM-WIDTH)
+  because folding them reaches every numeric scanner rather than one table.
 - Read Greek letters and four technical symbols, found by sweeping 96 symbols at
   once: `π` → `파이` / `pi`, and the same for α β γ δ ε θ λ μ ρ σ τ φ ω and the
   uppercase Δ Σ Π Ω Θ Λ Φ Ψ Γ Ξ, plus `∞` `√` `§` `№`. Punctuation is still kept

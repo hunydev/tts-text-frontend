@@ -199,3 +199,27 @@ speech_symbol	ko-KR	№	번호
 math_relation	ko-KR	≠	{L}{은/는} {R}와 같지 않다
 math_relation	ko-KR	≈	{L}{은/는} {R}와 거의 같다
 math_relation	ko-KR	≡	{L}{은/는} {R}와 항등이다
+# The remaining vulgar fractions and the parenthesised numbers, to match ½ and ①.
+speech_symbol	ko-KR	⅕	오분의 일
+speech_symbol	ko-KR	⅖	오분의 이
+speech_symbol	ko-KR	⅗	오분의 삼
+speech_symbol	ko-KR	⅘	오분의 사
+speech_symbol	ko-KR	⅙	육분의 일
+speech_symbol	ko-KR	⅚	육분의 오
+speech_symbol	ko-KR	⅐	칠분의 일
+speech_symbol	ko-KR	⅛	팔분의 일
+speech_symbol	ko-KR	⅜	팔분의 삼
+speech_symbol	ko-KR	⅝	팔분의 오
+speech_symbol	ko-KR	⅞	팔분의 칠
+speech_symbol	ko-KR	⅑	구분의 일
+speech_symbol	ko-KR	⅒	십분의 일
+speech_symbol	ko-KR	⑴	일
+speech_symbol	ko-KR	⑵	이
+speech_symbol	ko-KR	⑶	삼
+speech_symbol	ko-KR	⑷	사
+speech_symbol	ko-KR	⑸	오
+speech_symbol	ko-KR	⑹	육
+speech_symbol	ko-KR	⑺	칠
+speech_symbol	ko-KR	⑻	팔
+speech_symbol	ko-KR	⑼	구
+speech_symbol	ko-KR	⑽	십

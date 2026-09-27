@@ -189,3 +189,27 @@ speech_symbol	en-US	№	number
 math_relation	en-US	≠	{L} is not equal to {R}
 math_relation	en-US	≈	{L} is approximately {R}
 math_relation	en-US	≡	{L} is identical to {R}
+# The remaining vulgar fractions and the parenthesised numbers, to match ½ and ①.
+speech_symbol	en-US	⅕	one fifth
+speech_symbol	en-US	⅖	two fifths
+speech_symbol	en-US	⅗	three fifths
+speech_symbol	en-US	⅘	four fifths
+speech_symbol	en-US	⅙	one sixth
+speech_symbol	en-US	⅚	five sixths
+speech_symbol	en-US	⅐	one seventh
+speech_symbol	en-US	⅛	one eighth
+speech_symbol	en-US	⅜	three eighths
+speech_symbol	en-US	⅝	five eighths
+speech_symbol	en-US	⅞	seven eighths
+speech_symbol	en-US	⅑	one ninth
+speech_symbol	en-US	⅒	one tenth
+speech_symbol	en-US	⑴	one
+speech_symbol	en-US	⑵	two
+speech_symbol	en-US	⑶	three
+speech_symbol	en-US	⑷	four
+speech_symbol	en-US	⑸	five
+speech_symbol	en-US	⑹	six
+speech_symbol	en-US	⑺	seven
+speech_symbol	en-US	⑻	eight
+speech_symbol	en-US	⑼	nine
+speech_symbol	en-US	⑽	ten

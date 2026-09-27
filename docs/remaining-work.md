@@ -184,6 +184,15 @@ compiled resource의 **8개 CTest를 다시 실행해 모두 통과**했다. 이
   아니라 사전 대상이다. 7건을 `lexicons/ko-KR/acronym-additions.jsonl`에 넣었고, 이 추가를
   추측 발음 개선으로 세지 않는다(`docs/research/ko-acronym-v21-results.md`).
 
+- [ ] **NUM-WIDTH: 전각 숫자와 아래·위 첨자 숫자.** `１２３원`, `¹²³`, `₁₂₃`은 현재 읽지
+  않는다(2026-09-27 훑기에서 확인). 원문자 `①`과 로마 숫자 문자 `Ⅰ`은 `speech_symbol`로 읽고,
+  전각 숫자도 같은 방식으로 자리마다 읽게 할 수는 있으나 금액에서는 틀린다(`１２３원`은
+  일 이 삼 원이 아니라 백이십삼 원이다). 제대로 하려면 `ttf_numeric_value`뿐 아니라
+  `phone.c`·`date.c`·`counters.c`의 자체 스캐너까지 자리 폴딩을 넣어야 하고, span offset이
+  문자 폭과 달라지는 점도 함께 검증해야 한다. **닫는 증거:** 세 스캐너의 폴딩, 금액·날짜·전화의
+  전각 입력 계약, 위/아래 첨자는 각주 표시와의 모호성 판단. 첨자는 `²`가 각주일 수 있어 별도
+  결정이 필요하다.
+
 - [ ] **PRON-02: 확장 가능한 pronunciation IR 검증.** 현재 public phone buffer는
   1024 bytes, alphabet 24, provenance 64의 고정 구조이며 초기 ARPABET subset이다.
   **닫는 증거:** capacity 초과·unknown alphabet·invalid phone·실패 fallback의 명시적
