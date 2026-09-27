@@ -42,6 +42,14 @@ TN span이나 영어 보존 span에 발음 경로를 만들어 표시하지 않�
 | `part_begin`, `part_end` | 선택한 발음 입력의 부분 범위. 원문 surface, canonical form, verbalizer 결과 중 실제 사용한 문자열 기준 |
 | `phone_index` | Pronunciation IR 안의 0부터 시작하는 phone 번호. G2P 행에서는 그 행이 만든 첫 phone |
 
+서로 다른 리소스 버전의 `declaration_order` 절대값은 고정 참조로 비교하지 않는다.
+리소스 추가로 선언 번호가 밀릴 수 있다. CJK 기본값 회귀 검사는 출력 텍스트와
+번호를 제외한 **모든** trace 필드가 같고, 같은 엔진 설정·layer 내 상대 순서와
+동률이 유지되며, 그 layer의 변화가 균일한 상수 오프셋일 때만 허용한다.
+`tools/evaluation/trace_order.py`가 이 비교를 담당하고 실제 before/after 번호는
+보고서에 남긴다. 정규화 기대값이나 원본 캡처를 고쳐 맞추지 않는다.
+검사 자체의 부정 사례: `python3 tests/evaluation/test_trace_order.py`.
+
 Batch의 output 범위는 전체 결과 기준이고 streaming에서는 해당 callback
 segment 기준이다. `part_*`는 원본 입력 byte offset과 서로 더할 수 있는 값이
 아니다. 예를 들어 서수 verbalizer가 여러 단어를 만들면 원래 하나의 span에
