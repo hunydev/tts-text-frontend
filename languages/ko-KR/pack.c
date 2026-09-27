@@ -367,7 +367,7 @@ static ttf_status_t expression(const ttf_engine_t *e, const char *value, ttf_buf
     const char *relation = NULL, *template, *p;
     size_t length = strlen(value), left = length, right = length;
     ttf_status_t st;
-    static const char *const relations[] = {" = ", " < ", " > ", " ≤ ", " ≥ "};
+    static const char *const relations[] = {" = ", " < ", " > ", " ≤ ", " ≥ ", " ≠ ", " ≈ ", " ≡ "};
     for (size_t i = 0; i < sizeof(relations) / sizeof(relations[0]); ++i) {
         const char *hit = strstr(value, relations[i]);
         if (hit) {

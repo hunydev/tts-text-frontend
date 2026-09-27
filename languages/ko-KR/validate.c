@@ -127,11 +127,11 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     if (SAME(k, "math_relation")) {
         *handled = 1;
         return (SAME(key, "=") || SAME(key, "<") || SAME(key, ">") || SAME(key, "≤") ||
-                SAME(key, "≥")) &&
+                SAME(key, "≥") || SAME(key, "≠") || SAME(key, "≈") || SAME(key, "≡")) &&
                        label(v) && strstr(v, "{L}") && strstr(v, "{R}") && strlen(v) < 256
                    ? TTF_OK
                    : ttf_validation_error(
-                         d, "math_relation supports = < > ≤ ≥ with a {L}...{R} template");
+                         d, "math_relation supports = < > ≤ ≥ ≠ ≈ ≡ with a {L}...{R} template");
     }
     if (SAME(k, "speech_symbol_prefix")) {
         *handled = 1;

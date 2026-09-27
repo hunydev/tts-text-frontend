@@ -78,6 +78,15 @@
   stays. The default is unchanged and text mode is unaffected.
 - Space spelled characters by the declared `speech_join` alphabet value, which
   the final gate ignored: English now reads `two zero F` rather than `twozeroF`.
+- Read Greek letters and four technical symbols, found by sweeping 96 symbols at
+  once: `π` → `파이` / `pi`, and the same for α β γ δ ε θ λ μ ρ σ τ φ ω and the
+  uppercase Δ Σ Π Ω Θ Λ Φ Ψ Γ Ξ, plus `∞` `√` `§` `№`. Punctuation is still kept
+  for prosody and a decorative mark still follows the decorative policy, which is
+  what most of the 76 raw symbols were.
+- Complete the math relation set with `≠`, `≈` and `≡`, where `≤` and `≥` already
+  worked: `3≠5` → `삼은 오와 같지 않다` / `three is not equal to five`. The
+  classifier's operator table, both packs' relation lists and both validators
+  needed the same three characters.
 - Declare 24 currencies that reached the synthesizer as written, found by
   sweeping 23 symbols and 30 ISO codes at once: 17 symbols and 21 codes were
   unnormalized, and in a Korean sentence an undeclared code pulled the amount

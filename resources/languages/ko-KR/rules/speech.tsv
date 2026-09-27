@@ -166,3 +166,36 @@ speech_decorative	ko-KR	✔	체크
 speech_decorative	ko-KR	™	상표
 speech_decorative	ko-KR	©	저작권
 speech_decorative	ko-KR	®	등록상표
+# Greek letters and ∞ √ § № have settled names, so speech mode reads them; a
+# decorative mark still follows the decorative policy and punctuation is kept.
+speech_symbol	ko-KR	α	알파
+speech_symbol	ko-KR	β	베타
+speech_symbol	ko-KR	γ	감마
+speech_symbol	ko-KR	δ	델타
+speech_symbol	ko-KR	ε	엡실론
+speech_symbol	ko-KR	θ	세타
+speech_symbol	ko-KR	λ	람다
+speech_symbol	ko-KR	μ	뮤
+speech_symbol	ko-KR	π	파이
+speech_symbol	ko-KR	ρ	로
+speech_symbol	ko-KR	σ	시그마
+speech_symbol	ko-KR	τ	타우
+speech_symbol	ko-KR	φ	피
+speech_symbol	ko-KR	ω	오메가
+speech_symbol	ko-KR	Δ	델타
+speech_symbol	ko-KR	Σ	시그마
+speech_symbol	ko-KR	Π	파이
+speech_symbol	ko-KR	Ω	오메가
+speech_symbol	ko-KR	Θ	세타
+speech_symbol	ko-KR	Λ	람다
+speech_symbol	ko-KR	Φ	피
+speech_symbol	ko-KR	Ψ	프사이
+speech_symbol	ko-KR	Γ	감마
+speech_symbol	ko-KR	Ξ	크시
+speech_symbol	ko-KR	∞	무한
+speech_symbol	ko-KR	√	루트
+speech_symbol	ko-KR	§	절
+speech_symbol	ko-KR	№	번호
+math_relation	ko-KR	≠	{L}{은/는} {R}와 같지 않다
+math_relation	ko-KR	≈	{L}{은/는} {R}와 거의 같다
+math_relation	ko-KR	≡	{L}{은/는} {R}와 항등이다

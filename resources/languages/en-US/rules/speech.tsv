@@ -157,3 +157,35 @@ speech_decorative	en-US	✔	check
 speech_decorative	en-US	™	trademark
 speech_decorative	en-US	©	copyright
 speech_decorative	en-US	®	registered
+# Greek letters and ∞ √ § № have settled names, so speech mode reads them.
+speech_symbol	en-US	α	alpha
+speech_symbol	en-US	β	beta
+speech_symbol	en-US	γ	gamma
+speech_symbol	en-US	δ	delta
+speech_symbol	en-US	ε	epsilon
+speech_symbol	en-US	θ	theta
+speech_symbol	en-US	λ	lambda
+speech_symbol	en-US	μ	mu
+speech_symbol	en-US	π	pi
+speech_symbol	en-US	ρ	rho
+speech_symbol	en-US	σ	sigma
+speech_symbol	en-US	τ	tau
+speech_symbol	en-US	φ	phi
+speech_symbol	en-US	ω	omega
+speech_symbol	en-US	Δ	delta
+speech_symbol	en-US	Σ	sigma
+speech_symbol	en-US	Π	pi
+speech_symbol	en-US	Ω	omega
+speech_symbol	en-US	Θ	theta
+speech_symbol	en-US	Λ	lambda
+speech_symbol	en-US	Φ	phi
+speech_symbol	en-US	Ψ	psi
+speech_symbol	en-US	Γ	gamma
+speech_symbol	en-US	Ξ	xi
+speech_symbol	en-US	∞	infinity
+speech_symbol	en-US	√	square root
+speech_symbol	en-US	§	section
+speech_symbol	en-US	№	number
+math_relation	en-US	≠	{L} is not equal to {R}
+math_relation	en-US	≈	{L} is approximately {R}
+math_relation	en-US	≡	{L} is identical to {R}

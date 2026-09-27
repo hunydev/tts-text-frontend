@@ -314,8 +314,8 @@ static int ascii_web(char c) {
     unsigned char u = (unsigned char)c;
     return u > 32 && u < 127 && c != '<' && c != '>' && c != '"';
 }
-/* Math operators and relations: ASCII or the UTF-8 signs × ÷ − ≤ ≥. Returns
-   the byte width and writes the canonical operator, or 0 when absent. */
+/* Math operators and relations: ASCII or the UTF-8 signs × ÷ − ≤ ≥ ≠ ≈ ≡.
+   Returns the byte width and writes the canonical operator, or 0 when absent. */
 static size_t math_operator_at(const char *s, size_t n, size_t p, const char **op) {
     static const struct {
         const char *text, *canonical;
@@ -324,6 +324,9 @@ static size_t math_operator_at(const char *s, size_t n, size_t p, const char **o
                  {"\xe2\x88\x92", "-"},
                  {"\xe2\x89\xa4", "≤"},
                  {"\xe2\x89\xa5", "≥"},
+                 {"\xe2\x89\xa0", "≠"},
+                 {"\xe2\x89\x88", "≈"},
+                 {"\xe2\x89\xa1", "≡"},
                  {"+", "+"},
                  {"-", "-"},
                  {"*", "*"},
@@ -342,7 +345,7 @@ static size_t math_operator_at(const char *s, size_t n, size_t p, const char **o
 }
 static int math_relation(const char *op) {
     return !strcmp(op, "=") || !strcmp(op, "<") || !strcmp(op, ">") || !strcmp(op, "≤") ||
-           !strcmp(op, "≥");
+           !strcmp(op, "≥") || !strcmp(op, "≠") || !strcmp(op, "≈") || !strcmp(op, "≡");
 }
 /* 3-1=2, 2×3, a+b=c: operands are numbers or single ASCII letters. A plain
    hyphen or slash is also a range, date or fraction, so without a relation only
