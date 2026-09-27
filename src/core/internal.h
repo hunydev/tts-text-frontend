@@ -10,6 +10,11 @@
 #include <limits.h>
 #define TTF_MAX_PACKS 32
 #define TTF_MAX_RESOURCE_VALIDATORS 64
+/* Preserve pre-CJK lexical/boundary behavior while exposing richer metadata. */
+static inline ttf_script_t ttf_script_legacy(ttf_script_t script) {
+    return script == TTF_SCRIPT_HAN || script == TTF_SCRIPT_KANA ? TTF_SCRIPT_OTHER : script;
+}
+
 #define TTF_HASH_BUCKETS 1021
 #define TTF_PHRASE_WORDS 8
 #define TTF_PHRASE_INPUT 255
@@ -22,7 +27,17 @@ typedef struct ttf_entry {
     struct ttf_entry *boundary_next;
     struct ttf_entry *phrase_next;
     struct ttf_entry *rule_next;
+    struct ttf_entry *cjk_next;
+    size_t cjk_length;
+    uint32_t cjk_first;
 } ttf_entry_t;
+/* Owner of the detached CJK rows; word buckets only borrow entry pointers.
+   Request-local engine views copy this pointer, never the bucket arrays. */
+typedef struct {
+    ttf_entry_t *resources[TTF_HASH_BUCKETS];
+    ttf_entry_t *words[TTF_HASH_BUCKETS];
+    size_t max_length;
+} ttf_cjk_index_t;
 struct ttf_engine {
     ttf_config_t config;
     ttf_frontend_options_t frontend_options;
@@ -42,6 +57,7 @@ struct ttf_engine {
     ttf_entry_t *boundary_cues;
     ttf_entry_t *rules;
     ttf_entry_t *phrases[TTF_HASH_BUCKETS];
+    ttf_cjk_index_t *cjk;
 };
 char *ttf_strdup(const char *s);
 char *ttf_strndup(const char *s, size_t n);
@@ -53,6 +69,8 @@ uint32_t ttf_quote_closer(uint32_t cp);
 ttf_status_t ttf_resource_set(ttf_engine_t *e, const char *kind, const char *lang, const char *key,
                               const char *value, ttf_resource_layer_t layer);
 void ttf_resource_destroy(ttf_engine_t *e);
+/* Setup transaction only: discard rows appended since checkpoint, before indexing. */
+void ttf_resource_rollback(ttf_engine_t *e, size_t checkpoint);
 const ttf_entry_t *ttf_resource_entry(const ttf_engine_t *e, const char *kind, const char *lang,
                                       const char *key);
 void ttf_validation_copy(char *destination, size_t capacity, const char *source);
@@ -74,6 +92,14 @@ ttf_status_t ttf_register_builtins(ttf_engine_t *e);
 /* Bounded multiword pronunciation keys and shared lexical lookahead. */
 ttf_status_t ttf_lexicon_canonical_key(const char *key, char **out);
 void ttf_phrase_index(ttf_engine_t *engine);
+ttf_status_t ttf_cjk_index(ttf_engine_t *engine);
+/* Exactly the six resource kinds separated at freeze (not all kana_* kinds). */
+static inline int ttf_cjk_resource_kind(const char *kind) {
+    if (kind[0] == 'h') return !strcmp(kind, "hanja_reading");
+    if (kind[0] == 'c') return !strcmp(kind, "cjk_word");
+    return kind[0] == 'k' && (!strcmp(kind, "kana_reading") || !strcmp(kind, "kana_mark") ||
+                             !strcmp(kind, "kana_fold") || !strcmp(kind, "kana_long_after"));
+}
 size_t ttf_phrase_protect_until(const ttf_engine_t *engine, const char *text, size_t length,
                                 const ttf_token_t *tokens, size_t index);
 const char *ttf_phrase_match(const ttf_engine_t *engine, const char *source, const char *target,

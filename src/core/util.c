@@ -77,7 +77,7 @@ const char *ttf_status_string(ttf_status_t s) {
 }
 const char *ttf_script_name(ttf_script_t s) {
     static const char *const names[] = {"HANGUL",      "LATIN",  "DIGIT", "WHITESPACE",
-                                        "PUNCTUATION", "SYMBOL", "OTHER"};
+                                        "PUNCTUATION", "SYMBOL", "OTHER", "HAN", "KANA"};
     return (unsigned)s < sizeof(names) / sizeof(names[0]) ? names[s] : "UNKNOWN";
 }
 const char *ttf_layer_name(ttf_resource_layer_t s) {

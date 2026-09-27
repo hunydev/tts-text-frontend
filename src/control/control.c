@@ -14,7 +14,7 @@ static ttf_script_t script_at(const char *text, size_t length, size_t at, size_t
     *width = 0;
     if (at >= length || ttf_utf8_decode(text + at, length - at, &cp, width) != 1)
         return TTF_SCRIPT_SYMBOL;
-    return ttf_script_of(cp);
+    return ttf_script_legacy(ttf_script_of(cp));
 }
 static int alnum_script(ttf_script_t script) {
     return script == TTF_SCRIPT_LATIN || script == TTF_SCRIPT_DIGIT;

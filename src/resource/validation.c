@@ -154,7 +154,7 @@ static int declaration_order(const void *left, const void *right) {
 ttf_status_t ttf_engine_validate_resources(const ttf_engine_t *e,
                                            ttf_resource_validation_report_t *report,
                                            ttf_resource_diagnostic_t *diagnostic) {
-    size_t count = 0, bucket, i;
+    size_t count = 0, bucket, i, table;
     const ttf_entry_t **rows;
     ttf_resource_diagnostic_t local;
     ttf_status_t status = TTF_OK;
@@ -170,9 +170,9 @@ ttf_status_t ttf_engine_validate_resources(const ttf_engine_t *e,
     if (!diagnostic)
         diagnostic = &local;
     ttf_resource_diagnostic_init(diagnostic);
-    for (bucket = 0; bucket < TTF_HASH_BUCKETS; ++bucket) {
+    for (table = 0; table < (e->cjk ? 2u : 1u); ++table) for (bucket = 0; bucket < TTF_HASH_BUCKETS; ++bucket) {
         const ttf_entry_t *entry;
-        for (entry = e->resources[bucket]; entry; entry = entry->next)
+        for (entry = table ? e->cjk->resources[bucket] : e->resources[bucket]; entry; entry = entry->next)
             ++count;
     }
     if (count > SIZE_MAX / sizeof(*rows))
@@ -181,9 +181,9 @@ ttf_status_t ttf_engine_validate_resources(const ttf_engine_t *e,
     if (count && !rows)
         return TTF_ENOMEM;
     i = 0;
-    for (bucket = 0; bucket < TTF_HASH_BUCKETS; ++bucket) {
+    for (table = 0; table < (e->cjk ? 2u : 1u); ++table) for (bucket = 0; bucket < TTF_HASH_BUCKETS; ++bucket) {
         const ttf_entry_t *entry;
-        for (entry = e->resources[bucket]; entry; entry = entry->next)
+        for (entry = table ? e->cjk->resources[bucket] : e->resources[bucket]; entry; entry = entry->next)
             rows[i++] = entry;
     }
     if (count > 1)

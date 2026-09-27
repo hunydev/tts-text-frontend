@@ -133,6 +133,8 @@ def corpus(request, library, resources):
                     "input_format": row.get("input_format", "plain"),
                     "output_mode": row.get("output_mode", "text"),
                     "unreadable": row.get("unreadable", "preserve"),
+                    "hanja": row.get("hanja", "passthrough"),
+                    "kana": row.get("kana", "passthrough"),
                     "max_control_bytes": row.get("max_control_bytes", 4096),
                 },
             )

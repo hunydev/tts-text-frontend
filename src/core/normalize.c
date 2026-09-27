@@ -1,5 +1,6 @@
 #include "internal.h"
 #include "speech_output.h"
+#include "../cjk/cjk_reading.h"
 #include "../language/context_memo.h"
 #include "../pronunciation/trace.h"
 ttf_status_t ttf_trace_foreign_lexicon(const ttf_engine_t *, const char *, const char *,
@@ -554,7 +555,7 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
             consumed = 1;
             sem->type =
                 (tokens[i].script == TTF_SCRIPT_LATIN || tokens[i].script == TTF_SCRIPT_HANGUL ||
-                 tokens[i].script == TTF_SCRIPT_OTHER)
+                 ttf_script_legacy(tokens[i].script) == TTF_SCRIPT_OTHER)
                     ? TTF_SEM_WORD
                     : TTF_SEM_TEXT;
             if (tokens[i].script == TTF_SCRIPT_SYMBOL)
@@ -733,7 +734,13 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
                                 SIZE_MAX);
             if (st == TTF_OK && e->frontend_options.output_mode == TTF_OUTPUT_TEXT)
                 st = ttf_buffer_append(&normalized, text + tokens[i].begin, end - tokens[i].begin);
-        } else
+        } else if ((e->frontend_options.hanja == TTF_HANJA_KOREAN ||
+                    e->frontend_options.kana == TTF_KANA_KOREAN) &&
+                   !strcmp(sem->rule, "identity") && ttf_cjk_applies(renderer->language_tag, span.script))
+            st = ttf_cjk_render(e, renderer->language_tag, text + tokens[i].begin,
+                                end - tokens[i].begin, sem, &normalized,
+                                span.lexicon, &span.pronunciation_layer);
+        else
             st = renderer->verbalize(e, sem, text + tokens[i].begin, end - tokens[i].begin,
                                      &normalized);
         if (st == TTF_OK && (!strcmp(sem->unit, "@math") || !strcmp(sem->unit, "@number-sign"))) {
@@ -753,7 +760,7 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
             normalized = spaced;
         }
         if (st == TTF_OK && e->frontend_options.output_mode == TTF_OUTPUT_SPEECH && !rule &&
-            strncmp(span.lexicon, "lexicon:", 8) &&
+            (strncmp(span.lexicon, "lexicon:", 8) || !strncmp(sem->rule, "cjk.", 4)) &&
             strcmp(span.lexicon, "unknown-foreign-preserved")) {
             if (sem->type == TTF_SEM_TEXT && strcmp(sem->rule, "identity") &&
                 e->frontend_options.unreadable_policy != TTF_UNREADABLE_READ) {
@@ -812,7 +819,7 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
               text[tokens[i].begin - 1] == '\n') &&
             !(out->span_count &&
               ((!strcmp(out->spans[out->span_count - 1].semantic.unit, "@unreadable-cluster")) ||
-               (out->spans[out->span_count - 1].script == TTF_SCRIPT_OTHER &&
+               (ttf_script_legacy(out->spans[out->span_count - 1].script) == TTF_SCRIPT_OTHER &&
                 !strcmp(out->spans[out->span_count - 1].semantic.rule, "identity")))))
             st = particle_agreement(e, renderer, text + tokens[i].begin, end - tokens[i].begin,
                                     &output, &normalized);

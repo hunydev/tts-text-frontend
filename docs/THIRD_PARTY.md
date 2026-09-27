@@ -259,3 +259,16 @@ choices, not claims that E.164 defines TTS reading or every supported local form
 
 프로젝트의 `date(label)` TN 문법은 RFC 이메일 날짜 구현이 아니다. 날짜와 요일의
 불일치를 자동 수정하지 않는 자체 읽기 정책이며 [가이드](calendar-alias-resources.md)에 명시했다.
+
+
+## CJK 한국어 표기 리소스 (2026-09-27)
+
+| Source / version | License / commercial use | Redistribution / attribution / vendoring |
+|---|---|---|
+| [Unicode Unihan](https://www.unicode.org/reports/tr38/), 제공된 subset의 version header **18.0.0** | [Unicode License v3](https://www.unicode.org/license.txt). 사용·변경·상업적 배포를 고지 조건 하에 허용한다. | copyright/permission notice를 데이터 또는 동봉 문서에 유지. `resources/languages/ko-KR/cjk/UNICODE-LICENSE.txt` 동봉. 승인된 부분 추출본 `data/cjk/unihan-k-subset.txt` 및 생성 독음 TSV만 저장소에 포함하며 원본 zip은 반입하지 않는다. |
+| 외래어 표기법, 문화체육관광부 고시; 제2장 표 4 및 일본어 표기 규정, 조회 2026-09-27 | [저작권법 제7조 제2호](https://www.law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1029423769)의 국가 고시 등 비보호 저작물 근거를 기록한다. 이 기록은 법률 자문이나 웹사이트 전체 자료에 대한 허가가 아니다. | [국립국어원 어문 규범](https://www.korean.go.kr/kornorms/main/main.do)의 고시 출처와 규정 위치를 생성 TSV 머리말에 유지한다. 자체 작성 가나 대응표/규칙을 상업용 리소스로 사용하며 웹 설명·사전·예문집은 수집하지 않는다. |
+
+Unihan version은 사용자가 준비한 subset의 header에서 고정했고 파일 SHA256은
+`benchmark/manifests/sources.json`에 기록한다. 원본 zip을 다시 다운로드하여 대조했다는
+의미는 아니다. 두 출처 모두 자동 다운로드를 끈다. Unihan 원본 전체 및 제3자 한자 사전은
+이번 작업에 추가하지 않는다. 생성 결과·provenance는 고정 소스에서 LF로 재현한다.

@@ -40,7 +40,9 @@ typedef enum {
     TTF_SCRIPT_WHITESPACE,
     TTF_SCRIPT_PUNCTUATION,
     TTF_SCRIPT_SYMBOL,
-    TTF_SCRIPT_OTHER
+    TTF_SCRIPT_OTHER,
+    TTF_SCRIPT_HAN,
+    TTF_SCRIPT_KANA
 } ttf_script_t;
 typedef enum {
     TTF_SEM_TEXT,

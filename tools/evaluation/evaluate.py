@@ -26,7 +26,8 @@ SPAN_FIELDS = ("script", "source_lang", "context_lang", "render_lang", "semantic
 CHECK_FIELDS = set(SPAN_FIELDS) | {"normalized"}
 FRONTEND_DEFAULTS = {"output_mode": "text", "input_format": "plain",
                      "unreadable": "preserve", "brackets": "read", "unknown_foreign": "guess",
-                     "decorative": "follow", "initialism": "spell", "max_control_bytes": 4096}
+                     "decorative": "follow", "initialism": "spell", "max_control_bytes": 4096,
+                     "hanja": "passthrough", "kana": "passthrough"}
 
 
 def frontend_settings(case: dict) -> dict:
@@ -38,6 +39,8 @@ def frontend_settings(case: dict) -> dict:
                            ("brackets", ("read", "skip", "preserve")),
                            ("decorative", ("follow", "read")),
                            ("initialism", ("spell", "word")),
+                           ("hanja", ("passthrough", "korean")),
+                           ("kana", ("passthrough", "korean")),
                            ("unknown_foreign", ("guess", "spell", "preserve"))):
         if field in case:
             if not isinstance(case[field], str) or case[field] not in choices:

@@ -507,7 +507,7 @@ static int currency_name_tail(const ttf_pack_input_t *in, size_t end, int allow_
         return 0;
     if ((unsigned char)in->text[end] >= 128 &&
         ttf_utf8_decode(in->text + end, in->length - end, &cp, &width) == 1 &&
-        (ttf_script_of(cp) == TTF_SCRIPT_LATIN || ttf_script_of(cp) == TTF_SCRIPT_OTHER))
+        (ttf_script_of(cp) == TTF_SCRIPT_LATIN || ttf_script_legacy(ttf_script_of(cp)) == TTF_SCRIPT_OTHER))
         return 0;
     if (ttf_utf8_decode(in->text + end, in->length - end, &cp, &width) == 1 &&
         ttf_script_of(cp) == TTF_SCRIPT_SYMBOL &&
@@ -582,7 +582,7 @@ static size_t currency_name_invalid_end(const ttf_pack_input_t *in, size_t end) 
         if (ttf_utf8_decode(in->text + end, in->length - end, &cp, &width) != 1)
             break;
         script = ttf_script_of(cp);
-        if (script != TTF_SCRIPT_LATIN && script != TTF_SCRIPT_OTHER && script != TTF_SCRIPT_SYMBOL)
+        if (script != TTF_SCRIPT_LATIN && ttf_script_legacy(script) != TTF_SCRIPT_OTHER && script != TTF_SCRIPT_SYMBOL)
             break;
         end += width;
     }

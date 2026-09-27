@@ -1,4 +1,5 @@
 #include "../core/internal.h"
+#include "../cjk/cjk_reading.h"
 
 static int horizontal(char c) {
     return c == ' ' || c == '\t';
@@ -8,7 +9,7 @@ static char folded(char c) {
 }
 static int lexical(ttf_script_t script) {
     return script == TTF_SCRIPT_LATIN || script == TTF_SCRIPT_HANGUL ||
-           script == TTF_SCRIPT_OTHER;
+           ttf_script_legacy(script) == TTF_SCRIPT_OTHER;
 }
 static size_t first_bucket(const char *word, size_t length) {
     uint32_t hash = 2166136261u;
@@ -62,7 +63,7 @@ ttf_status_t ttf_lexicon_canonical_key(const char *key, char **out) {
             ttf_script_t current;
             if (ttf_utf8_decode(key + i, length - i, &cp, &width) != 1)
                 goto invalid;
-            current = ttf_script_of(cp);
+            current = ttf_script_legacy(ttf_script_of(cp));
             if (!lexical(current) || (script != TTF_SCRIPT_SYMBOL && current != script))
                 goto invalid;
             script = current;
@@ -169,7 +170,7 @@ static int connector(const char *text, const ttf_token_t *token) {
            cp == 0x2019 || cp == 0x2010 || cp == 0x2011;
 }
 static int same_word_script(ttf_script_t script, ttf_script_t neighbor) {
-    return neighbor == script || neighbor == TTF_SCRIPT_DIGIT;
+    return ttf_script_legacy(neighbor) == ttf_script_legacy(script) || neighbor == TTF_SCRIPT_DIGIT;
 }
 static int word_continues(const char *text, const ttf_token_t *tokens, size_t count, size_t at) {
     if (at + 1 >= count || tokens[at].end != tokens[at + 1].begin)
@@ -195,6 +196,9 @@ size_t ttf_phrase_protect_until(const ttf_engine_t *engine, const char *text, si
     const ttf_token_t *token = &tokens[index];
     const ttf_entry_t *entry;
     size_t until = token->begin;
+    if (engine->frontend_options.hanja != TTF_HANJA_PASSTHROUGH ||
+        engine->frontend_options.kana != TTF_KANA_PASSTHROUGH)
+        until = ttf_cjk_protect_until(engine, text, length, until);
     if (engine->config.render_policy != TTF_PHONETIC_LOCALIZE ||
         word_started_before(text, tokens, index))
         return until;
@@ -228,7 +232,7 @@ const char *ttf_phrase_match(const ttf_engine_t *engine, const char *source, con
         size_t n = token->end - token->begin, j;
         const char *hit;
         ttf_resource_layer_t candidate_layer;
-        if (token->script != script || !lexical(script) ||
+        if (ttf_script_legacy(token->script) != ttf_script_legacy(script) || !lexical(script) ||
             token->end - tokens[index].begin > TTF_PHRASE_INPUT ||
             n >= TTF_IR_VALUE_SIZE - used)
             break;

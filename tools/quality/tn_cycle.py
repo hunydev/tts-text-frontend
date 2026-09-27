@@ -49,7 +49,7 @@ def command(args, log, allowed=(0,)):
 def new_case(args):
     row = dict(id=args.id, category=args.category, text=args.text, expected=args.expected,
                default_language=args.language, output_mode=args.output_mode,
-               input_format=args.input_format, unreadable=args.unreadable,
+               input_format=args.input_format, unreadable=args.unreadable, hanja=args.hanja, kana=args.kana,
                expected_spans=[], notes=f"Source: {args.source}. Pending independent review. {args.reason}")
     args.out.parent.mkdir(parents=True, exist_ok=True)
     # Never overwrite a reference, even when the requested id is identical.
@@ -105,7 +105,7 @@ def verify_snapshot(path):
 
 def flags(case, resources):
     result = ["--resources", str(resources), "--language", case["default_language"]]
-    for key in ("input_format", "output_mode", "unreadable", "max_control_bytes"):
+    for key in ("input_format", "output_mode", "unreadable", "max_control_bytes", "hanja", "kana"):
         if key in case:
             result += ["--" + key.replace("_", "-"), str(case[key])]
     for row in case["resource_overrides"]:
@@ -169,6 +169,8 @@ def main():
     new.add_argument("--output-mode", choices=("text", "speech"), default="speech")
     new.add_argument("--input-format", choices=("plain", "annotated"), default="plain")
     new.add_argument("--unreadable", choices=("preserve", "drop"), default="preserve")
+    new.add_argument("--hanja", choices=("passthrough", "korean"), default="passthrough")
+    new.add_argument("--kana", choices=("passthrough", "korean"), default="passthrough")
     new.add_argument("--out", type=Path, required=True)
     new.set_defaults(run=new_case)
     snap = subs.add_parser("snapshot", help="build and freeze executable, resources and hashes locally")

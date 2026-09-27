@@ -738,6 +738,89 @@
         "https://www.korean.go.kr/front/page/pageView.do?page_id=P000145"
       ],
       "bulk_dictionary_rights": "not-verified"
+    },
+    {
+      "id": "unicode-unihan-korean-subset",
+      "title": "Unicode Unihan Korean-source subset",
+      "artifact_type": "data",
+      "source_url": "https://www.unicode.org/reports/tr38/",
+      "pin": {
+        "kind": "version-and-local-sha256",
+        "revision": "18.0.0",
+        "sha256": "93fd502eae819dd857e464f7b34c8962ce8b57c93c97ac0b08e1c9877bd2ac83"
+      },
+      "license": {
+        "declared": "Unicode-3.0",
+        "status": "official-license-checked",
+        "evidence_urls": [
+          "https://www.unicode.org/license.txt"
+        ]
+      },
+      "commercial_use": {
+        "assessment": "permitted-with-conditions",
+        "note": "Retain copyright and permission notice."
+      },
+      "redistribution": {
+        "assessment": "permitted-with-conditions",
+        "conditions": [
+          "Include Unicode copyright and permission notice with data or associated documentation."
+        ]
+      },
+      "attribution": [
+        "Copyright © 1991-2026 Unicode, Inc."
+      ],
+      "vendoring": {
+        "committed": false,
+        "upstream_files_in_product": [
+          "data/cjk/unihan-k-subset.txt",
+          "resources/languages/ko-KR/cjk/hanja_readings.tsv",
+          "resources/languages/ko-KR/cjk/UNICODE-LICENSE.txt"
+        ],
+        "project_policy": "Prepared source subset approved for vendoring; full archive excluded. Stage work not yet committed."
+      },
+      "inspection": "Provided subset header and SHA pinned; upstream archive was not reacquired. Official license inspected.",
+      "automatic_download": false,
+      "rights_conflicts": [],
+      "research_document": "docs/cjk-korean-reading.ko.md"
+    },
+    {
+      "id": "korean-loanword-kana-notice",
+      "title": "외래어 표기법 일본어 대응 및 표기 규정",
+      "artifact_type": "normative-rules",
+      "source_url": "https://www.korean.go.kr/kornorms/main/main.do",
+      "pin": {
+        "kind": "access-date",
+        "revision": "2026-09-27"
+      },
+      "license": {
+        "declared": "Korean Copyright Act Article 7(2), government notice",
+        "status": "statutory-basis-recorded",
+        "evidence_urls": [
+          "https://www.law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1029423769"
+        ]
+      },
+      "commercial_use": {
+        "assessment": "government-notice-exclusion",
+        "note": "Applies to the notice, not unrelated web commentary/dictionaries."
+      },
+      "redistribution": {
+        "assessment": "government-notice-exclusion",
+        "conditions": [
+          "Retain project provenance for the source notice and scope."
+        ]
+      },
+      "attribution": [
+        "문화체육관광부 외래어 표기법; 국립국어원 어문 규범"
+      ],
+      "vendoring": {
+        "committed": false,
+        "upstream_files_in_product": [],
+        "project_policy": "Project-authored kana_table.py and generated kana TSV, no dictionary/web scraping."
+      },
+      "inspection": "Statutory Article 7(2) checked; table scope follows approved CJK design.",
+      "automatic_download": false,
+      "rights_conflicts": [],
+      "research_document": "docs/cjk-korean-reading.ko.md"
     }
   ]
 }

@@ -71,6 +71,20 @@ add_executable(ttf_example examples/basic.c)
 target_link_libraries(ttf_example PRIVATE tts_text_frontend_static ttf_build_flags)
 
 if(BUILD_TESTING)
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/resources/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/cjk-lazy-resources)
+  add_executable(ttf_test_cjk_lazy tests/unit/test_cjk_lazy.c)
+  target_link_libraries(ttf_test_cjk_lazy PRIVATE tts_text_frontend_static ttf_build_flags)
+  add_test(NAME cjk_lazy_resources COMMAND ttf_test_cjk_lazy
+    ${CMAKE_CURRENT_SOURCE_DIR}/resources ${CMAKE_CURRENT_BINARY_DIR}/cjk-lazy-resources)
+  add_executable(ttf_test_cjk_stream tests/streaming/test_cjk_stream.c)
+  target_link_libraries(ttf_test_cjk_stream PRIVATE tts_text_frontend_static ttf_build_flags)
+  add_test(NAME cjk_streaming_native COMMAND ttf_test_cjk_stream ${CMAKE_CURRENT_SOURCE_DIR}/resources)
+  add_executable(ttf_test_cjk_index tests/unit/test_cjk_index.c)
+  target_link_libraries(ttf_test_cjk_index PRIVATE tts_text_frontend_static ttf_build_flags)
+  add_test(NAME cjk_word_index COMMAND ttf_test_cjk_index ${CMAKE_CURRENT_SOURCE_DIR}/resources)
+  add_executable(ttf_test_cjk_options tests/unit/test_cjk_options.c)
+  target_link_libraries(ttf_test_cjk_options PRIVATE tts_text_frontend_static ttf_build_flags)
+  add_test(NAME cjk_options_abi COMMAND ttf_test_cjk_options ${CMAKE_CURRENT_SOURCE_DIR}/resources)
   add_executable(ttf_test_context_cache tests/unit/test_context_cache.c)
   target_link_libraries(ttf_test_context_cache PRIVATE tts_text_frontend_static ttf_build_flags)
   add_test(NAME context_score_cache COMMAND ttf_test_context_cache ${CMAKE_CURRENT_SOURCE_DIR}/resources)
@@ -144,6 +158,10 @@ if(BUILD_TESTING)
   endif()
   find_package(Python3 COMPONENTS Interpreter QUIET)
   if(Python3_Interpreter_FOUND)
+    add_test(NAME cjk_generated_resources COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tools/cjk/generate.py build
+      --unihan ${CMAKE_CURRENT_SOURCE_DIR}/data/cjk
+      --out ${CMAKE_CURRENT_SOURCE_DIR}/resources/languages/ko-KR/cjk --check)
     add_test(NAME tn_improvement_harness COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/quality/test_tn_cycle.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
@@ -422,6 +440,32 @@ if(BUILD_TESTING)
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
     add_test(NAME evaluation_comparison COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_compare.py)
+    # Like the existing byte-split tests, ctypes runs in ordinary compiler jobs.
+    # Instrumented CI uses the native executable for every immutable contract,
+    # plus the C callback/index tests for ASan ownership and streaming checks.
+    if(TTF_ENABLE_ASAN OR TTF_ENABLE_UBSAN)
+      set(TTF_CJK_CONTRACT_BACKEND --cli $<TARGET_FILE:ttf>)
+    else()
+      set(TTF_CJK_CONTRACT_BACKEND --library $<TARGET_FILE:tts_text_frontend_shared>)
+    endif()
+    add_test(NAME cjk_reading_contracts COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_cjk_reading.py
+      ${TTF_CJK_CONTRACT_BACKEND}
+      --resources ${CMAKE_CURRENT_SOURCE_DIR}/resources --stage 3
+      --report ${CMAKE_CURRENT_BINARY_DIR}/cjk-contracts.json)
+    if(NOT TTF_ENABLE_ASAN AND NOT TTF_ENABLE_UBSAN)
+      add_test(NAME cjk_kana_edges COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_cjk_kana_edges.py
+      $<TARGET_FILE:tts_text_frontend_shared> ${CMAKE_CURRENT_SOURCE_DIR}/resources $<TARGET_FILE:ttf>)
+      add_test(NAME cjk_hanja_edges COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_cjk_hanja_edges.py
+      $<TARGET_FILE:tts_text_frontend_shared> ${CMAKE_CURRENT_SOURCE_DIR}/resources $<TARGET_FILE:ttf>)
+      add_test(NAME cjk_arbitrary_byte_splits COMMAND ${Python3_EXECUTABLE}
+        ${CMAKE_CURRENT_SOURCE_DIR}/tests/streaming/test_cjk_splits.py
+        $<TARGET_FILE:tts_text_frontend_shared> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
+    endif()
+    add_test(NAME trace_relative_order COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_trace_order.py)
     add_test(NAME domain_text_evaluation COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)

@@ -1,31 +1,46 @@
+#define TTF_FRONTEND_LEGACY_INIT
 #include "internal.h"
 
-void ttf_frontend_options_init(ttf_frontend_options_t *options) {
-    if (!options)
+void ttf_frontend_options_init_sized(ttf_frontend_options_t *options, size_t size) {
+    ttf_frontend_options_t defaults = {0};
+    if (!options || size < TTF_FRONTEND_OPTIONS_V020_SIZE || size > sizeof(defaults))
         return;
-    memset(options, 0, sizeof(*options));
-    options->struct_size = sizeof(*options);
-    options->abi_version = TTF_ABI_VERSION;
-    options->output_mode = TTF_OUTPUT_SPEECH;
-    options->unreadable_policy = TTF_UNREADABLE_PRESERVE;
-    options->max_control_bytes = 4096;
+    defaults.struct_size = (uint32_t)size;
+    defaults.abi_version = TTF_ABI_VERSION;
+    defaults.output_mode = TTF_OUTPUT_SPEECH;
+    defaults.unreadable_policy = TTF_UNREADABLE_PRESERVE;
+    defaults.max_control_bytes = 4096;
+    memcpy(options, &defaults, size);
+}
+
+void ttf_frontend_options_init(ttf_frontend_options_t *options) {
+    ttf_frontend_options_init_sized(options, TTF_FRONTEND_OPTIONS_V020_SIZE);
 }
 
 ttf_status_t ttf_engine_set_frontend_options(ttf_engine_t *engine,
                                              const ttf_frontend_options_t *options) {
-    if (!engine || !options || options->struct_size != sizeof(*options) ||
-        options->abi_version != TTF_ABI_VERSION ||
-        (options->input_format != TTF_INPUT_PLAIN &&
-         options->input_format != TTF_INPUT_ANNOTATED) ||
-        (options->output_mode != TTF_OUTPUT_TEXT && options->output_mode != TTF_OUTPUT_SPEECH) ||
-        (options->unreadable_policy != TTF_UNREADABLE_PRESERVE &&
-         options->unreadable_policy != TTF_UNREADABLE_DROP &&
-         options->unreadable_policy != TTF_UNREADABLE_READ) ||
-        !options->max_control_bytes)
+    ttf_frontend_options_t value;
+    if (!engine || !options || options->struct_size < TTF_FRONTEND_OPTIONS_V020_SIZE ||
+        options->struct_size > sizeof(*options) || options->abi_version != TTF_ABI_VERSION)
+        return TTF_EINVAL;
+    ttf_frontend_options_init_sized(&value, sizeof(value));
+    memcpy(&value, options, TTF_FRONTEND_OPTIONS_V020_SIZE);
+    value.struct_size = sizeof(value);
+    if (options->struct_size >= offsetof(ttf_frontend_options_t, hanja) + sizeof(value.hanja))
+        value.hanja = options->hanja;
+    if (options->struct_size >= offsetof(ttf_frontend_options_t, kana) + sizeof(value.kana))
+        value.kana = options->kana;
+    if ((value.input_format != TTF_INPUT_PLAIN && value.input_format != TTF_INPUT_ANNOTATED) ||
+        (value.output_mode != TTF_OUTPUT_TEXT && value.output_mode != TTF_OUTPUT_SPEECH) ||
+        (value.unreadable_policy != TTF_UNREADABLE_PRESERVE &&
+         value.unreadable_policy != TTF_UNREADABLE_DROP &&
+         value.unreadable_policy != TTF_UNREADABLE_READ) || !value.max_control_bytes ||
+        (value.hanja != TTF_HANJA_PASSTHROUGH && value.hanja != TTF_HANJA_KOREAN) ||
+        (value.kana != TTF_KANA_PASSTHROUGH && value.kana != TTF_KANA_KOREAN))
         return TTF_EINVAL;
     if (engine->frozen || engine->validating)
         return TTF_ESTATE;
-    engine->frontend_options = *options;
+    engine->frontend_options = value;
     return TTF_OK;
 }
 

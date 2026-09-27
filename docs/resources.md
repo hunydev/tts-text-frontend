@@ -165,3 +165,81 @@ When adding count context, pair a new left cue with `boundary_word`. A particle
 which may require right context also needs `quantity_lookahead_tail` so a short
 phrase target cannot commit its number early. Match preservation, exact values,
 IR secondary fields and byte-split invariance after any such change.
+
+## CJK Korean readings
+
+The manifest lists `languages/ko-KR/cjk/{hanja_readings,kana_readings,cjk_words}.tsv`.
+Creation skips these three system tables; freeze opens only the tables selected
+by the final `hanja`/`kana` options. Both passthrough (including legacy callers)
+opens none; either Korean mode loads the word table, plus its own reading table.
+The same reserved basenames with `.bin` or `.ttfb` extensions support compiled
+manifests. Other manifest paths retain their ordinary eager loading behavior.
+Offline inventory, auditing and compilation still see all three paths.
+
+Explicit domain/customer/user loads remain eager, even for disabled scripts.
+At freeze, the selected system files use the existing SYSTEM-layer loader and
+validators. Any load, final validation or index-allocation failure rolls back
+all rows and declaration numbers added by that freeze, retaining explicit
+overrides and leaving the engine mutable for a clean retry. Same-layer earlier
+declarations still win; deferred system rows follow pre-freeze overrides.
+`resource_root=NULL` uses the same resolved default root for both phases.
+
+Resource validation before freeze reports only currently loaded rows. For the
+shipped manifest without overlays, counts are:
+
+| Options | Before freeze | After freeze |
+|---|---:|---:|
+| Both passthrough / legacy | 3,459 | 3,459 |
+| Hanja Korean only | 3,459 | 11,580 |
+| Kana Korean only | 3,459 | 3,765 |
+| Both Korean | 3,459 | 11,881 |
+
+Explicit overlays add their row counts in both phases. After freeze, validation
+and public resource lookup include every loaded CJK row in the detached index.
+Before freeze, deferred system values are absent from lookup; explicit values
+remain available. Validate a system CJK file explicitly to check it offline
+without enabling its script. Public loading after freeze still returns `TTF_ESTATE`.
+
+These generated files are not edited by hand. Reproduce all three offline:
+
+```sh
+python3 tools/cjk/generate.py build --unihan data/cjk --out artifacts/cjk/build
+python3 tools/cjk/generate.py build --unihan data/cjk --out resources/languages/ko-KR/cjk --check
+```
+
+The first command writes tables, provenance and coverage reports to ignored artifacts.
+The second generates in a temporary directory and compares TSV bytes (including LF)
+without writing into the resource directory. CI runs it in CTest. No automatic
+external downloads occur. Inputs are the committed licensed Unihan subset,
+`tools/cjk/kana_table.py` and `tools/cjk/word_table.py`; their scope is fixed by the
+[CJK design](cjk-korean-reading.ko.md). Review generated differences before copying
+TSV files into the resource tree; keep provenance/report JSON in artifacts.
+
+For a customer-approved reading, author a separate UTF-8 TSV (actual tabs):
+
+```tsv
+cjk_word	ko-KR	張勳	장훈
+hanja_reading	ko-KR	樂	악|락
+```
+
+Load it with `--customer FILE` or `ttf_resource_load` before freeze, and enable
+`--hanja korean` (and/or `--kana korean`). Reading choices are deterministic: the
+first `|` item is preferred; initial variants are derived at runtime. A `cjk_word`
+key is one to six Han/Kana codepoints with no spaces; its output is Hangul. All
+scripts in the key must be enabled. Literal annotated aliases take precedence.
+For the C user pronunciation API use `source_lang="und", render_lang="ko-KR"`.
+The workbench's existing user-lexicon form is English-only; use its customer TSV
+field or API for CJK rows. The five system word rows are not a coverage collection.
+
+Higher layer beats a longer word; within a layer the longest match wins, then
+language specificity and earlier declaration. Single-character resource lookups
+retain the existing `ttf_resource_get` precedence. Trace exposes the selected kind,
+key, value, layer and declaration order. Misses preserve original characters;
+only the optional final speech policy may remove them, preserving word separation.
+
+Freeze detaches all six kinds (`hanja_reading`, `kana_reading`, `kana_mark`,
+`kana_fold`, `kana_long_after`, `cjk_word`) into a heap index. The engine stores one
+pointer; the owning buckets hold the original entries and the word buckets borrow
+them. Common resource/rule lookups do not traverse these rows. Public lookups and
+validation still include every detached row, with unchanged layer/order and value
+lifetime. Destroy frees each owning row and the index once.

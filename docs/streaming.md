@@ -152,3 +152,22 @@ Long opaque content can still delay output until its delimiter and require the
 pending buffer. Inputs dense with delimiter candidates may still cause repeated
 scans; the cache is not a general linear-time document parser. Public callback,
 error and ownership contracts are unchanged. See [protected text](protected-text.md).
+
+## Opt-in CJK reading protection
+
+`ttf_phrase_protect_until` also protects up to the effective CJK word index's
+maximum key length (at most six Han/Kana codepoints). Variation selectors stay
+with their base character. Disabled scripts stop protection, as do whitespace and
+other scripts. With both options off, the CJK hook is skipped.
+
+The existing tokenizer keeps contiguous CJK runs together and phrase cuts occur
+only at safe whitespace. An unfinished run waits for a boundary or flush, including
+writes ending inside UTF-8, halfwidth voiced Kana or a word key. There is no new
+whole-sentence buffer. A long run can exceed soft segment targets, but remains
+subject to `max_pending_bytes` like other indivisible tokens.
+
+`cjk_arbitrary_byte_splits` compares all 86 frozen contracts under two segment
+profiles at every two-part byte split, byte-at-a-time and seeded random schedules:
+2,488 text/span/trace comparisons. Separate assertions observe sentence and phrase
+callbacks during write, before flush. `cjk_streaming_native` checks the same
+retention/early-callback mechanics with instrumentation in sanitizer CI.

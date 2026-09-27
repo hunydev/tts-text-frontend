@@ -1,5 +1,6 @@
 #include "internal.h"
 #include "../resource/validation.h"
+#include "../cjk/cjk_reading.h"
 #ifndef TTF_DEFAULT_RESOURCE_ROOT
 #define TTF_DEFAULT_RESOURCE_ROOT "resources"
 #endif
@@ -38,7 +39,7 @@ ttf_status_t ttf_engine_register_pack(ttf_engine_t *e, const ttf_language_pack_t
     e->packs[e->pack_count++] = p;
     return TTF_OK;
 }
-static ttf_status_t load_manifest(ttf_engine_t *e, ttf_resource_diagnostic_t *d) {
+static ttf_status_t load_manifest(ttf_engine_t *e, ttf_resource_diagnostic_t *d, int deferred) {
     char path[4096], manifest[4096], line[2048];
     size_t line_number = 0;
     FILE *f;
@@ -97,6 +98,10 @@ static ttf_status_t load_manifest(ttf_engine_t *e, ttf_resource_diagnostic_t *d)
             st = ttf_validation_error(d, "Manifest requires relative paths without traversal");
             break;
         }
+        /* Keep every path in the manifest for offline tools. Disabled CJK
+           tables are never opened, including by legacy engines. */
+        if (!ttf_cjk_manifest_selected(e, line, deferred))
+            continue;
         if (snprintf(path, sizeof(path), "%s/%s", e->resource_root, line) >= (int)sizeof(path)) {
             (void)ttf_validation_error(d, "Manifest resource path exceeds the path limit");
             st = TTF_ELIMIT;
@@ -165,7 +170,7 @@ ttf_status_t ttf_engine_create_ex(const ttf_config_t *cfg, ttf_engine_t **out,
     if (st == TTF_OK)
         st = ttf_register_builtins(e);
     if (st == TTF_OK)
-        st = load_manifest(e, diagnostic);
+        st = load_manifest(e, diagnostic, 0);
     if (st != TTF_OK) {
         ttf_engine_destroy(e);
         return st;
@@ -174,8 +179,9 @@ ttf_status_t ttf_engine_create_ex(const ttf_config_t *cfg, ttf_engine_t **out,
     return TTF_OK;
 }
 ttf_status_t ttf_engine_freeze(ttf_engine_t *e) {
-    size_t bucket;
+    size_t bucket, checkpoint;
     ttf_status_t status;
+    ttf_resource_diagnostic_t diagnostic;
     if (!e)
         return TTF_EINVAL;
     if (e->validating)
@@ -184,9 +190,24 @@ ttf_status_t ttf_engine_freeze(ttf_engine_t *e) {
         return TTF_OK;
     if (!ttf_find_pack(e, e->default_language))
         return TTF_EINVAL;
-    status = ttf_engine_validate_resources(e, NULL, NULL);
-    if (status != TTF_OK)
+    checkpoint = e->resource_order;
+    status = TTF_OK;
+    if (e->frontend_options.hanja == TTF_HANJA_KOREAN ||
+        e->frontend_options.kana == TTF_KANA_KOREAN) {
+        ttf_resource_diagnostic_init(&diagnostic);
+        status = load_manifest(e, &diagnostic, 1);
+    }
+    if (status == TTF_OK)
+        status = ttf_engine_validate_resources(e, NULL, NULL);
+    /* Allocate/detach only after all files and engine validators succeed.
+       Index allocation is the last fallible operation; on failure no rows
+       have moved and the complete deferred load can be rolled back. */
+    if (status == TTF_OK)
+        status = ttf_cjk_index(e);
+    if (status != TTF_OK) {
+        ttf_resource_rollback(e, checkpoint);
         return status;
+    }
     /* Build immutable indexes before sharing the engine. Rules and boundary
        cues must not scan pronunciation dictionaries during normalization. */
     e->rules = NULL;

@@ -38,3 +38,7 @@ languages/en-US/rules/speech.tsv
 languages/ko-KR/rules/patterns.tsv
 
 common/speech.tsv
+# Deferred until freeze, selected by hanja/kana options; kept visible to offline tools.
+languages/ko-KR/cjk/kana_readings.tsv
+languages/ko-KR/cjk/hanja_readings.tsv
+languages/ko-KR/cjk/cjk_words.tsv

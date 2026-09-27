@@ -29,7 +29,7 @@ static void usage(FILE *out) {
           "Frontend: --input-format plain|annotated --output-mode text|speech\n"
           "          --unreadable preserve|drop|read --brackets read|skip|preserve\n"
           "          --unknown-foreign guess|spell|preserve --decorative follow|read\n"
-          "          --initialism spell|word\n"
+          "          --initialism spell|word --hanja passthrough|korean --kana passthrough|korean\n"
           "          --max-control-bytes N\n"
           "Stream options: --chunk-bytes N (default 4096)\n",
           out);
@@ -290,7 +290,8 @@ int main(int argc, char **argv) {
             (!strcmp(arg, "--input-format") || !strcmp(arg, "--output-mode") ||
              !strcmp(arg, "--unreadable") || !strcmp(arg, "--brackets") ||
              !strcmp(arg, "--unknown-foreign") || !strcmp(arg, "--decorative") ||
-             !strcmp(arg, "--initialism") || !strcmp(arg, "--max-control-bytes"))) {
+             !strcmp(arg, "--initialism") || !strcmp(arg, "--hanja") ||
+             !strcmp(arg, "--kana") || !strcmp(arg, "--max-control-bytes"))) {
             int valid = 1;
             if (++i == argc) {
                 exit_code = report("frontend option", TTF_EINVAL);
@@ -310,6 +311,12 @@ int main(int argc, char **argv) {
                 frontend.unreadable_policy = !strcmp(argv[i], "drop")   ? TTF_UNREADABLE_DROP
                                              : !strcmp(argv[i], "read") ? TTF_UNREADABLE_READ
                                                                         : TTF_UNREADABLE_PRESERVE;
+            } else if (!strcmp(arg, "--hanja") || !strcmp(arg, "--kana")) {
+                valid = !strcmp(argv[i], "passthrough") || !strcmp(argv[i], "korean");
+                if (!strcmp(arg, "--hanja"))
+                    frontend.hanja = !strcmp(argv[i], "korean") ? TTF_HANJA_KOREAN : TTF_HANJA_PASSTHROUGH;
+                else
+                    frontend.kana = !strcmp(argv[i], "korean") ? TTF_KANA_KOREAN : TTF_KANA_PASSTHROUGH;
             } else if (!strcmp(arg, "--initialism")) {
                 valid = !strcmp(argv[i], "spell") || !strcmp(argv[i], "word");
                 initialism = argv[i];

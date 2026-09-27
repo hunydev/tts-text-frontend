@@ -37,6 +37,10 @@ typedef enum { TTF_DECORATIVE_FOLLOW = 0, TTF_DECORATIVE_READ = 1 } ttf_decorati
    A pronunciation lexicon entry (NASA) outranks both. */
 typedef enum { TTF_INITIALISM_SPELL = 0, TTF_INITIALISM_WORD = 1 } ttf_initialism_policy_t;
 
+/* Opt-in Korean orthographic readings. Independent defaults preserve input. */
+typedef enum { TTF_HANJA_PASSTHROUGH = 0, TTF_HANJA_KOREAN = 1 } ttf_hanja_mode_t;
+typedef enum { TTF_KANA_PASSTHROUGH = 0, TTF_KANA_KOREAN = 1 } ttf_kana_mode_t;
+
 /* Additive options: the ABI v1 config, result and language-pack layouts stay
    unchanged. Initialize before editing fields. Apply before engine freeze.
    Legacy engine_create uses plain/text; this initializer selects plain/speech
@@ -48,10 +52,11 @@ typedef struct {
     ttf_output_mode_t output_mode;
     ttf_unreadable_policy_t unreadable_policy;
     size_t max_control_bytes;
+    ttf_hanja_mode_t hanja;
+    ttf_kana_mode_t kana;
 } ttf_frontend_options_t;
 
-/* Named policies are added as functions, not as new fields, so a consumer built
-   against an older header keeps its structure layout and its defaults. Apply
+/* Additional named policies preserve older callers and their defaults. Apply
    before engine freeze. Unknown names and values return TTF_EINVAL.
    Currently: "brackets" = read|skip|preserve,
    "unknown_foreign" = guess|spell|preserve, "decorative" = follow|read,
@@ -59,7 +64,18 @@ typedef struct {
 TTF_API ttf_status_t ttf_engine_set_option(ttf_engine_t *engine, const char *name,
                                            const char *value);
 
+/* The historical symbol initializes ONLY the v0.20 prefix, including its size.
+   This is essential for already-compiled callers with a smaller allocation.
+   New headers select the sized entry point, also available to FFI callers. */
+#define TTF_FRONTEND_OPTIONS_V020_SIZE offsetof(ttf_frontend_options_t, hanja)
 TTF_API void ttf_frontend_options_init(ttf_frontend_options_t *options);
+TTF_API void ttf_frontend_options_init_sized(ttf_frontend_options_t *options, size_t size);
+#ifndef TTF_FRONTEND_LEGACY_INIT
+#define ttf_frontend_options_init(options) \
+    ttf_frontend_options_init_sized((options), sizeof(ttf_frontend_options_t))
+#endif
+/* Accept v0.20..current sizes, default incomplete/missing trailing fields,
+   reject larger or incompatible versions. All calls remain ABI version 1. */
 TTF_API ttf_status_t ttf_engine_set_frontend_options(ttf_engine_t *engine,
                                                      const ttf_frontend_options_t *options);
 

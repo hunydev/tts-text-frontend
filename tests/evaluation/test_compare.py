@@ -50,19 +50,21 @@ for field, value in (("text", "changed input"), ("expected", "changed answer"),
                      ("expected_spans", [{"surface": "input", "value": "1"}]),
                      ("default_language", "en-US"), ("resource_overrides", [{"layer": "domain"}]),
                      ("output_mode", "speech"), ("input_format", "annotated"),
-                     ("unreadable", "drop"), ("max_control_bytes", 2048)):
+                     ("unreadable", "drop"), ("max_control_bytes", 2048),
+                     ("hanja", "korean"), ("kana", "korean")):
     altered = copy.deepcopy(after)
     altered["cases"][0][field] = value
     rejected(lambda: compare.compare(before, altered))
 # Missing legacy settings and explicitly equal defaults describe the same test.
 explicit = copy.deepcopy(after)
 for item in explicit["cases"]:
-    item.update(output_mode="text", input_format="plain", unreadable="preserve", max_control_bytes=4096)
+    item.update(output_mode="text", input_format="plain", unreadable="preserve", max_control_bytes=4096,
+                hanja="passthrough", kana="passthrough")
 assert compare.compare(before, explicit)["summary"] == result["summary"]
 assert compare.compare(before, explicit)["cases"][0]["frontend_settings"] == {
     "output_mode": "text", "input_format": "plain", "unreadable": "preserve",
     "brackets": "read", "unknown_foreign": "guess", "decorative": "follow", "initialism": "spell",
-    "max_control_bytes": 4096}
+    "max_control_bytes": 4096, "hanja": "passthrough", "kana": "passthrough"}
 altered = copy.deepcopy(after)
 altered["cases"].pop()
 rejected(lambda: compare.compare(before, altered))
@@ -93,7 +95,7 @@ with tempfile.TemporaryDirectory(prefix="ttf-comparison-") as tmp:
     rejected(lambda: compare.read_report(paths[0]))
     for field, value in (("output_mode", None), ("input_format", "ssml"),
                          ("unreadable", "guess"), ("max_control_bytes", True),
-                         ("max_control_bytes", 0)):
+                         ("max_control_bytes", 0), ("hanja", "invalid"), ("kana", None)):
         altered = copy.deepcopy(before)
         altered["cases"][0][field] = value
         paths[0].write_text(json.dumps(altered), encoding="utf-8")

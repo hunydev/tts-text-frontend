@@ -66,6 +66,18 @@ ttf_script_t ttf_script_of(uint32_t c) {
         (c >= 0x20a0 && c <= 0x20cf) || c == 0xa3 || c == 0xa5 || c == 0xb0 ||
         (c >= 0x2190 && c <= 0x2bff) || (c >= 0x1f000 && c <= 0x1faff))
         return TTF_SCRIPT_SYMBOL;
+    if ((c >= 0x3400 && c <= 0x4dbf) || (c >= 0x4e00 && c <= 0x9fff) ||
+        (c >= 0xf900 && c <= 0xfaff) || (c >= 0x2f800 && c <= 0x2fa1f) ||
+        (c >= 0x2e80 && c <= 0x2eff) || (c >= 0x2f00 && c <= 0x2fdf) ||
+        (c >= 0x20000 && c <= 0x2a6df) || (c >= 0x2a700 && c <= 0x2b73f) ||
+        (c >= 0x2b740 && c <= 0x2b81f) || (c >= 0x2b820 && c <= 0x2ceaf) ||
+        (c >= 0x2ceb0 && c <= 0x2ebef) || (c >= 0x30000 && c <= 0x3134f) ||
+        (c >= 0x31350 && c <= 0x323af))
+        return TTF_SCRIPT_HAN;
+    if ((c >= 0x3040 && c <= 0x309f) || (c >= 0x30a0 && c <= 0x30ff) ||
+        (c >= 0x31f0 && c <= 0x31ff) || (c >= 0xff66 && c <= 0xff9d) ||
+        (c >= 0x1b000 && c <= 0x1b16f))
+        return TTF_SCRIPT_KANA;
     return TTF_SCRIPT_OTHER;
 }
 ttf_status_t ttf_tokenize(const char *s, size_t n, ttf_token_t **out, size_t *count) {
@@ -84,7 +96,8 @@ ttf_status_t ttf_tokenize(const char *s, size_t n, ttf_token_t **out, size_t *co
             return TTF_EUTF8;
         }
         sc = ttf_script_of(cp);
-        if (len && a[len - 1].script == sc && sc != TTF_SCRIPT_PUNCTUATION &&
+        if (len && ttf_script_legacy(a[len - 1].script) == ttf_script_legacy(sc) &&
+            sc != TTF_SCRIPT_PUNCTUATION &&
             sc != TTF_SCRIPT_SYMBOL)
             a[len - 1].end = i + w;
         else {

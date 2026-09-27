@@ -2,7 +2,111 @@
 
 갱신: 2026-09-27. Release **0.20.0**, public ABI **v1**.
 
-## 이번 인계: 날짜 뒤 영문 요일 / 자원표 점검 (base `842dbfd`, 2026-09-27)
+## 이번 인계: CJK 정규화 — 1~4단계 완료, 승인된 기준선 커밋
+
+권위 문서: [cjk-korean-reading.ko.md](cjk-korean-reading.ko.md), 특히 §5.4/§5.5/§9/§18.
+Base `4386841`, HEAD `d9d3342` (이전 승인된 trace 비교 게이트 커밋).
+사용자가 CJK 기준선 커밋 후 KO/EN 품질 개선 재개를 승인했다.
+이 커밋은 사용자 준비 설계·생성기·데이터·86계약 및 검증된 CJK 구현을 함께 고정한다.
+push·배포·서비스 재시작은 수행하지 않았다. 다음은 KO/EN 자원표 한 규칙군이다.
+
+### 확정된 동작과 범위
+
+- 한자·가나 기본값은 `passthrough`; CJK source는 `und` 유지. 두 옵션 독립.
+  `--hanja korean`: `내 이름은 張勳입니다.` → `내 이름은 장훈입니다.`.
+  `--kana korean`: `ソウル うどん ボウル` → `서울 우동 보우루`.
+  둘 다 켜면 `東京とうきょう` → `동경도쿄`.
+- ABI v1 유지, frontend options는 v0.20 prefix32B부터 current40B까지 받는다.
+  부족한 필드 기본값, 과대 크기 거부. legacy initializer는32B만 기록한다.
+- Han/Kana는 script enum 끝에 추가; 기존 토큰 병합/문맥 점수는 legacy-equivalence 유지.
+  unified scanner, runtime 두음/어두 변이, preferred첫 독음, 전용 word index,
+  촉음/발음의 받침 결합 및 미결합 원문 보존, halfwidth 최장 fold를 구현했다.
+- 한자8,116 / 가나301 / 단어5행 고정. 기대값/TSV 수동 변경 없음.
+  계약86 SHA256 `721c212c3ab21c156578725b917de8c6b0c8e9dc8968ce75af85805d6a7e558e`.
+  가나27규칙 + 이전pending3 =30/30, 전체86/86, pending0.
+- 미등록/간체/신자체는 원문 보존. speech drop은 낱말 간격 유지(`山𠮷水`→`산 수`).
+  가타카나 모음 장음 흡수 없음(`トウキョウ`→`도우쿄우`); 히라가나만 흡수한다.
+  형태소 분석/원어 복원/독립 언어 감수/외부 한국어 TN gold는 범위 밖이다.
+- 스트리밍은 기존 phrase 보호를 최대6cp CJK word 길이만큼 확장했다.
+  별도 전체 문장 버퍼 없음. 86건×2profile, 모든 2조각 byte경계/1byte/random
+  **2,488회 text/span/trace 일치**, flush 전 문장/구 callback 확인.
+- `generate.py build --check`는 세 TSV를 임시 재생성해서 LF 포함 바이트 비교한다.
+  자동 외부 다운로드 없음. 사용자 contract는 simulator로 재생성하지 않는다.
+
+### 마지막 수정: §5.5 조건부 로드 + §5.4 전용 힙 인덱스
+
+공용 해시에 CJK 행을 남기지 않는 것만으로 warm throughput은 회복됐지만,
+사용자가 기동마다 미사용8,422행을 파싱하는 비용을 확인했다(§9.2).
+manifest를 유지하는 (b)를 채택했다. create는 CJK 세 경로를 건너뛰고,
+freeze에서 최종 옵션에 맞는 reading 파일과 공통 word 파일을 SYSTEM으로 읽는다.
+둘 다 passthrough 및 setter 없는 legacy는 CJK 파일을 **열지 않는다**.
+
+- 원래 manifest/validator/레이어를 유지. `.tsv`, `.bin`, `.ttfb` 예약 basename 지원.
+  실패 시 이번 freeze의 행과 declaration 번호를 모두 되돌리고 mutable 상태로 남긴다.
+  마지막 파일 오류, final validator 오류, 수정 후 재시도, 중복 freeze를 검증했다.
+  CJK index 할당은 마지막 실패 가능 작업; 성공 후 원래 엔트리만 옮긴다.
+- 먼저 로드한 동일 SYSTEM 행은 계속 우선, customer/user override 불변.
+  공용 해시는3,459행. 전용 인덱스는 heap, 엔진은포인터1개/17,320B.
+  `e->rules` 미사용. word bucket은 원래 행을 빌리며 destroy가 owning 행을 한 번씩 해제.
+- `resource_root=NULL`도 create에서 확정된 같은root를 사용한다.
+  공개 freeze 이후load는 `TTF_ESTATE`. validation/get은 **현재 로드된 모든 행**을 본다.
+
+| 옵션 (추가 override 없음) | freeze 전 record | freeze 후 record |
+|---|---:|---:|
+| 둘 다 passthrough / legacy | 3,459 | 3,459 |
+| hanja만 korean | 3,459 | 11,580 |
+| kana만 korean | 3,459 | 3,765 |
+| 둘 다 korean | 3,459 | 11,881 |
+
+### 검증 결과
+
+- 이전 GCC 전체 **161/161 통과**는 그대로 보존하고 전체를 다시 실행하지 않았다.
+  이번 수정 영향 범위 **CJK9/9 + 리소스·사전·trace·golden 등23/23** 통과.
+- passthrough **2,235건 출력 회귀0**; 허용script9곳 외 메타데이터 차이0.
+  기존 declaration offset7건도 이제0. 상대순서/선택행 불변.
+- GCC CLI 기동25표본 중앙값: **17.972ms /16.5ms =1.089×**, 한도1.25 통과.
+  참고용 Korean: hanja43.889ms, kana19.065ms, both44.704ms.
+- 13,776B 순수한글 warm throughput: 기준71.910ms → **74.632ms (1.038×)**,
+  +18,000단어74.910ms (**1.042×**), 한도1.25 통과.
+  두 옵션 Korean/비CJK입력 참고75.0ms. 모든 성능 측정은 suite와 겹치지 않았다.
+- Clang ASan+UBSan `evaluation_reports` **30.37초 통과**, 기존60초 제한 불변.
+  corpus109건 및 harness의 후속 검사를 통과. 평가 러너/기동 횟수/코퍼스 변경 없음.
+- 새 로드/롤백/해제·동시읽기 sanitizer **7/7**, 메모리·누수·UB 진단0.
+- 이전에 못 실행한 sanitizer **24/24 통과 (276.04초)**. 새 전체테스트 수는 GCC162/ASan145;
+  이번에 전체를 처음부터145/145 실행했다고 보고하지 않는다. 이름 목록으로 이전24개를 재개했다.
+- compiler manifest3파일 네 옵션의 출력/trace일치; lexicon inventory/references/
+  generation--check 통과. `git diff --check` 통과. 최종 snapshot도 보존했다.
+
+### 재현 명령과 증거
+
+```sh
+cmake -S . -B build
+cmake --build build -j2
+ctest --test-dir build --output-on-failure --stop-on-failure -R '^cjk_'
+python3 tests/integration/test_cjk_passthrough.py --before artifacts/tn/cjk-v22/baseline/libtts_text_frontend.so --before-resources artifacts/tn/cjk-v22/baseline/resources --after build/libtts_text_frontend.so --after-resources resources --report artifacts/tn/cjk-v22/NEW-passthrough.json
+python3 tools/cjk/check_startup.py --ttf build/ttf --resources resources --report artifacts/tn/cjk-v22/NEW-startup.json
+python3 tools/cjk/check_throughput.py --before artifacts/tn/cjk-v22/baseline/libtts_text_frontend.so --before-resources artifacts/tn/cjk-v22/baseline/resources --after build/libtts_text_frontend.so --after-resources resources --report artifacts/tn/cjk-v22/NEW-throughput.json
+cmake -S . -B build-v20-asan
+cmake --build build-v20-asan -j2
+ASAN_OPTIONS=detect_leaks=1:halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1:print_stacktrace=1 ctest --test-dir build-v20-asan --output-on-failure --stop-on-failure -R '^evaluation_reports$'
+# 별도 실행: 같은 환경 변수로 asan-resume-regex.txt의 이름24개 선택
+```
+
+`artifacts/tn/cjk-v22/stage4-lazy/`에 gcc/asan 빌드·검증 로그, 이전144개 목록,
+재개24개 이름/regex/선택검증JSON, frozen계약보고서, passthrough/startup/throughput.json,
+status.json, CJK소스조사표가 있다. `stage4-lazy-candidate/`는 최신 immutable snapshot.
+`stage4/`의 이전 전체GCC와 sanitizer실패 로그는 덮거나 삭제하지 않았다.
+과거수치/원인변경은 설계§18에 남겼다. `stage4-cycle/`의 stage1→stage4 비교는
+8/86→86/86, fixed78/regressed0. 이번 로드 변경은 정확도 개선으로 다시 세지 않는다.
+
+### 다음 작업 (별도 승인/범위)
+
+1. CJK 기준선 커밋 이후 KO/EN 자원표 한 규칙군을 진행한다. push/배포는 별도다.
+2. 배포/웹 CJK 선택기는 별도 진행. live 서비스는 이전버전 그대로다.
+3. 공용 hash 전체 힙화/동적 크기 및 layer별 counter 변경은 별도 핵심저장소 작업.
+4. 독립 감수·실제 입력 검토는 가능하나 간체사전/단어 coverage확장은 이번 범위 밖이다.
+
+## 이전 인계: 날짜 뒤 영문 요일 / 자원표 점검 (base `842dbfd`, 2026-09-27)
 
 이전 조사표 커밋 `842dbfd`의 GitHub Actions 전체 성공을 확인한 뒤, 5번의
 month/weekday alias 규칙군 하나를 진행했다. 다음 작업을 자동으로 시작하지 않는다.

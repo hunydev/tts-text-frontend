@@ -3,6 +3,7 @@ from pathlib import Path
 import subprocess
 import sys
 import tempfile
+import shutil
 
 cli, compiler, resources, domain = sys.argv[1:]
 
@@ -77,5 +78,27 @@ with tempfile.TemporaryDirectory(prefix="ttf-resource-test-") as temp:
         for resource in (endings, binary):
             result = normalize(resource)
             assert result.returncode == 0 and result.stdout == expected + "\n", result
-print("compiled/source numeric and multiword parity, line-ending grammar, "
+    # Manifest consumers still see all three CJK tables. Their compiled forms
+    # retain conditional freeze loading and exactly the same output/trace.
+    compiled_root = Path(temp) / "resources"
+    shutil.copytree(resources, compiled_root)
+    manifest = (compiled_root / "manifest.ttfm").read_text(encoding="utf-8")
+    paths = [line for line in manifest.splitlines()
+             if line.startswith("languages/ko-KR/cjk/")]
+    assert len(paths) == 3, paths
+    for i, relative in enumerate(paths):
+        src = compiled_root / relative
+        dst = src.with_suffix(".bin" if i % 2 else ".ttfb")
+        subprocess.run([sys.executable, compiler, str(src), str(dst), "--ttf", cli,
+                        "--resources", resources, "--require-complete-validation"], check=True)
+        manifest = manifest.replace(relative, str(dst.relative_to(compiled_root)))
+        src.unlink()  # No accidental fallback to the source TSV.
+    (compiled_root / "manifest.ttfm").write_text(manifest, encoding="utf-8")
+    for flags in ([], ["--hanja", "korean"], ["--kana", "korean"],
+                  ["--hanja", "korean", "--kana", "korean"]):
+        results = [subprocess.check_output(
+            [cli, "inspect", "--trace", "--resources", str(root), *flags, "張勳 ソウル"])
+            for root in (resources, compiled_root)]
+        assert results[0] == results[1], "compiled CJK manifest changes output/trace"
+print("compiled/source numeric, multiword and CJK manifest parity, line-ending grammar, "
       "failed compilation atomicity, corrupt/truncated resource rejection passed")

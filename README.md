@@ -73,6 +73,33 @@ See the [input grammar](docs/input-format.md),
 [API options](docs/api.md#frontend-input-and-output-options), and
 [verification scope](docs/research/speech-controls-v20-results.md).
 
+## Optional Korean readings for Han and Kana
+
+```sh
+build/ttf normalize --hanja korean '내 이름은 張勳입니다.'
+# 내 이름은 장훈입니다.
+build/ttf normalize --kana korean 'ソウル とうきょう ボウル'
+# 서울 도쿄 보우루
+build/ttf inspect --trace --hanja korean --kana korean '東京とうきょう'
+```
+
+`--hanja` and `--kana` each default to `passthrough`. Enable only the script you
+want to read in Korean context. System CJK tables are loaded at engine freeze
+only for enabled scripts; default and legacy engines never open these files.
+Unregistered characters remain unchanged by
+default; `--output-mode speech --unreadable drop` uses the existing word-separating
+drop policy. These are Korean character readings and a limited Kana transcription,
+not Japanese/Chinese language packs or translation. Source language stays `und`.
+Simplified/shinjitai forms have no extra dictionary; unknown forms remain visible.
+Hiragana vowel sequences may be absorbed as long vowels, while Katakana sequences
+are preserved (`ボウル → 보우루`); the long mark `ー` is handled separately.
+
+The five system word exceptions stay small. Use a customer `cjk_word` TSV for
+approved conventional readings. See the [CJK design and contracts](docs/cjk-korean-reading.ko.md),
+[resource guide](docs/resources.md#cjk-korean-readings) and [C API](docs/api.md).
+The web API accepts `hanja`/`kana` options; this change does not deploy or restart
+the running workbench, and the existing page has no dedicated CJK selectors.
+
 ## Named dates and contextual years (v0.13)
 
 The English pack now recognizes month-first and day-first named dates, partial

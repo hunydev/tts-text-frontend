@@ -56,7 +56,9 @@ ttf_status_t ttf_resource_set(ttf_engine_t *e, const char *kind, const char *lan
 static const ttf_entry_t *find_entry(const ttf_engine_t *e, const char *kind, const char *lang,
                                      const char *key) {
     const ttf_entry_t *p, *best = NULL;
-    for (p = e->resources[bucket(kind, lang, key)]; p; p = p->next) {
+    size_t h = bucket(kind, lang, key);
+    p = e->cjk && ttf_cjk_resource_kind(kind) ? e->cjk->resources[h] : e->resources[h];
+    for (; p; p = p->next) {
         if (strcmp(kind, p->kind) || strcmp(lang, p->lang) || strcmp(key, p->key))
             continue;
         if (!best || p->layer > best->layer || (p->layer == best->layer && p->order < best->order))
@@ -85,16 +87,35 @@ const char *ttf_resource_get(const ttf_engine_t *e, const char *kind, const char
     return a->value;
 }
 void ttf_resource_destroy(ttf_engine_t *e) {
-    size_t i;
-    for (i = 0; i < TTF_HASH_BUCKETS; i++) {
-        ttf_entry_t *p = e->resources[i];
+    size_t i, table;
+    for (table = 0; table < (e->cjk ? 2u : 1u); ++table) for (i = 0; i < TTF_HASH_BUCKETS; i++) {
+        ttf_entry_t **head = table ? &e->cjk->resources[i] : &e->resources[i];
+        ttf_entry_t *p = *head;
         while (p) {
             ttf_entry_t *n = p->next;
             entry_free(p);
             p = n;
         }
-        e->resources[i] = NULL;
+        *head = NULL;
     }
+    free(e->cjk); /* Word buckets borrow rows; never free their entries again. */
+    e->cjk = NULL;
+}
+void ttf_resource_rollback(ttf_engine_t *e, size_t checkpoint) {
+    size_t i;
+    for (i = 0; i < TTF_HASH_BUCKETS; ++i) {
+        ttf_entry_t **at = &e->resources[i];
+        while (*at) {
+            ttf_entry_t *entry = *at;
+            if (entry->order < checkpoint) {
+                at = &entry->next;
+            } else {
+                *at = entry->next;
+                entry_free(entry);
+            }
+        }
+    }
+    e->resource_order = checkpoint;
 }
 static uint32_t read_u32(const unsigned char *s) {
     return (uint32_t)s[0] | ((uint32_t)s[1] << 8) | ((uint32_t)s[2] << 16) | ((uint32_t)s[3] << 24);

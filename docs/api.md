@@ -54,12 +54,49 @@ fields and call `ttf_engine_set_frontend_options` **before freeze**. The setter
 copies the fields; no caller pointers are retained. Setup requires caller
 synchronization. Frozen engines reject changes with `TTF_ESTATE`.
 
+The CJK options extension accepts the v0.20 prefix size through the current size,
+with ABI version 1. Missing or incomplete trailing fields use their defaults;
+larger sizes are rejected. The historical `ttf_frontend_options_init` symbol writes
+only the v0.20 prefix, so an already-compiled caller's allocation remains safe.
+New headers route initializer calls to `ttf_frontend_options_init_sized(options,
+sizeof(ttf_frontend_options_t))`; FFI callers should use that sized entry point.
+The sized initializer ignores null pointers and sizes outside the accepted range.
+
 | Field | Initializer default | Other choice |
 |---|---|---|
 | `input_format` | `TTF_INPUT_PLAIN` | `TTF_INPUT_ANNOTATED` |
 | `output_mode` | `TTF_OUTPUT_SPEECH` | `TTF_OUTPUT_TEXT` |
 | `unreadable_policy` | `TTF_UNREADABLE_PRESERVE` | `TTF_UNREADABLE_DROP` |
 | `max_control_bytes` | 4096 | Positive total bytes per annotated control |
+| `hanja` | `TTF_HANJA_PASSTHROUGH` | `TTF_HANJA_KOREAN` |
+| `kana` | `TTF_KANA_PASSTHROUGH` | `TTF_KANA_KOREAN` |
+
+Han/Kana Korean rendering is opt-in, independently per script, in Korean context.
+Both flags default to passthrough. Source language remains `und`; successful
+readings use existing WORD IR, Korean render language and resource/initial-variant
+trace events. No semantic enum or language-pack ABI was added.
+
+```c
+ttf_frontend_options_t options;
+ttf_frontend_options_init(&options);
+options.hanja = TTF_HANJA_KOREAN;
+options.kana = TTF_KANA_KOREAN;
+/* Apply before ttf_engine_freeze(). */
+ttf_engine_set_frontend_options(engine, &options);
+```
+
+Freeze first loads only the enabled CJK system tables, then moves all six CJK
+resource kinds (including explicit pre-freeze overlays) into one engine-owned
+heap index. Both passthrough and legacy callers never open the system CJK files.
+A failed freeze rolls back deferred rows and declaration numbers; callers may
+correct the resource/options and retry. Public loading after freeze is unchanged
+(`TTF_ESTATE`). `ttf_resource_get` and resource validation include all currently
+loaded rows: before freeze this excludes deferred system tables, afterwards it
+includes the enabled tables. See the counts in [resources](resources.md#cjk-korean-readings).
+Returned values remain engine-owned until destroy. Immutable request
+views borrow the index. No per-request copy of the index or mutable global state
+is introduced. See the [CJK design](cjk-korean-reading.ko.md),
+[resource authoring](resources.md#cjk-korean-readings) and [handoff](HANDOFF.md).
 
 An engine without the setter retains legacy plain/text/preserve behavior. CLI
 also defaults to text; the web workbench selects speech explicitly. Unknown Han

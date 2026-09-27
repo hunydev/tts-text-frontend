@@ -188,9 +188,9 @@ static void extension(void) {
         return;
     OK(ttf_engine_register_pack(engine, &pack));
     OK(ttf_engine_freeze(engine));
-    OK(ttf_normalize(engine, "語 7", strlen("語 7"), &result));
+    OK(ttf_normalize(engine, "Ж 7", strlen("Ж 7"), &result));
     if (result.text)
-        CHECK(!strcmp(result.text, "語 synthetic-number"));
+        CHECK(!strcmp(result.text, "Ж synthetic-number"));
     ttf_result_free(&result);
     CHECK(ttf_engine_register_pack(engine, &pack) == TTF_ESTATE);
     ttf_engine_destroy(engine);

@@ -73,7 +73,7 @@ class Config(C.Structure):
 class FrontendOptions(C.Structure):
     _fields_ = [("struct_size", C.c_uint32), ("abi_version", C.c_uint32),
                 ("input_format", I), ("output_mode", I), ("unreadable_policy", I),
-                ("max_control_bytes", Z)]
+                ("max_control_bytes", Z), ("hanja", I), ("kana", I)]
 
 
 class ResourceDiagnostic(C.Structure):
@@ -174,7 +174,7 @@ class Engine:
                 "ttf_engine_validate_resources": (I, [P, C.POINTER(ResourceValidationReport), C.POINTER(ResourceDiagnostic)]),
             })
         frontend_keys = {"input_format", "output_mode", "unreadable", "brackets",
-                         "unknown_foreign", "decorative", "initialism", "max_control_bytes"}
+                         "unknown_foreign", "decorative", "initialism", "max_control_bytes", "hanja", "kana"}
         has_frontend = hasattr(self.lib, "ttf_engine_set_frontend_options")
         if frontend_keys.intersection(options) and not has_frontend:
             raise ValueError("This native library does not support frontend output/input options")
@@ -183,6 +183,11 @@ class Engine:
                 "ttf_frontend_options_init": (None, [C.POINTER(FrontendOptions)]),
                 "ttf_engine_set_frontend_options": (I, [P, C.POINTER(FrontendOptions)]),
             })
+        has_cjk_options = hasattr(self.lib, "ttf_frontend_options_init_sized")
+        if has_cjk_options:
+            definitions["ttf_frontend_options_init_sized"] = (None, [C.POINTER(FrontendOptions), Z])
+        elif any(options.get(key, "passthrough") != "passthrough" for key in ("hanja", "kana")):
+            raise ValueError("This native library does not support CJK options")
         self.detailed_trace = bool(options.get("detailed_trace", False))
         self.has_trace = hasattr(self.lib, "ttf_normalize_traced")
         if self.detailed_trace and not self.has_trace:
@@ -227,7 +232,12 @@ class Engine:
         try:
             if has_frontend:
                 frontend = FrontendOptions()
-                self.lib.ttf_frontend_options_init(C.byref(frontend))
+                if has_cjk_options:
+                    self.lib.ttf_frontend_options_init_sized(C.byref(frontend), C.sizeof(frontend))
+                    frontend.hanja = {"passthrough": 0, "korean": 1}[options.get("hanja", "passthrough")]
+                    frontend.kana = {"passthrough": 0, "korean": 1}[options.get("kana", "passthrough")]
+                else:
+                    self.lib.ttf_frontend_options_init(C.byref(frontend))
                 frontend.input_format = {"plain": 0, "annotated": 1}[options.get("input_format", "plain")]
                 frontend.output_mode = {"text": 0, "speech": 1}[options.get("output_mode", "text")]
                 frontend.unreadable_policy = {"preserve": 0, "drop": 1, "read": 2}[

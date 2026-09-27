@@ -2,6 +2,7 @@
  * check proves structural usability, not an independently approved reading. */
 #include "../../src/core/internal.h"
 #include "../../src/resource/validation.h"
+#include "../../src/cjk/cjk_reading.h"
 
 #define KO "ko-KR"
 #define SAME(a, b) (!strcmp((a), (b)))
@@ -118,6 +119,9 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     *handled = 0;
     if (!wildcard && !SAME(r->language, KO))
         return TTF_OK;
+    status = ttf_cjk_validate(r, handled, d);
+    if (*handled || status != TTF_OK)
+        return status;
     if (SAME(k, "number_sign")) {
         *handled = 1;
         return SAME(key, "#") && label(v) && strstr(v, "{N}") && strlen(v) < 64
