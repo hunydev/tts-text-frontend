@@ -236,3 +236,16 @@ was copied into runtime resources; tests and C implementation are original.
 The frontend does not validate subscriber reachability or country allocations.
 Seven-digit minimums, extension limits, and spoken labels are editable project
 choices, not claims that E.164 defines TTS reading or every supported local format.
+
+## 2026-09-27 조사표 참고 추가
+
+국립국어원 온라인가나다의 [랑/이랑](https://www.korean.go.kr/front/onlineQna/onlineQnaView.do?mn_id=216&pageIndex=1&qna_seq=318773),
+[나마/이나마](https://www.korean.go.kr/front/onlineQna/onlineQnaView.do?mn_id=216&pageIndex=1&qna_seq=320391),
+한국어기초사전의 [이라도](https://krdict.korean.go.kr/eng/dicSearch/SearchView?ParaWordNo=78504&nation=eng),
+[라도](https://krdict.korean.go.kr/chn/dicSearch/SearchView?ParaWordNo=78508),
+[든](https://krdict.korean.go.kr/eng/dicSearch/SearchView?ParaWordNo=86261&nation=eng)을
+문법 사실 참고로 조회했다. 고정 commit 없는 웹 자료이며 식별자는 각 URL의 항목 번호와
+조회일이다. 웹 원문/예문 전체에 대한 상업적 복제·재배포 허가나 open license는 확인하지
+않았으므로 vendoring하지 않았다. 링크·조회일을 출처로 남기고, 제품 TSV 및 72개 시험 문장은
+직접 작성했다. 외부 한국어 코퍼스나 사전 내용을 제품 resource로 가져온 작업이 아니다.
+정책과 독립 검수 상태는 [조사 가이드](particle-resources.md)에 기록한다.

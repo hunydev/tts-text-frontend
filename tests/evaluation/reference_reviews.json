@@ -862,6 +862,17 @@
         "reason": "The subset the current guess already reaches, kept as a regression gate; adding the failing words to a lexicon would not count as progress."
       },
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/particle_table_v21.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Project-authored 72-case particle inventory, frozen before candidate changes; docs/particle-resources.md",
+        "reason": "Mandatory allomorphs, quantity boundaries and preservation negatives; no independent human approval or external Korean gold."
+      },
+      "case_overrides": {}
     }
   ],
   "excluded": [

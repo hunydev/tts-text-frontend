@@ -352,6 +352,7 @@ TSV 문구만 바꿀 때 C core 재컴파일은 필요 없다. 새로운 classif
 
 - 금액의 NBSP/좁은 NBSP/thin space 묶음: [Unicode 숫자 가이드](unicode-numbers.md)
 - `번째`, 횟수/번호 `번`, `제3장`, 조사와 범위: [한국어 카운터 가이드](korean-counters.md)
+- 받침에 따른 조사 쌍, 문맥·금액 경계 및 고객 override: [조사표 편집 가이드](particle-resources.md)
 - 발음 사전/G2P의 실제 source layer 확인: [발음 trace 가이드](pronunciation-trace.md)
 
 `counter_role_before`를 추가하면 `boundary_word`도 함께 등록합니다. 새 조사

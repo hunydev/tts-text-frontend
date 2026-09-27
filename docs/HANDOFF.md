@@ -1,6 +1,69 @@
 # 현재 작업 인수인계
 
-갱신: 2026-09-22. Release **0.20.0**, public ABI **v1**.
+갱신: 2026-09-27. Release **0.20.0**, public ABI **v1**.
+
+## 이번 인계: 조사 자원표 한 규칙군 (base `aa562a7`, 2026-09-27)
+
+사용자가 제시한 여섯 후보 중 **5번의 조사표**를 선택했다. 다음 작업을 자동으로 시작하지 않는다.
+
+- `resources/languages/ko-KR/rules/context.tsv`에 의무적 조사 쌍 8개를
+  `particle_form` 16행 + `particle` 16행으로 선언했다. 공개 ABI 변경 없음.
+- 전체 회귀 검사에서 기존 고객 문자표 계약의 오인식이 드러났다: `가漢나`가 `가한이나`,
+  `가1️⃣나`가 `가키캡일이나`가 됐다. 기대값은 그대로 두고 `normalize.c`에서 미분류 OTHER
+  identity / unreadable-cluster 이름 치환 뒤에는 조사 교정을 생략하도록 좁혔다.
+  문자 이름 출력이 명사 경계라는 근거는 없으므로 자기 span만 바꾼다. 이는 해당 문자 뒤의
+  실제 조사도 자동 교정하지 않는 보수적 경계이며, 별도의 의미 분류가 필요한 후속 범위다.
+- `3랑` → `삼이랑`, `GPU이랑` → `지피유랑`, `1만원라도` → `만 원이라도`.
+  마지막 사례는 금액 경계까지 복구하며 CURRENCY(value=10000, unit=KRW)를 유지한다.
+- 변경 **전에** 고정한 `particle_table_v21.jsonl` 72건: baseline 35/72 → candidate 72/72,
+  fixed 37 / regressed 0. corpus SHA256
+  `346d129829bf4d9a942cdfb92fd606ed40902697b86283c2b621fd52bb65d457`.
+  기존 기대값은 바꾸지 않았다. 독립적인 사람 검수 및 외부 KO gold는 여전히 없다.
+- `tests/integration/test_particle_resources.py`: 두 분절 설정의 모든 두 조각 UTF-8 분할
+  1,390회에서 text/span/trace 동일. 금액 값, 선택 resource의 입력 offset·layer,
+  customer 조사표 override 및 user 발음에 따른 교정 검사도 통과.
+- `tn_cycle` snapshot/cycle: `artifacts/tn/particle-table/{baseline,final-candidate,final-comparison}`.
+  최초 resource-only candidate/comparison은 발견 과정의 기록으로 별도 보존했다.
+  외부 영어 `sproat-v21-leadzero` 대 `sproat-v21-particle-table-final`: 3,785문장·46,213span,
+  exact 35,313 그대로, chunk 11,355회 불일치 0. 결과 파일 SHA256 양쪽 동일:
+  `3f2d4d69e9a7c5466bd884c41a5623d6e2e50d9273e75915b47befe44fa4bf79`.
+  비교는 `benchmark/generated/sproat-v21-particle-table-final-comparison.json`.
+- corpus는 CTest·reference audit·웹 `particle-table-v21`에 등록했다.
+  사람용 [조사표 편집 가이드](particle-resources.md)와 THIRD_PARTY 참고 내역을 추가했다.
+- 남은 범위: 조사 연쇄(`이랑은`), 서술격 선택 축약, 호격, 문맥 prefix 오인식의 형태소 분석.
+  다음에는 5번의 **month/weekday alias** 표를 한 규칙군으로 훑는 작업을 권한다.
+  맨 연도·NUM-ZERO·NUM-WIDTH·로마 숫자·EVAL-03은 이번에 다루지 않았다.
+
+재현 명령:
+
+```sh
+python3 tools/quality/tn_cycle.py cycle \
+  --baseline artifacts/tn/particle-table/baseline \
+  --candidate artifacts/tn/particle-table/final-candidate \
+  --corpus tests/evaluation/particle_table_v21.jsonl --out artifacts/tn/particle-table/NEW-comparison
+ctest --test-dir build --output-on-failure -R 'particle|compiled_resources'
+```
+
+검증·배포:
+
+- Debug 전체 150개 실행에서 149개 통과, `user_pattern_contracts` 1개 실패로 위 문자 치환
+  회귀를 찾았다 (`/tmp/ttf-particle-table-ctest.log`). 경계 수정 뒤 관련 **9/9 통과**
+  (`/tmp/ttf-particle-table-guard2-check.log`). 최종 바이너리로 전체 150개를 다시 실행했다고
+  표기하지 않는다. push CI의 GCC/Clang 전체 실행은 해당 main commit의 Actions에서 확인한다.
+- 최종 ASan/UBSan 관련 **6/6 통과**: user-pattern 계약, 기존/신규 particle corpus,
+  resource validation/compiler, context cache. 30k-number는 **58.67초**로 기존 60초 제한 유지.
+  `/tmp/ttf-particle-table-final-sanitize.log` (이번에 sanitizer 전체 suite를 재실행하지 않음).
+- 기준선부터 작성한 참조 SHA는 그대로이며, 최종 snapshot/cycle fixed 37 / regressed 0.
+  추가한 참조 audit는 결함 0, 72건 전부 독립 검수 대기.
+- 브라우저 gate 통과 (`/tmp/ttf-particle-table-browser.log`). 문자 경계 수정 후에는
+  Release `build-web` 재빌드·서비스 재시작, live API로 금액·약어 조사 및 한자/키캡
+  문자 치환 4건을 다시 확인했다. 웹 `particle-table-v21`은 72/72 통과.
+  `/api/health` = `{"ok":true,"version":"0.20.0"}`. 릴리스 번호는 이번에 변경하지 않았다.
+- `gh run list --branch main --limit 1`로 push CI 결과를 확인한다. 이 절은 로컬 증거이며
+  pending CI를 성공으로 표시하지 않는다. 로그와 raw 외부 corpus는 Git에 넣지 않는다.
+
+이후의 과거 기록에서 "커밋·미배포"는 각 작성 당시 상태이므로 현재 상태는 `git log`와
+서비스 설정으로 확인한다.
 
 ## 최근 작업: speech 최종 관문 (2026-09-22, 커밋·미배포)
 

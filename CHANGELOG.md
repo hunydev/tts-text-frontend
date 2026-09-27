@@ -2,6 +2,17 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Complete eight mandatory Korean particle pairs in the resource tables:
+  `(이)랑`, `(이)나`, `(이)나마`, `(이)라도`, `(이)든`, `(이)든지`,
+  `(이)야말로`, `(이)라든지`. `3랑` now reads `삼이랑`; the quantity boundary
+  also recognises `1만원라도` as `만 원이라도` with CURRENCY(10000, KRW).
+  Preserve the existing character-substitution contracts (`가漢나` → `가한나`,
+  mapped keycaps): an unclassified OTHER character or unreadable cluster does
+  not establish a noun boundary for particle agreement. Public ABI is unchanged.
+  A frozen 72-case table sweep improves 35 → 72
+  with no regressions; the corpus, byte-split/override tests and editing guide
+  are included. Optional copula contractions and arbitrary suffix splitting
+  remain outside this policy.
 - Read a four-digit number that a bracket holds on its own as a year, which is
   the citation shape: `( 1965 )` → `( nineteen sixty five )`, `(1965)`, and
   `Bright , William ( 1965 ) .`. An ordinary parenthesis keeps its cardinals

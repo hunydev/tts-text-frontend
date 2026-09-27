@@ -14,6 +14,7 @@ import re
 import sys
 
 ACTIVE_JSONL = (
+    "particle_table_v21",
     "cases", "domain_cases_v8", "advanced_cases", "challenge_cases",
     "protected_cases", "content_v7", "finance_ranges_v7", "multiword_v8", "lexicon_v10",
     "scaled_currency_v12", "english_dates_v13", "english_forms_v14", "korean_counters_v15", "phone_cases_v18",

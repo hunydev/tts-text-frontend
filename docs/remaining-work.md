@@ -49,6 +49,14 @@ compiled resource의 **8개 CTest를 다시 실행해 모두 통과**했다. 이
   **범위:** 문맥 없는 `번`은 기존 Sino 기본값이고 한국어 형태소/어미 전체를
   이해하는 것은 아니다. 접두 서수 범위는 현재 전체 원문 보존으로 처리한다.
   새 동사·조사·업무별 번호 문맥의 확대와 독립 사람 검수는 계속 필요하다.
+  **조사표 진행 (2026-09-27):** 의무적인 `(이)랑`, `(이)나`, `(이)나마`, `(이)라도`,
+  `(이)든`, `(이)든지`, `(이)야말로`, `(이)라든지` 8쌍을 `particle_form`과 `particle`에
+  추가했다. 변경 전 고정한 72건에서 35 → 72 통과, 회귀 0이며 금액 IR/고객 override와
+  1,390회 byte 분할도 검사한다. [편집 가이드](particle-resources.md).
+  기존 문자 치환 계약을 지키도록 미분류 OTHER identity / unreadable-cluster 뒤에서는
+  조사 교정을 생략한다. 문자 이름은 명사 경계의 근거로 보지 않는다.
+  전체 조사 span만 교정하므로 `이랑은` 같은 연쇄, 붙여 쓴 서술어, 선택적 서술격 축약과
+  호격 모호성은 남긴다. 문맥 신호는 여전히 접두사 heuristic이고 형태소 분석을 보장하지 않는다.
 
 - [x] **RES-01: resource compiler/runtime 행 구분 문법 일치.**
   [compiler](../tools/resource_compiler/compile_resources.py)는 `str.splitlines()`를

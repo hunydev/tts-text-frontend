@@ -47,3 +47,40 @@ particle_form	ko-KR	로써	으로써|로써|로써
 particle_form	ko-KR	으로써	으로써|로써|로써
 particle_form	ko-KR	로부터	으로부터|로부터|로부터
 particle_form	ko-KR	으로부터	으로부터|로부터|로부터
+
+# Obligatory noun-particle pairs; exact spans only, never arbitrary word prefixes.
+# See docs/particle-resources.md for the policy, sources and editing procedure.
+particle_form	ko-KR	랑	이랑|랑
+particle_form	ko-KR	이랑	이랑|랑
+particle_form	ko-KR	나	이나|나
+particle_form	ko-KR	이나	이나|나
+particle_form	ko-KR	나마	이나마|나마
+particle_form	ko-KR	이나마	이나마|나마
+particle_form	ko-KR	라도	이라도|라도
+particle_form	ko-KR	이라도	이라도|라도
+particle_form	ko-KR	든	이든|든
+particle_form	ko-KR	이든	이든|든
+particle_form	ko-KR	든지	이든지|든지
+particle_form	ko-KR	이든지	이든지|든지
+particle_form	ko-KR	야말로	이야말로|야말로
+particle_form	ko-KR	이야말로	이야말로|야말로
+particle_form	ko-KR	라든지	이라든지|라든지
+particle_form	ko-KR	이라든지	이라든지|라든지
+
+# Both written forms also close numeric quantities and signal Korean context.
+particle	ko-KR	랑	1
+particle	ko-KR	이랑	1
+particle	ko-KR	나	1
+particle	ko-KR	이나	1
+particle	ko-KR	나마	1
+particle	ko-KR	이나마	1
+particle	ko-KR	라도	1
+particle	ko-KR	이라도	1
+particle	ko-KR	든	1
+particle	ko-KR	이든	1
+particle	ko-KR	든지	1
+particle	ko-KR	이든지	1
+particle	ko-KR	야말로	1
+particle	ko-KR	이야말로	1
+particle	ko-KR	라든지	1
+particle	ko-KR	이라든지	1

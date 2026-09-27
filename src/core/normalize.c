@@ -803,10 +803,17 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
                                        text + end, length - end);
         }
         /* Only a particle written directly against the previous reading, with no
-           space, is part of that phrase; a separate word keeps its own text. */
+           space, is part of that phrase; a separate word keeps its own text.
+           A final-pass name for an unclassified OTHER character or an unreadable
+           cluster does not establish a noun boundary. Keep that substitution
+           local to its span, without changing the next word. */
         if (st == TTF_OK && output.length && tokens[i].begin &&
             !(text[tokens[i].begin - 1] == ' ' || text[tokens[i].begin - 1] == '\t' ||
-              text[tokens[i].begin - 1] == '\n'))
+              text[tokens[i].begin - 1] == '\n') &&
+            !(out->span_count &&
+              ((!strcmp(out->spans[out->span_count - 1].semantic.unit, "@unreadable-cluster")) ||
+               (out->spans[out->span_count - 1].script == TTF_SCRIPT_OTHER &&
+                !strcmp(out->spans[out->span_count - 1].semantic.rule, "identity")))))
             st = particle_agreement(e, renderer, text + tokens[i].begin, end - tokens[i].begin,
                                     &output, &normalized);
         if (st == TTF_OK && e->frontend_options.output_mode == TTF_OUTPUT_SPEECH) {
