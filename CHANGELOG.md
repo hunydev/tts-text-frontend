@@ -78,6 +78,16 @@
   stays. The default is unchanged and text mode is unaffected.
 - Space spelled characters by the declared `speech_join` alphabet value, which
   the final gate ignored: English now reads `two zero F` rather than `twozeroF`.
+- Read a long leading-zero digit run as digits rather than a quantity:
+  `0774858583` was `seven hundred seventy four million eight hundred fifty eight
+  thousand five hundred eighty three` and is now read digit by digit, which is
+  what the external sample does with it. The rule starts at seven plain digits,
+  where zero padding stops being a plausible quantity, so the project's recorded
+  position that a shorter bare run is ambiguous (`001204` → `천이백사`, `00010` →
+  `십`) is untouched, and a grouped `0,123,456` keeps its quantity reading. The
+  disagreement about shorter runs, and which Korean zero reading a bare
+  identifier should use, is recorded as NUM-ZERO in remaining-work rather than
+  decided here.
 - Read the remaining vulgar fractions and the parenthesised numbers, which a
   numeral-character sweep found unread while `½`, `⅓`, `¼`, `①`..`⑳` and `Ⅰ`..`Ⅹ`
   already worked: `⅕` → `오분의 일` / `one fifth`, `⑴` → `일` / `one`, and the rest
