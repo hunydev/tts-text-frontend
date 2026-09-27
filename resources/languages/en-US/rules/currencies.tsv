@@ -78,3 +78,117 @@ currency_minor_digits	en-US	CHF	2
 currency_minor_digits	en-US	NOK	2
 currency_minor_digits	en-US	JPY	0
 currency_minor_digits	en-US	KRW	0
+
+# Currencies the sweep found unnormalized. No minor unit is declared, so a
+# fractional value reads in major units; ¢ stays out as a minor unit.
+numeric_suffix	*	CNY	CURRENCY:CNY
+currency	en-US	CNY.one	yuan
+currency	en-US	CNY.many	yuan
+currency_minor_digits	en-US	CNY	0
+numeric_suffix	*	INR	CURRENCY:INR
+currency	en-US	INR.one	rupee
+currency	en-US	INR.many	rupees
+currency_minor_digits	en-US	INR	0
+numeric_suffix	*	RUB	CURRENCY:RUB
+currency	en-US	RUB.one	ruble
+currency	en-US	RUB.many	rubles
+currency_minor_digits	en-US	RUB	0
+numeric_suffix	*	BRL	CURRENCY:BRL
+currency	en-US	BRL.one	real
+currency	en-US	BRL.many	reais
+currency_minor_digits	en-US	BRL	0
+numeric_suffix	*	MXN	CURRENCY:MXN
+currency	en-US	MXN.one	Mexican peso
+currency	en-US	MXN.many	Mexican pesos
+currency_minor_digits	en-US	MXN	0
+numeric_suffix	*	ZAR	CURRENCY:ZAR
+currency	en-US	ZAR.one	rand
+currency	en-US	ZAR.many	rand
+currency_minor_digits	en-US	ZAR	0
+numeric_suffix	*	NZD	CURRENCY:NZD
+currency	en-US	NZD.one	New Zealand dollar
+currency	en-US	NZD.many	New Zealand dollars
+currency_minor_digits	en-US	NZD	0
+numeric_suffix	*	SGD	CURRENCY:SGD
+currency	en-US	SGD.one	Singapore dollar
+currency	en-US	SGD.many	Singapore dollars
+currency_minor_digits	en-US	SGD	0
+numeric_suffix	*	HKD	CURRENCY:HKD
+currency	en-US	HKD.one	Hong Kong dollar
+currency	en-US	HKD.many	Hong Kong dollars
+currency_minor_digits	en-US	HKD	0
+numeric_suffix	*	TWD	CURRENCY:TWD
+currency	en-US	TWD.one	Taiwan dollar
+currency	en-US	TWD.many	Taiwan dollars
+currency_minor_digits	en-US	TWD	0
+numeric_suffix	*	THB	CURRENCY:THB
+currency	en-US	THB.one	baht
+currency	en-US	THB.many	baht
+currency_minor_digits	en-US	THB	0
+numeric_suffix	*	VND	CURRENCY:VND
+currency	en-US	VND.one	dong
+currency	en-US	VND.many	dong
+currency_minor_digits	en-US	VND	0
+numeric_suffix	*	IDR	CURRENCY:IDR
+currency	en-US	IDR.one	rupiah
+currency	en-US	IDR.many	rupiah
+currency_minor_digits	en-US	IDR	0
+numeric_suffix	*	MYR	CURRENCY:MYR
+currency	en-US	MYR.one	ringgit
+currency	en-US	MYR.many	ringgit
+currency_minor_digits	en-US	MYR	0
+numeric_suffix	*	PHP	CURRENCY:PHP
+currency	en-US	PHP.one	Philippine peso
+currency	en-US	PHP.many	Philippine pesos
+currency_minor_digits	en-US	PHP	0
+numeric_suffix	*	SEK	CURRENCY:SEK
+currency	en-US	SEK.one	Swedish krona
+currency	en-US	SEK.many	Swedish kronor
+currency_minor_digits	en-US	SEK	0
+numeric_suffix	*	DKK	CURRENCY:DKK
+currency	en-US	DKK.one	Danish krone
+currency	en-US	DKK.many	Danish kroner
+currency_minor_digits	en-US	DKK	0
+numeric_suffix	*	PLN	CURRENCY:PLN
+currency	en-US	PLN.one	zloty
+currency	en-US	PLN.many	zlotys
+currency_minor_digits	en-US	PLN	0
+numeric_suffix	*	CZK	CURRENCY:CZK
+currency	en-US	CZK.one	Czech koruna
+currency	en-US	CZK.many	Czech korunas
+currency_minor_digits	en-US	CZK	0
+numeric_suffix	*	HUF	CURRENCY:HUF
+currency	en-US	HUF.one	forint
+currency	en-US	HUF.many	forint
+currency_minor_digits	en-US	HUF	0
+numeric_suffix	*	TRY	CURRENCY:TRY
+currency	en-US	TRY.one	Turkish lira
+currency	en-US	TRY.many	Turkish lira
+currency_minor_digits	en-US	TRY	0
+numeric_suffix	*	ILS	CURRENCY:ILS
+currency	en-US	ILS.one	shekel
+currency	en-US	ILS.many	shekels
+currency_minor_digits	en-US	ILS	0
+numeric_suffix	*	UAH	CURRENCY:UAH
+currency	en-US	UAH.one	hryvnia
+currency	en-US	UAH.many	hryvnia
+currency_minor_digits	en-US	UAH	0
+numeric_suffix	*	NGN	CURRENCY:NGN
+currency	en-US	NGN.one	naira
+currency	en-US	NGN.many	naira
+currency_minor_digits	en-US	NGN	0
+currency_prefix	*	¥CN	CNY
+currency_prefix	*	₹	INR
+currency_prefix	*	₽	RUB
+currency_prefix	*	R$	BRL
+currency_prefix	*	NZ$	NZD
+currency_prefix	*	S$	SGD
+currency_prefix	*	HK$	HKD
+currency_prefix	*	NT$	TWD
+currency_prefix	*	฿	THB
+currency_prefix	*	₫	VND
+currency_prefix	*	₺	TRY
+currency_prefix	*	₪	ILS
+currency_prefix	*	₴	UAH
+currency_prefix	*	₦	NGN
+currency_prefix	*	¥	JPY

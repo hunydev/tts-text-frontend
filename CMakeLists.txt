@@ -237,6 +237,9 @@ if(BUILD_TESTING)
     add_test(NAME unit_sweep_v21_evaluation COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources unit_sweep_v21.jsonl 43)
+    add_test(NAME currency_sweep_v21_evaluation COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources currency_sweep_v21.jsonl 45)
     add_test(NAME unreadable_read_v21_evaluation COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources unreadable_read_v21.jsonl 13)
@@ -374,11 +377,14 @@ if(BUILD_TESTING)
     add_test(NAME option_matrix COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_option_matrix.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
-    set_tests_properties(option_matrix PROPERTIES TIMEOUT 300)
+    # Each check is a separate CLI run, so an instrumented build needs room.
+    set_tests_properties(option_matrix PROPERTIES
+      TIMEOUT $<IF:$<OR:$<BOOL:${TTF_ENABLE_ASAN}>,$<BOOL:${TTF_ENABLE_UBSAN}>>,1200,300>)
     add_test(NAME speakable_sweep COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_speakable.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
-    set_tests_properties(speakable_sweep PROPERTIES TIMEOUT 300)
+    set_tests_properties(speakable_sweep PROPERTIES
+      TIMEOUT $<IF:$<OR:$<BOOL:${TTF_ENABLE_ASAN}>,$<BOOL:${TTF_ENABLE_UBSAN}>>,1800,300>)
     add_test(NAME range_semantics COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_range_semantics.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)

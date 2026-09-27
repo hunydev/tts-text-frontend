@@ -11,6 +11,17 @@ The new records are in:
   English labels and English minor-unit reading policy.
 - `resources/languages/ko-KR/rules/currencies.tsv`: additional Korean labels.
 
+On 2026-09-26 a sweep of 23 symbols and 30 ISO codes found 17 symbols and 21
+codes undeclared, so 24 currencies were added (CNY, INR, RUB, BRL, MXN, ZAR, NZD,
+SGD, HKD, TWD, THB, VND, IDR, MYR, PHP, SEK, DKK, PLN, CZK, HUF, TRY, ILS, UAH,
+NGN). Three decisions are worth repeating: `¥` maps to JPY, the convention for
+that symbol, and the yuan is written `CN¥`; `¢` is a minor unit rather than a
+currency, so it stays undeclared and is left unread; and the new set declares
+`currency_minor_digits 0`, so a fractional amount reads in major units until a
+customer overlay adds minor labels. A symbol carrying Latin letters (`HK$`,
+`NZ$`) still chooses English context when it stands alone, which is the ordinary
+context scoring, not a currency rule.
+
 Existing USD, EUR, JPY and KRW records remain in `numeric.tsv` or
 `measurements.tsv`. Keeping each key in one place avoids first-declaration
 precedence silently hiding a later edit. Recognition records use language `*`,

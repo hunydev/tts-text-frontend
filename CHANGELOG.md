@@ -78,6 +78,15 @@
   stays. The default is unchanged and text mode is unaffected.
 - Space spelled characters by the declared `speech_join` alphabet value, which
   the final gate ignored: English now reads `two zero F` rather than `twozeroF`.
+- Declare 24 currencies that reached the synthesizer as written, found by
+  sweeping 23 symbols and 30 ISO codes at once: 17 symbols and 21 codes were
+  unnormalized, and in a Korean sentence an undeclared code pulled the amount
+  into English as well (`5 CNY` read `five c n y`). CNY, INR, RUB, BRL, MXN, ZAR,
+  NZD, SGD, HKD, TWD, THB, VND, IDR, MYR, PHP, SEK, DKK, PLN, CZK, HUF, TRY, ILS,
+  UAH and NGN now carry their code, symbol and labels in both languages. `¥` maps
+  to JPY, the convention for that symbol, with `CN¥` for the yuan, and `¢` stays
+  out because it is a minor unit rather than a currency. No minor unit is declared
+  for the new set, so a fractional value reads in major units.
 - Declare 33 unit abbreviations that reached the synthesizer as written, found
   by sweeping 77 of them at once: 54 were unnormalized. `5ms`, `5hr`, `5px`,
   `5pt`, `5dB`, `5rpm`, `5Pa`, `5kV`, `5mAh`, `5lb`, `5oz`, `5inch`, `5mile`,
