@@ -2,7 +2,83 @@
 
 갱신: 2026-09-27. Release **0.20.0**, public ABI **v1**.
 
-## 이번 인계: 조사 자원표 한 규칙군 (base `aa562a7`, 2026-09-27)
+## 이번 인계: 날짜 뒤 영문 요일 / 자원표 점검 (base `842dbfd`, 2026-09-27)
+
+이전 조사표 커밋 `842dbfd`의 GitHub Actions 전체 성공을 확인한 뒤, 5번의
+month/weekday alias 규칙군 하나를 진행했다. 다음 작업을 자동으로 시작하지 않는다.
+
+- 기존 월 alias 24개는 모두 정상. 기존 한글 weekday cue 14개도 점검했다.
+  영문 alias 14개 + KO/EN 읽기 14개를 추가했다. `마감은 5/8(Fri)입니다.` →
+  `마감은 오 월 팔 일(금요일)입니다.`.
+- `languages/en-US/date.c`가 날짜에 바로 붙은 괄호 안 alias만 분류한다.
+  공통 IR은 `DATE(value=1..7, unit=weekday, secondary=접힌 alias)`이며 KO/EN
+  verbalizer가 각자의 `weekday` 표로 렌더링한다. Core는 단서의 대소문자·점 처리와
+  layer 전달만 일반화했다. 공개 구조체/symbol/ABI 변경 없음.
+- 상세 trace에 실제 `weekday_label`/`weekday` 행을 기록한다. 괄호는 독립 span이며
+  read/preserve/skip을 유지한다. 사용자 파일의 alias 추가·0 비활성·읽기 override를 검증한다.
+- 신규 `calendar_alias_v21.jsonl` 72건을 구현 전에 직접 작성했다. 최초 precheck의
+  분수 negative 3건은 `five eighths`로 작성돼 기존 `fraction_over=over`와 달랐다.
+  **구현 전** 정책 검토에서 정정하고 원본을 artifacts에 보관했다. 최종 같은 corpus의
+  baseline 33/72 → candidate 72/72, fixed 39 / regressed 0. 정정 3건을 개선으로 세지 않았다.
+  기존 활성 corpus 기대값 수정은 없다. 독립 사람 검수 및 외부 KO gold는 아직 없다.
+- corpus SHA256: `37f7d7d908e12e959195130576917362d489e3e70e5f0b2aa28372a7498d673c`.
+  `artifacts/tn/calendar-alias/`에 baseline, 최초 reference/precheck, 개발 결과,
+  candidate/comparison을 보존한다. 최종 경계값 수정 후 캡처·검증 위치는 아래에 기록한다.
+- CTest·reference audit·웹 `calendar-alias-v21` 등록.
+  [달력 별칭 편집 가이드](calendar-alias-resources.md), Semantic IR/validation/THIRD_PARTY 갱신.
+- 외부 영어 표본 3,785문장·46,213span 결과는 이전과 동일. exact 35,313 및 chunk
+  11,355회 불일치 0. 결과 SHA256 `3f2d4d69e9a7c5466bd884c41a5623d6e2e50d9273e75915b47befe44fa4bf79`.
+  이번 합성 표본에서 확인한 개선을 외부 정확도 향상으로 주장하지 않는다.
+- 남은 범위: prefix 요일(`Mon., May 8`), 날짜/괄호 사이 공백, 한자 요일 및 한글 약자
+  확장, 날짜-요일 불일치 진단. 날짜 lookbehind는 96바이트로 제한한다.
+  다음 자원표는 **abbreviation** 또는 **speech_character** 중 하나만 선택한다.
+  맨 연도·NUM-ZERO·NUM-WIDTH·로마 숫자·EVAL-03은 별도 범위다.
+
+재현 명령:
+
+```sh
+ctest --test-dir build --output-on-failure -R 'calendar_alias|resource_semantic_validation'
+python3 tools/quality/tn_cycle.py cycle \
+  --baseline artifacts/tn/calendar-alias/baseline \
+  --candidate artifacts/tn/calendar-alias/final-candidate \
+  --corpus tests/evaluation/calendar_alias_v21.jsonl --out artifacts/tn/calendar-alias/NEW-comparison
+```
+
+검증·배포:
+
+- GCC Debug 전체 **152/152 통과**, 692.12초 (`/tmp/ttf-calendar-all-tests.log`).
+  이 전체 실행은 `candidate` snapshot의 바이너리다. 이후 허용 최대 31자 alias에
+  끝 점을 붙였을 때 공통 단서 버퍼가 부족한 경계를 수정했다(32 → 33바이트).
+  최종 바이너리는 관련 **4/4 통과** (`/tmp/ttf-calendar-final-targeted.log`):
+  신규 corpus/native byte split, resource semantic validation, compiled resources.
+  이 최종 한 바이트 경계 수정 후 로컬 전체 152개를 재실행했다고 표시하지 않는다.
+- Native 비교 **2,122회**: 두 분절 profile에서 모든 두 조각 UTF-8 분할의
+  text/span/trace 일치. 고객 alias 추가·비활성·읽기 교체, 31자+점, KO context/source,
+  bracket read/preserve/skip 및 부정 사례를 별도 검사했다.
+- 최종 Clang ASan/UBSan 관련 **6/6 통과**, 73.07초
+  (`/tmp/ttf-calendar-sanitize.log`): context score cache, resource validator, 신규 corpus,
+  bracket corpus, English date value contracts, compiled resources. sanitizer 전체는
+  로컬 재실행하지 않았으며 push CI가 전체 GCC/Clang/ASan/UBSan을 실행한다.
+- 최종 `artifacts/tn/calendar-alias/{final-candidate,final-comparison}`: fixed 39,
+  unchanged-pass 33, regressed 0. 기준문 SHA는 위와 동일하다.
+  외부 재평가 `benchmark/generated/sproat-v21-calendar-alias-final` 및
+  `sproat-v21-calendar-alias-final-comparison.json` 역시 기존 결과 SHA와 완전히 같다.
+- Reference audit: 50파일·1,618건, 구조 결함 0, 사람 승인 0 / 전체 독립 검수 대기.
+  `artifacts/tn/calendar-alias/final-reference-audit.json`.
+- Release `build-web` 재빌드, `ttf-workbench.service` 재시작 완료. 브라우저 gate 통과
+  (`/tmp/ttf-calendar-browser.log`), live API 신규 corpus **72/72**, 상세 trace와
+  chunk parity 확인 (`artifacts/tn/calendar-alias/live-web.json`).
+  `/api/health`는 `ok=true, version=0.20.0`; 이번에도 release 번호는 변경하지 않았다.
+- 편집 가이드의 TSV 예제를 `validate-resource --require-complete-validation`으로 검사하고
+  `마감은 오 월 팔 일(금)입니다.` 출력도 확인했다. 기존 동작을 바꾸는 고객 정책은
+  시스템 기본 사전에 합치지 않았다.
+- `gh run list --branch main --limit 1`로 이번 push의 전체 CI를 확인한다.
+  위는 로컬 실행 증거이며 pending CI를 성공으로 기록하지 않는다.
+
+
+---
+
+## 이전 인계: 조사 자원표 한 규칙군 (base `aa562a7`, 2026-09-27)
 
 사용자가 제시한 여섯 후보 중 **5번의 조사표**를 선택했다. 다음 작업을 자동으로 시작하지 않는다.
 

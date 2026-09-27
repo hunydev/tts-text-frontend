@@ -286,3 +286,11 @@ CLI/compiler 테스트는 진단 좌표, 잘못된 scalar/관계/의존성, stri
 추가 namespace에는 검증기를 추가하고, 발음/읽기 정답은 버전 관리한 reference와
 독립 검토를 유지한다. 리소스 schema 통과만으로 production 언어 품질 완료를
 주장하지 않는다.
+
+
+## v0.21 달력 별칭
+
+`weekday_label/en-US`는 소문자 ASCII key(1..31자), 한 자리 0..7을 검증한다.
+`weekday/ko-KR|en-US`는 key 1..7과 비어 있지 않은 읽기(앞뒤 ASCII 공백·제어문자 금지)를
+검증한다. 기존 `weekday_label/ko-KR`의 0|1 활성 규약은 유지한다.
+편집 방법과 두 namespace의 차이는 [달력 별칭 가이드](calendar-alias-resources.md)를 참고한다.

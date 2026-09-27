@@ -76,7 +76,9 @@ See the [input grammar](docs/input-format.md),
 ## Named dates and contextual years (v0.13)
 
 The English pack now recognizes month-first and day-first named dates, partial
-month/day and year/month values, and resource-cued years. Calendar validation
+month/day and year/month values, and resource-cued years. Date-attached English weekdays
+(`5/8(Fri)` → `May eighth(Friday)` or `오 월 팔 일(금요일)` in Korean context)
+use editable [calendar alias resources](docs/calendar-alias-resources.md). Calendar validation
 rejects impossible dates; missing fields remain absent in Semantic IR.
 
 ```text

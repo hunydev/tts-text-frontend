@@ -1,5 +1,8 @@
 # Named English dates and contextual years
 
+For the v0.21 date-attached weekday labels and editable month/weekday tables,
+see [calendar alias resources](calendar-alias-resources.md).
+
 The English language pack recognizes named calendar dates before its lexical
 classification step. Recognition produces the shared `DATE` semantic IR;
 rendering remains the responsibility of the selected speech language pack.

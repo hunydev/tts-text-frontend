@@ -595,3 +595,18 @@ phone-negative 계약 2건의 기대를 CARDINAL → DATE로 바꾼 정책 변�
 28단어에서 정확 일치 0 → 14이며 남은 14건은 `docs/research/oov-guess-v21-results.md`에 남겼다.
 사전 추가로 통과시키지 않았다. 남은 범위: 모음 질(`o` → AA 고정), 어말 파열음 받침(`마켓`),
 `-tion`/`-sion` 밖의 접미사, 그리고 known-hit와 OOV를 분리한 더 큰 표본.
+
+
+## v0.21 후속(미릴리스) — 날짜 뒤 영문 요일 / 자원표 점검 (TN-02 일부)
+
+월 alias 24개 및 기존 한글 weekday cue 14개를 점검했다. 영문 weekday alias 14개와
+KO/EN 출력 label 14개를 추가하고 `date(Fri.)`를 DATE/weekday IR로 읽는다.
+`마감은 5/8(Fri)입니다.` → `마감은 오 월 팔 일(금요일)입니다.`.
+독립 작성 72건: 같은 고정 corpus에서 33/72 → 72/72, fixed 39 / regressed 0.
+최초 기준문 분수 표현 3건의 구현 전 정책 정정 이력을 [편집 가이드](calendar-alias-resources.md)에
+남겼으며 개선에 포함하지 않았다. 외부 영어 3,785문장 결과 파일은 이전과 동일하다.
+
+남은 범위는 `Mon., May 8` prefix 요일, 날짜와 괄호 사이 공백, 한글 약자 확장 및 한자
+요일, 달력 불일치 진단이다. `sun`/`sat`/`wed` 단어 전체를 요일로 바꾸지 않는다.
+다음 자원표 sweep은 **abbreviation** 또는 **speech_character** 중 하나를 선택한다.
+EVAL-03 held-out 분리, 맨 연도, NUM-ZERO, NUM-WIDTH, 로마 숫자는 여전히 별도 범위다.

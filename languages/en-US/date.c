@@ -1,4 +1,5 @@
 #include "date.h"
+#include "../../src/core/internal.h"
 #include "../../src/semantic/numeric_grouping.h"
 
 #include <stdio.h>
@@ -565,6 +566,66 @@ static size_t year_range(const ttf_pack_input_t *in, ttf_semantic_t *out, size_t
     return consumed;
 }
 
+/* A weekday spelling is only a calendar label in an adjacent date(label).
+   Reuse the date classifiers on a bounded lookbehind; ordinary sun/sat/wed
+   and malformed dates must not become weekdays. Keep parentheses separate
+   so bracket read/preserve/skip still owns their contents. */
+static size_t bracketed_weekday(const ttf_pack_input_t *in, ttf_semantic_t *out,
+                                size_t start) {
+    char key[32];
+    const char *value;
+    size_t end = start, label_end, opening, i;
+    ttf_resource_layer_t layer;
+    if (!start || in->text[start - 1] != '(' ||
+        in->tokens[in->index].script != TTF_SCRIPT_LATIN)
+        return 0;
+    while (end < in->length && ascii_alpha(in->text[end]))
+        ++end;
+    if (end == start || end - start >= sizeof(key))
+        return 0;
+    label_end = end;
+    if (end < in->length && in->text[end] == '.')
+        ++end;
+    if (end >= in->length || in->text[end] != ')')
+        return 0;
+    for (i = start; i < label_end; ++i)
+        key[i - start] = ascii_lower(in->text[i]);
+    key[label_end - start] = 0;
+    value = ttf_resource_get(in->engine, "weekday_label", EN, key, &layer);
+    if (!value || value[0] < '1' || value[0] > '7' || value[1])
+        return 0;
+    opening = start - 1;
+    i = in->index;
+    while (i) {
+        ttf_pack_input_t probe = *in;
+        ttf_semantic_t date = {0};
+        size_t begin = in->tokens[--i].begin;
+        if (opening - begin > 96)
+            break;
+        if (in->tokens[i].script != TTF_SCRIPT_DIGIT &&
+            in->tokens[i].script != TTF_SCRIPT_LATIN)
+            continue;
+        probe.index = i;
+        if (!left_boundary(&probe, begin))
+            continue;
+        (void)ttf_classify_universal(&probe, &date);
+        if (date.type != TTF_SEM_DATE || date.input_end != opening ||
+            (date.unit[0] && strcmp(date.unit, "month-day"))) {
+            memset(&date, 0, sizeof(date));
+            (void)named_date(&probe, &date, begin);
+        }
+        if (date.type != TTF_SEM_DATE || date.input_end != opening ||
+            (date.unit[0] && strcmp(date.unit, "month-day")))
+            continue;
+        (void)snprintf(out->value, sizeof(out->value), "%s", value);
+        (void)snprintf(out->unit, sizeof(out->unit), "weekday");
+        (void)snprintf(out->secondary, sizeof(out->secondary), "%s", key);
+        merge_layer(&layer, date.layer);
+        return finish(in, out, end, 1, layer, "en.date.weekday");
+    }
+    return 0;
+}
+
 size_t ttf_en_classify_date(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     size_t start, named;
     if (!in || !out || in->index >= in->token_count)
@@ -572,6 +633,9 @@ size_t ttf_en_classify_date(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     start = in->tokens[in->index].begin;
     if (start >= in->length || !left_boundary(in, start))
         return 0;
+    named = bracketed_weekday(in, out, start);
+    if (named)
+        return named;
     named = named_date(in, out, start);
     if (named)
         return named;

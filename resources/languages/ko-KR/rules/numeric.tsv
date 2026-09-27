@@ -383,3 +383,12 @@ range_unit_family	ko-KR	주	calendar
 range_unit_family	ko-KR	시	clock
 range_unit_family	ko-KR	분	clock
 range_unit_family	ko-KR	초	clock
+
+# Rendering of DATE/weekday identities, shared with source language packs.
+weekday	ko-KR	1	월요일
+weekday	ko-KR	2	화요일
+weekday	ko-KR	3	수요일
+weekday	ko-KR	4	목요일
+weekday	ko-KR	5	금요일
+weekday	ko-KR	6	토요일
+weekday	ko-KR	7	일요일

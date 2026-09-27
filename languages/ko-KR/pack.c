@@ -598,6 +598,19 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         unsigned year = 0, month = 0, day = 0;
         int consumed = 0, has_year = 1, has_month = 1, has_day = 1;
         char value[16];
+        if (!strcmp(s->unit, "weekday")) {
+            const char *label;
+            if (s->value[0] < '1' || s->value[0] > '7' || s->value[1])
+                return TTF_EINVAL;
+            ttf_trace_stage(e, TTF_TRACE_POLICY, 0, length);
+            if (s->secondary[0])
+                TRY(ttf_trace_resource(e, "weekday_label", s->source_lang, s->secondary,
+                                       NULL, "date-attached weekday alias", (size_t)-1));
+            TRY(ttf_trace_resource(e, "weekday", "ko-KR", s->value, NULL,
+                                   "calendar weekday reading", (size_t)-1));
+            label = ttf_resource_get(e, "weekday", "ko-KR", s->value, NULL);
+            return label ? ttf_buffer_puts(out, label) : TTF_ERESOURCE;
+        }
         if (!strcmp(s->unit, "year")) {
             has_month = has_day = 0;
             if (sscanf(s->value, "%u%n", &year, &consumed) != 1)

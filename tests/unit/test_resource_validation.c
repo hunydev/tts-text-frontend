@@ -380,6 +380,14 @@ static void test_unknown_layering_and_atomicity(void) {
 
 static void test_known_invalid_rows(void) {
     static const char *invalid[] = {
+        "weekday_label\ten-US\tFri\t5\n",
+        "weekday_label\ten-US\tfri\t8\n",
+        "weekday_label\ten-US\tfri\t05\n",
+        "weekday_label\ten-US\tfri.\t5\n",
+        "weekday_label\tko-KR\t금\t5\n",
+        "weekday\ten-US\t0\tFriday\n",
+        "weekday\tko-KR\t8\t금요일\n",
+        "weekday\ten-US\t5\t   \n",
         "initialism_policy\ten-US\tdotted\tletter\n",
         "initialism_policy\t*\tdotted\tletter\n",
         "initialism_policy\ten-US\tunknown-key\tletters\n",

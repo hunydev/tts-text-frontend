@@ -252,3 +252,26 @@ decade_plural	en-US	1000	thousands
 # A decade is more specific than the generic "digits with a tail" fallback.
 classifier_priority	en-US	en.date.decade	10
 classifier_priority	en-US	en.date.year-range	10
+
+# Adjacent date(label) only; Monday=1, Sunday=7, 0 disables an alias.
+weekday_label	en-US	mon	1
+weekday_label	en-US	monday	1
+weekday_label	en-US	tue	2
+weekday_label	en-US	tuesday	2
+weekday_label	en-US	wed	3
+weekday_label	en-US	wednesday	3
+weekday_label	en-US	thu	4
+weekday_label	en-US	thursday	4
+weekday_label	en-US	fri	5
+weekday_label	en-US	friday	5
+weekday_label	en-US	sat	6
+weekday_label	en-US	saturday	6
+weekday_label	en-US	sun	7
+weekday_label	en-US	sunday	7
+weekday	en-US	1	Monday
+weekday	en-US	2	Tuesday
+weekday	en-US	3	Wednesday
+weekday	en-US	4	Thursday
+weekday	en-US	5	Friday
+weekday	en-US	6	Saturday
+weekday	en-US	7	Sunday

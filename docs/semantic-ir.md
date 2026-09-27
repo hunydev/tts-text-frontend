@@ -99,6 +99,12 @@ forms are this API's documented canonical strings; no missing field is inferred.
 empty unit/secondary. Consumers must examine `unit` before assuming three fields.
 See [the complete date contract](english-dates.md).
 
+The v0.21 work also uses `DATE(unit=weekday, value=1..7)` for an English
+weekday in an adjacent `date(label)` expression; Monday is 1. `secondary`
+holds the folded input alias (`fri` for `Fri.`), not a date order. The preceding
+date and parentheses retain separate spans. Rendering uses the context pack's
+`weekday` table. See [calendar alias resources](calendar-alias-resources.md).
+
 Named months establish an English source language. A contextual year whose
 source span contains only digits has source `und`; context and render language
 remain independent. Calendar values render through the selected language pack,

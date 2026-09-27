@@ -249,3 +249,13 @@ choices, not claims that E.164 defines TTS reading or every supported local form
 않았으므로 vendoring하지 않았다. 링크·조회일을 출처로 남기고, 제품 TSV 및 72개 시험 문장은
 직접 작성했다. 외부 한국어 코퍼스나 사전 내용을 제품 resource로 가져온 작업이 아니다.
 정책과 독립 검수 상태는 [조사 가이드](particle-resources.md)에 기록한다.
+
+
+## 2026-09-27 월·요일 별칭 참고 추가
+
+| Source / version | License / commercial-use assessment | Redistribution / attribution / vendoring |
+|---|---|---|
+| [RFC 5322 §3.3](https://www.rfc-editor.org/rfc/rfc5322#section-3.3), October 2008; 조회 2026-09-27 | 문서의 Copyright Statement는 IETF Trust (2008) 및 BCP 78의 권리·제한을 명시한다. 상업 제품에 원문 전체를 복제할 무제한 허가로 해석하지 않는다. 이번에는 통상적인 영문 월/요일 약자를 사실 참고로만 확인했다. | RFC 원문·ABNF·예문을 vendoring하지 않았다. 직접 작성한 TSV와 합성 시험만 포함하며 source/version을 여기 기록한다. 향후 RFC 원문을 재배포하려면 해당 문서에 적용되는 BCP 78 고지·조건을 별도로 확인해야 한다. |
+
+프로젝트의 `date(label)` TN 문법은 RFC 이메일 날짜 구현이 아니다. 날짜와 요일의
+불일치를 자동 수정하지 않는 자체 읽기 정책이며 [가이드](calendar-alias-resources.md)에 명시했다.

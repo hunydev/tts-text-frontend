@@ -1001,10 +1001,11 @@ static int calendar_day(unsigned month, unsigned day) {
     static const unsigned days[] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     return month >= 1 && month <= 12 && day >= 1 && day <= days[month - 1];
 }
-static int weekday_bracket(const ttf_pack_input_t *in, size_t p) {
+static int weekday_bracket(const ttf_pack_input_t *in, size_t p,
+                           ttf_resource_layer_t *layer) {
     const char *s = in->text;
     size_t n = in->length, end;
-    char key[32];
+    char key[33]; /* 31-byte alias, optional dot, NUL. */
     if (p >= n || s[p] != '(')
         return 0;
     end = ++p;
@@ -1012,13 +1013,28 @@ static int weekday_bracket(const ttf_pack_input_t *in, size_t p) {
         ++end;
     if (end >= n || s[end] != ')' || end == p)
         return 0;
-    memcpy(key, s + p, end - p);
-    key[end - p] = 0;
+    /* ASCII labels are case insensitive and may have an abbreviation dot.
+       Non-ASCII calendar cues retain their exact resource spelling. */
+    size_t length = end - p;
+    int ascii = 1;
+    for (size_t i = 0; i < length; ++i) {
+        unsigned char c = (unsigned char)s[p + i];
+        if (c >= 128)
+            ascii = 0;
+        key[i] = c >= 'A' && c <= 'Z' ? (char)(c + 'a' - 'A') : (char)c;
+    }
+    if (ascii && length > 1 && key[length - 1] == '.')
+        --length;
+    key[length] = 0;
     for (size_t pack = 0; pack < in->engine->pack_count; ++pack) {
+        ttf_resource_layer_t found;
         const char *value = ttf_resource_get(in->engine, "weekday_label",
-                                             in->engine->packs[pack]->language_tag, key, NULL);
-        if (value && strcmp(value, "0"))
+                                             in->engine->packs[pack]->language_tag, key, &found);
+        if (value && strcmp(value, "0")) {
+            if (found > *layer)
+                *layer = found;
             return 1;
+        }
     }
     return 0;
 }
@@ -1056,7 +1072,7 @@ static size_t slash_date(const ttf_pack_input_t *in, size_t b, ttf_semantic_t *o
     if (second_end < n && (digit(s[second_end]) || s[second_end] == '/' ||
                            ascii_letter(s[second_end]) || s[second_end] == '.'))
         return 0;
-    if (second <= 12 && !weekday_bracket(in, second_end))
+    if (second <= 12 && !weekday_bracket(in, second_end, &out->layer))
         return 0;
     snprintf(out->value, sizeof(out->value), "--%02u-%02u", first, second);
     snprintf(out->unit, sizeof(out->unit), "month-day");

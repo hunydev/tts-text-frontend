@@ -873,6 +873,17 @@
         "reason": "Mandatory allomorphs, quantity boundaries and preservation negatives; no independent human approval or external Korean gold."
       },
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/calendar_alias_v21.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Project-authored 72-case month/weekday inventory before candidate changes; docs/calendar-alias-resources.md",
+        "reason": "Date-attached weekday labels, month sweep and preservation negatives. Three fraction references corrected before implementation to existing fraction_over policy; original precheck retained. No external Korean gold or independent linguistic approval."
+      },
+      "case_overrides": {}
     }
   ],
   "excluded": [

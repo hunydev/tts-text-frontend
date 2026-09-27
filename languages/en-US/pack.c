@@ -1155,6 +1155,19 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     case TTF_SEM_PHONE:
         return phone(e, s, b);
     case TTF_SEM_DATE:
+        if (!strcmp(s->unit, "weekday")) {
+            if (s->value[0] < '1' || s->value[0] > '7' || s->value[1])
+                return TTF_EINVAL;
+            ttf_trace_stage(e, TTF_TRACE_POLICY, 0, length);
+            if (s->secondary[0] &&
+                (st = ttf_trace_resource(e, "weekday_label", s->source_lang, s->secondary,
+                                         NULL, "date-attached weekday alias", (size_t)-1)) != TTF_OK)
+                return st;
+            if ((st = ttf_trace_resource(e, "weekday", EN, s->value, NULL,
+                                         "calendar weekday reading", (size_t)-1)) != TTF_OK)
+                return st;
+            return word(e, b, "weekday", s->value);
+        }
         return date(e, s, b);
     case TTF_SEM_TIME: {
         int fields = sscanf(s->value, "%u:%u:%u", &h, &min, &sec);

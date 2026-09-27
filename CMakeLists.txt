@@ -180,6 +180,9 @@ if(BUILD_TESTING)
     add_test(NAME particle_v21_evaluation COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources particle_v21.jsonl 20)
+    add_test(NAME calendar_alias_v21_evaluation COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources calendar_alias_v21.jsonl 72)
     add_test(NAME particle_table_v21_evaluation COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources particle_table_v21.jsonl 72)
@@ -469,6 +472,9 @@ if(BUILD_TESTING)
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_multiword_guards.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
     if(UNIX AND NOT TTF_ENABLE_ASAN AND NOT TTF_ENABLE_UBSAN)
+      add_test(NAME calendar_alias_byte_splits COMMAND ${Python3_EXECUTABLE}
+        ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_calendar_aliases.py
+        $<TARGET_FILE:tts_text_frontend_shared> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
       add_test(NAME particle_table_byte_splits COMMAND ${Python3_EXECUTABLE}
         ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_particle_resources.py
         $<TARGET_FILE:tts_text_frontend_shared> ${CMAKE_CURRENT_SOURCE_DIR}/resources)

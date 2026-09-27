@@ -146,6 +146,13 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "range_unit_family requires a unit and a family name");
     }
+    if (SAME(k, "weekday")) {
+        *handled = 1;
+        return key[0] >= '1' && key[0] <= '7' && !key[1] && label(v) &&
+                       v[0] != ' ' && v[strlen(v) - 1] != ' '
+                   ? TTF_OK
+                   : ttf_validation_error(d, "weekday requires an identity 1..7 and a reading");
+    }
     if (SAME(k, "weekday_label")) {
         *handled = 1;
         return label(key) && strlen(key) < 32 && ttf_validation_enum(v, "0|1")
