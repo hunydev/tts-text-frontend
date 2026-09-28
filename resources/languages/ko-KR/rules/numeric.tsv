@@ -395,3 +395,7 @@ weekday	ko-KR	4	목요일
 weekday	ko-KR	5	금요일
 weekday	ko-KR	6	토요일
 weekday	ko-KR	7	일요일
+
+# A number inside a fixed name is read as the name says: the disease name
+# 코로나19 is 코로나 일구, never 코로나 십구. The spaced count 코로나 19명 is unaffected.
+exact	ko-KR	코로나19	코로나 일구

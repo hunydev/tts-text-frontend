@@ -442,6 +442,9 @@ if(BUILD_TESTING)
     add_test(NAME identifier_fallback_evaluation COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources identifier_fallback_v22.jsonl 19)
+    add_test(NAME ko_covid_name_v23_evaluation COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources ko_covid_name_v23.jsonl 4)
     add_test(NAME ko_password_label_v23_evaluation COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources ko_password_label_v23.jsonl 7)
