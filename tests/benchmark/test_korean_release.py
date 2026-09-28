@@ -64,6 +64,7 @@ class Contracts(unittest.TestCase):
    self.assertEqual(report['sentences']['scorable'],3);self.assertEqual(report['sentences']['compact'],1)
    self.assertEqual(report['sentences']['errors'],1);self.assertEqual(report['spans']['unaligned'],4)
    self.assertEqual(report['reviewed_sentences']['total'],0)
+   self.assertEqual(report['adjusted_sentences'],report['sentences'])
    with sqlite3.connect(root/'report/report.sqlite') as db:self.assertEqual(db.execute('select count(*) from cases').fetchone()[0],4)
    records=[json.loads(l) for l in (imported/'records.jsonl').read_text().splitlines()]
    reviews=root/'reviews.jsonl';reviews.write_text(json.dumps(dict(id=records[1]['id'],record_sha256=records[1]['record_sha256'],status='corrected',expected='금액 삼 원',reviewer='fixture reviewer',reviewed_at='2026-09-28',reason='Synthetic test only'))+'\n')
@@ -71,6 +72,15 @@ class Contracts(unittest.TestCase):
    self.assertEqual(adjusted['sentences'],report['sentences'])
    self.assertEqual(adjusted['reviewed_sentences']['exact'],1)
    self.assertNotEqual(adjusted['comparison_key'],report['comparison_key'])
+   self.assertEqual((adjusted['adjusted_sentences']['scorable'],adjusted['adjusted_sentences']['compact']),(3,2))
+   # An excluded reference leaves the raw headline and joins neither subset.
+   cleaned=root/'cleaned.jsonl';cleaned.write_text(reviews.read_text()+json.dumps(dict(id=records[0]['id'],record_sha256=records[0]['record_sha256'],status='excluded',reviewer='auto:fixture',reviewed_at='2026-09-28',reason='Synthetic reference error'))+'\n')
+   excluded=evaluate(imported,lib,resources,root/'cleaned',cleaned,backend=FakeBackend())
+   self.assertEqual(excluded['sentences'],report['sentences'])
+   self.assertEqual((excluded['adjusted_sentences']['total'],excluded['adjusted_sentences']['scorable'],excluded['adjusted_sentences']['compact']),(3,2,1))
+   self.assertEqual(excluded['reviewed_sentences']['scorable'],1)
+   self.assertEqual(excluded['review_counts'],dict(corrected=1,excluded=1))
+   self.assertEqual(excluded['categories'][0]['adjusted_sentences']['scorable'],2)
    reviews.write_text(json.dumps(json.loads(reviews.read_text()),indent=2))
    self.assertEqual(len(read_reviews(reviews)),1)
    reviews.write_text(reviews.read_text().replace(records[1]['record_sha256'],'0'*64))

@@ -164,13 +164,56 @@ python3 benchmark/evaluators/korean_release.py \
 ```
 
 - `accepted`: 기존 참조 사용. `corrected`: 검토한 `expected` 필수.
-- `excluded`: 검토 부분집합에서 제외, 원본 지표에서는 유지.
+- `excluded`: 검토 부분집합과 보정 지표에서 제외, 원본 지표에서는 유지.
 - `needs-review`: 계속 대기. `route`는 선택적으로 문장의 제안을 변경하며 문장 사례
   필터에 반영한다. 구간별 제안·집계는 원본 입력에서 얻은 분류를 유지한다.
 - 빈 검토자·사유·날짜, 중복/없는 ID, stale fingerprint는 거부한다.
   기록된 검토자 이름의 신원을 인증하는 서비스는 아니다.
 - `--reviews LOCAL.jsonl`과 새로운 `--out`으로 실행한다. 검토 후 지표는 별도 표시하고
   원본 제공 참조 지표를 덮어쓰지 않는다. 외부 문장이 포함된 review 파일도 ignored 경로에 둔다.
+
+보고서에는 세 문장 지표가 함께 남는다.
+
+| 지표 | 분모 | 용도 |
+|---|---|---|
+| `sentences` | 제공 참조 전체 | 원본 기준. 검토 파일과 무관하게 변하지 않는다. |
+| `adjusted_sentences` | 전체 − `excluded`, `corrected`는 정정본으로 채점 | 참조 오류를 걷어낸 점수. 검토 파일이 없으면 원본과 같다. |
+| `reviewed_sentences` | `accepted` + `corrected`만 | 사람이 확인한 부분집합. |
+
+카테고리별 `adjusted_sentences`도 기록한다. 엔진끼리(이 프로젝트와 legacy TN 등) 비교할 때는
+**같은 검토 파일**로 만든 보고서끼리만 보정 지표를 비교한다. 검토 파일 hash가
+`comparison_key`에 들어가므로 다른 검토 파일의 기록은 웹에서 증감 계산 대상이 아니다.
+
+### 자동 참조 오류 검출
+
+`benchmark/evaluators/korean_reference_validator.py`는 **원문과 제공 참조만** 읽는다.
+엔진 출력을 보지 않으므로 어떤 엔진을 평가하든 같은 문장이 제외된다. 판정 결과는
+`status: excluded`, `reviewer: auto:korean-reference-validator/1` 검토 파일로 쓴다.
+
+```sh
+python3 benchmark/evaluators/korean_reference_validator.py \
+  --import-dir benchmark/generated/ko-release/import-v1 \
+  --reviews-out benchmark/generated/ko-release/reviews/reference-errors-v1.jsonl
+python3 benchmark/evaluators/korean_release.py ... \
+  --reviews benchmark/generated/ko-release/reviews/reference-errors-v1.jsonl --out ...
+```
+
+보수적으로 판정한다. 한자어·고유어·혼합(백스무)·한 자리씩(둘 영 하나 구)·서수(셋째 주)·
+유월/시월·영어식(써리 원 데이) 중 **하나라도** 맞으면 오류가 아니다. 서른/삼십, 다시 유무처럼
+정책이 다른 참조는 채점에서 걷어내지 않는다. 경계가 원문과 어긋난 구간과 사투리 카테고리는
+판정하지 않는다. 제외하는 경우는 다음 네 가지뿐이다.
+
+| 코드 | 뜻 | 예 |
+|---|---|---|
+| `value-mismatch` | 어떤 읽기로도 숫자 값이 다름 | 25개 → 스물여섯 개 |
+| `non-number-syllable` | 숫자 자리에 숫자가 아닌 음절 | 15명 → 십모 명 |
+| `identifier-digits` | 한 자리씩 읽은 번호의 숫자가 다름 | 015-… → 공오일 다시 … |
+| `korean-text-edited` | TN 대상이 아닌 한국어를 바꿈 | 동홍주공 → 동흥주공, 철수는 → 철수가 |
+
+AI Hub 159 `import-v1`에서 142,191문장(사투리 57문장 제외)을 검사해 70문장(0.05%)을
+제외했다. 구간 272,244개 중 98.7%는 경계가 원문과 맞고, 값까지 판정한 구간은 52.0%다.
+따라서 이 수치는 참조 오류의 **하한**이다. 새 오류 유형은 합성 fixture를 먼저 추가한 뒤
+검출기를 넓히고, 버전을 올려 새 검토 파일로 만든다.
 
 ## 웹과 검증
 
