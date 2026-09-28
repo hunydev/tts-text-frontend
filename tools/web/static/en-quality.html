@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>영어 TN 참조 평가 · TTF Lab</title>
+  <link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/ko-quality.css">
+  <script src="/en-quality.js" defer></script>
+</head>
+<body>
+<header class="mast"><a href="/" class="brand"><span class="brandmark">Tt</span><span>TTF <b>Lab</b><small>ENGLISH TN / REFERENCE AGREEMENT</small></span></a><div class="mast-right"><a href="/">텍스트 검사</a><a href="/lexicon">사전 관리</a><a href="/ko-quality">한국어 TN 지표</a></div></header>
+<main class="quality-main">
+<section class="intro"><div><p class="eyebrow">영어 TN · 측정과 검토</p><h1>영어 문장만,<br>같은 기준으로 비교하세요.</h1><p class="lead">NeMo 평가셋과 Sproat 표본을 순수 영어·숫자·기호 문장으로 한정해 문장 단위 일치도를 봅니다. 한글·한자·가나 등이 섞인 문장은 채점하지 않습니다.</p></div></section>
+<p id="notice" role="status" aria-live="polite">완료된 측정을 불러오는 중입니다.</p>
+<section class="quality-panel"><div class="toolbar"><label>측정 기록<select id="run"></select></label><label>이전 기록과 비교<select id="baseline"><option value="">비교 안 함</option></select></label><button id="download" class="secondary">집계 JSON 내려받기</button></div>
+<p id="provenance" class="small"></p><p class="reference-note">참조는 자료 제작 시스템이나 작성자의 판단이며 사람이 보증한 정답이 아닙니다. 자료마다 구두점·대소문자 표기가 달라 <b>대소문자·구두점 무시</b>와 <b>영국/미국 철자 무시</b>(centre ↔ center) 단계를 함께 봅니다. speech와 text 출력 기록은 서로 비교하지 않습니다.</p>
+<div id="cards" class="quality-cards"></div><p id="compare-note" class="small"></p>
+<div class="quality-scroll"><table><thead><tr><th>자료</th><th>채점</th><th>정확 일치</th><th>공백 무시</th><th>대소문자·구두점 무시</th><th>철자 변형 무시</th><th>범위 밖 / 오류</th><th>이전 대비 (철자 변형 무시)</th></tr></thead><tbody id="datasets"></tbody></table></div>
+</section>
+<section class="quality-panel"><h2>범위와 판정 기준</h2><div id="audit"></div><details><summary>측정 조건 · 해시 · 비교 규칙</summary><pre id="protocol"></pre></details></section>
+<section class="quality-panel"><h2>사례 살펴보기</h2><div class="toolbar filters">
+<label>자료<select id="dataset"><option value="">전체</option></select></label>
+<label>결과<select id="result"><option value="miss">불일치</option><option value="rejected">알려진 오답과 같음</option><option value="variant">철자 변형 무시에서 일치</option><option value="loose">대소문자·구두점 무시에서 일치</option><option value="compact">공백 무시에서 일치</option><option value="exact">정확 일치</option><option value="error">엔진 오류</option><option value="out-of-scope">범위 밖 (채점 안 함)</option><option value="">전체</option></select></label>
+<label>이전 기록 대비<select id="change" disabled><option value="">전체</option><option value="gained">새로 맞음</option><option value="lost">새로 틀림</option><option value="changed">출력이 바뀐 문장</option></select></label>
+<label>원문 검색<input id="query" maxlength="200" placeholder="단어·숫자 검색"></label><button id="search" class="primary">조회</button>
+</div><p id="case-count" aria-live="polite"></p><div class="quality-scroll"><table><thead><tr><th>원문</th><th>참조</th><th>실제 출력</th><th>판정</th></tr></thead><tbody id="cases"></tbody></table></div><div class="toolbar"><button id="prev" class="secondary">이전</button><span id="page"></span><button id="next" class="secondary">다음</button></div>
+</section>
+</main>
+<dialog id="detail" class="case-dialog" aria-labelledby="detail-title" aria-describedby="detail-meta">
+  <header class="case-dialog-header"><div><h2 id="detail-title">사례 상세</h2><p id="detail-meta" class="small"></p></div><button id="detail-close" class="secondary" type="button" autofocus>닫기 <span aria-hidden="true">×</span></button></header>
+  <div id="detail-view" class="case-dialog-body" aria-live="polite"></div>
+</dialog>
+</body></html>

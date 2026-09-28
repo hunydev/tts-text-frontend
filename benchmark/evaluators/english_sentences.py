@@ -98,7 +98,8 @@ def finish(m):
     return dict(m, **rates)
 
 
-def run(corpora, library, resources, output, mode="speech", scope="english", limit=0, backend=None):
+def run(corpora, library, resources, output, mode="speech", scope="english", limit=0, backend=None,
+        label=""):
     output = ensure_output(output)
     if output.exists():
         raise ValueError("report exists; create a new run directory")
@@ -172,7 +173,8 @@ def run(corpora, library, resources, output, mode="speech", scope="english", lim
     protocol = dict(metric_version=METRIC_VERSION, scope=SCOPE_VERSION if scope == "english" else "all",
                     output_mode=mode, limit=limit, corpora=before["corpora"], harness=before["harness"],
                     evaluated_records_sha256=records.hexdigest())
-    report = dict(schema_version=1, status="complete", created_at=started,
+    report = dict(schema_version=1, status="complete", run_id=output.name,
+                  label=label or "%s (%s)" % (output.name, mode), created_at=started,
                   finished_at=datetime.now(timezone.utc).isoformat(),
                   comparison_key=digest_json(protocol), protocol=protocol,
                   engine=dict(library_sha256=before["library"], resources_sha256=before["resources"]),
@@ -200,9 +202,10 @@ def main(argv=None):
     parser.add_argument("--output-mode", choices=("speech", "text"), default="speech")
     parser.add_argument("--scope", choices=("english", "all"), default="english")
     parser.add_argument("--limit", type=int, default=0, help="per-corpus prefix; 0 means all")
+    parser.add_argument("--label", default="", help="name shown on the /en-quality page")
     args = parser.parse_args(argv)
     report = run(args.corpus, args.library, args.resources, args.out,
-                 args.output_mode, args.scope, args.limit)
+                 args.output_mode, args.scope, args.limit, label=args.label)
     print(json.dumps(dict(sentences=report["sentences"], datasets=report["datasets"]), ensure_ascii=False))
     return 0
 

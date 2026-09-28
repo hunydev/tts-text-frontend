@@ -58,6 +58,11 @@ python3 benchmark/evaluators/english_sentences.py \
   --out $E/reports/NAME
 ```
 
+웹 `/en-quality`에서 기록 선택, 같은 출력 모드의 이전 기록과 자료별 증감 비교, 새로 맞음·새로 틀림·
+출력이 바뀐 문장, 결과·자료·원문 검색 필터, 범위 밖 문장을 볼 수 있다. 기본 경로는
+`benchmark/generated/en-eval/reports`이고 `--en-report-root`로 바꾼다. 새 보고서에
+`--label`로 이름을 붙인다.
+
 보고서는 `summary.json`(전체·자료별 지표, 범위 밖 문자 통계, 입력·엔진·평가기 hash),
 `results.jsonl`(채점한 문장별 출력과 단계), `out-of-scope.jsonl`로 이루어진다. 기존
 output 디렉터리는 덮어쓰지 않고, 평가 중 입력·리소스·평가 코드가 바뀌면 보고서를 쓰지

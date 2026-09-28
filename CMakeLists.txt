@@ -508,6 +508,8 @@ if(BUILD_TESTING)
     endif()
     add_test(NAME korean_release_web COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/web/test_ko_reports.py)
+    add_test(NAME english_quality_web COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/web/test_en_reports.py)
     add_test(NAME external_benchmark_diagnostics COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/benchmark/test_diagnose.py)
     add_test(NAME external_sproat_importer COMMAND ${Python3_EXECUTABLE}
