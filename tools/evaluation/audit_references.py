@@ -14,6 +14,7 @@ import re
 import sys
 
 ACTIVE_JSONL = (
+    "ko_password_label_v23",
     "ko_card_number_v23",
     "en_month_year_v23",
     "en_roman_numeral_v23",

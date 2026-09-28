@@ -84,6 +84,64 @@ identifier_label	ko-KR	군번	digits
 identifier_label	ko-KR	군번은	digits
 identifier_render	ko-KR	zero	공
 identifier_render	ko-KR	separator	 다시 
+# Passwords and PINs are read digit by digit: 비밀번호 451233 -> 사오일이삼삼.
+# A counted number after the label (비밀번호 4자리) keeps its counter reading.
+identifier_label	ko-KR	비밀번호	digits
+identifier_label	ko-KR	비밀번호는	digits
+identifier_label	ko-KR	비밀번호가	digits
+identifier_label	ko-KR	비밀번호를	digits
+identifier_label	ko-KR	비밀번호로	digits
+identifier_label	ko-KR	비밀번호도	digits
+identifier_label	ko-KR	비밀번호인	digits
+identifier_label	ko-KR	비밀 번호	digits
+identifier_label	ko-KR	비밀 번호는	digits
+identifier_label	ko-KR	비밀 번호가	digits
+identifier_label	ko-KR	비밀 번호를	digits
+identifier_label	ko-KR	비밀 번호로	digits
+identifier_label	ko-KR	비밀 번호도	digits
+identifier_label	ko-KR	비밀 번호인	digits
+identifier_label	ko-KR	핀 번호	digits
+identifier_label	ko-KR	핀 번호는	digits
+identifier_label	ko-KR	핀 번호가	digits
+identifier_label	ko-KR	핀 번호를	digits
+identifier_label	ko-KR	핀 번호로	digits
+identifier_label	ko-KR	핀 번호도	digits
+identifier_label	ko-KR	핀 번호인	digits
+identifier_label	ko-KR	핀번호	digits
+identifier_label	ko-KR	핀번호는	digits
+identifier_label	ko-KR	핀번호가	digits
+identifier_label	ko-KR	핀번호를	digits
+identifier_label	ko-KR	핀번호로	digits
+identifier_label	ko-KR	핀번호도	digits
+identifier_label	ko-KR	핀번호인	digits
+identifier_label	ko-KR	PIN 번호	digits
+identifier_label	ko-KR	PIN 번호는	digits
+identifier_label	ko-KR	PIN 번호가	digits
+identifier_label	ko-KR	PIN 번호를	digits
+identifier_label	ko-KR	PIN 번호로	digits
+identifier_label	ko-KR	PIN 번호도	digits
+identifier_label	ko-KR	PIN 번호인	digits
+identifier_label	ko-KR	PIN번호	digits
+identifier_label	ko-KR	PIN번호는	digits
+identifier_label	ko-KR	PIN번호가	digits
+identifier_label	ko-KR	PIN번호를	digits
+identifier_label	ko-KR	PIN번호로	digits
+identifier_label	ko-KR	PIN번호도	digits
+identifier_label	ko-KR	PIN번호인	digits
+identifier_label	ko-KR	비번	digits
+identifier_label	ko-KR	비번은	digits
+identifier_label	ko-KR	비번이	digits
+identifier_label	ko-KR	비번을	digits
+identifier_label	ko-KR	비번으로	digits
+identifier_label	ko-KR	비번도	digits
+identifier_label	ko-KR	비번인	digits
+identifier_label	ko-KR	암호	digits
+identifier_label	ko-KR	암호는	digits
+identifier_label	ko-KR	암호가	digits
+identifier_label	ko-KR	암호를	digits
+identifier_label	ko-KR	암호로	digits
+identifier_label	ko-KR	암호도	digits
+identifier_label	ko-KR	암호인	digits
 # A letter+digit code next to Korean text (speech output) outranks the generic
 # alphanumeric term over the same extent: K37PA1798 reads 케이 삼칠 피에이 일칠구팔.
 classifier_priority	ko-KR	ko:alnum-identifier	10
