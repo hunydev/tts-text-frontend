@@ -1,84 +1,57 @@
 name: C11 build and test
+# Actions minutes are a budget. Pushes do not run CI; run tools/ci/run.sh locally
+# before pushing (see AGENTS.md). Actions checks pull requests to main and manual
+# runs. The ~50-minute clang and ASan/UBSan jobs run only when asked:
+#   gh workflow run ci.yml -f full=true
 on:
-  push:
   pull_request:
+    branches: [main]
+    paths-ignore:
+      - 'docs/**'
+      - '**/*.md'
+  workflow_dispatch:
+    inputs:
+      full:
+        description: 'Also run the clang build and the ASan/UBSan suite (about 50 extra minutes)'
+        type: boolean
+        default: false
 permissions:
   contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
-  build:
+  gcc:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        compiler: [gcc, clang]
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7.0.1
-      - name: Configure
-        run: cmake -S . -B build -DCMAKE_C_COMPILER=${{ matrix.compiler }} -DCMAKE_BUILD_TYPE=Debug
-      - name: Build
-        run: cmake --build build --parallel 2
-      - name: Test
-        run: ctest --test-dir build --output-on-failure
+      - run: tools/ci/run.sh gcc
+
+  clang:
+    if: ${{ inputs.full }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - run: tools/ci/run.sh clang
+
   sanitizers:
+    if: ${{ inputs.full }}
     runs-on: ubuntu-latest
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@v7.0.1
-      - run: cmake -S . -B build -DCMAKE_C_COMPILER=clang -DCMAKE_BUILD_TYPE=Debug -DTTF_ENABLE_ASAN=ON -DTTF_ENABLE_UBSAN=ON
-      - run: cmake --build build --parallel 2
-      - run: ctest --test-dir build --output-on-failure
-        env:
-          ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
-          UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+      - run: tools/ci/run.sh sanitizers
 
   text-evaluation:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7.0.1
-      - run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-      - run: cmake --build build --parallel 2
-      - name: Verify text protocol and evaluation
-        run: ctest --test-dir build --output-on-failure -R 'cli_stream_json|evaluation|lexicon|external_|korean_release_|context_score_cache|context_cache_compatibility'
-      - name: Build normalized text report
-        run: python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources --corpus tests/evaluation/cases.jsonl --output-dir artifacts/evaluation/regression
-      - name: Audit expected-text integrity and review classifications
-        run: python3 tools/evaluation/audit_references.py --self-test --output artifacts/evaluation/reference-audit.json
-      - name: Evaluate finance and content scenarios
-        run: python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources --corpus tests/evaluation/domain_cases_v8.jsonl --output-dir artifacts/evaluation/domain
-      - name: Report challenge corpus (advisory text mismatches)
-        run: |
-          python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources --corpus tests/evaluation/challenge_cases.jsonl --output-dir artifacts/evaluation/challenge || test "$?" -eq 1
-      - name: Verify advanced finance and content regressions
-        run: python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources --corpus tests/evaluation/advanced_cases.jsonl --output-dir artifacts/evaluation/advanced
-      - name: Verify literal code, markup and path preservation
-        run: python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources --corpus tests/evaluation/protected_cases.jsonl --output-dir artifacts/evaluation/protected
-      - name: Verify finance ranges and content vocabulary
-        run: |
-          python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources --corpus tests/evaluation/finance_ranges_v7.jsonl --output-dir artifacts/evaluation/finance-v7
-          python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources --corpus tests/evaluation/content_v7.jsonl --output-dir artifacts/evaluation/content-v7
-      - name: Verify multiword pronunciation and streaming
-        run: python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources --corpus tests/evaluation/multiword_v8.jsonl --output-dir artifacts/evaluation/multiword-v8
-      - name: Verify managed lexicon sources and vocabulary contexts
-        run: |
-          python3 tools/lexicon/manage.py build --check
-          python3 tools/lexicon/manage.py inventory --output artifacts/evaluation/lexicon-inventory.json
-          python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources --corpus tests/evaluation/lexicon_v10.jsonl --output-dir artifacts/evaluation/lexicon-v10
-      - name: Verify offline CJK tables and text contracts
-        run: |
-          python3 tools/cjk/generate.py build --unihan data/cjk --out resources/languages/ko-KR/cjk --check
-          python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources --corpus tests/evaluation/cjk_reading_v22.jsonl --output-dir artifacts/evaluation/cjk-v22
-      - name: Verify exact scaled currency and context contracts
-        run: python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources --corpus tests/evaluation/scaled_currency_v12.jsonl --output-dir artifacts/evaluation/scaled-currency-v12
-      - name: Verify named dates, partial dates and contextual years
-        run: python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources --corpus tests/evaluation/english_dates_v13.jsonl --output-dir artifacts/evaluation/english-dates-v13
-      - name: Verify written currency names, abbreviations and initials
-        run: python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources --corpus tests/evaluation/english_forms_v14.jsonl --output-dir artifacts/evaluation/english-forms-v14
-      - name: Verify Korean ordinal, frequency and identifier contracts
-        run: python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources --corpus tests/evaluation/korean_counters_v15.jsonl --output-dir artifacts/evaluation/korean-counters-v15
-      - name: Verify telephone, extension and financial identifier contracts
-        run: python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources --corpus tests/evaluation/phone_cases_v18.jsonl --output-dir artifacts/evaluation/phone-v18
-      - name: Verify annotated input and final speech text
-        run: python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources --corpus tests/evaluation/user_patterns_v20.jsonl --output-dir artifacts/evaluation/user-patterns-v20
+      - run: tools/ci/run.sh text-evaluation
       - name: Upload evaluation artifact
+        if: always()
         uses: actions/upload-artifact@v7.0.1
         with:
           name: frontend-text-evaluation
@@ -88,6 +61,7 @@ jobs:
 
   web-browser:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7.0.1
       - uses: actions/setup-node@v6
@@ -95,17 +69,6 @@ jobs:
           node-version: '22'
           cache: npm
           cache-dependency-path: tests/web/package-lock.json
-      - run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-      - run: cmake --build build --parallel 2
       - run: npm ci --prefix tests/web
       - run: ./tests/web/node_modules/.bin/playwright install --with-deps chromium
-      - name: Exercise web workbench in Chromium
-        run: |
-          python3 tools/web/server.py --port 8000 > /tmp/ttf-web.log 2>&1 &
-          TTF_WEB_PID=$!
-          trap 'kill "$TTF_WEB_PID"' EXIT
-          for i in $(seq 1 30); do
-            if curl --fail --silent http://127.0.0.1:8000/api/health; then break; fi
-            sleep 1
-          done
-          node tests/web/browser.cjs
+      - run: tools/ci/run.sh web-browser

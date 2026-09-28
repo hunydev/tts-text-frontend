@@ -21,8 +21,13 @@ is ordered in `benchmark/manifests/quality-work-queue.json`.
   Unknown characters preserve by default; controls are opt-in annotated input.
 - Keep external/private corpora and captures under ignored `artifacts/` or
   `benchmark/generated/`. Never vendor NC datasets into product resources.
-- Run targeted tests while editing, then required release CI once. On this 2-core VM,
-  do not run full GCC and sanitizer suites concurrently: the 30k-number gate has a
+- Run targeted tests while editing, then `tools/ci/run.sh full` once before pushing
+  (`quick` = gcc + text-evaluation for small changes). GitHub Actions minutes are a
+  budget: pushes do not run CI. Actions runs only on pull requests to main and manual
+  dispatch; clang/sanitizers only with `gh workflow run ci.yml -f full=true`. Actions
+  and local runs share `tools/ci/run.sh`, so edit jobs there, not in the workflow.
+  Push finished work in batches, not after every commit. On this 2-core VM, do not
+  run full GCC and sanitizer suites concurrently: the 30k-number gate has a
   deliberate 60-second limit. Do not relax limits to disguise contention/regression.
 - Update HANDOFF with the task, exact commands/results, remaining work and artifact
   locations. Commit/push/deploy only when authorized by the session.
