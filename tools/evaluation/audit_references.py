@@ -14,6 +14,7 @@ import re
 import sys
 
 ACTIVE_JSONL = (
+    "en_speech_hyphen_v23",
     "en_decade_zero_v23",
     "counted_noun_v22", "break_controls_v22",
     "ko_spacing_v22",

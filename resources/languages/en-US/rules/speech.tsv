@@ -17,6 +17,11 @@ speech_symbol_prefix	en-US	#	hashtag
 speech_symbol	en-US	.	dot
 speech_symbol	en-US	@	at
 speech_symbol	en-US	-	hyphen
+# In English prose a hyphen joining words (well-known, twenty-first) or a dash
+# between words (was--well) is punctuation: it separates the words and is not
+# said. Recognized objects read their own separators first (ranges, phones,
+# identifiers, math, negatives, URLs and e-mail keep their readings).
+speech_silent	en-US	-	1
 speech_symbol	en-US	_	underscore
 speech_symbol	en-US	:	colon
 speech_symbol	en-US	/	slash
