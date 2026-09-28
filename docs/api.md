@@ -103,7 +103,14 @@ also defaults to text; the web workbench selects speech explicitly. Unknown Han
 and emoji preservation is the default in every mode. Drop applies only to the
 speech character pass. Protected literals and explicit aliases retain their
 literal contract; malformed/ambiguous semantic objects remain visible with a
-trace reason instead of being reinterpreted digit by digit.
+trace reason instead of being reinterpreted digit by digit. One speech-only
+exception: a pure digit/hyphen run rejected by the phone and range recognizers
+(`syntax.invalid-phone`, `syntax.invalid-range`) is read with the renderer's
+identifier grammar, because raw digits must not reach TTS. Its IR keeps the
+recognizer's `TEXT` verdict and the trace records `identifier-fallback`. Text
+output keeps it literally, and a phone-shaped run (first group `0X`/`0XX`)
+stays preserved as a malformed phone number. See
+[identifier fallback](identifier-fallback.ko.md).
 
 Annotated controls produce `CUSTOM` spans over the complete original syntax,
 including braces. Literal aliases are decoded once and are not normalized again.

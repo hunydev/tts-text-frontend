@@ -17,6 +17,7 @@ ACTIVE_JSONL = (
     "counted_noun_v22", "break_controls_v22",
     "ko_spacing_v22",
     "phone_zero_v22",
+    "identifier_fallback_v22",
     "lexical_coverage_v22",
     "counter_frequency_v22",
     "particle_table_v21", "calendar_alias_v21", "abbreviation_dotted_v21", "speech_character_width_v21", "grouped_controls_v22", "typed_controls_v22", "numeric_width_v22",

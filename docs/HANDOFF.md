@@ -2,6 +2,31 @@
 
 갱신: 2026-09-28. Release **0.20.0**, public ABI **v1**.
 
+## 이번 인계: 식별번호 대체 읽기와 하이픈 `다시` (2026-09-28)
+
+브랜치 `claude/identifier-fallback` (작업 트리 `~/ttf-work`), 기준 `3b6db7b`.
+**미커밋·미push.** 사용자 검토 후 커밋한다. 자세한 정책·측정은
+[identifier-fallback.ko.md](identifier-fallback.ko.md).
+
+- speech 출력에서 전화·범위 인식기가 거부한 순수 숫자·하이픈 열을 식별번호로 읽는다
+  (`src/core/normalize.c` `identifier_fallback`/`read_identifier`). IR은 `TEXT` 유지.
+  text 출력, 전화번호 모양(`0X`/`0XX`), 영숫자 코드는 대상 아님.
+- `identifier_render / ko-KR / separator` → ` 다시 `. 기존 계약 10행 갱신
+  ([원장](audit/identifier-separator-policy-20260928.json)). `korean-range-again`
+  검사에 명시적 식별번호 선언 예외를 추가했다 (self-test 5건).
+- 검증: `identifier_fallback_v22.jsonl` 19/19, GCC Debug 전체 CTest 195/195.
+  sanitizer 전체와 clang은 이번에 돌리지 않았다.
+- AI Hub 159 참조 (Training, held-out 아님): 문장 공백무시 일치 80,523 → 81,991
+  (+1,468; 새로 맞음 1,722 / 새로 틀림 254). 대체 읽기 +1,005 (손실 0), 하이픈 `다시`
+  +463 (손실 254 — 참조가 하이픈을 읽지 않은 문장). 보고서
+  `20260928-claude-{base,separator,identifier}`.
+- 재현:
+  ```sh
+  cd ~/ttf-work && cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug && cmake --build build -j2
+  ctest --test-dir build -R 'identifier_fallback|reference_integrity|phone|identif' --output-on-failure
+  ```
+- 다음: 영숫자 식별번호 (`26-6573557-L97`, `32124a`) 약 700문장.
+
 ## Git 체크포인트: 누적 작업 일괄 커밋 (2026-09-28)
 
 사용자가 현재까지의 전체 워크트리 커밋과 `main` push를 승인했다. 이 체크포인트는

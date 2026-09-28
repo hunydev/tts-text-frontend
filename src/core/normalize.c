@@ -104,6 +104,60 @@ static const ttf_language_pack_t *context_pack(const ttf_engine_t *e, const ttf_
     }
     return best;
 }
+/* Every recognizer rejected this pure digit/hyphen object. Text output keeps it
+   literally (docs/api.md), but speech output would hand raw digits to TTS, so it
+   is read with the renderer's own identifier grammar. The IR keeps the
+   recognizer's verdict. Only the two numeric rejections qualify; alphanumeric
+   codes are a separate rule family. A phone-shaped run (first group 0X or 0XX)
+   stays preserved: a malformed phone number keeps its existing visible-error
+   contract (phone-cue-v21, phone_number_tail overlays). */
+static int identifier_fallback(const ttf_semantic_t *sem, const char *surface, size_t length) {
+    size_t i, groups = 1, first = 0;
+    int digit = 0;
+    if (sem->type != TTF_SEM_TEXT ||
+        (strcmp(sem->rule, "syntax.invalid-phone") && strcmp(sem->rule, "syntax.invalid-range")) ||
+        !length || length >= TTF_IR_VALUE_SIZE)
+        return 0;
+    for (i = 0; i < length; ++i) {
+        if (surface[i] >= '0' && surface[i] <= '9') {
+            digit = 1;
+            if (groups == 1)
+                ++first;
+        } else if (surface[i] == '-' && digit) {
+            digit = 0;
+            ++groups;
+        } else
+            return 0;
+    }
+    if (surface[0] == '0' && (first == 2 || first == 3))
+        return 0;
+    return digit && groups >= 2;
+}
+static ttf_status_t read_identifier(const ttf_engine_t *e, const ttf_language_pack_t *renderer,
+                                    const ttf_semantic_t *sem, const char *surface, size_t length,
+                                    ttf_buffer_t *normalized, int *done) {
+    ttf_semantic_t identifier = *sem;
+    ttf_buffer_t spoken = {0};
+    ttf_status_t st;
+    *done = 0;
+    identifier.type = TTF_SEM_DIGIT_SEQUENCE;
+    snprintf(identifier.unit, sizeof(identifier.unit), "financial_identifier");
+    memcpy(identifier.value, surface, length);
+    identifier.value[length] = '\0';
+    st = renderer->verbalize(e, &identifier, surface, length, &spoken);
+    if (st != TTF_OK) {
+        ttf_buffer_free(&spoken);
+        /* A pack without identifier grammar keeps the literal under the guard. */
+        return st == TTF_EINVAL ? TTF_OK : st;
+    }
+    ttf_buffer_free(normalized);
+    *normalized = spoken;
+    *done = 1;
+    ttf_trace_stage(e, TTF_TRACE_POLICY, 0, normalized->length);
+    return ttf_trace_emit(e, TTF_TRACE_SELECTED, TTF_LAYER_COMMON, 0, renderer->language_tag,
+                          "decision", "identifier-fallback", "", identifier.value,
+                          "rejected-numeric-read-as-identifier", SIZE_MAX);
+}
 static int foreign_type(ttf_semantic_type_t t) {
     return t == TTF_SEM_WORD || t == TTF_SEM_INITIALISM || t == TTF_SEM_ACRONYM ||
            t == TTF_SEM_ALNUM_TERM || t == TTF_SEM_ORDINAL || t == TTF_SEM_ABBREVIATION;
@@ -382,6 +436,7 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
         const ttf_entry_t *rule = NULL;
         const char *phrase_hit = NULL;
         ttf_buffer_t normalized = {0};
+        int identifier_read = 0;
         memset(&span, 0, sizeof(span));
         sem->struct_size = sizeof(*sem);
         sem->type = TTF_SEM_TEXT;
@@ -823,9 +878,13 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
             normalized = spaced;
         }
         if (st == TTF_OK && e->frontend_options.output_mode == TTF_OUTPUT_SPEECH && !rule &&
+            identifier_fallback(sem, text + tokens[i].begin, end - tokens[i].begin))
+            st = read_identifier(e, renderer, sem, text + tokens[i].begin, end - tokens[i].begin,
+                                 &normalized, &identifier_read);
+        if (st == TTF_OK && e->frontend_options.output_mode == TTF_OUTPUT_SPEECH && !rule &&
             (strncmp(span.lexicon, "lexicon:", 8) || !strncmp(sem->rule, "cjk.", 4)) &&
             strcmp(span.lexicon, "unknown-foreign-preserved")) {
-            if (sem->type == TTF_SEM_TEXT && strcmp(sem->rule, "identity") &&
+            if (!identifier_read && sem->type == TTF_SEM_TEXT && strcmp(sem->rule, "identity") &&
                 e->frontend_options.unreadable_policy != TTF_UNREADABLE_READ) {
                 ttf_trace_stage(e, TTF_TRACE_POLICY, 0, normalized.length);
                 st = ttf_trace_emit(e, TTF_TRACE_SELECTED, TTF_LAYER_COMMON, 0,

@@ -985,6 +985,17 @@
       }
     },
     {
+      "path": "tests/evaluation/identifier_fallback_v22.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "User reading policy 2026-09-28; independently authored synthetic cases",
+        "reason": "Speech reads a rejected pure digit/hyphen object as an identifier with the identifier hyphen reading; text keeps it literally. Phone-shaped malformed numbers, valid phones, ranges, dates and alphanumeric codes are guards."
+      },
+      "case_overrides": {}
+    },
+    {
       "path": "tests/evaluation/ko_spacing_v22.jsonl",
       "format": "jsonl",
       "default": {
