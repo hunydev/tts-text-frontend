@@ -8,6 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 MAX_TEXT_BYTES = 16384
 CORPORA = {
+    "ko-alnum-identifier-v23": ("영문+숫자 코드 · 한 글자씩 · 하이픈 다시", "ko_alnum_identifier_v23.jsonl"),
     "en-speech-hyphen-v23": ("영어 speech 하이픈·대시 무음", "en_speech_hyphen_v23.jsonl"),
     "en-decade-zero-v23": ("영어 decade 00s · 2000년대", "en_decade_zero_v23.jsonl"),
     "ko-spacing-v22": ("한국어 수 묶음 띄어쓰기", "ko_spacing_v22.jsonl"),

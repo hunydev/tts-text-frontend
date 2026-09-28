@@ -84,3 +84,6 @@ identifier_label	ko-KR	군번	digits
 identifier_label	ko-KR	군번은	digits
 identifier_render	ko-KR	zero	공
 identifier_render	ko-KR	separator	 다시 
+# A letter+digit code next to Korean text (speech output) outranks the generic
+# alphanumeric term over the same extent: K37PA1798 reads 케이 삼칠 피에이 일칠구팔.
+classifier_priority	ko-KR	ko:alnum-identifier	10
