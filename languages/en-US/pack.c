@@ -711,6 +711,120 @@ static size_t hyphen_letters(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     return index - in->index + 1;
 }
 
+/* An uppercase Roman numeral named by the word before it: a numbering word
+   (CHAPTER IX, World War II) makes it a cardinal, a regnal name (Henry II,
+   Pope Benedict XVI) an ordinal read with "the". The cue words are data
+   (roman_cue). Initials such as Louis C, the pronoun I and bare letters
+   without a cue are left alone. */
+static unsigned roman_value(const char *s, size_t n) {
+    static const char *const thousands[] = {"", "M", "MM", "MMM"};
+    static const char *const hundreds[] = {"", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"};
+    static const char *const tens[] = {"", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"};
+    static const char *const ones[] = {"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"};
+    unsigned value = 0, i;
+    char canonical[20];
+    for (i = 0; i < n; ++i) {
+        unsigned digit;
+        switch (s[i]) {
+        case 'I': digit = 1; break;
+        case 'V': digit = 5; break;
+        case 'X': digit = 10; break;
+        case 'L': digit = 50; break;
+        case 'C': digit = 100; break;
+        case 'D': digit = 500; break;
+        case 'M': digit = 1000; break;
+        default: return 0;
+        }
+        if (i + 1 < n) {
+            unsigned next = 0;
+            switch (s[i + 1]) {
+            case 'I': next = 1; break;
+            case 'V': next = 5; break;
+            case 'X': next = 10; break;
+            case 'L': next = 50; break;
+            case 'C': next = 100; break;
+            case 'D': next = 500; break;
+            case 'M': next = 1000; break;
+            default: return 0;
+            }
+            if (digit < next) {
+                value -= digit;
+                continue;
+            }
+        }
+        value += digit;
+    }
+    if (!value || value > 3999)
+        return 0;
+    /* Only the canonical spelling is a numeral (IIX, VV are not). */
+    (void)snprintf(canonical, sizeof(canonical), "%s%s%s%s", thousands[value / 1000],
+                   hundreds[value / 100 % 10], tens[value / 10 % 10], ones[value % 10]);
+    return strlen(canonical) == n && !memcmp(canonical, s, n) ? value : 0;
+}
+static size_t roman_numeral(const ttf_pack_input_t *in, ttf_semantic_t *out) {
+    const ttf_token_t *t = &in->tokens[in->index], *space_token, *word;
+    size_t n = t->end - t->begin, i, p;
+    char key[32];
+    const char *cue;
+    unsigned value;
+    int capitalized = 1;
+    if (t->script != TTF_SCRIPT_LATIN || n > 15 || in->index < 2)
+        return 0;
+    value = roman_value(in->text + t->begin, n);
+    if (!value)
+        return 0;
+    space_token = &in->tokens[in->index - 1];
+    word = &in->tokens[in->index - 2];
+    if (space_token->script != TTF_SCRIPT_WHITESPACE || word->script != TTF_SCRIPT_LATIN ||
+        word->end != space_token->begin || word->end - word->begin >= sizeof(key))
+        return 0;
+    for (p = space_token->begin; p < space_token->end; ++p)
+        if (in->text[p] != ' ')
+            return 0;
+    for (i = 0, p = word->begin; p < word->end; ++p, ++i) {
+        char c = in->text[p];
+        if (c >= 'A' && c <= 'Z') {
+            if (i)
+                capitalized = 0;
+            c = (char)(c + 32);
+        } else if (c < 'a' || c > 'z')
+            return 0;
+        else if (!i)
+            capitalized = 0;
+        key[i] = c;
+    }
+    key[i] = '\0';
+    cue = res(in->engine, "roman_cue", key);
+    if (!cue)
+        return 0;
+    if (!strcmp(cue, "regnal")) {
+        /* A regnal numeral is written with I, V and X after a capitalized
+           name; a lone I is the pronoun unless punctuation or "of" follows. */
+        for (p = t->begin; p < t->end; ++p)
+            if (in->text[p] != 'I' && in->text[p] != 'V' && in->text[p] != 'X')
+                return 0;
+        if (!capitalized)
+            return 0;
+        if (n == 1 && in->text[t->begin] == 'I') {
+            size_t q = t->end;
+            if (q < in->length && in->text[q] == ' ' &&
+                !(q + 3 <= in->length && !memcmp(in->text + q, " of", 3) &&
+                  (q + 3 == in->length || in->text[q + 3] == ' ')))
+                return 0;
+        }
+        out->type = TTF_SEM_ORDINAL;
+        (void)snprintf(out->secondary, sizeof(out->secondary), "regnal");
+        (void)snprintf(out->rule, sizeof(out->rule), "en.roman.regnal");
+    } else if (!strcmp(cue, "cardinal")) {
+        out->type = TTF_SEM_CARDINAL;
+        (void)snprintf(out->rule, sizeof(out->rule), "en.roman.cardinal");
+    } else
+        return 0;
+    (void)snprintf(out->value, sizeof(out->value), "%u", value);
+    (void)snprintf(out->source_lang, sizeof(out->source_lang), "%s", EN);
+    out->input_end = t->end;
+    return 1;
+}
 static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     const ttf_token_t *t = &in->tokens[in->index];
     char key[96];
@@ -727,6 +841,9 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
         return date_tokens;
     if (t->script != TTF_SCRIPT_LATIN || n >= sizeof(key))
         return 0;
+    date_tokens = roman_numeral(in, out);
+    if (date_tokens)
+        return date_tokens;
     date_tokens = ampersand_initialism(in, out);
     if (date_tokens)
         return date_tokens;
@@ -1156,6 +1273,9 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         uint64_t value;
         if (!uint64_value(s->value, &value))
             return ttf_buffer_append(b, surface, length);
+        /* Henry II -> the second */
+        if (!strcmp(s->secondary, "regnal") && (st = ttf_buffer_puts(b, "the ")) != TTF_OK)
+            return st;
         return ordinal(e, value, b);
     }
     case TTF_SEM_DIGIT_SEQUENCE:

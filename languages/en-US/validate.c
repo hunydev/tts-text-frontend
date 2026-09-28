@@ -354,6 +354,14 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    : ttf_validation_error(d, "identifier reading label must be nonempty, bounded "
                                              "and contain no ASCII controls");
     }
+    if (SAME(k, "roman_cue")) {
+        *handled = 1;
+        if (!lowercase_letters(key, 31))
+            return ttf_validation_error(d, "roman_cue key is a bounded lowercase ASCII word");
+        return ttf_validation_enum(v, "cardinal|regnal")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "roman_cue value must be cardinal or regnal");
+    }
     if (SAME(k, "decade_plural")) {
         *handled = 1;
         if (!ttf_validation_enum(key, "10|20|30|40|50|60|70|80|90|100|1000"))
