@@ -26,8 +26,9 @@ text alone cannot prove the currency class or value; inspect the Semantic IR.
 The EN pack uses `abbreviation.c`, with resources in
 `resources/languages/en-US/rules/abbreviations.tsv`.
 
-- Dotted `Dr.`, `Mr.`, `Mrs.`, `Prof.` expand before an ASCII-capitalized name.
-  The default labels are `Doctor`, `Mister`, `Missus`, `Professor`.
+- Dotted `Dr.`, `Mr.`, `Mrs.`, `Prof.`, `St.`, `Mt.`, `Ft.` expand before an
+  ASCII-capitalized name. The default labels are `Doctor`, `Mister`, `Missus`,
+  `Professor`, `Saint`, `Mount`, `Fort`.
 - Terminal `Dr.` and `Oak Dr.` retain their spelling. Ambiguous `St.` and `Ms.`
   do not receive an invented expansion. This finite name guard is not address or
   person-name recognition.

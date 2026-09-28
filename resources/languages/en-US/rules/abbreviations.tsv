@@ -1,6 +1,11 @@
-# Editable reading policy; titles require an immediately following capitalized name.
-# Ambiguous terminal/street Dr., St., and a lone A. are deliberately preserved.
+# Editable reading policy; titles require an immediately following capitalized name
+# (St. Louis -> Saint Louis, Mt. Everest -> Mount Everest, Ft. Worth -> Fort Worth).
+# Terminal/street Dr. and St. (Oak Dr., Main St.) and a lone A. are deliberately
+# preserved: the street name before them may be in an earlier stream segment.
 abbreviation_expansion	en-US	dr	Doctor
+abbreviation_expansion	en-US	st	Saint
+abbreviation_expansion	en-US	mt	Mount
+abbreviation_expansion	en-US	ft	Fort
 abbreviation_expansion	en-US	mr	Mister
 abbreviation_expansion	en-US	mrs	Missus
 abbreviation_expansion	en-US	prof	Professor
