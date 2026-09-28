@@ -14,6 +14,7 @@ import re
 import sys
 
 ACTIVE_JSONL = (
+    "en_caps_word_v23",
     "ko_covid_name_v23",
     "ko_password_label_v23",
     "ko_card_number_v23",

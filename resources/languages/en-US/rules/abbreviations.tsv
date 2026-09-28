@@ -43,6 +43,26 @@ context_neutral	en-US	dotted_initials	1
 # word (NASA, FIFA, EXCEL). The syllable tables below decide that.
 initialism_policy	en-US	inferred_speech	letters
 initialism_policy	en-US	pronounceable_speech	preserve
+# Word-initial clusters of ordinary words written in capitals (CHRIST, SCHOONER,
+# KNOT, GHOST) and word-final doubled letters and digraphs (STILL, LIGHT, SEARCH, TOWN).
+syllable_onset	en-US	chr	1
+syllable_onset	en-US	sch	1
+syllable_onset	en-US	kn	1
+syllable_onset	en-US	gh	1
+syllable_onset	en-US	gn	1
+syllable_coda	en-US	ss	1
+syllable_coda	en-US	ll	1
+syllable_coda	en-US	ff	1
+syllable_coda	en-US	tt	1
+syllable_coda	en-US	zz	1
+syllable_coda	en-US	ght	1
+syllable_coda	en-US	gh	1
+syllable_coda	en-US	rch	1
+syllable_coda	en-US	rth	1
+syllable_coda	en-US	tch	1
+syllable_coda	en-US	lth	1
+syllable_coda	en-US	wn	1
+syllable_coda	en-US	wl	1
 # Consonant clusters that may start a syllable.
 syllable_onset	en-US	bl	1
 syllable_onset	en-US	br	1

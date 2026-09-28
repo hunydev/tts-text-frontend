@@ -281,6 +281,11 @@ static int pronounceable(const ttf_engine_t *engine, const char *word, size_t le
             continue;
         if (i == length && cluster(engine, "syllable_coda", word + run, i - run))
             continue;
+        /* A plural or third-person s after a final coda (IMPRESSIONS, PLANTS).
+           Short runs stay initialisms: IRS, ALS, APS. */
+        if (i == length && length >= 5 && i - run > 1 && word[i - 1] == 's' &&
+            cluster(engine, "syllable_coda", word + run, i - run - 1))
+            continue;
         if (!run || i == length)
             return 0;
         for (split = 1; split < i - run; ++split)
