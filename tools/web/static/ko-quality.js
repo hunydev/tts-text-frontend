@@ -32,6 +32,7 @@ function render(){
   `구조 검사를 통과한 문장: ${number(r.structurally_clean_sentences.scorable)}건, 정확 ${percent(r.structurally_clean_sentences.exact_rate)}, 공백 제거 ${percent(r.structurally_clean_sentences.compact_rate)}. 언어 검수를 통과했다는 뜻은 아닙니다.`,
   `공백을 제거한 입력·참조 쌍 중복 제거: ${number(r.unique_pair_sentences.scorable)}건, 정확 ${percent(r.unique_pair_sentences.exact_rate)}, 공백 제거 ${percent(r.unique_pair_sentences.compact_rate)}. 원본 중복 입력 ${number(r.source.duplicate_input_records)}건, 상충 입력 그룹 ${number(r.source.conflicting_input_groups)}개.`,
   `별도 검토 파일의 승인·정정 문장: ${number(r.reviewed_sentences.scorable)}건, 정확 ${percent(r.reviewed_sentences.exact_rate)}, 공백 제거 ${percent(r.reviewed_sentences.compact_rate)}. 검토 파일을 적용해도 위의 원본 기준 점수는 바뀌지 않습니다.`,
+  ...(r.adjusted_sentences && r.review_counts && Object.keys(r.review_counts).length ? [`참조 오류 제외·정정 반영 점수: ${number(r.adjusted_sentences.scorable)}문장, 정확 ${percent(r.adjusted_sentences.exact_rate)}, 공백 제거 ${percent(r.adjusted_sentences.compact_rate)} (제외 ${number(r.review_counts.excluded||0)}, 정정 ${number(r.review_counts.corrected||0)}).`] : []),
   "공백 제거는 Unicode 공백 문자만 제거합니다. 대소문자·기호·숫자 값은 그대로 비교합니다. 의미 정확도나 발음 허용형까지 판정하지 않습니다."]){ul.append(node("li",text));}
  for(const [flag,count] of Object.entries(r.flags))ul.append(node("li",`${flag}: ${number(count)}건`));$("audit").replaceChildren(ul);
  $("protocol").textContent=JSON.stringify({protocol:r.protocol,engine:r.engine,harness:r.harness,review_counts:r.review_counts,policy:r.policy},null,2);

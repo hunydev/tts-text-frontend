@@ -113,8 +113,8 @@ def run(import_dir, library, resources, output, reviews_path=None, label='', bac
       CREATE INDEX span_filter ON spans(category,theme,route,status);
       CREATE INDEX span_case ON spans(case_id);
     ''')
-    sentences, spans_total, clean, unique, reviewed = [metric() for _ in range(5)]
-    category = defaultdict(lambda: dict(sentences=metric(),spans=metric(),flagged=0))
+    sentences, spans_total, clean, unique, reviewed, adjusted = [metric() for _ in range(6)]
+    category = defaultdict(lambda: dict(sentences=metric(),adjusted=metric(),spans=metric(),flagged=0))
     themes, routes, engine_types = [defaultdict(metric) for _ in range(3)]
     flags, review_counts, status_counts = Counter(),Counter(),Counter()
     seen, count = set(), 0
@@ -140,6 +140,10 @@ def run(import_dir, library, resources, output, reviews_path=None, label='', bac
                     review_counts[rev['status']]+=1
                     if rev['status'] in ('accepted','corrected'):
                         add(reviewed,rev.get('expected',expected) if rev['status']=='corrected' else expected,actual,error)
+                # Adjusted: every sentence except review exclusions, corrections applied.
+                if not (rev and rev['status']=='excluded'):
+                    fixed=rev['expected'] if rev and rev['status']=='corrected' else expected
+                    add(adjusted,fixed,actual,error);add(category[cat]['adjusted'],fixed,actual,error)
                 status=('unscorable' if expected is None else 'error' if error else
                         'exact' if actual==expected else 'spacing' if compact(actual)==compact(expected) else 'different')
                 status_counts[status]+=1
@@ -193,16 +197,18 @@ def run(import_dir, library, resources, output, reviews_path=None, label='', bac
                     harness=dict(evaluator_sha256=sha256(Path(__file__)),importer_sha256=manifest['importer_sha256'],
                                  adapter_sha256=sha256(ROOT/'tools/web/native.py'),alignment_sha256=sha256(ROOT/'benchmark/evaluators/evaluate.py')),
                     sentences=finish(sentences),spans=finish(spans_total),structurally_clean_sentences=finish(clean),
-                    unique_pair_sentences=finish(unique),reviewed_sentences=finish(reviewed),review_counts=dict(review_counts),
+                    unique_pair_sentences=finish(unique),reviewed_sentences=finish(reviewed),adjusted_sentences=finish(adjusted),review_counts=dict(review_counts),
                     flags=dict(flags),status_counts=dict(status_counts),
                     categories=[dict(id=k,name=next(x['category'] for x in manifest['source_summary']['files'] if x['category_en']==k),
-                                     sentences=finish(v['sentences']),spans=finish(v['spans']),flagged=v['flagged']) for k,v in category.items()],
+                                     sentences=finish(v['sentences']),adjusted_sentences=finish(v['adjusted']),spans=finish(v['spans']),flagged=v['flagged']) for k,v in category.items()],
                     themes=[dict(name=k,spans=finish(v)) for k,v in sorted(themes.items())],
                     routes=[dict(name=k,spans=finish(v)) for k,v in sorted(routes.items())],
                     engine_types=[dict(name=k,spans=finish(v)) for k,v in sorted(engine_types.items())],
                     policy=dict(whitespace='Remove Python str.isspace Unicode whitespace only; preserve punctuation, case and codepoints.',
                                 unaligned='All declared reference spans remain in the denominator; unaligned spans are misses, reported separately.',
                                 reviews='Raw headline never changes with review exclusions/corrections. Reviewed sentence subset is separate.',
+                                adjusted='All sentences minus review exclusions, with review corrections applied; '
+                                         'equals the raw headline when no review file is given. Compare engines only on the same review file.',
                                 routes='Source-shape suggestions, not correctness verdicts. No lexicon or controls injected into evaluation.',
                                 themes='Dataset topics, not semiotic class truth.',timing='Wall time of report generation, not native throughput or audio latency.'))
         db.close()

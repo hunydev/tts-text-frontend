@@ -464,6 +464,8 @@ if(BUILD_TESTING)
     endif()
     add_test(NAME korean_release_harness COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/benchmark/test_korean_release.py)
+    add_test(NAME korean_release_reference_validator COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/benchmark/test_korean_reference_validator.py)
     if(UNIX AND NOT TTF_ENABLE_ASAN AND NOT TTF_ENABLE_UBSAN)
       add_test(NAME korean_release_native COMMAND ${Python3_EXECUTABLE}
         ${CMAKE_CURRENT_SOURCE_DIR}/tests/benchmark/test_korean_release_native.py
