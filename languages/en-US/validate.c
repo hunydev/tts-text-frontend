@@ -373,14 +373,20 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "initial_continuation value must be 0 or 1");
     }
-    if (SAME(k, "abbreviation_bare")) {
+    if (SAME(k, "abbreviation_dotted_period")) {
+        *handled = 1;
+        return lowercase_letters(key, 31) && ttf_validation_enum(v, "sentence|continuation")
+                   ? TTF_OK : ttf_validation_error(
+                       d, "abbreviation_dotted_period requires a lowercase key and sentence|continuation");
+    }
+    if (SAME(k, "abbreviation_bare") || SAME(k, "abbreviation_dotted")) {
         *handled = 1;
         if (!lowercase_letters(key, 31))
             return ttf_validation_error(d,
-                                        "abbreviation_bare key is 1..31 lowercase ASCII letters");
+                                        "abbreviation reading key is 1..31 lowercase ASCII letters");
         return label(v) && strlen(v) < 64
                    ? TTF_OK
-                   : ttf_validation_error(d, "abbreviation_bare value is a word or preserve");
+                   : ttf_validation_error(d, "abbreviation reading value is a word or preserve");
     }
     if (SAME(k, "syllable_onset") || SAME(k, "syllable_coda")) {
         *handled = 1;
@@ -774,7 +780,8 @@ static ttf_status_t engine(const ttf_engine_t *e, ttf_resource_diagnostic_t *d, 
                     return final_error(d, "pronunciation_choice", entry->key,
                                        "selected pronunciation variant is missing");
             }
-            if (SAME(entry->kind, "abbreviation_expansion") &&
+            if ((SAME(entry->kind, "abbreviation_expansion") ||
+                 SAME(entry->kind, "abbreviation_dotted")) &&
                 (SAME(entry->lang, EN) || SAME(entry->lang, "*"))) {
                 value = ttf_resource_get(e, entry->kind, EN, entry->key, NULL);
                 /* A common protected marker also protects the same period.
@@ -783,7 +790,7 @@ static ttf_status_t engine(const ttf_engine_t *e, ttf_resource_diagnostic_t *d, 
                     !ttf_resource_get(e, "abbreviation", EN, entry->key, NULL))
                     return final_error(
                         d, "abbreviation", entry->key,
-                        "enabled title expansion needs an abbreviation boundary marker");
+                        "enabled abbreviation expansion needs an abbreviation boundary marker");
             }
             if ((SAME(entry->kind, "month_alias") || SAME(entry->kind, "date_year_cue")) &&
                 (SAME(entry->lang, EN) || SAME(entry->lang, "*"))) {

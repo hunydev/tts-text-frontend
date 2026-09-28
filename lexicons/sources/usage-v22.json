@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "sources": [
+    {
+      "id": "lexical-v22-editorial",
+      "title": "Authored Korean lexical choices",
+      "url": "https://github.com/hunydev/tts-text-frontend",
+      "kind": "editorial-policy",
+      "checked_at": "2026-09-28",
+      "note": "Original small lexical choices. The local benchmark ranks missing vocabulary only; no dataset dictionary, sentences or automatic pronunciation labels are imported. Pending independent review."
+    },
+    {
+      "id": "lexical-v22-kia",
+      "title": "Kia Korean site",
+      "url": "https://www.kia.com/kr",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-28",
+      "note": "Kia and 기아 appear on the official Korean site."
+    },
+    {
+      "id": "lexical-v22-ielts",
+      "title": "IDP IELTS guide",
+      "url": "https://ieltskorea.org/korea/prepare/ielts-guide-korea",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-28",
+      "note": "The official test provider uses IELTS and 아이엘츠."
+    },
+    {
+      "id": "lexical-v22-axa",
+      "title": "AXA press release",
+      "url": "https://www.axa.co.kr/AsianPlatformInternet/html/axacms/common/intro/pr_ad/report/1001239_20332.html",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-28",
+      "note": "The insurer explicitly writes AXA(악사). No insurance advice or policy text is imported."
+    },
+    {
+      "id": "lexical-v22-fedex",
+      "title": "FedEx Korea",
+      "url": "https://www.fedex.com/ko-kr/home.html",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-28",
+      "note": "The official Korean site identifies FedEx as 페덱스."
+    },
+    {
+      "id": "lexical-v22-coov",
+      "title": "KDCA COOV press release",
+      "url": "https://www.kdca.go.kr/board/board.es?act=view&bid=0015&list_no=717378&mid=a20501010000&nPage=1",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-28",
+      "note": "KDCA identifies the historical app as 쿠브(COOV); naming evidence, not a claim of current service availability."
+    },
+    {
+      "id": "lexical-v22-soil",
+      "title": "S-OIL corporate identity",
+      "url": "https://www.s-oil.com/m/company/CI.aspx",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-28",
+      "note": "Official Korean logo is 에쓰오일. 에스오일 is retained only as an optional user preference, not selected by corpus majority."
+    },
+    {
+      "id": "lexical-v22-itzy",
+      "title": "JYP ITZY album introduction",
+      "url": "https://itzy.jype.com/discography/k8onosy8",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-28",
+      "note": "Official introduction explicitly writes ITZY(있지)."
+    },
+    {
+      "id": "lexical-v22-yes24",
+      "title": "YES24 Korean site",
+      "url": "https://www.yes24.com/Main/default.aspx",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-28",
+      "note": "Site uses YES24/예스24 and the spelled-out company name 예스이십사."
+    },
+    {
+      "id": "lexical-v22-pass",
+      "title": "PASS developer centre",
+      "url": "https://devcenter.passauth.co.kr/integration/mydata",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-28",
+      "note": "Official PASS documentation also labels the service 패스. No code imported."
+    },
+    {
+      "id": "lexical-v22-gsshop",
+      "title": "GS SHOP Korean retail listing",
+      "url": "https://www.gsshop.com/prd/prd.gs?lseq=361587&prdid=62173610",
+      "kind": "official-korean-name",
+      "checked_at": "2026-09-28",
+      "note": "Official shop page uses GS SHOP/GSSHOP and 지에스샵; 숍 remains a valid alternative reading choice."
+    }
+  ]
+}

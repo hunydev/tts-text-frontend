@@ -10,6 +10,7 @@ lexicon	ko-KR	en-US:computer	컴퓨터
 lexicon	ko-KR	en-US:data	데이터
 lexicon	ko-KR	en-US:doctor	닥터
 lexicon	ko-KR	en-US:download	다운로드
+lexicon	ko-KR	en-US:eco	에코
 lexicon	ko-KR	en-US:eight	에이트
 lexicon	ko-KR	en-US:eighteen	에이틴
 lexicon	ko-KR	en-US:eighteenth	에이틴스
@@ -36,10 +37,13 @@ lexicon	ko-KR	en-US:fourteen	포틴
 lexicon	ko-KR	en-US:fourteenth	포틴스
 lexicon	ko-KR	en-US:fourth	포스
 lexicon	ko-KR	en-US:frontend	프런트엔드
+lexicon	ko-KR	en-US:full	풀
+lexicon	ko-KR	en-US:go	고
 lexicon	ko-KR	en-US:hello	헬로
 lexicon	ko-KR	en-US:hundred	헌드레드
 lexicon	ko-KR	en-US:hundredth	헌드레드스
 lexicon	ko-KR	en-US:login	로그인
+lexicon	ko-KR	en-US:loud	라우드
 lexicon	ko-KR	en-US:million	밀리언
 lexicon	ko-KR	en-US:missus	미시즈
 lexicon	ko-KR	en-US:mister	미스터
@@ -53,6 +57,7 @@ lexicon	ko-KR	en-US:ninth	나인스
 lexicon	ko-KR	en-US:offline	오프라인
 lexicon	ko-KR	en-US:one	원
 lexicon	ko-KR	en-US:online	온라인
+lexicon	ko-KR	en-US:pro	프로
 lexicon	ko-KR	en-US:professor	프로페서
 lexicon	ko-KR	en-US:quasar	퀘이사
 lexicon	ko-KR	en-US:sale	세일
@@ -73,6 +78,7 @@ lexicon	ko-KR	en-US:sixteenth	식스틴스
 lexicon	ko-KR	en-US:sixth	식스스
 lexicon	ko-KR	en-US:sixtieth	식스티스
 lexicon	ko-KR	en-US:sixty	식스티
+lexicon	ko-KR	en-US:sky	스카이
 lexicon	ko-KR	en-US:stream	스트림
 lexicon	ko-KR	en-US:summer	서머
 lexicon	ko-KR	en-US:ten	텐
@@ -99,4 +105,5 @@ lexicon	ko-KR	en-US:voice	보이스
 lexicon	ko-KR	en-US:watch	워치
 lexicon	ko-KR	en-US:winter	윈터
 lexicon	ko-KR	en-US:world	월드
+lexicon	ko-KR	en-US:yes	예스
 lexicon	ko-KR	en-US:zero	제로

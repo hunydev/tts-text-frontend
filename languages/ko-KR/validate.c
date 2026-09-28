@@ -321,6 +321,13 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "phone cue flag must be 0 or 1");
     }
+    if (SAME(k, "phone_number_tail")) {
+        *handled = 1;
+        return label(key) && strlen(key) < TTF_IR_VALUE_SIZE && !strchr(key, ' ') &&
+                       ttf_validation_enum(v, "0|1")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "phone_number_tail requires a bounded suffix and 0|1");
+    }
     if (SAME(k, "phone_render")) {
         *handled = 1;
         if (!ttf_validation_enum(key, "plus|extension|separator|zero"))
@@ -350,6 +357,16 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
         return label(key) && strlen(key) < 96 && !strchr(key, ' ') && ttf_validation_enum(v, "0|1")
                    ? TTF_OK
                    : ttf_validation_error(d, "floor cue requires one bounded token and flag 0|1");
+    }
+    if (SAME(k, "address_policy")) {
+        *handled = 1;
+        if (SAME(key, "number") || SAME(key, "leading_zero"))
+            return ttf_validation_enum(v, "cardinal|digits") ? TTF_OK :
+                ttf_validation_error(d, "address number policy requires cardinal|digits");
+        if (SAME(key, "hyphen"))
+            return label(v) && strlen(v) < 96 ? TTF_OK :
+                ttf_validation_error(d, "address hyphen reading requires 1..95 printable bytes");
+        return ttf_validation_error(d, "unknown address_policy key");
     }
     if (SAME(k, "native_standalone")) {
         *handled = 1;
@@ -388,7 +405,8 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "ordinal_policy supports only large=sino");
     }
-    if (SAME(k, "counter_role_before") || SAME(k, "counter_role_after")) {
+    if (SAME(k, "counter_role_before") || SAME(k, "counter_role_after") ||
+        SAME(k, "counter_role_tail")) {
         *handled = 1;
         if ((status = bounded_key(r, 96, d)) != TTF_OK)
             return status;
@@ -398,7 +416,9 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "counter role must be frequency, identifier or 0");
     }
-    if (SAME(k, "counter_role_unit") || SAME(k, "ordinal_prefix_unit")) {
+    if (SAME(k, "counter_role_unit") || SAME(k, "ordinal_prefix_unit") ||
+        SAME(k, "counter_noun_unit") || SAME(k, "counter_noun_tail") ||
+        SAME(k, "counter_noun_attached")) {
         *handled = 1;
         if ((status = bounded_key(r, 32, d)) != TTF_OK)
             return status;
@@ -431,6 +451,12 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d,
                                           "phone map index exceeds its Hangul composition bounds");
+    }
+    if (SAME(k, "number_spacing")) {
+        *handled = 1;
+        return SAME(key, "group") && ttf_validation_enum(v, "space|compact")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "number_spacing requires group and space|compact");
     }
     if (SAME(k, "scale")) {
         *handled = 1;
@@ -569,6 +595,16 @@ static ttf_status_t engine(const ttf_engine_t *e, ttf_resource_diagnostic_t *d, 
         const ttf_entry_t *entry;
         for (entry = e->resources[bucket]; entry; entry = entry->next) {
             const char *value;
+            if (SAME(entry->kind, "counter_role_tail") &&
+                (SAME(entry->lang, KO) || SAME(entry->lang, "*"))) {
+                value = ttf_resource_get(e, entry->kind, KO, entry->key, NULL);
+                if (value == entry->value && !SAME(value, "0") &&
+                    ((!ttf_resource_get(e, "particle", KO, entry->key, NULL) &&
+                      !ttf_resource_get(e, "quantity_tail", KO, entry->key, NULL)) ||
+                     !ttf_resource_get(e, "quantity_lookahead_tail", KO, entry->key, NULL)))
+                    return ttf_validation_error(
+                        d, "enabled Korean counter tail needs a particle/quantity_tail and quantity_lookahead_tail");
+            }
             if (!SAME(entry->kind, "counter_role_before") ||
                 (!SAME(entry->lang, KO) && !SAME(entry->lang, "*")))
                 continue;

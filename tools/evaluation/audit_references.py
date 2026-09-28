@@ -14,7 +14,12 @@ import re
 import sys
 
 ACTIVE_JSONL = (
-    "particle_table_v21", "calendar_alias_v21",
+    "counted_noun_v22", "break_controls_v22",
+    "ko_spacing_v22",
+    "phone_zero_v22",
+    "lexical_coverage_v22",
+    "counter_frequency_v22",
+    "particle_table_v21", "calendar_alias_v21", "abbreviation_dotted_v21", "speech_character_width_v21", "grouped_controls_v22", "typed_controls_v22", "numeric_width_v22",
     "cases", "domain_cases_v8", "advanced_cases", "challenge_cases",
     "protected_cases", "content_v7", "finance_ranges_v7", "multiword_v8", "lexicon_v10",
     "scaled_currency_v12", "english_dates_v13", "english_forms_v14", "korean_counters_v15", "phone_cases_v18",
@@ -102,7 +107,13 @@ def known_defects(case: dict) -> list[tuple[str, str]]:
     # the ordinary Korean adverb 다시 without using it to verbalize an interval.
     explicit = "range" in case.get("id", "").lower() or "range" in case.get("category", "").lower()
     explicit |= any(span.get("semantic_type") == "RANGE" for span in case.get("expected_spans", []))
-    if (explicit or RANGE_SURFACE.search(original)) and AGAIN_RANGE.search(expected):
+    # A complete, explicitly typed postal address has address-number separators,
+    # not intervals. Keep the interval check for plain input, range metadata,
+    # tildes and every mixed address-plus-prose case (no whole-case wildcard).
+    address = re.fullmatch(r"\[\[([^\[\]{}\\]+)\]\]\{@address\}", original)
+    address_only = (case.get("input_format") == "annotated" and address is not None
+                    and not re.search(r"[~∼～–—]", address.group(1)))
+    if (explicit or (not address_only and RANGE_SURFACE.search(original))) and AGAIN_RANGE.search(expected):
         findings.append(("korean-range-again", "A numeric interval is rendered with 다시; review the interval policy instead of approving this reference."))
     if MONTH.search(expected):
         findings.append(("split-korean-month", "The June/October month word is split as 유 월 or 시 월; review 육/유 and 십/시 month reading and spacing."))
@@ -177,6 +188,11 @@ def self_test() -> None:
         (dict(id="money-range", text="가격은 1~2만원입니다.", expected="가격은 만 다시 이만 원입니다."), {"korean-range-again"}),
         (dict(id="check-again", text="금액은 1만원입니다. 다시 확인하세요.", expected="금액은 만 원입니다. 다시 확인하세요."), set()),
         (dict(id="money-range", text="1~2만 원", expected="만 원에서 이만 원"), set()),
+        (dict(id="address", input_format="annotated", text="[[서울시 12-3]]{@address}", expected="서울시 십이 다시 삼"), set()),
+        (dict(id="address", input_format="plain", text="[[서울시 12-3]]{@address}", expected="서울시 십이 다시 삼"), {"korean-range-again"}),
+        (dict(id="money-range", input_format="annotated", text="[[서울시 12-3]]{@address}", expected="서울시 십이 다시 삼"), {"korean-range-again"}),
+        (dict(id="mixed", input_format="annotated", text="[[서울시 12-3]]{@address} 1~2원", expected="서울시 십이 다시 삼 일 다시 이 원"), {"korean-range-again"}),
+        (dict(id="address", input_format="annotated", text="[[서울시 12~3]]{@address}", expected="서울시 십이 다시 삼"), {"korean-range-again"}),
         (dict(id="month", text="2026-06-10", expected="이천이십육 년 유 월 십 일"), {"split-korean-month"}),
         (dict(id="month", text="2026-10-16", expected="이천이십육 년 시 월 십육 일"), {"split-korean-month"}),
         (dict(id="month", text="2026-10-16", expected="이천이십육 년 시월 십육 일"), set()),

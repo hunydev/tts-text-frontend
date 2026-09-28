@@ -3,8 +3,10 @@
 #include "tts_text_frontend/ttf_language_pack.h"
 #include "../../src/pronunciation/trace.h"
 #include "../../src/core/internal.h" /* Builtin scalar grammar reuse; not public ABI. */
+#include "../../src/semantic/phone.h"
 #include "identifiers.h"
 #include "speech.h"
+#include "address.h"
 #include "patterns.h"
 #include "counters.h"
 #include "../context_run.h"
@@ -171,6 +173,9 @@ static ttf_status_t cardinal(const ttf_engine_t *e, const char *value, ttf_buffe
         if (groups > sizeof(powers) / sizeof(powers[0])) {
             TRY(digits(e, integer, 0, out));
         } else {
+            int emitted = 0;
+            int separate = groups > 1 &&
+                !strcmp(resource(e, "number_spacing", "group", "compact"), "space");
             start = 0;
             for (i = groups; i > 0; --i) {
                 size_t width = i == groups ? (n - 1) % 4 + 1 : 4, j;
@@ -179,6 +184,8 @@ static ttf_status_t cardinal(const ttf_engine_t *e, const char *value, ttf_buffe
                     group = group * 10 + (unsigned)(integer[start++] - '0');
                 if (!group)
                     continue;
+                if (emitted && separate)
+                    TRY(ttf_buffer_puts(out, " "));
                 if (!(group == 1 && i == 2))
                     TRY(sino_group(e, group, out));
                 if (i > 1) {
@@ -186,6 +193,7 @@ static ttf_status_t cardinal(const ttf_engine_t *e, const char *value, ttf_buffe
                     (void)snprintf(key, sizeof(key), "10^%u", (unsigned)((i - 1) * 4));
                     TRY(ttf_buffer_puts(out, resource(e, "magnitude", key, powers[i - 1])));
                 }
+                emitted = 1;
             }
         }
     }
@@ -470,12 +478,19 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     switch (s->type) {
     case TTF_SEM_CUSTOM:
         if (!strcmp(s->unit, "@native"))
-            return standalone_native(e, s->value, out);
+            return !s->value[0] && length ? TTF_ELIMIT : standalone_native(e, s->value, out);
         if (!strcmp(s->unit, "@sino"))
-            return controlled_decimal(s->value) ? cardinal(e, s->value, out) : TTF_EINVAL;
+            return !s->value[0] && length ? TTF_ELIMIT :
+                (controlled_decimal(s->value) ? cardinal(e, s->value, out) : TTF_EINVAL);
         if (!strcmp(s->unit, "@alphabet"))
-            return ttf_ko_speech_spelling(e, s->value, strlen(s->value), 0, out);
-        return TTF_EINVAL;
+            return !strcmp(s->secondary, "control-surface")
+                       ? ttf_ko_speech_spelling(e, surface, length, 0, out)
+                       : ttf_ko_speech_spelling(e, s->value, strlen(s->value), 0, out);
+        if (!strcmp(s->unit, "@email") || !strcmp(s->unit, "@url"))
+            return ttf_electronic_control(e, s, surface, length, out);
+        if (!strcmp(s->unit, "@address"))
+            return ttf_ko_address(e, surface, length, out);
+        return ttf_semantic_control(e, s, surface, length, out);
     case TTF_SEM_VERSION:
     case TTF_SEM_IP_ADDRESS:
         return dotted_numbers(e, s, surface, length, out);
@@ -514,6 +529,18 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     case TTF_SEM_DIGIT_SEQUENCE:
         if (strcmp(s->unit, "financial_identifier") == 0)
             return ttf_ko_render_identifier(e, s->value, out);
+        if (!strcmp(s->unit, "leading_zero")) {
+            const char *p = s->value;
+            const char *zero = resource(e, "number", "leading_zero_zero",
+                                        resource(e, "digit", "0", "영"));
+            for (; *p; ++p) {
+                if (*p == '0')
+                    TRY(ttf_buffer_puts(out, zero));
+                else if (*p >= '1' && *p <= '9')
+                    TRY(digit(e, (unsigned)(*p - '0'), 0, out));
+            }
+            return TTF_OK;
+        }
         return digits(e, s->value, 0, out);
     case TTF_SEM_PHONE:
         return phone(e, s, out);
@@ -1163,12 +1190,29 @@ static int ascending_integers(const char *left, const char *right) {
     return a < b || (a == b && strcmp(left, right) < 0);
 }
 
+/* A scalar probed in a shortened endpoint view can look like a bare identifier.
+   Inside a confirmed quantity grammar, its original digits are the coefficient. */
+static void quantity_endpoint(ttf_semantic_t *s) {
+    if (s->type == TTF_SEM_DIGIT_SEQUENCE && !strcmp(s->unit, "leading_zero")) {
+        s->type = TTF_SEM_CARDINAL;
+        s->unit[0] = '\0';
+    }
+}
+
 static size_t compound_currency_range(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     size_t begin = in->tokens[in->index].begin, i;
     if (in->tokens[in->index].script != TTF_SCRIPT_DIGIT &&
         in->tokens[in->index].script != TTF_SCRIPT_SYMBOL && in->text[begin] != '-' &&
         in->text[begin] != '+')
         return 0;
+    if (in->tokens[in->index].end < in->length &&
+        in->text[in->tokens[in->index].end] == '-') {
+        ttf_semantic_t telephone = {0};
+        /* A complete phone is not a range coefficient, even before a particle
+           or name that starts with a scale character. Use the shared scanner. */
+        if (ttf_classify_phone(in, &telephone) && telephone.type == TTF_SEM_PHONE)
+            return 0;
+    }
     for (i = in->index + 1; i < in->token_count; ++i) {
         const ttf_token_t *token = &in->tokens[i];
         char key[8];
@@ -1199,6 +1243,7 @@ static size_t compound_currency_range(const ttf_pack_input_t *in, ttf_semantic_t
         first_scaled = first_count != 0;
         if (!first_count)
             first_count = ttf_classify_universal(&left, &first);
+        quantity_endpoint(&first);
         if (!first_count ||
             (first.type != TTF_SEM_CARDINAL && first.type != TTF_SEM_NUMBER &&
              first.type != TTF_SEM_CURRENCY && first.type != TTF_SEM_COUNTER &&
@@ -1218,6 +1263,7 @@ static size_t compound_currency_range(const ttf_pack_input_t *in, ttf_semantic_t
         second_scaled = second_count != 0;
         if (!second_count)
             second_count = ttf_classify_universal(&right, &second);
+        quantity_endpoint(&second);
         if (!second_scaled && second_count) {
             unsigned ignored_power;
             size_t scale_start = skip_spaces(in->text, in->length, second.input_end);
@@ -1473,6 +1519,9 @@ static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     if (identifier)
         return identifier;
     identifier = ttf_ko_classify_counter(in, s);
+    if (identifier)
+        return identifier;
+    identifier = ttf_ko_classify_counted_noun(in, s);
     if (identifier)
         return identifier;
     p = unsigned_value(text, n, begin, &year);

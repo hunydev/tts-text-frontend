@@ -103,6 +103,13 @@ candidate의 처음 20건은 `failed-traces/`에 inspect trace를 저장한다.
 
 ## 실제 데이터의 다음 순서
 
+2026-09-28 한국어 제공 자료 142,255문장을 추가했다. 한국어 작업은
+[한국어 측정·작업 큐](../benchmark/manifests/korean-quality-work-queue.json)와
+[참조 검토·재측정 가이드](korean-reference-benchmark.ko.md)를 먼저 읽는다.
+`/ko-quality`에서 실패 사례를 좁히고, 원본 참조의 정책/구조 검토 후 한 규칙군만 선정한다.
+원본은 Training이므로 새 독립 held-out 자료로 간주하지 않는다. 아래 영어 측정과는
+언어·출력 모드·분모가 달라 점수를 합치지 않는다.
+
 수치와 순서는 [quality-work-queue.json](../benchmark/manifests/quality-work-queue.json)에
 있다. 이는 2026-09-17의 **개발용 plain/text 측정**이며 새 speech 품질 점수가 아니다.
 

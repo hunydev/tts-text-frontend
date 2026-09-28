@@ -23,6 +23,9 @@ magnitude	ko-KR	10^32	구
 magnitude	ko-KR	10^36	간
 magnitude	ko-KR	10^40	정
 number	ko-KR	phone_zero	공
+number	ko-KR	leading_zero_zero	공
+# NIKL article 44: separate nonzero myriad groups; compact is a customer option.
+number_spacing	ko-KR	group	space
 number	ko-KR	decimal	 점 
 number	ko-KR	negative	마이너스 
 number	ko-KR	ordinal_prefix	제

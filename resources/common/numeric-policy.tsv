@@ -1,0 +1,4 @@
+# Preserve every digit of an unsigned, ungrouped, unitless integer starting in 0.
+# Explicit numeric grammars and annotated cardinal/sino controls take precedence.
+# Raise to 7 to recover the previous short-run classification threshold.
+numeric_policy	*	leading_zero_min_digits	2

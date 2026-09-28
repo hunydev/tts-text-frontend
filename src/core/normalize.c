@@ -6,6 +6,7 @@
 ttf_status_t ttf_trace_foreign_lexicon(const ttf_engine_t *, const char *, const char *,
                                        const char *, size_t, const char *);
 #include "../protected/protected.h"
+#include "../semantic/numeric_width.h"
 const ttf_entry_t *ttf_rule_match(const ttf_engine_t *, const char *, const char *, size_t,
                                   size_t *);
 ttf_status_t ttf_foreign_render(const ttf_engine_t *, const ttf_language_pack_t *,
@@ -158,14 +159,25 @@ static ttf_status_t render_control(const ttf_engine_t *e, const ttf_pack_input_t
     ttf_semantic_t *sem = &span->semantic;
     ttf_token_t *base_tokens = NULL;
     size_t base_count = 0, base_length = control->base_end - control->base_begin;
-    ttf_buffer_t decoded = {0};
+    ttf_buffer_t decoded = {0}, base = {0};
+    const char *source_text = in->text + control->base_begin;
     ttf_status_t status;
     context = context_pack(e, in, span->context_trace);
     if (!context)
         return TTF_EINVAL;
-    status = ttf_tokenize(in->text + control->base_begin, base_length, &base_tokens, &base_count);
+    if (control->kind == TTF_CONTROL_PATTERN && control->grouped) {
+        status = ttf_control_decode(in->text, control->base_begin, control->base_end, &base);
+        if (status != TTF_OK)
+            goto done;
+        source_text = base.data;
+        base_length = base.length;
+        /* Borrowed complete source is carried by the existing pack callback.
+           Never truncate a long group into the fixed ABI v1 value field. */
+        snprintf(sem->secondary, sizeof(sem->secondary), "control-surface");
+    }
+    status = ttf_tokenize(source_text, base_length, &base_tokens, &base_count);
     if (status != TTF_OK)
-        return status;
+        goto done;
     for (size_t k = 0; k < base_count && !source; ++k)
         source = script_pack(e, base_tokens[k].script);
     span->script = base_count ? base_tokens[0].script : TTF_SCRIPT_SYMBOL;
@@ -178,23 +190,31 @@ static ttf_status_t render_control(const ttf_engine_t *e, const ttf_pack_input_t
     tag(sem->render_lang, context->language_tag);
     tag(span->verbalizer, context->language_tag);
     snprintf(sem->rule, sizeof(sem->rule), "control.%s",
+             control->kind == TTF_CONTROL_BREAK ? "break" :
              control->kind == TTF_CONTROL_PATTERN ? "pattern" : "literal");
     if (base_length < sizeof(sem->value))
-        memcpy(sem->value, in->text + control->base_begin, base_length);
-    else if (control->kind == TTF_CONTROL_PATTERN)
-        return TTF_ELIMIT;
+        memcpy(sem->value, source_text, base_length);
+    else if (control->kind == TTF_CONTROL_PATTERN && !control->grouped) {
+        status = TTF_ELIMIT;
+        goto done;
+    }
     status = ttf_control_decode(in->text, control->payload_begin, control->payload_end, &decoded);
     if (status != TTF_OK)
         goto done;
     ttf_trace_span_begin(e, span->input_begin, span->input_end);
     ttf_trace_stage(e, TTF_TRACE_POLICY, 0, control->end - control->begin);
-    if (control->kind == TTF_CONTROL_PATTERN) {
+    if (control->kind == TTF_CONTROL_BREAK) {
+        static const char *const separators[] = {"", " ", ", ", ". "};
+        snprintf(sem->unit, sizeof(sem->unit), "@break");
+        snprintf(sem->value, sizeof(sem->value), "%d", control->break_strength);
+        status = ttf_buffer_puts(output, separators[control->break_strength]);
+    } else if (control->kind == TTF_CONTROL_PATTERN) {
         if (decoded.length >= sizeof(sem->unit)) {
             status = TTF_ELIMIT;
             goto done;
         }
         memcpy(sem->unit, decoded.data, decoded.length);
-        status = context->verbalize(e, sem, in->text + control->base_begin, base_length, output);
+        status = context->verbalize(e, sem, source_text, base_length, output);
     } else {
         snprintf(sem->unit, sizeof(sem->unit), "@literal");
         status = ttf_buffer_append(output, decoded.data, decoded.length);
@@ -203,8 +223,11 @@ static ttf_status_t render_control(const ttf_engine_t *e, const ttf_pack_input_t
     if (status == TTF_OK)
         status = ttf_trace_emit(e, TTF_TRACE_SELECTED, TTF_LAYER_USER, 0, context->language_tag,
                                 "input-control", sem->unit, decoded.data ? decoded.data : "",
-                                sem->value, "explicit-input-reading", SIZE_MAX);
+                                control->kind == TTF_CONTROL_PATTERN && control->grouped
+                                    ? base.data : sem->value,
+                                "explicit-input-reading", SIZE_MAX);
 done:
+    ttf_buffer_free(&base);
     ttf_buffer_free(&decoded);
     return status;
 }
@@ -322,6 +345,7 @@ static size_t bracket_region(const ttf_engine_t *e, const char *text, size_t len
 ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t length, size_t offset,
                               ttf_result_t *out) {
     ttf_context_memo_t memo = {0};
+    ttf_numeric_width_t width_view = {0};
     ttf_engine_t context_view = *e;
     unsigned context_invalidations = 0;
     ttf_token_t *tokens = NULL;
@@ -343,6 +367,9 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
         free(regions);
         return TTF_ENOMEM;
     }
+    st = ttf_numeric_width_create(text, length, tokens, count, regions, region_count, &width_view);
+    if (st != TTF_OK)
+        goto fail;
     while (i < count) {
         ttf_pack_input_t in;
         ttf_span_t span;
@@ -350,7 +377,8 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
         size_t consumed = 0, j, end, matched = 0, semantic_limit = length, phrase_count = count;
         long classifier_priority = 0;
         const ttf_language_pack_t *source, *context, *renderer;
-        const char *reading = NULL;
+        const char *reading = NULL, *render_text;
+        size_t render_length;
         const ttf_entry_t *rule = NULL;
         const char *phrase_hit = NULL;
         ttf_buffer_t normalized = {0};
@@ -481,6 +509,12 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
             }
             semantic_limit = classification.length;
             phrase_count = classification.token_count;
+            if (width_view.text) {
+                width_view.tokens[i].begin = width_view.scan[tokens[i].begin];
+                classification.text = width_view.text;
+                classification.length = width_view.scan[classification.length];
+                classification.tokens = width_view.tokens;
+            }
             consumed = ttf_classify_universal(&classification, sem);
             for (j = 0; j < e->pack_count; j++)
                 if (e->packs[j]->classify && strcmp(sem->unit, "@math")) {
@@ -539,8 +573,16 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
                         classifier_priority = candidate_priority;
                     }
                 }
+            consumed = ttf_numeric_width_guard(&classification, sem, consumed);
+            if (width_view.text && consumed) {
+                if (sem->input_end > classification.length) {
+                    st = TTF_ERESOURCE;
+                    goto fail;
+                }
+                sem->input_end = width_view.raw[sem->input_end];
+            }
             rule = ttf_rule_match(e, context->language_tag, text + tokens[i].begin,
-                                  classification.length - tokens[i].begin, &matched);
+                                  semantic_limit - tokens[i].begin, &matched);
         }
         if (rule) {
             sem->type = TTF_SEM_CUSTOM;
@@ -638,6 +680,29 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
         span.script = tokens[i].script;
         tag(span.verbalizer, renderer->language_tag);
         ttf_trace_span_begin(e, span.input_begin, span.input_end);
+        render_text = text + tokens[i].begin;
+        render_length = end - tokens[i].begin;
+        if (width_view.text && !rule &&
+            width_view.scan[end] - width_view.scan[tokens[i].begin] != render_length) {
+            if (e->trace_state) {
+                char *original = ttf_strndup(render_text, render_length);
+                if (!original) { st = TTF_ENOMEM; goto fail; }
+                ttf_trace_stage(e, TTF_TRACE_POLICY, 0, render_length);
+                st = ttf_trace_emit(e, TTF_TRACE_SELECTED, TTF_LAYER_COMMON, 0,
+                                    renderer->language_tag, "decision", "numeric-width",
+                                    "U+FF10..FF19 -> ASCII", original,
+                                    "scanner-view; subsequent part offsets use canonical input", SIZE_MAX);
+                free(original);
+                if (st != TTF_OK)
+                    goto fail;
+            }
+            if (ttf_numeric_width_surface(sem->type) &&
+                !(sem->type == TTF_SEM_ALNUM_TERM && source == context &&
+                  e->frontend_options.output_mode == TTF_OUTPUT_TEXT)) {
+                render_text = width_view.text + width_view.scan[tokens[i].begin];
+                render_length = width_view.scan[end] - width_view.scan[tokens[i].begin];
+            }
+        }
         if (rule)
             st = ttf_buffer_puts(&normalized, rule->value);
         else if (phrase_hit) {
@@ -669,8 +734,7 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
                                              &original_hit, &span.pronunciation_layer,
                                              &selected_text, &selected_length);
             if (st == TTF_OK && (!original_hit || span.pronunciation_layer < TTF_LAYER_USER)) {
-                ttf_status_t verbalized = source->verbalize(e, sem, text + tokens[i].begin,
-                                                            end - tokens[i].begin, &spoken);
+                ttf_status_t verbalized = source->verbalize(e, sem, render_text, render_length, &spoken);
                 if (verbalized == TTF_OK)
                     st = pronunciation_candidate(e, source->language_tag, context->language_tag,
                                                  spoken.data ? spoken.data : "", spoken.length,
@@ -741,8 +805,7 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
                                 end - tokens[i].begin, sem, &normalized,
                                 span.lexicon, &span.pronunciation_layer);
         else
-            st = renderer->verbalize(e, sem, text + tokens[i].begin, end - tokens[i].begin,
-                                     &normalized);
+            st = renderer->verbalize(e, sem, render_text, render_length, &normalized);
         if (st == TTF_OK && (!strcmp(sem->unit, "@math") || !strcmp(sem->unit, "@number-sign"))) {
             ttf_buffer_t spaced = {0};
             size_t begin = tokens[i].begin;
@@ -878,12 +941,14 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
     out->text = output.data;
     out->length = output.length;
     ttf_context_memo_clear(&memo);
+    ttf_numeric_width_free(&width_view);
     free(tokens);
     free(scopes);
     free(regions);
     return TTF_OK;
 fail:
     ttf_context_memo_clear(&memo);
+    ttf_numeric_width_free(&width_view);
     free(tokens);
     free(scopes);
     free(regions);

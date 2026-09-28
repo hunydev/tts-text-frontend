@@ -70,19 +70,25 @@ for text, expected, value, cue in positive:
 negative = [
     ("번호는 12입니다.", "번호는 십이입니다."),
     ("계좌는 3개입니다.", "계좌는 세 개입니다."),
-    ("계좌는 12,500원입니다.", "계좌는 만이천오백 원입니다."),
+    ("계좌는 12,500원입니다.", "계좌는 만 이천오백 원입니다."),
     ("참조 번호는 1.5입니다.", "참조 번호는 일 점 오입니다."),
     ("계좌는 -12입니다.", "계좌는 마이너스 십이입니다."),
-    ("내계좌는 001204입니다.", "내계좌는 천이백사입니다."),
-    ("참조\n번호는 001204입니다.", "참조\n번호는 천이백사입니다."),
-    ("001204", "천이백사"),
+    ("내계좌는 001204입니다.", "내계좌는 공공일이공사입니다."),
+    ("참조\n번호는 001204입니다.", "참조\n번호는 공공일이공사입니다."),
+    ("001204", "공공일이공사"),
 ]
 for text, expected in negative:
     for profile in profiles:
         for chunk in (1, 4096):
             output, spans = inspect(text, chunk, profile)
             assert output == expected, (text, profile, output)
-            assert all(span["semantic_type"] != "DIGIT_SEQUENCE" for span in spans), (text, spans)
+            if "001204" in text:
+                # The weak label still supplies no financial identifier cue.
+                # The user's general zero policy independently preserves digits.
+                found = [s for s in spans if s["semantic_type"] == "DIGIT_SEQUENCE"]
+                assert len(found) == 1 and found[0]["unit"] == "leading_zero", (text, spans)
+            else:
+                assert all(span["semantic_type"] != "DIGIT_SEQUENCE" for span in spans), (text, spans)
             checks += 1
 
 # New labels, zero/spacing policy and disabling a cue require resources only.
@@ -100,8 +106,9 @@ with tempfile.TemporaryDirectory() as directory:
         checks += 1
     path.write_text("identifier_label\tko-KR\t계좌는\tdisabled\n", encoding="utf-8")
     output, spans = inspect("계좌는 001204입니다.", overrides=("--customer", str(path)))
-    assert output == "계좌는 천이백사입니다.", output
-    assert all(span["semantic_type"] != "DIGIT_SEQUENCE" for span in spans), spans
+    assert output == "계좌는 공공일이공사입니다.", output
+    found = [s for s in spans if s["semantic_type"] == "DIGIT_SEQUENCE"]
+    assert len(found) == 1 and found[0]["unit"] == "leading_zero", spans
     checks += 1
 
 print(f"{len(positive)} identifier and {len(negative)} negative cases; "

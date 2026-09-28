@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>한국어 TN 참조 평가 · TTF Lab</title>
+  <link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/ko-quality.css">
+  <script src="/ko-quality.js" defer></script>
+</head>
+<body>
+<header class="mast"><a href="/" class="brand"><span class="brandmark">Tt</span><span>TTF <b>Lab</b><small>KOREAN TN / REFERENCE AGREEMENT</small></span></a><div class="mast-right"><a href="/">텍스트 검사</a><a href="/lexicon">사전 관리</a></div></header>
+<main class="quality-main">
+<section class="intro"><div><p class="eyebrow">한국어 TN · 측정과 검토</p><h1>어디가 달라졌는지,<br>같은 기준으로 확인하세요.</h1><p class="lead">카테고리별 참조 일치도와 공백 차이, 구간 정렬 및 수정 방향을 함께 확인합니다.</p></div></section>
+<p id="notice" role="status" aria-live="polite">완료된 측정을 불러오는 중입니다.</p>
+<section class="quality-panel"><div class="toolbar"><label>측정 기록<select id="run"></select></label><label>이전 기록과 비교<select id="baseline"><option value="">비교 안 함</option></select></label><button id="download" class="secondary">집계 JSON 내려받기</button></div>
+<p id="provenance" class="small"></p><p class="reference-note">이 자료는 Training 스크립트에서 제공된 참조입니다. 수치는 참조와의 일치도이며 독립 테스트 정확도나 사람이 보증한 정답률이 아닙니다. 공백 제거는 띄어쓰기 영향을 보는 보조 지표입니다.</p>
+<div id="cards" class="quality-cards"></div><p id="compare-note" class="small"></p>
+<div class="legend"><span class="swatch exact"></span>정확 일치 <span class="swatch spacing"></span>공백만 다름 <span class="swatch different"></span>공백 외 차이 / 오류</div>
+<div class="quality-scroll"><table><thead><tr><th>카테고리 · 문장</th><th>분모</th><th>정확 일치</th><th>공백 제거 일치</th><th>공백만 다름</th><th>미채점 / 오류</th><th>검토 신호</th><th>이전 대비</th></tr></thead><tbody id="categories"></tbody></table></div>
+</section>
+<section class="quality-panel" aria-labelledby="spacing-title"><h2 id="spacing-title">공백 차이의 종류</h2>
+<label>공백 진단 범주 <select id="spacing-category"><option value="">전체</option></select></label>
+<p id="spacing-note" class="small" aria-live="polite">공백 진단을 불러오는 중입니다.</p>
+<p class="small">공백만 다른 문장을 대상으로 경계를 분류합니다. 한 문장에 여러 유형이 겹칠 수 있습니다. 아래 분류는 검토 후보이며, 모두 맞춤법 오류라는 뜻이 아닙니다. 원본 점수는 그대로 유지합니다.</p>
+<div class="quality-scroll"><table><thead><tr><th>유형</th><th>경계 수</th><th>해당 문장 수</th><th>판단 기준</th><th>사례</th></tr></thead><tbody id="spacing-groups"></tbody></table></div>
+</section>
+<section class="quality-panel"><h2>구간별 진단</h2><p class="small">주제는 원본 분류, 수정 방향은 입력 형태에 따른 제안입니다. 실제 문맥·정책과 참조를 확인한 뒤 결정하세요. 주제명이 의미 분류를 보증하지 않습니다.</p>
+<div class="toolbar"><label>집계 기준<select id="group"><option value="routes">수정 방향 제안</option><option value="themes">원본 주제</option><option value="engine_types">엔진 의미 분류</option></select></label></div>
+<p id="span-note" class="small"></p><div class="quality-scroll"><table><thead><tr><th>분류</th><th>구간 분모</th><th>정확 일치</th><th>공백 제거 일치</th><th>정렬 실패</th></tr></thead><tbody id="groups"></tbody></table></div>
+</section>
+<section class="quality-panel"><h2>참조 품질과 분모</h2><div id="audit"></div><details><summary>측정 조건 · 해시 · 비교 규칙</summary><pre id="protocol"></pre></details></section>
+<section class="quality-panel"><h2>사례 살펴보기</h2><div class="toolbar filters">
+<label>단위<select id="scope"><option value="sentence">문장</option><option value="span">참조 구간</option></select></label>
+<label>카테고리<select id="category"><option value="">전체</option></select></label>
+<label>원본 주제<select id="theme" disabled><option value="">전체</option></select></label>
+<label>수정 방향<select id="route"><option value="">전체</option><option value="pattern">패턴 후보</option><option value="lexicon">사전 후보</option><option value="context-control">문맥·명시 제어 후보</option><option value="review">검토 필요</option></select></label>
+<label>결과<select id="status"><option value="different">공백 외 차이</option><option value="spacing">공백만 다름</option><option value="exact">정확 일치</option><option value="unaligned">구간 정렬 실패</option><option value="unscorable">참조 미채점</option><option value="error">엔진 오류</option><option value="">전체</option></select></label>
+<label>원문 검색<input id="query" maxlength="200" placeholder="숫자·단어 검색"></label><label class="check"><input type="checkbox" id="flagged">검토 신호만</label><button id="search" class="primary">조회</button>
+</div><p id="case-count" aria-live="polite"></p><div class="quality-scroll"><table><thead><tr><th>원문</th><th>제공 참조</th><th>실제 출력</th><th>진단</th></tr></thead><tbody id="cases"></tbody></table></div><div class="toolbar"><button id="prev" class="secondary">이전</button><span id="page"></span><button id="next" class="secondary">다음</button></div>
+</section>
+</main>
+<dialog id="detail" class="case-dialog" aria-labelledby="detail-title" aria-describedby="detail-meta">
+  <header class="case-dialog-header"><div><h2 id="detail-title">사례 상세</h2><p id="detail-meta" class="small"></p></div><button id="detail-close" class="secondary" type="button" autofocus>닫기 <span aria-hidden="true">×</span></button></header>
+  <div id="detail-view" class="case-dialog-body" aria-live="polite"></div>
+  <footer class="case-dialog-footer"><button id="review-export" class="secondary" type="button" disabled>검토 양식 JSON 내려받기</button><p class="small">검토 양식에 reviewer·reason·reviewed_at을 채워 별도 review 파일로 평가할 수 있습니다. 원본 참조와 원래 점수는 유지됩니다.</p></footer>
+</dialog>
+</body></html>

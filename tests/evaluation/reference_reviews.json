@@ -884,6 +884,135 @@
         "reason": "Date-attached weekday labels, month sweep and preservation negatives. Three fraction references corrected before implementation to existing fraction_over policy; original precheck retained. No external Korean gold or independent linguistic approval."
       },
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/abbreviation_dotted_v21.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Project-authored 30-case dotted abbreviation corpus frozen before changes; docs/english-forms.md",
+        "reason": "Reuse of established bare expansions with explicit period retention and preservation guards. No external data or independent linguistic approval."
+      },
+      "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/speech_character_width_v21.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Project-authored 30-case fullwidth Latin character corpus frozen before resource edits; docs/speech-resources.md",
+        "reason": "KO existing letter names, EN width-only output. Text/protected/unregistered-character negatives; no external corpus or independent linguistic approval."
+      },
+      "case_overrides": {
+        "char-width-digits-not-folded": {
+          "classification": "reference-policy",
+          "review_status": "pending-independent-review",
+          "reference_source": "NUM-WIDTH fullwidth digit semantics; docs/numeric-width.ko.md",
+          "reason": "Former unimplemented-feature preservation reference intentionally superseded before NUM-WIDTH implementation. Original reference saved in artifacts/tn/numeric-width."
+        }
+      }
+    },
+    {
+      "path": "tests/evaluation/grouped_controls_v22.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Project-authored 30-case grouped control contract, frozen before implementation; docs/input-format.md",
+        "reason": "Explicit KO address number and hyphen reading, KO/EN email and URL whole-span directives, bounded decoded groups and legacy controls. Not postal/RFC certification or independent linguistic gold."
+      },
+      "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/typed_controls_v22.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "developer-authored explicit interpretation contracts, existing KO/EN reading policies",
+        "reason": "Explicit type and input-order choices; not independently approved linguistic truth."
+      },
+      "case_overrides": {
+        "typed-ip-en": {
+          "classification": "reference-policy",
+          "review_status": "pending-independent-review",
+          "reference_source": "0012911 resources/languages/en-US/rules/speech.tsv electronic_separator en-US ip dot",
+          "reason": "Initial author used version point in error. Corrected against pre-feature resource policy; original and correction hashes are documented in explicit-pattern-controls.ko.md. Engine policy unchanged."
+        }
+      }
+    },
+    {
+      "path": "tests/evaluation/numeric_width_v22.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Developer-authored 30-case NUM-WIDTH corpus, authored before scanner edits; docs/numeric-width.ko.md",
+        "reason": "Reuse of established ASCII semantics for fullwidth digits. Not independently reviewed linguistic gold. Invalid-group span corrected against pre-feature ASCII boundary; expected text unchanged."
+      },
+      "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/counter_frequency_v22.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "developer-authored synthetic fixture",
+        "reason": "Independent pre-change count-context contracts with identifier guards; external sentences and reference corrections are not included."
+      }
+    },
+    {
+      "path": "tests/evaluation/lexical_coverage_v22.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "provisional-pronunciation",
+        "review_status": "pending-independent-review",
+        "reference_source": "Original lexical contexts and explicit customer preferences; official-name evidence where available",
+        "reason": "Pre-candidate authored expected text, not copied external sentences. English verbatim-preservation fixture mode corrected from speech to text with audit; expected text unchanged."
+      }
+    },
+    {
+      "path": "tests/evaluation/phone_zero_v22.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "User reading policy 2026-09-28; independently authored synthetic cases",
+        "reason": "Phone-shaped 2/3-digit areas including English, number-designator tails, leading-zero plain digit runs, structured numeric and explicit-control guards. Range negative authoring correction follows existing resource policy; original recorded locally."
+      }
+    },
+    {
+      "path": "tests/evaluation/ko_spacing_v22.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "NIKL article 44; independently authored fixtures",
+        "reason": "Myriad group boundaries; protects internal numerals, zero groups, aliases and English. Text policy, not audio evaluation."
+      }
+    },
+    {
+      "path": "tests/evaluation/counted_noun_v22.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "User request and independent developer contracts",
+        "reason": "Sino counted nouns with exact tails; lexical negatives and number-internal spelling retained."
+      }
+    },
+    {
+      "path": "tests/evaluation/break_controls_v22.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "User request and independent developer contracts",
+        "reason": "Position directive strengths from user; literal separators and independent contracts fixed before implementation."
+      }
     }
   ],
   "excluded": [

@@ -1,5 +1,6 @@
 #include "abbreviation.h"
 #include "../../src/core/internal.h"
+#include "../../src/pronunciation/trace.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -89,6 +90,35 @@ static int terminal_period(const ttf_pack_input_t *in, size_t end) {
     return 0;
 }
 
+/* A word immediately following the dot is an identifier, not an abbreviation
+   boundary (Vol.3, ltd.example). A Korean particle remains a valid boundary. */
+static int dotted_boundary(const ttf_pack_input_t *in, size_t end) {
+    char c;
+    uint32_t cp;
+    size_t width;
+    if (end == in->length) return 1;
+    c = in->text[end];
+    if ((unsigned char)c >= 128) {
+        if (ttf_utf8_decode(in->text + end, in->length - end, &cp, &width) != 1)
+            return 0;
+        return ttf_script_of(cp) != TTF_SCRIPT_LATIN && ttf_script_of(cp) != TTF_SCRIPT_DIGIT;
+    }
+    return !alpha(c) && !(c >= '0' && c <= '9') &&
+           c != '_' && c != '-' && c != '/' && c != '\\' && c != '@';
+}
+static int dotted_keeps_period(const ttf_pack_input_t *in, size_t end, const char *key) {
+    size_t p = end;
+    const char *policy;
+    if (terminal_period(in, end) || (end < in->length && in->text[end] == '.'))
+        return 1;
+    while (p < in->length && horizontal(in->text[p])) ++p;
+    policy = lookup(in->engine, "abbreviation_dotted_period", key, NULL);
+    /* A capitalized following word may start a sentence. Preserve that dot,
+       unless the resource declares a connective such as 'vs. Beta'. */
+    return p > end && p < in->length && upper(in->text[p]) &&
+           (!policy || strcmp(policy, "continuation"));
+}
+
 void ttf_en_initialism_policy(const ttf_engine_t *engine, ttf_semantic_t *s, const char *surface,
                               size_t length, const char *kind) {
     char key[TTF_IR_VALUE_SIZE];
@@ -135,6 +165,21 @@ size_t ttf_en_classify_abbreviation(const ttf_pack_input_t *in, ttf_semantic_t *
             (void)snprintf(out->secondary, sizeof(out->secondary), "title");
             (void)snprintf(out->source_lang, sizeof(out->source_lang), "%s", EN);
             (void)snprintf(out->rule, sizeof(out->rule), "en.abbreviation.title");
+            return token_count(in, out->input_end);
+        }
+        expansion = lookup(in->engine, "abbreviation_dotted", key, NULL);
+        if (expansion && strcmp(expansion, "preserve") &&
+            dotted_boundary(in, token->end + 1)) {
+            out->type = TTF_SEM_ABBREVIATION;
+            out->lexical_class = TTF_LEX_WORD;
+            out->input_end = dotted_keeps_period(in, token->end + 1, key)
+                                 ? token->end : token->end + 1;
+            (void)lookup(in->engine, "abbreviation_dotted", key, out);
+            (void)lookup(in->engine, "abbreviation_dotted_period", key, out);
+            (void)snprintf(out->value, sizeof(out->value), "%s", key);
+            (void)snprintf(out->secondary, sizeof(out->secondary), "dotted");
+            (void)snprintf(out->source_lang, sizeof(out->source_lang), "%s", EN);
+            (void)snprintf(out->rule, sizeof(out->rule), "en.abbreviation.dotted");
             return token_count(in, out->input_end);
         }
     }
@@ -255,6 +300,18 @@ ttf_status_t ttf_en_verbalize_abbreviation(const ttf_engine_t *engine, const ttf
     size_t i, used = 0;
     ttf_status_t status;
     if (s->type == TTF_SEM_ABBREVIATION) {
+        if (!strcmp(s->secondary, "dotted")) {
+            value = lookup(engine, "abbreviation_dotted", s->value, NULL);
+            if (!value || !strcmp(value, "preserve"))
+                return ttf_buffer_append(out, surface, length);
+            ttf_trace_stage(engine, TTF_TRACE_POLICY, 0, length);
+            status = ttf_trace_resource(engine, "abbreviation_dotted", EN, s->value,
+                                        s->value, "dotted-abbreviation-reading", SIZE_MAX);
+            if (status == TTF_OK && lookup(engine, "abbreviation_dotted_period", s->value, NULL))
+                status = ttf_trace_resource(engine, "abbreviation_dotted_period", EN, s->value,
+                                            s->value, "dotted-abbreviation-period", SIZE_MAX);
+            return status == TTF_OK ? ttf_buffer_puts(out, value) : status;
+        }
         if (!strcmp(s->secondary, "bare")) {
             value = lookup(engine, "abbreviation_bare", s->value, NULL);
             return value && strcmp(value, "preserve") ? ttf_buffer_puts(out, value)

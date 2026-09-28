@@ -1,0 +1,401 @@
+{
+  "date": "2026-09-28",
+  "authority": "User explicitly requested preserving leading zeros as digit readings and considering English as well as Korean.",
+  "source_reference_modified": false,
+  "changes": [
+    {
+      "path": "tests/evaluation/advanced_cases.jsonl",
+      "id": "advanced-bare-identifier-ambiguous",
+      "before": {
+        "id": "advanced-bare-identifier-ambiguous",
+        "category": "finance/identifier-negative",
+        "text": "001204",
+        "expected": "천이백사",
+        "expected_spans": [
+          {
+            "surface": "001204",
+            "semantic_type": "CARDINAL",
+            "value": "001204",
+            "unit": ""
+          }
+        ]
+      },
+      "after": {
+        "id": "advanced-bare-identifier-ambiguous",
+        "category": "finance/identifier-negative",
+        "text": "001204",
+        "expected": "공공일이공사",
+        "expected_spans": [
+          {
+            "surface": "001204",
+            "semantic_type": "DIGIT_SEQUENCE",
+            "value": "001204",
+            "unit": "leading_zero"
+          }
+        ],
+        "notes": "User policy change 2026-09-28: plain leading-zero integers use DIGIT_SEQUENCE, KO 공 and EN zero, including short runs. Supersedes the old short-run cardinal policy. Structured quantities and explicit controls remain distinct. Prior reference and reason: docs/audit/phone-zero-policy-20260928.json. Independent linguistic review pending."
+      },
+      "reason": "Explicit user reading policy, not corpus score fitting."
+    },
+    {
+      "path": "tests/evaluation/leading_zero_v21.jsonl",
+      "id": "leading-zero-v21-long-ten",
+      "before": {
+        "id": "leading-zero-v21-long-ten",
+        "category": "number/leading-zero",
+        "text": "0774858583",
+        "expected": "영칠칠사팔오팔오팔삼",
+        "default_language": "ko-KR",
+        "output_mode": "speech",
+        "input_format": "plain",
+        "unreadable": "preserve",
+        "expected_spans": [],
+        "notes": "Developer-authored contract for a long leading-zero digit run, fixed before implementing the candidate; provisional project reading policy, pending independent linguistic review. No synthesized audio. The external English sample reads 0774858583 digit by digit and the engine read it as 'seven hundred seventy four million …', which no listener wants. The project separately records that a short bare run is ambiguous and stays a quantity (advanced-bare-identifier-ambiguous 001204 → 천이백사, golden 00010 → 십), and that position is not overridden here: the rule starts at seven digits, where zero padding stops being a plausible quantity. The disagreement about shorter runs is recorded in docs/remaining-work.md as NUM-ZERO rather than decided."
+      },
+      "after": {
+        "id": "leading-zero-v21-long-ten",
+        "category": "number/leading-zero",
+        "text": "0774858583",
+        "expected": "공칠칠사팔오팔오팔삼",
+        "default_language": "ko-KR",
+        "output_mode": "speech",
+        "input_format": "plain",
+        "unreadable": "preserve",
+        "expected_spans": [],
+        "notes": "User policy change 2026-09-28: plain leading-zero integers use DIGIT_SEQUENCE, KO 공 and EN zero, including short runs. Supersedes the old short-run cardinal policy. Structured quantities and explicit controls remain distinct. Prior reference and reason: docs/audit/phone-zero-policy-20260928.json. Independent linguistic review pending."
+      },
+      "reason": "Explicit user reading policy, not corpus score fitting."
+    },
+    {
+      "path": "tests/evaluation/leading_zero_v21.jsonl",
+      "id": "leading-zero-v21-long-seven",
+      "before": {
+        "id": "leading-zero-v21-long-seven",
+        "category": "number/leading-zero",
+        "text": "0012345",
+        "expected": "영영일이삼사오",
+        "default_language": "ko-KR",
+        "output_mode": "speech",
+        "input_format": "plain",
+        "unreadable": "preserve",
+        "expected_spans": [],
+        "notes": "Developer-authored contract for a long leading-zero digit run, fixed before implementing the candidate; provisional project reading policy, pending independent linguistic review. No synthesized audio. The external English sample reads 0774858583 digit by digit and the engine read it as 'seven hundred seventy four million …', which no listener wants. The project separately records that a short bare run is ambiguous and stays a quantity (advanced-bare-identifier-ambiguous 001204 → 천이백사, golden 00010 → 십), and that position is not overridden here: the rule starts at seven digits, where zero padding stops being a plausible quantity. The disagreement about shorter runs is recorded in docs/remaining-work.md as NUM-ZERO rather than decided."
+      },
+      "after": {
+        "id": "leading-zero-v21-long-seven",
+        "category": "number/leading-zero",
+        "text": "0012345",
+        "expected": "공공일이삼사오",
+        "default_language": "ko-KR",
+        "output_mode": "speech",
+        "input_format": "plain",
+        "unreadable": "preserve",
+        "expected_spans": [],
+        "notes": "User policy change 2026-09-28: plain leading-zero integers use DIGIT_SEQUENCE, KO 공 and EN zero, including short runs. Supersedes the old short-run cardinal policy. Structured quantities and explicit controls remain distinct. Prior reference and reason: docs/audit/phone-zero-policy-20260928.json. Independent linguistic review pending."
+      },
+      "reason": "Explicit user reading policy, not corpus score fitting."
+    },
+    {
+      "path": "tests/evaluation/leading_zero_v21.jsonl",
+      "id": "leading-zero-v21-short-six-unchanged",
+      "before": {
+        "id": "leading-zero-v21-short-six-unchanged",
+        "category": "number/leading-zero",
+        "text": "001204",
+        "expected": "천이백사",
+        "default_language": "ko-KR",
+        "output_mode": "speech",
+        "input_format": "plain",
+        "unreadable": "preserve",
+        "expected_spans": [],
+        "notes": "Developer-authored contract for a long leading-zero digit run, fixed before implementing the candidate; provisional project reading policy, pending independent linguistic review. No synthesized audio. The external English sample reads 0774858583 digit by digit and the engine read it as 'seven hundred seventy four million …', which no listener wants. The project separately records that a short bare run is ambiguous and stays a quantity (advanced-bare-identifier-ambiguous 001204 → 천이백사, golden 00010 → 십), and that position is not overridden here: the rule starts at seven digits, where zero padding stops being a plausible quantity. The disagreement about shorter runs is recorded in docs/remaining-work.md as NUM-ZERO rather than decided."
+      },
+      "after": {
+        "id": "leading-zero-v21-short-six-unchanged",
+        "category": "number/leading-zero",
+        "text": "001204",
+        "expected": "공공일이공사",
+        "default_language": "ko-KR",
+        "output_mode": "speech",
+        "input_format": "plain",
+        "unreadable": "preserve",
+        "expected_spans": [],
+        "notes": "User policy change 2026-09-28: plain leading-zero integers use DIGIT_SEQUENCE, KO 공 and EN zero, including short runs. Supersedes the old short-run cardinal policy. Structured quantities and explicit controls remain distinct. Prior reference and reason: docs/audit/phone-zero-policy-20260928.json. Independent linguistic review pending."
+      },
+      "reason": "Explicit user reading policy, not corpus score fitting."
+    },
+    {
+      "path": "tests/evaluation/leading_zero_v21.jsonl",
+      "id": "leading-zero-v21-short-five-unchanged",
+      "before": {
+        "id": "leading-zero-v21-short-five-unchanged",
+        "category": "number/leading-zero",
+        "text": "00010",
+        "expected": "십",
+        "default_language": "ko-KR",
+        "output_mode": "speech",
+        "input_format": "plain",
+        "unreadable": "preserve",
+        "expected_spans": [],
+        "notes": "Developer-authored contract for a long leading-zero digit run, fixed before implementing the candidate; provisional project reading policy, pending independent linguistic review. No synthesized audio. The external English sample reads 0774858583 digit by digit and the engine read it as 'seven hundred seventy four million …', which no listener wants. The project separately records that a short bare run is ambiguous and stays a quantity (advanced-bare-identifier-ambiguous 001204 → 천이백사, golden 00010 → 십), and that position is not overridden here: the rule starts at seven digits, where zero padding stops being a plausible quantity. The disagreement about shorter runs is recorded in docs/remaining-work.md as NUM-ZERO rather than decided."
+      },
+      "after": {
+        "id": "leading-zero-v21-short-five-unchanged",
+        "category": "number/leading-zero",
+        "text": "00010",
+        "expected": "공공공일공",
+        "default_language": "ko-KR",
+        "output_mode": "speech",
+        "input_format": "plain",
+        "unreadable": "preserve",
+        "expected_spans": [],
+        "notes": "User policy change 2026-09-28: plain leading-zero integers use DIGIT_SEQUENCE, KO 공 and EN zero, including short runs. Supersedes the old short-run cardinal policy. Structured quantities and explicit controls remain distinct. Prior reference and reason: docs/audit/phone-zero-policy-20260928.json. Independent linguistic review pending."
+      },
+      "reason": "Explicit user reading policy, not corpus score fitting."
+    },
+    {
+      "path": "tests/evaluation/leading_zero_v21.jsonl",
+      "id": "leading-zero-v21-short-three-unchanged",
+      "before": {
+        "id": "leading-zero-v21-short-three-unchanged",
+        "category": "number/leading-zero",
+        "text": "007",
+        "expected": "칠",
+        "default_language": "ko-KR",
+        "output_mode": "speech",
+        "input_format": "plain",
+        "unreadable": "preserve",
+        "expected_spans": [],
+        "notes": "Developer-authored contract for a long leading-zero digit run, fixed before implementing the candidate; provisional project reading policy, pending independent linguistic review. No synthesized audio. The external English sample reads 0774858583 digit by digit and the engine read it as 'seven hundred seventy four million …', which no listener wants. The project separately records that a short bare run is ambiguous and stays a quantity (advanced-bare-identifier-ambiguous 001204 → 천이백사, golden 00010 → 십), and that position is not overridden here: the rule starts at seven digits, where zero padding stops being a plausible quantity. The disagreement about shorter runs is recorded in docs/remaining-work.md as NUM-ZERO rather than decided."
+      },
+      "after": {
+        "id": "leading-zero-v21-short-three-unchanged",
+        "category": "number/leading-zero",
+        "text": "007",
+        "expected": "공공칠",
+        "default_language": "ko-KR",
+        "output_mode": "speech",
+        "input_format": "plain",
+        "unreadable": "preserve",
+        "expected_spans": [],
+        "notes": "User policy change 2026-09-28: plain leading-zero integers use DIGIT_SEQUENCE, KO 공 and EN zero, including short runs. Supersedes the old short-run cardinal policy. Structured quantities and explicit controls remain distinct. Prior reference and reason: docs/audit/phone-zero-policy-20260928.json. Independent linguistic review pending."
+      },
+      "reason": "Explicit user reading policy, not corpus score fitting."
+    },
+    {
+      "path": "tests/evaluation/leading_zero_v21.jsonl",
+      "id": "leading-zero-v21-short-two-unchanged",
+      "before": {
+        "id": "leading-zero-v21-short-two-unchanged",
+        "category": "number/leading-zero",
+        "text": "09",
+        "expected": "구",
+        "default_language": "ko-KR",
+        "output_mode": "speech",
+        "input_format": "plain",
+        "unreadable": "preserve",
+        "expected_spans": [],
+        "notes": "Developer-authored contract for a long leading-zero digit run, fixed before implementing the candidate; provisional project reading policy, pending independent linguistic review. No synthesized audio. The external English sample reads 0774858583 digit by digit and the engine read it as 'seven hundred seventy four million …', which no listener wants. The project separately records that a short bare run is ambiguous and stays a quantity (advanced-bare-identifier-ambiguous 001204 → 천이백사, golden 00010 → 십), and that position is not overridden here: the rule starts at seven digits, where zero padding stops being a plausible quantity. The disagreement about shorter runs is recorded in docs/remaining-work.md as NUM-ZERO rather than decided."
+      },
+      "after": {
+        "id": "leading-zero-v21-short-two-unchanged",
+        "category": "number/leading-zero",
+        "text": "09",
+        "expected": "공구",
+        "default_language": "ko-KR",
+        "output_mode": "speech",
+        "input_format": "plain",
+        "unreadable": "preserve",
+        "expected_spans": [],
+        "notes": "User policy change 2026-09-28: plain leading-zero integers use DIGIT_SEQUENCE, KO 공 and EN zero, including short runs. Supersedes the old short-run cardinal policy. Structured quantities and explicit controls remain distinct. Prior reference and reason: docs/audit/phone-zero-policy-20260928.json. Independent linguistic review pending."
+      },
+      "reason": "Explicit user reading policy, not corpus score fitting."
+    },
+    {
+      "path": "tests/evaluation/numeric_width_v22.jsonl",
+      "id": "width-short-zero",
+      "before": {
+        "id": "width-short-zero",
+        "category": "numeric-width/cardinal",
+        "text": "０００１０",
+        "expected": "십",
+        "default_language": "ko-KR",
+        "output_mode": "speech",
+        "input_format": "plain",
+        "notes": "Written before implementation. Fullwidth digits use the existing ASCII numeric reading policy; raw protected/invalid text stays intact. Developer reference, pending independent review.",
+        "expected_spans": [
+          {
+            "surface": "０００１０",
+            "semantic_type": "CARDINAL",
+            "value": "00010"
+          }
+        ]
+      },
+      "after": {
+        "id": "width-short-zero",
+        "category": "numeric-width/cardinal",
+        "text": "０００１０",
+        "expected": "공공공일공",
+        "default_language": "ko-KR",
+        "output_mode": "speech",
+        "input_format": "plain",
+        "notes": "User policy change 2026-09-28: plain leading-zero integers use DIGIT_SEQUENCE, KO 공 and EN zero, including short runs. Supersedes the old short-run cardinal policy. Structured quantities and explicit controls remain distinct. Prior reference and reason: docs/audit/phone-zero-policy-20260928.json. Independent linguistic review pending.",
+        "expected_spans": [
+          {
+            "surface": "０００１０",
+            "semantic_type": "DIGIT_SEQUENCE",
+            "value": "00010",
+            "unit": "leading_zero"
+          }
+        ]
+      },
+      "reason": "Explicit user reading policy, not corpus score fitting."
+    },
+    {
+      "path": "tests/evaluation/phone_cases_v18.jsonl",
+      "id": "phone-v18-extension-newline-boundary",
+      "before": {
+        "id": "phone-v18-extension-newline-boundary",
+        "category": "phone/international",
+        "default_language": "en-US",
+        "text": "Phone: +12125550100\next. 0042",
+        "expected": "Phone: plus one two one two five five five zero one zero zero\next. forty two",
+        "expected_spans": [
+          {
+            "surface": "+12125550100",
+            "semantic_type": "PHONE",
+            "value": "+12125550100",
+            "secondary": "",
+            "unit": "international",
+            "source_lang": "und",
+            "context_lang": "en-US"
+          },
+          {
+            "surface": "0042",
+            "semantic_type": "CARDINAL",
+            "value": "0042"
+          }
+        ],
+        "notes": "Original developer-authored text/semantic contract fixed before candidate execution; pending independent linguistic review. Digits, leading zeros and extension identity are exact; plus/zero/extension/group reading is editable project policy. Phone shape recognition does not certify country-code allocation or subscriber reachability. No external corpus or audio included."
+      },
+      "after": {
+        "id": "phone-v18-extension-newline-boundary",
+        "category": "phone/international",
+        "default_language": "en-US",
+        "text": "Phone: +12125550100\next. 0042",
+        "expected": "Phone: plus one two one two five five five zero one zero zero\next. zero zero four two",
+        "expected_spans": [
+          {
+            "surface": "+12125550100",
+            "semantic_type": "PHONE",
+            "value": "+12125550100",
+            "secondary": "",
+            "unit": "international",
+            "source_lang": "und",
+            "context_lang": "en-US"
+          },
+          {
+            "surface": "0042",
+            "semantic_type": "DIGIT_SEQUENCE",
+            "value": "0042",
+            "unit": "leading_zero"
+          }
+        ],
+        "notes": "User policy change 2026-09-28: plain leading-zero integers use DIGIT_SEQUENCE, KO 공 and EN zero, including short runs. Supersedes the old short-run cardinal policy. Structured quantities and explicit controls remain distinct. Prior reference and reason: docs/audit/phone-zero-policy-20260928.json. Independent linguistic review pending."
+      },
+      "reason": "Explicit user reading policy, not corpus score fitting."
+    },
+    {
+      "path": "tests/evaluation/phone_cases_v18.jsonl",
+      "id": "phone-v18-en-unlabeled-spaces",
+      "before": {
+        "id": "phone-v18-en-unlabeled-spaces",
+        "category": "phone/negative",
+        "default_language": "en-US",
+        "text": "212 555 0100",
+        "expected": "two hundred twelve five hundred fifty five one hundred",
+        "expected_spans": [
+          {
+            "surface": "212",
+            "semantic_type": "CARDINAL",
+            "value": "212"
+          },
+          {
+            "surface": "555",
+            "semantic_type": "CARDINAL",
+            "value": "555"
+          },
+          {
+            "surface": "0100",
+            "semantic_type": "CARDINAL",
+            "value": "0100"
+          }
+        ],
+        "notes": "Original developer-authored text/semantic contract fixed before candidate execution; pending independent linguistic review. Digits, leading zeros and extension identity are exact; plus/zero/extension/group reading is editable project policy. Phone shape recognition does not certify country-code allocation or subscriber reachability. No external corpus or audio included."
+      },
+      "after": {
+        "id": "phone-v18-en-unlabeled-spaces",
+        "category": "phone/negative",
+        "default_language": "en-US",
+        "text": "212 555 0100",
+        "expected": "two hundred twelve five hundred fifty five zero one zero zero",
+        "expected_spans": [
+          {
+            "surface": "212",
+            "semantic_type": "CARDINAL",
+            "value": "212"
+          },
+          {
+            "surface": "555",
+            "semantic_type": "CARDINAL",
+            "value": "555"
+          },
+          {
+            "surface": "0100",
+            "semantic_type": "DIGIT_SEQUENCE",
+            "value": "0100",
+            "unit": "leading_zero"
+          }
+        ],
+        "notes": "User policy change 2026-09-28: plain leading-zero integers use DIGIT_SEQUENCE, KO 공 and EN zero, including short runs. Supersedes the old short-run cardinal policy. Structured quantities and explicit controls remain distinct. Prior reference and reason: docs/audit/phone-zero-policy-20260928.json. Independent linguistic review pending."
+      },
+      "reason": "Explicit user reading policy, not corpus score fitting."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "input": "00010",
+      "before": "십",
+      "after": "공공공일공",
+      "reason": "Same user policy as short leading-zero contracts."
+    }
+  ],
+  "additional_test_sources": [
+    "tests/integration/test_phone_contracts.py: shared synthetic phone fixtures",
+    "tests/integration/test_identifiers.py: weak/disabled identifier labels remain non-financial_identifier; a separate leading_zero DIGIT_SEQUENCE now applies"
+  ],
+  "integration_contract_updates": [
+    {
+      "path": "tests/integration/test_phone_contracts.py",
+      "id": "disabled-long-identifier-label",
+      "before": {
+        "text": "Account number:twelve",
+        "semantic_type": "CARDINAL",
+        "value": "0012"
+      },
+      "after": {
+        "text": "Account number:zero zero one two",
+        "semantic_type": "DIGIT_SEQUENCE",
+        "value": "0012",
+        "unit": "leading_zero",
+        "secondary": ""
+      },
+      "reason": "Disabled identifier cue stays disabled, but bare leading-zero digits follow the new general policy. Exact unit/secondary assertions retain the guard against suffix cue revival."
+    },
+    {
+      "path": "tests/integration/test_numeric_width.py",
+      "before_sha256": "b74babf8fd0e070994d7e950d2085334d1147da93a21648242e515db62ff57b0",
+      "after_sha256": "79f58fb742823c3186187dcb7abeab6f729c256eee45c17575cdce75526e17ef",
+      "reason": "Exact corpus byte pin updated for the recorded width-short-zero policy change, without loosening hash verification."
+    }
+  ]
+}

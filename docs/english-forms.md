@@ -143,3 +143,80 @@ recognition, possessives, arbitrary sentence-final abbreviation disambiguation
 and broad currency-name inflections require more work. Phrase target changes can
 still change the context horizon in other constructions. Neither benchmark
 agreement nor these tests establish complete production language accuracy.
+
+## Dotted word abbreviations (v0.21 continuation)
+
+`resources/languages/en-US/rules/abbreviations-dotted.tsv` explicitly opts five
+period-bearing forms into the **already established bare readings**. Titles keep
+an independent following-name guard. No outside dictionary/code was imported.
+
+| Input | Output |
+|---|---|
+| `Acme Ltd. paid 12 dollars.` | `Acme limited paid twelve dollars.` |
+| `Read Vol. 3.` | `Read volume three.` |
+| `Alpha vs. Beta` | `Alpha versus Beta` |
+| `Use paper, ink, etc.` | `Use paper, ink, etcetera.` |
+| `Rowan Jr.` | `Rowan junior.` |
+
+The English pack produces `ABBREVIATION`, lowercase key in `value`, `dotted` in
+`secondary`, and `en.abbreviation.dotted` in `rule`. The source language is
+`en-US`; context and render language retain normal routing. Text and speech use
+the same semantic expansion. In Korean context the expanded English word enters
+the existing pronunciation pipeline; this change does not certify the naturalness
+of its unknown-word Hangul fallback. User/customer lexicons may set that reading.
+
+### Editing the resources
+
+Author a separate UTF-8 TSV with real tabs and load it with `--customer FILE`:
+
+```tsv
+abbreviation_dotted	en-US	inc	incorporated
+abbreviation	en-US	inc	preserve
+abbreviation_dotted	en-US	vol	part
+abbreviation_dotted_period	en-US	vs	sentence
+```
+
+- `abbreviation_dotted`: 1..31 lowercase ASCII letters; nonempty reading below
+  64 bytes, or `preserve` to disable expansion. A new enabled key also needs the
+  `abbreviation` marker so sentence/phrase streaming retains enough input.
+  Final resource validation rejects a missing marker. Ordinary bare words are
+  not changed by this table.
+- `abbreviation_dotted_period`: `sentence` (default) or `continuation`.
+  `sentence` retains a period before a following capitalized ASCII word, since
+  it may start a new sentence. `continuation` consumes it there (`vs. Beta`).
+  Both retain the dot at EOF, newline, a closing quote/bracket, or before further
+  dots. A following `!`/`?` or comma keeps that punctuation and consumes the
+  abbreviation's own dot. This is a deterministic finite policy, not general
+  sentence-final abbreviation disambiguation.
+- Customer > Domain > System; same-layer earlier declarations win. `inspect
+  --trace` records the selected expansion and any explicit period policy.
+- An ASCII letter/digit, extended Latin letter, `_`, `-`, slash, backslash or `@`
+  immediately after the dot is not this grammar. `Vol.3`, `Vol.é`, hosts, paths,
+  email and protected literals retain their existing interpretation.
+
+For a Korean conventional reading, use the separate pronunciation namespace:
+
+```tsv
+lexicon	ko-KR	en-US:limited	리미티드
+```
+
+`표기는 Ltd.입니다.` then yields `표기는 리미티드입니다.`. A user `Ltd.` pronunciation
+entry still takes precedence over that customer verbalized alias. This does not
+translate `limited` into a Korean company type. Pronunciation and TN rows remain
+separate. `Dr.`, `St.`, `No.` and undeclared ambiguous abbreviations are unchanged.
+
+### Evidence and limits
+
+The 30 original references were frozen before candidate changes (SHA256
+`b7c1d5a34ec18816b996cdb0d189cd1fb2344cf27878cd1026cc029cca521382`).
+`tn_cycle`: **9/30 → 30/30**, fixed21, regressed0; no expected strings changed.
+Two segment profiles, text/speech, every two-part byte split, single bytes and
+seeded random schedules give **1,738** exact text/span/trace comparisons. Native
+and CLI checks cover semantic offsets, period ownership, disabling, custom keys,
+validation bounds, layer ties, code-mixed aliases and extended Latin boundaries.
+These are project policy contracts, pending independent linguistic review.
+
+Possessives, general sentence inference, multi-dot abbreviations such as `e.g.` /
+`i.e.`, and context-dependent `Co.` / `Inc.` / `No.` remain separate work. Those
+forms were not silently added to the system table. The web workbench corpus is
+`abbreviation-dotted-v21`; serving it requires a separately authorized deployment.

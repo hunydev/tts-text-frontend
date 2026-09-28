@@ -46,6 +46,10 @@ typedef struct ttf_language_pack {
     int (*context_score)(const ttf_pack_input_t *input);
     /* Return token count consumed, zero for no match. Populate IR, never output text. */
     size_t (*classify)(const ttf_pack_input_t *input, ttf_semantic_t *semantic);
+    /* Grouped CUSTOM patterns use secondary="control-surface": surface/length
+       carry the complete decoded source for this call, including long groups.
+       value is empty when that source does not fit; it is never truncated.
+       The borrowed surface must not be retained. See docs/input-format.md. */
     ttf_status_t (*verbalize)(const ttf_engine_t *engine, const ttf_semantic_t *semantic,
                               const char *surface, size_t length, ttf_buffer_t *output);
     ttf_status_t (*pronounce)(const ttf_engine_t *engine, const char *word, size_t length,

@@ -136,6 +136,68 @@ build/ttf normalize --input-format annotated --output-mode speech 'ABC{@alphabet
 
 장식 기호를 기본 이름으로 읽지 않는 것은 의도한 정책이다. `★ 별점`을 `별 별점`으로 읽으면 대본의 뜻이 바뀐다. 필요하면 고객 TSV에 `speech_symbol` 행을 추가한다. `~`가 두 읽기 사이에 공백 없이 붙어 있으면 범위 표시로 `speech_range_mark`의 값을 읽는다 (`서울~부산` → `서울에서 부산`). 반복된 `~~~`, 공백을 둔 `~`, 고객이 `quantity_range_separator`로 끈 경우는 제외한다. `~`는 단어 뒤에서 휴지 앞일 때만 늘임표이고, 단독 `~`는 `물결`, 수량 범위는 기존 `에서`를 유지한다. `℃`·`㎏` 같은 호환 단위 문자는 `numeric_suffix`로 기존 단위에 연결하므로 숫자 문법이 읽는다 (`50℃` → `섭씨 오십 도`).
 
+## 전각 영문자 최종 읽기 (v0.21 continuation)
+
+`resources/languages/{ko-KR,en-US}/rules/speech-characters.tsv`는 전각 영문 대·소문자
+52개씩을 `speech_character`로 선언한다. **speech 출력에만 적용**하며 한국어는 기존
+알파벳 이름, 영어는 대소문자를 유지한 ASCII 문자로 치환한다. Unicode 문자 범위는
+[Halfwidth and Fullwidth Forms 공식 표](https://www.unicode.org/charts/PDF/UFF00.pdf)의
+U+FF21–FF3A / U+FF41–FF5A를 참고했다. 읽기 정책과 예문은 자체 작성이며 독립 검수 대기다.
+
+| 입력 | KO speech | EN speech | text |
+|---|---|---|---|
+| `ＡＢＣ` | `에이비씨` | `ABC` | `ＡＢＣ` |
+| `ａｂｃ` | `에이비씨` | `abc` | `ａｂｃ` |
+| `Ｆｉｌｅ` | `에프아이엘이` | `File` | `Ｆｉｌｅ` |
+
+`계좌 ＡＢＣ 확인` → `계좌 에이비씨 확인`, `Ｂ등급 채권` → `비등급 채권`.
+읽기는 앞뒤와 붙으며 `Ｃ가`는 `씨가`다. 조사 교정·단어 발음 사전 재조회는 하지 않는다.
+토큰의 원문/byte offset/script/source는 그대로다 (`ＡＢＣ`: OTHER, source=und).
+`inspect --output-mode speech --trace`는 각 문자의 key/value/layer 및 span 내 byte
+범위를 `policy / final-character-mapped`로 보여 준다.
+
+### 사람이 바꾸는 방법
+
+TSV의 필드는 `kind`, `language`, `key`, `value` 순서이며 **실제 탭**으로 구분한다.
+고객 파일을 만들고 `--customer customer.tsv`로 지정한다.
+
+```tsv
+speech_character	ko-KR	Ａ	아
+speech_character	ko-KR	Ｚ	지
+speech_character	en-US	Ａ	A
+```
+
+Customer > Domain > System; 같은 layer/key는 먼저 선언된 행이 우선한다.
+한국어 `Ａ`의 기본값 `에이` 대신 `아`를 적용하면 `가Ａ나` → `가아나`.
+대·소문자는 별도 key이므로 `ａ`도 바꾸려면 별도 행이 필요하다.
+원문을 유지할 문자는 `speech_character ko-KR Ａ Ａ`처럼 자기 자신을 값으로 등록한다.
+`preserve`는 이 표의 예약어가 아니므로 값에 쓰면 그대로 출력된다.
+치환 값은 재귀적으로 처리하지 않는다. 빈 값은 validator가 거부한다.
+
+```sh
+build/ttf validate-resource --resources resources --require-complete-validation customer.tsv
+build/ttf inspect --resources resources --output-mode speech --trace --customer customer.tsv '가Ａ나'
+```
+
+### 범위와 한계
+
+- 입력 NFKC/숫자 스캐너 folding이 아니다. `１２３`의 수 해석은 **NUM-WIDTH** 후속 작업이며
+  이 표에 숫자 한 글자 읽기를 넣어서 값·단위·선행 0 해석을 우회하지 않는다.
+- 한국어의 `Ｆｉｌｅ`는 `파일`이 아닌 글자 이름이다. source가 und라 기존 EN 발음 사전에
+  `Ｆｉｌｅ`를 추가해도 그 사전이 선택되지 않는다. 단어 단위 관용 발음은 향후 입력 folding
+  설계 대상이며 지금은 annotated literal `Ｆｉｌｅ{파일}` 또는 기존 exact TN override를 쓴다.
+- `speech_character` 자체는 일반 다중 문자 최장일치 사전이 아니다. 한 코드포인트와
+  엔진이 별도 보호하는 특정 cluster key를 지원한다. 임의 단어를 여기에 넣지 않는다.
+- unknown-foreign 옵션은 원어가 식별된 외국어 낱말에 적용된다. 이 표의 source=und 문자는
+  그 옵션의 대상이 아니다. 전체 원문을 유지하려면 text 출력/보호 구간/자기 자신 치환을 쓴다.
+- 미등록 한자·이모지의 기본 보존과 drop 시 낱말 간격, bracket preserve, annotated literal,
+  기존 CJK 옵션은 그대로다. 이 표의 등록 문자는 unreadable=drop/read에서도 읽을 수 있다.
+
+계약: `speech_character_width_v21.jsonl` 30건 (구현 전 고정), 전체 52문자 대·소문자,
+KO/EN, 금융·콘텐츠 문맥, text/보호/미등록 문자 부정 예. 웹 코퍼스 이름은
+`speech-character-width-v21`이다. CTest `speech_character_*`는 trace, 고객 override,
+동일 layer 순서 및 arbitrary UTF-8 chunk 결과를 함께 검증한다.
+
 ## 이메일·URL 읽기
 
 `EMAIL`과 `URL` Semantic IR은 text 모드에서 원문을 보존한다. Speech 모드는 주소를 기호와 영문자·숫자 묶음으로 나눈다. 기호는 `speech_symbol` 이름으로 앞뒤를 띄워 읽는다. 순수 영문자 묶음은 다음 순서로 읽는다.

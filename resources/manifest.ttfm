@@ -1,6 +1,7 @@
 # Deterministic load order; domain/customer overlays are loaded explicitly.
 common/boundaries.tsv
 common/numeric-grouping.tsv
+common/numeric-policy.tsv
 common/protected.tsv
 languages/en-US/dictionaries/pronunciation.tsv
 languages/en-US/g2p/graphemes.tsv
@@ -42,3 +43,8 @@ common/speech.tsv
 languages/ko-KR/cjk/kana_readings.tsv
 languages/ko-KR/cjk/hanja_readings.tsv
 languages/ko-KR/cjk/cjk_words.tsv
+languages/en-US/rules/abbreviations-dotted.tsv
+languages/ko-KR/rules/speech-characters.tsv
+languages/en-US/rules/speech-characters.tsv
+languages/ko-KR/rules/controls.tsv
+languages/ko-KR/rules/counter-frequency.tsv

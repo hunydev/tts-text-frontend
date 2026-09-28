@@ -1,14 +1,14 @@
-{"id": "finance-contract-compound", "category": "finance/amounts", "text": "계약 금액은 1억2천3백만원입니다.", "expected": "계약 금액은 일억이천삼백만 원입니다.", "expected_spans": [{"surface": "1억2천3백만원", "semantic_type": "CURRENCY", "value": "123000000", "unit": "KRW", "context_lang": "ko-KR"}]}
-{"id": "finance-refund-compound", "category": "finance/amounts", "text": "환급액은 2만5천원이며 내일 입금됩니다.", "expected": "환급액은 이만오천 원이며 내일 입금됩니다.", "expected_spans": [{"surface": "2만5천원", "semantic_type": "CURRENCY", "value": "25000", "unit": "KRW", "context_lang": "ko-KR"}]}
-{"id": "finance-negative-adjustment", "category": "finance/amounts", "text": "조정 금액은 -1억2천만원입니다.", "expected": "조정 금액은 마이너스 일억이천만 원입니다.", "expected_spans": [{"surface": "-1억2천만원", "semantic_type": "CURRENCY", "value": "-120000000", "unit": "KRW", "context_lang": "ko-KR"}]}
-{"id": "finance-spaced-compound", "category": "finance/amounts", "text": "보증금은 1억 2,500만원입니다.", "expected": "보증금은 일억이천오백만 원입니다.", "expected_spans": [{"surface": "1억 2,500만원", "semantic_type": "CURRENCY", "value": "125000000", "unit": "KRW", "context_lang": "ko-KR"}]}
-{"id": "finance-decimal-component", "category": "finance/amounts", "text": "총액은 1억2.5천만원으로 조정됐습니다.", "expected": "총액은 일억이천오백만 원으로 조정됐습니다.", "expected_spans": [{"surface": "1억2.5천만원", "semantic_type": "CURRENCY", "value": "125000000", "unit": "KRW", "context_lang": "ko-KR"}]}
-{"id": "finance-large-budget", "category": "finance/amounts", "text": "사업 예산은 2조3억4만원입니다.", "expected": "사업 예산은 이조삼억사만 원입니다.", "expected_spans": [{"surface": "2조3억4만원", "semantic_type": "CURRENCY", "value": "2000300040000", "unit": "KRW", "context_lang": "ko-KR"}]}
-{"id": "finance-fee-and-rate", "category": "finance/amounts", "text": "수수료는 12,500원이고 할인율은 2.5%입니다.", "expected": "수수료는 만이천오백 원이고 할인율은 이 점 오 퍼센트입니다."}
-{"id": "finance-decimal-man", "category": "finance/amounts", "text": "월 납입금은 3.5만원입니다.", "expected": "월 납입금은 삼만오천 원입니다.", "expected_spans": [{"surface": "3.5만원", "semantic_type": "CURRENCY", "value": "35000", "unit": "KRW", "context_lang": "ko-KR"}]}
-{"id": "finance-exact-small-scale", "category": "finance/amounts", "text": "추가 납부액은 1.001만원입니다.", "expected": "추가 납부액은 만십 원입니다.", "expected_spans": [{"surface": "1.001만원", "semantic_type": "CURRENCY", "value": "10010", "unit": "KRW", "context_lang": "ko-KR"}]}
+{"id": "finance-contract-compound", "category": "finance/amounts", "text": "계약 금액은 1억2천3백만원입니다.", "expected": "계약 금액은 일억 이천삼백만 원입니다.", "expected_spans": [{"surface": "1억2천3백만원", "semantic_type": "CURRENCY", "value": "123000000", "unit": "KRW", "context_lang": "ko-KR"}]}
+{"id": "finance-refund-compound", "category": "finance/amounts", "text": "환급액은 2만5천원이며 내일 입금됩니다.", "expected": "환급액은 이만 오천 원이며 내일 입금됩니다.", "expected_spans": [{"surface": "2만5천원", "semantic_type": "CURRENCY", "value": "25000", "unit": "KRW", "context_lang": "ko-KR"}]}
+{"id": "finance-negative-adjustment", "category": "finance/amounts", "text": "조정 금액은 -1억2천만원입니다.", "expected": "조정 금액은 마이너스 일억 이천만 원입니다.", "expected_spans": [{"surface": "-1억2천만원", "semantic_type": "CURRENCY", "value": "-120000000", "unit": "KRW", "context_lang": "ko-KR"}]}
+{"id": "finance-spaced-compound", "category": "finance/amounts", "text": "보증금은 1억 2,500만원입니다.", "expected": "보증금은 일억 이천오백만 원입니다.", "expected_spans": [{"surface": "1억 2,500만원", "semantic_type": "CURRENCY", "value": "125000000", "unit": "KRW", "context_lang": "ko-KR"}]}
+{"id": "finance-decimal-component", "category": "finance/amounts", "text": "총액은 1억2.5천만원으로 조정됐습니다.", "expected": "총액은 일억 이천오백만 원으로 조정됐습니다.", "expected_spans": [{"surface": "1억2.5천만원", "semantic_type": "CURRENCY", "value": "125000000", "unit": "KRW", "context_lang": "ko-KR"}]}
+{"id": "finance-large-budget", "category": "finance/amounts", "text": "사업 예산은 2조3억4만원입니다.", "expected": "사업 예산은 이조 삼억 사만 원입니다.", "expected_spans": [{"surface": "2조3억4만원", "semantic_type": "CURRENCY", "value": "2000300040000", "unit": "KRW", "context_lang": "ko-KR"}]}
+{"id": "finance-fee-and-rate", "category": "finance/amounts", "text": "수수료는 12,500원이고 할인율은 2.5%입니다.", "expected": "수수료는 만 이천오백 원이고 할인율은 이 점 오 퍼센트입니다."}
+{"id": "finance-decimal-man", "category": "finance/amounts", "text": "월 납입금은 3.5만원입니다.", "expected": "월 납입금은 삼만 오천 원입니다.", "expected_spans": [{"surface": "3.5만원", "semantic_type": "CURRENCY", "value": "35000", "unit": "KRW", "context_lang": "ko-KR"}]}
+{"id": "finance-exact-small-scale", "category": "finance/amounts", "text": "추가 납부액은 1.001만원입니다.", "expected": "추가 납부액은 만 십 원입니다.", "expected_spans": [{"surface": "1.001만원", "semantic_type": "CURRENCY", "value": "10010", "unit": "KRW", "context_lang": "ko-KR"}]}
 {"id": "finance-remaining-balance", "category": "finance/amounts", "text": "잔액은 0원이고 예정 출금액은 30,000원입니다.", "expected": "잔액은 영 원이고 예정 출금액은 삼만 원입니다."}
-{"id": "finance-symbol-currency", "category": "finance/amounts", "text": "결제 금액 ₩ 12,500을 확인하세요.", "expected": "결제 금액 만이천오백 원을 확인하세요."}
+{"id": "finance-symbol-currency", "category": "finance/amounts", "text": "결제 금액 ₩ 12,500을 확인하세요.", "expected": "결제 금액 만 이천오백 원을 확인하세요."}
 {"id": "finance-fraction-share", "category": "finance/notices", "text": "배당금의 1/4을 이번 달에 지급합니다.", "expected": "배당금의 사 분의 일을 이번 달에 지급합니다.", "expected_spans": [{"surface": "1/4", "semantic_type": "FRACTION", "value": "1"}]}
 {"id": "finance-negative-rate", "category": "finance/notices", "text": "이번 달 수익률은 -3.5%입니다.", "expected": "이번 달 수익률은 마이너스 삼 점 오 퍼센트입니다."}
 {"id": "finance-maturity-date", "category": "finance/notices", "text": "만기일은 2026년 10월 16일입니다.", "expected": "만기일은 이천이십육 년 시 월 십육 일입니다.", "expected_spans": [{"surface": "2026년 10월 16일", "semantic_type": "DATE"}]}
@@ -39,7 +39,7 @@
 {"id": "content-storage-demo", "category": "content/narration", "text": "저장 공간은 32 GB이고 파일은 3개입니다.", "expected": "저장 공간은 삼십이 기가바이트이고 파일은 세 개입니다."}
 {"id": "content-video-duration", "category": "content/narration", "text": "영상 길이는 3분 20초입니다.", "expected": "영상 길이는 삼 분 이십 초입니다."}
 {"id": "content-release-day", "category": "content/narration", "text": "공개일은 2026. 9. 16. 기준입니다.", "expected": "공개일은 이천이십육 년 구 월 십육 일 기준입니다."}
-{"id": "content-discount-price", "category": "content/narration", "text": "행사 가격은 2만5천원이며 할인율은 10%입니다.", "expected": "행사 가격은 이만오천 원이며 할인율은 십 퍼센트입니다."}
+{"id": "content-discount-price", "category": "content/narration", "text": "행사 가격은 2만5천원이며 할인율은 10%입니다.", "expected": "행사 가격은 이만 오천 원이며 할인율은 십 퍼센트입니다."}
 {"id": "content-recipe", "category": "content/narration", "text": "재료 3 kg과 물 2 L를 준비합니다.", "expected": "재료 삼 킬로그램과 물 이 리터를 준비합니다."}
 {"id": "content-temperature", "category": "content/narration", "text": "설정 온도는 32 °C입니다.", "expected": "설정 온도는 삼십이 도입니다."}
 {"id": "content-chapter-card", "category": "content/narration", "text": "화면 카드 3장을 보여 주고 2초 동안 기다립니다.", "expected": "화면 카드 세 장을 보여 주고 이 초 동안 기다립니다."}

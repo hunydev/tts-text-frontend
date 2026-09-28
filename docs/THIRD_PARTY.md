@@ -272,3 +272,48 @@ Unihan version은 사용자가 준비한 subset의 header에서 고정했고 파
 `benchmark/manifests/sources.json`에 기록한다. 원본 zip을 다시 다운로드하여 대조했다는
 의미는 아니다. 두 출처 모두 자동 다운로드를 끈다. Unihan 원본 전체 및 제3자 한자 사전은
 이번 작업에 추가하지 않는다. 생성 결과·provenance는 고정 소스에서 LF로 재현한다.
+
+## 점 표기 영문 약어 (2026-09-27)
+
+`abbreviations-dotted.tsv`는 저장소에 이미 있던 `abbreviation_bare`의
+vol/ltd/vs/etc/jr 읽기를 명시적인 점 표기에 재사용한 자체 정책이다. 외부 사전·코드·
+문장을 반입하지 않았다. 30건 corpus와 경계/리소스 검사도 직접 작성했으며,
+통과 결과를 독립 언어 감수나 외부 benchmark 전체 품질의 보증으로 표시하지 않는다.
+
+### v0.21 전각 영문자 최종 문자 읽기 (2026-09-27)
+
+- 참고: [Unicode Halfwidth and Fullwidth Forms chart](https://www.unicode.org/charts/PDF/UFF00.pdf),
+  열람본 표기 Unicode **18.0**, 확인일 2026-09-27. U+FF21–FF3A / U+FF41–FF5A 문자 대응을 확인했다.
+- 라이선스/재배포: 명세 chart는 Unicode Terms of Use의 출판물 조건을 따른다. 위 Unihan의
+  데이터 라이선스를 chart 전체에 적용하지 않는다. PDF·그림·설명·폰트·외부 데이터셋은
+  vendoring하지 않았다. 문서에 출처/버전/열람일만 기록한다.
+- 제품 리소스: KO는 기존 프로젝트 phone_letter 읽기를 재사용하고 EN은 대응 ASCII를
+  쓰는 자체 작성 정책104행. 계약30건도 자체 작성. 외부 발음 데이터 반입 없음;
+  저작권자의 제품 리소스이며 상업 사용·재배포 허가는 저장소 LICENSE(별도 서면 허가 필요)를 따른다.
+  독립 언어 검수/음성 품질 승인은 아니다.
+
+## 사용자 제공 한국어 TN release (2026-09-28)
+
+- Source: 업로드된 `summary.json`은 `159.숫자가 포함된 패턴 발화 데이터 / Training /
+  라벨링데이터`의 스크립트 텍스트라고 기술한다. 21파일, 142,255문장. 실제 dataset ID나
+  공개 다운로드 URL을 임의로 추정하지 않는다.
+- Version: `benchmark/manifests/sources.json`에 summary SHA256, 로컬 import manifest에
+  개별21파일 SHA256과 원본 순번을 기록한다. 업스트림 배포판과의 동일성은 검증하지 않았다.
+- License / commercial use / redistribution / attribution requirements: 업로드에 이용허락
+  문서가 포함되지 않아 **미확인**이다. 공개 데이터셋이거나 업로드되었다는 이유만으로
+  상업 제품 리소스 사용 또는 재배포 허가를 추정하지 않는다. 출처 설명은 참조 기록에 보존한다.
+- Vendoring: 원본·가공 문장·SQLite 사례 보고서는 ignored `benchmark/generated/ko-release/`
+  에만 둔다. Git에는 자체 importer/evaluator/web UI와 자체 작성 합성 fixture만 관리한다.
+  자동 다운로드, 제품 TN/발음 사전으로의 자동 반입은 없다.
+- Evaluation: 독립 gold가 아닌 제공 참조와의 텍스트 일치도. 원본의 Training/Validation
+  중복 제외 설명도 보존하고, 독립 held-out 점수로 부르지 않는다.
+
+### 공통 발음 보강의 출처 (2026-09-28)
+
+`lexicons/sources/usage-v22.json`은 공식 기관·제품 웹페이지 10개와 프로젝트 편집
+정책의 URL·확인일을 기록한다. 후보 빈도는 위 로컬 자료에서 검토했지만 외부
+문장/사전을 제품 리소스로 일괄 복사하지 않았다. 직접 고른 23개 단어의 읽기를
+직접 작성했고, 그중 10개는 공식 한국어 표기와 대조했다. 13개는 검토 대기다.
+웹페이지 원문·이미지·코드·테이블은 vendoring하지 않으며, 해당 사이트 전체의
+상업 사용/재배포 허가를 추정하지 않는다. 원본 관리 파일의 evidence와 notes,
+[보강 가이드](lexicon-coverage-v22.ko.md)에 각 선택의 범위를 남긴다.

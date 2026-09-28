@@ -1,0 +1,4 @@
+# Explicit @address policy only; ordinary ranges retain their existing policy.
+address_policy	ko-KR	number	cardinal
+address_policy	ko-KR	leading_zero	digits
+address_policy	ko-KR	hyphen	다시

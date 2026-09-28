@@ -59,11 +59,11 @@ int main(int argc, char **argv) {
         return 2;
     }
     expect_semantic(engine, TTF_SEM_CARDINAL, "0", "", "", "영");
-    expect_semantic(engine, TTF_SEM_CARDINAL, "10001", "", "", "만일");
+    expect_semantic(engine, TTF_SEM_CARDINAL, "10001", "", "", "만 일");
     expect_semantic(engine, TTF_SEM_CARDINAL, "100000000", "", "", "일억");
-    expect_semantic(engine, TTF_SEM_CARDINAL, "100000001", "", "", "일억일");
+    expect_semantic(engine, TTF_SEM_CARDINAL, "100000001", "", "", "일억 일");
     expect_semantic(engine, TTF_SEM_CARDINAL, "1000000000000", "", "", "일조");
-    expect_semantic(engine, TTF_SEM_CARDINAL, "1001001001001", "", "", "일조십억백만천일");
+    expect_semantic(engine, TTF_SEM_CARDINAL, "1001001001001", "", "", "일조 십억 백만 천일");
     expect_semantic(engine, TTF_SEM_CARDINAL, "000100", "", "", "백");
     expect_semantic(engine, TTF_SEM_CARDINAL, "-12.50", "", "", "마이너스 십이 점 오영");
     expect_semantic(engine, TTF_SEM_COUNTER, "20", "", "개", "스무 개");

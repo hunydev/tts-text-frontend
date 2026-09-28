@@ -380,6 +380,15 @@ static void test_unknown_layering_and_atomicity(void) {
 
 static void test_known_invalid_rows(void) {
     static const char *invalid[] = {
+        "numeric_policy\t*\tleading_zero_min_digits\t1\n",
+        "numeric_policy\t*\tleading_zero_min_digits\t96\n",
+        "numeric_policy\t*\tleading_zero_min_digits\t2junk\n",
+        "numeric_policy\tko-KR\tleading_zero_min_digits\t2\n",
+        "numeric_policy\t*\tunknown\t2\n",
+        "phone_number_tail\tko-KR\t번\tyes\n",
+        "phone_number_tail\tko-KR\t번 호\t1\n",
+        "number_spacing\tko-KR\tgroup\ttabs\n",
+        "number_spacing\tko-KR\tunknown\tspace\n",
         "weekday_label\ten-US\tFri\t5\n",
         "weekday_label\ten-US\tfri\t8\n",
         "weekday_label\ten-US\tfri\t05\n",
@@ -402,6 +411,8 @@ static void test_known_invalid_rows(void) {
         "ordinal_policy\tko-KR\tlarge\tnative\n",
         "counter\tko-KR\t개\tNatural\n",
         "counter_role_before\tko-KR\t총\tfreqency\n",
+        "counter_role_tail\tko-KR\t씩\tfreqency\n",
+        "counter_role_tail\tko-KR\t꼬리 말\tfrequency\n",
         "ordinal_prefix_unit\tko-KR\t회\t2\n",
         "phone_onset\tko-KR\tK\t19\n",
         "phone_vowel\tko-KR\tAA\t21\n",
@@ -482,6 +493,8 @@ static void test_required_boundary_companions(void) {
                  {"date_year_cue\ten-US\treview cycle\t1\n",
                   "boundary_word\t*\treview\t1\nboundary_word\t*\tcycle\t1\n"},
                  {"counter_role_before\tko-KR\t총합\tfrequency\n", "boundary_word\t*\t총합\t1\n"},
+                 {"counter_role_tail\tko-KR\t마다\tfrequency\n",
+                  "quantity_tail\tko-KR\t마다\t1\nquantity_lookahead_tail\tko-KR\t마다\t1\n"},
                  {"ordinal_marker\tko-KR\tprefix\t검증\n", "boundary_word\t*\t검증\t1\n"}};
     size_t i;
     for (i = 0; i < sizeof(cases) / sizeof(cases[0]); ++i) {
@@ -505,6 +518,7 @@ static void test_required_boundary_companions(void) {
             /* Disabled cues do not need an active lookahead companion. */
             STATUS(load_text(engine,
                              "date_year_cue\ten-US\tdisabled cue\t0\n"
+                             "counter_role_tail\tko-KR\t비활성\t0\n"
                              "counter_role_before\tko-KR\t비활성\t0\n",
                              TTF_LAYER_CUSTOMER, 0, NULL),
                    TTF_OK);

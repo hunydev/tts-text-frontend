@@ -188,3 +188,23 @@ CI에는 원작 synthetic parser/metadata/lexicon precedence/chunk 테스트만 
 [한국어 자료 분석](../docs/research/korean-sources.md),
 [CMU/국립국어원 분석](../docs/research/pronunciation-sources.md)에서
 원본과 현 C architecture의 차이 및 아직 해결하지 않은 coverage를 설명한다.
+
+## 사용자 제공 한국어 TN release
+
+`summary.json`과 21개 category JSON을 `importers/korean_release/`로 가져오고,
+`evaluators/korean_release.py`로 문장/구간 정확 일치 및 공백 제거 일치를 측정한다.
+원본 주제와 엔진 의미 분류, 패턴/사전/문맥·제어 후보, 참조 품질 경고를 분리한다.
+완료된 기록은 웹 `/ko-quality`에서 비교할 수 있다.
+[가져오기·검토 파일·지표의 분모·재현 방법](../docs/korean-reference-benchmark.ko.md).
+
+완료된 한국어 보고서에서 사전 후보를 수집할 수 있다. 출력은 검토 대기 자료이며
+사전/정답을 자동 생성하지 않는다. 빈도, 복수 읽기, 정렬 경고, 단위 분류 충돌을 보존한다.
+원본 자료와 같은 이용 제한이 있으므로 ignored 경로에만 저장한다.
+
+```sh
+python3 benchmark/evaluators/lexicon_candidates.py \
+  --report benchmark/generated/ko-release/reports/20260928-frequency-v3 \
+  --out artifacts/tn/NEXT/lexicon-candidates.json
+```
+
+[공통 사전과 선택형 사용자 사전의 검토·적용 가이드](../docs/lexicon-coverage-v22.ko.md).

@@ -315,5 +315,12 @@
     "CASE differences are not pronunciationvalueerrors",
     "NC or unavailable Korean data must not enter shipped resources",
     "All937 localreferences still pending independentreview"
+  ],
+  "additional_measurements": [
+    {
+      "language": "ko-KR",
+      "manifest": "benchmark/manifests/korean-quality-work-queue.json",
+      "note": "2026-09-28 provided Training reference, separate speech protocol; do not merge with the English legacy text baseline."
+    }
   ]
 }

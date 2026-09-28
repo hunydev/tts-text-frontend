@@ -1,0 +1,65 @@
+# Bounded Korean count-context expansion; see docs/korean-counters.md.
+# Complete left tokens require matching streaming boundaries.
+counter_role_before	ko-KR	횟수	frequency
+boundary_word	ko-KR	횟수	1
+counter_role_before	ko-KR	횟수는	frequency
+boundary_word	ko-KR	횟수는	1
+counter_role_before	ko-KR	횟수가	frequency
+boundary_word	ko-KR	횟수가	1
+counter_role_before	ko-KR	횟수만	frequency
+boundary_word	ko-KR	횟수만	1
+counter_role_before	ko-KR	하루	frequency
+boundary_word	ko-KR	하루	1
+counter_role_before	ko-KR	하루에	frequency
+boundary_word	ko-KR	하루에	1
+counter_role_before	ko-KR	매주	frequency
+boundary_word	ko-KR	매주	1
+counter_role_before	ko-KR	매년	frequency
+boundary_word	ko-KR	매년	1
+# Right cues are prefixes of the next word after an optional registered particle.
+counter_role_after	ko-KR	연습	frequency
+counter_role_after	ko-KR	재생	frequency
+counter_role_after	ko-KR	복용	frequency
+counter_role_after	ko-KR	접종	frequency
+counter_role_after	ko-KR	왕복	frequency
+counter_role_after	ko-KR	횡단	frequency
+counter_role_after	ko-KR	되풀이	frequency
+counter_role_after	ko-KR	연속	frequency
+counter_role_after	ko-KR	도전	frequency
+counter_role_after	ko-KR	거절	frequency
+counter_role_after	ko-KR	방문	frequency
+counter_role_after	ko-KR	출전	frequency
+counter_role_after	ko-KR	등장	frequency
+counter_role_after	ko-KR	언급	frequency
+counter_role_after	ko-KR	우승	frequency
+counter_role_after	ko-KR	수술	frequency
+counter_role_after	ko-KR	시술	frequency
+counter_role_after	ko-KR	실패	frequency
+counter_role_after	ko-KR	성공	frequency
+# Longest noun cues guard numbered objects against shorter action stems.
+counter_role_after	ko-KR	문제	identifier
+counter_role_after	ko-KR	연습문제	identifier
+counter_role_after	ko-KR	연습실	identifier
+counter_role_after	ko-KR	재생목록	identifier
+counter_role_after	ko-KR	방문자	identifier
+counter_role_after	ko-KR	검사실	identifier
+counter_role_after	ko-KR	좌석	identifier
+counter_role_after	ko-KR	객실	identifier
+counter_role_after	ko-KR	창구	identifier
+counter_role_after	ko-KR	승강장	identifier
+counter_role_after	ko-KR	항목	identifier
+counter_role_after	ko-KR	후보	identifier
+# These existing particles must retain right context under short phrase targets.
+quantity_lookahead_tail	ko-KR	이나	1
+quantity_lookahead_tail	ko-KR	의	1
+quantity_lookahead_tail	ko-KR	이	1
+quantity_lookahead_tail	ko-KR	가	1
+quantity_lookahead_tail	ko-KR	에	1
+quantity_lookahead_tail	ko-KR	으로	1
+# Route nouns win over recurring-time words that can also be route names.
+counter_role_after	ko-KR	막차	identifier
+counter_role_after	ko-KR	첫차	identifier
+counter_role_after	ko-KR	정류장	identifier
+counter_role_after	ko-KR	노선	identifier
+# Direct attached distributive marker; identifier context still takes precedence.
+counter_role_tail	ko-KR	씩	frequency

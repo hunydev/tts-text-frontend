@@ -59,6 +59,7 @@ v0.15는 숫자의 의미를 판별한 뒤 한국어 pack에서 읽습니다. `�
 | `ordinal_prefix_unit` | `호` | `1` | 접두 서수 단위 |
 | `counter_role_before` | `총` | `frequency` / `identifier` | 왼쪽 완전한 단어 |
 | `counter_role_after` | `반복` | `frequency` / `identifier` | 오른쪽 단어의 접두 stem |
+| `counter_role_tail` | `씩` | `frequency` / `identifier` / `0` | `번`에 바로 붙은 완전한 꼬리; 0은 비활성 |
 | `boundary_word` | `총` | `1` | 뒤의 수량을 기다리는 streaming 단서 |
 | `classifier_priority` | `ko:suffix-ordinal` | `10` | 같은 범위에서 generic 후보보다 높은 specificity |
 
@@ -118,6 +119,43 @@ build/ttf normalize --customer customer-counter.tsv '재생 3번'
 (`차량 20대` → `차량 스무 대`), `counter_band_after ko-KR 남성 band`. 구간 unit은 `band`이며
 `range_repeat_unit ko-KR band 0`이 범위의 단위 반복을 끈다. `20대의 차량`처럼 조사를 사이에 둔
 cue는 보지 않으므로 기본값(구간)을 따른다.
+
+## 횟수 문맥 리소스 보강 (2026-09-28)
+
+`resources/languages/ko-KR/rules/counter-frequency.tsv`가 기존 role 판별 알고리즘에
+단서를 추가한다. 원본 외부 문장을 문장별 예외로 등록하지 않는다.
+
+- 왼쪽은 `횟수/횟수는/횟수가/횟수만`, `하루/하루에`, `매주/매년`의 완전한 token.
+- 오른쪽은 연습·재생·복용·접종·왕복·횡단·되풀이·연속·도전·거절·방문·출전·등장·언급·
+  우승·수술·시술·실패·성공의 접두 stem이다.
+- 더 긴 `연습문제/연습실`, `재생목록`, `방문자`, `검사실`은 번호 단서가 우선한다.
+  `문제/좌석/객실/창구/승강장/항목/후보`, `막차/첫차/정류장/노선`도 번호 단서다. 기존 양쪽 번호 우선 원칙은 같다.
+- `이나/의/이/가/에/으로`는 기존 조사다. 읽기 규칙을 추가하지 않고 streaming의
+  `quantity_lookahead_tail`에 선언해 오른쪽 단어가 오기 전에 숫자를 확정하지 않게 했다.
+- 붙은 `씩`은 `counter_role_tail`로 직접 횟수를 나타낸다. `3번씩 확인합니다`는
+  `세 번씩 확인합니다`지만, `번호는 3번씩 배정합니다`에는 번호 단서가 우선한다.
+  꼬리는 전체가 일치해야 하며, 등록한 `particle` 또는 `quantity_tail` 및
+  `quantity_lookahead_tail`이 함께 있어야 한다. freeze validator가 누락을 거부한다.
+- `3번` 단독은 `삼 번`, `3번 연습합니다`는 `세 번 연습합니다`, `3번 연습문제`는
+  `삼 번 연습문제`다. 줄바꿈·문장부호를 넘어 단서를 가져오지 않는다.
+
+숫자 하나를 듣기 좋게 `하나/둘`로 읽는 개인 식별번호 의도와 횟수 문법은 별개다.
+식별자 제어를 자동 추가하지 않으며, 이 변경은 형태소/담화 전체를 이해하는 모델이 아니다.
+예를 들어 멀리 떨어진 목적어나 단서 없는 `N번`에는 기존 정책이 남는다.
+`매월`은 노선 이름과 충돌하므로 왼쪽 기본 단서에서 제외했다. `확인/검사/수정`도
+식별번호 뒤에 올 수 있어 기본 오른쪽 단서로 쓰지 않는다. `매월 3번`처럼 횟수로
+볼 여지가 있어도 직접 단서가 없는 경우에는 기존 읽기가 유지될 수 있다.
+
+고객 파일에 `counter_role_after<TAB>ko-KR<TAB>연습<TAB>0`을 선언하면 해당 단서를
+끄고, `identifier`로 바꾸면 번호로 처리한다. 왼쪽 단서는 `boundary_word=1`도 필요하다.
+`counter_role_tail<TAB>ko-KR<TAB>씩<TAB>0`으로 붙은 횟수 단서도 끌 수 있다.
+`counter-frequency-v22` 웹 corpus의 자체 계약33건과 모든2조각/1byte/random stream에서
+text/span/trace, 고객 override와 긴 단서 우선순위를 검사한다.
+
+일반적인 횟수/번호 읽기 구분의 참고:
+[국립국어원 325931](https://www.korean.go.kr/front/onlineQna/onlineQnaView.do?mn_id=&pageIndex=1&qna_seq=325931)
+(2026-09-28 확인). 문맥 구분에 절대적인 기준은 없다는 설명을 유지하며, 위 단서 목록은
+프로젝트의 제한된 정책이다. 기관이 이 출력들을 검수했다는 뜻은 아니다.
 
 ## 조사 교정
 

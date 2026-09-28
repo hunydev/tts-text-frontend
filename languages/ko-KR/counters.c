@@ -129,8 +129,19 @@ static int role(const ttf_pack_input_t *in, size_t begin, size_t end, ttf_resour
         const ttf_token_t *token = &in->tokens[i];
         if (token->script == TTF_SCRIPT_HANGUL && token->begin <= p && p < token->end &&
             token->end - p < sizeof(key)) {
+            ttf_resource_layer_t source;
+            int current;
             memcpy(key, in->text + p, token->end - p);
             key[token->end - p] = 0;
+            /* A complete attached count marker (e.g. 번씩) carries its own
+               role. Keep stronger identifier evidence from either side. */
+            current = role_value(ttf_resource_get(in->engine, "counter_role_tail", "ko-KR",
+                                                 key, &source));
+            if (current && current >= found) {
+                found = current;
+                if (source > *layer)
+                    *layer = source;
+            }
             if (ttf_resource_get(in->engine, "particle", "ko-KR", key, NULL) ||
                 ttf_resource_get(in->engine, "quantity_tail", "ko-KR", key, NULL))
                 p = token->end;
@@ -183,6 +194,98 @@ static size_t attached_end(const ttf_pack_input_t *in, size_t end) {
         end = token->end;
     }
     return end;
+}
+
+/* Counted nouns need a complete grammatical tail, not an arbitrary Hangul
+   prefix. In particular 세대/세탁기 and 차원 are not 세/차 plus a particle. */
+static int noun_tail(const ttf_pack_input_t *in, size_t end) {
+    size_t i;
+    if (end == in->length)
+        return 1;
+    for (i = in->index; i < in->token_count; ++i) {
+        const ttf_token_t *t = &in->tokens[i];
+        if (t->begin <= end && end < t->end) {
+            char key[96];
+            const char *flag;
+            size_t length = t->end - end;
+            if (t->script != TTF_SCRIPT_HANGUL)
+                return t->script == TTF_SCRIPT_WHITESPACE ||
+                       t->script == TTF_SCRIPT_PUNCTUATION || t->script == TTF_SCRIPT_SYMBOL;
+            if (length >= sizeof(key))
+                return 0;
+            memcpy(key, in->text + end, length);
+            key[length] = 0;
+            flag = ttf_resource_get(in->engine, "counter_noun_tail", "ko-KR", key, NULL);
+            if (!flag)
+                flag = ttf_resource_get(in->engine, "particle", "ko-KR", key, NULL);
+            return flag && !strcmp(flag, "1");
+        }
+    }
+    return 0;
+}
+
+static size_t noun_number(const ttf_pack_input_t *in, size_t begin, char *value,
+                          ttf_resource_layer_t *layer) {
+    size_t end, i;
+    if (begin >= in->length || in->text[begin] < '0' || in->text[begin] > '9')
+        return begin;
+    end = ttf_numeric_value(in, begin, value, layer);
+    for (i = begin; i < end; ++i)
+        if (in->text[i] == '.' || in->text[i] == 'e' || in->text[i] == 'E')
+            return begin;
+    for (i = 0; value[i]; ++i)
+        if (value[i] < '0' || value[i] > '9')
+            return begin;
+    return end;
+}
+
+static int noun_attachment(const ttf_pack_input_t *in, const char *unit,
+                            size_t number_end, size_t unit_begin) {
+    const char *flag =
+        ttf_resource_get(in->engine, "counter_noun_attached", "ko-KR", unit, NULL);
+    return number_end == unit_begin || !flag || strcmp(flag, "1");
+}
+
+size_t ttf_ko_classify_counted_noun(const ttf_pack_input_t *in, ttf_semantic_t *out) {
+    ttf_semantic_t s = {0};
+    size_t begin = in->tokens[in->index].begin, end, at, width, count;
+    char unit[32] = "", right[32] = "", separator[32];
+    int range = 0;
+    s.struct_size = sizeof(s);
+    s.layer = TTF_LAYER_SYSTEM;
+    end = noun_number(in, begin, s.value, &s.layer);
+    if (end == begin)
+        return 0;
+    at = spaces(in, end);
+    width = match(in, "counter_noun_unit", at, unit, sizeof(unit), &s.layer);
+    if (width && !noun_attachment(in, unit, end, at))
+        return 0;
+    if (width)
+        end = at + width;
+    at = spaces(in, end);
+    width = match(in, "quantity_range_separator", at, separator, sizeof(separator), &s.layer);
+    if (width) {
+        size_t start = spaces(in, at + width);
+        size_t next = noun_number(in, start, s.secondary, &s.layer);
+        if (next == start)
+            return 0;
+        at = spaces(in, next);
+        width = match(in, "counter_noun_unit", at, right, sizeof(right), &s.layer);
+        if (!width || (*unit && strcmp(unit, right)))
+            return 0;
+        if (!noun_attachment(in, right, next, at))
+            return 0;
+        memcpy(unit, right, strlen(right) + 1);
+        end = at + width;
+        range = 1;
+    }
+    if (!*unit || !noun_tail(in, end))
+        return 0;
+    memcpy(s.unit, unit, strlen(unit) + 1);
+    count = finish(in, &s, end, range ? TTF_SEM_RANGE : TTF_SEM_COUNTER,
+                   range ? "ko:counted-noun-range" : "ko:counted-noun");
+    *out = s;
+    return count;
 }
 
 size_t ttf_ko_classify_counter(const ttf_pack_input_t *in, ttf_semantic_t *s) {

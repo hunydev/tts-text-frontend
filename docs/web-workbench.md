@@ -180,3 +180,58 @@ Errors identify the file, physical row and resource key. Successful results show
 validated and unhandled row counts, also present in downloaded JSON. These are policy
 schema checks; reference correctness still requires independent review.
 See [editable policy guide](resource-validation.md).
+
+## 한국어 TN 참조 보고서
+
+`/ko-quality`는 전체 외부 자료를 오프라인으로 평가한 완료 기록을 보여준다.
+문장/구간 정확 일치와 공백 제거 일치, 카테고리·원본 주제·수정 방향별 지표,
+참조 품질 경고와 오류/미채점/정렬 실패 분모, 50건 단위 사례 조회를 제공한다.
+사례 행을 클릭하면 모달에서 원문·주석 참조·비교용 참조·실제 출력 전체를 확인한다.
+참조 구간 목록에서는 선택 구간과 문장 전체를 함께 표시한다. 긴 텍스트는 줄바꿈과
+모달 내부 스크롤로 끝까지 표시하며, 상세 IR은 펼쳐서 볼 수 있다. 닫기 버튼·Esc·
+배경 클릭으로 닫으면 선택했던 사례 버튼으로 키보드 초점이 돌아간다.
+같은 데이터·설정·평가기·검토 파일의 측정만 증감을 표시하며 독립 held-out 점수로
+표시하지 않는다. [평가·검토 가이드](korean-reference-benchmark.ko.md)를 따른다.
+
+보고서 기본 경로는 ignored `benchmark/generated/ko-release/reports`다.
+서버의 `--ko-report-root DIR`로 변경 가능하다. API는 읽기 전용이며 외부 데이터나
+사례를 Git에 포함하지 않는다. 지표·개별 검토 양식 다운로드는 서버 원본을 수정하지 않는다.
+
+### 전화번호와 선행 0 검증 (2026-09-28)
+
+`phone-zero-v22` corpus는 53개 text/IR 계약을 제공한다. 예제에서 서울 지역번호,
+임의 앞자리 전화번호, 영어 전화번호, 맨 선행 0 숫자를 골라 normalize/stream/verify로
+비교할 수 있다. 한국어 품질 페이지의 같은 이름 보고서는 기존 사전 보강 보고서와
+비교한다. 참조의 영/공 또는 전화 그룹 연결어 차이는 불일치에 그대로 포함된다.
+영 읽기를 원하면 고객 TSV에 `number\tko-KR\tleading_zero_zero\t영`을 실제 탭으로
+작성한다. 자세한 적용 범위는 [정책 가이드](phone-zero-policy.ko.md)에 있다.
+
+### 공백 차이 진단 (2026-09-28)
+
+`/ko-quality`의 **공백 차이의 종류**는 수 묶음, 수사 내부, 번호 자릿수,
+단어 내부, 단위·접사, 서식, 나머지 경계로 검토 대상을 나눈다. 각 유형의
+경계 수와 해당 문장 수, 판단 안내, 전체 사례 모달을 제공한다. 한 문장이 여러
+유형에 포함될 수 있으므로 문장 수를 합산하지 않는다. 자동 분류는 검토 후보이며
+모든 참조 차이를 맞춤법 오류로 판정하지 않는다. 기존 정확/공백 제거 점수는 그대로다.
+
+완료 보고서와 hash로 연결된 `spacing/REPORT_ID/summary.json`을 별도 생성한다.
+기본 위치는 `benchmark/generated/ko-release/spacing`이며 사용자 지정 report root도
+그 부모의 `spacing`을 사용한다. 진단이 없는 과거 보고서는 미생성 안내를 표시한다.
+`GET /api/ko-spacing?run=REPORT_ID`는 읽기 전용이다.
+[생성 명령과 정책](korean-spacing.ko.md)을 참고한다.
+웹 corpus `ko-spacing-v22`는 독립 작성한 30개 계약과 같으며, 고객 TSV의
+`number_spacing / ko-KR / group / compact`로 기존 붙임 정책도 시험할 수 있다.
+
+### 나이 단위와 끊어 읽기
+
+`counted-noun-v22`는 세·차·학년의 숫자/단위 경계와 일반 단어 오인 방지32건을
+제공한다. `break-controls-v22`는 위치 제어30건이다. 예제 선택에서 **단위 경계**와
+**끊어 읽기**를 고르면 필요한 plain/annotated 설정이 함께 적용된다.
+`{@break:1}`은 공백, `{@break:2}`는 쉼표와 공백, `{@break:3}`은 마침표와 공백을
+삽입한다. 앞뒤 원문 공백/기호는 보존하며 3단계는 출력 callback도 확정한다.
+[입력 규격](input-format.md#position-breaks-v022-continuation)을 참고한다.
+
+새 한국어 품질 보고서의 공백 진단에는 **공백 진단 범주** 선택이 있다.
+나이·생년월일을 선택하면 그 범주의 공백만 다른 문장에 한정한 유형과 사례가 보인다.
+공백 외 읽기 차이는 이 진단의 분모에 포함되지 않으며 기존 문장/구간 점수에서
+계속 집계한다. 모든 참조 간격을 필수 맞춤법으로 자동 승인하지 않는다.

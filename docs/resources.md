@@ -166,6 +166,15 @@ which may require right context also needs `quantity_lookahead_tail` so a short
 phrase target cannot commit its number early. Match preservation, exact values,
 IR secondary fields and byte-split invariance after any such change.
 
+`counter_role_tail ko-KR <attached-tail> frequency|identifier|0` supplies a role
+from the complete suffix immediately after `번` (system default: `씩`). An enabled
+tail requires a `particle` or `quantity_tail` entry and a `quantity_lookahead_tail`
+entry; freeze validates both dependencies. Identifier cues still win over count
+cues. Customer `0` disables that tail without changing the other cues. The bounded
+system cue expansion is in `languages/ko-KR/rules/counter-frequency.tsv`; see the
+[counter guide](korean-counters.md) for ambiguous verbs and route names excluded
+from the defaults.
+
 ## CJK Korean readings
 
 The manifest lists `languages/ko-KR/cjk/{hanja_readings,kana_readings,cjk_words}.tsv`.
@@ -185,14 +194,14 @@ declarations still win; deferred system rows follow pre-freeze overrides.
 `resource_root=NULL` uses the same resolved default root for both phases.
 
 Resource validation before freeze reports only currently loaded rows. For the
-shipped manifest without overlays, counts are:
+shipped manifest without overlays (including the nine dotted-abbreviation rows), counts are:
 
 | Options | Before freeze | After freeze |
 |---|---:|---:|
-| Both passthrough / legacy | 3,459 | 3,459 |
-| Hanja Korean only | 3,459 | 11,580 |
-| Kana Korean only | 3,459 | 3,765 |
-| Both Korean | 3,459 | 11,881 |
+| Both passthrough / legacy | 3,575 | 3,575 |
+| Hanja Korean only | 3,575 | 11,696 |
+| Kana Korean only | 3,575 | 3,881 |
+| Both Korean | 3,575 | 11,997 |
 
 Explicit overlays add their row counts in both phases. After freeze, validation
 and public resource lookup include every loaded CJK row in the detached index.
@@ -243,3 +252,40 @@ pointer; the owning buckets hold the original entries and the word buckets borro
 them. Common resource/rule lookups do not traverse these rows. Public lookups and
 validation still include every detached row, with unchanged layer/order and value
 lifetime. Destroy frees each owning row and the index once.
+
+## Bare leading-zero policy and telephone tails (2026-09-28)
+
+`resources/common/numeric-policy.tsv` declares `numeric_policy / * /
+leading_zero_min_digits = 2` (integer 2–95; absent legacy root defaults to 7).
+Only plain unsigned digit runs qualify after structured grammars. Korean
+`number / leading_zero_zero = 공` controls their zero rendering independently
+of phone/identifier/digit controls. Missing values retain the legacy digit table.
+
+`phone_number_tail / ko-KR / 번 = 1` permits number-designating tails after an
+established telephone shape; value `0` disables the exception. Keys are printable
+UTF-8 without spaces, shorter than 96 bytes; values are exactly `0` or `1`.
+The shared phone classifier and Korean pack validators preserve layer precedence.
+No prefix allocation list is added. See [policy and overlay examples](phone-zero-policy.ko.md).
+
+Row-count tables above describe their dated snapshots; newly added system rows
+change absolute counts and engine-relative declaration ordinals. Verify selected
+rows and same-layer relative order rather than treating historical counts as
+the current manifest total.
+
+## Korean numeral spacing (2026-09-28)
+
+`number_spacing / ko-KR / group = space` separates nonzero myriad groups in the
+cardinal verbalizer: `12500 → 만 이천오백`. Only key `group` and values `space`
+or `compact` are valid. Customer/domain overlays keep the normal layer precedence;
+an older resource root without this row defaults to `compact`.
+This does not split tens/hundreds, phone digits, native numerals or literal aliases.
+It applies when other grammars reuse the cardinal renderer, including currency,
+measure and range quantities. See [policy, examples and reference audit](korean-spacing.ko.md).
+
+`counter_noun_unit / ko-KR / 세|차|학년 = 1` declares bounded Korean counted
+nouns, with the existing `counter` reading table. `counter_noun_tail` declares
+exact attached grammatical endings; `counter_noun_attached / 차 = 1` requires
+adjacency to the numeric field to avoid reading a vehicle identifier as a stage.
+These three kinds take bounded keys under 32 bytes and boolean `0|1` flags.
+Higher-layer zero disables the corresponding entry. This does not change the
+universal `numeric_suffix` inventory or add broad Hangul prefix matches.

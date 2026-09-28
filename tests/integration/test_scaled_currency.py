@@ -184,7 +184,7 @@ REFERENCES = (
     (
         "ko-KR",
         "금액은 €1.25billion입니다.",
-        "금액은 십이억오천만 유로입니다.",
+        "금액은 십이억 오천만 유로입니다.",
         "€1.25billion",
         "1.25",
         9,
@@ -527,7 +527,7 @@ def main():
     # positive-sign policy canonicalizes the value without a leading plus.
     for text, expected, value, unit in (
         ("-$2만", "마이너스 이만 달러", "-20000", "USD"),
-        ("-US$2.5만", "마이너스 이만오천 달러", "-25000", "USD"),
+        ("-US$2.5만", "마이너스 이만 오천 달러", "-25000", "USD"),
         ("-₩2만원", "마이너스 이만 원", "-20000", "KRW"),
         ("+A$2만", "이만 호주 달러", "20000", "AUD"),
     ):

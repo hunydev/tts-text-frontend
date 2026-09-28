@@ -1,0 +1,759 @@
+{
+  "authority": "User requests orthographic and TTS boundaries; NIKL article 44.",
+  "source": "https://www.korean.go.kr/kornorms/m/m_regltn.do?regltn_code=0001",
+  "external_reference_modified": false,
+  "baseline_protocol_mismatches": [
+    {
+      "path": "tests/evaluation/domain_cases.jsonl",
+      "id": "finance-maturity-date"
+    },
+    {
+      "path": "tests/evaluation/domain_cases.jsonl",
+      "id": "finance-range-default"
+    },
+    {
+      "path": "tests/evaluation/domain_cases.jsonl",
+      "id": "content-temperature"
+    },
+    {
+      "path": "tests/evaluation/domain_cases.jsonl",
+      "id": "customer-appointment"
+    },
+    {
+      "path": "tests/evaluation/oov_guess_form_v21.jsonl",
+      "id": "oov-form-v21-visit"
+    },
+    {
+      "path": "tests/evaluation/oov_guess_form_v21.jsonl",
+      "id": "oov-form-v21-michael"
+    },
+    {
+      "path": "tests/evaluation/oov_guess_neighbour_v21.jsonl",
+      "id": "oov-near-v21-national"
+    }
+  ],
+  "changes": [
+    {
+      "path": "tests/evaluation/advanced_cases.jsonl",
+      "id": "advanced-finance-large-final-group",
+      "input": "최종 합계는 3억4천5백6십7만8천9백원입니다.",
+      "before": "최종 합계는 삼억사천오백육십칠만팔천구백 원입니다.",
+      "after": "최종 합계는 삼억 사천오백육십칠만 팔천구백 원입니다.",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/evaluation/cases.jsonl",
+      "id": "currency-stream",
+      "input": "가격은 12,500원입니다.",
+      "before": "가격은 만이천오백 원입니다.",
+      "after": "가격은 만 이천오백 원입니다.",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/evaluation/cases.jsonl",
+      "id": "ko-number-grouped",
+      "input": "1,234,567",
+      "before": "백이십삼만사천오백육십칠",
+      "after": "백이십삼만 사천오백육십칠",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/evaluation/cases.jsonl",
+      "id": "ko-quantity-scale-won",
+      "input": "3.5만원",
+      "before": "삼만오천 원",
+      "after": "삼만 오천 원",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/evaluation/cases.jsonl",
+      "id": "ko-quantity-scale-large",
+      "input": "1.25억원",
+      "before": "일억이천오백만 원",
+      "after": "일억 이천오백만 원",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/evaluation/cases.jsonl",
+      "id": "ko-quantity-won-prefix-spaced",
+      "input": "₩ 12,500",
+      "before": "만이천오백 원",
+      "after": "만 이천오백 원",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/evaluation/challenge_cases.jsonl",
+      "id": "challenge-finance-large-final-group",
+      "input": "최종 합계는 3억4천5백6십7만8천9백원입니다.",
+      "before": "최종 합계는 삼억사천오백육십칠만팔천구백 원입니다.",
+      "after": "최종 합계는 삼억 사천오백육십칠만 팔천구백 원입니다.",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/evaluation/domain_cases.jsonl",
+      "id": "finance-contract-compound",
+      "input": "계약 금액은 1억2천3백만원입니다.",
+      "before": "계약 금액은 일억이천삼백만 원입니다.",
+      "after": "계약 금액은 일억 이천삼백만 원입니다.",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/evaluation/domain_cases.jsonl",
+      "id": "finance-refund-compound",
+      "input": "환급액은 2만5천원이며 내일 입금됩니다.",
+      "before": "환급액은 이만오천 원이며 내일 입금됩니다.",
+      "after": "환급액은 이만 오천 원이며 내일 입금됩니다.",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/evaluation/domain_cases.jsonl",
+      "id": "finance-negative-adjustment",
+      "input": "조정 금액은 -1억2천만원입니다.",
+      "before": "조정 금액은 마이너스 일억이천만 원입니다.",
+      "after": "조정 금액은 마이너스 일억 이천만 원입니다.",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/evaluation/domain_cases.jsonl",
+      "id": "finance-spaced-compound",
+      "input": "보증금은 1억 2,500만원입니다.",
+      "before": "보증금은 일억이천오백만 원입니다.",
+      "after": "보증금은 일억 이천오백만 원입니다.",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/evaluation/domain_cases.jsonl",
+      "id": "finance-decimal-component",
+      "input": "총액은 1억2.5천만원으로 조정됐습니다.",
+      "before": "총액은 일억이천오백만 원으로 조정됐습니다.",
+      "after": "총액은 일억 이천오백만 원으로 조정됐습니다.",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/evaluation/domain_cases.jsonl",
+      "id": "finance-large-budget",
+      "input": "사업 예산은 2조3억4만원입니다.",
+      "before": "사업 예산은 이조삼억사만 원입니다.",
+      "after": "사업 예산은 이조 삼억 사만 원입니다.",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/evaluation/domain_cases.jsonl",
+      "id": "finance-fee-and-rate",
+      "input": "수수료는 12,500원이고 할인율은 2.5%입니다.",
+      "before": "수수료는 만이천오백 원이고 할인율은 이 점 오 퍼센트입니다.",
+      "after": "수수료는 만 이천오백 원이고 할인율은 이 점 오 퍼센트입니다.",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/evaluation/domain_cases.jsonl",
+      "id": "finance-decimal-man",
+      "input": "월 납입금은 3.5만원입니다.",
+      "before": "월 납입금은 삼만오천 원입니다.",
+      "after": "월 납입금은 삼만 오천 원입니다.",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/evaluation/domain_cases.jsonl",
+      "id": "finance-exact-small-scale",
+      "input": "추가 납부액은 1.001만원입니다.",
+      "before": "추가 납부액은 만십 원입니다.",
+      "after": "추가 납부액은 만 십 원입니다.",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/evaluation/domain_cases.jsonl",
+      "id": "finance-symbol-currency",
+      "input": "결제 금액 ₩ 12,500을 확인하세요.",
+      "before": "결제 금액 만이천오백 원을 확인하세요.",
+      "after": "결제 금액 만 이천오백 원을 확인하세요.",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/evaluation/domain_cases.jsonl",
+      "id": "content-discount-price",
+      "input": "행사 가격은 2만5천원이며 할인율은 10%입니다.",
+      "before": "행사 가격은 이만오천 원이며 할인율은 십 퍼센트입니다.",
+      "after": "행사 가격은 이만 오천 원이며 할인율은 십 퍼센트입니다.",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/evaluation/domain_cases_v8.jsonl",
+      "id": "finance-contract-compound",
+      "input": "계약 금액은 1억2천3백만원입니다.",
+      "before": "계약 금액은 일억이천삼백만 원입니다.",
+      "after": "계약 금액은 일억 이천삼백만 원입니다.",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/evaluation/domain_cases_v8.jsonl",
+      "id": "finance-refund-compound",
+      "input": "환급액은 2만5천원이며 내일 입금됩니다.",
+      "before": "환급액은 이만오천 원이며 내일 입금됩니다.",
+      "after": "환급액은 이만 오천 원이며 내일 입금됩니다.",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/evaluation/domain_cases_v8.jsonl",
+      "id": "finance-negative-adjustment",
+      "input": "조정 금액은 -1억2천만원입니다.",
+      "before": "조정 금액은 마이너스 일억이천만 원입니다.",
+      "after": "조정 금액은 마이너스 일억 이천만 원입니다.",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/evaluation/domain_cases_v8.jsonl",
+      "id": "finance-spaced-compound",
+      "input": "보증금은 1억 2,500만원입니다.",
+      "before": "보증금은 일억이천오백만 원입니다.",
+      "after": "보증금은 일억 이천오백만 원입니다.",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/evaluation/domain_cases_v8.jsonl",
+      "id": "finance-decimal-component",
+      "input": "총액은 1억2.5천만원으로 조정됐습니다.",
+      "before": "총액은 일억이천오백만 원으로 조정됐습니다.",
+      "after": "총액은 일억 이천오백만 원으로 조정됐습니다.",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/evaluation/domain_cases_v8.jsonl",
+      "id": "finance-large-budget",
+      "input": "사업 예산은 2조3억4만원입니다.",
+      "before": "사업 예산은 이조삼억사만 원입니다.",
+      "after": "사업 예산은 이조 삼억 사만 원입니다.",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/evaluation/domain_cases_v8.jsonl",
+      "id": "finance-fee-and-rate",
+      "input": "수수료는 12,500원이고 할인율은 2.5%입니다.",
+      "before": "수수료는 만이천오백 원이고 할인율은 이 점 오 퍼센트입니다.",
+      "after": "수수료는 만 이천오백 원이고 할인율은 이 점 오 퍼센트입니다.",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/evaluation/domain_cases_v8.jsonl",
+      "id": "finance-decimal-man",
+      "input": "월 납입금은 3.5만원입니다.",
+      "before": "월 납입금은 삼만오천 원입니다.",
+      "after": "월 납입금은 삼만 오천 원입니다.",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/evaluation/domain_cases_v8.jsonl",
+      "id": "finance-exact-small-scale",
+      "input": "추가 납부액은 1.001만원입니다.",
+      "before": "추가 납부액은 만십 원입니다.",
+      "after": "추가 납부액은 만 십 원입니다.",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/evaluation/domain_cases_v8.jsonl",
+      "id": "finance-symbol-currency",
+      "input": "결제 금액 ₩ 12,500을 확인하세요.",
+      "before": "결제 금액 만이천오백 원을 확인하세요.",
+      "after": "결제 금액 만 이천오백 원을 확인하세요.",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/evaluation/domain_cases_v8.jsonl",
+      "id": "content-discount-price",
+      "input": "행사 가격은 2만5천원이며 할인율은 10%입니다.",
+      "before": "행사 가격은 이만오천 원이며 할인율은 십 퍼센트입니다.",
+      "after": "행사 가격은 이만 오천 원이며 할인율은 십 퍼센트입니다.",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/evaluation/finance_ranges_v7.jsonl",
+      "id": "range-scaled-decimal",
+      "input": "금액은 1.5만원~2.5만원입니다.",
+      "before": "금액은 만오천 원에서 이만오천 원입니다.",
+      "after": "금액은 만 오천 원에서 이만 오천 원입니다.",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/evaluation/leading_zero_v21.jsonl",
+      "id": "leading-zero-v21-negative-grouped",
+      "input": "0,123,456",
+      "before": "십이만삼천사백오십육",
+      "after": "십이만 삼천사백오십육",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/evaluation/numeric_width_v22.jsonl",
+      "id": "width-grouped-money",
+      "input": "₩１２,５００",
+      "before": "만이천오백 원",
+      "after": "만 이천오백 원",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/evaluation/numeric_width_v22.jsonl",
+      "id": "width-scaled-money",
+      "input": "１억２천만원",
+      "before": "일억이천만 원",
+      "after": "일억 이천만 원",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/evaluation/protected_cases.jsonl",
+      "id": "protected-inline-financial",
+      "input": "코드는 `account=001204`이고 금액은 12,500원입니다.",
+      "before": "코드는 `account=001204`이고 금액은 만이천오백 원입니다.",
+      "after": "코드는 `account=001204`이고 금액은 만 이천오백 원입니다.",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/evaluation/scaled_currency_v12.jsonl",
+      "id": "currency-v12-billion-ko",
+      "input": "매출은 US$1.25billion입니다.",
+      "before": "매출은 십이억오천만 달러입니다.",
+      "after": "매출은 십이억 오천만 달러입니다.",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "id": "golden-fee5ff745b654a6d-1",
+      "input": "12,500원",
+      "before": "만이천오백 원",
+      "after": "만 이천오백 원",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "id": "golden-81f70baac31d6007-1",
+      "input": "₩12,500",
+      "before": "만이천오백 원",
+      "after": "만 이천오백 원",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "id": "golden-9b1d746d38098b32-1",
+      "input": "12,500 원",
+      "before": "만이천오백 원",
+      "after": "만 이천오백 원",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "id": "golden-165c9ff258fb87d5-1",
+      "input": "3.5만원",
+      "before": "삼만오천 원",
+      "after": "삼만 오천 원",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "id": "golden-7b7fdbf2ca731a5c-1",
+      "input": "3.5만원입니다.",
+      "before": "삼만오천 원입니다.",
+      "after": "삼만 오천 원입니다.",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "id": "golden-b92b81d71e25567d-1",
+      "input": "1.25억원",
+      "before": "일억이천오백만 원",
+      "after": "일억 이천오백만 원",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "id": "golden-20c9c889660188ca-1",
+      "input": "12,500만원",
+      "before": "일억이천오백만 원",
+      "after": "일억 이천오백만 원",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "id": "golden-93635481a9dd7657-1",
+      "input": "3.5만",
+      "before": "삼만오천",
+      "after": "삼만 오천",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "id": "golden-fa7ac6effbfdbf44-1",
+      "input": "1.001만원",
+      "before": "만십 원",
+      "after": "만 십 원",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "id": "golden-7633737d53ee41b5-1",
+      "input": "1,234,567.89",
+      "before": "백이십삼만사천오백육십칠 점 팔구",
+      "after": "백이십삼만 사천오백육십칠 점 팔구",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "id": "golden-b65f4e81f4b34ca1-1",
+      "input": "3.5만입니다.",
+      "before": "삼만오천입니다.",
+      "after": "삼만 오천입니다.",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "id": "golden-710d5d52ce19f654-1",
+      "input": "3.5만에 도착합니다.",
+      "before": "삼만오천에 도착합니다.",
+      "after": "삼만 오천에 도착합니다.",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "id": "golden-d7bf88fd9e2fbd83-1",
+      "input": "1억2천3백만원",
+      "before": "일억이천삼백만 원",
+      "after": "일억 이천삼백만 원",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "id": "golden-8219e1f811a0533a-1",
+      "input": "1억 2,500만원",
+      "before": "일억이천오백만 원",
+      "after": "일억 이천오백만 원",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "id": "golden-bacc1a1ec2154cb7-1",
+      "input": "1 억 2 천 3 백 만 원",
+      "before": "일억이천삼백만 원",
+      "after": "일억 이천삼백만 원",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "id": "golden-cebcf2b1efa70052-1",
+      "input": "2조3억4만원",
+      "before": "이조삼억사만 원",
+      "after": "이조 삼억 사만 원",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "id": "golden-bd445afec096a2b9-1",
+      "input": "2만5천원",
+      "before": "이만오천 원",
+      "after": "이만 오천 원",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "id": "golden-101462ecc495ae9f-1",
+      "input": "-1억2천만원",
+      "before": "마이너스 일억이천만 원",
+      "after": "마이너스 일억 이천만 원",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "id": "golden-22271751a1c68129-1",
+      "input": "+1억2천만원",
+      "before": "일억이천만 원",
+      "after": "일억 이천만 원",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "id": "golden-a94a8e3d0f07f9b0-1",
+      "input": "1억2.5천만원",
+      "before": "일억이천오백만 원",
+      "after": "일억 이천오백만 원",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "id": "golden-db2bffab55f66307-1",
+      "input": "₩1억2천만원",
+      "before": "일억이천만 원",
+      "after": "일억 이천만 원",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "id": "golden-aa813f2852e8ca0f-1",
+      "input": "₩ 1억 2천만",
+      "before": "일억이천만 원",
+      "after": "일억 이천만 원",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "id": "golden-08ff56b8c66e6e9b-1",
+      "input": "1억2천3백4십5만6천7백8십9원",
+      "before": "일억이천삼백사십오만육천칠백팔십구 원",
+      "after": "일억 이천삼백사십오만 육천칠백팔십구 원",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "id": "golden-492d7c35de11edaa-1",
+      "input": "1조2천3백45억6천7백89만1234원",
+      "before": "일조이천삼백사십오억육천칠백팔십구만천이백삼십사 원",
+      "after": "일조 이천삼백사십오억 육천칠백팔십구만 천이백삼십사 원",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "id": "golden-a502ba1ce7423191-1",
+      "input": "1억9999만원",
+      "before": "일억구천구백구십구만 원",
+      "after": "일억 구천구백구십구만 원",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "id": "golden-15820e187a5773f9-1",
+      "input": "9.9999999999억원",
+      "before": "구억구천구백구십구만구천구백구십구 점 구구 원",
+      "after": "구억 구천구백구십구만 구천구백구십구 점 구구 원",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "id": "golden-551434c64e653465-1",
+      "input": "1경2조3억4만원",
+      "before": "일경이조삼억사만 원",
+      "after": "일경 이조 삼억 사만 원",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "id": "golden-b7c96ac3fb9219d3-1",
+      "input": "총 1억2천3백만원입니다.",
+      "before": "총 일억이천삼백만 원입니다.",
+      "after": "총 일억 이천삼백만 원입니다.",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "id": "golden-7ab869c4d81f8671-1",
+      "input": "잔액은 1억 2,500만원이며 수수료는 3천원입니다.",
+      "before": "잔액은 일억이천오백만 원이며 수수료는 삼천 원입니다.",
+      "after": "잔액은 일억 이천오백만 원이며 수수료는 삼천 원입니다.",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "id": "golden-e11edb768783011c-1",
+      "input": "1만2천명",
+      "before": "만이천 명",
+      "after": "만 이천 명",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "id": "golden-af30ec9bbb78a5b2-1",
+      "input": "1만2천kg",
+      "before": "만이천 킬로그램",
+      "after": "만 이천 킬로그램",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/golden/ko/cases.tsv",
+      "id": "golden-ca80bff070c8bd68-1",
+      "input": "$1억2천만",
+      "before": "일억이천만 달러",
+      "after": "일억 이천만 달러",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/golden/streaming/cases.tsv",
+      "id": "golden-540b22f181eb987c-1",
+      "input": "가격은 12,500원입니다.",
+      "before": "가격은 만이천오백 원입니다.",
+      "after": "가격은 만 이천오백 원입니다.",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/golden/streaming/cases.tsv",
+      "id": "golden-7b7fdbf2ca731a5c-1",
+      "input": "3.5만원입니다.",
+      "before": "삼만오천 원입니다.",
+      "after": "삼만 오천 원입니다.",
+      "reason": "Article-44 nonzero myriad group spacing in KO numeric rendering; baseline IR only."
+    },
+    {
+      "path": "tests/evaluation/numeric_width_v22.jsonl",
+      "id": "width-grouped-money",
+      "input": "₩１２,５００",
+      "before": "만 이천오백 원",
+      "after": "만 이천오백 원",
+      "reason": "Manual article-44 review of comma-grouped/fullwidth or explicit currency-control input. Baseline migration helper deliberately handled only plain numeric IR values."
+    },
+    {
+      "path": "tests/evaluation/numeric_width_v22.jsonl",
+      "id": "width-scaled-money",
+      "input": "１억２천만원",
+      "before": "일억 이천만 원",
+      "after": "일억 이천만 원",
+      "reason": "Manual article-44 review of comma-grouped/fullwidth or explicit currency-control input. Baseline migration helper deliberately handled only plain numeric IR values."
+    },
+    {
+      "path": "tests/evaluation/typed_controls_v22.jsonl",
+      "id": "typed-cardinal-grouped-ko",
+      "input": "[[-12,500]]{@cardinal}",
+      "before": "마이너스 만이천오백",
+      "after": "마이너스 만 이천오백",
+      "reason": "Manual article-44 review of comma-grouped/fullwidth or explicit currency-control input. Baseline migration helper deliberately handled only plain numeric IR values."
+    },
+    {
+      "path": "tests/evaluation/typed_controls_v22.jsonl",
+      "id": "typed-currency-won-ko",
+      "input": "[[12,500원]]{@currency}",
+      "before": "만이천오백 원",
+      "after": "만 이천오백 원",
+      "reason": "Manual article-44 review of comma-grouped/fullwidth or explicit currency-control input. Baseline migration helper deliberately handled only plain numeric IR values."
+    },
+    {
+      "path": "tests/evaluation/typed_controls_v22.jsonl",
+      "id": "typed-currency-scale-ko",
+      "input": "[[1억2천만원]]{@currency}",
+      "before": "일억이천만 원",
+      "after": "일억 이천만 원",
+      "reason": "Manual article-44 review of comma-grouped/fullwidth or explicit currency-control input. Baseline migration helper deliberately handled only plain numeric IR values."
+    }
+  ],
+  "reviewed_test_literals": [
+    {
+      "path": "tests/integration/test_identifiers.py",
+      "line": 73,
+      "before": "    (\"계좌는 12,500원입니다.\", \"계좌는 만이천오백 원입니다.\"),",
+      "after": "    (\"계좌는 12,500원입니다.\", \"계좌는 만 이천오백 원입니다.\"),"
+    },
+    {
+      "path": "tests/integration/test_numeric_width.py",
+      "line": 78,
+      "before": " assert flatten(out)['text']=='먼저 안내합니다.\\n가격은 만이천오백 원입니다.'",
+      "after": " assert flatten(out)['text']=='먼저 안내합니다.\\n가격은 만 이천오백 원입니다.'"
+    },
+    {
+      "path": "tests/integration/test_scaled_currency.py",
+      "line": 187,
+      "before": "        \"금액은 십이억오천만 유로입니다.\",",
+      "after": "        \"금액은 십이억 오천만 유로입니다.\","
+    },
+    {
+      "path": "tests/integration/test_scaled_currency.py",
+      "line": 530,
+      "before": "        (\"-US$2.5만\", \"마이너스 이만오천 달러\", \"-25000\", \"USD\"),",
+      "after": "        (\"-US$2.5만\", \"마이너스 이만 오천 달러\", \"-25000\", \"USD\"),"
+    },
+    {
+      "path": "tests/integration/test_shared_scale_ranges.py",
+      "line": 13,
+      "before": "    ('1.5~2.5만원', '만오천 원에서 이만오천 원', '15000', '25000', 'KRW'),",
+      "after": "    ('1.5~2.5만원', '만 오천 원에서 이만 오천 원', '15000', '25000', 'KRW'),"
+    },
+    {
+      "path": "tests/integration/test_typed_controls.py",
+      "line": 82,
+      "before": "check('[[12,500.50]]{@decimal}','만이천오백 점 오영')",
+      "after": "check('[[12,500.50]]{@decimal}','만 이천오백 점 오영')"
+    },
+    {
+      "path": "tests/integration/test_unicode_grouping.py",
+      "line": 61,
+      "before": "        (\"ko-KR\", f\"+1{s}250e+2원\", \"플러스 십이만오천 원\", \"CURRENCY\", \"+125000\", \"KRW\", \"\"),",
+      "after": "        (\"ko-KR\", f\"+1{s}250e+2원\", \"플러스 십이만 오천 원\", \"CURRENCY\", \"+125000\", \"KRW\", \"\"),"
+    },
+    {
+      "path": "tests/streaming/test_semantic_boundaries.c",
+      "line": 76,
+      "before": "        {\"₩ 12,500\", \"만이천오백 원\"},",
+      "after": "        {\"₩ 12,500\", \"만 이천오백 원\"},"
+    },
+    {
+      "path": "tests/streaming/test_semantic_boundaries.c",
+      "line": 84,
+      "before": "        {\"3.5만   원\", \"삼만오천 원\"},",
+      "after": "        {\"3.5만   원\", \"삼만 오천 원\"},"
+    },
+    {
+      "path": "tests/streaming/test_semantic_boundaries.c",
+      "line": 85,
+      "before": "        {\"1억2천3백만원\", \"일억이천삼백만 원\"},",
+      "after": "        {\"1억2천3백만원\", \"일억 이천삼백만 원\"},"
+    },
+    {
+      "path": "tests/streaming/test_semantic_boundaries.c",
+      "line": 86,
+      "before": "        {\"1 억 2 천 3 백 만 원\", \"일억이천삼백만 원\"},",
+      "after": "        {\"1 억 2 천 3 백 만 원\", \"일억 이천삼백만 원\"},"
+    },
+    {
+      "path": "tests/streaming/test_semantic_boundaries.c",
+      "line": 87,
+      "before": "        {\"1억 2,500만원\", \"일억이천오백만 원\"},",
+      "after": "        {\"1억 2,500만원\", \"일억 이천오백만 원\"},"
+    },
+    {
+      "path": "tests/streaming/test_semantic_boundaries.c",
+      "line": 88,
+      "before": "        {\"1억2.5천만원\", \"일억이천오백만 원\"},",
+      "after": "        {\"1억2.5천만원\", \"일억 이천오백만 원\"},"
+    },
+    {
+      "path": "tests/streaming/test_semantic_boundaries.c",
+      "line": 89,
+      "before": "        {\"2조3억4만원\", \"이조삼억사만 원\"},",
+      "after": "        {\"2조3억4만원\", \"이조 삼억 사만 원\"},"
+    },
+    {
+      "path": "tests/streaming/test_semantic_boundaries.c",
+      "line": 90,
+      "before": "        {\"-1억2천만원\", \"마이너스 일억이천만 원\"},",
+      "after": "        {\"-1억2천만원\", \"마이너스 일억 이천만 원\"},"
+    },
+    {
+      "path": "tests/unit/test_ko_pack.c",
+      "line": 62,
+      "before": "    expect_semantic(engine, TTF_SEM_CARDINAL, \"10001\", \"\", \"\", \"만일\");",
+      "after": "    expect_semantic(engine, TTF_SEM_CARDINAL, \"10001\", \"\", \"\", \"만 일\");"
+    },
+    {
+      "path": "tests/unit/test_ko_pack.c",
+      "line": 64,
+      "before": "    expect_semantic(engine, TTF_SEM_CARDINAL, \"100000001\", \"\", \"\", \"일억일\");",
+      "after": "    expect_semantic(engine, TTF_SEM_CARDINAL, \"100000001\", \"\", \"\", \"일억 일\");"
+    },
+    {
+      "path": "tests/unit/test_ko_pack.c",
+      "line": 66,
+      "before": "    expect_semantic(engine, TTF_SEM_CARDINAL, \"1001001001001\", \"\", \"\", \"일조십억백만천일\");",
+      "after": "    expect_semantic(engine, TTF_SEM_CARDINAL, \"1001001001001\", \"\", \"\", \"일조 십억 백만 천일\");"
+    }
+  ],
+  "exact_corpus_pins": [
+    {
+      "path": "tests/integration/test_numeric_width.py",
+      "corpus": "tests/evaluation/numeric_width_v22.jsonl",
+      "before": "79f58fb742823c3186187dcb7abeab6f729c256eee45c17575cdce75526e17ef",
+      "after": "68e8153ba512dc9c0ed7047f6c3ca974899e2b435e14af0c11248d338037384f"
+    },
+    {
+      "path": "tests/integration/test_numeric_width.py",
+      "corpus": "tests/evaluation/numeric_width_v22.jsonl",
+      "before": "68e8153ba512dc9c0ed7047f6c3ca974899e2b435e14af0c11248d338037384f",
+      "after": "68e8153ba512dc9c0ed7047f6c3ca974899e2b435e14af0c11248d338037384f"
+    },
+    {
+      "path": "tests/integration/test_typed_controls.py",
+      "corpus": "tests/evaluation/typed_controls_v22.jsonl",
+      "before": "37c928066f5d65fd9916d9a3331fd3d90b0bcfef487289c5b9da2f91cdf5586f",
+      "after": "69efbbfef691d5b81c5d3a167ee55f93f2f77ac8259e1fdc0c5c5158a3cf0686"
+    }
+  ]
+}

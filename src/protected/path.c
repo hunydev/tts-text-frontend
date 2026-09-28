@@ -119,8 +119,19 @@ int ttf_protect_path(const ttf_engine_t *engine, const char *s, size_t n,
             ++p;
         return set_match(match, p < n ? p + 1 : n, p < n || final, layer);
     }
-    while (p < n && path_character((unsigned char)s[p])) {
+    while (p < n) {
         unsigned char c = (unsigned char)s[p];
+        if (c >= 128) {
+            uint32_t cp;
+            size_t width;
+            if (ttf_utf8_decode(s + p, n - p, &cp, &width) != 1 || cp < 0xff10 || cp > 0xff19)
+                break;
+            ++component_length;
+            p += width;
+            continue;
+        }
+        if (!path_character(c))
+            break;
         if (ascii_alpha(c) || c == '_')
             named = 1;
         if (c == '/' || c == '\\') {

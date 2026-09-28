@@ -241,7 +241,7 @@ static size_t preserve(const ttf_pack_input_t *in, ttf_semantic_t *out, size_t e
     return finish(in, out, end, TTF_SEM_TEXT, "syntax.invalid-phone");
 }
 /* Numeric suffixes keep their existing quantity meaning, even after a long '+'. */
-static int quantity_tail(const ttf_pack_input_t *in, size_t at) {
+static int quantity_tail(const ttf_pack_input_t *in, size_t at, ttf_resource_layer_t *layer) {
     size_t p = spaces(in->text, in->length, at), begin = p;
     char key[TTF_IR_VALUE_SIZE];
     while (p < in->length && p - begin < sizeof(key) - 1 && in->text[p] != '\n' &&
@@ -255,8 +255,17 @@ static int quantity_tail(const ttf_pack_input_t *in, size_t at) {
             (letter(in->text[p]) || digit(in->text[p])))
             continue;
         suffix = ttf_resource_get(in->engine, "numeric_suffix", "*", key, NULL);
-        if (suffix)
-            return 1;
+        if (suffix) {
+            /* A pack may use a numeric suffix as a number designator after a
+               telephone. Keep it outside the PHONE span; do not confuse it
+               with a physical quantity suffix. The phone shape is still
+               checked below, including lengths, signs and malformed groups. */
+            ttf_resource_layer_t selected = TTF_LAYER_COMMON;
+            const char *tail = lookup(in->engine, "phone_number_tail", NULL, key, &selected);
+            if (tail)
+                promote(layer, selected);
+            return !tail || strcmp(tail, "1");
+        }
         for (i = 0; i < p - begin; ++i)
             key[i] = fold(key[i]);
         if (ttf_resource_get(in->engine, "currency_name", "*", key, NULL))
@@ -513,7 +522,7 @@ static size_t classify_phone(const ttf_pack_input_t *in, ttf_semantic_t *out) {
                      parsed.international ? "international_max_digits" : "national_max_digits", 15,
                      &layer);
     end = parsed.end;
-    if (quantity_tail(in, end)) {
+    if (quantity_tail(in, end, &layer)) {
         if (parsed.groups == 1 && !parsed.parenthesis)
             return 0;
         parsed.malformed = 1;

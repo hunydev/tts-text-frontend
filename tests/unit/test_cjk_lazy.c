@@ -45,9 +45,15 @@ int main(int argc, char **argv) {
     int mode, reject = 1;
     ttf_resource_validator_t validator = {sizeof(validator), TTF_RESOURCE_VALIDATOR_ABI_VERSION,
         "reject-late", &reject, NULL, reject_late};
-    size_t checkpoint;
+    size_t checkpoint, base_records;
     const ttf_entry_t *original;
     CHECK(argc == 3);
+    CHECK(create(argv[1], -1, &e) == 0);
+    CHECK(!ttf_resource_get(e, "hanja_reading", "ko-KR", "山", NULL));
+    CHECK(!ttf_resource_get(e, "kana_reading", "ko-KR", "か", NULL));
+    base_records = records(e);
+    CHECK(base_records != SIZE_MAX && base_records > 0);
+    ttf_engine_destroy(e);
     /* Missing files, then invalid files: disabled paths must not be opened. */
     for (mode = -1; mode <= 0; ++mode) {
         char path[4096];
@@ -55,7 +61,7 @@ int main(int argc, char **argv) {
         snprintf(path, sizeof(path), "%s/%s", argv[2], kana); remove(path);
         snprintf(path, sizeof(path), "%s/%s", argv[2], word); remove(path);
         CHECK(create(argv[2], mode, &e) == 0);
-        CHECK(ttf_engine_freeze(e) == TTF_OK && records(e) == 3459);
+        CHECK(ttf_engine_freeze(e) == TTF_OK && records(e) == base_records);
         ttf_engine_destroy(e);
     }
     for (mode = 0; mode < 4; ++mode) {
@@ -63,9 +69,9 @@ int main(int argc, char **argv) {
         CHECK(put(argv[2], kana, mode & 2 ? valid_kana : "invalid\n"));
         CHECK(put(argv[2], word, mode ? valid_word : "invalid\n"));
         CHECK(create(argv[2], mode, &e) == 0);
-        CHECK(records(e) == 3459);
+        CHECK(records(e) == base_records);
         CHECK(ttf_engine_freeze(e) == TTF_OK);
-        CHECK(records(e) == 3459 + (size_t)((!!(mode & 1)) + (!!(mode & 2)) + !!mode));
+        CHECK(records(e) == base_records + (size_t)((!!(mode & 1)) + (!!(mode & 2)) + !!mode));
         CHECK(!!ttf_resource_get(e, "hanja_reading", "ko-KR", "山", NULL) == !!(mode & 1));
         CHECK(!!ttf_resource_get(e, "kana_reading", "ko-KR", "か", NULL) == !!(mode & 2));
         CHECK(!!ttf_resource_get(e, "cjk_word", "ko-KR", "音樂", NULL) == !!mode);
@@ -84,16 +90,16 @@ int main(int argc, char **argv) {
     checkpoint = e->resource_order;
     CHECK(ttf_engine_freeze(e) == TTF_ERESOURCE);
     CHECK(!e->frozen && !e->validating && !e->cjk && !e->rules && !e->boundary_cues);
-    CHECK(records(e) == 3461 && checkpoint == e->resource_order);
+    CHECK(records(e) == base_records + 2 && checkpoint == e->resource_order);
     CHECK(ttf_resource_entry(e, "hanja_reading", "ko-KR", "山") == original);
     CHECK(!ttf_resource_get(e, "kana_reading", "ko-KR", "か", NULL));
     CHECK(put(argv[2], word, valid_word));
     CHECK(ttf_engine_register_resource_validator(e, &validator) == TTF_OK);
-    CHECK(records(e) == 3461); /* final engine validator sees no deferred rows yet */
+    CHECK(records(e) == base_records + 2); /* final engine validator sees no deferred rows yet */
     CHECK(ttf_engine_freeze(e) == TTF_ERESOURCE);
-    CHECK(records(e) == 3461 && checkpoint == e->resource_order && !e->cjk && !e->frozen);
+    CHECK(records(e) == base_records + 2 && checkpoint == e->resource_order && !e->cjk && !e->frozen);
     reject = 0;
-    CHECK(ttf_engine_freeze(e) == TTF_OK && records(e) == 3464);
+    CHECK(ttf_engine_freeze(e) == TTF_OK && records(e) == base_records + 5);
     CHECK(e->resource_order == checkpoint + 3);
     CHECK(ttf_resource_entry(e, "hanja_reading", "ko-KR", "山") == original);
     CHECK(!strcmp(ttf_resource_get(e, "cjk_word", "ko-KR", "音樂", NULL), "고객"));
@@ -102,9 +108,9 @@ int main(int argc, char **argv) {
     for (mode = -1; mode < 4; ++mode) {
         size_t added = mode <= 0 ? 0 : (mode & 1 ? 8116 : 0) + (mode & 2 ? 301 : 0) + 5;
         CHECK(create(mode == 3 ? NULL : argv[1], mode, &e) == 0);
-        CHECK(records(e) == 3459);
-        CHECK(ttf_engine_freeze(e) == TTF_OK && records(e) == 3459 + added);
-        printf("mode %d: 3459 -> %zu records\n", mode, records(e));
+        CHECK(records(e) == base_records);
+        CHECK(ttf_engine_freeze(e) == TTF_OK && records(e) == base_records + added);
+        printf("mode %d: %zu -> %zu records\n", mode, base_records, records(e));
         ttf_engine_destroy(e);
     }
     puts("lazy CJK: disabled paths, four modes, NULL root, rollback/retry, validators, priority passed");

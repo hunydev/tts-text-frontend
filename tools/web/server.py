@@ -11,6 +11,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlsplit
 from workbench import ROOT, catalog, validate
+import ko_reports
 
 sys.path.insert(0, str(ROOT / "tools/lexicon"))
 from manage import inventory
@@ -50,7 +51,25 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(raw)
 
     def do_GET(self):
-        path = urlsplit(self.path).path
+        parsed = urlsplit(self.path)
+        path = parsed.path
+        if path in ("/api/ko-reports", "/api/ko-report", "/api/ko-cases", "/api/ko-spacing"):
+            try:
+                root = getattr(self.server, "ko_report_root", ko_reports.DEFAULT_ROOT)
+                args = ko_reports.arguments(parsed.query)
+                if path == "/api/ko-reports":
+                    result = ko_reports.catalog(root)
+                elif path == "/api/ko-report":
+                    result = ko_reports.summary(root, args.get("run"))
+                elif path == "/api/ko-spacing":
+                    result = ko_reports.spacing(root, args.get("run"))
+                else:
+                    result = ko_reports.cases(root, args)
+                return self.json(200, result)
+            except (ValueError, TypeError, KeyError):
+                return self.json(400, {"error": "보고서나 검색 조건을 확인하세요."})
+            except (OSError, ko_reports.sqlite3.Error):
+                return self.json(503, {"error": "보고서를 읽을 수 없습니다."})
         if path == "/api/catalog":
             return self.json(200, catalog())
         if path == "/api/health":
@@ -64,6 +83,9 @@ class Handler(BaseHTTPRequestHandler):
             "/": "index.html",
             "/app.js": "app.js",
             "/style.css": "style.css",
+            "/ko-quality": "ko-quality.html",
+            "/ko-quality.js": "ko-quality.js",
+            "/ko-quality.css": "ko-quality.css",
             "/lexicon": "lexicon.html",
             "/lexicon.js": "lexicon.js",
         }
@@ -199,10 +221,12 @@ if __name__ == "__main__":
         "--library", type=Path, default=ROOT / "build/libtts_text_frontend.so"
     )
     p.add_argument("--resources", type=Path, default=ROOT / "resources")
+    p.add_argument("--ko-report-root", type=Path, default=ko_reports.DEFAULT_ROOT)
     args = p.parse_args()
     if not args.library.is_file() or not (args.resources / "manifest.ttfm").is_file():
         p.error("Build the shared library and supply an existing resource directory.")
     server = Server((args.host, args.port), Handler)
+    server.ko_report_root = args.ko_report_root.resolve()
     server.library = args.library.resolve()
     server.resources = args.resources.resolve()
     print(f"TTF workbench listening on {args.host}:{server.server_port}", flush=True)

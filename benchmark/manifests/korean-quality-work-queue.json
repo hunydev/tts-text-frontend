@@ -1,0 +1,474 @@
+{
+  "schema_version": 1,
+  "measurement_date": "2026-09-28",
+  "mode": "ko-KR plain/speech; provided Training reference agreement, not independent held-out accuracy",
+  "local_report": "benchmark/generated/ko-release/reports/20260928-baseline",
+  "summary_sha256": "0cd5d3d7b66e8a3af187699d48129ede78b118bbadd519ddd0bb31a63ea54dbb",
+  "comparison_key": "59c137e84281cd26929f3c1dabe2ff29a07c44c99b44ca6f8021fcb7c39eba6b",
+  "engine": {
+    "library_sha256": "98ad7a767971fe3b46548fa1c28b81fed83b85fc7e3c8e7f12a0513939a6f413",
+    "resources_sha256": "b4a341b00b61b5673affcac878d4e2c5e02cc918db6fc76cec22eff9b4a7e865",
+    "git_head": "001291196f34f962c52890bc37d0dc3aca82450c",
+    "git_dirty": true
+  },
+  "source_counts": {
+    "source_records": 142255,
+    "imported": 142255,
+    "spans": 272325,
+    "aligned_spans": 269372,
+    "flagged_records": 1349,
+    "sentence_references": 142248
+  },
+  "sentences": {
+    "total": 142255,
+    "scorable": 142248,
+    "unscorable": 7,
+    "errors": 0,
+    "unaligned": 0,
+    "exact": 16896,
+    "compact": 80114,
+    "spacing_only": 63218,
+    "different": 62134,
+    "exact_rate": 0.11877847140205838,
+    "compact_rate": 0.5631994825937798
+  },
+  "spans": {
+    "total": 272325,
+    "scorable": 272325,
+    "unscorable": 0,
+    "errors": 0,
+    "unaligned": 39782,
+    "exact": 76757,
+    "compact": 173929,
+    "spacing_only": 97172,
+    "different": 98396,
+    "exact_rate": 0.2818580739924722,
+    "compact_rate": 0.6386817222069219
+  },
+  "rights": "unverified local benchmark; do not redistribute raw records or derived product resources",
+  "queue": [
+    {
+      "id": "KO-SPACING",
+      "priority": 1,
+      "task": "Review required Korean spacing separately from valid variants and speech segmentation preferences; first iteration implements nonzero myriad-group boundaries.",
+      "evidence": {
+        "spacing_only_sentences": 63218
+      },
+      "gate": "Report strict and whitespace-removed scores together; never hide value or punctuation changes with normalization.",
+      "completed_iterations": [
+        "KO-SPACING-01",
+        "KO-SPACING-02"
+      ],
+      "next_step": "Review numeral-internal spacing as standard writing versus intentional speech spacing, without changing default strict/compact metrics. Review remaining unit families separately with negatives; retain range-unit policy disagreements.",
+      "latest_evidence": {
+        "run_id": "20260928-counted-noun-v3",
+        "spacing_only_sentences": 61546,
+        "diagnostic": "benchmark/generated/ko-release/spacing/20260928-counted-noun-v3/summary.json"
+      }
+    },
+    {
+      "id": "KO-REFERENCE-REVIEW",
+      "priority": 2,
+      "task": "Review structural warnings before choosing engine fixes; preserve raw headline.",
+      "evidence": {
+        "flagged_sentences": 1349,
+        "unscorable_sentences": 7
+      },
+      "gate": "Review overlay must name reviewer, reason, date and immutable record fingerprint; no silent gold edits."
+    },
+    {
+      "id": "KO-FINANCE-IDENTIFIERS",
+      "priority": 3,
+      "task": "Record per-case intended readings before designing assisted control evaluation; do not infer the speaker choice from a dataset category.",
+      "gate": "Confirm reading policy first, then choose one rule family with independent positives and negatives; explicit controls remain separate from automatic TN scores.",
+      "status": "deferred-to-reading-intent-review"
+    },
+    {
+      "id": "KO-PATTERN-FAMILY",
+      "priority": 4,
+      "task": "Use IR and span evidence to improve one confirmed numeric, unit, date or address family.",
+      "gate": "Value/unit/context and byte streaming parity; evaluate the same immutable full reference after targeted contracts.",
+      "completed_iterations": [
+        "KO-FREQUENCY-01",
+        "KO-PHONE-ZERO-01"
+      ],
+      "next_step": "Review remaining native_cardinal mismatches for one missing counter family. Separate person/minute 분, allowed native/Sino variants and approximate ranges from confirmed missing rules before adding independent contracts."
+    },
+    {
+      "id": "KO-CONTENT-LEXICON",
+      "priority": 5,
+      "task": "Review conventional names, abbreviations and alphanumeric terms separately from numeric grammar.",
+      "gate": "Review source and scope before managed lexicon entries; preserve user/customer precedence; never add whole-sentence exceptions.",
+      "completed_iterations": [
+        "KO-LEXICON-01"
+      ],
+      "next_step": "Review pending common pronunciations; resolve KB/MG classifier/context conflicts independently from dictionary additions. Reuse candidate collector without importing majority readings automatically. Review a scoped lexicon path for conventional Hangul+number names such as 코로나19; do not infer digit reading for every Hangul+number term."
+    },
+    {
+      "id": "KO-HELDOUT",
+      "priority": 6,
+      "task": "Separate templates/duplicate inputs before later development and held-out evaluation; current full Training baseline is exploratory.",
+      "gate": "Persist split manifest and keep test references out of tuning; do not call Training=Validation an independent evaluation."
+    }
+  ],
+  "user_policy_20260928": {
+    "identifier_reading": "Personal identifier readings may be chosen by the speaker, including native names per digit. Do not force these cases into one automatic TN reading.",
+    "assisted_evaluation": "Deferred: a manually reviewed per-case subset, separate automatic/annotated-input strict and whitespace-removed scores; distinguish literal aliases from pattern controls. No assisted scores published yet.",
+    "immediate_scope": "Prioritize Korean whitespace mismatches; distinguish standard written boundaries, acceptable variants and speech preferences. First bounded iteration: myriad-group spacing plus transparent diagnostics.",
+    "lexicon_scope": "Common readings in system lexicon; preference/domain variants explicit user/customer opt-in. Keep optional profile effects out of default automatic TN scores.",
+    "plain_leading_zero": "Unsigned ungrouped bare integers starting with zero use digit sequence from two digits; KO 공, EN zero. Date/time/quantity/explicit controls keep their grammar. Supersedes former short-run cardinal policy."
+  },
+  "iterations": [
+    {
+      "id": "KO-FREQUENCY-01",
+      "date": "2026-09-28",
+      "scope": "N번 frequency cues and attached 씩; explicit identifier readings deferred",
+      "local_report": "benchmark/generated/ko-release/reports/20260928-frequency-v3",
+      "summary_sha256": "8a6e8ac93e4e137c0048a613400363bb9ef2ca19be1f96871c4779bd17d966bf",
+      "comparison_key": "59c137e84281cd26929f3c1dabe2ff29a07c44c99b44ca6f8021fcb7c39eba6b",
+      "engine": {
+        "library_sha256": "57fa7e8f40899ecf9de0ab6608d71cd49fa7d6cc4b8f06e901dd167efc5f2093",
+        "resources_sha256": "5d130bfa6428d70740415310fabb98fdfe9102b51f881eb8df0122d45e57bcd2",
+        "git_head": "001291196f34f962c52890bc37d0dc3aca82450c",
+        "git_dirty": true
+      },
+      "sentences": {
+        "total": 142255,
+        "scorable": 142248,
+        "unscorable": 7,
+        "errors": 0,
+        "unaligned": 0,
+        "exact": 16963,
+        "compact": 80242,
+        "spacing_only": 63279,
+        "different": 62006,
+        "exact_rate": 0.11924947978178956,
+        "compact_rate": 0.5640993194983409
+      },
+      "spans": {
+        "total": 272325,
+        "scorable": 272325,
+        "unscorable": 0,
+        "errors": 0,
+        "unaligned": 39782,
+        "exact": 76878,
+        "compact": 174100,
+        "spacing_only": 97222,
+        "different": 98225,
+        "exact_rate": 0.28230239603415036,
+        "compact_rate": 0.6393096483980538
+      },
+      "changed_sentences": 171,
+      "compact_gained": 129,
+      "compact_lost": 1,
+      "compact_net_gain": 128,
+      "reference_policy_disagreements": [
+        {
+          "id": "ko-release/currency_amount/015183",
+          "reason": "26번의 우승: reference Sino vs project native count; retained as raw mismatch, awaiting independent review"
+        }
+      ],
+      "notes": "No reference edits or exclusions. 33 synthetic contracts are not human-approved gold. Exploratory Training agreement; not held-out accuracy."
+    },
+    {
+      "id": "KO-LEXICON-01",
+      "date": "2026-09-28",
+      "scope": "23 shared lexicon entries (24 keys); 9 optional customer/user readings measured separately",
+      "local_report": "benchmark/generated/ko-release/reports/20260928-lexicon-v2",
+      "summary_sha256": "ac40d1b381b43480acafc507c26ddbbbfd5bbf905b9447f39c24637c07eedf59",
+      "comparison_key": "59c137e84281cd26929f3c1dabe2ff29a07c44c99b44ca6f8021fcb7c39eba6b",
+      "engine": {
+        "library_sha256": "57fa7e8f40899ecf9de0ab6608d71cd49fa7d6cc4b8f06e901dd167efc5f2093",
+        "resources_sha256": "d9c73f569661655e867c90fa36a9a633d513e2a513b9acb9f602c53eb09ccbee",
+        "git_head": "001291196f34f962c52890bc37d0dc3aca82450c",
+        "git_dirty": true
+      },
+      "sentences": {
+        "total": 142255,
+        "scorable": 142248,
+        "unscorable": 7,
+        "errors": 0,
+        "unaligned": 0,
+        "exact": 16967,
+        "compact": 80318,
+        "spacing_only": 63351,
+        "different": 61930,
+        "exact_rate": 0.11927759968505708,
+        "compact_rate": 0.5646335976604241
+      },
+      "spans": {
+        "total": 272325,
+        "scorable": 272325,
+        "unscorable": 0,
+        "errors": 0,
+        "unaligned": 39782,
+        "exact": 77113,
+        "compact": 174388,
+        "spacing_only": 97275,
+        "different": 97937,
+        "exact_rate": 0.28316533553658313,
+        "compact_rate": 0.6403672082989076
+      },
+      "candidate_collection": {
+        "keys": 4290,
+        "spans": 13869,
+        "mismatched_spans": 5434
+      },
+      "changed_sentences": 301,
+      "compact_gained": 77,
+      "compact_lost": 1,
+      "compact_net_gain": 76,
+      "span_compact_gained": 289,
+      "span_compact_lost": 1,
+      "span_compact_net_gain": 288,
+      "reference_policy_disagreements": [
+        {
+          "id": "ko-release/statistics/014536",
+          "reason": "IELTS: reference letter names versus official Korean 아이엘츠; raw mismatch retained, independent review pending"
+        }
+      ],
+      "partial_change_followups": [
+        {
+          "id": "ko-release/personal_id_number/001942",
+          "reason": "PRO lexical evidence also enables existing ALNUM English-number policy; identifier reading still requires explicit intent"
+        },
+        {
+          "id": "ko-release/address_area/001362",
+          "reason": "PRO360 numeral reading differs from reference before and after"
+        },
+        {
+          "id": "ko-release/address_area/001416",
+          "reason": "PRO360 numeral reading differs from reference before and after"
+        }
+      ],
+      "notes": "No reference edits/exclusions. Optional customer profile NOT loaded in this benchmark. New 36 synthetic contracts are not human-approved gold. Training agreement, not held-out accuracy."
+    },
+    {
+      "id": "KO-PHONE-ZERO-01",
+      "date": "2026-09-28",
+      "scope": "Established telephone shapes before number-designating tails; bare leading-zero digit policy across KO/EN; structured quantities preserved",
+      "local_report": "benchmark/generated/ko-release/reports/20260928-phone-zero-v2",
+      "summary_sha256": "3735f6ded31b85437f27104e3c1c4a38f744d5fd2feb89bee0cc6cba926f17aa",
+      "comparison_key": "59c137e84281cd26929f3c1dabe2ff29a07c44c99b44ca6f8021fcb7c39eba6b",
+      "engine": {
+        "library_sha256": "6ac635d13adf031f45f9d6a4f2b2149d76236913b4d6821d6141a12cdc9ecb75",
+        "resources_sha256": "1dd2bbdeafe223355c4729182e58a002b520b495cf8f86e8f2606b05909fa507",
+        "git_head": "001291196f34f962c52890bc37d0dc3aca82450c",
+        "git_dirty": true
+      },
+      "sentences": {
+        "total": 142255,
+        "scorable": 142248,
+        "unscorable": 7,
+        "errors": 0,
+        "unaligned": 0,
+        "exact": 16967,
+        "compact": 80669,
+        "spacing_only": 63702,
+        "different": 61579,
+        "exact_rate": 0.11927759968505708,
+        "compact_rate": 0.56710111917215
+      },
+      "spans": {
+        "total": 272325,
+        "scorable": 272325,
+        "unscorable": 0,
+        "errors": 0,
+        "unaligned": 39771,
+        "exact": 77113,
+        "compact": 174610,
+        "spacing_only": 97497,
+        "different": 97715,
+        "exact_rate": 0.28316533553658313,
+        "compact_rate": 0.6411824107224823
+      },
+      "changed_sentences": 10975,
+      "compact_gained": 361,
+      "compact_lost": 10,
+      "compact_net_gain": 351,
+      "span_compact_gained": 235,
+      "span_compact_lost": 13,
+      "span_compact_net_gain": 222,
+      "phone_category_compact_before": 1404,
+      "phone_category_compact_after": 1661,
+      "reference_policy_disagreements": [
+        {
+          "id": "ko-release/generated_number/001141",
+          "reason": "Reference 영 vs user-selected 공 for plain leading-zero digits; raw mismatch retained"
+        },
+        {
+          "id": "ko-release/generated_number/002822",
+          "reason": "Reference 영 vs user-selected 공 for plain leading-zero digits; raw mismatch retained"
+        },
+        {
+          "id": "ko-release/order_info/003038",
+          "reason": "Reference 영 vs user-selected 공 for plain leading-zero digits; raw mismatch retained"
+        },
+        {
+          "id": "ko-release/order_info/003513",
+          "reason": "Reference 영 vs user-selected 공 for plain leading-zero digits; raw mismatch retained"
+        },
+        {
+          "id": "ko-release/order_info/003920",
+          "reason": "Reference 영 vs user-selected 공 for plain leading-zero digits; raw mismatch retained"
+        },
+        {
+          "id": "ko-release/order_info/003940",
+          "reason": "Reference 영 vs user-selected 공 for plain leading-zero digits; raw mismatch retained"
+        },
+        {
+          "id": "ko-release/order_info/004033",
+          "reason": "Reference 영 vs user-selected 공 for plain leading-zero digits; raw mismatch retained"
+        },
+        {
+          "id": "ko-release/order_info/004035",
+          "reason": "Reference 영 vs user-selected 공 for plain leading-zero digits; raw mismatch retained"
+        },
+        {
+          "id": "ko-release/order_info/004046",
+          "reason": "Reference 영 vs user-selected 공 for plain leading-zero digits; raw mismatch retained"
+        },
+        {
+          "id": "ko-release/order_info/004047",
+          "reason": "Reference 영 vs user-selected 공 for plain leading-zero digits; raw mismatch retained"
+        }
+      ],
+      "notes": "53 synthetic text/IR contracts; 1760 byte streaming schedules. Raw external references unchanged. Training agreement, not held-out accuracy. Telephone separators and personal identifier reading preferences remain separate policies."
+    },
+    {
+      "id": "KO-SPACING-01",
+      "date": "2026-09-28",
+      "scope": "Nonzero myriad-group boundaries in Korean cardinal renderer; immutable whitespace-only diagnostic sidecars",
+      "local_report": "benchmark/generated/ko-release/reports/20260928-spacing-v1",
+      "summary_sha256": "550dde2b3e2d2613fe4b59b4767335165e55afba9a91d305c33bd03b86fac864",
+      "comparison_key": "59c137e84281cd26929f3c1dabe2ff29a07c44c99b44ca6f8021fcb7c39eba6b",
+      "engine": {
+        "library_sha256": "35289fff69c9a0ad72a6c6eaf2c410c67aadbfdbb8a2c36994a65aa9f9282ca9",
+        "resources_sha256": "65dfe40cc9bad52f92eca0bda5b32c1af09c2f68968449d3ed2650cab7e8833e",
+        "git_head": "001291196f34f962c52890bc37d0dc3aca82450c",
+        "git_dirty": true
+      },
+      "sentences": {
+        "total": 142255,
+        "scorable": 142248,
+        "unscorable": 7,
+        "errors": 0,
+        "unaligned": 0,
+        "exact": 18182,
+        "compact": 80669,
+        "spacing_only": 62487,
+        "different": 61579,
+        "exact_rate": 0.12781902030257017,
+        "compact_rate": 0.56710111917215
+      },
+      "spans": {
+        "total": 272325,
+        "scorable": 272325,
+        "unscorable": 0,
+        "errors": 0,
+        "unaligned": 39771,
+        "exact": 80457,
+        "compact": 174610,
+        "spacing_only": 94153,
+        "different": 97715,
+        "exact_rate": 0.2954447810520518,
+        "compact_rate": 0.6411824107224823
+      },
+      "changed_sentences": 16459,
+      "exact_gained": 1215,
+      "exact_lost": 0,
+      "compact_net_gain": 0,
+      "notes": "All changed outputs differ only in whitespace; semantic/input IR unchanged. Raw references unchanged. Diagnostic groups overlap and are review candidates, not correctness decisions. Training agreement, not held-out accuracy."
+    },
+    {
+      "id": "KO-SPACING-02",
+      "date": "2026-09-28",
+      "scope": "Korean age/stage/grade counted-noun boundaries with exact particle tails; category-specific whitespace diagnostics",
+      "local_report": "benchmark/generated/ko-release/reports/20260928-counted-noun-v3",
+      "summary_sha256": "bf0f2fc01f9e2e7be83597768bcca6be6ee3f16ed1ccbc9b08d6c9667c096ae5",
+      "comparison_key": "59c137e84281cd26929f3c1dabe2ff29a07c44c99b44ca6f8021fcb7c39eba6b",
+      "engine": {
+        "library_sha256": "17173a71247c1d3418d57e4603c596599de2b085f547fb7d88b602d6c3765db2",
+        "resources_sha256": "4bafb21cf61325616769b939ccb028d387766ba7724f90db06ad4826c1d674af",
+        "git_head": "001291196f34f962c52890bc37d0dc3aca82450c",
+        "git_dirty": true
+      },
+      "sentences": {
+        "total": 142255,
+        "scorable": 142248,
+        "unscorable": 7,
+        "errors": 0,
+        "unaligned": 0,
+        "exact": 18977,
+        "compact": 80523,
+        "spacing_only": 61546,
+        "different": 61725,
+        "exact_rate": 0.1334078510769923,
+        "compact_rate": 0.566074742702885
+      },
+      "spans": {
+        "total": 272325,
+        "scorable": 272325,
+        "unscorable": 0,
+        "errors": 0,
+        "unaligned": 37750,
+        "exact": 83189,
+        "compact": 176414,
+        "spacing_only": 93225,
+        "different": 95911,
+        "exact_rate": 0.3054769117782062,
+        "compact_rate": 0.6478068484347747
+      },
+      "changed_sentences": 4831,
+      "whitespace_only_changes": 4606,
+      "exact_gained": 796,
+      "exact_lost": 1,
+      "compact_gained": 2,
+      "compact_lost": 148,
+      "compact_net_gain": -146,
+      "age_birthdate": {
+        "id": "age_birthdate",
+        "name": "나이-생년월일",
+        "sentences": {
+          "total": 5439,
+          "scorable": 5439,
+          "unscorable": 0,
+          "errors": 0,
+          "unaligned": 0,
+          "exact": 511,
+          "compact": 4999,
+          "spacing_only": 4488,
+          "different": 440,
+          "exact_rate": 0.09395109395109395,
+          "compact_rate": 0.9191027762456334
+        },
+        "spans": {
+          "total": 9517,
+          "scorable": 9517,
+          "unscorable": 0,
+          "errors": 0,
+          "unaligned": 2869,
+          "exact": 2194,
+          "compact": 6304,
+          "spacing_only": 4110,
+          "different": 3213,
+          "exact_rate": 0.2305348324051697,
+          "compact_rate": 0.662393611432174
+        },
+        "flagged": 34
+      },
+      "reference_policy_disagreements": [
+        {
+          "family": "counted-noun-ranges",
+          "count": 148,
+          "reason": "Existing project range policy repeats the unit at both endpoints, unlike the reference. All compact losses retained; optional range_repeat_unit customer policy remains separate from default scores."
+        },
+        {
+          "id": "ko-release/traffic/003432",
+          "reason": "Apartment phase name 6차: 육차 versus 육 차. Exact lost, compact retained; proper-name joining requires review."
+        }
+      ],
+      "notes": "32 independent synthetic contracts; break controls separately have 30 contracts. Candidate v1 vehicle-identifier error was corrected with an attached-only 차 resource guard before v2 publication. References unchanged. 코로나19 conventional reading still pending. Training agreement, not held-out accuracy. Final v3 restores attached-alias pending byte limits; the complete external rerun has identical scores to v2."
+    }
+  ]
+}

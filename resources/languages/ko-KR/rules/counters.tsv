@@ -121,3 +121,34 @@ counter_band_after	ko-KR	이상	band
 counter_band_after	ko-KR	이하	band
 counter_band_after	ko-KR	미만	band
 counter_band_after	ko-KR	가구	band
+
+# Sino counted nouns with exact grammatical tails; never prefix-match a noun.
+counter_noun_unit	ko-KR	세	1
+counter_noun_unit	ko-KR	차	1
+counter_noun_unit	ko-KR	학년	1
+# A separated 차 can mean a vehicle or tea, including after a plate identifier.
+counter_noun_attached	ko-KR	차	1
+counter	ko-KR	세	sino
+counter	ko-KR	차	sino
+counter	ko-KR	학년	sino
+counter_noun_tail	ko-KR	인	1
+counter_noun_tail	ko-KR	이신	1
+counter_noun_tail	ko-KR	이며	1
+counter_noun_tail	ko-KR	이고	1
+counter_noun_tail	ko-KR	이면	1
+counter_noun_tail	ko-KR	이니	1
+counter_noun_tail	ko-KR	인데	1
+counter_noun_tail	ko-KR	이지만	1
+counter_noun_tail	ko-KR	입니다만	1
+counter_noun_tail	ko-KR	이었습니다	1
+counter_noun_tail	ko-KR	이었으며	1
+counter_noun_tail	ko-KR	이었다	1
+counter_noun_tail	ko-KR	이에요	1
+counter_noun_tail	ko-KR	부터는	1
+counter_noun_tail	ko-KR	까지는	1
+counter_noun_tail	ko-KR	미만	1
+counter_noun_tail	ko-KR	이상	1
+counter_noun_tail	ko-KR	이하	1
+counter_noun_tail	ko-KR	초과	1
+classifier_priority	ko-KR	ko:counted-noun	10
+classifier_priority	ko-KR	ko:counted-noun-range	10

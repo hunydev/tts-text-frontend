@@ -1126,8 +1126,14 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         return ttf_buffer_append(b, surface, length);
     case TTF_SEM_CUSTOM:
         if (!strcmp(s->unit, "@alphabet"))
-            return ttf_en_speech_spelling(e, s->value, strlen(s->value), 0, b);
-        return TTF_EINVAL;
+            return !strcmp(s->secondary, "control-surface")
+                       ? ttf_en_speech_spelling(e, surface, length, 0, b)
+                       : ttf_en_speech_spelling(e, s->value, strlen(s->value), 0, b);
+        if (!strcmp(s->unit, "@email") || !strcmp(s->unit, "@url"))
+            return ttf_electronic_control(e, s, surface, length, b);
+        if (!strcmp(s->unit, "@counter"))
+            return TTF_EINVAL; /* Native counted nouns are a KO pack control. */
+        return ttf_semantic_control(e, s, surface, length, b);
     case TTF_SEM_VERSION:
     case TTF_SEM_IP_ADDRESS:
         return dotted_numbers(e, s, surface, length, b);

@@ -8,6 +8,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 MAX_TEXT_BYTES = 16384
 CORPORA = {
+    "ko-spacing-v22": ("한국어 수 묶음 띄어쓰기", "ko_spacing_v22.jsonl"),
+    "counted-noun-v22": ("나이·차수·학년 단위 경계", "counted_noun_v22.jsonl"),
+    "break-controls-v22": ("끊어 읽기 강도 1·2·3", "break_controls_v22.jsonl"),
+    "phone-zero-v22": ("전화번호 · 번호/번 꼬리 · 선행 0 자리 읽기", "phone_zero_v22.jsonl"),
+    "lexical-coverage-v22": ("공통 발음 사전 · 사용자 읽기 선택", "lexical_coverage_v22.jsonl"),
+    "counter-frequency-v22": ("횟수·번 문맥 단서 / 번호 구분", "counter_frequency_v22.jsonl"),
     "regression": ("기본 회귀 · KO / EN / 코드믹스", "cases.jsonl"),
     "finance-content": ("금융·콘텐츠 시나리오", "domain_cases_v8.jsonl"),
     "advanced": ("금융 식별자·수치·콘텐츠 확장", "advanced_cases.jsonl"),
@@ -22,6 +28,9 @@ CORPORA = {
     "korean-counters-v15": ("한국어 서수·횟수·번호", "korean_counters_v15.jsonl"),
     "phone-v18": ("국제전화·내선·계좌번호 구분", "phone_cases_v18.jsonl"),
     "user-patterns-v20": ("읽기 제어·발화용 출력", "user_patterns_v20.jsonl"),
+    "numeric-width-v22": ("전각 숫자 · 금액 / 날짜 / 전화 / 셈단위", "numeric_width_v22.jsonl"),
+    "typed-controls-v22": ("의미 지정 읽기 · 숫자 / 날짜 / 단위 / 기술 표기", "typed_controls_v22.jsonl"),
+    "grouped-controls-v22": ("구간 지정 읽기 · 주소 / 이메일 / URL", "grouped_controls_v22.jsonl"),
     "speech-final-gate-v21": ("발화 최종 관문 · 기호·숫자형 문자", "speech_final_gate_v21.jsonl"),
     "letters-v21": ("& 이니셜 · 대문자 한 글자", "letters_v21.jsonl"),
     "electronic-v21": ("이메일·URL 단어 · 버전 · IP", "electronic_v21.jsonl"),
@@ -32,6 +41,8 @@ CORPORA = {
     "letter-number-sign-v21": ("Z 읽기 · #숫자", "letter_number_sign_v21.jsonl"),
     "particle-v21": ("조사 교정 (은/는, 로/으로)", "particle_v21.jsonl"),
     "calendar-alias-v21": ("월·요일 별칭 · 날짜 뒤 (Fri)", "calendar_alias_v21.jsonl"),
+    "abbreviation-dotted-v21": ("영문 점 약어 · Ltd. / Vol. / vs.", "abbreviation_dotted_v21.jsonl"),
+    "speech-character-width-v21": ("전각 영문자 · 최종 문자 읽기", "speech_character_width_v21.jsonl"),
     "particle-table-v21": ("조사 자원표 · (이)랑·(이)라도·(이)나마", "particle_table_v21.jsonl"),
     "mixed-case-v21": ("iOS·5G 같은 혼합 표기", "mixed_case_v21.jsonl"),
     "phone-service-v21": ("대표번호·괄호 전화번호", "phone_service_v21.jsonl"),
@@ -259,6 +270,14 @@ def catalog():
             expected="애플은 사과입니다. 지피유를 사용합니다.\nApple released the iPhone.",
         ),
         dict(
+            id="reading-preferences",
+            category="사전",
+            title="사용자 사전 · 티비/올레드/차종 읽기",
+            text="TV와 OLED, K3의 이름입니다.",
+            expected="티비와 올레드, 케이쓰리의 이름입니다.",
+            options={"customer_tsv": (ROOT / "resources/customers/reading-preferences/ko-KR/lexicon.tsv").read_text(encoding="utf-8")},
+        ),
+        dict(
             id="layer",
             category="리소스",
             title="사용자 발음사전 우선순위",
@@ -312,7 +331,7 @@ def catalog():
             category="스트리밍",
             title="문장 콜백과 숫자 lookahead",
             text="Apple은 사과입니다.\n가격은 12,500원입니다.\nPlease go to the 1st floor.",
-            expected="애플은 사과입니다.\n가격은 만이천오백 원입니다.\nPlease go to the first floor.",
+            expected="애플은 사과입니다.\n가격은 만 이천오백 원입니다.\nPlease go to the first floor.",
             options={"chunk_bytes": 7, "delay_ms": 50},
         ),
         dict(
@@ -412,6 +431,80 @@ def catalog():
                 ) if key in row},
                 reference_review=reviewed_cases[(relative, row["id"])],
             ))
+    group_titles = {
+        "control-group-building": "주소 구간 · 건물·동·호수 읽기",
+        "control-group-email-internal": "이메일 지정 · 내부 도메인",
+        "control-group-url-path": "URL 지정 · 경로 읽기",
+    }
+    relative = corpus_path("grouped-controls-v22").relative_to(ROOT).as_posix()
+    for line in corpus_path("grouped-controls-v22").read_text().splitlines():
+        row = json.loads(line)
+        if row["id"] in group_titles:
+            samples.append(dict(id=row["id"], category="구간 지정 읽기",
+                title=group_titles[row["id"]], text=row["text"], expected=row["expected"],
+                options={key: row[key] for key in ("default_language", "input_format", "output_mode")},
+                reference_review=reviewed_cases[(relative, row["id"])]))
+    typed_titles = {
+        "typed-digits-ko": "자릿수 지정 · 선행 0 보존",
+        "typed-year-en": "연도 지정 · 영어 단서 없는 연도",
+        "typed-date-mdy-ko": "날짜 지정 · 월/일/년",
+        "typed-date-dmy-ko": "날짜 지정 · 일/월/년",
+        "typed-fraction-ko": "분수 지정 · 날짜와 구별",
+        "typed-counter-ko": "셈단위 지정 · 고유어 수사",
+        "typed-phone-ko": "전화번호 지정 · 자동 형식 밖 번호",
+        "typed-version-ko": "버전 지정 · 소수와 구별",
+        "typed-preserve-ko": "구간 원문 보존",
+        "typed-skip-join": "구간 생략 · 주변 공백은 입력대로",
+    }
+    relative = corpus_path("typed-controls-v22").relative_to(ROOT).as_posix()
+    for line in corpus_path("typed-controls-v22").read_text().splitlines():
+        row = json.loads(line)
+        if row["id"] in typed_titles:
+            samples.append(dict(id=row["id"], category="의미 지정 읽기",
+                title=typed_titles[row["id"]], text=row["text"], expected=row["expected"],
+                options={key: row[key] for key in ("default_language", "input_format", "output_mode")},
+                reference_review=reviewed_cases[(relative, row["id"])]))
+    width_titles = {
+        "width-grouped-money": "전각 금액 · 숫자 값으로 읽기",
+        "width-phone": "전각 전화번호 · 자릿수 보존",
+        "width-date": "전각 날짜 · 달력 해석",
+    }
+    relative = corpus_path("numeric-width-v22").relative_to(ROOT).as_posix()
+    for line in corpus_path("numeric-width-v22").read_text().splitlines():
+        row = json.loads(line)
+        if row["id"] in width_titles:
+            samples.append(dict(id=row["id"], category="전각 숫자",
+                title=width_titles[row["id"]], text=row["text"], expected=row["expected"],
+                options={key: row[key] for key in ("default_language", "input_format", "output_mode")},
+                reference_review=reviewed_cases[(relative, row["id"])]))
+    phone_zero_titles = {
+        "phone-zero-v22-02-four": "서울 지역번호 · 번호 꼬리",
+        "phone-zero-v22-015": "임의 전화 앞자리 · 번호 꼬리",
+        "phone-zero-v22-us-phone": "영어 전화번호 · 자리 읽기",
+        "phone-zero-v22-bare-0046": "선행 0 · 모든 자릿수 보존",
+    }
+    relative = corpus_path("phone-zero-v22").relative_to(ROOT).as_posix()
+    for line in corpus_path("phone-zero-v22").read_text().splitlines():
+        row = json.loads(line)
+        if row["id"] in phone_zero_titles:
+            samples.append(dict(id=row["id"], category="전화·숫자",
+                title=phone_zero_titles[row["id"]], text=row["text"], expected=row["expected"],
+                options={key: row[key] for key in ("default_language", "input_format", "output_mode") if key in row},
+                reference_review=reviewed_cases[(relative, row["id"])]))
+    for corpus_key, category, titles in [
+        ("counted-noun-v22", "단위 경계", {"counted-noun-v22-age-attached": "나이 · 조사/어미",
+                                       "counted-noun-v22-stage": "차수 · 예약",
+                                       "counted-noun-v22-negative-generation": "세대 · 단위 오인 방지"}),
+        ("break-controls-v22", "끊어 읽기", {f"break-v22-{level}-middle": f"끊기 {level}단계" for level in (1, 2, 3)}),
+    ]:
+        relative = corpus_path(corpus_key).relative_to(ROOT).as_posix()
+        for line in corpus_path(corpus_key).read_text().splitlines():
+            row = json.loads(line)
+            if row["id"] in titles:
+                samples.append(dict(id=row["id"], category=category, title=titles[row["id"]],
+                    text=row["text"], expected=row["expected"],
+                    options={key: row[key] for key in ("default_language", "input_format", "output_mode")},
+                    reference_review=reviewed_cases[(relative, row["id"])]))
     example_references = {
         "amount-range": ("finance-v7", "range-krw"),
         "mixed": ("regression", "mixed-ordinal"),
@@ -419,6 +512,7 @@ def catalog():
         "fallback": ("regression", "unknown-foobar"),
         "multiword": ("multiword-v8", "multiword-after-effects"),
         "protected": ("protected", "protected-code-challenge"),
+        "reading-preferences": ("lexical-coverage-v22", "lexical-v22-preference-tv"),
     }
     for sample in samples:
         if "reference_review" not in sample:

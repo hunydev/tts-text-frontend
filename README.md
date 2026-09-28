@@ -100,6 +100,18 @@ approved conventional readings. See the [CJK design and contracts](docs/cjk-kore
 The web API accepts `hanja`/`kana` options; this change does not deploy or restart
 the running workbench, and the existing page has no dedicated CJK selectors.
 
+## Dotted English abbreviations
+
+```text
+Acme Ltd. paid 12 dollars. → Acme limited paid twelve dollars.
+Read Vol. 3.              → Read volume three.
+Alpha vs. Beta            → Alpha versus Beta
+```
+
+The resource table covers `Ltd.`, `Vol.`, `vs.`, `etc.` and `Jr.`. Sentence-final
+periods remain punctuation; customer resources control readings and period policy.
+See the [editing guide and limits](docs/english-forms.md#dotted-word-abbreviations-v021-continuation).
+
 ## Named dates and contextual years (v0.13)
 
 The English pack now recognizes month-first and day-first named dates, partial
@@ -422,7 +434,7 @@ build/ttf_bench --iterations 100 --chunk-bytes 64 examples/code_mixed.txt
 The current priority is finance, with content narration and general-purpose
 multilingual text retained as reference domains. Compound amounts such as
 `1억2천3백만원` yield one `CURRENCY` span with value `123000000`, then render as
-`일억이천삼백만 원`. See [scenario evidence](docs/domain-corpus.md) and
+`일억 이천삼백만 원`. See [scenario evidence](docs/domain-corpus.md) and
 [context routing](docs/context-routing.md) for measured changes and remaining gaps.
 
 The v0.5 finance and content additions include:
@@ -668,3 +680,79 @@ See the [measurements and reproduction commands](docs/research/context-cache-v19
 and [callback ownership contract](docs/language-pack.md#callback-engine-ownership).
 Repeated partial token changes and pending scans still need worst-case performance
 work; [STREAM-01](docs/remaining-work.md) remains open.
+
+### 전각 영문자 발화
+
+```sh
+build/ttf normalize --output-mode speech '계좌 ＡＢＣ 확인'
+# 계좌 에이비씨 확인
+build/ttf normalize --language en-US --output-mode speech 'Ｆｉｌｅ'
+# File
+```
+
+문자별 최종 읽기이며 한국어 단어 발음 복원은 별도다. 전각 숫자는 아래 숫자 의미 해석을 사용한다.
+[문자표 편집·보존 방법](docs/speech-resources.md#전각-영문자-최종-읽기-v021-continuation)을 참고한다.
+
+### 구간을 지정하는 읽기 제어
+
+```sh
+build/ttf normalize --input-format annotated --output-mode speech '[[서울시 12-3]]{@address}'
+# 서울시 십이 다시 삼
+build/ttf normalize --input-format annotated --output-mode speech '[[a1@b2.com]]{@email}'
+# 에이일 앳 비이 닷 컴
+build/ttf normalize --input-format annotated --output-mode speech '[[q1/a2]]{@url}'
+# 큐일 슬래시 에이이
+```
+
+`[[...]]`로 여러 단어·구두점을 묶고 `{@패턴}`으로 그 구간의 읽기를 지정한다.
+주소는 한국어부터 지원하며, 이메일·URL은 KO/EN에서 기존 사전·기호 읽기를 재사용한다.
+[사용법·주소 정책 편집·길이와 오류](docs/explicit-pattern-controls.ko.md)를 참고한다.
+
+### Explicit semantic controls
+
+Use `--input-format annotated` (web: **발음 제어 표기 사용**) to specify an interpretation:
+
+```text
+[[0210]]{@digits}           → 영이일영
+[[9/25]]{@fraction}         → 이십오 분의 구
+[[03/04/2026]]{@date-dmy}    → 이천이십육 년 사 월 삼 일
+[[3개]]{@counter}           → 세 개
+[[Apple 123]]{@preserve}    → Apple 123
+```
+
+There are 26 names including the earlier address/email/url controls. The new 20 cover numbers,
+calendar values, quantities, phone/version/IPv4 and preserve/skip. They reuse resource policies,
+validate the whole value and report errors for unsupported input. Both text/speech modes apply
+the explicit reading. [Complete syntax, limits and examples](docs/explicit-pattern-controls.ko.md).
+The web corpus is `typed-controls-v22`; it evaluates normalized text, not audio.
+
+
+### 위치를 지정하는 끊어 읽기
+
+웹에서 **발음 제어 표기 사용**을 켜거나 CLI에 `--input-format annotated`를 준다.
+
+| 입력 | 출력 |
+|---|---|
+| `앞{@break:1}뒤` | `앞 뒤` |
+| `앞{@break:2}뒤` | `앞, 뒤` |
+| `앞{@break:3}뒤` | `앞. 뒤` |
+
+앞 단어의 읽기를 바꾸지 않고 해당 위치에 구분 문자를 삽입한다.
+기존 공백·구두점도 그대로 남으므로 구문 주변에 별도 공백을 쓰지 않아도 된다.
+3단계는 그 위치까지 출력 콜백을 확정하며, 1·2단계는 강제 콜백을 만들지 않는다.
+[구문·오류·스트리밍 계약](docs/input-format.md#position-breaks-v022-continuation).
+
+### 전각 숫자 TN
+
+`０`–`９`는 기존 KO/EN 숫자 문법으로 해석한다. `１２３원` → `백이십삼 원`,
+`３개` → `세 개`, `１st`(영어 문맥) → `first`. 코드·경로·명시적 제어의 원문은 보존한다.
+전각 쉼표 등 미지원 구두점이 섞인 `１２，５００원`과 첨자 `¹²³`은 보존한다.
+[지원 범위·원문 offset·검증](docs/numeric-width.ko.md)을 참고한다.
+
+### 한국어 대규모 참조 평가
+
+사용자 제공 `summary.json`/category JSON을 로컬로 가져와 문장·구간·카테고리별
+정확 일치와 **공백 제거 일치**를 함께 측정한다. 참조 품질 경고와 패턴/사전/명시 제어
+후보를 구별하고, 웹 `/ko-quality`에서 같은 기준의 측정 이력을 비교한다.
+외부 문장은 Git/제품 리소스에 포함하지 않는다.
+[실행·검토·지표 가이드](docs/korean-reference-benchmark.ko.md).

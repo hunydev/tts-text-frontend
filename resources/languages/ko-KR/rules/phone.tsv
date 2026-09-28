@@ -8,6 +8,8 @@ phone_render	ko-KR	plus	플러스
 phone_render	ko-KR	extension	 내선 
 phone_render	ko-KR	separator	 
 phone_render	ko-KR	zero	공
+# After an established phone shape, 번/번호 designate that number, not a quantity.
+phone_number_tail	ko-KR	번	1
 phone_label	ko-KR	대표전화	1
 phone_label	ko-KR	대표 전화	1
 phone_label	ko-KR	문의전화	1

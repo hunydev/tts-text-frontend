@@ -15,7 +15,7 @@
       >
       <div class="mast-right">
         <span class="live-dot"></span><span id="version">연결 중</span
-        ><span class="tag">TEXT ONLY</span><a href="/lexicon">사전 관리 ↗</a>
+        ><span class="tag">TEXT ONLY</span><a href="/lexicon">사전 관리 ↗</a><a href="/ko-quality">한국어 TN 지표 ↗</a>
       </div>
     </header>
     <main>
@@ -250,6 +250,13 @@
           발음 제어 표기를 켜면 <code>1{첫}번째</code>, <code>21{@native}</code>,
           <code>-12{@sino}</code>, <code>ABC{@alphabet}마트</code>를 사용할 수 있습니다.
           여러 단어는 <code>[[source phrase]]{지정 발음}</code>으로 묶습니다.
+          구간 전체에 규칙을 적용하려면 <code>[[서울시 12-3]]{@address}</code>,
+          <code>[[a1@b2.com]]{@email}</code>, <code>[[q1/a2]]{@url}</code>을 사용합니다.
+          해석 지정은 <code>[[0210]]{@digits}</code>, <code>[[9/25]]{@fraction}</code>,
+          <code>[[03/04/2026]]{@date-dmy}</code>처럼 사용합니다.
+          <code>@year</code>, <code>@time</code>, <code>@currency</code>, <code>@measure</code>,
+          <code>@phone</code>, <code>@version</code> 등은 “의미 지정 읽기” 예문에서 확인하세요.
+          <code>[[원문]]{@preserve}</code>는 보존, <code>[[생략]]{@skip}</code>은 해당 구간만 삭제합니다.
           중괄호 자체는 <code>\{</code>, <code>\}</code>로 입력합니다.
           발화용 출력은 이메일·URL을 읽을 수 있는 텍스트로 바꾸며,
           문자 제거 설정은 발화용 출력에서만 적용합니다. 코드·태그·경로는 보호됩니다.

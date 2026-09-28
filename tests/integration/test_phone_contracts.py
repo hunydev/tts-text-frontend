@@ -120,10 +120,10 @@ GUARDS = [
          text="1000001", expected="one million one", expected_spans=[
              dict(surface="1000001", semantic_type="CARDINAL", value="1000001")]),
     dict(id="en-unlabeled-spaces", category="phone/negative", default_language="en-US",
-         text="212 555 0100", expected="two hundred twelve five hundred fifty five one hundred",
+         text="212 555 0100", expected="two hundred twelve five hundred fifty five zero one zero zero",
          expected_spans=[dict(surface="212", semantic_type="CARDINAL", value="212"),
                          dict(surface="555", semantic_type="CARDINAL", value="555"),
-                         dict(surface="0100", semantic_type="CARDINAL", value="0100")]),
+                         dict(surface="0100", semantic_type="DIGIT_SEQUENCE", value="0100", unit="leading_zero")]),
     dict(id="en-code-preserved", category="phone/negative", default_language="en-US",
          text="`+12125550100 ext. 0042`", expected="`+12125550100 ext. 0042`", expected_spans=[]),
     dict(id="en-short-signed-number", category="phone/negative", default_language="en-US",
@@ -170,10 +170,10 @@ for case_id, surface, prefix in (
 REFERENCES.append(dict(
     id="extension-newline-boundary", category="phone/international", default_language="en-US",
     text="Phone: +12125550100\next. 0042",
-    expected="Phone: " + spoken_phone("+12125550100", "", "en-US") + "\next. forty two",
+    expected="Phone: " + spoken_phone("+12125550100", "", "en-US") + "\next. zero zero four two",
     expected_spans=[dict(surface="+12125550100", semantic_type="PHONE", value="+12125550100",
                          secondary="", unit="international", source_lang="und", context_lang="en-US"),
-                    dict(surface="0042", semantic_type="CARDINAL", value="0042")]))
+                    dict(surface="0042", semantic_type="DIGIT_SEQUENCE", value="0042", unit="leading_zero")]))
 
 
 def verify(result, row):
@@ -257,8 +257,11 @@ def customization_checks(args):
         overlaid(disabled_long_phone, "phone_label\ten-US\tcustomer phone\t0\n")
         disabled_long_identifier = dict(id="disabled-long-identifier-label", category="phone/negative",
                                         default_language="en-US", text="Account number:0012",
-                                        expected="Account number:twelve", expected_spans=[
-                                            dict(surface="0012", semantic_type="CARDINAL", value="0012")])
+                                        expected="Account number:zero zero one two", expected_spans=[
+                                            dict(surface="0012", semantic_type="DIGIT_SEQUENCE", value="0012",
+                                                 unit="leading_zero", secondary="")])
+        # Disabling the cue must prevent financial_identifier, while the
+        # user-selected plain leading-zero policy still retains every digit.
         overlaid(disabled_long_identifier, "identifier_label\ten-US\taccount\tdisabled\n"
                   "identifier_label\ten-US\taccount number\tdisabled\n"
                   "identifier_label\ten-US\tnumber\tdigits\n")

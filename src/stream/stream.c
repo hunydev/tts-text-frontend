@@ -30,6 +30,15 @@ static int waiting_for_literal(ttf_stream_t *s, size_t valid) {
         return 0; /* A closing delimiter run needs one byte of lookahead. */
     for (; p < valid; ++p) {
         unsigned char c = (unsigned char)s->pending.data[p];
+        if (s->wait.kind == TTF_WAIT_PATH && c >= 128) {
+            uint32_t cp;
+            size_t width;
+            if (ttf_utf8_decode(s->pending.data + p, valid - p, &cp, &width) == 1 &&
+                cp >= 0xff10 && cp <= 0xff19) {
+                p += width - 1;
+                continue;
+            }
+        }
         if ((s->wait.kind == TTF_WAIT_BACKTICKS && c == '`') ||
             (s->wait.kind == TTF_WAIT_ELEMENT && (c == '<' || c == '>')) ||
             (s->wait.kind == TTF_WAIT_COMMENT && c == '>') ||

@@ -821,6 +821,43 @@
       "automatic_download": false,
       "rights_conflicts": [],
       "research_document": "docs/cjk-korean-reading.ko.md"
+    },
+    {
+      "id": "user-korean-tn-release-20260928",
+      "title": "사용자 제공 Korean TN reference data",
+      "artifact_type": "data",
+      "source_url": "local:user-provided/tn_release",
+      "pin": {
+        "kind": "sha256",
+        "revision": "763163fb883220ef4eef8e85d54390772cb06e75f7e825640869d8bd00787601"
+      },
+      "license": {
+        "declared": "Not supplied in this upload",
+        "status": "unverified",
+        "evidence_urls": []
+      },
+      "commercial_use": {
+        "assessment": "unresolved",
+        "note": "No product-resource grant inferred from an uploaded benchmark."
+      },
+      "redistribution": {
+        "assessment": "unresolved",
+        "conditions": [
+          "Original and derivative sentence data stay local and ignored."
+        ]
+      },
+      "attribution": [
+        "Source description from uploaded summary.json: 159.숫자가 포함된 패턴 발화 데이터 / Training / 스크립트 텍스트"
+      ],
+      "vendoring": {
+        "committed": false,
+        "upstream_files_in_product": [],
+        "project_policy": "No source data or detailed reports in Git; only original harness and synthetic tests."
+      },
+      "inspection": "2026-09-28: user-provided JSON metadata and local structural audit; no external terms verification.",
+      "automatic_download": false,
+      "rights_conflicts": [],
+      "research_document": "docs/korean-reference-benchmark.ko.md"
     }
   ]
 }

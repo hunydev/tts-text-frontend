@@ -50,7 +50,7 @@ ttf_script_t ttf_script_of(uint32_t c) {
     if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
         (c >= 0xc0 && c <= 0x2af && c != 0xd7 && c != 0xf7))
         return TTF_SCRIPT_LATIN;
-    if (c >= '0' && c <= '9')
+    if ((c >= '0' && c <= '9') || (c >= 0xff10 && c <= 0xff19))
         return TTF_SCRIPT_DIGIT;
     if (c == ' ' || (c >= 9 && c <= 13) || c == 0xa0 || c == 0x202f || c == 0x3000 ||
         (c >= 0x2000 && c <= 0x200a))

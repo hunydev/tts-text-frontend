@@ -2,6 +2,7 @@
 #include "../protected/protected.h"
 #include "../semantic/numeric_grouping.h"
 #include "../semantic/phone.h"
+#include "../semantic/numeric_width.h"
 static char ascii_fold(char c) {
     return c >= 'A' && c <= 'Z' ? (char)(c + ('a' - 'A')) : c;
 }
@@ -358,6 +359,7 @@ static void incomplete_literal_hint(const char *s, size_t n, const ttf_protected
 ttf_status_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, int final, int first,
                                size_t *boundary, ttf_boundary_wait_t *wait) {
     ttf_token_t *tokens = NULL;
+    ttf_numeric_width_t width_view = {0};
     ttf_protected_region_t *regions = NULL;
     size_t region_count = 0, region_index = 0;
     size_t count = 0, i, at, chars = 0,
@@ -372,6 +374,22 @@ ttf_status_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, i
     memset(wait, 0, sizeof(*wait));
     if (status != TTF_OK)
         return status;
+    status = ttf_numeric_width_create(s, n, tokens, count, regions, region_count, &width_view);
+    if (status != TTF_OK) {
+        free(tokens);
+        free(regions);
+        return status;
+    }
+    if (width_view.text) {
+        s = width_view.text;
+        n = width_view.length;
+        free(tokens);
+        free(regions);
+        tokens = width_view.tokens;
+        regions = width_view.regions;
+        width_view.tokens = NULL;
+        width_view.regions = NULL;
+    }
     /* A long title eventually yields a phrase. The cap is measured from the
        current unit start, so input chunk boundaries cannot change it. */
     title_limit = title_scope_limit(s, n, e->config.max_segment_length);
@@ -384,12 +402,22 @@ ttf_status_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, i
                     wait->begin = t->begin;
                     wait->control_limit = e->frontend_options.max_control_bytes;
                     wait->quote = regions[region_index].match.control.wait_quote;
-                    /* A trailing escape must be rechecked on the next byte,
-                       regardless of which reserved character follows it. */
-                    if (regions[region_index].match.control.kind == TTF_CONTROL_ESCAPE)
+                    /* Recheck escapes and short position directives on each
+                       byte. A partial "{@break:" may still become an attached
+                       alias; caching its closer would use the wrong byte-limit
+                       origin (the brace rather than the preceding atom). */
+                    if (regions[region_index].match.control.kind == TTF_CONTROL_ESCAPE ||
+                        regions[region_index].match.control.kind == TTF_CONTROL_BREAK)
                         wait->kind = TTF_WAIT_NONE;
                 } else
                     incomplete_literal_hint(s, n, &regions[region_index], wait);
+                goto done;
+            }
+            /* An explicit sentence break commits here independently of target
+               size and automatic sentence splitting. Its syntax stays atomic. */
+            if (regions[region_index].match.control.kind == TTF_CONTROL_BREAK &&
+                regions[region_index].match.control.break_strength == 3) {
+                selected = t->end;
                 goto done;
             }
             ++region_index;
@@ -528,6 +556,9 @@ ttf_status_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, i
 done:
     free(tokens);
     free(regions);
-    *boundary = selected;
+    *boundary = width_view.text ? width_view.raw[selected] : selected;
+    if (width_view.text)
+        wait->begin = width_view.raw[wait->begin];
+    ttf_numeric_width_free(&width_view);
     return TTF_OK;
 }

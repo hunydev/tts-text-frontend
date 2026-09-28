@@ -1,0 +1,13 @@
+{
+  "changes": [
+    {
+      "path": "tests/evaluation/ko_counter_native3_v21.jsonl",
+      "id": "ko-counter3-v21-sino-grade",
+      "input": "2학년",
+      "before": "이학년",
+      "after": "이 학년",
+      "reason": "Explicit numeral + school-grade counted noun now receives its own COUNTER span and separating space; independent new grade contract precedes implementation."
+    }
+  ],
+  "external_references_modified": false
+}

@@ -58,7 +58,7 @@ def references(separator):
          "CARDINAL", "12345678", "", ""),
         ("ko-KR", f"-1{s}250.50%", "마이너스 천이백오십 점 오영 퍼센트", "PERCENT", "-1250.50", "", ""),
         ("ko-KR", f"1{s}250e-2kg", "십이 점 오 킬로그램", "MEASURE", "12.5", "kg", ""),
-        ("ko-KR", f"+1{s}250e+2원", "플러스 십이만오천 원", "CURRENCY", "+125000", "KRW", ""),
+        ("ko-KR", f"+1{s}250e+2원", "플러스 십이만 오천 원", "CURRENCY", "+125000", "KRW", ""),
         ("ko-KR", f"1{s}250~2{s}500원", "천이백오십 원에서 이천오백 원", "RANGE", "1250", "KRW", "2500"),
         ("en-US", f"$1{s}250~$2{s}500", "one thousand two hundred fifty to two thousand five hundred dollars",
          "RANGE", "1250", "USD", "2500"),

@@ -1546,19 +1546,24 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     }
     if (structured_tail(in, p))
         return preserve(in, out, ttf_numeric_atom_end(in, b), "syntax.unsupported-numeric");
-    /* A long run that starts with a zero is not a quantity: nobody zero-pads
-       774858583. Seven digits is where the ambiguity the project records for a
-       short run (advanced-bare-identifier-ambiguous, golden 00010) runs out, and
-       docs/remaining-work.md keeps the disagreement with the external sample,
-       which reads even 09 as digits. */
-    if (out->value[0] == '0' && p - b >= 7 && strspn(out->value, "0123456789") == p - b) {
-        /* The source has to be a plain run: "0,123,456" is a grouped quantity
-           whose leading zero is a formatting artifact, not an identifier. */
+    /* Only plain unsigned runs use the leading-zero policy. Dates, clocks,
+       suffixes, decimals, signs and grouped quantities have already retained
+       their grammar. With old resource roots, keep the legacy seven-digit
+       threshold; current resources explicitly select two digits. */
+    if (out->value[0] == '0' && p - b >= 2 && strspn(out->value, "0123456789") == p - b) {
+        ttf_resource_layer_t selected = TTF_LAYER_COMMON;
+        const char *minimum = ttf_resource_get(in->engine, "numeric_policy", "*",
+                                               "leading_zero_min_digits", &selected);
+        size_t threshold = minimum ? (size_t)strtoul(minimum, NULL, 10) : 7;
         size_t at = b;
         while (at < p && digit(s[at]))
             ++at;
-        if (at == p)
+        if (at == p && p - b >= threshold) {
+            if (selected > out->layer)
+                out->layer = selected;
+            (void)snprintf(out->unit, sizeof(out->unit), "leading_zero");
             return finish(in, out, p, TTF_SEM_DIGIT_SEQUENCE, "syntax.leading-zero-digits");
+        }
     }
     return finish(in, out, p, TTF_SEM_CARDINAL, "syntax.cardinal");
 }

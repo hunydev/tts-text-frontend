@@ -1,8 +1,1098 @@
 # 현재 작업 인수인계
 
-갱신: 2026-09-27. Release **0.20.0**, public ABI **v1**.
+갱신: 2026-09-28. Release **0.20.0**, public ABI **v1**.
 
-## 이번 인계: CJK 정규화 — 1~4단계 완료, 승인된 기준선 커밋
+## Git 체크포인트: 누적 작업 일괄 커밋 (2026-09-28)
+
+사용자가 현재까지의 전체 워크트리 커밋과 `main` push를 승인했다. 이 체크포인트는
+아래 각 작업에서 남긴 미커밋 코드·리소스·테스트·문서를 함께 보존한다.
+아래의 “미커밋”, “commit/push 없음”은 각 검증 당시 상태를 기록한 과거 설명이다.
+
+- 한국어/영어 리소스 보강: 조사·단위 경계, 횟수, 전화번호·선행 0, 전각 숫자,
+  점 포함 약어·문자 읽기, 공통 발음 사전과 선택형 고객 읽기.
+- 구간 제어와 의미 유형 지정: 한국어 주소, 이메일·URL, 추가 명시 패턴,
+  `{@break:1|2|3}` 위치 끊기와 스트리밍·길이 제한 계약.
+- 한국어 참조 importer/evaluator, 사전 후보 수집, 공백 차이 진단,
+  카테고리별 웹 리포트·전체 사례 모달, 정책 변경 원장과 후속 작업 큐.
+- 마지막 엔진 검증: GCC 전체 최초193/194, 실제 회귀 수정 후 영향15/15;
+  Clang ASan+UBSan 영향12/12; 새 계약62건·1,740 byte 분할 및 웹 검사 통과.
+  상세 실행 기록과 남은 한계는 다음 절에 있다. 이 커밋 정리에서 엔진 코드는
+  추가 변경하지 않았다.
+
+한국어 참조 원본·가공 데이터·문장별 결과·실행 캡처는 기존 정책대로
+`benchmark/generated/`, `artifacts/`에 로컬 보존하며 Git에 추가하지 않는다.
+새 clone에는 이 파일들이 없으므로 [한국어 참조 평가 가이드](korean-reference-benchmark.ko.md)의
+가져오기·재평가 절차를 따른다. 기존 리포트의 `git_head`/dirty 표시는 측정 당시
+provenance이므로 커밋 후에도 다시 쓰지 않는다. 이 VM의 웹 배포 상태는 유지한다.
+
+## 이번 인계: 나이·차수·학년 경계 / 위치 끊기 제어 — 완료 (미커밋)
+
+사용자 요청: 나이·생년월일의 큰 공백 격차와 제시한 `15세인 … 1차 예약`을
+일반 패턴으로 보강. 추가로 끊기 강도1=공백,2=쉼표+공백,3=마침표+공백을 구현.
+기존 dirty 작업 보존, ABI v1 유지, 음성 평가/commit/push 없음.
+
+### 구현과 편집 위치
+
+- KO `counters.c`에서 기존 숫자 스캐너와 COUNTER/RANGE IR을 재사용한다.
+  `15세인 → 십오 세인`, `1차 예약 → 일 차 예약`, `3학년에 → 삼 학년에`.
+  `counter_noun_unit`으로 세/차/학년, `counter_noun_tail`로 정확한 조사·어미를 선언한다.
+  `counter_noun_attached / 차=1`은 공백 뒤의 일반 명사 ‘차’를 차수로 오인하지 않는다.
+  `counter` 읽기 table과 Customer 우선순위 유지. Core의 numeric_suffix는 변경하지 않았다.
+- 정수/선행0 수량/전각/범위 지원. `세대/세탁기/차원/학년제`, 원래 한글, 소수·음수
+  확대는 이번 범위 밖. 부정 예와 명시 Customer 비활성화 검사가 있다.
+  [단위 경계와 읽기 정책](korean-spacing.ko.md).
+- annotated에서 위치 구문 `{@break:1|2|3}` 추가. 정확히 ` ` / `, ` / `. ` 삽입.
+  앞 단어는 정상 TN, 기존 공백·부호는 보존한다. 앞 단어 길이는 marker10바이트 한도에
+  포함되지 않는다. plain/보호코드/리터럴 별칭에서는 재해석하지 않는다.
+- 별도 CUSTOM IR, `rule=control.break`, `unit=@break`, `value=1|2|3`, 원문 marker byte 범위,
+  명시 입력 trace. 3단계는 자동 sentence_split 설정과 별개로 해당 위치에서 callback을
+  확정한다. 1·2단계는 문자 삽입이며 강제 callback이 아니다. [규격](input-format.md).
+- 웹 예제6개/새 corpus32+30개 등록. 공백 진단의 `categories`별 집계를 추가해
+  나이·생년월일 등 범주를 고르고 전체 사례 모달로 확인할 수 있다. 이전 진단은 전체만
+  표시한다. COUNTER의 일 단위 경계를 숫자 ‘일’의 내부 간격과 구별하도록 진단도 보강했다.
+
+### 재평가 / 참고값과의 차이
+
+`reports/20260928-spacing-v1` → `reports/20260928-counted-noun-v3`。
+142,255문장 중142,248채점 /272,325구간, 같은 comparison_key.
+
+| 지표 | 이전 | 이후 |
+|---|---:|---:|
+| 전체 문장 정확 일치 | 18,182 (12.78%) | 18,977 (13.34%) |
+| 전체 문장 공백 제거 일치 | 80,669 (56.71%) | 80,523 (56.61%) |
+| 나이·생년월일 정확 일치 /5,439 | 119 (2.19%) | 511 (9.40%) |
+| 나이·생년월일 공백 제거 일치 | 5,054 (92.92%) | 4,999 (91.91%) |
+| 전체 구간 정확 일치 | 80,457 | 83,189 |
+| 전체 구간 공백 제거 일치 | 174,610 | 176,414 |
+
+변경4,831문장 중4,606은 공백만 변경. 정확 일치 신규796/상실1,
+공백 제거 신규2/상실148. 전체 구간 정렬 실패39,771→37,750.
+기존 참조와 입력은 그대로이며 엔진 오류0/미채점7/구조 경고1,349 유지.
+
+참조·입력·평가 프로토콜 그대로, Training 참조 일치도이며 held-out 정확도가 아니다.
+원본/실제 문장은 ignored 경로에만 둔다. 값/단위의 의미 정확도를 참조 일치율과 혼동하지 않는다.
+
+- 이전 age_birthdate 공백 차이4,935문장 중 진단상4,461문장(중복 범주)이 수사 내부
+  간격을 포함했다. `십오`와 `십 오`를 무조건 같게 채점하거나 기본 수사를 분해하지 않는다.
+- 새 수량 범위는 기존 정책에 따라 `15~19세 → 십오 세에서 십구 세`로 읽는다.
+  참조가 끝 단위만 쓰면 공백 제거 일치에서도 달라진다. compact 상실148문장 전부
+  이 범위 계열을 포함한다. 평가에서 제외하지 않았다. `range_repeat_unit / 세=0`
+  등의 명시 고객 정책으로 끝 단위만 선택 가능하며 기본 점수와 섞지 않는다.
+- 정확 일치 상실1건은 아파트 ‘6차’의 육차/육 차 표기 차이(traffic/003432).
+  숫자값은 같고 공백 제거 일치는 유지한다. 고유명 관용 붙임은 별도 검토 대상이다.
+- 사용자 사례 age_birthdate/000043은 나이/차수 경계를 고쳤지만 `코로나19`의
+  십구/일구는 여전히 별도 관용명 읽기 문제다. `[[코로나19]]{코로나 일구}`는 사용할 수
+  있다. 모든 한글+숫자에 자리 읽기를 적용하지 않았으며 미해결을 완료로 세지 않는다.
+
+### 검증과 변경 이력
+
+- 새 계약32+30 **62건**,2분절 설정 **1,740 byte schedules**의 text/span/trace 동일.
+  Customer 비활성화·native 읽기와 3단계 write 중 callback을 확인했다.
+  malformed18종 batch/1byte stream, marker정확한10byte한도(긴 앞 단어 포함),
+  인접/리터럴 구문과 invalid resource3종 검사 통과.
+- age cycle:17→32, fixed15/regressed0. break의 이전 엔진은 새 문법을 거부하여
+  tn_cycle가 before 단계에서 exit2로 종료했다(`cycle-break/before.log`). 이를 통과한
+  전후 cycle로 보고하지 않는다. 새 문법은 고정30건과 strict/stream/기존 corpus로 검증했다.
+- 기존2,656건 비교: 정책 갱신한 `2학년 → 이 학년`1건 외 회귀0. 선택 행·같은 layer
+  상대 순서 유지. 이전 기대와 이유는 `docs/audit/counted-noun-policy-20260928.json`.
+- v1 외부 평가에서 `0987 차는`의 차량 번호를 차수로 오인한 실제 결함을 발견했다.
+  진행 중 GCC를 중단하고 v1 로그/report/snapshot을 보존했다. v2 수정 전에 독립 부정
+  계약2개를 추가했으며 차수는 숫자에 붙은 형태만 허용한다. v1/v2는 웹에 발행하지 않았다.
+- GCC 전체194개 중193개 최초 통과(819.84초). `user_pattern_byte_splits`의 기존 길이 한도 계약1개가 실제 회귀를 찾았다. 불완전한 break prefix의 캐시를 해제해 별칭으로 재판별하도록 수정하고, 영향15개를 **15/15** 재검증(53.06초)했다. 기대값/제한시간 변경 없음. `gcc-ctest-v2.log`, `gcc-recheck-v3.log`, `gcc-final-status.json`을 함께 본다.
+- Clang ASan+UBSan 영향 범위 **12/12** 통과(161.49초). GCC 후 순차 실행, GCC/Clang compiler warning 0. 전체 sanitizer suite 재실행을 뜻하지 않는다.
+- 한글/숫자 혼합 두 workload 교대7라운드×3회 처리 시간비 **0.979× / 1.003×**, 1.25× 게이트 통과. 평가/빌드와 동시에 측정하지 않았다.
+- 후보 CLI/library hash 확인 후 원자적 교체·service 재시작. 웹 API 예제11개 text/parity, 웹 corpus **62/62** 통과. Playwright 메인/품질 페이지 검사 모두 통과: 범주별 공백 진단, 전체 사례 모달, 키보드/모바일/XSS, streaming callback 포함.
+- 참조 구조 감사61파일2,019건 결함0, 독립 언어 검수 완료라는 뜻은 아니다.
+
+### 산출물과 재현
+
+`artifacts/tn/age-break/`: `baseline`, `candidate-v3` 불변 snapshot.
+`candidate`는 v1, `candidate-v2`는 길이 한도 수정 전, `cycle-age-v3`, `existing-corpora-v3.json`, `external-comparison-v3.json`,
+`audit-baseline`, `audit-candidate-v3`, `streaming-v2.log`, `errors-v2.log`,
+`gcc-ctest-v2.log`, `gcc-recheck-v3.log`, `asan-ctest.log`, `throughput-v3.json`, `deployment.json`, `previous-web/`.
+최초60건 고정본과 v2 수정 전 부정2건을 더한 고정본, `pre-change-tests/`도 보존했다.
+완료 보고서는 `reports/20260928-counted-noun-v3`, 공백 진단은 sibling `spacing/`에 있다.
+
+```sh
+python3 tools/quality/tn_cycle.py cycle --baseline artifacts/tn/age-break/baseline \
+  --candidate artifacts/tn/age-break/candidate-v3 \
+  --corpus tests/evaluation/counted_noun_v22.jsonl --out artifacts/tn/NEXT/cycle
+python3 tests/integration/test_age_break.py build/libtts_text_frontend.so resources
+python3 tests/integration/test_break_errors.py build/ttf resources
+python3 benchmark/evaluators/korean_release.py \
+  --import-dir benchmark/generated/ko-release/import-v1 \
+  --library artifacts/tn/age-break/candidate-v3/libtts_text_frontend.so \
+  --resources artifacts/tn/age-break/candidate-v3/resources \
+  --out benchmark/generated/ko-release/draft-reports/NEXT --label '변경 설명'
+python3 benchmark/evaluators/spacing_audit.py \
+  --report benchmark/generated/ko-release/reports/REPORT_ID \
+  --out benchmark/generated/ko-release/spacing/REPORT_ID
+cmake -S . -B build
+cmake --build build -j2
+ctest --test-dir build --output-on-failure -j1
+# GCC가 끝난 뒤에만 실행. 정확한 12개 -R 목록은 보존된 script에 있다.
+bash artifacts/tn/age-break/run-sanitizer.sh
+TTF_PLAYWRIGHT_MODULE=/tmp/ttf-web-browser/node_modules/playwright \
+  /tmp/ttf-web-browser/node_modules/node/bin/node tests/web/korean-quality.cjs http://127.0.0.1:8000
+TTF_PLAYWRIGHT_MODULE=/tmp/ttf-web-browser/node_modules/playwright \
+  /tmp/ttf-web-browser/node_modules/node/bin/node tests/web/browser.cjs http://127.0.0.1:8000
+```
+
+최종 웹 engine/report identity:
+- library SHA256 `17173a71247c1d3418d57e4603c596599de2b085f547fb7d88b602d6c3765db2`
+- resources SHA256 `4bafb21cf61325616769b939ccb028d387766ba7724f90db06ad4826c1d674af`
+- comparison_key `59c137e84281cd26929f3c1dabe2ff29a07c44c99b44ca6f8021fcb7c39eba6b`
+
+다음 요청에서는 날짜의 수사 내부 간격을 맞춤법/발화 선호로 분리 검토하거나,
+코로나19 같은 한글+숫자 관용명에 사용할 사전 경로를 별도 범위로 설계한다.
+참조 전체를 맞추기 위해 날짜의 숫자 내부를 일괄 분리하거나 고유 명칭을 일반 숫자
+규칙으로 바꾸지 않는다. 기존 `range_repeat_unit` 선택형 평가도 자동 기본 점수와 구분한다.
+
+---
+
+## 이전 인계: 한국어 수 묶음 띄어쓰기 / 공백 차이 진단 — 완료 (미커밋)
+
+사용자 요청: 공백만 다른 비율을 먼저 줄이고, 필수 표기와 참조의 발화 간격·허용
+표기 차이를 구분한다. 첫 반복은 **만 단위 수 묶음**으로 제한했다. 기존 dirty 작업
+보존, C ABI v1 유지. [정책·리소스 가이드](korean-spacing.ko.md).
+
+### 구현과 경계
+
+- KO `cardinal()`이 0이 아닌 만·억·조 등의 묶음 사이에 공백을 생성한다.
+  `12,500원 → 만 이천오백 원`, `1억2천3백만원 → 일억 이천삼백만 원`.
+- `numeric.tsv`의 `number_spacing / ko-KR / group = space`. 값은 `space|compact`만
+  허용하며 고객 overlay로 기존 붙임 정책을 선택한다. 행 없는 과거 root는 compact.
+  Core/API 변경 없이 pack scalar renderer를 재사용하는 금액·단위·범위에도 적용한다.
+- 수사 내부 `십이/열두`, `유월/시월`, 전화·선행 0 자리 읽기, 영어, 리터럴 별칭,
+  입력 한글 문장은 일괄 교정하지 않는다. 음성 생성/청취 평가는 하지 않는다.
+- 새 `benchmark/evaluators/spacing_audit.py`는 완료 보고서/DB hash를 확인하여
+  공백만 다른 문장의 경계를 Unicode 문자 좌표와 엔진 UTF-8 byte span으로 연결한다.
+  수 묶음/수사 내부/번호 자리/단어 내부/단위·접사/서식/나머지 경계로 검토 후보를
+  구분한다. 자동 언어적 오류 판정이나 점수 보정기가 아니며 유형별 문장 수는 중복된다.
+- `/ko-quality`에 **공백 차이의 종류** 표와 전체 사례 모달을 추가했다.
+  `/api/ko-spacing`은 별도 sidecar를 읽으며 보고서 hash 불일치/경로 이탈을 거부한다.
+  원본 보고서와 참조는 그대로이며 진단 없는 과거 보고서에는 미생성 안내를 보인다.
+
+### 동일 외부 자료 재평가
+
+`reports/20260928-phone-zero-v2` → `reports/20260928-spacing-v1`.
+142,255문장 중142,248채점 /272,325구간, 같은 comparison_key.
+Training 참조 일치도이며 독립 held-out 정확도가 아니다. 참조 수정·제외 없음.
+
+| 지표 | 이전 | 이후 |
+|---|---:|---:|
+| 문장 정확 일치 | 16,967 (11.93%) | 18,182 (12.78%) |
+| 문장 공백 제거 일치 | 80,669 (56.71%) | 80,669 (56.71%) |
+| 공백만 다른 문장 | 63,702 | 62,487 |
+| 구간 정확 일치 | 77,113 | 80,457 |
+| 구간 공백 제거 일치 | 174,610 | 174,610 |
+
+변경16,459문장 전부 공백 제거 문자열·참조·입력·의미 IR 동일.
+문장 정확 일치 신규1,215 / 상실0. 구간 정렬 실패39,771 / 구조 경고1,349 /
+미채점7 / 엔진 오류0 유지. 공백 진단 대상에서 수 묶음 경계 차이6,342→0,
+전체 공백 경계175,599→169,257. 공백 외 불일치가 있는 문장은 이 진단에서 제외되므로
+전체 수 묶음의 언어적 완전성이나 전체 corpus 정확도를 뜻하지 않는다.
+
+### 계약·감사·게이트
+
+- 구현 전 고정한 새30건 통과. cycle:15→30 / fixed15 / regressed0.
+  2분절 설정의608 byte schedules text/span/trace 동일, 고객 overlay2개 통과.
+- 기존2,626건 비교: 독립 수 묶음 정책 변경 이외 회귀0. 숫자 값·단위·입력좌표·
+  언어·규칙/trace 선택 행과 상대 순서 동일. 공백 때문에 출력 byte 좌표만 이동한다.
+  trace 좌표도 공백 제거 prefix가 동일한 위치인지 확인. 행1개 추가로 순번 이동785건.
+- 기존 참조74건과 고정 literal18줄의 변경 전후는
+  `docs/audit/ko-spacing-policy-20260928.json`. 자동69건은 이전 엔진 IR과 독립
+  수 묶음 계산으로 작성했으며 쉼표/명시 통화5건은 같은 규칙으로 별도 검토했다.
+  후보 출력으로 정답 생성하지 않았다. 새30건은 구현 전 고정본과 같다.
+- GCC 전체190개 중188개 최초 통과(794.06초). 기존 붙임 기대값이 남은
+  `korean_pack_edges`, `typed_controls_evaluation`2개는 정책 원장을 갱신하고
+  unit fixture만 재빌드하여 재실행 **2/2** 통과(5.55초). 엔진/리소스 재변경 없음.
+  최초/재실행 로그와 `gcc-final-status.json`을 함께 보아야 한다.
+- Clang ASan+UBSan 영향 범위 **10/10** 통과(93.50초), GCC와 순차 실행.
+  compiler warning 없음. 전체 sanitizer suite를 다시 돌렸다는 뜻은 아니다.
+- 한글/숫자 혼합 두 workload 교대7라운드×3회 처리 시간비 **0.990× / 0.999×**,
+  1.25× 게이트 통과. 평가/빌드와 동시에 재지 않았다.
+- 참조 구조 감사59파일1,957건 결함0. 독립 사람 검수 완료를 뜻하지 않는다.
+- 후보 CLI/library의 hash를 확인해 원자적 교체, 서비스 재시작 후 보고서/공백
+  sidecar2개 발행. API 사례9개 text/parity와 웹 corpus **30/30** 통과.
+  Playwright 품질 페이지의 공백 분류/사례 모달·전체 내용·키보드·모바일·XSS, 기존 메인
+  UI의 제어/사전/콜백/byte parity 검사 통과. `deployment.json`, `live-web.json`,
+  `browser-quality.log`, `browser-main.log`. 이전 바이너리 백업은 `previous-web/`.
+- main은 기존 `0012911`; commit/push 없음. 이전 작업까지 포함한 dirty 상태 유지.
+
+### 재현 / 산출물
+
+루트 `artifacts/tn/ko-spacing/`: `baseline`, `candidate` 불변 snapshot,
+`references-before-candidate.jsonl` 새 계약 고정본, `pre-policy-tests/` 이전 참조 사본,
+`cycle/`, `existing-corpora.json`, `external-comparison.json`, `audit-baseline/`,
+`audit-candidate/`, `gcc-ctest.log`, `gcc-rerun.log`, `asan-ctest.log`, `throughput.json`.
+대용량 입력/실제 문장과 sidecar는 ignored 경로에만 둔다.
+
+```sh
+python3 tools/quality/tn_cycle.py cycle --baseline artifacts/tn/ko-spacing/baseline \
+  --candidate artifacts/tn/ko-spacing/candidate \
+  --corpus tests/evaluation/ko_spacing_v22.jsonl --out artifacts/tn/NEXT/cycle
+python3 benchmark/evaluators/korean_release.py \
+  --import-dir benchmark/generated/ko-release/import-v1 \
+  --library artifacts/tn/ko-spacing/candidate/libtts_text_frontend.so \
+  --resources artifacts/tn/ko-spacing/candidate/resources \
+  --out benchmark/generated/ko-release/draft-reports/NEXT --label '변경 설명'
+python3 benchmark/evaluators/spacing_audit.py \
+  --report benchmark/generated/ko-release/reports/REPORT_ID \
+  --out benchmark/generated/ko-release/spacing/REPORT_ID
+cmake -S . -B build
+cmake --build build -j2
+ctest --test-dir build --output-on-failure -j1
+# GCC 종료 후 sanitizer를 단독 실행
+cmake -S . -B build-sanitize -DCMAKE_C_COMPILER=clang -DCMAKE_BUILD_TYPE=Debug \
+  -DTTF_ENABLE_ASAN=ON -DTTF_ENABLE_UBSAN=ON
+cmake --build build-sanitize -j2
+ASAN_OPTIONS=detect_leaks=1:halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1 \
+  ctest --test-dir build-sanitize --output-on-failure -j1 \
+  -R '^(ko_spacing_evaluation|ko_spacing_audit|resource_semantic_validation|korean_pack_edges|semantic_boundary_streaming|numeric_width_evaluation|typed_controls_evaluation|finance_ranges_v7_evaluation|scaled_currency_v12_evaluation|financial_quantity_values)$'
+```
+
+최종 library SHA `35289fff69c9a0ad72a6c6eaf2c410c67aadbfdbb8a2c36994a65aa9f9282ca9`,
+resources SHA `65dfe40cc9bad52f92eca0bda5b32c1af09c2f68968449d3ed2650cab7e8833e`.
+웹 `https://tts-text-frontend.exe.xyz:8000/ko-quality`에서 **만·억·조 수 묶음 띄어쓰기**
+보고서를 선택한다. corpus에는 `ko-spacing-v22`가 있다.
+
+다음은 `korean-quality-work-queue.json`의 KO-SPACING을 우선한다. 단위·접사와 나머지
+경계의 실제 사례를 검토한 뒤 한 규칙만 고르고, 순서/합성어/조사의 부정 계약을
+먼저 작성한다. `십 이/열 두/유 월` 또는 식별자 자리 간격을 단순 점수 향상 때문에
+일괄 도입하지 않는다. 발화 간격 프로필, 자동 전역 띄어쓰기 교정, 사람의 판정이
+완료된 공백 평가 subset은 후속이다. 남은62,487문장을 해결 완료로 취급하지 않는다.
+
+---
+
+## 이전 인계: 전화번호 꼬리 문맥 / 선행 0 자리 읽기 — 완료 (미커밋)
+
+사용자 요청: `015`에 국한하지 않고 `02`와 영어 전화 형태를 고려하며, 맨 `0046`은
+0을 버린 사십육 대신 **공공사육**으로 읽는다. 이번에는 이 두 문법 계열만 변경한다.
+이전 작업의 dirty 파일은 그대로 유지한다. public ABI v1 유지, 외부 참조 수정 없음.
+
+### 변경과 정책
+
+- 실제 bypass 원인은 앞자리 whitelist가 아니라 전화 뒤 `번/번호`를 수량 접미사로
+  취급한 `src/semantic/phone.c::quantity_tail`이었다. 한국어 `phone_number_tail / 번=1`
+  리소스로 기존 전화 구조 뒤의 번호 꼬리를 허용한다. kg 등 수량 방어는 유지한다.
+- 공통 `numeric_policy / leading_zero_min_digits=2`, 한국어 `number / leading_zero_zero=공`.
+  맨 부호 없는 숫자열은 `DIGIT_SEQUENCE`, `unit=leading_zero`, value는 모든 자릿수 보존.
+  영어는 기존 zero 읽기를 사용한다. 임계값7 또는 영 읽기는 Customer overlay로 선택한다.
+- 완성 전화번호는 뒤 `만` 조사/`조` 이름 때문에 공유 배율 범위로 해석하지 않는다.
+  반면 `01~02만 원`의 01은 수량 계수로 유지한다. 중간 v1의 계수 해석 문제는 v2에서
+  수정했으며 v1 snapshot/report는 실패 이력으로 보관하고 발행하지 않는다.
+- 날짜/시간/소수/금액/단위/부호/그룹 수량/명시 제어의 의미를 유지한다. 기존 금융 cue와
+  일반 선행 0의 IR을 구분한다. `0046{@cardinal}` 또는 `{@sino}`는 annotated에서 사십육.
+- [편집·정책·한계](phone-zero-policy.ko.md), [전화 리소스](phone-resources.md).
+  웹 `phone-zero-v22` corpus와 전화·숫자 예제4개를 등록했다.
+
+### 재평가 결과 (전체 게이트 후 웹 발행 완료)
+
+`reports/20260928-lexicon-v2` → `reports/20260928-phone-zero-v2`.
+같은 원본142,255문장/채점142,248문장/272,325구간, 같은 comparison_key.
+Training 탐색용 참조 일치도이며 독립 held-out 정확도가 아니다.
+
+| 지표 | 이전 | 이후 |
+|---|---:|---:|
+| 문장 엄격 일치 | 16,967 (11.93%) | 16,967 (11.93%) |
+| 문장 공백 제거 일치 | 80,318 (56.46%) | 80,669 (56.71%) |
+| 구간 엄격 일치 | 77,113 (28.32%) | 77,113 (28.32%) |
+| 구간 공백 제거 일치 | 174,388 (64.04%) | 174,610 (64.12%) |
+| 전화번호 범주 공백 제거 / 9,110 | 1,404 | 1,661 |
+
+문장 출력 변화10,975: 새 일치361 / 상실10 / 여전히 불일치10,604(미채점1 포함).
+기존에 일치하던10문장/13구간의 상실은 모두 영→공 정책 차이이며 원본 그대로 집계한다.
+정렬 구간 새 일치235 / 상실13 / 순증222. 구조 경고1,349 / 미채점7 / 엔진 오류0,
+구간 정렬 실패39,782→39,771. 평가 소요176.922초는 보고서 작성 시간이다.
+전화 그룹의 ‘다시’ 연결과 숫자 읽기 선호 등은 남은 불일치로 보존한다.
+
+변경된 구간도 조사: 선행 0 읽기11,618구간, 이전 invalid-phone에서 복구1,957구간,
+전화 뒤 배율 동음 문자로 생긴 잘못된 범위/경계13사례를 별도 확인했다.
+일부 식별자와 전화 모양의 모호성 전체를 해결한 것은 아니다. 개인 번호의 화자 선호는
+명시 제어/독립 검토 후속으로 두고 자동 점수를 위해 참조를 바꾸지 않는다.
+
+### 계약과 감사
+
+- 새 자체 계약53/53, 2분절 설정에서1,760 byte schedules text/span/trace 동일,
+  Customer override4개 통과. `cycle-v2`: 기존25→53, fixed28 / regressed0.
+- 기존2,573건 비교: 명시 정책 변화12건 외 회귀0. trace declaration_order 이동3,627,
+  선택 행·비순번 필드·같은 layer 안 상대 순서/동률 보존.
+- 기존 기대 문자열 변경11건은 `docs/audit/phone-zero-policy-20260928.json`에 전후 기록.
+  나머지1건은 영어 긴 숫자열의 IR unit 추가이며 출력은 그대로다. 과거 ID는 유지한다.
+- 자체 새 range 부정 참조1건의 ‘다시’는 기존부터 ‘에서’였던 저작 오류다.
+  `reference-authoring-correction.json`에 수정 전·후와 baseline 증거를 보관한다.
+  v2 공유 배율/전화 꼬리6건은 해당 보완 전에 별도 고정했다.
+- 참조 구조 감사58파일1,927건 결함0. 독립 사람 검수 완료라는 뜻은 아니다.
+
+### 재현과 산출물
+
+루트 `artifacts/tn/phone-zero/`. `baseline`과 `candidate-v2`는 불변 snapshot.
+`candidate`, `cycle`, `draft-reports/20260928-phone-zero-v1`은 중간안이다.
+`pre-policy-tests/`는 기존 참조의 변경 전 사본, `references-before-*`는 새 계약 고정본이다.
+
+```sh
+python3 tools/quality/tn_cycle.py cycle --baseline artifacts/tn/phone-zero/baseline \
+  --candidate artifacts/tn/phone-zero/candidate-v2 \
+  --corpus tests/evaluation/phone_zero_v22.jsonl --out artifacts/tn/NEXT/cycle
+python3 benchmark/evaluators/korean_release.py \
+  --import-dir benchmark/generated/ko-release/import-v1 \
+  --library artifacts/tn/phone-zero/candidate-v2/libtts_text_frontend.so \
+  --resources artifacts/tn/phone-zero/candidate-v2/resources \
+  --out benchmark/generated/ko-release/draft-reports/NEXT --label '변경 설명'
+cmake -S . -B build
+cmake --build build -j2
+ctest --test-dir build --output-on-failure -j1
+```
+
+비교: `existing-corpora-v2.json`, `external-comparison-v2.json`,
+`external-span-audit-v2.json`, `external-review-v2.json`과 실행 스크립트.
+원본/실제 문장은 ignored 경로에만 있고 제품 리소스에 옮기지 않았다.
+
+### 완료 게이트
+
+- GCC 전체187개 중184개가 최초 통과(769.82초). 영어 비활성 식별자 cue의 이전 기수
+  기대값과 전각 corpus 고정 해시가 남아3개 실패했다. 사용자 정책 변경을 전후 원장에
+  기록하고 `unit=leading_zero` 검사와 정확한 해시 pin을 유지했다. C/리소스 변경 없이
+  `ctest --test-dir build --rerun-failed --output-on-failure -j1` **3/3 통과**,81.93초.
+  최종 모든187개 통과 근거는 `gcc-final-status.json`, 최초/재실행 로그를 함께 본다.
+- Clang ASan+UBSan 영향 범위 **13/13**,133.11초. `asan-build.log`/`asan-ctest.log`.
+  GCC 전체/재실행 종료 후 단독 실행했고 compiler warning 없음.
+- 불변 baseline/candidate-v2의 한글/숫자 혼합 두 workload, 교대7라운드×3회:
+  처리 시간비 **1.010× / 1.005×**,1.25× 게이트 통과. `throughput.json`.
+- `build-web` CLI/공유 라이브러리 원자적 교체 후 service 재시작. 새 보고서만 발행했다.
+  `deployment.json`의 이전 바이너리 백업은 `previous-web/`. 리소스 hash와 snapshot 일치 확인.
+- 웹 새 예제4개 및 추가6개(API의 KO/EN/고객 영 읽기/명시 기수/금액 범위) text·parity 통과.
+  웹 corpus **53/53**, 최신 보고서의 전체/전화 범주 지표 확인. `live-web.json`.
+- Playwright 한국어 품질 페이지의 지표·필터·사례 전체 모달·키보드·모바일·내보내기·XSS
+  및 기존 메인 UI의 제어·trace·사전·callback·byte parity·corpus 검사 통과.
+  `browser-quality.log`, `browser-main.log`.
+- git diff --check 통과. main은 기존 `0012911`; commit/push 없음.
+
+Sanitizer 재현 (GCC와 동시에 실행하지 않는다):
+
+```sh
+cmake -S . -B build-sanitize -DCMAKE_C_COMPILER=clang -DCMAKE_BUILD_TYPE=Debug \
+  -DTTF_ENABLE_ASAN=ON -DTTF_ENABLE_UBSAN=ON
+cmake --build build-sanitize -j2
+ASAN_OPTIONS=detect_leaks=1:halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1 \
+  ctest --test-dir build-sanitize --output-on-failure -j1 \
+  -R '^(phone_scanner_bounds|resource_semantic_validation|korean_pack_edges|semantic_boundary_streaming|leading_zero_v21_evaluation|numeric_width_evaluation|phone_zero_evaluation|phone_v18_evaluation|labeled_financial_identifiers|financial_quantity_values|finance_ranges_v7_evaluation|typed_controls_evaluation|numeric_width_native)$'
+```
+
+최종 library SHA `6ac635d13adf031f45f9d6a4f2b2149d76236913b4d6821d6141a12cdc9ecb75`,
+resources SHA `1dd2bbdeafe223355c4729182e58a002b520b495cf8f86e8f2606b05909fa507`.
+웹 `https://tts-text-frontend.exe.xyz:8000/ko-quality`에서 **전화번호 꼬리 문맥 · 선행 0 자리 읽기**
+보고서를 고르고 직전 사전 보고서와 비교한다. 첫 화면은 전화·숫자 예제4개와 corpus53건을 제공한다.
+
+다음 반복은 별도 요청에서 한 계열만 고른다. 전화 연결어/개인 번호의 화자 선호는
+참조 일치율만으로 자동 결정하지 말고 사용자 리소스/명시 제어 평가로 분리한다.
+남은 한국어 counter family 또는 사전/문맥 충돌은 `korean-quality-work-queue.json`의
+근거를 먼저 검토한다. 이번에 전체 전화 numbering plan이나 개인 식별번호 문법을 확장하지 않았다.
+초기 v1 GCC 실행은 계수 합성 문제를 확인해 중단한 로그(`gcc-ctest-interrupted-v1.log`)다.
+성공한 전체 실행으로 세지 않는다. 커밋/푸시는 하지 않는다.
+
+---
+
+## 이전 인계: 공통 발음 사전 / 선택형 사용자 사전 — 완료 (미커밋)
+
+사용자 결정: **공통은 기본 사전, 선택형은 사용자 사전**. 한 번의 사전 coverage 반복만
+진행했다. 엔진 C/ABI/숫자 문법은 변경하지 않았다. 기존 dirty 작업은 그대로 유지했다.
+제공 Training 참조의 다수 읽기를 언어적 정답으로 자동 채택하지 않는다.
+
+### 변경과 편집 위치
+
+- `benchmark/evaluators/lexicon_candidates.py`: 완료 보고서/DB hash를 확인하고 lexicon
+  후보4,290키/13,869구간을 수집. 미일치5,434와 복수 읽기/정렬/구조/단위 분류 신호를
+  보존한다. 원본·사전·gold를 수정하지 않고 산출물을 덮어쓰지 않는다. 외부 후보는 ignored.
+- `lexicons/ko-KR/usage-additions-v22.jsonl`: 공통23항목, 별칭 포함24키. PIN, GS25,
+  KIA, PASS, IELTS, AXA, FedEx, COOV, CJONE, Hmall, YES24, S-OIL, ITZY, GOT7,
+  KOVO, GS SHOP/GSSHOP, PRO, SKY, ECO, FULL, LOUD, GO, YES.
+  출처10항목 대조 / 편집 선택13항목 대기. 원본 JSONL → `manage.py build`로 기존5개 TSV 생성.
+- `lexicons/sources/usage-v22.json`: 확인일·공식 URL·편집 정책. 외부 웹 원문/이미지/코드와
+  제공 corpus 문장을 제품 리소스에 복사하지 않았다. THIRD_PARTY에 범위를 기록했다.
+- 선택형9키: `resources/customers/reading-preferences/ko-KR/lexicon.tsv`.
+  TV/CCTV/OLED/K3/SM3/XM3/QM3/S-OIL/MY. system manifest에 없으며 customer 로드나
+  User API로 명시 적용한다. 기본 TV→티브이는 유지, 선택형은 티비.
+- 웹 sample `reading-preferences`, corpus `lexical-coverage-v22` 등록. 선택형 파일은
+  웹 고객 TSV 칸에서 편집 가능. 공통 사전은 `/lexicon` 검색·출처·수정안 시험에서 확인한다.
+- 편집/적용법: [사전 보강 가이드](lexicon-coverage-v22.ko.md), [관리 가이드](lexicon-maintenance.ko.md).
+  전체 관리 사전453항목/456키(system407/finance46), source-checked95/pending358/human-reviewed0.
+
+### 같은 한국어 참조로 재측정
+
+`reports/20260928-frequency-v3` → `reports/20260928-lexicon-v2`.
+전체 게이트 후 최종 보고서를 웹에 발행했다. 원본/참조/옵션/평가기 동일, 제어 삽입과 선택형
+사용자 프로필은 **적용하지 않았다**. Training 탐색용 일치도이며 held-out 정확도가 아니다.
+
+| 지표 | 이전 | 이후 |
+|---|---:|---:|
+| 문장 정확 일치 / 142,248 | 16,963 (11.92%) | 16,967 (11.93%) |
+| 문장 공백 제거 일치 | 80,242 (56.41%) | 80,318 (56.46%) |
+| 구간 정확 일치 / 272,325 | 76,878 (28.23%) | 77,113 (28.32%) |
+| 구간 공백 제거 일치 | 174,100 (63.93%) | 174,388 (64.04%) |
+
+문장 출력 변화301: 새 일치77 / 상실1 / 여전히 불일치223. 정렬된 구간 변화309:
+새 일치289 / 상실1 / 여전히 불일치19. 미채점 문장7 / 구조 경고1,349 /
+구간 정렬 실패39,782 / 엔진 오류0 유지. 평가 보고서 작성182.774초(처리량/TTFB 아님).
+
+상실1은 `ko-release/statistics/014536`: IELTS의 참조 `아이이엘티에스`와 공식
+표기 `아이엘츠`의 차이. 참조 수정/제외 없이 불일치로 집계하며 독립 검토 대기다.
+S-OIL(에쓰/에스), GS SHOP(샵/숍)도 raw 차이를 숨기지 않는다.
+모든 변경301건의 부분 출력도 점검했다. PRO 사전 근거는 기존 ALNUM_TERM의
+붙은 숫자 읽기도 바꾼다: `pro5549` 1건과 `PRO360` 2건은 전후 모두 불일치다.
+값 손실은 없지만 원하는 식별번호/제품 코드 읽기는 명시 제어/전체 키 사전의 후속이다.
+
+### 검증과 수정 기록
+
+- 새 자체 계약36건, 기대 문자열은 최초 저작 이후 변경 없음. `cycle-final`: 이전12→이후36,
+  fixed24 / regressed0. 기본/짧은 분절에서2,110 byte schedules의 text/span/trace 일치.
+  User > Customer > System 및 영어 문맥 검사 통과. 짧은 분절 설정 자체는 기존 context
+  창을 바꾸므로 서로 다른 설정 간 동일 출력은 보장하지 않는다(가이드 참고).
+- 최초 English fixture는 text 보존 의도인데 speech로 작성해 모드만 text로 정정했다.
+  `reference-mode-correction.json`에 원본/사유 기록; 기존 EN speech 출력은 전후 동일.
+- 최초 MY를 전역 추가하자 기존 email local-part의 철자 읽기가 바뀌었다. MY를 선택형으로
+  제한해 해소했다. 중간 실패 candidate/cycle/report는 보존하고 웹에는 발행하지 않는다.
+- `existing-corpora-final.json`: 기존2,537건 text/span/비순번 trace 회귀0.
+  trace 순번1149건 이동: 정렬 TSV 여러 위치 삽입으로 상수 오프셋은 아니며, 선택한 행과
+  같은 layer 안의 상대 순서/tie는 모두 유지한다. 기존 corpus 참조 수정 없음.
+- 후보 수집기 자체3검사 및 관련 CTest6/6 통과. 참조 audit57파일1,874건 구조 결함0,
+  독립 사람 승인0. 전체 GCC/웹 결과는 아래 완료 검증에 기록했다.
+
+### 재현과 산출물
+
+루트 `artifacts/tn/ko-lexicon/`. 원래 baseline은 불변이고, `baseline-final`은 같은
+기본 리소스에 명시 overlay 검사용 선택형 파일만 둔 비교 snapshot이다.
+`candidate-v2`가 최종23개 기본 사전, `candidate-v1`은 이메일 회귀가 있던 중간안이다.
+
+```sh
+python3 benchmark/evaluators/lexicon_candidates.py \
+  --report benchmark/generated/ko-release/reports/20260928-frequency-v3 \
+  --out artifacts/tn/NEXT/candidates.json
+python3 tools/lexicon/manage.py build --check
+python3 tools/quality/tn_cycle.py cycle --baseline artifacts/tn/ko-lexicon/baseline-final \
+  --candidate artifacts/tn/ko-lexicon/candidate-v2 \
+  --corpus tests/evaluation/lexical_coverage_v22.jsonl --out artifacts/tn/NEXT/cycle
+python3 benchmark/evaluators/korean_release.py \
+  --import-dir benchmark/generated/ko-release/import-v1 \
+  --library artifacts/tn/ko-lexicon/candidate-v2/libtts_text_frontend.so \
+  --resources artifacts/tn/ko-lexicon/candidate-v2/resources \
+  --out benchmark/generated/ko-release/draft-reports/NEXT \
+  --label '사전 변경 설명'
+cmake -S . -B build
+cmake --build build -j2
+ctest --test-dir build --output-on-failure -j1
+```
+
+- `cycle-final/`, `native-contracts.log`, `existing-corpora-final.json`과 실행 스크립트.
+- `external-comparison-final.json`, `external-changes-final.log`, `external-span-changes-final.json`:
+  전체 변경/상실/부분 차이. 비교 스크립트는 발행된 reports 경로를 사용한다.
+- `candidates-v1.json`, `inventory-final.json`, `reference-audit.json`: 검토 큐/사전/참조 원장.
+- library SHA는 직전과 같은 `57fa7e8f40899ecf9de0ab6608d71cd49fa7d6cc4b8f06e901dd167efc5f2093`.
+  resources SHA `d9c73f569661655e867c90fa36a9a633d513e2a513b9acb9f602c53eb09ccbee`.
+
+### 완료 검증 / 다음 순서
+
+- GCC Debug C11 build, **CTest185/185**, 790.18초. `gcc-ctest.log`.
+- 이번 반복은 C 코드 변경이 없고 library SHA가 직전과 같으므로 sanitizer 전체를 다시
+  실행하지 않았다. 직전 native 변경의 sanitizer10/10 기록은 아래 이전 인계에 있으며,
+  이를 이번 리소스의 새 sanitizer 실행으로 주장하지 않는다.
+- 웹 service 재시작, native library는 교체하지 않았다. `deployment.json`에 실제
+  library/resources/summary 해시를 기록했다. 실패 중간안은 draft에만 남긴다.
+- `/api/lexicon`:453항목, 새23항목 확인. 선택형9키 모두 요청별 text/byte parity 통과,
+  기본 TV→티브이 유지, 웹 corpus36/36. `live-web.json`, `live-web.log`.
+- Playwright: 선택형 예제의 고객 TSV·최종 text·분할 검증과 KIA 사전 근거 확인 통과.
+  한국어 지표/필터/사례 전체 모달/키보드/모바일/내보내기/XSS gate, 기존 메인 UI의
+  callback/제어/trace/코퍼스/모바일 gate도 모두 통과.
+  `browser-preferences.log`, `browser-quality.log`, `browser-main.log`.
+- 참조 구조 audit57파일1,874건 결함0, `git diff --check` 통과. main HEAD는 기존
+  `0012911`이며 기존 작업과 이번 변경은 아직 미커밋이다.
+
+웹: `https://tts-text-frontend.exe.xyz:8000/ko-quality`에서 최신 **공통 발음 사전
+23항목 보강**과 직전 횟수 보고서를 비교한다. 첫 화면의 **사용자 사전 ·
+티비/올레드/차종 읽기** 예제를 선택하면 편집 가능한 고객 TSV가 채워진다.
+
+```sh
+TTF_PLAYWRIGHT_MODULE=/tmp/ttf-web-browser/node_modules/playwright \
+  /tmp/ttf-web-browser/node_modules/node/bin/node \
+  tests/web/korean-quality.cjs http://127.0.0.1:8000
+TTF_PLAYWRIGHT_MODULE=/tmp/ttf-web-browser/node_modules/playwright \
+  /tmp/ttf-web-browser/node_modules/node/bin/node \
+  tests/web/browser.cjs http://127.0.0.1:8000
+```
+
+운영 적용은 `artifacts/tn/ko-lexicon/publish_web.py`에 절차를 남겼지만 기존 output을
+다시 덮어쓰는 명령은 아니다. 다음 변경은 새 snapshot/report/artifact 이름을 사용한다.
+
+다음 반복은 KB/MG가 브랜드 문맥에서 단위로 분류되는 문제를 독립 계약으로 검토하거나,
+이번 pending 읽기를 검수하는 한 계열만 선택한다. 개인 식별번호의 자리별 native 읽기와
+assisted score는 사용자 의도 검토 후 별도 작업이다. 현재 선택형 테스트 통과를 외부자료
+제어 적용 정확도로 표시하지 않는다. 미커밋 상태이며 커밋/푸시는 수행하지 않았다.
+
+## 이전 인계: 한국어 횟수 `N번` 개선 — 완료 (미커밋)
+
+사용자 요청에 따라 개인고유번호는 발화 의도/명시 제어의 후속 과제로 남기고,
+제공 한국어 자료에서 **고유어기수의 횟수** 한 계열을 개선했다. 자동 TN 결과에
+제어 구문을 주입하지 않았다. 제어 적용 정확도는 아직 측정하지 않는다.
+`@native`는 정수 전체 읽기이며 자리별 `하나/둘` 읽기가 아니라는 점과 후속 평가의
+부분집합·원문·주석·참조·검토자·literal/pattern 구분을 `remaining-work.md`에 기록했다.
+
+### 변경
+
+- `counter-frequency.tsv`: 58행. 앞 횟수 단서8 + streaming boundary8,
+  뒤 횟수 동사19 + 번호 명사16, 조사 lookahead6, 붙은 `씩`1.
+- KO pack `counters.c`에 `counter_role_tail` 추가: `3번씩`의 직접 횟수 단서.
+  번호 단서 우선, 단서 없는 `3번`은 한자어, 나머지 기존 IR/전후 문맥 알고리즘 유지.
+- `validate.c`: role enum/키 검사, enabled tail의 `particle|quantity_tail` 및
+  `quantity_lookahead_tail` 의존 검사. 고객 `0` override 가능. Core/ABI 변경 없음.
+- 자체 계약33건: 문맥·조사·범위·전각·문항/노선 부정·번호 우선·줄바꿈·고객 override.
+  후보 전에 저작했고 기존 기대값을 바꾸지 않았다. 실제 외부 문장은 Git에 복사하지 않았다.
+- CMake/web corpus/reference inventory 등록, `korean-counters.md`·`resources.md` 편집법,
+  `korean-reference-benchmark.ko.md` 측정 이력, Korean work queue 갱신.
+
+### 같은 외부 참조로 재측정
+
+142,255문장 중 채점142,248, 미채점7. 272,325구간. Training 탐색용 참조이며
+독립 held-out 정답률이 아니다. 원본/리뷰 overlay/평가기/옵션을 바꾸지 않았다.
+
+| 지표 | 기준선 | 최종 |
+|---|---:|---:|
+| 전체 문장 정확 일치 | 16,896 (11.88%) | 16,963 (11.92%) |
+| 전체 문장 공백 제거 일치 | 80,114 (56.32%) | 80,242 (56.41%) |
+| 고유어기수 정확 일치 / 13,267 | 5,630 (42.44%) | 5,689 (42.88%) |
+| 고유어기수 공백 제거 일치 | 11,040 (83.21%) | 11,145 (84.01%) |
+| 구간 공백 제거 일치 | 173,929 | 174,100 |
+
+출력 변화171문장; 새 공백 제거 일치129, 상실1, 순증128. 상실1은
+`ko-release/currency_amount/015183`의 `26번의 우승`에서 참조 `이십육` / 정책
+`스물여섯` 차이다. 독립 검토 대기이며 원본 불일치로 그대로 집계했다.
+나머지41문장은 아직 전체 불일치지만 부분 변화도 검토했다. 엔진 오류0,
+구간 정렬 실패39,782와 구조 경고1,349는 동일하다.
+
+초기 후보는 `매월`이라는 노선명과 `확인` 앞 식별번호를 횟수로 오인했다.
+**점수의 gain/loss만 보면 이미 불일치였던 번호 문장의 악화가 숨는다.**
+전체 변경171건의 부분 출력도 확인하는 것이 이 반복의 필수 절차다.
+최종안은 `매월`과 넓은 `확인/검사/수정` 단서를 빼고 직접 `씩`을 읽는다.
+중간 실패 보고서는 `draft-reports/`에만 남겼으며 웹에 발행하지 않았다.
+
+### 고정 결과·재현
+
+- 작업 artifact: `artifacts/tn/ko-frequency/`. `baseline/`, `candidate/`, `candidate-v2/`,
+  **`candidate-v3/`**에 CLI·library·resources·snapshot hash 보존. 최종 외부 평가175.413초
+  (보고서 생성 전체 시간; 처리량/TTFB로 인용하지 않는다).
+- 최종 보고서: `benchmark/generated/ko-release/reports/20260928-frequency-v3/`.
+  기준선은 `reports/20260928-baseline/`; 같은 comparison_key. 원문/보고서 Git ignored.
+- 최종 library SHA: `57fa7e8f40899ecf9de0ab6608d71cd49fa7d6cc4b8f06e901dd167efc5f2093`.
+  resources SHA: `5d130bfa6428d70740415310fabb98fdfe9102b51f881eb8df0122d45e57bcd2`.
+- `cycle-v3/cycle.json`: 33/33, baseline 통과13 → 후보33, fixed20, regressed0.
+  `existing-corpora-v3.json`: 기존2,504건 출력/span/비순번 trace 회귀0.
+  trace 순번217건은 +58 균일, 같은 layer 상대 순서 동일(엔진 상대 일련번호).
+- `external-comparison-v3.json`과 `external-changes-v3.log`: 모든 실제 변경/상실/부분 변화.
+  비교 스크립트를 재실행할 때 `new`를 발행한 `reports/` 경로로 바꾼다.
+- 새 native 테스트: 33개 참조, 기본/짧은 분절에서1,718개 UTF-8 byte 분할의
+  text/span/trace 동일, 고객 override·번호 우선·이른 callback 확인.
+- 참조 audit: 56파일1,838건, 구조 결함0, 독립 사람 승인0.
+- 교대 측정7회×3의 처리 시간 비율: 한글0.989배, 숫자/영어 혼합1.034배.
+  기존 1.25배 제한 유지, baseline/candidate 출력 동일.
+
+검증 명령은 현재 저장소 루트에서 실행한다(기존 artifact 경로 재사용 금지):
+
+```sh
+python3 tools/quality/tn_cycle.py snapshot --build build-ko-report --resources resources \
+  --out artifacts/tn/ko-frequency/candidate-v3
+python3 tools/quality/tn_cycle.py cycle --baseline artifacts/tn/ko-frequency/baseline \
+  --candidate artifacts/tn/ko-frequency/candidate-v3 \
+  --corpus tests/evaluation/counter_frequency_v22.jsonl --out artifacts/tn/ko-frequency/cycle-v3
+python3 benchmark/evaluators/korean_release.py \
+  --import-dir benchmark/generated/ko-release/import-v1 \
+  --library artifacts/tn/ko-frequency/candidate-v3/libtts_text_frontend.so \
+  --resources artifacts/tn/ko-frequency/candidate-v3/resources \
+  --out benchmark/generated/ko-release/draft-reports/20260928-frequency-v3 \
+  --label '횟수·번 문맥 단서 보강'
+cmake -S . -B build
+cmake --build build -j2
+ctest --test-dir build --output-on-failure -j1
+```
+
+### 완료 검증·웹 반영
+
+- GCC CTest **182/182**, 782.82초. `gcc-ctest.log`.
+- GCC 종료 뒤 Clang ASan+UBSan 관련 **10/10**, 21.26초. leak/error halt 활성.
+  전체 sanitizer suite를 다시 돌린 것은 아니다. 새 횟수33건 CLI, KO 경계,
+  리소스 의미 검증, 우선순위, 임의/무작위/의미 스트리밍, 동시 엔진 검증 포함.
+  `asan-configure.log`, `asan-build.log`, `asan-ctest.log`.
+- `check_web.py`: 실제 서비스의 이전/이후 지표, 횟수/번호4예제의 text/span/trace/segment
+  분할 동일성, 새 웹 corpus33/33. `live-web.json`/`live-web.log`.
+- `tests/web/korean-quality.cjs`, `tests/web/browser.cjs`: 실제 Chromium에서 보고서,
+  상세 모달·전체 내용·모바일·XSS 처리 및 기존 workbench/콜백 통과.
+  `browser-report.log`, `browser-workbench.log`.
+- `publish_web.py`는 위 gate와 library/resources/report DB hash를 확인하고,
+  기존 실행 파일을 `previous-web/`에 백업한 뒤 원자적 교체·서비스 재시작했다.
+  `deployment.json`에 전후 SHA 기록. 운영 `build-web/`은 최종 스냅샷과 동일하다.
+  https://tts-text-frontend.exe.xyz:8000/ko-quality 에서 **횟수·번 문맥 단서 보강** 선택,
+  이전 기록 **20260928-baseline**과 비교할 수 있다. 표의 사례는 모달로 열린다.
+- HEAD **0012911** 및 이전 미커밋 작업을 보존했다. 이번 커밋/푸시 없음.
+
+재현한 sanitizer 명령(전체 GCC 종료 후 단독):
+
+```sh
+cmake -S . -B build-v20-asan -DCMAKE_C_COMPILER=clang -DCMAKE_BUILD_TYPE=Debug \
+  -DTTF_ENABLE_ASAN=ON -DTTF_ENABLE_UBSAN=ON
+cmake --build build-v20-asan -j2
+ASAN_OPTIONS=detect_leaks=1:halt_on_error=1 \
+UBSAN_OPTIONS=halt_on_error=1:print_stacktrace=1 \
+ctest --test-dir build-v20-asan --output-on-failure -j1 \
+  -R '^(golden_ko|api_and_tokenizer|resource_and_lexicon_priority|resource_semantic_validation|arbitrary_chunk_streaming|korean_pack_edges|randomized_streaming|semantic_boundary_streaming|concurrent_shared_engine|counter_frequency_evaluation)$'
+```
+
+### 다음 한 작업
+
+1. 현재 고유어기수의 남은 미일치2,122건에서 직접적인 셈단위 누락을 한 계열만 선별한다.
+   `분`(사람/시간), 30개 등의 한자어/고유어 허용형, `두세` vs `두 번에서 세 번`은
+   정책 차이일 수 있으므로 참조만 따라 고치지 않는다. 명확한 변형·부정 계약부터 만든다.
+2. 개인고유번호는 문장별 읽기 의도를 검토한 뒤 제어의 자리별 native digit 규격과
+   assisted 부분집합 지표를 설계한다. 자동 점수와 합산하지 않는다.
+3. held-out 분리는 여전히 별도 후속. 이번 자료를 이미 튜닝에 썼으므로 일반화 성능 주장 금지.
+
+
+## 이번 인계: 한국어 제공 참조 평가·웹 보고서 — 완료 (미커밋)
+
+### 후속 UI 수정: 사례 상세 모달 (2026-09-28)
+
+사례 상세가 긴 표 아래에서 열려 전체 내용을 찾기 어렵다는 사용자 제보를 반영했다.
+`ko-quality.html/js/css`에서 native dialog 모달로 전환했다. 행 어느 칸에서나 열 수 있고,
+원문/주석 참조/비교 참조/출력 전체, 선택 구간과 문장, 펼칠 수 있는 IR을 제공한다.
+긴 텍스트 줄바꿈·내부 스크롤, 모바일 크기, 닫기/Esc/배경 클릭과 초점 복원을 지원한다.
+빠른 재열기 때 지연된 close 이벤트가 새 요청을 무효화하지 않도록 동기 취소를 적용했다.
+운영 8000 포트의 정적 파일에 반영했고 새로고침하면 적용된다. 엔진/자료/점수 변경 없음.
+`korean_release_web` CTest1/1 및 `tests/web/korean-quality.cjs` 실서비스 브라우저 통과.
+브라우저는 실제 필드 전체 일치, 7,500자 이상 내용 끝까지 표시, 행 클릭, 키보드 재열기,
+모바일, XSS 문자 처리와 기존 보고서 필터·다운로드를 확인한다.
+로그: `artifacts/tn/ko-release/browser-modal.log`. 전체 C suite 재실행은 하지 않았다.
+
+2026-09-28. `/tmp/tn_release/summary.json`부터 21개 JSON을 조사해 **142,255문장 /
+272,325참조 구간**의 첫 전체 기준선을 만들었다. 이번에는 엔진 C/rule/lexicon을 수정하지
+않았다. HEAD **0012911** 및 기존 미커밋 약어·문자·그룹/의미 제어·NUM-WIDTH 작업을
+보존했다. 커밋/푸시는 하지 않았다. 사용자가 요청한 웹 보고서 반영은 아래에 기록했다.
+
+### 구현과 객관성 계약
+
+- `benchmark/importers/korean_release/import_release.py`: summary/파일/행 개수·원본 SHA,
+  bracket 참조 해제, 문장 전체의 유일한 source↔spoken 정렬, 원본 UTF-8 offset,
+  중복·충돌·구조 경고. 원본 theme은 주제이며 semantic class 정답으로 취급하지 않는다.
+- `benchmark/evaluators/korean_release.py`: frozen native engine 1개를 재사용하는 전체 문장
+  평가, strict/Unicode 공백 제거 지표, 구간 투영·정렬 실패, 카테고리/주제/IR/수정 방향별
+  집계. 정렬 실패는 구간 분모에서 빼지 않는다. 값·기호·대소문자·NFC/NFKC는 완화하지 않는다.
+- 수정 방향 `pattern / lexicon / context-control / review`는 입력 형태와 주제에서 얻은
+  **제안**이다. 자동 TN에 사전/제어를 몰래 삽입하지 않고 확정된 원인처럼 표시하지 않는다.
+- `--reviews`는 source fingerprint·검토자·사유·날짜가 있는 accepted/corrected/excluded/
+  needs-review overlay. 원본 headline은 고정하고 검토 부분집합만 별도 집계한다.
+- import/report output 재사용 거부, 시작/종료 corpus/library/resource/harness hash 검사,
+  6개 평가 코드 사본, 압축 SQLite 사례/IR 저장. 완료 summary를 마지막에 발행한다.
+- `tools/web/ko_reports.py`, `/ko-quality`: 완료된 로컬 보고서만 읽는 GET API·50개 페이지,
+  카테고리/주제/수정 방향/공백 차이/구조 경고/문장·구간 필터, 실제 IR, 검토 양식·집계
+  다운로드, 동일 protocol 기록만 증감 비교. 서버에서 평가나 참조 쓰기를 수행하지 않는다.
+- 제공 자료는 **Training**이고 Validation이 동일하여 제외했다는 원본 설명을 보존했다.
+  독립 held-out/production 정답률로 부르지 않는다. 사용 권리는 미확인, 자동 다운로드·
+  vendoring 없음. 외부 원문과 보고서는 Git ignored 아래에만 둔다.
+
+### 실제 첫 기준선
+
+| 지표 | 문장 | 참조 구간 |
+|---|---:|---:|
+| 전체 | 142,255 | 272,325 |
+| 채점 분모 | 142,248 | 272,325 |
+| 정확 일치 | 16,896 (11.88%) | 76,757 (28.19%) |
+| 공백 제거 일치 | 80,114 (56.32%) | 173,929 (63.87%) |
+| 공백만 다름 | 63,218 | 97,172 |
+
+엔진 오류0, 문장 미채점7, 구간 정렬 실패39,782. 구조 경고 문장1,349
+(주석/metadata 차이21, 주석 밖 변경1,321, 불완전 bracket7). 중복 입력 행233,
+입력별 참조 충돌 그룹0. 구조 검사 통과 부분집합·중복 제거·검토 부분집합도 별도 표시한다.
+사람 승인 참조0. 기록된177.036초는 보고서 생성 전체 시간이지 엔진 처리량/TTFB가 아니다.
+초기 저장 형식의 측정과 최종 압축 DB 측정은 모든 지표·카테고리·주제·수정 방향 집계 동일.
+
+### 재현 파일과 다음 작업
+
+- 원본 보관: `benchmark/generated/ko-release/source/` (업로드와 동일).
+- import: `benchmark/generated/ko-release/import-v1/`.
+- immutable Release snapshot: `benchmark/generated/ko-release/engine-20260928/`.
+- 최종 보고서: `benchmark/generated/ko-release/reports/20260928-baseline/`.
+  `summary.json`, `report.sqlite`(약671MiB), `harness/`. 웹에는 이 완료 기록만 공개한다.
+- library SHA256 `98ad7a767971fe3b46548fa1c28b81fed83b85fc7e3c8e7f12a0513939a6f413`.
+- resources SHA256 `b4a341b00b61b5673affcac878d4e2c5e02cc918db6fc76cec22eff9b4a7e865`.
+- 조사/빌드/평가/CTest/브라우저 근거: `artifacts/tn/ko-release/`.
+- 재실행 명령과 review 계약: [한국어 참조 가이드](korean-reference-benchmark.ko.md).
+- 다음 순서: [한국어 작업 큐](../benchmark/manifests/korean-quality-work-queue.json).
+  먼저 참조 경고와 금융 번호의 공/영·묶음·마스킹·문맥 정책을 검토하고 한 규칙군만 선정한다.
+  관용 이름은 사전, 불명확한 의도는 명시 제어 검토로 구분한다. 띄어쓰기63,218건은
+  값/단어 개선과 별도로 다룬다. EVAL-03 held-out 분리는 여전히 미완료다.
+
+### 검증·웹 반영
+
+- GCC configure/build 성공. 새 importer/evaluator/HTTP/native 검사와 기존 연결 검사
+  `ctest --test-dir build --output-on-failure -R 'korean_release_|external_benchmark_evaluator|evaluation_comparison|web_workbench'`
+  **6/6** (15.58초), 전체 `ctest --test-dir build --output-on-failure -j1`
+  **180/180** (774.56초). 시간 제한 변경 없음. Python importer/evaluator 단위5개,
+  HTTP 계약4개와 native 합성 참조2건을 새 게이트에 포함했다.
+- 이번 작업은 C 엔진을 수정하지 않아 sanitizer를 다시 실행하지 않았다. 이전 NUM-WIDTH
+  관련 ASan+UBSan30/30은 아래 과거 인계의 결과이며 이번 전체 검사로 세지 않는다.
+- 실제 전체 자료142,255건 평가 완료·엔진 오류0. source/엔진/resource/harness 고정 검사를
+  통과했다. synthetic CI fixture만 Git 관리하며 외부 원문은 CI 입력/artifact로 올리지 않는다.
+- 운영 브라우저 검사 두 개 모두 성공:
+  `TTF_PLAYWRIGHT_MODULE=/tmp/ttf-web-browser/node_modules/playwright /tmp/ttf-web-browser/node_modules/node/bin/node tests/web/korean-quality.cjs http://127.0.0.1:8000`
+  및 같은 환경의 `tests/web/browser.cjs http://127.0.0.1:8000`.
+  새 보고서 필터/상세/다운로드/동일·상이 protocol 비교/모바일/XSS 문자 처리와 기존
+  제어·오류·사전·임의 분할·실시간 callback·corpus UI까지 통과했다.
+- 사용자 요청에 따라 **8000 포트 반영 완료**:
+  https://tts-text-frontend.exe.xyz:8000/ko-quality (메인 화면 링크도 추가).
+  기존 `ttf-workbench.service`를 재시작했다. Release snapshot의 shared library·CLI를
+  `build-web`에 atomic replace했고 service/library/resource 경로와 접근 정책은 유지했다.
+  웹 library SHA는 보고서와 동일하다. static archive는 서비스가 쓰지 않아 교체하지 않았다.
+  교체 전 파일/서비스 설정은 `artifacts/tn/ko-release/previous-web/`, 전후 hash는
+  `deployment.json`, HTTP 검증은 `live-http.json`에 있다. 8001 임시 검증 서버는 종료했다.
+- 실서비스 `/api/health`, 보고서 catalog, `１２３원 → 백이십삼 원`,
+  `[[0210]]{@digits} → 영이일영`, `Apple은 사과입니다. → 애플은 사과입니다.` 확인.
+  git diff --check 통과, 외부 원문·DB가 ignored임을 확인했다. HEAD/원격 변경 없음.
+
+## 이전 인계: NUM-WIDTH 전각 숫자 — 완료 (미커밋)
+
+2026-09-28. 제어 예약어 확장 전의 KO/EN 작업 순서로 복귀해 **전각 숫자 U+FF10–FF19**
+한 규칙군을 구현했다. HEAD **0012911**, 기존 미커밋 약어·전각 영문자·그룹 제어·20개
+의미 지정 제어를 유지했다. 커밋/푸시/운영 웹 배포·재시작은 하지 않았다.
+
+### 구현 범위
+
+- `src/semantic/numeric_width.c`가 보호 구간 밖 숫자의 scanner view와 양방향 byte map을
+  제공한다. universal numeric/phone/EN date/KO counters는 기존 ASCII 값 스캐너를 재사용한다.
+  각 스캐너에 UTF-8 폭 처리를 복제하지 않았다. core 언어 분기·새 public ABI 없음.
+- tokenizer 전각 숫자→DIGIT, segmenter/normalizer가 공통 view 사용. input offset은 raw UTF-8,
+  IR value는 canonical ASCII, numeric verbalizer의 surface는 canonical. 상세 trace는
+  numeric-width 결정을 기록한다. exact/pattern/원문 보존은 raw 기준이다.
+- 코드·경로·명시적 제어 보호. 경로 검사와 incremental path 대기에 전각 숫자를 허용했다.
+  annotated 숫자 예약어의 ASCII-only 계약은 유지한다.
+- 미지원 전각 숫자 구두점의 일부 읽기를 방지하는 `syntax.width-punctuation` 보호.
+  `１２，５００원`을 `십이，오백 원`으로 잘못 나누지 않는다. 전각 구두점 자체를
+  숫자 문법으로 지원하지는 않는다. 위/아래 첨자는 기존 보존 정책 그대로다.
+- [정책·설계·참조 가이드](numeric-width.ko.md), README/language-pack/remaining-work,
+  CTest3개, 웹 corpus `numeric-width-v22`·예문3개와 reference inventory를 갱신했다.
+
+### 확정된 근거
+
+- 구현 전 자체 참조30건, **IR 포함 계약6→30 (개선24, 회귀0), 텍스트 exact7→30**.
+  tn_cycle batch/1·7·64byte streaming과
+  IR 검사 통과. 개발자 정책 참조이며 외부 실데이터 정확도·독립 언어 감수로 세지 않는다.
+- 최초 참조 중 `width-invalid-group`의 span만 기존 ASCII baseline을 근거로 정정했다.
+  TEXT가 숫자 부분을 소유하고 원은 다음 WORD다. 기대 출력 텍스트는 그대로다.
+  original/current SHA와 before/after는 가이드와 artifacts/reference-correction.json 참조.
+- 기존 **2,474건 중 의도한 변경2건, 예상 밖 회귀0**. 과거 미지원 보존 참조
+  `char-width-digits-not-folded`·`numeral-char-v21-fullwidth-open`은 구현 전에 승격했다.
+  나머지 text/span/trace가 모두 동일하고 declaration_order 변경도0이다.
+- 두 분할 profile에서 **1,244회** 임의 byte 분할 text/span/trace 일치. 추가 ASCII↔전각·혼합
+  숫자64조합의 값/IR 동등성. invalid/preserved 원문은 원래 폭을 유지하는 별도 계약.
+  canonical로 원문 override 열쇠를 바꾸지 않는지, 앞부분 폴딩 후 제어 offset, early callback도 검사.
+- native C gate가 UTF-8 byte 경계, 전각 구두점8부정, code/control/path, 9,009byte 경로의
+  1byte 입력을 검증해 sanitizer에서도 실행된다.
+- 처리 시간 교대7회·3반복 중앙값: 한국어 기존 입력 **80.19→83.43ms (1.040배)**,
+  KO/EN·ASCII 숫자 입력 **134.16→138.32ms (1.031배)**. 고정1.25배 한도 통과.
+  전각 workload **124.63ms**는 정보값이다. Debug/VM에서 측정, 숫자 폭에 따른 경로 차이가
+  있어 성능 우위를 주장하지 않는다. 생성/로딩/trace 비용은 이 처리량 측정에서 제외했다.
+- reference audit **55파일·1,805건**, 구조결함0, 사람승인0.
+- GCC 전체 **177/177** (761.74초), Clang **ASan+UBSan 관련30/30** (125.71초).
+  sanitizer evaluation_reports도 기존 제한 그대로 **31.86초**에 통과. compiler warning 및
+  메모리·누수·UB 진단0. 두 suite는 순차 실행했다. sanitizer 전체 suite를 재실행한 것은 아니다.
+- 최종 build CLI/shared library의 SHA256은 candidate snapshot과 동일하다. CLI 예문5개를
+  직접 실행해 문서와 대조했다(cli-examples.json). git diff --check 통과. HEAD/원격 변경 없음.
+
+### 재현·남은 순서
+
+```sh
+cmake -S . -B build
+cmake --build build -j2
+ctest --test-dir build --output-on-failure -j1
+python3 tools/quality/tn_cycle.py cycle --baseline artifacts/tn/numeric-width/baseline --candidate artifacts/tn/numeric-width/candidate --corpus tests/evaluation/numeric_width_v22.jsonl --out artifacts/tn/numeric-width/NEW-cycle
+```
+
+근거: `artifacts/tn/numeric-width/`의 immutable snapshots, cycle/, existing-corpora.json,
+compare_existing.py, intentional-changes.json, 참조 변경 기록, throughput.py/json,
+GCC/ASan 로그 및 reference-audit.json. sanitizer는 GCC 전체 suite 종료 후
+`bash artifacts/tn/numeric-width/run-sanitizer.sh`로 순차 실행한다. 제한을 늘리지 않는다.
+
+다음 후보는 **EVAL-03 held-out 평가 분리** 또는 새로 제공된 실입력 한 규칙군이다.
+맨 연도/짧은 선행0/로마 숫자/위·아래 첨자는 해석 정책 결정을 먼저 해야 한다.
+이번 작업에서 자동으로 변경하지 않았다. 최신 웹 바이너리 적용은 별도 승인 후 진행한다.
+
+## 이전 인계: 의미 지정 제어 예약어 20개 — 완료 (미커밋)
+
+2026-09-28. 사용자가 address/email/url 외 여러 의미를 명시하는 예약어 확장을 요청했다.
+HEAD **0012911**와 이전 미커밋 약어·전각 문자·그룹 제어를 보존했다. 커밋/푸시/서비스 배포나
+재시작은 하지 않았다. 이번 범위는 다음20개이며 자동 TN 개선 goal을 재개하지 않는다.
+
+- 숫자: `@cardinal`, `@digits`, `@decimal`, `@ordinal`.
+- 달력: `@year`, `@date`, `@date-mdy`, `@date-dmy`, `@time`.
+- 수량: `@currency`, `@percent`, `@measure`, `@counter`(KO), `@fraction`, `@range`.
+- 기술: `@phone`, `@version`, `@ip`(IPv4).
+- 출력 의도: `@preserve`, `@skip`.
+
+### 구현·계약
+
+- 기존 예약어6개와 총26개. 문법은 기존 `[[source]]{@name}`이며 single atom도 유지한다.
+  annotated에서만 실행하고 명시 제어는 text/speech 모두 적용한다.
+- 공유 `src/control/semantic.c`가 엄격한 유효성 검사 → 내부 Semantic IR → 기존 pack
+  verbalizer를 연결한다. pack이 CUSTOM dispatch에서 선택하며 core의 언어 분기/새 ABI/
+  재귀 normalize는 없다. 외부 span은 CUSTOM/control.pattern, 내부 타입·값·unit·secondary·
+  grammar는 control-semantic trace, 전체 decoded 원문은 input-control trace에 남는다.
+- 단위형은 요청한 타입으로 전체 매칭될 때만 사용한다. 부분 매칭/TEXT-preserve/다른 타입은
+  EINVAL. 정수부18자리, 일반 semantic 원문95byte, digits95자리. preserve/skip은 전체
+  max_control_bytes 한도. 기존 sino44자리/주소 정책은 변경하지 않았다.
+- `[[9/25]]{@fraction}` → `이십오 분의 구`, `[[0210]]{@digits}` → `영이일영`.
+  `[[03/04/2026]]{@date-dmy}` → `이천이십육 년 사 월 삼 일`.
+  영어 `[[1984]]{@year}` → `nineteen eighty four`.
+- 날짜 순서 directive는 입력 순서만 지정한다. 달력 유효성 검증(윤년 포함). phone은
+  선택적+와 숫자/공백/하이픈, version은 선택적v/V와 숫자 성분, IPv4는4개 0..255성분이다.
+  IPv6·SemVer 전체·phone 내선·중첩·국제화 전자주소·영문주소는 지원하지 않는다.
+- `@preserve`는 문자 drop도 건너뛰고 원문 유지. `@skip`은 완전 생략이며 주변 공백을
+  추가/정리하지 않는다. 고객 phone/electronic/range 리소스 override를 그대로 따른다.
+- 웹 corpus `typed-controls-v22`, 예문10개·도움말, README/input-format/language-pack/
+  remaining-work와 [한국어 가이드](explicit-pattern-controls.ko.md)를 갱신했다.
+
+### 검증 근거
+
+- 구현 전 참조67건, 최초66/67. `typed-ip-en`은 작성자가 기존 version의 point를 IP에도
+  잘못 쓴 참조 오류였다. **기존0012911 speech.tsv의 ip=dot / version=point**를 근거로
+  참조만 정정했다. 엔진/리소스 정책 변경 없음. 원본·정정SHA와 사유는 가이드/리뷰 목록,
+  artifacts의 references-original.jsonl/reference-correction.json에 남겼다. 사람승인0.
+- 정정본67/67, SHA `37c928066f5d65fd9916d9a3331fd3d90b0bcfef487289c5b9da2f91cdf5586f`.
+  개발자 정책 참조이며 외부 corpus/독립 언어 평가의 개선 점수로 해석하지 않는다.
+- 기존 **2407건 회귀0**: text/span/trace 완전 동일, declaration_order 변화도0.
+  `tn_cycle`은 기존 grouped_controls30건으로 **30→30, 회귀0**. 새 이름은 이전 엔진이
+  거부하므로 도구 오류를 텍스트 불일치 점수로 바꾸지 않는다.
+- 새67건×2분할 profile, 모든2조각/1byte/random **2858회** text/span/trace 일치.
+  고객 override, 긴 그룹, preserve/drop, escape, code/plain 보호, 앞 문장의 write callback과
+  잘못된 뒤 구간 비노출 검사. 오류 **200가지 언어/형식 조합** batch/byte stream 거부,
+  크기초과10건, EN counter 거부.
+- GCC 전체 **174/174** (755.50초). 이후 내부 IR의 struct_size/상대 입력 범위 초기화를
+  명시했고, 최종 제어·웹 검사 **7/7** (32.16초)와 기존2407건 비교를 재실행해 모두 통과했다.
+  최종 candidate-final 스냅샷의 CLI/shared library hash는 build와 동일하다.
+- Clang **ASan+UBSan 관련11/11** (120.06초), compiler warning/메모리·누수·UB 진단0.
+  GCC suite와 순차 실행했다. sanitizer 전체 suite를 재실행한 것으로 주장하지 않는다.
+  신규/기존 제어, 오류·한도, arbitrary/semantic streaming, pack 확장, CLI callback을 검사했다.
+- 최종 평가 after-final/report.json은 **67/67**, metadata/stream 실패0. tn_cycle legacy-final은
+  기존30건30→30. 이전 바이너리는 새67건 모두 EINVAL로 거부(baseline-availability.json).
+- reference audit **54파일·1775건**, 구조결함0/사람승인0. 기준 기대값은 독립 검토 대기다.
+
+### 재현과 다음 작업
+
+```sh
+cmake -S . -B build
+cmake --build build -j2
+ctest --test-dir build --output-on-failure -R '^typed_controls_'
+python3 tools/evaluation/evaluate.py --ttf build/ttf --resources resources --corpus tests/evaluation/typed_controls_v22.jsonl --output-dir artifacts/tn/typed-controls/NEW-evaluation
+python3 tools/quality/tn_cycle.py cycle --baseline artifacts/tn/typed-controls/baseline --candidate artifacts/tn/typed-controls/candidate-final --corpus tests/evaluation/grouped_controls_v22.jsonl --out artifacts/tn/typed-controls/NEW-legacy-cycle
+```
+
+증거: `artifacts/tn/typed-controls/` (immutable snapshots, 기존2407 비교, legacy-cycle,
+참조 정정 근거, GCC/ASan 로그, reference audit, status.json). 운영 웹 엔진은 배포하지 않았다.
+Sanitizer 재현은 GCC suite 종료 후 실행한다:
+
+```sh
+cmake -S . -B build-v20-asan -DCMAKE_C_COMPILER=clang -DCMAKE_BUILD_TYPE=Debug -DTTF_ENABLE_ASAN=ON -DTTF_ENABLE_UBSAN=ON
+cmake --build build-v20-asan -j2
+ASAN_OPTIONS=detect_leaks=1:halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1:print_stacktrace=1 ctest --test-dir build-v20-asan --output-on-failure --stop-on-failure -R '^typed_controls_|^grouped_controls_|^user_pattern_contracts$|^user_patterns_v20_evaluation$|^semantic_boundary_streaming$|^protected_stream_limits$|^arbitrary_chunk_streaming$|^language_pack_extension$|^cli_stream_json$'
+```
+다음 변경은 구체적 실입력/요청을 받아 같은 가이드의 타입·오류·byte 분할 계약부터 추가한다.
+NUM-WIDTH/자동 연도·leading-zero/held-out은 별도 미착수 항목이다.
+
+## 이전 인계: 명시적 구간 패턴 제어 — 완료 (미커밋)
+
+2026-09-28. 사용자가 NUM-WIDTH보다 먼저 구간 지정 패턴을 요청했고, 주소는 **한국어부터**
+지원하는 범위를 확인했다. HEAD `0012911`; 앞선 점 약어·전각 문자 변경을 그대로 보존했다.
+현재 작업도 commit/push/웹 엔진 배포·재시작을 하지 않았다.
+
+### 구현과 사용법
+
+- 기존 `[[source]]{literal}`을 `[[source]]{@pattern}`까지 확장했다. 새 괄호 문법 없이
+  기존 parser/stream pending/UTF-8 escape와 한 구간 callback 계약을 재사용한다.
+- KO `@address`: 한글 지명 그대로, ASCII 숫자 한자어 수사, 선행0 자릿수 보존,
+  숫자 사이 하이픈은 `다시`, ASCII 글자는 글자 이름. `address_policy` 3행과 validator.
+  주소 숫자는 기존 CARDINAL/DIGIT_SEQUENCE IR/verbalizer를 재사용하며 재귀 TN은 없다.
+- KO/EN `@email`·`@url`: 전체 구간을 기존 electronic renderer/사전/기호 읽기로 처리.
+  자동 TLD/URL 인식에 의존하지 않는다. 내부 이메일 호스트와 상대 경로도 지원한다.
+  ASCII 형식 검증과 명시적 오류를 제공하며 DNS/우편 검증이나 네트워크 요청은 없다.
+- `--input-format annotated` 필요. 새 제어는 기존 @native처럼 **text/speech 모두 읽기**.
+  `[[서울시 12-3]]{@address}` → `서울시 십이 다시 삼`;
+  `[[a1@b2.com]]{@email}` → `에이일 앳 비이 닷 컴`;
+  `[[q1/a2]]{@url}` → `큐일 슬래시 에이이`.
+- public ABI v1 변경 없음. CUSTOM `unit=@name`, `secondary=control-surface`와 기존
+  callback surface/length로 완전한 decoded group을 전달한다. 95byte를 넘으면 value는
+  빈 값, 전체 원문은 callback과 input-control trace에 유지한다. 원문을 자르지 않는다.
+  단일 atom의 기존95byte 한도와 제어 전체 max_control_bytes는 유지한다.
+- 긴 전자 주소의 알파벳 run도 같은 borrowed-surface 전달로 읽는다. scalar native/sino
+  범위는 유지. `@address`의 숫자 run은 cardinal44자리/digits95자리 제한.
+- 영어 주소/국제화 이메일·URL/모든 지명 관용 독음/그룹 중첩은 미지원. 예외 발음은
+  literal 제어를 사용한다. 한국어 주소 계약은 사용자 선택이지만 자체 30사례의 독립
+  언어 감수나 우편 주소 유효성 인증을 주장하지 않는다.
+
+### 검증과 근거
+
+- `grouped_controls_v22.jsonl` **30/30**, 구현 전 고정, 기대값 변경 없음.
+  SHA256 `aed54be33c8879afdfc8c3105e06a4091427a1cc40561a4cac4628a850362395`.
+  기준선은 새 구문27건을 EINVAL로 거부하며 legacy3건만 지원한다. evaluator의 정상
+  프로토콜 오류를 텍스트 점수로 바꾸지 않았고 `baseline-availability.json`에 따로 기록했다.
+- `tn_cycle`은 기존 user_patterns51건에 적용: **51→51, 회귀0**. baseline/candidate는
+  `tools/quality/tn_cycle.py snapshot`으로 고정했다.
+- 기존 **2,377건 회귀0**(앞선 미커밋 약어30·문자30 포함): text/span, 선택 리소스/trace
+  비순번 필드 모두 동일. 늦게 로드되는 CJK/overlay trace217개만+3, 같은 layer 상대순서/동률 불변.
+- 새30건×2profile, 모든2조각/1byte/seed random **2,246회 text/span/trace 일치**.
+  앞 문장의 write callback, 미완성/잘못된 그룹 비노출, 이미 commit한 callback 유지 확인.
+- 잘못된 구문/메일/URL/주소 **32종**을 batch·1byte streaming 양쪽에서 거부.
+  제어 전체 byte limit 경계, 영어 주소 거부, 기존 atom 길이, 잘못된 고객 정책도 검사했다.
+- GCC 신규3/3 및 관련 **39/39** (64.23초). Clang ASan+UBSan 관련 **9/9** (82.42초),
+  메모리·UB 진단0, compiler warning0. 두 suite는 순차 실행. release 전체 suite 재실행은 아니다.
+- reference audit **53파일·1,708건**, 구조결함0/사람승인0. 주소 단독 annotated 구간만
+  하이픈 `다시` 검사의 주소 예외다. plain, 명시 RANGE, 물결, 주소 밖 범위는 계속 검출하며
+  부정 self-test로 고정했다. 기존 금액 범위 게이트를 느슨하게 만들지 않았다.
+- CTest/웹 corpus `grouped-controls-v22`/웹 예문3개/입력 도움말 등록.
+  [한국어 사용·편집 가이드](explicit-pattern-controls.ko.md), [입력 계약](input-format.md),
+  language-pack ABI 전달 규약과 README 갱신. 일반행3,575, CJK both11,997.
+
+### 재현
+
+```sh
+cmake -S . -B build
+cmake --build build -j2
+ctest --test-dir build --output-on-failure -R '^grouped_controls_'
+python3 tools/quality/tn_cycle.py cycle --baseline artifacts/tn/grouped-controls/baseline --candidate artifacts/tn/grouped-controls/candidate --corpus tests/evaluation/user_patterns_v20.jsonl --out artifacts/tn/grouped-controls/NEW-legacy-cycle
+ASAN_OPTIONS=detect_leaks=1:halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1:print_stacktrace=1 ctest --test-dir build-v20-asan --output-on-failure -R '^grouped_controls_'
+```
+
+증거는 `artifacts/tn/grouped-controls/`: immutable snapshots, baseline availability,
+신규 평가 report, 기존 전수 비교 script/JSON, legacy-cycle, GCC/ASan 로그, audit.
+이 요청은 완료. 다음 TN 후보 NUM-WIDTH는 아직 미착수이며 자동 진행하지 않는다.
+
+## 이전 인계: speech_character 전각 영문자 — 완료 (미커밋)
+
+2026-09-27 시작, 09-28 완료. HEAD **`0012911`**. 직전 점 약어 working tree를 기준선으로
+고정하고 한 문자군만 보강했다. 이전 변경을 유지했으며 이번에도 **commit/push/배포/서비스
+재시작은 하지 않았다**. 웹 코퍼스 등록은 소스에 반영됐지만 운영 중인 웹 서비스는 갱신하지 않았다.
+
+### 변경·계약·한계
+
+- `resources/languages/{ko-KR,en-US}/rules/speech-characters.tsv` 각52행을 manifest 끝에 추가.
+  KO는 기존 알파벳 이름, EN은 대소문자 유지 ASCII로 최종 출력한다. 이번 작업의 runtime
+  C 코드·ABI·tokenizer 변경은 없다. 숫자·단어의 의미 분석 전에 입력을 folding하지 않는다.
+- `계좌 ＡＢＣ 확인` → `계좌 에이비씨 확인`, `Ｂ등급 채권` → `비등급 채권`;
+  EN speech `Ｆｉｌｅ` → `File`. KO `Ｆｉｌｅ`는 **글자 이름**이며 `파일` 복원은 범위 밖이다.
+- source=und/script=OTHER 및 원문 offset 유지. 선택 key/value/layer/부분 byte 범위는
+  policy trace에 남는다. 붙임/조사 locality, 보호 구간, text 원문, unknown 기본 보존 유지.
+- Customer > Domain > System, 같은 layer는 먼저 선언한 행. 자기 자신 치환으로 문자별
+  보존 가능. 전각 단어는 EN 발음 사전 검색 대상이 아니므로 관용 읽기가 필요하면
+  annotated literal을 쓴다. 이 한계와 실제 탭 편집 예시는
+  [문자표 가이드](speech-resources.md#전각-영문자-최종-읽기-v021-continuation)에 기록했다.
+- 고정 계약 `speech_character_width_v21.jsonl` **30건**, 구현 전 작성, 기대값 수정 없음.
+  SHA256 `b507c23f08e290a8e225e53bfae7aa4d747b7da6e3392401e8533944cbc86a97`.
+  `tn_cycle`: **8/30→30/30**, fixed22 / regressed0 / remaining0. 자체 정책 검증이며
+  외부 실제 자료/held-out/독립 언어 감수로 해석하지 않는다.
+
+### 검증 결과
+
+- GCC 신규3/3, 관련 **31/31** (30.36초). CJK86계약, 기존 漢/keycap 문자 locality,
+  점 약어, compiled resources, 웹, reference integrity 포함.
+- Clang ASan+UBSan 관련 **7/7** (30.47초), 메모리/누수/UB 진단0. GCC와 동시 실행 없음.
+  이번에는 release 전체 suite를 다시 실행하지 않았다.
+- 새30건×2분할 profile, 모든2조각/1byte/seed random **834회** text/span/trace 일치.
+- 기존 corpus **2,347건 회귀0**: `0012911`의 corpus2,317 + 미커밋 점 약어30건.
+  출력·span 및 선언번호 외 trace 모든 필드 동일. 추가104행 뒤의 CJK/overlay 이벤트217개
+  선언번호만+104; 같은 layer 상대순서/동률 불변.
+- audit **52파일·1,678건**, 구조 결함0, 사람 승인0. 새로운 corpus는 pending review.
+- 일반 공용 행3,572, hanja만11,693 / kana만3,878 / both11,994. 공개 가이드 현재 수치 갱신;
+  CJK 설계의 역사적 측정값은 유지했다. 새 TSV는 생성 CJK 파일이 아닌 자체 편집 정책표다.
+- snapshot candidate와 최종 build의 CLI/shared library SHA 동일. 기존 corpus 비교 스크립트와
+  결과, 기준선/후보, cycle, GCC/ASan 로그, audit는 `artifacts/tn/speech-character-width/`.
+
+### 재현 명령
+
+```sh
+cmake -S . -B build
+cmake --build build -j2
+ctest --test-dir build --output-on-failure -R '^speech_character_'
+python3 tools/quality/tn_cycle.py cycle --baseline artifacts/tn/speech-character-width/baseline --candidate artifacts/tn/speech-character-width/candidate --corpus tests/evaluation/speech_character_width_v21.jsonl --out artifacts/tn/speech-character-width/NEW-comparison
+ASAN_OPTIONS=detect_leaks=1:halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1:print_stacktrace=1 ctest --test-dir build-v20-asan --output-on-failure -R '^speech_character_'
+```
+
+다음 한 규칙군 후보: **NUM-WIDTH**(전각 숫자, 숫자/날짜/전화/셈단위 스캐너와 source offset).
+문자표에 숫자를 넣어 의미 해석을 우회하지 않는다. 맨 연도·NUM-ZERO·로마숫자·EVAL-03은
+정책/별도 범위를 유지한다. 이번 한 규칙군은 완료했으므로 자동으로 계속하지 않는다.
+
+## 이전 인계: 점 표기 영문 약어 — 구현·검증 완료 (미커밋)
+
+사용자가 승인한 순서에 따라 CJK 전체를 **`0012911`**로 커밋한 뒤 KO/EN 개선을 재개했다.
+현재 HEAD는 `0012911`. 이번 TN 변경은 검증된 working tree에 남겼다. push·배포·서비스
+재시작은 수행하지 않았다. **한 규칙군 완료 후 종료**하며 다음 항목을 자동 진행하지 않는다.
+
+### 변경과 정책
+
+- 기존 `abbreviation_bare`가 정한 vol/ltd/vs/etc/jr 읽기를 **점 표기**에도 명시적으로
+  적용했다. `Read Vol. 3.` → `Read volume three.`, `Acme Ltd.` → `Acme limited.`.
+- `abbreviations-dotted.tsv`: 읽기5행, boundary marker3행, vs의 continuation1행.
+  새 일반 경로는 EN pack의 `ABBREVIATION(value=key, secondary=dotted)`이며
+  `en.abbreviation.dotted`와 실제 읽기/마침표 리소스를 trace한다. ABI/Core 변경 없음.
+- EOF/개행/닫는 괄호·따옴표/다중점 앞의 점을 보존한다. 뒤의 대문자 낱말은 문장
+  시작일 수 있어 기본 보존한다. vs는 `continuation`으로 `vs. Beta`의 점을 소비한다.
+  고객이 `sentence|continuation`을 바꿀 수 있다. 일반 문장 경계 추론을 완성한 것은 아니다.
+- 식별자·URL·email·literal은 기존 경로. 마지막 검사에서 `Vol.é`→`volumeé` 오인식을
+  찾아 확장 Latin도 오른쪽 경계에서 거부했다. 고정30건 기대값은 수정하지 않았다.
+- KO 문맥은 기존 발음 파이프라인을 사용한다. customer `limited→리미티드` 및
+  user `Ltd.→고객명` 우선순위를 검사했다. 새로운 system 발음 사전을 넣지 않았으며
+  기본 unknown-word 한글 발음 품질의 개선/검수를 주장하지 않는다.
+- CJK lazy 테스트가 일반 행 수3,459를 고정하고 있어 일반 자원9행 추가에 깨지는 것을
+  방지했다. baseline record 수를 읽되 CJK 사전 미로드·옵션별 증가량·rollback·우선순위
+  검사는 유지한다. 일반공용3,468행, 둘 다 CJK Korean일 때 총11,890행. 공개 리소스
+  가이드의 현재 수치도 갱신했다. 설계§18의 과거 측정 수치는 바꾸지 않았다.
+
+### 고정 계약과 검증
+
+- 자체 작성 `abbreviation_dotted_v21.jsonl` **30건**, 구현 전 고정.
+  SHA256 `b7c1d5a34ec18816b996cdb0d189cd1fb2344cf27878cd1026cc029cca521382`.
+  `tn_cycle` **9/30→30/30, fixed21 / regressed0 / remaining0**.
+- 두 phrase profile, text/speech, 모든2조각/단일byte/seed random **1,738회**
+  text/span/trace 일치. 의미값·원문 byte offset·문장 마침표 별도span도 검사한다.
+- 기준선0012911의 기존 corpus **2,317건 회귀0** (CJK86 포함).
+  text/span 및 trace의 선택행 kind/key/value/layer 등은 모두 동일. 새9행 뒤에 로드되는
+  CJK system 및 domain/customer trace217개의 선언번호만+9 이동한다. 같은 layer 상대순서/동률 불변.
+  이 비교는 이번 일반 자원 추가의 상대순서를 검사하며 기존 CJK migration gate를 수정하지 않았다.
+- GCC 관련 **6/6 + 27/27**. 최종 Unicode 경계 수정 이후 해당3개를 다시 실행해 **3/3**.
+  Clang ASan+UBSan 관련 **9/9**(46.10초), 최종 경계 수정 후 **2/2**(9.04초), 진단0.
+  이번 턴에 GCC/ASan 전체 suite를 다시 돌렸다고 표시하지 않는다.
+- 외부 Sproat 개발 표본 **3,785문장 /46,213span**, 전후exact35,313 동일,
+  streaming11,355회 불일치0. 두 results.jsonl SHA256 모두
+  `3f2d4d69e9a7c5466bd884c41a5623d6e2e50d9273e75915b47befe44fa4bf79`.
+  held-out/독립 정답이 아니며 이번 합성표본21건을 외부 정확도 향상으로 세지 않는다.
+- reference audit **51파일·1,648건**, 구조 결함0, 사람승인0; 새 corpus는 pending review.
+  웹 `abbreviation-dotted-v21`/CTest/audit 등록. 기존 gold/외부 데이터 변경·반입 없음.
+
+### 재현과 인계 파일
+
+```sh
+cmake -S . -B build
+cmake --build build -j2
+ctest --test-dir build --output-on-failure -R '^abbreviation_dotted_'
+python3 tools/quality/tn_cycle.py cycle --baseline artifacts/tn/abbreviation-dotted/baseline --candidate artifacts/tn/abbreviation-dotted/final-candidate --corpus tests/evaluation/abbreviation_dotted_v21.jsonl --out artifacts/tn/abbreviation-dotted/NEW-comparison
+ASAN_OPTIONS=detect_leaks=1:halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1:print_stacktrace=1 ctest --test-dir build-v20-asan --output-on-failure -R '^abbreviation_dotted_'
+```
+
+`artifacts/tn/abbreviation-dotted/`: baseline/초기candidate/최종final-candidate snapshot,
+최종cycle·기존전수비교JSON/스크립트, GCC/ASan 로그, reference audit를 보관한다.
+`benchmark/generated/sproat-v21-dotted-{before,after}`와 `sproat-v21-dotted-comparison.json`은
+로컬 측정 증거다. 원본 경로는 `/tmp/ttf-research-v11/sproat-bounded/sentences.jsonl`,
+입력 SHA는 기존 `6b0a0a56a4955166ca1786dc6778ab744e372219cc4d8ab6bcf4d51943c2dd51`.
+[약어 편집 가이드](english-forms.md#dotted-word-abbreviations-v021-continuation)에 표/옵션/한계가 있다.
+
+다음은 이번 TN 변경의 커밋·배포 범위 확인이다. 이후 자원표는 **speech_character**를
+한 규칙군으로 다룬다. 다의적 Co./Inc./No./St., e.g./i.e., 소유격은 별도이며 맨 연도·
+NUM-ZERO·NUM-WIDTH·로마숫자·EVAL-03의 기존 우선순위/정책 보류를 유지한다.
+
+## 이전 인계: CJK 정규화 — 1~4단계 완료, 기준선 `0012911`
 
 권위 문서: [cjk-korean-reading.ko.md](cjk-korean-reading.ko.md), 특히 §5.4/§5.5/§9/§18.
 Base `4386841`, HEAD `d9d3342` (이전 승인된 trace 비교 게이트 커밋).

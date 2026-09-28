@@ -287,6 +287,11 @@ static ttf_status_t core_record(const ttf_resource_record_t *r, int *handled,
             !ttf_validation_integer(value, 1, maximum, NULL))
             return ttf_validation_error(d, "phone_policy requires common '*' namespace, a known "
                                            "digit limit and integer 1..15 (extension 1..95)");
+    } else if (!strcmp(kind, "numeric_policy")) {
+        if (strcmp(r->language, "*") || strcmp(key, "leading_zero_min_digits") ||
+            !ttf_validation_integer(value, 2, TTF_IR_VALUE_SIZE - 1, NULL))
+            return ttf_validation_error(d, "numeric_policy requires common '*' namespace, "
+                                           "leading_zero_min_digits and integer 2..95");
     } else if (!strcmp(kind, "numeric_group_separator")) {
         uint32_t cp;
         size_t width, n = strlen(key);

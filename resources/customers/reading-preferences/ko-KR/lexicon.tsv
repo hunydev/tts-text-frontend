@@ -1,0 +1,12 @@
+# Optional Korean reading preferences; never loaded by the system manifest.
+# Edit explicitly for a customer. See docs/lexicon-coverage-v22.ko.md.
+lexicon	ko-KR	en-US:tv	티비
+lexicon	ko-KR	en-US:cctv	씨씨티비
+lexicon	ko-KR	en-US:oled	올레드
+lexicon	ko-KR	en-US:k3	케이쓰리
+lexicon	ko-KR	en-US:sm3	에스엠쓰리
+lexicon	ko-KR	en-US:xm3	엑스엠쓰리
+lexicon	ko-KR	en-US:qm3	큐엠쓰리
+lexicon	ko-KR	en-US:s-oil	에스오일
+# Optional word reading; the default keeps the existing email local-part spelling.
+lexicon	ko-KR	en-US:my	마이

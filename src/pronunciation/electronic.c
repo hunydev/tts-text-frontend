@@ -14,13 +14,15 @@ static int alnum(char c) {
 static ttf_status_t spell(const ttf_engine_t *e, const ttf_language_pack_t *target,
                           const char *text, size_t n, ttf_buffer_t *out) {
     ttf_semantic_t sem = {0};
-    if (n >= sizeof(sem.value))
-        return TTF_ELIMIT;
     sem.struct_size = sizeof(sem);
     sem.type = TTF_SEM_CUSTOM;
     snprintf(sem.unit, sizeof(sem.unit), "@alphabet");
-    memcpy(sem.value, text, n);
-    return target->verbalize(e, &sem, sem.value, n, out);
+    if (n < sizeof(sem.value)) {
+        memcpy(sem.value, text, n);
+        return target->verbalize(e, &sem, sem.value, n, out);
+    }
+    snprintf(sem.secondary, sizeof(sem.secondary), "control-surface");
+    return target->verbalize(e, &sem, text, n, out);
 }
 
 /* An alphabetic address label is read as a word only with resource evidence:
@@ -98,4 +100,55 @@ ttf_status_t ttf_electronic_render(const ttf_engine_t *e, const ttf_language_pac
         at = end;
     }
     return st;
+}
+
+/* These controls assert the object's type; they do not assert DNS existence,
+   mailbox deliverability, RFC completeness or permission to fetch a URL.
+   URLs are bounded printable ASCII references (relative paths are allowed).
+   Email uses an unquoted dot-atom and hostname; internal hosts need no TLD. */
+ttf_status_t ttf_electronic_control(const ttf_engine_t *e, const ttf_semantic_t *s,
+                                    const char *text, size_t n, ttf_buffer_t *out) {
+    const ttf_language_pack_t *source = ttf_find_pack(e, s->source_lang);
+    const ttf_language_pack_t *target = ttf_find_pack(e, s->render_lang);
+    size_t at = SIZE_MAX, i, label;
+    int email = !strcmp(s->unit, "@email");
+    if ((!email && strcmp(s->unit, "@url")) || !text || !n || !target)
+        return TTF_EINVAL;
+    for (i = 0; i < n; ++i) {
+        unsigned char c = (unsigned char)text[i];
+        if (c <= 32 || c >= 127)
+            return TTF_EINVAL;
+        if (email && c == '@') {
+            if (at != SIZE_MAX)
+                return TTF_EINVAL;
+            at = i;
+        }
+        if (!email && (c == '<' || c == '>' || c == '"' || c == '\\' || c == '`' ||
+                       c == '{' || c == '}'))
+            return TTF_EINVAL;
+        if (!email && c == '%' && (i + 2 >= n ||
+            !strchr("0123456789abcdefABCDEF", text[i + 1]) ||
+            !strchr("0123456789abcdefABCDEF", text[i + 2])))
+            return TTF_EINVAL;
+    }
+    if (email) {
+        if (at == SIZE_MAX || !at || at + 1 == n || text[0] == '.' || text[at - 1] == '.')
+            return TTF_EINVAL;
+        for (i = 0; i < at; ++i) {
+            if (!alnum(text[i]) && !strchr(".!#$%&'*+-/=?^_`{|}~", text[i]))
+                return TTF_EINVAL;
+            if (text[i] == '.' && i && text[i - 1] == '.')
+                return TTF_EINVAL;
+        }
+        label = at + 1;
+        for (i = label; i <= n; ++i) {
+            if (i == n || text[i] == '.') {
+                if (i == label || !alnum(text[label]) || !alnum(text[i - 1]))
+                    return TTF_EINVAL;
+                label = i + 1;
+            } else if (!alnum(text[i]) && text[i] != '-')
+                return TTF_EINVAL;
+        }
+    }
+    return ttf_electronic_render(e, source, target, text, n, out);
 }

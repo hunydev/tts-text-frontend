@@ -11,15 +11,17 @@
 | `lexicons/ko-KR/seed.jsonl` | 기존 기본 발음과 대안 |
 | `lexicons/ko-KR/finance-additions.jsonl` | 금융 용어·기관명·약어 |
 | `lexicons/ko-KR/content-additions.jsonl` | 제작 도구·기술·콘텐츠 용어 |
+| `lexicons/ko-KR/usage-additions-v22.jsonl` | 실제 입력 후보를 검토해 고른 공통 발음 |
 | `lexicons/sources/*.json` | 근거 자료 URL·자료 종류·확인 날짜 |
 | `resources/languages/ko-KR/lexicon/**/*.tsv` | 자동 생성되는 시스템 런타임 사전 |
 | `resources/domains/finance/ko-KR/lexicon.tsv` | 명시적으로 켜는 금융 발음 사전 |
+| `resources/customers/reading-preferences/ko-KR/lexicon.tsv` | 티비/올레드/차종 등 선택형 예제; 자동 적용 안 됨 |
 
 **관리되는 기본 사전은 JSONL 원본을 수정한다.** 생성된 TSV를 직접 바꾸면 CI가
 차이를 잡는다. 고객별 변경은 별도 customer TSV를 만들어 로드할 수 있다.
 TSV·바이너리는 C에서 읽으므로 운영 런타임에 Python/JSON 파서가 필요하지 않다.
 
-현재 총 379항목, 별칭을 포함한 381키다. 시스템은 333항목, 금융을 켰을 때
+2026-09-28 집계는 총 453항목, 별칭을 포함한 456키다. 시스템은 407항목, 금융을 켰을 때
 추가되는 항목은 46개다. 기본 금융 단어·기관명은 시스템에 있고, `ABS`, `PER`,
 `ROE` 등 문맥에 따라 해석이 달라질 수 있는 신규 약어는 금융 scope에 있다.
 ASCII 대소문자를 구분하지 않으므로 금융 scope에서는 `per`도 `PER`와 같은
@@ -86,12 +88,16 @@ ASCII 대소문자를 구분하지 않으므로 금융 scope에서는 `per`도 `
 - `human-reviewed`: 별도 검토자가 실제 문맥과 읽기를 검수한 뒤 `reviewer`와
   `reviewed_at`를 남긴 상태. 컴파일러/테스트 성공으로 자동 승격하지 않는다.
 
-이번 버전은 **출처 대조 85, 대기 289, 사람 검수 완료 0**이다. 기존 215항목을
+v0.10 도입 당시에는 **출처 대조 85, 대기 289, 사람 검수 완료 0**이었다. 기존 215항목을
 옮겼다는 이유로 검수 완료 표시를 부여하지 않았다. official source는 서로 다른
 주장을 뒷받침할 수 있으므로 항목별 notes를 읽어야 한다. 외부 사전의 대량 복사나
 자동 수집은 하지 않았다. 대규모 사전을 도입할 때는 배포 허용 범위와 출처를
 별도로 기록한다. 자세한 선택 근거는 [금융](lexicon-finance-v10.md),
 [콘텐츠](lexicon-content-v10.md) 문서에 있다.
+
+2026-09-28 현재는 **출처 대조 95, 대기 358, 사람 검수 완료 0**이다.
+공통 23항목과 사용자 선택형 9키를 구분한 최근 추가 근거·적용법·검증은
+[실제 입력 기반 보강 가이드](lexicon-coverage-v22.ko.md)를 따른다.
 
 ## 5. 생성·검증·적용
 
@@ -134,7 +140,7 @@ python3 tools/lexicon/manage.py inventory --output lexicon-inventory.json
 함께 진행한다. 같은 입력에서 수정 전후 결과·trace·청크 검증을 비교하고,
 영어 원문 보존 사례와 다른 뜻의 문맥을 최소 하나씩 추가한다.
 
-원어 발음 사전과 G2P는 아직 작은 프로토타입이다. 현재 사전의 379항목이나
+원어 발음 사전과 G2P는 아직 작은 프로토타입이다. 현재 사전의 453항목이나
 회귀 성공률이 임의의 실사용 문서를 포괄한다는 의미는 아니다. 다음 작업은
 실제 금융·콘텐츠 원고의 빈도 기반 보강, 문맥별 발음 정책과 별도 검토,
 출처/배포 조건이 명확한 대규모 원어 발음 사전, 크기에 따라 확장되는 storage다.

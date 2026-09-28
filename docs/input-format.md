@@ -96,8 +96,49 @@ Use `[[source phrase]]{literal pronunciation}` to replace an explicit group:
 The source group may contain spaces and punctuation. `[[` and `]]` are delimiters,
 and `{` must immediately follow the closing `]]`. Empty or ASCII-whitespace-only
 groups are invalid. Groups do not nest. Escape literal brackets or braces in a
-source group. Grouped controls currently accept literal payloads only; a grouped
-`{@pattern}` returns `TTF_EINVAL`.
+source group. Grouped controls accept both literal payloads and named patterns. For example,
+`[[서울시 12-3]]{@address}`, `[[a1@b2.com]]{@email}` and `[[q1/a2]]{@url}`
+apply a reading to the entire group. This extends the existing grouped syntax;
+unmarked whitespace or punctuation never enlarges the atom before a control.
+
+## Position breaks (v0.22 continuation)
+
+In annotated input, `{@break:1}`, `{@break:2}` and `{@break:3}` insert a separator
+at that position. They do **not** replace or bind the preceding word:
+
+| Input | Output |
+|---|---|
+| `앞{@break:1}뒤` | `앞 뒤` |
+| `앞{@break:2}뒤` | `앞, 뒤` |
+| `앞{@break:3}뒤` | `앞. 뒤` |
+| `12{@break:1}34` | `십이 삼십사` |
+
+The exact insertions are one ASCII space, comma + space, and period + space.
+Adjacent source spaces/punctuation are retained; avoid adding them around the
+marker when exactly one separator is wanted. Consecutive markers insert each
+separator. Leading/trailing markers are valid. This is a text boundary request,
+not an audio duration or a guarantee of a downstream voice's pause length.
+
+The directives work in text and speech output, independently of language packs.
+Plain input and protected code do not interpret them. A literal alias containing
+escaped braces is not parsed again. `[[words]]{@break:2}` is invalid: put a position
+marker after the ordinary words or after a complete existing alias/control.
+Only the exact strengths 1, 2, 3 are accepted; no signs, leading zeros, spaces or
+other numeric formats. All other parameterized names still follow their existing
+grammar and are not enabled by this addition.
+
+Inspect returns a separate `CUSTOM` span with `rule=control.break`, `unit=@break`,
+`value=1|2|3`, and input offsets covering only the ten-byte marker. Detailed trace
+records the explicit input decision. It has no phonemes and consumes no word.
+`max_control_bytes` applies to the marker alone, including braces (ten bytes),
+even when the preceding word is long and input arrives one byte at a time.
+
+Strength 3 explicitly commits a streaming segment through the marker, including
+the generated period and space, before flush. It overrides automatic sentence
+split/target settings. Strengths 1 and 2 insert their characters without forcing
+a callback; normal safe phrase/sentence planning and flush still apply.
+Invalid markers return `TTF_EINVAL`, excess byte limits `TTF_ELIMIT`. Already
+committed earlier stream segments cannot be recalled if later input is invalid.
 
 ## Language-pack patterns
 
@@ -112,21 +153,92 @@ ABC{@alphabet}마트
 The parser accepts a lowercase ASCII name beginning with a letter, followed by
 letters, digits, `_` or `-`, up to 30 name characters. It does not contain a list
 of languages or pattern meanings. The selected language pack receives
-`CUSTOM` Semantic IR with the original atom in `value` and `@name` in `unit`.
+`CUSTOM` Semantic IR with `@name` in `unit`. Short source text is stored in
+`value`. Grouped patterns also receive `secondary="control-surface"` and the
+complete decoded group through the existing `surface/length` callback arguments.
+Those bytes are borrowed for the call, not engine-owned.
 An unsupported pattern or an invalid source value returns `TTF_EINVAL`.
 
-The initial Korean pack supplies these bounded policies:
+The first six directives supply these bounded policies; the twenty additional
+[semantic directives](#explicit-semantic-types-v022-continuation) are listed below:
 
 | Pattern | Source contract | Reading policy |
 |---|---|---|
 | `@native` | One or two ASCII digits, value 0–99 | Standalone native Korean number forms; zero uses `영` |
 | `@sino` | Signed or unsigned decimal, without grouping or exponent syntax | Sino-Korean numbers |
-| `@alphabet` | ASCII letters and digits | Per-character names |
+| `@alphabet` | ASCII letters and digits (no spaces) | Per-character names; KO and EN |
+| `@address` | Explicit Korean address group | Sino-Korean numbers, numeric hyphen `다시`; KO only |
+| `@email` | ASCII unquoted mailbox + hostname, including internal hosts | Existing electronic spelling and layered address lexicons; KO/EN |
+| `@url` | Printable ASCII reference, including relative paths | Existing electronic spelling; KO/EN |
 
-Pattern values must fit the 95-byte Semantic IR value field. For example,
+Ungrouped pattern values retain the 95-byte Semantic IR limit. For example,
 `1.5{@sino}` is one decimal source; `1,000{@sino}` remains one source but is
-rejected by the initial pattern policy. Literal controls do not have this IR-value
-restriction; their total control length still has the configured limit below.
+rejected by its reading policy. A grouped source may exceed 95 bytes, up to
+`max_control_bytes` for the entire control. Its `value` is empty when the complete
+decoded source does not fit, never a truncated prefix. `@address`, `@email`, `@url`
+and grouped `@alphabet` consume the borrowed source. `@native`/`@sino` retain their
+numeric limits; an oversized scalar group returns `TTF_ELIMIT`.
+
+### Explicit semantic readings
+
+```text
+[[서울시 강남구 테헤란로 123-4 101동 1203호]]{@address}
+→ 서울시 강남구 테헤란로 백이십삼 다시 사 백일동 천이백삼호
+[[a1@b2.com]]{@email}
+→ 에이일 앳 비이 닷 컴
+[[q1/a2]]{@url}
+→ 큐일 슬래시 에이이
+```
+
+These are explicit reading requests, so they produce spoken text in **both text
+and speech output modes**, just like `@native`. Automatic EMAIL/URL recognition
+still preserves spelling in text mode. Use groups around punctuation: in
+`abc@example.com{@email}`, the atom grammar cannot bind the whole email. The
+invalid trailing atom is rejected; use `[[abc@example.com]]{@email}`.
+
+`@address` does not establish that an address exists. It preserves written Hangul
+names, spacing and `. , ( )`; reads ASCII letter runs as letter names; renders
+unsigned ASCII integers as Sino-Korean numbers, with leading-zero runs spoken as
+digits; and reads a hyphen **only between numbers** as `다시`. No ordinal, date,
+phone, range or counter classifier is applied inside this region. Nonzero postal
+codes are cardinal unless a customer chooses the digits policy. A numeric run is
+limited to 44 digits in cardinal mode or 95 in digits mode. Unsupported characters
+(including fullwidth digits), isolated hyphens and tilde ranges return `TTF_EINVAL`.
+English address conventions and exceptional place-name pronunciations are outside
+this first policy; use a literal alias for an exceptional reading.
+
+`@email` accepts one `@`, nonempty dot-atom local/host parts, no whitespace, empty
+labels, edge dots or edge hostname hyphens. A host need not be on the TLD list or
+even contain a dot. Quoted local parts, internationalized domains/mailboxes and
+address literals are not supported. `@url` accepts a printable ASCII reference
+with well-formed percent escapes; spaces and raw quotes, braces, backslashes,
+angle brackets and backticks are rejected. This is a reading contract, not a
+complete RFC validator. Neither control performs network access, percent decoding,
+DNS lookup or mailbox delivery checks.
+
+The explicit control is one CUSTOM span (`rule=control.pattern`, `unit=@name`).
+Input offsets include group delimiters and directive; output offsets cover the
+whole reading. For grouped controls, resource trace parts refer to the decoded
+source or the number/letter sub-input being rendered, and `input-control.text`
+retains the full decoded source even when `value` is empty. Plain input, literal
+aliases, protected code and unknown-pattern errors retain their previous behavior.
+
+Korean customer policies live separately from general numeric ranges:
+
+```tsv
+address_policy	ko-KR	number	cardinal
+address_policy	ko-KR	leading_zero	digits
+address_policy	ko-KR	hyphen	다시
+```
+
+`number` and `leading_zero` accept `cardinal|digits`; `hyphen` accepts a nonempty
+printable label up to 95 UTF-8 bytes. Resource layers and same-layer declaration
+priority are unchanged. `electronic_word`, pronunciation lexicons and
+`speech_symbol` customize `@email`/`@url` exactly as for automatic electronic
+reading. An explicit typed control chooses a reading algorithm; a literal payload
+chooses the final output. These requests do not add persistent rules or entries.
+
+See [Korean usage guide](explicit-pattern-controls.ko.md) for examples and limits.
 
 ## Escaping and protected text
 
@@ -221,3 +333,36 @@ all-uppercase run of two or more letters is an abbreviation regardless, and unde
 (`NASA`), a proper noun, or an explicit pronunciation lexicon entry outranks both,
 and single letters, mixed-case names (`iPhone`) and English-context text are
 unaffected.
+
+## Explicit semantic types (v0.22 continuation)
+
+See the complete [Korean directive guide](explicit-pattern-controls.ko.md#의미를-지정하는-예약어-20개-2026-09-28-추가).
+In addition to native/sino/alphabet/address/email/url, built-in packs now support:
+
+- Numbers: `@cardinal`, `@digits`, `@decimal`, `@ordinal`.
+- Calendar: `@year`, `@date` (YMD), `@date-mdy`, `@date-dmy`, `@time`.
+- Quantities: `@currency`, `@percent`, `@measure`, `@counter` (KO only), `@fraction`, `@range`.
+- Technical strings: `@phone`, `@version`, `@ip` (IPv4 only).
+- Output intent: `@preserve`, `@skip`.
+
+`[[9/25]]{@fraction}` forces a fraction, `[[1984]]{@year}` forces a year without a cue.
+Date order directives describe the **input** order; the pack's date output policy stays in force.
+Numbers must be ASCII; general integers may have signs and correctly grouped commas, decimals
+require a point, digits/ordinals accept only digits (ordinal > 0). Year requires four digits > 0;
+numeric dates require a four-digit year and Gregorian validity. Phone accepts an optional `+`
+and digit groups separated by a hyphen or spaces; no parentheses/extensions. Version accepts
+optional v/V and at least two dot-separated numeric components. IPv4 requires four 0..255 octets.
+Types needing a unit/currency require it in the source and a complete match of that type's grammar.
+No guessed currency, partial success or raw fallback is permitted for an invalid directive.
+
+New semantic sources are at most 95 decoded bytes; common numeric integral parts at most 18 digits.
+Digits allow 95 digits. Preserve/skip may use the whole group byte limit. Existing native/sino and
+address limits are unchanged. `@preserve` bypasses further normalization and character dropping.
+`@skip` emits nothing, including no inserted space: surrounding whitespace belongs to the caller.
+All explicit controls apply in both text and speech output and are inactive in plain/protected input.
+
+The shared internal semantic helper is called by opting-in packs, not by core name dispatch.
+It makes inner Semantic IR, then calls the pack verbalizer without recursive normalization.
+The public span remains CUSTOM/control.pattern; `control-semantic` trace records the inner type,
+value, grammar, unit and secondary value. `input-control` records full decoded source.
+See `typed_controls_v22.jsonl` and the integration tests for examples and rejection contracts.
