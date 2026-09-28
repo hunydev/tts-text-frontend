@@ -7,6 +7,7 @@
 size_t ttf_ko_classify_identifier(const ttf_pack_input_t *input, ttf_semantic_t *semantic);
 /* A letter+digit code next to Korean text (K37PA1798, M4137번, C5135-12).
  * Speech output only; the caller checks the output mode. */
+size_t ttf_ko_classify_card(const ttf_pack_input_t *input, ttf_semantic_t *semantic);
 size_t ttf_ko_classify_alnum_identifier(const ttf_pack_input_t *input, ttf_semantic_t *semantic);
 ttf_status_t ttf_ko_render_identifier(const ttf_engine_t *engine, const char *value,
                                       ttf_buffer_t *output);

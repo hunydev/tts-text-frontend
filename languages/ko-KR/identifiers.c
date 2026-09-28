@@ -274,6 +274,50 @@ size_t ttf_ko_classify_alnum_identifier(const ttf_pack_input_t *in, ttf_semantic
     return i - in->index;
 }
 
+/* Four space-separated groups of four digits next to Korean text are a card
+ * number (0066 4144 0087 5301): read digit by digit like an identifier. A
+ * fifth group, a unit or counter after it, or an attached number rejects it. */
+size_t ttf_ko_classify_card(const ttf_pack_input_t *in, ttf_semantic_t *semantic) {
+    size_t begin = in->tokens[in->index].begin, p = begin, group, i;
+    char before;
+    if (begin == in->length || !decimal_digit(in->text[begin]))
+        return 0;
+    before = begin ? in->text[begin - 1] : ' ';
+    if (alnum(before) || before == '-' || before == '.' || before == ',' || before == '+' ||
+        before == '/' || before == ':')
+        return 0;
+    for (group = 0; group < 4; ++group) {
+        size_t digits = 0;
+        if (group) {
+            if (p >= in->length || in->text[p] != ' ')
+                return 0;
+            ++p;
+        }
+        while (p < in->length && decimal_digit(in->text[p]) && digits < 5) {
+            ++p;
+            ++digits;
+        }
+        if (digits != 4)
+            return 0;
+    }
+    if (p + 1 < in->length && in->text[p] == ' ' && decimal_digit(in->text[p + 1]))
+        return 0;
+    if (!valid_tail(in, p) || p - begin >= sizeof(semantic->value))
+        return 0;
+    for (i = in->index; i < in->token_count && in->tokens[i].begin < p; ++i) {
+    }
+    if (in->tokens[i - 1].end != p || !korean_neighbour(in, p))
+        return 0;
+    memcpy(semantic->value, in->text + begin, p - begin);
+    semantic->value[p - begin] = '\0';
+    (void)snprintf(semantic->unit, sizeof(semantic->unit), "financial_identifier");
+    (void)snprintf(semantic->rule, sizeof(semantic->rule), "ko:card-number");
+    semantic->type = TTF_SEM_DIGIT_SEQUENCE;
+    semantic->input_end = p;
+    semantic->layer = TTF_LAYER_COMMON;
+    return i - in->index;
+}
+
 /* Digits one by one, Latin letters by their Korean names; a letter run and a
  * digit run are separated by a space. */
 ttf_status_t ttf_ko_render_identifier(const ttf_engine_t *engine, const char *value,
@@ -294,6 +338,8 @@ ttf_status_t ttf_ko_render_identifier(const ttf_engine_t *engine, const char *va
             rendered = ttf_resource_get(engine, "phone_letter", "ko-KR", key, NULL);
             if (!rendered)
                 return TTF_ERESOURCE;
+        } else if (*value == ' ') {
+            rendered = " "; /* card number group boundary */
         } else if (*value == '-') {
             rendered = ttf_resource_get(engine, "identifier_render", "ko-KR", "separator", NULL);
             if (!rendered)
