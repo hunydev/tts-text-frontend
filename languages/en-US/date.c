@@ -492,6 +492,35 @@ static size_t decade(const ttf_pack_input_t *in, ttf_semantic_t *out, size_t sta
     return finish(in, out, p + digits + 1, 1, layer, "en.date.decade");
 }
 
+/* "the 9th of April, 1865, Grant", "In June, 1812, the war": a four-digit
+   number right after a month name and its comma is the year of that date when
+   punctuation or the end follows it. A following word keeps the quantity test
+   ("In April, 1500 soldiers") and the cardinal. */
+static int month_cue(const ttf_pack_input_t *in, size_t start, size_t stop,
+                     ttf_resource_layer_t *layer) {
+    size_t p = start, begin, q = skip_horizontal(in->text, in->length, stop);
+    unsigned month = 0;
+    ttf_resource_layer_t found = TTF_LAYER_COMMON;
+    if (q < in->length && !strchr(",.;:)]", in->text[q]))
+        return 0;
+    while (p && horizontal(in->text[p - 1]))
+        --p;
+    if (!p || in->text[p - 1] != ',')
+        return 0;
+    --p;
+    while (p && horizontal(in->text[p - 1]))
+        --p;
+    begin = p;
+    while (begin && ascii_alpha(in->text[begin - 1]))
+        --begin;
+    if (begin == p || (begin && (ascii_alpha(in->text[begin - 1]) || ascii_digit(in->text[begin - 1]))))
+        return 0;
+    if (month_at(in, begin, &month, &found) != p || !month)
+        return 0;
+    merge_layer(layer, found);
+    return 1;
+}
+
 static size_t contextual_year(const ttf_pack_input_t *in, ttf_semantic_t *out, size_t start) {
     date_number_t number;
     size_t consumed;
@@ -502,7 +531,7 @@ static size_t contextual_year(const ttf_pack_input_t *in, ttf_semantic_t *out, s
     number = number_at(in, start, 0);
     if (!number.valid || number.digits != 4 || following_quantity(in, number.end) ||
         (!preceding_cue(in, start, number.end, &layer) && !following_cue(in, number.end, &layer) &&
-         !interval_continuation(in, start, &layer)))
+         !interval_continuation(in, start, &layer) && !month_cue(in, start, number.end, &layer)))
         return 0;
     if (number.end < in->length && in->text[number.end] == ',' && number.end + 1 < in->length &&
         ascii_digit(in->text[number.end + 1]))
