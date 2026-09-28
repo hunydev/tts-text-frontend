@@ -1,0 +1,552 @@
+{
+  "date": "2026-09-28",
+  "authority": "User decision 2026-09-28: inside an identifier the hyphen reads '다시' in Korean, so that labelled identifiers and the new speech fallback for rejected digit runs read one shape one way. Implemented as the existing identifier_render/ko-KR/separator resource; en-US keeps a space.",
+  "evidence": "AI Hub 159 provided references, identifier shapes: hyphen read 다시 44% (2 groups), 39% (3 groups), 68% (4 groups); the plurality in each.",
+  "source_reference_modified": false,
+  "scope": "Only rows whose candidate output differs from the baseline by the separator alone; contract_diff.py compared every tests/evaluation/*.jsonl and found no other change.",
+  "changes": [
+    {
+      "path": "tests/evaluation/advanced_cases.jsonl",
+      "id": "advanced-finance-account",
+      "before": {
+        "id": "advanced-finance-account",
+        "category": "finance/identifier",
+        "text": "입금 계좌는 110-123-456789입니다.",
+        "expected": "입금 계좌는 일일공 일이삼 사오육칠팔구입니다.",
+        "notes": "Promoted from the unchanged v0.4 challenge set into the v0.5 development regression suite. Desired domain policy: an explicitly labelled account is a grouped digit sequence, not a range.",
+        "expected_spans": [
+          {
+            "surface": "110-123-456789",
+            "semantic_type": "DIGIT_SEQUENCE",
+            "value": "110-123-456789",
+            "unit": "financial_identifier",
+            "context_lang": "ko-KR"
+          }
+        ]
+      },
+      "after": {
+        "id": "advanced-finance-account",
+        "category": "finance/identifier",
+        "text": "입금 계좌는 110-123-456789입니다.",
+        "expected": "입금 계좌는 일일공 다시 일이삼 다시 사오육칠팔구입니다.",
+        "notes": "Promoted from the unchanged v0.4 challenge set into the v0.5 development regression suite. Desired domain policy: an explicitly labelled account is a grouped digit sequence, not a range.",
+        "expected_spans": [
+          {
+            "surface": "110-123-456789",
+            "semantic_type": "DIGIT_SEQUENCE",
+            "value": "110-123-456789",
+            "unit": "financial_identifier",
+            "context_lang": "ko-KR"
+          }
+        ]
+      }
+    },
+    {
+      "path": "tests/evaluation/advanced_cases.jsonl",
+      "id": "advanced-account-short",
+      "before": {
+        "id": "advanced-account-short",
+        "category": "finance/identifier",
+        "text": "계좌는 010-001입니다.",
+        "expected": "계좌는 공일공 공공일입니다.",
+        "expected_spans": [
+          {
+            "surface": "010-001",
+            "semantic_type": "DIGIT_SEQUENCE",
+            "value": "010-001",
+            "unit": "financial_identifier"
+          }
+        ]
+      },
+      "after": {
+        "id": "advanced-account-short",
+        "category": "finance/identifier",
+        "text": "계좌는 010-001입니다.",
+        "expected": "계좌는 공일공 다시 공공일입니다.",
+        "expected_spans": [
+          {
+            "surface": "010-001",
+            "semantic_type": "DIGIT_SEQUENCE",
+            "value": "010-001",
+            "unit": "financial_identifier"
+          }
+        ]
+      }
+    },
+    {
+      "path": "tests/evaluation/challenge_cases.jsonl",
+      "id": "challenge-finance-account",
+      "before": {
+        "id": "challenge-finance-account",
+        "category": "finance/identifier",
+        "text": "입금 계좌는 110-123-456789입니다.",
+        "expected": "입금 계좌는 일일공 일이삼 사오육칠팔구입니다.",
+        "notes": "Desired domain policy: an explicitly labelled account is a grouped digit sequence, not a range."
+      },
+      "after": {
+        "id": "challenge-finance-account",
+        "category": "finance/identifier",
+        "text": "입금 계좌는 110-123-456789입니다.",
+        "expected": "입금 계좌는 일일공 다시 일이삼 다시 사오육칠팔구입니다.",
+        "notes": "Desired domain policy: an explicitly labelled account is a grouped digit sequence, not a range."
+      }
+    },
+    {
+      "path": "tests/evaluation/domain_cases.jsonl",
+      "id": "finance-domain-reference",
+      "before": {
+        "id": "finance-domain-reference",
+        "category": "finance/identifier-policy",
+        "text": "참조 번호는 123-456입니다.",
+        "expected": "참조 번호는 일이삼 사오육입니다.",
+        "notes": "Explicit finance range policy; no claim of automatic bank-account recognition.",
+        "resource_overrides": [
+          {
+            "layer": "domain",
+            "path": "domains/finance/ko-KR/rules.tsv"
+          }
+        ]
+      },
+      "after": {
+        "id": "finance-domain-reference",
+        "category": "finance/identifier-policy",
+        "text": "참조 번호는 123-456입니다.",
+        "expected": "참조 번호는 일이삼 다시 사오육입니다.",
+        "notes": "Explicit finance range policy; no claim of automatic bank-account recognition.",
+        "resource_overrides": [
+          {
+            "layer": "domain",
+            "path": "domains/finance/ko-KR/rules.tsv"
+          }
+        ]
+      }
+    },
+    {
+      "path": "tests/evaluation/domain_cases.jsonl",
+      "id": "finance-customer-reference",
+      "before": {
+        "id": "finance-customer-reference",
+        "category": "finance/identifier-policy",
+        "text": "접수 번호는 123-456입니다.",
+        "expected": "접수 번호는 일이삼 사오육입니다.",
+        "resource_overrides": [
+          {
+            "layer": "domain",
+            "path": "domains/finance/ko-KR/rules.tsv"
+          },
+          {
+            "layer": "customer",
+            "path": "customers/example/ko-KR/rules.tsv"
+          }
+        ],
+        "notes": "Expectation updated 2026-09-26: 접수번호 became a declared identifier_label, so a reference number is read digit by digit instead of as a range. The previous value recorded the range reading 백이십삼에서 사백오십육 with the customer separator, which is wrong for a reference number; the customer range separator itself stays covered by the range-customer case in cases.jsonl."
+      },
+      "after": {
+        "id": "finance-customer-reference",
+        "category": "finance/identifier-policy",
+        "text": "접수 번호는 123-456입니다.",
+        "expected": "접수 번호는 일이삼 다시 사오육입니다.",
+        "resource_overrides": [
+          {
+            "layer": "domain",
+            "path": "domains/finance/ko-KR/rules.tsv"
+          },
+          {
+            "layer": "customer",
+            "path": "customers/example/ko-KR/rules.tsv"
+          }
+        ],
+        "notes": "Expectation updated 2026-09-26: 접수번호 became a declared identifier_label, so a reference number is read digit by digit instead of as a range. The previous value recorded the range reading 백이십삼에서 사백오십육 with the customer separator, which is wrong for a reference number; the customer range separator itself stays covered by the range-customer case in cases.jsonl."
+      }
+    },
+    {
+      "path": "tests/evaluation/domain_cases_v8.jsonl",
+      "id": "finance-domain-reference",
+      "before": {
+        "id": "finance-domain-reference",
+        "category": "finance/identifier-policy",
+        "text": "참조 번호는 123-456입니다.",
+        "expected": "참조 번호는 일이삼 사오육입니다.",
+        "notes": "Explicit finance range policy; no claim of automatic bank-account recognition.",
+        "resource_overrides": [
+          {
+            "layer": "domain",
+            "path": "domains/finance/ko-KR/rules.tsv"
+          }
+        ]
+      },
+      "after": {
+        "id": "finance-domain-reference",
+        "category": "finance/identifier-policy",
+        "text": "참조 번호는 123-456입니다.",
+        "expected": "참조 번호는 일이삼 다시 사오육입니다.",
+        "notes": "Explicit finance range policy; no claim of automatic bank-account recognition.",
+        "resource_overrides": [
+          {
+            "layer": "domain",
+            "path": "domains/finance/ko-KR/rules.tsv"
+          }
+        ]
+      }
+    },
+    {
+      "path": "tests/evaluation/domain_cases_v8.jsonl",
+      "id": "finance-customer-reference",
+      "before": {
+        "id": "finance-customer-reference",
+        "category": "finance/identifier-policy",
+        "text": "접수 번호는 123-456입니다.",
+        "expected": "접수 번호는 일이삼 사오육입니다.",
+        "resource_overrides": [
+          {
+            "layer": "domain",
+            "path": "domains/finance/ko-KR/rules.tsv"
+          },
+          {
+            "layer": "customer",
+            "path": "customers/example/ko-KR/rules.tsv"
+          }
+        ],
+        "notes": "Expectation updated 2026-09-26: 접수번호 became a declared identifier_label, so a reference number is read digit by digit instead of as a range. The previous value recorded the range reading 백이십삼에서 사백오십육 with the customer separator, which is wrong for a reference number; the customer range separator itself stays covered by the range-customer case in cases.jsonl."
+      },
+      "after": {
+        "id": "finance-customer-reference",
+        "category": "finance/identifier-policy",
+        "text": "접수 번호는 123-456입니다.",
+        "expected": "접수 번호는 일이삼 다시 사오육입니다.",
+        "resource_overrides": [
+          {
+            "layer": "domain",
+            "path": "domains/finance/ko-KR/rules.tsv"
+          },
+          {
+            "layer": "customer",
+            "path": "customers/example/ko-KR/rules.tsv"
+          }
+        ],
+        "notes": "Expectation updated 2026-09-26: 접수번호 became a declared identifier_label, so a reference number is read digit by digit instead of as a range. The previous value recorded the range reading 백이십삼에서 사백오십육 with the customer separator, which is wrong for a reference number; the customer range separator itself stays covered by the range-customer case in cases.jsonl."
+      }
+    },
+    {
+      "path": "tests/evaluation/ko_identifier_v21.jsonl",
+      "id": "ko-identifier-v21-order-dashed",
+      "before": {
+        "id": "ko-identifier-v21-order-dashed",
+        "category": "ko/identifier-digits",
+        "text": "주문번호 20260926-0001",
+        "expected": "주문번호 이공이육공구이육 공공공일",
+        "default_language": "ko-KR",
+        "output_mode": "speech",
+        "input_format": "plain",
+        "unreadable": "preserve",
+        "expected_spans": [],
+        "notes": "Developer-authored Korean identifier contract fixed before implementing the candidate; provisional project reading policy, pending independent linguistic review. No synthesized audio. Found by reading realistic Korean notices: a digit run after an identifier cue was read as a quantity, so 우편번호 06236 became 육천이백삼십육 (losing the leading zero) and 주문번호 20260926-0001 became a range. Korean reads these digit by digit. A cue is required, so an ordinary amount keeps its cardinal reading, and the existing counter cues are untouched."
+      },
+      "after": {
+        "id": "ko-identifier-v21-order-dashed",
+        "category": "ko/identifier-digits",
+        "text": "주문번호 20260926-0001",
+        "expected": "주문번호 이공이육공구이육 다시 공공공일",
+        "default_language": "ko-KR",
+        "output_mode": "speech",
+        "input_format": "plain",
+        "unreadable": "preserve",
+        "expected_spans": [],
+        "notes": "Developer-authored Korean identifier contract fixed before implementing the candidate; provisional project reading policy, pending independent linguistic review. No synthesized audio. Found by reading realistic Korean notices: a digit run after an identifier cue was read as a quantity, so 우편번호 06236 became 육천이백삼십육 (losing the leading zero) and 주문번호 20260926-0001 became a range. Korean reads these digit by digit. A cue is required, so an ordinary amount keeps its cardinal reading, and the existing counter cues are untouched."
+      }
+    },
+    {
+      "path": "tests/evaluation/ko_identifier_v21.jsonl",
+      "id": "ko-identifier-v21-business-dashed",
+      "before": {
+        "id": "ko-identifier-v21-business-dashed",
+        "category": "ko/identifier-digits",
+        "text": "사업자번호 123-45-67890",
+        "expected": "사업자번호 일이삼 사오 육칠팔구공",
+        "default_language": "ko-KR",
+        "output_mode": "speech",
+        "input_format": "plain",
+        "unreadable": "preserve",
+        "expected_spans": [],
+        "notes": "Developer-authored Korean identifier contract fixed before implementing the candidate; provisional project reading policy, pending independent linguistic review. No synthesized audio. Found by reading realistic Korean notices: a digit run after an identifier cue was read as a quantity, so 우편번호 06236 became 육천이백삼십육 (losing the leading zero) and 주문번호 20260926-0001 became a range. Korean reads these digit by digit. A cue is required, so an ordinary amount keeps its cardinal reading, and the existing counter cues are untouched."
+      },
+      "after": {
+        "id": "ko-identifier-v21-business-dashed",
+        "category": "ko/identifier-digits",
+        "text": "사업자번호 123-45-67890",
+        "expected": "사업자번호 일이삼 다시 사오 다시 육칠팔구공",
+        "default_language": "ko-KR",
+        "output_mode": "speech",
+        "input_format": "plain",
+        "unreadable": "preserve",
+        "expected_spans": [],
+        "notes": "Developer-authored Korean identifier contract fixed before implementing the candidate; provisional project reading policy, pending independent linguistic review. No synthesized audio. Found by reading realistic Korean notices: a digit run after an identifier cue was read as a quantity, so 우편번호 06236 became 육천이백삼십육 (losing the leading zero) and 주문번호 20260926-0001 became a range. Korean reads these digit by digit. A cue is required, so an ordinary amount keeps its cardinal reading, and the existing counter cues are untouched."
+      }
+    },
+    {
+      "path": "tests/evaluation/phone_cases_v18.jsonl",
+      "id": "phone-v18-ko-financial-identifier",
+      "before": {
+        "id": "phone-v18-ko-financial-identifier",
+        "category": "phone/identifier",
+        "default_language": "ko-KR",
+        "text": "거래번호: 010-1234-5678",
+        "expected": "거래번호: 공일공 일이삼사 오육칠팔",
+        "expected_spans": [
+          {
+            "surface": "010-1234-5678",
+            "semantic_type": "DIGIT_SEQUENCE",
+            "value": "010-1234-5678",
+            "secondary": "거래번호",
+            "unit": "financial_identifier"
+          }
+        ],
+        "notes": "Original developer-authored text/semantic contract fixed before candidate execution; pending independent linguistic review. Digits, leading zeros and extension identity are exact; plus/zero/extension/group reading is editable project policy. Phone shape recognition does not certify country-code allocation or subscriber reachability. No external corpus or audio included."
+      },
+      "after": {
+        "id": "phone-v18-ko-financial-identifier",
+        "category": "phone/identifier",
+        "default_language": "ko-KR",
+        "text": "거래번호: 010-1234-5678",
+        "expected": "거래번호: 공일공 다시 일이삼사 다시 오육칠팔",
+        "expected_spans": [
+          {
+            "surface": "010-1234-5678",
+            "semantic_type": "DIGIT_SEQUENCE",
+            "value": "010-1234-5678",
+            "secondary": "거래번호",
+            "unit": "financial_identifier"
+          }
+        ],
+        "notes": "Original developer-authored text/semantic contract fixed before candidate execution; pending independent linguistic review. Digits, leading zeros and extension identity are exact; plus/zero/extension/group reading is editable project policy. Phone shape recognition does not certify country-code allocation or subscriber reachability. No external corpus or audio included."
+      }
+    }
+  ],
+  "integration_contract_updates": [
+    {
+      "path": "tests/integration/test_identifiers.py",
+      "before": "입금 계좌는 일일공 일이삼 사오육칠팔구입니다.",
+      "after": "입금 계좌는 일일공 다시 일이삼 다시 사오육칠팔구입니다."
+    },
+    {
+      "path": "tests/integration/test_identifiers.py",
+      "before": "계좌번호는 공공일 이공사입니다.",
+      "after": "계좌번호는 공공일 다시 이공사입니다."
+    },
+    {
+      "path": "tests/integration/test_identifiers.py",
+      "before": "번호는 공일이 삼사공입니다.",
+      "after": "번호는 공일이 다시 삼사공입니다."
+    },
+    {
+      "path": "tests/integration/test_identifiers.py",
+      "before": "계좌는 공일공 일이삼사 오육칠팔입니다.",
+      "after": "계좌는 공일공 다시 일이삼사 다시 오육칠팔입니다."
+    },
+    {
+      "path": "tests/integration/test_identifiers.py",
+      "before": "참조번호는 일이삼 사오육입니다.",
+      "after": "참조번호는 일이삼 다시 사오육입니다."
+    },
+    {
+      "path": "tests/integration/test_identifiers.py",
+      "before": "참조 번호는 이공이육 공구 일육입니다.",
+      "after": "참조 번호는 이공이육 다시 공구 다시 일육입니다."
+    },
+    {
+      "path": "docs/financial-text.md",
+      "before": "`입금 계좌는 일일공 일이삼 사오육칠팔구입니다.`",
+      "after": "`입금 계좌는 일일공 다시 일이삼 다시 사오육칠팔구입니다.`"
+    },
+    {
+      "path": "README.md",
+      "before": "`계좌는 일일공 일이삼 사오육칠팔구입니다.`",
+      "after": "`계좌는 일일공 다시 일이삼 다시 사오육칠팔구입니다.`"
+    },
+    {
+      "path": "tests/integration/test_phone_contracts.py",
+      "before": "거래번호: 공일공 일이삼사 오육칠팔",
+      "after": "거래번호: 공일공 다시 일이삼사 다시 오육칠팔"
+    },
+    {
+      "path": "tests/streaming/test_semantic_boundaries.c",
+      "before": "계좌는 일일공 일이삼 사오육칠팔구입니다.",
+      "after": "계좌는 일일공 다시 일이삼 다시 사오육칠팔구입니다."
+    }
+  ],
+  "metadata_declarations": [
+    {
+      "path": "tests/evaluation/domain_cases.jsonl",
+      "id": "finance-domain-reference",
+      "before": {
+        "id": "finance-domain-reference",
+        "category": "finance/identifier-policy",
+        "text": "참조 번호는 123-456입니다.",
+        "expected": "참조 번호는 일이삼 다시 사오육입니다.",
+        "notes": "Explicit finance range policy; no claim of automatic bank-account recognition.",
+        "resource_overrides": [
+          {
+            "layer": "domain",
+            "path": "domains/finance/ko-KR/rules.tsv"
+          }
+        ]
+      },
+      "after": {
+        "id": "finance-domain-reference",
+        "category": "finance/identifier-policy",
+        "text": "참조 번호는 123-456입니다.",
+        "expected": "참조 번호는 일이삼 다시 사오육입니다.",
+        "notes": "Explicit finance range policy; no claim of automatic bank-account recognition.",
+        "resource_overrides": [
+          {
+            "layer": "domain",
+            "path": "domains/finance/ko-KR/rules.tsv"
+          }
+        ],
+        "expected_spans": [
+          {
+            "surface": "123-456",
+            "semantic_type": "DIGIT_SEQUENCE",
+            "value": "123-456",
+            "unit": "financial_identifier"
+          }
+        ]
+      },
+      "reason": "Declare the financial identifier the engine already recognises, so the korean-range-again lint applies its explicit-identifier exemption instead of a wildcard."
+    },
+    {
+      "path": "tests/evaluation/domain_cases.jsonl",
+      "id": "finance-customer-reference",
+      "before": {
+        "id": "finance-customer-reference",
+        "category": "finance/identifier-policy",
+        "text": "접수 번호는 123-456입니다.",
+        "expected": "접수 번호는 일이삼 다시 사오육입니다.",
+        "resource_overrides": [
+          {
+            "layer": "domain",
+            "path": "domains/finance/ko-KR/rules.tsv"
+          },
+          {
+            "layer": "customer",
+            "path": "customers/example/ko-KR/rules.tsv"
+          }
+        ],
+        "notes": "Expectation updated 2026-09-26: 접수번호 became a declared identifier_label, so a reference number is read digit by digit instead of as a range. The previous value recorded the range reading 백이십삼에서 사백오십육 with the customer separator, which is wrong for a reference number; the customer range separator itself stays covered by the range-customer case in cases.jsonl."
+      },
+      "after": {
+        "id": "finance-customer-reference",
+        "category": "finance/identifier-policy",
+        "text": "접수 번호는 123-456입니다.",
+        "expected": "접수 번호는 일이삼 다시 사오육입니다.",
+        "resource_overrides": [
+          {
+            "layer": "domain",
+            "path": "domains/finance/ko-KR/rules.tsv"
+          },
+          {
+            "layer": "customer",
+            "path": "customers/example/ko-KR/rules.tsv"
+          }
+        ],
+        "notes": "Expectation updated 2026-09-26: 접수번호 became a declared identifier_label, so a reference number is read digit by digit instead of as a range. The previous value recorded the range reading 백이십삼에서 사백오십육 with the customer separator, which is wrong for a reference number; the customer range separator itself stays covered by the range-customer case in cases.jsonl.",
+        "expected_spans": [
+          {
+            "surface": "123-456",
+            "semantic_type": "DIGIT_SEQUENCE",
+            "value": "123-456",
+            "unit": "financial_identifier"
+          }
+        ]
+      },
+      "reason": "Declare the financial identifier the engine already recognises, so the korean-range-again lint applies its explicit-identifier exemption instead of a wildcard."
+    },
+    {
+      "path": "tests/evaluation/domain_cases_v8.jsonl",
+      "id": "finance-domain-reference",
+      "before": {
+        "id": "finance-domain-reference",
+        "category": "finance/identifier-policy",
+        "text": "참조 번호는 123-456입니다.",
+        "expected": "참조 번호는 일이삼 다시 사오육입니다.",
+        "notes": "Explicit finance range policy; no claim of automatic bank-account recognition.",
+        "resource_overrides": [
+          {
+            "layer": "domain",
+            "path": "domains/finance/ko-KR/rules.tsv"
+          }
+        ]
+      },
+      "after": {
+        "id": "finance-domain-reference",
+        "category": "finance/identifier-policy",
+        "text": "참조 번호는 123-456입니다.",
+        "expected": "참조 번호는 일이삼 다시 사오육입니다.",
+        "notes": "Explicit finance range policy; no claim of automatic bank-account recognition.",
+        "resource_overrides": [
+          {
+            "layer": "domain",
+            "path": "domains/finance/ko-KR/rules.tsv"
+          }
+        ],
+        "expected_spans": [
+          {
+            "surface": "123-456",
+            "semantic_type": "DIGIT_SEQUENCE",
+            "value": "123-456",
+            "unit": "financial_identifier"
+          }
+        ]
+      },
+      "reason": "Declare the financial identifier the engine already recognises, so the korean-range-again lint applies its explicit-identifier exemption instead of a wildcard."
+    },
+    {
+      "path": "tests/evaluation/domain_cases_v8.jsonl",
+      "id": "finance-customer-reference",
+      "before": {
+        "id": "finance-customer-reference",
+        "category": "finance/identifier-policy",
+        "text": "접수 번호는 123-456입니다.",
+        "expected": "접수 번호는 일이삼 다시 사오육입니다.",
+        "resource_overrides": [
+          {
+            "layer": "domain",
+            "path": "domains/finance/ko-KR/rules.tsv"
+          },
+          {
+            "layer": "customer",
+            "path": "customers/example/ko-KR/rules.tsv"
+          }
+        ],
+        "notes": "Expectation updated 2026-09-26: 접수번호 became a declared identifier_label, so a reference number is read digit by digit instead of as a range. The previous value recorded the range reading 백이십삼에서 사백오십육 with the customer separator, which is wrong for a reference number; the customer range separator itself stays covered by the range-customer case in cases.jsonl."
+      },
+      "after": {
+        "id": "finance-customer-reference",
+        "category": "finance/identifier-policy",
+        "text": "접수 번호는 123-456입니다.",
+        "expected": "접수 번호는 일이삼 다시 사오육입니다.",
+        "resource_overrides": [
+          {
+            "layer": "domain",
+            "path": "domains/finance/ko-KR/rules.tsv"
+          },
+          {
+            "layer": "customer",
+            "path": "customers/example/ko-KR/rules.tsv"
+          }
+        ],
+        "notes": "Expectation updated 2026-09-26: 접수번호 became a declared identifier_label, so a reference number is read digit by digit instead of as a range. The previous value recorded the range reading 백이십삼에서 사백오십육 with the customer separator, which is wrong for a reference number; the customer range separator itself stays covered by the range-customer case in cases.jsonl.",
+        "expected_spans": [
+          {
+            "surface": "123-456",
+            "semantic_type": "DIGIT_SEQUENCE",
+            "value": "123-456",
+            "unit": "financial_identifier"
+          }
+        ]
+      },
+      "reason": "Declare the financial identifier the engine already recognises, so the korean-range-again lint applies its explicit-identifier exemption instead of a wildcard."
+    }
+  ],
+  "lint_update": "tools/evaluation/audit_references.py korean-range-again: an explicitly typed DIGIT_SEQUENCE/financial_identifier span covering every range-shaped surface exempts the surface heuristic, like the existing explicit @address exemption. Explicit range ids/categories/RANGE spans, untyped input, partially covered input and other DIGIT_SEQUENCE units are still flagged (self-test fixtures)."
+}

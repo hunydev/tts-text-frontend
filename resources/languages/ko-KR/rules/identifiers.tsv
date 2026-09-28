@@ -83,4 +83,4 @@ identifier_label	ko-KR	사번은	digits
 identifier_label	ko-KR	군번	digits
 identifier_label	ko-KR	군번은	digits
 identifier_render	ko-KR	zero	공
-identifier_render	ko-KR	separator	 
+identifier_render	ko-KR	separator	 다시 

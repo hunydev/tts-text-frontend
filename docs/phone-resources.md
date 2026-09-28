@@ -175,6 +175,13 @@ root에서는 기존의 일반 전화번호 digit 읽기를 계속 허용한다.
 않는다. 기존 root에 identifier render가 없으면 zero는 기존 `number / 0`,
 separator는 공백을 사용한다.
 
+한국어 `identifier_render / ko-KR / separator` 기본값은 2026-09-28부터 ` 다시 `다
+(`사업자번호 123-45-67890` → `일이삼 다시 사오 다시 육칠팔구공`). speech 모드에서
+전화·범위 인식기가 거부한 순수 숫자·하이픈 열도 같은 값을 쓴다. 전화번호 하이픈은
+`phone_render / separator`로 따로 정하며 이 값의 영향을 받지 않는다. 변경 근거와
+바뀐 기존 계약은 [식별번호 대체 읽기](identifier-fallback.ko.md)와
+[정책 원장](audit/identifier-separator-policy-20260928.json)에 있다.
+
 ## 적용과 검사
 
 아래 Customer 정책은 국제 표기의 +, 내선 연결어와 영어 금융 식별자 0 읽기를

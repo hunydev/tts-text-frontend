@@ -136,7 +136,7 @@ GUARDS = [
          text="Phone:\n1000001", expected="Phone:\none million one", expected_spans=[
              dict(surface="1000001", semantic_type="CARDINAL", value="1000001")]),
     dict(id="ko-financial-identifier", category="phone/identifier", default_language="ko-KR",
-         text="거래번호: 010-1234-5678", expected="거래번호: 공일공 일이삼사 오육칠팔",
+         text="거래번호: 010-1234-5678", expected="거래번호: 공일공 다시 일이삼사 다시 오육칠팔",
          expected_spans=[dict(surface="010-1234-5678", semantic_type="DIGIT_SEQUENCE",
                              value="010-1234-5678", secondary="거래번호", unit="financial_identifier")]),
     dict(id="en-financial-identifier", category="phone/identifier", default_language="en-US",

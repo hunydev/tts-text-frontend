@@ -113,7 +113,18 @@ def known_defects(case: dict) -> list[tuple[str, str]]:
     address = re.fullmatch(r"\[\[([^\[\]{}\\]+)\]\]\{@address\}", original)
     address_only = (case.get("input_format") == "annotated" and address is not None
                     and not re.search(r"[~∼～–—]", address.group(1)))
-    if (explicit or (not address_only and RANGE_SURFACE.search(original))) and AGAIN_RANGE.search(expected):
+    # Likewise a hyphen inside an explicitly typed financial identifier separates
+    # digit groups; its 다시 reading is the identifier policy, not an interval.
+    # Every range-shaped surface must be covered by such a typed span; explicit
+    # range ids/categories/RANGE spans are still checked.
+    identifiers = [span.get("surface", "") for span in case.get("expected_spans", [])
+                   if span.get("semantic_type") == "DIGIT_SEQUENCE"
+                   and span.get("unit") == "financial_identifier"]
+    surfaces = [match.group(0).strip() for match in RANGE_SURFACE.finditer(original)]
+    identifier_only = bool(surfaces) and all(
+        any(surface in identifier for identifier in identifiers) for surface in surfaces)
+    if (explicit or (not address_only and not identifier_only and RANGE_SURFACE.search(original))) \
+            and AGAIN_RANGE.search(expected):
         findings.append(("korean-range-again", "A numeric interval is rendered with 다시; review the interval policy instead of approving this reference."))
     if MONTH.search(expected):
         findings.append(("split-korean-month", "The June/October month word is split as 유 월 or 시 월; review 육/유 and 십/시 month reading and spacing."))
@@ -193,6 +204,17 @@ def self_test() -> None:
         (dict(id="money-range", input_format="annotated", text="[[서울시 12-3]]{@address}", expected="서울시 십이 다시 삼"), {"korean-range-again"}),
         (dict(id="mixed", input_format="annotated", text="[[서울시 12-3]]{@address} 1~2원", expected="서울시 십이 다시 삼 일 다시 이 원"), {"korean-range-again"}),
         (dict(id="address", input_format="annotated", text="[[서울시 12~3]]{@address}", expected="서울시 십이 다시 삼"), {"korean-range-again"}),
+        (dict(id="account", text="계좌는 010-001입니다.", expected="계좌는 공일공 다시 공공일입니다.",
+              expected_spans=[dict(surface="010-001", semantic_type="DIGIT_SEQUENCE", unit="financial_identifier")]), set()),
+        (dict(id="account", text="계좌는 010-001입니다.", expected="계좌는 공일공 다시 공공일입니다."),
+         {"korean-range-again"}),
+        (dict(id="account-range", text="계좌는 010-001입니다.", expected="계좌는 공일공 다시 공공일입니다.",
+              expected_spans=[dict(surface="010-001", semantic_type="DIGIT_SEQUENCE", unit="financial_identifier")]), {"korean-range-again"}),
+        (dict(id="account", text="계좌는 010-001, 기간은 3-5일", expected="계좌는 공일공 다시 공공일, 기간은 삼 다시 오 일",
+              expected_spans=[dict(surface="010-001", semantic_type="DIGIT_SEQUENCE", unit="financial_identifier")]), {"korean-range-again"}),
+        (dict(id="account", text="계좌는 010-001입니다.", expected="계좌는 공일공 다시 공공일입니다.",
+              expected_spans=[dict(surface="010-001", semantic_type="DIGIT_SEQUENCE", unit="leading_zero")]),
+         {"korean-range-again"}),
         (dict(id="month", text="2026-06-10", expected="이천이십육 년 유 월 십 일"), {"split-korean-month"}),
         (dict(id="month", text="2026-10-16", expected="이천이십육 년 시 월 십육 일"), {"split-korean-month"}),
         (dict(id="month", text="2026-10-16", expected="이천이십육 년 시월 십육 일"), set()),
