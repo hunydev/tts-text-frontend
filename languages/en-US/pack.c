@@ -306,7 +306,11 @@ static ttf_status_t date_year(const ttf_engine_t *e, unsigned year, const char *
 static ttf_status_t date_decade(const ttf_engine_t *e, unsigned value, ttf_buffer_t *b) {
     char key[16];
     ttf_status_t st;
-    unsigned century = value / 100, remainder = value % 100;
+    unsigned century, remainder;
+    if (!value)
+        value = 2000; /* '00s is the decade of 2000: two thousands */
+    century = value / 100;
+    remainder = value % 100;
     if (value < 100) {
         (void)snprintf(key, sizeof(key), "%u", value);
         return word(e, b, "decade_plural", key);

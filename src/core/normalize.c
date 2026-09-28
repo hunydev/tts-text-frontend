@@ -859,8 +859,22 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
             st = ttf_cjk_render(e, renderer->language_tag, text + tokens[i].begin,
                                 end - tokens[i].begin, sem, &normalized,
                                 span.lexicon, &span.pronunciation_layer);
-        else
+        else {
             st = renderer->verbalize(e, sem, render_text, render_length, &normalized);
+            /* A reading the pack cannot produce (missing resource, value outside
+               its grammar) must not fail the whole sentence: keep the written
+               token, record why, and normalize everything else. */
+            if ((st == TTF_EINVAL || st == TTF_ERESOURCE) && sem->type != TTF_SEM_TEXT) {
+                ttf_buffer_free(&normalized);
+                st = ttf_buffer_append(&normalized, text + tokens[i].begin, end - tokens[i].begin);
+                if (st == TTF_OK) {
+                    ttf_trace_stage(e, TTF_TRACE_POLICY, 0, normalized.length);
+                    st = ttf_trace_emit(e, TTF_TRACE_SELECTED, TTF_LAYER_COMMON, 0,
+                                        renderer->language_tag, "decision", "verbalizer-fallback",
+                                        "", sem->rule, "unrenderable-token-kept-literally", SIZE_MAX);
+                }
+            }
+        }
         if (st == TTF_OK && (!strcmp(sem->unit, "@math") || !strcmp(sem->unit, "@number-sign"))) {
             ttf_buffer_t spaced = {0};
             size_t begin = tokens[i].begin;

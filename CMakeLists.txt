@@ -144,6 +144,9 @@ if(BUILD_TESTING)
   add_executable(ttf_test_markup tests/unit/test_protected_markup.c)
   target_link_libraries(ttf_test_markup PRIVATE tts_text_frontend_static ttf_build_flags)
   add_test(NAME protected_markup_grammar COMMAND ttf_test_markup)
+  add_executable(ttf_test_verbalize_fallback tests/unit/test_verbalize_fallback.c)
+  target_link_libraries(ttf_test_verbalize_fallback PRIVATE tts_text_frontend_static ttf_build_flags)
+  add_test(NAME verbalize_fallback COMMAND ttf_test_verbalize_fallback ${CMAKE_CURRENT_SOURCE_DIR}/resources)
   add_executable(ttf_test_protected_limits tests/streaming/test_protected_limits.c)
   target_link_libraries(ttf_test_protected_limits PRIVATE tts_text_frontend_static ttf_build_flags)
   add_test(NAME protected_stream_limits COMMAND ttf_test_protected_limits ${CMAKE_CURRENT_SOURCE_DIR}/resources)
@@ -439,6 +442,9 @@ if(BUILD_TESTING)
     add_test(NAME identifier_fallback_evaluation COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources identifier_fallback_v22.jsonl 19)
+    add_test(NAME en_decade_zero_v23_evaluation COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources en_decade_zero_v23.jsonl 11)
     if(UNIX AND NOT TTF_ENABLE_ASAN AND NOT TTF_ENABLE_UBSAN)
       add_test(NAME phone_zero_streaming COMMAND ${Python3_EXECUTABLE}
         ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_phone_zero.py

@@ -1024,6 +1024,18 @@
         "reference_source": "User request and independent developer contracts",
         "reason": "Position directive strengths from user; literal separators and independent contracts fixed before implementation."
       }
+    },
+    {
+      "path": "tests/evaluation/en_decade_zero_v23.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Night work 2026-09-29 under the user's goal; independently authored synthetic cases, written before the implementation",
+        "reason": "The two-digit decade 00s reads as the 2000s (two thousands); other decades are guards."
+      },
+      "category_overrides": {},
+      "case_overrides": {}
     }
   ],
   "excluded": [
