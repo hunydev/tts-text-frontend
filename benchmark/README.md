@@ -11,14 +11,17 @@ Python 3.10+ 표준 라이브러리와 빌드한 C frontend를 사용한다. imp
 ```text
 benchmark/
   common.py                 # UTF-8 span schema, validation, hashes
+  english_scope.py          # which sentences English-only evaluation scores
   importers/
     sproat/                 # original TSV, bounded optional fetch
     ksponspeech/            # authorized local dual transcriptions
     coreaspeech/            # authorized local text export; optional NC benchmark
     cmudict/                # pinned pronunciation archive and explicit native export
+    nemo_eval/              # NeMo GoogleTN / LibriTTS / EngConf evaluation sets
   evaluators/
     evaluate.py             # contextual sentence/span/class agreement
     compare.py              # fixed-reference before/after differences
+    english_sentences.py    # English-only sentence agreement across corpora
   manifests/sources.json    # source revisions and rights boundaries
   generated/                # ignored local data/results; never commit
 ```
@@ -188,6 +191,13 @@ CI에는 원작 synthetic parser/metadata/lexicon precedence/chunk 테스트만 
 [한국어 자료 분석](../docs/research/korean-sources.md),
 [CMU/국립국어원 분석](../docs/research/pronunciation-sources.md)에서
 원본과 현 C architecture의 차이 및 아직 해결하지 않은 coverage를 설명한다.
+
+## 영어 참조 문장 benchmark
+
+[NeMo 평가셋](importers/nemo_eval/README.md) 3종과 Sproat 표본을 `evaluators/english_sentences.py`로
+함께 잰다. 한국어·한자·가나 등 다른 문자가 섞인 문장은 영어 채점 대상에서 빼고 따로 기록한다.
+`exact`/`compact`/`loose`/`variant`(영국·미국 철자 접기) 단계와 첫 측정 결과는
+[영어 참조 문장 benchmark](../docs/english-reference-benchmark.ko.md)에 있다.
 
 ## 사용자 제공 한국어 TN release
 
