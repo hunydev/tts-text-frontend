@@ -60,14 +60,25 @@ static const char *phone_zero(const ttf_engine_t *e) {
         return legacy;
     return current ? current : "공"; /* Existing phone digit fallback. */
 }
+/* number_spacing digits spaced (reading-unit profile): one word per digit in a
+   digit reading, 공 일 공; the default joins a run, 공일공. */
+static ttf_status_t digit_gap(const ttf_engine_t *e, int *previous, ttf_buffer_t *out) {
+    if (*previous && !strcmp(resource(e, "number_spacing", "digits", "joined"), "spaced"))
+        TRY(ttf_buffer_puts(out, " "));
+    *previous = 1;
+    return TTF_OK;
+}
 static ttf_status_t phone_digits(const ttf_engine_t *e, const char *value, ttf_buffer_t *out) {
+    int previous = 0;
     for (; *value; ++value) {
         const char *label;
         if (*value == '-') {
             label = ttf_resource_get(e, "phone_render", "ko-KR", "separator", NULL);
             if (!label)
                 label = " "; /* Legacy phone group separator. */
+            previous = 0;
         } else if (*value >= '0' && *value <= '9') {
+            TRY(digit_gap(e, &previous, out));
             if (*value != '0') {
                 TRY(digit(e, (unsigned)(*value - '0'), 0, out));
                 continue;
@@ -103,13 +114,18 @@ static ttf_status_t phone(const ttf_engine_t *e, const ttf_semantic_t *s, ttf_bu
 
 static ttf_status_t digits(const ttf_engine_t *e, const char *value, int telephone,
                            ttf_buffer_t *out) {
+    int previous = 0;
     for (; *value; ++value) {
-        if (*value >= '0' && *value <= '9')
+        if (*value >= '0' && *value <= '9') {
+            TRY(digit_gap(e, &previous, out));
             TRY(digit(e, (unsigned)(*value - '0'), telephone, out));
-        else if (*value == '-' || *value == ' ')
+        } else if (*value == '-' || *value == ' ') {
             TRY(ttf_buffer_puts(out, " "));
-        else if (*value == '.')
+            previous = 0;
+        } else if (*value == '.') {
             TRY(ttf_buffer_puts(out, resource(e, "number", "decimal", " 점 ")));
+            previous = 0;
+        }
     }
     return TTF_OK;
 }
@@ -118,11 +134,16 @@ static ttf_status_t sino_group(const ttf_engine_t *e, unsigned value, ttf_buffer
     static const unsigned divisors[] = {1000, 100, 10, 1};
     static const char *const units[] = {"천", "백", "십", ""};
     size_t i;
+    /* number_spacing group unit (reading-unit profile): 사천 삼백 육십 칠. */
+    int spaced = !strcmp(resource(e, "number_spacing", "group", "compact"), "unit"), emitted = 0;
     for (i = 0; i < 4; ++i) {
         unsigned d = value / divisors[i];
         value %= divisors[i];
         if (!d)
             continue;
+        if (emitted && spaced)
+            TRY(ttf_buffer_puts(out, " "));
+        emitted = 1;
         if (d != 1 || i == 3)
             TRY(digit(e, d, 0, out));
         if (i != 3) {
@@ -174,8 +195,8 @@ static ttf_status_t cardinal(const ttf_engine_t *e, const char *value, ttf_buffe
             TRY(digits(e, integer, 0, out));
         } else {
             int emitted = 0;
-            int separate = groups > 1 &&
-                !strcmp(resource(e, "number_spacing", "group", "compact"), "space");
+            const char *style = resource(e, "number_spacing", "group", "compact");
+            int separate = groups > 1 && (!strcmp(style, "space") || !strcmp(style, "unit"));
             start = 0;
             for (i = groups; i > 0; --i) {
                 size_t width = i == groups ? (n - 1) % 4 + 1 : 4, j;
@@ -533,7 +554,10 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             const char *p = s->value;
             const char *zero = resource(e, "number", "leading_zero_zero",
                                         resource(e, "digit", "0", "영"));
+            int previous = 0;
             for (; *p; ++p) {
+                if (*p >= '0' && *p <= '9')
+                    TRY(digit_gap(e, &previous, out));
                 if (*p == '0')
                     TRY(ttf_buffer_puts(out, zero));
                 else if (*p >= '1' && *p <= '9')

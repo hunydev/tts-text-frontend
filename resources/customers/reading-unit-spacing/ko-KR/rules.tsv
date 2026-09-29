@@ -1,0 +1,5 @@
+# Reading-unit spacing (opt-in): the AI Hub 159 annotation convention for TTS
+# input. A space after every Sino unit (만 구천 사백 사십 원) and one word per digit
+# in digit readings (공 일 공). The default is NIKL article 44 (myriad groups).
+number_spacing	ko-KR	group	unit
+number_spacing	ko-KR	digits	spaced

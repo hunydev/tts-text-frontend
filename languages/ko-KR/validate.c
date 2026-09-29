@@ -454,9 +454,11 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     }
     if (SAME(k, "number_spacing")) {
         *handled = 1;
-        return SAME(key, "group") && ttf_validation_enum(v, "space|compact")
+        return (SAME(key, "group") && ttf_validation_enum(v, "space|compact|unit")) ||
+                       (SAME(key, "digits") && ttf_validation_enum(v, "joined|spaced"))
                    ? TTF_OK
-                   : ttf_validation_error(d, "number_spacing requires group and space|compact");
+                   : ttf_validation_error(d, "number_spacing requires group space|compact|unit "
+                                             "or digits joined|spaced");
     }
     if (SAME(k, "scale")) {
         *handled = 1;

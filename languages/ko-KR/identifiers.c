@@ -325,11 +325,14 @@ ttf_status_t ttf_ko_render_identifier(const ttf_engine_t *engine, const char *va
     static const char *const digits[] = {"공", "일", "이", "삼", "사",
                                          "오", "육", "칠", "팔", "구"};
     int previous = 0; /* 1 letter, 2 digit */
+    const char *style = ttf_resource_get(engine, "number_spacing", "ko-KR", "digits", NULL);
+    int spaced = style && !strcmp(style, "spaced"); /* reading-unit: 케이 삼 칠 */
     for (; *value; ++value) {
         const char *rendered;
         ttf_status_t status;
         int now = ascii_letter(*value) ? 1 : decimal_digit(*value) ? 2 : 0;
-        if (now && previous && now != previous && (status = ttf_buffer_puts(output, " ")) != TTF_OK)
+        if (now && previous && (now != previous || spaced) &&
+            (status = ttf_buffer_puts(output, " ")) != TTF_OK)
             return status;
         previous = now;
         if (now == 1) {

@@ -8,6 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 MAX_TEXT_BYTES = 16384
 CORPORA = {
+    "ko-reading-unit-spacing-v23": ("한국어 읽기 단위 띄어쓰기 (선택 옵션)", "ko_reading_unit_spacing_v23.jsonl"),
     "en-street-title-v23": ("영어 St./Mt./Ft. 호칭 전개", "en_street_title_v23.jsonl"),
     "en-caps-word-v23": ("영어 대문자 일반 단어 · 철자 읽기 방지", "en_caps_word_v23.jsonl"),
     "ko-covid-name-v23": ("코로나19 이름 읽기", "ko_covid_name_v23.jsonl"),
