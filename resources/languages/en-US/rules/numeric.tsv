@@ -185,6 +185,11 @@ unit	en-US	basis_point.many	basis points
 # Written meridiem suffix and language-specific rendering.
 time_suffix	*	AM	AM
 time_suffix	*	PM	PM
+# Lowercase and dotted forms (5pm, 7 a.m.) mean the same twelve-hour suffix.
+time_suffix	*	am	AM
+time_suffix	*	pm	PM
+time_suffix	*	a.m.	AM
+time_suffix	*	p.m.	PM
 meridiem	en-US	AM	a m
 meridiem	en-US	PM	p m
 

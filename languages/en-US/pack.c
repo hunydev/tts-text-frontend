@@ -1319,7 +1319,10 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             return st;
         if ((st = space(b)) != TTF_OK)
             return st;
-        if (!min) {
+        if (!min && !strcmp(s->rule, "syntax.hour-meridiem")) {
+            /* 5pm, 7 a.m.: the meridiem replaces o'clock (five p m); a written
+               8:00 AM keeps its o'clock reading. */
+        } else if (!min) {
             /* The project keeps 24-hour values; do not attach o'clock to 13..23. */
             st = h <= 12 ? word(e, b, "number", "oclock") : word(e, b, "clock", "h24_full_hour");
             if (st != TTF_OK)
@@ -1342,7 +1345,7 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
                 return st;
         }
         if (s->secondary[0]) {
-            if ((st = space(b)) != TTF_OK)
+            if ((!b->length || b->data[b->length - 1] != ' ') && (st = space(b)) != TTF_OK)
                 return st;
             return word(e, b, "meridiem", s->secondary);
         }

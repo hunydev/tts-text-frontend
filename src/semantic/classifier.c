@@ -1414,6 +1414,37 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
             }
         }
     }
+    /* 5pm, 5 PM, 10.30pm, 7 a.m.: an hour of the twelve-hour clock, optionally
+       .MM, then a declared time suffix ending at a word boundary. Without the
+       suffix the digits stay a number; 13pm stays unreadable text. */
+    if (a_end > b && a_end - b <= 2 && (a_end == n || s[a_end] != ':')) {
+        unsigned hour = small_uint(s + b, a_end - b), minute = 0;
+        size_t at = a_end, suffix_end;
+        const char *meridiem;
+        ttf_resource_layer_t meridiem_layer = TTF_LAYER_COMMON;
+        if (at + 2 < n && s[at] == '.' && digit(s[at + 1]) && digit(s[at + 2]) &&
+            (at + 3 == n || !digit(s[at + 3]))) {
+            minute = small_uint(s + at + 1, 2);
+            at += 3;
+        }
+        int attached = !(at < n && s[at] == ' ');
+        if (!attached)
+            ++at;
+        /* An attached suffix is a time only in lowercase before a boundary (5pm.);
+           attached capitals are names (2PM의, 2AM 앨범). */
+        if (hour >= 1 && hour <= 12 && minute < 60 &&
+            resource_prefix(in, "time_suffix", at, &meridiem, &suffix_end, &meridiem_layer) &&
+            (suffix_end == n || !ascii_letter(s[suffix_end])) &&
+            (!attached || ((s[at] < 'A' || s[at] > 'Z') &&
+                           (suffix_end == n || strchr(" \t\r\n.,;:!?)", s[suffix_end])))) &&
+            !structured_tail(in, suffix_end) &&
+            copy_value(out->secondary, sizeof(out->secondary), meridiem, strlen(meridiem))) {
+            (void)snprintf(out->value, sizeof(out->value), "%02u:%02u", hour, minute);
+            out->layer = meridiem_layer > out->layer ? meridiem_layer : out->layer;
+            return finish(in, out, suffix_end, TTF_SEM_TIME,
+                          at > a_end + 1 && s[a_end] == '.' ? "syntax.time" : "syntax.hour-meridiem");
+        }
+    }
     /* A colon with no digits after it is not a time attempt at all: "1912:"
        is a timeline year and "12:" is a number before a mark. */
     if (a_end > b && a_end < n && s[a_end] == ':' && integer(s, n, a_end + 1) > a_end + 1) {
