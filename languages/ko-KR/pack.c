@@ -62,8 +62,17 @@ static const char *phone_zero(const ttf_engine_t *e) {
 }
 /* number_spacing digits spaced (reading-unit profile): one word per digit in a
    digit reading, 공 일 공; the default joins a run, 공일공. */
+/* The spacing=reading-unit option selects the same style as the reading-unit
+   resource profile; otherwise the resources decide (default article 44). */
+static const char *group_spacing(const ttf_engine_t *e) {
+    return e->reading_unit_spacing ? "unit" : resource(e, "number_spacing", "group", "compact");
+}
+static int spaced_digits(const ttf_engine_t *e) {
+    return e->reading_unit_spacing ||
+           !strcmp(resource(e, "number_spacing", "digits", "joined"), "spaced");
+}
 static ttf_status_t digit_gap(const ttf_engine_t *e, int *previous, ttf_buffer_t *out) {
-    if (*previous && !strcmp(resource(e, "number_spacing", "digits", "joined"), "spaced"))
+    if (*previous && spaced_digits(e))
         TRY(ttf_buffer_puts(out, " "));
     *previous = 1;
     return TTF_OK;
@@ -135,7 +144,7 @@ static ttf_status_t sino_group(const ttf_engine_t *e, unsigned value, ttf_buffer
     static const char *const units[] = {"천", "백", "십", ""};
     size_t i;
     /* number_spacing group unit (reading-unit profile): 사천 삼백 육십 칠. */
-    int spaced = !strcmp(resource(e, "number_spacing", "group", "compact"), "unit"), emitted = 0;
+    int spaced = !strcmp(group_spacing(e), "unit"), emitted = 0;
     for (i = 0; i < 4; ++i) {
         unsigned d = value / divisors[i];
         value %= divisors[i];
@@ -195,7 +204,7 @@ static ttf_status_t cardinal(const ttf_engine_t *e, const char *value, ttf_buffe
             TRY(digits(e, integer, 0, out));
         } else {
             int emitted = 0;
-            const char *style = resource(e, "number_spacing", "group", "compact");
+            const char *style = group_spacing(e);
             int separate = groups > 1 && (!strcmp(style, "space") || !strcmp(style, "unit"));
             start = 0;
             for (i = groups; i > 0; --i) {

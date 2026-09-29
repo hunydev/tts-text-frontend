@@ -30,6 +30,7 @@ static void usage(FILE *out) {
           "          --unreadable preserve|drop|read --brackets read|skip|preserve\n"
           "          --unknown-foreign guess|spell|preserve --decorative follow|read\n"
           "          --initialism spell|word --hanja passthrough|korean --kana passthrough|korean\n"
+          "          --spacing orthographic|reading-unit\n"
           "          --max-control-bytes N\n"
           "Stream options: --chunk-bytes N (default 4096)\n",
           out);
@@ -240,7 +241,7 @@ int main(int argc, char **argv) {
     ttf_config_t config;
     ttf_frontend_options_t frontend;
     const char *bracket_policy = NULL, *unknown_foreign = NULL, *decorative = NULL,
-               *initialism = NULL;
+               *initialism = NULL, *spacing = NULL;
     ttf_trace_options_t trace_options;
     int is_trace = 0, trace_limit_set = 0;
     ttf_engine_t *engine = NULL;
@@ -291,7 +292,8 @@ int main(int argc, char **argv) {
              !strcmp(arg, "--unreadable") || !strcmp(arg, "--brackets") ||
              !strcmp(arg, "--unknown-foreign") || !strcmp(arg, "--decorative") ||
              !strcmp(arg, "--initialism") || !strcmp(arg, "--hanja") ||
-             !strcmp(arg, "--kana") || !strcmp(arg, "--max-control-bytes"))) {
+             !strcmp(arg, "--kana") || !strcmp(arg, "--spacing") ||
+             !strcmp(arg, "--max-control-bytes"))) {
             int valid = 1;
             if (++i == argc) {
                 exit_code = report("frontend option", TTF_EINVAL);
@@ -317,6 +319,9 @@ int main(int argc, char **argv) {
                     frontend.hanja = !strcmp(argv[i], "korean") ? TTF_HANJA_KOREAN : TTF_HANJA_PASSTHROUGH;
                 else
                     frontend.kana = !strcmp(argv[i], "korean") ? TTF_KANA_KOREAN : TTF_KANA_PASSTHROUGH;
+            } else if (!strcmp(arg, "--spacing")) {
+                valid = !strcmp(argv[i], "orthographic") || !strcmp(argv[i], "reading-unit");
+                spacing = argv[i];
             } else if (!strcmp(arg, "--initialism")) {
                 valid = !strcmp(argv[i], "spell") || !strcmp(argv[i], "word");
                 initialism = argv[i];
@@ -441,6 +446,8 @@ int main(int argc, char **argv) {
         status = ttf_engine_set_option(engine, "decorative", decorative);
     if (status == TTF_OK && initialism)
         status = ttf_engine_set_option(engine, "initialism", initialism);
+    if (status == TTF_OK && spacing)
+        status = ttf_engine_set_option(engine, "spacing", spacing);
     if (status != TTF_OK) {
         exit_code = report("frontend options", status);
         goto done;

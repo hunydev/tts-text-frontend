@@ -14,6 +14,7 @@ import re
 import sys
 
 ACTIVE_JSONL = (
+    "ko_spacing_option_v23",
     "ko_reading_unit_spacing_v23",
     "en_street_title_v23",
     "en_caps_word_v23",

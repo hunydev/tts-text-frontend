@@ -69,6 +69,15 @@ ttf_status_t ttf_engine_set_option(ttf_engine_t *engine, const char *name, const
             return TTF_EINVAL;
         return TTF_OK;
     }
+    if (!strcmp(name, "spacing")) {
+        if (!strcmp(value, "orthographic"))
+            engine->reading_unit_spacing = 0;
+        else if (!strcmp(value, "reading-unit"))
+            engine->reading_unit_spacing = 1;
+        else
+            return TTF_EINVAL;
+        return TTF_OK;
+    }
     if (!strcmp(name, "decorative")) {
         if (!strcmp(value, "follow"))
             engine->decorative_policy = TTF_DECORATIVE_FOLLOW;

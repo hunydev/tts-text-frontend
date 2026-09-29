@@ -60,7 +60,9 @@ typedef struct {
    before engine freeze. Unknown names and values return TTF_EINVAL.
    Currently: "brackets" = read|skip|preserve,
    "unknown_foreign" = guess|spell|preserve, "decorative" = follow|read,
-   "initialism" = spell|word. */
+   "initialism" = spell|word, "spacing" = orthographic|reading-unit (Korean
+   number spacing: resource default, NIKL article 44; or a space after every
+   Sino unit and one word per digit in digit readings). */
 TTF_API ttf_status_t ttf_engine_set_option(ttf_engine_t *engine, const char *name,
                                            const char *value);
 

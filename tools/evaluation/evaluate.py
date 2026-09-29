@@ -26,7 +26,8 @@ SPAN_FIELDS = ("script", "source_lang", "context_lang", "render_lang", "semantic
 CHECK_FIELDS = set(SPAN_FIELDS) | {"normalized"}
 FRONTEND_DEFAULTS = {"output_mode": "text", "input_format": "plain",
                      "unreadable": "preserve", "brackets": "read", "unknown_foreign": "guess",
-                     "decorative": "follow", "initialism": "spell", "max_control_bytes": 4096,
+                     "decorative": "follow", "initialism": "spell", "spacing": "orthographic",
+                     "max_control_bytes": 4096,
                      "hanja": "passthrough", "kana": "passthrough"}
 
 
@@ -39,6 +40,7 @@ def frontend_settings(case: dict) -> dict:
                            ("brackets", ("read", "skip", "preserve")),
                            ("decorative", ("follow", "read")),
                            ("initialism", ("spell", "word")),
+                           ("spacing", ("orthographic", "reading-unit")),
                            ("hanja", ("passthrough", "korean")),
                            ("kana", ("passthrough", "korean")),
                            ("unknown_foreign", ("guess", "spell", "preserve"))):

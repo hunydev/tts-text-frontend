@@ -1,4 +1,5 @@
 #include "identifiers.h"
+#include "../../src/core/internal.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -326,7 +327,7 @@ ttf_status_t ttf_ko_render_identifier(const ttf_engine_t *engine, const char *va
                                          "오", "육", "칠", "팔", "구"};
     int previous = 0; /* 1 letter, 2 digit */
     const char *style = ttf_resource_get(engine, "number_spacing", "ko-KR", "digits", NULL);
-    int spaced = style && !strcmp(style, "spaced"); /* reading-unit: 케이 삼 칠 */
+    int spaced = engine->reading_unit_spacing || (style && !strcmp(style, "spaced")); /* 케이 삼 칠 */
     for (; *value; ++value) {
         const char *rendered;
         ttf_status_t status;

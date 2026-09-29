@@ -174,7 +174,8 @@ class Engine:
                 "ttf_engine_validate_resources": (I, [P, C.POINTER(ResourceValidationReport), C.POINTER(ResourceDiagnostic)]),
             })
         frontend_keys = {"input_format", "output_mode", "unreadable", "brackets",
-                         "unknown_foreign", "decorative", "initialism", "max_control_bytes", "hanja", "kana"}
+                         "unknown_foreign", "decorative", "initialism", "spacing", "max_control_bytes",
+                         "hanja", "kana"}
         has_frontend = hasattr(self.lib, "ttf_engine_set_frontend_options")
         if frontend_keys.intersection(options) and not has_frontend:
             raise ValueError("This native library does not support frontend output/input options")
@@ -247,7 +248,8 @@ class Engine:
                 self.check(self.lib.ttf_engine_set_frontend_options(self.handle, C.byref(frontend)))
             if hasattr(self.lib, "ttf_engine_set_option"):
                 for name, default in (("brackets", "read"), ("unknown_foreign", "guess"),
-                                      ("decorative", "follow"), ("initialism", "spell")):
+                                      ("decorative", "follow"), ("initialism", "spell"),
+                                      ("spacing", "orthographic")):
                     if options.get(name, default) != default:
                         self.check(self.lib.ttf_engine_set_option(
                             self.handle, name.encode(), options[name].encode()))

@@ -8,6 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 MAX_TEXT_BYTES = 16384
 CORPORA = {
+    "ko-spacing-option-v23": ("띄어쓰기 옵션 spacing=orthographic|reading-unit", "ko_spacing_option_v23.jsonl"),
     "ko-reading-unit-spacing-v23": ("한국어 읽기 단위 띄어쓰기 (선택 옵션)", "ko_reading_unit_spacing_v23.jsonl"),
     "en-street-title-v23": ("영어 St./Mt./Ft. 호칭 전개", "en_street_title_v23.jsonl"),
     "en-caps-word-v23": ("영어 대문자 일반 단어 · 철자 읽기 방지", "en_caps_word_v23.jsonl"),
@@ -85,6 +86,7 @@ DEFAULTS = dict(
     unknown_foreign="guess",
     decorative="follow",
     initialism="spell",
+    spacing="orthographic",
     max_control_bytes=4096,
     sentence_split=True,
     phrase_split=True,
@@ -173,6 +175,7 @@ def validate(request, corpus=False):
         ("unknown_foreign", ("guess", "spell", "preserve")),
         ("decorative", ("follow", "read")),
         ("initialism", ("spell", "word")),
+        ("spacing", ("orthographic", "reading-unit")),
         ("domain", ("none", "finance", "finance-vocabulary")),
     ]:
         if opts[key] not in allowed:
@@ -439,7 +442,7 @@ def catalog():
                 text=row["text"], expected=row["expected"],
                 options={key: row[key] for key in (
                     "default_language", "input_format", "output_mode", "unreadable", "brackets", "unknown_foreign",
-                    "decorative", "initialism"
+                    "decorative", "initialism", "spacing"
                 ) if key in row},
                 reference_review=reviewed_cases[(relative, row["id"])],
             ))
