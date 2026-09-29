@@ -1,6 +1,6 @@
 "use strict";
 const $ = id => document.getElementById(id);
-const names = {pattern:"패턴 후보",lexicon:"사전 후보","context-control":"문맥·명시 제어 후보",review:"검토 필요",exact:"정확 일치",spacing:"공백만 다름",different:"공백 외 차이",unaligned:"정렬 실패",unscorable:"미채점",error:"엔진 오류"};
+const names = {pattern:"패턴 후보",lexicon:"사전 후보","context-control":"문맥·명시 제어 후보",review:"검토 필요",exact:"정확 일치",spacing:"공백만 다름",variant:"정책 변이만 다름",different:"공백·정책 변이 외 차이",unaligned:"정렬 실패",unscorable:"미채점",error:"엔진 오류"};
 const state = {reports:[],data:null,baseline:null,page:0,detail:null,sequence:0,runSequence:0,detailSequence:0};
 const number = v => Number(v).toLocaleString("ko-KR");
 const percent = v => v===null || v===undefined ? "—" : (v*100).toFixed(2)+"%";
@@ -17,14 +17,14 @@ function render(){
  const r=state.data,m=r.sentences;$("cards").replaceChildren(
   card("정확 일치",percent(m.exact_rate),`${number(m.exact)} / ${number(m.scorable)}문장`),
   card("공백 제거 일치",percent(m.compact_rate),`${number(m.compact)} / ${number(m.scorable)}문장`),
-  card("공백만 다른 문장",number(m.spacing_only),"정확 불일치 중 공백 제거 후 일치"),
+  ...(m.variant_rate!==undefined?[card("정책 변이 무시 일치",percent(m.variant_rate),`${number(m.variant)} / ${number(m.scorable)}문장 · 영/공·숫자 사이 구분자`)]:[card("공백만 다른 문장",number(m.spacing_only),"정확 불일치 중 공백 제거 후 일치")]),
   card("전체 입력",number(m.total),`미채점 ${number(m.unscorable)} · 엔진 오류 ${number(m.errors)}`));
  $("provenance").textContent=`${r.created_at} · 원본 ${r.source.split} · 엔진 ${r.engine.library_sha256.slice(0,12)} · HEAD ${r.engine.git_head.slice(0,7)}${r.engine.git_dirty?" + 작업 중 변경":""}`;
  const comparable=state.baseline&&state.baseline.comparison_key===r.comparison_key;
  $("compare-note").textContent=state.baseline?(comparable?`이전 측정 대비: ${delta(m,state.baseline.sentences)}. 같은 입력·설정·평가기·검토 파일 기준입니다.`:"비교 불가: 데이터·설정·평가기 또는 검토 파일이 다릅니다. 증감 수치를 만들지 않습니다."):"같은 기준의 이전 기록을 선택하면 카테고리별 증감을 표시합니다. 첫 기록은 기준선이며 개선량이 아닙니다.";
  $("categories").replaceChildren();
  for(const c of r.categories){const tr=node("tr"),td=node("td"),button=node("button",c.name);button.className="text-button";button.addEventListener("click",safely(()=>{$("category").value=c.id;state.page=0;return loadCases();}));td.append(button,bar(c.sentences));const old=comparable?state.baseline.categories.find(x=>x.id===c.id)?.sentences:null;
- tr.append(td,node("td",number(c.sentences.scorable)),node("td",percent(c.sentences.exact_rate)),node("td",percent(c.sentences.compact_rate)),node("td",number(c.sentences.spacing_only)),node("td",`${number(c.sentences.unscorable)} / ${number(c.sentences.errors)}`),node("td",number(c.flagged)),node("td",delta(c.sentences,old)));$("categories").append(tr);}
+ tr.append(td,node("td",number(c.sentences.scorable)),node("td",percent(c.sentences.exact_rate)),node("td",percent(c.sentences.compact_rate)),node("td",c.sentences.variant_rate!==undefined?percent(c.sentences.variant_rate):number(c.sentences.spacing_only)),node("td",`${number(c.sentences.unscorable)} / ${number(c.sentences.errors)}`),node("td",number(c.flagged)),node("td",delta(c.sentences,old)));$("categories").append(tr);}
  const ul=node("ul");
  for(const text of [
   `원본 ${number(r.source.counts.source_records)}건 → 가져온 문장 ${number(r.source.counts.imported)}건. 구조 오류 격리 ${number(r.source.counts.quarantined||0)}건. 미채점 문장도 전체 입력 수에 남습니다.`,
@@ -33,7 +33,8 @@ function render(){
   `공백을 제거한 입력·참조 쌍 중복 제거: ${number(r.unique_pair_sentences.scorable)}건, 정확 ${percent(r.unique_pair_sentences.exact_rate)}, 공백 제거 ${percent(r.unique_pair_sentences.compact_rate)}. 원본 중복 입력 ${number(r.source.duplicate_input_records)}건, 상충 입력 그룹 ${number(r.source.conflicting_input_groups)}개.`,
   `별도 검토 파일의 승인·정정 문장: ${number(r.reviewed_sentences.scorable)}건, 정확 ${percent(r.reviewed_sentences.exact_rate)}, 공백 제거 ${percent(r.reviewed_sentences.compact_rate)}. 검토 파일을 적용해도 위의 원본 기준 점수는 바뀌지 않습니다.`,
   ...(r.adjusted_sentences && r.review_counts && Object.keys(r.review_counts).length ? [`참조 오류 제외·정정 반영 점수: ${number(r.adjusted_sentences.scorable)}문장, 정확 ${percent(r.adjusted_sentences.exact_rate)}, 공백 제거 ${percent(r.adjusted_sentences.compact_rate)} (제외 ${number(r.review_counts.excluded||0)}, 정정 ${number(r.review_counts.corrected||0)}).`] : []),
-  "공백 제거는 Unicode 공백 문자만 제거합니다. 대소문자·기호·숫자 값은 그대로 비교합니다. 의미 정확도나 발음 허용형까지 판정하지 않습니다."]){ul.append(node("li",text));}
+  "공백 제거는 Unicode 공백 문자만 제거합니다. 대소문자·기호·숫자 값은 그대로 비교합니다. 의미 정확도나 발음 허용형까지 판정하지 않습니다.",
+  "정책 변이 무시는 공백 제거에 더해, 숫자 읽기 안에서만 영↔공, 숫자 사이 구분자 다시/에, 맨 앞 일만/만을 참조와 출력 양쪽에서 똑같이 접습니다. 사람마다 갈리는 표기 관행을 오류로 세지 않기 위한 보조 지표입니다. 고유어 숫자(하나·둘)나 서른/삼십 같은 읽기 선택은 접지 않습니다."]){ul.append(node("li",text));}
  for(const [flag,count] of Object.entries(r.flags))ul.append(node("li",`${flag}: ${number(count)}건`));$("audit").replaceChildren(ul);
  $("protocol").textContent=JSON.stringify({protocol:r.protocol,engine:r.engine,harness:r.harness,review_counts:r.review_counts,policy:r.policy},null,2);
  renderGroups();

@@ -19,15 +19,35 @@ from benchmark.common import digest_json, ensure_output, sha256, tree_hash
 from benchmark.evaluators.evaluate import Backend, align_span
 from benchmark.importers.korean_release.import_release import compact, ROUTES
 
-METRIC_VERSION = 'ko-reference-agreement-v1'
+METRIC_VERSION = 'ko-reference-agreement-v2'
 OPTIONS = dict(input_format='plain',output_mode='speech',unreadable='preserve',
                hanja='passthrough',kana='passthrough',render_policy='phonetic',
                brackets='read',unknown_foreign='guess',decorative='follow',initialism='spell')
 
 
+# Policy variants that people read either way (reference convention, not TN
+# errors), folded symmetrically on both sides and only inside runs of digit
+# syllables: zero 영/공, the separator 다시/에 between digits, and a leading
+# 일만/만. Whitespace is already ignored by compact. Mixed native digits
+# (하나, 둘) and Sino/native choices (삼십/서른) are readings, not folded.
+DIGIT = '공영일이삼사오육칠팔구'
+VARIANT_FOLDS = (
+    (re.compile('(?<=[%s])(?:다시|에)(?=[%s])' % (DIGIT, DIGIT)), ''),
+    (re.compile('(?<=[%s])영|영(?=[%s])' % (DIGIT, DIGIT)), '공'),
+)
+LEADING_ILMAN = re.compile('(?<![가-힣])일만')  # before compaction: 통일만 is a word
+
+
+def variant(text):
+    text = compact(LEADING_ILMAN.sub('만', text))
+    for pattern, replacement in VARIANT_FOLDS:
+        text = pattern.sub(replacement, text)
+    return text
+
+
 def metric():
     return dict(total=0,scorable=0,unscorable=0,errors=0,unaligned=0,exact=0,
-                compact=0,spacing_only=0,different=0)
+                compact=0,spacing_only=0,variant=0,different=0)
 
 
 def add(m, expected, actual, error=None, unaligned=False):
@@ -40,14 +60,17 @@ def add(m, expected, actual, error=None, unaligned=False):
     m['scorable'] += 1
     exact = actual is not None and actual == expected
     loose = actual is not None and compact(actual) == compact(expected)
+    folded = loose or (actual is not None and variant(actual) == variant(expected))
     m['exact'] += exact; m['compact'] += loose
     m['spacing_only'] += loose and not exact
-    m['different'] += not loose
+    m['variant'] += folded
+    m['different'] += not folded
 
 
 def finish(m):
     return dict(m,exact_rate=m['exact']/m['scorable'] if m['scorable'] else None,
-                compact_rate=m['compact']/m['scorable'] if m['scorable'] else None)
+                compact_rate=m['compact']/m['scorable'] if m['scorable'] else None,
+                variant_rate=m['variant']/m['scorable'] if m['scorable'] else None)
 
 
 def read_reviews(path):
@@ -75,7 +98,8 @@ def read_reviews(path):
     return rows
 
 
-def run(import_dir, library, resources, output, reviews_path=None, label='', backend=None):
+def run(import_dir, library, resources, output, reviews_path=None, label='', backend=None,
+        overlays=()):
     import_dir, output = Path(import_dir).resolve(), ensure_output(output)
     manifest = json.loads((import_dir/'manifest.json').read_text())
     if manifest['status'] != 'complete' or manifest['records_sha256'] != sha256(import_dir/'records.jsonl'):
@@ -96,11 +120,14 @@ def run(import_dir, library, resources, output, reviews_path=None, label='', bac
                     'benchmark/common.py','benchmark/importers/korean_release/import_release.py',
                     'tools/web/native.py','tools/evaluation/evaluate.py')
     source_bytes = {p:(ROOT/p).read_bytes() for p in source_paths}
+    overlays = [Path(o).resolve(strict=True) for o in overlays]
     identities = dict(library=sha256(library),resources=tree_hash(resources),
-                      reviews=sha256(reviews_path) if reviews_path else None)
+                      reviews=sha256(reviews_path) if reviews_path else None,
+                      overlays=[sha256(o) for o in overlays])
     output.mkdir(parents=True)
     owned = backend is None
-    backend = backend or Backend(library,None,resources,OPTIONS,[])
+    # Overlays (e.g. the reading-unit spacing profile) load as the domain layer.
+    backend = backend or Backend(library,None,resources,OPTIONS,overlays)
     started = datetime.now(timezone.utc).isoformat(); clock = time.monotonic()
     db = sqlite3.connect(output/'report.sqlite')
     db.executescript('''
@@ -145,7 +172,8 @@ def run(import_dir, library, resources, output, reviews_path=None, label='', bac
                     fixed=rev['expected'] if rev and rev['status']=='corrected' else expected
                     add(adjusted,fixed,actual,error);add(category[cat]['adjusted'],fixed,actual,error)
                 status=('unscorable' if expected is None else 'error' if error else
-                        'exact' if actual==expected else 'spacing' if compact(actual)==compact(expected) else 'different')
+                        'exact' if actual==expected else 'spacing' if compact(actual)==compact(expected) else
+                        'variant' if variant(actual)==variant(expected) else 'different')
                 status_counts[status]+=1
                 projected=[]
                 for s in row['spans']:
@@ -160,7 +188,8 @@ def run(import_dir, library, resources, output, reviews_path=None, label='', bac
                     types=sorted({p['semantic_type'] for p in selected})
                     add(engine_types['+'.join(types) or 'UNALIGNED'],s['spoken'],part,error,part is None)
                     st=('unaligned' if part is None else 'exact' if part==s['spoken'] else
-                        'spacing' if compact(part)==compact(s['spoken']) else 'different')
+                        'spacing' if compact(part)==compact(s['spoken']) else
+                        'variant' if variant(part)==variant(s['spoken']) else 'different')
                     detail=dict(s,actual=part,alignment_issue=why,engine_types=types,
                                 engine_rules=sorted({p['rule'] for p in selected}),status=st)
                     projected.append(detail)
@@ -175,13 +204,15 @@ def run(import_dir, library, resources, output, reviews_path=None, label='', bac
         if count != manifest['counts']['imported']: raise ValueError('import record count mismatch')
         db.commit()
         if (identities != dict(library=sha256(library),resources=tree_hash(resources),
-                               reviews=sha256(reviews_path) if reviews_path else None)
+                               reviews=sha256(reviews_path) if reviews_path else None,
+                               overlays=[sha256(o) for o in overlays])
             or any((ROOT/p).read_bytes()!=data for p,data in source_bytes.items())
             or sha256(import_dir/'records.jsonl')!=manifest['records_sha256']):
             raise ValueError('inputs or harness changed during evaluation; report is not publishable')
         fingerprint = dict(metric_version=METRIC_VERSION,import_id=manifest['import_id'],options=OPTIONS,
                            evaluator_sha256=sha256(Path(__file__)),alignment_sha256=sha256(ROOT/'benchmark/evaluators/evaluate.py'),
-                           reviews_sha256=sha256(reviews_path) if reviews_path else None)
+                           reviews_sha256=sha256(reviews_path) if reviews_path else None,
+                           overlays_sha256=[sha256(o) for o in overlays])
         report=dict(schema_version=1,status='complete',label=label or output.name,run_id=output.name,
                     created_at=started,finished_at=datetime.now(timezone.utc).isoformat(),
                     elapsed_seconds=round(time.monotonic()-clock,3),metric_version=METRIC_VERSION,storage='zlib-json-v1',
@@ -210,6 +241,9 @@ def run(import_dir, library, resources, output, reviews_path=None, label='', bac
                                 adjusted='All sentences minus review exclusions, with review corrections applied; '
                                          'equals the raw headline when no review file is given. Compare engines only on the same review file.',
                                 routes='Source-shape suggestions, not correctness verdicts. No lexicon or controls injected into evaluation.',
+                                variant='Compact, plus a symmetric fold inside digit runs only: zero 영/공, the '
+                                        'separator 다시/에 between digits and a leading 일만/만. Readings such as '
+                                        'native digits or 서른/삼십 are not folded.',
                                 themes='Dataset topics, not semiotic class truth.',timing='Wall time of report generation, not native throughput or audio latency.'))
         db.close()
         report['database_sha256']=sha256(output/'report.sqlite')
@@ -231,7 +265,10 @@ def main():
     p.add_argument('--import-dir',type=Path,required=True);p.add_argument('--library',type=Path,required=True)
     p.add_argument('--resources',type=Path,required=True);p.add_argument('--out',type=Path,required=True)
     p.add_argument('--reviews',type=Path);p.add_argument('--label',default='')
-    a=p.parse_args();r=run(a.import_dir,a.library.resolve(),a.resources.resolve(),a.out,a.reviews,a.label)
+    p.add_argument('--overlay',type=Path,action='append',default=[],
+                   help='resource overlay TSV, e.g. resources/customers/reading-unit-spacing/ko-KR/rules.tsv')
+    a=p.parse_args();r=run(a.import_dir,a.library.resolve(),a.resources.resolve(),a.out,a.reviews,a.label,
+                           overlays=a.overlay)
     print(json.dumps(dict(sentences=r['sentences'],spans=r['spans']),ensure_ascii=False));return 0
 
 if __name__=='__main__': raise SystemExit(main())

@@ -9,7 +9,7 @@ import unittest
 
 ROOT=Path(__file__).resolve().parents[2];sys.path.insert(0,str(ROOT))
 from benchmark.importers.korean_release.import_release import align,compact,convert,parse_tn,route,run as import_run
-from benchmark.evaluators.korean_release import add,finish,metric,read_reviews,run as evaluate
+from benchmark.evaluators.korean_release import add,finish,metric,read_reviews,run as evaluate,variant
 
 
 def row(text='물건은 3개다.',tn='물건은 [세 개]다.',written='3개',spoken='세 개',theme='개수'):
@@ -38,6 +38,14 @@ class Contracts(unittest.TestCase):
   for a,b in [('세 개','세\t개'),('A','a'),('１','1'),('하나.','하나'),('가\u200b나','가나'),('A\u00a0B','AB')]:add(m,a,b)
   r=finish(m);self.assertEqual((r['exact'],r['compact'],r['spacing_only']), (0,2,2))
   add(m,'일',None,'error');add(m,None,'x');self.assertEqual((m['scorable'],m['errors'],m['unscorable']),(7,1,1))
+ def test_policy_variant_fold(self):
+  for a,b in [('공 일 공 다시 일 이','영일공일이'),('삼칠 에 사사','삼칠사사'),('일만 천 원','만 천 원'),('이 영 이 오','이공이오')]:
+   with self.subTest(a):self.assertEqual(variant(a),variant(b))
+  # Words and readings are not folded: 영화, 서른/삼십, 하나/일, 다시 outside digits.
+  for a,b in [('영화 보기','공화 보기'),('서른 명','삼십 명'),('하나 둘','일 이'),('다시 보기','보기'),('통일만','통만')]:
+   with self.subTest(a):self.assertNotEqual(variant(a),variant(b))
+  m=metric();add(m,'공일공 다시 일','영 일 영 일');add(m,'서른 명','삼십 명')
+  r=finish(m);self.assertEqual((r['compact'],r['variant'],r['different']),(0,1,1))
  def test_alignment(self):
   d=row('3개와 3개','[세 개]와 [세 개]');d['NumberWord']*=2;d['patterns'][0]['spans']*=2
   r=convert(d,'fixture',1,'0'*64,'fixture','fixture')
