@@ -192,3 +192,6 @@ vehicle_plate_letter	ko-KR	공	1
 vehicle_plate_letter	ko-KR	해	1
 vehicle_plate_letter	ko-KR	국	1
 vehicle_plate_letter	ko-KR	합	1
+# Clothing sizes 44..99 before this word read digit by digit (55사이즈 -> 오오사이즈).
+clothing_size_word	ko-KR	사이즈	1
+classifier_priority	ko-KR	ko:clothing-size	10

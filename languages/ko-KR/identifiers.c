@@ -468,6 +468,46 @@ size_t ttf_ko_classify_number_letters(const ttf_pack_input_t *in, ttf_semantic_t
     return i - in->index;
 }
 
+/* Korean women's clothing sizes 44..99 (two equal digits) before 사이즈 are
+ * read digit by digit: 55사이즈 -> 오오사이즈. Men's sizes (95, 100) read as
+ * values. The word after the number is a resource (clothing_size_word). */
+size_t ttf_ko_classify_clothing_size(const ttf_pack_input_t *in, ttf_semantic_t *semantic) {
+    size_t begin = in->tokens[in->index].begin, p = begin + 2, i;
+    const ttf_token_t *next = NULL;
+    char word[TTF_IR_VALUE_SIZE];
+    char before = begin ? in->text[begin - 1] : ' ';
+    if (p > in->length || in->tokens[in->index].end != p || in->text[begin] != in->text[begin + 1] ||
+        in->text[begin] < '4' || in->text[begin] > '9' || alnum(before) || before == '.' ||
+        before == ',' || before == '-')
+        return 0;
+    for (i = in->index + 1; i < in->token_count && i <= in->index + 2; ++i)
+        if (in->tokens[i].script == TTF_SCRIPT_HANGUL) {
+            next = &in->tokens[i];
+            break;
+        } else if (in->tokens[i].script != TTF_SCRIPT_WHITESPACE ||
+                   in->tokens[i].end - in->tokens[i].begin != 1)
+            return 0;
+    if (!next)
+        return 0;
+    for (i = 1; i <= next->end - next->begin && i < sizeof(word); ++i) {
+        const char *flag;
+        memcpy(word, in->text + next->begin, i);
+        word[i] = '\0';
+        flag = ttf_resource_get(in->engine, "clothing_size_word", "ko-KR", word, NULL);
+        if (flag && !strcmp(flag, "1")) {
+            memcpy(semantic->value, in->text + begin, 2);
+            semantic->value[2] = '\0';
+            (void)snprintf(semantic->unit, sizeof(semantic->unit), "financial_identifier");
+            (void)snprintf(semantic->rule, sizeof(semantic->rule), "ko:clothing-size");
+            semantic->type = TTF_SEM_DIGIT_SEQUENCE;
+            semantic->input_end = p;
+            semantic->layer = TTF_LAYER_COMMON;
+            return 1;
+        }
+    }
+    return 0;
+}
+
 /* Digits one by one, Latin letters by their Korean names; a letter run and a
  * digit run are separated by a space. */
 ttf_status_t ttf_ko_render_identifier(const ttf_engine_t *engine, const char *value,
