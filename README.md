@@ -727,20 +727,19 @@ the explicit reading. [Complete syntax, limits and examples](docs/explicit-patte
 The web corpus is `typed-controls-v22`; it evaluates normalized text, not audio.
 
 
-### 위치를 지정하는 끊어 읽기
+### 한 글자씩 끊어 읽기
 
 웹에서 **발음 제어 표기 사용**을 켜거나 CLI에 `--input-format annotated`를 준다.
+`{@break:N}` 앞의 표기(붙어 있는 단어·숫자, 또는 `[[...]]` 묶음)를 한 글자씩 읽는다.
 
 | 입력 | 출력 |
 |---|---|
-| `앞{@break:1}뒤` | `앞 뒤` |
-| `앞{@break:2}뒤` | `앞, 뒤` |
-| `앞{@break:3}뒤` | `앞. 뒤` |
+| `1234{@break:1}` | `일 이 삼 사` |
+| `1234{@break:2}` | `일, 이, 삼, 사` |
+| `1234{@break:3}` | `일. 이. 삼. 사.` |
 
-앞 단어의 읽기를 바꾸지 않고 해당 위치에 구분 문자를 삽입한다.
-기존 공백·구두점도 그대로 남으므로 구문 주변에 별도 공백을 쓰지 않아도 된다.
-3단계는 그 위치까지 출력 콜백을 확정하며, 1·2단계는 강제 콜백을 만들지 않는다.
-[구문·오류·스트리밍 계약](docs/input-format.md#position-breaks-v022-continuation).
+숫자는 `{@digits}`와 같이, 로마자는 글자 이름으로 읽는다. 앞에 표기가 없는 `{@break:N}`은
+오류다. [구문·오류·스트리밍 계약](docs/input-format.md#break-controls-v023).
 
 ### 전각 숫자 TN
 

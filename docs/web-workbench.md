@@ -225,11 +225,11 @@ See [editable policy guide](resource-validation.md).
 ### 나이 단위와 끊어 읽기
 
 `counted-noun-v22`는 세·차·학년의 숫자/단위 경계와 일반 단어 오인 방지32건을
-제공한다. `break-controls-v22`는 위치 제어30건이다. 예제 선택에서 **단위 경계**와
+제공한다. `break-controls-v23`은 끊어 읽기 제어13건이다. 예제 선택에서 **단위 경계**와
 **끊어 읽기**를 고르면 필요한 plain/annotated 설정이 함께 적용된다.
-`{@break:1}`은 공백, `{@break:2}`는 쉼표와 공백, `{@break:3}`은 마침표와 공백을
-삽입한다. 앞뒤 원문 공백/기호는 보존하며 3단계는 출력 callback도 확정한다.
-[입력 규격](input-format.md#position-breaks-v022-continuation)을 참고한다.
+`1234{@break:1}`은 `일 이 삼 사`, `{@break:2}`는 `일, 이, 삼, 사`, `{@break:3}`은
+`일. 이. 삼. 사.`처럼 앞 표기를 한 글자씩 읽는다.
+[입력 규격](input-format.md#break-controls-v023)을 참고한다.
 
 새 한국어 품질 보고서의 공백 진단에는 **공백 진단 범주** 선택이 있다.
 나이·생년월일을 선택하면 그 범주의 공백만 다른 문장에 한정한 유형과 사례가 보인다.

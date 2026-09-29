@@ -101,44 +101,41 @@ source group. Grouped controls accept both literal payloads and named patterns. 
 apply a reading to the entire group. This extends the existing grouped syntax;
 unmarked whitespace or punctuation never enlarges the atom before a control.
 
-## Position breaks (v0.22 continuation)
+## Break controls (v0.23)
 
-In annotated input, `{@break:1}`, `{@break:2}` and `{@break:3}` insert a separator
-at that position. They do **not** replace or bind the preceding word:
+In annotated input, `X{@break:1}`, `X{@break:2}` and `X{@break:3}` read the atom or
+`[[group]]` X immediately before the marker **one character at a time**, with a
+separator between the characters:
 
-| Input | Output |
-|---|---|
-| `앞{@break:1}뒤` | `앞 뒤` |
-| `앞{@break:2}뒤` | `앞, 뒤` |
-| `앞{@break:3}뒤` | `앞. 뒤` |
-| `12{@break:1}34` | `십이 삼십사` |
+| Input | Output (ko-KR) | Output (en-US) |
+|---|---|---|
+| `1234{@break:1}` | `일 이 삼 사` | `one two three four` |
+| `1234{@break:2}` | `일, 이, 삼, 사` | `one, two, three, four` |
+| `1234{@break:3}` | `일. 이. 삼. 사.` | `one. two. three. four.` |
+| `K7{@break:2}` | `케이, 칠` | |
+| `[[12-34]]{@break:1}` | `일 이 삼 사` | |
+| `번호는 1234{@break:2}입니다.` | `번호는 일, 이, 삼, 사입니다.` | |
 
-The exact insertions are one ASCII space, comma + space, and period + space.
-Adjacent source spaces/punctuation are retained; avoid adding them around the
-marker when exactly one separator is wanted. Consecutive markers insert each
-separator. Leading/trailing markers are valid. This is a text boundary request,
-not an audio duration or a guarantee of a downstream voice's pause length.
+Strength 1 separates with one space, 2 with a comma and a space, 3 with a period
+and a space and also ends with a period. Digits read as `{@digits}` reads them
+(Korean zero 영) and Latin letters by their names, both through the render pack;
+other characters (Hangul, Han, ...) are kept as written; spaces and ASCII
+punctuation inside a group are dropped. Text around the control is untouched,
+so a suffix written against the marker attaches to the last item.
 
-The directives work in text and speech output, independently of language packs.
-Plain input and protected code do not interpret them. A literal alias containing
-escaped braces is not parsed again. `[[words]]{@break:2}` is invalid: put a position
-marker after the ordinary words or after a complete existing alias/control.
-Only the exact strengths 1, 2, 3 are accepted; no signs, leading zeros, spaces or
-other numeric formats. All other parameterized names still follow their existing
-grammar and are not enabled by this addition.
+The marker binds exactly like other attached controls: an atom is a Hangul/Other
+script word or adjacent Latin letters and digits; use `[[...]]` for anything else.
+A marker with nothing before it (`{@break:1}`, `앞 {@break:1}`), a group with no
+letter or digit, and strengths other than exactly 1, 2 or 3 are `TTF_EINVAL`.
+`max_control_bytes` covers the atom and the marker. The directive works in text
+and speech output and in every language pack; plain input and protected code do
+not interpret it. Inspect reports one `CUSTOM` span with `rule=control.pattern`,
+`unit=@break:N` covering the atom and marker; the trace records `BREAK` and the
+strength. It does not force a stream callback: the separators are output text,
+not an audio duration or a guaranteed pause length of a downstream voice.
 
-Inspect returns a separate `CUSTOM` span with `rule=control.break`, `unit=@break`,
-`value=1|2|3`, and input offsets covering only the ten-byte marker. Detailed trace
-records the explicit input decision. It has no phonemes and consumes no word.
-`max_control_bytes` applies to the marker alone, including braces (ten bytes),
-even when the preceding word is long and input arrives one byte at a time.
-
-Strength 3 explicitly commits a streaming segment through the marker, including
-the generated period and space, before flush. It overrides automatic sentence
-split/target settings. Strengths 1 and 2 insert their characters without forcing
-a callback; normal safe phrase/sentence planning and flush still apply.
-Invalid markers return `TTF_EINVAL`, excess byte limits `TTF_ELIMIT`. Already
-committed earlier stream segments cannot be recalled if later input is invalid.
+This replaces the v0.22 position marker (`앞{@break:1}뒤` inserted a separator at
+that position without reading the preceding word differently).
 
 ## Language-pack patterns
 
