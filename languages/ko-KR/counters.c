@@ -337,10 +337,19 @@ size_t ttf_ko_classify_counter(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         /* 제 is also an ordinary word, so a number after it that carries a
            measure is not a malformed ordinal: "제 10kg" is 제 plus 십 킬로그램.
            Only a candidate that already matched an ordinal unit is preserved. */
-        if (!tail(in, end))
+        if (!tail(in, end)) {
+            /* Speech: 제 written against a valid number before an unknown noun
+               (제2외국어, 제3기) is still the ordinal prefix; the noun stays text. */
+            if (attached && !had_unit && valid &&
+                in->engine->frontend_options.output_mode == TTF_OUTPUT_SPEECH) {
+                s->unit[0] = '\0';
+                snprintf(s->secondary, sizeof(s->secondary), "prefix");
+                return finish(in, s, end, TTF_SEM_ORDINAL, "ko:prefix-ordinal");
+            }
             return had_unit || attached
                        ? finish(in, s, attached_end(in, end), TTF_SEM_TEXT, "ko:invalid-ordinal")
                        : 0;
+        }
         if (!valid && !had_unit && !attached)
             return 0;
         snprintf(s->unit, sizeof(s->unit), "%s", unit);

@@ -135,7 +135,11 @@ static int identifier_fallback(const ttf_semantic_t *sem, const char *surface, s
         } else
             return 0;
     }
-    if (surface[0] == '0' && (first == 2 || first == 3))
+    /* A malformed phone number (0X/0XX, a 3-4 digit middle, a 3-5 digit last
+       group: 010-1234-56789) keeps its visible error; 077-19-254985 or
+       080-434-146780 is not phone-shaped and is read as an identifier. */
+    if (surface[0] == '0' && (first == 2 || first == 3) &&
+        (groups != 3 || (widths[1] >= 3 && widths[1] <= 4 && widths[2] >= 3 && widths[2] <= 5)))
         return 0;
     /* A YYYY-MM-DD shape that is not a date (2026-13-45) keeps its visible
        error, like a malformed phone number; 3883-0661-9521 is an identifier. */

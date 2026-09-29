@@ -1181,7 +1181,11 @@ static size_t compound_amount(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     if (!suffix && !quantity_boundary(in, end)) {
         if (valid && coefficients == 1)
             return 0;
-        valid = 0;
+        /* Speech: a valid compound before an unknown attached suffix (1만
+           5,000본, 1만 5,000여) is still that number; the suffix stays text.
+           Text output keeps the rejected object literally. */
+        if (!(valid && in->engine->frontend_options.output_mode == TTF_OUTPUT_SPEECH))
+            valid = 0;
     }
     if (valid && have_pending) {
         if ((have_group && !decimal_below_power(&pending, last_minor)) ||
