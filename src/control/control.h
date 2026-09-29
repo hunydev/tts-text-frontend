@@ -6,8 +6,7 @@ typedef enum {
     TTF_CONTROL_NONE = 0,
     TTF_CONTROL_LITERAL,
     TTF_CONTROL_PATTERN,
-    TTF_CONTROL_ESCAPE,
-    TTF_CONTROL_BREAK
+    TTF_CONTROL_ESCAPE
 } ttf_control_kind_t;
 
 /* All ranges are byte offsets in the original input. A grouped base excludes
@@ -19,7 +18,6 @@ typedef struct {
     size_t payload_begin, payload_end;
     ttf_control_kind_t kind;
     int complete, grouped;
-    int break_strength;
     char wait_quote;
 } ttf_control_match_t;
 

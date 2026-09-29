@@ -1016,16 +1016,6 @@
       }
     },
     {
-      "path": "tests/evaluation/break_controls_v22.jsonl",
-      "format": "jsonl",
-      "default": {
-        "classification": "reference-policy",
-        "review_status": "pending-independent-review",
-        "reference_source": "User request and independent developer contracts",
-        "reason": "Position directive strengths from user; literal separators and independent contracts fixed before implementation."
-      }
-    },
-    {
       "path": "tests/evaluation/en_decade_zero_v23.jsonl",
       "format": "jsonl",
       "default": {
@@ -1165,6 +1155,18 @@
         "review_status": "pending-independent-review",
         "reference_source": "Night work 2026-09-29 under the user's goal; independently authored synthetic cases, written before the implementation",
         "reason": "Named option spacing selects the reading-unit profile; orthographic and English outputs are guards."
+      },
+      "category_overrides": {},
+      "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/break_controls_v23.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Night work 2026-09-29 under the user's goal; independently authored synthetic cases, written before the implementation",
+        "reason": "X{@break:N} reads the preceding atom or group one character at a time with space/comma/period separators; literal controls and plain input are guards."
       },
       "category_overrides": {},
       "case_overrides": {}

@@ -1,4 +1,4 @@
-"""Position controls: malformed syntax, exact limits and no accidental binding."""
+"""Break controls: malformed syntax, exact limits and the bound atom."""
 import json
 from pathlib import Path
 import subprocess
@@ -6,10 +6,11 @@ import sys
 import tempfile
 cli, resources = sys.argv[1:]
 options=['--resources',resources,'--input-format','annotated','--output-mode','speech']
-invalid=['{@break:0}','{@break:4}','{@break:01}','{@break:-1}','{@break:1.0}',
-         '{@break:}', '{@break: 1}', '{@Break:1}', '{@break:1', '{@break:',
-         '{@break:1}}', '앞{@break:9}뒤', '[[앞]]{@break:1}',
-         '{@native}', '1{@native:1}', '앞{@break}', '{@break:1x}', '{@break:가}']
+# A break control needs a preceding atom or [[group]] and strength 1, 2 or 3 exactly.
+invalid=['{@break:1}', '앞 {@break:1}', '1{@break:0}', '1{@break:4}', '1{@break:01}',
+         '1{@break:-1}', '1{@break:1.0}', '1{@break:}', '1{@break: 1}', '1{@Break:1}',
+         '1{@break:1', '1{@break:', '1{@break:1}}', '1{@break}', '1{@break:1x}', '1{@break:가}',
+         '[[ ]]{@break:1}', '[[--]]{@break:2}', '{@native}', '1{@native:1}']
 for source in invalid:
  for mode in ('normalize','stream-json'):
   extra=['--chunk-bytes','1','-'] if mode=='stream-json' else [source]
@@ -20,25 +21,25 @@ for source in invalid:
   else:
    events=[json.loads(s) for s in result.stdout.splitlines()]
    assert not any(e['event'] in ('segment','end') for e in events),(source,events)
-for limit in (9,10):
- # The long preceding atom is not part of a position directive's byte limit.
- source='가'*100+'{@break:2}나'
+# The byte limit covers the bound atom and the marker, like every attached control.
+source='1234{@break:2}'
+for limit in (len(source)-1,len(source)):
  for mode in ('normalize','stream-json'):
   extra=['--chunk-bytes','1','-'] if mode=='stream-json' else [source]
   r=subprocess.run([cli,mode,*options,'--max-control-bytes',str(limit),*extra],
                    input=source if mode=='stream-json' else None,capture_output=True,text=True,timeout=10)
-  assert (r.returncode==0)==(limit==10),(limit,mode,r)
-  if limit==9:assert 'limit' in r.stderr,r
-  elif mode=='normalize':assert r.stdout.rstrip('\n')=='가'*100+', 나',r
-# Language independent, and adjacent directives insert exactly what was requested.
-for source,expected in [('앞{@break:1}{@break:2}{@break:3}뒤','앞 , . 뒤'),
- ('[[앞]]{앞\\{@break:1\\}}','앞{@break:1}')]:
+  assert (r.returncode==0)==(limit==len(source)),(limit,mode,r)
+  if limit<len(source):assert 'limit' in r.stderr,r
+  elif mode=='normalize':assert r.stdout.rstrip('\n')=='일, 이, 삼, 사',r
+# Only the atom right before the marker is read one character at a time.
+for source,expected in [('12{@break:1}34','일 이삼십사'),('[[A-1]]{@break:3}번','에이. 일.번'),
+                        ('[[앞]]{앞\\{@break:1\\}}','앞{@break:1}')]:
  r=subprocess.run([cli,'normalize',*options,source],capture_output=True,text=True,timeout=10)
- assert r.returncode==0 and r.stdout.rstrip('\n')==expected,r
+ assert r.returncode==0 and r.stdout.rstrip('\n')==expected,(source,r)
 with tempfile.TemporaryDirectory() as directory:
  path=Path(directory)/'bad.tsv'
  for kind in ('counter_noun_unit','counter_noun_tail','counter_noun_attached'):
   path.write_text(f'{kind}\tko-KR\t세\tmaybe\n')
   r=subprocess.run([cli,'normalize',*options,'--customer',str(path),'15세'],capture_output=True,text=True,timeout=10)
   assert r.returncode and 'resource' in r.stderr,r
-print(f'{len(invalid)} malformed controls in batch/byte streams; exact marker limits, adjacent/literal controls and 3 invalid resources passed')
+print(f'{len(invalid)} malformed controls in batch/byte streams; exact limits, bound atoms and 3 invalid resources passed')

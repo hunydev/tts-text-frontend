@@ -185,6 +185,58 @@ static ttf_status_t classified(const ttf_engine_t *e, const ttf_language_pack_t 
     return status;
 }
 
+/* X{@break:N}: read the bound atom or group one character at a time. Digits
+   read as {@digits} reads them and Latin letters by name, both through the
+   render pack; other characters are kept as written; spaces and ASCII
+   punctuation inside a group are dropped. Items are joined by a space (1), a
+   comma (2) or a period (3), and strength 3 also ends with a period. */
+static ttf_status_t spelled_with_breaks(const ttf_engine_t *e, const ttf_language_pack_t *pack,
+                                        const ttf_semantic_t *request, const char *text,
+                                        size_t n, int strength, ttf_buffer_t *out) {
+    static const char *const separators[] = {"", " ", ", ", ". "};
+    size_t at = 0, items = 0, width;
+    uint32_t cp;
+    ttf_status_t status;
+    char detail[32];
+    ttf_trace_stage(e, TTF_TRACE_POLICY, 0, n);
+    (void)snprintf(detail, sizeof(detail), "strength=%d", strength);
+    status = ttf_trace_emit(e, TTF_TRACE_SELECTED, TTF_LAYER_USER, 0, pack->language_tag,
+                            "control-semantic", request->unit, "BREAK", "", detail, SIZE_MAX);
+    while (status == TTF_OK && at < n) {
+        ttf_semantic_t item = {0};
+        if (ttf_utf8_decode(text + at, n - at, &cp, &width) != 1)
+            return TTF_EUTF8;
+        if (cp < 128 && !digit((char)cp) && !((cp | 32) >= 'a' && (cp | 32) <= 'z')) {
+            at += width; /* spaces and ASCII punctuation inside a group */
+            continue;
+        }
+        if (items && (status = ttf_buffer_puts(out, separators[strength])) != TTF_OK)
+            return status;
+        item.struct_size = sizeof(item);
+        item.input_end = width;
+        memcpy(item.value, text + at, width);
+        memcpy(item.context_lang, request->context_lang, sizeof(item.context_lang));
+        memcpy(item.render_lang, request->render_lang, sizeof(item.render_lang));
+        memcpy(item.source_lang, request->source_lang, sizeof(item.source_lang));
+        if (digit((char)cp)) {
+            item.type = TTF_SEM_DIGIT_SEQUENCE;
+            status = pack->verbalize(e, &item, text + at, width, out);
+        } else if (cp < 128) {
+            item.type = TTF_SEM_CUSTOM;
+            (void)snprintf(item.unit, sizeof(item.unit), "@alphabet");
+            status = pack->verbalize(e, &item, text + at, width, out);
+        } else
+            status = ttf_buffer_append(out, text + at, width);
+        ++items;
+        at += width;
+    }
+    if (status != TTF_OK)
+        return status;
+    if (!items)
+        return TTF_EINVAL;
+    return strength == 3 ? ttf_buffer_puts(out, ".") : TTF_OK;
+}
+
 ttf_status_t ttf_semantic_control(const ttf_engine_t *e, const ttf_semantic_t *request,
                                   const char *text, size_t n, ttf_buffer_t *out) {
     const char *name = request->unit;
@@ -203,6 +255,8 @@ ttf_status_t ttf_semantic_control(const ttf_engine_t *e, const ttf_semantic_t *r
         return ttf_buffer_append(out, text, n);
     if (!strcmp(name, "@skip"))
         return TTF_OK; /* Caller owns adjoining whitespace, just like a literal. */
+    if (!strncmp(name, "@break:", 7) && name[7] >= '1' && name[7] <= '3' && !name[8])
+        return spelled_with_breaks(e, pack, request, text, n, name[7] - '0', out);
     if (n >= sizeof(ir.value))
         return TTF_ELIMIT;
     if (!strcmp(name, "@cardinal") || !strcmp(name, "@decimal")) {

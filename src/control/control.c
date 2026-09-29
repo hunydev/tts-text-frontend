@@ -9,14 +9,11 @@ static int escaped(char c) {
 static int pattern_character(char c, int first) {
     return (c >= 'a' && c <= 'z') || (!first && (digit(c) || c == '_' || c == '-'));
 }
-/* A position directive never binds the preceding source atom. Retain partial
-   prefixes too: otherwise its byte limit would depend on arriving chunks. */
-static int break_prefix(const char *text, size_t length, size_t at) {
-    static const char prefix[] = "{@break:";
-    size_t n = length - at;
-    if (n > sizeof(prefix) - 1)
-        n = sizeof(prefix) - 1;
-    return n && !memcmp(text + at, prefix, n);
+/* {@break:1|2|3} is the one parameterized pattern: it reads the bound atom or
+   group one character at a time with a space, comma or period between. */
+static int break_pattern(const char *text, size_t begin, size_t end) {
+    return end - begin == 8 && !memcmp(text + begin, "@break:", 7) && text[begin + 7] >= '1' &&
+           text[begin + 7] <= '3';
 }
 static ttf_script_t script_at(const char *text, size_t length, size_t at, size_t *width) {
     uint32_t cp;
@@ -98,7 +95,7 @@ static ttf_status_t payload(const ttf_engine_t *engine, const char *text, size_t
             size_t i, n = p - match->payload_begin;
             if (!n)
                 return TTF_EINVAL;
-            if (match->kind == TTF_CONTROL_PATTERN) {
+            if (match->kind == TTF_CONTROL_PATTERN && !break_pattern(text, match->payload_begin, p)) {
                 /* The public CUSTOM.unit field includes '@' and its terminator. */
                 if (n < 2 || n > 31)
                     return TTF_EINVAL;
@@ -141,23 +138,6 @@ ttf_status_t ttf_control_parse(const ttf_engine_t *engine, const char *text, siz
         if (engine->frontend_options.max_control_bytes < 2)
             return TTF_ELIMIT;
         match->end = match->base_end = match->payload_end = begin + 2;
-        match->complete = 1;
-        return TTF_OK;
-    }
-    if (text[begin] == '{' && break_prefix(text, length, begin)) {
-        size_t available = length - begin;
-        match->kind = TTF_CONTROL_BREAK;
-        match->base_begin = match->base_end = begin;
-        if (available < 10)
-            return incomplete(engine, length, final, '}', match);
-        if (engine->frontend_options.max_control_bytes < 10)
-            return TTF_ELIMIT;
-        if (text[begin + 8] < '1' || text[begin + 8] > '3' || text[begin + 9] != '}')
-            return TTF_EINVAL;
-        match->break_strength = text[begin + 8] - '0';
-        match->payload_begin = begin + 8;
-        match->payload_end = begin + 9;
-        match->end = begin + 10;
         match->complete = 1;
         return TTF_OK;
     }
@@ -209,8 +189,6 @@ ttf_status_t ttf_control_parse(const ttf_engine_t *engine, const char *text, siz
         return TTF_OK;
     base_end = atom_end(text, length, begin);
     if (base_end == begin || base_end == length || text[base_end] != '{')
-        return TTF_OK;
-    if (break_prefix(text, length, base_end))
         return TTF_OK;
     match->base_begin = begin;
     match->base_end = base_end;

@@ -1,4 +1,4 @@
-"""Counted nouns and position breaks: exact text/IR across arbitrary byte splits."""
+"""Counted nouns and break controls: exact text/IR across arbitrary byte splits."""
 import json,random,sys
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
@@ -6,7 +6,7 @@ sys.path[:0]=[str(ROOT/'tools/web'),str(ROOT/'tools/evaluation')]
 from native import Engine,flatten
 from evaluate import frontend_settings
 library,resources=(Path(x).resolve() for x in sys.argv[1:])
-rows=[json.loads(s) for name in ('counted_noun_v22','break_controls_v22') for s in (ROOT/f'tests/evaluation/{name}.jsonl').read_text().splitlines()]
+rows=[json.loads(s) for name in ('counted_noun_v22','break_controls_v23') for s in (ROOT/f'tests/evaluation/{name}.jsonl').read_text().splitlines()]
 checks=0
 for profile in ({},dict(first_target=1,normal_target=3,max_length=12)):
  engines={}
@@ -42,21 +42,24 @@ for overlay,expected in [
   assert batch['text']==expected,batch
   assert flatten(e.stream(raw,[1]*len(raw)))==batch
  finally:e.close()
-# An explicit sentence break commits before flush, even with automatic splitting off.
-e=Engine(library,resources,dict(input_format='annotated',sentence_split=False,phrase_split=False))
+# A break control is one span over its atom and marker, even when the marker
+# arrives a byte at a time with automatic splitting off.
+e=Engine(library,resources,dict(input_format='annotated',sentence_split=False,phrase_split=False,
+                                output_mode='speech',default_language='ko-KR'))
 try:
- events=[]
- segments=e.stream('앞{@break:3}뒤'.encode(),[len('앞{@break:3}'.encode()),len('뒤'.encode())],events.append)
- first=next(event for event in events if event['event']=='segment')
- assert first['stage']=='write' and first['write_index']==0,first
- assert [s['text'] for s in segments]==['앞. ','뒤'],segments
+ raw='번호 1234{@break:3} 끝'.encode()
+ batch=e.normalize(raw)
+ assert batch['text']=='번호 일. 이. 삼. 사. 끝',batch
+ control=[s for s in batch['spans'] if s['unit']=='@break:3']
+ assert len(control)==1 and control[0]['surface']=='1234{@break:3}',control
+ assert flatten(e.stream(raw,[1]*len(raw)))==batch
 finally:e.close()
 
 # Plain text and protected code do not interpret break markers.
-for opts,text in [({'input_format':'plain'},'앞{@break:1}뒤'),
-                  ({'input_format':'annotated'},'`앞{@break:1}뒤`')]:
+for opts,text in [({'input_format':'plain'},'1234{@break:1}'),
+                  ({'input_format':'annotated'},'`1234{@break:1}`')]:
  e=Engine(library,resources,opts)
  try:
   result=e.normalize(text.encode())
-  assert not any(s['unit']=='@break' for s in result['spans']),result
+  assert not any(s['unit'].startswith('@break') for s in result['spans']),result
  finally:e.close()

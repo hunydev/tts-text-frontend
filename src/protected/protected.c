@@ -27,7 +27,6 @@ ttf_status_t ttf_tokenize_protected(const ttf_engine_t *engine, const char *text
                 match.end = match.control.end;
                 match.kind = "control";
                 match.rule = match.control.kind == TTF_CONTROL_ESCAPE    ? "control.escape"
-                             : match.control.kind == TTF_CONTROL_BREAK   ? "control.break"
                              : match.control.kind == TTF_CONTROL_PATTERN ? "control.pattern"
                                                                          : "control.literal";
                 match.layer = TTF_LAYER_COMMON;

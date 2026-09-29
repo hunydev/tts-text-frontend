@@ -14,6 +14,7 @@ import re
 import sys
 
 ACTIVE_JSONL = (
+    "break_controls_v23",
     "ko_spacing_option_v23",
     "ko_reading_unit_spacing_v23",
     "en_street_title_v23",
@@ -26,7 +27,7 @@ ACTIVE_JSONL = (
     "ko_alnum_identifier_v23",
     "en_speech_hyphen_v23",
     "en_decade_zero_v23",
-    "counted_noun_v22", "break_controls_v22",
+    "counted_noun_v22",
     "ko_spacing_v22",
     "phone_zero_v22",
     "identifier_fallback_v22",

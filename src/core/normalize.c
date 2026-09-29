@@ -244,7 +244,6 @@ static ttf_status_t render_control(const ttf_engine_t *e, const ttf_pack_input_t
     tag(sem->render_lang, context->language_tag);
     tag(span->verbalizer, context->language_tag);
     snprintf(sem->rule, sizeof(sem->rule), "control.%s",
-             control->kind == TTF_CONTROL_BREAK ? "break" :
              control->kind == TTF_CONTROL_PATTERN ? "pattern" : "literal");
     if (base_length < sizeof(sem->value))
         memcpy(sem->value, source_text, base_length);
@@ -257,12 +256,7 @@ static ttf_status_t render_control(const ttf_engine_t *e, const ttf_pack_input_t
         goto done;
     ttf_trace_span_begin(e, span->input_begin, span->input_end);
     ttf_trace_stage(e, TTF_TRACE_POLICY, 0, control->end - control->begin);
-    if (control->kind == TTF_CONTROL_BREAK) {
-        static const char *const separators[] = {"", " ", ", ", ". "};
-        snprintf(sem->unit, sizeof(sem->unit), "@break");
-        snprintf(sem->value, sizeof(sem->value), "%d", control->break_strength);
-        status = ttf_buffer_puts(output, separators[control->break_strength]);
-    } else if (control->kind == TTF_CONTROL_PATTERN) {
+    if (control->kind == TTF_CONTROL_PATTERN) {
         if (decoded.length >= sizeof(sem->unit)) {
             status = TTF_ELIMIT;
             goto done;

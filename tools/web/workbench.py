@@ -8,6 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 MAX_TEXT_BYTES = 16384
 CORPORA = {
+    "break-controls-v23": ("끊어 읽기 · 앞 표기를 한 글자씩 1·2·3", "break_controls_v23.jsonl"),
     "ko-spacing-option-v23": ("띄어쓰기 옵션 spacing=orthographic|reading-unit", "ko_spacing_option_v23.jsonl"),
     "ko-reading-unit-spacing-v23": ("한국어 읽기 단위 띄어쓰기 (선택 옵션)", "ko_reading_unit_spacing_v23.jsonl"),
     "en-street-title-v23": ("영어 St./Mt./Ft. 호칭 전개", "en_street_title_v23.jsonl"),
@@ -22,7 +23,6 @@ CORPORA = {
     "en-decade-zero-v23": ("영어 decade 00s · 2000년대", "en_decade_zero_v23.jsonl"),
     "ko-spacing-v22": ("한국어 수 묶음 띄어쓰기", "ko_spacing_v22.jsonl"),
     "counted-noun-v22": ("나이·차수·학년 단위 경계", "counted_noun_v22.jsonl"),
-    "break-controls-v22": ("끊어 읽기 강도 1·2·3", "break_controls_v22.jsonl"),
     "phone-zero-v22": ("전화번호 · 번호/번 꼬리 · 선행 0 자리 읽기", "phone_zero_v22.jsonl"),
     "identifier-fallback-v22": ("식별번호 · 거부된 숫자열 읽기 · 하이픈 다시", "identifier_fallback_v22.jsonl"),
     "lexical-coverage-v22": ("공통 발음 사전 · 사용자 읽기 선택", "lexical_coverage_v22.jsonl"),
@@ -510,7 +510,7 @@ def catalog():
         ("counted-noun-v22", "단위 경계", {"counted-noun-v22-age-attached": "나이 · 조사/어미",
                                        "counted-noun-v22-stage": "차수 · 예약",
                                        "counted-noun-v22-negative-generation": "세대 · 단위 오인 방지"}),
-        ("break-controls-v22", "끊어 읽기", {f"break-v22-{level}-middle": f"끊기 {level}단계" for level in (1, 2, 3)}),
+        ("break-controls-v23", "끊어 읽기", {f"break-v23-strength-{level}": f"한 글자씩 끊기 {level}단계" for level in (1, 2, 3)}),
     ]:
         relative = corpus_path(corpus_key).relative_to(ROOT).as_posix()
         for line in corpus_path(corpus_key).read_text().splitlines():

@@ -402,22 +402,11 @@ ttf_status_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, i
                     wait->begin = t->begin;
                     wait->control_limit = e->frontend_options.max_control_bytes;
                     wait->quote = regions[region_index].match.control.wait_quote;
-                    /* Recheck escapes and short position directives on each
-                       byte. A partial "{@break:" may still become an attached
-                       alias; caching its closer would use the wrong byte-limit
-                       origin (the brace rather than the preceding atom). */
-                    if (regions[region_index].match.control.kind == TTF_CONTROL_ESCAPE ||
-                        regions[region_index].match.control.kind == TTF_CONTROL_BREAK)
+                    /* Recheck escapes on each byte. */
+                    if (regions[region_index].match.control.kind == TTF_CONTROL_ESCAPE)
                         wait->kind = TTF_WAIT_NONE;
                 } else
                     incomplete_literal_hint(s, n, &regions[region_index], wait);
-                goto done;
-            }
-            /* An explicit sentence break commits here independently of target
-               size and automatic sentence splitting. Its syntax stays atomic. */
-            if (regions[region_index].match.control.kind == TTF_CONTROL_BREAK &&
-                regions[region_index].match.control.break_strength == 3) {
-                selected = t->end;
                 goto done;
             }
             ++region_index;
