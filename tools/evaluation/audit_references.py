@@ -14,6 +14,7 @@ import re
 import sys
 
 ACTIVE_JSONL = (
+    "ko_identifier_shapes_v23",
     "break_controls_v23",
     "ko_spacing_option_v23",
     "ko_reading_unit_spacing_v23",
@@ -131,9 +132,13 @@ def known_defects(case: dict) -> list[tuple[str, str]]:
     # digit groups; its 다시 reading is the identifier policy, not an interval.
     # Every range-shaped surface must be covered by such a typed span; explicit
     # range ids/categories/RANGE spans are still checked.
+    # A declared rejection (TEXT with syntax.invalid-range/phone/date) is the
+    # engine refusing the interval; speech then reads the identifier grammar.
     identifiers = [span.get("surface", "") for span in case.get("expected_spans", [])
-                   if span.get("semantic_type") == "DIGIT_SEQUENCE"
-                   and span.get("unit") == "financial_identifier"]
+                   if (span.get("semantic_type") == "DIGIT_SEQUENCE"
+                       and span.get("unit") == "financial_identifier")
+                   or (span.get("semantic_type") == "TEXT" and span.get("rule") in
+                       ("syntax.invalid-range", "syntax.invalid-phone", "syntax.invalid-date"))]
     surfaces = [match.group(0).strip() for match in RANGE_SURFACE.finditer(original)]
     identifier_only = bool(surfaces) and all(
         any(surface in identifier for identifier in identifiers) for surface in surfaces)
@@ -221,6 +226,11 @@ def self_test() -> None:
         (dict(id="account", text="계좌는 010-001입니다.", expected="계좌는 공일공 다시 공공일입니다.",
               expected_spans=[dict(surface="010-001", semantic_type="DIGIT_SEQUENCE", unit="financial_identifier")]), set()),
         (dict(id="account", text="계좌는 010-001입니다.", expected="계좌는 공일공 다시 공공일입니다."),
+         {"korean-range-again"}),
+        (dict(id="account", text="3765-38264로 입금", expected="삼칠육오 다시 삼팔이육사로 입금",
+              expected_spans=[dict(surface="3765-38264", semantic_type="TEXT", rule="syntax.invalid-range")]), set()),
+        (dict(id="account", text="3765-38264로 입금", expected="삼칠육오 다시 삼팔이육사로 입금",
+              expected_spans=[dict(surface="3765-38264", semantic_type="TEXT", rule="identity")]),
          {"korean-range-again"}),
         (dict(id="account-range", text="계좌는 010-001입니다.", expected="계좌는 공일공 다시 공공일입니다.",
               expected_spans=[dict(surface="010-001", semantic_type="DIGIT_SEQUENCE", unit="financial_identifier")]), {"korean-range-again"}),

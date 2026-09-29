@@ -8,6 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 MAX_TEXT_BYTES = 16384
 CORPORA = {
+    "ko-identifier-shapes-v23": ("하이픈 숫자열 · 범위 아님 · 원문 방치 방지", "ko_identifier_shapes_v23.jsonl"),
     "break-controls-v23": ("끊어 읽기 · 앞 표기를 한 글자씩 1·2·3", "break_controls_v23.jsonl"),
     "ko-spacing-option-v23": ("띄어쓰기 옵션 spacing=orthographic|reading-unit", "ko_spacing_option_v23.jsonl"),
     "ko-reading-unit-spacing-v23": ("한국어 읽기 단위 띄어쓰기 (선택 옵션)", "ko_reading_unit_spacing_v23.jsonl"),

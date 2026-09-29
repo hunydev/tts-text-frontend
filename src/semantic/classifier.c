@@ -831,6 +831,23 @@ static size_t quantity_endpoint(const ttf_pack_input_t *in, size_t start, ttf_se
 }
 /* Preserve unsupported chains through each numeric endpoint, rather than
    verbalizing their last number after retaining only an invalid prefix. */
+/* A bare hyphen pair that nobody reads as an interval is an identifier
+   (000012-2526758, 3765-38264): a leading-zero group, a side of six or more
+   digits, or sides of different lengths where the longer has five or more.
+   Equal-length pairs (12000-15000, 1995-2005), small pairs and grouped or
+   decimal values stay ranges; units and counters take another path. */
+static int identifier_pair(const char *s, size_t a, size_t a_end, size_t b, size_t b_end) {
+    size_t la = a_end - a, lb = b_end - b, i;
+    for (i = a; i < a_end; ++i)
+        if (!digit(s[i]))
+            return 0;
+    for (i = b; i < b_end; ++i)
+        if (!digit(s[i]))
+            return 0;
+    if ((la > 1 && s[a] == '0') || (lb > 1 && s[b] == '0') || la >= 6 || lb >= 6)
+        return 1;
+    return la != lb && (la >= 5 || lb >= 5);
+}
 static size_t range_chain_end(const ttf_pack_input_t *in, size_t end) {
     size_t separator;
     while ((separator = quantity_separator(in, skip_quantity_space(in, end), NULL))) {
@@ -1490,6 +1507,8 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
                 }
                 if (quantity_separator(in, skip_quantity_space(in, end), NULL))
                     return preserve(in, out, range_chain_end(in, end), "syntax.invalid-range");
+                if (legacy_hyphen && identifier_pair(s, b, p, start, end))
+                    return preserve(in, out, ttf_numeric_atom_end(in, end), "syntax.invalid-range");
                 if (!structured_tail(in, end)) {
                     out->layer = separator_layer > out->layer ? separator_layer : out->layer;
                     return finish(in, out, end, TTF_SEM_RANGE,

@@ -112,10 +112,11 @@ static const ttf_language_pack_t *context_pack(const ttf_engine_t *e, const ttf_
    stays preserved: a malformed phone number keeps its existing visible-error
    contract (phone-cue-v21, phone_number_tail overlays). */
 static int identifier_fallback(const ttf_semantic_t *sem, const char *surface, size_t length) {
-    size_t i, groups = 1, first = 0;
-    int digit = 0;
+    size_t i, groups = 1, first = 0, widths[3] = {0, 0, 0};
+    int digit = 0, date = !strcmp(sem->rule, "syntax.invalid-date");
     if (sem->type != TTF_SEM_TEXT ||
-        (strcmp(sem->rule, "syntax.invalid-phone") && strcmp(sem->rule, "syntax.invalid-range")) ||
+        (strcmp(sem->rule, "syntax.invalid-phone") && strcmp(sem->rule, "syntax.invalid-range") &&
+         !date) ||
         !length || length >= TTF_IR_VALUE_SIZE)
         return 0;
     for (i = 0; i < length; ++i) {
@@ -123,6 +124,8 @@ static int identifier_fallback(const ttf_semantic_t *sem, const char *surface, s
             digit = 1;
             if (groups == 1)
                 ++first;
+            if (groups <= 3)
+                ++widths[groups - 1];
         } else if (surface[i] == '-' && digit) {
             digit = 0;
             ++groups;
@@ -130,6 +133,10 @@ static int identifier_fallback(const ttf_semantic_t *sem, const char *surface, s
             return 0;
     }
     if (surface[0] == '0' && (first == 2 || first == 3))
+        return 0;
+    /* A YYYY-MM-DD shape that is not a date (2026-13-45) keeps its visible
+       error, like a malformed phone number; 3883-0661-9521 is an identifier. */
+    if (date && groups == 3 && widths[0] == 4 && widths[1] <= 2 && widths[2] <= 2)
         return 0;
     return digit && groups >= 2;
 }
