@@ -129,6 +129,9 @@ static int identifier_fallback(const ttf_semantic_t *sem, const char *surface, s
         } else if (surface[i] == '-' && digit) {
             digit = 0;
             ++groups;
+        } else if (surface[i] == ' ' && i + 1 < length &&
+                   (surface[i + 1] == '-' || (i && surface[i - 1] == '-'))) {
+            continue; /* 201218 -12531: a space next to the hyphen */
         } else
             return 0;
     }
@@ -147,10 +150,13 @@ static ttf_status_t read_identifier(const ttf_engine_t *e, const ttf_language_pa
     ttf_buffer_t spoken = {0};
     ttf_status_t st;
     *done = 0;
+    size_t i, used = 0;
     identifier.type = TTF_SEM_DIGIT_SEQUENCE;
     snprintf(identifier.unit, sizeof(identifier.unit), "financial_identifier");
-    memcpy(identifier.value, surface, length);
-    identifier.value[length] = '\0';
+    for (i = 0; i < length; ++i)
+        if (surface[i] != ' ')
+            identifier.value[used++] = surface[i];
+    identifier.value[used] = '\0';
     st = renderer->verbalize(e, &identifier, surface, length, &spoken);
     if (st != TTF_OK) {
         ttf_buffer_free(&spoken);
