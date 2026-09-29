@@ -1580,6 +1580,9 @@ static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         identifier = ttf_ko_classify_alnum_identifier(in, s);
         if (identifier)
             return identifier;
+        identifier = ttf_ko_classify_number_letters(in, s);
+        if (identifier)
+            return identifier;
     }
     identifier = ttf_ko_classify_counter(in, s);
     if (identifier)

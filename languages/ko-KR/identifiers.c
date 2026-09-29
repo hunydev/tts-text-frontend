@@ -387,6 +387,87 @@ size_t ttf_ko_classify_plate(const ttf_pack_input_t *in, ttf_semantic_t *semanti
     return i - in->index;
 }
 
+/* A number with an attached Latin unit that no shared grammar reads (75t,
+ * 3,000P, 4Km, 2,000cc) reached TTS as raw digits. Speech output reads a
+ * declared Korean letter unit (letter_unit: t -> t, P -> point) as a measure
+ * next to Korean text. Other letters are labels and keep their own policy. */
+size_t ttf_ko_classify_number_letters(const ttf_pack_input_t *in, ttf_semantic_t *semantic) {
+    size_t begin = in->tokens[in->index].begin, p = begin, letters, i, used = 0, digits = 0;
+    char before, key[8];
+    const char *unit;
+    int decimal = 0;
+    if (begin == in->length || !decimal_digit(in->text[begin]))
+        return 0;
+    before = begin ? in->text[begin - 1] : ' ';
+    if (alnum(before) || before == '-' || before == '.' || before == ',' || before == '+' ||
+        before == '@' || before == '/' || before == ':')
+        return 0;
+    while (p < in->length) {
+        char c = in->text[p];
+        if (decimal_digit(c)) {
+            if (used + 1 >= sizeof(semantic->value))
+                return 0;
+            semantic->value[used++] = c;
+            ++digits;
+            ++p;
+        } else if ((c == ',' || (c == '.' && !decimal)) && p + 1 < in->length &&
+                   decimal_digit(in->text[p + 1]) && p > begin) {
+            if (c == '.') {
+                decimal = 1;
+                semantic->value[used++] = c;
+            }
+            ++p;
+        } else
+            break;
+    }
+    semantic->value[used] = '\0';
+    for (letters = 0; p + letters < in->length && ascii_letter(in->text[p + letters]); ++letters) {
+    }
+    if (!letters || letters >= sizeof(key) || (p + letters < in->length &&
+        (decimal_digit(in->text[p + letters]) || in->text[p + letters] == '@' ||
+         in->text[p + letters] == '_' || in->text[p + letters] == '-' ||
+         ((in->text[p + letters] == '.' || in->text[p + letters] == '/') &&
+          p + letters + 1 < in->length && alnum(in->text[p + letters + 1])))))
+        return 0;
+    memcpy(key, in->text + p, letters);
+    key[letters] = '\0';
+    /* An English ordinal (1st, 22nd) keeps its reading. */
+    if (letters == 2 && (!strcmp(key, "st") || !strcmp(key, "nd") || !strcmp(key, "rd") ||
+                         !strcmp(key, "th") || !strcmp(key, "ST") || !strcmp(key, "ND") ||
+                         !strcmp(key, "RD") || !strcmp(key, "TH")))
+        return 0;
+    /* Shared units (10kg) already read as measures; a lexicon term (3D -> 쓰리디)
+       keeps its word reading. */
+    if (ttf_resource_get(in->engine, "numeric_suffix", "*", key, NULL))
+        return 0;
+    if (!decimal && p + letters - begin < 40) {
+        char term[48];
+        size_t k, t = (size_t)snprintf(term, sizeof(term), "en-US:");
+        for (k = begin; k < p + letters; ++k)
+            if (in->text[k] != ',')
+                term[t++] = (char)(in->text[k] >= 'A' && in->text[k] <= 'Z' ? in->text[k] + 32 : in->text[k]);
+        term[t] = '\0';
+        if (ttf_resource_get(in->engine, "lexicon", "ko-KR", term, NULL))
+            return 0;
+    }
+    unit = ttf_resource_get(in->engine, "letter_unit", "ko-KR", key, NULL);
+    /* Only declared units: other letters (20F, 4K, 45A) are ambiguous labels
+       with their own preservation and unreadable-read policy. */
+    if (!unit)
+        return 0;
+    p += letters;
+    for (i = in->index; i < in->token_count && in->tokens[i].begin < p; ++i) {
+    }
+    if (in->tokens[i - 1].end != p || !korean_neighbour(in, p))
+        return 0;
+    semantic->type = TTF_SEM_MEASURE;
+    (void)snprintf(semantic->unit, sizeof(semantic->unit), "%s", unit);
+    (void)snprintf(semantic->rule, sizeof(semantic->rule), "ko:letter-unit");
+    semantic->input_end = p;
+    semantic->layer = TTF_LAYER_COMMON;
+    return i - in->index;
+}
+
 /* Digits one by one, Latin letters by their Korean names; a letter run and a
  * digit run are separated by a space. */
 ttf_status_t ttf_ko_render_identifier(const ttf_engine_t *engine, const char *value,

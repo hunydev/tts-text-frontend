@@ -452,6 +452,16 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    : ttf_validation_error(d,
                                           "phone map index exceeds its Hangul composition bounds");
     }
+    if (SAME(k, "letter_unit")) {
+        size_t i, n = strlen(key);
+        *handled = 1;
+        for (i = 0; i < n; ++i)
+            if (!((key[i] >= 'a' && key[i] <= 'z') || (key[i] >= 'A' && key[i] <= 'Z')))
+                break;
+        return n && n < 8 && i == n && v[0] && strlen(v) < 32
+                   ? TTF_OK
+                   : ttf_validation_error(d, "letter_unit key is 1..7 ASCII letters, value a unit id");
+    }
     if (SAME(k, "number_spacing")) {
         *handled = 1;
         return (SAME(key, "group") && ttf_validation_enum(v, "space|compact|unit")) ||
