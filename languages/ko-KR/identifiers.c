@@ -319,6 +319,74 @@ size_t ttf_ko_classify_card(const ttf_pack_input_t *in, ttf_semantic_t *semantic
     return i - in->index;
 }
 
+/* A vehicle plate (25후 5748): two or three digits, one declared plate syllable,
+ * an optional space and a four-digit serial. The serial is read digit by digit
+ * (오칠사팔); the front number keeps its value reading. A counter after the
+ * serial (34가 1234명) is a quantity, not a plate. Speech output only. */
+static int plate_tail(const ttf_pack_input_t *in, size_t end) {
+    size_t i;
+    if (valid_tail(in, end))
+        return 1;
+    for (i = in->index; i < in->token_count; ++i)
+        if (in->tokens[i].begin == end && in->tokens[i].script == TTF_SCRIPT_HANGUL) {
+            size_t n = in->tokens[i].end - end;
+            char key[TTF_IR_VALUE_SIZE];
+            if (n < 3 || memcmp(in->text + end, "번", 3) || n - 3 >= sizeof(key))
+                return 0;
+            if (n == 3)
+                return 1;
+            memcpy(key, in->text + end + 3, n - 3);
+            key[n - 3] = '\0';
+            return ttf_resource_get(in->engine, "particle", "ko-KR", key, NULL) != NULL;
+        }
+    return 0;
+}
+
+size_t ttf_ko_classify_plate(const ttf_pack_input_t *in, ttf_semantic_t *semantic) {
+    size_t begin = in->tokens[in->index].begin, p = begin, front, serial, i, used;
+    char before, letter[4];
+    const char *flag;
+    if (begin == in->length || !decimal_digit(in->text[begin]))
+        return 0;
+    before = begin ? in->text[begin - 1] : ' ';
+    if (alnum(before) || before == '-' || before == '.' || before == ',' || before == '+')
+        return 0;
+    while (p < in->length && decimal_digit(in->text[p]))
+        ++p;
+    front = p - begin;
+    if (front < 2 || front > 3 || p + 3 > in->length ||
+        (unsigned char)in->text[p] < 0xEA || (unsigned char)in->text[p] > 0xED)
+        return 0;
+    memcpy(letter, in->text + p, 3);
+    letter[3] = '\0';
+    flag = ttf_resource_get(in->engine, "vehicle_plate_letter", "ko-KR", letter, NULL);
+    if (!flag || strcmp(flag, "1"))
+        return 0;
+    p += 3;
+    if (p < in->length && in->text[p] == ' ')
+        ++p;
+    for (serial = p; p < in->length && decimal_digit(in->text[p]); ++p) {
+    }
+    if (p - serial != 4 || (p < in->length && (alnum(in->text[p]) || in->text[p] == '-')) ||
+        !plate_tail(in, p))
+        return 0;
+    for (i = in->index; i < in->token_count && in->tokens[i].begin < p; ++i) {
+    }
+    if (in->tokens[i - 1].end != p)
+        return 0;
+    used = 0;
+    memcpy(semantic->value, in->text + begin, front + 3);
+    used = front + 3;
+    memcpy(semantic->value + used, in->text + serial, 4);
+    semantic->value[used + 4] = '\0';
+    (void)snprintf(semantic->unit, sizeof(semantic->unit), "vehicle_plate");
+    (void)snprintf(semantic->rule, sizeof(semantic->rule), "ko:vehicle-plate");
+    semantic->type = TTF_SEM_DIGIT_SEQUENCE;
+    semantic->input_end = p;
+    semantic->layer = TTF_LAYER_COMMON;
+    return i - in->index;
+}
+
 /* Digits one by one, Latin letters by their Korean names; a letter run and a
  * digit run are separated by a space. */
 ttf_status_t ttf_ko_render_identifier(const ttf_engine_t *engine, const char *value,

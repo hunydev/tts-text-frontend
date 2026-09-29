@@ -14,6 +14,7 @@ import re
 import sys
 
 ACTIVE_JSONL = (
+    "ko_vehicle_plate_v23",
     "ko_identifier_shapes_v23",
     "break_controls_v23",
     "ko_spacing_option_v23",

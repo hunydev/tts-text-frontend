@@ -418,7 +418,7 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     }
     if (SAME(k, "counter_role_unit") || SAME(k, "ordinal_prefix_unit") ||
         SAME(k, "counter_noun_unit") || SAME(k, "counter_noun_tail") ||
-        SAME(k, "counter_noun_attached")) {
+        SAME(k, "counter_noun_attached") || SAME(k, "vehicle_plate_letter")) {
         *handled = 1;
         if ((status = bounded_key(r, 32, d)) != TTF_OK)
             return status;

@@ -559,6 +559,19 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     case TTF_SEM_DIGIT_SEQUENCE:
         if (strcmp(s->unit, "financial_identifier") == 0)
             return ttf_ko_render_identifier(e, s->value, out);
+        if (!strcmp(s->unit, "vehicle_plate")) {
+            /* 25후5748: front value, plate syllable, serial digit by digit. */
+            char front[4] = {0};
+            size_t n = strspn(s->value, "0123456789");
+            if (n < 2 || n > 3 || strlen(s->value) != n + 3 + 4)
+                return TTF_EINVAL;
+            memcpy(front, s->value, n);
+            /* 01후: a leading zero keeps the digit reading (공일후). */
+            TRY(front[0] == '0' ? ttf_ko_render_identifier(e, front, out) : cardinal(e, front, out));
+            TRY(ttf_buffer_append(out, s->value + n, 3));
+            TRY(ttf_buffer_puts(out, " "));
+            return ttf_ko_render_identifier(e, s->value + n + 3, out);
+        }
         if (!strcmp(s->unit, "leading_zero")) {
             const char *p = s->value;
             const char *zero = resource(e, "number", "leading_zero_zero",
@@ -1550,6 +1563,9 @@ static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         return identifier;
     if (in->engine->frontend_options.output_mode == TTF_OUTPUT_SPEECH) {
         identifier = ttf_ko_classify_card(in, s);
+        if (identifier)
+            return identifier;
+        identifier = ttf_ko_classify_plate(in, s);
         if (identifier)
             return identifier;
     }

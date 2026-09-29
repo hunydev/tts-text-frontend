@@ -1182,6 +1182,18 @@
       },
       "category_overrides": {},
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/ko_vehicle_plate_v23.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Night work 2026-09-29 under the user's goal; independently authored synthetic cases, written before the implementation",
+        "reason": "Vehicle plate serials read digit by digit; apartments, floors, months, counted tails and text output are guards."
+      },
+      "category_overrides": {},
+      "case_overrides": {}
     }
   ],
   "excluded": [
