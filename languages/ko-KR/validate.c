@@ -378,6 +378,18 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    : ttf_validation_error(
                          d, "native standalone label must contain 1..95 printable bytes");
     }
+    if (SAME(k, "context") && (SAME(key, "absorb_foreign") || SAME(key, "attached_grammar"))) {
+        *handled = 1;
+        return ttf_validation_enum(v, "0|1")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "sentence-language context flag must be 0 or 1");
+    }
+    if (SAME(k, "context") && SAME(key, "sentence_word_weight")) {
+        *handled = 1;
+        return ttf_validation_integer(v, 1, 9, NULL)
+                   ? TTF_OK
+                   : ttf_validation_error(d, "sentence_word_weight must be an integer in 1..9");
+    }
     if (SAME(k, "context")) {
         if (!ttf_validation_enum(key, "hangul_weight|particle_weight|clause_floor|script_weight")) {
             if (wildcard)

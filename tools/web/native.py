@@ -174,7 +174,7 @@ class Engine:
                 "ttf_engine_validate_resources": (I, [P, C.POINTER(ResourceValidationReport), C.POINTER(ResourceDiagnostic)]),
             })
         frontend_keys = {"input_format", "output_mode", "unreadable", "brackets",
-                         "unknown_foreign", "decorative", "initialism", "spacing", "max_control_bytes",
+                         "unknown_foreign", "decorative", "initialism", "spacing", "matrix", "max_control_bytes",
                          "hanja", "kana"}
         has_frontend = hasattr(self.lib, "ttf_engine_set_frontend_options")
         if frontend_keys.intersection(options) and not has_frontend:
@@ -249,7 +249,7 @@ class Engine:
             if hasattr(self.lib, "ttf_engine_set_option"):
                 for name, default in (("brackets", "read"), ("unknown_foreign", "guess"),
                                       ("decorative", "follow"), ("initialism", "spell"),
-                                      ("spacing", "orthographic")):
+                                      ("spacing", "orthographic"), ("matrix", "auto")):
                     if options.get(name, default) != default:
                         self.check(self.lib.ttf_engine_set_option(
                             self.handle, name.encode(), options[name].encode()))

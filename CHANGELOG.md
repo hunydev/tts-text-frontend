@@ -2,6 +2,18 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Give each sentence a language before per-token routing (named option
+  `matrix=auto|declared|legacy`, default `auto`; CLI `--matrix`). An English
+  sentence now reads its own words and numbers in English and keeps Hangul,
+  Hanja and Kana words as written: `My friend 민수 bought 3 books yesterday.` →
+  `My friend 민수 bought three books yesterday.` (previously `미 프린드 민수
+  바우그흐트 삼 부크스 …`). Korean sentences keep the previous routing. Pack
+  resources `absorb_foreign`, `attached_grammar` and `sentence_word_weight`
+  declare the policy; the core has no language branch and ABI v1 is unchanged.
+  Korean and English benchmarks: 0 changed sentences. The v0.18 context-cache
+  metadata oracle is checked under `--matrix legacy`. See
+  `docs/matrix-language.ko.md` and `matrix_language_v24.jsonl` (28 cases).
+
 - Complete eight mandatory Korean particle pairs in the resource tables:
   `(이)랑`, `(이)나`, `(이)나마`, `(이)라도`, `(이)든`, `(이)든지`,
   `(이)야말로`, `(이)라든지`. `3랑` now reads `삼이랑`; the quantity boundary

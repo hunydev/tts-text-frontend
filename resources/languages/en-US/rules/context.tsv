@@ -92,6 +92,9 @@ context	en-US	latin_weight	8
 # Phrase evidence saturates below the default attached-particle signal.
 context	en-US	phrase_ceiling	160
 context	en-US	clause_weight	500
+# Sentence language (docs/matrix-language.ko.md): an English sentence reads its
+# own material and leaves words of another script as they are.
+context	en-US	absorb_foreign	0
 # Predicate roles are deterministic policy data, not POS-model predictions.
 context_role	en-US	is	finite
 context_role	en-US	are	finite

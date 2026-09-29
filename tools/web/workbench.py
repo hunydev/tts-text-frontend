@@ -8,6 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 MAX_TEXT_BYTES = 16384
 CORPORA = {
+    "matrix-language-v24": ("문장 언어 판정 (영어 문장 속 한글 유지)", "matrix_language_v24.jsonl"),
     "en-number-dash-v23": ("영어 숫자 뒤 대시 --", "en_number_dash_v23.jsonl"),
     "en-meridiem-v23": ("영어 오전·오후 시각 5pm·7 a.m.", "en_meridiem_v23.jsonl"),
     "ko-clothing-size-v23": ("옷 사이즈 44~99 한 자리씩", "ko_clothing_size_v23.jsonl"),
@@ -94,6 +95,7 @@ DEFAULTS = dict(
     decorative="follow",
     initialism="spell",
     spacing="orthographic",
+    matrix="auto",
     max_control_bytes=4096,
     sentence_split=True,
     phrase_split=True,
@@ -183,6 +185,7 @@ def validate(request, corpus=False):
         ("decorative", ("follow", "read")),
         ("initialism", ("spell", "word")),
         ("spacing", ("orthographic", "reading-unit")),
+        ("matrix", ("auto", "legacy", "declared")),
         ("domain", ("none", "finance", "finance-vocabulary")),
     ]:
         if opts[key] not in allowed:
@@ -449,7 +452,7 @@ def catalog():
                 text=row["text"], expected=row["expected"],
                 options={key: row[key] for key in (
                     "default_language", "input_format", "output_mode", "unreadable", "brackets", "unknown_foreign",
-                    "decorative", "initialism", "spacing"
+                    "decorative", "initialism", "spacing", "matrix"
                 ) if key in row},
                 reference_review=reviewed_cases[(relative, row["id"])],
             ))

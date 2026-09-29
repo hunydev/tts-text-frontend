@@ -86,6 +86,252 @@ static const ttf_language_pack_t *script_pack(const ttf_engine_t *e, ttf_script_
     }
     return best;
 }
+/* Sentence language (docs/matrix-language.ko.md). Each sentence of the context
+   view gets one matrix pack. A pack that absorbs foreign material (resource
+   `context <tag> absorb_foreign 1`, the default) keeps per-token scoring; for a
+   pack that does not, every token of the sentence is routed to it except words
+   of a script another pack owns, which keep their own reading. */
+typedef struct {
+    const ttf_language_pack_t *pack; /* NULL: per-token scoring decides */
+    char why[40];
+} matrix_route_t;
+typedef struct {
+    size_t count;
+    matrix_route_t routes[];
+} matrix_plan_t;
+static const char matrix_memo_identity = 0;
+
+static int pack_flag(const ttf_engine_t *e, const ttf_language_pack_t *pack, const char *key,
+                     int fallback) {
+    const char *value = ttf_resource_get(e, "context", pack->language_tag, key, NULL);
+    return value ? strcmp(value, "0") != 0 : fallback;
+}
+/* An eojeol carries its particles and endings, so a pack may weigh its words. */
+static unsigned word_weight(const ttf_engine_t *e, const ttf_language_pack_t *pack) {
+    const char *value = ttf_resource_get(e, "context", pack->language_tag, "sentence_word_weight", NULL);
+    return value && *value >= '1' && *value <= '9' && !value[1] ? (unsigned)(*value - '0') : 1u;
+}
+static uint32_t token_cp(const ttf_pack_input_t *in, size_t k) {
+    uint32_t cp = 0;
+    size_t width;
+    if (in->tokens[k].end > in->tokens[k].begin &&
+        ttf_utf8_decode(in->text + in->tokens[k].begin, in->tokens[k].end - in->tokens[k].begin,
+                        &cp, &width) == 1 &&
+        width == in->tokens[k].end - in->tokens[k].begin)
+        return cp;
+    return 0;
+}
+/* A sentence ends after . ! ? (ASCII or ideographic/full-width) followed by
+   whitespace or the end of the view, and at a newline. */
+static int sentence_end(const ttf_pack_input_t *in, size_t k) {
+    const ttf_token_t *t = &in->tokens[k];
+    if (t->script == TTF_SCRIPT_WHITESPACE)
+        return memchr(in->text + t->begin, '\n', t->end - t->begin) != NULL;
+    if (t->script == TTF_SCRIPT_PUNCTUATION) {
+        uint32_t cp = token_cp(in, k);
+        if (cp == '.' || cp == '!' || cp == '?' || cp == 0x3002 || cp == 0xff01 || cp == 0xff1f)
+            return k + 1 == in->token_count || in->tokens[k + 1].script == TTF_SCRIPT_WHITESPACE;
+    }
+    return 0;
+}
+static uint32_t matrix_closer(uint32_t cp) {
+    switch (cp) {
+    case '(':
+        return ')';
+    case '[':
+        return ']';
+    case '{':
+        return '}';
+    case 0xff08:
+        return 0xff09;
+    default:
+        return ttf_quote_closer(cp);
+    }
+}
+/* A letter run joined to an earlier letter or digit without whitespace
+   (report.txt, R&D, x-y, 3km) continues that word; it is not another vote. */
+static int continues_word(const ttf_pack_input_t *in, size_t begin, size_t k) {
+    while (k > begin && in->tokens[k - 1].end == in->tokens[k].begin) {
+        ttf_script_t script = in->tokens[--k].script;
+        if (script == TTF_SCRIPT_WHITESPACE)
+            return 0;
+        if (script != TTF_SCRIPT_PUNCTUATION && script != TTF_SCRIPT_SYMBOL)
+            return 1;
+    }
+    return 0;
+}
+/* A word written only in capitals (RAM, SSD, Q) is a code or an initialism;
+   such words appear in every language and are not sentence evidence. */
+static int capital_code(const char *s, size_t n) {
+    size_t i;
+    int upper = 0;
+    for (i = 0; i < n; ++i) {
+        if (s[i] >= 'a' && s[i] <= 'z')
+            return 0;
+        upper |= s[i] >= 'A' && s[i] <= 'Z';
+    }
+    return upper;
+}
+static size_t pack_index(const ttf_engine_t *e, const ttf_language_pack_t *pack) {
+    size_t j;
+    for (j = 0; j < e->pack_count; ++j)
+        if (e->packs[j] == pack)
+            return j;
+    return SIZE_MAX;
+}
+/* Decide the matrix of tokens [begin, end). Contents of complete brackets and
+   quotations do not vote. A word of a grammar-attaching pack written against a
+   preceding token of another script (meeting은, 3시에, "..."라고) is grammar
+   evidence; otherwise words vote for the pack owning their script. Single
+   letters, all-capital codes and runs continuing a word (3km, report.txt) do
+   not vote, and one word or a tie is no sentence language. */
+static const ttf_language_pack_t *sentence_matrix(const ttf_engine_t *e,
+                                                  const ttf_pack_input_t *in, size_t begin,
+                                                  size_t end, char why[40]) {
+    const ttf_language_pack_t *fallback = ttf_find_pack(e, e->default_language), *best = NULL;
+    unsigned votes[TTF_MAX_PACKS] = {0}, grammar[TTF_MAX_PACKS] = {0};
+    uint32_t closers[32];
+    size_t openers[32], depth = 0, k, j, top = SIZE_MAX, second = 0;
+    int *inner = (int *)calloc(end - begin + 1, sizeof(*inner)), nested = 0;
+    const char *basis = "vote";
+    /* One pass pairs brackets and quotations; unmatched openers mark nothing. */
+    for (k = begin; inner && k < end; ++k) {
+        uint32_t cp = in->tokens[k].script == TTF_SCRIPT_PUNCTUATION ? token_cp(in, k) : 0, closer;
+        if (!cp)
+            continue;
+        if (depth && cp == closers[depth - 1]) {
+            --depth;
+            ++inner[openers[depth] + 1 - begin];
+            --inner[k - begin];
+        } else if ((closer = matrix_closer(cp)) && depth < 32) {
+            openers[depth] = k;
+            closers[depth++] = closer;
+        }
+    }
+    for (k = begin; k < end; ++k) {
+        const ttf_token_t *t = &in->tokens[k];
+        const ttf_language_pack_t *owner;
+        if (inner)
+            nested += inner[k - begin];
+        if (nested > 0 || !(owner = script_pack(e, t->script)) ||
+            (j = pack_index(e, owner)) == SIZE_MAX)
+            continue;
+        if (k > begin && in->tokens[k - 1].end == t->begin &&
+            in->tokens[k - 1].script != t->script &&
+            in->tokens[k - 1].script != TTF_SCRIPT_WHITESPACE &&
+            pack_flag(e, owner, "attached_grammar", 0)) {
+            ++grammar[j];
+            continue;
+        }
+        if (continues_word(in, begin, k) || t->end - t->begin == 1 ||
+            capital_code(in->text + t->begin, t->end - t->begin))
+            continue;
+        votes[j] += word_weight(e, owner);
+    }
+    free(inner);
+    for (j = 0; j < e->pack_count; ++j)
+        if (grammar[j] && (top == SIZE_MAX || grammar[j] > grammar[top]))
+            top = j;
+    if (top != SIZE_MAX) {
+        basis = "grammar";
+        best = e->packs[top];
+    } else {
+        for (j = 0; j < e->pack_count; ++j)
+            if (top == SIZE_MAX || votes[j] > votes[top])
+                top = j;
+        for (j = 0; j < e->pack_count; ++j)
+            if (j != top && votes[j] > second)
+                second = votes[j];
+        /* One word, or a tie, is not a sentence language. */
+        if (top != SIZE_MAX && votes[top] >= 2 && votes[top] > second)
+            best = e->packs[top];
+    }
+    if (!best) {
+        basis = "default";
+        best = fallback;
+    }
+    if (why) {
+        unsigned total = 0;
+        for (j = 0; j < e->pack_count; ++j)
+            total += votes[j];
+        snprintf(why, 40, "matrix=%s(%s %u/%u)", best ? best->language_tag : "und", basis,
+                 top != SIZE_MAX ? votes[top] : 0u, total);
+    }
+    return best;
+}
+static void sentence_bounds(const ttf_pack_input_t *in, size_t index, size_t *begin, size_t *end) {
+    size_t b = index, n = in->token_count;
+    while (b > 0 && !sentence_end(in, b - 1))
+        --b;
+    *begin = b;
+    while (index < n && !sentence_end(in, index))
+        ++index;
+    *end = index < n ? index + 1 : n;
+}
+static void matrix_route(const ttf_engine_t *e, const ttf_pack_input_t *in, size_t begin,
+                         size_t end, matrix_route_t *routes) {
+    char why[40];
+    const ttf_language_pack_t *matrix = e->matrix_policy == TTF_MATRIX_DECLARED
+                                            ? ttf_find_pack(e, e->default_language)
+                                            : sentence_matrix(e, in, begin, end, why);
+    int forced = matrix && !pack_flag(e, matrix, "absorb_foreign", 1);
+    size_t k;
+    if (e->matrix_policy == TTF_MATRIX_DECLARED)
+        snprintf(why, sizeof(why), "matrix=%s(declared)", matrix ? matrix->language_tag : "und");
+    for (k = begin; k < end; ++k) {
+        const ttf_language_pack_t *owner = script_pack(e, in->tokens[k].script);
+        routes[k - begin].pack = forced && (!owner || owner == matrix) ? matrix : NULL;
+        memcpy(routes[k - begin].why, why, sizeof(why));
+    }
+}
+static ttf_status_t build_matrix_plan(const ttf_pack_input_t *in, void **out) {
+    matrix_plan_t *plan;
+    size_t begin = 0, end;
+    *out = NULL;
+    if (in->token_count > (SIZE_MAX - sizeof(*plan)) / sizeof(plan->routes[0]))
+        return TTF_ELIMIT;
+    plan = (matrix_plan_t *)calloc(1, sizeof(*plan) + in->token_count * sizeof(plan->routes[0]));
+    if (!plan)
+        return TTF_ENOMEM;
+    plan->count = in->token_count;
+    while (begin < in->token_count) {
+        sentence_bounds(in, begin, &begin, &end);
+        matrix_route(in->engine, in, begin, end, plan->routes + begin);
+        begin = end;
+    }
+    *out = plan;
+    return TTF_OK;
+}
+static void dispose_matrix_plan(void *plan) {
+    free(plan);
+}
+/* NULL keeps per-token scoring; otherwise the sentence's non-absorbing matrix. */
+static const ttf_language_pack_t *matrix_pack(const ttf_engine_t *e, const ttf_pack_input_t *in,
+                                              char why[40]) {
+    matrix_plan_t *plan;
+    matrix_route_t route;
+    size_t begin, end;
+    if (e->matrix_policy == TTF_MATRIX_LEGACY || in->index >= in->token_count)
+        return NULL;
+    if (ttf_context_memo_enabled(in) &&
+        (plan = (matrix_plan_t *)ttf_context_memo_get(in, &matrix_memo_identity,
+                                                      build_matrix_plan, dispose_matrix_plan))) {
+        memcpy(why, plan->routes[in->index].why, 40);
+        return plan->routes[in->index].pack;
+    }
+    /* Direct callers without a request memo decide the one sentence. */
+    sentence_bounds(in, in->index, &begin, &end);
+    {
+        matrix_route_t *routes = (matrix_route_t *)malloc((end - begin) * sizeof(*routes));
+        if (!routes)
+            return NULL;
+        matrix_route(e, in, begin, end, routes);
+        route = routes[in->index - begin];
+        free(routes);
+    }
+    memcpy(why, route.why, 40);
+    return route.pack;
+}
 static const ttf_language_pack_t *context_pack(const ttf_engine_t *e, const ttf_pack_input_t *in,
                                                char trace[192]) {
     const ttf_language_pack_t *best = ttf_find_pack(e, e->default_language);
@@ -100,6 +346,17 @@ static const ttf_language_pack_t *context_pack(const ttf_engine_t *e, const ttf_
         if (n > score) {
             score = n;
             best = e->packs[j];
+        }
+    }
+    {
+        /* The score trace stays; a matrix that changes the route is appended. */
+        char why[40];
+        const ttf_language_pack_t *matrix = matrix_pack(e, in, why);
+        size_t used = strlen(trace);
+        if (matrix && matrix != best) {
+            if (used < 191)
+                snprintf(trace + used, 192 - used, "%s%s", used ? " " : "", why);
+            best = matrix;
         }
     }
     return best;

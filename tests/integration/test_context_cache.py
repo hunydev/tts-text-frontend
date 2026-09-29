@@ -19,6 +19,10 @@ ROOT = Path(__file__).resolve().parents[2]
 REFERENCE = Path(__file__).with_name("context_cache_v18_reference.json")
 PARTIAL_REFERENCE = Path(__file__).with_name("context_cache_partial_v18_reference.json")
 PROFILES = ((), ("--first-target", "1", "--normal-target", "3", "--max-length", "12"))
+# The v0.18 metadata oracle describes the per-token router, kept as matrix=legacy.
+# The default sentence-language router is checked against the same independent
+# text expectations and for chunk-invariant spans (auto_checks).
+LEGACY = ("--matrix", "legacy")
 
 
 def case(identifier, language, text, expected=None, **options):
@@ -131,8 +135,21 @@ def compatibility_checks(args, references, cases=CASES):
             expected = reference["profiles"][profile_index]
             assert expected["text"] == row["expected"], (row["id"], "invalid independent text reference")
             for chunk in (1, 2, 7, 4096):
-                actual = run_stream(args.cli, args.resources, row, profile, chunk)
+                actual = run_stream(args.cli, args.resources, row, LEGACY + profile, chunk)
                 assert actual == expected, (row["id"], profile_index, chunk, expected, actual)
+                checks += 1
+    return checks
+
+
+def auto_checks(args, cases):
+    checks = 0
+    for row in cases:
+        for profile in PROFILES:
+            whole = run_stream(args.cli, args.resources, row, profile, 4096)
+            assert whole["text"] == row["expected"], (row["id"], profile, whole["text"])
+            for chunk in (1, 2, 7):
+                actual = run_stream(args.cli, args.resources, row, profile, chunk)
+                assert actual == whole, (row["id"], profile, chunk, whole, actual)
                 checks += 1
     return checks
 
@@ -177,7 +194,8 @@ def partial_counter_checks(args, references):
                    " ".join(["세 개는"] * count))
         limit = str(len(row["text"].encode()) + 1)
         profile = ("--first-target", limit, "--normal-target", limit, "--max-length", limit)
-        result = run_stream(args.cli, args.resources, row, profile, len(row["text"].encode()), timeout=60)
+        result = run_stream(args.cli, args.resources, row, LEGACY + profile, len(row["text"].encode()),
+                            timeout=60)
         assert result["text"] == row["expected"] and len(result["spans"]) == 3 * count - 1
         for index, span in enumerate(result["spans"]):
             item, part = divmod(index, 3)
@@ -254,6 +272,7 @@ def main():
     checks = compatibility_checks(args, references)
     checks += large_numeric_checks(args, references)
     checks += partial_counter_checks(args, partial_references)
+    checks += auto_checks(args, CASES + PARTIAL_CASES)
     native_count = native_checks(args)
     print(f"context cache: {checks} compatibility/large-input checks; {native_count} native split comparisons")
 

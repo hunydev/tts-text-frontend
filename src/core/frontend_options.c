@@ -78,6 +78,17 @@ ttf_status_t ttf_engine_set_option(ttf_engine_t *engine, const char *name, const
             return TTF_EINVAL;
         return TTF_OK;
     }
+    if (!strcmp(name, "matrix")) {
+        if (!strcmp(value, "auto"))
+            engine->matrix_policy = TTF_MATRIX_AUTO;
+        else if (!strcmp(value, "legacy"))
+            engine->matrix_policy = TTF_MATRIX_LEGACY;
+        else if (!strcmp(value, "declared"))
+            engine->matrix_policy = TTF_MATRIX_DECLARED;
+        else
+            return TTF_EINVAL;
+        return TTF_OK;
+    }
     if (!strcmp(name, "decorative")) {
         if (!strcmp(value, "follow"))
             engine->decorative_policy = TTF_DECORATIVE_FOLLOW;

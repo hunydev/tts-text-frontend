@@ -40,6 +40,9 @@ typedef enum { TTF_INITIALISM_SPELL = 0, TTF_INITIALISM_WORD = 1 } ttf_initialis
 /* Opt-in Korean orthographic readings. Independent defaults preserve input. */
 typedef enum { TTF_HANJA_PASSTHROUGH = 0, TTF_HANJA_KOREAN = 1 } ttf_hanja_mode_t;
 typedef enum { TTF_KANA_PASSTHROUGH = 0, TTF_KANA_KOREAN = 1 } ttf_kana_mode_t;
+/* Sentence language (v0.24): decided per sentence, fixed to the configured
+   default language, or the pre-v0.24 per-token scoring only. */
+typedef enum { TTF_MATRIX_AUTO = 0, TTF_MATRIX_LEGACY = 1, TTF_MATRIX_DECLARED = 2 } ttf_matrix_policy_t;
 
 /* Additive options: the ABI v1 config, result and language-pack layouts stay
    unchanged. Initialize before editing fields. Apply before engine freeze.
@@ -62,7 +65,11 @@ typedef struct {
    "unknown_foreign" = guess|spell|preserve, "decorative" = follow|read,
    "initialism" = spell|word, "spacing" = orthographic|reading-unit (Korean
    number spacing: resource default, NIKL article 44; or a space after every
-   Sino unit and one word per digit in digit readings). */
+   Sino unit and one word per digit in digit readings), "matrix" =
+   auto|legacy|declared (sentence language: auto decides each sentence from its
+   words and attached grammar; declared uses the default language for every
+   sentence; legacy is the pre-v0.24 per-token routing). An English sentence
+   leaves words of another script as written. */
 TTF_API ttf_status_t ttf_engine_set_option(ttf_engine_t *engine, const char *name,
                                            const char *value);
 

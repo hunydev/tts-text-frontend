@@ -46,6 +46,7 @@ struct ttf_engine {
     ttf_decorative_policy_t decorative_policy;
     ttf_initialism_policy_t initialism_policy;
     int reading_unit_spacing; /* spacing=reading-unit; 0 keeps resource spacing */
+    ttf_matrix_policy_t matrix_policy; /* matrix=auto (0), legacy or declared */
     char *resource_root, *default_language;
     int frozen, validating;
     struct ttf_trace_state *trace_state;   /* Request view only; frozen owner stays NULL. */

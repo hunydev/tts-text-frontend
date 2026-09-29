@@ -27,6 +27,13 @@ context	ko-KR	hangul_weight	20
 context	ko-KR	particle_weight	200
 context	ko-KR	clause_floor	60
 context	ko-KR	script_weight	1000
+# Sentence language: a Korean sentence reads embedded foreign material in Korean;
+# Hangul written against another script (meeting은, 3시에) is Korean grammar.
+context	ko-KR	absorb_foreign	1
+context	ko-KR	attached_grammar	1
+# One eojeol holds a word with its particles and endings: it counts as two words
+# against another script (update 안내 update stays Korean).
+context	ko-KR	sentence_word_weight	2
 
 # Particle agreement after a spoken reading: consonant|vowel[|rieul] forms.
 # Only obligatory allomorphs; optional copula contractions (이며/며) keep their text.

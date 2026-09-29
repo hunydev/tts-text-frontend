@@ -113,3 +113,37 @@ KO/EN scores or extend quotation scopes. Their own language metadata is `und`.
 Ordinary text in non-opaque tag bodies continues through normal routing. Language
 packs should consume the supplied token view and respect classification bounds;
 raw bytes inside an opaque token are not prose evidence.
+
+## Sentence language (v0.24)
+
+Per-token scores decide inside a sentence of a pack that absorbs foreign material;
+the sentence itself now has a language first (`docs/matrix-language.ko.md`). The
+named option `matrix` selects `auto` (default), `declared` (the configured
+default language for every sentence) or `legacy` (per-token scores only, the
+pre-v0.24 behaviour).
+
+`auto` splits the context view at `. ! ?` (ASCII, ideographic, full-width) before
+whitespace and at newlines. Contents of complete brackets and quotations do not
+vote. A word of a pack declaring `attached_grammar` written against a preceding
+token of another script (`meeting은`, `3시에`, `"…"라고`) makes the sentence that
+pack's. Otherwise words vote for the pack owning their script, weighted by
+`sentence_word_weight`; single letters, all-capital codes and letter runs that
+continue an earlier word (`report.txt`, `3km`) do not vote, and fewer than two
+votes or a tie leaves `default_language`.
+
+| Input (`en-US` or `ko-KR` default) | Sentence | Speech |
+|---|---|---|
+| `My friend 민수 bought 3 books yesterday.` | en-US | `My friend 민수 bought three books yesterday.` |
+| `I visited 北京 with 민수 in 2019.` (`--hanja korean`) | en-US | `I visited 北京 with 민수 in twenty nineteen.` |
+| `오늘 meeting은 3시에 R&D실에서` | ko-KR (grammar) | `오늘 미팅은 세 시에 알앤디실에서` |
+| `용량 5GB, RAM 8GB, SSD 256GB` | ko-KR (default) | Korean readings, unchanged |
+
+`absorb_foreign 0` (en-US) routes every token of its sentence to that pack except
+words of a script another pack owns, which keep their own reading; Hanja and Kana
+options therefore apply only inside Korean sentences. A pack without the row
+absorbs, so custom packs keep the previous routing. `context_trace` keeps the
+score list and appends `matrix=<tag>(<basis> <top>/<total>)` only where the
+sentence language changed the route. With default resources the Korean benchmark
+(142,248 sentences) and the English benchmark are unchanged; the contract is
+`tests/evaluation/matrix_language_v24.jsonl` (28 cases).
+
