@@ -12,7 +12,7 @@ function download(name,data){const url=URL.createObjectURL(new Blob([JSON.string
 function option(value,text){const e=node("option",text);e.value=value;return e;}
 function card(title,value,detail){const e=node("div");e.className="quality-card";e.append(node("span",title),node("strong",value),node("small",detail));return e;}
 function bar(m){const e=node("div");e.className="bar";e.title=`정확 ${percent(m.exact_rate)} / 공백 제거 ${percent(m.compact_rate)}`;for(const [kind,v] of [["exact",m.exact_rate||0],["spacing",m.scorable?m.spacing_only/m.scorable:0]]){const x=node("span");x.className=kind;x.style.width=(v*100)+"%";e.append(x);}return e;}
-function delta(current,old){if(!old)return "—";const one=(a,b)=>a===null||b===null?"—":((a-b)*100>=0?"+":"")+((a-b)*100).toFixed(2)+"pp";return `정확 ${one(current.exact_rate,old.exact_rate)} / 공백 ${one(current.compact_rate,old.compact_rate)}`;}
+function delta(current,old){if(!old)return "—";const one=(a,b)=>a===null||b===null?"—":((a-b)*100>=0?"+":"")+((a-b)*100).toFixed(2)+"pp";return `정확 ${one(current.exact_rate,old.exact_rate)} / 공백 ${one(current.compact_rate,old.compact_rate)}`+(current.variant_rate!==undefined&&old.variant_rate!==undefined?` / 변이 ${one(current.variant_rate,old.variant_rate)}`:"");}
 function render(){
  const r=state.data,m=r.sentences;$("cards").replaceChildren(
   card("정확 일치",percent(m.exact_rate),`${number(m.exact)} / ${number(m.scorable)}문장`),
