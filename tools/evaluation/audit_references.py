@@ -14,6 +14,7 @@ import re
 import sys
 
 ACTIVE_JSONL = (
+    "en_number_dash_v23",
     "en_meridiem_v23",
     "ko_clothing_size_v23",
     "ko_number_letters_v23",

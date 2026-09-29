@@ -106,6 +106,9 @@ static int attached_tail(const ttf_pack_input_t *in, size_t p) {
     if (p >= length)
         return 0;
     c = text[p];
+    /* 1899--seventeen: a doubled hyphen before a word is a dash, not a tail. */
+    if (c == '-' && p + 2 < length && text[p + 1] == '-' && ascii_alpha(text[p + 2]))
+        return 0;
     /* A calendar field cannot end at the first group of a typographic number.
        Commas remain the named-date day/year delimiter; only Unicode numeric
        spaces extend this malformed-field guard. */

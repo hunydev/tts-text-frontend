@@ -1511,6 +1511,10 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
         ttf_resource_layer_t separator_layer = TTF_LAYER_COMMON;
         size_t separator_end = quantity_separator(in, q, &separator_layer);
         int legacy_hyphen = q < n && s[q] == '-';
+        /* 1899--seventeen: a doubled hyphen before a word is a dash after the
+           number, not an interval; the number is read and the dash kept. */
+        if (legacy_hyphen && q + 2 < n && s[q + 1] == '-' && ascii_letter(s[q + 2]))
+            return finish(in, out, p, TTF_SEM_CARDINAL, "syntax.cardinal");
         /* Keep the established bare-hyphen compatibility grammar; resource
            delimiters additionally provide explicit ranges such as 1~2. */
         if (!separator_end && legacy_hyphen)
