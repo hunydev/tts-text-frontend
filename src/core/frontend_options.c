@@ -78,6 +78,17 @@ ttf_status_t ttf_engine_set_option(ttf_engine_t *engine, const char *name, const
             return TTF_EINVAL;
         return TTF_OK;
     }
+    if (!strcmp(name, "symbol_fallback")) {
+        if (!strcmp(value, "on"))
+            engine->symbol_fallback_policy = TTF_SYMBOL_FALLBACK_ON;
+        else if (!strcmp(value, "native"))
+            engine->symbol_fallback_policy = TTF_SYMBOL_FALLBACK_NATIVE;
+        else if (!strcmp(value, "off"))
+            engine->symbol_fallback_policy = TTF_SYMBOL_FALLBACK_OFF;
+        else
+            return TTF_EINVAL;
+        return TTF_OK;
+    }
     if (!strcmp(name, "matrix")) {
         if (!strcmp(value, "auto"))
             engine->matrix_policy = TTF_MATRIX_AUTO;

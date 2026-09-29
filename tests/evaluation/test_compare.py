@@ -64,7 +64,7 @@ assert compare.compare(before, explicit)["summary"] == result["summary"]
 assert compare.compare(before, explicit)["cases"][0]["frontend_settings"] == {
     "output_mode": "text", "input_format": "plain", "unreadable": "preserve",
     "brackets": "read", "unknown_foreign": "guess", "decorative": "follow", "initialism": "spell",
-    "spacing": "orthographic", "matrix": "auto", "max_control_bytes": 4096, "hanja": "passthrough", "kana": "passthrough"}
+    "spacing": "orthographic", "matrix": "auto", "symbol_fallback": "on", "max_control_bytes": 4096, "hanja": "passthrough", "kana": "passthrough"}
 altered = copy.deepcopy(after)
 altered["cases"].pop()
 rejected(lambda: compare.compare(before, altered))

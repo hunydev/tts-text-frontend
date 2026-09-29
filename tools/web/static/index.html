@@ -252,6 +252,11 @@
             <option value="declared">기본 언어로 고정</option>
             <option value="legacy">이전 방식 (토큰별 점수)</option>
           </select></label>
+          <label>기호·이모지 이름<select id="symbol-fallback">
+            <option value="on">읽기 (없으면 영어 이름)</option>
+            <option value="native">읽기 (해당 언어 이름만)</option>
+            <option value="off">읽지 않음 (처리 불가 정책)</option>
+          </select></label>
           <label>제어 표기 상한 (byte)<input id="max-control" type="number"
             min="1" max="16384" value="4096" /></label>
         </div>

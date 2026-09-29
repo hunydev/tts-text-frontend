@@ -163,8 +163,10 @@ try:
         assert result["expected_match"] and result["verification"]["passed"], result
     assert run("a1@b2.com")[0]["text"] == "에이일 앳 비이 닷 컴"
     assert run("a1@b2.com", opts={"output_mode": "text"})[0]["text"] == "a1@b2.com"
-    assert run("가👨‍👩‍👧‍👦漢나", opts={"unreadable": "drop"})[0]["text"] == "가 나"
-    assert run("가👨‍👩‍👧‍👦漢나")[0]["text"] == "가👨‍👩‍👧‍👦漢나"
+    # Unnamed characters follow the unreadable policy; v0.24 names emoji by default.
+    assert run("가👨‍👩‍👧‍👦漢나", opts={"unreadable": "drop", "symbol_fallback": "off"})[0]["text"] == "가 나"
+    assert run("가👨‍👩‍👧‍👦漢나", opts={"symbol_fallback": "off"})[0]["text"] == "가👨‍👩‍👧‍👦漢나"
+    assert run("가🙂나")[0]["text"] == "가 살짝 미소 짓는 얼굴 나"
     assert run("가🙂나", opts={"output_mode": "text", "unreadable": "drop"})[0]["text"] == "가🙂나"
     for source, extra, message in (
         ("1{", {}, "invalid argument"),

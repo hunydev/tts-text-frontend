@@ -1,4 +1,5 @@
 #include "../core/internal.h"
+#include "../unicode_fallback/fallback.h"
 #include "numeric_grouping.h"
 #include "phone.h"
 
@@ -1115,6 +1116,17 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
             snprintf(out->unit, sizeof(out->unit), "@unreadable-cluster");
             copy_value(out->value, sizeof(out->value), s + b, cluster_end - b);
             return finish(in, out, cluster_end, TTF_SEM_SYMBOL, "syntax.keycap-cluster");
+        }
+    }
+    /* A flag, skin-tone, tag or ZWJ sequence, or a pictograph with its
+       presentation selector, is one object too: the speech pass names it
+       whole or applies the unreadable policy, never part of it. */
+    {
+        size_t cluster_end = ttf_emoji_cluster_end(s, n, b);
+        if (cluster_end) {
+            snprintf(out->unit, sizeof(out->unit), "@unreadable-cluster");
+            copy_value(out->value, sizeof(out->value), s + b, cluster_end - b);
+            return finish(in, out, cluster_end, TTF_SEM_SYMBOL, "syntax.emoji-cluster");
         }
     }
     /* abc_123, @daily_log: an identifier is transmitted like an address, so the

@@ -43,6 +43,13 @@ typedef enum { TTF_KANA_PASSTHROUGH = 0, TTF_KANA_KOREAN = 1 } ttf_kana_mode_t;
 /* Sentence language (v0.24): decided per sentence, fixed to the configured
    default language, or the pre-v0.24 per-token scoring only. */
 typedef enum { TTF_MATRIX_AUTO = 0, TTF_MATRIX_LEGACY = 1, TTF_MATRIX_DECLARED = 2 } ttf_matrix_policy_t;
+/* Unicode spoken fallback (v0.24): name a symbol or emoji no rule reads, from
+   the language's files, then (on) from the English files; or never (off). */
+typedef enum {
+    TTF_SYMBOL_FALLBACK_ON = 0,
+    TTF_SYMBOL_FALLBACK_NATIVE = 1,
+    TTF_SYMBOL_FALLBACK_OFF = 2
+} ttf_symbol_fallback_policy_t;
 
 /* Additive options: the ABI v1 config, result and language-pack layouts stay
    unchanged. Initialize before editing fields. Apply before engine freeze.
@@ -69,7 +76,10 @@ typedef struct {
    auto|legacy|declared (sentence language: auto decides each sentence from its
    words and attached grammar; declared uses the default language for every
    sentence; legacy is the pre-v0.24 per-token routing). An English sentence
-   leaves words of another script as written. */
+   leaves words of another script as written. "symbol_fallback" = on|native|off
+   (speech: a symbol or emoji sequence no rule reads is named from
+   <resources>/unicode-fallback/<language>.idx/.dat/.seq; on also uses the
+   English files; off keeps the unreadable policy). */
 TTF_API ttf_status_t ttf_engine_set_option(ttf_engine_t *engine, const char *name,
                                            const char *value);
 

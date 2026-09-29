@@ -7,6 +7,7 @@ ttf_status_t ttf_trace_foreign_lexicon(const ttf_engine_t *, const char *, const
                                        const char *, size_t, const char *);
 #include "../protected/protected.h"
 #include "../semantic/numeric_width.h"
+#include "../unicode_fallback/fallback.h"
 const ttf_entry_t *ttf_rule_match(const ttf_engine_t *, const char *, const char *, size_t,
                                   size_t *);
 ttf_status_t ttf_foreign_render(const ttf_engine_t *, const ttf_language_pack_t *,
@@ -1181,6 +1182,38 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
                 if (!cluster && e->decorative_policy == TTF_DECORATIVE_READ && normalized.data)
                     cluster = ttf_resource_get(e, "speech_decorative", renderer->language_tag,
                                                normalized.data, NULL);
+                if (!cluster && normalized.data) {
+                    ttf_buffer_t name = {0};
+                    int found = 0;
+                    st = ttf_symbol_fallback_speak(e, renderer, normalized.data, normalized.length,
+                                                   &name, &found);
+                    if (st == TTF_OK && found) {
+                        /* A spoken name is a word: keep it apart from its neighbours. */
+                        int before = ttf_speech_spoken_before(e, renderer->language_tag,
+                                                              output.data, output.length);
+                        int after = ttf_speech_spoken_after(e, renderer->language_tag,
+                                                            text + end, length - end);
+                        st = ttf_trace_emit(e, TTF_TRACE_SELECTED, TTF_LAYER_COMMON, 0,
+                                            renderer->language_tag, "decision", "unicode-fallback",
+                                            "", normalized.data, "final-unicode-fallback",
+                                            SIZE_MAX);
+                        normalized.length = 0;
+                        if (normalized.data)
+                            normalized.data[0] = 0;
+                        if (st == TTF_OK && before)
+                            st = ttf_buffer_puts(&normalized, " ");
+                        if (st == TTF_OK)
+                            st = ttf_buffer_append(&normalized, name.data ? name.data : "",
+                                                   name.length);
+                        if (st == TTF_OK && after)
+                            st = ttf_buffer_puts(&normalized, " ");
+                        ttf_buffer_free(&name);
+                        goto cluster_done;
+                    }
+                    ttf_buffer_free(&name);
+                    if (st != TTF_OK)
+                        goto fail;
+                }
                 if (cluster) {
                     st = ttf_trace_resource(e, "speech_character", renderer->language_tag,
                                             normalized.data, normalized.data,
@@ -1209,6 +1242,7 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
                             st = ttf_buffer_puts(&normalized, " ");
                     }
                 }
+            cluster_done:;
             } else
                 st = ttf_speech_output(e, renderer, &normalized, output.data, output.length,
                                        text + end, length - end);

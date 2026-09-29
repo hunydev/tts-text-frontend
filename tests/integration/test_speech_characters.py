@@ -15,7 +15,8 @@ from evaluate import frontend_settings
 
 library, resources = (Path(arg).resolve() for arg in sys.argv[1:])
 corpus = ROOT / "tests/evaluation/speech_character_width_v21.jsonl"
-assert hashlib.sha256(corpus.read_bytes()).hexdigest() == "f9bd0134d1905ffe2e19456f1c636794e748d01f8ea6463a3bb793a5ffbec726"
+# 2026-09-30 (v0.24): two emoji rows pin symbol_fallback=off; expected text unchanged.
+assert hashlib.sha256(corpus.read_bytes()).hexdigest() == "3b510135e60a132ca9b846309ecb2b58e56219149d2c79e23d4aca065e48f34e"
 rows = [json.loads(line) for line in corpus.read_text(encoding="utf-8").splitlines()]
 checks = 0
 rng = random.Random(210927)

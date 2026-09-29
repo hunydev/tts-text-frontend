@@ -2,6 +2,22 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Name symbols and emoji that no rule reads instead of passing them raw to TTS
+  (named option `symbol_fallback=on|native|off`, default `on`; CLI
+  `--symbol-fallback`). Each language has an index/data file pair under
+  `resources/unicode-fallback/`: the index maps a code point straight to an
+  offset of a NUL-terminated name, and a sorted sequence file holds flag,
+  skin-tone, keycap, tag and ZWJ sequences; the files are memory-mapped, never
+  loaded. Names come from CLDR release-48-2 `tts` annotations (English also from
+  UCD 17 names); digit keycaps read the digit alone (`1️⃣` → 일, one). Emoji
+  sequences are one object: `👨‍👩‍👧` → 가족, 남자 여자 여자 아이, and an
+  unregistered combination is never read in part. Decorative characters keep
+  the `decorative` policy. `tools/unicode_fallback/build.py` builds every CLDR
+  locale (170) reproducibly; ko and en are committed. Korean and English
+  benchmarks: 0 changed sentences. Sixteen rows of older contracts that use an
+  emoji as the unnamed-character example now pin `symbol_fallback: "off"`
+  (expected text unchanged). See `docs/unicode-fallback.ko.md` and
+  `unicode_fallback_v24.jsonl` (28 cases).
 - Give each sentence a language before per-token routing (named option
   `matrix=auto|declared|legacy`, default `auto`; CLI `--matrix`). An English
   sentence now reads its own words and numbers in English and keeps Hangul,

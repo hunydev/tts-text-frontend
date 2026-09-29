@@ -62,7 +62,8 @@ def options(row):
     return ["--language", row["default_language"],
             "--output-mode", row.get("output_mode", "speech"),
             "--input-format", row.get("input_format", "plain"),
-            "--unreadable", row.get("unreadable", "preserve")]
+            "--unreadable", row.get("unreadable", "preserve"),
+            *(["--symbol-fallback", row["symbol_fallback"]] if "symbol_fallback" in row else [])]
 
 
 def stream(cli, resources, row, chunk, profile=(), extra=(), success=True, traced=False):
@@ -163,6 +164,7 @@ def cli_checks(args):
     for text, unreadable, expected in EXTRA_CHARACTERS:
         row = row_for(text, expected, annotated=False)
         row["unreadable"] = unreadable
+        row["symbol_fallback"] = "off"  # the unreadable policy of an unnamed character
         for profile in PROFILES:
             actual = stream(args.cli, args.resources, row, 1, profile)
             assert actual["text"] == expected, (row, actual)
@@ -213,6 +215,7 @@ def final_trace_checks(args):
         for policy in ("preserve", "drop"):
             row = row_for("가" + cluster + "나", annotated=False)
             row["unreadable"] = policy
+            row["symbol_fallback"] = "off"  # the unreadable-policy trace of an unnamed character
             # A removed character between two words leaves one separating space.
             row["expected"] = "가" + (cluster if policy == "preserve" else " ") + "나"
             for profile in PROFILES:
@@ -323,6 +326,11 @@ class Native:
         self.opts.unreadable_policy = row.get("unreadable", "preserve") == "drop"
         if configure:
             assert self.lib.ttf_engine_set_frontend_options(self.handle, C.byref(self.opts)) == 0
+            if "symbol_fallback" in row:
+                self.lib.ttf_engine_set_option.restype = C.c_int
+                self.lib.ttf_engine_set_option.argtypes = [C.c_void_p, C.c_char_p, C.c_char_p]
+                assert self.lib.ttf_engine_set_option(self.handle, b"symbol_fallback",
+                                                      row["symbol_fallback"].encode()) == 0
 
     def close(self):
         self.lib.ttf_engine_destroy(self.handle)
@@ -405,7 +413,8 @@ def native_checks(args):
     native_rows = rows() + [row_for(text, expected) for text, expected in EXTRA_ALIASES if expected is not None]
     native_rows += [dict(row_for(text, expected, annotated=False), default_language=language)
                     for language, text, expected in EXTRA_PATTERNS]
-    native_rows += [dict(row_for(text, expected, annotated=False), unreadable=unreadable)
+    native_rows += [dict(row_for(text, expected, annotated=False), unreadable=unreadable,
+                         symbol_fallback="off")
                     for text, unreadable, expected in EXTRA_CHARACTERS]
     native_rows.append(dict(row_for(*EXACT_ALIAS_WITH_DROP), unreadable="drop"))
     native_rows += [dict(row_for(text, expected, annotated=False), default_language="en-US")

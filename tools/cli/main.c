@@ -31,6 +31,7 @@ static void usage(FILE *out) {
           "          --unknown-foreign guess|spell|preserve --decorative follow|read\n"
           "          --initialism spell|word --hanja passthrough|korean --kana passthrough|korean\n"
           "          --spacing orthographic|reading-unit --matrix auto|legacy|declared\n"
+          "          --symbol-fallback on|native|off\n"
           "          --max-control-bytes N\n"
           "Stream options: --chunk-bytes N (default 4096)\n",
           out);
@@ -241,7 +242,7 @@ int main(int argc, char **argv) {
     ttf_config_t config;
     ttf_frontend_options_t frontend;
     const char *bracket_policy = NULL, *unknown_foreign = NULL, *decorative = NULL,
-               *initialism = NULL, *spacing = NULL, *matrix = NULL;
+               *initialism = NULL, *spacing = NULL, *matrix = NULL, *symbol_fallback = NULL;
     ttf_trace_options_t trace_options;
     int is_trace = 0, trace_limit_set = 0;
     ttf_engine_t *engine = NULL;
@@ -293,6 +294,7 @@ int main(int argc, char **argv) {
              !strcmp(arg, "--unknown-foreign") || !strcmp(arg, "--decorative") ||
              !strcmp(arg, "--initialism") || !strcmp(arg, "--hanja") ||
              !strcmp(arg, "--kana") || !strcmp(arg, "--spacing") || !strcmp(arg, "--matrix") ||
+             !strcmp(arg, "--symbol-fallback") ||
              !strcmp(arg, "--max-control-bytes"))) {
             int valid = 1;
             if (++i == argc) {
@@ -326,6 +328,10 @@ int main(int argc, char **argv) {
                 valid = !strcmp(argv[i], "auto") || !strcmp(argv[i], "legacy") ||
                         !strcmp(argv[i], "declared");
                 matrix = argv[i];
+            } else if (!strcmp(arg, "--symbol-fallback")) {
+                valid = !strcmp(argv[i], "on") || !strcmp(argv[i], "native") ||
+                        !strcmp(argv[i], "off");
+                symbol_fallback = argv[i];
             } else if (!strcmp(arg, "--initialism")) {
                 valid = !strcmp(argv[i], "spell") || !strcmp(argv[i], "word");
                 initialism = argv[i];
@@ -454,6 +460,8 @@ int main(int argc, char **argv) {
         status = ttf_engine_set_option(engine, "spacing", spacing);
     if (status == TTF_OK && matrix)
         status = ttf_engine_set_option(engine, "matrix", matrix);
+    if (status == TTF_OK && symbol_fallback)
+        status = ttf_engine_set_option(engine, "symbol_fallback", symbol_fallback);
     if (status != TTF_OK) {
         exit_code = report("frontend options", status);
         goto done;

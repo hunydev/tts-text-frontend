@@ -47,6 +47,9 @@ struct ttf_engine {
     ttf_initialism_policy_t initialism_policy;
     int reading_unit_spacing; /* spacing=reading-unit; 0 keeps resource spacing */
     ttf_matrix_policy_t matrix_policy; /* matrix=auto (0), legacy or declared */
+    ttf_symbol_fallback_policy_t symbol_fallback_policy; /* symbol_fallback=on (0) */
+    /* Mapped Unicode fallback files per pack slot; the frozen owner closes them. */
+    struct ttf_symbol_fallback *symbol_fallback[TTF_MAX_PACKS];
     char *resource_root, *default_language;
     int frozen, validating;
     struct ttf_trace_state *trace_state;   /* Request view only; frozen owner stays NULL. */

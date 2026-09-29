@@ -1,4 +1,5 @@
 #include "internal.h"
+#include "../unicode_fallback/fallback.h"
 #include "../resource/validation.h"
 #include "../cjk/cjk_reading.h"
 #ifndef TTF_DEFAULT_RESOURCE_ROOT
@@ -199,12 +200,16 @@ ttf_status_t ttf_engine_freeze(ttf_engine_t *e) {
     }
     if (status == TTF_OK)
         status = ttf_engine_validate_resources(e, NULL, NULL);
+    /* Map the Unicode fallback files before the last fallible allocation. */
+    if (status == TTF_OK)
+        status = ttf_symbol_fallback_attach(e);
     /* Allocate/detach only after all files and engine validators succeed.
        Index allocation is the last fallible operation; on failure no rows
        have moved and the complete deferred load can be rolled back. */
     if (status == TTF_OK)
         status = ttf_cjk_index(e);
     if (status != TTF_OK) {
+        ttf_symbol_fallback_detach(e);
         ttf_resource_rollback(e, checkpoint);
         return status;
     }
@@ -264,6 +269,7 @@ ttf_status_t ttf_engine_freeze(ttf_engine_t *e) {
 void ttf_engine_destroy(ttf_engine_t *e) {
     if (e) {
         ttf_resource_destroy(e);
+        ttf_symbol_fallback_detach(e);
         free(e->resource_root);
         free(e->default_language);
         free(e);

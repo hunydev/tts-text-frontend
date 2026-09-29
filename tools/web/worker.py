@@ -136,6 +136,10 @@ def corpus(request, library, resources):
                     "hanja": row.get("hanja", "passthrough"),
                     "kana": row.get("kana", "passthrough"),
                     "max_control_bytes": row.get("max_control_bytes", 4096),
+                    # Named policies a row declares (decorative, matrix, ...) apply too.
+                    **{key: row[key] for key in ("brackets", "unknown_foreign", "decorative",
+                                                 "initialism", "spacing", "matrix",
+                                                 "symbol_fallback") if key in row},
                 },
             )
         )["options"]

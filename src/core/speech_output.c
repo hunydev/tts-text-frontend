@@ -1,4 +1,5 @@
 #include "speech_output.h"
+#include "../unicode_fallback/fallback.h"
 #include "../pronunciation/trace.h"
 
 /* A character is spoken content when it is neither whitespace nor punctuation
@@ -133,6 +134,41 @@ static int symbol_spaced(const ttf_engine_t *e, const char *language, const char
    Resource replacements are explicit output and are never recursively expanded.
    `left` is output already committed in this unit; `right` is the source after
    the span. They only decide word spacing and lengthening marks. */
+/* The Unicode spoken fallback names a character, or the complete emoji
+   sequence starting there, that no table above reads. *consumed is 0 when it
+   has no allowed name, so the unreadable policy decides as before. */
+static ttf_status_t unicode_fallback(const ttf_engine_t *e, const ttf_language_pack_t *renderer,
+                                     const char *lang, const char *text, size_t length,
+                                     size_t at, int prev_spoken, ttf_buffer_t *out,
+                                     size_t *consumed) {
+    size_t end = ttf_emoji_cluster_end(text, length, at), width;
+    uint32_t cp;
+    ttf_buffer_t name = {0};
+    int found = 0;
+    ttf_status_t status;
+    char key[64];
+    *consumed = 0;
+    if (!end) {
+        if (ttf_utf8_decode(text + at, length - at, &cp, &width) != 1)
+            return TTF_OK;
+        end = at + width;
+    }
+    status = ttf_symbol_fallback_speak(e, renderer, text + at, end - at, &name, &found);
+    if (status == TTF_OK && found) {
+        snprintf(key, sizeof(key), "%.*s", (int)(end - at < sizeof(key) - 1 ? end - at : sizeof(key) - 1),
+                 text + at);
+        status = ttf_trace_emit(e, TTF_TRACE_SELECTED, TTF_LAYER_COMMON, 0, lang, "decision",
+                                "unicode-fallback", "", key, "final-unicode-fallback", SIZE_MAX);
+        if (status == TTF_OK && prev_spoken)
+            status = ttf_buffer_puts(out, " ");
+        if (status == TTF_OK)
+            status = ttf_buffer_append(out, name.data ? name.data : "", name.length);
+        if (status == TTF_OK)
+            *consumed = end - at;
+    }
+    ttf_buffer_free(&name);
+    return status;
+}
 ttf_status_t ttf_speech_output(const ttf_engine_t *e, const ttf_language_pack_t *renderer,
                                ttf_buffer_t *text, const char *left, size_t left_length,
                                const char *right, size_t right_length) {
@@ -148,7 +184,7 @@ ttf_status_t ttf_speech_output(const ttf_engine_t *e, const ttf_language_pack_t 
                 : ttf_speech_spoken_before(e, lang, left, left_length))
     while (at < text->length) {
         uint32_t cp;
-        size_t width, run;
+        size_t width, run, fallback;
         char key[5];
         const char *mapped, *keep;
         ttf_script_t script;
@@ -268,6 +304,14 @@ ttf_status_t ttf_speech_output(const ttf_engine_t *e, const ttf_language_pack_t 
             if (status == TTF_OK)
                 status = ttf_buffer_puts(&out, mapped);
             pending_space = 1;
+        } else if ((status = unicode_fallback(e, renderer, lang, text->data, text->length, at,
+                                              PREV_SPOKEN(), &out, &fallback)) != TTF_OK ||
+                   fallback) {
+            if (status != TTF_OK)
+                break;
+            pending_space = 1;
+            at += fallback;
+            continue;
         } else {
         unknown:
             status = ttf_trace_emit(e, TTF_TRACE_SELECTED, TTF_LAYER_COMMON, 0, lang, "decision",

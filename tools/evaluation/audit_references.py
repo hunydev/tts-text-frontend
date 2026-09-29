@@ -14,6 +14,7 @@ import re
 import sys
 
 ACTIVE_JSONL = (
+    "unicode_fallback_v24",
     "matrix_language_v24",
     "en_number_dash_v23",
     "en_meridiem_v23",

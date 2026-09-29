@@ -8,6 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 MAX_TEXT_BYTES = 16384
 CORPORA = {
+    "unicode-fallback-v24": ("기호·이모지 이름 (Unicode fallback)", "unicode_fallback_v24.jsonl"),
     "matrix-language-v24": ("문장 언어 판정 (영어 문장 속 한글 유지)", "matrix_language_v24.jsonl"),
     "en-number-dash-v23": ("영어 숫자 뒤 대시 --", "en_number_dash_v23.jsonl"),
     "en-meridiem-v23": ("영어 오전·오후 시각 5pm·7 a.m.", "en_meridiem_v23.jsonl"),
@@ -96,6 +97,7 @@ DEFAULTS = dict(
     initialism="spell",
     spacing="orthographic",
     matrix="auto",
+    symbol_fallback="on",
     max_control_bytes=4096,
     sentence_split=True,
     phrase_split=True,
@@ -186,6 +188,7 @@ def validate(request, corpus=False):
         ("initialism", ("spell", "word")),
         ("spacing", ("orthographic", "reading-unit")),
         ("matrix", ("auto", "legacy", "declared")),
+        ("symbol_fallback", ("on", "native", "off")),
         ("domain", ("none", "finance", "finance-vocabulary")),
     ]:
         if opts[key] not in allowed:
@@ -452,7 +455,7 @@ def catalog():
                 text=row["text"], expected=row["expected"],
                 options={key: row[key] for key in (
                     "default_language", "input_format", "output_mode", "unreadable", "brackets", "unknown_foreign",
-                    "decorative", "initialism", "spacing", "matrix"
+                    "decorative", "initialism", "spacing", "matrix", "symbol_fallback"
                 ) if key in row},
                 reference_review=reviewed_cases[(relative, row["id"])],
             ))
