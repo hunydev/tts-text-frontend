@@ -35,7 +35,8 @@ VARIANT_FOLDS = (
     (re.compile('(?<=[%s])(?:다시|에)(?=[%s])' % (DIGIT, DIGIT)), ''),
     (re.compile('(?<=[%s])영|영(?=[%s])' % (DIGIT, DIGIT)), '공'),
 )
-LEADING_ILMAN = re.compile('(?<![가-힣])일만')  # before compaction: 통일만 is a word
+# Before compaction: 통일만 is a word, and 십 일만 (110,000 spaced by unit) is a number.
+LEADING_ILMAN = re.compile('(?<![가-힣])(?<![공영일이삼사오육칠팔구십백천만억조] )일만')
 
 
 def variant(text):

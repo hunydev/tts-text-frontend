@@ -42,7 +42,7 @@ class Contracts(unittest.TestCase):
   for a,b in [('공 일 공 다시 일 이','영일공일이'),('삼칠 에 사사','삼칠사사'),('일만 천 원','만 천 원'),('이 영 이 오','이공이오')]:
    with self.subTest(a):self.assertEqual(variant(a),variant(b))
   # Words and readings are not folded: 영화, 서른/삼십, 하나/일, 다시 outside digits.
-  for a,b in [('영화 보기','공화 보기'),('서른 명','삼십 명'),('하나 둘','일 이'),('다시 보기','보기'),('통일만','통만')]:
+  for a,b in [('영화 보기','공화 보기'),('서른 명','삼십 명'),('하나 둘','일 이'),('다시 보기','보기'),('통일만','통만'),('십 일만 원','십만 원')]:
    with self.subTest(a):self.assertNotEqual(variant(a),variant(b))
   m=metric();add(m,'공일공 다시 일','영 일 영 일');add(m,'서른 명','삼십 명')
   r=finish(m);self.assertEqual((r['compact'],r['variant'],r['different']),(0,1,1))
