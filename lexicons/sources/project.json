@@ -56,6 +56,14 @@
       "kind": "editorial-policy",
       "checked_at": "2026-09-30",
       "note": "Counts of how the provided Korean references read bare and multiplied apparel sizes (XL 엑스라지 41:2, XS 엑스스몰 8:5). Reference agreement, not linguistic approval; no synthesized audio."
+    },
+    {
+      "id": "ai-hub-159-unit-survey-2026-09-30",
+      "title": "Unit and technology-term readings in the AI Hub 159 Korean references",
+      "url": "https://github.com/hunydev/tts-text-frontend/blob/main/docs/korean-unit-leaks.ko.md",
+      "kind": "editorial-policy",
+      "checked_at": "2026-09-30",
+      "note": "Counts of how the provided references read 5G, 4K, gold purity and unit variants. Reference agreement, not linguistic approval; no synthesized audio."
     }
   ]
 }

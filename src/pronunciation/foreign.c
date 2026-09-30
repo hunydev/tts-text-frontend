@@ -69,6 +69,22 @@ ttf_status_t ttf_foreign_lookup(const ttf_engine_t *e, const char *source, const
         if (key[i] >= 'A' && key[i] <= 'Z')
             key[i] += 'a' - 'A';
     *hit = ttf_resource_get(e, "lexicon", target, key, layer);
+    /* lexicon_case: lower entries (kg, cm) do not apply to an all-capital
+       surface (KG이니시스, KB국민은행 are letters); upper entries (5G, 4G) apply
+       only to a surface without lowercase letters (생강 2g is a measure). */
+    if (*hit && n >= 2) {
+        const char *rule = ttf_resource_get(e, "lexicon_case", target, key, NULL);
+        int capitals = 1, lowercase = 0;
+        for (i = 0; i < n; i++) {
+            if (text[i] >= 'a' && text[i] <= 'z')
+                lowercase = 1;
+            if (text[i] < 'A' || text[i] > 'Z')
+                capitals = 0;
+        }
+        if (rule && ((!strcmp(rule, "lower") && capitals) ||
+                     (!strcmp(rule, "upper") && lowercase)))
+            *hit = NULL;
+    }
     free(key);
     return TTF_OK;
 }

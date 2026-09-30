@@ -199,6 +199,22 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "counter band cue requires a word and band|count");
     }
+    if (SAME(k, "lexicon_case")) {
+        *handled = 1;
+        return !strncmp(key, "en-US:", 6) && key[6] && strlen(key) < 64 &&
+                       ttf_validation_enum(v, "lower|upper")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "lexicon_case needs an en-US: lexicon key and lower|upper");
+    }
+    if (SAME(k, "letter_unit_values")) {
+        size_t i;
+        int ok = label(key) && strlen(key) < 8 && v[0] && strlen(v) < 96;
+        for (i = 0; ok && v[i]; ++i)
+            ok = (v[i] >= '0' && v[i] <= '9') || (v[i] == '|' && i && v[i + 1] && v[i - 1] != '|');
+        *handled = 1;
+        return ok ? TTF_OK
+                  : ttf_validation_error(d, "letter_unit_values needs a letter and digits joined by |");
+    }
     if (SAME(k, "apparel_size") || SAME(k, "apparel_size_multiplier")) {
         *handled = 1;
         return label(key) && strlen(key) < 8 && label(v) && strlen(v) < 64

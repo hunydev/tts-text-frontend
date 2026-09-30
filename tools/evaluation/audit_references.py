@@ -14,6 +14,7 @@ import re
 import sys
 
 ACTIVE_JSONL = (
+    "ko_unit_leaks_v24",
     "ko_apparel_size_v24",
     "ko_range_reading_v24",
     "unicode_fallback_v24",

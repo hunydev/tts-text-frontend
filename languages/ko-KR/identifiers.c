@@ -455,6 +455,22 @@ size_t ttf_ko_classify_number_letters(const ttf_pack_input_t *in, ttf_semantic_t
        with their own preservation and unreadable-read policy. */
     if (!unit)
         return 0;
+    /* A declared value list (G: 8|16|...|2048) limits a letter to its values. */
+    {
+        const char *values = ttf_resource_get(in->engine, "letter_unit_values", "ko-KR", key, NULL);
+        if (values) {
+            size_t length = strlen(semantic->value);
+            const char *at = values;
+            int listed = 0;
+            while (*at && !listed) {
+                size_t width = strcspn(at, "|");
+                listed = width == length && !strncmp(at, semantic->value, length);
+                at += width + (at[width] == '|');
+            }
+            if (!listed)
+                return 0;
+        }
+    }
     p += letters;
     for (i = in->index; i < in->token_count && in->tokens[i].begin < p; ++i) {
     }

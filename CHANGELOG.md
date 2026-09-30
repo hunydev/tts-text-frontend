@@ -2,6 +2,15 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Read unit notations that reached Korean speech raw, from the AI Hub 159
+  references: gold purity 18K 십팔 케이, 4K/8K 포케이/에잇케이, 5G 파이브지 (was 오지;
+  3G/4G 쓰리지/포지), storage 32G 기가 (declared capacities only), m/s km/s 초속,
+  W/kg, Kcal/kal, kw/KW, GWh/MWh, cc 씨씨 (was 시시; now a shared unit, so ranges
+  and lists read), and 4만 2000km인. A bare all-capital abbreviation is read by
+  letters (KB국민은행 케이비국민은행, KG이니시스, MG손해보험; references 100%) through
+  lexicon_case lower; lowercase kg당 and 몇 ml keep the unit. Korean adjusted
+  agreement 77.00% → 77.27% (+387 / −1); English unchanged; Latin left in Korean
+  speech 497 → 365. Contract ko_unit_leaks_v24 (32), docs/korean-unit-leaks.ko.md.
 - Read apparel sizes in Korean speech instead of passing them raw: `3XL` →
   쓰리 엑스라지, `2XS` → 투 엑스스몰, `XL` → 엑스라지, `XXL` → 투 엑스라지 (was
   "x x l"), bra sizes `75AA` → 칠십오 에이에이. Rule and words follow the AI Hub 159

@@ -1400,7 +1400,12 @@ static size_t compound_amount(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             end = q + width;
             if (prefix && (strncmp(suffix, "CURRENCY:", 9) || strcmp(prefix, suffix + 9)))
                 valid = 0;
-            if (!quantity_boundary(in, end)) {
+            /* Speech: 4만 2000km인, 1만 2,547km였다 keep the quantity; the attached
+               ending stays text (as for an unknown suffix below). */
+            if (!quantity_boundary(in, end) &&
+                !(valid && coefficients > 1 && !strncmp(suffix, "MEASURE:", 8) &&
+                  in->engine->frontend_options.output_mode == TTF_OUTPUT_SPEECH &&
+                  ((unsigned char)in->text[end] & 0xe0) == 0xe0)) {
                 if (valid && coefficients == 1)
                     return 0;
                 valid = 0;

@@ -202,7 +202,8 @@ clock	en-US	midnight	midnight
 clock	en-US	after	after
 clock	en-US	h24_full_hour	hundred hours
 
-# Lowercase spellings share the same alphanumeric semantic term and lexicon key.
+# Lowercase spellings share the same alphanumeric semantic term and lexicon key,
+# except network generations: lowercase 2g..5g are grams (생강 2g).
 semantic_term	*	c++	ALNUM_TERM:en-US
 semantic_term	*	C#	ALNUM_TERM:en-US
 semantic_term	*	c#	ALNUM_TERM:en-US
@@ -210,11 +211,13 @@ semantic_term	*	3d	ALNUM_TERM:en-US
 semantic_term	*	top100	ALNUM_TERM:en-US
 semantic_term	*	TOP100	ALNUM_TERM:en-US
 semantic_term	*	5G	ALNUM_TERM:en-US
-semantic_term	*	5g	ALNUM_TERM:en-US
 semantic_term	*	4G	ALNUM_TERM:en-US
-semantic_term	*	4g	ALNUM_TERM:en-US
 semantic_term	*	3G	ALNUM_TERM:en-US
-semantic_term	*	3g	ALNUM_TERM:en-US
+semantic_term	*	2G	ALNUM_TERM:en-US
+semantic_term	*	4K	ALNUM_TERM:en-US
+semantic_term	*	4k	ALNUM_TERM:en-US
+semantic_term	*	8K	ALNUM_TERM:en-US
+semantic_term	*	8k	ALNUM_TERM:en-US
 semantic_term	*	2D	ALNUM_TERM:en-US
 semantic_term	*	2d	ALNUM_TERM:en-US
 # Unicode compatibility unit signs map to the same canonical unit.

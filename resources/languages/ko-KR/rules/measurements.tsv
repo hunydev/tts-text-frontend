@@ -50,3 +50,12 @@ unit	ko-KR	lux	럭스
 unit	ko-KR	dB	데시벨
 unit	ko-KR	rpm	알피엠
 unit	ko-KR	Ω	옴
+
+# Speed per second reads 초속 like 시속 (AI Hub 159 references 9/9).
+unit	ko-KR	m_per_second	미터
+quantity_prefix	ko-KR	m_per_second	초속 
+unit	ko-KR	km_per_second	킬로미터
+quantity_prefix	ko-KR	km_per_second	초속 
+unit	ko-KR	W_per_kg	와트 퍼 킬로그램
+unit	ko-KR	GWh	기가와트시
+unit	ko-KR	MWh	메가와트시

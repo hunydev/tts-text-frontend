@@ -430,12 +430,37 @@ exact	ko-KR	코로나19	코로나 일구
 letter_unit	ko-KR	t	t
 letter_unit	ko-KR	P	point
 letter_unit	ko-KR	p	point
-letter_unit	ko-KR	cc	cc
 letter_unit	ko-KR	Km	km
 letter_unit	ko-KR	KM	km
 letter_unit	ko-KR	Kg	kg
 letter_unit	ko-KR	KG	kg
+# Gold purity 14K/18K/24K reads 케이 (references 32/32); 4K/8K are lexicon terms.
+letter_unit	ko-KR	K	karat
+letter_unit	ko-KR	k	karat
+unit	ko-KR	karat	케이
+# Storage sizes 32G/128G read 기가; only declared capacities (470G is a model).
+letter_unit	ko-KR	G	giga
+letter_unit_values	ko-KR	G	8|16|32|64|128|256|512|1024|2048
+unit	ko-KR	giga	기가
 unit	ko-KR	t	톤
 unit	ko-KR	point	포인트
-unit	ko-KR	cc	시시
+unit	ko-KR	cc	씨씨
 classifier_priority	ko-KR	ko:letter-unit	10
+
+# A bare unit abbreviation reads as the unit only in its lowercase spelling (kg당,
+# 몇 ml); an all-capital form is a name read by letters (KG이니시스, MG손해보험;
+# AI Hub 159 references 100%). kb left the unit lexicon: bare KB/kb are letters (223/223).
+lexicon_case	ko-KR	en-US:kg	lower
+lexicon_case	ko-KR	en-US:cm	lower
+lexicon_case	ko-KR	en-US:km	lower
+lexicon_case	ko-KR	en-US:mm	lower
+lexicon_case	ko-KR	en-US:hz	lower
+lexicon_case	ko-KR	en-US:kw	lower
+lexicon_case	ko-KR	en-US:ml	lower
+lexicon_case	ko-KR	en-US:mg	lower
+lexicon_case	ko-KR	en-US:khz	lower
+# Network generations are capitals (5G 파이브지); lowercase 2g..5g are grams.
+lexicon_case	ko-KR	en-US:2g	upper
+lexicon_case	ko-KR	en-US:3g	upper
+lexicon_case	ko-KR	en-US:4g	upper
+lexicon_case	ko-KR	en-US:5g	upper

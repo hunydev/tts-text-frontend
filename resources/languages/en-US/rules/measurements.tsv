@@ -170,3 +170,29 @@ unit	en-US	rpm.many	rpm
 numeric_suffix	*	Ω	MEASURE:Ω
 unit	en-US	Ω.one	ohm
 unit	en-US	Ω.many	ohms
+
+# Written variants of existing units (AI Hub 159: Kcal/kal 17/17, kw 8/9).
+numeric_suffix	*	Kcal	MEASURE:kcal
+numeric_suffix	*	KCAL	MEASURE:kcal
+numeric_suffix	*	kal	MEASURE:kcal
+numeric_suffix	*	kw	MEASURE:kW
+numeric_suffix	*	KW	MEASURE:kW
+# Energy, speed per second, specific absorption rate and cubic centimetres.
+numeric_suffix	*	GWh	MEASURE:GWh
+numeric_suffix	*	MWh	MEASURE:MWh
+numeric_suffix	*	m/s	MEASURE:m_per_second
+numeric_suffix	*	km/s	MEASURE:km_per_second
+numeric_suffix	*	W/kg	MEASURE:W_per_kg
+numeric_suffix	*	cc	MEASURE:cc
+unit	en-US	GWh.one	gigawatt hour
+unit	en-US	GWh.many	gigawatt hours
+unit	en-US	MWh.one	megawatt hour
+unit	en-US	MWh.many	megawatt hours
+unit	en-US	m_per_second.one	meter per second
+unit	en-US	m_per_second.many	meters per second
+unit	en-US	km_per_second.one	kilometer per second
+unit	en-US	km_per_second.many	kilometers per second
+unit	en-US	W_per_kg.one	watt per kilogram
+unit	en-US	W_per_kg.many	watts per kilogram
+unit	en-US	cc.one	c c
+unit	en-US	cc.many	c c
