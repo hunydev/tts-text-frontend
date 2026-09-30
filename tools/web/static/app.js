@@ -463,7 +463,47 @@ function handle(event) {
       ? `리소스 정책 검사 ${resourceCheck.validated_records}/${resourceCheck.records}행 · 검사기 미등록 ${resourceCheck.unvalidated_records}행 · 발음 정답 검토는 별도`
       : "";
     if (event.verification) verification(event.verification);
+    $("jev-judge").disabled = !event.text;
     inspect();
+  }
+}
+function jevVerdict(value) {
+  if (value >= 0.7) return ["good", "올바른 읽기로 판단"];
+  if (value >= 0.4) return ["mid", "판단이 갈림 · 직접 확인 권장"];
+  return ["bad", "틀린 읽기일 가능성 높음"];
+}
+async function judgeResult() {
+  if (!state.result || !state.result.text || state.controller) return;
+  const box = $("jev-result");
+  box.hidden = false;
+  box.className = "jev-result";
+  box.textContent = "Jev가 채점하는 중입니다…";
+  $("jev-judge").disabled = true;
+  try {
+    const response = await fetch("/api/judge", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        text: state.request?.text || $("source").value,
+        normalized: state.result.text,
+        language: $("language").value,
+      }),
+    });
+    const data = await response.json();
+    if (!response.ok) throw Error(data.error || "Jev 채점 실패");
+    const [kind, label] = jevVerdict(data.noul);
+    box.className = `jev-result jev-${kind}`;
+    box.textContent =
+      `Jev ${data.noul.toFixed(2)} · ${label} (${data.model}` +
+      (data.calibrated ? "" : ", 이 언어는 보정 전") +
+      ")" +
+      " — 참조 문장 하나와 비교하지 않고, 이 읽기가 원문의 올바른 읽기인지 판단한 확률입니다." +
+      " 숫자 값 오류는 잘 잡고 여러 정답 변이형은 함께 인정하지만, 미세한 발음 차이는 놓칠 수 있습니다.";
+  } catch (e) {
+    box.className = "jev-result jev-bad";
+    box.textContent = e.message;
+  } finally {
+    $("jev-judge").disabled = !state.result?.text;
   }
 }
 async function execute() {
@@ -485,6 +525,8 @@ async function execute() {
   state.events = [];
   state.result = null;
   $("resource-validation").textContent = "";
+  $("jev-result").hidden = true;
+  $("jev-judge").disabled = true;
   state.controller = new AbortController();
   $("run").disabled = true;
   $("cancel").disabled = false;
@@ -736,6 +778,7 @@ $("sample").addEventListener("change", () => {
   markStale();
   message("예제와 권장 설정을 불러왔습니다. 실행 버튼으로 확인하세요.");
 });
+$("jev-judge").addEventListener("click", judgeResult);
 $("copy").addEventListener("click", async () => {
   try {
     await navigator.clipboard.writeText(state.result.text);

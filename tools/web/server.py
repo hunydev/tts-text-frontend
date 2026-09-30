@@ -13,6 +13,7 @@ from urllib.parse import urlsplit
 from workbench import ROOT, catalog, validate
 import ko_reports
 import en_reports
+import jev
 
 sys.path.insert(0, str(ROOT / "tools/lexicon"))
 from manage import inventory
@@ -121,7 +122,7 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         path = urlsplit(self.path).path
-        if path not in ("/api/run", "/api/corpus"):
+        if path not in ("/api/run", "/api/corpus", "/api/judge"):
             return self.json(404, {"error": "Not found"})
         if (
             self.headers.get("Content-Type", "").split(";")[0].strip()
@@ -132,6 +133,8 @@ class Handler(BaseHTTPRequestHandler):
         host = self.headers.get("X-Forwarded-Host", self.headers.get("Host", ""))
         if origin and urlsplit(origin).netloc != host:
             return self.json(403, {"error": "다른 출처의 요청은 허용되지 않습니다."})
+        if path == "/api/judge":
+            return self.judge()
         try:
             length = int(self.headers.get("Content-Length", "0"))
             if not 0 < length <= MAX_BODY:
@@ -225,6 +228,27 @@ class Handler(BaseHTTPRequestHandler):
                 if process.stdin and not process.stdin.closed:
                     process.stdin.close()
             SLOTS.release()
+
+
+    def judge(self):
+        """Score one normalization result with Jev (tools/web/jev.py)."""
+        try:
+            length = int(self.headers.get("Content-Length", "0"))
+            if not 0 < length <= 65536:
+                raise ValueError("요청 본문은 64 KiB 이내여야 합니다.")
+            body = json.loads(self.rfile.read(length))
+            if not isinstance(body, dict):
+                raise ValueError("JSON 객체가 필요합니다.")
+        except (ValueError, UnicodeError):
+            return self.json(400, {"error": "Jev 채점 요청을 확인하세요."})
+        client = self.headers.get("X-Forwarded-For", self.client_address[0]).split(",")[0].strip()
+        judge = getattr(self.server, "judge", None) or jev.Judge()
+        self.server.judge = judge
+        try:
+            result = judge.score(body.get("text"), body.get("normalized"), body.get("language"), client)
+        except jev.JudgeError as exc:
+            return self.json(exc.status, {"error": str(exc)})
+        return self.json(200, result)
 
 
 class Server(ThreadingHTTPServer):

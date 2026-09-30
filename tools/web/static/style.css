@@ -814,3 +814,19 @@ footer {
 .jev-high {
   color: #067647;
 }
+.jev-result {
+  margin: 8px 0 0;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 0.9em;
+  background: rgba(127, 127, 127, 0.08);
+}
+.jev-result.jev-good {
+  border-left: 3px solid #067647;
+}
+.jev-result.jev-mid {
+  border-left: 3px solid #b54708;
+}
+.jev-result.jev-bad {
+  border-left: 3px solid #b42318;
+}

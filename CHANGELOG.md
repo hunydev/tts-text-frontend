@@ -2,6 +2,13 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Web workbench: a **Jev 채점** button scores the current result with one
+  TypeSafe Jev Noul, whether the spoken text is a correct way to read the input
+  aloud, so readings that differ from the single reference but are right can be
+  told from errors. Calibrated on 40 Korean sentences: correct 0.81, accepted
+  variants 0.81, one wrong number 0.15 (AUC 0.97), one dropped word 0.37 (AUC
+  0.89). `/api/judge` keeps the key on the server, limits input size and calls
+  per client and in total, and caches repeated pairs (`tools/web/jev.py`).
 - Second brand review: English words as keys keep the word's reading (solid
   솔리드, was 쏠리드; arctic 아크틱; verbatim 버베이텀) and FTC empower/esteem are
   dropped; the Jev 0.5-0.65 band loses translations, extra or missing words and

@@ -96,11 +96,15 @@
           <div id="output" class="output empty" tabindex="0">
             변환 결과가 여기에 표시됩니다.
           </div>
+          <p id="jev-result" class="jev-result" hidden></p>
           <div class="output-footer">
             <span id="summary">텍스트 합성·음성 평가는 수행하지 않습니다.</span>
             <span id="resource-validation" class="small"></span>
             <div>
-              <button id="copy" class="text-button" disabled>복사</button
+              <button id="jev-judge" class="text-button" disabled
+                title="TypeSafe Jev가 이 결과를 원문의 올바른 읽기로 보는지 0~1로 채점합니다"
+              >Jev 채점</button
+              ><button id="copy" class="text-button" disabled>복사</button
               ><button id="download" class="text-button" disabled>
                 JSON 저장 ↓
               </button>

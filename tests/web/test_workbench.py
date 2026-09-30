@@ -413,6 +413,63 @@ try:
         checks += 1
     else:
         raise AssertionError("filesystem path exposed")
+    # Jev judgement: the key stays on the server, requests are validated,
+    # repeated pairs come from the cache, and no network is used here.
+    import io
+    import jev
+
+    sent = []
+
+    class FakeResponse(io.BytesIO):
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *exc):
+            return False
+
+    def fake_open(request, timeout):
+        payload = json.loads(request.data)
+        sent.append((request.get_header("Authorization"), payload))
+        assert payload["state"]["written"] and payload["state"]["spoken"]
+        return FakeResponse(json.dumps({"model": "jev-test", "answers": {
+            "reading_correct": {"type": "noul", "noul": 0.8123}}}).encode())
+
+    server.judge = jev.Judge(key="secret-test-key", opener=fake_open)
+    body = dict(text="3만 원", normalized="삼만 원", language="ko-KR")
+    for expect_cached in (False, True):
+        with post("/api/judge", body) as response:
+            judged = json.load(response)
+        assert judged["noul"] == 0.8123 and judged["cached"] is expect_cached, judged
+        assert "secret-test-key" not in json.dumps(judged)
+        checks += 1
+    assert len(sent) == 1 and sent[0][0] == "Bearer secret-test-key", sent
+    for bad in (dict(body, language="xx-XX"), dict(body, normalized=""), dict(body, text="가" * 2001)):
+        try:
+            post("/api/judge", bad)
+        except urllib.error.HTTPError as e:
+            assert e.code == 400, e.code
+            checks += 1
+        else:
+            raise AssertionError("invalid judge request accepted")
+    server.judge = jev.Judge(key=None, opener=fake_open)
+    server.judge.key = None
+    try:
+        post("/api/judge", body)
+    except urllib.error.HTTPError as e:
+        assert e.code == 503
+        checks += 1
+    else:
+        raise AssertionError("judge without a key answered")
+    limited = jev.Judge(key="k", opener=fake_open, clock=lambda: 0.0)
+    for n in range(jev.PER_CLIENT[0]):
+        limited.score("%d원" % n, "원", "ko-KR", "client")
+    try:
+        limited.score("마지막", "마지막", "ko-KR", "client")
+    except jev.JudgeError as e:
+        assert e.status == 429
+        checks += 1
+    else:
+        raise AssertionError("per-client limit not applied")
 finally:
     server.shutdown()
     server.server_close()
