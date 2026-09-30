@@ -10,7 +10,8 @@ from native import Engine, flatten
 from evaluate import frontend_settings
 library, resources = [Path(x).resolve() for x in sys.argv[1:]]
 corpus = ROOT/'tests/evaluation/typed_controls_v22.jsonl'
-assert hashlib.sha256(corpus.read_bytes()).hexdigest() == '69efbbfef691d5b81c5d3a167ee55f93f2f77ac8259e1fdc0c5c5158a3cf0686'
+# 2026-09-30 (v0.24): range rows follow the range-reading decision.
+assert hashlib.sha256(corpus.read_bytes()).hexdigest() == 'b1e506e243f2bba9fa9988e028fc0729bd3cb99c004a530433ba0283abbf548f'
 rows = [json.loads(x) for x in corpus.read_text().splitlines()]
 rng = random.Random(20260928)
 checks = 0
@@ -61,7 +62,7 @@ def check(source,expected,**opts):
 check('[[01-02]]{@phone}','영일 영이',customer_tsv='phone_render\tko-KR\tzero\t영\n')
 check('[[1.2.3.4]]{@ip}','one point two point three point four',default_language='en-US',
       customer_tsv='electronic_separator\ten-US\tip\tpoint\n')
-check('[[1~2kg]]{@range}','일 킬로그램부터 이 킬로그램',
+check('[[1~2kg]]{@range}','일부터 이 킬로그램',
       customer_tsv='policy\tko-KR\tquantity_range_separator\t부터 \n')
 check('[[Apple 123 漢🙂]]{@preserve}','Apple 123 漢🙂',unreadable='drop')
 check('[[1\\{2\\}]]{@preserve}','1{2}')

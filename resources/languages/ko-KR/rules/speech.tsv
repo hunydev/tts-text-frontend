@@ -142,6 +142,8 @@ number_sign	ko-KR	#	{N} 번
 # 서울~부산: an attached range mark reads as the range word and keeps the left word.
 speech_range_mark	ko-KR	~	에서 
 speech_range_mark	ko-KR	～	에서 
+speech_range_mark	ko-KR	∼	에서 
+speech_range_mark	ko-KR	〜	에서 
 
 # Names used only when the decorative policy asks for them; otherwise these
 # characters follow the unreadable policy. Provisional, pending review.

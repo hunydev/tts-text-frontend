@@ -84,7 +84,7 @@ try:
                 help_cases += 1
     assert help_cases > 60
     assert catalog["samples"][0]["text"] == "1~2만 원"
-    assert catalog["samples"][0]["expected"] == "만 원에서 이만 원"
+    assert catalog["samples"][0]["expected"] == "일에서 이만 원"
     phone_samples = [sample for sample in catalog["samples"] if sample["id"].startswith("phone-v18-")]
     assert len(phone_samples) >= 4 and all(sample["options"]["default_language"] == "en-US"
                                           for sample in phone_samples[:4])

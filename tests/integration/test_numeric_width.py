@@ -9,7 +9,8 @@ library,resources=[Path(x).resolve() for x in sys.argv[1:]]
 corpus=ROOT/'tests/evaluation/numeric_width_v22.jsonl'
 # 2026-09-28 user policy: width-short-zero now retains each digit; preimage and
 # reason remain in docs/audit/phone-zero-policy-20260928.json. Keep the exact pin.
-assert hashlib.sha256(corpus.read_bytes()).hexdigest()=='68e8153ba512dc9c0ed7047f6c3ca974899e2b435e14af0c11248d338037384f'
+# 2026-09-30 (v0.24): range rows follow the range-reading decision.
+assert hashlib.sha256(corpus.read_bytes()).hexdigest()=='3ec27d9f01067abba90ca3e1b451a690ab8d6b4c42ef2178fbcea90ba572df9a'
 rows=[json.loads(x) for x in corpus.read_text().splitlines()]
 # These negatives are fixed before the unsupported fullwidth-punctuation guard.
 for i,text in enumerate(['１２，５００원','₩１２，５００','$12，500','－１２３','１２．５０%',

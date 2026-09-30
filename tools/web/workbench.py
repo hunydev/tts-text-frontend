@@ -8,6 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 MAX_TEXT_BYTES = 16384
 CORPORA = {
+    "ko-range-reading-v24": ("한국어 범위 읽기 (어림수·단위 공유)", "ko_range_reading_v24.jsonl"),
     "unicode-fallback-v24": ("기호·이모지 이름 (Unicode fallback)", "unicode_fallback_v24.jsonl"),
     "matrix-language-v24": ("문장 언어 판정 (영어 문장 속 한글 유지)", "matrix_language_v24.jsonl"),
     "en-number-dash-v23": ("영어 숫자 뒤 대시 --", "en_number_dash_v23.jsonl"),
@@ -274,7 +275,7 @@ def catalog():
             category="금융",
             title="금액 범위와 생략된 단위",
             text="1~2만 원",
-            expected="만 원에서 이만 원",
+            expected="일에서 이만 원",
         ),
         dict(
             id="tilde-symbol",

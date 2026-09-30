@@ -199,11 +199,21 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "counter band cue requires a word and band|count");
     }
+    if (SAME(k, "range_contract")) {
+        size_t digit = strlen(key) - 1;
+        *handled = 1;
+        return (!strncmp(key, "native:", 7) || !strncmp(key, "sino:", 5)) && digit &&
+                       key[digit] >= '1' && key[digit] <= '8' && key[digit - 1] == ':' &&
+                       label(v) && strlen(v) < 32
+                   ? TTF_OK
+                   : ttf_validation_error(
+                         d, "range_contract requires native:1..8 or sino:1..8 and a reading");
+    }
     if (SAME(k, "range_repeat_unit")) {
         *handled = 1;
-        return label(key) && strlen(key) < 32 && ttf_validation_enum(v, "0|1")
+        return label(key) && strlen(key) < 32 && ttf_validation_enum(v, "0|1|wide")
                    ? TTF_OK
-                   : ttf_validation_error(d, "range_repeat_unit requires a unit and 0|1");
+                   : ttf_validation_error(d, "range_repeat_unit requires a unit and 0|1|wide");
     }
     if (SAME(k, "url_tld")) {
         *handled = 1;
@@ -502,6 +512,10 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
             return ttf_validation_enum(v, "0|1")
                        ? TTF_OK
                        : ttf_validation_error(d, "quantity_range_repeat_unit must be 0 or 1");
+        if (SAME(key, "range_contract"))
+            return ttf_validation_enum(v, "adjacent|off")
+                       ? TTF_OK
+                       : ttf_validation_error(d, "range_contract must be adjacent or off");
         if (!ttf_validation_enum(key,
                                  "range_separator|quantity_range_separator|quantity_range_suffix"))
             return ttf_validation_error(d, "unknown Korean policy key");

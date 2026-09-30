@@ -26,7 +26,7 @@ const path = require("node:path");
     );
   };
   assert.equal(await page.inputValue("#source"), "1~2만 원");
-  assert.equal(await page.inputValue("#expected"), "만 원에서 이만 원");
+  assert.equal(await page.inputValue("#expected"), "일에서 이만 원");
   assert.equal(await page.inputValue("#input-format"), "plain");
   assert.equal(await page.inputValue("#output-mode"), "speech");
   assert.equal(await page.inputValue("#unreadable"), "preserve");
@@ -39,7 +39,7 @@ const path = require("node:path");
   await run();
   assert.equal(
     await page.locator("#output").textContent(),
-    "만 원에서 이만 원",
+    "일에서 이만 원",
   );
   // The displayed settings drive the native request; examples select their
   // required grammar instead of interpreting braces silently in plain mode.

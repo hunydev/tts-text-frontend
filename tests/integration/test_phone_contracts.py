@@ -100,7 +100,7 @@ GUARDS = [
          text="+10000000원", expected="플러스 천만 원", expected_spans=[
              dict(surface="+10000000원", semantic_type="CURRENCY", value="+10000000", unit="KRW")]),
     dict(id="ko-amount-range", category="phone/negative", default_language="ko-KR",
-         text="1~2원", expected="일 원에서 이 원", expected_spans=[
+         text="1~2원", expected="일이 원", expected_spans=[
              dict(surface="1~2원", semantic_type="RANGE", value="1", secondary="2", unit="KRW")]),
     dict(id="en-generic-range", category="phone/negative", default_language="en-US",
          text="3-5", expected="three to five", expected_spans=[

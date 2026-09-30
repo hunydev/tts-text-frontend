@@ -1278,6 +1278,18 @@
       },
       "category_overrides": {},
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/ko_range_reading_v24.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Night work 2026-09-29 under the user's goal; independently authored synthetic cases, written before the implementation",
+        "reason": "User decision 2026-09-30 on range reading; expected outputs authored before implementation from the reference survey."
+      },
+      "category_overrides": {},
+      "case_overrides": {}
     }
   ],
   "excluded": [

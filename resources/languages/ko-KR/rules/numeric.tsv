@@ -350,8 +350,29 @@ meridiem	ko-KR	AM	오전
 meridiem	ko-KR	PM	오후
 unit	ko-KR	percent	퍼센트
 
-# Range endpoints retain units; "none" disables the optional final suffix.
-policy	ko-KR	quantity_range_repeat_unit	1
+# A range reads the unit once, after the second number (3~5kg 삼에서 오 킬로그램;
+# AI Hub 159 references 1466:6). customers/range-repeat-unit restores both units.
+# "none" disables the optional final suffix.
+policy	ko-KR	quantity_range_repeat_unit	0
+# Adjacent approximate numbers contract (2~3만 원 이삼만 원, 3~4개 서너 개,
+# 20~30명 이삼십 명; references 663:172 for digits, 463:108 for tens).
+policy	ko-KR	range_contract	adjacent
+range_contract	ko-KR	sino:1	일이
+range_contract	ko-KR	sino:2	이삼
+range_contract	ko-KR	sino:3	삼사
+range_contract	ko-KR	sino:4	사오
+range_contract	ko-KR	sino:5	오륙
+range_contract	ko-KR	sino:6	육칠
+range_contract	ko-KR	sino:7	칠팔
+range_contract	ko-KR	sino:8	팔구
+range_contract	ko-KR	native:1	한두
+range_contract	ko-KR	native:2	두세
+range_contract	ko-KR	native:3	서너
+range_contract	ko-KR	native:4	네다섯
+range_contract	ko-KR	native:5	대여섯
+range_contract	ko-KR	native:6	예닐곱
+range_contract	ko-KR	native:7	일고여덟
+range_contract	ko-KR	native:8	여덟아홉
 policy	ko-KR	quantity_range_suffix	none
 symbol	ko-KR	~	물결
 quantity_prefix	ko-KR	°C	섭씨 

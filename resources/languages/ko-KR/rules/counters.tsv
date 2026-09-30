@@ -65,6 +65,9 @@ quantity_lookahead_tail	ko-KR	만큼	1
 unit	ko-KR	band	대
 counter	ko-KR	band	sino
 range_repeat_unit	ko-KR	band	0
+# A clock hour keeps its unit at both ends of a wider range (두 시에서 네 시);
+# adjacent hours still contract (두세 시).
+range_repeat_unit	ko-KR	시	wide
 classifier_priority	ko-KR	ko:band-counter	10
 classifier_priority	ko-KR	ko:band-range	10
 counter_band_before	ko-KR	차	count

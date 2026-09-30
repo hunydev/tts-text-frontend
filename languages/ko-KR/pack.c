@@ -503,6 +503,184 @@ static ttf_status_t dotted_numbers(const ttf_engine_t *e, const ttf_semantic_t *
     return TTF_OK;
 }
 
+/* Bytes of a range mark at text: ~, -, or U+223C/U+FF5E/U+301C; 0 otherwise. */
+static size_t range_mark_width(const char *text, size_t length) {
+    const unsigned char *u = (const unsigned char *)text;
+    if (length && (text[0] == '~' || text[0] == '-'))
+        return 1;
+    if (length >= 3 && ((u[0] == 0xe2 && u[1] == 0x88 && u[2] == 0xbc) ||
+                        (u[0] == 0xef && u[1] == 0xbd && u[2] == 0x9e) ||
+                        (u[0] == 0xe3 && u[1] == 0x80 && u[2] == 0x9c)))
+        return 3;
+    return 0;
+}
+/* Whether the written first endpoint ends at the range mark: its digits and an
+   optional scale word (1만~3만 원) are followed by ~ or a tilde variant, not by
+   a unit of its own (3개~4개). Unknown surfaces (full-width digits) share. */
+static int range_unit_shared(const char *surface, size_t length) {
+    static const char *const scales[] = {"만", "억", "조", "천"};
+    size_t i = 0, k;
+    if (!surface || !length)
+        return 1;
+    while (i < length) {
+        const unsigned char *u = (const unsigned char *)surface + i;
+        if ((surface[i] >= '0' && surface[i] <= '9') || surface[i] == ',' || surface[i] == '.')
+            ++i;
+        else if (length - i >= 3 && u[0] == 0xef && u[1] == 0xbc && u[2] >= 0x90 && u[2] <= 0x99)
+            i += 3;
+        else
+            break;
+    }
+    if (!i)
+        return 0; /* ₩1,000~₩2,000, B1~B3층: the first end carries its own unit. */
+    for (k = 0; k < sizeof(scales) / sizeof(scales[0]); ++k)
+        if (length - i >= strlen(scales[k]) && !strncmp(surface + i, scales[k], strlen(scales[k]))) {
+            i += strlen(scales[k]);
+            break;
+        }
+    while (i < length && surface[i] == ' ')
+        ++i;
+    return range_mark_width(surface + i, length - i) > 0;
+}
+/* A unit declared as a measure suffix (kg, km, cm, L) is a metric measure. */
+static int metric_unit(const ttf_engine_t *e, const char *unit) {
+    const char *suffix = unit[0] ? ttf_resource_get(e, "numeric_suffix", "*", unit, NULL) : NULL;
+    return suffix && !strncmp(suffix, "MEASURE:", 8);
+}
+/* Range endpoints read with native numerals: native counters, frequency and
+   whole clock hours (두세 시). */
+static int native_endpoint(const ttf_engine_t *e, const ttf_semantic_t *endpoint) {
+    if (endpoint->type == TTF_SEM_TIME)
+        return 1;
+    return endpoint->type == TTF_SEM_COUNTER &&
+           (!strcmp(endpoint->secondary, "frequency") ||
+            (strcmp(endpoint->secondary, "identifier") &&
+             !strcmp(resource(e, "counter", endpoint->unit, "sino"), "native")));
+}
+static int plain_integer(const char *value, unsigned long *out) {
+    char *end;
+    if (!value[0] || value[0] < '1' || value[0] > '9' || strlen(value) > 12)
+        return 0;
+    *out = strtoul(value, &end, 10);
+    return !*end;
+}
+/* 2~3만 원 이삼만 원, 3~4개 서너 개, 20~30명 이삼십 명: two adjacent approximate
+   numbers k·10^n and (k+1)·10^n read as one contracted numeral (policy
+   range_contract adjacent; the words are range_contract resources). The second
+   endpoint keeps its unit reading; ten and above with k = 1 (10~20, 1~2만) and
+   numbers the renderer does not start with the plain numeral are not contracted. */
+static ttf_status_t range_contraction(const ttf_engine_t *e, const ttf_semantic_t *s,
+                                      const ttf_semantic_t *endpoint, const char *surface,
+                                      size_t length, ttf_buffer_t *out, int *done) {
+    unsigned long a, b, scale = 1;
+    unsigned k, n = 0;
+    int native;
+    char key[16], place[24];
+    const char *pair;
+    ttf_semantic_t second = *endpoint;
+    ttf_buffer_t tail = {0}, lead = {0}, unit_place = {0};
+    ttf_status_t status = TTF_OK;
+    *done = 0;
+    /* A metric measure reads 일에서 이 킬로그램 (references 20:17); counters,
+       periods, money and percent contract. */
+    if (strcmp(resource(e, "policy", "range_contract", "adjacent"), "adjacent") || !s->unit[0] ||
+        !strcmp(s->rule, "ko:identifier-range") || endpoint->type == TTF_SEM_ORDINAL ||
+        endpoint->type == TTF_SEM_MEASURE || metric_unit(e, s->unit) ||
+        !plain_integer(s->value, &a) || !plain_integer(s->secondary, &b) || b <= a)
+        return TTF_OK;
+    while (a % (scale * 10) == 0 && b % (scale * 10) == 0) {
+        scale *= 10;
+        ++n;
+    }
+    if (a % scale || a / scale < 1 || a / scale > 8 || b != a + scale || (n && a / scale == 1))
+        return TTF_OK;
+    k = (unsigned)(a / scale);
+    native = native_endpoint(e, endpoint) && n == 0;
+    snprintf(key, sizeof(key), "%s:%u", native ? "native" : "sino", k);
+    pair = ttf_resource_get(e, "range_contract", "ko-KR", key, NULL);
+    if (!pair)
+        return TTF_OK;
+    memcpy(second.value, s->secondary, sizeof(second.value));
+    status = verbalize(e, &second, surface, length, &tail);
+    /* The second reading must begin with its own numeral (삼만, 세, 서른). */
+    if (status == TTF_OK)
+        status = endpoint->type == TTF_SEM_COUNTER && native_endpoint(e, endpoint)
+                     ? native_number(e, s->secondary, &lead)
+                 : endpoint->type == TTF_SEM_TIME ? native_number(e, s->secondary, &lead)
+                                                  : cardinal(e, s->secondary, &lead);
+    if (status == TTF_OK && n) {
+        snprintf(place, sizeof(place), "1%0*u", (int)n, 0u);
+        status = cardinal(e, place, &unit_place);
+    }
+    if (status == TTF_OK) {
+        const char *rest = NULL;
+        if (tail.data && lead.data && !strncmp(tail.data, lead.data, lead.length))
+            rest = tail.data + lead.length;
+        else if (!strcmp(s->unit, "월") && tail.data &&
+                 (!strcmp(tail.data, "유월") || !strcmp(tail.data, "시월")))
+            rest = " 월"; /* 5~6월 오륙 월: the contraction keeps plain numerals. */
+        if (rest) {
+            status = ttf_buffer_puts(out, pair);
+            /* 10^8 reads 일억 alone; after a numeral it is 억 (사오억). */
+            if (status == TTF_OK && unit_place.data)
+                status = ttf_buffer_puts(out, !strncmp(unit_place.data, "일", strlen("일"))
+                                                  ? unit_place.data + strlen("일")
+                                                  : unit_place.data);
+            if (status == TTF_OK)
+                status = ttf_buffer_puts(out, rest);
+            if (status == TTF_OK) {
+                *done = 1;
+                ttf_trace_stage(e, TTF_TRACE_POLICY, 0, length);
+                status = ttf_trace_resource(e, "range_contract", "ko-KR", key, surface,
+                                            "adjacent-range-contracted", SIZE_MAX);
+            }
+        }
+    }
+    ttf_buffer_free(&tail);
+    ttf_buffer_free(&lead);
+    ttf_buffer_free(&unit_place);
+    return status;
+}
+/* After the range mark: whether the second number is written with a decimal
+   point (1~1.5만 원). */
+static int second_written_decimal(const char *mark, size_t length) {
+    size_t i = range_mark_width(mark, length);
+    while (i < length && mark[i] == ' ')
+        ++i;
+    while (i < length && ((mark[i] >= '0' && mark[i] <= '9') || mark[i] == ','))
+        ++i;
+    return i < length && mark[i] == '.';
+}
+/* A wider range reads its first number without the unit (3~5kg 삼에서 오
+   킬로그램). A first number written without the shared scale (1~3만 원) is read
+   as written; a native counter uses the standalone numeral (2~5개 둘에서). */
+static ttf_status_t range_first_bare(const ttf_engine_t *e, const ttf_semantic_t *s,
+                                     const ttf_semantic_t *endpoint, const char *surface,
+                                     size_t length, ttf_buffer_t *out) {
+    char written[TTF_IR_VALUE_SIZE];
+    size_t i = 0, w = 0;
+    unsigned long value, as_written;
+    while (surface && i < length && w + 1 < sizeof(written) &&
+           ((surface[i] >= '0' && surface[i] <= '9') || surface[i] == ',')) {
+        if (surface[i] != ',')
+            written[w++] = surface[i];
+        ++i;
+    }
+    written[w] = 0;
+    while (i < length && surface[i] == ' ')
+        ++i;
+    /* Only digits directly before the range mark share the second's scale, and
+       only when the second is written as a plain integer too. */
+    if (w && range_mark_width(surface + i, length - i) &&
+        !second_written_decimal(surface + i, length - i) && plain_integer(s->value, &value) &&
+        plain_integer(written, &as_written) && as_written < value)
+        return cardinal(e, written, out);
+    if (native_endpoint(e, endpoint) && endpoint->type == TTF_SEM_COUNTER &&
+        plain_integer(s->value, &value) && value <= 99 &&
+        standalone_native(e, s->value, out) == TTF_OK)
+        return TTF_OK;
+    return cardinal(e, s->value, out);
+}
 static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, const char *surface,
                               size_t length, ttf_buffer_t *out) {
     switch (s->type) {
@@ -616,6 +794,7 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         TRY(ttf_buffer_puts(out, resource(e, "quantity_prefix", s->unit, "")));
         return quantity(e, s->value, resource(e, "unit", s->unit, s->unit), 0, out);
     case TTF_SEM_RANGE: {
+        int contracted = 0;
         int quantity_range = strcmp(s->rule, "syntax.range") != 0 || s->unit[0] ||
                              strchr(s->value, '.') || strchr(s->secondary, '.') ||
                              s->value[0] == '-' || s->value[0] == '+' || s->secondary[0] == '-' ||
@@ -640,13 +819,32 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             snprintf(endpoint.secondary, sizeof(endpoint.secondary), "frequency");
         else if (!strcmp(s->rule, "ko:identifier-range"))
             snprintf(endpoint.secondary, sizeof(endpoint.secondary), "identifier");
-        if (s->unit[0] && ttf_resource_get(e, "range_repeat_unit", "ko-KR", s->unit, NULL) &&
-            !strcmp(ttf_resource_get(e, "range_repeat_unit", "ko-KR", s->unit, NULL), "0"))
+        /* Per unit: 0 never repeats, 1 always repeats, wide repeats only a range
+           that does not contract (2~3시 두세 시, 2~4시 두 시에서 네 시). */
+        const char *unit_repeat =
+            s->unit[0] ? ttf_resource_get(e, "range_repeat_unit", "ko-KR", s->unit, NULL) : NULL;
+        if (unit_repeat && !strcmp(unit_repeat, "0"))
             repeat_unit = 0;
+        else if (unit_repeat && !strcmp(unit_repeat, "1"))
+            repeat_unit = 1;
+        else if (unit_repeat && !strcmp(unit_repeat, "wide"))
+            repeat_unit = 0;
+        /* 3개~4개 keeps both written units (세 개에서 네 개); only a unit written
+           once, after the second number, is shared by the range. */
+        /* A prefixed unit (시속 삼 마일) keeps its reading at both ends. */
+        if (!range_unit_shared(surface, length) || endpoint.type == TTF_SEM_ORDINAL ||
+            (s->unit[0] && *resource(e, "quantity_prefix", s->unit, "")))
+            repeat_unit = 1;
+        if (quantity_range && !repeat_unit)
+            TRY(range_contraction(e, s, &endpoint, surface, length, out, &contracted));
+        if (contracted)
+            return TTF_OK;
+        if (unit_repeat && !strcmp(unit_repeat, "wide"))
+            repeat_unit = 1;
         if (repeat_unit || !s->unit[0] || !strcmp(s->unit, "time"))
             TRY(verbalize(e, &endpoint, surface, length, out));
         else
-            TRY(cardinal(e, s->value, out));
+            TRY(range_first_bare(e, s, &endpoint, surface, length, out));
         TRY(ttf_buffer_puts(
             out,
             resource(e, "policy", quantity_range ? "quantity_range_separator" : "range_separator",

@@ -5,6 +5,28 @@ static int wide(const char *s, size_t n, size_t at) {
            (unsigned char)s[at + 1] == 0xbc &&
            (unsigned char)s[at + 2] >= 0x90 && (unsigned char)s[at + 2] <= 0x99;
 }
+static int ascii_digit_at(const char *s, size_t n, size_t at) {
+    return at < n && ((s[at] >= '0' && s[at] <= '9') || wide(s, n, at));
+}
+/* A tilde operator, full-width tilde or wave dash written between a value and
+   a number (5∼6교시, 3～5kg, 20〜40km) is the range mark ~ for classification.
+   Elsewhere (감사합니다∼) it keeps its own character. */
+static int wide_tilde(const char *s, size_t n, size_t at) {
+    const unsigned char *u = (const unsigned char *)s + at;
+    size_t next = at + 3, before = at;
+    if (n - at < 3 || !((u[0] == 0xe2 && u[1] == 0x88 && u[2] == 0xbc) ||
+                        (u[0] == 0xef && u[1] == 0xbd && u[2] == 0x9e) ||
+                        (u[0] == 0xe3 && u[1] == 0x80 && u[2] == 0x9c)))
+        return 0;
+    while (next < n && s[next] == ' ')
+        ++next;
+    while (before > 0 && s[before - 1] == ' ')
+        --before;
+    return before > 0 && s[before - 1] != '\n' && ascii_digit_at(s, n, next);
+}
+static int canonical(const char *s, size_t n, size_t at) {
+    return wide(s, n, at) || wide_tilde(s, n, at);
+}
 void ttf_numeric_width_free(ttf_numeric_width_t *v) {
     free(v->text);
     free(v->raw);
@@ -18,20 +40,21 @@ ttf_status_t ttf_numeric_width_create(const char *s, size_t n, const ttf_token_t
                                        size_t region_count, ttf_numeric_width_t *v) {
     size_t at = 0, k = 0, region = 0;
     memset(v, 0, sizeof(*v));
-    /* ASCII and all other Unicode incur no allocation. Search the rare UTF-8
-       lead byte once per unit, never once per classifier/token. */
+    /* Text without a full-width digit or a range tilde incurs no allocation.
+       The scan is once per unit, never once per classifier/token. */
     while (at < n) {
-        const char *hit = memchr(s + at, 0xef, n - at);
-        if (!hit)
-            return TTF_OK;
-        at = (size_t)(hit - s);
+        unsigned char c = (unsigned char)s[at];
+        if (c != 0xef && c != 0xe2 && c != 0xe3) {
+            ++at;
+            continue;
+        }
         while (region < region_count && regions[region].match.end <= at)
             ++region;
         if (region < region_count && regions[region].begin <= at) {
             at = regions[region].match.end;
             continue;
         }
-        if (wide(s, n, at))
+        if (canonical(s, n, at))
             break;
         ++at;
     }
@@ -61,6 +84,10 @@ ttf_status_t ttf_numeric_width_create(const char *s, size_t n, const ttf_token_t
         if (!protected && wide(s, n, at)) {
             v->scan[at + 1] = v->scan[at + 2] = k;
             v->text[k++] = (char)('0' + (unsigned char)s[at + 2] - 0x90);
+            at += 3;
+        } else if (!protected && wide_tilde(s, n, at)) {
+            v->scan[at + 1] = v->scan[at + 2] = k;
+            v->text[k++] = '~';
             at += 3;
         } else
             v->text[k++] = s[at++];

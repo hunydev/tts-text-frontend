@@ -2,6 +2,18 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Read Korean ranges the way the references and the standard approximate
+  numerals do (user decision; `docs/korean-range-reading.ko.md`). Adjacent
+  numbers contract (`2~3만 원` → 이삼만 원, `3~4개` → 서너 개, `20~30명` → 이삼십
+  명); a wider range names the unit once, after the second number (`3~5kg` →
+  삼에서 오 킬로그램, `1~3만 원` → 일에서 삼만 원); a unit written on both ends is
+  read as written (`3개~4개`). `∼`, `～` and `〜` between numbers mark a range
+  like `~`. Korean adjusted agreement 75.39% → 76.84% (+2,086 / −15); English
+  unchanged. Resources `range_contract`, `policy range_contract` and
+  `range_repeat_unit … wide`; the previous reading is the customer profile
+  `customers/range-repeat-unit`. Forty-five contract rows and thirty test
+  literals that encoded the previous reading follow the decision (previous
+  values kept in notes). Contract `ko_range_reading_v24` (49 cases).
 - Name symbols and emoji that no rule reads instead of passing them raw to TTS
   (named option `symbol_fallback=on|native|off`, default `on`; CLI
   `--symbol-fallback`). Each language has an index/data file pair under

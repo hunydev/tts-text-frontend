@@ -1,0 +1,4 @@
+# Optional customer profile: read the unit at both range ends and never contract
+# (2~3만 원 이만 원에서 삼만 원, 3~4개 세 개에서 네 개), the pre-v0.24 reading.
+policy	ko-KR	quantity_range_repeat_unit	1
+policy	ko-KR	range_contract	off

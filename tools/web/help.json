@@ -33,7 +33,7 @@
         {"syntax": "[[…]]{@measure}", "meaning": "수 + 단위", "example": "[[3kg]]{@measure}", "output": "삼 킬로그램"},
         {"syntax": "[[…]]{@counter}", "meaning": "수 + 셈 단위 (한국어)", "example": "[[3개]]{@counter}", "output": "세 개"},
         {"syntax": "[[…]]{@fraction}", "meaning": "분수", "example": "[[9/25]]{@fraction}", "output": "이십오 분의 구"},
-        {"syntax": "[[…]]{@range}", "meaning": "범위", "example": "[[1~2kg]]{@range}", "output": "일 킬로그램에서 이 킬로그램"},
+        {"syntax": "[[…]]{@range}", "meaning": "범위", "example": "[[1~2kg]]{@range}", "output": "일에서 이 킬로그램"},
         {"syntax": "[[…]]{@phone}", "meaning": "전화번호", "example": "[[0210-09]]{@phone}", "output": "공이일공 공구"},
         {"syntax": "[[…]]{@version}", "meaning": "버전 번호", "example": "[[12.03.4]]{@version}", "output": "십이 점 영삼 점 사"},
         {"syntax": "[[…]]{@ip}", "meaning": "IP 주소", "example": "[[192.168.0.1]]{@ip}", "output": "일구이 점 일육팔 점 영 점 일"},
