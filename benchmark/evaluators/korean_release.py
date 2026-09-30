@@ -19,6 +19,32 @@ from benchmark.common import digest_json, ensure_output, sha256, tree_hash
 from benchmark.evaluators.evaluate import Backend, align_span
 from benchmark.importers.korean_release.import_release import compact, ROUTES
 
+sys.path.insert(0, str(ROOT / 'tools/web'))
+import jev as jev_judge  # noqa: E402
+JEV_CACHE = ROOT / 'benchmark/generated/jev-cache/ko-KR.jsonl'
+
+
+def jev_metric():
+    return dict(scored=0, total=0.0, passed=0, low=0, unread=0,
+                reference_different_passed=0, reference_agreed_failed=0)
+
+
+def jev_add(m, value, unread, status):
+    """Jev pass = noul >= 0.7 and no digits, Latin or symbols left unread."""
+    ok = value >= jev_judge.PASS and not unread
+    m['scored'] += 1; m['total'] += value; m['passed'] += ok
+    m['low'] += value < 0.4; m['unread'] += bool(unread)
+    if status == 'different':
+        m['reference_different_passed'] += ok
+    elif status in ('exact', 'spacing', 'variant'):
+        m['reference_agreed_failed'] += not ok
+
+
+def jev_finish(m):
+    n = m['scored']
+    return dict({k: v for k, v in m.items() if k != 'total'}, mean=round(m['total'] / n, 4) if n else None,
+                pass_rate=m['passed'] / n if n else None)
+
 METRIC_VERSION = 'ko-reference-agreement-v2'
 OPTIONS = dict(input_format='plain',output_mode='speech',unreadable='preserve',
                hanja='passthrough',kana='passthrough',render_policy='phonetic',
@@ -100,7 +126,20 @@ def read_reviews(path):
 
 
 def run(import_dir, library, resources, output, reviews_path=None, label='', backend=None,
-        overlays=()):
+        overlays=(), jev=False, predictions=None, system=None):
+    """predictions: a JSON-lines file {id, actual} of another system's outputs
+    (legacy TN), scored instead of this engine; jev: add a TypeSafe Jev score
+    per sentence (tools/web/jev.py, cached in benchmark/generated/jev-cache)."""
+    predicted = None
+    if predictions is not None:
+        predictions = Path(predictions).resolve(strict=True)
+        predicted = {}
+        for line in predictions.read_text(encoding='utf-8').splitlines():
+            if line.strip():
+                p = json.loads(line)
+                if not isinstance(p.get('id'), str) or not (p.get('actual') is None or isinstance(p['actual'], str)):
+                    raise ValueError('prediction rows need id and actual')
+                predicted[p['id']] = p['actual']
     import_dir, output = Path(import_dir).resolve(), ensure_output(output)
     manifest = json.loads((import_dir/'manifest.json').read_text())
     if manifest['status'] != 'complete' or manifest['records_sha256'] != sha256(import_dir/'records.jsonl'):
@@ -117,23 +156,27 @@ def run(import_dir, library, resources, output, reviews_path=None, label='', bac
         with (import_dir/'records.jsonl').open(encoding='utf-8') as f:
             ids=set(json.loads(l)['id'] for l in f)
         if set(reviews)-ids: raise ValueError('review contains unknown ids')
-    source_paths = ('benchmark/evaluators/korean_release.py','benchmark/evaluators/evaluate.py',
+    source_paths = ('benchmark/evaluators/korean_release.py','benchmark/evaluators/evaluate.py','tools/web/jev.py',
                     'benchmark/common.py','benchmark/importers/korean_release/import_release.py',
                     'tools/web/native.py','tools/evaluation/evaluate.py')
     source_bytes = {p:(ROOT/p).read_bytes() for p in source_paths}
     overlays = [Path(o).resolve(strict=True) for o in overlays]
-    identities = dict(library=sha256(library),resources=tree_hash(resources),
+    engine_file = predictions if predicted is not None else library
+    identities = dict(library=sha256(engine_file),resources=tree_hash(resources),
                       reviews=sha256(reviews_path) if reviews_path else None,
                       overlays=[sha256(o) for o in overlays])
     output.mkdir(parents=True)
     owned = backend is None
     # Overlays (e.g. the reading-unit spacing profile) load as the domain layer.
-    backend = backend or Backend(library,None,resources,OPTIONS,overlays)
+    if predicted is not None:
+        owned = False
+    else:
+        backend = backend or Backend(library,None,resources,OPTIONS,overlays)
     started = datetime.now(timezone.utc).isoformat(); clock = time.monotonic()
     db = sqlite3.connect(output/'report.sqlite')
     db.executescript('''
       CREATE TABLE cases(id TEXT PRIMARY KEY,category TEXT,route TEXT,status TEXT,
-        flagged INTEGER,duplicate_group TEXT,text TEXT NOT NULL,details BLOB NOT NULL);
+        flagged INTEGER,duplicate_group TEXT,text TEXT NOT NULL,details BLOB NOT NULL,jev REAL);
       CREATE INDEX case_filter ON cases(category,route,status);
       CREATE INDEX case_flags ON cases(flagged);
       CREATE TABLE spans(id INTEGER PRIMARY KEY,case_id TEXT,category TEXT,theme TEXT,
@@ -146,6 +189,7 @@ def run(import_dir, library, resources, output, reviews_path=None, label='', bac
     themes, routes, engine_types = [defaultdict(metric) for _ in range(3)]
     flags, review_counts, status_counts = Counter(),Counter(),Counter()
     seen, count = set(), 0
+    judged = []  # (id, category, text, actual, status) for Jev after the pass
     conflicts=set(manifest['conflicting_input_groups'])
     try:
         with (import_dir/'records.jsonl').open(encoding='utf-8') as handle:
@@ -153,10 +197,16 @@ def run(import_dir, library, resources, output, reviews_path=None, label='', bac
                 row=json.loads(line); count+=1; flags_here=list(row['flags'])
                 if row['input_group'] in conflicts: flags_here.append('conflicting-input-reference')
                 actual,result,error=None,None,None
-                try:
-                    result=backend.run(row['text'],'ko-KR');actual=result['text']
-                except (ValueError,RuntimeError,OSError) as exc:
-                    error=str(exc)
+                if predicted is not None:
+                    if row['id'] in predicted and predicted[row['id']] is not None:
+                        actual=predicted[row['id']];result=dict(text=actual,spans=[])
+                    else:
+                        error='no prediction for this id'
+                else:
+                    try:
+                        result=backend.run(row['text'],'ko-KR');actual=result['text']
+                    except (ValueError,RuntimeError,OSError) as exc:
+                        error=str(exc)
                 expected=row['expected'];cat=row['category_en'];rev=reviews.get(row['id'])
                 primary=rev.get('route',row['route']) if rev else row['route']
                 add(sentences,expected,actual,error);add(category[cat]['sentences'],expected,actual,error)
@@ -198,13 +248,38 @@ def run(import_dir, library, resources, output, reviews_path=None, label='', bac
                                (row['id'],cat,s['theme'],s['route'],st,zlib.compress(json.dumps(detail,ensure_ascii=False).encode(),1)))
                 detail=dict(row,actual=actual,error=error,status=status,flags=flags_here,route=primary,
                             review=rev,spans=projected,engine_spans=result['spans'] if result else [])
-                db.execute('INSERT INTO cases VALUES(?,?,?,?,?,?,?,?)',
+                db.execute('INSERT INTO cases VALUES(?,?,?,?,?,?,?,?,NULL)',
                     (row['id'],cat,primary,status,bool(flags_here),row['input_group'],row['text'],zlib.compress(json.dumps(detail,ensure_ascii=False).encode(),1)))
+                if jev and actual:
+                    judged.append((row['id'],cat,row['text'],actual,status))
                 if count%5000==0:
                     db.commit();print(json.dumps(dict(processed=count,total=manifest['counts']['imported'],seconds=round(time.monotonic()-clock,1))),flush=True)
         if count != manifest['counts']['imported']: raise ValueError('import record count mismatch')
         db.commit()
-        if (identities != dict(library=sha256(library),resources=tree_hash(resources),
+        jev_report, jev_categories = None, {}
+        if jev:
+            scores, fresh = jev_judge.batch([(t, a) for _, _, t, a, _ in judged], 'ko-KR', JEV_CACHE,
+                                            progress=lambda d, n: print(json.dumps(dict(jev=d, of=n)), flush=True))
+            overall, models = jev_metric(), Counter()
+            for case_id, cat, text, actual, status in judged:
+                value, model = scores[(text, actual)]
+                left = jev_judge.unread(actual, 'ko-KR')
+                models[model] += 1
+                jev_add(overall, value, left, status)
+                jev_add(jev_categories.setdefault(cat, jev_metric()), value, left, status)
+                raw = db.execute('SELECT details FROM cases WHERE id=?', (case_id,)).fetchone()[0]
+                detail = json.loads(zlib.decompress(raw).decode())
+                detail['jev'] = dict(noul=value, model=model, unread=left, passed=value >= jev_judge.PASS and not left)
+                db.execute('UPDATE cases SET jev=?, details=? WHERE id=?',
+                           (value, zlib.compress(json.dumps(detail, ensure_ascii=False).encode(), 1), case_id))
+            db.commit()
+            jev_report = dict(jev_finish(overall), question=jev_judge.QUESTION_ID, threshold=jev_judge.PASS,
+                              models=dict(models), newly_scored=fresh,
+                              policy='Pass = Jev noul >= 0.7 ("spoken is a correct way to read written aloud") '
+                                     'and no digits, Latin letters or symbols left in the output. Independent of '
+                                     'the reference: it accepts other correct readings and can miss fine '
+                                     'pronunciation errors. Calibration: tools/web/jev.py.')
+        if (identities != dict(library=sha256(engine_file),resources=tree_hash(resources),
                                reviews=sha256(reviews_path) if reviews_path else None,
                                overlays=[sha256(o) for o in overlays])
             or any((ROOT/p).read_bytes()!=data for p,data in source_bytes.items())
@@ -223,7 +298,9 @@ def run(import_dir, library, resources, output, reviews_path=None, label='', bac
                                 source_summary_sha256=manifest['source_summary_sha256'],source_files=manifest['source_files'],
                                 counts=manifest['counts'],flags=manifest['flags'],duplicate_input_records=manifest['duplicate_input_records'],
                                 conflicting_input_groups=len(conflicts),rights='Unverified; local benchmark only; no source redistribution'),
-                    engine=dict(library_sha256=sha256(library),resources_sha256=tree_hash(resources),
+                    engine=dict(library_sha256=sha256(engine_file),resources_sha256=tree_hash(resources),
+                                system=system or ('external predictions' if predicted is not None else 'tts-text-frontend'),
+                                predictions=str(predictions) if predicted is not None else None,
                                 git_head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
                                 git_dirty=bool(subprocess.check_output(['git','status','--porcelain'],cwd=ROOT))),
                     harness=dict(evaluator_sha256=sha256(Path(__file__)),importer_sha256=manifest['importer_sha256'],
@@ -231,8 +308,11 @@ def run(import_dir, library, resources, output, reviews_path=None, label='', bac
                     sentences=finish(sentences),spans=finish(spans_total),structurally_clean_sentences=finish(clean),
                     unique_pair_sentences=finish(unique),reviewed_sentences=finish(reviewed),adjusted_sentences=finish(adjusted),review_counts=dict(review_counts),
                     flags=dict(flags),status_counts=dict(status_counts),
+                    jev=jev_report,
+                    selection=manifest.get('selection'),
                     categories=[dict(id=k,name=next(x['category'] for x in manifest['source_summary']['files'] if x['category_en']==k),
-                                     sentences=finish(v['sentences']),adjusted_sentences=finish(v['adjusted']),spans=finish(v['spans']),flagged=v['flagged']) for k,v in category.items()],
+                                     sentences=finish(v['sentences']),adjusted_sentences=finish(v['adjusted']),spans=finish(v['spans']),flagged=v['flagged'],
+                                     jev=jev_finish(jev_categories[k]) if k in jev_categories else None) for k,v in category.items()],
                     themes=[dict(name=k,spans=finish(v)) for k,v in sorted(themes.items())],
                     routes=[dict(name=k,spans=finish(v)) for k,v in sorted(routes.items())],
                     engine_types=[dict(name=k,spans=finish(v)) for k,v in sorted(engine_types.items())],
@@ -268,8 +348,11 @@ def main():
     p.add_argument('--reviews',type=Path);p.add_argument('--label',default='')
     p.add_argument('--overlay',type=Path,action='append',default=[],
                    help='resource overlay TSV, e.g. resources/customers/reading-unit-spacing/ko-KR/rules.tsv')
+    p.add_argument('--jev',action='store_true',help='add a TypeSafe Jev score per sentence (cached)')
+    p.add_argument('--predictions',type=Path,help='JSON lines {id, actual}: score another system (legacy TN)')
+    p.add_argument('--system',help='name of the scored system shown in the report')
     a=p.parse_args();r=run(a.import_dir,a.library.resolve(),a.resources.resolve(),a.out,a.reviews,a.label,
-                           overlays=a.overlay)
-    print(json.dumps(dict(sentences=r['sentences'],spans=r['spans']),ensure_ascii=False));return 0
+                           overlays=a.overlay,jev=a.jev,predictions=a.predictions,system=a.system)
+    print(json.dumps(dict(sentences=r['sentences'],spans=r['spans'],jev=r['jev']),ensure_ascii=False));return 0
 
 if __name__=='__main__': raise SystemExit(main())

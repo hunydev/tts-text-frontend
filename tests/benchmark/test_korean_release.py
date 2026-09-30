@@ -108,4 +108,34 @@ class Contracts(unittest.TestCase):
     evaluate(root/'import',root/'lib',root/'resources',root/'report',backend=Mutating())
    self.assertFalse((root/'report/summary.json').exists())
 
+ def test_predictions_and_jev(self):
+  # Another system's outputs (legacy TN) are scored by id, and Jev scores are
+  # aggregated per category with the unread-form check; no network is used.
+  import benchmark.evaluators.korean_release as kr
+  with tempfile.TemporaryDirectory() as temp:
+   root=Path(temp);fixture(root/'source',[row(),row('금액 2원','금액 [이 원]','2원','이 원'),row('검토 1','검토 [일]','1','일')])
+   imported=root/'import';import_run(root/'source',imported)
+   records=[json.loads(l) for l in (imported/'records.jsonl').read_text().splitlines()]
+   outputs={records[0]['id']:'물건은 세 개다.',records[1]['id']:'금액 2원'}  # third id missing
+   predictions=root/'legacy.jsonl'
+   predictions.write_text(''.join(json.dumps(dict(id=k,actual=v),ensure_ascii=False)+'\n' for k,v in outputs.items()))
+   lib=root/'library';lib.write_text('unused');resources=root/'resources';resources.mkdir();(resources/'rules').write_text('fixture')
+   seen=[]
+   def fake_batch(pairs,language,cache,**kw):
+    seen.extend(pairs)
+    return {p:(0.9 if p[1]=='물건은 세 개다.' else 0.8,'jev-test') for p in pairs},len(pairs)
+   original=kr.jev_judge.batch;kr.jev_judge.batch=fake_batch
+   try:
+    report=evaluate(imported,lib,resources,root/'legacy',predictions=predictions,jev=True,system='legacy-tn')
+   finally:kr.jev_judge.batch=original
+   self.assertEqual(report['engine']['system'],'legacy-tn')
+   self.assertEqual(report['sentences']['errors'],1)  # no prediction for the third id
+   self.assertEqual(report['sentences']['exact'],1)
+   self.assertEqual(len(seen),2)
+   j=report['jev'];self.assertEqual((j['scored'],j['passed'],j['unread']),(2,1,1))  # '2원' is left unread
+   self.assertEqual(report['categories'][0]['jev']['passed'],1)
+   with sqlite3.connect(root/'legacy/report.sqlite') as db:
+    self.assertEqual(sorted(r[0] for r in db.execute('select jev from cases where jev is not null')),[0.8,0.9])
+
+
 if __name__=='__main__':unittest.main()

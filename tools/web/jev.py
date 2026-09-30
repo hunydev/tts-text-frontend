@@ -144,3 +144,74 @@ class Judge:
             while len(self.cache) > 512:
                 self.cache.popitem(last=False)
         return dict(result, unread=unread(spoken, language) if speech else [])
+
+
+PASS = 0.7
+
+
+def cache_key(written, spoken, language):
+    return hashlib.sha256(json.dumps([QUESTION_ID, language, written, spoken]).encode()).hexdigest()
+
+
+def batch(pairs, language, cache_path, key=None, workers=8, opener=urllib.request.urlopen, progress=None):
+    """Score (written, spoken) pairs for a benchmark run; returns {pair: (noul, model)}.
+
+    Rows already in cache_path (JSON lines keyed by question, language and both
+    texts) are reused, so a rerun or another system's identical output costs
+    nothing. Retries 429/529/5xx with backoff; any other failure stops the run.
+    """
+    from concurrent.futures import ThreadPoolExecutor
+    judge = Judge(key=key, opener=opener)
+    if not judge.available:
+        raise JudgeError(503, "TypeSafe API key not found (~/.config/ttf/typesafe_api_key or TYPESAFE_API_KEY)")
+    cache_path = Path(cache_path)
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    known = {}
+    if cache_path.exists():
+        for line in cache_path.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                row = json.loads(line)
+                known[row["key"]] = (row["noul"], row["model"])
+    unique = list(dict.fromkeys(pairs))
+    todo = [p for p in unique if cache_key(p[0], p[1], language) not in known]
+    lock = threading.Lock()
+    done = [0]
+
+    def one(pair):
+        body = {"model": MODEL, "state": {"written": pair[0], "spoken": pair[1], "context": context(language)},
+                "questions": {"reading_correct": question(language)}}
+        data = json.dumps(body).encode()
+        delay = 1.0
+        for attempt in range(8):
+            request = urllib.request.Request(URL, data=data, method="POST",
+                                             headers={"Authorization": "Bearer " + judge.key,
+                                                      "Content-Type": "application/json"})
+            try:
+                with opener(request, timeout=60) as response:
+                    answer = json.loads(response.read())
+                value = round(float(answer["answers"]["reading_correct"]["noul"]), 4)
+                model = answer.get("model", MODEL)
+                break
+            except urllib.error.HTTPError as exc:
+                if exc.code not in (429, 500, 502, 503, 529) or attempt == 7:
+                    raise JudgeError(502, "Jev HTTP %d" % exc.code)
+            except (urllib.error.URLError, TimeoutError, ConnectionError):
+                if attempt == 7:
+                    raise JudgeError(502, "Jev unreachable")
+            time.sleep(delay)
+            delay = min(delay * 2, 30)
+        row = dict(key=cache_key(pair[0], pair[1], language), noul=value, model=model, question=QUESTION_ID,
+                   language=language)
+        with lock:
+            with cache_path.open("a", encoding="utf-8") as h:
+                h.write(json.dumps(row) + "\n")
+            known[row["key"]] = (value, model)
+            done[0] += 1
+            if progress and done[0] % 200 == 0:
+                progress(done[0], len(todo))
+
+    with ThreadPoolExecutor(workers) as pool:
+        for future in [pool.submit(one, p) for p in todo]:
+            future.result()
+    return {p: known[cache_key(p[0], p[1], language)] for p in unique}, len(todo)
+
