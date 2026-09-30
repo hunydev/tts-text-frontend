@@ -64,8 +64,17 @@ def run_stream(text, chunk=4096, overlay=()):
 
 records, _ = MANAGE.load(ROOT)
 MANAGE.build(ROOT, check=True)
+# lexicon_case ... upper: the entry applies only to a capital surface (5G, not 5g grams).
+UPPER = set()
+for tsv in (Path(resources) / "languages/ko-KR/rules").glob("*.tsv"):
+    for line in tsv.read_text(encoding="utf-8").splitlines():
+        cells = line.split("\t")
+        if len(cells) == 4 and cells[0] == "lexicon_case" and cells[3] == "upper":
+            UPPER.add(cells[2].split(":", 1)[1])
 for row in records:
     for term in [row["term"], *row["aliases"]]:
+        if term in UPPER:
+            term = term.upper()
         text = term + "의 발음을 확인합니다."
         expected = row["pronunciation"] + "의 발음을 확인합니다."
         layer = "domain" if row.get("scope") == "finance" else "system"
