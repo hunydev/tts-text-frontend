@@ -2,7 +2,7 @@
 
 한국어 문장 속 로마자 회사·브랜드 이름을 사전으로 읽는다. 선택 팩이며 기본값은 꺼짐이다.
 
-- 파일: `resources/domains/brands/ko-KR/lexicon.tsv` (6,281항목)
+- 파일: `resources/domains/brands/ko-KR/lexicon.tsv` (6,239항목)
 - 켜기: CLI `--domain` 또는 웹 실험 설정의 "브랜드 발음 사전"
 - 도메인 층으로 읽으므로 사용자·고객 사전이 우선한다.
 - 엔진 시작 시간: 11ms → 35ms (켰을 때만)
@@ -18,8 +18,8 @@
 
 | 출처 | 라이선스 | 쓰는 것 | 항목 |
 |---|---|---|---|
-| Wikidata 회사·브랜드 | CC0 | 영어 이름과 한국어 레이블 | 4,980 |
-| 공정거래위원회 가맹정보 브랜드 목록 (2017~2025) | 이용허락범위 제한 없음 | `코드런(CODE RUN)`처럼 한글과 로마자를 함께 등록한 브랜드명 | 1,301 |
+| Wikidata 회사·브랜드 | CC0 | 영어 이름과 한국어 레이블 | 4,939 |
+| 공정거래위원회 가맹정보 브랜드 목록 (2017~2025) | 이용허락범위 제한 없음 | `코드런(CODE RUN)`처럼 한글과 로마자를 함께 등록한 브랜드명 | 1,300 |
 
 두 사전 모두 `lexicons/ko-KR/brand-*.jsonl` 원본에서 `manage.py build`로 만든다. 검토 상태는 모두 pending이다.
 
@@ -69,6 +69,21 @@
 
 연결 부호가 든 키(`a-free cafe`, `mom's pizza`, `bowl & bowl`, `hewlett-packard`)는 v0.24 연결 부호 작업부터 들어간다. 그전에는 빌더가 부호를 공백으로 바꿔서, 실제 글과 맞지 않는 키가 생겼다.
 
+### 검토 결정
+
+생성된 항목을 검토해 빼거나 고친 결정은 `lexicons/reviews/decisions/brands.jsonl`에 둔다. 한 줄에 출처, 키, `drop` 또는 `fix`, 고친 읽기, 이유, 검토자, 날짜를 적는다. 두 빌더가 매번 이 결정을 적용하므로 다시 만들어도 결정이 유지된다. 고친 항목의 notes에는 수집된 원래 읽기와 이유가 남는다.
+
+2026-09-30에는 Jev 0.5 미만 239건을 검토했다. 76건을 결정했고(삭제 42, 수정 34), 나머지는 유지했다.
+
+- **삭제:**
+  - 다른 이름이나 번역: `complex media` 컴플렉스 네트웍스, `artchicken` 예술치킨
+  - 폴란드 지명 별칭: `elk` 에우크, `bendin` 벵진
+  - 일반 영어 단어·구가 키가 된 것: `being`, `shaken`, `i've`, `the on`, `more info`, `lays`, `wanderer`
+- **수정:**
+  - 붙은 설명어 떼기: `four seasons` 포시즌스 호텔 → 포시즌스, `lilliput` 키즈카페릴리펏 → 릴리펏
+  - 틀린 읽기 고치기: `hilti` 히트 → 힐티, `naver clova` 네이버 클라우드 → 네이버 클로바, `nippon paint` 일본 페인트 → 닛폰 페인트
+- **유지:** Jev가 소유자 표기나 한국어 로마자 표기를 낮게 본 경우다. 예: 공정위 말장난 상호 `Who seek` 후식·`Meatgo` 믿고, 로마자 표기 `Baljunso` 발전소·`Bonjuk` 본죽.
+
 ## 3. 다시 만들기
 
 ```bash
@@ -89,5 +104,6 @@ python3 tools/lexicon/brands/build_ftc.py benchmark/generated/brand-lexicon/ftc 
 - 레이블과 등록명은 발음의 권위가 아니다. 소유자 표기를 따르므로 `Refresh Bowl` → 리프레쉬보울처럼 외래어 표기법과 다를 수 있다.
 - 무작위 60건을 확인한 Wikidata 정밀도는 약 95%다.
 - 검토 대기는 Wikidata 1,459건, 공정위 64건이다.
+- `F&F Entertainment`처럼 `&`로 이은 약어가 앞에 오는 이름 3건은 약어 규칙이 먼저 잡아 팩에서 빠진다.
 - 별칭·단어 대응 규칙은 Jev 점수로 확인했다(`docs/lexicon-maintenance.ko.md`). 규칙으로 빠지거나 바뀐 Wikidata 항목 256건 중 133건이 Jev 0.5 미만이었다. 전체 평균은 약 5%다. Wikidata 팩의 0.5 미만은 253건에서 127건으로, 0.3 미만은 95건에서 34건으로 줄었다.
 - 계약은 `tests/evaluation/ko_brand_lexicon_v24.jsonl` 22건이다. 로딩, 여러 단어 조회, 조사 호응, 대문자 단어, 약어 보호, 연결 부호를 확인하며, 구현 전에 작성했다.

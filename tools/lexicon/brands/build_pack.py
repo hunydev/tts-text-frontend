@@ -94,6 +94,48 @@ def letters(text):
     return re.sub(r"[^a-z]", "", text.lower())
 
 
+def decisions(source):
+    """Reviewed decisions for one brand source: term -> {action, pronunciation, reason}.
+
+    lexicons/reviews/decisions/brands.jsonl records a reviewer's drop or fix of a
+    generated entry, so a rebuild keeps it; a fix replaces the reading and the
+    note keeps the collected one."""
+    path = ROOT / "lexicons/reviews/decisions/brands.jsonl"
+    out = {}
+    if path.exists():
+        for line in path.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                row = json.loads(line)
+                if row["source"] == source:
+                    out[row["term"]] = row
+    return out
+
+
+def apply_decisions(entries, source, stats):
+    """Drop or correct reviewed entries; entries are dicts with term/pronunciation."""
+    reviewed = decisions(source)
+    kept = []
+    for entry in entries:
+        d = reviewed.get(entry["term"])
+        if d and d["action"] == "drop":
+            stats["review-dropped"] += 1
+            continue
+        if d and d["action"] == "fix":
+            entry = dict(entry, collected=entry["pronunciation"], pronunciation=d["pronunciation"],
+                         review=d)
+            stats["review-fixed"] += 1
+        kept.append(entry)
+    return kept
+
+
+def review_note(c):
+    d = c.get("review")
+    if not d:
+        return ""
+    return " Reading corrected in review %s by %s (collected %s): %s." % (
+        d["reviewed_at"], d["reviewer"], c["collected"], d["reason"])
+
+
 def written_forms(row):
     out = {}
     for k, name in enumerate([row["en"]] + row.get("aliases", [])):
@@ -219,15 +261,16 @@ def main():
                                                   encoding="utf-8")
     (args.report / "review.jsonl").write_text("".join(json.dumps(c, ensure_ascii=False) + "\n"
                                                       for c in decided if c["status"] == "review"), encoding="utf-8")
-    accepted = [c for c in decided if c["status"] == "accept"]
+    accepted = apply_decisions([c for c in decided if c["status"] == "accept"], "wikidata", stats)
 
     def record(c):
         return dict(id="brand-wd-%s-%s" % (c["qid"].lower(), slug(c["term"])),
                     source_lang="en-US", target_lang="ko-KR", term=c["term"], aliases=[], pronunciation=c["pronunciation"],
                     category="brands", scope="brands", review_status="pending", evidence=["wikidata-brands-2026-09-30"],
                     notes="Wikidata %s (%s): en \"%s\", ko \"%s\"; jamo similarity %.2f to the reading without the "
-                          "pack (%s). Machine-selected; review pending." % (c["qid"], c["cls"], c["en"], c["ko"],
-                                                                             c["similarity"], c["before"]))
+                          "pack (%s). Machine-selected; review pending.%s" % (c["qid"], c["cls"], c["en"], c["ko"],
+                                                                               c["similarity"], c["before"],
+                                                                               review_note(c)))
     lexicon = ROOT / "lexicons/ko-KR/brand-wikidata.jsonl"
     pack = ROOT / "resources/domains/brands/ko-KR/lexicon.tsv"
     dropped = []

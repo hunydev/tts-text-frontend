@@ -2,6 +2,14 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Review the 239 lexicon entries Jev scored below 0.5: 42 brand entries are
+  dropped (other names, translations, Polish town aliases, English words as
+  keys such as being, shaken, i've, the on) and 34 corrected (Hilti 힐티, was
+  히트; NAVER Clova 네이버 클로바, was 네이버 클라우드; Four Seasons 포시즌스, was
+  포시즌스 호텔), recorded in `lexicons/reviews/decisions/brands.jsonl` so the
+  brand builders reapply them; seed eighth 에잇스 (was 에이스, the reading of
+  ace). The rest stay: owner spellings and Korean romanisations Jev undervalues.
+  Rejudged: below 0.5 239 → 165, below 0.3 54 → 25.
 - Narrow the Wikidata brand builder after Jev triage: an alias takes the
   label's Korean name only as a spelling variant of the label or when that name
   fits it at least as well (PlayStation Trophies 플레이스테이션 네트워크 and Acer

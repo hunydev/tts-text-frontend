@@ -32,7 +32,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from build_pack import KEY, PROBE, ROOT, Engine, similarity, slug  # noqa: E402
+from build_pack import KEY, PROBE, ROOT, Engine, apply_decisions, review_note, similarity, slug  # noqa: E402
 
 SOURCE = "ftc-franchise-brands-2026-09-30"
 HANGUL = r"[가-힣]+(?: [가-힣]+)*"
@@ -159,6 +159,7 @@ def main():
             review.extend(dict(x, reason="conflict") for x in rows)
         else:
             accepted.append(rows[0])
+    accepted = apply_decisions(accepted, "ftc", stats)
     args.report.mkdir(parents=True, exist_ok=True)
     (args.report / "candidates.jsonl").write_text("".join(json.dumps(c, ensure_ascii=False) + "\n" for c in accepted),
                                                   encoding="utf-8")
@@ -170,8 +171,9 @@ def main():
                     source_lang="en-US", target_lang="ko-KR", term=c["term"], aliases=[], pronunciation=c["pronunciation"],
                     category="brands", scope="brands", review_status="pending", evidence=[SOURCE],
                     notes="FTC franchise brand %s (%s, base year %s): registered \"%s\"; jamo similarity %.2f to the "
-                          "reading without the pack (%s). Machine-selected; review pending."
-                          % (c["brand"], c["industry"] or "-", c["year"], c["name"], c["similarity"], c["before"]))
+                          "reading without the pack (%s). Machine-selected; review pending.%s"
+                          % (c["brand"], c["industry"] or "-", c["year"], c["name"], c["similarity"], c["before"],
+                             review_note(c)))
     lexicon = ROOT / "lexicons/ko-KR/brand-ftc.jsonl"
     pack = ROOT / "resources/domains/brands/ko-KR/lexicon.tsv"
     dropped = []

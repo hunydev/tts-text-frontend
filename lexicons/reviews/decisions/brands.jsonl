@@ -1,0 +1,76 @@
+{"source": "ftc", "term": "porkfork", "action": "fix", "reason": "registered Hangul adds the owner's name 김태진", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30", "pronunciation": "포크포크"}
+{"source": "ftc", "term": "lilliput", "action": "fix", "reason": "registered Hangul adds 키즈카페", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30", "pronunciation": "릴리펏"}
+{"source": "ftc", "term": "walki donki", "action": "fix", "reason": "registered Hangul adds 커피", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30", "pronunciation": "워키동키"}
+{"source": "ftc", "term": "artchicken", "action": "drop", "reason": "registered Hangul 예술치킨 translates art", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "complex media", "action": "drop", "reason": "label 컴플렉스 네트웍스 names Complex Networks", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "eolith", "action": "drop", "reason": "label 네오리스 does not read Eolith", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "dongfeng yueda kia", "action": "drop", "reason": "label 동옥 위에다 기아 is garbled", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "colgate-palmolive-peet", "action": "drop", "reason": "label lacks Peet", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "barclays ib", "action": "drop", "reason": "label 바클레이스 캐피털 names Barclays Capital", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "wordpress", "action": "drop", "reason": "label adds 닷컴; the engine already reads 워드프레스", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "microsoft office online", "action": "drop", "reason": "label 오피스 웹사이트 is another name", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "four seasons", "action": "fix", "reason": "label adds 호텔", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30", "pronunciation": "포시즌스"}
+{"source": "wikidata", "term": "the on", "action": "drop", "reason": "key the on is an ordinary English phrase", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "steff-houlberg", "action": "drop", "reason": "label 스테프 핫도그 is another name", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "naver clova", "action": "fix", "reason": "label 네이버 클라우드 names NAVER Cloud", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30", "pronunciation": "네이버 클로바"}
+{"source": "wikidata", "term": "flix se", "action": "drop", "reason": "label 플릭스버스 names FlixBus", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "silk way", "action": "fix", "reason": "label adds 항공", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30", "pronunciation": "실크웨이"}
+{"source": "wikidata", "term": "ratpac-dune entertainment", "action": "fix", "reason": "label lacks RatPac", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30", "pronunciation": "랫팩 듄 엔터테인먼트"}
+{"source": "wikidata", "term": "campbells", "action": "fix", "reason": "label adds 수프", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30", "pronunciation": "캠벨"}
+{"source": "wikidata", "term": "campbell's", "action": "fix", "reason": "label adds 수프", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30", "pronunciation": "캠벨"}
+{"source": "wikidata", "term": "nintendo system development", "action": "drop", "reason": "label translates System Development", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "nico nico", "action": "fix", "reason": "label adds 동화", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30", "pronunciation": "니코니코"}
+{"source": "wikidata", "term": "acer aspire predator", "action": "drop", "reason": "label 에이서 프레데터 lacks Aspire", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "fantom entertainment", "action": "fix", "reason": "label adds 그룹", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30", "pronunciation": "팬텀 엔터테인먼트"}
+{"source": "wikidata", "term": "liminuv", "action": "drop", "reason": "alias of the town Limanowa, not read as written", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "google image search", "action": "drop", "reason": "label lacks Search", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "pan american world", "action": "fix", "reason": "label adds 항공", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30", "pronunciation": "팬아메리칸 월드"}
+{"source": "wikidata", "term": "goair", "action": "fix", "reason": "label 고우 drops Air", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30", "pronunciation": "고에어"}
+{"source": "wikidata", "term": "zoom communications", "action": "fix", "reason": "label adds 비디오", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30", "pronunciation": "줌 커뮤니케이션스"}
+{"source": "wikidata", "term": "shenzhen tencent animation", "action": "drop", "reason": "label lacks Shenzhen", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "def jam recordings", "action": "fix", "reason": "label reads Recordings as 레코드", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30", "pronunciation": "데프 잼 레코딩스"}
+{"source": "wikidata", "term": "praust", "action": "drop", "reason": "German alias of the town Pruszcz Gdański", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "cathay dragon", "action": "fix", "reason": "label adds 항공", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30", "pronunciation": "캐세이드래곤"}
+{"source": "wikidata", "term": "taiwan fresh supermarket", "action": "drop", "reason": "label 펭강 translates Fresh", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "cognizant", "action": "fix", "reason": "Korean media spell Cognizant 코그니전트", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30", "pronunciation": "코그니전트"}
+{"source": "wikidata", "term": "hilti", "action": "fix", "reason": "label 히트 drops the l", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30", "pronunciation": "힐티"}
+{"source": "wikidata", "term": "chicago and north western railway", "action": "drop", "reason": "label lacks Railway", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "chicago and northwestern railway", "action": "drop", "reason": "label lacks Railway", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "yoshimoto r and c", "action": "fix", "reason": "label reads C as 시", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30", "pronunciation": "요시모토 알 앤드 씨"}
+{"source": "wikidata", "term": "nbcuniversal entertainment japan", "action": "drop", "reason": "label 제네온 is the former name", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "kingstone bookstore", "action": "fix", "reason": "label 킹스톤 북 drops store", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30", "pronunciation": "킹스톤 북스토어"}
+{"source": "wikidata", "term": "subsc", "action": "drop", "reason": "Japanese reading 사부스쿠 of an abbreviation", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "elk", "action": "drop", "reason": "Polish town Ełk; the key is the English word elk", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "google answers", "action": "fix", "reason": "label drops the plural", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30", "pronunciation": "구글 앤서스"}
+{"source": "wikidata", "term": "boleslavia", "action": "drop", "reason": "Latin alias of the town Bolesławiec", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "telenor", "action": "fix", "reason": "Korean media spell Telenor 텔레노르", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30", "pronunciation": "텔레노르"}
+{"source": "wikidata", "term": "i've", "action": "drop", "reason": "key i've is an English contraction", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "loviche", "action": "drop", "reason": "alias of the town Łowicz", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "luyvich", "action": "drop", "reason": "alias of the town Łowicz", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "bendin", "action": "drop", "reason": "alias of the town Będzin", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "bendzin", "action": "drop", "reason": "alias of the town Będzin", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "eo contents", "action": "fix", "reason": "label adds 그룹", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30", "pronunciation": "이오 콘텐츠"}
+{"source": "wikidata", "term": "being", "action": "drop", "reason": "key being is an English word; label 빙 names B Zone", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "freshness burger", "action": "fix", "reason": "label 렛슈네스 is garbled", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30", "pronunciation": "프레시니스 버거"}
+{"source": "wikidata", "term": "south african express air", "action": "drop", "reason": "label translates South African, lacks Air", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "sixapart", "action": "fix", "reason": "label 아파트 misreads Apart", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30", "pronunciation": "식스어파트"}
+{"source": "wikidata", "term": "brzeg", "action": "drop", "reason": "Polish town, not a brand", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "standard chartered yeah", "action": "drop", "reason": "malformed alias key", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "litton industries", "action": "fix", "reason": "label drops the plural", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30", "pronunciation": "리턴 인더스트리스"}
+{"source": "wikidata", "term": "uli", "action": "drop", "reason": "label 알리 names Acer Laboratories", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "shaken", "action": "drop", "reason": "key shaken is an English word", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "sea life centre", "action": "fix", "reason": "label reads Centre as 센터스", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30", "pronunciation": "시 라이프 센터"}
+{"source": "wikidata", "term": "lays", "action": "drop", "reason": "key lays is an English word; Lay's stays", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "grey hound bus", "action": "fix", "reason": "label drops Bus", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30", "pronunciation": "그레이하운드 버스"}
+{"source": "wikidata", "term": "songlim shoes", "action": "drop", "reason": "label 수제화 translates Shoes", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "the internet movie database", "action": "drop", "reason": "label translates the name", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "wanderer", "action": "drop", "reason": "key wanderer is an English word", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "winston strawn", "action": "fix", "reason": "label adds 앤 the key lacks", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30", "pronunciation": "윈스턴 스트론"}
+{"source": "wikidata", "term": "kellogg's", "action": "fix", "reason": "label 켈로그사 adds 사", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30", "pronunciation": "켈로그스"}
+{"source": "wikidata", "term": "douglas aircraft company", "action": "fix", "reason": "label drops Company", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30", "pronunciation": "더글러스 에어크래프트 컴퍼니"}
+{"source": "wikidata", "term": "signal entertainment", "action": "fix", "reason": "label adds 그룹", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30", "pronunciation": "시그널 엔터테인먼트"}
+{"source": "wikidata", "term": "koliner perkins", "action": "drop", "reason": "misspelled alias of Kleiner Perkins", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "yakiniku king", "action": "fix", "reason": "label reads King as 킹구", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30", "pronunciation": "야키니쿠 킹"}
+{"source": "wikidata", "term": "more info", "action": "drop", "reason": "key more info is an ordinary English phrase", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "milky", "action": "drop", "reason": "key milky is an English word; label 밀키즈 adds 즈", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30"}
+{"source": "wikidata", "term": "nippon paint", "action": "fix", "reason": "label translates Nippon as 일본", "reviewer": "Claude (Jev < 0.5 triage)", "reviewed_at": "2026-09-30", "pronunciation": "닛폰 페인트"}
