@@ -804,3 +804,13 @@ footer {
   max-height: 640px;
   overflow: auto;
 }
+.jev-low {
+  color: #b42318;
+  font-weight: 600;
+}
+.jev-mid {
+  color: #b54708;
+}
+.jev-high {
+  color: #067647;
+}

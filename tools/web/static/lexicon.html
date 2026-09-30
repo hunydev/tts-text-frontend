@@ -57,8 +57,21 @@
               <option value="source-checked">출처 대조</option>
               <option value="human-reviewed">사람 검수 완료</option>
             </select></label
+          ><label for="lex-sort"
+            >정렬<select id="lex-sort">
+              <option value="jev-asc">Jev 점수 낮은 순</option>
+              <option value="jev-desc">Jev 점수 높은 순</option>
+              <option value="source">원본 순서</option>
+            </select></label
           >
         </div>
+        <p id="lex-jev-note" class="small">
+          Jev 점수는 TypeSafe Jev(noul)가 판단한 "한국어 발음이 원어를 올바르게
+          읽는가"의 확률입니다(0~1). 낮을수록 틀렸을 가능성이 높아 먼저 보도록
+          정렬합니다. 번역·다른 단어·누락은 잘 잡지만 모음 하나 차이 같은 미세한
+          오류는 높게 나올 수 있어, 높은 점수가 검수 완료를 뜻하지는 않습니다.
+          점수가 없는 항목은 맨 뒤에 둡니다.
+        </p>
       </section>
       <section class="workspace lex-workspace">
         <div class="panel">
@@ -72,6 +85,7 @@
                 <tr>
                   <th>원어</th>
                   <th>선택된 발음</th>
+                  <th>Jev</th>
                   <th>검토 상태</th>
                 </tr>
               </thead>

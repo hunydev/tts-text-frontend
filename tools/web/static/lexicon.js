@@ -26,6 +26,7 @@ function filter() {
   const q = $("lex-query").value.toLowerCase().trim(),
     category = $("lex-category").value,
     review = $("lex-review").value;
+  const sort = $("lex-sort").value;
   const rows = state.data.entries.filter(
     (r) =>
       (!category || r.category === category) &&
@@ -35,6 +36,17 @@ function filter() {
           s.toLowerCase().includes(q),
         )),
   );
+  if (sort !== "source") {
+    const sign = sort === "jev-desc" ? -1 : 1;
+    rows.sort((a, b) => {
+      const x = a.jev?.noul,
+        y = b.jev?.noul;
+      if (x === undefined && y === undefined) return 0;
+      if (x === undefined) return 1;
+      if (y === undefined) return -1;
+      return sign * (x - y);
+    });
+  }
   $("lex-count").textContent =
     `${rows.length}건 중 ${Math.min(rows.length, state.limit)}건 표시`;
   $("lex-rows").replaceChildren();
@@ -45,9 +57,18 @@ function filter() {
     button.className = "text-button";
     button.addEventListener("click", () => select(r));
     td.append(button);
+    const score = node("td", r.jev ? r.jev.noul.toFixed(2) : "–");
+    score.className = r.jev
+      ? r.jev.noul < 0.3
+        ? "jev-low"
+        : r.jev.noul < 0.6
+          ? "jev-mid"
+          : "jev-high"
+      : "";
     tr.append(
       td,
       node("td", r.pronunciation),
+      score,
       node("td", labels[r.review_status]),
     );
     $("lex-rows").append(tr);
@@ -60,7 +81,9 @@ function select(r) {
   $("lex-term").textContent = r.term;
   $("lex-state").textContent =
     `${labels[r.review_status]} · ${r.scope || "system"} · ${r.category} · ${r.id}`;
-  $("lex-notes").textContent = r.notes;
+  $("lex-notes").textContent = r.jev
+    ? `Jev 점수 ${r.jev.noul.toFixed(2)} (${r.jev.model}, ${r.jev.checked_at}) · ${r.notes}`
+    : r.notes;
   $("lex-aliases").textContent = r.aliases.length
     ? `별칭: ${r.aliases.join(", ")}`
     : "대소문자는 같은 키로 처리합니다.";
@@ -154,6 +177,7 @@ async function test(override) {
           }
         : {};
     if (r.scope === "finance") options.domain = "finance-vocabulary";
+    if (r.scope === "brands") options.brand_lexicon = "on";
     lock(true);
     $("lex-result").textContent = "검사 중입니다.";
     notice("실제 엔진으로 발음과 사전 경로를 검사합니다.");
@@ -266,7 +290,7 @@ $("lex-export-coverage").addEventListener("click", () =>
     "application/json",
   ),
 );
-for (const id of ["lex-query", "lex-category", "lex-review"])
+for (const id of ["lex-query", "lex-category", "lex-review", "lex-sort"])
   $(id).addEventListener(id === "lex-query" ? "input" : "change", () => {
     state.limit = 50;
     filter();
@@ -283,9 +307,11 @@ $("lex-more").addEventListener("click", () => {
     state.data = data;
     $("lex-total").textContent =
       `${data.summary.entries}항목 · ${data.summary.runtime_keys}키`;
-    $("lex-summary").textContent = Object.keys(labels)
-      .map((k) => `${labels[k]} ${data.summary.review_status[k] || 0}건`)
-      .join(" · ");
+    $("lex-summary").textContent =
+      Object.keys(labels)
+        .map((k) => `${labels[k]} ${data.summary.review_status[k] || 0}건`)
+        .join(" · ") + ` · Jev 점수 ${data.summary.jev_scored || 0}건`;
+    if (!data.summary.jev_scored) $("lex-sort").value = "source";
     Object.keys(data.summary.categories).forEach((c) => {
       const o = node("option", c);
       o.value = c;

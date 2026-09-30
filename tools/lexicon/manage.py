@@ -285,10 +285,30 @@ def rendered(records):
     return output
 
 
+def judgements(root=ROOT):
+    """Jev triage scores (tools/lexicon/judge_jev.py) still matching their entry."""
+    path = root / "lexicons/reviews/jev/noul.jsonl"
+    rows = {}
+    if path.exists():
+        for line in path.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                row = json.loads(line)
+                rows[row["id"]] = row
+    return rows
+
+
 def inventory(root=ROOT):
     records, sources = load(root)
+    scores = judgements(root)
+
+    def jev(row):
+        s = scores.get(row["id"])
+        if not s or s["term"] != row["term"] or s["pronunciation"] != row["pronunciation"]:
+            return None
+        return dict(noul=s["noul"], model=s["model"], checked_at=s["checked_at"])
+
     public = [
-        dict(row, sources=[sources[key] for key in row["evidence"]]) for row in records
+        dict(row, sources=[sources[key] for key in row["evidence"]], jev=jev(row)) for row in records
     ]
     return dict(
         schema_version=1,
@@ -303,6 +323,7 @@ def inventory(root=ROOT):
             scopes=dict(
                 sorted(Counter(r.get("scope", "system") for r in records).items())
             ),
+            jev_scored=sum(1 for r in public if r["jev"]),
         ),
         entries=public,
         note="Source-checked confirms a documented choice, not independent human pronunciation approval. Pending entries remain explicit project defaults.",

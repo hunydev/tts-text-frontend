@@ -108,6 +108,23 @@ class LexiconSourceTests(unittest.TestCase):
             with self.subTest(term=repr(term)), self.assertRaises(ValueError):
                 MANAGE.canonical(term)
 
+    def test_jev_scores_attach_only_to_the_judged_reading(self):
+        # tools/lexicon/judge_jev.py rows are triage for the /lexicon page; a row
+        # judged for another term or pronunciation is stale and not shown.
+        row = self.rows[0]
+        path = self.root / "lexicons/reviews/jev/noul.jsonl"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        judged = dict(id=row["id"], term=row["term"], pronunciation=row["pronunciation"], noul=0.12,
+                      model="jev-1.13.0", question="reading-matches-v1", checked_at="2026-09-30")
+        path.write_text(json.dumps(judged) + "\n", encoding="utf-8")
+        entries = {e["id"]: e for e in MANAGE.inventory(self.root)["entries"]}
+        self.assertEqual(entries[row["id"]]["jev"]["noul"], 0.12)
+        path.write_text(json.dumps(dict(judged, pronunciation=row["pronunciation"] + "가")) + "\n",
+                        encoding="utf-8")
+        entries = {e["id"]: e for e in MANAGE.inventory(self.root)["entries"]}
+        self.assertIsNone(entries[row["id"]]["jev"])
+        MANAGE.load(self.root)  # a score file never counts as a lexicon source
+
     def test_duplicate_record_id_rejected(self):
         def change(row, rows):
             other = deepcopy(row)
