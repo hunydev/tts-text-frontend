@@ -2,6 +2,16 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Add 1,202 franchise brands to the optional brand pack from the Fair Trade
+  Commission franchise brand list (data.go.kr, 이용허락범위 제한 없음, base years
+  2017-2025): brands registered with both a Hangul and a Latin name use the
+  owner's Hangul form, WAK BURGER 왁버거 (was read letter by letter), TAFELRUNDE
+  타펠룬데, CODE RUN 코드런. Translated names, lone capital abbreviations of four
+  letters or fewer, common English words and names the Wikidata pack already has
+  are excluded; 69 pairs wait for review. `tools/lexicon/brands/collect_ftc.py`,
+  `build_ftc.py`; contract `ko_brand_lexicon_v24` 9 → 14. Add the missing
+  `docs/brand-lexicon.ko.md`. OpenDART and KIPRIS data stay local: their terms do
+  not allow redistribution.
 - Add an optional Korean brand pronunciation pack, off by default and loaded as
   the domain layer (`resources/domains/brands/ko-KR/lexicon.tsv`; CLI `--domain`,
   web "브랜드 발음 사전"). 4,817 company and brand names from Wikidata (CC0) whose

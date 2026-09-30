@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "sources": [
+    {
+      "id": "ftc-franchise-brands-2026-09-30",
+      "title": "Fair Trade Commission franchise brand list (가맹정보 브랜드 목록 정보 제공 서비스), base years 2017-2025",
+      "url": "https://www.data.go.kr/data/15125467/openapi.do",
+      "kind": "open-data",
+      "checked_at": "2026-09-30",
+      "note": "Korea Fair Trade Commission via data.go.kr, 이용허락범위 제한 없음. Collected by tools/lexicon/brands/collect_ftc.py; only brand names registered with both a Hangul and a Latin form are used, and the Hangul form counts only when it is phonetically related to the written name. Registered names are the franchisor's own spelling, not pronunciation authority; no synthesized audio."
+    }
+  ]
+}

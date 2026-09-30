@@ -98,7 +98,7 @@ def main():
 
     system_terms = set()
     for p in (ROOT / "lexicons/ko-KR").glob("*.jsonl"):
-        if p.name == "brand-wikidata.jsonl":
+        if p.name.startswith("brand-"):  # the brand packs themselves
             continue
         for line in p.read_text(encoding="utf-8").splitlines():
             if line.strip():
