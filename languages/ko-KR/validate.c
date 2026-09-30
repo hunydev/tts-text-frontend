@@ -199,6 +199,18 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "counter band cue requires a word and band|count");
     }
+    if (SAME(k, "apparel_size") || SAME(k, "apparel_size_multiplier")) {
+        *handled = 1;
+        return label(key) && strlen(key) < 8 && label(v) && strlen(v) < 64
+                   ? TTF_OK
+                   : ttf_validation_error(d, "apparel size rows need a short key and a reading");
+    }
+    if (SAME(k, "bra_band") || SAME(k, "bra_cup")) {
+        *handled = 1;
+        return label(key) && strlen(key) < 8 && ttf_validation_enum(v, "1")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "bra_band and bra_cup rows need a key and 1");
+    }
     if (SAME(k, "range_contract")) {
         size_t digit = strlen(key) - 1;
         *handled = 1;

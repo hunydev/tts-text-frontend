@@ -2,6 +2,15 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Read apparel sizes in Korean speech instead of passing them raw: `3XL` →
+  쓰리 엑스라지, `2XS` → 투 엑스스몰, `XL` → 엑스라지, `XXL` → 투 엑스라지 (was
+  "x x l"), bra sizes `75AA` → 칠십오 에이에이. Rule and words follow the AI Hub 159
+  size references (177 multiplied sizes, XL 41:2, XS 8:5, 117 bra sizes); only
+  next to Korean text, never in text mode, and the general number+letter policy
+  (`20F`, `45A` preserved) is unchanged. Korean adjusted agreement 76.84% →
+  77.00% (+229 / −4); sentences with Latin left in speech 729 → 497 (size
+  category 214 → 15). Contract `ko_apparel_size_v24` (22 cases),
+  `docs/korean-apparel-sizes.ko.md`.
 - Read Korean ranges the way the references and the standard approximate
   numerals do (user decision; `docs/korean-range-reading.ko.md`). Adjacent
   numbers contract (`2~3만 원` → 이삼만 원, `3~4개` → 서너 개, `20~30명` → 이삼십

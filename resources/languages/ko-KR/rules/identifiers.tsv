@@ -195,3 +195,33 @@ vehicle_plate_letter	ko-KR	합	1
 # Clothing sizes 44..99 before this word read digit by digit (55사이즈 -> 오오사이즈).
 clothing_size_word	ko-KR	사이즈	1
 classifier_priority	ko-KR	ko:clothing-size	10
+
+# Apparel sizes in a Korean sentence (AI Hub 159 size references): 2XL~6XL read
+# the English multiplier and the size word (투 엑스라지, 177 refs); bare XL is
+# 엑스라지 (41:2), XS 엑스스몰 (8:5). Bra sizes: band value and cup letters.
+apparel_size	ko-KR	XL	엑스라지
+apparel_size	ko-KR	XS	엑스스몰
+apparel_size	ko-KR	XXL	투 엑스라지
+apparel_size	ko-KR	XXS	투 엑스스몰
+apparel_size	ko-KR	XXXL	쓰리 엑스라지
+apparel_size	ko-KR	XXXS	쓰리 엑스스몰
+apparel_size_multiplier	ko-KR	2	투
+apparel_size_multiplier	ko-KR	3	쓰리
+apparel_size_multiplier	ko-KR	4	포
+apparel_size_multiplier	ko-KR	5	파이브
+apparel_size_multiplier	ko-KR	6	식스
+bra_band	ko-KR	65	1
+bra_band	ko-KR	70	1
+bra_band	ko-KR	75	1
+bra_band	ko-KR	80	1
+bra_band	ko-KR	85	1
+bra_band	ko-KR	90	1
+bra_band	ko-KR	95	1
+bra_band	ko-KR	100	1
+bra_cup	ko-KR	AA	1
+bra_cup	ko-KR	A	1
+bra_cup	ko-KR	B	1
+bra_cup	ko-KR	C	1
+bra_cup	ko-KR	D	1
+bra_cup	ko-KR	E	1
+bra_cup	ko-KR	F	1

@@ -9,6 +9,7 @@ size_t ttf_ko_classify_identifier(const ttf_pack_input_t *input, ttf_semantic_t 
  * Speech output only; the caller checks the output mode. */
 size_t ttf_ko_classify_number_letters(const ttf_pack_input_t *input, ttf_semantic_t *semantic);
 size_t ttf_ko_classify_clothing_size(const ttf_pack_input_t *input, ttf_semantic_t *semantic);
+size_t ttf_ko_classify_apparel_size(const ttf_pack_input_t *input, ttf_semantic_t *semantic);
 size_t ttf_ko_classify_plate(const ttf_pack_input_t *input, ttf_semantic_t *semantic);
 size_t ttf_ko_classify_card(const ttf_pack_input_t *input, ttf_semantic_t *semantic);
 size_t ttf_ko_classify_alnum_identifier(const ttf_pack_input_t *input, ttf_semantic_t *semantic);

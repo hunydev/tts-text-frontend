@@ -468,6 +468,89 @@ size_t ttf_ko_classify_number_letters(const ttf_pack_input_t *in, ttf_semantic_t
     return i - in->index;
 }
 
+/* Some Hangul in the unit: an apparel size belongs to a Korean sentence. */
+static int unit_has_hangul(const ttf_pack_input_t *in) {
+    size_t i;
+    for (i = 0; i < in->token_count; ++i)
+        if (in->tokens[i].script == TTF_SCRIPT_HANGUL)
+            return 1;
+    return 0;
+}
+/* Apparel sizes in a Korean sentence (AI Hub 159 size references):
+ *   3XL 쓰리 엑스라지, 2XS 투 엑스스몰: a multiplier 2..6 (apparel_size_multiplier)
+ *   before XL/XS; XL XS XXL XXS XXXL XXXS read as apparel_size words;
+ *   75AA 칠십오 에이에이: a declared bra band (bra_band) and cup (bra_cup).
+ * The size must stand alone: no letter or digit on either side (particles may
+ * follow). The general number+letter policy (20F, 45A) is unchanged. */
+size_t ttf_ko_classify_apparel_size(const ttf_pack_input_t *in, ttf_semantic_t *semantic) {
+    const char *s = in->text;
+    size_t n = in->length, begin = in->tokens[in->index].begin, p = begin, i, used = 0;
+    char key[16], before = begin ? s[begin - 1] : ' ';
+    const char *unit = NULL;
+    if (alnum(before) || !unit_has_hangul(in))
+        return 0;
+    if (decimal_digit(s[p])) {
+        size_t digits = 0;
+        while (p < n && decimal_digit(s[p]) && digits < 4) {
+            ++p;
+            ++digits;
+        }
+        if (p < n && decimal_digit(s[p]))
+            return 0;
+        /* 3XL: one multiplier digit, then a size word. */
+        if (digits == 1 && p + 2 <= n && s[p] == 'X' && (s[p + 1] == 'L' || s[p + 1] == 'S') &&
+            (p + 2 == n || !alnum(s[p + 2]))) {
+            key[0] = s[begin];
+            key[1] = 0;
+            if (!ttf_resource_get(in->engine, "apparel_size_multiplier", "ko-KR", key, NULL))
+                return 0;
+            p += 2;
+            unit = "apparel_size";
+        } else {
+            size_t cup = p;
+            if (p - begin >= sizeof(key))
+                return 0;
+            memcpy(key, s + begin, p - begin);
+            key[p - begin] = 0;
+            if (!ttf_resource_get(in->engine, "bra_band", "ko-KR", key, NULL))
+                return 0;
+            while (cup < n && s[cup] >= 'A' && s[cup] <= 'Z' && cup - p < 3)
+                ++cup;
+            if (cup == p || (cup < n && alnum(s[cup])) || cup - p >= sizeof(key))
+                return 0;
+            memcpy(key, s + p, cup - p);
+            key[cup - p] = 0;
+            if (!ttf_resource_get(in->engine, "bra_cup", "ko-KR", key, NULL))
+                return 0;
+            p = cup;
+            unit = "bra_size";
+        }
+    } else {
+        while (p < n && ascii_letter(s[p]) && p - begin < 5)
+            ++p;
+        if (p - begin >= sizeof(key) || (p < n && alnum(s[p])))
+            return 0;
+        memcpy(key, s + begin, p - begin);
+        key[p - begin] = 0;
+        if (!ttf_resource_get(in->engine, "apparel_size", "ko-KR", key, NULL))
+            return 0;
+        unit = "apparel_size";
+    }
+    if (p - begin >= TTF_IR_VALUE_SIZE)
+        return 0;
+    memcpy(semantic->value, s + begin, p - begin);
+    semantic->value[p - begin] = 0;
+    (void)snprintf(semantic->unit, sizeof(semantic->unit), "%s", unit);
+    (void)snprintf(semantic->rule, sizeof(semantic->rule), "ko:%s", !strcmp(unit, "bra_size")
+                                                                    ? "bra-size" : "apparel-size");
+    semantic->type = TTF_SEM_DIGIT_SEQUENCE;
+    semantic->input_end = p;
+    semantic->layer = TTF_LAYER_COMMON;
+    for (i = in->index; i < in->token_count && in->tokens[i].begin < p; ++i)
+        ++used;
+    return used;
+}
+
 /* Korean women's clothing sizes 44..99 (two equal digits) before 사이즈 are
  * read digit by digit: 55사이즈 -> 오오사이즈. Men's sizes (95, 100) read as
  * values. The word after the number is a resource (clothing_size_word). */

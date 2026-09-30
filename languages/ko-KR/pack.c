@@ -737,6 +737,41 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     case TTF_SEM_DIGIT_SEQUENCE:
         if (strcmp(s->unit, "financial_identifier") == 0)
             return ttf_ko_render_identifier(e, s->value, out);
+        if (!strcmp(s->unit, "apparel_size")) {
+            /* 3XL 쓰리 엑스라지; XL 엑스라지. */
+            if (s->value[0] >= '0' && s->value[0] <= '9') {
+                char key[2] = {s->value[0], 0};
+                const char *multiplier =
+                    ttf_resource_get(e, "apparel_size_multiplier", "ko-KR", key, NULL);
+                const char *word = ttf_resource_get(e, "apparel_size", "ko-KR", s->value + 1, NULL);
+                if (!multiplier || !word)
+                    return TTF_ERESOURCE;
+                TRY(ttf_buffer_puts(out, multiplier));
+                TRY(ttf_buffer_puts(out, " "));
+                return ttf_buffer_puts(out, word);
+            }
+            return ttf_buffer_puts(out, resource(e, "apparel_size", s->value, s->value));
+        }
+        if (!strcmp(s->unit, "bra_size")) {
+            /* 75AA 칠십오 에이에이: band value, then the cup letters by name. */
+            char band[8] = {0};
+            size_t n = strspn(s->value, "0123456789");
+            if (!n || n >= sizeof(band) || !s->value[n])
+                return TTF_EINVAL;
+            memcpy(band, s->value, n);
+            TRY(cardinal(e, band, out));
+            TRY(ttf_buffer_puts(out, " "));
+            for (const char *c = s->value + n; *c; ++c) {
+                char key[] = "letter.X";
+                const char *name;
+                key[7] = *c;
+                name = ttf_resource_get(e, "phone_letter", "ko-KR", key, NULL);
+                if (!name)
+                    return TTF_ERESOURCE;
+                TRY(ttf_buffer_puts(out, name));
+            }
+            return TTF_OK;
+        }
         if (!strcmp(s->unit, "vehicle_plate")) {
             /* 25후5748: front value, plate syllable, serial digit by digit. */
             char front[4] = {0};
@@ -1775,6 +1810,9 @@ static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     if (identifier)
         return identifier;
     if (in->engine->frontend_options.output_mode == TTF_OUTPUT_SPEECH) {
+        identifier = ttf_ko_classify_apparel_size(in, s);
+        if (identifier)
+            return identifier;
         identifier = ttf_ko_classify_alnum_identifier(in, s);
         if (identifier)
             return identifier;
