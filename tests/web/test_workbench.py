@@ -443,6 +443,10 @@ try:
         assert "secret-test-key" not in json.dumps(judged)
         checks += 1
     assert len(sent) == 1 and sent[0][0] == "Bearer secret-test-key", sent
+    assert judged["unread"] == [], judged
+    assert jev.unread("코로나 십구로 인해 30~40명, KB 5%", "ko-KR") == ["30~40", "KB", "5", "%"]
+    assert jev.unread("삼만 원", "ko-KR") == [] and jev.unread("three dollars", "en-US") == []
+    checks += 1
     for bad in (dict(body, language="xx-XX"), dict(body, normalized=""), dict(body, text="가" * 2001)):
         try:
             post("/api/judge", bad)

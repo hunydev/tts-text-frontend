@@ -487,13 +487,20 @@ async function judgeResult() {
         text: state.request?.text || $("source").value,
         normalized: state.result.text,
         language: $("language").value,
+        output_mode: $("output-mode").value,
       }),
     });
     const data = await response.json();
     if (!response.ok) throw Error(data.error || "Jev 채점 실패");
-    const [kind, label] = jevVerdict(data.noul);
+    let [kind, label] = jevVerdict(data.noul);
+    const left = data.unread || [];
+    if (left.length && kind === "good") {
+      kind = "mid";
+      label = "직접 확인 권장";
+    }
     box.className = `jev-result jev-${kind}`;
     box.textContent =
+      (left.length ? `읽지 않은 표기가 남아 있음: ${left.join(" ")} · ` : "") +
       `Jev ${data.noul.toFixed(2)} · ${label} (${data.model}` +
       (data.calibrated ? "" : ", 이 언어는 보정 전") +
       ")" +

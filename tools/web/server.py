@@ -245,7 +245,8 @@ class Handler(BaseHTTPRequestHandler):
         judge = getattr(self.server, "judge", None) or jev.Judge()
         self.server.judge = judge
         try:
-            result = judge.score(body.get("text"), body.get("normalized"), body.get("language"), client)
+            result = judge.score(body.get("text"), body.get("normalized"), body.get("language"), client,
+                                 speech=body.get("output_mode", "speech") == "speech")
         except jev.JudgeError as exc:
             return self.json(exc.status, {"error": str(exc)})
         return self.json(200, result)
