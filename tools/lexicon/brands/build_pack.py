@@ -7,6 +7,14 @@
    engine inside a Korean sentence; the Korean label counts as a pronunciation
    only when it is phonetically close (jamo similarity >= 0.6; aliases only then,
    labels 0.4..0.6 go to review). Translated names (China Mobile 중국이동) fail.
+   An alias counts only as a spelling variant of the English label (the same
+   letters, Coca Cola / Coca-Cola, or a reading within 0.85 of the label's) or
+   when the Korean name fits it at least as well as the label (Pagani for Pagani
+   Automobili 파가니). Another alias borrowed the label's Korean name
+   (PlayStation Trophies 플레이스테이션 네트워크, Acer Aspire Predator 에이서
+   프레데터) and is dropped. A multiword name
+   whose content words do not each align with a piece of the Korean (>= 0.2)
+   goes to review.
 2. Dropped: pairs the engine already reads identically, all-capital written forms
    (GT, SNT: abbreviations are read by letters), keys outside the lexicon grammar
    (letters, spaces and the joiners - ' &; a dot or digit is outside it),
@@ -41,6 +49,7 @@ LATIN = re.compile(r"^[A-Za-z][A-Za-z0-9&.'\- ]*[A-Za-z0-9.]$")
 WORD = r"[a-z]+(?:[-'&][a-z]+)*"
 KEY = re.compile(r"^%s(?: (?:%s|&(?= )))*$" % (WORD, WORD))
 PROBE = "의 발음을 확인합니다."
+FUNCTION_WORDS = ("&", "the", "a", "an", "of", "and")
 
 
 def slug(term):
@@ -64,6 +73,25 @@ def similarity(a, b):
             cur.append(min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (ca != cb)))
         prev = cur
     return 1 - prev[-1] / max(len(a), len(b))
+
+
+def aligned(parts, ko):
+    """Best split of the Hangul into one piece per word, scored by its weakest piece."""
+    ko = ko.replace(" ", "")
+    best = {0: 1.0}
+    for i, part in enumerate(parts):
+        nxt = {}
+        for pos, score in best.items():
+            for end in range(pos + 1, len(ko) - (len(parts) - i - 1) + 1):
+                value = min(score, similarity(part, ko[pos:end]))
+                if value > nxt.get(end, -1):
+                    nxt[end] = value
+        best = nxt
+    return best.get(len(ko), 0)
+
+
+def letters(text):
+    return re.sub(r"[^a-z]", "", text.lower())
 
 
 def written_forms(row):
@@ -105,9 +133,15 @@ def main():
             cache[form] = re.sub(r"(을|를)$", "", text).strip()
         return cache[form]
 
-    system_terms = set()
+    system_terms, other_brand_terms = set(), set()
     for p in (ROOT / "lexicons/ko-KR").glob("*.jsonl"):
-        if p.name.startswith("brand-"):  # the brand packs themselves
+        if p.name == "brand-wikidata.jsonl":
+            continue
+        if p.name.startswith("brand-"):
+            # Another brand pack (build_ftc.py) keeps the terms it already has, so a
+            # rebuild in either order stays consistent.
+            other_brand_terms.update(json.loads(l)["term"] for l in p.read_text(encoding="utf-8").splitlines()
+                                     if l.strip())
             continue
         for line in p.read_text(encoding="utf-8").splitlines():
             if line.strip():
@@ -118,7 +152,19 @@ def main():
     stats = collections.Counter()
     by_key = collections.defaultdict(list)
     for row in rows:
-        for form, alias in written_forms(row):
+        forms = written_forms(row)
+        labels = [f for f, alias in forms if not alias]
+        label_ko = korean_form(row["ko"], labels[0].lower()) if labels else None
+        for form, alias in forms:
+            # An alias keeps the label's Korean name only as a spelling variant of the
+            # English label, or when that Korean name fits the alias at least as well
+            # as the label (Pagani for Pagani Automobili 파가니).
+            if alias and labels and label_ko and not any(
+                    letters(form) == letters(label) or similarity(reading(form), reading(label)) >= 0.85
+                    or similarity(reading(form), label_ko) >= similarity(reading(label), label_ko)
+                    for label in labels):
+                stats["alias-not-a-variant"] += 1
+                continue
             term = form.lower()
             ko = korean_form(row["ko"], term)
             if not ko:
@@ -127,15 +173,38 @@ def main():
             if not any(ch.islower() for ch in form):
                 stats["all-capital"] += 1
                 continue
+            if term in other_brand_terms:
+                stats["in-other-brand-pack"] += 1
+                continue
             if not KEY.match(term) or len(term.split()) > 8 or term in system_terms:
                 stats["key-grammar-or-system"] += 1
                 continue
             before = reading(form)
+            # A Korean label may name the kind of business after the brand (Triumph
+            # 트라이엄프 모터, Blue Note 블루 노트 레코드): drop trailing words the
+            # written name lacks while that brings the Hangul closer to the name.
+            content = [w for w in form.split() if w.lower() not in FUNCTION_WORDS]
+            ko_words = ko.split(" ")
+            # The shorter Hangul must still cover the written name (SwissAir 스위스 항공
+            # keeps 항공: 스위스 alone is too short for the reading).
+            while len(ko_words) > max(1, len(content)):
+                shorter = " ".join(ko_words[:-1])
+                if (similarity(before, shorter) <= similarity(before, " ".join(ko_words))
+                        or len(jamo(shorter)) < 0.8 * len(jamo(before))):
+                    break
+                ko_words.pop()
+                stats["korean-kind-word-dropped"] += 1
+            ko = " ".join(ko_words)
             if before.replace(" ", "") == ko.replace(" ", ""):
                 stats["already-read"] += 1
                 continue
             sim = similarity(before, ko)
             status = "accept" if sim >= 0.6 else "review" if sim >= 0.4 and not alias else "reject"
+            # Function words are often left out in Korean (The Economist 이코노미스트).
+            words = [w for w in form.split() if w.lower() not in FUNCTION_WORDS]
+            if status == "accept" and len(words) > 1 and aligned([reading(w) for w in words], ko) < 0.2:
+                status = "review" if not alias else "reject"
+                stats["word-alignment"] += 1
             by_key[term].append(dict(term=term, written=form, pronunciation=ko, before=before, similarity=round(sim, 3),
                                      status=status, qid=row["qid"], cls=row["cls"], alias=alias, en=row["en"],
                                      ko=row["ko"]))

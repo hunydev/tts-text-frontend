@@ -48,17 +48,14 @@ lexicon	ko-KR	en-US:add cup	애드컵
 lexicon	ko-KR	en-US:addictea	에딕티
 lexicon	ko-KR	en-US:adecco	아데코
 lexicon	ko-KR	en-US:ader error	아더에러
-lexicon	ko-KR	en-US:adgaurd	애드가드
 lexicon	ko-KR	en-US:adguard	애드가드
 lexicon	ko-KR	en-US:adidas	아디다스
 lexicon	ko-KR	en-US:adidas yeezy	아디다스 이지
 lexicon	ko-KR	en-US:adient	애디언트
-lexicon	ko-KR	en-US:adobe echosign	어도비 사인
 lexicon	ko-KR	en-US:adobe sign	어도비 사인
 lexicon	ko-KR	en-US:adobe systems	어도비 시스템즈
 lexicon	ko-KR	en-US:adreno	아드레노
 lexicon	ko-KR	en-US:advanced info service	어드밴스드 인포 서비스
-lexicon	ko-KR	en-US:advanced info service public	어드밴스드 인포 서비스
 lexicon	ko-KR	en-US:advanced micro devices	어드밴스트 마이크로 디바이시스
 lexicon	ko-KR	en-US:advantest	아드반테스트
 lexicon	ko-KR	en-US:adventure soft	어드벤처 소프트
@@ -80,9 +77,9 @@ lexicon	ko-KR	en-US:aeromar	아에로마르
 lexicon	ko-KR	en-US:aeromexico	아에로멕시코
 lexicon	ko-KR	en-US:aeromexico connect	아에로멕시코 커넥트
 lexicon	ko-KR	en-US:aeromexico travel	아에로멕시코 트래블
+lexicon	ko-KR	en-US:aerosvit	에어로스비트
 lexicon	ko-KR	en-US:aetna	애트나
 lexicon	ko-KR	en-US:affinity equity partners	어피니티 에쿼티 파트너스
-lexicon	ko-KR	en-US:african express airways	아프리칸 익스프레스 항공
 lexicon	ko-KR	en-US:aftermath entertainment	애프터매스 엔터테인먼트
 lexicon	ko-KR	en-US:agentsoft	에이전트소프트
 lexicon	ko-KR	en-US:agfa-gevaert	아그파게바트
@@ -111,6 +108,7 @@ lexicon	ko-KR	en-US:air blue	에어블루
 lexicon	ko-KR	en-US:air busan	에어부산
 lexicon	ko-KR	en-US:air cairo	에어 카이로
 lexicon	ko-KR	en-US:air caledonie	에어 칼레도니
+lexicon	ko-KR	en-US:air canada	에어 캐나다
 lexicon	ko-KR	en-US:air canada express	에어 캐나다 익스프레스
 lexicon	ko-KR	en-US:air canada rouge	에어 캐나다 루즈
 lexicon	ko-KR	en-US:air canada tango	에어 캐나다 탱고
@@ -162,6 +160,7 @@ lexicon	ko-KR	en-US:air transport international	에어 트랜스포트 인터내
 lexicon	ko-KR	en-US:air vietnam	에어 베트남
 lexicon	ko-KR	en-US:air zimbabwe	에어 짐바브웨
 lexicon	ko-KR	en-US:airasia	에어아시아
+lexicon	ko-KR	en-US:airasia japan	에어아시아 재팬
 lexicon	ko-KR	en-US:airasia philippines	에어아시아 필리핀
 lexicon	ko-KR	en-US:airbaltic	에어발틱
 lexicon	ko-KR	en-US:airberlin	에어 베를린
@@ -190,7 +189,6 @@ lexicon	ko-KR	en-US:akella	아켈라
 lexicon	ko-KR	en-US:akirayoi	아키라요이
 lexicon	ko-KR	en-US:akita hotel	아키타 호텔
 lexicon	ko-KR	en-US:akita shoten	아키타 쇼텐
-lexicon	ko-KR	en-US:akita view hotel	아키타 호텔
 lexicon	ko-KR	en-US:akron beacon journal	애크런 비콘 저널
 lexicon	ko-KR	en-US:akzo nobel	악조노벨
 lexicon	ko-KR	en-US:akzonobel	악조노벨
@@ -203,6 +201,7 @@ lexicon	ko-KR	en-US:albert heijn	알버트 하인
 lexicon	ko-KR	en-US:albert park	알버트파크
 lexicon	ko-KR	en-US:alco	알코
 lexicon	ko-KR	en-US:alcon	알콘
+lexicon	ko-KR	en-US:aldebaran	알데바란
 lexicon	ko-KR	en-US:aldus	알두스
 lexicon	ko-KR	en-US:alenia aeronautica	알레니아 아에로나우티카
 lexicon	ko-KR	en-US:alexa internet	알렉사 인터넷
@@ -221,7 +220,6 @@ lexicon	ko-KR	en-US:alibaba cloud	알리바바 클라우드
 lexicon	ko-KR	en-US:alibaba pictures	알리바바 픽처스
 lexicon	ko-KR	en-US:alice soft	앨리스소프트
 lexicon	ko-KR	en-US:alicesoft	앨리스소프트
-lexicon	ko-KR	en-US:alicloud	알리바바 클라우드
 lexicon	ko-KR	en-US:aliexpress	알리익스프레스
 lexicon	ko-KR	en-US:alipay	알리페이
 lexicon	ko-KR	en-US:alitalia	알리탈리아
@@ -293,10 +291,10 @@ lexicon	ko-KR	en-US:america movil	아메리카 모빌
 lexicon	ko-KR	en-US:american apparel	아메리칸 어패럴
 lexicon	ko-KR	en-US:american axle	아메리칸 액슬
 lexicon	ko-KR	en-US:american bitcoin	아메리칸 비트코인
+lexicon	ko-KR	en-US:american eagle	아메리칸 이글
 lexicon	ko-KR	en-US:american eagle outfitters	아메리칸 이글 아웃피터스
 lexicon	ko-KR	en-US:american electric power	아메리칸 일렉트릭 파워
 lexicon	ko-KR	en-US:american express	아메리칸 엑스프레스
-lexicon	ko-KR	en-US:american express bank	아메리칸 엑스프레스
 lexicon	ko-KR	en-US:american international	아메리칸 인터내셔널
 lexicon	ko-KR	en-US:american motors	아메리칸 모터스
 lexicon	ko-KR	en-US:american pizza	아메리칸피자
@@ -339,7 +337,7 @@ lexicon	ko-KR	en-US:anguspark	앵거스박
 lexicon	ko-KR	en-US:anheuser-busch	앤하이저부시
 lexicon	ko-KR	en-US:anheuser-busch inbev	앤하이저부시 인베브
 lexicon	ko-KR	en-US:anhui conch cement	안후이 콘치 시멘트
-lexicon	ko-KR	en-US:anhui conch cement company	안후이 콘치 시멘트
+lexicon	ko-KR	en-US:ankai	안카이
 lexicon	ko-KR	en-US:anker innovations	앤커 이노베이션즈
 lexicon	ko-KR	en-US:annasnack	안나스낵
 lexicon	ko-KR	en-US:anothercoffee	어나더커피
@@ -351,6 +349,7 @@ lexicon	ko-KR	en-US:ansett australia	안셋 오스트레일리아
 lexicon	ko-KR	en-US:ansungtangmyun	안성탕면
 lexicon	ko-KR	en-US:ant financial	앤트파이낸셜
 lexicon	ko-KR	en-US:antec	안텍
+lexicon	ko-KR	en-US:antenna	안테나
 lexicon	ko-KR	en-US:antenna music	안테나 뮤직
 lexicon	ko-KR	en-US:anthon berg	안톤버그
 lexicon	ko-KR	en-US:anti social social club	안티 소셜 소셜 클럽
@@ -365,10 +364,8 @@ lexicon	ko-KR	en-US:apilco	아필코
 lexicon	ko-KR	en-US:apogee software	아포기 소프트웨어
 lexicon	ko-KR	en-US:apollo computer	아폴로 컴퓨터
 lexicon	ko-KR	en-US:apollo global management	아폴로 글로벌 매니지먼트
-lexicon	ko-KR	en-US:apop entertainment	미스틱엔터테인먼트
 lexicon	ko-KR	en-US:appaloosa interactive	아팔루사 인터랙티브
 lexicon	ko-KR	en-US:appier	애피어
-lexicon	ko-KR	en-US:apple isight	아이사이트
 lexicon	ko-KR	en-US:apple korea	애플코리아
 lexicon	ko-KR	en-US:apple records	애플 레코드
 lexicon	ko-KR	en-US:applebar	애플바
@@ -384,14 +381,14 @@ lexicon	ko-KR	en-US:aquaplus	아쿠아플러스
 lexicon	ko-KR	en-US:aquascutum	아쿠아스큐텀
 lexicon	ko-KR	en-US:aranzi aronzo	알란지 알론조
 lexicon	ko-KR	en-US:arash motor company	아라시 모터 컴파니
+lexicon	ko-KR	en-US:arc sys	아크 시스템
 lexicon	ko-KR	en-US:arc'teryx	아크테릭스
 lexicon	ko-KR	en-US:arcalive	아카라이브
 lexicon	ko-KR	en-US:arcelormittal	아르셀로미탈
 lexicon	ko-KR	en-US:archdaily	아키데일리
 lexicon	ko-KR	en-US:archer daniels midland	아처 대니얼스 미들랜드
-lexicon	ko-KR	en-US:archer daniels midland company	아처 대니얼스 미들랜드
-lexicon	ko-KR	en-US:archer-daniels-midland company	아처 대니얼스 미들랜드
 lexicon	ko-KR	en-US:arco valeno	아르코발레노
+lexicon	ko-KR	en-US:arcsys	아크 시스템
 lexicon	ko-KR	en-US:arcteryx	아크테릭스
 lexicon	ko-KR	en-US:arctic	아틱
 lexicon	ko-KR	en-US:arena	아레나
@@ -409,9 +406,9 @@ lexicon	ko-KR	en-US:arista networks	아리스타 네트웍스
 lexicon	ko-KR	en-US:arista records	아리스타 레코드
 lexicon	ko-KR	en-US:aritaum	아리따움
 lexicon	ko-KR	en-US:arizona republic	애리조나 리퍼블릭
-lexicon	ko-KR	en-US:arizona republican	애리조나 리퍼블릭
 lexicon	ko-KR	en-US:arkane studios	아케인 스튜디오
 lexicon	ko-KR	en-US:arkefly	아크플라이
+lexicon	ko-KR	en-US:arkia	아키아
 lexicon	ko-KR	en-US:arla foods	알라 푸드
 lexicon	ko-KR	en-US:armavia	아르마비아
 lexicon	ko-KR	en-US:armind	아르미드
@@ -420,6 +417,8 @@ lexicon	ko-KR	en-US:armour and company	아머 앤 컴퍼니
 lexicon	ko-KR	en-US:aroicoffee	아로이커피
 lexicon	ko-KR	en-US:aroithai	아로이타이
 lexicon	ko-KR	en-US:around us entertainment	어라운드어스 엔터테인먼트
+lexicon	ko-KR	en-US:arrinera	아리네라
+lexicon	ko-KR	en-US:arris	애리스
 lexicon	ko-KR	en-US:arriva	아리바
 lexicon	ko-KR	en-US:arrow electronics	애로우 일렉트로닉스
 lexicon	ko-KR	en-US:art basel	아트 바젤
@@ -434,11 +433,13 @@ lexicon	ko-KR	en-US:artist company	아티스트컴퍼니
 lexicon	ko-KR	en-US:artmajeur	아트마쥬르
 lexicon	ko-KR	en-US:artpilates	아트필라테스
 lexicon	ko-KR	en-US:arts vision	아트비전
+lexicon	ko-KR	en-US:asahi	아사히
 lexicon	ko-KR	en-US:asahi kasei	아사히 카세이
 lexicon	ko-KR	en-US:asahi shuzo	아사히 주조
 lexicon	ko-KR	en-US:asahi-kasei	아사히 카세이
 lexicon	ko-KR	en-US:ascend	어센드
 lexicon	ko-KR	en-US:asetek	아세텍
+lexicon	ko-KR	en-US:ashland	애슐랜드
 lexicon	ko-KR	en-US:ashley	애슐리
 lexicon	ko-KR	en-US:ashley madison	애슐리 매디슨
 lexicon	ko-KR	en-US:asia cement	아세아시멘트
@@ -457,12 +458,9 @@ lexicon	ko-KR	en-US:associated oil company	어소시에이티드 오일 컴퍼�
 lexicon	ko-KR	en-US:astar air cargo	아스타 에어 카고
 lexicon	ko-KR	en-US:astell & kern	아스텔앤컨
 lexicon	ko-KR	en-US:astell&kern	아스텔앤컨
-lexicon	ko-KR	en-US:astellnkern	아스텔앤컨
 lexicon	ko-KR	en-US:asthmatic kitty	애스매틱 키티
-lexicon	ko-KR	en-US:aston martin lagonda	애스턴 마틴
 lexicon	ko-KR	en-US:astra	아스트라
 lexicon	ko-KR	en-US:astra international	아스트라 인터내셔널
-lexicon	ko-KR	en-US:astra international tbk	아스트라 인터내셔널
 lexicon	ko-KR	en-US:astrazeneca	아스트라제네카
 lexicon	ko-KR	en-US:asungdaiso	아성다이소
 lexicon	ko-KR	en-US:asus	아수스
@@ -471,12 +469,12 @@ lexicon	ko-KR	en-US:atco records	앳코 레코드
 lexicon	ko-KR	en-US:ateam finergy	에이 팀 피나 지
 lexicon	ko-KR	en-US:atec mobility	에이텍모빌리티
 lexicon	ko-KR	en-US:athlon	애슬론
-lexicon	ko-KR	en-US:atlantic	더 애틀란틱
 lexicon	ko-KR	en-US:atlantic records	애틀랜틱 레코드
 lexicon	ko-KR	en-US:atlas copco	아트라스콥코
 lexicon	ko-KR	en-US:atlas entertainment	애틀러스 엔터테인먼트
 lexicon	ko-KR	en-US:atlasjet	아틀라스 제트
 lexicon	ko-KR	en-US:atmel	아트멜
+lexicon	ko-KR	en-US:atomic monster	아토믹 몬스터
 lexicon	ko-KR	en-US:atomic monster productions	아토믹 몬스터 프로덕션스
 lexicon	ko-KR	en-US:atomic planet entertainment	아토믹 플래닛 엔터테인먼트
 lexicon	ko-KR	en-US:atos	아토스
@@ -503,14 +501,12 @@ lexicon	ko-KR	en-US:autobell	오토벨
 lexicon	ko-KR	en-US:autocarz	오토카지
 lexicon	ko-KR	en-US:autodesk	오토데스크
 lexicon	ko-KR	en-US:autogloss	오토글로스
-lexicon	ko-KR	en-US:autograph collection hotels	오토그래프 컬렉션
 lexicon	ko-KR	en-US:autoliv	오토리브
 lexicon	ko-KR	en-US:automattic	오토매틱
 lexicon	ko-KR	en-US:automobili pininfarina	오토모빌리 피닌파리나
 lexicon	ko-KR	en-US:automotive news	오토모티브 뉴스
 lexicon	ko-KR	en-US:autonomy	오토노미
 lexicon	ko-KR	en-US:autooasis	오토오아시스
-lexicon	ko-KR	en-US:autovaz	아브토바즈
 lexicon	ko-KR	en-US:av club	디 에이브이 클럽
 lexicon	ko-KR	en-US:avalanche software	애벌랜치 소프트웨어
 lexicon	ko-KR	en-US:avant tecno	아반트 테크노
@@ -579,21 +575,20 @@ lexicon	ko-KR	en-US:banco delta asia	방코델타아시아
 lexicon	ko-KR	en-US:bancolombia	방콜롬비아
 lexicon	ko-KR	en-US:bandai	반다이
 lexicon	ko-KR	en-US:bandai channel	반다이 채널
+lexicon	ko-KR	en-US:bandai namco	반다이 남코
 lexicon	ko-KR	en-US:bandai namco arts	반다이 남코 아츠
 lexicon	ko-KR	en-US:bandai namco entertainment	반다이 남코 엔터테인먼트
 lexicon	ko-KR	en-US:bandai namco studios	반다이 남코 스튜디오
 lexicon	ko-KR	en-US:bang & olufsen	뱅 앤 올룹슨
 lexicon	ko-KR	en-US:banjoo	반주
 lexicon	ko-KR	en-US:bank of united states	뱅크 오브 유나이티드 스테이츠
-lexicon	ko-KR	en-US:banpresoft	반프레스토
 lexicon	ko-KR	en-US:banpresto	반프레스토
 lexicon	ko-KR	en-US:baobab	바오밥
 lexicon	ko-KR	en-US:baoneng	바오넝
-lexicon	ko-KR	en-US:barclay	바클레이 레코드
-lexicon	ko-KR	en-US:barclays bank	바클레이스
 lexicon	ko-KR	en-US:barclays ib	바클레이스 캐피털
 lexicon	ko-KR	en-US:bardel entertainment	바르델 엔터테인먼트
 lexicon	ko-KR	en-US:barilla	바릴라
+lexicon	ko-KR	en-US:barista	바리스타
 lexicon	ko-KR	en-US:barneys new york	바니스 뉴욕
 lexicon	ko-KR	en-US:baro buyking	바로바이킹
 lexicon	ko-KR	en-US:baro juice	바로주스
@@ -624,7 +619,6 @@ lexicon	ko-KR	en-US:beankies	빈키즈
 lexicon	ko-KR	en-US:bear milk	베어밀크
 lexicon	ko-KR	en-US:bear robotics	베어로보틱스
 lexicon	ko-KR	en-US:bear stearns	베어스턴스
-lexicon	ko-KR	en-US:beast burger	미스트비스트 버거
 lexicon	ko-KR	en-US:beasts & natives	비스츠앤네이티브스
 lexicon	ko-KR	en-US:beat interactive	비트인터렉티브
 lexicon	ko-KR	en-US:beat per minute	비츠 퍼 미닛
@@ -644,15 +638,16 @@ lexicon	ko-KR	en-US:behaviour tech computer	비헤이비어 테크 컴퓨터
 lexicon	ko-KR	en-US:beiben truck	비벤 트럭
 lexicon	ko-KR	en-US:beiersdorf	바이어스도르프
 lexicon	ko-KR	en-US:beijing benz	베이징 벤츠
-lexicon	ko-KR	en-US:beijing roborock technology	로보락 테크놀로지
 lexicon	ko-KR	en-US:being	빙
 lexicon	ko-KR	en-US:bek air	벡 에어
+lexicon	ko-KR	en-US:belavia	벨라비아
 lexicon	ko-KR	en-US:belift lab	빌리프랩
 lexicon	ko-KR	en-US:bell canada	벨 캐나다
 lexicon	ko-KR	en-US:bell media	벨 미디어
 lexicon	ko-KR	en-US:bellada	밸라다
 lexicon	ko-KR	en-US:belle air	벨에어
 lexicon	ko-KR	en-US:belstaff	벨스타프
+lexicon	ko-KR	en-US:bemani	비마니
 lexicon	ko-KR	en-US:ben backer	벤베커
 lexicon	ko-KR	en-US:ben davis	벤 데이비스
 lexicon	ko-KR	en-US:benadryl	베나드릴
@@ -687,7 +682,7 @@ lexicon	ko-KR	en-US:bethlehem records	베들레헴 레코드
 lexicon	ko-KR	en-US:bethlehem steel	베슬리헴 스틸
 lexicon	ko-KR	en-US:better homes & gardens	베터 홈 앤 가든스
 lexicon	ko-KR	en-US:better homes and gardens	베터 홈 앤 가든스
-lexicon	ko-KR	en-US:better packaging	베터 패키징 코
+lexicon	ko-KR	en-US:better packaging	베터 패키징
 lexicon	ko-KR	en-US:beyond honeycomb	비욘드허니컴
 lexicon	ko-KR	en-US:beyond meat	비욘드 미트
 lexicon	ko-KR	en-US:bharti airtel	바르티 에어텔
@@ -711,8 +706,6 @@ lexicon	ko-KR	en-US:bikini burger	비키니버거
 lexicon	ko-KR	en-US:bikkuri donkey	빗쿠리돈키
 lexicon	ko-KR	en-US:bikkuri ramen ichiban	빗쿠리 라면 이치반
 lexicon	ko-KR	en-US:bild	빌트
-lexicon	ko-KR	en-US:bilibili comics	빌리빌리 만화
-lexicon	ko-KR	en-US:bilibili manga	빌리빌리 만화
 lexicon	ko-KR	en-US:bilibili manhua	빌리빌리 만화
 lexicon	ko-KR	en-US:bilibili manhwa	빌리빌리 만화
 lexicon	ko-KR	en-US:bilibilicomics	빌리빌리 만화
@@ -754,11 +747,9 @@ lexicon	ko-KR	en-US:black laurels coffee	블랙로럴스커피
 lexicon	ko-KR	en-US:black paper	블랙페이퍼
 lexicon	ko-KR	en-US:black top records	블랙 탑 레코드
 lexicon	ko-KR	en-US:black yak	블랙야크
-lexicon	ko-KR	en-US:blackberry app world	블랙베리 월드
 lexicon	ko-KR	en-US:blackberry world	블랙베리 월드
 lexicon	ko-KR	en-US:blacklabel library	블랙라벨라이브러리
 lexicon	ko-KR	en-US:blackmagic design	블랙매직 디자인
-lexicon	ko-KR	en-US:blackmagic design pty	블랙매직 디자인
 lexicon	ko-KR	en-US:blackmagicdesign	블랙매직 디자인
 lexicon	ko-KR	en-US:blackpaper	블랙페이퍼
 lexicon	ko-KR	en-US:blackvue	블랙뷰
@@ -770,19 +761,17 @@ lexicon	ko-KR	en-US:blizzard entertainment	블리자드 엔터테인먼트
 lexicon	ko-KR	en-US:blockberry creative	블록베리크리에이티브
 lexicon	ko-KR	en-US:blockbuster	블록버스터
 lexicon	ko-KR	en-US:blockbuster records	블록버스터 레코드
-lexicon	ko-KR	en-US:blogger beta	블로거
 lexicon	ko-KR	en-US:bloomberg businessweek	블룸버그 비즈니스위크
 lexicon	ko-KR	en-US:bloomsbury publishing	블룸즈버리 퍼블리싱
 lexicon	ko-KR	en-US:blossom entertainment	블러썸 엔터테인먼트
 lexicon	ko-KR	en-US:blu shaak	블루샥
 lexicon	ko-KR	en-US:blue air	블루 에어
-lexicon	ko-KR	en-US:blue bird tbk	블루버드
 lexicon	ko-KR	en-US:blue elephant	블루엘리펀트
 lexicon	ko-KR	en-US:blue fang games	블루 팽 게임스
-lexicon	ko-KR	en-US:blue note	블루 노트 레코드
 lexicon	ko-KR	en-US:blue note records	블루 노트 레코드
 lexicon	ko-KR	en-US:blue origin	블루 오리진
 lexicon	ko-KR	en-US:blue owl capital	블루아울 캐피털
+lexicon	ko-KR	en-US:blue panorama	블루 파노라마
 lexicon	ko-KR	en-US:blue pepper	블루페퍼
 lexicon	ko-KR	en-US:bluebird cargo	블루버드 카고
 lexicon	ko-KR	en-US:bluehands	블루핸즈
@@ -794,7 +783,6 @@ lexicon	ko-KR	en-US:bluestacks	블루스택
 lexicon	ko-KR	en-US:bluhands	블루핸즈
 lexicon	ko-KR	en-US:bmeal the bistro	비밀더비스트로
 lexicon	ko-KR	en-US:boat rocker media	보트 로커 미디어
-lexicon	ko-KR	en-US:boat rocker studios	보트 로커 미디어
 lexicon	ko-KR	en-US:bobaedream	보배드림
 lexicon	ko-KR	en-US:bobcat company	밥캣 컴퍼니
 lexicon	ko-KR	en-US:bobperman	밥퍼맨
@@ -803,13 +791,11 @@ lexicon	ko-KR	en-US:body texmed	바디 텍 메드
 lexicon	ko-KR	en-US:bodychannel	바디채널
 lexicon	ko-KR	en-US:boeing	보잉
 lexicon	ko-KR	en-US:bohemia interactive	보헤미아 인터렉티브
-lexicon	ko-KR	en-US:bohemia interactive studio	보헤미아 인터렉티브
 lexicon	ko-KR	en-US:bohna	보흐니아
 lexicon	ko-KR	en-US:bohnja	보흐니아
 lexicon	ko-KR	en-US:boleslavia	볼레스와비에츠
 lexicon	ko-KR	en-US:bolongaro trevor	볼롱가로 트레버
 lexicon	ko-KR	en-US:bolshoi ballet	볼쇼이 발레단
-lexicon	ko-KR	en-US:bolshoi ballet company	볼쇼이 발레단
 lexicon	ko-KR	en-US:bombardier	봄바디어
 lexicon	ko-KR	en-US:bombardier aerospace	봄바디어 에어로스페이스
 lexicon	ko-KR	en-US:bomnal entertainment	봄날 엔터테인먼트
@@ -828,11 +814,9 @@ lexicon	ko-KR	en-US:boom pizza	붐피자
 lexicon	ko-KR	en-US:boostreet	부스트릿
 lexicon	ko-KR	en-US:booz allen hamilton	부즈 앨런 해밀턴
 lexicon	ko-KR	en-US:borgwarner	보그워너
-lexicon	ko-KR	en-US:boring	더 보링
 lexicon	ko-KR	en-US:boring company	더 보링 컴퍼니
 lexicon	ko-KR	en-US:boroo	보루
 lexicon	ko-KR	en-US:borsalino	보르살리노
-lexicon	ko-KR	en-US:boston daily globe	보스턴 글로브
 lexicon	ko-KR	en-US:boston duck tours	보스턴 덕 투어
 lexicon	ko-KR	en-US:boston dynamics	보스턴 다이내믹스
 lexicon	ko-KR	en-US:boston herald	보스턴 헤럴드
@@ -889,8 +873,10 @@ lexicon	ko-KR	en-US:broadcom	브로드컴
 lexicon	ko-KR	en-US:brollbin	브롤빈
 lexicon	ko-KR	en-US:bronsis	브론시스
 lexicon	ko-KR	en-US:bronze garden	브론즈가든
+lexicon	ko-KR	en-US:brookfield	브룩필드
 lexicon	ko-KR	en-US:brooks brothers	브룩스브라더스
 lexicon	ko-KR	en-US:broom studio	비룸스튜디오
+lexicon	ko-KR	en-US:brother	브라더
 lexicon	ko-KR	en-US:brother kitchen	부라더키친
 lexicon	ko-KR	en-US:brow-doll	브로우돌
 lexicon	ko-KR	en-US:browning arms company	브라우닝 암즈 컴퍼니
@@ -903,7 +889,6 @@ lexicon	ko-KR	en-US:bs burger	비에스버거
 lexicon	ko-KR	en-US:bs cafe	비에스카페
 lexicon	ko-KR	en-US:bty perfumery	비티와이퍼퓨머리
 lexicon	ko-KR	en-US:bubang techron	부방테크론
-lexicon	ko-KR	en-US:bubba gump shrimp	버바 검프 슈림프
 lexicon	ko-KR	en-US:bubba gump shrimp company	버바 검프 슈림프 컴퍼니
 lexicon	ko-KR	en-US:bubble angel	버블엔젤
 lexicon	ko-KR	en-US:bubble coffee	버블커피
@@ -919,7 +904,6 @@ lexicon	ko-KR	en-US:bullfrog productions	불프로그 프로덕션스
 lexicon	ko-KR	en-US:bullmark	불마크
 lexicon	ko-KR	en-US:bulls one	불스원
 lexicon	ko-KR	en-US:bultaco	불타코
-lexicon	ko-KR	en-US:bumble app	범블
 lexicon	ko-KR	en-US:bumhan fuel cell	범한퓨얼셀
 lexicon	ko-KR	en-US:bumper coffee	범퍼커피
 lexicon	ko-KR	en-US:bungie	번지
@@ -1000,7 +984,6 @@ lexicon	ko-KR	en-US:cake n farm	케익앤팜
 lexicon	ko-KR	en-US:calbee	칼비
 lexicon	ko-KR	en-US:california motor company	캘리포니아 모터 컴퍼니
 lexicon	ko-KR	en-US:callaway cars	캘러웨이 카즈
-lexicon	ko-KR	en-US:callaway golf	캘러웨이 골프
 lexicon	ko-KR	en-US:callaway golf company	캘러웨이 골프 컴퍼니
 lexicon	ko-KR	en-US:callinus	콜인어스
 lexicon	ko-KR	en-US:calpis	칼피스
@@ -1009,18 +992,17 @@ lexicon	ko-KR	en-US:calvin klein	캘빈 클라인
 lexicon	ko-KR	en-US:cambridge institute	캠브리지인스티튜트
 lexicon	ko-KR	en-US:camojoy	카모조이
 lexicon	ko-KR	en-US:campari	캄파리
-lexicon	ko-KR	en-US:campbell soup company	캠벨 수프 컴퍼니
 lexicon	ko-KR	en-US:campbell's	캠벨 수프
 lexicon	ko-KR	en-US:campbells	캠벨 수프
 lexicon	ko-KR	en-US:campfire aniwork	캠프파이어 애니웍스
 lexicon	ko-KR	en-US:campfire aniworks	캠프파이어 애니웍스
-lexicon	ko-KR	en-US:campfireaniwork	캠프파이어 애니웍스
 lexicon	ko-KR	en-US:campfireaniworks	캠프파이어 애니웍스
 lexicon	ko-KR	en-US:canaan creative	카난 크리에이티브
 lexicon	ko-KR	en-US:canada goose	캐나다 구스
 lexicon	ko-KR	en-US:canada post	캐나다 포스트
 lexicon	ko-KR	en-US:canadian locomotive company	캐나디안 로코모티브 컴퍼니
 lexicon	ko-KR	en-US:canadian tire	캐나디안 타이어
+lexicon	ko-KR	en-US:canadien national	캐나다 내셔널
 lexicon	ko-KR	en-US:candlelight records	캔들라이트 레코드
 lexicon	ko-KR	en-US:candybee	캔디비
 lexicon	ko-KR	en-US:canfactory	캔팩토리
@@ -1030,7 +1012,6 @@ lexicon	ko-KR	en-US:cantor fitzgerald	캔터 피츠제럴드
 lexicon	ko-KR	en-US:cap't loui	캡틴루이
 lexicon	ko-KR	en-US:capcom vancouver	캡콤 밴쿠버
 lexicon	ko-KR	en-US:caphe hoang	카페홍
-lexicon	ko-KR	en-US:capitol nashville	캐피톨 레코드 내슈빌
 lexicon	ko-KR	en-US:capitol records	캐피털 레코드
 lexicon	ko-KR	en-US:capitol records nashville	캐피톨 레코드 내슈빌
 lexicon	ko-KR	en-US:capstone software	캡스톤 소프트웨어
@@ -1047,8 +1028,6 @@ lexicon	ko-KR	en-US:carl's jr	칼스 주니어
 lexicon	ko-KR	en-US:carl's junior	칼스 주니어
 lexicon	ko-KR	en-US:carls jr	칼스 주니어
 lexicon	ko-KR	en-US:carls junior	칼스 주니어
-lexicon	ko-KR	en-US:carlson hotel	래디슨 호텔
-lexicon	ko-KR	en-US:carlson radisson hotel	래디슨 호텔
 lexicon	ko-KR	en-US:carlyle	칼라일
 lexicon	ko-KR	en-US:carmina	카르미나
 lexicon	ko-KR	en-US:carnival	카니발
@@ -1067,7 +1046,6 @@ lexicon	ko-KR	en-US:cathay pacific	캐세이퍼시픽 항공
 lexicon	ko-KR	en-US:cavare sound	카바레 사운드
 lexicon	ko-KR	en-US:cdnetworks	씨디네트웍스
 lexicon	ko-KR	en-US:cebu pacific	세부퍼시픽
-lexicon	ko-KR	en-US:cebu pacific air	세부퍼시픽
 lexicon	ko-KR	en-US:celeron	셀러론
 lexicon	ko-KR	en-US:celestron	셀레스트론
 lexicon	ko-KR	en-US:cellenique	세레니끄
@@ -1080,13 +1058,13 @@ lexicon	ko-KR	en-US:cemedine	세메다인
 lexicon	ko-KR	en-US:cendana auto	센다나 오토
 lexicon	ko-KR	en-US:cengage	센게이지
 lexicon	ko-KR	en-US:centerra gold	센테라 골드
-lexicon	ko-KR	en-US:central park	센트럴 파크 지하가
 lexicon	ko-KR	en-US:central park media	센트럴 파크 미디어
 lexicon	ko-KR	en-US:centrica	센트리카
 lexicon	ko-KR	en-US:centurion air cargo	센츄리온 에어 카고
 lexicon	ko-KR	en-US:century pacific food	센추리 퍼시픽 푸드
 lexicon	ko-KR	en-US:ceravision	세라비전
 lexicon	ko-KR	en-US:cerberus capital management	케르베로스 캐피털 매니지먼트
+lexicon	ko-KR	en-US:cerebras	세레브라스
 lexicon	ko-KR	en-US:cerebras systems	세레브라스 시스템즈
 lexicon	ko-KR	en-US:certicom	써티콤
 lexicon	ko-KR	en-US:cervelo	서벨로
@@ -1107,6 +1085,7 @@ lexicon	ko-KR	en-US:changxin memory technologies	창신 메모리 테크놀로�
 lexicon	ko-KR	en-US:channel awesome	채널 어썸
 lexicon	ko-KR	en-US:chao phraya express boat	짜오프라야 익스프레스 보트
 lexicon	ko-KR	en-US:chaosium	카오시움
+lexicon	ko-KR	en-US:charisma	카리스마
 lexicon	ko-KR	en-US:charisma records	카리스마 레코드
 lexicon	ko-KR	en-US:charles and keith	찰스앤키스
 lexicon	ko-KR	en-US:charmandre	차만다
@@ -1122,6 +1101,7 @@ lexicon	ko-KR	en-US:chefmeal	쉐프밀
 lexicon	ko-KR	en-US:chemours	케무어스
 lexicon	ko-KR	en-US:cherkizovo	체르키조보
 lexicon	ko-KR	en-US:cherry	체리
+lexicon	ko-KR	en-US:chery	체리
 lexicon	ko-KR	en-US:chery jaguar land rover	체리 재규어 랜드로버
 lexicon	ko-KR	en-US:chess records	체스 레코드
 lexicon	ko-KR	en-US:chevron	셰브런
@@ -1143,11 +1123,9 @@ lexicon	ko-KR	en-US:chikara	치카라
 lexicon	ko-KR	en-US:chimcking	치맥킹
 lexicon	ko-KR	en-US:china factory	차이나팩토리
 lexicon	ko-KR	en-US:china high speed transmission	차이나 하이 스피드 트랜스미션
-lexicon	ko-KR	en-US:china high speed transmission equipment	차이나 하이 스피드 트랜스미션
 lexicon	ko-KR	en-US:china lucky film	차이나 러키 필름
 lexicon	ko-KR	en-US:china national heavy duty truck	차이나 내셔널 해비 듀티 트럭
 lexicon	ko-KR	en-US:china netcom	차이나 넷콤
-lexicon	ko-KR	en-US:china telecommunications	중국 텔레콤뮤너케이션
 lexicon	ko-KR	en-US:china unicom	차이나 유니콤
 lexicon	ko-KR	en-US:chinabowl	차이나볼
 lexicon	ko-KR	en-US:chipotle mexican grill	치포틀레 멕시칸 그릴
@@ -1171,9 +1149,11 @@ lexicon	ko-KR	en-US:chrono studio	크로노스튜디오
 lexicon	ko-KR	en-US:chronoswiss	크로노스위스
 lexicon	ko-KR	en-US:chrysalis records	크리설리스 레코드
 lexicon	ko-KR	en-US:chucklefish	처클피시
+lexicon	ko-KR	en-US:chunsoft	춘소프트
 lexicon	ko-KR	en-US:chupa chups	츄파춥스
 lexicon	ko-KR	en-US:cigna	시그나
 lexicon	ko-KR	en-US:cine world	시네월드
+lexicon	ko-KR	en-US:cineju	씨네주
 lexicon	ko-KR	en-US:cinema camera	시네마 카메라
 lexicon	ko-KR	en-US:cinema sunshine	시네마 선샤인
 lexicon	ko-KR	en-US:cinemaware	시네마웨어
@@ -1184,6 +1164,7 @@ lexicon	ko-KR	en-US:ciot	시옷
 lexicon	ko-KR	en-US:cipla	시플라
 lexicon	ko-KR	en-US:cipolla	치폴라
 lexicon	ko-KR	en-US:cipollini	치폴리니
+lexicon	ko-KR	en-US:circle	서클
 lexicon	ko-KR	en-US:circle chart	써클 차트
 lexicon	ko-KR	en-US:circus	서커스
 lexicon	ko-KR	en-US:cirio	치리오
@@ -1205,7 +1186,6 @@ lexicon	ko-KR	en-US:clariant	클라리언트
 lexicon	ko-KR	en-US:clarion	클라리온
 lexicon	ko-KR	en-US:clarivate	클래리베이트
 lexicon	ko-KR	en-US:classcafe	클래스카페
-lexicon	ko-KR	en-US:classroom	구글 클래스룸
 lexicon	ko-KR	en-US:classys	클래시스
 lexicon	ko-KR	en-US:clavia	클라비아
 lexicon	ko-KR	en-US:clayee	클라이
@@ -1282,14 +1262,12 @@ lexicon	ko-KR	en-US:colgate-palmolive	콜게이트 파몰리브
 lexicon	ko-KR	en-US:colgate-palmolive company	콜게이트 파몰리브
 lexicon	ko-KR	en-US:colgate-palmolive-peet	콜게이트 파몰리브
 lexicon	ko-KR	en-US:collabnet	콜랩넷
-lexicon	ko-KR	en-US:collective	더 콜렉티브
 lexicon	ko-KR	en-US:colnago	콜나고
 lexicon	ko-KR	en-US:colorful technology	컬러풀 테크놀로지
 lexicon	ko-KR	en-US:colorsidae	칼라시대
 lexicon	ko-KR	en-US:colour index international	컬러 인덱스 인터내셔널
 lexicon	ko-KR	en-US:colowide	코로와이드
 lexicon	ko-KR	en-US:colt car company	콜트 카 컴퍼니
-lexicon	ko-KR	en-US:columbia pictures entertainment	소니 픽처스 엔터테인먼트
 lexicon	ko-KR	en-US:columbia records	컬럼비아 레코드
 lexicon	ko-KR	en-US:columbia sportswear	컬럼비아 스포츠웨어
 lexicon	ko-KR	en-US:combat zone wrestling	컴뱃 존 레슬링
@@ -1307,6 +1285,7 @@ lexicon	ko-KR	en-US:compal electronics	컴팔 일렉트로닉스
 lexicon	ko-KR	en-US:compass	컴패스
 lexicon	ko-KR	en-US:complet's	컴플리츠
 lexicon	ko-KR	en-US:completereve	컴플리트레브
+lexicon	ko-KR	en-US:complex	컴플렉스
 lexicon	ko-KR	en-US:complex media	컴플렉스 네트웍스
 lexicon	ko-KR	en-US:complex networks	컴플렉스 네트웍스
 lexicon	ko-KR	en-US:compose coffee	컴포즈커피
@@ -1318,6 +1297,7 @@ lexicon	ko-KR	en-US:concord records	콩코드 레코드
 lexicon	ko-KR	en-US:conexant	커넥선트
 lexicon	ko-KR	en-US:coney island	코니아일랜드
 lexicon	ko-KR	en-US:conrad hotels	콘래드 호텔
+lexicon	ko-KR	en-US:consequence	컨시퀀스
 lexicon	ko-KR	en-US:consequence of sound	컨시퀀스 오브 사운드
 lexicon	ko-KR	en-US:consolidated aircraft	컨살러데이티드 에어크래프트
 lexicon	ko-KR	en-US:contact air	콘텍트 에어
@@ -1328,10 +1308,12 @@ lexicon	ko-KR	en-US:contentree joongang	콘텐트리중앙
 lexicon	ko-KR	en-US:contentreejoongang	콘텐트리중앙
 lexicon	ko-KR	en-US:continental air micronesia	콘티넨탈 미크로네시아
 lexicon	ko-KR	en-US:continental connection	콘티넨탈 커넥션
+lexicon	ko-KR	en-US:continental express	콘티넨탈 익스프레스
 lexicon	ko-KR	en-US:continental lite	콘티넨탈 라이트
 lexicon	ko-KR	en-US:continental micronesia	콘티넨탈 미크로네시아
 lexicon	ko-KR	en-US:control data	컨트롤 데이터
 lexicon	ko-KR	en-US:converse	컨버스
+lexicon	ko-KR	en-US:conviasa	콘비아사
 lexicon	ko-KR	en-US:cookery	쿠커리
 lexicon	ko-KR	en-US:cookie friends cafe	쿠키프렌즈카페
 lexicon	ko-KR	en-US:cooler master	쿨러 마스터
@@ -1351,7 +1333,6 @@ lexicon	ko-KR	en-US:coridel entertainment	코리델 엔터테인먼트
 lexicon	ko-KR	en-US:corneliani	꼬르넬리아니
 lexicon	ko-KR	en-US:cornerstone ondemand	코너스톤 온디맨드
 lexicon	ko-KR	en-US:corning	코닝
-lexicon	ko-KR	en-US:corning gorilla glass	고릴라 글래스
 lexicon	ko-KR	en-US:corpay	코페이
 lexicon	ko-KR	en-US:corus entertainment	코러스 엔터테인먼트
 lexicon	ko-KR	en-US:cosina	코시나
@@ -1364,10 +1345,7 @@ lexicon	ko-KR	en-US:costco	코스트코
 lexicon	ko-KR	en-US:cosworth	코스워스
 lexicon	ko-KR	en-US:cotai water jet	코타이 워터젯
 lexicon	ko-KR	en-US:cotta coffee	코타커피
-lexicon	ko-KR	en-US:couch surf	카우치서핑
 lexicon	ko-KR	en-US:couch surfing	카우치서핑
-lexicon	ko-KR	en-US:couchsurf	카우치서핑
-lexicon	ko-KR	en-US:couchsurfer	카우치서핑
 lexicon	ko-KR	en-US:couchsurfing	카우치서핑
 lexicon	ko-KR	en-US:cover girl	커버걸
 lexicon	ko-KR	en-US:covergirl	커버걸
@@ -1453,9 +1431,12 @@ lexicon	ko-KR	en-US:daimler company	다임러 컴퍼니
 lexicon	ko-KR	en-US:daimler truck north america	다임러 트럭 북아메리카
 lexicon	ko-KR	en-US:dains	다인스
 lexicon	ko-KR	en-US:dairy queen	데어리퀸
+lexicon	ko-KR	en-US:daiso	다이소
 lexicon	ko-KR	en-US:daito cacao	다이토 카카오
+lexicon	ko-KR	en-US:daiwa house	다이와 하우스
 lexicon	ko-KR	en-US:daiwon media	대원미디어
 lexicon	ko-KR	en-US:dakpo	닭포
+lexicon	ko-KR	en-US:dalavia	달라비아
 lexicon	ko-KR	en-US:dalcom soft	달콤소프트
 lexicon	ko-KR	en-US:dalcrab	달크랩
 lexicon	ko-KR	en-US:daldaguni	달다구니
@@ -1474,7 +1455,6 @@ lexicon	ko-KR	en-US:danny burger	대니버거
 lexicon	ko-KR	en-US:dara dara	다라다라
 lexicon	ko-KR	en-US:darak maeul premium	다락마을프리미엄
 lexicon	ko-KR	en-US:darea creamery	다래크리머리
-lexicon	ko-KR	en-US:darkie	달리
 lexicon	ko-KR	en-US:darktrace	다크트레이스
 lexicon	ko-KR	en-US:darugio	다르지오
 lexicon	ko-KR	en-US:dasan solueta	다산솔루에타
@@ -1493,6 +1473,7 @@ lexicon	ko-KR	en-US:dawonsys	다원시스
 lexicon	ko-KR	en-US:daymer	데이메르
 lexicon	ko-KR	en-US:days inn	데이즈 인
 lexicon	ko-KR	en-US:daytona entertainment	데이토나 엔터테인먼트
+lexicon	ko-KR	en-US:daze alive	데이즈 얼라이브
 lexicon	ko-KR	en-US:dazim	다짐
 lexicon	ko-KR	en-US:dc shoes	디씨슈즈
 lexicon	ko-KR	en-US:dcinside	디시인사이드
@@ -1540,6 +1521,7 @@ lexicon	ko-KR	en-US:dell inspiron	델 인스피론
 lexicon	ko-KR	en-US:dell technologies	델 테크놀로지스
 lexicon	ko-KR	en-US:delonghi	드롱기
 lexicon	ko-KR	en-US:delphian records	델피언 레코드
+lexicon	ko-KR	en-US:delta	델타
 lexicon	ko-KR	en-US:delta connection	델타 커넥션
 lexicon	ko-KR	en-US:delta electronics	델타 일렉트로닉스
 lexicon	ko-KR	en-US:delta express	델타 익스프레스
@@ -1566,7 +1548,6 @@ lexicon	ko-KR	en-US:deutsche post	도이체 포스트
 lexicon	ko-KR	en-US:deutsche telekom	도이체 텔레콤
 lexicon	ko-KR	en-US:devcat studio	데브캣 스튜디오
 lexicon	ko-KR	en-US:develon	디벨론
-lexicon	ko-KR	en-US:devolver digital films	디볼버 디지털
 lexicon	ko-KR	en-US:devpack	데브팩
 lexicon	ko-KR	en-US:devsisters	데브시스터즈
 lexicon	ko-KR	en-US:dex crew	덱스크루
@@ -1618,6 +1599,7 @@ lexicon	ko-KR	en-US:disney interactive studios	디즈니 인터랙티브 스튜�
 lexicon	ko-KR	en-US:disney live entertainment	디즈니 라이브 엔터테인먼트
 lexicon	ko-KR	en-US:disney music	디즈니 뮤직
 lexicon	ko-KR	en-US:disney star	디즈니 스타
+lexicon	ko-KR	en-US:disney streaming	디즈니 스트리밍
 lexicon	ko-KR	en-US:disney streaming services	디즈니 스트리밍 서비스
 lexicon	ko-KR	en-US:disney television animation	디즈니 텔레비전 애니메이션
 lexicon	ko-KR	en-US:disneytoon studios	디즈니툰 스튜디오
@@ -1627,6 +1609,7 @@ lexicon	ko-KR	en-US:djarum	자럼
 lexicon	ko-KR	en-US:dmarket	디마켓
 lexicon	ko-KR	en-US:dniproavia	드니프로아비아
 lexicon	ko-KR	en-US:dobor	도보르
+lexicon	ko-KR	en-US:dobrolet	도브로렛
 lexicon	ko-KR	en-US:doctor martens	닥터 마틴
 lexicon	ko-KR	en-US:dog marcat	도그마캣
 lexicon	ko-KR	en-US:dogdot	도그닷
@@ -1637,18 +1620,16 @@ lexicon	ko-KR	en-US:dokkeb coffee	도케비커피
 lexicon	ko-KR	en-US:dole food company	돌 푸드 컴퍼니
 lexicon	ko-KR	en-US:dollar general	달러 제너럴
 lexicon	ko-KR	en-US:dominion voting systems	도미니언 보팅 시스템
-lexicon	ko-KR	en-US:domino's	도미노피자
+lexicon	ko-KR	en-US:donavia	도나비아
 lexicon	ko-KR	en-US:donbassaero	돈바스아에로
-lexicon	ko-KR	en-US:dong yang p&f	디와이피엔에프
 lexicon	ko-KR	en-US:dongfeng honda	둥펑 혼다
 lexicon	ko-KR	en-US:dongfeng nammi	둥펑 나미
 lexicon	ko-KR	en-US:dongfeng yueda kia	동옥 위에다 기아
 lexicon	ko-KR	en-US:dongman entertainment	동만 엔터테인먼트
+lexicon	ko-KR	en-US:dongman manhua	동만 만화
 lexicon	ko-KR	en-US:dongman manhwa	동만 만화
 lexicon	ko-KR	en-US:dongmanmanhua	동만 만화
 lexicon	ko-KR	en-US:donguimogam	동의모감
-lexicon	ko-KR	en-US:dongyang p & f	디와이피엔에프
-lexicon	ko-KR	en-US:dongyang p&f	디와이피엔에프
 lexicon	ko-KR	en-US:dongyo entertainment	동요엔터테인먼트
 lexicon	ko-KR	en-US:donotpay	두낫페이
 lexicon	ko-KR	en-US:dontnod entertainment	돈노드 엔터테인먼트
@@ -1667,6 +1648,7 @@ lexicon	ko-KR	en-US:doubleclick	더블클릭
 lexicon	ko-KR	en-US:doubleday	더블데이
 lexicon	ko-KR	en-US:doubletap games	더블탭 게임스
 lexicon	ko-KR	en-US:doubletree	더블트리
+lexicon	ko-KR	en-US:douglas	더글러스
 lexicon	ko-KR	en-US:douglas aircraft company	더글러스 에어크래프트
 lexicon	ko-KR	en-US:dow chemical	다우 케미컬
 lexicon	ko-KR	en-US:dplace	디플레이스
@@ -1681,6 +1663,7 @@ lexicon	ko-KR	en-US:dream t entertainment	드림티엔터테인먼트
 lexicon	ko-KR	en-US:dreamcatcher company	드림캐쳐 컴퍼니
 lexicon	ko-KR	en-US:dreamcatcher interactive	드림캐처 인터랙티브
 lexicon	ko-KR	en-US:dreamtea entertainment	드림티엔터테인먼트
+lexicon	ko-KR	en-US:dreamus	드림어스
 lexicon	ko-KR	en-US:dreamus company	드림어스컴퍼니
 lexicon	ko-KR	en-US:dreamworks animation	드림웍스 애니메이션
 lexicon	ko-KR	en-US:dreamworks records	드림웍스 레코드
@@ -1712,7 +1695,7 @@ lexicon	ko-KR	en-US:dunlop sport	던롭 스포츠
 lexicon	ko-KR	en-US:duracell	듀라셀
 lexicon	ko-KR	en-US:durex	듀렉스
 lexicon	ko-KR	en-US:dusit international	두짓 인터네셔널
-lexicon	ko-KR	en-US:dutch bros	더치 브로스 커피
+lexicon	ko-KR	en-US:dutch bros	더치 브로스
 lexicon	ko-KR	en-US:dutch bros coffee	더치 브로스 커피
 lexicon	ko-KR	en-US:dynamis one	디나미스 원
 lexicon	ko-KR	en-US:eagle	이글
@@ -1723,7 +1706,6 @@ lexicon	ko-KR	en-US:eaglexpress	이글 익스프레스
 lexicon	ko-KR	en-US:earl of sandwich	얼오브샌드위치
 lexicon	ko-KR	en-US:earth star entertainment	어스 스타 엔터테인먼트
 lexicon	ko-KR	en-US:earthing	어씽
-lexicon	ko-KR	en-US:eastern championship wrestling	익스트림 챔피언십 레슬링
 lexicon	ko-KR	en-US:easyjet europe	이지젯 유럽
 lexicon	ko-KR	en-US:easyjet switzerland	이지젯 스위스
 lexicon	ko-KR	en-US:easytech	이지테크
@@ -1770,9 +1752,9 @@ lexicon	ko-KR	en-US:electric muse	일렉트릭 뮤즈
 lexicon	ko-KR	en-US:electro motive diesel	일렉트로 모티브 디젤
 lexicon	ko-KR	en-US:electro scientific industries	일렉트로 사이언티픽 인더스트리스
 lexicon	ko-KR	en-US:electro-motive diesel	일렉트로 모티브 디젤
-lexicon	ko-KR	en-US:electro-motive division	일렉트로 모티브 디젤
 lexicon	ko-KR	en-US:electrolux	일렉트로룩스
 lexicon	ko-KR	en-US:electronic arts	일렉트로닉 아츠
+lexicon	ko-KR	en-US:elektra	엘렉트라
 lexicon	ko-KR	en-US:elektra records	엘렉트라 레코드
 lexicon	ko-KR	en-US:elektrolux	일렉트로룩스
 lexicon	ko-KR	en-US:elentec	이랜텍
@@ -1790,6 +1772,7 @@ lexicon	ko-KR	en-US:elliott brothers	엘리엇 브라더스
 lexicon	ko-KR	en-US:elliott management	엘리엇 매니지먼트
 lexicon	ko-KR	en-US:elna	엘나
 lexicon	ko-KR	en-US:elpida memory	엘피다 메모리
+lexicon	ko-KR	en-US:em-lyon	이엠리옹
 lexicon	ko-KR	en-US:emart	이마트
 lexicon	ko-KR	en-US:embarcadero technologies	엠바카데로 테크놀로지스
 lexicon	ko-KR	en-US:embark studios	엠바크 스튜디오
@@ -1798,8 +1781,8 @@ lexicon	ko-KR	en-US:embraer	엠브라에르
 lexicon	ko-KR	en-US:embrafilme	엠브라필름
 lexicon	ko-KR	en-US:emergent biosolutions	이머전트 바이오솔루션스
 lexicon	ko-KR	en-US:emerson electric	에머슨 일렉트릭
-lexicon	ko-KR	en-US:emerson electric company	에머슨 일렉트릭
 lexicon	ko-KR	en-US:emi music korea	이엠아이뮤직코리아
+lexicon	ko-KR	en-US:emirates	에미레이트
 lexicon	ko-KR	en-US:emirates skycargo	에미레이트 스카이카고
 lexicon	ko-KR	en-US:emjespaemilli	엠젯패밀리
 lexicon	ko-KR	en-US:emoi	에머이
@@ -1830,6 +1813,7 @@ lexicon	ko-KR	en-US:epidgames	에피드게임즈
 lexicon	ko-KR	en-US:episode company	에피소드컴퍼니
 lexicon	ko-KR	en-US:episoden	에피소든
 lexicon	ko-KR	en-US:epitaph records	에피타프 레코드
+lexicon	ko-KR	en-US:epoch	에폭
 lexicon	ko-KR	en-US:epson	엡손
 lexicon	ko-KR	en-US:epyx	에픽스
 lexicon	ko-KR	en-US:equestria daily	이퀘스트리아 데일리
@@ -1848,8 +1832,12 @@ lexicon	ko-KR	en-US:essential products	에센셜 프로덕츠
 lexicon	ko-KR	en-US:estee lauder	에스티 로더
 lexicon	ko-KR	en-US:esteem	이스팀
 lexicon	ko-KR	en-US:estsoft	이스트소프트
+lexicon	ko-KR	en-US:ethiopian	에티오피아
+lexicon	ko-KR	en-US:etihad	에티하드
 lexicon	ko-KR	en-US:etisalat	에티살랏
 lexicon	ko-KR	en-US:etoro	이토로
+lexicon	ko-KR	en-US:euroatlantic	유로 애틀랜틱
+lexicon	ko-KR	en-US:eurofighter	유로파이터
 lexicon	ko-KR	en-US:euroko pizza	유로코피자
 lexicon	ko-KR	en-US:euronext	유로넥스트
 lexicon	ko-KR	en-US:european air transport leipzig	유로 에어 트랜스포트 라이프치히
@@ -1890,25 +1878,21 @@ lexicon	ko-KR	en-US:eyefine	아이파인
 lexicon	ko-KR	en-US:eyegentry	아이젠트리
 lexicon	ko-KR	en-US:eyesaver	아이세이버
 lexicon	ko-KR	en-US:ezaki glico	에자키 글리코
-lexicon	ko-KR	en-US:ezaki guriko	에자키 글리코
 lexicon	ko-KR	en-US:faber castell	파버카스텔
 lexicon	ko-KR	en-US:faber-castell	파버카스텔
 lexicon	ko-KR	en-US:fafeg	파페지
 lexicon	ko-KR	en-US:falcon motorsports	팔콘 모터스포츠
-lexicon	ko-KR	en-US:falcons	팀 팔콘스
-lexicon	ko-KR	en-US:family gekijo	패밀리 극장
 lexicon	ko-KR	en-US:family mart	훼미리마트
 lexicon	ko-KR	en-US:family search	패밀리서치
 lexicon	ko-KR	en-US:familymart	훼미리마트
 lexicon	ko-KR	en-US:familysearch	패밀리서치
-lexicon	ko-KR	en-US:fandom	팬덤 사
+lexicon	ko-KR	en-US:fandom	팬덤
 lexicon	ko-KR	en-US:fannie mae	패니 메이
 lexicon	ko-KR	en-US:fantagio	판타지오
 lexicon	ko-KR	en-US:fantagio music	판타지오 뮤직
 lexicon	ko-KR	en-US:fantastic m	판타스틱엠
 lexicon	ko-KR	en-US:fantastic television	판타스틱 텔레비전
 lexicon	ko-KR	en-US:fantom entertainment	팬텀엔터테인먼트그룹
-lexicon	ko-KR	en-US:fantom entertainment korea	팬텀엔터테인먼트그룹
 lexicon	ko-KR	en-US:fanuc	파낙
 lexicon	ko-KR	en-US:faraday future	패러데이 퓨처
 lexicon	ko-KR	en-US:farfetch	파페치
@@ -1922,7 +1906,6 @@ lexicon	ko-KR	en-US:father'sbagel	파더스베이글
 lexicon	ko-KR	en-US:fave	페이브
 lexicon	ko-KR	en-US:febreze	페브리즈
 lexicon	ko-KR	en-US:fed ex express	페덱스 익스프레스
-lexicon	ko-KR	en-US:fed ex express air	페덱스 익스프레스
 lexicon	ko-KR	en-US:fedora project	페도라 프로젝트
 lexicon	ko-KR	en-US:feel free	필프리
 lexicon	ko-KR	en-US:feel ghood music	필굿뮤직
@@ -1940,11 +1923,9 @@ lexicon	ko-KR	en-US:fidelity investments	피델리티 인베스트먼트
 lexicon	ko-KR	en-US:fincantieri	핀칸티에리
 lexicon	ko-KR	en-US:fine today shiseido	파인 투데이 시세이도
 lexicon	ko-KR	en-US:fine week	파인위크
-lexicon	ko-KR	en-US:finlayson oy	핀레이슨
 lexicon	ko-KR	en-US:firaxis games	피랙시스 게임스
 lexicon	ko-KR	en-US:fire point	파이어 포인트
 lexicon	ko-KR	en-US:firefly aerospace	파이어플라이 에어로스페이스
-lexicon	ko-KR	en-US:firefly space systems	파이어플라이 에어로스페이스
 lexicon	ko-KR	en-US:firefly studios	파이어플라이 스튜디오
 lexicon	ko-KR	en-US:firma philips	필립스
 lexicon	ko-KR	en-US:first kitchen	패스트 키친
@@ -1965,12 +1946,12 @@ lexicon	ko-KR	en-US:flamme	플레임
 lexicon	ko-KR	en-US:flat glass	플랫 글라스
 lexicon	ko-KR	en-US:flex sports academy	플렉스스포츠아카데미
 lexicon	ko-KR	en-US:flextudio	플렉스튜디오
-lexicon	ko-KR	en-US:flix	플릭스버스
 lexicon	ko-KR	en-US:flix se	플릭스버스
 lexicon	ko-KR	en-US:flora of north america	플로라 오브 노스 아메리카
 lexicon	ko-KR	en-US:florabase	플로라베이스
 lexicon	ko-KR	en-US:florsheim shoes	플로샤임 슈즈
 lexicon	ko-KR	en-US:flow hive	플로우하이브
+lexicon	ko-KR	en-US:flowworks	플로우웍스
 lexicon	ko-KR	en-US:fly english	플라이잉글리쉬
 lexicon	ko-KR	en-US:flying dutchman records	플라잉 더치맨 레코드
 lexicon	ko-KR	en-US:flying tiger line	플라이 타이거 라인
@@ -1987,10 +1968,11 @@ lexicon	ko-KR	en-US:foosung	후성
 lexicon	ko-KR	en-US:foot locker	풋 로커
 lexicon	ko-KR	en-US:foot's all	풋스올
 lexicon	ko-KR	en-US:footsis	풋시스
+lexicon	ko-KR	en-US:for life music	포 라이프 뮤직
 lexicon	ko-KR	en-US:for life music entertainment	포 라이프 뮤직 엔터테인먼트
 lexicon	ko-KR	en-US:forbes	포브스
+lexicon	ko-KR	en-US:ford	포드
 lexicon	ko-KR	en-US:ford italia	포드 이탈리아
-lexicon	ko-KR	en-US:ford italy	포드 이탈리아
 lexicon	ko-KR	en-US:ford motor company of japan	포드 모터 컴퍼니 오브 재팬
 lexicon	ko-KR	en-US:ford performance vehicles	포드 퍼포먼스 비클스
 lexicon	ko-KR	en-US:foreign affairs	포린 어페어스
@@ -2070,7 +2052,6 @@ lexicon	ko-KR	en-US:funnyflux	퍼니플럭스
 lexicon	ko-KR	en-US:futuremark	퓨처마크
 lexicon	ko-KR	en-US:futurestream networks	퓨쳐스트림네트웍스
 lexicon	ko-KR	en-US:fuyao	푸야오
-lexicon	ko-KR	en-US:g star	지스타로우
 lexicon	ko-KR	en-US:g'zox	지족스
 lexicon	ko-KR	en-US:g-star raw	지스타로우
 lexicon	ko-KR	en-US:gabia	가비아
@@ -2099,7 +2080,7 @@ lexicon	ko-KR	en-US:garena	가레나
 lexicon	ko-KR	en-US:garmin	가르민
 lexicon	ko-KR	en-US:garosero blinds	가로세로블라인드
 lexicon	ko-KR	en-US:garoseroblinds	가로세로블라인드
-lexicon	ko-KR	en-US:garuda indonesia	가루다 인도네시아 항공
+lexicon	ko-KR	en-US:garuda indonesia	가루다 인도네시아
 lexicon	ko-KR	en-US:garwolin	가르볼린
 lexicon	ko-KR	en-US:gate study cafe	게이트스터디카페
 lexicon	ko-KR	en-US:gatorade	게토레이
@@ -2113,6 +2094,7 @@ lexicon	ko-KR	en-US:gazprom-media	가스프롬 미디어
 lexicon	ko-KR	en-US:gazprombank	가스프롬방크
 lexicon	ko-KR	en-US:gcoo	지쿠
 lexicon	ko-KR	en-US:gcooter	지쿠터
+lexicon	ko-KR	en-US:geely	지리
 lexicon	ko-KR	en-US:geffen records	게펜 레코드
 lexicon	ko-KR	en-US:gemini	제미니
 lexicon	ko-KR	en-US:gemini records	제미니 레코드
@@ -2126,7 +2108,6 @@ lexicon	ko-KR	en-US:general electric company	제너럴 일렉트릭 컴퍼니
 lexicon	ko-KR	en-US:general instrument	제너럴 인스트루먼트
 lexicon	ko-KR	en-US:general mills	제너럴 밀스
 lexicon	ko-KR	en-US:general motors	제너럴 모터스
-lexicon	ko-KR	en-US:general motors india pty	제너럴 모터스 인디아
 lexicon	ko-KR	en-US:general motors japan	제너럴 모터스 재팬
 lexicon	ko-KR	en-US:general radio	제너럴 라디오
 lexicon	ko-KR	en-US:general tire	제너럴 타이어
@@ -2140,7 +2121,6 @@ lexicon	ko-KR	en-US:genoss	제노스
 lexicon	ko-KR	en-US:gentle monster	젠틀몬스터
 lexicon	ko-KR	en-US:geocities	지오시티
 lexicon	ko-KR	en-US:geoportail	지오포르테일
-lexicon	ko-KR	en-US:gerber baby products	거버 프로덕트
 lexicon	ko-KR	en-US:gerber legendary blades	거버 레전더리 블레이드
 lexicon	ko-KR	en-US:gerber products company	거버 프로덕트 컴퍼니
 lexicon	ko-KR	en-US:germanwings	저먼윙스
@@ -2182,6 +2162,7 @@ lexicon	ko-KR	en-US:globalfoundries	글로벌파운드리
 lexicon	ko-KR	en-US:globalhope	글로벌호프
 lexicon	ko-KR	en-US:globalnews	글로벌 뉴스
 lexicon	ko-KR	en-US:globalstar	글로벌스타
+lexicon	ko-KR	en-US:globus	글로부스
 lexicon	ko-KR	en-US:gloces	글로시스
 lexicon	ko-KR	en-US:gloria jean's coffees	글로리아 진스 커피
 lexicon	ko-KR	en-US:glove entertainment	글러브 엔터테인먼트
@@ -2189,10 +2170,10 @@ lexicon	ko-KR	en-US:glovision	글로비전
 lexicon	ko-KR	en-US:gluecode	글루코드
 lexicon	ko-KR	en-US:gluugluu	글루글루
 lexicon	ko-KR	en-US:gmobile	지모바일
-lexicon	ko-KR	en-US:gnesna	그니에즈노
 lexicon	ko-KR	en-US:gniezno	그니에즈노
 lexicon	ko-KR	en-US:go mart	고마트
 lexicon	ko-KR	en-US:go ratings	고 레이팅스
+lexicon	ko-KR	en-US:goair	고우
 lexicon	ko-KR	en-US:goc coffee	고씨커피
 lexicon	ko-KR	en-US:gofundme	고펀드미
 lexicon	ko-KR	en-US:gold peak	골드 픽
@@ -2201,7 +2182,6 @@ lexicon	ko-KR	en-US:golden dragon	골든 드래곤
 lexicon	ko-KR	en-US:golden goose	골든 구스
 lexicon	ko-KR	en-US:golden harvest	골든 하베스트
 lexicon	ko-KR	en-US:goldentree	골든트리
-lexicon	ko-KR	en-US:goldman sachs and	골드만삭스
 lexicon	ko-KR	en-US:golfzon park	골프존파크
 lexicon	ko-KR	en-US:gonggam design	공감디자인
 lexicon	ko-KR	en-US:gontran cherrier	곤트란쉐리에
@@ -2213,13 +2193,10 @@ lexicon	ko-KR	en-US:good vibe	굿바이브
 lexicon	ko-KR	en-US:goodrich	굿리치
 lexicon	ko-KR	en-US:goodsmile company	굿 스마일 컴퍼니
 lexicon	ko-KR	en-US:goodson	굿손
-lexicon	ko-KR	en-US:google adsense	애드센스
 lexicon	ko-KR	en-US:google analytics	구글 애널리틱스
 lexicon	ko-KR	en-US:google answers	구글 앤서
-lexicon	ko-KR	en-US:google apps marketplace	구글 워크스페이스 마켓플레이스
 lexicon	ko-KR	en-US:google base	구글 베이스
 lexicon	ko-KR	en-US:google bookmarks	구글 북마크
-lexicon	ko-KR	en-US:google books ngram viewer	구글 엔그램 뷰어
 lexicon	ko-KR	en-US:google china	구글 차이나
 lexicon	ko-KR	en-US:google code jam	구글 코드 잼
 lexicon	ko-KR	en-US:google contributor	구글 컨트리뷰터
@@ -2235,7 +2212,6 @@ lexicon	ko-KR	en-US:google insights for search	구글 인사이츠 포 서치
 lexicon	ko-KR	en-US:google labs	구글 랩스
 lexicon	ko-KR	en-US:google ngram viewer	구글 엔그램 뷰어
 lexicon	ko-KR	en-US:google notebook	구글 노트북
-lexicon	ko-KR	en-US:google playstore	구글 플레이
 lexicon	ko-KR	en-US:google reader	구글 리더
 lexicon	ko-KR	en-US:google sites	구글 사이트
 lexicon	ko-KR	en-US:google trends	구글 트렌드
@@ -2276,10 +2252,8 @@ lexicon	ko-KR	en-US:greenpower motor company	그린파워 모터 컴퍼니
 lexicon	ko-KR	en-US:greenstore	그린스토어
 lexicon	ko-KR	en-US:greggs	그렉스
 lexicon	ko-KR	en-US:grey hound bus	그레이하운드
-lexicon	ko-KR	en-US:grey hound lines	그레이하운드
 lexicon	ko-KR	en-US:greyhound	그레이하운드
 lexicon	ko-KR	en-US:grezzo	그레초
-lexicon	ko-KR	en-US:grid entertainment	그리드엔터테인먼트
 lexicon	ko-KR	en-US:grifols	그리폴즈
 lexicon	ko-KR	en-US:grillro	그릴로
 lexicon	ko-KR	en-US:grimsaem	그림샘
@@ -2316,6 +2290,7 @@ lexicon	ko-KR	en-US:gwangmunsa	광문사
 lexicon	ko-KR	en-US:gym ground	짐그라운드
 lexicon	ko-KR	en-US:gym kitchen	짐키친
 lexicon	ko-KR	en-US:gym nation	짐네이션
+lexicon	ko-KR	en-US:gyunyu-sekken	큐뉴섹켄
 lexicon	ko-KR	en-US:h and m	에이치앤엠
 lexicon	ko-KR	en-US:h tea	에이치티
 lexicon	ko-KR	en-US:h&entertainment	에이치앤드엔터테인먼트
@@ -2396,6 +2371,8 @@ lexicon	ko-KR	en-US:happy tribe entertainment	해피트라이브엔터테인먼�
 lexicon	ko-KR	en-US:happybil	해피빌
 lexicon	ko-KR	en-US:happybottle	해피보틀
 lexicon	ko-KR	en-US:happygo	해피고
+lexicon	ko-KR	en-US:harada	하라다
+lexicon	ko-KR	en-US:harbin	하얼빈
 lexicon	ko-KR	en-US:hard rock cafe	하드 록 카페
 lexicon	ko-KR	en-US:hardkernel	하드커널
 lexicon	ko-KR	en-US:harland and wolff	해럴드 앤 울프
@@ -2407,12 +2384,13 @@ lexicon	ko-KR	en-US:harmonix music systems	하모닉스 뮤직 시스템즈
 lexicon	ko-KR	en-US:harper's bazaar	하퍼스 바자
 lexicon	ko-KR	en-US:harper's bazar	하퍼스 바자
 lexicon	ko-KR	en-US:harper's magazine	하퍼스 매거진
-lexicon	ko-KR	en-US:harper's monthy magazine	하퍼스 매거진
 lexicon	ko-KR	en-US:haru poke	하루포케
 lexicon	ko-KR	en-US:haruset	하루셋
 lexicon	ko-KR	en-US:harvard business review	하버드 비즈니스 리뷰
+lexicon	ko-KR	en-US:harvest	하비스트
 lexicon	ko-KR	en-US:harvest operations	하베스트 오퍼레이션
 lexicon	ko-KR	en-US:harvest records	하비스트 레코드
+lexicon	ko-KR	en-US:hasbro	해즈브로
 lexicon	ko-KR	en-US:hasegawa store	하세가와스토어
 lexicon	ko-KR	en-US:hasselblad	핫셀블라드
 lexicon	ko-KR	en-US:hate monday	헤이트먼데이
@@ -2430,6 +2408,7 @@ lexicon	ko-KR	en-US:heartmamcare	하트맘케어
 lexicon	ko-KR	en-US:hebe	헤베
 lexicon	ko-KR	en-US:heelys	힐리스
 lexicon	ko-KR	en-US:heewon entertainment	희원엔터테인먼트
+lexicon	ko-KR	en-US:heibao	헤이바오
 lexicon	ko-KR	en-US:heibao auto	헤이바오 오토
 lexicon	ko-KR	en-US:heidelbergcement	하이델베르크시멘트
 lexicon	ko-KR	en-US:heimish	헤이미쉬
@@ -2448,6 +2427,7 @@ lexicon	ko-KR	en-US:henan television	허난 텔레비전
 lexicon	ko-KR	en-US:hennessey performance engineering	헤네시 퍼포먼스 엔지니어링
 lexicon	ko-KR	en-US:henschel	헨셸
 lexicon	ko-KR	en-US:henz music studio	헨즈뮤직스튜디오
+lexicon	ko-KR	en-US:herbalife	허벌라이프
 lexicon	ko-KR	en-US:herbs&seeds	허브앤씨드
 lexicon	ko-KR	en-US:hercules computer technology	허큘리스 컴퓨터 테크놀로지
 lexicon	ko-KR	en-US:herend	헤렌드
@@ -2473,6 +2453,7 @@ lexicon	ko-KR	en-US:hidden ace	히든에이스
 lexicon	ko-KR	en-US:hidden path entertainment	히든패스 엔터테인먼트
 lexicon	ko-KR	en-US:hidden wiki	히든 위키
 lexicon	ko-KR	en-US:hiddenoasis	히든오아시스
+lexicon	ko-KR	en-US:higer	하이거
 lexicon	ko-KR	en-US:higer bus	하이거 버스
 lexicon	ko-KR	en-US:high impact games	하이 임팩트 게임스
 lexicon	ko-KR	en-US:high moon studios	하이 문 스튜디오
@@ -2497,6 +2478,7 @@ lexicon	ko-KR	en-US:hisilicon	하이실리콘
 lexicon	ko-KR	en-US:hisky	하이스카이
 lexicon	ko-KR	en-US:hispano suiza	이스파노 수이사
 lexicon	ko-KR	en-US:hispano-suiza	이스파노 수이사
+lexicon	ko-KR	en-US:hitachi	히타치
 lexicon	ko-KR	en-US:hitachi rail italy	히타치 레일 이탈리아
 lexicon	ko-KR	en-US:hitachi zosen	히타치 조선
 lexicon	ko-KR	en-US:hitel	하이텔
@@ -2505,15 +2487,12 @@ lexicon	ko-KR	en-US:hktailor	에이치케이테일러
 lexicon	ko-KR	en-US:ho sik's dumari chicken	호식이두마리치킨
 lexicon	ko-KR	en-US:hoegi burger	회기버거
 lexicon	ko-KR	en-US:hoffmann-la roche	호프만 라 로슈
+lexicon	ko-KR	en-US:hoka	호카
 lexicon	ko-KR	en-US:hokkaido gas	홋카이도 가스
 lexicon	ko-KR	en-US:hokkoku	홋코쿠
 lexicon	ko-KR	en-US:holalibrary	올라라이브러리
-lexicon	ko-KR	en-US:holiday	홀리데이 인
-lexicon	ko-KR	en-US:holiday inn hotels	홀리데이 인
 lexicon	ko-KR	en-US:holika holika	홀리카홀리카
-lexicon	ko-KR	en-US:holland america	홀랜드 아메리카 라인
 lexicon	ko-KR	en-US:holland america line	홀랜드 아메리카 라인
-lexicon	ko-KR	en-US:holland america lines	홀랜드 아메리카 라인
 lexicon	ko-KR	en-US:holland amerika lijn	홀랜드 아메리카 라인
 lexicon	ko-KR	en-US:holland amerika line	홀랜드 아메리카 라인
 lexicon	ko-KR	en-US:holland car	홀란드 카
@@ -2532,16 +2511,16 @@ lexicon	ko-KR	en-US:homestar runner	홈스타 러너
 lexicon	ko-KR	en-US:homestead	홈스테드
 lexicon	ko-KR	en-US:homies	호미스
 lexicon	ko-KR	en-US:homybread	호미브래드
+lexicon	ko-KR	en-US:honda	혼다
 lexicon	ko-KR	en-US:honda australia	혼다 오스트레일리아
 lexicon	ko-KR	en-US:honda canada	혼다 캐나다
 lexicon	ko-KR	en-US:honda china	혼다 차이나
 lexicon	ko-KR	en-US:honda racing	혼다 레이싱
 lexicon	ko-KR	en-US:honeybean's	허니빈스
 lexicon	ko-KR	en-US:honeywell	허니웰
-lexicon	ko-KR	en-US:hong kong express airlines	홍콩 익스프레스 항공
-lexicon	ko-KR	en-US:hong kong express airways	홍콩 익스프레스 항공
 lexicon	ko-KR	en-US:hong kong international theme parks	홍콩 인터내셔널 테마파크
 lexicon	ko-KR	en-US:hong kong movie database	홍콩 영화 데이터베이스
+lexicon	ko-KR	en-US:hongdu	훙두
 lexicon	ko-KR	en-US:honggeday	홍게데이
 lexicon	ko-KR	en-US:hongqi	훙치
 lexicon	ko-KR	en-US:hoodong	후둥
@@ -2564,14 +2543,11 @@ lexicon	ko-KR	en-US:hottracks	핫트랙스
 lexicon	ko-KR	en-US:house beautiful	하우스 뷰티풀
 lexicon	ko-KR	en-US:house of hardcore	하우스 오브 하드코어
 lexicon	ko-KR	en-US:houseman	하우스맨
-lexicon	ko-KR	en-US:howe & howe technologies	하우앤하우 테크놀로지스
 lexicon	ko-KR	en-US:hrvatski telekom	흐르바츠키 텔레콤
 lexicon	ko-KR	en-US:huawei	화웨이
 lexicon	ko-KR	en-US:huawei cloud	화웨이 클라우드
 lexicon	ko-KR	en-US:hudong	후둥
-lexicon	ko-KR	en-US:hudson bay company	허드슨 베이 회사
 lexicon	ko-KR	en-US:hudson motor car company	허드슨 모터 카 컴퍼니
-lexicon	ko-KR	en-US:hudson soft company	허드슨 소프트
 lexicon	ko-KR	en-US:huel	휴엘
 lexicon	ko-KR	en-US:hugel	휴젤
 lexicon	ko-KR	en-US:huggies	하기스
@@ -2584,7 +2560,6 @@ lexicon	ko-KR	en-US:human	휴먼
 lexicon	ko-KR	en-US:humana	휴매나
 lexicon	ko-KR	en-US:humax	휴맥스
 lexicon	ko-KR	en-US:humble bundle	험블 번들
-lexicon	ko-KR	en-US:humble bundles	험블 번들
 lexicon	ko-KR	en-US:hummel	험멜
 lexicon	ko-KR	en-US:hummer team	험머 팀
 lexicon	ko-KR	en-US:humongous entertainment	휴멍거스 엔터테인먼트
@@ -2632,6 +2607,7 @@ lexicon	ko-KR	en-US:iamdonut	아이엠도넛
 lexicon	ko-KR	en-US:ibanez	아이바네즈
 lexicon	ko-KR	en-US:ibank	아이뱅크
 lexicon	ko-KR	en-US:iberdrola	이베르드롤라
+lexicon	ko-KR	en-US:iberia	이베리아
 lexicon	ko-KR	en-US:iberia express	이베리아 익스프레스
 lexicon	ko-KR	en-US:ibis styles	이비스스타일
 lexicon	ko-KR	en-US:ice bean	아이스빈
@@ -2660,7 +2636,6 @@ lexicon	ko-KR	en-US:ikegami tsushinki	이케가미통신기
 lexicon	ko-KR	en-US:ikovox coffee studio	이코복스커피스튜디오
 lexicon	ko-KR	en-US:ikyu	잇큐
 lexicon	ko-KR	en-US:ilbe	일베
-lexicon	ko-KR	en-US:ilford	일퍼드 포토
 lexicon	ko-KR	en-US:iljin diamond	일진다이아몬드
 lexicon	ko-KR	en-US:iljin materials	일진머티리얼즈
 lexicon	ko-KR	en-US:illionaire records	일리네어 레코즈
@@ -2670,9 +2645,9 @@ lexicon	ko-KR	en-US:illusion	일루젼
 lexicon	ko-KR	en-US:illust-ya	이라스토야
 lexicon	ko-KR	en-US:illy caffe	일리카페
 lexicon	ko-KR	en-US:ilooda	이루다
-lexicon	ko-KR	en-US:ilshin stone	일신석재
 lexicon	ko-KR	en-US:ilyushin	일류신
 lexicon	ko-KR	en-US:imabari zosen	이마바리 조선
+lexicon	ko-KR	en-US:image engine	이미지 엔진
 lexicon	ko-KR	en-US:image line	이미지 라인
 lexicon	ko-KR	en-US:image-line	이미지 라인
 lexicon	ko-KR	en-US:imagination technologies	이매지네이션 테크놀로지
@@ -2710,7 +2685,6 @@ lexicon	ko-KR	en-US:inis	아이니스
 lexicon	ko-KR	en-US:injo in'gan	인조 인간
 lexicon	ko-KR	en-US:inland type foundry	인랜드 타입 파운드리
 lexicon	ko-KR	en-US:inmarsat	인말새트
-lexicon	ko-KR	en-US:inmobi pte	인모비
 lexicon	ko-KR	en-US:innogames	이노게임스
 lexicon	ko-KR	en-US:innospace	이노스페이스
 lexicon	ko-KR	en-US:inoda coffee	이노다 커피
@@ -2719,16 +2693,12 @@ lexicon	ko-KR	en-US:inoxcrom	이녹스크롬
 lexicon	ko-KR	en-US:insight bazi	인사이트바지
 lexicon	ko-KR	en-US:insightbazi	인사이트바지
 lexicon	ko-KR	en-US:insomniac games	인섬니악 게임스
-lexicon	ko-KR	en-US:inspiron	델 인스피론
 lexicon	ko-KR	en-US:instacart	인스타카트
 lexicon	ko-KR	en-US:institut esthederm	인스티튜트 에스테덤
 lexicon	ko-KR	en-US:integrated device technology	인터그레이티드 디바이스 테크놀로지
 lexicon	ko-KR	en-US:intel atom	인텔 아톰
 lexicon	ko-KR	en-US:intel clear video	인텔 클리어 비디오
 lexicon	ko-KR	en-US:intel core	인텔 코어
-lexicon	ko-KR	en-US:intel itanium	아이테니엄
-lexicon	ko-KR	en-US:intel pentium pro	펜티엄 프로
-lexicon	ko-KR	en-US:intel quick sync	인텔 퀵 싱크 비디오
 lexicon	ko-KR	en-US:intel quick sync video	인텔 퀵 싱크 비디오
 lexicon	ko-KR	en-US:intel viiv	인텔 바이브
 lexicon	ko-KR	en-US:intellian technologies	인텔리안 테크놀로지스
@@ -2748,7 +2718,6 @@ lexicon	ko-KR	en-US:international rectifier	인터내셔널 렉티파이어
 lexicon	ko-KR	en-US:internet brands	인터넷 브랜드
 lexicon	ko-KR	en-US:internet movie database	인터넷 영화 데이터베이스
 lexicon	ko-KR	en-US:interplay entertainment	인터플레이 엔터테인먼트
-lexicon	ko-KR	en-US:interscope	인터스코프 레코드
 lexicon	ko-KR	en-US:interscope records	인터스코프 레코드
 lexicon	ko-KR	en-US:intershop	인터숍
 lexicon	ko-KR	en-US:intesa sanpaolo	인테사 상파울로
@@ -2774,14 +2743,17 @@ lexicon	ko-KR	en-US:irem software engineering	아이렘 소프트웨어 엔지�
 lexicon	ko-KR	en-US:iridium communications	이리듐 커뮤니케이션스
 lexicon	ko-KR	en-US:isaac toast	이삭토스트
 lexicon	ko-KR	en-US:isetan	이세탄
+lexicon	ko-KR	en-US:ishiya	이시야
 lexicon	ko-KR	en-US:ishopmixup	아이숍믹스업
 lexicon	ko-KR	en-US:isight	아이사이트
 lexicon	ko-KR	en-US:island records	아일랜드 레코드
 lexicon	ko-KR	en-US:isotta fraschini	이소타 프라스키니
 lexicon	ko-KR	en-US:israel railways	이스라엘 레일웨이스
 lexicon	ko-KR	en-US:israel weapon industries	이스라엘 웨폰 인더스트리스
+lexicon	ko-KR	en-US:israir	이스라에어
 lexicon	ko-KR	en-US:isu petasys	이수페타시스
 lexicon	ko-KR	en-US:isu system	이수시스템
+lexicon	ko-KR	en-US:isuzu	이스즈
 lexicon	ko-KR	en-US:it's green	잇츠그린
 lexicon	ko-KR	en-US:it's my flower	잇츠마이플라워
 lexicon	ko-KR	en-US:it's showtime	잇츠 쇼타임
@@ -2797,11 +2769,13 @@ lexicon	ko-KR	en-US:itm entertainment	아이티엠 엔터테인먼트
 lexicon	ko-KR	en-US:ito yokado	이토요카도
 lexicon	ko-KR	en-US:ito-ya	이토야
 lexicon	ko-KR	en-US:ito-yokado	이토요카도
+lexicon	ko-KR	en-US:itochu	이토추
 lexicon	ko-KR	en-US:itoh company	이토 컴퍼니
 lexicon	ko-KR	en-US:itoman	이토만
 lexicon	ko-KR	en-US:itoya	이토야
 lexicon	ko-KR	en-US:itsmyflower	잇츠마이플라워
 lexicon	ko-KR	en-US:ive entertainment	아이브엔터테인먼트
+lexicon	ko-KR	en-US:ivory	아이보리
 lexicon	ko-KR	en-US:iworld	아이월드
 lexicon	ko-KR	en-US:j-air	제이에어
 lexicon	ko-KR	en-US:jabara cups	자바라컵스
@@ -2815,6 +2789,7 @@ lexicon	ko-KR	en-US:jaegermeister	예거마이스터
 lexicon	ko-KR	en-US:jaeyoung solutec	재영솔루텍
 lexicon	ko-KR	en-US:jagex	자겍스
 lexicon	ko-KR	en-US:jagjaguwar	잭재규어
+lexicon	ko-KR	en-US:jaguar	재규어
 lexicon	ko-KR	en-US:jaguar land rover	재규어 랜드로버
 lexicon	ko-KR	en-US:jaiku	자이쿠
 lexicon	ko-KR	en-US:jaleco	자레코
@@ -2824,12 +2799,12 @@ lexicon	ko-KR	en-US:jangpae	장패
 lexicon	ko-KR	en-US:jangsu-tongdak	장수통닭
 lexicon	ko-KR	en-US:japan air system	재팬 에어 시스템
 lexicon	ko-KR	en-US:japan music entertainment	재팬 뮤직 엔터테인먼트
-lexicon	ko-KR	en-US:japan registry service	일본 레지스트리 서비스
 lexicon	ko-KR	en-US:japan studio	재팬 스튜디오
 lexicon	ko-KR	en-US:jardine matheson	자딘 매터슨
 lexicon	ko-KR	en-US:jarritos	하리토스
 lexicon	ko-KR	en-US:javas	자바스
 lexicon	ko-KR	en-US:jay polychem	제이 폴리켐
+lexicon	ko-KR	en-US:jazeera	자지라
 lexicon	ko-KR	en-US:jcrew	제이 크루
 lexicon	ko-KR	en-US:jean louis david	장루이다비드
 lexicon	ko-KR	en-US:jellyfish entertainment	젤리피쉬엔터테인먼트
@@ -2840,6 +2815,7 @@ lexicon	ko-KR	en-US:jeon football academy	전풋볼아카데미
 lexicon	ko-KR	en-US:jet airways	제트 에어웨이즈
 lexicon	ko-KR	en-US:jet ski	제트 스키
 lexicon	ko-KR	en-US:jetairfly	제트에어플라이
+lexicon	ko-KR	en-US:jetblue	제트블루
 lexicon	ko-KR	en-US:jetbrains	젯브레인즈
 lexicon	ko-KR	en-US:jetconnect	제트커넥트
 lexicon	ko-KR	en-US:jetsmart	제트스마트
@@ -2880,6 +2856,7 @@ lexicon	ko-KR	en-US:juajoa	쥬아조아
 lexicon	ko-KR	en-US:juice king	쥬스킹
 lexicon	ko-KR	en-US:juiceegg	주스에그
 lexicon	ko-KR	en-US:juicy bean	쥬시빈
+lexicon	ko-KR	en-US:juling	쥐링
 lexicon	ko-KR	en-US:julius baer	줄리어스 베어
 lexicon	ko-KR	en-US:jungle entertainment	정글 엔터테인먼트
 lexicon	ko-KR	en-US:junia	주니아
@@ -2897,6 +2874,7 @@ lexicon	ko-KR	en-US:kadokawa shoten	가도카와 쇼텐
 lexicon	ko-KR	en-US:kaffee baum	카페바움
 lexicon	ko-KR	en-US:kaggle	캐글
 lexicon	ko-KR	en-US:kahr arms	카 암스
+lexicon	ko-KR	en-US:kailuan	카이루안
 lexicon	ko-KR	en-US:kairosoft	카이로소프트
 lexicon	ko-KR	en-US:kaiseisha	가이세이샤
 lexicon	ko-KR	en-US:kakao enterprise	카카오엔터프라이즈
@@ -2936,6 +2914,7 @@ lexicon	ko-KR	en-US:kbeautystation	케이뷰티스테이션
 lexicon	ko-KR	en-US:keep fit	키핏
 lexicon	ko-KR	en-US:keg beer	케그비어
 lexicon	ko-KR	en-US:keihan	게이한
+lexicon	ko-KR	en-US:keio	게이오
 lexicon	ko-KR	en-US:keio plaza hotel sapporo	게이오 플라자 호텔 삿포로
 lexicon	ko-KR	en-US:keisei	게이세이
 lexicon	ko-KR	en-US:kellogg's	켈로그사
@@ -2993,6 +2972,7 @@ lexicon	ko-KR	en-US:kinolights	키노라이츠
 lexicon	ko-KR	en-US:kintetsu retailing	긴테쓰 리테일링
 lexicon	ko-KR	en-US:kioon music	큔 뮤직
 lexicon	ko-KR	en-US:kioxia	키오시아
+lexicon	ko-KR	en-US:kirin	기린
 lexicon	ko-KR	en-US:kisha seizo	기샤세이조
 lexicon	ko-KR	en-US:kiss the tiramisu	키스더티라미수
 lexicon	ko-KR	en-US:kiswe mobile	키스위모바일
@@ -3021,6 +3001,7 @@ lexicon	ko-KR	en-US:koei tecmo games	코에이 테크모 게임즈
 lexicon	ko-KR	en-US:koenigsegg	코닉세그
 lexicon	ko-KR	en-US:kofola	코폴라
 lexicon	ko-KR	en-US:kogado studio	코가도 스튜디오
+lexicon	ko-KR	en-US:kogalymavia	코갈리마비아
 lexicon	ko-KR	en-US:kohl's	콜스
 lexicon	ko-KR	en-US:kohlberg kravis roberts	콜버그 크래비스 로버츠
 lexicon	ko-KR	en-US:kohrain	코라인
@@ -3053,7 +3034,6 @@ lexicon	ko-KR	en-US:konvict muzik	컨빅 뮤직
 lexicon	ko-KR	en-US:koohasanbang	구하산방
 lexicon	ko-KR	en-US:kooksoondang	국순당
 lexicon	ko-KR	en-US:koondak	꾼닭
-lexicon	ko-KR	en-US:korea cable telecom	한국케이블텔레콤
 lexicon	ko-KR	en-US:korea contents network	코리아컨텐츠네트워크
 lexicon	ko-KR	en-US:korea express air	코리아 익스프레스 에어
 lexicon	ko-KR	en-US:korea kako	코리아카코
@@ -3071,10 +3051,8 @@ lexicon	ko-KR	en-US:kozel darkhaus	코젤다크하우스
 lexicon	ko-KR	en-US:kozeldarkhaus	코젤다크하우스
 lexicon	ko-KR	en-US:kpm tech	케이피엠테크
 lexicon	ko-KR	en-US:kraff coffee	크라프커피
-lexicon	ko-KR	en-US:kraft	크래프트 푸즈
 lexicon	ko-KR	en-US:kraft foods	크래프트 푸즈
 lexicon	ko-KR	en-US:kraft heinz	크래프트 하인즈
-lexicon	ko-KR	en-US:kraft heinz company	크래프트 하인즈
 lexicon	ko-KR	en-US:krasnoyarsk dam	크라스노야르스크 댐
 lexicon	ko-KR	en-US:krasnystaw	크라스니스타프
 lexicon	ko-KR	en-US:kraussmaffei	크라우스마파이
@@ -3175,7 +3153,6 @@ lexicon	ko-KR	en-US:leessang company	리쌍컴퍼니
 lexicon	ko-KR	en-US:legacy recordings	레거시 레코딩스
 lexicon	ko-KR	en-US:legacy records	레거시 레코딩스
 lexicon	ko-KR	en-US:legend entertainment	레전드 엔터테인먼트
-lexicon	ko-KR	en-US:legend entertainment company	레전드 엔터테인먼트
 lexicon	ko-KR	en-US:legend fighting championship	레전드 파이팅 챔피언십
 lexicon	ko-KR	en-US:leger	레제
 lexicon	ko-KR	en-US:legg mason	레그 메이슨
@@ -3193,9 +3170,11 @@ lexicon	ko-KR	en-US:lenstown	렌즈타운
 lexicon	ko-KR	en-US:let's bagel	렛츠베이글
 lexicon	ko-KR	en-US:letspot	렛츠팟
 lexicon	ko-KR	en-US:lever brothers	레버 브라더스
+lexicon	ko-KR	en-US:levi strauss	리바이 스트라우스
 lexicon	ko-KR	en-US:levi strauss & company	리바이 스트라우스 앤드 컴퍼니
 lexicon	ko-KR	en-US:lewis leathers	루이스 레더
 lexicon	ko-KR	en-US:lewk coffee brewers	루크커피브루어스
+lexicon	ko-KR	en-US:lexicon	렉시콘
 lexicon	ko-KR	en-US:leyland trucks	레이랜드 트럭
 lexicon	ko-KR	en-US:lezhin comics	레진코믹스
 lexicon	ko-KR	en-US:li auto	리오토
@@ -3206,8 +3185,6 @@ lexicon	ko-KR	en-US:liber entertainment	리베르 엔터테인먼트
 lexicon	ko-KR	en-US:libera chat	리베라 챗
 lexicon	ko-KR	en-US:liberte	리베흐테
 lexicon	ko-KR	en-US:liberty media	리버티 미디어
-lexicon	ko-KR	en-US:liberty's	리버티
-lexicon	ko-KR	en-US:libertys	리버티
 lexicon	ko-KR	en-US:librainy	라이브레이니
 lexicon	ko-KR	en-US:library genesis	라이브러리 제네시스
 lexicon	ko-KR	en-US:libre wiki	리브레 위키
@@ -3299,6 +3276,7 @@ lexicon	ko-KR	en-US:lubin	루빈
 lexicon	ko-KR	en-US:lubliniec	루블리니에츠
 lexicon	ko-KR	en-US:lublinitz	루블리니에츠
 lexicon	ko-KR	en-US:lucasfilm	루커스필름
+lexicon	ko-KR	en-US:lucent	루슨트
 lexicon	ko-KR	en-US:lucent technologies	루슨트 테크놀로지
 lexicon	ko-KR	en-US:lucid	루시드
 lexicon	ko-KR	en-US:lucid motors	루시드 모터스
@@ -3360,7 +3338,6 @@ lexicon	ko-KR	en-US:mahan air	마한 에어
 lexicon	ko-KR	en-US:mahindra	마힌드라
 lexicon	ko-KR	en-US:mahindra tractors	마힌드라 트랙터
 lexicon	ko-KR	en-US:maiet entertainment	마이에트 엔터테인먼트
-lexicon	ko-KR	en-US:mainframe entertainment	레인메이커 엔터테인먼트
 lexicon	ko-KR	en-US:mainstream records	메인스트림 레코드
 lexicon	ko-KR	en-US:majesco entertainment	마제스코 엔터테인먼트
 lexicon	ko-KR	en-US:majestic athletic	마제스틱 애슬레틱
@@ -3374,7 +3351,8 @@ lexicon	ko-KR	en-US:makeus entertainment	메이크어스 엔터테인먼트
 lexicon	ko-KR	en-US:makro	마크로
 lexicon	ko-KR	en-US:malbork	말보르크
 lexicon	ko-KR	en-US:maldivian	몰디비안
-lexicon	ko-KR	en-US:malibu	말리부 럼
+lexicon	ko-KR	en-US:malev	말레브
+lexicon	ko-KR	en-US:malibu	말리부
 lexicon	ko-KR	en-US:malibu rum	말리부 럼
 lexicon	ko-KR	en-US:malitta	말리따
 lexicon	ko-KR	en-US:mama&kids	마마앤키즈
@@ -3387,7 +3365,7 @@ lexicon	ko-KR	en-US:mamonde	마몽드
 lexicon	ko-KR	en-US:man in the kitchen	맨인더키친
 lexicon	ko-KR	en-US:management mmm	매니지먼트엠엠엠
 lexicon	ko-KR	en-US:mandalay pictures	만달레이 픽처스
-lexicon	ko-KR	en-US:mandarin oriental	만다린 오리엔탈 호텔
+lexicon	ko-KR	en-US:mandarin	만다린
 lexicon	ko-KR	en-US:mandarin oriental hotel	만다린 오리엔탈 호텔
 lexicon	ko-KR	en-US:mandarina duck	만다리나덕
 lexicon	ko-KR	en-US:mandate pictures	맨데이트 픽처스
@@ -3415,7 +3393,6 @@ lexicon	ko-KR	en-US:marques'almeida	마르케스알메이다
 lexicon	ko-KR	en-US:marriott international	매리엇 인터내셔널
 lexicon	ko-KR	en-US:marsh coco	마시코코
 lexicon	ko-KR	en-US:marshall amplification	마셜 앰플리피케이션
-lexicon	ko-KR	en-US:marshall publication	마셜 앰플리피케이션
 lexicon	ko-KR	en-US:martin guitar	마틴 기타
 lexicon	ko-KR	en-US:martin guitars	마틴 기타
 lexicon	ko-KR	en-US:martin marietta	마틴 마리에타
@@ -3433,13 +3410,13 @@ lexicon	ko-KR	en-US:marvelous	마벨러스
 lexicon	ko-KR	en-US:marxists internet archive	막시스츠 인터넷 아카이브
 lexicon	ko-KR	en-US:mary eales	메리엘스
 lexicon	ko-KR	en-US:masalmi	마샐미
+lexicon	ko-KR	en-US:mascarello	마스카렐루
 lexicon	ko-KR	en-US:maserati	마세라티
 lexicon	ko-KR	en-US:masizzim	마시찜
 lexicon	ko-KR	en-US:maspro denkoh	마스프로 덴코
 lexicon	ko-KR	en-US:massimo dutti	마시모두띠
 lexicon	ko-KR	en-US:mastar	맛스타
 lexicon	ko-KR	en-US:mastretta	마스트레타
-lexicon	ko-KR	en-US:mastretta cars	마스트레타
 lexicon	ko-KR	en-US:matadream	마타드림
 lexicon	ko-KR	en-US:matchbox	매치박스
 lexicon	ko-KR	en-US:matches fashion	매치스패션
@@ -3465,13 +3442,13 @@ lexicon	ko-KR	en-US:maxwell technologies	맥스웰 테크놀로지스
 lexicon	ko-KR	en-US:maybach music	매이백 뮤직
 lexicon	ko-KR	en-US:maybank	메이뱅크
 lexicon	ko-KR	en-US:maybelline	메이블린
-lexicon	ko-KR	en-US:maybelline new york	메이블린
 lexicon	ko-KR	en-US:maywa denki	메이와덴키
 lexicon	ko-KR	en-US:mazda motor indonesia	마쓰다 모터 인도네시아
 lexicon	ko-KR	en-US:mballoon	엠벌룬
 lexicon	ko-KR	en-US:mcgraw-hill education	맥그로 힐 에듀케이션
 lexicon	ko-KR	en-US:mckee foods	맥키 푸드
 lexicon	ko-KR	en-US:mckesson	맥케슨
+lexicon	ko-KR	en-US:mclaren	맥라렌
 lexicon	ko-KR	en-US:mclaren automotive	맥라렌 오토모티브
 lexicon	ko-KR	en-US:mcmaster-carr	맥마스터카
 lexicon	ko-KR	en-US:mcqueen's	맥퀸스
@@ -3487,7 +3464,6 @@ lexicon	ko-KR	en-US:media blasters	미디어 블래스터즈
 lexicon	ko-KR	en-US:media create	미디어 크리에이트
 lexicon	ko-KR	en-US:media factory	미디어팩토리
 lexicon	ko-KR	en-US:media forest	미디어 포리스트
-lexicon	ko-KR	en-US:media geijutsu database	미디어 예술 데이터베이스
 lexicon	ko-KR	en-US:medialog	미디어로그
 lexicon	ko-KR	en-US:medianet plus	미디어넷 플러스
 lexicon	ko-KR	en-US:mediapro entertainment	미디어프로 엔터테인먼트
@@ -3550,12 +3526,14 @@ lexicon	ko-KR	en-US:metrobank	메트로뱅크
 lexicon	ko-KR	en-US:metrovagonmash	메트로바곤마시
 lexicon	ko-KR	en-US:metrowagonmash	메트로바곤마시
 lexicon	ko-KR	en-US:mexican tears	멕시칸 티어스
+lexicon	ko-KR	en-US:mexicana	멕시카나
 lexicon	ko-KR	en-US:mexicanaclick	멕시카나클릭
 lexicon	ko-KR	en-US:michinoku pro wrestling	미치노쿠 프로레슬링
 lexicon	ko-KR	en-US:micro center	마이크로 센터
 lexicon	ko-KR	en-US:micro focus	마이크로 포커스
 lexicon	ko-KR	en-US:microcar	마이크로카
 lexicon	ko-KR	en-US:microchip technology	마이크로칩 테크놀로지
+lexicon	ko-KR	en-US:micromax	마이크로맥스
 lexicon	ko-KR	en-US:micromax informatics	마이크로맥스 인포매틱스
 lexicon	ko-KR	en-US:micron technology	마이크론 테크놀로지
 lexicon	ko-KR	en-US:micronics	마이크로닉스
@@ -3564,7 +3542,6 @@ lexicon	ko-KR	en-US:microsoft developer network	마이크로소프트 개발자 
 lexicon	ko-KR	en-US:microsoft docs	마이크로소프트 독스
 lexicon	ko-KR	en-US:microsoft mice	마이크로소프트 마우스
 lexicon	ko-KR	en-US:microsoft mouse	마이크로소프트 마우스
-lexicon	ko-KR	en-US:microsoft news	마이크로소프트 스타트
 lexicon	ko-KR	en-US:microsoft office online	마이크로소프트 오피스 웹사이트
 lexicon	ko-KR	en-US:microsoft office website	마이크로소프트 오피스 웹사이트
 lexicon	ko-KR	en-US:microsoft online services	마이크로소프트 온라인 서비스
@@ -3580,6 +3557,7 @@ lexicon	ko-KR	en-US:mijurak	미주락
 lexicon	ko-KR	en-US:mikuni	미쿠니
 lexicon	ko-KR	en-US:milc learning	밀크러닝
 lexicon	ko-KR	en-US:milestone	마일스톤
+lexicon	ko-KR	en-US:milky	밀키즈
 lexicon	ko-KR	en-US:milky presso	밀키프레소
 lexicon	ko-KR	en-US:milkyyo	밀키요
 lexicon	ko-KR	en-US:mille zoo	밀레쥬
@@ -3594,7 +3572,7 @@ lexicon	ko-KR	en-US:minam coffee	미남커피
 lexicon	ko-KR	en-US:minato soft	미나토소프트
 lexicon	ko-KR	en-US:mind foundry	마인드 파운드리
 lexicon	ko-KR	en-US:mindroute	마인드루트
-lexicon	ko-KR	en-US:minecraft education	마인크래프트 에듀케이션 에디션
+lexicon	ko-KR	en-US:minecraft education	마인크래프트 에듀케이션
 lexicon	ko-KR	en-US:mingle stay	밍글스테이
 lexicon	ko-KR	en-US:mini melts	미니멜츠
 lexicon	ko-KR	en-US:mininova	미니노바
@@ -3609,8 +3587,6 @@ lexicon	ko-KR	en-US:minsk mazowiecki	민스크마조비에츠키
 lexicon	ko-KR	en-US:mintech	민테크
 lexicon	ko-KR	en-US:minute maid	미닛메이드
 lexicon	ko-KR	en-US:miracle electronic devices	미라클 일렉트로닉 디바이시스
-lexicon	ko-KR	en-US:miracle electronic devices pvt	미라클 일렉트로닉 디바이시스
-lexicon	ko-KR	en-US:miracle electronics	미라클 일렉트로닉 디바이시스
 lexicon	ko-KR	en-US:miracle linux	미러클 리눅스
 lexicon	ko-KR	en-US:miraen	미래엔
 lexicon	ko-KR	en-US:miramax	미라맥스
@@ -3618,14 +3594,12 @@ lexicon	ko-KR	en-US:miricanvas	미리캔버스
 lexicon	ko-KR	en-US:mirinda	미린다
 lexicon	ko-KR	en-US:miroku	미로쿠
 lexicon	ko-KR	en-US:mirrorball music	미러볼 뮤직
-lexicon	ko-KR	en-US:mississippi bubble	미시시피 계획
-lexicon	ko-KR	en-US:mississippi scheme	미시시피 계획
 lexicon	ko-KR	en-US:missoni	미쏘니
 lexicon	ko-KR	en-US:mistwalker	미스트워커
 lexicon	ko-KR	en-US:misumi	미스미
-lexicon	ko-KR	en-US:mit technology review	테크놀로지 리뷰
 lexicon	ko-KR	en-US:mitchell	미첼
 lexicon	ko-KR	en-US:mitre sports international	마이터 스포츠 인터내셔널
+lexicon	ko-KR	en-US:mitsubishi	미쓰비시
 lexicon	ko-KR	en-US:mitsubishi chemical	미쓰비시 케미컬
 lexicon	ko-KR	en-US:mitsubishi jisho sekkei	미쓰비시지쇼셋케
 lexicon	ko-KR	en-US:mitsubishi motors australia	미쓰비시 모터스 오스트레일리아
@@ -3633,7 +3607,6 @@ lexicon	ko-KR	en-US:mitsubishi pencil	미쓰비시 연필
 lexicon	ko-KR	en-US:mitsubishi wellpharma	미쓰비시웰파마
 lexicon	ko-KR	en-US:mitsui fudosan hotel management	미쓰이 부동산 호텔 매니지먼트
 lexicon	ko-KR	en-US:mitsukoshi	미쓰코시
-lexicon	ko-KR	en-US:mittal steel	미탈 스틸
 lexicon	ko-KR	en-US:mittal steel company	미탈 스틸 컴퍼니
 lexicon	ko-KR	en-US:miu miu	미우 미우
 lexicon	ko-KR	en-US:mixmash records	믹스매시 레코드
@@ -3668,10 +3641,10 @@ lexicon	ko-KR	en-US:monami	모나미
 lexicon	ko-KR	en-US:moncler	몽클레르
 lexicon	ko-KR	en-US:mond cdffee	몬트커피
 lexicon	ko-KR	en-US:mond coffee	몬트커피
-lexicon	ko-KR	en-US:mondaine watch	몬데인
 lexicon	ko-KR	en-US:monde nissin	몽드 닛신
 lexicon	ko-KR	en-US:mondelez international	몬덜리즈 인터내셔널
 lexicon	ko-KR	en-US:mondo media	몬도 미디어
+lexicon	ko-KR	en-US:mondragon	몬드라곤
 lexicon	ko-KR	en-US:monello	모넬로
 lexicon	ko-KR	en-US:moneybox	머니박스
 lexicon	ko-KR	en-US:moneygram	머니그램
@@ -3685,11 +3658,10 @@ lexicon	ko-KR	en-US:monolith software	모놀리스 소프트
 lexicon	ko-KR	en-US:monolithic memories	모놀리식 메모리
 lexicon	ko-KR	en-US:monsanto	몬산토
 lexicon	ko-KR	en-US:monster ale	몬스터에일
-lexicon	ko-KR	en-US:monstercat media	몬스터캣
-lexicon	ko-KR	en-US:monstercat silk	몬스터캣
 lexicon	ko-KR	en-US:mont-bell	몽벨
 lexicon	ko-KR	en-US:montage technology	몽타주 테크놀로지
 lexicon	ko-KR	en-US:montebi seoul	몬떼비서울
+lexicon	ko-KR	en-US:moody's	무디스
 lexicon	ko-KR	en-US:moon studios	문 스튜디오
 lexicon	ko-KR	en-US:mooni	무니
 lexicon	ko-KR	en-US:moonrun	문런
@@ -3698,7 +3670,8 @@ lexicon	ko-KR	en-US:more info	모아인포
 lexicon	ko-KR	en-US:more than today	모어덴투데이
 lexicon	ko-KR	en-US:morgan motor company	모건 모터 컴퍼니
 lexicon	ko-KR	en-US:morganstanley	모건 스탠리
-lexicon	ko-KR	en-US:morihigashi	더 모리히가시
+lexicon	ko-KR	en-US:mori-nu	모리나가
+lexicon	ko-KR	en-US:morinaga	모리나가
 lexicon	ko-KR	en-US:morisawa	모리사와
 lexicon	ko-KR	en-US:mormedi	모르메디
 lexicon	ko-KR	en-US:morris & company	모리스 앤드 컴퍼니
@@ -3716,7 +3689,6 @@ lexicon	ko-KR	en-US:moster hambagu	몬스터함바그
 lexicon	ko-KR	en-US:motiva enterprises	모티바 엔터프라이즈
 lexicon	ko-KR	en-US:motive studio	모티브 스튜디오
 lexicon	ko-KR	en-US:motor sich	모토르 시치
-lexicon	ko-KR	en-US:motor trend magazine	모터트렌드
 lexicon	ko-KR	en-US:motor-sich	모토르 시치
 lexicon	ko-KR	en-US:motorola solutions	모토로라 솔루션스
 lexicon	ko-KR	en-US:motortrend	모터트렌드
@@ -3736,7 +3708,6 @@ lexicon	ko-KR	en-US:multiverse saga	멀티버스 사가
 lexicon	ko-KR	en-US:mum mum	뭄뭄
 lexicon	ko-KR	en-US:mumuikseon	무무익선
 lexicon	ko-KR	en-US:munhwa ilbo	문화일보
-lexicon	ko-KR	en-US:munhwa ilbosa	문화일보
 lexicon	ko-KR	en-US:muni	무니
 lexicon	ko-KR	en-US:munpia	문피아
 lexicon	ko-KR	en-US:muscus	무스쿠스
@@ -3770,7 +3741,7 @@ lexicon	ko-KR	en-US:naenara	내나라
 lexicon	ko-KR	en-US:naftohaz	나프토가즈
 lexicon	ko-KR	en-US:naisoi	나이쏘이
 lexicon	ko-KR	en-US:nakamichi	나카미치
-lexicon	ko-KR	en-US:namco entertainment	반다이 남코 엔터테인먼트
+lexicon	ko-KR	en-US:namco	남코
 lexicon	ko-KR	en-US:namco tales studio	남코 테일즈 스튜디오
 lexicon	ko-KR	en-US:namiki	나미키
 lexicon	ko-KR	en-US:namu wiki	나무위키
@@ -3808,9 +3779,7 @@ lexicon	ko-KR	en-US:nature republic	네이처리퍼블릭
 lexicon	ko-KR	en-US:naturerepublic	네이처리퍼블릭
 lexicon	ko-KR	en-US:nauru pacific line	나우루 퍼시픽 라인
 lexicon	ko-KR	en-US:nautic investment	노틱인베스트먼트
-lexicon	ko-KR	en-US:naver cloud ai	네이버 클라우드
 lexicon	ko-KR	en-US:naver clova	네이버 클라우드
-lexicon	ko-KR	en-US:naver map	네이버 지도
 lexicon	ko-KR	en-US:naver matome	네이버 마토메
 lexicon	ko-KR	en-US:naver papago	네이버 파파고
 lexicon	ko-KR	en-US:naver series	네이버 시리즈
@@ -3834,7 +3803,7 @@ lexicon	ko-KR	en-US:neon	네온
 lexicon	ko-KR	en-US:neon giant	네온 자이언트
 lexicon	ko-KR	en-US:neon gold records	네온 골드 레코드
 lexicon	ko-KR	en-US:neopets	네오펫
-lexicon	ko-KR	en-US:neoplan bus	네오플랜
+lexicon	ko-KR	en-US:neos	니오스
 lexicon	ko-KR	en-US:neowiz	네오위즈
 lexicon	ko-KR	en-US:nepa	네파
 lexicon	ko-KR	en-US:nepenthes	네펜데스
@@ -3851,6 +3820,7 @@ lexicon	ko-KR	en-US:netkeiba	넷케이바
 lexicon	ko-KR	en-US:netlog	넷로그
 lexicon	ko-KR	en-US:netman	넷맨
 lexicon	ko-KR	en-US:netmarble	넷마블
+lexicon	ko-KR	en-US:nettwerk	네트웍
 lexicon	ko-KR	en-US:network aviation	네트워크 에이비에이션
 lexicon	ko-KR	en-US:new balance	뉴발란스
 lexicon	ko-KR	en-US:new cuts	뉴컷츠
@@ -3859,13 +3829,12 @@ lexicon	ko-KR	en-US:new make nature	뉴메이크네이처
 lexicon	ko-KR	en-US:new world computing	뉴 월드 컴퓨팅
 lexicon	ko-KR	en-US:new york amsterdam news	뉴욕 암스테르담 뉴스
 lexicon	ko-KR	en-US:new york central railroad	뉴욕 센트럴 철도
-lexicon	ko-KR	en-US:new york daily news	데일리 뉴스
 lexicon	ko-KR	en-US:new york review of books	뉴욕 리뷰 오브 북스
 lexicon	ko-KR	en-US:new york times company	뉴욕 타임스 컴퍼니
-lexicon	ko-KR	en-US:new york water taxi	뉴욕 수상 택시
 lexicon	ko-KR	en-US:newcom	뉴컴
 lexicon	ko-KR	en-US:newegg	뉴에그
 lexicon	ko-KR	en-US:newmont	뉴몬트
+lexicon	ko-KR	en-US:news	뉴스
 lexicon	ko-KR	en-US:newsarama	뉴사라마
 lexicon	ko-KR	en-US:newsbank	뉴스뱅크
 lexicon	ko-KR	en-US:newsbeat	뉴스비트
@@ -3875,6 +3844,7 @@ lexicon	ko-KR	en-US:nexen tire	넥센타이어
 lexicon	ko-KR	en-US:nexgen	넥스젠
 lexicon	ko-KR	en-US:nexon	넥슨
 lexicon	ko-KR	en-US:nexperia	넥스페리아
+lexicon	ko-KR	en-US:nexstreaming	넥스트리밍
 lexicon	ko-KR	en-US:next entertainment world	넥스트엔터테인먼트월드
 lexicon	ko-KR	en-US:next gen publishing	넥스트 젠 퍼블리싱
 lexicon	ko-KR	en-US:next level games	넥스트 레벨 게임스
@@ -3884,11 +3854,10 @@ lexicon	ko-KR	en-US:nice cab	나이스캡
 lexicon	ko-KR	en-US:nice cap	나이스캡
 lexicon	ko-KR	en-US:nice shower	나이스샤워
 lexicon	ko-KR	en-US:nice two meat u	나이스투미츄
+lexicon	ko-KR	en-US:nichia	니치아
 lexicon	ko-KR	en-US:nichiban	니치반
 lexicon	ko-KR	en-US:nichicon	니치콘
 lexicon	ko-KR	en-US:nico nico	니코니코 동화
-lexicon	ko-KR	en-US:nico nico douga	니코니코 동화
-lexicon	ko-KR	en-US:niconico	니코니코 동화
 lexicon	ko-KR	en-US:nielsen	닐슨
 lexicon	ko-KR	en-US:nielsen media research	닐슨 미디어 리서치
 lexicon	ko-KR	en-US:nielsen soundscan	닐슨 사운드스캔
@@ -3896,15 +3865,14 @@ lexicon	ko-KR	en-US:night dive studios	나이트다이브 스튜디오스
 lexicon	ko-KR	en-US:nightdive studios	나이트다이브 스튜디오스
 lexicon	ko-KR	en-US:nihon ad systems	니혼 애드 시스템스
 lexicon	ko-KR	en-US:nikka whisky	닛카 위스키
+lexicon	ko-KR	en-US:nikko hotels	닛코 호텔스
 lexicon	ko-KR	en-US:nikola	니콜라
 lexicon	ko-KR	en-US:nikon	니콘
 lexicon	ko-KR	en-US:nikuking burger	니꾸킹버거
 lexicon	ko-KR	en-US:nina ricci	니나 리치
 lexicon	ko-KR	en-US:ninja theory	닌자 시어리
-lexicon	ko-KR	en-US:ninomiya shoten	니노미야 서점
 lexicon	ko-KR	en-US:nintendo account	닌텐도 어카운트
 lexicon	ko-KR	en-US:nintendo of america	닌텐도 아메리카
-lexicon	ko-KR	en-US:nintendo online	닌텐도 스위치 온라인
 lexicon	ko-KR	en-US:nintendo pictures	닌텐도 픽처스
 lexicon	ko-KR	en-US:nintendo software technology	닌텐도 소프트웨어 테크놀로지
 lexicon	ko-KR	en-US:nintendo switch online	닌텐도 스위치 온라인
@@ -3917,7 +3885,10 @@ lexicon	ko-KR	en-US:nippon ichi software	니폰이치 소프트웨어
 lexicon	ko-KR	en-US:nippon paint	일본 페인트
 lexicon	ko-KR	en-US:nippon television	닛폰 텔레비전
 lexicon	ko-KR	en-US:nishi sports	니시 스포츠
+lexicon	ko-KR	en-US:nishitetsu	니시테츠
 lexicon	ko-KR	en-US:nishitetsu hotels	니시테쓰 호텔즈
+lexicon	ko-KR	en-US:nissan	닛산
+lexicon	ko-KR	en-US:nissan motorsport	닛산 모터스포츠
 lexicon	ko-KR	en-US:nissan motorsport international	닛산 모터스포츠 인터내셔널
 lexicon	ko-KR	en-US:nitro records	니트로 레코드
 lexicon	ko-KR	en-US:nitrome	나이트롬
@@ -3943,6 +3914,7 @@ lexicon	ko-KR	en-US:nonesuch records	논서치 레코드
 lexicon	ko-KR	en-US:nonnos	논노스
 lexicon	ko-KR	en-US:nop's	놉스
 lexicon	ko-KR	en-US:norangnuri	노랑누리
+lexicon	ko-KR	en-US:nordavia	노다비아
 lexicon	ko-KR	en-US:nordica	노르디카
 lexicon	ko-KR	en-US:nordisk film	노르디스크 필름
 lexicon	ko-KR	en-US:noripop	노리팝
@@ -3955,7 +3927,6 @@ lexicon	ko-KR	en-US:north korea tech	노스코리아테크
 lexicon	ko-KR	en-US:northern air cargo	노던에어 카고
 lexicon	ko-KR	en-US:northern farm	노던 팜
 lexicon	ko-KR	en-US:northern pacific railway	노던 퍼시픽 레일웨이
-lexicon	ko-KR	en-US:northern pacific railway company	노던 퍼시픽 레일웨이
 lexicon	ko-KR	en-US:northern rock	노던 록
 lexicon	ko-KR	en-US:northern songs	노던 송스
 lexicon	ko-KR	en-US:northern telecom	노던 텔레콤
@@ -4071,9 +4042,7 @@ lexicon	ko-KR	en-US:oneplus	원플러스
 lexicon	ko-KR	en-US:onlive	온라이브
 lexicon	ko-KR	en-US:onlybarre	온리바레
 lexicon	ko-KR	en-US:ono entertainment	오앤오 엔터테인먼트
-lexicon	ko-KR	en-US:ontario	온타리오 나이프
 lexicon	ko-KR	en-US:ontario knife	온타리오 나이프
-lexicon	ko-KR	en-US:ontario knife company	온타리오 나이프 컴퍼니
 lexicon	ko-KR	en-US:ontree	온뜨레
 lexicon	ko-KR	en-US:ooedo onsen monogatari	오에도온센 모노가타리
 lexicon	ko-KR	en-US:oota isan	오타이산
@@ -4087,9 +4056,9 @@ lexicon	ko-KR	en-US:open world entertainment	오픈월드 엔터테인먼트
 lexicon	ko-KR	en-US:openleaks	오픈리크스
 lexicon	ko-KR	en-US:openmoko	오픈모코
 lexicon	ko-KR	en-US:openskies	오픈스카이스
-lexicon	ko-KR	en-US:openstreetmap foundation	오픈스트리트맵 재단
 lexicon	ko-KR	en-US:opentide korea	오픈타이드코리아
 lexicon	ko-KR	en-US:opentime	오픈타임
+lexicon	ko-KR	en-US:opera	오페라
 lexicon	ko-KR	en-US:opera software	오페라 소프트웨어
 lexicon	ko-KR	en-US:oppo digital	오포 디지탈
 lexicon	ko-KR	en-US:optus	옵터스
@@ -4098,6 +4067,7 @@ lexicon	ko-KR	en-US:oral-b	오랄비
 lexicon	ko-KR	en-US:orange blues	오렌지블루스
 lexicon	ko-KR	en-US:orange county register	오렌지 카운티 레지스터
 lexicon	ko-KR	en-US:orascom	오라스콤
+lexicon	ko-KR	en-US:orbest	오르베스트
 lexicon	ko-KR	en-US:orbis optimus	오르비스 옵티무스
 lexicon	ko-KR	en-US:orbit	오비트
 lexicon	ko-KR	en-US:orbital sciences	오비털 사이언스
@@ -4118,6 +4088,7 @@ lexicon	ko-KR	en-US:osaka-menchi	오사카멘치
 lexicon	ko-KR	en-US:oscar	오스카
 lexicon	ko-KR	en-US:osh kosh b'gosh	오시코시 비고시
 lexicon	ko-KR	en-US:oshkosh b'gosh	오시코시 비고시
+lexicon	ko-KR	en-US:osprey	오스프리
 lexicon	ko-KR	en-US:osprey packs	오스프리 팩스
 lexicon	ko-KR	en-US:osram	오스람
 lexicon	ko-KR	en-US:ostrow wielkopolski	오스트루프비엘코폴스키
@@ -4150,23 +4121,21 @@ lexicon	ko-KR	en-US:oyo rooms	오요 룸스
 lexicon	ko-KR	en-US:ozon	오존
 lexicon	ko-KR	en-US:ozonia	오조니아
 lexicon	ko-KR	en-US:pabianice	파비아니체
+lexicon	ko-KR	en-US:pablo	파블로
 lexicon	ko-KR	en-US:pablo records	파블로 레코드
 lexicon	ko-KR	en-US:pachi	파치
 lexicon	ko-KR	en-US:pachinko	파친코
 lexicon	ko-KR	en-US:pacific coffee	퍼시픽 커피
 lexicon	ko-KR	en-US:pacific internet exchange	패시픽 인터넷 익스체인지
-lexicon	ko-KR	en-US:pacific southwest airlines	퍼시픽 사우스웨스트 항공
 lexicon	ko-KR	en-US:pacific sun	퍼시픽선
 lexicon	ko-KR	en-US:packard	패커드
 lexicon	ko-KR	en-US:pacnet	팩넷
 lexicon	ko-KR	en-US:pagani	파가니
-lexicon	ko-KR	en-US:pal express	에어필 익스프레스
 lexicon	ko-KR	en-US:palace skateboards	팔라스 스케이트보드
 lexicon	ko-KR	en-US:palacedonut	팔래스도우넛
 lexicon	ko-KR	en-US:palantir technologies	팔란티어 테크놀로지스
 lexicon	ko-KR	en-US:paldo	팔도
 lexicon	ko-KR	en-US:palit	팔릿
-lexicon	ko-KR	en-US:palm beach post	팜비치 포스트
 lexicon	ko-KR	en-US:palo alto networks	팰러앨토 네트웍스
 lexicon	ko-KR	en-US:pan american world	팬아메리칸 월드 항공
 lexicon	ko-KR	en-US:pan asia	팬아시아
@@ -4185,6 +4154,7 @@ lexicon	ko-KR	en-US:pandemic studios	팬데믹 스튜디오
 lexicon	ko-KR	en-US:pandora	판도라
 lexicon	ko-KR	en-US:pang's burger	팡스버거
 lexicon	ko-KR	en-US:panolos bioscience	파노로스바이오사이언스
+lexicon	ko-KR	en-US:panon	파논
 lexicon	ko-KR	en-US:panoramio	파노라미오
 lexicon	ko-KR	en-US:pantene	팬틴
 lexicon	ko-KR	en-US:panther software	팬서 소프트웨어
@@ -4201,7 +4171,6 @@ lexicon	ko-KR	en-US:parco	파르코
 lexicon	ko-KR	en-US:parker brothers	파커 브라더스
 lexicon	ko-KR	en-US:parker hannifin	파커 하니핀
 lexicon	ko-KR	en-US:parlophone records	팔로폰 레코드
-lexicon	ko-KR	en-US:parlophone uk	팔로폰 레코드
 lexicon	ko-KR	en-US:particle systems	파티클 시스템스
 lexicon	ko-KR	en-US:pasibus	파시부스
 lexicon	ko-KR	en-US:pasta yum	파스타얌
@@ -4237,7 +4206,6 @@ lexicon	ko-KR	en-US:pentax	펜탁스
 lexicon	ko-KR	en-US:pentium overdrive	펜티엄 오버드라이브
 lexicon	ko-KR	en-US:people's	피플스
 lexicon	ko-KR	en-US:pepe jeans	페페 진스
-lexicon	ko-KR	en-US:pepsi	펩시코
 lexicon	ko-KR	en-US:perfect shield	퍼펙트쉴드
 lexicon	ko-KR	en-US:perfect world pictures	퍼펙트 월드 픽처스
 lexicon	ko-KR	en-US:peripera	페리페라
@@ -4270,6 +4238,7 @@ lexicon	ko-KR	en-US:phobay	포베이
 lexicon	ko-KR	en-US:phoenix contact	피닉스 컨택트
 lexicon	ko-KR	en-US:phoenix technologies	피닉스 테크놀로지스
 lexicon	ko-KR	en-US:phoini	포아이니
+lexicon	ko-KR	en-US:phonogenic	포노제닉
 lexicon	ko-KR	en-US:phonogenic records	포노제닉 레코드
 lexicon	ko-KR	en-US:phoongnam	포옹남
 lexicon	ko-KR	en-US:phosagro	포스아그로
@@ -4288,25 +4257,26 @@ lexicon	ko-KR	en-US:pictionary art factory	픽셔너리 아트팩토리
 lexicon	ko-KR	en-US:picture music international	픽처 뮤직 인터내셔널
 lexicon	ko-KR	en-US:picup	피컵
 lexicon	ko-KR	en-US:pier thirty	피어서티
-lexicon	ko-KR	en-US:pilkington bros	필킹턴
+lexicon	ko-KR	en-US:pierce	피어스
 lexicon	ko-KR	en-US:pilsner house	필스너하우스
 lexicon	ko-KR	en-US:pimfy	핌피
+lexicon	ko-KR	en-US:pininfarina	피닌파리나
 lexicon	ko-KR	en-US:pink bus	핑크버스
 lexicon	ko-KR	en-US:pink rabbit	핑크래빗
 lexicon	ko-KR	en-US:pinkberry	핑크베리
 lexicon	ko-KR	en-US:pinkbus	핑크버스
+lexicon	ko-KR	en-US:pinkfong	핑크퐁
 lexicon	ko-KR	en-US:pinkypunky	핑키펑키
 lexicon	ko-KR	en-US:pinoy seoul	피노이서울
 lexicon	ko-KR	en-US:pinoyseoul	피노이서울
 lexicon	ko-KR	en-US:pinpoint sindorim building	핀포인트 신도림빌딩
-lexicon	ko-KR	en-US:pinpoint sindorim tower	핀포인트 신도림빌딩
 lexicon	ko-KR	en-US:piquadro	피콰드로
 lexicon	ko-KR	en-US:pirelli	피렐리
 lexicon	ko-KR	en-US:piriform	피리폼
 lexicon	ko-KR	en-US:pistar kitchen	피스타키친
+lexicon	ko-KR	en-US:pitchfork	피치포크
 lexicon	ko-KR	en-US:pittasoft	피타소프트
 lexicon	ko-KR	en-US:pixabay	픽사베이
-lexicon	ko-KR	en-US:pixelic korea	픽셀릭
 lexicon	ko-KR	en-US:pizplz	피자플리즈
 lexicon	ko-KR	en-US:pizza box	피자박스
 lexicon	ko-KR	en-US:pizza hip	피자힙
@@ -4329,29 +4299,24 @@ lexicon	ko-KR	en-US:plan d	플랜디
 lexicon	ko-KR	en-US:planet fitness	플래닛 피트니스
 lexicon	ko-KR	en-US:planet labs	플래닛랩스
 lexicon	ko-KR	en-US:plants of the world online	플랜츠 오브 더 월드 온라인
-lexicon	ko-KR	en-US:platinum pen	플래티넘
 lexicon	ko-KR	en-US:platinum vision	플래티넘 비전
 lexicon	ko-KR	en-US:play asia	플레이아시아
 lexicon	ko-KR	en-US:play m entertainment	플레이엠엔터테인먼트
 lexicon	ko-KR	en-US:play-asia	플레이아시아
 lexicon	ko-KR	en-US:play-doh	플레이도
-lexicon	ko-KR	en-US:play-dough	플레이도
 lexicon	ko-KR	en-US:playasia	플레이아시아
-lexicon	ko-KR	en-US:playcat korea	플레이캣
 lexicon	ko-KR	en-US:playdead	플레이데드
-lexicon	ko-KR	en-US:playdead aps	플레이데드
 lexicon	ko-KR	en-US:playground games	플레이그라운드 게임스
 lexicon	ko-KR	en-US:playism	플레이즘
 lexicon	ko-KR	en-US:playlab	플레이랩
 lexicon	ko-KR	en-US:playonline	플레이온라인
-lexicon	ko-KR	en-US:playstation originals	플레이스테이션 프로덕션
 lexicon	ko-KR	en-US:playstation productions	플레이스테이션 프로덕션
-lexicon	ko-KR	en-US:playstation trophies	플레이스테이션 네트워크
 lexicon	ko-KR	en-US:playwith korea	플레이위드코리아
 lexicon	ko-KR	en-US:pledis entertainment	플레디스엔터테인먼트
 lexicon	ko-KR	en-US:pli coffee	플리커피
 lexicon	ko-KR	en-US:plouf	플루프
 lexicon	ko-KR	en-US:pmang	피망
+lexicon	ko-KR	en-US:pobeda	포베다
 lexicon	ko-KR	en-US:pocari sweat	포카리 스웨트
 lexicon	ko-KR	en-US:pocarisweat	포카리 스웨트
 lexicon	ko-KR	en-US:pocketbook international	포켓북 인터내셔널
@@ -4374,7 +4339,6 @@ lexicon	ko-KR	en-US:polyus	폴리우스
 lexicon	ko-KR	en-US:pommede pin	폼드팡
 lexicon	ko-KR	en-US:pomoz	포모즈
 lexicon	ko-KR	en-US:pondersalad	폰더샐러드
-lexicon	ko-KR	en-US:ponican	포니 캐년
 lexicon	ko-KR	en-US:pooketdol studio	포켓돌스튜디오
 lexicon	ko-KR	en-US:poonawala	푸나왈라
 lexicon	ko-KR	en-US:poongsan	풍산
@@ -4409,18 +4373,20 @@ lexicon	ko-KR	en-US:prada	프라다
 lexicon	ko-KR	en-US:praga	프라가
 lexicon	ko-KR	en-US:pratt & whitney	프랫 앤 휘트니
 lexicon	ko-KR	en-US:pratt and whitney	프랫 앤 휘트니
+lexicon	ko-KR	en-US:praust	프루스크
 lexicon	ko-KR	en-US:premier music	프리미어뮤직
 lexicon	ko-KR	en-US:premium malt's	더 프리미엄 몰츠
 lexicon	ko-KR	en-US:preply	프레플리
 lexicon	ko-KR	en-US:presenty	프레젠티
 lexicon	ko-KR	en-US:preservica	프리저비카
+lexicon	ko-KR	en-US:prestige	프레스티지
 lexicon	ko-KR	en-US:prestige records	프레스티지 레코드
 lexicon	ko-KR	en-US:presto studios	프레스토 스튜디오
+lexicon	ko-KR	en-US:pret	프레타
 lexicon	ko-KR	en-US:pricewaterhousecoopers	프라이스워터하우스쿠퍼스
 lexicon	ko-KR	en-US:pride fighting championships	프라이드 파이팅 챔피언십
 lexicon	ko-KR	en-US:primark	프라이마크
 lexicon	ko-KR	en-US:primavera sound	프리마베라 사운드
-lexicon	ko-KR	en-US:primavera sound fest	프리마베라 사운드
 lexicon	ko-KR	en-US:prime computer	프라임 컴퓨터
 lexicon	ko-KR	en-US:prince & sanjay jewellers	프린스 앤 산제이 주얼러스
 lexicon	ko-KR	en-US:prince and sanjay jewellers	프린스 앤 산제이 주얼러스
@@ -4436,7 +4402,6 @@ lexicon	ko-KR	en-US:pro wrestling guerrilla	프로레슬링 게릴라
 lexicon	ko-KR	en-US:pro wrestling noah	프로레슬링 노아
 lexicon	ko-KR	en-US:pro-fit	프로 피트
 lexicon	ko-KR	en-US:proactiv solution	프로액티브 솔루션
-lexicon	ko-KR	en-US:procreate for pocket	프로크리에이트
 lexicon	ko-KR	en-US:procter & gamble	프록터 앤드 갬블
 lexicon	ko-KR	en-US:proctor and gamble	프록터 앤드 갬블
 lexicon	ko-KR	en-US:product red	프로덕트 레드
@@ -4462,7 +4427,7 @@ lexicon	ko-KR	en-US:puffu	푸푸
 lexicon	ko-KR	en-US:pulev	풀레브
 lexicon	ko-KR	en-US:pull & bear	풀앤베어
 lexicon	ko-KR	en-US:pull&bear	풀앤베어
-lexicon	ko-KR	en-US:pullman	풀만
+lexicon	ko-KR	en-US:pullman	풀먼
 lexicon	ko-KR	en-US:pulmuone	풀무원
 lexicon	ko-KR	en-US:pure peak	퓨어피크
 lexicon	ko-KR	en-US:pure storage	퓨어스토리지
@@ -4480,7 +4445,6 @@ lexicon	ko-KR	en-US:quadmedicine	쿼드메디슨
 lexicon	ko-KR	en-US:quala	콸라
 lexicon	ko-KR	en-US:qualcomm	퀄컴
 lexicon	ko-KR	en-US:qualcomm atheros	퀄컴 아테로스
-lexicon	ko-KR	en-US:qualcomm snapdragon	스냅드래곤
 lexicon	ko-KR	en-US:qualtrics	퀼트릭스
 lexicon	ko-KR	en-US:quanta computer	퀀타 컴퓨터
 lexicon	ko-KR	en-US:quanta display	콴타 디스플레이
@@ -4489,7 +4453,6 @@ lexicon	ko-KR	en-US:quantic dream	퀀틱 드림
 lexicon	ko-KR	en-US:quantum	퀀텀
 lexicon	ko-KR	en-US:quartertone	쿼터톤
 lexicon	ko-KR	en-US:queens moa	퀸즈모아
-lexicon	ko-KR	en-US:quick sync video	인텔 퀵 싱크 비디오
 lexicon	ko-KR	en-US:quin rose	퀸로제
 lexicon	ko-KR	en-US:quinn gillespie & associates	퀸 길레스피 앤드 어소시에이츠
 lexicon	ko-KR	en-US:quora	쿼라
@@ -4518,7 +4481,6 @@ lexicon	ko-KR	en-US:rainforest cafe	레인포리스트 카페
 lexicon	ko-KR	en-US:rainmaker entertainment	레인메이커 엔터테인먼트
 lexicon	ko-KR	en-US:rainway	레인웨이
 lexicon	ko-KR	en-US:rairaitei	라이라이테이
-lexicon	ko-KR	en-US:raizing	에이팅
 lexicon	ko-KR	en-US:rakuten	라쿠텐
 lexicon	ko-KR	en-US:rakuten mobile	라쿠텐 모바일
 lexicon	ko-KR	en-US:rakuten symphony korea	라쿠텐심포니코리아
@@ -4539,7 +4501,6 @@ lexicon	ko-KR	en-US:rashinban	라신반
 lexicon	ko-KR	en-US:rason contrans	라선콘트랜스
 lexicon	ko-KR	en-US:rate your music	레이트 유어 뮤직
 lexicon	ko-KR	en-US:rateyourmusic	레이트 유어 뮤직
-lexicon	ko-KR	en-US:ratpac entertainment	듄 엔터테인먼트
 lexicon	ko-KR	en-US:ratpac-dune entertainment	듄 엔터테인먼트
 lexicon	ko-KR	en-US:raw nap coffee haus	로우냅커피하우스
 lexicon	ko-KR	en-US:raytheon	레이시온
@@ -4582,12 +4543,11 @@ lexicon	ko-KR	en-US:refad	레페드
 lexicon	ko-KR	en-US:refresh bowl	리프레쉬보울
 lexicon	ko-KR	en-US:regain project	리게인프로젝트
 lexicon	ko-KR	en-US:regeneron pharmaceuticals	리제네론 파마슈티컬스
-lexicon	ko-KR	en-US:regional express	리저널 익스프레스 항공
+lexicon	ko-KR	en-US:regional express	리저널 익스프레스
 lexicon	ko-KR	en-US:reliance communications	릴라이언스 커뮤니케이션
 lexicon	ko-KR	en-US:reliance industries	릴라이언스 인더스트리
 lexicon	ko-KR	en-US:reliefweb	릴리프웹
 lexicon	ko-KR	en-US:remington arms	레밍턴 암스
-lexicon	ko-KR	en-US:remington arms company	레밍턴 암스
 lexicon	ko-KR	en-US:remington rand	레밍턴 랜드
 lexicon	ko-KR	en-US:renaissance technologies	르네상스 테크놀로지스
 lexicon	ko-KR	en-US:rendition	렌디션
@@ -4595,7 +4555,6 @@ lexicon	ko-KR	en-US:reply	리플라이
 lexicon	ko-KR	en-US:repretel	레프레텔
 lexicon	ko-KR	en-US:reprise records	리프라이즈 레코드
 lexicon	ko-KR	en-US:repsol	렙솔
-lexicon	ko-KR	en-US:republic	리퍼블릭 레코드
 lexicon	ko-KR	en-US:republic biscuit	리퍼블릭 비스킷
 lexicon	ko-KR	en-US:republic records	리퍼블릭 레코드
 lexicon	ko-KR	en-US:research in motion	리서치 인 모션
@@ -4612,7 +4571,6 @@ lexicon	ko-KR	en-US:reyn spooner	레인 스푸너
 lexicon	ko-KR	en-US:rh korea	알에이치코리아
 lexicon	ko-KR	en-US:rheinmetall	라인메탈
 lexicon	ko-KR	en-US:rhino entertainment	라이노 엔터테인먼트
-lexicon	ko-KR	en-US:rhino entertainment company	라이노 엔터테인먼트
 lexicon	ko-KR	en-US:rhodecode	로드코드
 lexicon	ko-KR	en-US:rhodia	로디아
 lexicon	ko-KR	en-US:rhone-poulenc	론풀랑크
@@ -4642,14 +4600,15 @@ lexicon	ko-KR	en-US:roadrunner records	로드러너 레코드
 lexicon	ko-KR	en-US:roark capital	로어크 캐피털
 lexicon	ko-KR	en-US:roasting robo	로스팅로보
 lexicon	ko-KR	en-US:robinson technologies	로빈슨 테크놀로지
+lexicon	ko-KR	en-US:roborock	로보락
 lexicon	ko-KR	en-US:roborock technology	로보락 테크놀로지
 lexicon	ko-KR	en-US:robot entertainment	로봇 엔터테인먼트
 lexicon	ko-KR	en-US:roc nation	락 네이션
 lexicon	ko-KR	en-US:rochester electronics	로체스터 일렉트로닉스
 lexicon	ko-KR	en-US:rock&douch	락앤도우
+lexicon	ko-KR	en-US:rock-o-rama	록오라마
 lexicon	ko-KR	en-US:rock-ola	록올라
 lexicon	ko-KR	en-US:rockchip	록칩
-lexicon	ko-KR	en-US:rocket records	로켓 레코드
 lexicon	ko-KR	en-US:rockport	락포트
 lexicon	ko-KR	en-US:rockstar	록스타
 lexicon	ko-KR	en-US:rockstar london	록스타 런던
@@ -4699,6 +4658,7 @@ lexicon	ko-KR	en-US:rowenta	로벤타
 lexicon	ko-KR	en-US:rowin	로윈
 lexicon	ko-KR	en-US:royal african company	로열 아프리칸 컴퍼니
 lexicon	ko-KR	en-US:royal air maroc	로얄 에어 모로코
+lexicon	ko-KR	en-US:royal brunei	로열 브루나이
 lexicon	ko-KR	en-US:royal copenhagen	로얄 코펜하겐
 lexicon	ko-KR	en-US:royal dutch shell	로열 더치 쉘
 lexicon	ko-KR	en-US:royal mail	로열메일
@@ -4725,7 +4685,7 @@ lexicon	ko-KR	en-US:rwandair	르완다 에어
 lexicon	ko-KR	en-US:ryoko	료코
 lexicon	ko-KR	en-US:ryonbong	련봉
 lexicon	ko-KR	en-US:ryukyu air commuter	류큐 에어 커뮤터
-lexicon	ko-KR	en-US:ryzen threadripper	스레드리퍼
+lexicon	ko-KR	en-US:sabena	사베나
 lexicon	ko-KR	en-US:sabritas	사브리타스
 lexicon	ko-KR	en-US:saerom animation	새롬 애니메이션
 lexicon	ko-KR	en-US:safran	사프란
@@ -4765,7 +4725,8 @@ lexicon	ko-KR	en-US:samsung biologics	삼성바이오로직스
 lexicon	ko-KR	en-US:samsung capital	삼성캐피탈
 lexicon	ko-KR	en-US:samsung engineering	삼성엔지니어링
 lexicon	ko-KR	en-US:samsung everland	삼성에버랜드
-lexicon	ko-KR	en-US:samsung galaxy book	삼성 갤럭시 북 시리즈
+lexicon	ko-KR	en-US:samsung galaxy book	삼성 갤럭시 북
+lexicon	ko-KR	en-US:samsung techwin	삼성테크윈
 lexicon	ko-KR	en-US:samyang biopharm	삼양바이오팜
 lexicon	ko-KR	en-US:samyung enc	삼영이엔씨
 lexicon	ko-KR	en-US:san francisco chronicle	샌프란시스코 크로니클
@@ -4788,7 +4749,6 @@ lexicon	ko-KR	en-US:sanok	사노크
 lexicon	ko-KR	en-US:sanpachi	산파치
 lexicon	ko-KR	en-US:sanrio	산리오
 lexicon	ko-KR	en-US:sanseido	산세이도
-lexicon	ko-KR	en-US:sanseido shoten	산세이도 서점
 lexicon	ko-KR	en-US:santa cruz operation	샌타크루즈 오퍼레이션
 lexicon	ko-KR	en-US:sapphire technology	사파이어 테크놀로지
 lexicon	ko-KR	en-US:sarbakan	사바켄
@@ -4796,11 +4756,13 @@ lexicon	ko-KR	en-US:sarbeto	사르베토
 lexicon	ko-KR	en-US:sasol	사솔
 lexicon	ko-KR	en-US:saucony	써코니
 lexicon	ko-KR	en-US:saudi aramco	사우디 아람코
+lexicon	ko-KR	en-US:saudia	사우디아
 lexicon	ko-KR	en-US:savoey	사보에
 lexicon	ko-KR	en-US:savoy records	사보이 레코드
 lexicon	ko-KR	en-US:saxo bank	삭소방크
 lexicon	ko-KR	en-US:sbenu	스베누
 lexicon	ko-KR	en-US:scantraxx	스캔트랙스
+lexicon	ko-KR	en-US:schindler	쉰들러
 lexicon	ko-KR	en-US:schmidt & bender	슈미트 앤드 벤더
 lexicon	ko-KR	en-US:scholastic	스콜라스틱
 lexicon	ko-KR	en-US:school boy records	스쿨보이 레코즈
@@ -4816,6 +4778,7 @@ lexicon	ko-KR	en-US:seagram's	시그램
 lexicon	ko-KR	en-US:seah superalloy technologies	세아 슈퍼알로이 테크놀로지스
 lexicon	ko-KR	en-US:seah wind	세아윈드
 lexicon	ko-KR	en-US:sealaunch	씨런치
+lexicon	ko-KR	en-US:sealife	시 라이프
 lexicon	ko-KR	en-US:seamicro	씨마이크로
 lexicon	ko-KR	en-US:searchina	서치나
 lexicon	ko-KR	en-US:sears	시어스
@@ -4843,13 +4806,13 @@ lexicon	ko-KR	en-US:segway	세그웨이
 lexicon	ko-KR	en-US:seibu	세이부
 lexicon	ko-KR	en-US:seikan ferry	세이칸 페리
 lexicon	ko-KR	en-US:seiun	세이은
-lexicon	ko-KR	en-US:seiyoken	우에노세이요켄
 lexicon	ko-KR	en-US:sejny	세이니
 lexicon	ko-KR	en-US:sejongmall	세종몰
 lexicon	ko-KR	en-US:sekisui house	세키스이 하우스
 lexicon	ko-KR	en-US:seldy	셀디
 lexicon	ko-KR	en-US:selene house wedding	셀레네하우스웨딩
 lexicon	ko-KR	en-US:selfridges	셀프리지스
+lexicon	ko-KR	en-US:sellafield	셀라필드
 lexicon	ko-KR	en-US:selpie replica	셀피레플리카
 lexicon	ko-KR	en-US:sembikiya	센비키야
 lexicon	ko-KR	en-US:senbikiya	센비키야
@@ -4871,7 +4834,6 @@ lexicon	ko-KR	en-US:seria	세리아
 lexicon	ko-KR	en-US:seromo	세로모
 lexicon	ko-KR	en-US:servicenow	서비스나우
 lexicon	ko-KR	en-US:seven news	세븐 뉴스
-lexicon	ko-KR	en-US:seven-eleven japan	세븐일레븐
 lexicon	ko-KR	en-US:sevenup	세븐업
 lexicon	ko-KR	en-US:severstal	세베르스탈
 lexicon	ko-KR	en-US:sg food	에스지푸드
@@ -4881,6 +4843,7 @@ lexicon	ko-KR	en-US:shake shack	셰이크 섁
 lexicon	ko-KR	en-US:shaken	사켄
 lexicon	ko-KR	en-US:shalallalla	샤랄랄라
 lexicon	ko-KR	en-US:shanda	샨다
+lexicon	ko-KR	en-US:shandong	산둥
 lexicon	ko-KR	en-US:shandong ruyi	산둥 루이
 lexicon	ko-KR	en-US:shanghai animation film studio	상하이 애니메이션 필름 스튜디오
 lexicon	ko-KR	en-US:shanghai maple	상하이 메이플
@@ -4890,13 +4853,14 @@ lexicon	ko-KR	en-US:shaw communications	쇼 커뮤니케이션스
 lexicon	ko-KR	en-US:shazam	샤잠
 lexicon	ko-KR	en-US:shein	쉬인
 lexicon	ko-KR	en-US:shenzhen tencent animation	텐센트 애니메이션
+lexicon	ko-KR	en-US:shenzhen-bao'an	선전 바오안
 lexicon	ko-KR	en-US:sheraton hotels and resorts	셰라톤 호텔 앤드 리조츠
 lexicon	ko-KR	en-US:sherdog	셔독
 lexicon	ko-KR	en-US:sherwin williams	셔윈윌리암스
 lexicon	ko-KR	en-US:sherwin-williams	셔윈윌리암스
-lexicon	ko-KR	en-US:sherwin-williams company	셔윈윌리암스
 lexicon	ko-KR	en-US:shimamura	시마무라
 lexicon	ko-KR	en-US:shimano	시마노
+lexicon	ko-KR	en-US:shimizu	시미즈
 lexicon	ko-KR	en-US:shimoda ropeway	시모다 로프웨이
 lexicon	ko-KR	en-US:shin kong mitsukoshi	신광미츠코시
 lexicon	ko-KR	en-US:shin vision	신 비전
@@ -4906,7 +4870,9 @@ lexicon	ko-KR	en-US:shinhan	신한
 lexicon	ko-KR	en-US:shinhan card	신한카드
 lexicon	ko-KR	en-US:shinhwa company	신화컴퍼니의
 lexicon	ko-KR	en-US:shinkwang	신광
+lexicon	ko-KR	en-US:shinmaywa	신메이와
 lexicon	ko-KR	en-US:shiny entertainment	샤이니 엔터테인먼트
+lexicon	ko-KR	en-US:shionogi	시오노기
 lexicon	ko-KR	en-US:shiseido parlour	시세이도 팔러
 lexicon	ko-KR	en-US:shochiku	쇼치쿠
 lexicon	ko-KR	en-US:shochiku multiplex theatres	쇼치쿠 멀티플렉스 시어터즈
@@ -4946,9 +4912,7 @@ lexicon	ko-KR	en-US:silicon image	실리콘 이미지
 lexicon	ko-KR	en-US:silicon knights	실리콘 나이츠
 lexicon	ko-KR	en-US:silicon power	실리콘 파워
 lexicon	ko-KR	en-US:silk air	실크에어
-lexicon	ko-KR	en-US:silk road fund	실크로드 기금
 lexicon	ko-KR	en-US:silk way	실크웨이 항공
-lexicon	ko-KR	en-US:silk way air	실크웨이 항공
 lexicon	ko-KR	en-US:silkair	실크에어
 lexicon	ko-KR	en-US:silver pictures	실버 픽처스
 lexicon	ko-KR	en-US:silverball studios	실버볼 스튜디오
@@ -4969,7 +4933,6 @@ lexicon	ko-KR	en-US:sisu auto	시수 아우토
 lexicon	ko-KR	en-US:six apart	식스 아파트
 lexicon	ko-KR	en-US:six flags	식스 플래그
 lexicon	ko-KR	en-US:sixapart	식스 아파트
-lexicon	ko-KR	en-US:sk communications	네이트커뮤니케이션즈
 lexicon	ko-KR	en-US:skechers	스케쳐스
 lexicon	ko-KR	en-US:sketchfab	스케치팹
 lexicon	ko-KR	en-US:skillup	스킬업
@@ -4979,6 +4942,7 @@ lexicon	ko-KR	en-US:skoda	스코다
 lexicon	ko-KR	en-US:sky & telescope	스카이 앤드 텔레스코프
 lexicon	ko-KR	en-US:sky angel	스카이 앤젤
 lexicon	ko-KR	en-US:sky e&m bliss entertainment	스카이이앤엠 블리스엔터테인먼트
+lexicon	ko-KR	en-US:sky pasada	스카이 파사다
 lexicon	ko-KR	en-US:sky sports	스카이 스포츠
 lexicon	ko-KR	en-US:skybound entertainment	스카이바운드 엔터테인먼트
 lexicon	ko-KR	en-US:skycode	스카이코드
@@ -5020,7 +4984,6 @@ lexicon	ko-KR	en-US:smoking cafe	스모킹카페
 lexicon	ko-KR	en-US:smoothie king	스무디킹
 lexicon	ko-KR	en-US:smoothieking	스무디킹
 lexicon	ko-KR	en-US:snacku	스나쿠
-lexicon	ko-KR	en-US:snapchat	스냅
 lexicon	ko-KR	en-US:snickers	스니커즈
 lexicon	ko-KR	en-US:sniper sound	스나이퍼 사운드
 lexicon	ko-KR	en-US:snohetta	스노헤타
@@ -5045,7 +5008,6 @@ lexicon	ko-KR	en-US:sokenbicha	소켄비차
 lexicon	ko-KR	en-US:sol life	솔라이프
 lexicon	ko-KR	en-US:solar entertainment	솔라 엔터테인먼트
 lexicon	ko-KR	en-US:solar frontier	솔라 프론티어
-lexicon	ko-KR	en-US:solar seed air	솔라시드 항공
 lexicon	ko-KR	en-US:solarwinds	솔라윈즈
 lexicon	ko-KR	en-US:solid	쏠리드
 lexicon	ko-KR	en-US:solo clean	솔로크린
@@ -5063,7 +5025,6 @@ lexicon	ko-KR	en-US:sonokong	손오공
 lexicon	ko-KR	en-US:sonova	소노바
 lexicon	ko-KR	en-US:sony alpha	소니 알파
 lexicon	ko-KR	en-US:sony chemicals	소니 케미컬
-lexicon	ko-KR	en-US:sony computer entertainment	소니 인터랙티브 엔터테인먼트
 lexicon	ko-KR	en-US:sony creative software	소니 크레이티브 소프트웨어
 lexicon	ko-KR	en-US:sony energy devices	소니 에너지 디바이스
 lexicon	ko-KR	en-US:sony entertainment	소니 엔터테인먼트
@@ -5074,10 +5035,10 @@ lexicon	ko-KR	en-US:sony music artists	소니 뮤직 아티스츠
 lexicon	ko-KR	en-US:sony music associated records	소니 뮤직 어소시에이티드 레코드
 lexicon	ko-KR	en-US:sony music australia	소니 뮤직 오스트레일리아
 lexicon	ko-KR	en-US:sony music entertainment	소니 뮤직 엔터테인먼트
-lexicon	ko-KR	en-US:sony music entertainment japan	소니 뮤직 엔터테인먼트
 lexicon	ko-KR	en-US:sony music records	소니 뮤직 레코드
 lexicon	ko-KR	en-US:sony online entertainment	소니 온라인 엔터테인먼트
 lexicon	ko-KR	en-US:sony optiarc	소니 옵티악
+lexicon	ko-KR	en-US:sony pictures	소니 픽처스
 lexicon	ko-KR	en-US:sony pictures entertainment	소니 픽처스 엔터테인먼트
 lexicon	ko-KR	en-US:sony pictures entertainment japan	소니 픽처스 엔터테인먼트 재팬
 lexicon	ko-KR	en-US:sony pictures entertainment korea	소니 픽처스 엔터테인먼트 코리아
@@ -5085,7 +5046,6 @@ lexicon	ko-KR	en-US:sony pictures imageworks	소니 픽처스 이미지워크스
 lexicon	ko-KR	en-US:sony pictures motion picture	소니 픽처스 모션 픽처스
 lexicon	ko-KR	en-US:sony store	소니스토어
 lexicon	ko-KR	en-US:sony visual products	소니 비주얼 프로덕트
-lexicon	ko-KR	en-US:sonymusic entertainment japan	소니 뮤직 엔터테인먼트
 lexicon	ko-KR	en-US:soonsikihair	순시키헤어
 lexicon	ko-KR	en-US:sora	소라
 lexicon	ko-KR	en-US:soranoiro	소라노이로
@@ -5115,7 +5075,6 @@ lexicon	ko-KR	en-US:sourceforge	소스포지
 lexicon	ko-KR	en-US:south african express	남아프리카 익스프레스
 lexicon	ko-KR	en-US:south african express air	남아프리카 익스프레스
 lexicon	ko-KR	en-US:south pole	사우스폴
-lexicon	ko-KR	en-US:southwest	사우스웨스트 항공
 lexicon	ko-KR	en-US:sovcomflot	소보콤플로트
 lexicon	ko-KR	en-US:sowana	소와나
 lexicon	ko-KR	en-US:spa gogyeol	스파고결
@@ -5126,7 +5085,6 @@ lexicon	ko-KR	en-US:space fit	스페이스핏
 lexicon	ko-KR	en-US:space neko company	스페이스 네코 컴퍼니
 lexicon	ko-KR	en-US:space shower music	스페이스 샤워 뮤직
 lexicon	ko-KR	en-US:space shower networks	스페이스 샤워 네트워크
-lexicon	ko-KR	en-US:spaceneko	스페이스 네코
 lexicon	ko-KR	en-US:spaceneko company	스페이스 네코 컴퍼니
 lexicon	ko-KR	en-US:spaces	스페이스
 lexicon	ko-KR	en-US:spanair	스팬에어
@@ -5139,6 +5097,7 @@ lexicon	ko-KR	en-US:speedstar records	스피드스타 레코드
 lexicon	ko-KR	en-US:spigen	슈피겐
 lexicon	ko-KR	en-US:spike chunsoft	스파이크 춘소프트
 lexicon	ko-KR	en-US:spin master	스핀 마스터
+lexicon	ko-KR	en-US:spirit	스피릿
 lexicon	ko-KR	en-US:splendino	스플렌디노
 lexicon	ko-KR	en-US:sports illustrated	스포츠 일러스트레이티드
 lexicon	ko-KR	en-US:sports reference	스포츠 레퍼런스
@@ -5148,6 +5107,7 @@ lexicon	ko-KR	en-US:sprite	스프라이트
 lexicon	ko-KR	en-US:sptek	에스피텍
 lexicon	ko-KR	en-US:sputnik music	스푸트니크뮤직
 lexicon	ko-KR	en-US:sputnikmusic	스푸트니크뮤직
+lexicon	ko-KR	en-US:square enix	스퀘어 에닉스
 lexicon	ko-KR	en-US:square-enix	스퀘어 에닉스
 lexicon	ko-KR	en-US:srixon	스릭슨
 lexicon	ko-KR	en-US:ssenavi barre	쎄나비바레
@@ -5158,17 +5118,13 @@ lexicon	ko-KR	en-US:stainless games	스테인리스 게임스
 lexicon	ko-KR	en-US:stainless steel studios	스테인리스 스틸 스튜디오
 lexicon	ko-KR	en-US:stampede wrestling	스탬피드 레슬링
 lexicon	ko-KR	en-US:standard chartered	스탠다드차타드 은행
-lexicon	ko-KR	en-US:standard chartered bunk	스탠다드차타드 은행
 lexicon	ko-KR	en-US:standard chartered yeah	스탠다드차타드 은행
-lexicon	ko-KR	en-US:standard oil company	스탠더드 오일
-lexicon	ko-KR	en-US:standard oil trust	스탠더드 오일
 lexicon	ko-KR	en-US:stanley black & decker	스탠리 블랙앤데커
 lexicon	ko-KR	en-US:stanley bottle	스탠리 보틀
 lexicon	ko-KR	en-US:star beer	스타비어
 lexicon	ko-KR	en-US:star bottle	스타보틀
 lexicon	ko-KR	en-US:star flyer	스타플라이어
 lexicon	ko-KR	en-US:star joint venture	스타 조인트 벤처
-lexicon	ko-KR	en-US:star joint venture company	스타 조인트 벤처
 lexicon	ko-KR	en-US:star news	스타뉴스
 lexicon	ko-KR	en-US:star wars	스타워즈
 lexicon	ko-KR	en-US:starbucks reserve	스타벅스 리저브
@@ -5177,7 +5133,6 @@ lexicon	ko-KR	en-US:starflyer	스타플라이어
 lexicon	ko-KR	en-US:starogard gdanski	스타로가르트그단스키
 lexicon	ko-KR	en-US:starship entertainment	스타쉽엔터테인먼트
 lexicon	ko-KR	en-US:startship study cafe	스타트쉽스터디카페
-lexicon	ko-KR	en-US:statcounter dot com	스탯카운터
 lexicon	ko-KR	en-US:stax records	스택스 레코드
 lexicon	ko-KR	en-US:stay studio	스테이스튜디오
 lexicon	ko-KR	en-US:stay the dam	스테이더담
@@ -5198,7 +5153,6 @@ lexicon	ko-KR	en-US:step espresso	스텝에스프레소
 lexicon	ko-KR	en-US:stereoboard	스테레오보드
 lexicon	ko-KR	en-US:sterling records	스털링 레코드
 lexicon	ko-KR	en-US:steve madden	스티브 매든
-lexicon	ko-KR	en-US:steven madden	스티브 매든
 lexicon	ko-KR	en-US:stic investments	스틱인베스트먼트
 lexicon	ko-KR	en-US:stick with me sweets	스틱위드미스위츠
 lexicon	ko-KR	en-US:stickypot	스티키팟
@@ -5221,9 +5175,6 @@ lexicon	ko-KR	en-US:strategy salad	스트래티지샐러드
 lexicon	ko-KR	en-US:strategysalad	스트래티지샐러드
 lexicon	ko-KR	en-US:stratolaunch systems	스트라토런치 시스템스
 lexicon	ko-KR	en-US:stream eyewear	스트림아이웨어
-lexicon	ko-KR	en-US:street view	구글 스트리트 뷰
-lexicon	ko-KR	en-US:street-view	구글 스트리트 뷰
-lexicon	ko-KR	en-US:streetview	구글 스트리트 뷰
 lexicon	ko-KR	en-US:strenesse	슈트레네세
 lexicon	ko-KR	en-US:stretchbang	스트레치뱅
 lexicon	ko-KR	en-US:strida	스트라이다
@@ -5258,6 +5209,7 @@ lexicon	ko-KR	en-US:suez	수에즈
 lexicon	ko-KR	en-US:sugakico systems	스가키코 시스템즈
 lexicon	ko-KR	en-US:sugar hair design shop	슈가헤어디자인숍
 lexicon	ko-KR	en-US:suki teenoi	스키 티노이
+lexicon	ko-KR	en-US:sumitomo	스미토모
 lexicon	ko-KR	en-US:summaface	숨마페이스
 lexicon	ko-KR	en-US:sumo digital	스모 디지털
 lexicon	ko-KR	en-US:sun air of scandinavia	선에어 오브 스칸디나비아
@@ -5305,23 +5257,20 @@ lexicon	ko-KR	en-US:sushiro	스시로
 lexicon	ko-KR	en-US:suwish	스위시
 lexicon	ko-KR	en-US:suzhou oriental semiconductor	쑤저우 오리엔탈 세미컨덕터
 lexicon	ko-KR	en-US:svensson	스벤손
+lexicon	ko-KR	en-US:swan	스완
 lexicon	ko-KR	en-US:swan records	스완 레코드
 lexicon	ko-KR	en-US:swan song records	스완 송 레코드
-lexicon	ko-KR	en-US:swarovski lp	스와로브스키
 lexicon	ko-KR	en-US:swatch	스와치
 lexicon	ko-KR	en-US:swedbank	스웨드뱅크
-lexicon	ko-KR	en-US:swedish film database	스웨덴 영화 데이터베이스
 lexicon	ko-KR	en-US:sweepers	스위퍼스
 lexicon	ko-KR	en-US:sweet monster	스위트몬스터
 lexicon	ko-KR	en-US:sweet power	스위트파워
 lexicon	ko-KR	en-US:sweet square	스윗스퀘어
 lexicon	ko-KR	en-US:swing entertainment	스윙 엔터테인먼트
-lexicon	ko-KR	en-US:swiss re	스위스리
 lexicon	ko-KR	en-US:swisscom	스위스컴
 lexicon	ko-KR	en-US:swordfish studios	소드피시 스튜디오
 lexicon	ko-KR	en-US:swweet balance	스윗밸런스
 lexicon	ko-KR	en-US:syco music	사이코 뮤직
-lexicon	ko-KR	en-US:sydney herald	시드니 모닝 헤럴드
 lexicon	ko-KR	en-US:sydney morning herald	시드니 모닝 헤럴드
 lexicon	ko-KR	en-US:symbian	심비안
 lexicon	ko-KR	en-US:synaffix	시너픽스
@@ -5355,13 +5304,13 @@ lexicon	ko-KR	en-US:taiwan cement	타이완 시멘트
 lexicon	ko-KR	en-US:taiwan fresh supermarket	타이완 펭강 슈퍼마켓
 lexicon	ko-KR	en-US:taiwan mobile	타이완 모바일
 lexicon	ko-KR	en-US:taiyo yuden	다이요유덴
+lexicon	ko-KR	en-US:taj	타지
 lexicon	ko-KR	en-US:tajik air	타지크 에어
 lexicon	ko-KR	en-US:tajin	타힌
 lexicon	ko-KR	en-US:takara tomy	다카라토미
 lexicon	ko-KR	en-US:takaratomi	다카라토미
 lexicon	ko-KR	en-US:takaratomy	다카라토미
 lexicon	ko-KR	en-US:take shift	테이크시프트
-lexicon	ko-KR	en-US:take-two interactive software	테이크투 인터랙티브
 lexicon	ko-KR	en-US:takeshobo	다케쇼보
 lexicon	ko-KR	en-US:tako land	타코랜드
 lexicon	ko-KR	en-US:talgo	탈고
@@ -5405,10 +5354,10 @@ lexicon	ko-KR	en-US:teamelysium	팀엘리시움
 lexicon	ko-KR	en-US:teanbooks	티앤북스
 lexicon	ko-KR	en-US:tech mahindra	테크 마힌드라
 lexicon	ko-KR	en-US:techmedianetwork	테크미디어네트워크
-lexicon	ko-KR	en-US:technos	테크노스 저팬
 lexicon	ko-KR	en-US:technos japan	테크노스 저팬
 lexicon	ko-KR	en-US:techrules	테크룰즈
 lexicon	ko-KR	en-US:techstars	테크스타스
+lexicon	ko-KR	en-US:ted	테드
 lexicon	ko-KR	en-US:ted baker	테드베이커
 lexicon	ko-KR	en-US:teddy's bagel	테디스베이글
 lexicon	ko-KR	en-US:tee stage	티스테이지
@@ -5420,19 +5369,15 @@ lexicon	ko-KR	en-US:telefonica	텔레포니카
 lexicon	ko-KR	en-US:telefunken	텔레풍켄
 lexicon	ko-KR	en-US:telegeography	텔레지오그래피
 lexicon	ko-KR	en-US:telekom malaysia	텔레콤 말레이시아
-lexicon	ko-KR	en-US:telekom malaysia berhad	텔레콤 말레이시아
 lexicon	ko-KR	en-US:telenor	텔레노
 lexicon	ko-KR	en-US:teleradio-moldova	텔레라디오 몰도바
 lexicon	ko-KR	en-US:teletica	텔레티카
 lexicon	ko-KR	en-US:telia finland	텔리아 핀란드
 lexicon	ko-KR	en-US:teliasonera	텔리아소네라
-lexicon	ko-KR	en-US:teliasonera finland	텔리아 핀란드
 lexicon	ko-KR	en-US:telltale games	텔테일 게임스
 lexicon	ko-KR	en-US:telstra	텔스트라
 lexicon	ko-KR	en-US:tempus coffee	템푸스커피
 lexicon	ko-KR	en-US:tenburger	텐버거
-lexicon	ko-KR	en-US:tencent animation and comics	텐센트 애니메이션
-lexicon	ko-KR	en-US:tender	텐더 코
 lexicon	ko-KR	en-US:tenri stamina ramen	텐리 스테미너 라면
 lexicon	ko-KR	en-US:tera coffee	테라커피
 lexicon	ko-KR	en-US:teraview	테라뷰
@@ -5441,6 +5386,7 @@ lexicon	ko-KR	en-US:terex	테렉스
 lexicon	ko-KR	en-US:terra networks	테라 네트웍스
 lexicon	ko-KR	en-US:terumo	테루모
 lexicon	ko-KR	en-US:terymarket	테리마켓
+lexicon	ko-KR	en-US:tesla	테슬라
 lexicon	ko-KR	en-US:tespa	테스파
 lexicon	ko-KR	en-US:tester coffee	테스터커피
 lexicon	ko-KR	en-US:tetra	테트라
@@ -5454,13 +5400,13 @@ lexicon	ko-KR	en-US:texas toast	텍사스 토스트
 lexicon	ko-KR	en-US:textron	텍스트론
 lexicon	ko-KR	en-US:thai air cargo	타이 에어 카고
 lexicon	ko-KR	en-US:thai beverage	타이 비버리지
+lexicon	ko-KR	en-US:thai smile	타이 스마일
 lexicon	ko-KR	en-US:thalesraytheonsystems	탈레스레이시온시스템
 lexicon	ko-KR	en-US:thames water	템스워터
 lexicon	ko-KR	en-US:the adecco	아데코
 lexicon	ko-KR	en-US:the adventure company	어드벤처 컴퍼니
 lexicon	ko-KR	en-US:the akron beacon journal	애크런 비콘 저널
 lexicon	ko-KR	en-US:the alley	더앨리
-lexicon	ko-KR	en-US:the allstate	올스테이트
 lexicon	ko-KR	en-US:the arizona republic	애리조나 리퍼블릭
 lexicon	ko-KR	en-US:the arizona republican	애리조나 리퍼블릭
 lexicon	ko-KR	en-US:the atlantic	더 애틀란틱
@@ -5473,12 +5419,10 @@ lexicon	ko-KR	en-US:the big cartoon database	빅 카툰 데이터베이스
 lexicon	ko-KR	en-US:the bium	더비움
 lexicon	ko-KR	en-US:the black label	더블랙레이블
 lexicon	ko-KR	en-US:the black wall street records	더 블랙 월 스트리트 레코드
-lexicon	ko-KR	en-US:the blackstone	블랙스톤
 lexicon	ko-KR	en-US:the body shop	더바디샵
 lexicon	ko-KR	en-US:the body's	더바디스
 lexicon	ko-KR	en-US:the boring company	더 보링 컴퍼니
 lexicon	ko-KR	en-US:the born korea	더본코리아
-lexicon	ko-KR	en-US:the boston daily globe	보스턴 글로브
 lexicon	ko-KR	en-US:the boston globe	보스턴 글로브
 lexicon	ko-KR	en-US:the boston herald	보스턴 헤럴드
 lexicon	ko-KR	en-US:the british motor	브리티시 모터
@@ -5502,7 +5446,6 @@ lexicon	ko-KR	en-US:the elder statesman	더 엘더 스테이츠만
 lexicon	ko-KR	en-US:the executive centre	디이그제큐티브센터
 lexicon	ko-KR	en-US:the frypan fried chicken	더후라이팬후라이드치킨
 lexicon	ko-KR	en-US:the futon critic	퓨턴 크리틱
-lexicon	ko-KR	en-US:the gap	갭
 lexicon	ko-KR	en-US:the gold class	더골드클래스
 lexicon	ko-KR	en-US:the goldman sachs	골드만삭스
 lexicon	ko-KR	en-US:the hearst	허스트
@@ -5514,21 +5457,16 @@ lexicon	ko-KR	en-US:the hundreds	더헌드레드
 lexicon	ko-KR	en-US:the hyundai	더현대
 lexicon	ko-KR	en-US:the indianapolis star	인디애나폴리스 스타
 lexicon	ko-KR	en-US:the infinity saga	인피니티 사가
-lexicon	ko-KR	en-US:the international harvester company	인터내셔널 하베스터
 lexicon	ko-KR	en-US:the internet movie database	인터넷 영화 데이터베이스
 lexicon	ko-KR	en-US:the island def jam music	아일랜드 데프 잼 뮤직
 lexicon	ko-KR	en-US:the joongang plus	더중앙플러스
 lexicon	ko-KR	en-US:the king study cafe	더킹스터디카페
 lexicon	ko-KR	en-US:the kooples	더 쿠플스
 lexicon	ko-KR	en-US:the kraft	크래프트
-lexicon	ko-KR	en-US:the kroger	크로거
-lexicon	ko-KR	en-US:the kyoto hotel	교토호텔
 lexicon	ko-KR	en-US:the learning company	러닝 컴퍼니
 lexicon	ko-KR	en-US:the line of best fit	더 라인 오브 베스트 핏
 lexicon	ko-KR	en-US:the liter	더리터
-lexicon	ko-KR	en-US:the loft	로프트
 lexicon	ko-KR	en-US:the magnum ice cream company	더 매그넘 아이스크림 컴퍼니
-lexicon	ko-KR	en-US:the mathworks	매스웍스
 lexicon	ko-KR	en-US:the maze	더메이즈
 lexicon	ko-KR	en-US:the meatrix	미트릭스
 lexicon	ko-KR	en-US:the metals company	더 메탈스 컴퍼니
@@ -5548,7 +5486,6 @@ lexicon	ko-KR	en-US:the nut's	더넛츠
 lexicon	ko-KR	en-US:the odd gentlemen	더 오드 젠틀맨
 lexicon	ko-KR	en-US:the on	디온
 lexicon	ko-KR	en-US:the orchard	디 오차드
-lexicon	ko-KR	en-US:the palm beach post	팜비치 포스트
 lexicon	ko-KR	en-US:the philadelphia inquirer	필라델피아 인콰이어러
 lexicon	ko-KR	en-US:the pho	더포
 lexicon	ko-KR	en-US:the pinkfong company	더핑크퐁컴퍼니
@@ -5600,6 +5537,7 @@ lexicon	ko-KR	en-US:thyssenkrupp marine systems	티센크루프 마린 시스템
 lexicon	ko-KR	en-US:ticketmaster	티켓마스터
 lexicon	ko-KR	en-US:tide	타이드
 lexicon	ko-KR	en-US:tiffany's	티파니
+lexicon	ko-KR	en-US:tiger	타이거
 lexicon	ko-KR	en-US:tiger electronics	타이거 일렉트로닉스
 lexicon	ko-KR	en-US:tiger of sweden	타이거오브스웨덴
 lexicon	ko-KR	en-US:tiger research	타이거리서치
@@ -5625,7 +5563,6 @@ lexicon	ko-KR	en-US:tmaxgaia	티맥스가이아
 lexicon	ko-KR	en-US:tmaxsoft	티맥스소프트
 lexicon	ko-KR	en-US:tms music	톰스 뮤직
 lexicon	ko-KR	en-US:tn entertainment	티엔엔터테인먼트
-lexicon	ko-KR	en-US:tn nation entertainment	티엔엔터테인먼트
 lexicon	ko-KR	en-US:to go green	투고그린
 lexicon	ko-KR	en-US:to go salad	투고샐러드
 lexicon	ko-KR	en-US:toaplan	동아플랜
@@ -5646,6 +5583,7 @@ lexicon	ko-KR	en-US:toho-towa	도호 도와
 lexicon	ko-KR	en-US:tohoku shinsha	도호쿠신샤
 lexicon	ko-KR	en-US:tok transit	토크 트랜짓
 lexicon	ko-KR	en-US:tokai	토카이
+lexicon	ko-KR	en-US:tokai radio	도카이 라디오
 lexicon	ko-KR	en-US:toki air	토키에어
 lexicon	ko-KR	en-US:tokina	토키나
 lexicon	ko-KR	en-US:tokopedia	토코페디아
@@ -5672,7 +5610,6 @@ lexicon	ko-KR	en-US:tongfu microelectronics	통푸 마이크로일렉트로닉�
 lexicon	ko-KR	en-US:tongyang online	동양온라인
 lexicon	ko-KR	en-US:tongyang systems	동양시스템즈
 lexicon	ko-KR	en-US:toni & guy	토니앤가이
-lexicon	ko-KR	en-US:toni and guy	토니앤가이
 lexicon	ko-KR	en-US:tony lama boots	토니라마 부츠
 lexicon	ko-KR	en-US:tony moly	토니모리
 lexicon	ko-KR	en-US:too cool for school	투쿨포스쿨
@@ -5711,7 +5648,6 @@ lexicon	ko-KR	en-US:transcend	트랜센드
 lexicon	ko-KR	en-US:transcontainer	트랜스컨테이너
 lexicon	ko-KR	en-US:transdev	트란스데브
 lexicon	ko-KR	en-US:transformers	트랜스포머
-lexicon	ko-KR	en-US:transglobal airways	트랜스 글로벌 항공
 lexicon	ko-KR	en-US:transmashholding	트랜스마시홀딩
 lexicon	ko-KR	en-US:transmeta	트랜스메타
 lexicon	ko-KR	en-US:transmile air services	트랜스마일 에어 서비스
@@ -5730,8 +5666,8 @@ lexicon	ko-KR	en-US:trident microsystems	트라이던트 마이크로시스템�
 lexicon	ko-KR	en-US:triniel	트리니엘
 lexicon	ko-KR	en-US:trinitron	트리니트론
 lexicon	ko-KR	en-US:tripadvisor	트립어드바이저
+lexicon	ko-KR	en-US:triumph	트라이엄프
 lexicon	ko-KR	en-US:triumph international	트라이엄프 인터내셔널
-lexicon	ko-KR	en-US:triumph motor company	트라이엄프 모터 컴퍼니
 lexicon	ko-KR	en-US:trivago	트리바고
 lexicon	ko-KR	en-US:troika	트로이카
 lexicon	ko-KR	en-US:troika games	트로이카 게임즈
@@ -5756,7 +5692,6 @@ lexicon	ko-KR	en-US:turbocache	터보캐시
 lexicon	ko-KR	en-US:turkcell	투르크셀
 lexicon	ko-KR	en-US:turnbull & asser	턴불앤아서
 lexicon	ko-KR	en-US:turnbull and asser	턴불앤아서
-lexicon	ko-KR	en-US:turner broadcasting	터너 브로드캐스팅 시스템
 lexicon	ko-KR	en-US:turtle beach	터틀 비치
 lexicon	ko-KR	en-US:tutorpedia	튜터피디아
 lexicon	ko-KR	en-US:tv by the numbers	티브이 바이 더 넘버
@@ -5778,7 +5713,6 @@ lexicon	ko-KR	en-US:uber taxi	우버택시
 lexicon	ko-KR	en-US:ubisoft dusseldorf	유비소프트 뒤셀도르프
 lexicon	ko-KR	en-US:ubisoft paris	유비소프트 파리
 lexicon	ko-KR	en-US:ubisoft quebec	유비소프트 퀘백
-lexicon	ko-KR	en-US:ubisoft red storm entertainment	레드 스톰 엔터테인먼트
 lexicon	ko-KR	en-US:ubisoft reflections	유비소프트 리플렉션스
 lexicon	ko-KR	en-US:ubisoft san francisco	유비소프트 샌프란시스코
 lexicon	ko-KR	en-US:ubisoft shanghai	유비소프트 상하이
@@ -5814,10 +5748,12 @@ lexicon	ko-KR	en-US:unicredit	우니크레디트
 lexicon	ko-KR	en-US:unicredito	우니크레디트
 lexicon	ko-KR	en-US:unilever	유니레버
 lexicon	ko-KR	en-US:union carbide	유니온 카바이드
+lexicon	ko-KR	en-US:union pacific	유니언 퍼시픽
 lexicon	ko-KR	en-US:unionwave entertainment	유니온 웨이브 엔터테인먼트
 lexicon	ko-KR	en-US:uniqlo	유니클로
 lexicon	ko-KR	en-US:unison capital	유니슨캐피탈
 lexicon	ko-KR	en-US:unisys	유니시스
+lexicon	ko-KR	en-US:united	유나이티드
 lexicon	ko-KR	en-US:united artist	유나이티드 아티스츠
 lexicon	ko-KR	en-US:united artists	유나이티드 아티스츠
 lexicon	ko-KR	en-US:united continental	유나이티드 콘티넨탈
@@ -5833,10 +5769,8 @@ lexicon	ko-KR	en-US:unity technologies	유니티 테크놀로지스
 lexicon	ko-KR	en-US:universal abit	유니버설 아비트
 lexicon	ko-KR	en-US:universal air	유니버설 에어
 lexicon	ko-KR	en-US:universal motown records	유니버설 모타운 레코드
-lexicon	ko-KR	en-US:universal music	유니버설 뮤직 재팬
-lexicon	ko-KR	en-US:universal music j	유니버설 뮤직 재팬
 lexicon	ko-KR	en-US:universal music korea	유니버설 뮤직 코리아
-lexicon	ko-KR	en-US:universal network television	유니버설 텔레비전
+lexicon	ko-KR	en-US:universal republic records	유니버설 리퍼블릭 레코드
 lexicon	ko-KR	en-US:universal robina	유니버설 로비나
 lexicon	ko-KR	en-US:universal robots	유니버설 로봇
 lexicon	ko-KR	en-US:universal television	유니버설 텔레비전
@@ -5850,6 +5784,7 @@ lexicon	ko-KR	en-US:up-front promotion	업프런트 프로모션
 lexicon	ko-KR	en-US:upjohn	업존
 lexicon	ko-KR	en-US:upstage	업스테이지
 lexicon	ko-KR	en-US:uptodate	업투데이트
+lexicon	ko-KR	en-US:ural	우랄
 lexicon	ko-KR	en-US:uralkali	우랄칼리
 lexicon	ko-KR	en-US:uralvagonzavod	우랄바곤자보드
 lexicon	ko-KR	en-US:urban azit	어반아지트
@@ -5883,7 +5818,6 @@ lexicon	ko-KR	en-US:uzauto motors	우즈오토 모터스
 lexicon	ko-KR	en-US:v at home	브이앳홈
 lexicon	ko-KR	en-US:v australia	브이 오스트레일리아
 lexicon	ko-KR	en-US:v-kool	브이쿨
-lexicon	ko-KR	en-US:v-system	비디오 시스템
 lexicon	ko-KR	en-US:vacheron constantin	바쉐론 콘스탄틴
 lexicon	ko-KR	en-US:vacuactivus	베쿠액티부스
 lexicon	ko-KR	en-US:vaisala	바이살라
@@ -5904,10 +5838,11 @@ lexicon	ko-KR	en-US:vans	반스
 lexicon	ko-KR	en-US:vanwich	베니치
 lexicon	ko-KR	en-US:vanzoe	반조애
 lexicon	ko-KR	en-US:varese sarabande	바레스 사라반드
+lexicon	ko-KR	en-US:varig brasil	바리그 브라질
 lexicon	ko-KR	en-US:varo entertainment	바로엔터테인먼트
 lexicon	ko-KR	en-US:vaunce	바운스
+lexicon	ko-KR	en-US:vauxhall	복스홀
 lexicon	ko-KR	en-US:velkins	벨킨스
-lexicon	ko-KR	en-US:velvet talk	벨벳톡
 lexicon	ko-KR	en-US:velvia	벨비아
 lexicon	ko-KR	en-US:venezia	베네치아
 lexicon	ko-KR	en-US:ventus coffee	벤투스커피
@@ -5924,6 +5859,7 @@ lexicon	ko-KR	en-US:vertex pharmaceuticals	버텍스 파마슈티컬
 lexicon	ko-KR	en-US:vertigo records	버티고 레코드
 lexicon	ko-KR	en-US:vertu	버투
 lexicon	ko-KR	en-US:verve records	버브 레코드
+lexicon	ko-KR	en-US:vespa	베스파
 lexicon	ko-KR	en-US:vestas	베스타스
 lexicon	ko-KR	en-US:vetra	베트라
 lexicon	ko-KR	en-US:vexed generation	벡스드 제너레이션
@@ -5933,7 +5869,6 @@ lexicon	ko-KR	en-US:viatris	비아트리스
 lexicon	ko-KR	en-US:vibram	비브람
 lexicon	ko-KR	en-US:vice media	바이스 미디어
 lexicon	ko-KR	en-US:vice news	바이스 뉴스
-lexicon	ko-KR	en-US:victor talking machine	빅터 토킹 머신
 lexicon	ko-KR	en-US:victor talking machine company	빅터 토킹 머신 컴퍼니
 lexicon	ko-KR	en-US:victoria's secret fashion show	빅토리아 시크릿 패션 쇼
 lexicon	ko-KR	en-US:victorinox	빅토리녹스
@@ -5946,6 +5881,7 @@ lexicon	ko-KR	en-US:vie de france	비 드 프랑스
 lexicon	ko-KR	en-US:vietcombank	비엣콤뱅크
 lexicon	ko-KR	en-US:vietin bank	비에틴뱅크
 lexicon	ko-KR	en-US:vietinbank	비에틴뱅크
+lexicon	ko-KR	en-US:vietjet	비엣젯
 lexicon	ko-KR	en-US:vietnamnet	베트남넷
 lexicon	ko-KR	en-US:vietnamobile	비엣나모바일
 lexicon	ko-KR	en-US:viettel	비엣텔
@@ -5968,8 +5904,6 @@ lexicon	ko-KR	en-US:vinpearl	빈펄
 lexicon	ko-KR	en-US:virgin	버진
 lexicon	ko-KR	en-US:virgin america	버진 아메리카
 lexicon	ko-KR	en-US:virgin atlantic	버진 애틀랜틱
-lexicon	ko-KR	en-US:virgin atlantic air	버진 애틀랜틱
-lexicon	ko-KR	en-US:virgin atlantic airline	버진 애틀랜틱
 lexicon	ko-KR	en-US:virgin australia	버진 오스트레일리아
 lexicon	ko-KR	en-US:virgin express	버진 익스프레스
 lexicon	ko-KR	en-US:virgin galactic	버진 갤럭틱
@@ -5994,6 +5928,7 @@ lexicon	ko-KR	en-US:visvim	비즈빔
 lexicon	ko-KR	en-US:vitabon	비타본
 lexicon	ko-KR	en-US:vitale barberis canonico	비탈레 바르베리스 까노니꼬
 lexicon	ko-KR	en-US:vitasoy	비타소이
+lexicon	ko-KR	en-US:viva	비바
 lexicon	ko-KR	en-US:viva aerobus	비바 아에로버스
 lexicon	ko-KR	en-US:viva entertainment	비바 엔터테인먼트
 lexicon	ko-KR	en-US:viva macau	비바 마카오
@@ -6007,27 +5942,28 @@ lexicon	ko-KR	en-US:vixber	빅스버
 lexicon	ko-KR	en-US:viyella	비옐라
 lexicon	ko-KR	en-US:viz media	비즈 미디어
 lexicon	ko-KR	en-US:vkontakte	브이콘탁트
-lexicon	ko-KR	en-US:vkusno & tochka	프쿠스노 이 토치카
 lexicon	ko-KR	en-US:vkusno i tochka	프쿠스노 이 토치카
-lexicon	ko-KR	en-US:vladivostok air	블라디보스토크 항공
 lexicon	ko-KR	en-US:vodacom	보다콤
+lexicon	ko-KR	en-US:vodafone	보다폰
 lexicon	ko-KR	en-US:voestalpine	포에스트알피네
 lexicon	ko-KR	en-US:vogue	보그
 lexicon	ko-KR	en-US:vohab	보하비
 lexicon	ko-KR	en-US:voila noir	브알라누아르
 lexicon	ko-KR	en-US:voith	보이트
-lexicon	ko-KR	en-US:volaris	볼라리스 항공
-lexicon	ko-KR	en-US:volaris air	볼라리스 항공
 lexicon	ko-KR	en-US:volcom	볼컴
 lexicon	ko-KR	en-US:volfas engelman	볼파스 엥겔만
+lexicon	ko-KR	en-US:volga dnepr	볼가 드네포르
+lexicon	ko-KR	en-US:volga-dnepr	볼가 드네포르
 lexicon	ko-KR	en-US:volks	보크스
 lexicon	ko-KR	en-US:volotea	볼로테아
 lexicon	ko-KR	en-US:volvo buses	볼보버스
 lexicon	ko-KR	en-US:volvo bussar	볼보버스
+lexicon	ko-KR	en-US:volvo trucks	볼보트럭
 lexicon	ko-KR	en-US:von dutch	본 더치
 lexicon	ko-KR	en-US:vprove	비프루브
 lexicon	ko-KR	en-US:vr playce	브이알플레이스
 lexicon	ko-KR	en-US:vuco cafe	뷰코카페
+lexicon	ko-KR	en-US:vueling	부엘링
 lexicon	ko-KR	en-US:vulkan	불칸
 lexicon	ko-KR	en-US:w-scope korea	더블유스코프코리아
 lexicon	ko-KR	en-US:w-store	더블유스토어
@@ -6040,19 +5976,18 @@ lexicon	ko-KR	en-US:wajijiwa entertainment	와지지와 엔터테인먼트
 lexicon	ko-KR	en-US:wak burger	왁버거
 lexicon	ko-KR	en-US:wako	와코
 lexicon	ko-KR	en-US:walgreen	월그린
+lexicon	ko-KR	en-US:walgreens	월그린
 lexicon	ko-KR	en-US:walgreens boots alliance	월그린스 부츠 얼라이언스
 lexicon	ko-KR	en-US:waliter	와리터
 lexicon	ko-KR	en-US:walkerhill hotels & resorts	워커힐 호텔앤리조트
 lexicon	ko-KR	en-US:walki donki	워키동키커피
 lexicon	ko-KR	en-US:wall street institute	월스트리트 인스티튜트
 lexicon	ko-KR	en-US:walldaechi	월대치
-lexicon	ko-KR	en-US:walt disney home entertainment	월트 디즈니 스튜디오 홈 엔터테인먼트
 lexicon	ko-KR	en-US:walt disney imagineering	월트 디즈니 이미지니어링
 lexicon	ko-KR	en-US:walt disney records	월트 디즈니 레코드
 lexicon	ko-KR	en-US:walt disney studios home entertainment	월트 디즈니 스튜디오 홈 엔터테인먼트
 lexicon	ko-KR	en-US:walt disney studios motion pictures	월트 디즈니 스튜디오 모션 픽처스
 lexicon	ko-KR	en-US:walt disney television	월트 디즈니 텔레비전
-lexicon	ko-KR	en-US:walt disney television animation	디즈니 텔레비전 애니메이션
 lexicon	ko-KR	en-US:wanda	완다
 lexicon	ko-KR	en-US:wanderer	반더러
 lexicon	ko-KR	en-US:wanhua chemical	완화 케미컬
@@ -6071,6 +6006,7 @@ lexicon	ko-KR	en-US:warner music	워너 뮤직
 lexicon	ko-KR	en-US:warner music japan	워너 뮤직 재팬
 lexicon	ko-KR	en-US:warner records	워너 레코드
 lexicon	ko-KR	en-US:warnermedia	워너미디어
+lexicon	ko-KR	en-US:warp	워프
 lexicon	ko-KR	en-US:warriors	워리어스
 lexicon	ko-KR	en-US:wasak	와삭
 lexicon	ko-KR	en-US:wash run	워시런
@@ -6097,27 +6033,22 @@ lexicon	ko-KR	en-US:wedgwood	웨지우드
 lexicon	ko-KR	en-US:wedidit	위디딧
 lexicon	ko-KR	en-US:wehome	위홈
 lexicon	ko-KR	en-US:weibo	시나 웨이보
-lexicon	ko-KR	en-US:welch foods	웰치스
 lexicon	ko-KR	en-US:wella	웰라
 lexicon	ko-KR	en-US:wellbeing square onnuri	웰빙스퀘어온누리
 lexicon	ko-KR	en-US:wellington management company	웰링턴 매니지먼트 컴퍼니
-lexicon	ko-KR	en-US:wells fargo bank	웰스 파고
+lexicon	ko-KR	en-US:wellness	웰니스
 lexicon	ko-KR	en-US:weltmeister	벨트마이스터
 lexicon	ko-KR	en-US:wemade entertainment	위메이드 엔터테인먼트
 lexicon	ko-KR	en-US:wemade max	위메이드맥스
 lexicon	ko-KR	en-US:wendys	웬디스
 lexicon	ko-KR	en-US:weneed	위닛
 lexicon	ko-KR	en-US:west jet	웨스트제트
-lexicon	ko-KR	en-US:west jet air	웨스트제트
 lexicon	ko-KR	en-US:western electric	웨스턴 일렉트릭
-lexicon	ko-KR	en-US:western electric company	웨스턴 일렉트릭
 lexicon	ko-KR	en-US:western story	웨스턴스토리
 lexicon	ko-KR	en-US:western union	웨스턴 유니온
 lexicon	ko-KR	en-US:westinghouse electric	웨스팅하우스 일렉트릭
 lexicon	ko-KR	en-US:westjet	웨스트제트
-lexicon	ko-KR	en-US:westjet air	웨스트제트
 lexicon	ko-KR	en-US:westone bit entertainment	웨스톤 비트 엔터테인먼트
-lexicon	ko-KR	en-US:westpac banking	웨스트팩
 lexicon	ko-KR	en-US:westwood studios	웨스트우드 스튜디오
 lexicon	ko-KR	en-US:wetzel's pretzels	웻즐스프레즐
 lexicon	ko-KR	en-US:weverse company	위버스컴퍼니
@@ -6139,7 +6070,6 @@ lexicon	ko-KR	en-US:wid lens	위드렌즈
 lexicon	ko-KR	en-US:wikiafrica	위키아프리카
 lexicon	ko-KR	en-US:wikimedia toolforge	위키미디어 툴포지
 lexicon	ko-KR	en-US:wikinews	위키뉴스
-lexicon	ko-KR	en-US:wikipedia scanner	위키스캐너
 lexicon	ko-KR	en-US:wikipediocracy	위키페디오크러시
 lexicon	ko-KR	en-US:wikitravel	위키트래블
 lexicon	ko-KR	en-US:wikitribune	위키트리뷴
@@ -6152,14 +6082,12 @@ lexicon	ko-KR	en-US:william hill	윌리엄 힐
 lexicon	ko-KR	en-US:william rast	윌리엄 래스트
 lexicon	ko-KR	en-US:williams international	윌리엄스 인터내셔널
 lexicon	ko-KR	en-US:willis towers watson	윌리스 타워스 왓슨
-lexicon	ko-KR	en-US:wimpyuk	윔피
 lexicon	ko-KR	en-US:winc	윙크
 lexicon	ko-KR	en-US:winc lite	윙크라이트
 lexicon	ko-KR	en-US:winchester repeating arms company	윈체스터 리피팅 암스 컴퍼니
 lexicon	ko-KR	en-US:wind jet	윈드 제트
 lexicon	ko-KR	en-US:windows live spaces	윈도 라이브 스페이스
 lexicon	ko-KR	en-US:windows update	윈도 업데이트
-lexicon	ko-KR	en-US:windyty	윈디
 lexicon	ko-KR	en-US:wine brothers	와인브라더스
 lexicon	ko-KR	en-US:wine to go	와인투고
 lexicon	ko-KR	en-US:wing stop	윙스탑
@@ -6169,7 +6097,7 @@ lexicon	ko-KR	en-US:winiaaid	위니아에이드
 lexicon	ko-KR	en-US:winners benefit	위너스베네핏
 lexicon	ko-KR	en-US:winston & strawn	윈스턴 앤 스트론
 lexicon	ko-KR	en-US:winston strawn	윈스턴 앤 스트론
-lexicon	ko-KR	en-US:winter & winter	윈터 앤드 윈터 레코드
+lexicon	ko-KR	en-US:winter & winter	윈터 앤드 윈터
 lexicon	ko-KR	en-US:wirobotics	위로보틱스
 lexicon	ko-KR	en-US:wistron	윅스턴
 lexicon	ko-KR	en-US:witch sand	위치샌드
@@ -6241,7 +6169,6 @@ lexicon	ko-KR	en-US:yamaha pro audio	야마하 프로 오디오
 lexicon	ko-KR	en-US:yamazaki mazak	야마자키마작
 lexicon	ko-KR	en-US:yambo records	얌보 레코드
 lexicon	ko-KR	en-US:yammy cake	야미케이크
-lexicon	ko-KR	en-US:yamyam entertainment	냠냠 엔터테인먼트
 lexicon	ko-KR	en-US:yandex	얀덱스
 lexicon	ko-KR	en-US:yangjisa	양지사
 lexicon	ko-KR	en-US:yangtze memory technology	양쯔 메모리 테크놀로지스
@@ -6257,9 +6184,9 @@ lexicon	ko-KR	en-US:yellow farm	옐로우팜
 lexicon	ko-KR	en-US:yellow pizza	옐로우피자
 lexicon	ko-KR	en-US:yellow t&c	옐로우티엔씨
 lexicon	ko-KR	en-US:yema auto	예마 오토
+lexicon	ko-KR	en-US:yemenia	예메니아
 lexicon	ko-KR	en-US:yen press	옌 프레스
 lexicon	ko-KR	en-US:yezihyun	예지현
-lexicon	ko-KR	en-US:yh entertainment	위에화 엔터테인먼트
 lexicon	ko-KR	en-US:yingss	잉쓰
 lexicon	ko-KR	en-US:yinyuetai	인웨타이
 lexicon	ko-KR	en-US:yippee coffee	이삐커피
@@ -6290,7 +6217,6 @@ lexicon	ko-KR	en-US:youtube instant	유튜브 인스턴트
 lexicon	ko-KR	en-US:youtube kids	유튜브 키즈
 lexicon	ko-KR	en-US:youtube red	유튜브 레드
 lexicon	ko-KR	en-US:youtube studio	유튜브 스튜디오
-lexicon	ko-KR	en-US:yt instant	유튜브 인스턴트
 lexicon	ko-KR	en-US:yudetaro	유데타로
 lexicon	ko-KR	en-US:yuehua entertainment	위에화 엔터테인먼트
 lexicon	ko-KR	en-US:yuhan-kimberly	유한킴벌리
@@ -6299,13 +6225,14 @@ lexicon	ko-KR	en-US:yumekobo	유메코보
 lexicon	ko-KR	en-US:yummy friends	야미프렌즈
 lexicon	ko-KR	en-US:yun mode	윤모드
 lexicon	ko-KR	en-US:yungjin pharm	영진약품
-lexicon	ko-KR	en-US:yunikuro	유니클로
 lexicon	ko-KR	en-US:yurastec	유라스텍
+lexicon	ko-KR	en-US:yutong	유퉁
 lexicon	ko-KR	en-US:yuzu soft	유즈 소프트
 lexicon	ko-KR	en-US:yuzu-soft	유즈 소프트
 lexicon	ko-KR	en-US:yuzusoft	유즈 소프트
 lexicon	ko-KR	en-US:zabka	자브카
 lexicon	ko-KR	en-US:zachtronics	자크트로닉스
+lexicon	ko-KR	en-US:zagat	저갯
 lexicon	ko-KR	en-US:zagat survey	저갯 서베이
 lexicon	ko-KR	en-US:zain	자인
 lexicon	ko-KR	en-US:zakdang work lounge	작당 워크라운지
@@ -6335,7 +6262,6 @@ lexicon	ko-KR	en-US:zerodang	제로당
 lexicon	ko-KR	en-US:zetawiki	제타위키
 lexicon	ko-KR	en-US:zgorzelec	즈고젤레츠
 lexicon	ko-KR	en-US:zhong tong bus	중통버스
-lexicon	ko-KR	en-US:zhorjelc	즈고젤레츠
 lexicon	ko-KR	en-US:ziff davis	지프 데이비스
 lexicon	ko-KR	en-US:ziff-davis	지프 데이비스
 lexicon	ko-KR	en-US:zigquest	직퀘스트

@@ -2,6 +2,15 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Narrow the Wikidata brand builder after Jev triage: an alias takes the
+  label's Korean name only as a spelling variant of the label or when that name
+  fits it at least as well (PlayStation Trophies 플레이스테이션 네트워크 and Acer
+  Aspire Predator 에이서 프레데터 are dropped, Pagani 파가니 stays); a multiword
+  name whose content words do not align with the Korean goes to review; a
+  trailing kind word the name lacks is dropped (Triumph 트라이엄프, was 트라이엄프
+  모터) when the rest still covers the reading; keys another brand pack has are
+  skipped so rebuilds converge. Wikidata 5,053 → 4,980 entries, Jev below 0.5
+  253 → 127, below 0.3 95 → 34.
 - Read Latin words joined by hyphens or apostrophes in Korean speech part by
   part, with the joiner silent and a final 's as 스, instead of a grapheme guess
   that spoke the hyphen: e-mail 이메일 (was 에 하이픈 므에이르), Rolls-Royce
