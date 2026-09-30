@@ -68,6 +68,12 @@
             <span>UTF-8 · KO / EN · 코드믹스</span
             ><button id="clear" class="text-button">비우기</button>
           </div>
+          <details id="control-help">
+            <summary>제어 구문 도움말</summary>
+            <p class="small">입력 형식이 <b>발음 제어 표기 사용</b>일 때만 동작합니다. 예시를 누르면 입력칸에
+              넣고 입력 형식을 바꿉니다. 결과는 현재 엔진의 실제 출력(한국어)입니다.</p>
+            <div id="control-help-body"></div>
+          </details>
           <details id="expected-details">
             <summary>기대 출력과 비교</summary>
             <p class="small">일치는 지정한 기대값과 같다는 뜻입니다. 발음·표현의 독립 검토 완료를 뜻하지 않습니다.</p>
@@ -182,24 +188,79 @@
           <h2>실험 설정 <span>Configuration</span></h2>
           <button id="reset" class="text-button">기본값으로</button>
         </div>
-        <div class="config-grid">
-          <label
-            >기본 언어<select id="language">
+        <p class="small option-intro">항목마다 뜻, 기본값, 값별 실제 출력 예시를 보여 줍니다. 밑줄 친 예시를 누르면 입력칸에 넣습니다.</p>
+        <div class="option-rows" id="option-rows">
+          <div class="option-row"><label>기본 언어<select id="language">
               <option value="ko-KR">한국어 · ko-KR</option>
               <option value="en-US">영어 · en-US</option>
-            </select></label
-          ><label
-            >외국어 읽기 정책<select id="policy">
+            </select></label><p class="option-help" data-option="language"></p></div>
+          <div class="option-row"><label>외국어 읽기 정책<select id="policy">
               <option value="phonetic">문맥 언어로 발음화</option>
               <option value="preserve">원래 언어 유지</option>
               <option value="semantic">의미 현지화 (번역 아님)</option>
-            </select></label
-          ><label
-            >업무 도메인<select id="domain">
+            </select></label><p class="option-help" data-option="policy"></p></div>
+          <div class="option-row"><label>업무 도메인<select id="domain">
               <option value="none">기본 시스템</option>
-              <option value="finance-vocabulary">금융 발음사전</option><option value="finance">금융 예제 정책</option>
-            </select></label
-          >
+              <option value="finance-vocabulary">금융 발음사전</option>
+              <option value="finance">금융 예제 정책</option>
+            </select></label><p class="option-help" data-option="domain"></p></div>
+          <div class="option-row"><label>입력 형식<select id="input-format">
+              <option value="plain">일반 텍스트</option>
+              <option value="annotated">발음 제어 표기 사용</option>
+            </select></label><p class="option-help" data-option="input-format"></p></div>
+          <div class="option-row"><label>출력 목적<select id="output-mode">
+              <option value="speech">발화용 텍스트</option>
+              <option value="text">표기 보존 텍스트</option>
+            </select></label><p class="option-help" data-option="output-mode"></p></div>
+          <div class="option-row"><label>읽을 수 없는 문자<select id="unreadable">
+              <option value="preserve">원문 유지</option>
+              <option value="drop">제거</option>
+              <option value="read">모두 읽기</option>
+            </select></label><p class="option-help" data-option="unreadable"></p></div>
+          <div class="option-row"><label>괄호 안<select id="brackets">
+              <option value="read">읽기</option>
+              <option value="skip">건너뛰기</option>
+              <option value="preserve">원문 유지</option>
+            </select></label><p class="option-help" data-option="brackets"></p></div>
+          <div class="option-row"><label>미등록 외국어<select id="unknown-foreign">
+              <option value="guess">추측 발음</option>
+              <option value="spell">철자 읽기</option>
+              <option value="preserve">원문 유지</option>
+            </select></label><p class="option-help" data-option="unknown-foreign"></p></div>
+          <div class="option-row"><label>장식 문자<select id="decorative">
+              <option value="follow">위 정책 따름</option>
+              <option value="read">이름으로 읽기</option>
+            </select></label><p class="option-help" data-option="decorative"></p></div>
+          <div class="option-row"><label>대문자 약어<select id="initialism">
+              <option value="spell">철자 읽기</option>
+              <option value="word">단어 읽기</option>
+            </select></label><p class="option-help" data-option="initialism"></p></div>
+          <div class="option-row"><label>한국어 숫자 띄어쓰기<select id="spacing">
+              <option value="orthographic">맞춤법 (만 단위)</option>
+              <option value="reading-unit">읽기 단위 (단위·숫자마다)</option>
+            </select></label><p class="option-help" data-option="spacing"></p></div>
+          <div class="option-row"><label>문장 언어<select id="matrix">
+              <option value="auto">자동 (문장마다 판정)</option>
+              <option value="declared">기본 언어로 고정</option>
+              <option value="legacy">이전 방식 (토큰별 점수)</option>
+            </select></label><p class="option-help" data-option="matrix"></p></div>
+          <div class="option-row"><label>기호·이모지 이름<select id="symbol-fallback">
+              <option value="on">읽기 (없으면 영어 이름)</option>
+              <option value="native">읽기 (해당 언어 이름만)</option>
+              <option value="off">읽지 않음 (처리 불가 정책)</option>
+            </select></label><p class="option-help" data-option="symbol-fallback"></p></div>
+          <div class="option-row"><label>한자<select id="hanja">
+              <option value="passthrough">원문 유지</option>
+              <option value="korean">한국어 독음</option>
+            </select></label><p class="option-help" data-option="hanja"></p></div>
+          <div class="option-row"><label>가나<select id="kana">
+              <option value="passthrough">원문 유지</option>
+              <option value="korean">한국어로 읽기</option>
+            </select></label><p class="option-help" data-option="kana"></p></div>
+          <div class="option-row"><label>제어 표기 상한 (byte)<input id="max-control" type="number"
+            min="1" max="16384" value="4096" /></label><p class="option-help" data-option="max-control"></p></div>
+        </div>
+        <div class="config-grid">
           <div class="preset">
             <span>분할 프리셋</span>
             <div>
@@ -211,69 +272,10 @@
             </div>
           </div>
         </div>
-        <div class="config-grid">
-          <label>입력 형식<select id="input-format">
-            <option value="plain">일반 텍스트</option>
-            <option value="annotated">발음 제어 표기 사용</option>
-          </select></label>
-          <label>출력 목적<select id="output-mode">
-            <option value="speech">발화용 텍스트</option>
-            <option value="text">표기 보존 텍스트</option>
-          </select></label>
-          <label>읽을 수 없는 문자<select id="unreadable">
-            <option value="preserve">원문 유지</option>
-            <option value="drop">제거</option>
-            <option value="read">모두 읽기</option>
-          </select></label>
-          <label>괄호 안<select id="brackets">
-            <option value="read">읽기</option>
-            <option value="skip">건너뛰기</option>
-            <option value="preserve">원문 유지</option>
-          </select></label>
-          <label>미등록 외국어<select id="unknown-foreign">
-            <option value="guess">추측 발음</option>
-            <option value="spell">철자 읽기</option>
-            <option value="preserve">원문 유지</option>
-          </select></label>
-          <label>장식 문자<select id="decorative">
-            <option value="follow">위 정책 따름</option>
-            <option value="read">이름으로 읽기</option>
-          </select></label>
-          <label>대문자 약어<select id="initialism">
-            <option value="spell">철자 읽기</option>
-            <option value="word">단어 읽기</option>
-          </select></label>
-          <label>한국어 숫자 띄어쓰기<select id="spacing">
-            <option value="orthographic">맞춤법 (만 단위)</option>
-            <option value="reading-unit">읽기 단위 (단위·숫자마다)</option>
-          </select></label>
-          <label>문장 언어<select id="matrix">
-            <option value="auto">자동 (문장마다 판정)</option>
-            <option value="declared">기본 언어로 고정</option>
-            <option value="legacy">이전 방식 (토큰별 점수)</option>
-          </select></label>
-          <label>기호·이모지 이름<select id="symbol-fallback">
-            <option value="on">읽기 (없으면 영어 이름)</option>
-            <option value="native">읽기 (해당 언어 이름만)</option>
-            <option value="off">읽지 않음 (처리 불가 정책)</option>
-          </select></label>
-          <label>제어 표기 상한 (byte)<input id="max-control" type="number"
-            min="1" max="16384" value="4096" /></label>
-        </div>
         <p class="small" id="frontend-help">
-          발음 제어 표기를 켜면 <code>1{첫}번째</code>, <code>21{@native}</code>,
-          <code>-12{@sino}</code>, <code>ABC{@alphabet}마트</code>를 사용할 수 있습니다.
-          여러 단어는 <code>[[source phrase]]{지정 발음}</code>으로 묶습니다.
-          구간 전체에 규칙을 적용하려면 <code>[[서울시 12-3]]{@address}</code>,
-          <code>[[a1@b2.com]]{@email}</code>, <code>[[q1/a2]]{@url}</code>을 사용합니다.
-          해석 지정은 <code>[[0210]]{@digits}</code>, <code>[[9/25]]{@fraction}</code>,
-          <code>[[03/04/2026]]{@date-dmy}</code>처럼 사용합니다.
-          <code>@year</code>, <code>@time</code>, <code>@currency</code>, <code>@measure</code>,
-          <code>@phone</code>, <code>@version</code> 등은 “의미 지정 읽기” 예문에서 확인하세요.
-          <code>[[원문]]{@preserve}</code>는 보존, <code>[[생략]]{@skip}</code>은 해당 구간만 삭제합니다.
-          중괄호 자체는 <code>\{</code>, <code>\}</code>로 입력합니다.
-          발화용 출력은 이메일·URL을 읽을 수 있는 텍스트로 바꾸며,
-          문자 제거 설정은 발화용 출력에서만 적용합니다. 코드·태그·경로는 보호됩니다.
+          발음 제어 표기 문법과 예시는 입력창 아래 <b>제어 구문 도움말</b>에 있습니다.
+          발화용 출력은 이메일·URL을 읽을 수 있는 텍스트로 바꾸며, 문자 제거 설정은 발화용 출력에서만
+          적용합니다. 코드·태그·경로는 보호됩니다.
           <a href="https://github.com/hunydev/tts-text-frontend/blob/main/docs/input-format.md"
             target="_blank" rel="noopener">입력 문법·오류·출력 정책 안내 ↗</a>
         </p>

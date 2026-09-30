@@ -556,6 +556,7 @@ def catalog():
                 "reason": "Editable example following the selected project policy; no independent linguistic approval.",
             }
     return dict(
+        help=json.loads((Path(__file__).with_name("help.json")).read_text(encoding="utf-8")),
         version=version(),
         abi_version=1,
         samples=samples,

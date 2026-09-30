@@ -102,6 +102,8 @@ function settings(options = {}) {
     spacing: "spacing",
     matrix: "matrix",
     symbol_fallback: "symbol-fallback",
+    hanja: "hanja",
+    kana: "kana",
     max_control_bytes: "max-control",
     domain: "domain",
     first_target: "first-target",
@@ -155,6 +157,8 @@ function options() {
     spacing: $("spacing").value,
     matrix: $("matrix").value,
     symbol_fallback: $("symbol-fallback").value,
+    hanja: $("hanja").value,
+    kana: $("kana").value,
     max_control_bytes: number("max-control"),
     domain: $("domain").value,
     first_target: number("first-target"),
@@ -584,17 +588,91 @@ document
 $("run").addEventListener("click", execute);
 $("cancel").addEventListener("click", () => state.controller?.abort());
 $("source").addEventListener("input", count);
-for (const id of ["source", "expected"]) {
-  $(id).addEventListener("input", () => {
-    state.sampleReview = null;
-    $("sample-review").textContent = "직접 편집한 입력·기대 출력 · 독립 검토 상태 없음";
+/* A hand-edited input no longer matches its example's expected output: stop the
+   exact comparison until an example is chosen again (or an expected text typed). */
+function manualEdit() {
+  state.sampleReview = null;
+  $("sample").value = "";
+  $("expected-enabled").checked = false;
+  $("sample-review").textContent =
+    "직접 편집한 입력 · 정확한 텍스트 일치 검사 꺼짐 (예제를 다시 고르면 켜짐)";
+}
+$("source").addEventListener("input", manualEdit);
+$("expected").addEventListener("input", () => {
+  state.sampleReview = null;
+  $("expected-enabled").checked = $("expected").value !== "";
+  $("sample-review").textContent = "직접 편집한 기대 출력 · 독립 검토 상태 없음";
+});
+function useExample(text, annotated) {
+  $("source").value = text;
+  if (annotated) $("input-format").value = "annotated";
+  manualEdit();
+  count();
+  markStale();
+  message(
+    annotated
+      ? "제어 구문 예시를 넣고 입력 형식을 '발음 제어 표기 사용'으로 바꿨습니다. 실행해 보세요."
+      : "예시를 입력칸에 넣었습니다. 설정을 바꿔 가며 실행해 보세요.",
+  );
+}
+function exampleButton(text, annotated) {
+  const b = node("button", text, "example-link");
+  b.type = "button";
+  b.addEventListener("click", () => useExample(text, annotated));
+  return b;
+}
+/* Help text comes from tools/web/help.json via the catalog; the workbench test
+   runs every example, so the shown outputs are the engine's actual outputs. */
+function renderHelp() {
+  const help = state.catalog.help;
+  if (!help) return;
+  const body = $("control-help-body");
+  body.replaceChildren();
+  help.controls.forEach((group) => {
+    body.append(node("h4", group.group));
+    const table = node("table", undefined, "help-table");
+    group.rows.forEach((r) => {
+      const tr = node("tr");
+      const syntax = node("td");
+      syntax.append(node("code", r.syntax));
+      const example = node("td");
+      example.append(exampleButton(r.example, true), " → ", node("code", r.output));
+      tr.append(syntax, node("td", r.meaning), example);
+      table.append(tr);
+    });
+    body.append(table);
+  });
+  help.options.forEach((item) => {
+    const target = document.querySelector(`[data-option="${item.id}"]`);
+    const field = $(item.id);
+    if (!target || !field) return;
+    const label = (value) => {
+      const option = field.tagName === "SELECT" && [...field.options].find((o) => o.value === value);
+      return option ? option.dataset.label || option.textContent : String(value);
+    };
+    const fallback = state.catalog.defaults[item.key];
+    if (field.tagName === "SELECT")
+      [...field.options].forEach((o) => {
+        o.dataset.label = o.textContent;
+        if (o.value === fallback) o.textContent += " · 기본";
+      });
+    target.replaceChildren(item.desc + " ");
+    target.append(node("span", "기본값: " + label(fallback), "default"));
+    item.examples.forEach((ex) => {
+      const line = node("span", undefined, "example-line");
+      line.append("예) ", exampleButton(ex.text, false), " → ");
+      Object.entries(ex.outputs).forEach(([value, out], k) => {
+        if (k) line.append(" · ");
+        line.append(label(value) + ": ", node("code", out));
+      });
+      target.append(line);
+    });
   });
 }
 $("corpus").addEventListener("change", corpusReview);
 $("clear").addEventListener("click", () => {
   $("source").value = "";
-  state.sampleReview = null;
-  $("sample-review").textContent = "직접 편집한 입력·기대 출력 · 독립 검토 상태 없음";
+  manualEdit();
   count();
   markStale();
 });
@@ -713,6 +791,7 @@ document.addEventListener("keydown", (e) => {
       o.value = c.id;
       $("corpus").append(o);
     });
+    renderHelp();
     loadSample(state.catalog.samples[0]);
     const audit = state.catalog.reference_summary;
     $("reference-summary").textContent =

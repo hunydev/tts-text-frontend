@@ -69,6 +69,20 @@ try:
     assert catalog["reference_summary"]["pending_independent_review"] == catalog["reference_summary"]["cases"]
     assert all(item["reference_review"]["review_status"] == "pending-independent-review"
                for item in catalog["samples"] + catalog["corpora"])
+    # Every help example is the engine's actual output under the named value.
+    help_cases = 0
+    for group in catalog["help"]["controls"]:
+        for item in group["rows"]:
+            assert run(item["example"], opts={"input_format": "annotated"})[0]["text"] == item["output"], item
+            help_cases += 1
+    for item in catalog["help"]["options"]:
+        assert item["key"] in catalog["defaults"], item
+        for example in item["examples"]:
+            for value, output in example["outputs"].items():
+                actual = run(example["text"], opts={item["key"]: value})[0]["text"]
+                assert actual == output, (item["id"], value, actual, output)
+                help_cases += 1
+    assert help_cases > 60
     assert catalog["samples"][0]["text"] == "1~2만 원"
     assert catalog["samples"][0]["expected"] == "만 원에서 이만 원"
     phone_samples = [sample for sample in catalog["samples"] if sample["id"].startswith("phone-v18-")]
