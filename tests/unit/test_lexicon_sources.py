@@ -81,6 +81,13 @@ class LexiconSourceTests(unittest.TestCase):
         self.assertEqual(MANAGE.canonical("USB-C"), "usb-c")
         self.assertEqual(MANAGE.canonical("C++"), "c++")
         self.assertEqual(MANAGE.canonical("MP3"), "mp3")
+        # v0.24 Latin joiners (docs/latin-joiners.ko.md): - ' & join letter runs
+        # inside a phrase word and & stands alone between words. "alpha-beta gamma"
+        # was rejected before; a dangling joiner is still outside the grammar.
+        self.assertEqual(MANAGE.canonical("Alpha-Beta Gamma"), "alpha-beta gamma")
+        self.assertEqual(MANAGE.canonical("Mom's Pizza"), "mom's pizza")
+        self.assertEqual(MANAGE.canonical("Procter & Gamble"), "procter & gamble")
+        self.assertEqual(MANAGE.canonical("Pull&Bear"), "pull&bear")
         for term in (
             " alpha",
             "alpha ",
@@ -90,7 +97,9 @@ class LexiconSourceTests(unittest.TestCase):
             "alpha\x7f",
             "123",
             "alpha 2",
-            "alpha-beta gamma",
+            "alpha- gamma",
+            "& alpha beta",
+            "alpha beta &",
             "a b c d e f g h i",
             "a" * 96,
             "a1b",

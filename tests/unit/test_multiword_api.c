@@ -121,7 +121,9 @@ int main(int argc, char **argv) {
         {"Please check Bank of America.", "Please check Bank of America."},
         {"<code>Bank of America</code>를 확인합니다.",
          "<code>Bank of America</code>를 확인합니다."}};
-    static const char *invalid[] = {"after\neffects",    "after-effects pro", "gpt4 pro",
+    /* "after-effects pro" became a valid joiner key in v0.24 (docs/latin-joiners.ko.md);
+       a dangling hyphen is still invalid. */
+    static const char *invalid[] = {"after\neffects",    "after- pro",        "gpt4 pro",
                                     "a b c d e f g h i", " after effects",    "after effects ",
                                     "apple 애플"};
     size_t i, checks = 0;

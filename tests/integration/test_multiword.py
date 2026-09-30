@@ -138,7 +138,9 @@ with tempfile.TemporaryDirectory(prefix="ttf-multiword-") as temp:
         assert "통합발음" not in output and all(span["rule"] != "lexicon.phrase"
                                             for _, _, span in spans), (text, spans)
         checks += 1
-    for key in ("alpha-beta gamma", "alpha2 beta", "a b c d e f g h i", "a" * 94 + " bb"):
+    # "alpha-beta gamma" is a valid joiner key since v0.24 (docs/latin-joiners.ko.md);
+    # a dangling hyphen stays invalid.
+    for key in ("alpha- gamma", "alpha2 beta", "a b c d e f g h i", "a" * 94 + " bb"):
         customer.write_text(f"lexicon\tko-KR\ten-US:{key}\t잘못된읽기\n", encoding="utf-8")
         run = subprocess.run([cli, "normalize", "--resources", resources, "--customer",
                               str(customer), "Alpha Beta는 설명입니다."], capture_output=True,

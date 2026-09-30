@@ -77,7 +77,9 @@ with tempfile.TemporaryDirectory() as directory:
     # errors instead of accepting keys that can never match the tokenizer.
     malformed = ("New York", ":New York", "en-US:", "en-US:New\u00a0York",
                  "en-US:New\vYork", "en-US:New\fYork", "en-US:New York 2",
-                 "en-US:New-York City", "en-US:New York 서울",
+                 # New-York City is a valid joiner key since v0.24; a
+                 # dangling hyphen is still unsupported.
+                 "en-US:New- York City", "en-US:New York 서울",
                  "en-US:" + " ".join(["a"] * 9), "en-US:" + "a " * 47 + "aa")
     for key in malformed:
         overlay.write_text(f"lexicon\tko-KR\t{key}\t거부대상\n", encoding="utf-8")
