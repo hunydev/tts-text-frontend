@@ -50,6 +50,9 @@ WORD = r"[a-z]+(?:[-'&][a-z]+)*"
 KEY = re.compile(r"^%s(?: (?:%s|&(?= )))*$" % (WORD, WORD))
 PROBE = "의 발음을 확인합니다."
 FUNCTION_WORDS = ("&", "the", "a", "an", "of", "and")
+# The fashion_brand query (Q2616791) returned only Polish towns and their
+# spelling variants (Sosnowiec, Łowicz, Bochnia), none of them a brand.
+EXCLUDED_CLASSES = {"fashion_brand"}
 
 
 def slug(term):
@@ -194,6 +197,9 @@ def main():
     stats = collections.Counter()
     by_key = collections.defaultdict(list)
     for row in rows:
+        if row["cls"] in EXCLUDED_CLASSES:
+            stats["excluded-class"] += 1
+            continue
         forms = written_forms(row)
         labels = [f for f, alias in forms if not alias]
         label_ko = korean_form(row["ko"], labels[0].lower()) if labels else None

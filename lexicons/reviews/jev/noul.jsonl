@@ -306,7 +306,6 @@
 {"checked_at": "2026-09-30", "id": "brand-ftc-brd-20170713-hey-james", "model": "jev-1.13.0", "noul": 0.78, "pronunciation": "헤이제임스", "question": "reading-matches-v1", "term": "hey james"}
 {"checked_at": "2026-09-30", "id": "brand-ftc-brd-20170739-forsta", "model": "jev-1.13.0", "noul": 0.56, "pronunciation": "포스타", "question": "reading-matches-v1", "term": "forsta"}
 {"checked_at": "2026-09-30", "id": "brand-ftc-brd-20170749-youmi", "model": "jev-1.13.0", "noul": 0.6, "pronunciation": "여우미", "question": "reading-matches-v1", "term": "youmi"}
-{"checked_at": "2026-09-30", "id": "brand-ftc-brd-20170749-youminw", "model": "jev-1.13.0", "noul": 0.54, "pronunciation": "여우미네트웍스", "question": "reading-matches-v1", "term": "youminw"}
 {"checked_at": "2026-09-30", "id": "brand-ftc-brd-20170751-chiso", "model": "jev-1.13.0", "noul": 0.57, "pronunciation": "차이소", "question": "reading-matches-v1", "term": "chiso"}
 {"checked_at": "2026-09-30", "id": "brand-ftc-brd-20170772-bassetts-ice-cream", "model": "jev-1.13.0", "noul": 0.76, "pronunciation": "바세츠아이스크림", "question": "reading-matches-v1", "term": "bassetts ice cream"}
 {"checked_at": "2026-09-30", "id": "brand-ftc-brd-20170824-soufflnet-cheesecake", "model": "jev-1.13.0", "noul": 0.65, "pronunciation": "수플넷치즈케이크", "question": "reading-matches-v1", "term": "soufflnet cheesecake"}
@@ -347,7 +346,7 @@
 {"checked_at": "2026-09-30", "id": "brand-ftc-brd-20171388-car-space", "model": "jev-1.13.0", "noul": 0.66, "pronunciation": "카스페이스", "question": "reading-matches-v1", "term": "car space"}
 {"checked_at": "2026-09-30", "id": "brand-ftc-brd-20171397-litway", "model": "jev-1.13.0", "noul": 0.75, "pronunciation": "리트웨이", "question": "reading-matches-v1", "term": "litway"}
 {"checked_at": "2026-09-30", "id": "brand-ftc-brd-20171401-langcook-chinese-junior", "model": "jev-1.13.0", "noul": 0.72, "pronunciation": "랭쿡차이니즈주니어", "question": "reading-matches-v1", "term": "langcook chinese junior"}
-{"checked_at": "2026-09-30", "id": "brand-ftc-brd-20171402-langcook-junior", "model": "jev-1.13.0", "noul": 0.56, "pronunciation": "랭쿡주니어학원", "question": "reading-matches-v1", "term": "langcook junior"}
+{"checked_at": "2026-09-30", "id": "brand-ftc-brd-20171402-langcook-junior", "model": "jev-1.13.0", "noul": 0.77, "pronunciation": "랭쿡주니어", "question": "reading-matches-v1", "term": "langcook junior"}
 {"checked_at": "2026-09-30", "id": "brand-ftc-brd-20171405-pilsner-house", "model": "jev-1.13.0", "noul": 0.84, "pronunciation": "필스너하우스", "question": "reading-matches-v1", "term": "pilsner house"}
 {"checked_at": "2026-09-30", "id": "brand-ftc-brd-20171411-eyesaver", "model": "jev-1.13.0", "noul": 0.79, "pronunciation": "아이세이버", "question": "reading-matches-v1", "term": "eyesaver"}
 {"checked_at": "2026-09-30", "id": "brand-ftc-brd-20171419-pho_n_sydney", "model": "jev-1.13.0", "noul": 0.83, "pronunciation": "포앤시드니", "question": "reading-matches-v1", "term": "pho&sydney"}
@@ -404,7 +403,6 @@
 {"checked_at": "2026-09-30", "id": "brand-ftc-brd-20180446-pistar-kitchen", "model": "jev-1.13.0", "noul": 0.78, "pronunciation": "피스타키친", "question": "reading-matches-v1", "term": "pistar kitchen"}
 {"checked_at": "2026-09-30", "id": "brand-ftc-brd-20180458-pho_n_banh", "model": "jev-1.13.0", "noul": 0.68, "pronunciation": "포앤반", "question": "reading-matches-v1", "term": "pho&banh"}
 {"checked_at": "2026-09-30", "id": "brand-ftc-brd-20180468-arco-valeno", "model": "jev-1.13.0", "noul": 0.79, "pronunciation": "아르코발레노", "question": "reading-matches-v1", "term": "arco valeno"}
-{"checked_at": "2026-09-30", "id": "brand-ftc-brd-20180469-empower", "model": "jev-1.13.0", "noul": 0.58, "pronunciation": "이엠파워", "question": "reading-matches-v1", "term": "empower"}
 {"checked_at": "2026-09-30", "id": "brand-ftc-brd-20180479-bulk-coffee", "model": "jev-1.13.0", "noul": 0.89, "pronunciation": "벌크커피", "question": "reading-matches-v1", "term": "bulk coffee"}
 {"checked_at": "2026-09-30", "id": "brand-ftc-brd-20180499-chef-run", "model": "jev-1.13.0", "noul": 0.71, "pronunciation": "셰프런", "question": "reading-matches-v1", "term": "chef run"}
 {"checked_at": "2026-09-30", "id": "brand-ftc-brd-20180502-naisoi", "model": "jev-1.13.0", "noul": 0.59, "pronunciation": "나이쏘이", "question": "reading-matches-v1", "term": "naisoi"}
@@ -707,7 +705,6 @@
 {"checked_at": "2026-09-30", "id": "brand-ftc-brd-20211044-head-doctor", "model": "jev-1.13.0", "noul": 0.82, "pronunciation": "헤드닥터", "question": "reading-matches-v1", "term": "head doctor"}
 {"checked_at": "2026-09-30", "id": "brand-ftc-brd-20211048-pick-n-go", "model": "jev-1.13.0", "noul": 0.79, "pronunciation": "픽앤고", "question": "reading-matches-v1", "term": "pick n go"}
 {"checked_at": "2026-09-30", "id": "brand-ftc-brd-20211051-saladit", "model": "jev-1.13.0", "noul": 0.77, "pronunciation": "샐러딧", "question": "reading-matches-v1", "term": "saladit"}
-{"checked_at": "2026-09-30", "id": "brand-ftc-brd-20211095-esteem", "model": "jev-1.13.0", "noul": 0.63, "pronunciation": "이스팀", "question": "reading-matches-v1", "term": "esteem"}
 {"checked_at": "2026-09-30", "id": "brand-ftc-brd-20211125-skinband", "model": "jev-1.13.0", "noul": 0.87, "pronunciation": "스킨밴드", "question": "reading-matches-v1", "term": "skinband"}
 {"checked_at": "2026-09-30", "id": "brand-ftc-brd-20211135-rollia", "model": "jev-1.13.0", "noul": 0.77, "pronunciation": "롤리아", "question": "reading-matches-v1", "term": "rollia"}
 {"checked_at": "2026-09-30", "id": "brand-ftc-brd-20211136-bowl-recipe", "model": "jev-1.13.0", "noul": 0.81, "pronunciation": "보울레시피", "question": "reading-matches-v1", "term": "bowl recipe"}
@@ -1391,14 +1388,6 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q1049080-juniper-networks", "model": "jev-1.13.0", "noul": 0.92, "pronunciation": "주니퍼 네트웍스", "question": "reading-matches-v1", "term": "juniper networks"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1049195-hakone-ropeway", "model": "jev-1.13.0", "noul": 0.85, "pronunciation": "하코네 로프웨이", "question": "reading-matches-v1", "term": "hakone ropeway"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q105044428-min_s_an-electric", "model": "jev-1.13.0", "noul": 0.74, "pronunciation": "민안 일렉트릭", "question": "reading-matches-v1", "term": "min'an electric"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q105060-sosnovets", "model": "jev-1.13.0", "noul": 0.75, "pronunciation": "소스노비에츠", "question": "reading-matches-v1", "term": "sosnovets"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q105060-sosnovice", "model": "jev-1.13.0", "noul": 0.6, "pronunciation": "소스노비에츠", "question": "reading-matches-v1", "term": "sosnovice"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q105060-sosnovits", "model": "jev-1.13.0", "noul": 0.69, "pronunciation": "소스노비에츠", "question": "reading-matches-v1", "term": "sosnovits"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q105060-sosnovitz", "model": "jev-1.13.0", "noul": 0.7, "pronunciation": "소스노비에츠", "question": "reading-matches-v1", "term": "sosnovitz"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q105060-sosnovitze", "model": "jev-1.13.0", "noul": 0.7, "pronunciation": "소스노비에츠", "question": "reading-matches-v1", "term": "sosnovitze"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q105060-sosnovyets", "model": "jev-1.13.0", "noul": 0.78, "pronunciation": "소스노비에츠", "question": "reading-matches-v1", "term": "sosnovyets"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q105060-sosnowez", "model": "jev-1.13.0", "noul": 0.56, "pronunciation": "소스노비에츠", "question": "reading-matches-v1", "term": "sosnowez"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q105060-sosnowiec", "model": "jev-1.13.0", "noul": 0.75, "pronunciation": "소스노비에츠", "question": "reading-matches-v1", "term": "sosnowiec"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q105063174-cradlepoint", "model": "jev-1.13.0", "noul": 0.79, "pronunciation": "크래이들포인트", "question": "reading-matches-v1", "term": "cradlepoint"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1050690-matchbox", "model": "jev-1.13.0", "noul": 0.9, "pronunciation": "매치박스", "question": "reading-matches-v1", "term": "matchbox"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1050783-royal-brunei", "model": "jev-1.13.0", "noul": 0.88, "pronunciation": "로열 브루나이", "question": "reading-matches-v1", "term": "royal brunei"}
@@ -1407,7 +1396,6 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q105123525-aoxin", "model": "jev-1.13.0", "noul": 0.69, "pronunciation": "아오신", "question": "reading-matches-v1", "term": "aoxin"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1051799-joma", "model": "jev-1.13.0", "noul": 0.74, "pronunciation": "조마", "question": "reading-matches-v1", "term": "joma"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q10518726-headfirst-productions", "model": "jev-1.13.0", "noul": 0.85, "pronunciation": "헤드퍼스트 프로덕션", "question": "reading-matches-v1", "term": "headfirst productions"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q105213117-ateam-finergy", "model": "jev-1.13.0", "noul": 0.5, "pronunciation": "에이 팀 피나 지", "question": "reading-matches-v1", "term": "ateam finergy"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1052893-celestron", "model": "jev-1.13.0", "noul": 0.85, "pronunciation": "셀레스트론", "question": "reading-matches-v1", "term": "celestron"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1053326-nexgen", "model": "jev-1.13.0", "noul": 0.86, "pronunciation": "넥스젠", "question": "reading-matches-v1", "term": "nexgen"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q105334279-techrules", "model": "jev-1.13.0", "noul": 0.86, "pronunciation": "테크룰즈", "question": "reading-matches-v1", "term": "techrules"}
@@ -1422,7 +1410,7 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q105533334-red-bull-powertrains", "model": "jev-1.13.0", "noul": 0.82, "pronunciation": "레드불 파워트레인스", "question": "reading-matches-v1", "term": "red bull powertrains"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q105557-embraer", "model": "jev-1.13.0", "noul": 0.86, "pronunciation": "엠브라에르", "question": "reading-matches-v1", "term": "embraer"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q105584-rotten-tomatoes", "model": "jev-1.13.0", "noul": 0.78, "pronunciation": "로튼 토마토", "question": "reading-matches-v1", "term": "rotten tomatoes"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q1055882-virgin-megastores", "model": "jev-1.13.0", "noul": 0.51, "pronunciation": "버진 메가스톤", "question": "reading-matches-v1", "term": "virgin megastores"}
+{"checked_at": "2026-09-30", "id": "brand-wd-q1055882-virgin-megastores", "model": "jev-1.13.0", "noul": 0.87, "pronunciation": "버진 메가스토어스", "question": "reading-matches-v1", "term": "virgin megastores"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1056567-cervelo", "model": "jev-1.13.0", "noul": 0.77, "pronunciation": "서벨로", "question": "reading-matches-v1", "term": "cervelo"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1057130-alitalia-express", "model": "jev-1.13.0", "noul": 0.85, "pronunciation": "알리탈리아 익스프레스", "question": "reading-matches-v1", "term": "alitalia express"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1057464-hilton-worldwide", "model": "jev-1.13.0", "noul": 0.91, "pronunciation": "힐튼 월드와이드", "question": "reading-matches-v1", "term": "hilton worldwide"}
@@ -1478,14 +1466,14 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q106908381-libera-chat", "model": "jev-1.13.0", "noul": 0.8, "pronunciation": "리베라 챗", "question": "reading-matches-v1", "term": "libera chat"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q106910250-off-the-record-entertainment", "model": "jev-1.13.0", "noul": 0.81, "pronunciation": "오프더레코드 엔터테인먼트", "question": "reading-matches-v1", "term": "off the record entertainment"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1069222-zonbu", "model": "jev-1.13.0", "noul": 0.66, "pronunciation": "존부", "question": "reading-matches-v1", "term": "zonbu"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q106941933-love-shack-fancy", "model": "jev-1.13.0", "noul": 0.55, "pronunciation": "러브쉐이크팬시", "question": "reading-matches-v1", "term": "love shack fancy"}
+{"checked_at": "2026-09-30", "id": "brand-wd-q106941933-love-shack-fancy", "model": "jev-1.13.0", "noul": 0.67, "pronunciation": "러브섁팬시", "question": "reading-matches-v1", "term": "love shack fancy"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q106956398-vince-camuto", "model": "jev-1.13.0", "noul": 0.73, "pronunciation": "빈스카뮤토", "question": "reading-matches-v1", "term": "vince camuto"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1069924-zipcar", "model": "jev-1.13.0", "noul": 0.65, "pronunciation": "짚카", "question": "reading-matches-v1", "term": "zipcar"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1070131-mininova", "model": "jev-1.13.0", "noul": 0.87, "pronunciation": "미니노바", "question": "reading-matches-v1", "term": "mininova"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1070152-young-money-entertainment", "model": "jev-1.13.0", "noul": 0.45, "pronunciation": "영 머니 엔터테인먼트", "question": "reading-matches-v1", "term": "young money entertainment"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q107074885-warner-bros-discovery", "model": "jev-1.13.0", "noul": 0.86, "pronunciation": "워너 브라더스 디스커버리", "question": "reading-matches-v1", "term": "warner bros discovery"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q107074885-warner-brothers-discovery", "model": "jev-1.13.0", "noul": 0.86, "pronunciation": "워너 브라더스 디스커버리", "question": "reading-matches-v1", "term": "warner brothers discovery"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q1070974-maotai", "model": "jev-1.13.0", "noul": 0.58, "pronunciation": "마오타이주", "question": "reading-matches-v1", "term": "maotai"}
+{"checked_at": "2026-09-30", "id": "brand-wd-q1070974-maotai", "model": "jev-1.13.0", "noul": 0.86, "pronunciation": "마오타이", "question": "reading-matches-v1", "term": "maotai"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1071312-my-little-pony", "model": "jev-1.13.0", "noul": 0.93, "pronunciation": "마이 리틀 포니", "question": "reading-matches-v1", "term": "my little pony"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1071882-turbocache", "model": "jev-1.13.0", "noul": 0.85, "pronunciation": "터보캐시", "question": "reading-matches-v1", "term": "turbocache"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q107257663-ubisoft-dusseldorf", "model": "jev-1.13.0", "noul": 0.88, "pronunciation": "유비소프트 뒤셀도르프", "question": "reading-matches-v1", "term": "ubisoft dusseldorf"}
@@ -1511,7 +1499,7 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q107483865-h_n_entertainment", "model": "jev-1.13.0", "noul": 0.87, "pronunciation": "에이치앤드엔터테인먼트", "question": "reading-matches-v1", "term": "h&entertainment"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1074851-giza-studio", "model": "jev-1.13.0", "noul": 0.44, "pronunciation": "기자 스튜디오", "question": "reading-matches-v1", "term": "giza studio"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q107503601-the-metals-company", "model": "jev-1.13.0", "noul": 0.85, "pronunciation": "더 메탈스 컴퍼니", "question": "reading-matches-v1", "term": "the metals company"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q1075485-so-so-def-recordings", "model": "jev-1.13.0", "noul": 0.6, "pronunciation": "소 소 데프 레코드", "question": "reading-matches-v1", "term": "so so def recordings"}
+{"checked_at": "2026-09-30", "id": "brand-wd-q1075485-so-so-def-recordings", "model": "jev-1.13.0", "noul": 0.71, "pronunciation": "소 소 데프 레코딩스", "question": "reading-matches-v1", "term": "so so def recordings"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1075971-galanz", "model": "jev-1.13.0", "noul": 0.77, "pronunciation": "갈란츠", "question": "reading-matches-v1", "term": "galanz"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q107750587-gwangju-global-motors", "model": "jev-1.13.0", "noul": 0.81, "pronunciation": "광주글로벌모터스", "question": "reading-matches-v1", "term": "gwangju global motors"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q107795342-muyedang", "model": "jev-1.13.0", "noul": 0.5, "pronunciation": "무예당", "question": "reading-matches-v1", "term": "muyedang"}
@@ -1545,8 +1533,8 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q108821670-sublime-artist-agency", "model": "jev-1.13.0", "noul": 0.84, "pronunciation": "써브라임아티스트에이전시", "question": "reading-matches-v1", "term": "sublime artist agency"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1088453-chrysalis-records", "model": "jev-1.13.0", "noul": 0.84, "pronunciation": "크리설리스 레코드", "question": "reading-matches-v1", "term": "chrysalis records"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q108853747-happy-tribe-entertainment", "model": "jev-1.13.0", "noul": 0.86, "pronunciation": "해피트라이브엔터테인먼트", "question": "reading-matches-v1", "term": "happy tribe entertainment"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q108876386-big-planet-made", "model": "jev-1.13.0", "noul": 0.51, "pronunciation": "빅플래닛메이드엔터", "question": "reading-matches-v1", "term": "big planet made"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q108876386-big-planet-made-entertainment", "model": "jev-1.13.0", "noul": 0.62, "pronunciation": "빅플래닛메이드엔터", "question": "reading-matches-v1", "term": "big planet made entertainment"}
+{"checked_at": "2026-09-30", "id": "brand-wd-q108876386-big-planet-made", "model": "jev-1.13.0", "noul": 0.78, "pronunciation": "빅플래닛메이드", "question": "reading-matches-v1", "term": "big planet made"}
+{"checked_at": "2026-09-30", "id": "brand-wd-q108876386-big-planet-made-entertainment", "model": "jev-1.13.0", "noul": 0.82, "pronunciation": "빅플래닛메이드 엔터테인먼트", "question": "reading-matches-v1", "term": "big planet made entertainment"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1088869-ps-company", "model": "jev-1.13.0", "noul": 0.88, "pronunciation": "피에스 컴퍼니", "question": "reading-matches-v1", "term": "ps company"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q108899227-bowery-farming", "model": "jev-1.13.0", "noul": 0.82, "pronunciation": "바워리 파밍", "question": "reading-matches-v1", "term": "bowery farming"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q108922362-mini-melts", "model": "jev-1.13.0", "noul": 0.79, "pronunciation": "미니멜츠", "question": "reading-matches-v1", "term": "mini melts"}
@@ -1585,7 +1573,6 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q109888-fedora-project", "model": "jev-1.13.0", "noul": 0.91, "pronunciation": "페도라 프로젝트", "question": "reading-matches-v1", "term": "fedora project"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1099064-clavia", "model": "jev-1.13.0", "noul": 0.85, "pronunciation": "클라비아", "question": "reading-matches-v1", "term": "clavia"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q10996045-kaggle", "model": "jev-1.13.0", "noul": 0.85, "pronunciation": "캐글", "question": "reading-matches-v1", "term": "kaggle"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q109992-lovich", "model": "jev-1.13.0", "noul": 0.58, "pronunciation": "워비치", "question": "reading-matches-v1", "term": "lovich"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q110061174-sejongmall", "model": "jev-1.13.0", "noul": 0.84, "pronunciation": "세종몰", "question": "reading-matches-v1", "term": "sejongmall"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q110064872-embark-studios", "model": "jev-1.13.0", "noul": 0.82, "pronunciation": "엠바크 스튜디오", "question": "reading-matches-v1", "term": "embark studios"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1100860-clever-bot", "model": "jev-1.13.0", "noul": 0.84, "pronunciation": "클레버봇", "question": "reading-matches-v1", "term": "clever bot"}
@@ -1717,7 +1704,7 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q11297188-kapital", "model": "jev-1.13.0", "noul": 0.82, "pronunciation": "캐피탈", "question": "reading-matches-v1", "term": "kapital"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q11301739-pmang", "model": "jev-1.13.0", "noul": 0.51, "pronunciation": "피망", "question": "reading-matches-v1", "term": "pmang"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1130218-it_s_s-showtime", "model": "jev-1.13.0", "noul": 0.83, "pronunciation": "잇츠 쇼타임", "question": "reading-matches-v1", "term": "it's showtime"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q11302260-kotobank", "model": "jev-1.13.0", "noul": 0.51, "pronunciation": "고트뱅크", "question": "reading-matches-v1", "term": "kotobank"}
+{"checked_at": "2026-09-30", "id": "brand-wd-q11302260-kotobank", "model": "jev-1.13.0", "noul": 0.81, "pronunciation": "코토뱅크", "question": "reading-matches-v1", "term": "kotobank"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q11302679-komeda", "model": "jev-1.13.0", "noul": 0.89, "pronunciation": "코메다", "question": "reading-matches-v1", "term": "komeda"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q11302912-colowide", "model": "jev-1.13.0", "noul": 0.68, "pronunciation": "코로와이드", "question": "reading-matches-v1", "term": "colowide"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q11303242-complet_s_s", "model": "jev-1.13.0", "noul": 0.61, "pronunciation": "컴플리츠", "question": "reading-matches-v1", "term": "complet's"}
@@ -1809,7 +1796,7 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q11370183-kyusyu-shosen", "model": "jev-1.13.0", "noul": 0.75, "pronunciation": "규슈 쇼센", "question": "reading-matches-v1", "term": "kyusyu shosen"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1137109-video-game-publisher", "model": "jev-1.13.0", "noul": 0.9, "pronunciation": "비디오 게임 퍼블리셔", "question": "reading-matches-v1", "term": "video game publisher"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1137136-sun-express", "model": "jev-1.13.0", "noul": 0.86, "pronunciation": "썬익스프레스", "question": "reading-matches-v1", "term": "sun express"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q1137136-sun-express-air", "model": "jev-1.13.0", "noul": 0.55, "pronunciation": "썬익스프레스", "question": "reading-matches-v1", "term": "sun express air"}
+{"checked_at": "2026-09-30", "id": "brand-wd-q1137136-sun-express-air", "model": "jev-1.13.0", "noul": 0.83, "pronunciation": "썬익스프레스 에어", "question": "reading-matches-v1", "term": "sun express air"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1137136-sunexpress", "model": "jev-1.13.0", "noul": 0.87, "pronunciation": "썬익스프레스", "question": "reading-matches-v1", "term": "sunexpress"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1137289-nuance-communications", "model": "jev-1.13.0", "noul": 0.85, "pronunciation": "뉘앙스 커뮤니케이션즈", "question": "reading-matches-v1", "term": "nuance communications"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q11374357-keisei", "model": "jev-1.13.0", "noul": 0.8, "pronunciation": "게이세이", "question": "reading-matches-v1", "term": "keisei"}
@@ -2081,7 +2068,7 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q1208203-general-electric-company", "model": "jev-1.13.0", "noul": 0.89, "pronunciation": "제너럴 일렉트릭 컴퍼니", "question": "reading-matches-v1", "term": "general electric company"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1208279-petro_canada", "model": "jev-1.13.0", "noul": 0.81, "pronunciation": "페트로캐나다", "question": "reading-matches-v1", "term": "petro-canada"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1208798-big-cartoon-database", "model": "jev-1.13.0", "noul": 0.87, "pronunciation": "빅 카툰 데이터베이스", "question": "reading-matches-v1", "term": "big cartoon database"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q1208798-the-big-cartoon-database", "model": "jev-1.13.0", "noul": 0.55, "pronunciation": "빅 카툰 데이터베이스", "question": "reading-matches-v1", "term": "the big cartoon database"}
+{"checked_at": "2026-09-30", "id": "brand-wd-q1208798-the-big-cartoon-database", "model": "jev-1.13.0", "noul": 0.81, "pronunciation": "더 빅 카툰 데이터베이스", "question": "reading-matches-v1", "term": "the big cartoon database"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1209119-djarum", "model": "jev-1.13.0", "noul": 0.64, "pronunciation": "자럼", "question": "reading-matches-v1", "term": "djarum"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q120968273-idus", "model": "jev-1.13.0", "noul": 0.43, "pronunciation": "아이디어스", "question": "reading-matches-v1", "term": "idus"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1209832-pro-wrestling-noah", "model": "jev-1.13.0", "noul": 0.87, "pronunciation": "프로레슬링 노아", "question": "reading-matches-v1", "term": "pro wrestling noah"}
@@ -2123,7 +2110,7 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q1239326-monolith-software", "model": "jev-1.13.0", "noul": 0.69, "pronunciation": "모놀리스 소프트", "question": "reading-matches-v1", "term": "monolith software"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q123987079-play-m-entertainment", "model": "jev-1.13.0", "noul": 0.84, "pronunciation": "플레이엠엔터테인먼트", "question": "reading-matches-v1", "term": "play m entertainment"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q124097510-mind-foundry", "model": "jev-1.13.0", "noul": 0.9, "pronunciation": "마인드 파운드리", "question": "reading-matches-v1", "term": "mind foundry"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q124499545-glaxo-smithkline-korea", "model": "jev-1.13.0", "noul": 0.5, "pronunciation": "글락소스미스클라인", "question": "reading-matches-v1", "term": "glaxo smithkline korea"}
+{"checked_at": "2026-09-30", "id": "brand-wd-q124499545-glaxo-smithkline-korea", "model": "jev-1.13.0", "noul": 0.81, "pronunciation": "글락소스미스클라인 코리아", "question": "reading-matches-v1", "term": "glaxo smithkline korea"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q124607404-hygon-information-technology", "model": "jev-1.13.0", "noul": 0.8, "pronunciation": "하이곤 인포메이션 테크놀로지", "question": "reading-matches-v1", "term": "hygon information technology"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q124631943-weverse-company", "model": "jev-1.13.0", "noul": 0.89, "pronunciation": "위버스컴퍼니", "question": "reading-matches-v1", "term": "weverse company"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1246399-mediaworks", "model": "jev-1.13.0", "noul": 0.88, "pronunciation": "미디어웍스", "question": "reading-matches-v1", "term": "mediaworks"}
@@ -2285,7 +2272,7 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q130356104-lunchly", "model": "jev-1.13.0", "noul": 0.71, "pronunciation": "런치리", "question": "reading-matches-v1", "term": "lunchly"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q130360425-corentec", "model": "jev-1.13.0", "noul": 0.77, "pronunciation": "코렌텍", "question": "reading-matches-v1", "term": "corentec"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q130385091-virtual-entertainment", "model": "jev-1.13.0", "noul": 0.9, "pronunciation": "버추얼 엔터테인먼트", "question": "reading-matches-v1", "term": "virtual entertainment"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q130427007-solid", "model": "jev-1.13.0", "noul": 0.77, "pronunciation": "쏠리드", "question": "reading-matches-v1", "term": "solid"}
+{"checked_at": "2026-09-30", "id": "brand-wd-q130427007-solid", "model": "jev-1.13.0", "noul": 0.88, "pronunciation": "솔리드", "question": "reading-matches-v1", "term": "solid"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q130479808-core-contents-media", "model": "jev-1.13.0", "noul": 0.8, "pronunciation": "코어콘텐츠미디어", "question": "reading-matches-v1", "term": "core contents media"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q130486239-empyrean-technology", "model": "jev-1.13.0", "noul": 0.8, "pronunciation": "엠피리언 테크놀로지", "question": "reading-matches-v1", "term": "empyrean technology"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1305019-vibram", "model": "jev-1.13.0", "noul": 0.88, "pronunciation": "비브람", "question": "reading-matches-v1", "term": "vibram"}
@@ -2367,7 +2354,7 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q1325291-saxo-bank", "model": "jev-1.13.0", "noul": 0.81, "pronunciation": "삭소방크", "question": "reading-matches-v1", "term": "saxo bank"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1325369-elbit-systems", "model": "jev-1.13.0", "noul": 0.81, "pronunciation": "엘빗 시스템즈", "question": "reading-matches-v1", "term": "elbit systems"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1325951-virgin-mobile", "model": "jev-1.13.0", "noul": 0.9, "pronunciation": "버진 모바일", "question": "reading-matches-v1", "term": "virgin mobile"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q1326178-the-meatrix", "model": "jev-1.13.0", "noul": 0.58, "pronunciation": "미트릭스", "question": "reading-matches-v1", "term": "the meatrix"}
+{"checked_at": "2026-09-30", "id": "brand-wd-q1326178-the-meatrix", "model": "jev-1.13.0", "noul": 0.62, "pronunciation": "더 미트릭스", "question": "reading-matches-v1", "term": "the meatrix"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1327429-fincantieri", "model": "jev-1.13.0", "noul": 0.83, "pronunciation": "핀칸티에리", "question": "reading-matches-v1", "term": "fincantieri"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1327874-realnetworks", "model": "jev-1.13.0", "noul": 0.84, "pronunciation": "리얼네트웍스", "question": "reading-matches-v1", "term": "realnetworks"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1327887-iomega", "model": "jev-1.13.0", "noul": 0.87, "pronunciation": "아이오메가", "question": "reading-matches-v1", "term": "iomega"}
@@ -2455,7 +2442,7 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q135968298-injo-in_s_gan", "model": "jev-1.13.0", "noul": 0.59, "pronunciation": "인조 인간", "question": "reading-matches-v1", "term": "injo in'gan"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q135972932-bilibili-manhua", "model": "jev-1.13.0", "noul": 0.84, "pronunciation": "빌리빌리 만화", "question": "reading-matches-v1", "term": "bilibili manhua"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q135972932-bilibili-manhwa", "model": "jev-1.13.0", "noul": 0.85, "pronunciation": "빌리빌리 만화", "question": "reading-matches-v1", "term": "bilibili manhwa"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q135972932-bilibilicomics", "model": "jev-1.13.0", "noul": 0.58, "pronunciation": "빌리빌리 만화", "question": "reading-matches-v1", "term": "bilibilicomics"}
+{"checked_at": "2026-09-30", "id": "brand-wd-q135972932-bilibilicomics", "model": "jev-1.13.0", "noul": 0.78, "pronunciation": "빌리빌리 코믹스", "question": "reading-matches-v1", "term": "bilibilicomics"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q135972932-bilibilimanga", "model": "jev-1.13.0", "noul": 0.76, "pronunciation": "빌리빌리 만화", "question": "reading-matches-v1", "term": "bilibilimanga"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q135972932-bilibilimanhua", "model": "jev-1.13.0", "noul": 0.76, "pronunciation": "빌리빌리 만화", "question": "reading-matches-v1", "term": "bilibilimanhua"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q135991328-fire-point", "model": "jev-1.13.0", "noul": 0.83, "pronunciation": "파이어 포인트", "question": "reading-matches-v1", "term": "fire point"}
@@ -2479,7 +2466,6 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q13635788-hennessey-performance-engineering", "model": "jev-1.13.0", "noul": 0.89, "pronunciation": "헤네시 퍼포먼스 엔지니어링", "question": "reading-matches-v1", "term": "hennessey performance engineering"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1363733-the-register", "model": "jev-1.13.0", "noul": 0.77, "pronunciation": "더 레지스터", "question": "reading-matches-v1", "term": "the register"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1364018-maybank", "model": "jev-1.13.0", "noul": 0.86, "pronunciation": "메이뱅크", "question": "reading-matches-v1", "term": "maybank"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q136409859-juling", "model": "jev-1.13.0", "noul": 0.51, "pronunciation": "쥐링", "question": "reading-matches-v1", "term": "juling"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1364834-cola-cao", "model": "jev-1.13.0", "noul": 0.76, "pronunciation": "콜라 카오", "question": "reading-matches-v1", "term": "cola cao"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q136570-zalando", "model": "jev-1.13.0", "noul": 0.73, "pronunciation": "잘란도", "question": "reading-matches-v1", "term": "zalando"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q136670153-ive-entertainment", "model": "jev-1.13.0", "noul": 0.7, "pronunciation": "아이브엔터테인먼트", "question": "reading-matches-v1", "term": "ive entertainment"}
@@ -2547,7 +2533,7 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q138002091-king-record", "model": "jev-1.13.0", "noul": 0.88, "pronunciation": "킹레코드", "question": "reading-matches-v1", "term": "king record"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q138006954-stereoboard", "model": "jev-1.13.0", "noul": 0.86, "pronunciation": "스테레오보드", "question": "reading-matches-v1", "term": "stereoboard"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q138012605-synnara-music", "model": "jev-1.13.0", "noul": 0.6, "pronunciation": "신나라뮤직", "question": "reading-matches-v1", "term": "synnara music"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q138019400-doremi-records", "model": "jev-1.13.0", "noul": 0.62, "pronunciation": "도레미레코드사", "question": "reading-matches-v1", "term": "doremi records"}
+{"checked_at": "2026-09-30", "id": "brand-wd-q138019400-doremi-records", "model": "jev-1.13.0", "noul": 0.84, "pronunciation": "도레미레코드", "question": "reading-matches-v1", "term": "doremi records"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q138053780-farm-entertainment", "model": "jev-1.13.0", "noul": 0.86, "pronunciation": "팜 엔터테인먼트", "question": "reading-matches-v1", "term": "farm entertainment"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q138057009-seah-superalloy-technologies", "model": "jev-1.13.0", "noul": 0.84, "pronunciation": "세아 슈퍼알로이 테크놀로지스", "question": "reading-matches-v1", "term": "seah superalloy technologies"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1380797-taylormade", "model": "jev-1.13.0", "noul": 0.92, "pronunciation": "테일러메이드", "question": "reading-matches-v1", "term": "taylormade"}
@@ -2734,7 +2720,6 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q14647-sun-microsystems", "model": "jev-1.13.0", "noul": 0.9, "pronunciation": "썬 마이크로시스템즈", "question": "reading-matches-v1", "term": "sun microsystems"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1465351-lifan", "model": "jev-1.13.0", "noul": 0.77, "pronunciation": "리판", "question": "reading-matches-v1", "term": "lifan"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q14681798-cybermed", "model": "jev-1.13.0", "noul": 0.89, "pronunciation": "사이버메드", "question": "reading-matches-v1", "term": "cybermed"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q146820-malbork", "model": "jev-1.13.0", "noul": 0.8, "pronunciation": "말보르크", "question": "reading-matches-v1", "term": "malbork"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1469447-winchester-repeating-arms-company", "model": "jev-1.13.0", "noul": 0.87, "pronunciation": "윈체스터 리피팅 암스 컴퍼니", "question": "reading-matches-v1", "term": "winchester repeating arms company"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1469903-sage", "model": "jev-1.13.0", "noul": 0.84, "pronunciation": "세이지", "question": "reading-matches-v1", "term": "sage"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1470329-the-victor-talking-machine-company", "model": "jev-1.13.0", "noul": 0.85, "pronunciation": "빅터 토킹 머신 컴퍼니", "question": "reading-matches-v1", "term": "the victor talking machine company"}
@@ -2755,7 +2740,6 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q14772-baidu", "model": "jev-1.13.0", "noul": 0.84, "pronunciation": "바이두", "question": "reading-matches-v1", "term": "baidu"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1477575-smithfield-foods", "model": "jev-1.13.0", "noul": 0.86, "pronunciation": "스미스필드 푸즈", "question": "reading-matches-v1", "term": "smithfield foods"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1477881-pegaso", "model": "jev-1.13.0", "noul": 0.71, "pronunciation": "페가소", "question": "reading-matches-v1", "term": "pegaso"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q147929-zgorzelec", "model": "jev-1.13.0", "noul": 0.63, "pronunciation": "즈고젤레츠", "question": "reading-matches-v1", "term": "zgorzelec"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q14799-lenovo", "model": "jev-1.13.0", "noul": 0.86, "pronunciation": "레노버", "question": "reading-matches-v1", "term": "lenovo"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1481820-virgin-interactive", "model": "jev-1.13.0", "noul": 0.85, "pronunciation": "버진 인터랙티브", "question": "reading-matches-v1", "term": "virgin interactive"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q14828461-joonggonara", "model": "jev-1.13.0", "noul": 0.6, "pronunciation": "중고나라", "question": "reading-matches-v1", "term": "joonggonara"}
@@ -2836,7 +2820,6 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q154950-royal-dutch-shell", "model": "jev-1.13.0", "noul": 0.81, "pronunciation": "로열 더치 쉘", "question": "reading-matches-v1", "term": "royal dutch shell"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1549526-spark-new-zealand", "model": "jev-1.13.0", "noul": 0.91, "pronunciation": "스파크 뉴질랜드", "question": "reading-matches-v1", "term": "spark new zealand"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q155038-germanwings", "model": "jev-1.13.0", "noul": 0.83, "pronunciation": "저먼윙스", "question": "reading-matches-v1", "term": "germanwings"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q155088-krasnystaw", "model": "jev-1.13.0", "noul": 0.77, "pronunciation": "크라스니스타프", "question": "reading-matches-v1", "term": "krasnystaw"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q15509774-mystic-story", "model": "jev-1.13.0", "noul": 0.8, "pronunciation": "미스틱스토리", "question": "reading-matches-v1", "term": "mystic story"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1551864-suez", "model": "jev-1.13.0", "noul": 0.84, "pronunciation": "수에즈", "question": "reading-matches-v1", "term": "suez"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q155296-heinkel", "model": "jev-1.13.0", "noul": 0.88, "pronunciation": "하인켈", "question": "reading-matches-v1", "term": "heinkel"}
@@ -2853,7 +2836,6 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q15670994-american-eagle", "model": "jev-1.13.0", "noul": 0.88, "pronunciation": "아메리칸 이글", "question": "reading-matches-v1", "term": "american eagle"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q156829-air-berlin", "model": "jev-1.13.0", "noul": 0.89, "pronunciation": "에어 베를린", "question": "reading-matches-v1", "term": "air berlin"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q156829-airberlin", "model": "jev-1.13.0", "noul": 0.86, "pronunciation": "에어 베를린", "question": "reading-matches-v1", "term": "airberlin"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q156837-kostrzyn-nad-odra", "model": "jev-1.13.0", "noul": 0.65, "pronunciation": "코스트신나트오드롱", "question": "reading-matches-v1", "term": "kostrzyn nad odra"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q157062-unilever", "model": "jev-1.13.0", "noul": 0.92, "pronunciation": "유니레버", "question": "reading-matches-v1", "term": "unilever"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1570773-kohlberg-kravis-roberts", "model": "jev-1.13.0", "noul": 0.79, "pronunciation": "콜버그 크래비스 로버츠", "question": "reading-matches-v1", "term": "kohlberg kravis roberts"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1570796-haldex", "model": "jev-1.13.0", "noul": 0.82, "pronunciation": "할덱스", "question": "reading-matches-v1", "term": "haldex"}
@@ -2865,7 +2847,7 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q1577153-penoles", "model": "jev-1.13.0", "noul": 0.62, "pronunciation": "페뇰레스", "question": "reading-matches-v1", "term": "penoles"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1579151-itausa", "model": "jev-1.13.0", "noul": 0.68, "pronunciation": "이타우사", "question": "reading-matches-v1", "term": "itausa"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q15805-hutchison-whampoa", "model": "jev-1.13.0", "noul": 0.78, "pronunciation": "허치슨 왐포아", "question": "reading-matches-v1", "term": "hutchison whampoa"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q15806047-diplomat", "model": "jev-1.13.0", "noul": 0.79, "pronunciation": "디플로마트", "question": "reading-matches-v1", "term": "diplomat"}
+{"checked_at": "2026-09-30", "id": "brand-wd-q15806047-diplomat", "model": "jev-1.13.0", "noul": 0.84, "pronunciation": "디플로맷", "question": "reading-matches-v1", "term": "diplomat"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1582724-super-bock", "model": "jev-1.13.0", "noul": 0.43, "pronunciation": "슈퍼복", "question": "reading-matches-v1", "term": "super bock"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q158283-vanity-fair", "model": "jev-1.13.0", "noul": 0.61, "pronunciation": "배너티 페어", "question": "reading-matches-v1", "term": "vanity fair"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q158285-diesel", "model": "jev-1.13.0", "noul": 0.93, "pronunciation": "디젤", "question": "reading-matches-v1", "term": "diesel"}
@@ -2873,16 +2855,14 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q1584831-mistwalker", "model": "jev-1.13.0", "noul": 0.84, "pronunciation": "미스트워커", "question": "reading-matches-v1", "term": "mistwalker"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1585448-lush", "model": "jev-1.13.0", "noul": 0.74, "pronunciation": "러쉬", "question": "reading-matches-v1", "term": "lush"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1585599-harman-international", "model": "jev-1.13.0", "noul": 0.88, "pronunciation": "하만 인터내셔널", "question": "reading-matches-v1", "term": "harman international"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q158589-pabianice", "model": "jev-1.13.0", "noul": 0.74, "pronunciation": "파비아니체", "question": "reading-matches-v1", "term": "pabianice"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1586156-rand-mcnally", "model": "jev-1.13.0", "noul": 0.85, "pronunciation": "랜드 맥날리", "question": "reading-matches-v1", "term": "rand mcnally"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1587563-slovnaft", "model": "jev-1.13.0", "noul": 0.65, "pronunciation": "슬로브나프트", "question": "reading-matches-v1", "term": "slovnaft"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q158796-radomsko", "model": "jev-1.13.0", "noul": 0.75, "pronunciation": "라돔스코", "question": "reading-matches-v1", "term": "radomsko"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q158886-nuclear-blast", "model": "jev-1.13.0", "noul": 0.78, "pronunciation": "뉴클리어 블래스트", "question": "reading-matches-v1", "term": "nuclear blast"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q15896237-kugou", "model": "jev-1.13.0", "noul": 0.67, "pronunciation": "쿠고우", "question": "reading-matches-v1", "term": "kugou"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q15897293-i_mei", "model": "jev-1.13.0", "noul": 0.77, "pronunciation": "이메이", "question": "reading-matches-v1", "term": "i-mei"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q15904636-global-mall", "model": "jev-1.13.0", "noul": 0.91, "pronunciation": "글로벌 몰", "question": "reading-matches-v1", "term": "global mall"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q15907772-meituan", "model": "jev-1.13.0", "noul": 0.81, "pronunciation": "메이퇀", "question": "reading-matches-v1", "term": "meituan"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q15911680-kingstone-books", "model": "jev-1.13.0", "noul": 0.53, "pronunciation": "킹스톤 북", "question": "reading-matches-v1", "term": "kingstone books"}
+{"checked_at": "2026-09-30", "id": "brand-wd-q15911680-kingstone-books", "model": "jev-1.13.0", "noul": 0.86, "pronunciation": "킹스톤 북스", "question": "reading-matches-v1", "term": "kingstone books"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q15911680-kingstone-bookstore", "model": "jev-1.13.0", "noul": 0.87, "pronunciation": "킹스톤 북스토어", "question": "reading-matches-v1", "term": "kingstone bookstore"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q15913890-iqiyi", "model": "jev-1.13.0", "noul": 0.72, "pronunciation": "아이치이", "question": "reading-matches-v1", "term": "iqiyi"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q15915960-xunlei", "model": "jev-1.13.0", "noul": 0.56, "pronunciation": "쉰레이", "question": "reading-matches-v1", "term": "xunlei"}
@@ -2910,7 +2890,6 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q16140965-avex-vanguard", "model": "jev-1.13.0", "noul": 0.81, "pronunciation": "에이벡스 뱅가드", "question": "reading-matches-v1", "term": "avex vanguard"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q161544-rheinmetall", "model": "jev-1.13.0", "noul": 0.83, "pronunciation": "라인메탈", "question": "reading-matches-v1", "term": "rheinmetall"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q16154874-acclaimed-music", "model": "jev-1.13.0", "noul": 0.8, "pronunciation": "어클레임드 뮤직", "question": "reading-matches-v1", "term": "acclaimed music"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q1615800-marki", "model": "jev-1.13.0", "noul": 0.79, "pronunciation": "마르키", "question": "reading-matches-v1", "term": "marki"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q16159566-lezhin-comics", "model": "jev-1.13.0", "noul": 0.88, "pronunciation": "레진코믹스", "question": "reading-matches-v1", "term": "lezhin comics"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q16159965-rowin", "model": "jev-1.13.0", "noul": 0.67, "pronunciation": "로윈", "question": "reading-matches-v1", "term": "rowin"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q16166298-hanwha-systems", "model": "jev-1.13.0", "noul": 0.88, "pronunciation": "한화시스템", "question": "reading-matches-v1", "term": "hanwha systems"}
@@ -3027,7 +3006,6 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q1689380-jimmy-johns", "model": "jev-1.13.0", "noul": 0.81, "pronunciation": "지미존스", "question": "reading-matches-v1", "term": "jimmy johns"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q16908664-hoka", "model": "jev-1.13.0", "noul": 0.85, "pronunciation": "호카", "question": "reading-matches-v1", "term": "hoka"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1691909-maldivian", "model": "jev-1.13.0", "noul": 0.84, "pronunciation": "몰디비안", "question": "reading-matches-v1", "term": "maldivian"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q169237-zdunska-wola", "model": "jev-1.13.0", "noul": 0.71, "pronunciation": "즈둔스카 볼라", "question": "reading-matches-v1", "term": "zdunska wola"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q16926220-luxshare", "model": "jev-1.13.0", "noul": 0.8, "pronunciation": "럭스쉐어", "question": "reading-matches-v1", "term": "luxshare"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q169339-glencore", "model": "jev-1.13.0", "noul": 0.85, "pronunciation": "글렌코어", "question": "reading-matches-v1", "term": "glencore"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q16935507-nature-republic", "model": "jev-1.13.0", "noul": 0.86, "pronunciation": "네이처리퍼블릭", "question": "reading-matches-v1", "term": "nature republic"}
@@ -3099,7 +3077,6 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q17216883-hakata-sanki", "model": "jev-1.13.0", "noul": 0.79, "pronunciation": "하카타 산키", "question": "reading-matches-v1", "term": "hakata sanki"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q17218299-avex-pictures", "model": "jev-1.13.0", "noul": 0.85, "pronunciation": "에이벡스 픽처스", "question": "reading-matches-v1", "term": "avex pictures"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q17219497-tokai", "model": "jev-1.13.0", "noul": 0.84, "pronunciation": "토카이", "question": "reading-matches-v1", "term": "tokai"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q17221844-qilingshi-animation", "model": "jev-1.13.0", "noul": 0.56, "pronunciation": "칠령석 애니메이션", "question": "reading-matches-v1", "term": "qilingshi animation"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q17225643-kanebo", "model": "jev-1.13.0", "noul": 0.78, "pronunciation": "가네보", "question": "reading-matches-v1", "term": "kanebo"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1722580-all-about-jazz", "model": "jev-1.13.0", "noul": 0.87, "pronunciation": "올 어바웃 재즈", "question": "reading-matches-v1", "term": "all about jazz"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q17238705-playism", "model": "jev-1.13.0", "noul": 0.83, "pronunciation": "플레이즘", "question": "reading-matches-v1", "term": "playism"}
@@ -3318,7 +3295,6 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q193023-capitol-records", "model": "jev-1.13.0", "noul": 0.86, "pronunciation": "캐피털 레코드", "question": "reading-matches-v1", "term": "capitol records"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q193136-prada", "model": "jev-1.13.0", "noul": 0.94, "pronunciation": "프라다", "question": "reading-matches-v1", "term": "prada"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1931458-micro-focus", "model": "jev-1.13.0", "noul": 0.9, "pronunciation": "마이크로 포커스", "question": "reading-matches-v1", "term": "micro focus"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q193177-sandomieras", "model": "jev-1.13.0", "noul": 0.62, "pronunciation": "산도미에시", "question": "reading-matches-v1", "term": "sandomieras"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1932886-spanx", "model": "jev-1.13.0", "noul": 0.83, "pronunciation": "스팽스", "question": "reading-matches-v1", "term": "spanx"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q193326-the-goldman-sachs", "model": "jev-1.13.0", "noul": 0.8, "pronunciation": "골드만삭스", "question": "reading-matches-v1", "term": "the goldman sachs"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q193412-texas-instruments", "model": "jev-1.13.0", "noul": 0.92, "pronunciation": "텍사스 인스트루먼트", "question": "reading-matches-v1", "term": "texas instruments"}
@@ -3375,7 +3351,7 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q19939621-naturalendo-tech", "model": "jev-1.13.0", "noul": 0.8, "pronunciation": "내츄럴엔도텍", "question": "reading-matches-v1", "term": "naturalendo tech"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q19940817-isu-system", "model": "jev-1.13.0", "noul": 0.75, "pronunciation": "이수시스템", "question": "reading-matches-v1", "term": "isu system"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q1998622-frescolita", "model": "jev-1.13.0", "noul": 0.7, "pronunciation": "프레스콜리타", "question": "reading-matches-v1", "term": "frescolita"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q20023037-shinhwa-company", "model": "jev-1.13.0", "noul": 0.61, "pronunciation": "신화컴퍼니의", "question": "reading-matches-v1", "term": "shinhwa company"}
+{"checked_at": "2026-09-30", "id": "brand-wd-q20023037-shinhwa-company", "model": "jev-1.13.0", "noul": 0.82, "pronunciation": "신화컴퍼니", "question": "reading-matches-v1", "term": "shinhwa company"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q2002710-pullman", "model": "jev-1.13.0", "noul": 0.9, "pronunciation": "풀먼", "question": "reading-matches-v1", "term": "pullman"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q2003258-swan", "model": "jev-1.13.0", "noul": 0.9, "pronunciation": "스완", "question": "reading-matches-v1", "term": "swan"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q2003258-swan-records", "model": "jev-1.13.0", "noul": 0.91, "pronunciation": "스완 레코드", "question": "reading-matches-v1", "term": "swan records"}
@@ -3393,13 +3369,11 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q201653-softbank", "model": "jev-1.13.0", "noul": 0.95, "pronunciation": "소프트뱅크", "question": "reading-matches-v1", "term": "softbank"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q201691-beiersdorf", "model": "jev-1.13.0", "noul": 0.7, "pronunciation": "바이어스도르프", "question": "reading-matches-v1", "term": "beiersdorf"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q2017-wikitravel", "model": "jev-1.13.0", "noul": 0.91, "pronunciation": "위키트래블", "question": "reading-matches-v1", "term": "wikitravel"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q201729-sanok", "model": "jev-1.13.0", "noul": 0.7, "pronunciation": "사노크", "question": "reading-matches-v1", "term": "sanok"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q2018532-love_de_lic", "model": "jev-1.13.0", "noul": 0.59, "pronunciation": "러브데릭", "question": "reading-matches-v1", "term": "love-de-lic"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q20205097-nurimedia", "model": "jev-1.13.0", "noul": 0.83, "pronunciation": "누리미디어", "question": "reading-matches-v1", "term": "nurimedia"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q2020713-rockstar-vancouver", "model": "jev-1.13.0", "noul": 0.89, "pronunciation": "록스타 밴쿠버", "question": "reading-matches-v1", "term": "rockstar vancouver"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q202133-pelikan", "model": "jev-1.13.0", "noul": 0.84, "pronunciation": "펠리컨", "question": "reading-matches-v1", "term": "pelikan"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q2021416-volcom", "model": "jev-1.13.0", "noul": 0.83, "pronunciation": "볼컴", "question": "reading-matches-v1", "term": "volcom"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q202160-kutno", "model": "jev-1.13.0", "noul": 0.72, "pronunciation": "쿠트노", "question": "reading-matches-v1", "term": "kutno"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q202440-atlantic-records", "model": "jev-1.13.0", "noul": 0.92, "pronunciation": "애틀랜틱 레코드", "question": "reading-matches-v1", "term": "atlantic records"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q2024644-tide", "model": "jev-1.13.0", "noul": 0.89, "pronunciation": "타이드", "question": "reading-matches-v1", "term": "tide"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q2025484-openleaks", "model": "jev-1.13.0", "noul": 0.78, "pronunciation": "오픈리크스", "question": "reading-matches-v1", "term": "openleaks"}
@@ -3415,7 +3389,7 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q203262-zilog", "model": "jev-1.13.0", "noul": 0.82, "pronunciation": "자일로그", "question": "reading-matches-v1", "term": "zilog"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q2032942-williams-international", "model": "jev-1.13.0", "noul": 0.9, "pronunciation": "윌리엄스 인터내셔널", "question": "reading-matches-v1", "term": "williams international"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q2033642-volvo-trucks", "model": "jev-1.13.0", "noul": 0.8, "pronunciation": "볼보트럭", "question": "reading-matches-v1", "term": "volvo trucks"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q2035424-rushydro", "model": "jev-1.13.0", "noul": 0.61, "pronunciation": "루스기드로", "question": "reading-matches-v1", "term": "rushydro"}
+{"checked_at": "2026-09-30", "id": "brand-wd-q2035424-rushydro", "model": "jev-1.13.0", "noul": 0.75, "pronunciation": "루스하이드로", "question": "reading-matches-v1", "term": "rushydro"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q203550-alpina", "model": "jev-1.13.0", "noul": 0.88, "pronunciation": "알피나", "question": "reading-matches-v1", "term": "alpina"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q204022-bultaco", "model": "jev-1.13.0", "noul": 0.68, "pronunciation": "불타코", "question": "reading-matches-v1", "term": "bultaco"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q204122-spanair", "model": "jev-1.13.0", "noul": 0.8, "pronunciation": "스팬에어", "question": "reading-matches-v1", "term": "spanair"}
@@ -3542,7 +3516,6 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q21825010-erail", "model": "jev-1.13.0", "noul": 0.74, "pronunciation": "이레일", "question": "reading-matches-v1", "term": "erail"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q21825231-kakao-tv", "model": "jev-1.13.0", "noul": 0.88, "pronunciation": "카카오티비", "question": "reading-matches-v1", "term": "kakao tv"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q21825258-tire-bank", "model": "jev-1.13.0", "noul": 0.86, "pronunciation": "타이어뱅크", "question": "reading-matches-v1", "term": "tire bank"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q218897-terespol", "model": "jev-1.13.0", "noul": 0.79, "pronunciation": "테레스폴", "question": "reading-matches-v1", "term": "terespol"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q219400-united-artist", "model": "jev-1.13.0", "noul": 0.79, "pronunciation": "유나이티드 아티스츠", "question": "reading-matches-v1", "term": "united artist"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q219400-united-artists", "model": "jev-1.13.0", "noul": 0.85, "pronunciation": "유나이티드 아티스츠", "question": "reading-matches-v1", "term": "united artists"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q219508-citigroup", "model": "jev-1.13.0", "noul": 0.94, "pronunciation": "시티그룹", "question": "reading-matches-v1", "term": "citigroup"}
@@ -3633,14 +3606,13 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q2355880-strenesse", "model": "jev-1.13.0", "noul": 0.63, "pronunciation": "슈트레네세", "question": "reading-matches-v1", "term": "strenesse"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q2357515-stryker", "model": "jev-1.13.0", "noul": 0.91, "pronunciation": "스트라이커", "question": "reading-matches-v1", "term": "stryker"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q2358400-legacy-recordings", "model": "jev-1.13.0", "noul": 0.89, "pronunciation": "레거시 레코딩스", "question": "reading-matches-v1", "term": "legacy recordings"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q2358400-legacy-records", "model": "jev-1.13.0", "noul": 0.51, "pronunciation": "레거시 레코딩스", "question": "reading-matches-v1", "term": "legacy records"}
+{"checked_at": "2026-09-30", "id": "brand-wd-q2358400-legacy-records", "model": "jev-1.13.0", "noul": 0.83, "pronunciation": "레거시 레코즈", "question": "reading-matches-v1", "term": "legacy records"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q2362203-lamborghini-trattori", "model": "jev-1.13.0", "noul": 0.83, "pronunciation": "람보르기니 트라토리", "question": "reading-matches-v1", "term": "lamborghini trattori"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q2365235-ozon", "model": "jev-1.13.0", "noul": 0.82, "pronunciation": "오존", "question": "reading-matches-v1", "term": "ozon"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q23679958-my-nintendo", "model": "jev-1.13.0", "noul": 0.87, "pronunciation": "마이 닌텐도", "question": "reading-matches-v1", "term": "my nintendo"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q2373435-volvo-buses", "model": "jev-1.13.0", "noul": 0.83, "pronunciation": "볼보버스", "question": "reading-matches-v1", "term": "volvo buses"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q2373435-volvo-bussar", "model": "jev-1.13.0", "noul": 0.83, "pronunciation": "볼보버스", "question": "reading-matches-v1", "term": "volvo bussar"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q237512-lubin", "model": "jev-1.13.0", "noul": 0.71, "pronunciation": "루빈", "question": "reading-matches-v1", "term": "lubin"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q2378642-thomas-built-buses", "model": "jev-1.13.0", "noul": 0.64, "pronunciation": "토마스 빌트 버스", "question": "reading-matches-v1", "term": "thomas built buses"}
+{"checked_at": "2026-09-30", "id": "brand-wd-q2378642-thomas-built-buses", "model": "jev-1.13.0", "noul": 0.66, "pronunciation": "토마스 빌트 버시스", "question": "reading-matches-v1", "term": "thomas built buses"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q2381970-denza", "model": "jev-1.13.0", "noul": 0.79, "pronunciation": "덴자", "question": "reading-matches-v1", "term": "denza"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q2387094-tadano", "model": "jev-1.13.0", "noul": 0.89, "pronunciation": "타다노", "question": "reading-matches-v1", "term": "tadano"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q2388234-mixmash-records", "model": "jev-1.13.0", "noul": 0.86, "pronunciation": "믹스매시 레코드", "question": "reading-matches-v1", "term": "mixmash records"}
@@ -3671,7 +3643,7 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q24261949-irasuto_ya", "model": "jev-1.13.0", "noul": 0.72, "pronunciation": "이라스토야", "question": "reading-matches-v1", "term": "irasuto-ya"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q24273186-coridel-entertainment", "model": "jev-1.13.0", "noul": 0.83, "pronunciation": "코리델 엔터테인먼트", "question": "reading-matches-v1", "term": "coridel entertainment"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q2430466-tk-elevator", "model": "jev-1.13.0", "noul": 0.84, "pronunciation": "티케이엘리베이터", "question": "reading-matches-v1", "term": "tk elevator"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q2436187-nudie-jeans", "model": "jev-1.13.0", "noul": 0.6, "pronunciation": "누디진", "question": "reading-matches-v1", "term": "nudie jeans"}
+{"checked_at": "2026-09-30", "id": "brand-wd-q2436187-nudie-jeans", "model": "jev-1.13.0", "noul": 0.83, "pronunciation": "누디 진스", "question": "reading-matches-v1", "term": "nudie jeans"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q2439480-primavera-sound", "model": "jev-1.13.0", "noul": 0.88, "pronunciation": "프리마베라 사운드", "question": "reading-matches-v1", "term": "primavera sound"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q2443609-zebra-technologies", "model": "jev-1.13.0", "noul": 0.86, "pronunciation": "지브라 테크놀로지스", "question": "reading-matches-v1", "term": "zebra technologies"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q244457-subway", "model": "jev-1.13.0", "noul": 0.83, "pronunciation": "써브웨이", "question": "reading-matches-v1", "term": "subway"}
@@ -3834,7 +3806,6 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q26874531-musik-k-entertainment", "model": "jev-1.13.0", "noul": 0.69, "pronunciation": "뮤직케이 엔터테인먼트", "question": "reading-matches-v1", "term": "musik k entertainment"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q26921-alfa-romeo", "model": "jev-1.13.0", "noul": 0.93, "pronunciation": "알파 로메오", "question": "reading-matches-v1", "term": "alfa romeo"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q2696696-netherrealm-studios", "model": "jev-1.13.0", "noul": 0.8, "pronunciation": "네더렐름 스튜디오", "question": "reading-matches-v1", "term": "netherrealm studios"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q2696696-netherrealm-studiosle", "model": "jev-1.13.0", "noul": 0.6, "pronunciation": "네더렐름 스튜디오", "question": "reading-matches-v1", "term": "netherrealm studiosle"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q269792-ferrero", "model": "jev-1.13.0", "noul": 0.9, "pronunciation": "페레로", "question": "reading-matches-v1", "term": "ferrero"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q2698027-world-of-spectrum", "model": "jev-1.13.0", "noul": 0.88, "pronunciation": "월드 오브 스펙트럼", "question": "reading-matches-v1", "term": "world of spectrum"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q26989-infosys", "model": "jev-1.13.0", "noul": 0.86, "pronunciation": "인포시스", "question": "reading-matches-v1", "term": "infosys"}
@@ -3845,7 +3816,7 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q2703822-skywalker-sound", "model": "jev-1.13.0", "noul": 0.9, "pronunciation": "스카이워커 사운드", "question": "reading-matches-v1", "term": "skywalker sound"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q2704059-santa-cruz-operation", "model": "jev-1.13.0", "noul": 0.85, "pronunciation": "샌타크루즈 오퍼레이션", "question": "reading-matches-v1", "term": "santa cruz operation"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q2707765-viktor-and-rolf", "model": "jev-1.13.0", "noul": 0.81, "pronunciation": "빅터앤롤프", "question": "reading-matches-v1", "term": "viktor and rolf"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q2707765-viktor-rolf", "model": "jev-1.13.0", "noul": 0.64, "pronunciation": "빅터앤롤프", "question": "reading-matches-v1", "term": "viktor rolf"}
+{"checked_at": "2026-09-30", "id": "brand-wd-q2707765-viktor-rolf", "model": "jev-1.13.0", "noul": 0.86, "pronunciation": "빅터 롤프", "question": "reading-matches-v1", "term": "viktor rolf"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q2709101-maple-leaf-foods", "model": "jev-1.13.0", "noul": 0.79, "pronunciation": "메이플 리프 푸즈", "question": "reading-matches-v1", "term": "maple leaf foods"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q2712143-inxile-entertainment", "model": "jev-1.13.0", "noul": 0.58, "pronunciation": "인엑자일 엔터테인먼트", "question": "reading-matches-v1", "term": "inxile entertainment"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q2714179-empire-interactive", "model": "jev-1.13.0", "noul": 0.87, "pronunciation": "엠파이어 인터랙티브", "question": "reading-matches-v1", "term": "empire interactive"}
@@ -3862,7 +3833,7 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q2726135-groove-merchant", "model": "jev-1.13.0", "noul": 0.88, "pronunciation": "그루브 머천트", "question": "reading-matches-v1", "term": "groove merchant"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q2729871-anadolu-efes", "model": "jev-1.13.0", "noul": 0.84, "pronunciation": "아나돌루 에페스", "question": "reading-matches-v1", "term": "anadolu efes"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q2735242-old-navy", "model": "jev-1.13.0", "noul": 0.92, "pronunciation": "올드 네이비", "question": "reading-matches-v1", "term": "old navy"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q27392-bristol-cars", "model": "jev-1.13.0", "noul": 0.6, "pronunciation": "브리스톨 자동차", "question": "reading-matches-v1", "term": "bristol cars"}
+{"checked_at": "2026-09-30", "id": "brand-wd-q27392-bristol-cars", "model": "jev-1.13.0", "noul": 0.75, "pronunciation": "브리스톨 카스", "question": "reading-matches-v1", "term": "bristol cars"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q2740021-national-westminster-bank", "model": "jev-1.13.0", "noul": 0.86, "pronunciation": "내셔널 웨스트민스터 은행", "question": "reading-matches-v1", "term": "national westminster bank"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q27401-bugatti", "model": "jev-1.13.0", "noul": 0.85, "pronunciation": "부가티", "question": "reading-matches-v1", "term": "bugatti"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q2740414-team-ninja", "model": "jev-1.13.0", "noul": 0.89, "pronunciation": "팀 닌자", "question": "reading-matches-v1", "term": "team ninja"}
@@ -4136,9 +4107,8 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q3198958-monmouthpedia", "model": "jev-1.13.0", "noul": 0.81, "pronunciation": "몬머스피디아", "question": "reading-matches-v1", "term": "monmouthpedia"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q320458-ibanez", "model": "jev-1.13.0", "noul": 0.84, "pronunciation": "아이바네즈", "question": "reading-matches-v1", "term": "ibanez"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q3207159-azsamand", "model": "jev-1.13.0", "noul": 0.58, "pronunciation": "아즈샤맨드", "question": "reading-matches-v1", "term": "azsamand"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q321010-ustka", "model": "jev-1.13.0", "noul": 0.8, "pronunciation": "우스트카", "question": "reading-matches-v1", "term": "ustka"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q3212802-la-senza", "model": "jev-1.13.0", "noul": 0.71, "pronunciation": "라 센자", "question": "reading-matches-v1", "term": "la senza"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q32141-cathay-pacific", "model": "jev-1.13.0", "noul": 0.62, "pronunciation": "캐세이퍼시픽 항공", "question": "reading-matches-v1", "term": "cathay pacific"}
+{"checked_at": "2026-09-30", "id": "brand-wd-q32141-cathay-pacific", "model": "jev-1.13.0", "noul": 0.87, "pronunciation": "캐세이퍼시픽", "question": "reading-matches-v1", "term": "cathay pacific"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q3216440-lakai", "model": "jev-1.13.0", "noul": 0.68, "pronunciation": "라카이", "question": "reading-matches-v1", "term": "lakai"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q3217138-lane-crawford", "model": "jev-1.13.0", "noul": 0.83, "pronunciation": "레인 크로퍼드", "question": "reading-matches-v1", "term": "lane crawford"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q321785-brabus", "model": "jev-1.13.0", "noul": 0.89, "pronunciation": "브라부스", "question": "reading-matches-v1", "term": "brabus"}
@@ -4156,9 +4126,7 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q324670-omegle", "model": "jev-1.13.0", "noul": 0.55, "pronunciation": "오메글", "question": "reading-matches-v1", "term": "omegle"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q324784-toni-_n_-guy", "model": "jev-1.13.0", "noul": 0.83, "pronunciation": "토니앤가이", "question": "reading-matches-v1", "term": "toni & guy"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q324901-transcend", "model": "jev-1.13.0", "noul": 0.84, "pronunciation": "트랜센드", "question": "reading-matches-v1", "term": "transcend"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q324917-brzeziny", "model": "jev-1.13.0", "noul": 0.63, "pronunciation": "브셰지니", "question": "reading-matches-v1", "term": "brzeziny"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q3249419-memrise", "model": "jev-1.13.0", "noul": 0.82, "pronunciation": "멤라이즈", "question": "reading-matches-v1", "term": "memrise"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q324964-limanowa", "model": "jev-1.13.0", "noul": 0.71, "pronunciation": "리마노바", "question": "reading-matches-v1", "term": "limanowa"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q325178-bin-air", "model": "jev-1.13.0", "noul": 0.81, "pronunciation": "빈에어", "question": "reading-matches-v1", "term": "bin air"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q325454-chronoswiss", "model": "jev-1.13.0", "noul": 0.85, "pronunciation": "크로노스위스", "question": "reading-matches-v1", "term": "chronoswiss"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q325635-telefunken", "model": "jev-1.13.0", "noul": 0.82, "pronunciation": "텔레풍켄", "question": "reading-matches-v1", "term": "telefunken"}
@@ -4307,7 +4275,6 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q371820-the-reader_s_s-digest", "model": "jev-1.13.0", "noul": 0.78, "pronunciation": "리더스 다이제스트", "question": "reading-matches-v1", "term": "the reader's digest"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q372657-credit-suisse", "model": "jev-1.13.0", "noul": 0.86, "pronunciation": "크레디 스위스", "question": "reading-matches-v1", "term": "credit suisse"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q372989-fortune", "model": "jev-1.13.0", "noul": 0.85, "pronunciation": "포춘", "question": "reading-matches-v1", "term": "fortune"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q37312-internet-movie-database", "model": "jev-1.13.0", "noul": 0.53, "pronunciation": "인터넷 영화 데이터베이스", "question": "reading-matches-v1", "term": "internet movie database"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q373225-virgin-galactic", "model": "jev-1.13.0", "noul": 0.91, "pronunciation": "버진 갤럭틱", "question": "reading-matches-v1", "term": "virgin galactic"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q373246-eagle-records", "model": "jev-1.13.0", "noul": 0.86, "pronunciation": "이글 레코드", "question": "reading-matches-v1", "term": "eagle records"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q3739421-ukroboronprom", "model": "jev-1.13.0", "noul": 0.79, "pronunciation": "우크로보론프롬", "question": "reading-matches-v1", "term": "ukroboronprom"}
@@ -4344,7 +4311,7 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q386442-fox-networks", "model": "jev-1.13.0", "noul": 0.86, "pronunciation": "폭스 네트웍스", "question": "reading-matches-v1", "term": "fox networks"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q386598-evobus", "model": "jev-1.13.0", "noul": 0.77, "pronunciation": "이보버스", "question": "reading-matches-v1", "term": "evobus"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q386773-korg", "model": "jev-1.13.0", "noul": 0.86, "pronunciation": "코르그", "question": "reading-matches-v1", "term": "korg"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q386786-arctic", "model": "jev-1.13.0", "noul": 0.77, "pronunciation": "아틱", "question": "reading-matches-v1", "term": "arctic"}
+{"checked_at": "2026-09-30", "id": "brand-wd-q386786-arctic", "model": "jev-1.13.0", "noul": 0.89, "pronunciation": "아크틱", "question": "reading-matches-v1", "term": "arctic"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q3875172-newtek", "model": "jev-1.13.0", "noul": 0.87, "pronunciation": "뉴텍", "question": "reading-matches-v1", "term": "newtek"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q387539-hollywood-records", "model": "jev-1.13.0", "noul": 0.91, "pronunciation": "할리우드 레코드", "question": "reading-matches-v1", "term": "hollywood records"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q3878818-charles-and-keith", "model": "jev-1.13.0", "noul": 0.83, "pronunciation": "찰스앤키스", "question": "reading-matches-v1", "term": "charles and keith"}
@@ -4585,7 +4552,7 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q4732268-alliancebernstein", "model": "jev-1.13.0", "noul": 0.79, "pronunciation": "얼라이언스번스틴", "question": "reading-matches-v1", "term": "alliancebernstein"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q473231-gulf-air", "model": "jev-1.13.0", "noul": 0.83, "pronunciation": "걸프 에어", "question": "reading-matches-v1", "term": "gulf air"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q473231-gulfair", "model": "jev-1.13.0", "noul": 0.82, "pronunciation": "걸프 에어", "question": "reading-matches-v1", "term": "gulfair"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q473360-verbatim", "model": "jev-1.13.0", "noul": 0.32, "pronunciation": "버바팀", "question": "reading-matches-v1", "term": "verbatim"}
+{"checked_at": "2026-09-30", "id": "brand-wd-q473360-verbatim", "model": "jev-1.13.0", "noul": 0.55, "pronunciation": "버베이텀", "question": "reading-matches-v1", "term": "verbatim"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q4734166-aloft-hotels", "model": "jev-1.13.0", "noul": 0.88, "pronunciation": "알로프트 호텔즈", "question": "reading-matches-v1", "term": "aloft hotels"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q4736682-altibase", "model": "jev-1.13.0", "noul": 0.88, "pronunciation": "알티베이스", "question": "reading-matches-v1", "term": "altibase"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q4740845-amazon-china", "model": "jev-1.13.0", "noul": 0.86, "pronunciation": "아마존 차이나", "question": "reading-matches-v1", "term": "amazon china"}
@@ -4744,7 +4711,6 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q5020697-california-motor-company", "model": "jev-1.13.0", "noul": 0.91, "pronunciation": "캘리포니아 모터 컴퍼니", "question": "reading-matches-v1", "term": "california motor company"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q502121-research-in-motion", "model": "jev-1.13.0", "noul": 0.87, "pronunciation": "리서치 인 모션", "question": "reading-matches-v1", "term": "research in motion"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q502940-general-dynamics", "model": "jev-1.13.0", "noul": 0.9, "pronunciation": "제너럴 다이내믹스", "question": "reading-matches-v1", "term": "general dynamics"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q503146-starogard-gdanski", "model": "jev-1.13.0", "noul": 0.73, "pronunciation": "스타로가르트그단스키", "question": "reading-matches-v1", "term": "starogard gdanski"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q503182-petrochina", "model": "jev-1.13.0", "noul": 0.79, "pronunciation": "페트로차이나", "question": "reading-matches-v1", "term": "petrochina"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q503191-nescafe", "model": "jev-1.13.0", "noul": 0.93, "pronunciation": "네스카페", "question": "reading-matches-v1", "term": "nescafe"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q503405-victorinox", "model": "jev-1.13.0", "noul": 0.84, "pronunciation": "빅토리녹스", "question": "reading-matches-v1", "term": "victorinox"}
@@ -4784,7 +4750,6 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q5140932-coffee-time", "model": "jev-1.13.0", "noul": 0.94, "pronunciation": "커피 타임", "question": "reading-matches-v1", "term": "coffee time"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q514140-rosatom", "model": "jev-1.13.0", "noul": 0.87, "pronunciation": "로사톰", "question": "reading-matches-v1", "term": "rosatom"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q514265-autonomy", "model": "jev-1.13.0", "noul": 0.81, "pronunciation": "오토노미", "question": "reading-matches-v1", "term": "autonomy"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q51432-gniezno", "model": "jev-1.13.0", "noul": 0.75, "pronunciation": "그니에즈노", "question": "reading-matches-v1", "term": "gniezno"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q5149397-colt-car-company", "model": "jev-1.13.0", "noul": 0.87, "pronunciation": "콜트 카 컴퍼니", "question": "reading-matches-v1", "term": "colt car company"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q5152258-commcare-pharmacy", "model": "jev-1.13.0", "noul": 0.75, "pronunciation": "컴케어 파머시", "question": "reading-matches-v1", "term": "commcare pharmacy"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q5156550-complex", "model": "jev-1.13.0", "noul": 0.9, "pronunciation": "컴플렉스", "question": "reading-matches-v1", "term": "complex"}
@@ -4855,7 +4820,6 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q52856379-sptek", "model": "jev-1.13.0", "noul": 0.75, "pronunciation": "에스피텍", "question": "reading-matches-v1", "term": "sptek"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q52856442-yurastec", "model": "jev-1.13.0", "noul": 0.83, "pronunciation": "유라스텍", "question": "reading-matches-v1", "term": "yurastec"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q5288580-dohwa-engineering", "model": "jev-1.13.0", "noul": 0.8, "pronunciation": "도화엔지니어링", "question": "reading-matches-v1", "term": "dohwa engineering"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q52895-ostrow-wielkopolski", "model": "jev-1.13.0", "noul": 0.83, "pronunciation": "오스트루프비엘코폴스키", "question": "reading-matches-v1", "term": "ostrow wielkopolski"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q528978-tajik-air", "model": "jev-1.13.0", "noul": 0.85, "pronunciation": "타지크 에어", "question": "reading-matches-v1", "term": "tajik air"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q5291085-dominion-voting-systems", "model": "jev-1.13.0", "noul": 0.82, "pronunciation": "도미니언 보팅 시스템", "question": "reading-matches-v1", "term": "dominion voting systems"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q5295884-dongfeng-honda", "model": "jev-1.13.0", "noul": 0.8, "pronunciation": "둥펑 혼다", "question": "reading-matches-v1", "term": "dongfeng honda"}
@@ -4903,7 +4867,6 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q53673099-ksenia-schnaider", "model": "jev-1.13.0", "noul": 0.83, "pronunciation": "크세니아 슈나이더", "question": "reading-matches-v1", "term": "ksenia schnaider"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q5367605-panon", "model": "jev-1.13.0", "noul": 0.75, "pronunciation": "파논", "question": "reading-matches-v1", "term": "panon"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q5368270-mandate-pictures", "model": "jev-1.13.0", "noul": 0.81, "pronunciation": "맨데이트 픽처스", "question": "reading-matches-v1", "term": "mandate pictures"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q5369036-hong-kong-movie-database", "model": "jev-1.13.0", "noul": 0.57, "pronunciation": "홍콩 영화 데이터베이스", "question": "reading-matches-v1", "term": "hong kong movie database"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q5370049-maclaren", "model": "jev-1.13.0", "noul": 0.85, "pronunciation": "맥클라렌", "question": "reading-matches-v1", "term": "maclaren"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q5370757-emergent-biosolutions", "model": "jev-1.13.0", "noul": 0.85, "pronunciation": "이머전트 바이오솔루션스", "question": "reading-matches-v1", "term": "emergent biosolutions"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q5370765-jcrew", "model": "jev-1.13.0", "noul": 0.87, "pronunciation": "제이 크루", "question": "reading-matches-v1", "term": "jcrew"}
@@ -4928,7 +4891,7 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q5443441-aeolus", "model": "jev-1.13.0", "noul": 0.82, "pronunciation": "아이올루스", "question": "reading-matches-v1", "term": "aeolus"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q5445393-ferro", "model": "jev-1.13.0", "noul": 0.79, "pronunciation": "페로", "question": "reading-matches-v1", "term": "ferro"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q544847-qualcomm", "model": "jev-1.13.0", "noul": 0.88, "pronunciation": "퀄컴", "question": "reading-matches-v1", "term": "qualcomm"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q5453133-first-kitchen", "model": "jev-1.13.0", "noul": 0.5, "pronunciation": "패스트 키친", "question": "reading-matches-v1", "term": "first kitchen"}
+{"checked_at": "2026-09-30", "id": "brand-wd-q5453133-first-kitchen", "model": "jev-1.13.0", "noul": 0.87, "pronunciation": "퍼스트 키친", "question": "reading-matches-v1", "term": "first kitchen"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q5453752-first-republic-bank", "model": "jev-1.13.0", "noul": 0.85, "pronunciation": "퍼스트 리퍼블릭 은행", "question": "reading-matches-v1", "term": "first republic bank"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q5455414-fitbit", "model": "jev-1.13.0", "noul": 0.9, "pronunciation": "핏비트", "question": "reading-matches-v1", "term": "fitbit"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q545565-anhui-conch-cement", "model": "jev-1.13.0", "noul": 0.84, "pronunciation": "안후이 콘치 시멘트", "question": "reading-matches-v1", "term": "anhui conch cement"}
@@ -5060,7 +5023,6 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q581161-ural", "model": "jev-1.13.0", "noul": 0.88, "pronunciation": "우랄", "question": "reading-matches-v1", "term": "ural"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q581297-eagle-air", "model": "jev-1.13.0", "noul": 0.88, "pronunciation": "이글 에어", "question": "reading-matches-v1", "term": "eagle air"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q582666-nitrome", "model": "jev-1.13.0", "noul": 0.68, "pronunciation": "나이트롬", "question": "reading-matches-v1", "term": "nitrome"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q583896-garwolin", "model": "jev-1.13.0", "noul": 0.54, "pronunciation": "가르볼린", "question": "reading-matches-v1", "term": "garwolin"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q5842736-corning", "model": "jev-1.13.0", "noul": 0.9, "pronunciation": "코닝", "question": "reading-matches-v1", "term": "corning"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q584601-baskin-robbins", "model": "jev-1.13.0", "noul": 0.89, "pronunciation": "배스킨라빈스", "question": "reading-matches-v1", "term": "baskin robbins"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q584601-baskin_robbins", "model": "jev-1.13.0", "noul": 0.89, "pronunciation": "배스킨라빈스", "question": "reading-matches-v1", "term": "baskin-robbins"}
@@ -5068,7 +5030,7 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q586260-sojitz", "model": "jev-1.13.0", "noul": 0.74, "pronunciation": "소지쯔", "question": "reading-matches-v1", "term": "sojitz"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q586564-illusion", "model": "jev-1.13.0", "noul": 0.84, "pronunciation": "일루젼", "question": "reading-matches-v1", "term": "illusion"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q58707-aeroflot", "model": "jev-1.13.0", "noul": 0.87, "pronunciation": "아에로플로트", "question": "reading-matches-v1", "term": "aeroflot"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q5871699-hitachi-zosen", "model": "jev-1.13.0", "noul": 0.62, "pronunciation": "히타치 조선", "question": "reading-matches-v1", "term": "hitachi zosen"}
+{"checked_at": "2026-09-30", "id": "brand-wd-q5871699-hitachi-zosen", "model": "jev-1.13.0", "noul": 0.83, "pronunciation": "히타치 조센", "question": "reading-matches-v1", "term": "hitachi zosen"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q58762734-huawei-cloud", "model": "jev-1.13.0", "noul": 0.92, "pronunciation": "화웨이 클라우드", "question": "reading-matches-v1", "term": "huawei cloud"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q588459-ring-of-honor", "model": "jev-1.13.0", "noul": 0.77, "pronunciation": "링 오브 오너", "question": "reading-matches-v1", "term": "ring of honor"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q5886240-grupo-imagen", "model": "jev-1.13.0", "noul": 0.79, "pronunciation": "그루포 이마헨", "question": "reading-matches-v1", "term": "grupo imagen"}
@@ -5133,7 +5095,7 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q6030458-infogear", "model": "jev-1.13.0", "noul": 0.86, "pronunciation": "인포기어", "question": "reading-matches-v1", "term": "infogear"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q60324825-all-elite-wrestling", "model": "jev-1.13.0", "noul": 0.87, "pronunciation": "올 엘리트 레슬링", "question": "reading-matches-v1", "term": "all elite wrestling"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q6045102-nol-universe", "model": "jev-1.13.0", "noul": 0.74, "pronunciation": "놀유니버스", "question": "reading-matches-v1", "term": "nol universe"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q605388-fat-wreck-chords", "model": "jev-1.13.0", "noul": 0.55, "pronunciation": "팻 렉 코드", "question": "reading-matches-v1", "term": "fat wreck chords"}
+{"checked_at": "2026-09-30", "id": "brand-wd-q605388-fat-wreck-chords", "model": "jev-1.13.0", "noul": 0.73, "pronunciation": "팻 렉 코즈", "question": "reading-matches-v1", "term": "fat wreck chords"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q605512-maybach-music", "model": "jev-1.13.0", "noul": 0.87, "pronunciation": "매이백 뮤직", "question": "reading-matches-v1", "term": "maybach music"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q605772-zamperla", "model": "jev-1.13.0", "noul": 0.76, "pronunciation": "잠펠라", "question": "reading-matches-v1", "term": "zamperla"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q60641381-the-pinkfong-company", "model": "jev-1.13.0", "noul": 0.84, "pronunciation": "더핑크퐁컴퍼니", "question": "reading-matches-v1", "term": "the pinkfong company"}
@@ -5168,7 +5130,6 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q6125565-proactiv-solution", "model": "jev-1.13.0", "noul": 0.87, "pronunciation": "프로액티브 솔루션", "question": "reading-matches-v1", "term": "proactiv solution"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q612637-teleradio_moldova", "model": "jev-1.13.0", "noul": 0.82, "pronunciation": "텔레라디오 몰도바", "question": "reading-matches-v1", "term": "teleradio-moldova"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q61357127-dorothy-company", "model": "jev-1.13.0", "noul": 0.83, "pronunciation": "도로시컴퍼니", "question": "reading-matches-v1", "term": "dorothy company"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q6137555-linux-documentation-project", "model": "jev-1.13.0", "noul": 0.53, "pronunciation": "리눅스 문서화 프로젝트", "question": "reading-matches-v1", "term": "linux documentation project"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q613801-kuju-entertainment", "model": "jev-1.13.0", "noul": 0.76, "pronunciation": "쿠주 엔터테인먼트", "question": "reading-matches-v1", "term": "kuju entertainment"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q614283-grupo-globo", "model": "jev-1.13.0", "noul": 0.85, "pronunciation": "그루포 글로부", "question": "reading-matches-v1", "term": "grupo globo"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q6149593-sony-energy-devices", "model": "jev-1.13.0", "noul": 0.83, "pronunciation": "소니 에너지 디바이스", "question": "reading-matches-v1", "term": "sony energy devices"}
@@ -5212,7 +5173,6 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q625573-nexen-tire", "model": "jev-1.13.0", "noul": 0.94, "pronunciation": "넥센타이어", "question": "reading-matches-v1", "term": "nexen tire"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q625631-jungle-entertainment", "model": "jev-1.13.0", "noul": 0.86, "pronunciation": "정글 엔터테인먼트", "question": "reading-matches-v1", "term": "jungle entertainment"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q625647-netmarble", "model": "jev-1.13.0", "noul": 0.94, "pronunciation": "넷마블", "question": "reading-matches-v1", "term": "netmarble"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q625654-ecomics", "model": "jev-1.13.0", "noul": 0.52, "pronunciation": "아이코닉스", "question": "reading-matches-v1", "term": "ecomics"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q62579358-young-_n_-reckless", "model": "jev-1.13.0", "noul": 0.65, "pronunciation": "영앤레크레스", "question": "reading-matches-v1", "term": "young & reckless"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q62579358-young-and-reckless", "model": "jev-1.13.0", "noul": 0.67, "pronunciation": "영앤레크레스", "question": "reading-matches-v1", "term": "young and reckless"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q625795-incruit", "model": "jev-1.13.0", "noul": 0.64, "pronunciation": "인크루트", "question": "reading-matches-v1", "term": "incruit"}
@@ -5246,7 +5206,7 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q63405798-infinity-saga", "model": "jev-1.13.0", "noul": 0.9, "pronunciation": "인피니티 사가", "question": "reading-matches-v1", "term": "infinity saga"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q63405798-the-infinity-saga", "model": "jev-1.13.0", "noul": 0.87, "pronunciation": "인피니티 사가", "question": "reading-matches-v1", "term": "the infinity saga"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q634341-tangsteel", "model": "jev-1.13.0", "noul": 0.78, "pronunciation": "탕스틸", "question": "reading-matches-v1", "term": "tangsteel"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q634677-hewson-consultants", "model": "jev-1.13.0", "noul": 0.64, "pronunciation": "휴슨 컨설턴트", "question": "reading-matches-v1", "term": "hewson consultants"}
+{"checked_at": "2026-09-30", "id": "brand-wd-q634677-hewson-consultants", "model": "jev-1.13.0", "noul": 0.84, "pronunciation": "휴슨 컨설턴츠", "question": "reading-matches-v1", "term": "hewson consultants"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q6347978-kailuan", "model": "jev-1.13.0", "noul": 0.71, "pronunciation": "카이루안", "question": "reading-matches-v1", "term": "kailuan"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q634815-motorola-solutions", "model": "jev-1.13.0", "noul": 0.79, "pronunciation": "모토로라 솔루션스", "question": "reading-matches-v1", "term": "motorola solutions"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q634831-sheraton-hotels-and-resorts", "model": "jev-1.13.0", "noul": 0.9, "pronunciation": "셰라톤 호텔 앤드 리조츠", "question": "reading-matches-v1", "term": "sheraton hotels and resorts"}
@@ -5277,7 +5237,7 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q644324-swisscom", "model": "jev-1.13.0", "noul": 0.83, "pronunciation": "스위스컴", "question": "reading-matches-v1", "term": "swisscom"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q6445491-kura-sushi", "model": "jev-1.13.0", "noul": 0.77, "pronunciation": "쿠라스시", "question": "reading-matches-v1", "term": "kura sushi"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q644735-barista", "model": "jev-1.13.0", "noul": 0.95, "pronunciation": "바리스타", "question": "reading-matches-v1", "term": "barista"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q645072-dean-foods", "model": "jev-1.13.0", "noul": 0.52, "pronunciation": "딘 푸드", "question": "reading-matches-v1", "term": "dean foods"}
+{"checked_at": "2026-09-30", "id": "brand-wd-q645072-dean-foods", "model": "jev-1.13.0", "noul": 0.49, "pronunciation": "딘 푸즈", "question": "reading-matches-v1", "term": "dean foods"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q645084-virgin-america", "model": "jev-1.13.0", "noul": 0.89, "pronunciation": "버진 아메리카", "question": "reading-matches-v1", "term": "virgin america"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q6451885-kyochon", "model": "jev-1.13.0", "noul": 0.79, "pronunciation": "교촌", "question": "reading-matches-v1", "term": "kyochon"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q64545-hasselblad", "model": "jev-1.13.0", "noul": 0.82, "pronunciation": "핫셀블라드", "question": "reading-matches-v1", "term": "hasselblad"}
@@ -5288,9 +5248,6 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q647493-arts-vision", "model": "jev-1.13.0", "noul": 0.88, "pronunciation": "아트비전", "question": "reading-matches-v1", "term": "arts vision"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q647737-marussia-motors", "model": "jev-1.13.0", "noul": 0.79, "pronunciation": "마러시아 모터스", "question": "reading-matches-v1", "term": "marussia motors"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q64797075-weltmeister", "model": "jev-1.13.0", "noul": 0.48, "pronunciation": "벨트마이스터", "question": "reading-matches-v1", "term": "weltmeister"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q648071-min_s_sk_mazovyetzki", "model": "jev-1.13.0", "noul": 0.75, "pronunciation": "민스크마조비에츠키", "question": "reading-matches-v1", "term": "min'sk-mazovyetzki"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q648071-minsk-mazovyets", "model": "jev-1.13.0", "noul": 0.78, "pronunciation": "민스크마조비에츠키", "question": "reading-matches-v1", "term": "minsk mazovyets"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q648071-minsk-mazowiecki", "model": "jev-1.13.0", "noul": 0.81, "pronunciation": "민스크마조비에츠키", "question": "reading-matches-v1", "term": "minsk mazowiecki"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q648074-aer-lingus-regional", "model": "jev-1.13.0", "noul": 0.68, "pronunciation": "에어링구스 리저널", "question": "reading-matches-v1", "term": "aer lingus regional"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q6483872-land-bank-of-the-philippines", "model": "jev-1.13.0", "noul": 0.8, "pronunciation": "랜드 뱅크 오브 더 필리핀", "question": "reading-matches-v1", "term": "land bank of the philippines"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q648458-birkenstock", "model": "jev-1.13.0", "noul": 0.87, "pronunciation": "비르켄슈토크", "question": "reading-matches-v1", "term": "birkenstock"}
@@ -5334,7 +5291,7 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q654606-harper_s_s-bazaar", "model": "jev-1.13.0", "noul": 0.82, "pronunciation": "하퍼스 바자", "question": "reading-matches-v1", "term": "harper's bazaar"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q654606-harper_s_s-bazar", "model": "jev-1.13.0", "noul": 0.74, "pronunciation": "하퍼스 바자", "question": "reading-matches-v1", "term": "harper's bazar"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q655121-ariana-television-network", "model": "jev-1.13.0", "noul": 0.85, "pronunciation": "아리아나 텔레비전 네트워크", "question": "reading-matches-v1", "term": "ariana television network"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q6554497-spaces", "model": "jev-1.13.0", "noul": 0.75, "pronunciation": "스페이스", "question": "reading-matches-v1", "term": "spaces"}
+{"checked_at": "2026-09-30", "id": "brand-wd-q6554497-spaces", "model": "jev-1.13.0", "noul": 0.5, "pronunciation": "스페이시스", "question": "reading-matches-v1", "term": "spaces"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q6555405-lion-electric-company", "model": "jev-1.13.0", "noul": 0.87, "pronunciation": "라이온 일렉트릭 컴퍼니", "question": "reading-matches-v1", "term": "lion electric company"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q656165-halliburton", "model": "jev-1.13.0", "noul": 0.86, "pronunciation": "할리버튼", "question": "reading-matches-v1", "term": "halliburton"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q656229-bushiroad", "model": "jev-1.13.0", "noul": 0.89, "pronunciation": "부시로드", "question": "reading-matches-v1", "term": "bushiroad"}
@@ -5464,7 +5421,6 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q691029-pull-_n_-bear", "model": "jev-1.13.0", "noul": 0.8, "pronunciation": "풀앤베어", "question": "reading-matches-v1", "term": "pull & bear"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q691029-pull_n_bear", "model": "jev-1.13.0", "noul": 0.82, "pronunciation": "풀앤베어", "question": "reading-matches-v1", "term": "pull&bear"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q691150-staedtler", "model": "jev-1.13.0", "noul": 0.86, "pronunciation": "스테들러", "question": "reading-matches-v1", "term": "staedtler"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q6912239-mori_nu", "model": "jev-1.13.0", "noul": 0.63, "pronunciation": "모리나가", "question": "reading-matches-v1", "term": "mori-nu"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q6912239-morinaga", "model": "jev-1.13.0", "noul": 0.88, "pronunciation": "모리나가", "question": "reading-matches-v1", "term": "morinaga"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q6913576-morris-_n_-company", "model": "jev-1.13.0", "noul": 0.86, "pronunciation": "모리스 앤드 컴퍼니", "question": "reading-matches-v1", "term": "morris & company"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q6913576-morris-and-company", "model": "jev-1.13.0", "noul": 0.88, "pronunciation": "모리스 앤드 컴퍼니", "question": "reading-matches-v1", "term": "morris and company"}
@@ -5599,9 +5555,7 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q7305191-red-ventures", "model": "jev-1.13.0", "noul": 0.89, "pronunciation": "레드 벤처스", "question": "reading-matches-v1", "term": "red ventures"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q730587-cunard-line", "model": "jev-1.13.0", "noul": 0.85, "pronunciation": "큐나드 라인", "question": "reading-matches-v1", "term": "cunard line"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q7308054-regeneron-pharmaceuticals", "model": "jev-1.13.0", "noul": 0.81, "pronunciation": "리제네론 파마슈티컬스", "question": "reading-matches-v1", "term": "regeneron pharmaceuticals"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q730944-legionowo", "model": "jev-1.13.0", "noul": 0.71, "pronunciation": "레기오노보", "question": "reading-matches-v1", "term": "legionowo"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q73124059-tinkercad", "model": "jev-1.13.0", "noul": 0.88, "pronunciation": "팅커캐드", "question": "reading-matches-v1", "term": "tinkercad"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q731325-mszana-dolna", "model": "jev-1.13.0", "noul": 0.69, "pronunciation": "므샤나 돌나", "question": "reading-matches-v1", "term": "mszana dolna"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q7314390-republic-biscuit", "model": "jev-1.13.0", "noul": 0.79, "pronunciation": "리퍼블릭 비스킷", "question": "reading-matches-v1", "term": "republic biscuit"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q731482-infinity-ward", "model": "jev-1.13.0", "noul": 0.9, "pronunciation": "인피니티 워드", "question": "reading-matches-v1", "term": "infinity ward"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q7317054-retrosheet", "model": "jev-1.13.0", "noul": 0.83, "pronunciation": "레트로시트", "question": "reading-matches-v1", "term": "retrosheet"}
@@ -5648,7 +5602,6 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q744618-steadicam", "model": "jev-1.13.0", "noul": 0.9, "pronunciation": "스테디캠", "question": "reading-matches-v1", "term": "steadicam"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q7446425-segway", "model": "jev-1.13.0", "noul": 0.92, "pronunciation": "세그웨이", "question": "reading-matches-v1", "term": "segway"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q744683-franklin-templeton-investments", "model": "jev-1.13.0", "noul": 0.88, "pronunciation": "프랭클린 템플턴 인베스트먼츠", "question": "reading-matches-v1", "term": "franklin templeton investments"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q745059-otwock", "model": "jev-1.13.0", "noul": 0.59, "pronunciation": "오트보츠크", "question": "reading-matches-v1", "term": "otwock"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q745099-kyocera", "model": "jev-1.13.0", "noul": 0.93, "pronunciation": "교세라", "question": "reading-matches-v1", "term": "kyocera"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q745428-sapphire-technology", "model": "jev-1.13.0", "noul": 0.91, "pronunciation": "사파이어 테크놀로지", "question": "reading-matches-v1", "term": "sapphire technology"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q7455653-servicenow", "model": "jev-1.13.0", "noul": 0.88, "pronunciation": "서비스나우", "question": "reading-matches-v1", "term": "servicenow"}
@@ -5746,7 +5699,7 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q773802-the-boston-herald", "model": "jev-1.13.0", "noul": 0.89, "pronunciation": "보스턴 헤럴드", "question": "reading-matches-v1", "term": "the boston herald"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q773875-safran-aircraft-engines", "model": "jev-1.13.0", "noul": 0.79, "pronunciation": "사프란 에어크래프트 엔진", "question": "reading-matches-v1", "term": "safran aircraft engines"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q7739717-the-himalaya-drug-company", "model": "jev-1.13.0", "noul": 0.82, "pronunciation": "더 히말라야 드러그 컴퍼니", "question": "reading-matches-v1", "term": "the himalaya drug company"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q7740985-the-hundreds", "model": "jev-1.13.0", "noul": 0.62, "pronunciation": "더헌드레드", "question": "reading-matches-v1", "term": "the hundreds"}
+{"checked_at": "2026-09-30", "id": "brand-wd-q7740985-the-hundreds", "model": "jev-1.13.0", "noul": 0.58, "pronunciation": "더헌드레즈", "question": "reading-matches-v1", "term": "the hundreds"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q7744946-the-kraft", "model": "jev-1.13.0", "noul": 0.72, "pronunciation": "크래프트", "question": "reading-matches-v1", "term": "the kraft"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q774830-kenworth", "model": "jev-1.13.0", "noul": 0.86, "pronunciation": "켄워스", "question": "reading-matches-v1", "term": "kenworth"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q775031-grupo-bimbo", "model": "jev-1.13.0", "noul": 0.82, "pronunciation": "그루포 빔보", "question": "reading-matches-v1", "term": "grupo bimbo"}
@@ -5889,9 +5842,6 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q815694-bell-canada", "model": "jev-1.13.0", "noul": 0.89, "pronunciation": "벨 캐나다", "question": "reading-matches-v1", "term": "bell canada"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q815713-bell-media", "model": "jev-1.13.0", "noul": 0.86, "pronunciation": "벨 미디어", "question": "reading-matches-v1", "term": "bell media"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q815842-belle-air", "model": "jev-1.13.0", "noul": 0.85, "pronunciation": "벨에어", "question": "reading-matches-v1", "term": "belle air"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q815903-bochnia", "model": "jev-1.13.0", "noul": 0.77, "pronunciation": "보흐니아", "question": "reading-matches-v1", "term": "bochnia"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q815903-bohna", "model": "jev-1.13.0", "noul": 0.65, "pronunciation": "보흐니아", "question": "reading-matches-v1", "term": "bohna"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q815903-bohnja", "model": "jev-1.13.0", "noul": 0.53, "pronunciation": "보흐니아", "question": "reading-matches-v1", "term": "bohnja"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q816353-bemani", "model": "jev-1.13.0", "noul": 0.8, "pronunciation": "비마니", "question": "reading-matches-v1", "term": "bemani"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q817123-benesse", "model": "jev-1.13.0", "noul": 0.8, "pronunciation": "베네세", "question": "reading-matches-v1", "term": "benesse"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q817139-benetton", "model": "jev-1.13.0", "noul": 0.86, "pronunciation": "베네통", "question": "reading-matches-v1", "term": "benetton"}
@@ -5908,7 +5858,6 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q824451-the-boston-globe", "model": "jev-1.13.0", "noul": 0.89, "pronunciation": "보스턴 글로브", "question": "reading-matches-v1", "term": "the boston globe"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q82467-ankai", "model": "jev-1.13.0", "noul": 0.77, "pronunciation": "안카이", "question": "reading-matches-v1", "term": "ankai"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q825943-borgwarner", "model": "jev-1.13.0", "noul": 0.82, "pronunciation": "보그워너", "question": "reading-matches-v1", "term": "borgwarner"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q826076-sejny", "model": "jev-1.13.0", "noul": 0.66, "pronunciation": "세이니", "question": "reading-matches-v1", "term": "sejny"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q827258-bershka", "model": "jev-1.13.0", "noul": 0.7, "pronunciation": "버쉬카", "question": "reading-matches-v1", "term": "bershka"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q827306-proton", "model": "jev-1.13.0", "noul": 0.89, "pronunciation": "프로톤", "question": "reading-matches-v1", "term": "proton"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q827927-inmarsat", "model": "jev-1.13.0", "noul": 0.71, "pronunciation": "인말새트", "question": "reading-matches-v1", "term": "inmarsat"}
@@ -6067,7 +6016,7 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q889935-dallas-morning-news", "model": "jev-1.13.0", "noul": 0.85, "pronunciation": "댈러스 모닝 뉴스", "question": "reading-matches-v1", "term": "dallas morning news"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q889935-the-dallas-morning-news", "model": "jev-1.13.0", "noul": 0.82, "pronunciation": "댈러스 모닝 뉴스", "question": "reading-matches-v1", "term": "the dallas morning news"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q890779-bohemia-interactive", "model": "jev-1.13.0", "noul": 0.85, "pronunciation": "보헤미아 인터렉티브", "question": "reading-matches-v1", "term": "bohemia interactive"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q891586-bolshoi-ballet", "model": "jev-1.13.0", "noul": 0.5, "pronunciation": "볼쇼이 발레단", "question": "reading-matches-v1", "term": "bolshoi ballet"}
+{"checked_at": "2026-09-30", "id": "brand-wd-q891586-bolshoi-ballet", "model": "jev-1.13.0", "noul": 0.88, "pronunciation": "볼쇼이 발레", "question": "reading-matches-v1", "term": "bolshoi ballet"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q891779-bombardier-aerospace", "model": "jev-1.13.0", "noul": 0.85, "pronunciation": "봄바디어 에어로스페이스", "question": "reading-matches-v1", "term": "bombardier aerospace"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q892498-caesars-entertainment", "model": "jev-1.13.0", "noul": 0.86, "pronunciation": "시저스 엔터테인먼트", "question": "reading-matches-v1", "term": "caesars entertainment"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q893011-book-off", "model": "jev-1.13.0", "noul": 0.75, "pronunciation": "북오프", "question": "reading-matches-v1", "term": "book off"}
@@ -6111,7 +6060,7 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q908206-kuraray", "model": "jev-1.13.0", "noul": 0.76, "pronunciation": "쿠라레", "question": "reading-matches-v1", "term": "kuraray"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q908324-brookfield", "model": "jev-1.13.0", "noul": 0.87, "pronunciation": "브룩필드", "question": "reading-matches-v1", "term": "brookfield"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q908553-union-carbide", "model": "jev-1.13.0", "noul": 0.84, "pronunciation": "유니온 카바이드", "question": "reading-matches-v1", "term": "union carbide"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q908931-reliance-industries", "model": "jev-1.13.0", "noul": 0.63, "pronunciation": "릴라이언스 인더스트리", "question": "reading-matches-v1", "term": "reliance industries"}
+{"checked_at": "2026-09-30", "id": "brand-wd-q908931-reliance-industries", "model": "jev-1.13.0", "noul": 0.83, "pronunciation": "릴라이언스 인더스트리스", "question": "reading-matches-v1", "term": "reliance industries"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q909169-lotus-software", "model": "jev-1.13.0", "noul": 0.86, "pronunciation": "로터스 소프트웨어", "question": "reading-matches-v1", "term": "lotus software"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q9094269-vinpearl", "model": "jev-1.13.0", "noul": 0.89, "pronunciation": "빈펄", "question": "reading-matches-v1", "term": "vinpearl"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q909560-druk-air", "model": "jev-1.13.0", "noul": 0.79, "pronunciation": "드루크 에어", "question": "reading-matches-v1", "term": "druk air"}
@@ -6232,9 +6181,6 @@
 {"checked_at": "2026-09-30", "id": "brand-wd-q980729-firefly-studios", "model": "jev-1.13.0", "noul": 0.87, "pronunciation": "파이어플라이 스튜디오", "question": "reading-matches-v1", "term": "firefly studios"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q98139925-li-auto", "model": "jev-1.13.0", "noul": 0.55, "pronunciation": "리오토", "question": "reading-matches-v1", "term": "li auto"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q984913-ifixit", "model": "jev-1.13.0", "noul": 0.79, "pronunciation": "아이픽스잇", "question": "reading-matches-v1", "term": "ifixit"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q985238-lubliniec", "model": "jev-1.13.0", "noul": 0.69, "pronunciation": "루블리니에츠", "question": "reading-matches-v1", "term": "lubliniec"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q985238-lublinitz", "model": "jev-1.13.0", "noul": 0.52, "pronunciation": "루블리니에츠", "question": "reading-matches-v1", "term": "lublinitz"}
-{"checked_at": "2026-09-30", "id": "brand-wd-q985656-kowary", "model": "jev-1.13.0", "noul": 0.53, "pronunciation": "코바리", "question": "reading-matches-v1", "term": "kowary"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q98581903-star-joint-venture", "model": "jev-1.13.0", "noul": 0.89, "pronunciation": "스타 조인트 벤처", "question": "reading-matches-v1", "term": "star joint venture"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q986546-shanghai-animation-film-studio", "model": "jev-1.13.0", "noul": 0.61, "pronunciation": "상하이 애니메이션 필름 스튜디오", "question": "reading-matches-v1", "term": "shanghai animation film studio"}
 {"checked_at": "2026-09-30", "id": "brand-wd-q988514-eisenacher-motorenwerk", "model": "jev-1.13.0", "noul": 0.72, "pronunciation": "아이제나허 모토렌베르크", "question": "reading-matches-v1", "term": "eisenacher motorenwerk"}

@@ -2,6 +2,14 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Second brand review: English words as keys keep the word's reading (solid
+  솔리드, was 쏠리드; arctic 아크틱; verbatim 버베이텀) and FTC empower/esteem are
+  dropped; the Jev 0.5-0.65 band loses translations, extra or missing words and
+  foreign-language readings (bristol cars 브리스톨 카스, was 브리스톨 자동차;
+  rushydro 루스하이드로, was 루스기드로; shinhwa company 신화컴퍼니, was 신화컴퍼니의);
+  the Wikidata fashion_brand class, which held only Polish towns, is excluded.
+  124 decisions in total; Wikidata 4,888, FTC 1,297; 33 of 36 corrected entries
+  score higher, the 0.5-0.65 band 468 → 418.
 - Review the 239 lexicon entries Jev scored below 0.5: 42 brand entries are
   dropped (other names, translations, Polish town aliases, English words as
   keys such as being, shaken, i've, the on) and 34 corrected (Hilti 힐티, was
