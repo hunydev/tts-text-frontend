@@ -8,6 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 MAX_TEXT_BYTES = 16384
 CORPORA = {
+    "ko-brand-lexicon-v24": ("브랜드 발음 사전 (선택)", "ko_brand_lexicon_v24.jsonl"),
     "ko-unit-leaks-v24": ("한국어 단위 표기 누출", "ko_unit_leaks_v24.jsonl"),
     "ko-apparel-size-v24": ("한국어 의류·속옷 사이즈", "ko_apparel_size_v24.jsonl"),
     "ko-range-reading-v24": ("한국어 범위 읽기 (어림수·단위 공유)", "ko_range_reading_v24.jsonl"),
@@ -101,6 +102,7 @@ DEFAULTS = dict(
     spacing="orthographic",
     matrix="auto",
     symbol_fallback="on",
+    brand_lexicon="off",
     max_control_bytes=4096,
     sentence_split=True,
     phrase_split=True,
@@ -192,6 +194,7 @@ def validate(request, corpus=False):
         ("spacing", ("orthographic", "reading-unit")),
         ("matrix", ("auto", "legacy", "declared")),
         ("symbol_fallback", ("on", "native", "off")),
+        ("brand_lexicon", ("off", "on")),
         ("domain", ("none", "finance", "finance-vocabulary")),
     ]:
         if opts[key] not in allowed:

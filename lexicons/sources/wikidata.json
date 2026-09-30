@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "sources": [
+    {
+      "id": "wikidata-brands-2026-09-30",
+      "title": "Wikidata English and Korean labels of companies and brands",
+      "url": "https://www.wikidata.org/",
+      "kind": "open-data",
+      "checked_at": "2026-09-30",
+      "note": "Structured data under CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/). Collected by tools/lexicon/brands/collect_wikidata.py; a Korean label counts only when it is phonetically close to the written name. Labels are community data, not pronunciation authority; no synthesized audio."
+    }
+  ]
+}

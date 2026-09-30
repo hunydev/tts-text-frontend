@@ -258,6 +258,8 @@ class Engine:
                 self.load(resources / "domains/finance/ko-KR/lexicon.tsv", 2)
             if options.get("domain") == "finance":
                 self.load(resources / "domains/finance/ko-KR/rules.tsv", 2)
+            if options.get("brand_lexicon") == "on":
+                self.load(resources / "domains/brands/ko-KR/lexicon.tsv", 2)
             for path, layer in overrides:
                 self.load(path, layer)
             if options.get("customer_tsv"):

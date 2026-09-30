@@ -1314,6 +1314,18 @@
       },
       "category_overrides": {},
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/ko_brand_lexicon_v24.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Night work 2026-09-29 under the user's goal; independently authored synthetic cases, written before the implementation",
+        "reason": "Optional brand pack contract authored 2026-09-30; readings from Wikidata labels accepted by phonetic similarity."
+      },
+      "category_overrides": {},
+      "case_overrides": {}
     }
   ],
   "excluded": [

@@ -71,15 +71,37 @@ for tsv in (Path(resources) / "languages/ko-KR/rules").glob("*.tsv"):
         cells = line.split("\t")
         if len(cells) == 4 and cells[0] == "lexicon_case" and cells[3] == "upper":
             UPPER.add(cells[2].split(":", 1)[1])
+# A large optional pack (brands) is checked in one stream: one probe per line.
+BATCHED = {"brands"}
+batches = {}
 for row in records:
+    scope = row.get("scope", "system")
+    if scope in BATCHED:
+        batches.setdefault(scope, []).append(row)
+for scope, rows in sorted(batches.items()):
+    probes = [(row, term) for row in rows for term in [row["term"], *row["aliases"]]]
+    text = "".join(term + "의 발음을 확인합니다.\n" for _, term in probes)
+    output, spans, _ = run_stream(
+        text, overlay=("--domain", str(Path(resources) / "domains" / scope / "ko-KR/lexicon.tsv")))
+    lines = output.split("\n")
+    for k, (row, term) in enumerate(probes):
+        if k >= len(lines) or lines[k] != row["pronunciation"] + "의 발음을 확인합니다.":
+            failures.append((row["id"], term, row["pronunciation"], lines[k] if k < len(lines) else None))
+    domain_hits = sum(1 for _, _, span in spans if span["lexicon"] == "lexicon:domain")
+    if domain_hits < len(probes):
+        failures.append((scope, "domain lexicon spans", len(probes), domain_hits))
+    checks += len(probes)
+for row in records:
+    if row.get("scope", "system") in BATCHED:
+        continue
     for term in [row["term"], *row["aliases"]]:
         if term in UPPER:
             term = term.upper()
         text = term + "의 발음을 확인합니다."
         expected = row["pronunciation"] + "의 발음을 확인합니다."
-        layer = "domain" if row.get("scope") == "finance" else "system"
+        layer = "domain" if row.get("scope", "system") != "system" else "system"
         overlay = (
-            ("--domain", str(Path(resources) / "domains/finance/ko-KR/lexicon.tsv"))
+            ("--domain", str(Path(resources) / "domains" / row["scope"] / "ko-KR/lexicon.tsv"))
             if layer == "domain"
             else ()
         )

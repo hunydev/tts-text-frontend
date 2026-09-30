@@ -3,117 +3,483 @@
     {
       "group": "발음 직접 지정",
       "rows": [
-        {"syntax": "원자{발음}", "meaning": "바로 앞 단어·숫자 하나를 적은 발음으로 바꿈", "example": "1{첫}번째", "output": "첫번째"},
-        {"syntax": "원자{발음}", "meaning": "영문·숫자 코드의 발음 지정", "example": "K7{케이세븐}", "output": "케이세븐"},
-        {"syntax": "[[구간]]{발음}", "meaning": "공백이 있는 여러 단어를 묶어 발음 지정", "example": "[[Bank of America]]{뱅크 오브 아메리카}", "output": "뱅크 오브 아메리카"}
+        {
+          "syntax": "원자{발음}",
+          "meaning": "바로 앞 단어·숫자 하나를 적은 발음으로 바꿈",
+          "example": "1{첫}번째",
+          "output": "첫번째"
+        },
+        {
+          "syntax": "원자{발음}",
+          "meaning": "영문·숫자 코드의 발음 지정",
+          "example": "K7{케이세븐}",
+          "output": "케이세븐"
+        },
+        {
+          "syntax": "[[구간]]{발음}",
+          "meaning": "공백이 있는 여러 단어를 묶어 발음 지정",
+          "example": "[[Bank of America]]{뱅크 오브 아메리카}",
+          "output": "뱅크 오브 아메리카"
+        }
       ]
     },
     {
       "group": "읽기 방식 지정 (값 하나)",
       "rows": [
-        {"syntax": "숫자{@native}", "meaning": "고유어 수 (0~99)", "example": "21{@native}", "output": "스물하나"},
-        {"syntax": "숫자{@sino}", "meaning": "한자어 수", "example": "-12{@sino}", "output": "마이너스 십이"},
-        {"syntax": "문자{@alphabet}", "meaning": "영문자·숫자를 한 글자씩", "example": "ABC{@alphabet}마트", "output": "에이비씨마트"}
+        {
+          "syntax": "숫자{@native}",
+          "meaning": "고유어 수 (0~99)",
+          "example": "21{@native}",
+          "output": "스물하나"
+        },
+        {
+          "syntax": "숫자{@sino}",
+          "meaning": "한자어 수",
+          "example": "-12{@sino}",
+          "output": "마이너스 십이"
+        },
+        {
+          "syntax": "문자{@alphabet}",
+          "meaning": "영문자·숫자를 한 글자씩",
+          "example": "ABC{@alphabet}마트",
+          "output": "에이비씨마트"
+        }
       ]
     },
     {
       "group": "의미 지정 (구간 전체)",
       "rows": [
-        {"syntax": "[[…]]{@cardinal}", "meaning": "일반 수량 (정수)", "example": "[[09]]{@cardinal}", "output": "구"},
-        {"syntax": "[[…]]{@digits}", "meaning": "모든 자릿수를 하나씩 (선행 0 포함)", "example": "[[0210]]{@digits}", "output": "영이일영"},
-        {"syntax": "[[…]]{@decimal}", "meaning": "소수 (소수부 0 유지)", "example": "[[12.50]]{@decimal}", "output": "십이 점 오영"},
-        {"syntax": "[[…]]{@ordinal}", "meaning": "서수", "example": "[[21]]{@ordinal}", "output": "제이십일"},
-        {"syntax": "[[…]]{@year}", "meaning": "연도", "example": "[[1984]]{@year}", "output": "천구백팔십사 년"},
-        {"syntax": "[[…]]{@date}", "meaning": "날짜 (YYYY-MM-DD)", "example": "[[2026-09-16]]{@date}", "output": "이천이십육 년 구 월 십육 일"},
-        {"syntax": "[[…]]{@date-mdy}", "meaning": "월/일/연 순서의 날짜", "example": "[[03/04/2026]]{@date-mdy}", "output": "이천이십육 년 삼 월 사 일"},
-        {"syntax": "[[…]]{@date-dmy}", "meaning": "일/월/연 순서의 날짜", "example": "[[03/04/2026]]{@date-dmy}", "output": "이천이십육 년 사 월 삼 일"},
-        {"syntax": "[[…]]{@time}", "meaning": "시각", "example": "[[09:05]]{@time}", "output": "아홉 시 오 분"},
-        {"syntax": "[[…]]{@currency}", "meaning": "금액", "example": "[[12,500원]]{@currency}", "output": "만 이천오백 원"},
-        {"syntax": "[[…]]{@percent}", "meaning": "퍼센트", "example": "[[12.5%]]{@percent}", "output": "십이 점 오 퍼센트"},
-        {"syntax": "[[…]]{@measure}", "meaning": "수 + 단위", "example": "[[3kg]]{@measure}", "output": "삼 킬로그램"},
-        {"syntax": "[[…]]{@counter}", "meaning": "수 + 셈 단위 (한국어)", "example": "[[3개]]{@counter}", "output": "세 개"},
-        {"syntax": "[[…]]{@fraction}", "meaning": "분수", "example": "[[9/25]]{@fraction}", "output": "이십오 분의 구"},
-        {"syntax": "[[…]]{@range}", "meaning": "범위", "example": "[[1~2kg]]{@range}", "output": "일에서 이 킬로그램"},
-        {"syntax": "[[…]]{@phone}", "meaning": "전화번호", "example": "[[0210-09]]{@phone}", "output": "공이일공 공구"},
-        {"syntax": "[[…]]{@version}", "meaning": "버전 번호", "example": "[[12.03.4]]{@version}", "output": "십이 점 영삼 점 사"},
-        {"syntax": "[[…]]{@ip}", "meaning": "IP 주소", "example": "[[192.168.0.1]]{@ip}", "output": "일구이 점 일육팔 점 영 점 일"},
-        {"syntax": "[[…]]{@address}", "meaning": "주소 (숫자 사이 하이픈은 '다시')", "example": "[[서울시 12-3]]{@address}", "output": "서울시 십이 다시 삼"},
-        {"syntax": "[[…]]{@email}", "meaning": "이메일 (표기 보존 모드에서도 읽음)", "example": "[[a1@b2.com]]{@email}", "output": "에이일 앳 비이 닷 컴"},
-        {"syntax": "[[…]]{@url}", "meaning": "URL·경로", "example": "[[q1/a2]]{@url}", "output": "큐일 슬래시 에이이"}
+        {
+          "syntax": "[[…]]{@cardinal}",
+          "meaning": "일반 수량 (정수)",
+          "example": "[[09]]{@cardinal}",
+          "output": "구"
+        },
+        {
+          "syntax": "[[…]]{@digits}",
+          "meaning": "모든 자릿수를 하나씩 (선행 0 포함)",
+          "example": "[[0210]]{@digits}",
+          "output": "영이일영"
+        },
+        {
+          "syntax": "[[…]]{@decimal}",
+          "meaning": "소수 (소수부 0 유지)",
+          "example": "[[12.50]]{@decimal}",
+          "output": "십이 점 오영"
+        },
+        {
+          "syntax": "[[…]]{@ordinal}",
+          "meaning": "서수",
+          "example": "[[21]]{@ordinal}",
+          "output": "제이십일"
+        },
+        {
+          "syntax": "[[…]]{@year}",
+          "meaning": "연도",
+          "example": "[[1984]]{@year}",
+          "output": "천구백팔십사 년"
+        },
+        {
+          "syntax": "[[…]]{@date}",
+          "meaning": "날짜 (YYYY-MM-DD)",
+          "example": "[[2026-09-16]]{@date}",
+          "output": "이천이십육 년 구 월 십육 일"
+        },
+        {
+          "syntax": "[[…]]{@date-mdy}",
+          "meaning": "월/일/연 순서의 날짜",
+          "example": "[[03/04/2026]]{@date-mdy}",
+          "output": "이천이십육 년 삼 월 사 일"
+        },
+        {
+          "syntax": "[[…]]{@date-dmy}",
+          "meaning": "일/월/연 순서의 날짜",
+          "example": "[[03/04/2026]]{@date-dmy}",
+          "output": "이천이십육 년 사 월 삼 일"
+        },
+        {
+          "syntax": "[[…]]{@time}",
+          "meaning": "시각",
+          "example": "[[09:05]]{@time}",
+          "output": "아홉 시 오 분"
+        },
+        {
+          "syntax": "[[…]]{@currency}",
+          "meaning": "금액",
+          "example": "[[12,500원]]{@currency}",
+          "output": "만 이천오백 원"
+        },
+        {
+          "syntax": "[[…]]{@percent}",
+          "meaning": "퍼센트",
+          "example": "[[12.5%]]{@percent}",
+          "output": "십이 점 오 퍼센트"
+        },
+        {
+          "syntax": "[[…]]{@measure}",
+          "meaning": "수 + 단위",
+          "example": "[[3kg]]{@measure}",
+          "output": "삼 킬로그램"
+        },
+        {
+          "syntax": "[[…]]{@counter}",
+          "meaning": "수 + 셈 단위 (한국어)",
+          "example": "[[3개]]{@counter}",
+          "output": "세 개"
+        },
+        {
+          "syntax": "[[…]]{@fraction}",
+          "meaning": "분수",
+          "example": "[[9/25]]{@fraction}",
+          "output": "이십오 분의 구"
+        },
+        {
+          "syntax": "[[…]]{@range}",
+          "meaning": "범위",
+          "example": "[[1~2kg]]{@range}",
+          "output": "일에서 이 킬로그램"
+        },
+        {
+          "syntax": "[[…]]{@phone}",
+          "meaning": "전화번호",
+          "example": "[[0210-09]]{@phone}",
+          "output": "공이일공 공구"
+        },
+        {
+          "syntax": "[[…]]{@version}",
+          "meaning": "버전 번호",
+          "example": "[[12.03.4]]{@version}",
+          "output": "십이 점 영삼 점 사"
+        },
+        {
+          "syntax": "[[…]]{@ip}",
+          "meaning": "IP 주소",
+          "example": "[[192.168.0.1]]{@ip}",
+          "output": "일구이 점 일육팔 점 영 점 일"
+        },
+        {
+          "syntax": "[[…]]{@address}",
+          "meaning": "주소 (숫자 사이 하이픈은 '다시')",
+          "example": "[[서울시 12-3]]{@address}",
+          "output": "서울시 십이 다시 삼"
+        },
+        {
+          "syntax": "[[…]]{@email}",
+          "meaning": "이메일 (표기 보존 모드에서도 읽음)",
+          "example": "[[a1@b2.com]]{@email}",
+          "output": "에이일 앳 비이 닷 컴"
+        },
+        {
+          "syntax": "[[…]]{@url}",
+          "meaning": "URL·경로",
+          "example": "[[q1/a2]]{@url}",
+          "output": "큐일 슬래시 에이이"
+        }
       ]
     },
     {
       "group": "구간 처리",
       "rows": [
-        {"syntax": "[[…]]{@preserve}", "meaning": "구간을 정규화하지 않고 그대로 둠", "example": "[[Apple 123 🙂]]{@preserve}", "output": "Apple 123 🙂"},
-        {"syntax": "[[…]]{@skip}", "meaning": "구간을 읽지 않고 삭제 (공백은 건드리지 않음)", "example": "가[[녹음 지시]]{@skip}나", "output": "가나"}
+        {
+          "syntax": "[[…]]{@preserve}",
+          "meaning": "구간을 정규화하지 않고 그대로 둠",
+          "example": "[[Apple 123 🙂]]{@preserve}",
+          "output": "Apple 123 🙂"
+        },
+        {
+          "syntax": "[[…]]{@skip}",
+          "meaning": "구간을 읽지 않고 삭제 (공백은 건드리지 않음)",
+          "example": "가[[녹음 지시]]{@skip}나",
+          "output": "가나"
+        }
       ]
     },
     {
       "group": "끊어 읽기",
       "rows": [
-        {"syntax": "원자{@break:1}", "meaning": "한 글자씩, 공백으로", "example": "1234{@break:1}", "output": "일 이 삼 사"},
-        {"syntax": "원자{@break:2}", "meaning": "한 글자씩, 쉼표로", "example": "1234{@break:2}", "output": "일, 이, 삼, 사"},
-        {"syntax": "원자{@break:3}", "meaning": "한 글자씩, 마침표로", "example": "1234{@break:3}", "output": "일. 이. 삼. 사."},
-        {"syntax": "문장 안에서", "meaning": "앞뒤 문장은 그대로", "example": "번호는 1234{@break:2}입니다.", "output": "번호는 일, 이, 삼, 사입니다."}
+        {
+          "syntax": "원자{@break:1}",
+          "meaning": "한 글자씩, 공백으로",
+          "example": "1234{@break:1}",
+          "output": "일 이 삼 사"
+        },
+        {
+          "syntax": "원자{@break:2}",
+          "meaning": "한 글자씩, 쉼표로",
+          "example": "1234{@break:2}",
+          "output": "일, 이, 삼, 사"
+        },
+        {
+          "syntax": "원자{@break:3}",
+          "meaning": "한 글자씩, 마침표로",
+          "example": "1234{@break:3}",
+          "output": "일. 이. 삼. 사."
+        },
+        {
+          "syntax": "문장 안에서",
+          "meaning": "앞뒤 문장은 그대로",
+          "example": "번호는 1234{@break:2}입니다.",
+          "output": "번호는 일, 이, 삼, 사입니다."
+        }
       ]
     },
     {
       "group": "이스케이프",
       "rows": [
-        {"syntax": "\\{ \\} \\[ \\] \\\\", "meaning": "제어 문자 자체를 글자로 쓰기", "example": "\\{첫\\}", "output": "{첫}"}
+        {
+          "syntax": "\\{ \\} \\[ \\] \\\\",
+          "meaning": "제어 문자 자체를 글자로 쓰기",
+          "example": "\\{첫\\}",
+          "output": "{첫}"
+        }
       ]
     }
   ],
   "options": [
-    {"id": "language", "key": "default_language",
-     "desc": "문장 언어를 가릴 단서가 없을 때 쓰는 언어(숫자만 있는 문장 등). '문장 언어: 기본 언어로 고정'이면 모든 문장에 적용됩니다.",
-     "examples": [{"text": "7 7 7", "outputs": {"ko-KR": "칠 칠 칠", "en-US": "seven seven seven"}}]},
-    {"id": "policy", "key": "render_policy",
-     "desc": "다른 언어 단어를 그 문장 언어의 발음으로 바꿀지 정합니다.",
-     "examples": [{"text": "Apple은 사과입니다.", "outputs": {"phonetic": "애플은 사과입니다.", "preserve": "Apple은 사과입니다.", "semantic": "에이피피엘이는 사과입니다."}}]},
-    {"id": "domain", "key": "domain",
-     "desc": "업무 도메인 리소스를 더합니다. 금융 발음사전은 약어 발음만, 금융 예제 정책은 숫자 규칙까지 바꿉니다.",
-     "examples": [{"text": "123-456", "outputs": {"none": "백이십삼에서 사백오십육", "finance-vocabulary": "백이십삼에서 사백오십육", "finance": "일이삼 사오육"}}]},
-    {"id": "input-format", "key": "input_format",
-     "desc": "{…}·[[…]] 발음 제어 표기를 해석할지 정합니다. 문법은 입력창 아래 '제어 구문 도움말'에 있습니다.",
-     "examples": [{"text": "1{첫}번째", "outputs": {"plain": "일{첫}번째", "annotated": "첫번째"}}]},
-    {"id": "output-mode", "key": "output_mode",
-     "desc": "발화용은 이메일·URL·기호까지 소리 나는 말로 바꾸고, 표기 보존은 주소·기호 표기를 남깁니다.",
-     "examples": [{"text": "a1@b2.com 3시", "outputs": {"speech": "에이일 앳 비이 닷 컴 세 시", "text": "a1@b2.com 세 시"}}]},
-    {"id": "unreadable", "key": "unreadable",
-     "desc": "읽을 방법이 없는 문자(이름도 없는 문자)와 해석을 거부한 표기의 처리입니다. 발화용 출력에서만 적용됩니다.",
-     "examples": [{"text": "가⸮나", "outputs": {"preserve": "가⸮나", "drop": "가 나", "read": "가 나"}},
-                  {"text": "20F 안내", "outputs": {"preserve": "20F 안내", "drop": "20F 안내", "read": "이영에프 안내"}}]},
-    {"id": "brackets", "key": "brackets",
-     "desc": "괄호 속 보충 설명을 읽을지 정합니다.",
-     "examples": [{"text": "가격(10%) 인상", "outputs": {"read": "가격(십 퍼센트) 인상", "skip": "가격 인상", "preserve": "가격(10%) 인상"}}]},
-    {"id": "unknown-foreign", "key": "unknown_foreign",
-     "desc": "발음사전에 없는 영문 단어를 어떻게 읽을지 정합니다.",
-     "examples": [{"text": "Zorblax는 새 앱", "outputs": {"guess": "조블랙스는 새 앱", "spell": "제트오알비엘에이엑스는 새 앱", "preserve": "Zorblax는 새 앱"}}]},
-    {"id": "decorative", "key": "decorative",
-     "desc": "★ ※ ♥ → 같은 장식 문자입니다. '따름'이면 '읽을 수 없는 문자' 정책을 따릅니다.",
-     "examples": [{"text": "★ 별점 ※ 참고", "outputs": {"follow": "★ 별점 ※ 참고", "read": "별 별점 참고표 참고"}}]},
-    {"id": "initialism", "key": "initialism",
-     "desc": "대문자 두 글자 이상을 약어로 볼지 단어로 볼지 정합니다. 사전에 등록된 약어(NASA 등)는 어느 쪽이든 사전 발음입니다.",
-     "examples": [{"text": "IT 기업", "outputs": {"spell": "아이티 기업", "word": "잇 기업"}}]},
-    {"id": "spacing", "key": "spacing",
-     "desc": "한국어 수 읽기의 띄어쓰기입니다. 맞춤법은 만 단위로, 읽기 단위는 단위·숫자마다 띄웁니다.",
-     "examples": [{"text": "12345원", "outputs": {"orthographic": "만 이천삼백사십오 원", "reading-unit": "만 이천 삼백 사십 오 원"}}]},
-    {"id": "matrix", "key": "matrix",
-     "desc": "문장마다 언어를 판정합니다. 영어 문장 속 한글 단어는 그대로 두고 영어로 읽습니다.",
-     "examples": [{"text": "My friend 민수 bought 3 books.", "outputs": {"auto": "My friend 민수 bought three books.", "declared": "미 프린드 민수 바우그흐트 삼 부크스.", "legacy": "미 프린드 민수 바우그흐트 삼 부크스."}}]},
-    {"id": "symbol-fallback", "key": "symbol_fallback",
-     "desc": "어떤 규칙도 읽지 못한 기호·이모지를 그 언어의 이름으로 읽습니다. 이름이 없으면 '읽을 수 없는 문자' 정책을 따릅니다.",
-     "examples": [{"text": "점심은 🍔 ∢", "outputs": {"on": "점심은 햄버거 스퍼리컬 애얼", "native": "점심은 햄버거 ∢", "off": "점심은 🍔 ∢"}}]},
-    {"id": "hanja", "key": "hanja",
-     "desc": "한국어 문장 속 한자를 한국어 독음으로 읽을지 정합니다.",
-     "examples": [{"text": "北京 출장", "outputs": {"passthrough": "北京 출장", "korean": "북경 출장"}}]},
-    {"id": "kana", "key": "kana",
-     "desc": "한국어 문장 속 가나를 한국어로 읽을지 정합니다.",
-     "examples": [{"text": "カメラ 구매", "outputs": {"passthrough": "カメラ 구매", "korean": "가메라 구매"}}]},
-    {"id": "max-control", "key": "max_control_bytes",
-     "desc": "제어 표기 하나의 최대 크기(byte)입니다. 넘으면 오류가 납니다.",
-     "examples": []}
+    {
+      "id": "language",
+      "key": "default_language",
+      "desc": "문장 언어를 가릴 단서가 없을 때 쓰는 언어(숫자만 있는 문장 등). '문장 언어: 기본 언어로 고정'이면 모든 문장에 적용됩니다.",
+      "examples": [
+        {
+          "text": "7 7 7",
+          "outputs": {
+            "ko-KR": "칠 칠 칠",
+            "en-US": "seven seven seven"
+          }
+        }
+      ]
+    },
+    {
+      "id": "policy",
+      "key": "render_policy",
+      "desc": "다른 언어 단어를 그 문장 언어의 발음으로 바꿀지 정합니다.",
+      "examples": [
+        {
+          "text": "Apple은 사과입니다.",
+          "outputs": {
+            "phonetic": "애플은 사과입니다.",
+            "preserve": "Apple은 사과입니다.",
+            "semantic": "에이피피엘이는 사과입니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "domain",
+      "key": "domain",
+      "desc": "업무 도메인 리소스를 더합니다. 금융 발음사전은 약어 발음만, 금융 예제 정책은 숫자 규칙까지 바꿉니다.",
+      "examples": [
+        {
+          "text": "123-456",
+          "outputs": {
+            "none": "백이십삼에서 사백오십육",
+            "finance-vocabulary": "백이십삼에서 사백오십육",
+            "finance": "일이삼 사오육"
+          }
+        }
+      ]
+    },
+    {
+      "id": "input-format",
+      "key": "input_format",
+      "desc": "{…}·[[…]] 발음 제어 표기를 해석할지 정합니다. 문법은 입력창 아래 '제어 구문 도움말'에 있습니다.",
+      "examples": [
+        {
+          "text": "1{첫}번째",
+          "outputs": {
+            "plain": "일{첫}번째",
+            "annotated": "첫번째"
+          }
+        }
+      ]
+    },
+    {
+      "id": "output-mode",
+      "key": "output_mode",
+      "desc": "발화용은 이메일·URL·기호까지 소리 나는 말로 바꾸고, 표기 보존은 주소·기호 표기를 남깁니다.",
+      "examples": [
+        {
+          "text": "a1@b2.com 3시",
+          "outputs": {
+            "speech": "에이일 앳 비이 닷 컴 세 시",
+            "text": "a1@b2.com 세 시"
+          }
+        }
+      ]
+    },
+    {
+      "id": "unreadable",
+      "key": "unreadable",
+      "desc": "읽을 방법이 없는 문자(이름도 없는 문자)와 해석을 거부한 표기의 처리입니다. 발화용 출력에서만 적용됩니다.",
+      "examples": [
+        {
+          "text": "가⸮나",
+          "outputs": {
+            "preserve": "가⸮나",
+            "drop": "가 나",
+            "read": "가 나"
+          }
+        },
+        {
+          "text": "20F 안내",
+          "outputs": {
+            "preserve": "20F 안내",
+            "drop": "20F 안내",
+            "read": "이영에프 안내"
+          }
+        }
+      ]
+    },
+    {
+      "id": "brackets",
+      "key": "brackets",
+      "desc": "괄호 속 보충 설명을 읽을지 정합니다.",
+      "examples": [
+        {
+          "text": "가격(10%) 인상",
+          "outputs": {
+            "read": "가격(십 퍼센트) 인상",
+            "skip": "가격 인상",
+            "preserve": "가격(10%) 인상"
+          }
+        }
+      ]
+    },
+    {
+      "id": "unknown-foreign",
+      "key": "unknown_foreign",
+      "desc": "발음사전에 없는 영문 단어를 어떻게 읽을지 정합니다.",
+      "examples": [
+        {
+          "text": "Zorblax는 새 앱",
+          "outputs": {
+            "guess": "조블랙스는 새 앱",
+            "spell": "제트오알비엘에이엑스는 새 앱",
+            "preserve": "Zorblax는 새 앱"
+          }
+        }
+      ]
+    },
+    {
+      "id": "decorative",
+      "key": "decorative",
+      "desc": "★ ※ ♥ → 같은 장식 문자입니다. '따름'이면 '읽을 수 없는 문자' 정책을 따릅니다.",
+      "examples": [
+        {
+          "text": "★ 별점 ※ 참고",
+          "outputs": {
+            "follow": "★ 별점 ※ 참고",
+            "read": "별 별점 참고표 참고"
+          }
+        }
+      ]
+    },
+    {
+      "id": "initialism",
+      "key": "initialism",
+      "desc": "대문자 두 글자 이상을 약어로 볼지 단어로 볼지 정합니다. 사전에 등록된 약어(NASA 등)는 어느 쪽이든 사전 발음입니다.",
+      "examples": [
+        {
+          "text": "IT 기업",
+          "outputs": {
+            "spell": "아이티 기업",
+            "word": "잇 기업"
+          }
+        }
+      ]
+    },
+    {
+      "id": "spacing",
+      "key": "spacing",
+      "desc": "한국어 수 읽기의 띄어쓰기입니다. 맞춤법은 만 단위로, 읽기 단위는 단위·숫자마다 띄웁니다.",
+      "examples": [
+        {
+          "text": "12345원",
+          "outputs": {
+            "orthographic": "만 이천삼백사십오 원",
+            "reading-unit": "만 이천 삼백 사십 오 원"
+          }
+        }
+      ]
+    },
+    {
+      "id": "matrix",
+      "key": "matrix",
+      "desc": "문장마다 언어를 판정합니다. 영어 문장 속 한글 단어는 그대로 두고 영어로 읽습니다.",
+      "examples": [
+        {
+          "text": "My friend 민수 bought 3 books.",
+          "outputs": {
+            "auto": "My friend 민수 bought three books.",
+            "declared": "미 프린드 민수 바우그흐트 삼 부크스.",
+            "legacy": "미 프린드 민수 바우그흐트 삼 부크스."
+          }
+        }
+      ]
+    },
+    {
+      "id": "symbol-fallback",
+      "key": "symbol_fallback",
+      "desc": "어떤 규칙도 읽지 못한 기호·이모지를 그 언어의 이름으로 읽습니다. 이름이 없으면 '읽을 수 없는 문자' 정책을 따릅니다.",
+      "examples": [
+        {
+          "text": "점심은 🍔 ∢",
+          "outputs": {
+            "on": "점심은 햄버거 스퍼리컬 애얼",
+            "native": "점심은 햄버거 ∢",
+            "off": "점심은 🍔 ∢"
+          }
+        }
+      ]
+    },
+    {
+      "id": "brand-lexicon",
+      "key": "brand_lexicon",
+      "desc": "기업·브랜드 영문 표기를 한국어로 널리 쓰는 발음으로 읽는 선택 사전(약 4,800항목)입니다. 사용자·고객 사전이 우선합니다.",
+      "examples": [
+        {
+          "text": "Ericsson과 Samsonite",
+          "outputs": {
+            "off": "어릭슨과 샘소닛",
+            "on": "에릭슨과 샘소나이트"
+          }
+        }
+      ]
+    },
+    {
+      "id": "hanja",
+      "key": "hanja",
+      "desc": "한국어 문장 속 한자를 한국어 독음으로 읽을지 정합니다.",
+      "examples": [
+        {
+          "text": "北京 출장",
+          "outputs": {
+            "passthrough": "北京 출장",
+            "korean": "북경 출장"
+          }
+        }
+      ]
+    },
+    {
+      "id": "kana",
+      "key": "kana",
+      "desc": "한국어 문장 속 가나를 한국어로 읽을지 정합니다.",
+      "examples": [
+        {
+          "text": "カメラ 구매",
+          "outputs": {
+            "passthrough": "カメラ 구매",
+            "korean": "가메라 구매"
+          }
+        }
+      ]
+    },
+    {
+      "id": "max-control",
+      "key": "max_control_bytes",
+      "desc": "제어 표기 하나의 최대 크기(byte)입니다. 넘으면 오류가 납니다.",
+      "examples": []
+    }
   ]
 }

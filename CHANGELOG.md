@@ -2,6 +2,15 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Add an optional Korean brand pronunciation pack, off by default and loaded as
+  the domain layer (`resources/domains/brands/ko-KR/lexicon.tsv`; CLI `--domain`,
+  web "브랜드 발음 사전"). 4,817 company and brand names from Wikidata (CC0) whose
+  Korean label is phonetically close to the written name: Samsonite 샘소나이트
+  (was 샘소닛), Ericsson 에릭슨, Kooksoondang 국순당. Translated names, all-capital
+  abbreviations and names the engine already reads are excluded; 1,421 pairs
+  wait for review. Built reproducibly by `tools/lexicon/brands/`; source records
+  stay pending review. Contract `ko_brand_lexicon_v24` (9),
+  `docs/brand-lexicon.ko.md`.
 - Read unit notations that reached Korean speech raw, from the AI Hub 159
   references: gold purity 18K 십팔 케이, 4K/8K 포케이/에잇케이, 5G 파이브지 (was 오지;
   3G/4G 쓰리지/포지), storage 32G 기가 (declared capacities only), m/s km/s 초속,

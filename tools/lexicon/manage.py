@@ -22,6 +22,8 @@ SOURCE_KINDS = {
     "official-korean-name",
     "official-pronunciation",
     "user-contract",
+    # Community open data (Wikidata CC0): candidate names, never an authority.
+    "open-data",
 }
 FIELDS = {
     "id",
@@ -167,7 +169,7 @@ def load(root: Path = ROOT):
                     row["category"]
                 ):
                     raise ValueError("unsafe category path")
-                if row.get("scope", "system") not in {"system", "finance"}:
+                if row.get("scope", "system") not in {"system", *DOMAIN_SCOPES}:
                     raise ValueError("unknown dictionary scope")
                 if row["review_status"] not in STATUSES:
                     raise ValueError("unknown review status")
@@ -238,9 +240,14 @@ def load(root: Path = ROOT):
     return records, sources
 
 
+# Optional dictionaries outside the system manifest, loaded as the domain layer.
+DOMAIN_SCOPES = ("finance", "brands")
+
+
 def runtime_path(record):
-    if record.get("scope", "system") == "finance":
-        return "resources/domains/finance/" + record["target_lang"] + "/lexicon.tsv"
+    if record.get("scope", "system") in DOMAIN_SCOPES:
+        return ("resources/domains/" + record["scope"] + "/" + record["target_lang"] +
+                "/lexicon.tsv")
     category = record["category"]
     tail = (
         "multiword/" + category.removeprefix("multiword_") + ".tsv"
@@ -310,10 +317,11 @@ def build(root=ROOT, check=False):
         str(p.relative_to(root))
         for p in (root / "resources/languages").glob("*/lexicon/**/*.tsv")
     }
-    existing.update(
-        str(p.relative_to(root))
-        for p in (root / "resources/domains/finance").glob("*/lexicon.tsv")
-    )
+    for scope in DOMAIN_SCOPES:
+        existing.update(
+            str(p.relative_to(root))
+            for p in (root / "resources/domains" / scope).glob("*/lexicon.tsv")
+        )
     if existing - set(output):
         raise ValueError(
             "unmanaged runtime lexicons: " + ", ".join(sorted(existing - set(output)))
