@@ -328,6 +328,12 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    : ttf_validation_error(
                          d, "speech_join supports alphabet|symbol|symbol.<char>=none|space");
     }
+    if (SAME(k, "latin_possessive")) {
+        *handled = 1;
+        return SAME(key, "s") && label(v) && strlen(v) < 64
+                   ? TTF_OK
+                   : ttf_validation_error(d, "latin_possessive supports s=<reading of 1..63 bytes>");
+    }
     if (SAME(k, "speech_symbol") || SAME(k, "speech_character") || SAME(k, "math_operator")) {
         *handled = 1;
         if (SAME(k, "speech_symbol") && !symbol_key(key))

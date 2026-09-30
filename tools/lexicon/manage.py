@@ -65,8 +65,11 @@ def canonical(term: str) -> str:
     if len(key.encode()) > 95:
         raise ValueError("canonical key exceeds the 95-byte semantic/lookup limit")
     if " " in key:
-        if not 2 <= len(key.split()) <= 8 or not all(
-            re.fullmatch("[a-z]+", w) for w in key.split()
+        # A word may join letter runs with - ' & (a-free, mom's); & alone is a word.
+        words = key.split()
+        if not 2 <= len(words) <= 8 or not all(
+            re.fullmatch(r"[a-z]+(?:[-'&][a-z]+)*", w) or (w == "&" and 0 < k < len(words) - 1)
+            for k, w in enumerate(words)
         ):
             raise ValueError(
                 "multiword keys require 2..8 alphabetic words in the current native grammar"
@@ -74,6 +77,8 @@ def canonical(term: str) -> str:
     elif not (
         key in {"c++", "c#"}
         or re.fullmatch(r"[a-z]+[0-9]*(?:-[a-z]+[0-9]*|-[0-9]+)?", key)
+        # Letter runs joined by hyphens, apostrophes or ampersands (coca-cola, mcdonald's, pull&bear).
+        or re.fullmatch(r"[a-z]+(?:[-'&][a-z]+)+", key)
         # A declared alnum label such as 5g or 3d reads as one term.
         or re.fullmatch(r"[0-9]+[a-z]+", key)
     ):

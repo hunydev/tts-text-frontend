@@ -8,7 +8,8 @@ A franchisor registers the brand name, often as "<Hangul>(<Latin>)" or
 owner's own reading, so the phonetic test is looser than for Wikidata labels;
 it only has to rule out translated names (빵농장(Bread Farm)).
 
-1. Kept: both sides pure (Hangul and spaces / Latin letters, spaces, & ' . -),
+1. Kept: both sides pure (Hangul and spaces / Latin letters, spaces, & ' -; the
+   joiners stay in the key as written, a dot is outside the key grammar),
    jamo similarity >= 0.45 between the Hangul and the engine's reading of the
    written name (capital words read as words), and for several words every word
    aligned with a piece of the Hangul (>= 0.3; failures go to review).
@@ -31,7 +32,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from build_pack import KEY, PROBE, ROOT, Engine, similarity  # noqa: E402
+from build_pack import KEY, PROBE, ROOT, Engine, similarity, slug  # noqa: E402
 
 SOURCE = "ftc-franchise-brands-2026-09-30"
 HANGUL = r"[가-힣]+(?: [가-힣]+)*"
@@ -112,12 +113,14 @@ def main():
     stats = collections.Counter()
     accepted, review = [], []
     for (en, ko), r in sorted(seen.items()):
-        words = en.replace("&", " and ").replace(".", " ").replace("-", " ").replace("'", "").split()
+        # The joiners - ' & stay in the key (Brow-Doll, MOM'S PIZZA, Bowl & Bowl); they
+        # are matched as written, so replacing them would give a key no text reaches.
+        words = en.split()
         term = " ".join(w.lower() for w in words)
-        if not KEY.match(term) or term in system_terms:
+        if not KEY.match(term) or len(words) > 8 or term in system_terms:
             stats["key-grammar-or-system"] += 1
             continue
-        if len(words) == 1 and words[0].isupper() and len(words[0]) <= 4:
+        if len(words) == 1 and words[0].isalpha() and words[0].isupper() and len(words[0]) <= 4:
             stats["abbreviation"] += 1
             continue
         if len(words) == 1 and term in common:
@@ -127,7 +130,8 @@ def main():
         if before.replace(" ", "") == ko:
             stats["already-read"] += 1
             continue
-        spoken = [w.capitalize() if w.isupper() and len(w) > 1 else w for w in words]
+        spoken = [w.capitalize() if w.isupper() and len(w) > 1 and re.sub("[-'&]", "", w).isalpha() else w
+                  for w in words]
         sim = max(similarity(before, ko), similarity(reading(" ".join(spoken)), ko))
         row = dict(term=term, written=en, pronunciation=ko, before=before, similarity=round(sim, 3),
                    brand=r["brandMnno"], name=r["brandNm"], year=r["jngBizCrtraYr"],
@@ -135,7 +139,7 @@ def main():
         if sim < 0.45:
             stats["not-phonetic"] += 1
             continue
-        if len(words) > 1 and aligned([reading(w) for w in spoken], ko) < 0.3:
+        if len(words) > 1 and aligned([reading(w) for w in spoken if w != "&"], ko) < 0.3:
             stats["word-alignment"] += 1
             review.append(dict(row, reason="word-alignment"))
             continue
@@ -162,7 +166,7 @@ def main():
                                               encoding="utf-8")
 
     def record(c):
-        return dict(id="brand-ftc-%s-%s" % (c["brand"].lower().replace("_", "-"), re.sub(r"[^a-z]+", "-", c["term"])[:40]),
+        return dict(id="brand-ftc-%s-%s" % (c["brand"].lower().replace("_", "-"), slug(c["term"])),
                     source_lang="en-US", target_lang="ko-KR", term=c["term"], aliases=[], pronunciation=c["pronunciation"],
                     category="brands", scope="brands", review_status="pending", evidence=[SOURCE],
                     notes="FTC franchise brand %s (%s, base year %s): registered \"%s\"; jamo similarity %.2f to the "

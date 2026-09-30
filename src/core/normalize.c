@@ -930,7 +930,8 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
                 tokens[i].script == TTF_SCRIPT_LATIN ? TTF_LEX_UNKNOWN_LATIN : TTF_LEX_NONE;
             snprintf(sem->rule, sizeof(sem->rule), "identity");
         }
-        if (!rule && consumed == 1 && source && source != context &&
+        if (!rule && (consumed == 1 || !strcmp(sem->rule, "pack.hyphenated-word")) && source &&
+            source != context &&
             e->config.render_policy == TTF_PHONETIC_LOCALIZE &&
             (sem->type == TTF_SEM_WORD || sem->type == TTF_SEM_INITIALISM ||
              sem->type == TTF_SEM_ACRONYM)) {
@@ -940,6 +941,8 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
             phrase_hit =
                 ttf_phrase_match(e, source->language_tag, context->language_tag, text, tokens,
                                  phrase_count, i, &phrase_consumed, phrase_value, &phrase_layer);
+            if (phrase_hit && phrase_consumed < consumed)
+                phrase_hit = NULL;
             if (phrase_hit) {
                 sem->type = TTF_SEM_WORD;
                 sem->lexical_class = TTF_LEX_WORD;

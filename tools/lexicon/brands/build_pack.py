@@ -8,7 +8,8 @@
    only when it is phonetically close (jamo similarity >= 0.6; aliases only then,
    labels 0.4..0.6 go to review). Translated names (China Mobile 중국이동) fail.
 2. Dropped: pairs the engine already reads identically, all-capital written forms
-   (GT, SNT: abbreviations are read by letters), keys outside the lexicon grammar,
+   (GT, SNT: abbreviations are read by letters), keys outside the lexicon grammar
+   (letters, spaces and the joiners - ' &; a dot or digit is outside it),
    terms the system lexicon already owns, conflicting readings (review).
 3. Writes lexicons/ko-KR/brand-wikidata.jsonl (scope brands, review pending),
    builds resources/domains/brands/ko-KR/lexicon.tsv, then checks every entry with
@@ -36,8 +37,16 @@ KO_LEGAL = {"코퍼레이션": ("corporation", "corp"), "코포레이션": ("cor
             "홀딩스": ("holdings",), "그룹": ("group",)}
 HANGUL = re.compile(r"^[가-힣]+( [가-힣]+)*$")
 LATIN = re.compile(r"^[A-Za-z][A-Za-z0-9&.'\- ]*[A-Za-z0-9.]$")
-KEY = re.compile(r"^[a-z]+( [a-z]+){0,7}$")
+# Words join letter runs with - ' & (coca-cola, mcdonald's, pull&bear); & alone is a word.
+WORD = r"[a-z]+(?:[-'&][a-z]+)*"
+KEY = re.compile(r"^%s(?: (?:%s|&(?= )))*$" % (WORD, WORD))
 PROBE = "의 발음을 확인합니다."
+
+
+def slug(term):
+    """Record id part; joiners stay distinct (ali-express ali_express, ali express ali-express)."""
+    marked = term.replace("-", "_").replace("'", "_s_").replace("&", "_n_")
+    return re.sub(r"[^a-z_]+", "-", marked)[:40]
 
 
 def jamo(text):
@@ -118,7 +127,7 @@ def main():
             if not any(ch.islower() for ch in form):
                 stats["all-capital"] += 1
                 continue
-            if not KEY.match(term) or term in system_terms:
+            if not KEY.match(term) or len(term.split()) > 8 or term in system_terms:
                 stats["key-grammar-or-system"] += 1
                 continue
             before = reading(form)
@@ -144,7 +153,7 @@ def main():
     accepted = [c for c in decided if c["status"] == "accept"]
 
     def record(c):
-        return dict(id="brand-wd-%s-%s" % (c["qid"].lower(), re.sub(r"[^a-z]+", "-", c["term"])[:40]),
+        return dict(id="brand-wd-%s-%s" % (c["qid"].lower(), slug(c["term"])),
                     source_lang="en-US", target_lang="ko-KR", term=c["term"], aliases=[], pronunciation=c["pronunciation"],
                     category="brands", scope="brands", review_status="pending", evidence=["wikidata-brands-2026-09-30"],
                     notes="Wikidata %s (%s): en \"%s\", ko \"%s\"; jamo similarity %.2f to the reading without the "

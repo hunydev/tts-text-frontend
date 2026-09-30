@@ -852,14 +852,27 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
         return date_tokens;
     /* Treat an adjacent hyphenated word as one lexical unit so the existing
        layered lexicon can choose a pronunciation for the complete spelling.
+       An apostrophe after a word with a small letter joins the same way
+       (McDonald's, Hold'em).
        Spaces, doubled hyphens and numeric terms are separate grammar. */
     while (in->index + consumed + 1 < in->token_count) {
         const ttf_token_t *separator = &in->tokens[in->index + consumed];
         const ttf_token_t *next = &in->tokens[in->index + consumed + 1];
         if (separator->begin != end || separator->end != separator->begin + 1 ||
-            in->text[separator->begin] != '-' || next->begin != separator->end ||
-            next->script != TTF_SCRIPT_LATIN)
+            (in->text[separator->begin] != '-' && in->text[separator->begin] != '\'') ||
+            next->begin != separator->end || next->script != TTF_SCRIPT_LATIN)
             break;
+        /* OSPF's, CW's: a capital abbreviation keeps its possessive apart and is
+           spelled; only a word with a small letter joins its apostrophe. */
+        if (in->text[separator->begin] == '\'') {
+            const ttf_token_t *left = &in->tokens[in->index + consumed - 1];
+            size_t k;
+            for (k = left->begin; k < left->end; ++k)
+                if (in->text[k] >= 'a' && in->text[k] <= 'z')
+                    break;
+            if (k == left->end)
+                break;
+        }
         /* Bound lookahead as well as the copied key. Otherwise an overlong
            chain revisited from each component would take quadratic time. */
         if (next->end - t->begin >= sizeof(key))

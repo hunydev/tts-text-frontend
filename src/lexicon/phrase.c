@@ -11,6 +11,20 @@ static int lexical(ttf_script_t script) {
     return script == TTF_SCRIPT_LATIN || script == TTF_SCRIPT_HANGUL ||
            ttf_script_legacy(script) == TTF_SCRIPT_OTHER;
 }
+/* Hyphen, apostrophe and ampersand join letters inside a phrase word
+   (a-free cafe, mom's pizza, pull&bear); a lone & is a word of its own
+   (procter & gamble). Keys with & or an apostrophe are phrases even without a
+   space: those words can stay several tokens (Pull&Bear, NILLI'S). Phrase
+   buckets hash the first letter run. */
+static int joiner(char c) {
+    return c == '-' || c == '\'' || c == '&';
+}
+static size_t first_run(const char *word) {
+    size_t n = 0;
+    while (word[n] && word[n] != ' ' && !joiner(word[n]))
+        ++n;
+    return n;
+}
 static size_t first_bucket(const char *word, size_t length) {
     uint32_t hash = 2166136261u;
     size_t i;
@@ -57,6 +71,14 @@ ttf_status_t ttf_lexicon_canonical_key(const char *key, char **out) {
             if (!key[i] || ++words > TTF_PHRASE_WORDS)
                 goto invalid;
             copy[used++] = ' ';
+        } else if (multi && joiner(key[i])) {
+            int inside = used > prefix && copy[used - 1] != ' ' && !joiner(copy[used - 1]) &&
+                         key[i + 1] && !horizontal(key[i + 1]) && !joiner(key[i + 1]);
+            int alone = key[i] == '&' && used > prefix && copy[used - 1] == ' ' &&
+                        horizontal(key[i + 1]);
+            if (!inside && !alone)
+                goto invalid;
+            copy[used++] = key[i++];
         } else if (multi) {
             uint32_t cp;
             size_t width, j;
@@ -88,7 +110,8 @@ void ttf_phrase_index(ttf_engine_t *engine) {
     for (bucket = 0; bucket < TTF_HASH_BUCKETS; ++bucket) {
         ttf_entry_t *entry;
         for (entry = engine->resources[bucket]; entry; entry = entry->next) {
-            const char *word, *space;
+            const char *word;
+            size_t run;
             char source[TTF_LANGUAGE_TAG_SIZE];
             const ttf_language_pack_t *source_pack, *script_pack = NULL;
             uint32_t cp;
@@ -96,7 +119,10 @@ void ttf_phrase_index(ttf_engine_t *engine) {
             int script_score = 0;
             entry->phrase_next = NULL;
             if (strcmp(entry->kind, "lexicon") || !(word = strchr(entry->key, ':')) ||
-                !(space = strchr(++word, ' ')))
+                (!strchr(++word, ' ') && !strchr(word, '&') && !strchr(word, '\'')))
+                continue;
+            run = first_run(word);
+            if (!run)
                 continue;
             source_length = (size_t)(word - entry->key) - 1;
             if (source_length >= sizeof(source))
@@ -107,7 +133,7 @@ void ttf_phrase_index(ttf_engine_t *engine) {
             if (!source_pack || !strcmp(source, entry->lang) ||
                 (strcmp(entry->lang, "*") && !ttf_find_pack(engine, entry->lang)))
                 continue;
-            if (ttf_utf8_decode(word, (size_t)(space - word), &cp, &width) != 1)
+            if (ttf_utf8_decode(word, run, &cp, &width) != 1)
                 continue;
             /* Match the core's source-script router. Entries for a registered
                pack that does not own this script cannot render these words and
@@ -124,7 +150,7 @@ void ttf_phrase_index(ttf_engine_t *engine) {
                 continue;
             if (ttf_resource_get(engine, "lexicon", entry->lang, entry->key, NULL) != entry->value)
                 continue;
-            at = first_bucket(word, (size_t)(space - word));
+            at = first_bucket(word, run);
             entry->phrase_next = engine->phrases[at];
             engine->phrases[at] = entry;
         }
@@ -219,7 +245,7 @@ const char *ttf_phrase_match(const ttf_engine_t *engine, const char *source, con
                              size_t index, size_t *consumed, char value[TTF_IR_VALUE_SIZE],
                              ttf_resource_layer_t *layer) {
     char key[TTF_LANGUAGE_TAG_SIZE + TTF_IR_VALUE_SIZE];
-    size_t prefix = strlen(source) + 1, used = 0, at = index, words = 0, best_words = 0;
+    size_t prefix = strlen(source) + 1, used = 0, at = index, words = 0, best_tokens = 0;
     const char *best = NULL;
     ttf_script_t script = tokens[index].script;
     if (word_started_before(text, tokens, index) ||
@@ -240,13 +266,25 @@ const char *ttf_phrase_match(const ttf_engine_t *engine, const char *source, con
             key[prefix + used++] = folded(text[token->begin + j]);
         key[prefix + used] = '\0';
         ++words;
+        /* A-FREE, MOM'S, Pull&Bear: an adjacent joiner and letter run continue
+           the same phrase word. */
+        if (at + 2 < count && tokens[at + 1].begin == token->end &&
+            tokens[at + 1].end == tokens[at + 1].begin + 1 && joiner(text[tokens[at + 1].begin]) &&
+            tokens[at + 2].begin == tokens[at + 1].end &&
+            ttf_script_legacy(tokens[at + 2].script) == ttf_script_legacy(script) &&
+            used + 1 < TTF_IR_VALUE_SIZE) {
+            key[prefix + used++] = text[tokens[at + 1].begin];
+            --words;
+            at += 2;
+            continue;
+        }
         hit = word_continues(text, tokens, count, at) ? NULL :
             ttf_resource_get(engine, "lexicon", target, key, &candidate_layer);
         if (hit && (!best || candidate_layer > *layer ||
-                    (candidate_layer == *layer && words > best_words))) {
+                    (candidate_layer == *layer && at - index + 1 > best_tokens))) {
             best = hit;
             *layer = candidate_layer;
-            best_words = words;
+            best_tokens = at - index + 1;
             *consumed = at - index + 1;
             memcpy(value, key + prefix, used + 1);
         }
@@ -259,6 +297,20 @@ const char *ttf_phrase_match(const ttf_engine_t *engine, const char *source, con
             break;
         key[prefix + used++] = ' ';
         at += 2;
+        /* Procter & Gamble: a lone ampersand between spaces is a phrase word. */
+        if (at + 2 < count && tokens[at].end == tokens[at].begin + 1 && text[tokens[at].begin] == '&' &&
+            tokens[at + 1].script == TTF_SCRIPT_WHITESPACE && used + 2 < TTF_IR_VALUE_SIZE &&
+            words < TTF_PHRASE_WORDS) {
+            for (j = tokens[at + 1].begin; j < tokens[at + 1].end; ++j)
+                if (!horizontal(text[j]))
+                    break;
+            if (j != tokens[at + 1].end)
+                break;
+            key[prefix + used++] = '&';
+            key[prefix + used++] = ' ';
+            ++words;
+            at += 2;
+        }
     }
-    return best_words > 1 ? best : NULL;
+    return best_tokens > 1 ? best : NULL;
 }

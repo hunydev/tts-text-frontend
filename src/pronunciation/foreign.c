@@ -158,6 +158,24 @@ static int declared_word(const ttf_engine_t *e, const ttf_language_pack_t *sourc
            hit != NULL;
 }
 
+/* Letters joined by single hyphens or apostrophes (Coca-Cola, McDonald's). */
+static int joined_latin(const char *text, size_t n) {
+    size_t i;
+    int joiner = 0;
+    if (n < 3)
+        return 0;
+    for (i = 0; i < n; ++i) {
+        char c = text[i];
+        if (c == '-' || c == '\'') {
+            if (!i || i + 1 == n || text[i - 1] == '-' || text[i - 1] == '\'')
+                return 0;
+            joiner = 1;
+        } else if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')))
+            return 0;
+    }
+    return joiner;
+}
+
 /* A declared reading is one the source pack takes from its pronunciation
    dictionary; a generated/grapheme guess is not. */
 static int declared_pronunciation(const ttf_engine_t *e, const ttf_language_pack_t *source,
@@ -370,6 +388,51 @@ static ttf_status_t render_at(const ttf_engine_t *e, const ttf_language_pack_t *
         (void)ttf_trace_emit(e, TTF_TRACE_SELECTED, TTF_LAYER_COMMON, 0, target->language_tag,
                              "decision", "preserve", "", "", "target-has-no-renderer", SIZE_MAX);
         return ttf_buffer_append(out, text, n);
+    }
+    /* Coca-Cola, McDonald's: a Latin word joined by hyphens or apostrophes with
+       no whole reading (lexicon above, pronunciation dictionary here) is read
+       part by part. The joiners are silent and a final 's takes the target's
+       latin_possessive reading (스). A capital part keeps the initialism class. */
+    if (joined_latin(text, n) && !declared_pronunciation(e, source, text, n, lexical)) {
+        const char *possessive =
+            ttf_resource_get(e, "latin_possessive", target->language_tag, "s", NULL);
+        size_t pos = 0;
+        *layer = TTF_LAYER_COMMON;
+        while (pos < n) {
+            size_t end = pos, k;
+            int upper = 1;
+            if (text[pos] == '-' || text[pos] == '\'') {
+                ++pos;
+                continue;
+            }
+            while (end < n && text[end] != '-' && text[end] != '\'')
+                ++end;
+            for (k = pos; k < end; ++k)
+                if (text[k] < 'A' || text[k] > 'Z')
+                    upper = 0;
+            if (possessive && end == n && end - pos == 1 && text[pos - 1] == '\'' &&
+                (text[pos] == 's' || text[pos] == 'S')) {
+                ttf_trace_stage(e, TTF_TRACE_POLICY, part_begin + pos - 1, part_begin + end);
+                st = ttf_trace_emit(e, TTF_TRACE_SELECTED, TTF_LAYER_COMMON, 0,
+                                    target->language_tag, "decision", "latin-possessive", "'s",
+                                    possessive, "latin-possessive", SIZE_MAX);
+                if (st == TTF_OK)
+                    st = ttf_buffer_puts(out, possessive);
+            } else {
+                char part_trace[64] = {0};
+                ttf_resource_layer_t part_layer = TTF_LAYER_COMMON;
+                st = render_at(e, source, target, text + pos, end - pos,
+                               upper && end - pos > 1 ? TTF_LEX_INITIALISM : TTF_LEX_WORD, out,
+                               part_trace, &part_layer, part_begin + pos);
+                if (part_layer > *layer)
+                    *layer = part_layer;
+            }
+            if (st != TTF_OK)
+                return st;
+            pos = end;
+        }
+        snprintf(trace, 64, "joined:parts");
+        return TTF_OK;
     }
     /* A source verbalizer can produce several words (e.g. an ordinal). Resolve
        the complete phrase above first, then preserve its whitespace and apply

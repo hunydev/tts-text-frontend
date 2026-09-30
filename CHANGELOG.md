@@ -2,6 +2,18 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Read Latin words joined by hyphens or apostrophes in Korean speech part by
+  part, with the joiner silent and a final 's as 스, instead of a grapheme guess
+  that spoke the hyphen: e-mail 이메일 (was 에 하이픈 므에이르), Rolls-Royce
+  롤스로이스, Wendy's 웬디스, D-TV 디티브이. Whole-word lexicon and dictionary
+  readings, the ampersand initialism (H&M) and capital possessives (OSPF's) are
+  unchanged; English output does not change. Lexicon keys accept the joiners
+  - ' & inside words and a lone & between words (a-free cafe, mom's pizza,
+  procter & gamble); phrase matching follows them, also after a hyphenated word.
+  The brand builders keep the joiners (they had replaced them with spaces, so the
+  keys matched no text): Wikidata 4,817 → 5,053, FTC 1,202 → 1,302, unreachable
+  entries 138 → 3. Korean benchmark +6/−0. Contracts `ko_latin_joiners_v24` (11),
+  `ko_brand_lexicon_v24` 14 → 22, `docs/latin-joiners.ko.md`.
 - Add 1,202 franchise brands to the optional brand pack from the Fair Trade
   Commission franchise brand list (data.go.kr, 이용허락범위 제한 없음, base years
   2017-2025): brands registered with both a Hangul and a Latin name use the
