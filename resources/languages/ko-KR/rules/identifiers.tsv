@@ -225,3 +225,12 @@ bra_cup	ko-KR	C	1
 bra_cup	ko-KR	D	1
 bra_cup	ko-KR	E	1
 bra_cup	ko-KR	F	1
+# A secret or ticket code after these words is read digit by digit even when it
+# is short and carries 번 (비밀번호 7537번 칠오삼칠번). Other labels keep a short
+# queue number as a count (예약번호 89번 팔십구 번). AI Hub 159 references, 2026-10-01:
+# 비밀번호 201 digits / 0 count, 예매번호 13 / 0, 예약번호 83 / 78 (kept as a count).
+short_code_label	ko-KR	비밀번호	1
+short_code_label	ko-KR	암호	1
+short_code_label	ko-KR	인증번호	1
+short_code_label	ko-KR	핀번호	1
+short_code_label	ko-KR	예매번호	1

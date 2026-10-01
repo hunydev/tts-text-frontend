@@ -7,8 +7,10 @@
   particle on the label (주문번호를), a copula or 번 after the number (2021034인,
   63107508번이) and the label after it (56478910이 예약번호이며). 만 after a hyphen
   pair with a group of five or more digits is the particle, not a shared scale
-  (254412-774521만 있으면, 주민번호 540019-3758929만). Contract ko_number_labels_v24
-  (12 cases).
+  (254412-774521만 있으면, 주민번호 540019-3758929만). A short queue number with 번
+  after a label stays a count (예약번호 89번 팔십구 번) unless the label names a
+  password or ticket code (short_code_label: 비밀번호 7537번 칠오삼칠번). Contract
+  ko_number_labels_v24 (16 cases); Korean benchmark 78.88% -> 79.30% (+593, -0).
 - Read a two-digit number after capitals as a model number (GV70 지브이칠십;
   it was 지브이세번지로), and a number after a declared product name with English
   numerals up to ten and Sino-Korean from eleven (아이폰6 대란 아이폰식스 대란,

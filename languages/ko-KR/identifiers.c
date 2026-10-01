@@ -164,6 +164,27 @@ static int valid_tail(const ttf_pack_input_t *in, size_t end) {
     return 0;
 }
 
+/* 비밀번호 7537번: a secret or ticket code (short_code_label) is read digit by
+ * digit even when short; other labels keep a short queue number as a count
+ * (예약번호 89번 팔십구 번). The last word of the label is tried as written and
+ * without one or two final syllables (비밀번호가, 비밀번호인). */
+static int short_code_label(const ttf_pack_input_t *in, const char *label) {
+    const char *word = strrchr(label, ' ');
+    char key[64];
+    size_t n, cut;
+    word = word ? word + 1 : label;
+    n = strlen(word);
+    if (n >= sizeof(key))
+        return 0;
+    for (cut = 0; cut <= 6 && cut < n; cut += 3) {
+        memcpy(key, word, n - cut);
+        key[n - cut] = '\0';
+        if (ttf_resource_get(in->engine, "short_code_label", "ko-KR", key, NULL))
+            return 1;
+    }
+    return 0;
+}
+
 /* After a labelled number: a particle, the copula (2021034인, 210547이다) or the
  * counter 번 (63107508번이). */
 static int labelled_tail(const ttf_pack_input_t *in, size_t end) {
@@ -242,10 +263,18 @@ size_t ttf_ko_classify_identifier(const ttf_pack_input_t *in, ttf_semantic_t *se
         return 0;
     memcpy(semantic->value, in->text + begin, end - begin);
     semantic->value[end - begin] = '\0';
-    /* 63107508번이: the counter joins the code, so the shared counter reading
-       (육천삼백십만… 번) does not take a longer span; it is read back after it. */
-    if (end + 3 <= in->length && !memcmp(in->text + end, "\xeb\xb2\x88", 3))
+    /* 63107508번이: the counter joins a code of five or more digits, so the
+       shared counter reading (육천삼백십만… 번) does not take a longer span; it
+       is read back after it. A short queue number keeps its counter reading
+       (예약번호 89번 팔십구 번). */
+    if (end + 3 <= in->length && !memcmp(in->text + end, "\xeb\xb2\x88", 3)) {
+        size_t digits = 0;
+        for (const char *c = semantic->value; *c; ++c)
+            digits += decimal_digit(*c);
+        if (digits < 5 && !short_code_label(in, label))
+            return 0;
         end += 3;
+    }
     (void)snprintf(semantic->secondary, sizeof(semantic->secondary), "%s", label);
     (void)snprintf(semantic->unit, sizeof(semantic->unit), "financial_identifier");
     (void)snprintf(semantic->rule, sizeof(semantic->rule), "ko:labeled-identifier");
