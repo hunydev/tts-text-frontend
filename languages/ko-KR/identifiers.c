@@ -769,6 +769,28 @@ static int raw_suffix(const ttf_pack_input_t *in, size_t p) {
     return 0;
 }
 
+/* A game result in the sentence (score_cue: a word prefix such as 승리, 졌, 비겼,
+ * 무승부, 동점, 꺾): a short hyphen pair then is a score, 25-18 이십오 대 십팔. */
+static int score_sentence(const ttf_pack_input_t *in) {
+    size_t i;
+    for (i = 0; i < in->token_count; ++i) {
+        const ttf_token_t *token = &in->tokens[i];
+        size_t width;
+        char key[64];
+        if (token->script != TTF_SCRIPT_HANGUL)
+            continue;
+        for (width = token->end - token->begin; width > 0; --width) {
+            if (width >= sizeof(key))
+                continue;
+            memcpy(key, in->text + token->begin, width);
+            key[width] = '\0';
+            if (ttf_resource_get(in->engine, "score_cue", "ko-KR", key, NULL))
+                return 1;
+        }
+    }
+    return 0;
+}
+
 /* Speech only. Two digit groups joined by a hyphen are an identifier (account,
  * phone, resident or order number), read
  * as a digit sequence with 다시: 27022-8080 이칠공이이 다시 팔공팔공. A range
@@ -812,6 +834,16 @@ size_t ttf_ko_classify_digit_identifier(const ttf_pack_input_t *in, ttf_semantic
             return 0;
         {
             int ahead = quantity_word(in, c_end, 1);
+            /* 2-0 승리, 25-18로 졌다: a score, read with 대 */
+            if (!ahead && la <= 3 && lb <= 3 && !(la > 1 && t[b] == '0') && !(lb > 1 && t[c] == '0') &&
+                score_sentence(in)) {
+                memcpy(s->value, t + b, la);
+                s->value[la] = '\0';
+                memcpy(s->secondary, t + c, lb);
+                s->secondary[lb] = '\0';
+                s->unit[0] = '\0';
+                return classified(in, s, c_end, TTF_SEM_RANGE, "ko:score");
+            }
             if (ahead == 'S' || (shared_identifier_pair(la, lb, t + b, t + c) && !raw_suffix(in, c_end)))
                 return 0;
         }

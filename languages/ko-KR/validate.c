@@ -559,10 +559,11 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                        ? TTF_OK
                        : ttf_validation_error(d, "long_digit_identifier_min must be 0 (off) or 7..16");
         if (!ttf_validation_enum(key,
-                                 "range_separator|quantity_range_separator|quantity_range_suffix"))
+                                 "range_separator|quantity_range_separator|quantity_range_suffix|"
+                                 "score_separator"))
             return ttf_validation_error(d, "unknown Korean policy key");
     } else if (SAME(k, "digit_label_counter") || SAME(k, "digit_range_scale") ||
-               SAME(k, "digit_range_cue")) {
+               SAME(k, "digit_range_cue") || SAME(k, "score_cue")) {
         *handled = 1;
         if ((status = bounded_key(r, 64, d)) != TTF_OK)
             return status;

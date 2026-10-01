@@ -2,6 +2,11 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Read a short hyphen pair in a sentence with a game cue as a score with 대
+  (25-18로 졌다 이십오 대 십팔로, 2-0 승리 이 대 영 승리): the identifier change had
+  lowered the sports category on /jev-eval from 59.5% to 53.5%. Cue words
+  (`score_cue`), separator policy `score_separator`; Korean benchmark 78.43% →
+  78.59% (+236), contract cases 24 → 29.
 - Read hyphen-joined digit groups and long plain digit runs as identifiers in
   Korean speech: 27022-8080 이칠공이이 다시 팔공팔공 (was 이만 칠천이십이에서 팔천팔십),
   874456932101 팔칠사사… (was 팔천칠백사십사억…), 2017345678번 이공일칠…번. 에서 is

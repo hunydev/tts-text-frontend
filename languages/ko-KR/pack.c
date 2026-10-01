@@ -830,6 +830,14 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         return quantity(e, s->value, resource(e, "unit", s->unit, s->unit), 0, out);
     case TTF_SEM_RANGE: {
         int contracted = 0;
+        /* A score (identifiers.c ko:score): 이십오 대 십팔. */
+        if (!strcmp(s->rule, "ko:score")) {
+            TRY(cardinal(e, s->value, out));
+            TRY(ttf_buffer_puts(out, " "));
+            TRY(ttf_buffer_puts(out, resource(e, "policy", "score_separator", "대")));
+            TRY(ttf_buffer_puts(out, " "));
+            return cardinal(e, s->secondary, out);
+        }
         int quantity_range = strcmp(s->rule, "syntax.range") != 0 || s->unit[0] ||
                              strchr(s->value, '.') || strchr(s->secondary, '.') ||
                              s->value[0] == '-' || s->value[0] == '+' || s->secondary[0] == '-' ||
