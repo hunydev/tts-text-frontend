@@ -6,8 +6,8 @@ const WEAK = new Set(["business_number", "id_card_number", "generated_number", "
 const state = { set: null, rows: [], outputs: {}, scores: {}, systems: [], page: 0, dirty: false, busy: false };
 const number = (v) => Number(v).toLocaleString("ko-KR");
 const percent = (v) => (v === null || v === undefined ? "—" : (v * 100).toFixed(1) + "%");
-// 10. 01. 17:15 in the viewer time zone; a dash when never done.
-const when = (iso) => (iso ? new Date(iso).toLocaleString("ko-KR", { month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hour12: false }) : "—");
+// 10. 01. 17:15 KST: Korean time (UTC+9) whatever the viewer time zone; a dash when never done.
+const when = (iso) => (iso ? new Date(iso).toLocaleString("ko-KR", { timeZone: "Asia/Seoul", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hour12: false }) + " KST" : "—");
 function timing(s) {
   const stale = s.scored_at && s.updated_at && s.updated_at > s.scored_at;
   const fresh = s.summary && s.summary.newly_scored !== undefined ? ` · 새로 채점 ${number(s.summary.newly_scored)}` : "";
