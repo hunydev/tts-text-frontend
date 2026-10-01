@@ -8,6 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 MAX_TEXT_BYTES = 16384
 CORPORA = {
+    "ko-digit-codes-v24": ("숫자로 시작하는 코드", "ko_digit_codes_v24.jsonl"),
     "ko-list-break-v24": ("목록 기호·break·digits 묶음", "ko_list_break_v24.jsonl"),
     "ko-digit-groups-v24": ("숫자 다섯 자리·digits 묶음", "ko_digit_groups_v24.jsonl"),
     "ko-number-labels-v24": ("번호 이름·만 조사", "ko_number_labels_v24.jsonl"),

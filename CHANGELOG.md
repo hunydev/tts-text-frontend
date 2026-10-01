@@ -2,6 +2,12 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Read digits then letters with five or more digits as a code (516123813ZC 오일육
+  일이삼 팔일삼 제트씨; it was left unread); a declared unit stays a quantity
+  (300000p 삼십만 포인트) and short labels (20F, 5A, 470G) keep the preservation
+  policy. Digit runs of five or more inside codes are grouped like plain codes
+  (KR180337594CN 일팔공 삼삼칠 오구사). Contract ko_digit_codes_v24 (7 cases);
+  Korean benchmark +28, -0.
 - Read 0 as 공 in {@digits}, {@digits:N} and the digits of {@break}, like a card or
   phone digit ([[0210]]{@digits} 공이일공; it was 영). Resource number digits_zero.
 - Skip list markers in speech: -, *, •, ·, ▪, ... at the start of a line and

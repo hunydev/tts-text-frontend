@@ -342,6 +342,52 @@ static ttf_status_t quantity(const ttf_engine_t *e, const char *value, const cha
     return ttf_buffer_puts(out, unit);
 }
 
+/* A run of five or more digits in a code is read in equal groups of five,
+   four or three, the largest that divides it (5, 6 3-3, 8 4-4, 9 3-3-3, 10 5-5,
+   12 4-4-4); otherwise five first, or four when only seven are left, and the
+   rest again (7 4-3, 11 5-3-3, 13 5-4-4). Letters and shorter runs are copied
+   (516123813ZC 오일육 일이삼 팔일삼 제트씨). Returns 0 when it does not fit. */
+static int group_digit_runs(const char *value, char *out, size_t size) {
+    size_t used = 0, at = 0, n = strlen(value);
+    while (at < n) {
+        size_t run = at;
+        while (run < n && value[run] >= '0' && value[run] <= '9')
+            ++run;
+        if (run == at) {
+            if (used + 2 > size)
+                return 0;
+            out[used++] = value[at++];
+            continue;
+        }
+        if (run - at < 5) {
+            if (used + (run - at) + 1 > size)
+                return 0;
+            memcpy(out + used, value + at, run - at);
+            used += run - at;
+            at = run;
+            continue;
+        }
+        {
+            size_t group = 0, first = 1;
+            while (at < run) {
+                size_t left = run - at, take;
+                if (!group)
+                    group = !(left % 5) ? 5 : !(left % 4) ? 4 : !(left % 3) ? 3 : 0;
+                take = group ? group : left >= 8 ? 5 : left == 7 ? 4 : left;
+                if (used + take + 2 > size)
+                    return 0;
+                if (!first)
+                    out[used++] = ' ';
+                memcpy(out + used, value + at, take);
+                used += take;
+                at += take;
+                first = 0;
+            }
+        }
+    }
+    out[used] = '\0';
+    return 1;
+}
 /* English numerals up to ten from the shared lexicon words (6 식스, 10 텐),
    the same words letter labels use (K5 케이파이브). NULL above ten. */
 static const char *english_numeral(const ttf_engine_t *e, const char *value) {
@@ -759,29 +805,12 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         }
         return TTF_OK;
     case TTF_SEM_DIGIT_SEQUENCE:
-        if (!strcmp(s->unit, "financial_identifier") && !strcmp(s->rule, "ko:long-digit-identifier")) {
-            /* A code of five or more digits is read in equal groups of five, four
-               or three, the largest that divides it (5, 6 3-3, 8 4-4, 9 3-3-3, 10
-               5-5, 12 4-4-4); otherwise five first, or four when only seven are
-               left, and the rest again (7 4-3, 11 5-3-3, 13 5-4-4). */
+        if (!strcmp(s->unit, "financial_identifier") &&
+            (!strcmp(s->rule, "ko:long-digit-identifier") || !strcmp(s->rule, "ko:alnum-identifier"))) {
             char grouped[TTF_IR_VALUE_SIZE * 2];
-            size_t n = strlen(s->value), at = 0, used = 0, group = 0;
-            while (at < n && used + 7 < sizeof(grouped)) {
-                size_t left = n - at, take;
-                if (!group)
-                    group = !(left % 5) ? 5 : !(left % 4) ? 4 : !(left % 3) ? 3 : 0;
-                /* No group may be shorter than three: 7 is 4-3, not 5-2. */
-                take = group ? group : left >= 8 ? 5 : left == 7 ? 4 : left;
-                if (used)
-                    grouped[used++] = ' ';
-                memcpy(grouped + used, s->value + at, take);
-                used += take;
-                at += take;
-            }
-            if (at < n)
-                return ttf_ko_render_identifier(e, s->value, out);
-            grouped[used] = '\0';
-            return ttf_ko_render_identifier(e, grouped, out);
+            if (group_digit_runs(s->value, grouped, sizeof(grouped)))
+                return ttf_ko_render_identifier(e, grouped, out);
+            return ttf_ko_render_identifier(e, s->value, out);
         }
         if (strcmp(s->unit, "financial_identifier") == 0) {
             TRY(ttf_ko_render_identifier(e, s->value, out));

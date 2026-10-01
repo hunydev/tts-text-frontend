@@ -337,6 +337,18 @@ static int korean_neighbour(const ttf_pack_input_t *in, size_t end) {
     return 0;
 }
 
+/* 300000p, 72000P: the letters after the digits are a declared unit (포인트),
+ * read by the quantity grammar, not a code. */
+static int unit_letters(const ttf_pack_input_t *in, size_t begin, size_t end) {
+    char key[16];
+    if (end <= begin || end - begin >= sizeof(key))
+        return 0;
+    memcpy(key, in->text + begin, end - begin);
+    key[end - begin] = 0;
+    return ttf_resource_get(in->engine, "numeric_suffix", "*", key, NULL) ||
+           ttf_resource_get(in->engine, "letter_unit", "ko-KR", key, NULL);
+}
+
 size_t ttf_ko_classify_alnum_identifier(const ttf_pack_input_t *in, ttf_semantic_t *semantic) {
     size_t begin = in->tokens[in->index].begin, end = begin, i, run = 0;
     size_t letters = 0, digits = 0, hyphens = 0, transitions = 0;
@@ -388,8 +400,13 @@ size_t ttf_ko_classify_alnum_identifier(const ttf_pack_input_t *in, ttf_semantic
     /* Codes, not words or quantities: two letter/digit changes (K37PA1798,
      * 50QNA90), letters then at least three digits (M4137, kip214), or
      * hyphenated groups with at least three digits (C5135-12, AP-1019D). */
+    /* Digits then letters with five or more digits (516123813ZC) is a code too,
+     * like a plain run of five or more digits; shorter ones (20F, 5A, 470G) stay
+     * ambiguous labels. */
     if (!((transitions >= 2 && end - begin >= 5) ||
           (ascii_letter(in->text[begin]) && transitions == 1 && !hyphens && digits >= 3) ||
+          (decimal_digit(in->text[begin]) && transitions == 1 && !hyphens && digits >= 5 &&
+           !unit_letters(in, begin + digits, end)) ||
           (hyphens && digits >= 3)))
         return 0;
     /* A letter run that is a Korean loanword is a word with a number
