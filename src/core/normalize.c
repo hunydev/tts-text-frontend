@@ -777,6 +777,58 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
         sem->struct_size = sizeof(*sem);
         sem->type = TTF_SEM_TEXT;
         sem->layer = TTF_LAYER_COMMON;
+        /* - 사과, • 항목: a list marker (list_marker) at the start of a line followed
+           by a space is not read in speech (it was 하이픈 or 마이너스). -3도 with
+           no space stays a negative number. */
+        if (e->frontend_options.output_mode == TTF_OUTPUT_SPEECH && i + 2 < count &&
+            tokens[i].end - tokens[i].begin < 8 &&
+            tokens[i + 1].script == TTF_SCRIPT_WHITESPACE) {
+            size_t back = tokens[i].begin, w = tokens[i].end - tokens[i].begin;
+            char marker[8];
+            int at_line_start;
+            while (back && (text[back - 1] == ' ' || text[back - 1] == '\t'))
+                --back;
+            at_line_start = !back || text[back - 1] == '\n' || text[back - 1] == '\r';
+            memcpy(marker, text + tokens[i].begin, w);
+            marker[w] = '\0';
+            if (at_line_start && text[tokens[i + 1].begin] != '\n' &&
+                text[tokens[i + 1].begin] != '\r' &&
+                ttf_resource_get(e, "list_marker", "*", marker, NULL)) {
+                size_t skip_end = tokens[i + 1].end;
+                for (size_t k = tokens[i + 1].begin; k < tokens[i + 1].end; ++k)
+                    if (text[k] == '\n' || text[k] == '\r') {
+                        skip_end = k;
+                        break;
+                    }
+                span.input_begin = sem->input_begin = tokens[i].begin + offset;
+                span.input_end = sem->input_end = skip_end + offset;
+                snprintf(sem->rule, sizeof(sem->rule), "syntax.list-marker");
+                snprintf(sem->unit, sizeof(sem->unit), "@list-marker");
+                tag(sem->source_lang, "und");
+                tag(sem->context_lang, "und");
+                tag(sem->render_lang, "und");
+                tag(span.verbalizer, "identity");
+                span.script = TTF_SCRIPT_PUNCTUATION;
+                span.begin = span.end = output.length;
+                ttf_trace_span_begin(e, span.input_begin, span.input_end);
+                ttf_trace_stage(e, TTF_TRACE_POLICY, 0, skip_end - tokens[i].begin);
+                st = ttf_trace_emit(e, TTF_TRACE_SELECTED, TTF_LAYER_COMMON, 0, "und", "decision",
+                                    "list-marker", marker, "", "list-marker-skipped", SIZE_MAX);
+                ttf_trace_span_finish(e, span.begin, span.end);
+                if (st == TTF_OK)
+                    st = add_span(out, &span, &capacity);
+                if (st != TTF_OK)
+                    goto fail;
+                removed_before = 0;
+                if (skip_end == tokens[i + 1].end)
+                    i += 2;
+                else {
+                    tokens[i + 1].begin = skip_end;
+                    i += 1;
+                }
+                continue;
+            }
+        }
         if (e->bracket_policy != TTF_BRACKET_READ) {
             size_t close = bracket_region(e, text, length, tokens, count, i);
             if (close) {

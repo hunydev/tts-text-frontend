@@ -307,3 +307,7 @@ lexicon	ko-KR	en-US:k7	케이세븐
 `--customer FILE` 또는 freeze 전 `ttf_resource_load(..., TTF_LAYER_CUSTOMER)`로
 적용한다. 등록 전/후 `inspect --trace`에서 실제 소비 범위와 뒤따르는 조사를
 확인한다. 한 번의 직접 alias는 이러한 사전보다 먼저 적용된다.
+
+## List markers (2026-10-02)
+
+`list_marker * <symbol> 1` (resources/common/speech.tsv): at the start of a line and followed by a space, the marker is not read in speech (`- 사과` 사과, `• 회의` 회의). A hyphen written against a number (`-3도`) stays a minus sign, and a marker in the middle of a line keeps its reading. Text output keeps the marker.

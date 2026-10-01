@@ -218,7 +218,7 @@ static ttf_status_t spelled_with_breaks(const ttf_engine_t *e, const ttf_languag
         memcpy(item.context_lang, request->context_lang, sizeof(item.context_lang));
         memcpy(item.render_lang, request->render_lang, sizeof(item.render_lang));
         memcpy(item.source_lang, request->source_lang, sizeof(item.source_lang));
-        if (digit((char)cp)) {
+        if (cp < 128 && digit((char)cp)) {
             item.type = TTF_SEM_DIGIT_SEQUENCE;
             status = pack->verbalize(e, &item, text + at, width, out);
         } else if (cp < 128) {
@@ -245,6 +245,8 @@ ttf_status_t ttf_semantic_control(const ttf_engine_t *e, const ttf_semantic_t *r
     ttf_status_t status = TTF_EINVAL;
     char detail[256], cased[TTF_IR_VALUE_SIZE];
     const char *groups = NULL; /* {@digits:N...} group sizes */
+    int written = 0;           /* {@digits} value with written group separators */
+    char joined[TTF_IR_VALUE_SIZE]; /* written groups joined for {@digits:N} */
     static const struct { const char *name; ttf_semantic_type_t type; } grammars[] = {
         {"@time", TTF_SEM_TIME}, {"@currency", TTF_SEM_CURRENCY},
         {"@percent", TTF_SEM_PERCENT}, {"@measure", TTF_SEM_MEASURE},
@@ -265,9 +267,19 @@ ttf_status_t ttf_semantic_control(const ttf_engine_t *e, const ttf_semantic_t *r
         status = number(text, n, !strcmp(name, "@decimal"), ir.value);
     } else if (!strcmp(name, "@digits") || !strncmp(name, "@digits:", 8) ||
                !strcmp(name, "@ordinal") || !strcmp(name, "@year")) {
-        for (size_t i = 0; i < n; ++i)
-            if (!digit(text[i]))
-                return TTF_EINVAL;
+        /* [[0095 6341 2825 0503]]{@digits}: single spaces or hyphens between
+           digit groups are kept as written group boundaries. */
+        int digits_control = !strncmp(name, "@digits", 7);
+        for (size_t i = 0; i < n; ++i) {
+            if (digit(text[i]))
+                continue;
+            if (digits_control && (text[i] == ' ' || text[i] == '-') && i && i + 1 < n &&
+                digit(text[i - 1]) && digit(text[i + 1])) {
+                written = 1;
+                continue;
+            }
+            return TTF_EINVAL;
+        }
         memcpy(ir.value, text, n);
         if (!strncmp(name, "@digits:", 8)) {
             groups = name + 8;
@@ -371,6 +383,34 @@ ttf_status_t ttf_semantic_control(const ttf_engine_t *e, const ttf_semantic_t *r
                             detail, SIZE_MAX);
     if (status != TTF_OK)
         return status;
+    if (written) {
+        /* Each written group reads like {@digits}; {@digits:N} regroups the digits. */
+        size_t used = 0, at = 0;
+        for (size_t i = 0; i < n; ++i)
+            if (digit(text[i]))
+                joined[used++] = text[i];
+        joined[used] = '\0';
+        if (groups) {
+            text = joined;
+            n = used;
+        } else {
+            while (at < n) {
+                size_t end = at;
+                ttf_semantic_t part = ir;
+                while (end < n && digit(text[end]))
+                    ++end;
+                memcpy(part.value, text + at, end - at);
+                part.value[end - at] = '\0';
+                part.input_end = end - at;
+                if (at && (status = ttf_buffer_puts(out, " ")) != TTF_OK)
+                    return status;
+                if ((status = pack->verbalize(e, &part, text + at, end - at, out)) != TTF_OK)
+                    return status;
+                at = end + (end < n);
+            }
+            return TTF_OK;
+        }
+    }
     if (groups) {
         /* 123123{@digits:12} 일 이삼 일 이삼: each group reads like {@digits};
            a value shorter than the group is one group. */

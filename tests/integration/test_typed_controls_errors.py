@@ -7,7 +7,9 @@ import sys
 cli, resources = sys.argv[1:]
 invalid = {
     'cardinal': ['12.5', '1e3', '12,34', '1234,567', '1,,234', '+', ' 1', '1 ', '１２', '1x'],
-    'digits': ['1.2', '1 2', '-12', '12,500', '１２'],
+    # 2026-10-02: a single space or hyphen between digit groups is a written group
+    # boundary ([[0095 6341]]{@digits}), so '1 2' is valid; doubled spaces are not.
+    'digits': ['1.2', '1  2', '-12', '12,500', '１２', '1-', ' 12'],
     'decimal': ['12', '.5', '1.', '1.2.3', '1e-2'],
     'ordinal': ['0', '000', '-1', '1st', '1.5'],
     'year': ['0', '0000', '99', '10000', '2026년'],

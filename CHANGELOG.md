@@ -2,6 +2,12 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Skip list markers in speech: -, *, •, ·, ▪, ... at the start of a line and
+  followed by a space are not read (- 사과 사과; it was 하이픈 사과); -3도 stays
+  마이너스 삼도. {@break:N} keeps 세 and 섹 (their code points truncated to the
+  ASCII digits 8 and 9 and were dropped). {@digits} accepts spaces or hyphens
+  between digit groups ([[0095 6341 2825 0503]]{@digits}). Contract
+  ko_list_break_v24 (15 cases).
 - Read a plain number of five or more digits (no comma grouping, unit or
   counter) digit by digit; up to four digits stays an amount (project-owner
   decision; it was nine). Groups of five, four or three never leave a group

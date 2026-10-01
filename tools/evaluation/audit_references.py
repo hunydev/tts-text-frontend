@@ -14,6 +14,7 @@ import re
 import sys
 
 ACTIVE_JSONL = (
+    "ko_list_break_v24",
     "ko_digit_groups_v24",
     "ko_number_labels_v24",
     "ko_alnum_models_v24",

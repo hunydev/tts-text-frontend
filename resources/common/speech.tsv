@@ -266,3 +266,35 @@ bracket_pair	*	{	}
 bracket_pair	*	（	）
 bracket_pair	*	〈	〉
 bracket_pair	*	《	》
+# List markers (2026-10-02, project-owner decision): at the start of a line and
+# followed by a space they are not read in speech (- 사과 사과). Written against a
+# number (-3도) a hyphen stays a minus sign. ※ is a reference mark with its own
+# reading (참고표), not a list marker.
+list_marker	*	-	1
+list_marker	*	*	1
+list_marker	*	+	1
+list_marker	*	•	1
+list_marker	*	·	1
+list_marker	*	‧	1
+list_marker	*	∙	1
+list_marker	*	◦	1
+list_marker	*	▪	1
+list_marker	*	▫	1
+list_marker	*	■	1
+list_marker	*	□	1
+list_marker	*	●	1
+list_marker	*	○	1
+list_marker	*	◆	1
+list_marker	*	◇	1
+list_marker	*	▶	1
+list_marker	*	▷	1
+list_marker	*	►	1
+list_marker	*	‣	1
+list_marker	*	⁃	1
+list_marker	*	–	1
+list_marker	*	—	1
+list_marker	*	✓	1
+list_marker	*	✔	1
+list_marker	*	☐	1
+list_marker	*	☑	1
+list_marker	*	√	1
