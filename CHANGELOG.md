@@ -2,6 +2,12 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Add the {@score} and {@math} controls: 10:10{@score} and [[40-30]]{@score} read
+  십 대 십 / 사십 대 삼십 (ten to ten), 4-3{@math} reads 사 빼기 삼 (four minus three).
+  Colons keep the time grammar and are not guessed as scores; hyphen defaults are
+  unchanged. A bare digit atom now includes one `- + * / = :` between digits, so
+  4-3{@math} and 2026-10-01{@date} bind the whole value. Contract
+  ko_score_math_v24 (23 cases, including {@address} hyphen readings).
 - Stop reading a word that only begins with a scale syllable as a scale after a
   hyphen pair (417-00-32154 조회 kept raw because 조회 looked like 조), and read an
   identifier with an attached Hangul word (417-00-32154번) instead of keeping it

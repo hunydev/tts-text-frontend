@@ -831,7 +831,7 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     case TTF_SEM_RANGE: {
         int contracted = 0;
         /* A score (identifiers.c ko:score): 이십오 대 십팔. */
-        if (!strcmp(s->rule, "ko:score")) {
+        if (!strcmp(s->rule, "ko:score") || !strcmp(s->rule, "syntax.score")) {
             TRY(cardinal(e, s->value, out));
             TRY(ttf_buffer_puts(out, " "));
             TRY(ttf_buffer_puts(out, resource(e, "policy", "score_separator", "대")));

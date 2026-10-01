@@ -140,6 +140,18 @@
           "output": "일에서 이 킬로그램"
         },
         {
+          "syntax": "[[…]]{@score}",
+          "meaning": "점수·대비 (하이픈이나 콜론으로 이은 두 수, 대로 읽기)",
+          "example": "10:10{@score}",
+          "output": "십 대 십"
+        },
+        {
+          "syntax": "[[…]]{@math}",
+          "meaning": "수식 (하이픈은 빼기, 연산자 말은 math_operator 리소스)",
+          "example": "4-3{@math}",
+          "output": "사 빼기 삼"
+        },
+        {
           "syntax": "[[…]]{@phone}",
           "meaning": "전화번호",
           "example": "[[0210-09]]{@phone}",

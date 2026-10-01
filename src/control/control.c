@@ -52,6 +52,14 @@ static size_t atom_end(const char *text, size_t length, size_t begin) {
             ++p;
             continue;
         }
+        /* 4-3{@math}, 10:10{@score}: an operator or colon between digits joins
+           one bare numeric atom; [[...]] is still the general grouping syntax. */
+        if (numeric && p > begin && digit(text[p - 1]) && p + 1 < length && digit(text[p + 1]) &&
+            (text[p] == '-' || text[p] == '+' || text[p] == '*' || text[p] == '/' ||
+             text[p] == '=' || text[p] == ':')) {
+            ++p;
+            continue;
+        }
         break;
     }
     return p;

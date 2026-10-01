@@ -119,6 +119,8 @@ const char *ttf_phrase_match(const ttf_engine_t *engine, const char *source, con
                              ttf_resource_layer_t *layer);
 /* Generic semantic recognition supplied by semantic/classifier.c. */
 size_t ttf_classify_universal(const ttf_pack_input_t *input, ttf_semantic_t *out);
+/* {@math}: reads all of text as one arithmetic expression (classifier.c). */
+int ttf_math_expression(const char *text, size_t n, ttf_semantic_t *out);
 /* Normalize one stable context unit; shared by batch and streaming. */
 ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t length,
                               size_t input_offset, ttf_result_t *out);

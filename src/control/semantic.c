@@ -298,6 +298,25 @@ ttf_status_t ttf_semantic_control(const ttf_engine_t *e, const ttf_semantic_t *r
             status = TTF_EINVAL;
     } else if (!strcmp(name, "@phone")) {
         status = telephone(text, n, &ir);
+    } else if (!strcmp(name, "@score")) {
+        /* 10-10, 40:30: two whole numbers joined by a hyphen or colon. */
+        size_t i = 0, join;
+        while (i < n && digit(text[i]))
+            ++i;
+        join = i;
+        if (!join || join + 1 >= n || (text[join] != '-' && text[join] != ':') || join > 18 ||
+            n - join - 1 > 18)
+            return TTF_EINVAL;
+        for (i = join + 1; i < n; ++i)
+            if (!digit(text[i]))
+                return TTF_EINVAL;
+        memcpy(ir.value, text, join);
+        memcpy(ir.secondary, text + join + 1, n - join - 1);
+        ir.type = TTF_SEM_RANGE;
+        snprintf(ir.rule, sizeof(ir.rule), "syntax.score");
+        status = TTF_OK;
+    } else if (!strcmp(name, "@math")) {
+        status = ttf_math_expression(text, n, &ir) ? TTF_OK : TTF_EINVAL;
     } else if (!strcmp(name, "@version") || !strcmp(name, "@ip")) {
         status = dotted(text, n, !strcmp(name, "@ip"), &ir);
     } else {

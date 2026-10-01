@@ -352,7 +352,8 @@ static int math_relation(const char *op) {
    hyphen or slash is also a range, date or fraction, so without a relation only
    ×, ÷, * or a letter operand with + make an expression. The canonical form is
    stored in the value with single spaces between operands and operators. */
-static size_t math_expression_end(const ttf_pack_input_t *in, size_t b, ttf_semantic_t *out) {
+static size_t math_expression_scan(const ttf_pack_input_t *in, size_t b, ttf_semantic_t *out,
+                                   int forced) {
     const char *s = in->text, *op = NULL;
     size_t n = in->length, p = b, end = b, used = 0, operands = 0, width;
     int relations = 0, letters = 0, strong = 0, weak = 0;
@@ -420,7 +421,8 @@ static size_t math_expression_end(const ttf_pack_input_t *in, size_t b, ttf_sema
     }
     if (operands < 2 || relations > 1)
         return 0;
-    if (!relations && !(strong && !weak) && !(letters && !weak))
+    /* {@math} asks for the arithmetic reading of a plain hyphen or slash. */
+    if (!forced && !relations && !(strong && !weak) && !(letters && !weak))
         return 0;
     if (end < n &&
         (ascii_letter(s[end]) || digit(s[end]) || s[end] == '%' || s[end] == '$' || s[end] == '_' ||
@@ -430,6 +432,19 @@ static size_t math_expression_end(const ttf_pack_input_t *in, size_t b, ttf_sema
     value[used] = '\0';
     memcpy(out->value, value, used + 1);
     return end;
+}
+static size_t math_expression_end(const ttf_pack_input_t *in, size_t b, ttf_semantic_t *out) {
+    return math_expression_scan(in, b, out, 0);
+}
+/* {@math}: the whole text is one expression (4-3 사 빼기 삼). */
+int ttf_math_expression(const char *text, size_t n, ttf_semantic_t *out) {
+    ttf_pack_input_t input = {text, n, NULL, 0, 0, NULL};
+    if (math_expression_scan(&input, 0, out, 1) != n)
+        return 0;
+    snprintf(out->unit, sizeof(out->unit), "@expression");
+    snprintf(out->rule, sizeof(out->rule), "syntax.math-expression");
+    out->type = TTF_SEM_SYMBOL;
+    return 1;
 }
 /* A bare host such as naver.com: ASCII labels whose final label is a declared
    lowercase top-level domain. Returns the end offset, or `begin` when absent. */
