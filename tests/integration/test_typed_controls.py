@@ -11,7 +11,8 @@ from evaluate import frontend_settings
 library, resources = [Path(x).resolve() for x in sys.argv[1:]]
 corpus = ROOT/'tests/evaluation/typed_controls_v22.jsonl'
 # 2026-09-30 (v0.24): range rows follow the range-reading decision.
-assert hashlib.sha256(corpus.read_bytes()).hexdigest() == 'b1e506e243f2bba9fa9988e028fc0729bd3cb99c004a530433ba0283abbf548f'
+# 2026-10-02: {@digits} reads 0 as 공 (typed-digits-ko, typed-atom).
+assert hashlib.sha256(corpus.read_bytes()).hexdigest() == '6a954c253e351916b23ac28ff22759bb9f9a6ccdbf35a724ffff99acf0e7efd1'
 rows = [json.loads(x) for x in corpus.read_text().splitlines()]
 rng = random.Random(20260928)
 checks = 0
@@ -81,8 +82,9 @@ check('[[2000-02-29]]{@date}','이천 년 이 월 이십구 일')
 check('[[255.000.0.1]]{@ip}','이오오 점 영영영 점 영 점 일')
 check('[[v2.1.3]]{@version}','브이 이 점 일 점 삼')
 check('[[12,500.50]]{@decimal}','만 이천오백 점 오영')
-check('[['+'0'*95+']]{@digits}','영'*95)
-check('[[123456789012345678]]{@digits}','일이삼사오육칠팔구영일이삼사오육칠팔')
+# {@digits} reads 0 as 공 since 2026-10-02 (number digits_zero; was 영).
+check('[['+'0'*95+']]{@digits}','공'*95)
+check('[[123456789012345678]]{@digits}','일이삼사오육칠팔구공일이삼사오육칠팔')
 # Semantic forcing must differ from automatic interpretation in these cases.
 # invalid_control=error keeps the strict failure under test (default: ignore).
 e = Engine(library,resources,dict(input_format='annotated',output_mode='speech',invalid_control='error'))

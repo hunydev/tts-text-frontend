@@ -839,10 +839,14 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             TRY(ttf_buffer_puts(out, " "));
             return ttf_ko_render_identifier(e, s->value + n + 3, out);
         }
-        if (!strcmp(s->unit, "leading_zero")) {
+        if (!strcmp(s->unit, "leading_zero") || !strcmp(s->unit, "@digits")) {
+            /* {@digits} reads 0 like a card or phone digit (number digits_zero,
+               공 since 2026-10-02; it was 영). */
             const char *p = s->value;
-            const char *zero = resource(e, "number", "leading_zero_zero",
-                                        resource(e, "digit", "0", "영"));
+            const char *zero = !strcmp(s->unit, "@digits")
+                                   ? resource(e, "number", "digits_zero", "공")
+                                   : resource(e, "number", "leading_zero_zero",
+                                              resource(e, "digit", "0", "영"));
             int previous = 0;
             for (; *p; ++p) {
                 if (*p >= '0' && *p <= '9')

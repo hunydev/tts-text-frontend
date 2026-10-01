@@ -220,6 +220,7 @@ static ttf_status_t spelled_with_breaks(const ttf_engine_t *e, const ttf_languag
         memcpy(item.source_lang, request->source_lang, sizeof(item.source_lang));
         if (cp < 128 && digit((char)cp)) {
             item.type = TTF_SEM_DIGIT_SEQUENCE;
+            (void)snprintf(item.unit, sizeof(item.unit), "@digits");
             status = pack->verbalize(e, &item, text + at, width, out);
         } else if (cp < 128) {
             item.type = TTF_SEM_CUSTOM;
@@ -281,6 +282,8 @@ ttf_status_t ttf_semantic_control(const ttf_engine_t *e, const ttf_semantic_t *r
             return TTF_EINVAL;
         }
         memcpy(ir.value, text, n);
+        if (!strncmp(name, "@digits", 7))
+            snprintf(ir.unit, sizeof(ir.unit), "@digits"); /* 0 reads like a card digit */
         if (!strncmp(name, "@digits:", 8)) {
             groups = name + 8;
             for (const char *g = groups; *g; ++g)

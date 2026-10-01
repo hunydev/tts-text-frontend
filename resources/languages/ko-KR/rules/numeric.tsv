@@ -24,6 +24,9 @@ magnitude	ko-KR	10^36	간
 magnitude	ko-KR	10^40	정
 number	ko-KR	phone_zero	공
 number	ko-KR	leading_zero_zero	공
+# {@digits}, {@digits:N} and digits in {@break} read 0 like a card or phone digit
+# (project-owner decision 2026-10-02; it was 영). Set 영 to restore.
+number	ko-KR	digits_zero	공
 # NIKL article 44: separate nonzero myriad groups; compact is a customer option.
 # unit (a space after every Sino unit) and digits spaced form the opt-in
 # reading-unit profile, customers/reading-unit-spacing/ko-KR/rules.tsv.

@@ -2,6 +2,8 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Read 0 as 공 in {@digits}, {@digits:N} and the digits of {@break}, like a card or
+  phone digit ([[0210]]{@digits} 공이일공; it was 영). Resource number digits_zero.
 - Skip list markers in speech: -, *, •, ·, ▪, ... at the start of a line and
   followed by a space are not read (- 사과 사과; it was 하이픈 사과); -3도 stays
   마이너스 삼도. {@break:N} keeps 세 and 섹 (their code points truncated to the

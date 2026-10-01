@@ -59,7 +59,7 @@
           "syntax": "[[…]]{@digits}",
           "meaning": "모든 자릿수를 하나씩 (선행 0 포함)",
           "example": "[[0210]]{@digits}",
-          "output": "영이일영"
+          "output": "공이일공"
         },
         {
           "syntax": "[[…]]{@decimal}",
