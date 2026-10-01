@@ -464,3 +464,32 @@ lexicon_case	ko-KR	en-US:2g	upper
 lexicon_case	ko-KR	en-US:3g	upper
 lexicon_case	ko-KR	en-US:4g	upper
 lexicon_case	ko-KR	en-US:5g	upper
+# Digit identifiers (2026-10-01, project-owner decision). Two digit groups joined
+# by a hyphen are an identifier read digit by digit with 다시 (27022-8080 이칠공이이
+# 다시 팔공팔공); 에서 is the fallback for ascending groups with a unit or counter
+# (3-4개 서너 개, 10-20% 십에서 이십 퍼센트) or two years (2019-2020). range restores
+# the old reading. A plain run of nine or more digits without commas, unit or
+# quantity counter is a code read digit by digit (874456932101); amounts keep
+# commas or a unit, and {@sino} reads one on request. 0 turns this off.
+policy	ko-KR	hyphen_digits	identifier
+policy	ko-KR	long_digit_identifier_min	9
+# Counters that label identifiers: a range only with one- or two-digit groups.
+digit_label_counter	ko-KR	번	1
+digit_label_counter	ko-KR	호	1
+digit_label_counter	ko-KR	번지	1
+digit_label_counter	ko-KR	동	1
+digit_label_counter	ko-KR	차	1
+# Scale words after the second group make it an amount range (100-200만 원).
+digit_range_scale	ko-KR	십	1
+digit_range_scale	ko-KR	백	1
+digit_range_scale	ko-KR	천	1
+digit_range_scale	ko-KR	만	1
+digit_range_scale	ko-KR	억	1
+digit_range_scale	ko-KR	조	1
+# A word that itself means an interval (가격은 12000-15000 사이).
+digit_range_cue	ko-KR	사이	1
+# 100: the Korean reading replaces the shared numeric grammar, also where that
+# grammar took the following counter (27022-8080 통장, 2020-1234호).
+classifier_priority	ko-KR	ko:digit-identifier	100
+classifier_priority	ko-KR	ko:long-digit-identifier	100
+classifier_priority	ko-KR	ko:year-range	100

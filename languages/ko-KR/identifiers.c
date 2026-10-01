@@ -1,6 +1,7 @@
 #include "identifiers.h"
 #include "../../src/core/internal.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 static int horizontal_space(char c) {
@@ -69,6 +70,17 @@ static int preceding_label(const ttf_pack_input_t *in, size_t begin, char *match
         }
     }
     return found && enabled;
+}
+
+static size_t classified(const ttf_pack_input_t *in, ttf_semantic_t *s, size_t end,
+                         ttf_semantic_type_t type, const char *rule) {
+    size_t consumed = 0;
+    while (in->index + consumed < in->token_count && in->tokens[in->index + consumed].begin < end)
+        ++consumed;
+    s->type = type;
+    s->input_end = end;
+    (void)snprintf(s->rule, sizeof(s->rule), "%s", rule);
+    return consumed;
 }
 
 static int valid_tail(const ttf_pack_input_t *in, size_t end) {
@@ -651,3 +663,206 @@ ttf_status_t ttf_ko_render_identifier(const ttf_engine_t *engine, const char *va
     }
     return TTF_OK;
 }
+
+static int latin_letter(char c) {
+    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+}
+
+static size_t digit_run(const char *text, size_t n, size_t p) {
+    while (p < n && decimal_digit(text[p]))
+        ++p;
+    return p;
+}
+
+static const char *korean_policy(const ttf_pack_input_t *in, const char *key) {
+    return ttf_resource_get(in->engine, "policy", "ko-KR", key, NULL);
+}
+
+/* The quantity word right after a number, if it really ends there (a particle
+ * or a word boundary follows): 'U' unit, currency, percent or scale word
+ * (100-200만 원), 'C' counter, 'L' a counter that labels identifiers
+ * (digit_label_counter: 1234-5678번, 2020-1234호), 0 none. After a space the
+ * word must be complete, so 10-20 시즌 and 27022-8080 통장 take no counter.
+ * 'S' is a scale word after the number (만, 억). */
+static int hangul_syllable_at(const ttf_pack_input_t *in, size_t p) {
+    const unsigned char *u = (const unsigned char *)in->text + p;
+    unsigned cp;
+    if (p + 3 > in->length || (u[0] & 0xf0) != 0xe0)
+        return 0;
+    cp = ((unsigned)(u[0] & 0x0f) << 12) | ((unsigned)(u[1] & 0x3f) << 6) | (unsigned)(u[2] & 0x3f);
+    return cp >= 0xac00 && cp <= 0xd7a3;
+}
+
+static int quantity_word(const ttf_pack_input_t *in, size_t p, int attached) {
+    size_t q = p, n;
+    char key[64];
+    while (q < in->length && horizontal_space(in->text[q]))
+        ++q;
+    if (q < in->length && in->text[q] == '%')
+        return valid_tail(in, q + 1) ? 'U' : 0;
+    n = in->length - q;
+    if (n >= sizeof(key))
+        n = sizeof(key) - 1;
+    /* 12000-15000 사이: a word that itself means an interval. */
+    for (size_t m = n; m; --m) {
+        memcpy(key, in->text + q, m);
+        key[m] = '\0';
+        if (ttf_resource_get(in->engine, "digit_range_cue", "ko-KR", key, NULL))
+            return valid_tail(in, q + m) ? 'U' : 0;
+    }
+    if (n >= sizeof(key))
+        n = sizeof(key) - 1;
+    for (; n; --n) {
+        const char *value;
+        memcpy(key, in->text + q, n);
+        key[n] = '\0';
+        value = ttf_resource_get(in->engine, "numeric_suffix", "*", key, NULL);
+        if (!value && ttf_resource_get(in->engine, "digit_range_scale", "ko-KR", key, NULL))
+            return 'S'; /* 100-200만 원, 01-02만원: the shared-scale grammar reads it */
+        if (!value)
+            continue;
+        if (!valid_tail(in, q + n)) {
+            if (q > p)
+                return 0;
+            break; /* 7-10일간: an attached word, judged below */
+        }
+        if (!strncmp(value, "COUNTER:", 8))
+            return ttf_resource_get(in->engine, "digit_label_counter", "ko-KR", value + 8, NULL) ? 'L'
+                                                                                               : 'C';
+        return 'U';
+    }
+    /* A Hangul word attached to the number that is not a particle is a counter
+     * or unit the shared grammar knows (3-5세, 2-3회, 5-10위안, 2-32점); a
+     * particle (12-34를) is not. Only for hyphen pairs: after a long code an
+     * attached ending (326253620012더라) is not a counter. */
+    if (attached && q == p && hangul_syllable_at(in, q) && !valid_tail(in, q))
+        return 'C';
+    return 0;
+}
+
+/* Whether the shared grammar already rejects a bare hyphen pair as a range
+ * (classifier.c identifier_pair) and something follows that it could take as a
+ * counter or unit; then that path, and the labelled identifier cue after it
+ * (계좌번호 3765-38264), keep the pair. */
+static int shared_identifier_pair(size_t la, size_t lb, const char *a, const char *b) {
+    if ((la > 1 && a[0] == '0') || (lb > 1 && b[0] == '0') || la >= 6 || lb >= 6)
+        return 1;
+    return la != lb && (la >= 5 || lb >= 5);
+}
+
+static int raw_suffix(const ttf_pack_input_t *in, size_t p) {
+    size_t q = p, n;
+    char key[64];
+    while (q < in->length && horizontal_space(in->text[q]))
+        ++q;
+    if (q < in->length && in->text[q] == '%')
+        return 1;
+    n = in->length - q;
+    if (n >= sizeof(key))
+        n = sizeof(key) - 1;
+    for (; n; --n) {
+        memcpy(key, in->text + q, n);
+        key[n] = '\0';
+        if (ttf_resource_get(in->engine, "numeric_suffix", "*", key, NULL))
+            return 1;
+    }
+    return 0;
+}
+
+/* Speech only. Two digit groups joined by a hyphen are an identifier (account,
+ * phone, resident or order number), read
+ * as a digit sequence with 다시: 27022-8080 이칠공이이 다시 팔공팔공. A range
+ * (에서) is the fallback: ascending groups followed by a unit (up to five
+ * digits), a counter (up to four) or a labelling counter (up to two), or two
+ * four-digit years (2019-2020). Policy hyphen_digits=range restores the old
+ * reading. A plain run of long_digit_identifier_min or more digits with no comma
+ * grouping and no unit or quantity counter is a code read digit by digit
+ * (874456932101, 2017345678번); 1,234,567,890원 and 1234567890명 stay amounts
+ * and 874456932101{@sino} still reads one. Three or more groups, decimals,
+ * signs and alphanumeric codes keep their own grammar, a recognized phone number
+ * (1588-0000 일오팔팔 공공공공) stays a phone number, and the classifier only acts
+ * in Korean text (default ko-KR or a Hangul token in the input). */
+size_t ttf_ko_classify_digit_identifier(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    const char *t = in->text, *policy;
+    size_t n = in->length, b = in->tokens[in->index].begin, a_end, minimum = 0, i;
+    int korean = in->engine->default_language && !strcmp(in->engine->default_language, "ko-KR");
+    if (b >= n || !decimal_digit(t[b]))
+        return 0;
+    /* Korean text only: pages 3-5 in an English sentence keeps its range. */
+    for (i = 0; !korean && i < in->token_count; ++i)
+        korean = in->tokens[i].script == TTF_SCRIPT_HANGUL;
+    if (!korean)
+        return 0;
+    if (b && (decimal_digit(t[b - 1]) || latin_letter(t[b - 1]) || t[b - 1] == '-' ||
+              t[b - 1] == '+' || t[b - 1] == '.' || t[b - 1] == ','))
+        return 0;
+    a_end = digit_run(t, n, b);
+    if (a_end + 1 < n && (t[a_end] == '.' || t[a_end] == ',' || t[a_end] == ':' || t[a_end] == '/') &&
+        decimal_digit(t[a_end + 1]))
+        return 0;
+    if (a_end < n && latin_letter(t[a_end]))
+        return 0;
+    policy = korean_policy(in, "hyphen_digits");
+    if (a_end + 1 < n && t[a_end] == '-' && decimal_digit(t[a_end + 1]) &&
+        (!policy || strcmp(policy, "range"))) {
+        size_t c = a_end + 1, c_end = digit_run(t, n, c), la = a_end - b, lb = c_end - c;
+        if (c_end < n && (t[c_end] == '-' || t[c_end] == ':' || t[c_end] == '/' || latin_letter(t[c_end]) ||
+                          ((t[c_end] == '.' || t[c_end] == ',') && c_end + 1 < n &&
+                           decimal_digit(t[c_end + 1]))))
+            return 0;
+        {
+            int ahead = quantity_word(in, c_end, 1);
+            if (ahead == 'S' || (shared_identifier_pair(la, lb, t + b, t + c) && !raw_suffix(in, c_end)))
+                return 0;
+        }
+        if (la <= 9 && lb <= 9 && !(la > 1 && t[b] == '0') && !(lb > 1 && t[c] == '0')) {
+            unsigned long x = 0, y = 0;
+            size_t limit;
+            int kind;
+            for (i = b; i < a_end; ++i)
+                x = x * 10 + (unsigned long)(t[i] - '0');
+            for (i = c; i < c_end; ++i)
+                y = y * 10 + (unsigned long)(t[i] - '0');
+            kind = quantity_word(in, c_end, 1);
+            limit = kind == 'U' ? 5 : kind == 'C' ? 4 : kind == 'L' ? 2 : 0;
+            if (x < y && limit && la <= limit && lb <= limit)
+                return 0; /* a quantity range: the shared range grammar reads it */
+            /* 24-5개월: a shortened second number (24 to 25) before a counter. */
+            if (x >= y && kind && kind != 'L' && lb < la && la <= 4)
+                return 0;
+            if (x < y && !kind && la == 4 && lb == 4 && x >= 1000 && y <= 2999 && y - x <= 100 &&
+                valid_tail(in, c_end)) {
+                memcpy(s->value, t + b, la);
+                s->value[la] = '\0';
+                memcpy(s->secondary, t + c, lb);
+                s->secondary[lb] = '\0';
+                s->unit[0] = '\0';
+                return classified(in, s, c_end, TTF_SEM_RANGE, "ko:year-range");
+            }
+        }
+        if (c_end - b >= sizeof(s->value))
+            return 0;
+        memcpy(s->value, t + b, c_end - b);
+        s->value[c_end - b] = '\0';
+        s->secondary[0] = '\0';
+        (void)snprintf(s->unit, sizeof(s->unit), "financial_identifier");
+        return classified(in, s, c_end, TTF_SEM_DIGIT_SEQUENCE, "ko:digit-identifier");
+    }
+    policy = korean_policy(in, "long_digit_identifier_min");
+    if (policy)
+        minimum = (size_t)strtoul(policy, NULL, 10);
+    if (minimum && a_end - b >= minimum && !(a_end < n && t[a_end] == '-')) {
+        int kind = quantity_word(in, a_end, 0);
+        if (kind == 'U' || kind == 'C' || kind == 'S')
+            return 0;
+        if (a_end - b >= sizeof(s->value))
+            return 0;
+        memcpy(s->value, t + b, a_end - b);
+        s->value[a_end - b] = '\0';
+        s->secondary[0] = '\0';
+        (void)snprintf(s->unit, sizeof(s->unit), "financial_identifier");
+        return classified(in, s, a_end, TTF_SEM_DIGIT_SEQUENCE, "ko:long-digit-identifier");
+    }
+    return 0;
+}
+

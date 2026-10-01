@@ -550,9 +550,23 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
             return ttf_validation_enum(v, "adjacent|off")
                        ? TTF_OK
                        : ttf_validation_error(d, "range_contract must be adjacent or off");
+        if (SAME(key, "hyphen_digits"))
+            return ttf_validation_enum(v, "identifier|range")
+                       ? TTF_OK
+                       : ttf_validation_error(d, "hyphen_digits must be identifier or range");
+        if (SAME(key, "long_digit_identifier_min"))
+            return ttf_validation_enum(v, "0|7|8|9|10|11|12|13|14|15|16")
+                       ? TTF_OK
+                       : ttf_validation_error(d, "long_digit_identifier_min must be 0 (off) or 7..16");
         if (!ttf_validation_enum(key,
                                  "range_separator|quantity_range_separator|quantity_range_suffix"))
             return ttf_validation_error(d, "unknown Korean policy key");
+    } else if (SAME(k, "digit_label_counter") || SAME(k, "digit_range_scale") ||
+               SAME(k, "digit_range_cue")) {
+        *handled = 1;
+        if ((status = bounded_key(r, 64, d)) != TTF_OK)
+            return status;
+        return SAME(v, "1") ? TTF_OK : ttf_validation_error(d, "value must be 1");
     } else if (SAME(k, "identifier_label")) {
         *handled = 1;
         if ((status = bounded_key(r, TTF_IR_VALUE_SIZE, d)) != TTF_OK)

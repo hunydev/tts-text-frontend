@@ -2,6 +2,17 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Read hyphen-joined digit groups and long plain digit runs as identifiers in
+  Korean speech: 27022-8080 이칠공이이 다시 팔공팔공 (was 이만 칠천이십이에서 팔천팔십),
+  874456932101 팔칠사사… (was 팔천칠백사십사억…), 2017345678번 이공일칠…번. 에서 is
+  the fallback for ascending groups with a unit or counter (3-4개, 10-20%, 7-10일간),
+  a range cue (사이), a scale word (100-200만 원) or two years (2019-2020); amounts
+  with commas or a currency, measure or quantity counter keep their reading and
+  {@sino} reads one on request. Pack rules with priority 100 may replace a longer
+  shared numeric object (the shared grammar took 통 from 통장, 시 from 시즌) but not
+  a phone number or an identifier it already rejected. Korean benchmark 76.97% →
+  78.43% (+1,637/−1). Contract `ko_number_identifiers_v24` (24), 12 contracts
+  updated with their previous values, `docs/korean-number-identifiers.ko.md`.
 - Jev question v3 adds Korean reading conventions to the context: a digit
   before a counter is a Sino-Korean number (2층 이 층, 4회 사 회), personal,
   account, phone and order numbers are read digit by digit (reading one as a

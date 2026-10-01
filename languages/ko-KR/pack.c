@@ -1810,6 +1810,9 @@ static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         identifier = ttf_ko_classify_plate(in, s);
         if (identifier)
             return identifier;
+        identifier = ttf_ko_classify_digit_identifier(in, s);
+        if (identifier)
+            return identifier;
     }
     identifier = ttf_ko_classify_identifier(in, s);
     if (identifier)

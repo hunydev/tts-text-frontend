@@ -885,13 +885,34 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
                         n && n == consumed && candidate.input_end == sem->input_end &&
                         candidate.type == TTF_SEM_DATE &&
                         (sem->type == TTF_SEM_CARDINAL || sem->type == TTF_SEM_NUMBER);
+                    /* A pack rule declared with priority 100 or more replaces the
+                       generic numeric grammar even where that grammar also took a
+                       following counter or unit (27022-8080 통장, 2020-1234호): the
+                       pack's shorter object is kept and the word after it is
+                       classified on its own. */
+                    /* ...but a recognized phone number, or an identifier the shared
+                       grammar already rejected as a range or phone, stays as it was. */
+                    int keeps_shared =
+                        candidate_priority >= 100 &&
+                        (sem->type == TTF_SEM_PHONE ||
+                         (sem->type == TTF_SEM_TEXT && (!strcmp(sem->rule, "syntax.invalid-range") ||
+                                                        !strcmp(sem->rule, "syntax.invalid-phone"))));
+                    int replacing_numeric =
+                        !keeps_shared && n && n < consumed && candidate_priority >= 100 &&
+                        candidate.input_end < sem->input_end &&
+                        (sem->type == TTF_SEM_RANGE || sem->type == TTF_SEM_CARDINAL ||
+                         sem->type == TTF_SEM_NUMBER || sem->type == TTF_SEM_COUNTER ||
+                         sem->type == TTF_SEM_MEASURE || sem->type == TTF_SEM_CURRENCY ||
+                         sem->type == TTF_SEM_TEXT);
+                    if (keeps_shared && n <= consumed)
+                        continue;
                     if (n > consumed ||
                         (n && n == consumed &&
                          (candidate.input_end > sem->input_end ||
                           (candidate.input_end == sem->input_end &&
                            candidate_priority > classifier_priority))) ||
                         (n && n == consumed && sem->type == TTF_SEM_WORD) || labeled_identifier ||
-                        contextual_date) {
+                        contextual_date || replacing_numeric) {
                         *sem = candidate;
                         consumed = n;
                         classifier_priority = candidate_priority;

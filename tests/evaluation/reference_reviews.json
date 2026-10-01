@@ -1338,6 +1338,18 @@
       },
       "category_overrides": {},
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/ko_number_identifiers_v24.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Night work 2026-09-29 under the user's goal; independently authored synthetic cases, written before the implementation",
+        "reason": "Number identifier contract authored 2026-10-01 before the implementation (project-owner decision): hyphen-joined digit groups and long plain digit runs read digit by digit."
+      },
+      "category_overrides": {},
+      "case_overrides": {}
     }
   ],
   "excluded": [
