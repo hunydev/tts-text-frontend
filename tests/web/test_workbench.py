@@ -198,7 +198,7 @@ try:
         assert not any(event["event"] in ("result", "segment", "end") for event in invalid), invalid
         checks += 1
     # By default an invalid control is ignored and the rest is read (2026-10-01).
-    assert run("45821{@digit}은 예약 번호이다.")[0]["text"] == "사만 오천팔백이십일은 예약 번호이다."
+    assert run("45821{@digit}은 예약 번호이다.")[0]["text"] == "사오팔이일은 예약 번호이다."  # five-digit policy 2026-10-02
     assert run("1{")[0]["text"] == "일{"
     checks += 2
     assert run("3개", expected="잘못된 정답")[0]["expected_match"] is False

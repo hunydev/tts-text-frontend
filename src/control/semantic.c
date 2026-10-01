@@ -244,6 +244,7 @@ ttf_status_t ttf_semantic_control(const ttf_engine_t *e, const ttf_semantic_t *r
     ttf_semantic_t ir = {0};
     ttf_status_t status = TTF_EINVAL;
     char detail[256], cased[TTF_IR_VALUE_SIZE];
+    const char *groups = NULL; /* {@digits:N...} group sizes */
     static const struct { const char *name; ttf_semantic_type_t type; } grammars[] = {
         {"@time", TTF_SEM_TIME}, {"@currency", TTF_SEM_CURRENCY},
         {"@percent", TTF_SEM_PERCENT}, {"@measure", TTF_SEM_MEASURE},
@@ -262,13 +263,21 @@ ttf_status_t ttf_semantic_control(const ttf_engine_t *e, const ttf_semantic_t *r
     if (!strcmp(name, "@cardinal") || !strcmp(name, "@decimal")) {
         ir.type = TTF_SEM_CARDINAL;
         status = number(text, n, !strcmp(name, "@decimal"), ir.value);
-    } else if (!strcmp(name, "@digits") || !strcmp(name, "@ordinal") ||
-               !strcmp(name, "@year")) {
+    } else if (!strcmp(name, "@digits") || !strncmp(name, "@digits:", 8) ||
+               !strcmp(name, "@ordinal") || !strcmp(name, "@year")) {
         for (size_t i = 0; i < n; ++i)
             if (!digit(text[i]))
                 return TTF_EINVAL;
         memcpy(ir.value, text, n);
-        if (!strcmp(name, "@digits"))
+        if (!strncmp(name, "@digits:", 8)) {
+            groups = name + 8;
+            for (const char *g = groups; *g; ++g)
+                if (*g < '1' || *g > '9')
+                    return TTF_EINVAL;
+            if (!*groups)
+                return TTF_EINVAL;
+            ir.type = TTF_SEM_DIGIT_SEQUENCE;
+        } else if (!strcmp(name, "@digits"))
             ir.type = TTF_SEM_DIGIT_SEQUENCE;
         else if (!strcmp(name, "@ordinal")) {
             if (!nonzero(ir.value))
@@ -362,5 +371,25 @@ ttf_status_t ttf_semantic_control(const ttf_engine_t *e, const ttf_semantic_t *r
                             detail, SIZE_MAX);
     if (status != TTF_OK)
         return status;
+    if (groups) {
+        /* 123123{@digits:12} 일 이삼 일 이삼: each group reads like {@digits};
+           a value shorter than the group is one group. */
+        size_t at = 0, step = 0, count = strlen(groups);
+        while (at < n) {
+            size_t size = (size_t)(groups[step++ % count] - '0');
+            ttf_semantic_t part = ir;
+            if (size > n - at)
+                size = n - at;
+            memcpy(part.value, text + at, size);
+            part.value[size] = '\0';
+            part.input_end = size;
+            if (at && (status = ttf_buffer_puts(out, " ")) != TTF_OK)
+                return status;
+            if ((status = pack->verbalize(e, &part, text + at, size, out)) != TTF_OK)
+                return status;
+            at += size;
+        }
+        return TTF_OK;
+    }
     return pack->verbalize(e, &ir, text, n, out);
 }

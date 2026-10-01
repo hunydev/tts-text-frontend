@@ -470,11 +470,13 @@ lexicon_case	ko-KR	en-US:3m	upper
 # by a hyphen are an identifier read digit by digit with 다시 (27022-8080 이칠공이이
 # 다시 팔공팔공); 에서 is the fallback for ascending groups with a unit or counter
 # (3-4개 서너 개, 10-20% 십에서 이십 퍼센트) or two years (2019-2020). range restores
-# the old reading. A plain run of nine or more digits without commas, unit or
-# quantity counter is a code read digit by digit (874456932101); amounts keep
-# commas or a unit, and {@sino} reads one on request. 0 turns this off.
+# the old reading. A plain run of five or more digits without commas, unit or
+# quantity counter is a code read digit by digit (12345 일이삼사오, 2026-10-02
+# project-owner decision; it was nine); up to four digits is an amount (1234
+# 천이백삼십사). Amounts keep commas or a unit, and {@sino} reads one on request.
+# 0 turns this off.
 policy	ko-KR	hyphen_digits	identifier
-policy	ko-KR	long_digit_identifier_min	9
+policy	ko-KR	long_digit_identifier_min	5
 # Counters that label identifiers: a range only with one- or two-digit groups.
 digit_label_counter	ko-KR	번	1
 digit_label_counter	ko-KR	호	1

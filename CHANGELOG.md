@@ -2,6 +2,13 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Read a plain number of five or more digits (no comma grouping, unit or
+  counter) digit by digit; up to four digits stays an amount (project-owner
+  decision; it was nine). Groups of five, four or three never leave a group
+  shorter than three (12345 일이삼사오, 123456 일이삼 사오육, 1234567 일이삼사
+  오육칠). Amounts are requested with {@sino}/{@cardinal}. {@digits:N} reads N
+  digits at a time and several digits repeat in turn (1234{@digits:1} 일 이 삼
+  사, 01012341234{@digits:344}). Contract ko_digit_groups_v24 (20 cases).
 - Read a number named by a word ending in 번호 digit by digit (예매번호 12578
   일이오칠팔; not phone words, bare 번호 or three digits or fewer), also with a
   particle on the label (주문번호를), a copula or 번 after the number (2021034인,

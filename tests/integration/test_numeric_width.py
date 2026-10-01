@@ -10,7 +10,8 @@ corpus=ROOT/'tests/evaluation/numeric_width_v22.jsonl'
 # 2026-09-28 user policy: width-short-zero now retains each digit; preimage and
 # reason remain in docs/audit/phone-zero-policy-20260928.json. Keep the exact pin.
 # 2026-09-30 (v0.24): range rows follow the range-reading decision.
-assert hashlib.sha256(corpus.read_bytes()).hexdigest()=='3ec27d9f01067abba90ca3e1b451a690ab8d6b4c42ef2178fbcea90ba572df9a'
+# Hash updated 2026-10-02: width-short-zero span unit leading_zero -> financial_identifier (five-digit policy).
+assert hashlib.sha256(corpus.read_bytes()).hexdigest()=='0e893b4512853d8997f704907e11383d8a6cabf6df65c9b21cf44beb7aa81c20'
 rows=[json.loads(x) for x in corpus.read_text().splitlines()]
 # These negatives are fixed before the unsupported fullwidth-punctuation guard.
 for i,text in enumerate(['１２，５００원','₩１２，５００','$12，500','－１２３','１２．５０%',

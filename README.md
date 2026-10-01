@@ -714,6 +714,7 @@ Use `--input-format annotated` (web: **발음 제어 표기 사용**) to specify
 
 ```text
 [[0210]]{@digits}           → 영이일영
+1234{@digits:1}             → 일 이 삼 사
 10:10{@score}               → 십 대 십
 4-3{@math}                  → 사 빼기 삼
 3M{@unit}                   → 삼 미터

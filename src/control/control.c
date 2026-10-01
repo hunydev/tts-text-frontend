@@ -9,6 +9,16 @@ static int escaped(char c) {
 static int pattern_character(char c, int first) {
     return (c >= 'a' && c <= 'z') || (!first && (digit(c) || c == '_' || c == '-'));
 }
+/* {@digits:N...}: digits read in groups whose sizes (1-9) repeat in turn. */
+static int digits_pattern(const char *text, size_t begin, size_t end) {
+    size_t i;
+    if (end - begin < 9 || end - begin > 24 || memcmp(text + begin, "@digits:", 8))
+        return 0;
+    for (i = begin + 8; i < end; ++i)
+        if (text[i] < '1' || text[i] > '9')
+            return 0;
+    return 1;
+}
 /* {@break:1|2|3} is the one parameterized pattern: it reads the bound atom or
    group one character at a time with a space, comma or period between. */
 static int break_pattern(const char *text, size_t begin, size_t end) {
@@ -103,7 +113,8 @@ static ttf_status_t payload(const ttf_engine_t *engine, const char *text, size_t
             size_t i, n = p - match->payload_begin;
             if (!n)
                 return TTF_EINVAL;
-            if (match->kind == TTF_CONTROL_PATTERN && !break_pattern(text, match->payload_begin, p)) {
+            if (match->kind == TTF_CONTROL_PATTERN && !break_pattern(text, match->payload_begin, p) &&
+                !digits_pattern(text, match->payload_begin, p)) {
                 /* The public CUSTOM.unit field includes '@' and its terminator. */
                 if (n < 2 || n > 31)
                     return TTF_EINVAL;

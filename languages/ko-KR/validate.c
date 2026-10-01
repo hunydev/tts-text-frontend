@@ -555,9 +555,9 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                        ? TTF_OK
                        : ttf_validation_error(d, "hyphen_digits must be identifier or range");
         if (SAME(key, "long_digit_identifier_min"))
-            return ttf_validation_enum(v, "0|7|8|9|10|11|12|13|14|15|16")
+            return ttf_validation_enum(v, "0|5|6|7|8|9|10|11|12|13|14|15|16")
                        ? TTF_OK
-                       : ttf_validation_error(d, "long_digit_identifier_min must be 0 (off) or 7..16");
+                       : ttf_validation_error(d, "long_digit_identifier_min must be 0 (off) or 5..16");
         if (!ttf_validation_enum(key,
                                  "range_separator|quantity_range_separator|quantity_range_suffix|"
                                  "score_separator"))
