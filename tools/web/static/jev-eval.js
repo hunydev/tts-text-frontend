@@ -6,6 +6,13 @@ const WEAK = new Set(["business_number", "id_card_number", "generated_number", "
 const state = { set: null, rows: [], outputs: {}, scores: {}, systems: [], page: 0, dirty: false, busy: false };
 const number = (v) => Number(v).toLocaleString("ko-KR");
 const percent = (v) => (v === null || v === undefined ? "—" : (v * 100).toFixed(1) + "%");
+// 10. 01. 17:15 in the viewer time zone; a dash when never done.
+const when = (iso) => (iso ? new Date(iso).toLocaleString("ko-KR", { month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hour12: false }) : "—");
+function timing(s) {
+  const stale = s.scored_at && s.updated_at && s.updated_at > s.scored_at;
+  const fresh = s.summary && s.summary.newly_scored !== undefined ? ` · 새로 채점 ${number(s.summary.newly_scored)}` : "";
+  return `결과 저장 ${when(s.updated_at)} · Jev 평가 ${when(s.scored_at)}${fresh}` + (stale ? " · 평가 후 결과가 바뀜" : "");
+}
 function node(tag, text) { const e = document.createElement(tag); if (text !== undefined) e.textContent = text; return e; }
 function option(value, text) { const e = node("option", text); e.value = value; return e; }
 function message(text, error = false) { $("notice").textContent = text; $("notice").classList.toggle("error", error); }
@@ -32,11 +39,12 @@ function renderCompare() {
   const cats = [...new Map(state.rows.map((r) => [r.category_en, r.category])).entries()];
   $("cards").replaceChildren(...scored.map((s) => {
     const o = s.summary.overall, e = node("div"); e.className = "quality-card jev";
-    e.append(node("span", s.system), node("strong", percent(o.pass_rate)), node("small", `인정 ${number(o.passed)} / ${number(o.scored)} · 평균 ${o.mean} · 채움 ${number(o.filled)}/${number(o.sentences)}`));
+    const t = node("small", timing(s)); t.className = "jev-time";
+    e.append(node("span", s.system), node("strong", percent(o.pass_rate)), node("small", `인정 ${number(o.passed)} / ${number(o.scored)} · 평균 ${o.mean} · 채움 ${number(o.filled)}/${number(o.sentences)}`), t);
     return e;
   }));
   const head = node("tr"); head.append(node("th", "카테고리"), node("th", "문장"));
-  for (const s of scored) { const th = node("th", s.system); th.className = "jev-text"; head.append(th); }
+  for (const s of scored) { const th = node("th", s.system); th.className = "jev-text"; th.title = timing(s); head.append(th); }
   $("compare-head").replaceChildren(head);
   const rows = [["", "전체", state.rows.length]].concat(cats.map(([id, name]) => [id, name, state.rows.filter((r) => r.category_en === id).length]));
   $("compare").replaceChildren(...rows.map(([id, name, n]) => {
@@ -137,7 +145,7 @@ async function loadSystems() {
   const r = await get("/api/jev-eval/systems", { set: state.set.id });
   state.systems = r.systems;
   const current = $("system").value;
-  $("system").replaceChildren(option("", "새 시스템"), ...r.systems.map((s) => option(s.system, s.system + (s.summary?.overall.scored ? ` · Jev ${percent(s.summary.overall.pass_rate)}` : ""))));
+  $("system").replaceChildren(option("", "새 시스템"), ...r.systems.map((s) => option(s.system, s.system + (s.summary?.overall.scored ? ` · Jev ${percent(s.summary.overall.pass_rate)} · ${when(s.scored_at)}` : ""))));
   if (r.systems.some((s) => s.system === current)) $("system").value = current;
 }
 async function loadSet(id) {
@@ -153,7 +161,7 @@ async function loadSystem() {
   if (!name) { state.outputs = {}; state.scores = {}; state.dirty = false; renderAll(); return; }
   const d = await get("/api/jev-eval/system", { set: state.set.id, system: name });
   state.outputs = d.outputs || {}; state.scores = d.scores || {}; state.dirty = false; renderAll();
-  message(`${name} 결과를 불러왔습니다${d.scored_at ? " · 마지막 Jev 평가 " + d.scored_at.slice(0, 16).replace("T", " ") : ""}.`);
+  message(`${name} 결과를 불러왔습니다 · ${timing(d)}.`);
 }
 function parseImport(name, text) {
   const out = {}, ids = new Set(state.rows.map((r) => r.id)), lines = text.replace(/\r/g, "").split("\n");
