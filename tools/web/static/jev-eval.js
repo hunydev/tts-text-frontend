@@ -72,27 +72,59 @@ function visible() {
     return sign * (x.noul - y.noul);
   });
 }
+const SVG = "http://www.w3.org/2000/svg";
+function copyButton(label, text) {
+  const b = node("button"), svg = document.createElementNS(SVG, "svg");
+  b.type = "button"; b.className = "icon-button"; b.title = label; b.setAttribute("aria-label", label);
+  svg.setAttribute("viewBox", "0 0 16 16"); svg.setAttribute("aria-hidden", "true");
+  for (const [x, y] of [[5, 5], [2, 2]]) {
+    const r = document.createElementNS(SVG, "rect");
+    r.setAttribute("x", x); r.setAttribute("y", y); r.setAttribute("width", 9); r.setAttribute("height", 9); r.setAttribute("rx", 1.5);
+    svg.append(r);
+  }
+  b.append(svg);
+  b.addEventListener("click", safely(async () => {
+    await navigator.clipboard.writeText(text());
+    b.classList.add("copied"); setTimeout(() => b.classList.remove("copied"), 900);
+  }));
+  return b;
+}
 function renderRows() {
   const rows = visible(), pages = Math.max(1, Math.ceil(rows.length / PAGE));
   state.page = Math.min(state.page, pages - 1);
   const slice = rows.slice(state.page * PAGE, (state.page + 1) * PAGE);
   $("rows").replaceChildren(...slice.map((r) => {
-    const tr = node("tr"), input = node("textarea"), cell = node("td"), result = node("div"), button = node("button", "평가");
-    input.rows = 2; input.value = state.outputs[r.id] || ""; input.placeholder = "이 원문을 TN으로 변환한 결과";
+    const tr = node("tr"), input = node("div"), cell = node("td"), result = node("div"), button = node("button", "평가");
+    input.className = "editable"; input.setAttribute("role", "textbox"); input.setAttribute("aria-label", "TN 결과");
+    input.setAttribute("data-placeholder", "TN 결과 입력");
+    try { input.contentEditable = "plaintext-only"; } catch { input.contentEditable = "true"; }
+    if (input.contentEditable !== "plaintext-only") input.contentEditable = "true";
+    input.textContent = state.outputs[r.id] || "";
+    input.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); input.blur(); } });
     const paint = () => {
       const s = scoreOf(r);
       result.className = "jev-text row-result" + (s ? (s.passed ? " pass" : " fail") : "");
-      result.textContent = s ? `${s.noul.toFixed(2)} ${s.passed ? "인정" : "불인정"}${s.unread.length ? " · 남은 표기 " + s.unread.join(" ") : ""}`
-        : state.outputs[r.id] ? (state.scores[r.id] ? "수정됨 · 다시 평가 필요" : "미평가") : "—";
+      result.textContent = s ? `${s.noul.toFixed(2)} ${s.passed ? "인정" : "불인정"}` : state.outputs[r.id] ? (state.scores[r.id] ? "수정됨" : "미평가") : "—";
+      result.title = s ? `Jev ${s.noul} · ${s.model}${s.unread.length ? " · 남은 원문 표기: " + s.unread.join(" ") : ""}` : "";
+      if (s && s.unread.length) result.textContent += " ·표기";
       button.disabled = state.busy || !state.outputs[r.id];
     };
-    input.addEventListener("input", () => { if (input.value) state.outputs[r.id] = input.value; else delete state.outputs[r.id]; markDirty(); paint(); });
+    input.addEventListener("input", () => {
+      const value = input.textContent.replace(/\s+/g, " ").trim();
+      if (value) state.outputs[r.id] = value; else delete state.outputs[r.id];
+      markDirty(); paint();
+    });
     button.className = "secondary row-score"; button.title = "이 문장 하나만 Jev로 평가합니다";
     button.addEventListener("click", safely(() => scoreRows([r.id], paint)));
     paint();
-    cell.append(result, button);
-    tr.append(node("td", r.category + (WEAK.has(r.category_en) ? " ※" : "")), node("td", r.text), node("td"), cell);
-    tr.children[2].append(input);
+    cell.className = "col-jev"; cell.append(result, button);
+    const source = node("td"), sourceBox = node("div"), output = node("td"), outputBox = node("div");
+    sourceBox.className = outputBox.className = "cell-with-copy";
+    sourceBox.append(node("span", r.text), copyButton("원문 복사", () => r.text));
+    outputBox.append(input, copyButton("결과 복사", () => state.outputs[r.id] || ""));
+    source.append(sourceBox); output.append(outputBox);
+    const category = node("td", r.category + (WEAK.has(r.category_en) ? " ※" : "")); category.className = "col-category";
+    tr.append(category, source, output, cell);
     return tr;
   }));
   $("row-count").textContent = `${number(rows.length)}문장 중 ${rows.length ? number(state.page * PAGE + 1) : 0}–${number(state.page * PAGE + slice.length)}`;

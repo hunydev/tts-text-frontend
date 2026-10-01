@@ -2,6 +2,13 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Jev question v2 adds Korean reading conventions to the context (a digit
+  before a counter is a Sino-Korean number such as 2층 이 층 or 4회 사 회, codes
+  are read digit by digit, Latin letters by Korean names such as Z 제트): on
+  reviewed low scores the separation of correct outputs from real errors rose
+  from AUC 0.43 to 0.94 with the value-error calibration unchanged. /jev-eval
+  shows the full sentence, an in-place editable output, icon copy buttons and a
+  compact score column.
 - Add a Jev TN comparison page (`/jev-eval`): 4,057 representative source
   sentences (up to 200 per category, low duplication, no reference used) in a
   table of category, sentence, TN output and evaluation. Each TN to compare is a
