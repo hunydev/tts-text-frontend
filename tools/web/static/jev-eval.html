@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Jev TN 평가 · TTF Lab</title>
+  <link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/ko-quality.css">
+  <script src="/jev-eval.js" defer></script>
+</head>
+<body>
+<header class="mast"><a href="/" class="brand"><span class="brandmark">Tt</span><span>TTF <b>Lab</b><small>TN COMPARISON / JEV</small></span></a><div class="mast-right"><a href="/">텍스트 검사</a><a href="/ko-quality">한국어 TN 지표</a><a href="/lexicon">사전 관리</a></div></header>
+<main class="quality-main">
+<section class="intro"><div><p class="eyebrow">TN 비교 · Jev 채점</p><h1>같은 원문, 여러 TN의 결과를<br>Jev로 비교하세요.</h1><p class="lead">카테고리별 대표 원문을 각 TN으로 변환한 결과를 채운 뒤, TypeSafe Jev가 결과마다 "원문을 올바르게 읽었는가"를 채점합니다. 참조 정답은 쓰지 않습니다.</p></div></section>
+<p id="notice" role="status" aria-live="polite">평가셋을 불러오는 중입니다.</p>
+
+<section class="quality-panel">
+  <div class="toolbar">
+    <label>평가셋<select id="set"></select></label>
+    <label>원문 내보내기<select id="export-format"><option value="jsonl">JSONL {id, category, text}</option><option value="tsv">TSV id⇥category⇥text</option><option value="txt">TXT 한 줄에 원문 하나</option></select></label>
+    <button id="export" class="secondary">내려받기</button>
+  </div>
+  <p id="set-info" class="small"></p>
+</section>
+
+<section class="quality-panel">
+  <h2>TN 결과</h2>
+  <div class="toolbar">
+    <label>시스템<select id="system"><option value="">새 시스템</option></select></label>
+    <label>이름<input id="system-name" maxlength="48" placeholder="예: ours-v0.24, legacy-tn"></label>
+    <button id="fill" class="secondary">우리 TN으로 채우기</button>
+    <label class="file-label">결과 가져오기<input id="import" type="file" accept=".jsonl,.json,.tsv,.txt,.csv"></label>
+    <button id="save" class="secondary">저장</button>
+    <button id="score-changed" class="secondary">수정된 내용만 평가</button>
+    <button id="score" class="primary">전체 평가</button>
+  </div>
+  <p class="small">전체 평가는 채워진 모든 문장을, 수정된 내용만 평가는 아직 채점하지 않았거나 채점 뒤 바뀐 문장만 채점합니다. 문장 표의 행마다 있는 평가 버튼은 그 문장 하나만 채점합니다. 같은 원문·결과 쌍은 캐시에서 바로 답합니다.</p>
+  <p class="small">가져오기 형식: JSONL <code>{"id": …, "actual": …}</code>, JSON <code>{id: 결과}</code>, TSV <code>id⇥결과</code>(3열이면 마지막 열), TXT(내보낸 원문 순서대로 한 줄에 결과 하나).</p>
+  <div class="jev-progress" hidden><div class="bar jev-bar jev-wide"><span id="progress-fill"></span></div><span id="progress-text" class="small"></span></div>
+  <p id="fill-info" class="small"></p>
+</section>
+
+<section class="quality-panel">
+  <h2>Jev 결과 비교</h2>
+  <p class="small">Jev 인정: TypeSafe Jev가 "결과가 원문을 소리 내어 읽는 올바른 방법"이라고 판단한 확률이 0.7 이상이고, 결과에 숫자·로마자·기호가 남지 않은 문장의 비율입니다. 사람마다 다르게 읽는 여러 정답은 함께 인정하지만, 미세한 발음 오류는 놓칠 수 있습니다. ※ 표시 카테고리는 긴 숫자열을 한 자리씩 읽는 번호류로, Jev가 자리별 대조를 하지 못해 참고용입니다.</p>
+  <div id="cards" class="quality-cards"></div>
+  <div class="quality-scroll"><table><thead id="compare-head"></thead><tbody id="compare"></tbody></table></div>
+</section>
+
+<section class="quality-panel">
+  <h2>문장</h2>
+  <div class="toolbar">
+    <label>카테고리<select id="category"><option value="">전체</option></select></label>
+    <label>보기<select id="view"><option value="">전체</option><option value="empty">빈 결과만</option><option value="fail">Jev 불인정만</option><option value="pass">Jev 인정만</option></select></label>
+  </div>
+  <p id="row-count" class="small"></p>
+  <div class="quality-scroll"><table class="jev-rows"><thead><tr><th>카테고리</th><th>원문</th><th>TN 결과</th><th class="jev-text">Jev 평가</th></tr></thead><tbody id="rows"></tbody></table></div>
+  <div class="toolbar"><button id="prev" class="secondary">이전</button><span id="page"></span><button id="next" class="secondary">다음</button></div>
+</section>
+</main>
+</body>
+</html>

@@ -464,6 +464,77 @@ try:
         checks += 1
     else:
         raise AssertionError("judge without a key answered")
+    # Jev evaluation page: a sentence set, saved outputs, engine fill and a
+    # streamed scoring run with a fake Jev batch.
+    import tempfile as _tempfile
+    eval_root = Path(_tempfile.mkdtemp(prefix="ttf-jev-eval-"))
+    (eval_root / "t1").mkdir()
+    sentences = [dict(id="s%d" % i, category="통화-금액", category_en="currency_amount", text=t)
+                 for i, t in enumerate(["3만 원을 냈다.", "5개를 샀다.", "오늘 2시에 만나요."])]
+    (eval_root / "t1/sentences.jsonl").write_text(
+        "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in sentences), encoding="utf-8")
+    (eval_root / "t1/meta.json").write_text(json.dumps(dict(source="fixture", per_category=3)), encoding="utf-8")
+    server.jev_eval_root = eval_root
+    batches = []
+
+    def fake_batch(pairs, language, cache, progress=None):
+        batches.append(list(pairs))
+        if progress:
+            progress(0, len(pairs))
+            progress(len(pairs), len(pairs))
+        return {pair: (0.9, "jev-test") for pair in pairs}, len(pairs)
+
+    server.jev_batch = fake_batch
+    with urllib.request.urlopen(base + "/api/jev-eval/sets") as response:
+        assert [x["set_id"] for x in json.load(response)["sets"]] == ["t1"]
+    with urllib.request.urlopen(base + "/api/jev-eval/set?set=t1") as response:
+        assert len(json.load(response)["rows"]) == 3
+    with post("/api/jev-eval/save", dict(set="t1", system="legacy-tn",
+                                          outputs={"s0": "삼만 원을 냈다.", "s1": "5개를 샀다."})) as response:
+        assert json.load(response)["summary"]["overall"]["filled"] == 2
+    for bad in (dict(set="t1", system="legacy-tn", outputs={"zz": "x"}),
+                dict(set="t1", system="../x", outputs={}), dict(set="../t1", system="a", outputs={})):
+        try:
+            post("/api/jev-eval/save", bad)
+        except urllib.error.HTTPError as e:
+            assert e.code in (400, 404), e.code
+            checks += 1
+        else:
+            raise AssertionError("invalid jev-eval save accepted")
+    with post("/api/jev-eval/fill", dict(set="t1")) as response:
+        filled_outputs = json.load(response)["outputs"]
+    assert set(filled_outputs) == {"s0", "s1", "s2"} and all(filled_outputs.values()), filled_outputs
+    with post("/api/jev-eval/score", dict(set="t1", system="legacy-tn")) as response:
+        events = [json.loads(line) for line in response]
+    assert events[0]["event"] == "progress" and events[-1]["event"] == "result", events
+    overall = events[-1]["summary"]["overall"]
+    assert (overall["scored"], overall["passed"], overall["unread"]) == (2, 1, 1), overall  # '5개' left unread
+    assert len(batches[-1]) == 2
+    with urllib.request.urlopen(base + "/api/jev-eval/system?set=t1&system=legacy-tn") as response:
+        stored = json.load(response)
+    assert stored["scores"]["s0"]["passed"] and not stored["scores"]["s1"]["passed"], stored["scores"]
+    with urllib.request.urlopen(base + "/api/jev-eval/systems?set=t1") as response:
+        assert json.load(response)["systems"][0]["summary"]["overall"]["pass_rate"] == 0.5
+    # One row with an edited output: only that row is scored, others keep theirs.
+    with post("/api/jev-eval/score", dict(set="t1", system="legacy-tn", ids=["s1"],
+                                           patch={"s1": "다섯 개를 샀다."})) as response:
+        events = [json.loads(line) for line in response]
+    assert events[-1]["event"] == "result" and batches[-1] == [("5개를 샀다.", "다섯 개를 샀다.")], batches[-1]
+    assert events[-1]["summary"]["overall"]["passed"] == 2 and set(events[-1]["scores"]) == {"s1"}
+    with urllib.request.urlopen(base + "/api/jev-eval/system?set=t1&system=legacy-tn") as response:
+        stored = json.load(response)
+    assert stored["scores"]["s0"]["passed"] and stored["outputs"]["s1"] == "다섯 개를 샀다."
+    # A system that was never saved can be scored row by row.
+    with post("/api/jev-eval/score", dict(set="t1", system="new-tn", ids=["s2"],
+                                           patch={"s2": "오늘 두 시에 만나요."})) as response:
+        assert [json.loads(line) for line in response][-1]["summary"]["overall"]["scored"] == 1
+    for bad in (dict(set="t1", system="legacy-tn", ids=["zz"]), dict(set="t1", system="legacy-tn", patch={"zz": "x"})):
+        with post("/api/jev-eval/score", bad) as response:
+            assert json.loads(response.read().splitlines()[-1])["event"] == "error"
+        checks += 1
+    with urllib.request.urlopen(base + "/jev-eval") as response:
+        assert b"jev-eval.js" in response.read()
+    checks += 6
     limited = jev.Judge(key="k", opener=fake_open, clock=lambda: 0.0)
     for n in range(jev.PER_CLIENT[0]):
         limited.score("%d원" % n, "원", "ko-KR", "client")

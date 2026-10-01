@@ -29,7 +29,7 @@ def arguments(query):
     values=parse_qs(query,keep_blank_values=True)
     if any(len(v)!=1 for v in values.values()):raise ValueError('중복 검색 인자')
     result={k:v[0] for k,v in values.items()}
-    if set(result)-{'run','category','theme','route','status','flagged','page','scope','id','q','jev'}:
+    if set(result)-{'run','category','theme','route','status','flagged','page','scope','id','q'}:
         raise ValueError('알 수 없는 검색 인자')
     return result
 
@@ -59,7 +59,7 @@ def catalog(root):
             if not path.is_dir() or not (path/'summary.json').is_file():continue
             try:
                 r=summary(root,path.name)
-                reports.append(dict({k:r[k] for k in ('run_id','label','created_at','comparison_key','engine','sentences','spans')},jev=r.get('jev')))
+                reports.append({k:r[k] for k in ('run_id','label','created_at','comparison_key','engine','sentences','spans')})
             except (ValueError,OSError,KeyError):continue
     reports.sort(key=lambda r:(r['created_at'],r['run_id']),reverse=True)
     return dict(reports=reports,latest=reports[0]['run_id'] if reports else None)
@@ -89,13 +89,9 @@ def cases(root,args):
     if args.get('q'):
         clauses.append("instr(c.text,?)>0");params.append(args['q'])
     table='cases c JOIN spans s ON s.case_id=c.id' if scope=='span' else 'cases c'
+    where=' WHERE '+' AND '.join(clauses) if clauses else ''
     db=sqlite3.connect('file:'+quote(str(path/'report.sqlite'))+'?mode=ro',uri=True,timeout=3)
     try:
-        has_jev='jev' in [r[1] for r in db.execute('PRAGMA table_info(cases)')]
-        if args.get('jev'):
-            if args['jev'] not in ('pass','fail') or not has_jev:raise ValueError('이 보고서에는 Jev 점수가 없습니다')
-            clauses.append('c.jev IS NOT NULL AND c.jev'+('>=?' if args['jev']=='pass' else '<?'));params.append(0.7)
-        where=' WHERE '+' AND '.join(clauses) if clauses else ''
         count=db.execute('SELECT count(*) FROM '+table+where,params).fetchone()[0]
         columns='c.details,s.details' if scope=='span' else 'c.details'
         rows=db.execute('SELECT '+columns+' FROM '+table+where+' ORDER BY '+('s.id' if scope=='span' else 'c.id')+' LIMIT ? OFFSET ?',params+[50,page*50]).fetchall()
@@ -105,7 +101,7 @@ def cases(root,args):
             if args.get('id'):
                 item=full
             else:
-                item=dict({k:full[k] for k in ('id','category','category_en','text','expected','actual','status','route','flags')},jev=full.get('jev'))
+                item={k:full[k] for k in ('id','category','category_en','text','expected','actual','status','route','flags')}
             if scope=='span':item['selected_span']=decode(row[1])
             entries.append(item)
         return dict(run=run,scope=scope,total=count,page=page,page_size=50,entries=entries)

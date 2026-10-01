@@ -174,6 +174,8 @@ def batch(pairs, language, cache_path, key=None, workers=8, opener=urllib.reques
                 known[row["key"]] = (row["noul"], row["model"])
     unique = list(dict.fromkeys(pairs))
     todo = [p for p in unique if cache_key(p[0], p[1], language) not in known]
+    if progress:
+        progress(0, len(todo))
     lock = threading.Lock()
     done = [0]
 
@@ -213,5 +215,7 @@ def batch(pairs, language, cache_path, key=None, workers=8, opener=urllib.reques
     with ThreadPoolExecutor(workers) as pool:
         for future in [pool.submit(one, p) for p in todo]:
             future.result()
+    if progress and todo:
+        progress(len(todo), len(todo))
     return {p: known[cache_key(p[0], p[1], language)] for p in unique}, len(todo)
 

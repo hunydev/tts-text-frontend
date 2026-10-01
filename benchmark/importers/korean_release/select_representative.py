@@ -2,6 +2,7 @@
 """Select a representative, low-duplication subset of a Korean release import.
 
     select_representative.py IMPORT_DIR OUT_DIR [--per-category 200] [--reviews FILE] [--seed 20261001]
+    select_representative.py IMPORT_DIR OUT_DIR --sentences-only   # source sentences for /jev-eval
 
 The AI Hub scripts repeat a few sentence frames with different numbers (주민번호
 610030-4984446인 …). Per category this keeps sentences that are scorable, carry
@@ -14,6 +15,10 @@ the reference-error review file, then
      theme or span route not yet covered.
 OUT_DIR is a complete import (records.jsonl, manifest.json) the Korean
 evaluator reads unchanged, plus selection.json with the method and counts.
+With --sentences-only the reference is not used at all: every source sentence
+is a candidate and OUT_DIR gets sentences.jsonl ({id, category, category_en,
+text}) and meta.json for the Jev evaluation page (/jev-eval), where each TN to
+compare fills in its own output.
 The source records are not redistributable: keep OUT_DIR under the ignored
 benchmark/generated/.
 """
@@ -85,6 +90,8 @@ def main():
     ap.add_argument("--per-category", type=int, default=200)
     ap.add_argument("--reviews", type=Path, help="reference-error review file; listed ids are left out")
     ap.add_argument("--seed", type=int, default=20261001)
+    ap.add_argument("--sentences-only", action="store_true",
+                    help="ignore references; write sentences.jsonl for the Jev evaluation page")
     args = ap.parse_args()
     if args.out.exists():
         raise SystemExit("output exists; create a new selection directory")
@@ -104,7 +111,8 @@ def main():
             r = json.loads(line)
             c = counts[r["category_en"]]
             c["records"] += 1
-            if (r["expected"] is None or r["flags"] or r["input_group"] in conflicts or r["id"] in excluded):
+            if not args.sentences_only and (r["expected"] is None or r["flags"] or r["input_group"] in conflicts
+                                            or r["id"] in excluded):
                 continue
             c["eligible"] += 1
             key = (r["category_en"], frame(r["text"]))
@@ -120,6 +128,21 @@ def main():
         counts[cat]["selected"] = len(chosen)
         selected.extend(sorted(chosen, key=lambda r: r["id"]))
     args.out.mkdir(parents=True)
+    if args.sentences_only:
+        rows = [dict(id=r["id"], category=r["category"], category_en=r["category_en"], text=r["text"])
+                for r in selected]
+        (args.out / "sentences.jsonl").write_text("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows),
+                                                  encoding="utf-8")
+        meta = dict(schema_version=1, set_id=args.out.name, source_import_id=manifest["import_id"],
+                    source=manifest["source_summary"]["name"], per_category=args.per_category, seed=args.seed,
+                    rules=["every source sentence (references are not used)",
+                           "one per input group and per masked frame (digits 0, Latin A)",
+                           "greedy max-diversity on masked 3-grams (Jaccard) + theme/route coverage bonus"],
+                    selector_sha256=sha256(Path(__file__)), sentences_sha256=sha256(args.out / "sentences.jsonl"),
+                    categories={k: v for k, v in sorted(counts.items())})
+        (args.out / "meta.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        print(json.dumps(dict(sentences=len(rows))))
+        return
     records = args.out / "records.jsonl"
     records.write_text("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in selected), encoding="utf-8")
     (args.out / "quarantine.jsonl").write_text("", encoding="utf-8")

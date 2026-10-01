@@ -2,14 +2,16 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
-- Add a representative Korean benchmark set (up to 200 low-duplication
-  sentences per category, 4,057 in all) and Jev scores in Korean reports:
-  `select_representative.py`, `korean_release.py --jev` (cached) and
-  `--predictions/--system` to score another system such as a legacy TN on the
-  same protocol. The /ko-quality page shows Jev in blue per report, category and
-  case. First run: reference agreement 73.48%, Jev pass 67.46%; Jev separates
-  poorly on long digit strings read digit by digit (AUC 0.56), marked ※.
-  `docs/korean-benchmark-representative.ko.md`.
+- Add a Jev TN comparison page (`/jev-eval`): 4,057 representative source
+  sentences (up to 200 per category, low duplication, no reference used) in a
+  table of category, sentence, TN output and evaluation. Each TN to compare is a
+  named system whose outputs are typed, imported (JSONL, JSON, TSV, TXT) or
+  filled with this engine; Jev scores everything, only the edited rows, or one
+  row, with cached pairs free, and the page compares systems per category in
+  blue. The representative selection also builds a reference import
+  (`select_representative.py`), and `korean_release.py --predictions/--system`
+  scores another system's outputs on the reference protocol. Jev is not shown on
+  /ko-quality. `docs/korean-benchmark-representative.ko.md`.
 - Web workbench: a **Jev 채점** button scores the current result with one
   TypeSafe Jev Noul, whether the spoken text is a correct way to read the input
   aloud, so readings that differ from the single reference but are right can be
