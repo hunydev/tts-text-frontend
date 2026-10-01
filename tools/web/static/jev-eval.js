@@ -54,14 +54,22 @@ function renderCompare() {
   }));
 }
 function visible() {
-  const cat = $("category").value, view = $("view").value;
-  return state.rows.filter((r) => {
+  const cat = $("category").value, view = $("view").value, sort = $("sort").value;
+  const rows = state.rows.filter((r) => {
     if (cat && r.category_en !== cat) return false;
     const s = scoreOf(r);
     if (view === "empty") return !state.outputs[r.id];
     if (view === "fail") return s && !s.passed;
     if (view === "pass") return s && s.passed;
     return true;
+  });
+  if (!sort) return rows;
+  // Worst first (or best first); rows without a current score go last.
+  const sign = sort === "desc" ? -1 : 1;
+  return rows.slice().sort((a, b) => {
+    const x = scoreOf(a), y = scoreOf(b);
+    if (!x || !y) return (x ? 0 : 1) - (y ? 0 : 1);
+    return sign * (x.noul - y.noul);
   });
 }
 function renderRows() {
@@ -249,7 +257,7 @@ $("import").addEventListener("change", safely(async () => {
 $("save").addEventListener("click", safely(save));
 $("score").addEventListener("click", safely(score));
 $("score-changed").addEventListener("click", safely(() => scoreRows(changedIds())));
-for (const id of ["category", "view"]) $(id).addEventListener("change", () => { state.page = 0; renderRows(); });
+for (const id of ["category", "view", "sort"]) $(id).addEventListener("change", () => { state.page = 0; renderRows(); });
 $("prev").addEventListener("click", () => { state.page = Math.max(0, state.page - 1); renderRows(); });
 $("next").addEventListener("click", () => { state.page++; renderRows(); });
 window.addEventListener("beforeunload", (e) => { if (state.dirty) { e.preventDefault(); e.returnValue = ""; } });
