@@ -34,7 +34,7 @@ from pathlib import Path
 
 URL = "https://api.typesafe.ai/v1/systemone"
 MODEL = "jev-latest"
-QUESTION_ID = "spoken-reading-correct-v2"
+QUESTION_ID = "spoken-reading-correct-v3"
 LANGUAGES = {"ko-KR": "Korean", "en-US": "English"}
 MAX_WRITTEN = 2000
 MAX_SPOKEN = 4000
@@ -67,18 +67,23 @@ def question(language):
     }
 
 
-# v2 (2026-10-01): Jev read Sino-Korean numbers as look-alike words (이 층 "this
-# floor" for 2층, 사회 "society" for 4회) and doubted Korean letter names (Z 제트).
-# On 31 correct outputs it had scored low and 22 real errors, these conventions
-# in the context raised the separation from AUC 0.43 to 0.94 (correct median
-# 0.14 -> 0.41, errors 0.16 -> 0.07) and left the value-error calibration as it
-# was (correct 0.80, one wrong digit 0.20, AUC 0.93).
+# Korean reading conventions in the context (2026-10-01). Without them Jev read
+# Sino-Korean numbers as look-alike words (2층 이 층 "this floor", 4회 사회
+# "society"), doubted Korean letter names (Z 제트) and accepted codes read as
+# one large amount. v2 prescribed digit-by-digit codes with 다시 and lowered
+# correct phone, bus and room readings, so v3 lists the acceptable readings.
+# On 67 reviewed correct outputs and 31 real errors: AUC v1 0.59, v2 0.94,
+# v3 0.90; errors passing at 0.7: 29%, 0%, 0%; hard correct outputs passing:
+# 49%, 6%, 15%. Value-error calibration: correct 0.82, one wrong digit 0.18.
 CONVENTIONS = {
-    "ko-KR": (" Korean reading conventions: a digit before a counter or unit is a Sino-Korean number that can "
-              "look like another word (2층 이 층, 2주 이 주, 4회 사 회, 2.5 이 점 오, 9동 구동, 2대3 이 대 삼); "
-              "codes, IDs, account, phone, registration and order numbers are read one digit at a time with 0 "
-              "as 공 or 영 and a hyphen as 다시; Latin letters use Korean letter names (Z 제트, K 케이); "
-              "spacing does not matter."),
+    "ko-KR": (" Korean reading conventions (several readings can be right): a digit before a counter or unit is "
+              "a Sino-Korean number that can look like another word (2층 이 층, 2주 이 주, 4회 사 회, 2.5 이 점 "
+              "오, 9동 구동, 2대3 이 대 삼) - judge it as that number. Personal ID, account, card, phone, PIN, "
+              "postal, reservation and order numbers and other codes are read digit by digit (0 as 공 or 영), in "
+              "groups or with 다시 or a pause at a hyphen; reading such a number as one large amount is wrong. "
+              "Bus, line, room, building and floor numbers and counts are usually read as whole numbers (742번 "
+              "칠백사십이 번, 1206호 천이백육 호). Latin letters use Korean letter names (Z 제트, K 케이). "
+              "Spacing does not matter."),
 }
 
 
