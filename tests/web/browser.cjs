@@ -62,11 +62,11 @@ const path = require("node:path");
     assert.equal(await page.locator("#output").textContent(), expected);
   }
   await page.selectOption("#input-format", "annotated");
+  // An invalid control is ignored by default; the rest is read (2026-10-01).
   await page.fill("#source", "1{@unknown}");
   await page.click("#run");
   await page.waitForFunction(() => !document.querySelector("#run").disabled);
-  assert(await page.locator("#notice").evaluate((e) => e.classList.contains("error")));
-  assert((await page.locator("#notice").textContent()).includes("invalid argument"));
+  assert.equal(await page.locator("#output").textContent(), "일");
   await page.click('[data-mode="normalize"]');
   await page.click("#reset");
   assert.equal(await page.inputValue("#input-format"), "plain");

@@ -109,6 +109,15 @@ ttf_status_t ttf_engine_set_option(ttf_engine_t *engine, const char *name, const
             return TTF_EINVAL;
         return TTF_OK;
     }
+    if (!strcmp(name, "invalid_control")) {
+        if (!strcmp(value, "ignore"))
+            engine->strict_controls = 0;
+        else if (!strcmp(value, "error"))
+            engine->strict_controls = 1;
+        else
+            return TTF_EINVAL;
+        return TTF_OK;
+    }
     if (!strcmp(name, "unknown_foreign")) {
         if (!strcmp(value, "guess"))
             engine->unknown_foreign_policy = TTF_UNKNOWN_FOREIGN_GUESS;

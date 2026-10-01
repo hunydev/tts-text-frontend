@@ -63,7 +63,8 @@ try:
     assert catalog["defaults"]["detailed_trace"] is True
     assert {key: catalog["defaults"][key] for key in (
         "input_format", "output_mode", "unreadable", "max_control_bytes"
-    )} == dict(input_format="plain", output_mode="speech", unreadable="preserve", max_control_bytes=4096)
+    )} == dict(input_format="annotated", output_mode="speech", unreadable="preserve", max_control_bytes=4096)
+    assert catalog["defaults"]["invalid_control"] == "ignore"
     assert next(item for item in catalog["corpora"] if item["id"] == "user-patterns-v20")["count"] == 51
     assert catalog["reference_summary"]["human_approved_cases"] == 0
     assert catalog["reference_summary"]["pending_independent_review"] == catalog["reference_summary"]["cases"]
@@ -190,12 +191,16 @@ try:
         ("1{첫}", {"max_control_bytes": 4}, "limit"),
     ):
         with post("/api/run", dict(mode="stream", text=source, options={
-            "input_format": "annotated", "chunk_bytes": 1, **extra
+            "input_format": "annotated", "chunk_bytes": 1, "invalid_control": "error", **extra
         })) as response:
             invalid = [json.loads(line) for line in response]
         assert invalid[-1]["event"] == "error" and message in invalid[-1]["message"], invalid
         assert not any(event["event"] in ("result", "segment", "end") for event in invalid), invalid
         checks += 1
+    # By default an invalid control is ignored and the rest is read (2026-10-01).
+    assert run("45821{@digit}은 예약 번호이다.")[0]["text"] == "사만 오천팔백이십일은 예약 번호이다."
+    assert run("1{")[0]["text"] == "일{"
+    checks += 2
     assert run("3개", expected="잘못된 정답")[0]["expected_match"] is False
     # Detailed evidence is enabled by default. Disabling it preserves the old
     # text/span transport, without trace fields or pointers leaking into JSON.

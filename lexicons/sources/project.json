@@ -64,6 +64,14 @@
       "kind": "editorial-policy",
       "checked_at": "2026-09-30",
       "note": "Counts of how the provided references read 5G, 4K, gold purity and unit variants. Reference agreement, not linguistic approval; no synthesized audio."
+    },
+    {
+      "id": "project-owner-decision-2026-10-01",
+      "title": "Project-owner reading decisions of 2026-10-01 (3M, unit control)",
+      "url": "https://github.com/hunydev/tts-text-frontend/blob/main/docs/explicit-pattern-controls.ko.md",
+      "kind": "editorial-policy",
+      "checked_at": "2026-10-01",
+      "note": "The company name 3M is read 쓰리엠 and a meter reading is requested with 3M{@unit}. Project decision, not independent linguistic approval; no synthesized audio."
     }
   ]
 }

@@ -214,6 +214,8 @@ semantic_term	*	5G	ALNUM_TERM:en-US
 semantic_term	*	4G	ALNUM_TERM:en-US
 semantic_term	*	3G	ALNUM_TERM:en-US
 semantic_term	*	2G	ALNUM_TERM:en-US
+# The company 3M is a capital term (쓰리엠); lowercase 3m stays a meter (2026-10-01).
+semantic_term	*	3M	ALNUM_TERM:en-US
 semantic_term	*	4K	ALNUM_TERM:en-US
 semantic_term	*	4k	ALNUM_TERM:en-US
 semantic_term	*	8K	ALNUM_TERM:en-US

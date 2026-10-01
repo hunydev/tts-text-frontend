@@ -464,6 +464,8 @@ lexicon_case	ko-KR	en-US:2g	upper
 lexicon_case	ko-KR	en-US:3g	upper
 lexicon_case	ko-KR	en-US:4g	upper
 lexicon_case	ko-KR	en-US:5g	upper
+# The company 3M is a capital (쓰리엠); lowercase 3m is meters (2026-10-01).
+lexicon_case	ko-KR	en-US:3m	upper
 # Digit identifiers (2026-10-01, project-owner decision). Two digit groups joined
 # by a hyphen are an identifier read digit by digit with 다시 (27022-8080 이칠공이이
 # 다시 팔공팔공); 에서 is the fallback for ascending groups with a unit or counter

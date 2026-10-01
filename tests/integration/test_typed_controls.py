@@ -84,7 +84,8 @@ check('[[12,500.50]]{@decimal}','만 이천오백 점 오영')
 check('[['+'0'*95+']]{@digits}','영'*95)
 check('[[123456789012345678]]{@digits}','일이삼사오육칠팔구영일이삼사오육칠팔')
 # Semantic forcing must differ from automatic interpretation in these cases.
-e = Engine(library,resources,dict(input_format='annotated',output_mode='speech'))
+# invalid_control=error keeps the strict failure under test (default: ignore).
+e = Engine(library,resources,dict(input_format='annotated',output_mode='speech',invalid_control='error'))
 try:
     assert e.normalize(b'9/25')['text'] != e.normalize(b'[[9/25]]{@fraction}')['text']
     prefix='먼저 안내합니다.\n'.encode();raw=prefix+b'[[9/25]]{@fraction}'

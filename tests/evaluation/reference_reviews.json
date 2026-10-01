@@ -1362,6 +1362,30 @@
       },
       "category_overrides": {},
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/ko_unit_control_v24.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Night work 2026-09-29 under the user's goal; independently authored synthetic cases, written before the implementation",
+        "reason": "Unit control and 3M contract authored 2026-10-01 before the implementation (project-owner decision)."
+      },
+      "category_overrides": {},
+      "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/ko_control_ignore_v24.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Night work 2026-09-29 under the user's goal; independently authored synthetic cases, written before the implementation",
+        "reason": "Invalid-control contract authored 2026-10-01 (project-owner decision): an invalid control is ignored."
+      },
+      "category_overrides": {},
+      "case_overrides": {}
     }
   ],
   "excluded": [

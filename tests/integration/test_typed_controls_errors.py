@@ -33,7 +33,7 @@ for pattern, sources in invalid.items():
         for language in ('ko-KR', 'en-US'):
             text = f'[[{source}]]{{@{pattern}}}'
             options = ['--resources', resources, '--language', language,
-                       '--input-format', 'annotated', '--output-mode', 'speech']
+                       '--input-format', 'annotated', '--invalid-control', 'error', '--output-mode', 'speech']
             result = subprocess.run([cli, 'normalize', *options, text], capture_output=True,
                                     text=True, timeout=10)
             assert result.returncode and not result.stdout and 'invalid argument' in result.stderr, (text, language, result)
@@ -47,11 +47,11 @@ for pattern, value in [('cardinal', '1'*19), ('decimal', '1'*19+'.0'), ('ordinal
                        ('digits', '1'*96), ('currency', '$'+'1'*19), ('measure','1'*19+'kg'),
                        ('fraction', '1/'+'1'*19), ('version', '1.'+'1'*19),
                        ('phone', '1'*96), ('cardinal', '1'*200)]:
-    result = subprocess.run([cli, 'normalize', '--resources', resources, '--input-format', 'annotated',
+    result = subprocess.run([cli, 'normalize', '--resources', resources, '--input-format', 'annotated', '--invalid-control', 'error',
                              f'[[{value}]]{{@{pattern}}}'], capture_output=True, text=True, timeout=10)
     assert result.returncode and not result.stdout and 'limit' in result.stderr, (pattern, result)
 # The EN pack explicitly does not opt into KO counted-noun controls.
 r = subprocess.run([cli,'normalize','--resources',resources,'--language','en-US',
-                    '--input-format','annotated','[[3개]]{@counter}'], capture_output=True,text=True,timeout=10)
+                    '--input-format','annotated','--invalid-control','error','[[3개]]{@counter}'], capture_output=True,text=True,timeout=10)
 assert r.returncode and 'invalid argument' in r.stderr, r
 print(f'{checks} invalid pattern/language combinations rejected in batch and byte streams; 10 size limits and EN counter refusal passed')

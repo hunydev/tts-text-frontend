@@ -116,6 +116,18 @@ void ttf_trace_stage(const ttf_engine_t *engine, ttf_trace_stage_t stage, size_t
 size_t ttf_trace_mark(const ttf_engine_t *engine) {
     return engine && engine->trace_state ? engine->trace_state->count : 0;
 }
+void ttf_trace_remap_input(const ttf_engine_t *engine, size_t mark, const size_t *map,
+                           size_t used, size_t length, size_t offset) {
+    ttf_trace_state_t *state = engine ? engine->trace_state : NULL;
+    if (!state)
+        return;
+    for (; mark < state->count; ++mark) {
+        ttf_trace_event_t *event = &state->events[mark];
+        size_t b = event->input_begin, e = event->input_end;
+        event->input_begin = offset + (!b ? 0 : b < used ? map[b] : length);
+        event->input_end = offset + (e < used ? map[e] : length);
+    }
+}
 void ttf_trace_reject_since(const ttf_engine_t *engine, size_t mark) {
     ttf_trace_state_t *state = engine ? engine->trace_state : NULL;
     if (!state)

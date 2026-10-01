@@ -243,7 +243,7 @@ ttf_status_t ttf_semantic_control(const ttf_engine_t *e, const ttf_semantic_t *r
     const ttf_language_pack_t *pack = ttf_find_pack(e, request->render_lang);
     ttf_semantic_t ir = {0};
     ttf_status_t status = TTF_EINVAL;
-    char detail[256];
+    char detail[256], cased[TTF_IR_VALUE_SIZE];
     static const struct { const char *name; ttf_semantic_type_t type; } grammars[] = {
         {"@time", TTF_SEM_TIME}, {"@currency", TTF_SEM_CURRENCY},
         {"@percent", TTF_SEM_PERCENT}, {"@measure", TTF_SEM_MEASURE},
@@ -315,6 +315,23 @@ ttf_status_t ttf_semantic_control(const ttf_engine_t *e, const ttf_semantic_t *r
         ir.type = TTF_SEM_RANGE;
         snprintf(ir.rule, sizeof(ir.rule), "syntax.score");
         status = TTF_OK;
+    } else if (!strcmp(name, "@unit")) {
+        /* 3M{@unit}: a number with a Latin unit is a measure even where a
+           lexicon term or letter case reads it otherwise. The unit is tried as
+           written, then lowercase (3M 삼 미터), then uppercase (5w 오 와트). */
+        for (int pass = 0; pass < 3 && status != TTF_OK; ++pass) {
+            for (size_t i = 0; i < n; ++i) {
+                char c = text[i];
+                if (pass == 1 && c >= 'A' && c <= 'Z')
+                    c = (char)(c - 'A' + 'a');
+                else if (pass == 2 && c >= 'a' && c <= 'z')
+                    c = (char)(c - 'a' + 'A');
+                cased[i] = c;
+            }
+            status = classified(e, pack, cased, n, TTF_SEM_MEASURE, &ir);
+        }
+        if (status == TTF_OK)
+            text = cased;
     } else if (!strcmp(name, "@math")) {
         status = ttf_math_expression(text, n, &ir) ? TTF_OK : TTF_EINVAL;
     } else if (!strcmp(name, "@version") || !strcmp(name, "@ip")) {

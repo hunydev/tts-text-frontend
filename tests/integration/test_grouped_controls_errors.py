@@ -6,7 +6,7 @@ import sys
 import tempfile
 
 cli, resources = sys.argv[1:]
-base = [cli, "normalize", "--resources", resources, "--input-format", "annotated",
+base = [cli, "normalize", "--resources", resources, "--input-format", "annotated", "--invalid-control", "error",
         "--output-mode", "speech"]
 invalid = [
     "[[a1@b2]]{@missing}", "[[ ]]{{x}}", "[[a1@b2]]{@Email}",
@@ -26,7 +26,7 @@ for source in invalid:
     result = subprocess.run([*base, source], capture_output=True, text=True, timeout=10)
     assert result.returncode and not result.stdout and "invalid argument" in result.stderr, (source, result)
     result = subprocess.run([cli, "stream-json", "--resources", resources, "--input-format",
-                             "annotated", "--output-mode", "speech", "--chunk-bytes", "1", "-"],
+                             "annotated", "--invalid-control", "error", "--output-mode", "speech", "--chunk-bytes", "1", "-"],
                             input=source, capture_output=True, text=True, timeout=10)
     events = [json.loads(line) for line in result.stdout.splitlines()]
     assert result.returncode and not any(e["event"] in ("segment", "end") for e in events), (source, result)

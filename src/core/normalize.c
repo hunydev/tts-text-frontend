@@ -676,6 +676,59 @@ static size_t bracket_region(const ttf_engine_t *e, const char *text, size_t len
     return 0;
 }
 
+/* An invalid control (45821{@digit}: unknown name, bad value) is ignored: the
+   unit is read again with only that control's markup removed, as if it were
+   never written, and spans and trace map back to the input. Dropped markup
+   joins the span before it (the next one at the start of the unit). */
+static ttf_status_t ignore_control(const ttf_engine_t *e, const char *text, size_t length,
+                                   size_t offset, const ttf_control_match_t *control,
+                                   size_t mark, ttf_result_t *out) {
+    size_t *map = (size_t *)malloc((length + 1) * sizeof(*map)), used = 0, i, retry;
+    char *copy = (char *)malloc(length + 1), name[TTF_IR_VALUE_SIZE];
+    ttf_status_t st = TTF_ENOMEM;
+    if (!map || !copy)
+        goto done;
+    ttf_trace_reject_since(e, mark);
+    for (i = 0; i < length; ++i)
+        if (!(i >= control->begin && i < control->base_begin) &&
+            !(i >= control->base_end && i < control->end)) {
+            copy[used] = text[i];
+            map[used++] = i;
+        }
+    map[used] = length;
+    retry = ttf_trace_mark(e);
+    st = ttf_process_unit(e, copy, used, 0, out);
+    if (st != TTF_OK)
+        goto done;
+    ttf_trace_remap_input(e, retry, map, used, length, offset);
+    for (i = 0; i < out->span_count; ++i) {
+        ttf_span_t *span = &out->spans[i];
+        size_t b = span->input_begin, end = span->input_end;
+        span->input_begin = offset + (!b ? 0 : b < used ? map[b] : length);
+        span->input_end = offset + (end < used ? map[end] : length);
+        span->semantic.input_begin = span->input_begin;
+        span->semantic.input_end = span->input_end;
+    }
+    i = control->payload_end - control->payload_begin;
+    if (i >= sizeof(name))
+        i = sizeof(name) - 1;
+    memcpy(name, text + control->payload_begin, i);
+    name[i] = 0;
+    ttf_trace_span_begin(e, offset + control->begin, offset + control->end);
+    st = ttf_trace_emit(e, TTF_TRACE_REJECTED, TTF_LAYER_USER, 0, "und", "input-control", name, "",
+                        "", "ignored-invalid-control", SIZE_MAX);
+    for (i = 0; i < out->span_count; ++i)
+        if (out->spans[i].input_end > offset + control->begin || i + 1 == out->span_count)
+            break;
+    ttf_trace_span_finish(e, i < out->span_count ? out->spans[i].begin : 0,
+                          i < out->span_count ? out->spans[i].end : 0);
+    if (st != TTF_OK)
+        ttf_result_free(out);
+done:
+    free(map);
+    free(copy);
+    return st;
+}
 ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t length, size_t offset,
                               ttf_result_t *out) {
     ttf_context_memo_t memo = {0};
@@ -690,6 +743,9 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
     int removed_before = 0;
     ttf_buffer_t output = {0};
     ttf_status_t st;
+    ttf_control_match_t rejected = {0};
+    size_t trace_mark = ttf_trace_mark(e);
+    int ignore = 0;
     context_view.context_memo = &memo;
     memset(out, 0, sizeof(*out));
     st = ttf_tokenize_protected(e, text, length, 1, &tokens, &count, &regions, &region_count);
@@ -773,6 +829,10 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
                 st = render_control(e, &control_input, &literal->control, offset, &span, &output);
                 span.end = output.length;
                 ttf_trace_span_finish(e, span.begin, span.end);
+                if ((st == TTF_EINVAL || st == TTF_ELIMIT) && !e->strict_controls) {
+                    rejected = literal->control;
+                    ignore = 1;
+                }
                 if (st == TTF_OK)
                     st = add_span(out, &span, &capacity);
                 if (st != TTF_OK)
@@ -1364,7 +1424,7 @@ fail:
     free(regions);
     ttf_buffer_free(&output);
     ttf_result_free(out);
-    return st;
+    return ignore ? ignore_control(e, text, length, offset, &rejected, trace_mark, out) : st;
 }
 
 typedef struct {

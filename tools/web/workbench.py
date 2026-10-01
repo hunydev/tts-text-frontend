@@ -8,6 +8,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 MAX_TEXT_BYTES = 16384
 CORPORA = {
+    "ko-control-ignore-v24": ("잘못된 제어 무시", "ko_control_ignore_v24.jsonl"),
+    "ko-unit-control-v24": ("단위 제어·3M", "ko_unit_control_v24.jsonl"),
     "ko-score-math-v24": ("점수·수식 제어·주소", "ko_score_math_v24.jsonl"),
     "ko-number-identifiers-v24": ("숫자 번호·하이픈", "ko_number_identifiers_v24.jsonl"),
     "ko-latin-joiners-v24": ("라틴 연결 부호", "ko_latin_joiners_v24.jsonl"),
@@ -93,7 +95,7 @@ CORPORA = {
 DEFAULTS = dict(
     default_language="ko-KR",
     render_policy="phonetic",
-    input_format="plain",
+    input_format="annotated",
     output_mode="speech",
     unreadable="preserve",
     hanja="passthrough",
@@ -105,6 +107,7 @@ DEFAULTS = dict(
     spacing="orthographic",
     matrix="auto",
     symbol_fallback="on",
+    invalid_control="ignore",
     brand_lexicon="off",
     max_control_bytes=4096,
     sentence_split=True,
@@ -197,6 +200,7 @@ def validate(request, corpus=False):
         ("spacing", ("orthographic", "reading-unit")),
         ("matrix", ("auto", "legacy", "declared")),
         ("symbol_fallback", ("on", "native", "off")),
+        ("invalid_control", ("ignore", "error")),
         ("brand_lexicon", ("off", "on")),
         ("domain", ("none", "finance", "finance-vocabulary")),
     ]:

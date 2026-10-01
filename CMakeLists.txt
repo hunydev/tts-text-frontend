@@ -437,12 +437,18 @@ if(BUILD_TESTING)
     add_test(NAME identifier_fallback_evaluation COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources identifier_fallback_v22.jsonl 19)
+    add_test(NAME ko_control_ignore_v24_evaluation COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources ko_control_ignore_v24.jsonl 7)
+    add_test(NAME ko_unit_control_v24_evaluation COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources ko_unit_control_v24.jsonl 12)
     add_test(NAME ko_score_math_v24_evaluation COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources ko_score_math_v24.jsonl 23)
     add_test(NAME ko_number_identifiers_v24_evaluation COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
-      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources ko_number_identifiers_v24.jsonl 32)
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources ko_number_identifiers_v24.jsonl 36)
     add_test(NAME ko_latin_joiners_v24_evaluation COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources ko_latin_joiners_v24.jsonl 11)

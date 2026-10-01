@@ -2,6 +2,21 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Ignore an invalid control instead of failing the request: an unknown name
+  (45821{@digit}) or a value the pattern rejects drops only that control and the
+  unit is read as if it were absent (사만 오천팔백이십일은); malformed control syntax
+  is plain text. invalid_control=error / --invalid-control error keeps the old
+  failure (the strict error tests use it). Contract ko_control_ignore_v24 (7 cases).
+- The web workbench uses annotated input (발음 제어 표기 사용) by default.
+- Read long digit codes in groups of three to five: the largest of 5, 4, 3 that
+  divides the length (123456789 일이삼 사오육 칠팔구, 874456932101 팔칠사사 오육구삼
+  이일공일), else five first and the rest again (11 digits 5-3-3). Seven contract
+  expectations updated with the previous values in notes; four cases added.
+- Read the company name 3M as 쓰리엠 (it was left unread; capital only, 3m stays
+  삼 미터) and add the {@unit} control: a number with a Latin unit is a measure even
+  where a lexicon term or letter case reads it otherwise, the unit looked up as
+  written, lowercase, then uppercase (3M{@unit} 삼 미터, 5w{@unit} 오 와트).
+  Contract ko_unit_control_v24 (12 cases).
 - Add the {@score} and {@math} controls: 10:10{@score} and [[40-30]]{@score} read
   십 대 십 / 사십 대 삼십 (ten to ten), 4-3{@math} reads 사 빼기 삼 (four minus three).
   Colons keep the time grammar and are not guessed as scores; hyphen defaults are

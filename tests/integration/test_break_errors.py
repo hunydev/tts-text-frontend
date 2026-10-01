@@ -5,7 +5,7 @@ import subprocess
 import sys
 import tempfile
 cli, resources = sys.argv[1:]
-options=['--resources',resources,'--input-format','annotated','--output-mode','speech']
+options=['--resources',resources,'--input-format','annotated','--invalid-control','error','--output-mode','speech']
 # A break control needs a preceding atom or [[group]] and strength 1, 2 or 3 exactly.
 invalid=['{@break:1}', '앞 {@break:1}', '1{@break:0}', '1{@break:4}', '1{@break:01}',
          '1{@break:-1}', '1{@break:1.0}', '1{@break:}', '1{@break: 1}', '1{@Break:1}',

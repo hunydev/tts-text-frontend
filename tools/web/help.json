@@ -146,6 +146,12 @@
           "output": "십 대 십"
         },
         {
+          "syntax": "[[…]]{@unit}",
+          "meaning": "숫자+영문 단위 (사전 용어보다 단위로, 대소문자 무관: 3M 삼 미터)",
+          "example": "3M{@unit}",
+          "output": "삼 미터"
+        },
+        {
           "syntax": "[[…]]{@math}",
           "meaning": "수식 (하이픈은 빼기, 연산자 말은 math_operator 리소스)",
           "example": "4-3{@math}",

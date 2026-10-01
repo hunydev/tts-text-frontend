@@ -250,7 +250,7 @@ class Engine:
                 for name, default in (("brackets", "read"), ("unknown_foreign", "guess"),
                                       ("decorative", "follow"), ("initialism", "spell"),
                                       ("spacing", "orthographic"), ("matrix", "auto"),
-                                      ("symbol_fallback", "on")):
+                                      ("symbol_fallback", "on"), ("invalid_control", "ignore")):
                     if options.get(name, default) != default:
                         self.check(self.lib.ttf_engine_set_option(
                             self.handle, name.encode(), options[name].encode()))

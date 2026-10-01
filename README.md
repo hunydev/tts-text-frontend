@@ -716,15 +716,17 @@ Use `--input-format annotated` (web: **발음 제어 표기 사용**) to specify
 [[0210]]{@digits}           → 영이일영
 10:10{@score}               → 십 대 십
 4-3{@math}                  → 사 빼기 삼
+3M{@unit}                   → 삼 미터
 [[9/25]]{@fraction}         → 이십오 분의 구
 [[03/04/2026]]{@date-dmy}    → 이천이십육 년 사 월 삼 일
 [[3개]]{@counter}           → 세 개
 [[Apple 123]]{@preserve}    → Apple 123
 ```
 
-There are 28 names including the earlier address/email/url controls. The new 20 cover numbers,
+There are 29 names including the earlier address/email/url controls. The new 20 cover numbers,
 calendar values, quantities, phone/version/IPv4 and preserve/skip. They reuse resource policies,
-validate the whole value and report errors for unsupported input. Both text/speech modes apply
+validate the whole value; an invalid control is ignored and the rest of the text is read as if it were
+absent (`--invalid-control error` makes it fail instead). Both text/speech modes apply
 the explicit reading. [Complete syntax, limits and examples](docs/explicit-pattern-controls.ko.md).
 The web corpus is `typed-controls-v22`; it evaluates normalized text, not audio.
 

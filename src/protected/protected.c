@@ -21,6 +21,12 @@ ttf_status_t ttf_tokenize_protected(const ttf_engine_t *engine, const char *text
                     ttf_protect_path(engine, text, length, token.begin, final, &match);
         if (!found && engine->frontend_options.input_format == TTF_INPUT_ANNOTATED) {
             status = ttf_control_parse(engine, text, length, token.begin, final, &match.control);
+            /* Malformed control syntax (45821{@digit, a stray brace) is ordinary
+               text unless invalid_control=error asks for the failure. */
+            if ((status == TTF_EINVAL || status == TTF_ELIMIT) && !engine->strict_controls) {
+                status = TTF_OK;
+                memset(&match.control, 0, sizeof(match.control));
+            }
             if (status != TTF_OK)
                 goto fail;
             if (match.control.kind != TTF_CONTROL_NONE) {

@@ -179,7 +179,8 @@ def cli_checks(args):
             checks += 2
     for text in ERRORS + tuple(text for text, expected in EXTRA_ALIASES if expected is None):
         for chunk in (1, 4096):
-            events = stream(args.cli, args.resources, row_for(text), chunk, success=False)
+            events = stream(args.cli, args.resources, row_for(text), chunk, success=False,
+                            extra=("--invalid-control", "error"))
             assert not any(event.get("event") == "segment" for event in events), (text, events)
             checks += 1
     # Reserved controls are inert under the explicit plain format.
@@ -475,6 +476,10 @@ def native_error_checks(args):
             assert setter(engine.handle, C.byref(engine.opts)) == 1, field
             setattr(engine.opts, field, saved)
             checks += 1
+        # invalid_control=error keeps the strict failure under test (default: ignore).
+        engine.lib.ttf_engine_set_option.restype = C.c_int
+        engine.lib.ttf_engine_set_option.argtypes = [C.c_void_p, C.c_char_p, C.c_char_p]
+        assert engine.lib.ttf_engine_set_option(engine.handle, b"invalid_control", b"error") == 0
         engine.freeze()
         assert engine.normalize("1{첫}".encode())["text"] == "첫"
         checks += 1
@@ -529,6 +534,8 @@ def native_error_checks(args):
     try:
         engine.opts.max_control_bytes = 12
         assert engine.lib.ttf_engine_set_frontend_options(engine.handle, C.byref(engine.opts)) == 0
+        # invalid_control=error keeps the limit failure under test (default: ignore).
+        assert engine.lib.ttf_engine_set_option(engine.handle, b"invalid_control", b"error") == 0
         engine.freeze()
         engine.normalize("1{가나다라마바사아자차카타파하}".encode(), 7)
         callbacks, handle = [], C.c_void_p()

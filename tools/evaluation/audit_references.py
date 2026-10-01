@@ -14,6 +14,8 @@ import re
 import sys
 
 ACTIVE_JSONL = (
+    "ko_control_ignore_v24",
+    "ko_unit_control_v24",
     "ko_score_math_v24",
     "ko_number_identifiers_v24",
     "ko_latin_joiners_v24",

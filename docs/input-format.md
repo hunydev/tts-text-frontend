@@ -339,8 +339,10 @@ In addition to native/sino/alphabet/address/email/url, built-in packs now suppor
 - Numbers: `@cardinal`, `@digits`, `@decimal`, `@ordinal`.
 - Calendar: `@year`, `@date` (YMD), `@date-mdy`, `@date-dmy`, `@time`.
 - Quantities: `@currency`, `@percent`, `@measure`, `@counter` (KO only), `@fraction`, `@range`.
+- Units: `@unit` (`3M{@unit}` 삼 미터): `@measure` with the unit looked up as written, then lowercase, then uppercase.
 - Pairs and formulas: `@score` (`10:10{@score}` 십 대 십, ten to ten) and `@math` (`4-3{@math}` 사 빼기 삼, four minus three). A bare digit atom includes one `- + * / = :` between digits; group anything else with `[[...]]`.
 - Technical strings: `@phone`, `@version`, `@ip` (IPv4 only).
+- Invalid controls: an unknown name or a value the pattern rejects is ignored and the text is read as if the control were absent; malformed syntax is plain text. Option `invalid_control=error` (CLI `--invalid-control error`) makes the request fail as before.
 - Output intent: `@preserve`, `@skip`.
 
 `[[9/25]]{@fraction}` forces a fraction, `[[1984]]{@year}` forces a year without a cue.

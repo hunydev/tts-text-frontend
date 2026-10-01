@@ -85,7 +85,9 @@ check("`[[서울시 12-3]]{@address}`", "`[[서울시 12-3]]{@address}`")
 check("q1{@url}", "큐일")
 
 # Incomplete controls cannot emit their source; a completed earlier sentence can.
-engine = Engine(library, resources, dict(input_format="annotated", output_mode="speech"))
+# invalid_control=error keeps the strict failure under test (default: ignore).
+engine = Engine(library, resources, dict(input_format="annotated", output_mode="speech",
+                                         invalid_control="error"))
 try:
     prefix = "먼저 안내합니다.\n".encode()
     raw = prefix + "[[서울시 12-3]]{@address}".encode()

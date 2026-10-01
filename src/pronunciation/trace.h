@@ -13,6 +13,10 @@ void ttf_trace_span_finish(const ttf_engine_t *engine, size_t output_begin, size
 void ttf_trace_stage(const ttf_engine_t *engine, ttf_trace_stage_t stage, size_t part_begin,
                      size_t part_end);
 size_t ttf_trace_mark(const ttf_engine_t *engine);
+/* Events since mark move from a stripped copy back to input offsets (map[k] is
+   the input offset of copy byte k; offset is added). */
+void ttf_trace_remap_input(const ttf_engine_t *engine, size_t mark, const size_t *map,
+                           size_t used, size_t length, size_t offset);
 void ttf_trace_reject_since(const ttf_engine_t *engine, size_t mark);
 ttf_status_t ttf_trace_status(const ttf_engine_t *engine);
 ttf_status_t ttf_trace_emit(const ttf_engine_t *engine, ttf_trace_disposition_t disposition,

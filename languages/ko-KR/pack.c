@@ -735,6 +735,28 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         }
         return TTF_OK;
     case TTF_SEM_DIGIT_SEQUENCE:
+        if (!strcmp(s->unit, "financial_identifier") && !strcmp(s->rule, "ko:long-digit-identifier")) {
+            /* A long code is read in equal groups of five, four or three, the
+               largest that divides it (9 3-3-3, 10 5-5, 12 4-4-4); otherwise
+               five first and the rest again (11 5-3-3, 13 5-4-4). */
+            char grouped[TTF_IR_VALUE_SIZE * 2];
+            size_t n = strlen(s->value), at = 0, used = 0, group = 0;
+            while (at < n && used + 7 < sizeof(grouped)) {
+                size_t left = n - at, take;
+                if (!group)
+                    group = !(left % 5) ? 5 : !(left % 4) ? 4 : !(left % 3) ? 3 : 0;
+                take = group ? group : left > 5 ? 5 : left;
+                if (used)
+                    grouped[used++] = ' ';
+                memcpy(grouped + used, s->value + at, take);
+                used += take;
+                at += take;
+            }
+            if (at < n)
+                return ttf_ko_render_identifier(e, s->value, out);
+            grouped[used] = '\0';
+            return ttf_ko_render_identifier(e, grouped, out);
+        }
         if (strcmp(s->unit, "financial_identifier") == 0)
             return ttf_ko_render_identifier(e, s->value, out);
         if (!strcmp(s->unit, "apparel_size")) {

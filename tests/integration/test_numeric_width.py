@@ -62,7 +62,9 @@ for lang in ('ko-KR','en-US'):
 
 # Earlier fullwidth fields must not shift subsequent control/code input offsets,
 # or make the annotated ASCII-only value contracts accept wide digits.
-e=Engine(library,resources,dict(input_format='annotated',output_mode='speech',detailed_trace=True))
+# invalid_control=error keeps the strict failure under test (default: ignore).
+e=Engine(library,resources,dict(input_format='annotated',output_mode='speech',detailed_trace=True,
+                                invalid_control='error'))
 try:
  for source,expected in [('１２３원 [[１２３]]{@preserve}','백이십삼 원 １２３'),
                          ('３개 `１２３원`','세 개 `１２３원`'),
