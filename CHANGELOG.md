@@ -2,6 +2,15 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Read a two-digit number after capitals as a model number (GV70 지브이칠십;
+  it was 지브이세번지로), and a number after a declared product name with English
+  numerals up to ten and Sino-Korean from eleven (아이폰6 대란 아이폰식스 대란,
+  갤럭시노트10 노트텐, 아이폰 14 십사; 아이폰 2대 stays a quantity). Codes with
+  three or more digits after capitals keep English digits, now from the lexicon
+  words (ABC127 원투세븐, was 원투세번). Baseball counts 아웃 and 스트라이크 take
+  English numerals (2아웃 투 아웃), lowercase sizes read (2xl 투 엑스라지), and
+  2NE1 투애니원, 2TV 이티비, 4D 포디 get readings. Contract ko_alnum_models_v24
+  (23 cases).
 - Ignore an invalid control instead of failing the request: an unknown name
   (45821{@digit}) or a value the pattern rejects drops only that control and the
   unit is read as if it were absent (사만 오천팔백이십일은); malformed control syntax

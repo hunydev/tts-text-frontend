@@ -532,3 +532,33 @@ score_cue	ko-KR	경기	1
 score_cue	ko-KR	세트	1
 score_cue	ko-KR	골	1
 score_cue	ko-KR	점차	1
+# Model numbers (2026-10-01, project-owner decision): a number right after a
+# product name reads English numerals up to ten (아이폰6 아이폰식스, 노트10 노트텐)
+# and Sino-Korean from eleven (아이폰 14 아이폰 십사). A counter after it (아이폰
+# 2대) makes it a quantity.
+classifier_priority	ko-KR	ko:model-number	100
+model_name	ko-KR	아이폰	1
+model_name	ko-KR	아이패드	1
+model_name	ko-KR	아이팟	1
+model_name	ko-KR	갤럭시	1
+model_name	ko-KR	갤럭시노트	1
+model_name	ko-KR	노트	1
+model_name	ko-KR	갤럭시탭	1
+model_name	ko-KR	갤럭시폴드	1
+model_name	ko-KR	폴드	1
+model_name	ko-KR	갤럭시플립	1
+model_name	ko-KR	플립	1
+model_name	ko-KR	갤럭시워치	1
+model_name	ko-KR	애플워치	1
+model_name	ko-KR	갤럭시버즈	1
+model_name	ko-KR	버즈	1
+model_name	ko-KR	에어팟	1
+model_name	ko-KR	맥북	1
+model_name	ko-KR	픽셀	1
+model_name	ko-KR	플레이스테이션	1
+model_name	ko-KR	엑스박스	1
+# Baseball counts read English numerals (2아웃 투 아웃, 1스트라이크 원 스트라이크).
+numeric_suffix	*	아웃	COUNTER:아웃
+numeric_suffix	*	스트라이크	COUNTER:스트라이크
+counter	ko-KR	아웃	english
+counter	ko-KR	스트라이크	english

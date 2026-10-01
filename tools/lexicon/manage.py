@@ -79,8 +79,8 @@ def canonical(term: str) -> str:
         or re.fullmatch(r"[a-z]+[0-9]*(?:-[a-z]+[0-9]*|-[0-9]+)?", key)
         # Letter runs joined by hyphens, apostrophes or ampersands (coca-cola, mcdonald's, pull&bear).
         or re.fullmatch(r"[a-z]+(?:[-'&][a-z]+)+", key)
-        # A declared alnum label such as 5g or 3d reads as one term.
-        or re.fullmatch(r"[0-9]+[a-z]+", key)
+        # A declared alnum label such as 5g, 3d or 2ne1 reads as one term.
+        or re.fullmatch(r"[0-9]+[a-z]+[0-9]*", key)
     ):
         raise ValueError(
             "key is not a supported single lexical word, alphanumeric, hyphenated word, alnum label, C++ or C# shape"

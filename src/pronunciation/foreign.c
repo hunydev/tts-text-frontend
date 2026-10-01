@@ -316,10 +316,19 @@ static ttf_status_t render_at(const ttf_engine_t *e, const ttf_language_pack_t *
         while (prefix < n && text[prefix] >= 'A' && text[prefix] <= 'Z')
             ++prefix;
         int code_word = prefix >= 2 && prefix < n && declared_word(e, source, target, text, prefix);
+        int spell_digits = 0;
         if (prefix >= 2 && prefix < n && !code_word &&
             (text[prefix] == '-' || (text[prefix] >= '0' && text[prefix] <= '9')) &&
-            initialism_policy && !strcmp(initialism_policy, "source-digits"))
-            valid = 0;
+            initialism_policy && !strcmp(initialism_policy, "source-digits")) {
+            /* GV70, PS5: a model number of one or two digits ends the label and
+               is read like G80 (지브이칠십, 피에스파이브). Longer codes (ABC123)
+               keep their digits one by one, with the source numeral words. */
+            size_t run = prefix;
+            while (run < n && text[run] >= '0' && text[run] <= '9')
+                ++run;
+            if (!(run == n && run - prefix <= 2))
+                spell_digits = 1;
+        }
         for (size_t k = 0; k < n; ++k) {
             unsigned char c = (unsigned char)text[k];
             if (c >= '0' && c <= '9')
@@ -350,8 +359,19 @@ static ttf_status_t render_at(const ttf_engine_t *e, const ttf_language_pack_t *
                     ttf_trace_stage(e, TTF_TRACE_POLICY, part_begin + pos, part_begin + end);
                     /* A word label keeps the source numeral (SAVE20 → 세이브 트웬티),
                        and so does a single digit after letters (k7 → 케이세븐).
-                       Longer digit runs stay in the target language (G80 → 지팔십). */
-                    if (word_label || (sem.type == TTF_SEM_CARDINAL && end - pos == 1))
+                       Longer runs stay in the target language (G80 → 지팔십,
+                       N10번 버스 엔십번); a long code is read digit by digit. */
+                    if (spell_digits) {
+                        st = TTF_OK;
+                        for (size_t d = pos; d < end && st == TTF_OK; ++d) {
+                            ttf_semantic_t one = sem;
+                            one.type = TTF_SEM_CARDINAL;
+                            one.value[0] = text[d];
+                            one.value[1] = 0;
+                            st = source_numeral(e, source, target, &one, text + d, 1, out, layer,
+                                                part_begin + d);
+                        }
+                    } else if (word_label || (sem.type == TTF_SEM_CARDINAL && end - pos == 1))
                         st = source_numeral(e, source, target, &sem, text + pos, end - pos, out,
                                             layer, part_begin + pos);
                     else

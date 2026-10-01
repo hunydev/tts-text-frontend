@@ -526,7 +526,9 @@ size_t ttf_ko_classify_apparel_size(const ttf_pack_input_t *in, ttf_semantic_t *
         if (p < n && decimal_digit(s[p]))
             return 0;
         /* 3XL: one multiplier digit, then a size word. */
-        if (digits == 1 && p + 2 <= n && s[p] == 'X' && (s[p + 1] == 'L' || s[p + 1] == 'S') &&
+        /* 2xl reads like 2XL. */
+        if (digits == 1 && p + 2 <= n && (s[p] == 'X' || s[p] == 'x') &&
+            (s[p + 1] == 'L' || s[p + 1] == 'S' || s[p + 1] == 'l' || s[p + 1] == 's') &&
             (p + 2 == n || !alnum(s[p + 2]))) {
             key[0] = s[begin];
             key[1] = 0;
@@ -568,6 +570,10 @@ size_t ttf_ko_classify_apparel_size(const ttf_pack_input_t *in, ttf_semantic_t *
         return 0;
     memcpy(semantic->value, s + begin, p - begin);
     semantic->value[p - begin] = 0;
+    if (decimal_digit(semantic->value[0]) && !strcmp(unit, "apparel_size"))
+        for (i = 1; semantic->value[i]; ++i)
+            if (semantic->value[i] >= 'a' && semantic->value[i] <= 'z')
+                semantic->value[i] = (char)(semantic->value[i] - 'a' + 'A');
     (void)snprintf(semantic->unit, sizeof(semantic->unit), "%s", unit);
     (void)snprintf(semantic->rule, sizeof(semantic->rule), "ko:%s", !strcmp(unit, "bra_size")
                                                                     ? "bra-size" : "apparel-size");
@@ -789,6 +795,41 @@ static int score_sentence(const ttf_pack_input_t *in) {
         }
     }
     return 0;
+}
+
+/* 아이폰6 대란, 갤럭시노트10, 아이폰 14: a number of one or two digits right
+ * after a declared product name (model_name), alone or one space apart, is a
+ * model number. Up to ten it is read with English numerals (아이폰식스,
+ * 노트텐), from eleven as a Sino-Korean number (아이폰 십사). A counter or
+ * unit attached to the number (아이폰 2대) makes it a quantity. */
+size_t ttf_ko_classify_model_number(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    const char *t = in->text;
+    size_t n = in->length, b = in->tokens[in->index].begin, e = b, word;
+    char key[64];
+    if (in->index == 0 || !decimal_digit(t[b]))
+        return 0;
+    while (e < n && decimal_digit(t[e]))
+        ++e;
+    if (e - b > 2 || (e < n && (alnum(t[e]) || t[e] == '.' || t[e] == ',' || t[e] == '-' ||
+                                t[e] == ':' || t[e] == '/')))
+        return 0;
+    word = in->index - 1;
+    if (in->tokens[word].script == TTF_SCRIPT_WHITESPACE) {
+        if (word == 0 || in->tokens[word].end - in->tokens[word].begin != 1 || t[in->tokens[word].begin] != ' ')
+            return 0;
+        --word;
+    }
+    if (in->tokens[word].script != TTF_SCRIPT_HANGUL ||
+        in->tokens[word].end - in->tokens[word].begin >= sizeof(key))
+        return 0;
+    memcpy(key, t + in->tokens[word].begin, in->tokens[word].end - in->tokens[word].begin);
+    key[in->tokens[word].end - in->tokens[word].begin] = '\0';
+    if (!ttf_resource_get(in->engine, "model_name", "ko-KR", key, NULL) || quantity_word(in, e, 1))
+        return 0;
+    memcpy(s->value, t + b, e - b);
+    s->value[e - b] = '\0';
+    s->secondary[0] = s->unit[0] = '\0';
+    return classified(in, s, e, TTF_SEM_CARDINAL, "ko:model-number");
 }
 
 /* Speech only. Two digit groups joined by a hyphen are an identifier (account,

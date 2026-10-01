@@ -451,9 +451,9 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
         if ((status = bounded_key(r, 32, d)) != TTF_OK)
             return status;
         /* A zero suffix is unsafe: the renderer tests resource presence. */
-        return ttf_validation_enum(v, "native|sino")
+        return ttf_validation_enum(v, "native|sino") || (SAME(k, "counter") && SAME(v, "english"))
                    ? TTF_OK
-                   : ttf_validation_error(d, "counter reading must be native or sino");
+                   : ttf_validation_error(d, "counter reading must be native, sino or english");
     }
     if (SAME(k, "ordinal_policy")) {
         *handled = 1;
@@ -563,7 +563,7 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                                  "score_separator"))
             return ttf_validation_error(d, "unknown Korean policy key");
     } else if (SAME(k, "digit_label_counter") || SAME(k, "digit_range_scale") ||
-               SAME(k, "digit_range_cue") || SAME(k, "score_cue")) {
+               SAME(k, "digit_range_cue") || SAME(k, "score_cue") || SAME(k, "model_name")) {
         *handled = 1;
         if ((status = bounded_key(r, 64, d)) != TTF_OK)
             return status;

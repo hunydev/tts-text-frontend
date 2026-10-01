@@ -8,6 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 MAX_TEXT_BYTES = 16384
 CORPORA = {
+    "ko-alnum-models-v24": ("모델 번호·야구·사이즈", "ko_alnum_models_v24.jsonl"),
     "ko-control-ignore-v24": ("잘못된 제어 무시", "ko_control_ignore_v24.jsonl"),
     "ko-unit-control-v24": ("단위 제어·3M", "ko_unit_control_v24.jsonl"),
     "ko-score-math-v24": ("점수·수식 제어·주소", "ko_score_math_v24.jsonl"),

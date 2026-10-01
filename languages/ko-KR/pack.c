@@ -342,6 +342,25 @@ static ttf_status_t quantity(const ttf_engine_t *e, const char *value, const cha
     return ttf_buffer_puts(out, unit);
 }
 
+/* English numerals up to ten from the shared lexicon words (6 식스, 10 텐),
+   the same words letter labels use (K5 케이파이브). NULL above ten. */
+static const char *english_numeral(const ttf_engine_t *e, const char *value) {
+    static const char *const names[] = {"zero", "one", "two", "three", "four", "five",
+                                        "six",  "seven", "eight", "nine", "ten"};
+    char key[16];
+    unsigned number = 0;
+    if (!*value || strlen(value) > 2)
+        return NULL;
+    for (const char *p = value; *p; ++p) {
+        if (*p < '0' || *p > '9')
+            return NULL;
+        number = number * 10 + (unsigned)(*p - '0');
+    }
+    if (number > 10)
+        return NULL;
+    (void)snprintf(key, sizeof(key), "en-US:%s", names[number]);
+    return ttf_resource_get(e, "lexicon", "ko-KR", key, NULL);
+}
 static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, const char *surface,
                               size_t length, ttf_buffer_t *out);
 static ttf_status_t expression_number(const ttf_engine_t *e, const char *value, ttf_buffer_t *out);
@@ -707,6 +726,11 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         return ttf_ko_speech_spelling(e, surface, length, 1, out);
     case TTF_SEM_NUMBER:
     case TTF_SEM_CARDINAL:
+        if (!strcmp(s->rule, "ko:model-number")) {
+            const char *word = english_numeral(e, s->value);
+            if (word)
+                return ttf_buffer_puts(out, word);
+        }
         return cardinal(e, s->value, out);
     case TTF_SEM_ORDINAL:
         if (ttf_resource_get(e, "native_ordinal_suffix", "ko-KR", s->unit, NULL)) {
@@ -836,6 +860,15 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             TRY(ttf_buffer_puts(out,
                                 resource(e, "month", month, !strcmp(month, "6") ? "유" : "시")));
             return ttf_buffer_puts(out, "월");
+        }
+        /* Baseball counts (counter english): 원 아웃, 투 스트라이크. */
+        if (!strcmp(resource(e, "counter", s->unit, "sino"), "english")) {
+            const char *word = english_numeral(e, month);
+            if (word) {
+                TRY(ttf_buffer_puts(out, word));
+                TRY(ttf_buffer_puts(out, " "));
+                return ttf_buffer_puts(out, resource(e, "unit", s->unit, s->unit));
+            }
         }
         return quantity(e, s->value, resource(e, "unit", s->unit, s->unit),
                         !strcmp(s->secondary, "frequency") ||
@@ -1848,6 +1881,9 @@ static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         if (identifier)
             return identifier;
         identifier = ttf_ko_classify_digit_identifier(in, s);
+        if (identifier)
+            return identifier;
+        identifier = ttf_ko_classify_model_number(in, s);
         if (identifier)
             return identifier;
     }

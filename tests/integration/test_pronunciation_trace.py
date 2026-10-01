@@ -43,8 +43,11 @@ SCENARIOS = (
      ((2, "g2p\ten-US\tba\tB AA\n"), (3, "phone_vowel\tko-KR\tAA\t4\n"))),
     ("U.S.는 표기입니다.", "U.S.", "고객에스는 표기입니다.", "initialism", "common",
      ((3, "phone_letter\tko-KR\tletter.U\t고객\n"),)),
-    ("QR-9는 표기입니다.", "QR-9", "큐알어는 표기입니다.", "alnum-initialism", "customer",
-     ((3, "digit_pronunciation\ten-US\t9\tAH\n"),)),
+    # Korean letter codes take their English digits from the lexicon number
+    # words since 2026-10-01 (ABC127 원투세븐, was 원투세번 from digit phones), so a
+    # customer reading of the word reaches the code. Was: digit_pronunciation 9 AH.
+    ("QR-9는 표기입니다.", "QR-9", "큐알어는 표기입니다.", "alnum:composed", "customer",
+     ((3, "lexicon\tko-KR\ten-US:nine\t어\n"),)),
     # A rejected source dictionary must not leave its layer on the fallback.
     ("baba는 표기입니다.", "baba", "브아브아는 표기입니다.", "grapheme-fallback", "common",
      ((3, "pronunciation\ten-US\tbaba\tAH UNMAPPED\n"),)),
