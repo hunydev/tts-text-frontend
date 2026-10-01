@@ -369,6 +369,14 @@ static const ttf_language_pack_t *context_pack(const ttf_engine_t *e, const ttf_
    codes are a separate rule family. A phone-shaped run (first group 0X or 0XX)
    stays preserved: a malformed phone number keeps its existing visible-error
    contract (phone-cue-v21, phone_number_tail overlays). */
+/* 417-00-32154번: an attached Hangul word after the last digit group is kept
+   as written and is not part of the identifier. */
+static size_t identifier_tail(const char *surface, size_t length) {
+    size_t end = length;
+    while (end && (unsigned char)surface[end - 1] >= 0x80)
+        --end;
+    return end && surface[end - 1] >= '0' && surface[end - 1] <= '9' ? end : length;
+}
 static int identifier_fallback(const ttf_semantic_t *sem, const char *surface, size_t length) {
     size_t i, groups = 1, first = 0, widths[3] = {0, 0, 0};
     int digit = 0, date = !strcmp(sem->rule, "syntax.invalid-date");
@@ -377,6 +385,7 @@ static int identifier_fallback(const ttf_semantic_t *sem, const char *surface, s
          !date) ||
         !length || length >= TTF_IR_VALUE_SIZE)
         return 0;
+    length = identifier_tail(surface, length);
     for (i = 0; i < length; ++i) {
         if (surface[i] >= '0' && surface[i] <= '9') {
             digit = 1;
@@ -412,14 +421,16 @@ static ttf_status_t read_identifier(const ttf_engine_t *e, const ttf_language_pa
     ttf_buffer_t spoken = {0};
     ttf_status_t st;
     *done = 0;
-    size_t i, used = 0;
+    size_t i, used = 0, tail = identifier_tail(surface, length);
     identifier.type = TTF_SEM_DIGIT_SEQUENCE;
     snprintf(identifier.unit, sizeof(identifier.unit), "financial_identifier");
-    for (i = 0; i < length; ++i)
+    for (i = 0; i < tail; ++i)
         if (surface[i] != ' ')
             identifier.value[used++] = surface[i];
     identifier.value[used] = '\0';
-    st = renderer->verbalize(e, &identifier, surface, length, &spoken);
+    st = renderer->verbalize(e, &identifier, surface, tail, &spoken);
+    if (st == TTF_OK && tail < length)
+        st = ttf_buffer_append(&spoken, surface + tail, length - tail);
     if (st != TTF_OK) {
         ttf_buffer_free(&spoken);
         /* A pack without identifier grammar keeps the literal under the guard. */

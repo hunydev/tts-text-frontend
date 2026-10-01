@@ -2,6 +2,10 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Stop reading a word that only begins with a scale syllable as a scale after a
+  hyphen pair (417-00-32154 조회 kept raw because 조회 looked like 조), and read an
+  identifier with an attached Hangul word (417-00-32154번) instead of keeping it
+  verbatim. Found on /jev-eval in the 사업자번호 category; contract cases 29 → 32.
 - Read a short hyphen pair in a sentence with a game cue as a score with 대
   (25-18로 졌다 이십오 대 십팔로, 2-0 승리 이 대 영 승리): the identifier change had
   lowered the sports category on /jev-eval from 59.5% to 53.5%. Cue words

@@ -30,9 +30,11 @@ for profile in ({},dict(first_target=1,normal_target=3,max_length=12)):
  finally:
   for e in engines.values():e.close()
 # Explicit overlays change policy; no whole-sentence exceptions or code rebuild.
+# A plain 9+ digit run is an identifier in speech (long_digit_identifier_min, 2026-10-01);
+# the amount grammar is asserted on the comma-grouped form. Was: 100010001.
 overlays=[
- ('number_spacing\tko-KR\tgroup\tcompact\n','100010001','일억만일','CARDINAL'),
- ('number_spacing\tko-KR\tgroup\tspace\n','100010001','일억 만 일','CARDINAL'),
+ ('number_spacing\tko-KR\tgroup\tcompact\n','100,010,001','일억만일','CARDINAL'),
+ ('number_spacing\tko-KR\tgroup\tspace\n','100,010,001','일억 만 일','CARDINAL'),
 ]
 for tsv,text,expected,kind in overlays:
  e=Engine(library,resources,dict(output_mode='speech',customer_tsv=tsv,detailed_trace=True))

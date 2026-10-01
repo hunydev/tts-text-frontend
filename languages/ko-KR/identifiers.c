@@ -825,6 +825,13 @@ size_t ttf_ko_classify_digit_identifier(const ttf_pack_input_t *in, ttf_semantic
     if (a_end < n && latin_letter(t[a_end]))
         return 0;
     policy = korean_policy(in, "hyphen_digits");
+    {
+        /* A domain that reads every hyphen pair digit by digit (finance:
+           range_mode digits, 123-456 일이삼 사오육) keeps its own reading. */
+        const char *range_mode = korean_policy(in, "range_mode");
+        if (range_mode && !strcmp(range_mode, "digits"))
+            policy = "range";
+    }
     if (a_end + 1 < n && t[a_end] == '-' && decimal_digit(t[a_end + 1]) &&
         (!policy || strcmp(policy, "range"))) {
         size_t c = a_end + 1, c_end = digit_run(t, n, c), la = a_end - b, lb = c_end - c;

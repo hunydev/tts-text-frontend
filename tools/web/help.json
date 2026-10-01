@@ -273,8 +273,8 @@
         {
           "text": "123-456",
           "outputs": {
-            "none": "백이십삼에서 사백오십육",
-            "finance-vocabulary": "백이십삼에서 사백오십육",
+            "none": "일이삼 다시 사오육",
+            "finance-vocabulary": "일이삼 다시 사오육",
             "finance": "일이삼 사오육"
           }
         }

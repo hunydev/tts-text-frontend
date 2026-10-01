@@ -107,7 +107,7 @@ try:
     assert coverage["eligible_foreign_spans"] == 2
     assert coverage["review_candidates"][0]["canonical_key"] == "foobarquux"
     result, _ = run("ABS의 정보입니다. 1-2", opts={"domain": "finance-vocabulary"})
-    assert result["text"] == "에이비에스의 정보입니다. 일에서 이"
+    assert result["text"] == "에이비에스의 정보입니다. 일 다시 이"  # hyphen_digits identifier policy, 2026-10-01; was 일에서 이
     assert any(s["lexicon"] == "lexicon:domain" for s in result["spans"])
     assert result["lexicon_coverage"]["terms"][0]["entry_id"] == "finance-abs"
     text = "1st는 첫 번째입니다.\nPlease go to the 1st floor"

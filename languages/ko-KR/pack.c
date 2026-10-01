@@ -1562,9 +1562,16 @@ static size_t compound_currency_range(const ttf_pack_input_t *in, ttf_semantic_t
         quantity_endpoint(&second);
         if (!second_scaled && second_count) {
             unsigned ignored_power;
-            size_t scale_start = skip_spaces(in->text, in->length, second.input_end);
-            if (scale_at(in, scale_start, &ignored_power)) {
-                size_t guard_end = scale_start, guard_index = next, suffix_width;
+            size_t scale_start = skip_spaces(in->text, in->length, second.input_end), suffix_width;
+            size_t scale_width = scale_at(in, scale_start, &ignored_power);
+            /* 조회, 억지: a word that only begins with a scale is not one. */
+            if (scale_width && !quantity_boundary(in, scale_start + scale_width) &&
+                !quantity_resource_at(in, "numeric_suffix", scale_start + scale_width,
+                                      &suffix_width) &&
+                !scale_at(in, scale_start + scale_width, &ignored_power))
+                scale_width = 0;
+            if (scale_width) {
+                size_t guard_end = scale_start, guard_index = next;
                 const char *suffix;
                 while (guard_index < in->token_count &&
                        in->tokens[guard_index].begin <= scale_start) {
