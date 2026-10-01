@@ -2,6 +2,13 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Read a number named by a word ending in 번호 digit by digit (예매번호 12578
+  일이오칠팔; not phone words, bare 번호 or three digits or fewer), also with a
+  particle on the label (주문번호를), a copula or 번 after the number (2021034인,
+  63107508번이) and the label after it (56478910이 예약번호이며). 만 after a hyphen
+  pair with a group of five or more digits is the particle, not a shared scale
+  (254412-774521만 있으면, 주민번호 540019-3758929만). Contract ko_number_labels_v24
+  (12 cases).
 - Read a two-digit number after capitals as a model number (GV70 지브이칠십;
   it was 지브이세번지로), and a number after a declared product name with English
   numerals up to ten and Sino-Korean from eleven (아이폰6 대란 아이폰식스 대란,

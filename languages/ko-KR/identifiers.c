@@ -12,13 +12,55 @@ static int decimal_digit(char c) {
     return c >= '0' && c <= '9';
 }
 
+/* 예매번호, 주민번호, 항공 번호: a word ending in 번호 names a number to read digit by
+ * digit, unless it names a phone number (전화번호, 휴대폰번호), which keeps its own
+ * grammar. A declared identifier_label (also disabled ones) takes precedence. */
+static int number_word(const char *key, size_t n) {
+    static const char suffix[] = "\xeb\xb2\x88\xed\x98\xb8"; /* 번호 */
+    /* Bare 번호 names nothing in particular; 예매번호, 항공 번호 do. */
+    if (n <= 6 || memcmp(key + n - 6, suffix, 6))
+        return 0;
+    return !strstr(key, "\xec\xa0\x84\xed\x99\x94") /* 전화 */ &&
+           !strstr(key, "\xed\x8f\xb0"); /* 폰 */
+}
+/* The label as written may carry a particle (주문번호를, 예매번호가). */
+static const char *label_value(const ttf_pack_input_t *in, char *key, size_t used,
+                               ttf_resource_layer_t *layer, int *generic) {
+    const char *value = ttf_resource_get(in->engine, "identifier_label", "ko-KR", key, layer);
+    size_t cut;
+    *generic = 0;
+    if (value)
+        return value;
+    for (cut = 3; cut <= 6 && cut < used; cut += 3) {
+        char saved = key[used - cut];
+        if (!ttf_resource_get(in->engine, "particle", "ko-KR", key + used - cut, NULL))
+            continue;
+        key[used - cut] = '\0';
+        value = ttf_resource_get(in->engine, "identifier_label", "ko-KR", key, layer);
+        if (!value && number_word(key, used - cut)) {
+            value = "digits";
+            *layer = TTF_LAYER_COMMON;
+            *generic = 1;
+        }
+        key[used - cut] = saved;
+        if (value)
+            return value;
+    }
+    if (number_word(key, used)) {
+        *layer = TTF_LAYER_COMMON;
+        *generic = 1;
+        return "digits";
+    }
+    return NULL;
+}
+
 /* The tokenizer supplies starts so a cue cannot match inside a longer word.
  * Canonical keys use one ASCII space; repeated spaces and tabs are equivalent.
  * Newlines, punctuation and quotes terminate label scope. */
 static int preceding_label(const ttf_pack_input_t *in, size_t begin, char *matched, size_t capacity,
                            ttf_resource_layer_t *layer) {
     size_t end = begin, i;
-    int found = 0, enabled = 0;
+    int found = 0, enabled = 0, declared = 0;
     while (end && horizontal_space(in->text[end - 1]))
         --end;
     if (end && in->text[end - 1] == ':') {
@@ -59,8 +101,14 @@ static int preceding_label(const ttf_pack_input_t *in, size_t begin, char *match
             key[used++] = c;
         }
         key[used] = '\0';
-        value = ttf_resource_get(in->engine, "identifier_label", "ko-KR", key, &candidate_layer);
+        int generic;
+        value = label_value(in, key, used, &candidate_layer, &generic);
+        /* A declared cue (참조 번호는) is not extended by a longer generic 번호
+           word around it (거래 참조 번호는). */
+        if (value && generic && declared)
+            value = NULL;
         if (value) {
+            declared |= !generic;
             /* Prefer the longest complete cue; resource layering has already
              * selected the effective record for that exact cue. */
             found = 1;
@@ -116,24 +164,88 @@ static int valid_tail(const ttf_pack_input_t *in, size_t end) {
     return 0;
 }
 
+/* After a labelled number: a particle, the copula (2021034인, 210547이다) or the
+ * counter 번 (63107508번이). */
+static int labelled_tail(const ttf_pack_input_t *in, size_t end) {
+    static const char *const heads[] = {"\xec\x9d\xb4", "\xec\x9d\xb8", "\xec\x9e\x85",
+                                        "\xeb\xb2\x88"}; /* 이 인 입 번 */
+    size_t k;
+    if (valid_tail(in, end))
+        return 1;
+    for (k = 0; k < sizeof(heads) / sizeof(heads[0]); ++k)
+        if (end + 3 <= in->length && !memcmp(in->text + end, heads[k], 3))
+            return 1;
+    return 0;
+}
+/* 56478910이 예약번호이며: a code of five or more digits, a particle, then a
+ * word that names a number (number_word) right after it. */
+static int following_label(const ttf_pack_input_t *in, size_t end, char *matched, size_t capacity) {
+    size_t i, p;
+    for (i = in->index; i < in->token_count && in->tokens[i].end <= end; ++i) {
+    }
+    if (i < in->token_count && in->tokens[i].begin == end &&
+        in->tokens[i].script != TTF_SCRIPT_WHITESPACE) {
+        const ttf_token_t *t = &in->tokens[i];
+        char key[64];
+        if (t->script != TTF_SCRIPT_HANGUL || t->end - end >= sizeof(key))
+            return 0;
+        memcpy(key, in->text + end, t->end - end);
+        key[t->end - end] = '\0';
+        if (!ttf_resource_get(in->engine, "particle", "ko-KR", key, NULL))
+            return 0;
+        ++i;
+    }
+    if (i >= in->token_count || in->tokens[i].script != TTF_SCRIPT_WHITESPACE ||
+        in->tokens[i].end - in->tokens[i].begin != 1)
+        return 0;
+    ++i;
+    if (i >= in->token_count || in->tokens[i].script != TTF_SCRIPT_HANGUL)
+        return 0;
+    for (p = in->tokens[i].begin + 6; p <= in->tokens[i].end; p += 3) {
+        size_t n = p - in->tokens[i].begin;
+        if (n < capacity && n < 64) {
+            char key[64];
+            memcpy(key, in->text + in->tokens[i].begin, n);
+            key[n] = '\0';
+            if (number_word(key, n)) {
+                memcpy(matched, key, n + 1);
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
 size_t ttf_ko_classify_identifier(const ttf_pack_input_t *in, ttf_semantic_t *semantic) {
     size_t begin = in->tokens[in->index].begin, end = begin, i;
     char label[TTF_IR_VALUE_SIZE];
     ttf_resource_layer_t layer = TTF_LAYER_COMMON;
-    if (begin == in->length || !decimal_digit(in->text[begin]) ||
-        !preceding_label(in, begin, label, sizeof(label), &layer))
+    int before;
+    if (begin == in->length || !decimal_digit(in->text[begin]))
         return 0;
+    before = preceding_label(in, begin, label, sizeof(label), &layer);
     while (end < in->length && decimal_digit(in->text[end]))
         ++end;
+    if (!before && !(end - begin >= 5 && !(end < in->length && in->text[end] == '-') &&
+                     following_label(in, end, label, sizeof(label))))
+        return 0;
+    /* A word ending in 번호 that is not a declared label only marks a code of
+       four or more digits (번호 3번을 keeps its counter reading). */
+    if (end - begin < 4 && !ttf_resource_get(in->engine, "identifier_label", "ko-KR", label, NULL))
+        return 0;
     while (end + 1 < in->length && in->text[end] == '-' && decimal_digit(in->text[end + 1])) {
         ++end;
         while (end < in->length && decimal_digit(in->text[end]))
             ++end;
     }
-    if (!valid_tail(in, end) || end - begin >= sizeof(semantic->value))
+    if (!labelled_tail(in, end) || end - begin >= sizeof(semantic->value))
         return 0;
     memcpy(semantic->value, in->text + begin, end - begin);
     semantic->value[end - begin] = '\0';
+    /* 63107508번이: the counter joins the code, so the shared counter reading
+       (육천삼백십만… 번) does not take a longer span; it is read back after it. */
+    if (end + 3 <= in->length && !memcmp(in->text + end, "\xeb\xb2\x88", 3))
+        end += 3;
     (void)snprintf(semantic->secondary, sizeof(semantic->secondary), "%s", label);
     (void)snprintf(semantic->unit, sizeof(semantic->unit), "financial_identifier");
     (void)snprintf(semantic->rule, sizeof(semantic->rule), "ko:labeled-identifier");
@@ -892,7 +1004,8 @@ size_t ttf_ko_classify_digit_identifier(const ttf_pack_input_t *in, ttf_semantic
                 s->unit[0] = '\0';
                 return classified(in, s, c_end, TTF_SEM_RANGE, "ko:score");
             }
-            if (ahead == 'S' || (shared_identifier_pair(la, lb, t + b, t + c) && !raw_suffix(in, c_end)))
+            if ((ahead == 'S' && la <= 4 && lb <= 4) ||
+                (shared_identifier_pair(la, lb, t + b, t + c) && !raw_suffix(in, c_end)))
                 return 0;
         }
         if (la <= 9 && lb <= 9 && !(la > 1 && t[b] == '0') && !(lb > 1 && t[c] == '0')) {

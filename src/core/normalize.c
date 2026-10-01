@@ -947,6 +947,8 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
                         (sem->type == TTF_SEM_CARDINAL || sem->type == TTF_SEM_NUMBER ||
                          sem->type == TTF_SEM_PHONE || sem->type == TTF_SEM_RANGE ||
                          sem->type == TTF_SEM_DATE || sem->type == TTF_SEM_TEXT ||
+                         /* 항공 번호 63107508번: a labelled code with its counter. */
+                         sem->type == TTF_SEM_COUNTER ||
                          /* A leading zero already reads as digits; a declared label
                             still decides how, so 001204 after 참조 번호 keeps 공. */
                          sem->type == TTF_SEM_DIGIT_SEQUENCE);

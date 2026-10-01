@@ -781,8 +781,14 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             grouped[used] = '\0';
             return ttf_ko_render_identifier(e, grouped, out);
         }
-        if (strcmp(s->unit, "financial_identifier") == 0)
-            return ttf_ko_render_identifier(e, s->value, out);
+        if (strcmp(s->unit, "financial_identifier") == 0) {
+            TRY(ttf_ko_render_identifier(e, s->value, out));
+            /* A labelled code with its counter (63107508번) keeps the 번. */
+            if (!strcmp(s->rule, "ko:labeled-identifier") && length >= 3 &&
+                !memcmp(surface + length - 3, "\xeb\xb2\x88", 3))
+                return ttf_buffer_puts(out, "\xeb\xb2\x88");
+            return TTF_OK;
+        }
         if (!strcmp(s->unit, "apparel_size")) {
             /* 3XL 쓰리 엑스라지; XL 엑스라지. */
             if (s->value[0] >= '0' && s->value[0] <= '9') {
@@ -1651,6 +1657,17 @@ static size_t compound_currency_range(const ttf_pack_input_t *in, ttf_semantic_t
         if (!first_scaled && second_scaled &&
             (first.type == TTF_SEM_CARDINAL || first.type == TTF_SEM_NUMBER)) {
             size_t p = in->tokens[next].begin, scale_width, parsed = 0;
+            /* 254412-774521만 있으면: a coefficient of five or more digits does not
+               share a scale; 만 there is the particle (only). */
+            {
+                size_t a = 0, z = p;
+                for (const char *c = first.value; *c; ++c)
+                    a += *c >= '0' && *c <= '9';
+                while (z < in->length && in->text[z] >= '0' && in->text[z] <= '9')
+                    ++z;
+                if (a > 4 || z - p > 4)
+                    return 0;
+            }
             unsigned exponent = 0, power;
             int negative = first.value[0] == '-';
             ko_decimal_t coefficient, ignored;
