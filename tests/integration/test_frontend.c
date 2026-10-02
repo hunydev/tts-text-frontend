@@ -1,5 +1,6 @@
 #include "tts_text_frontend/ttf.h"
 #include "tts_text_frontend/ttf_language_pack.h"
+#include "tts_text_frontend/ttf_frontend_options.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -20,6 +21,8 @@ static ttf_engine_t *make_engine(const char *language, int freeze) {
     config.resource_root = TTF_RESOURCE_ROOT;
     config.default_language = language;
     OK(ttf_engine_create(&config, &engine));
+    /* particle agreement opt-in (default off since 2026-10-02) */
+    OK(ttf_engine_set_option(engine, "particle_agreement", "on"));
     if (engine && freeze)
         OK(ttf_engine_freeze(engine));
     return engine;
@@ -184,6 +187,8 @@ static void extension(void) {
     config.resource_root = TTF_RESOURCE_ROOT;
     config.default_language = "ko-KR";
     OK(ttf_engine_create(&config, &engine));
+    /* particle agreement opt-in (default off since 2026-10-02) */
+    OK(ttf_engine_set_option(engine, "particle_agreement", "on"));
     if (!engine)
         return;
     OK(ttf_engine_register_pack(engine, &pack));
@@ -377,6 +382,8 @@ static void streaming(void) {
         config.max_segment_length = 9;
         engine = NULL;
         OK(ttf_engine_create(&config, &engine));
+    /* particle agreement opt-in (default off since 2026-10-02) */
+    OK(ttf_engine_set_option(engine, "particle_agreement", "on"));
         if (engine) {
             OK(ttf_engine_freeze(engine));
             expect(engine, dated, expected);

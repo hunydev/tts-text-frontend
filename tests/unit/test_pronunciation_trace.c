@@ -2,6 +2,7 @@
    isolate provenance and policy selection from linguistic correctness. */
 #include "tts_text_frontend/ttf_trace.h"
 #include "tts_text_frontend/ttf_language_pack.h"
+#include "tts_text_frontend/ttf_frontend_options.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,6 +31,8 @@ static ttf_engine_t *engine_new(int short_segments) {
         config.max_segment_length = 12;
     }
     STATUS(ttf_engine_create(&config, &engine), TTF_OK);
+    /* Particle agreement is off by default since 2026-10-02; these cases include it. */
+    STATUS(ttf_engine_set_option(engine, "particle_agreement", "on"), TTF_OK);
     return engine;
 }
 static void load(ttf_engine_t *engine, ttf_resource_layer_t layer, const char *text) {

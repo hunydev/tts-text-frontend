@@ -97,7 +97,7 @@ def main():
                     checks += 1
         path.write_text("initialism_policy\ten-US\tdotted\tinvalid-policy\n", encoding="utf-8")
         run = subprocess.run([str(args.cli), "normalize", "--resources", str(args.resources),
-                              "--language", "en-US", *overlay, "U.S. market"],
+                              "--language", "en-US", "--particle-agreement", "on", *overlay, "U.S. market"],
                              capture_output=True, timeout=15, check=False)
         assert run.returncode != 0, (run.stdout, run.stderr)
         checks += 1
@@ -120,6 +120,10 @@ def main():
         spec = importlib.util.spec_from_file_location("ttf_native", ROOT / "tools/web/native.py")
         native = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(native)
+        # Particle agreement is off by default since 2026-10-02; these expectations include it.
+        _engine = native.Engine
+        native.Engine = lambda lib, res, opts=None, *a, **k: _engine(
+            lib, res, dict({"particle_agreement": "on"}, **(opts or {})), *a, **k)
         for tiny in (False, True):
             for language in ("en-US", "ko-KR"):
                 options = {"default_language": language}

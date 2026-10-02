@@ -227,3 +227,7 @@ speech_symbol	ko-KR	⑼	구
 speech_symbol	ko-KR	⑽	십
 # A final 's of a Latin word read part by part (McDonald's 맥도널드스, Wendy's 웬디스).
 latin_possessive	ko-KR	s	스
+# Particle agreement after a reading (5kg로 → 킬로그램으로) is off by default
+# (2026-10-02, project-owner decision): the written Hangul is kept as written, as
+# a following word is not always a particle (성수동1가). Set on to restore.
+policy	ko-KR	particle_agreement	off

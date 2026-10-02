@@ -128,7 +128,8 @@ GUARDS = (
 
 def stream(cli, resources, text, language="en-US", chunk=1, profile=(), overlay=()):
     command = [str(cli), "stream-json", "--resources", str(resources),
-               "--language", language, "--chunk-bytes", str(chunk), *profile, *overlay, "-"]
+               "--language", language, "--chunk-bytes", str(chunk), *profile, *overlay,
+               "--particle-agreement", "on", "-"]  # particle agreement opt-in (default off, 2026-10-02)
     run = subprocess.run(command, input=text.encode(), capture_output=True,
                          timeout=15, check=False)
     assert run.returncode == 0, (command, text, run.stderr.decode(errors="replace"))

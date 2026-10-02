@@ -109,6 +109,15 @@ ttf_status_t ttf_engine_set_option(ttf_engine_t *engine, const char *name, const
             return TTF_EINVAL;
         return TTF_OK;
     }
+    if (!strcmp(name, "particle_agreement")) {
+        if (!strcmp(value, "off"))
+            engine->particle_option = 1;
+        else if (!strcmp(value, "on"))
+            engine->particle_option = 2;
+        else
+            return TTF_EINVAL;
+        return TTF_OK;
+    }
     if (!strcmp(name, "invalid_control")) {
         if (!strcmp(value, "ignore"))
             engine->strict_controls = 0;

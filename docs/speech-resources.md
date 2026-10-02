@@ -311,3 +311,7 @@ lexicon	ko-KR	en-US:k7	케이세븐
 ## List markers (2026-10-02)
 
 `list_marker * <symbol> 1` (resources/common/speech.tsv): at the start of a line and followed by a space, the marker is not read in speech (`- 사과` 사과, `• 회의` 회의). A hyphen written against a number (`-3도`) stays a minus sign, and a marker in the middle of a line keeps its reading. Text output keeps the marker.
+
+## Particle agreement (2026-10-02)
+
+`policy ko-KR particle_agreement off` (resources/languages/ko-KR/rules/speech.tsv) keeps the Hangul written after a reading as written: 성수동1가 reads 성수동일가, 5kg로 reads 오 킬로그램로. The engine option `particle_agreement=on` (CLI `--particle-agreement on`, web 조사 맞춤) or the policy value `on` restores the agreement table (`particle_form`: 3랑 삼이랑, 5kg로 오 킬로그램으로).

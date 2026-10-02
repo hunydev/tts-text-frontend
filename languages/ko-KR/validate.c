@@ -562,6 +562,10 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
             return ttf_validation_enum(v, "adjacent|off")
                        ? TTF_OK
                        : ttf_validation_error(d, "range_contract must be adjacent or off");
+        if (SAME(key, "particle_agreement"))
+            return ttf_validation_enum(v, "on|off")
+                       ? TTF_OK
+                       : ttf_validation_error(d, "particle_agreement must be on or off");
         if (SAME(key, "hyphen_digits"))
             return ttf_validation_enum(v, "identifier|range")
                        ? TTF_OK

@@ -50,7 +50,7 @@ def flatten(segments):
 
 
 def cli_options(profile, overrides):
-    options = []
+    options = ["--particle-agreement", "on"]  # opt-in, default off since 2026-10-02
     for key, flag in (("first_target", "--first-target"),
                       ("normal_target", "--normal-target"), ("max_length", "--max-length")):
         if key in profile:
@@ -130,6 +130,10 @@ def main():
         spec = importlib.util.spec_from_file_location("alias_native", ROOT / "tools/web/native.py")
         native = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(native)
+        # Particle agreement is off by default since 2026-10-02; these expectations include it.
+        _engine = native.Engine
+        native.Engine = lambda lib, res, opts=None, *a, **k: _engine(
+            lib, res, dict({"particle_agreement": "on"}, **(opts or {})), *a, **k)
 
     with tempfile.TemporaryDirectory(prefix="ttf-aliases-") as directory:
         temp = Path(directory)

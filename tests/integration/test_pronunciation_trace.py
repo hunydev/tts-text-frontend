@@ -82,6 +82,10 @@ def main():
         spec = importlib.util.spec_from_file_location("trace_native", ROOT / "tools/web/native.py")
         native = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(native)
+        # Particle agreement is off by default since 2026-10-02; these expectations include it.
+        _engine = native.Engine
+        native.Engine = lambda lib, res, opts=None, *a, **k: _engine(
+            lib, res, dict({"particle_agreement": "on"}, **(opts or {})), *a, **k)
     with tempfile.TemporaryDirectory(prefix="ttf-pron-trace-") as directory:
         temp = Path(directory)
         for case_index, (text, surface, expected, path, layer, rows) in enumerate(SCENARIOS):

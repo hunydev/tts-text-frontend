@@ -2,6 +2,14 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Keep the Hangul written after a number, Latin text or symbol: particle
+  agreement is off by default (project-owner decision), since a following word
+  is not always a particle (성수동1가 성수동일가, 종로3가, 11번가; it became
+  성수동일이). The option particle_agreement=on (CLI --particle-agreement on, web
+  조사 맞춤) restores it (3랑 삼이랑, 5kg로 오 킬로그램으로). Tests whose
+  expectations include agreement opt in. GV60, GV70, GV80 are Genesis model
+  names read 지브이육공, 지브이칠공, 지브이팔공. Korean benchmark +54, -10 (ten
+  references agree the particle after a code: 90970로 구공구칠공으로).
 - Read short digit-first labels as the number and the letter names instead of
   leaving them as written (20F 이십 에프, 1234AB 천이백삼십사 에이비, 5A 오 에이;
   project-owner decision). Units, meridiems (2PM), English ordinals, decades and

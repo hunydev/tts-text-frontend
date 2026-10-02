@@ -601,6 +601,16 @@ static ttf_status_t particle_agreement(const ttf_engine_t *e, const ttf_language
     if (!source_length || source_length >= sizeof(key) || !output->length ||
         !((unsigned char)source[0] & 0x80))
         return TTF_OK;
+    /* Off unless the language policy turns it on (2026-10-02, project-owner
+       decision): the written text is explicit, and a following word is not
+       always a particle (성수동1가 keeps 가, not 이). */
+    if (e->particle_option == 1)
+        return TTF_OK;
+    if (e->particle_option != 2) {
+        const char *policy = ttf_resource_get(e, "policy", renderer->language_tag, "particle_agreement", NULL);
+        if (!policy || strcmp(policy, "on"))
+            return TTF_OK;
+    }
     if (normalized->length != source_length || memcmp(normalized->data, source, source_length))
         return TTF_OK;
     while (start && ((unsigned char)output->data[start - 1] & 0xc0) == 0x80)

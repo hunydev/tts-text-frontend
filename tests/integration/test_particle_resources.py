@@ -9,7 +9,10 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools/web"))
-from native import Engine, flatten
+from native import Engine as _Engine, flatten
+# Particle agreement is off by default since 2026-10-02; these expectations include it.
+def Engine(lib, res, opts=None, *a, **k):
+    return _Engine(lib, res, dict({"particle_agreement": "on"}, **(opts or {})), *a, **k)
 
 library, resources = map(lambda p: Path(p).resolve(), sys.argv[1:3])
 corpus = [json.loads(line) for line in

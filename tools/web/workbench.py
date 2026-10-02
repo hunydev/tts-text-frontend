@@ -8,6 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 MAX_TEXT_BYTES = 16384
 CORPORA = {
+    "ko-written-particles-v24": ("쓴 그대로의 조사", "ko_written_particles_v24.jsonl"),
     "ko-jev-leaks3-v24": ("Jev 평가 숫자 누락 3", "ko_jev_leaks3_v24.jsonl"),
     "ko-short-labels-v24": ("짧은 표기·주소 층", "ko_short_labels_v24.jsonl"),
     "ko-jev-leaks2-v24": ("Jev 평가 숫자 누락 2", "ko_jev_leaks2_v24.jsonl"),
@@ -116,6 +117,7 @@ DEFAULTS = dict(
     spacing="orthographic",
     matrix="auto",
     symbol_fallback="on",
+    particle_agreement="off",
     invalid_control="ignore",
     brand_lexicon="off",
     max_control_bytes=4096,
@@ -209,6 +211,7 @@ def validate(request, corpus=False):
         ("spacing", ("orthographic", "reading-unit")),
         ("matrix", ("auto", "legacy", "declared")),
         ("symbol_fallback", ("on", "native", "off")),
+        ("particle_agreement", ("off", "on")),
         ("invalid_control", ("ignore", "error")),
         ("brand_lexicon", ("off", "on")),
         ("domain", ("none", "finance", "finance-vocabulary")),
@@ -477,7 +480,7 @@ def catalog():
                 text=row["text"], expected=row["expected"],
                 options={key: row[key] for key in (
                     "default_language", "input_format", "output_mode", "unreadable", "brackets", "unknown_foreign",
-                    "decorative", "initialism", "spacing", "matrix", "symbol_fallback"
+                    "decorative", "initialism", "spacing", "matrix", "symbol_fallback", "particle_agreement"
                 ) if key in row},
                 reference_review=reviewed_cases[(relative, row["id"])],
             ))
