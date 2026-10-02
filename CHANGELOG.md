@@ -2,6 +2,8 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Lexicon: Genesis G70, G80, G90 read 지칠공, 지팔공, 지구공, and the card name 2v4
+  reads 이브이포 (project-owner decision). Korean benchmark +8, -0.
 - Keep the Hangul written after a number, Latin text or symbol: particle
   agreement is off by default (project-owner decision), since a following word
   is not always a particle (성수동1가 성수동일가, 종로3가, 11번가; it became

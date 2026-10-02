@@ -2,6 +2,7 @@
 # Review status and provenance are in lexicons/; matching a default is not linguistic approval.
 lexicon	ko-KR	en-US:2ne1	투애니원
 lexicon	ko-KR	en-US:2tv	이티비
+lexicon	ko-KR	en-US:2v4	이브이포
 lexicon	ko-KR	en-US:3m	쓰리엠
 lexicon	ko-KR	en-US:8d	에이트디
 lexicon	ko-KR	en-US:adobe	어도비
@@ -18,6 +19,9 @@ lexicon	ko-KR	en-US:daum	다음
 lexicon	ko-KR	en-US:docker	도커
 lexicon	ko-KR	en-US:fedex	페덱스
 lexicon	ko-KR	en-US:firefox	파이어폭스
+lexicon	ko-KR	en-US:g70	지칠공
+lexicon	ko-KR	en-US:g80	지팔공
+lexicon	ko-KR	en-US:g90	지구공
 lexicon	ko-KR	en-US:gmail	지메일
 lexicon	ko-KR	en-US:google	구글
 lexicon	ko-KR	en-US:gs25	지에스이십오
