@@ -176,6 +176,7 @@ semantic_term	*	3D	ALNUM_TERM:en-US
 
 # Distinct rate-change quantities; never convert their values to percent.
 numeric_suffix	*	%p	MEASURE:percentage_point
+numeric_suffix	*	%P	MEASURE:percentage_point
 numeric_suffix	*	bp	MEASURE:basis_point
 unit	en-US	percentage_point.one	percentage point
 unit	en-US	percentage_point.many	percentage points

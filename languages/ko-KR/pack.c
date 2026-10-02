@@ -1506,8 +1506,13 @@ static size_t compound_amount(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                 valid = 0;
             /* Speech: 4만 2000km인, 1만 2,547km였다 keep the quantity; the attached
                ending stays text (as for an unknown suffix below). */
+            /* 5억 1,317만 원어치의, 3백2십만 원하는: currency and counters too. */
             if (!quantity_boundary(in, end) &&
-                !(valid && coefficients > 1 && !strncmp(suffix, "MEASURE:", 8) &&
+                !(valid && coefficients > 1 && strncmp(suffix, "MEASURE:", 8) == 0 &&
+                  in->engine->frontend_options.output_mode == TTF_OUTPUT_SPEECH &&
+                  ((unsigned char)in->text[end] & 0xe0) == 0xe0) &&
+                !(valid && coefficients > 1 &&
+                  (!strncmp(suffix, "CURRENCY:", 9) || !strncmp(suffix, "COUNTER:", 8)) &&
                   in->engine->frontend_options.output_mode == TTF_OUTPUT_SPEECH &&
                   ((unsigned char)in->text[end] & 0xe0) == 0xe0)) {
                 if (valid && coefficients == 1)
@@ -1660,6 +1665,12 @@ static size_t compound_currency_range(const ttf_pack_input_t *in, ttf_semantic_t
             unsigned ignored_power;
             size_t scale_start = skip_spaces(in->text, in->length, second.input_end), suffix_width;
             size_t scale_width = scale_at(in, scale_start, &ignored_power);
+            /* 1시간 만에, 6년 만에: after an endpoint with its own unit and a space,
+               만 is the bound noun (2026-10-02). */
+            if (scale_width && scale_start > second.input_end &&
+                (second.type == TTF_SEM_COUNTER || second.type == TTF_SEM_MEASURE ||
+                 second.type == TTF_SEM_CURRENCY || second.type == TTF_SEM_TIME))
+                scale_width = 0;
             /* 조회, 억지: a word that only begins with a scale is not one. */
             if (scale_width && !quantity_boundary(in, scale_start + scale_width) &&
                 !quantity_resource_at(in, "numeric_suffix", scale_start + scale_width,

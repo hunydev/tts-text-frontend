@@ -690,6 +690,13 @@ static int quantity_suffix(const ttf_pack_input_t *in, size_t p, ttf_semantic_t 
         *type = TTF_SEM_PERCENT;
         return 1;
     }
+    /* 18.1％: the fullwidth percent sign (U+FF05) after a number (2026-10-02). */
+    if (p + 3 <= in->length && !memcmp(in->text + p, "\xef\xbc\x85", 3) &&
+        quantity_tail(in, p + 3, allow_range)) {
+        *end = p + 3;
+        *type = TTF_SEM_PERCENT;
+        return 1;
+    }
     return 0;
 }
 
@@ -958,6 +965,20 @@ static int preceding_family_unit(const ttf_pack_input_t *in, size_t begin, const
     return 0;
 }
 
+/* Durations rank by size (range_unit_rank: 초 1, 분 2, 시간 3, 일 4, 주 5, 개월 6,
+   년 7); 0 when the unit is not a duration (시 and 월 are clock and calendar
+   positions). */
+static long unit_rank(const ttf_pack_input_t *in, const char *unit) {
+    size_t pack;
+    for (pack = 0; pack < in->engine->pack_count; ++pack) {
+        const char *rank = ttf_resource_get(in->engine, "range_unit_rank",
+                                            in->engine->packs[pack]->language_tag, unit, NULL);
+        if (rank)
+            return strtol(rank, NULL, 10);
+    }
+    return 0;
+}
+
 static size_t repeated_quantity_range(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     ttf_semantic_t first = {0}, second = {0};
     ttf_resource_layer_t delimiter_layer = TTF_LAYER_COMMON;
@@ -1004,9 +1025,12 @@ static size_t repeated_quantity_range(const ttf_pack_input_t *in, ttf_semantic_t
     /* 3월 1일~3월 5일: neighbouring units of one declared family belong to
        different objects, so each side is read on its own instead of the whole
        span staying verbatim. Unrelated units keep the preserved contract. */
+    /* 3월 1일~3월 5일: a preceding unit of the family; 40분~1시간, 3일~2주: two
+       ascending durations (2026-10-02). 1시~2분 keeps the preserved contract. */
     if (first.type == second.type && first.type != TTF_SEM_TEXT &&
         strcmp(first.unit, second.unit) && same_unit_family(in, first.unit, second.unit) &&
-        preceding_family_unit(in, in->tokens[in->index].begin, first.unit))
+        (preceding_family_unit(in, in->tokens[in->index].begin, first.unit) ||
+         (unit_rank(in, first.unit) && unit_rank(in, first.unit) < unit_rank(in, second.unit))))
         return 0;
     if (first.type == TTF_SEM_TEXT || second.type == TTF_SEM_TEXT || first.type != second.type ||
         strcmp(first.unit, second.unit) ||

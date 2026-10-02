@@ -304,6 +304,12 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    : ttf_validation_error(
                          d, "speech_lengthening requires one symbol code point and 0|1 flag");
     }
+    if (SAME(k, "range_unit_rank")) {
+        *handled = 1;
+        return label(key) && strlen(key) < 32 && ttf_validation_integer(v, 1, 99, NULL)
+                   ? TTF_OK
+                   : ttf_validation_error(d, "range_unit_rank requires a unit key and a rank 1..99");
+    }
     if (SAME(k, "list_marker")) {
         *handled = 1;
         return label(key) && strlen(key) < 8 && SAME(v, "1")

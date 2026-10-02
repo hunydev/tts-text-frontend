@@ -155,6 +155,12 @@ size_t ttf_numeric_width_guard(const ttf_pack_input_t *in, ttf_semantic_t *sem,
     if (!width || (consumed && !ttf_numeric_width_surface(sem->type) && sem->type != TTF_SEM_TEXT))
         return consumed;
     at = end + width;
+    /* 18.1％: an ASCII number before a trailing fullwidth percent sign reads as a
+       percentage (2026-10-02); the sign cannot split an amount. */
+    if (!consumed && width == 3 && (unsigned char)in->text[end + 2] == 0x85 &&
+        !(at < in->length && in->text[at] >= '0' && in->text[at] <= '9') && end > start &&
+        in->text[start] >= '0' && in->text[start] <= '9')
+        return consumed;
     /* A standalone fullwidth mark is outside this numeric guard. A trailing
        percent sign is still structure; the other trailing marks need digits. */
     if (!(consumed && (unsigned char)in->text[end + 2] == 0x85) &&

@@ -15,8 +15,11 @@ assert hashlib.sha256(corpus.read_bytes()).hexdigest()=='0e893b4512853d8997f7049
 rows=[json.loads(x) for x in corpus.read_text().splitlines()]
 # These negatives are fixed before the unsupported fullwidth-punctuation guard.
 for i,text in enumerate(['１２，５００원','₩１２，５００','$12，500','－１２３','１２．５０%',
-                          '０９：０５','September 17, ２０２６．５','１２３％']):
+                          '０９：０５','September 17, ２０２６．５']):
  rows.append(dict(id=f'wide-punctuation-{i}',text=text,expected=text,default_language='ko-KR' if i!=6 else 'en-US',output_mode='speech'))
+# 2026-10-02: a trailing fullwidth percent sign reads like % (it cannot split an
+# amount); １２３％ was the eighth guard row above (expected: kept as written).
+rows.append(dict(id='wide-percent',text='１２３％',expected='백이십삼 퍼센트',default_language='ko-KR',output_mode='speech'))
 checks=0;rng=random.Random(20260928)
 for profile in ({},dict(first_target=1,normal_target=3,max_length=12)):
  engines={}

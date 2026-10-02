@@ -60,7 +60,8 @@ int main(int argc, char **argv) {
         {"$12，500", "$12，500"}, {"－１２３", "－１２３"},
         {"１２．５０%", "１２．５０%"}, {"０９：０５", "０９：０５"},
         {"September 17, ２０２６．５", "September 17, ２０２６．５"},
-        {"１２３％", "１２３％"}
+        /* 2026-10-02: a trailing fullwidth percent sign reads like % (was kept). */
+        {"１２３％", "백이십삼 퍼센트"}
     };
     CHECK(argc == 2);
     CHECK(ttf_tokenize("1２3가", strlen("1２3가"), &tokens, &count) == TTF_OK);

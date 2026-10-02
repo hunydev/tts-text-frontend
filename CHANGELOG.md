@@ -2,6 +2,15 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Read numbers that /jev-eval left unread: a compound amount with two or more
+  numbers before an attached ending (5억 1,317만 원어치의, 3백2십만 원하는);
+  만 after a quantity with its own unit (1시간 만에, 5~6년 만에); an ordinal
+  or quantity before the copula (11번째인, 20번째다); ascending duration
+  ranges (40분~1시간, families plus range_unit_rank; 1시~2분 stays
+  preserved); a trailing fullwidth percent sign (18.1％, １２３％) and %P.
+  Contract ko_jev_leaks_v24 (10 cases). Korean benchmark +319, -3: three
+  references read a decimal before a scale (264.7만 개다 이백육십사 점 칠만)
+  that the compound grammar expands, as it already did before a particle.
 - Read digits then letters with five or more digits as a code (516123813ZC 오일육
   일이삼 팔일삼 제트씨; it was left unread); a declared unit stays a quantity
   (300000p 삼십만 포인트) and short labels (20F, 5A, 470G) keep the preservation

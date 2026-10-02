@@ -290,6 +290,16 @@ numeric_continuation	ko-KR	십	1
 numeric_continuation	ko-KR	백	1
 
 # Exact attached quantity tails; no arbitrary particle-prefix word matching.
+# The copula after a quantity or ordinal (11번째인, 20번째다; 2026-10-02).
+quantity_tail	ko-KR	인	1
+quantity_tail	ko-KR	다	1
+quantity_tail	ko-KR	이다	1
+quantity_tail	ko-KR	였다	1
+quantity_tail	ko-KR	이야	1
+quantity_tail	ko-KR	야	1
+quantity_tail	ko-KR	인가요	1
+quantity_tail	ko-KR	이었고	1
+quantity_tail	ko-KR	였고	1
 quantity_tail	ko-KR	이며	1
 quantity_tail	ko-KR	이고	1
 quantity_tail	ko-KR	이면	1
@@ -567,3 +577,14 @@ numeric_suffix	*	아웃	COUNTER:아웃
 numeric_suffix	*	스트라이크	COUNTER:스트라이크
 counter	ko-KR	아웃	english
 counter	ko-KR	스트라이크	english
+# Durations join the families (40분~1시간, 3일~2주, 6개월~1년; 2026-10-02); an
+# ascending pair of durations reads each side on its own without a preceding unit.
+range_unit_family	ko-KR	시간	clock
+range_unit_family	ko-KR	개월	calendar
+range_unit_rank	ko-KR	초	1
+range_unit_rank	ko-KR	분	2
+range_unit_rank	ko-KR	시간	3
+range_unit_rank	ko-KR	일	4
+range_unit_rank	ko-KR	주	5
+range_unit_rank	ko-KR	개월	6
+range_unit_rank	ko-KR	년	7
