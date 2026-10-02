@@ -1143,6 +1143,27 @@ size_t ttf_ko_classify_digit_identifier(const ttf_pack_input_t *in, ttf_semantic
                 return classified(in, s, c_end + 1, TTF_SEM_DIGIT_SEQUENCE, "ko:short-label");
             }
         }
+        /* 3days, 1day, 2way: a lowercase word too, when it has a vowel and the
+           shared grammar has no unit for it (5min, 3kcal stay quantities). */
+        if (a_end - b == 1 && p + 2 < n && t[p] >= 'a' && t[p] <= 'z' && t[p + 1] >= 'a' && t[p + 1] <= 'z') {
+            ttf_semantic_t shared = {0};
+            int vowel = 0;
+            u = p;
+            while (u < n && t[u] >= 'a' && t[u] <= 'z')
+                vowel |= strchr("aeiouy", t[u++]) != NULL;
+            shared.struct_size = sizeof(shared);
+            if (u - p >= 3 && vowel && !(u < n && alnum(t[u])) && u - b < sizeof(s->value) &&
+                !unit_letters(in, p, u) && ttf_classify_universal(in, &shared) &&
+                shared.type == TTF_SEM_TEXT && !strcmp(shared.rule, "syntax.unsupported-numeric") &&
+                shared.input_end == u) {
+                memcpy(s->value, t + b, u - b);
+                s->value[u - b] = '\0';
+                s->unit[0] = s->secondary[0] = '\0';
+                (void)snprintf(s->source_lang, sizeof(s->source_lang), "en-US");
+                s->lexical_class = TTF_LEX_ALNUM_TERM;
+                return classified(in, s, u, TTF_SEM_ALNUM_TERM, "ko:numeral-word");
+            }
+        }
         if (a_end - b == 1 && p + 3 < n && t[p] >= 'A' && t[p] <= 'Z' && t[p + 1] >= 'a' && t[p + 1] <= 'z') {
             u = p + 1;
             while (u < n && t[u] >= 'a' && t[u] <= 'z')

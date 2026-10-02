@@ -76,6 +76,11 @@ g2p	en-US	ive$	IH V
 g2p	en-US	ure$	ER
 g2p	en-US	e$	-
 g2p	en-US	y$	IY
+# A plural -s after a vowel and y is voiced: days 데이즈, boys 보이즈 (2026-10-02).
+g2p	en-US	ays$	EY Z
+g2p	en-US	oys$	OY Z
+g2p	en-US	eys$	IY Z
+g2p	en-US	uys$	AY Z
 g2p	en-US	ing$	IH NG
 g2p	en-US	le$	AH L
 g2p	en-US	ew	UW

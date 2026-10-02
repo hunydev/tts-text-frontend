@@ -2,6 +2,13 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Read a single digit before a lowercase English word with an English numeral
+  like 3Bay (3days 스리데이즈, 1day 원데이, 2way 투웨이; it was left unread or
+  spelled). Units the shared grammar reads (5min, 3kcal) and words without a
+  vowel (4wd) keep their reading. The English G2P reads a word-final -ays,
+  -oys, -eys, -uys plural with 즈 (days 데이즈, boys 보이즈; was 데이스).
+  Contract ko_numeral_words_v24 (10 cases). Korean benchmark +0, -0 (2
+  changed); English unchanged.
 - Read numbers the Korean benchmark left unread: 2PM and 2AM as group names
   투피엠, 투에이엠 (project-owner decision; times are written 오후 2시); a single
   digit before a capitalized English word with English numerals (3Bay 스리베이);
