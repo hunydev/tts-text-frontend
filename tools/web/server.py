@@ -126,6 +126,8 @@ class Handler(BaseHTTPRequestHandler):
             "/lexicon": "lexicon.html",
             "/lexicon.js": "lexicon.js",
             "/jev-eval": "jev-eval.html",
+            "/perf": "perf.html",
+            "/perf.js": "perf.js",
             "/jev-eval.js": "jev-eval.js",
         }
         if path not in names:

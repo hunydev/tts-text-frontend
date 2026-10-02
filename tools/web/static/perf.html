@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>정규화 성능 · TTF Lab</title>
+  <link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/ko-quality.css">
+  <script src="/perf.js" defer></script>
+</head>
+<body>
+<header class="mast"><a href="/" class="brand"><span class="brandmark">Tt</span><span>TTF <b>Lab</b><small>NORMALIZATION SPEED</small></span></a><div class="mast-right"><a href="/">텍스트 검사</a><a href="/ko-quality">한국어 TN 지표</a><a href="/lexicon">사전 관리</a><a href="/perf">성능</a></div></header>
+<main class="quality-main">
+<section class="intro"><div><p class="eyebrow">성능 · 진단</p><h1>엔진 로드와 정규화에<br>걸리는 시간을 나눠 봅니다.</h1><p class="lead">Jev 평가셋에서 숫자와 영문이 섞인 문장을 엔터로 이어 붙여 한 번에 정규화합니다. 1·10·100·1000문장을 재고, 웹 요청 한 번에 드는 시간(작업 프로세스 시작, 엔진 로드, 사전 커버리지 계산)을 따로 보여 줍니다. 웹은 엔진 빌드를 재시작 없이 반영하려고 요청마다 새 작업 프로세스에서 엔진을 다시 로드합니다.</p></div></section>
+<p id="notice" role="status" aria-live="polite">측정 실행을 누르세요.</p>
+<section class="quality-panel">
+  <div class="toolbar"><button id="run">측정 실행</button><span id="meta" class="small"></span></div>
+  <h2>웹 요청 한 번 (1문장)</h2>
+  <div id="cards" class="quality-cards"></div>
+  <h2>정규화만 (엔진 로드 이후)</h2>
+  <div class="quality-scroll"><table><thead><tr><th>문장 수</th><th>글자 수</th><th>반복</th><th>정규화 시간</th><th>문장당</th><th>span 수</th></tr></thead><tbody id="rows"></tbody></table></div>
+  <p class="small">표는 상세 추적(trace)을 끈 상태로 잰다. 추적은 후보마다 기록을 남겨 한 번에 약 700문장(이벤트 65,536개)이 한도다. 정규화 시간은 반복 측정의 중앙값이다(1·10문장 5회, 100문장 3회, 1000문장 1회). 평가셋의 숫자·영문 혼합 문장이 1000개보다 적으면 숫자 문장을 더하고, 그래도 모자라면 처음부터 되풀이한다.</p>
+</section>
+</main>
+</body>
+</html>

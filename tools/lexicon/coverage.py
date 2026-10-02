@@ -16,10 +16,45 @@ import sys
 from manage import ROOT, inventory
 
 LEXICAL = {"WORD", "INITIALISM", "ACRONYM", "ALNUM_TERM", "ABBREVIATION"}
+CACHE = ROOT / "benchmark/generated/cache/lexicon-coverage-index-v1.json"
+FIELDS = ("id", "scope", "source_lang", "target_lang", "canonical_keys", "pronunciation", "review_status")
+
+
+def _fingerprint(root=ROOT):
+    rows = []
+    for path in sorted((Path(root) / "lexicons").rglob("*")):
+        if path.is_file():
+            st = path.stat()
+            rows.append("%s:%d:%d" % (path.relative_to(root), st.st_size, st.st_mtime_ns))
+    return "|".join(rows)
+
+
+def coverage_entries(root=ROOT, cache=CACHE):
+    """The inventory fields summarize() needs, cached by the lexicon sources' size and mtime.
+
+    inventory() validates every source file (~330 ms with the brand packs); a web
+    request runs in a fresh worker, so the compact index is kept on disk and
+    rebuilt only when a file under lexicons/ changes."""
+    key = _fingerprint(root)
+    try:
+        cached = json.loads(Path(cache).read_text(encoding="utf-8"))
+        if cached.get("fingerprint") == key:
+            return cached["entries"]
+    except (OSError, ValueError, KeyError):
+        pass
+    entries = [{k: r[k] for k in FIELDS if k in r} for r in inventory(root)["entries"]]
+    try:
+        Path(cache).parent.mkdir(parents=True, exist_ok=True)
+        tmp = Path(cache).with_suffix(".tmp")
+        tmp.write_text(json.dumps(dict(fingerprint=key, entries=entries), ensure_ascii=False), encoding="utf-8")
+        tmp.replace(cache)
+    except OSError:
+        pass
+    return entries
 
 
 def summarize(spans, data=None):
-    data = data or inventory()
+    data = data or dict(entries=coverage_entries())
     index = {
         (r.get("scope", "system"), r["source_lang"], r["target_lang"], key): r
         for r in data["entries"]

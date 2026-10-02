@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """One disposable native-library process per web operation."""
 
+import time as _time
+
+STARTED = _time.monotonic()  # worker process start, for the /perf breakdown
+
 import json
 import random
 import sys
@@ -112,6 +116,81 @@ def run(request, library, resources):
         engine.close()
 
 
+PERF_SIZES = (1, 10, 100, 1000)
+
+
+def perf_sentences(count):
+    """Jev evaluation sentences that mix digits and Latin letters, then other
+    sentences with digits, cycled when the set is smaller than count."""
+    import re
+    path = ROOT / "benchmark/generated/jev-eval/ko-v1/sentences.jsonl"
+    texts = [json.loads(l)["text"] for l in path.read_text(encoding="utf-8").splitlines() if l.strip()]
+    mixed = [t for t in texts if re.search(r"\d", t) and re.search(r"[A-Za-z]", t)]
+    digits = [t for t in texts if re.search(r"\d", t) and t not in set(mixed)]
+    pool = mixed + digits
+    return [pool[i % len(pool)] for i in range(count)], len(mixed)
+
+
+def perf(request, library, resources):
+    """Engine load, normalization of 1/10/100/1000 newline-joined sentences, and
+    the per-request extras of a web normalization (coverage, tokens)."""
+    opts = request["options"]
+    emit(dict(event="start", version=version(), mode="perf"))
+    process_ms = (time.monotonic() - STARTED) * 1000
+    t = time.perf_counter()
+    engine = Engine(library, resources, opts)
+    load_ms = (time.perf_counter() - t) * 1000
+    # The scaling table runs without the detailed trace, as production does: the
+    # trace keeps every candidate (65536-event cap, about 700 sentences at once).
+    traced = None
+    if opts.get("detailed_trace"):
+        sample = perf_sentences(1)[0][0].encode()
+        times = []
+        for _ in range(5):
+            t = time.perf_counter()
+            engine.normalize(sample)
+            times.append((time.perf_counter() - t) * 1000)
+        traced = sorted(times)[2]
+        engine.close()
+        engine = Engine(library, resources, dict(opts, detailed_trace=False))
+    try:
+        sentences, mixed = perf_sentences(max(PERF_SIZES))
+        rows = []
+        for n in PERF_SIZES:
+            source = "\n".join(sentences[:n]).encode()
+            repeats = 5 if n <= 10 else 3 if n <= 100 else 1
+            times = []
+            for _ in range(repeats):
+                t = time.perf_counter()
+                result = engine.normalize(source)
+                times.append((time.perf_counter() - t) * 1000)
+            times.sort()
+            best = times[len(times) // 2]
+            rows.append(dict(sentences=n, bytes=len(source), chars=len(source.decode()), repeats=repeats,
+                             normalize_ms=round(best, 2), per_sentence_ms=round(best / n, 3),
+                             spans=len(result["spans"])))
+            emit(dict(event="progress", row=rows[-1]))
+        one = engine.normalize(sentences[0].encode())
+        sys.path.insert(0, str(ROOT / "tools/lexicon"))
+        from coverage import summarize, coverage_entries, inventory
+        t = time.perf_counter()
+        summarize(one["spans"])
+        coverage_ms = (time.perf_counter() - t) * 1000
+        t = time.perf_counter()
+        engine.tokens(sentences[0].encode())
+        tokens_ms = (time.perf_counter() - t) * 1000
+        t = time.perf_counter()
+        summarize(one["spans"], dict(entries=inventory()["entries"]))
+        uncached_ms = (time.perf_counter() - t) * 1000
+        emit(dict(event="result", perf=dict(
+            process_start_ms=round(process_ms, 1), engine_load_ms=round(load_ms, 1),
+            coverage_ms=round(coverage_ms, 1), coverage_uncached_ms=round(uncached_ms, 1),
+            tokens_ms=round(tokens_ms, 2), rows=rows, mixed_sentences=mixed,
+            sample=sentences[0], traced_one_ms=round(traced, 2) if traced is not None else None)))
+    finally:
+        engine.close()
+
+
 def corpus(request, library, resources):
     sys.path.insert(0, str(ROOT / "tools/evaluation"))
     from evaluate import read_corpus, check_spans
@@ -191,7 +270,8 @@ if __name__ == "__main__":
         request = json.load(sys.stdin)
         is_corpus = "corpus" in request
         request = validate(request, corpus=is_corpus)
-        (corpus if is_corpus else run)(request, Path(sys.argv[1]), Path(sys.argv[2]))
+        handler = corpus if is_corpus else perf if request["mode"] == "perf" else run
+        handler(request, Path(sys.argv[1]), Path(sys.argv[2]))
         emit(dict(event="end", ok=True))
     except BrokenPipeError:
         sys.exit(1)

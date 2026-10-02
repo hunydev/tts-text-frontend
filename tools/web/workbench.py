@@ -176,7 +176,7 @@ def validate(request, corpus=False):
         if key not in CORPORA or not corpus_path(key).is_file():
             raise ValueError("등록되지 않은 코퍼스입니다.")
         return {"corpus": key}
-    if request.get("mode") not in ("normalize", "stream", "verify"):
+    if request.get("mode") not in ("normalize", "stream", "verify", "perf"):
         raise ValueError("지원하지 않는 실행 모드입니다.")
     result = {
         "mode": request["mode"],
