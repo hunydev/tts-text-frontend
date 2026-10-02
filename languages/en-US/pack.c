@@ -514,7 +514,7 @@ static int context_cue_score(const ttf_pack_input_t *in, size_t begin) {
  * remains significant (for example an imperative following a subject). */
 static int run_context_score(const ttf_pack_input_t *in, size_t begin, size_t end) {
     size_t i, words = 0;
-    int total = 0, predicate = 0, imperative = 0, subject = 0, polite = 0;
+    int total = 0, predicate = 0, imperative = 0, subject = 0, polite = 0, previous_caps = 0;
     int ceiling = weight(res(in->engine, "context", "phrase_ceiling"), 160);
     int latin = weight(res(in->engine, "context", "latin_weight"), 8);
     for (i = begin; i < end; ++i) {
@@ -531,7 +531,16 @@ static int run_context_score(const ttf_pack_input_t *in, size_t begin, size_t en
         if (neutral_marker(in, i, key))
             continue;
         ++words;
-        addition = latin + weight(res(in->engine, "context_word", key), 0);
+        {
+            /* GTX A, SRT A: a capital letter after a capitalized initialism is a
+               label, not the article a (2026-10-02). */
+            int caps = 1, label;
+            for (j = 0; j < n; ++j)
+                caps &= !(in->text[t->begin + j] >= 'a' && in->text[t->begin + j] <= 'z');
+            label = n == 1 && caps && previous_caps;
+            previous_caps = caps;
+            addition = latin + (label ? 0 : weight(res(in->engine, "context_word", key), 0));
+        }
         /* Saturation avoids an arbitrarily long noun list defeating an attached
            particle, and prevents an integer overflow on a large input. */
         total = addition >= ceiling - total ? ceiling : total + addition;

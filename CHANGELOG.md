@@ -2,6 +2,19 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Read rejected numbers as written in Korean speech instead of keeping them
+  (project-owner decision; option numeric_fallback=preserve, CLI
+  --numeric-fallback, web 숫자 폴백): 27만 천 원 이십칠만 천 원, 1970년 2월 29일,
+  4~5억 사에서 오억, 9번째라 아홉번째라, 제15호선 제십오호선, 52,7% 오십이 점 칠
+  퍼센트, 088-696-8173 and 9034MDSAP run by run, $12，500 만 이천오백 달러,
+  ０９：０５ 아홉 시 오 분. A backtick closed by an apostrophe is a quote, not
+  code (`가을야구'의); GTX A reads 지티엑스 에이 (a capital after an initialism is
+  a label); 아이폰 6s 식스에스; units Mb, Giga and ％P; 6G 식스지 like 5G.
+  English phrases, inline code and 24:00 keep their reading. Contract
+  ko_written_fallback_v24 (29 cases); 13 contract rows, the fullwidth guards and
+  one web sample now read the span, with previous values in notes. Korean
+  benchmark leftovers with digits or Latin 108 to 6 sentences (3 English
+  phrases, 3 inline code spans).
 - Read a single digit before a lowercase English word with an English numeral
   like 3Bay (3days 스리데이즈, 1day 원데이, 2way 투웨이; it was left unread or
   spelled). Units the shared grammar reads (5min, 3kcal) and words without a

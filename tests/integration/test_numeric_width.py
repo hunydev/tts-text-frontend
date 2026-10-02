@@ -11,12 +11,18 @@ corpus=ROOT/'tests/evaluation/numeric_width_v22.jsonl'
 # reason remain in docs/audit/phone-zero-policy-20260928.json. Keep the exact pin.
 # 2026-09-30 (v0.24): range rows follow the range-reading decision.
 # Hash updated 2026-10-02: width-short-zero span unit leading_zero -> financial_identifier (five-digit policy).
-assert hashlib.sha256(corpus.read_bytes()).hexdigest()=='0e893b4512853d8997f704907e11383d8a6cabf6df65c9b21cf44beb7aa81c20'
+# Hash updated 2026-10-02: width-invalid-date and width-invalid-group follow the written fallback.
+assert hashlib.sha256(corpus.read_bytes()).hexdigest()=='64069484e10323f0bcf5846cd4b1fea10ede804b3f66d73357d34e80637c1d6a'
 rows=[json.loads(x) for x in corpus.read_text().splitlines()]
 # These negatives are fixed before the unsupported fullwidth-punctuation guard.
-for i,text in enumerate(['１２，５００원','₩１２，５００','$12，500','－１２３','１２．５０%',
-                          '０９：０５','September 17, ２０２６．５']):
- rows.append(dict(id=f'wide-punctuation-{i}',text=text,expected=text,default_language='ko-KR' if i!=6 else 'en-US',output_mode='speech'))
+# 2026-10-02 (project-owner decision): Korean speech reads the rejected span as
+# written (written fallback); each row was kept as written before. English text
+# keeps the guard.
+for i,(text,expected) in enumerate([('１２，５００원','만 이천오백원'),('₩１２，５００','만 이천오백 원'),
+                          ('$12，500','만 이천오백 달러'),('－１２３','마이너스 백이십삼'),
+                          ('１２．５０%','십이 점 오영 퍼센트'),('０９：０５','아홉 시 오 분'),
+                          ('September 17, ２０２６．５','September 17, ２０２６．５')]):
+ rows.append(dict(id=f'wide-punctuation-{i}',text=text,expected=expected,default_language='ko-KR' if i!=6 else 'en-US',output_mode='speech'))
 # 2026-10-02: a trailing fullwidth percent sign reads like % (it cannot split an
 # amount); １２３％ was the eighth guard row above (expected: kept as written).
 rows.append(dict(id='wide-percent',text='１２３％',expected='백이십삼 퍼센트',default_language='ko-KR',output_mode='speech'))

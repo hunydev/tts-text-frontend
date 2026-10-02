@@ -312,6 +312,18 @@ lexicon	ko-KR	en-US:k7	케이세븐
 
 `list_marker * <symbol> 1` (resources/common/speech.tsv): at the start of a line and followed by a space, the marker is not read in speech (`- 사과` 사과, `• 회의` 회의). A hyphen written against a number (`-3도`) stays a minus sign, and a marker in the middle of a line keeps its reading. Text output keeps the marker.
 
+## Written fallback (2026-10-02)
+
+In Korean speech a span that every grammar rejected (`syntax.invalid-*`, `syntax.unsupported-*`, `syntax.width-*`, `ko:invalid-*`, `ko:unsupported-*`, `ko:ambiguous-*`) and that contains a digit is read as written instead of kept (project-owner decision): 27만 천 원 이십칠만 천 원, 1970년 2월 29일 천구백칠십년 이월 이십구일, 4~5억 사에서 오억, 9번째라 아홉번째라, 52,7% 오십이 점 칠 퍼센트, 088-696-8173 공팔팔 다시 육구육 다시 팔일칠삼, 9034MDSAP 구공삼사 엠디에스에이피, $12，500 만 이천오백 달러. The ko-KR pack reads it piece by piece:
+
+- a code (a leading zero, five or more digits, a hyphen between groups, three or more capitals, letters directly before digits, two or more decimal points) runs through the identifier reading;
+- otherwise numbers are cardinals (native before a native counter such as 번째 or 시간), a comma before one or two digits and then % or a unit is a decimal point, letters read as a `numeric_suffix` unit (two or more letters, L, or one lowercase letter) or by name, and `~` 에서, `%` 퍼센트 (`%P` 퍼센트포인트), `:` 대, `/` 슬래시; a valid clock shape reads as a time (０９：０５ 아홉 시 오 분);
+- fullwidth forms read like ASCII, a currency prefix is read after its amount, and Hangul is copied.
+
+A colon that the grammar rejected as a time (24:00) stays preserved, English words are not touched, and text output is unchanged. The option `numeric_fallback=preserve` (CLI `--numeric-fallback preserve`, web 숫자 폴백) keeps the rejected span as before.
+
+A backtick closed by an apostrophe (`가을야구'의) is a quote mark, not inline code, and `speech_preserve * `` 1` keeps it like `'`. A capital letter after a capitalized initialism (GTX A) is a label, not the English article, so the run keeps Korean context.
+
 ## Particle agreement (2026-10-02)
 
 `policy ko-KR particle_agreement off` (resources/languages/ko-KR/rules/speech.tsv) keeps the Hangul written after a reading as written: 성수동1가 reads 성수동일가, 5kg로 reads 오 킬로그램로. The engine option `particle_agreement=on` (CLI `--particle-agreement on`, web 조사 맞춤) or the policy value `on` restores the agreement table (`particle_form`: 3랑 삼이랑, 5kg로 오 킬로그램으로).

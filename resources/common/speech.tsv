@@ -6,6 +6,8 @@ speech_preserve	*	?	1
 speech_preserve	*	:	1
 speech_preserve	*	;	1
 speech_preserve	*	'	1
+# A backtick in prose is a quote mark (`가을야구'의), kept like ' (2026-10-02).
+speech_preserve	*	`	1
 speech_preserve	*	"	1
 speech_preserve	*	(	1
 speech_preserve	*	)	1

@@ -45,6 +45,7 @@ struct ttf_engine {
     ttf_unknown_foreign_policy_t unknown_foreign_policy;
     int strict_controls; /* invalid_control=error: an invalid control fails the request. */
     int particle_option; /* 0 language policy, 1 off, 2 on (particle_agreement option). */
+    int numeric_fallback_off; /* numeric_fallback=preserve: keep rejected numeric spans. */
     ttf_decorative_policy_t decorative_policy;
     ttf_initialism_policy_t initialism_policy;
     int reading_unit_spacing; /* spacing=reading-unit; 0 keeps resource spacing */

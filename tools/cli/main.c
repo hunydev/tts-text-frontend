@@ -33,7 +33,7 @@ static void usage(FILE *out) {
           "          --spacing orthographic|reading-unit --matrix auto|legacy|declared\n"
           "          --symbol-fallback on|native|off\n"
           "          --max-control-bytes N --invalid-control ignore|error\n"
-          "          --particle-agreement off|on\n"
+          "          --particle-agreement off|on --numeric-fallback read|preserve\n"
           "Stream options: --chunk-bytes N (default 4096)\n",
           out);
 }
@@ -242,7 +242,7 @@ static ttf_status_t read_input(FILE *file, char *buffer, size_t capacity, size_t
 int main(int argc, char **argv) {
     ttf_config_t config;
     ttf_frontend_options_t frontend;
-    const char *invalid_control = NULL, *particle_agreement = NULL;
+    const char *invalid_control = NULL, *particle_agreement = NULL, *numeric_fallback = NULL;
     const char *bracket_policy = NULL, *unknown_foreign = NULL, *decorative = NULL,
                *initialism = NULL, *spacing = NULL, *matrix = NULL, *symbol_fallback = NULL;
     ttf_trace_options_t trace_options;
@@ -297,7 +297,7 @@ int main(int argc, char **argv) {
              !strcmp(arg, "--initialism") || !strcmp(arg, "--hanja") ||
              !strcmp(arg, "--kana") || !strcmp(arg, "--spacing") || !strcmp(arg, "--matrix") ||
              !strcmp(arg, "--symbol-fallback") || !strcmp(arg, "--invalid-control") ||
-             !strcmp(arg, "--particle-agreement") ||
+             !strcmp(arg, "--particle-agreement") || !strcmp(arg, "--numeric-fallback") ||
              !strcmp(arg, "--max-control-bytes"))) {
             int valid = 1;
             if (++i == argc) {
@@ -341,6 +341,9 @@ int main(int argc, char **argv) {
             } else if (!strcmp(arg, "--decorative")) {
                 valid = !strcmp(argv[i], "follow") || !strcmp(argv[i], "read");
                 decorative = argv[i];
+            } else if (!strcmp(arg, "--numeric-fallback")) {
+                valid = !strcmp(argv[i], "read") || !strcmp(argv[i], "preserve");
+                numeric_fallback = argv[i];
             } else if (!strcmp(arg, "--particle-agreement")) {
                 valid = !strcmp(argv[i], "off") || !strcmp(argv[i], "on");
                 particle_agreement = argv[i];
@@ -463,6 +466,8 @@ int main(int argc, char **argv) {
         status = ttf_engine_set_option(engine, "unknown_foreign", unknown_foreign);
     if (status == TTF_OK && particle_agreement)
         status = ttf_engine_set_option(engine, "particle_agreement", particle_agreement);
+    if (status == TTF_OK && numeric_fallback)
+        status = ttf_engine_set_option(engine, "numeric_fallback", numeric_fallback);
     if (status == TTF_OK && invalid_control)
         status = ttf_engine_set_option(engine, "invalid_control", invalid_control);
     if (status == TTF_OK && decorative)

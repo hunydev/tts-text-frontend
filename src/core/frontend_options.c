@@ -118,6 +118,15 @@ ttf_status_t ttf_engine_set_option(ttf_engine_t *engine, const char *name, const
             return TTF_EINVAL;
         return TTF_OK;
     }
+    if (!strcmp(name, "numeric_fallback")) {
+        if (!strcmp(value, "read"))
+            engine->numeric_fallback_off = 0;
+        else if (!strcmp(value, "preserve"))
+            engine->numeric_fallback_off = 1;
+        else
+            return TTF_EINVAL;
+        return TTF_OK;
+    }
     if (!strcmp(name, "invalid_control")) {
         if (!strcmp(value, "ignore"))
             engine->strict_controls = 0;

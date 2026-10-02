@@ -142,6 +142,10 @@ unit	en-US	mm.many	millimeters
 numeric_suffix	*	mm	MEASURE:mm
 unit	en-US	MB.one	megabyte
 unit	en-US	MB.many	megabytes
+unit	en-US	Mb.one	megabit
+unit	en-US	Mb.many	megabits
+unit	en-US	Giga.one	giga
+unit	en-US	Giga.many	giga
 numeric_suffix	*	MB	MEASURE:MB
 unit	en-US	TB.one	terabyte
 unit	en-US	TB.many	terabytes
@@ -177,6 +181,10 @@ semantic_term	*	3D	ALNUM_TERM:en-US
 # Distinct rate-change quantities; never convert their values to percent.
 numeric_suffix	*	%p	MEASURE:percentage_point
 numeric_suffix	*	%P	MEASURE:percentage_point
+numeric_suffix	*	％P	MEASURE:percentage_point
+# 300Mb 삼백 메가비트, 10Giga 십 기가 (2026-10-02).
+numeric_suffix	*	Mb	MEASURE:Mb
+numeric_suffix	*	Giga	MEASURE:Giga
 numeric_suffix	*	bp	MEASURE:basis_point
 unit	en-US	percentage_point.one	percentage point
 unit	en-US	percentage_point.many	percentage points
@@ -212,6 +220,7 @@ semantic_term	*	3d	ALNUM_TERM:en-US
 semantic_term	*	top100	ALNUM_TERM:en-US
 semantic_term	*	TOP100	ALNUM_TERM:en-US
 semantic_term	*	5G	ALNUM_TERM:en-US
+semantic_term	*	6G	ALNUM_TERM:en-US
 semantic_term	*	4G	ALNUM_TERM:en-US
 semantic_term	*	3G	ALNUM_TERM:en-US
 semantic_term	*	2G	ALNUM_TERM:en-US

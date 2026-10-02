@@ -445,6 +445,50 @@ static ttf_status_t read_identifier(const ttf_engine_t *e, const ttf_language_pa
                           "decision", "identifier-fallback", "", identifier.value,
                           "rejected-numeric-read-as-identifier", SIZE_MAX);
 }
+/* Korean speech reads a rejected numeric span as written through the ko-KR
+   written fallback instead of keeping it (27만 천 원, 1970년 2월 29일, 9034MDSAP;
+   project-owner decision 2026-10-02). numeric_fallback=preserve keeps the old
+   behaviour; a colon that is not a time (24:00) stays preserved as decided. */
+static int written_fallback(const ttf_engine_t *e, const ttf_language_pack_t *renderer,
+                            const ttf_semantic_t *sem, const char *surface, size_t length) {
+    static const char *const rules[] = {"syntax.invalid-", "syntax.unsupported-", "syntax.width-",
+                                        "ko:invalid-",     "ko:unsupported-",     "ko:ambiguous-"};
+    size_t i;
+    int digit = 0;
+    if (e->numeric_fallback_off || sem->type != TTF_SEM_TEXT || !renderer ||
+        strcmp(renderer->language_tag, "ko-KR") || !strcmp(sem->rule, "syntax.invalid-time"))
+        return 0;
+    for (i = 0; i < length; ++i)
+        digit |= (surface[i] >= '0' && surface[i] <= '9') ||
+                 (i + 2 < length && (unsigned char)surface[i] == 0xEF && /* fullwidth digits */
+                  (unsigned char)surface[i + 1] == 0xBC && (unsigned char)surface[i + 2] >= 0x90 &&
+                  (unsigned char)surface[i + 2] <= 0x99);
+    for (i = 0; digit && i < sizeof(rules) / sizeof(rules[0]); ++i)
+        if (!strncmp(sem->rule, rules[i], strlen(rules[i])))
+            return 1;
+    return 0;
+}
+static ttf_status_t read_written(const ttf_engine_t *e, const ttf_language_pack_t *renderer,
+                                 const ttf_semantic_t *sem, const char *surface, size_t length,
+                                 ttf_buffer_t *normalized, int *done) {
+    ttf_semantic_t written = *sem;
+    ttf_buffer_t spoken = {0};
+    ttf_status_t st;
+    written.type = TTF_SEM_DIGIT_SEQUENCE;
+    snprintf(written.unit, sizeof(written.unit), "written_fallback");
+    st = renderer->verbalize(e, &written, surface, length, &spoken);
+    if (st != TTF_OK) {
+        ttf_buffer_free(&spoken);
+        return st == TTF_EINVAL || st == TTF_ERESOURCE ? TTF_OK : st;
+    }
+    ttf_buffer_free(normalized);
+    *normalized = spoken;
+    *done = 1;
+    ttf_trace_stage(e, TTF_TRACE_POLICY, 0, normalized->length);
+    return ttf_trace_emit(e, TTF_TRACE_SELECTED, TTF_LAYER_COMMON, 0, renderer->language_tag,
+                          "decision", "written-fallback", "", sem->rule,
+                          "rejected-numeric-read-as-written", SIZE_MAX);
+}
 static int foreign_type(ttf_semantic_type_t t) {
     return t == TTF_SEM_WORD || t == TTF_SEM_INITIALISM || t == TTF_SEM_ACRONYM ||
            t == TTF_SEM_ALNUM_TERM || t == TTF_SEM_ORDINAL || t == TTF_SEM_ABBREVIATION;
@@ -1330,6 +1374,10 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
             identifier_fallback(sem, text + tokens[i].begin, end - tokens[i].begin))
             st = read_identifier(e, renderer, sem, text + tokens[i].begin, end - tokens[i].begin,
                                  &normalized, &identifier_read);
+        if (st == TTF_OK && e->frontend_options.output_mode == TTF_OUTPUT_SPEECH && !rule &&
+            !identifier_read && written_fallback(e, renderer, sem, text + tokens[i].begin, end - tokens[i].begin))
+            st = read_written(e, renderer, sem, text + tokens[i].begin, end - tokens[i].begin,
+                              &normalized, &identifier_read);
         if (st == TTF_OK && e->frontend_options.output_mode == TTF_OUTPUT_SPEECH && !rule &&
             (strncmp(span.lexicon, "lexicon:", 8) || !strncmp(sem->rule, "cjk.", 4)) &&
             strcmp(span.lexicon, "unknown-foreign-preserved")) {

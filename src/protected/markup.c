@@ -178,6 +178,16 @@ static int backticks(const char *s, size_t length, size_t begin, int final,
     while (p < length) {
         size_t close_begin;
         if (s[p] != '`') {
+            /* `가을야구'의: one backtick closed by an apostrophe is an opening
+               quote typed for a curly quote in prose, not code (2026-10-02);
+               an apostrophe inside a word (`it's`) stays code. */
+            if (count == 1 && s[p] == '\'') {
+                if (p + 1 == length && !final)
+                    return result(out, length, "code", "protected.code", layer, 0);
+                if (p + 1 == length || !((s[p + 1] >= 'a' && s[p + 1] <= 'z') ||
+                                         (s[p + 1] >= 'A' && s[p + 1] <= 'Z')))
+                    return 0;
+            }
             ++p;
             continue;
         }

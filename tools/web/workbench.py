@@ -8,6 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 MAX_TEXT_BYTES = 16384
 CORPORA = {
+    "ko-written-fallback-v24": ("Korean written fallback v24", "ko_written_fallback_v24.jsonl"),
     "ko-numeral-words-v24": ("Korean numeral words v24", "ko_numeral_words_v24.jsonl"),
     "ko-bench-leaks-v24": ("벤치마크 숫자·영문 누락", "ko_bench_leaks_v24.jsonl"),
     "ko-written-particles-v24": ("쓴 그대로의 조사", "ko_written_particles_v24.jsonl"),
@@ -121,6 +122,7 @@ DEFAULTS = dict(
     symbol_fallback="on",
     particle_agreement="off",
     invalid_control="ignore",
+    numeric_fallback="read",
     brand_lexicon="off",
     max_control_bytes=4096,
     sentence_split=True,
@@ -215,6 +217,7 @@ def validate(request, corpus=False):
         ("symbol_fallback", ("on", "native", "off")),
         ("particle_agreement", ("off", "on")),
         ("invalid_control", ("ignore", "error")),
+        ("numeric_fallback", ("read", "preserve")),
         ("brand_lexicon", ("off", "on")),
         ("domain", ("none", "finance", "finance-vocabulary")),
     ]:
@@ -422,8 +425,9 @@ def catalog():
          "1\u00a0250원", "천이백오십 원", "reference-policy"),
         ("unicode-grouping-percent", "부호·소수·좁은 NBSP (U+202F)",
          "-1\u202f250.50%", "마이너스 천이백오십 점 오영 퍼센트", "reference-policy"),
-        ("unicode-grouping-malformed", "잘못된 얇은 공백 묶음 보존 (U+2009)",
-         "1\u200925원", "1\u200925원", "preservation-contract"),
+        # 2026-10-02 (project-owner decision): the written fallback reads it (was kept as written).
+        ("unicode-grouping-malformed", "잘못된 얇은 공백 묶음 쓰인 그대로 읽기 (U+2009)",
+         "1\u200925원", "일 이십오원", "reference-policy"),
         ("unicode-grouping-range", "금액 범위의 얇은 공백 묶음 (U+2009)",
          "1\u2009250~2\u2009500원", "천이백오십 원에서 이천오백 원", "reference-policy"),
     ):

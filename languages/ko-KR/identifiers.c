@@ -1043,10 +1043,10 @@ size_t ttf_ko_classify_model_number(const ttf_pack_input_t *in, ttf_semantic_t *
         ++e;
     {
         size_t l = e;
-        while (l < n && t[l] >= 'A' && t[l] <= 'Z' && l - e < 2)
+        while (l < n && ((t[l] >= 'A' && t[l] <= 'Z') || (t[l] >= 'a' && t[l] <= 'z')) && l - e < 2)
             ++l;
         if (l > e && !(l < n && alnum(t[l])))
-            e = l; /* 6S, 13X */
+            e = l; /* 6S, 13X, 아이폰 6s (2026-10-02) */
     }
     if (e - b > 4 || (e < n && (alnum(t[e]) || t[e] == '.' || t[e] == ',' || t[e] == '-' ||
                                 t[e] == ':' || t[e] == '/')))

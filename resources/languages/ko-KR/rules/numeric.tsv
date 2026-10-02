@@ -69,6 +69,8 @@ unit	ko-KR	cm	센티미터
 unit	ko-KR	mm	밀리미터
 unit	ko-KR	GB	기가바이트
 unit	ko-KR	MB	메가바이트
+unit	ko-KR	Mb	메가비트
+unit	ko-KR	Giga	기가
 unit	ko-KR	TB	테라바이트
 unit	ko-KR	GHz	기가헤르츠
 unit	ko-KR	MHz	메가헤르츠
@@ -498,6 +500,7 @@ lexicon_case	ko-KR	en-US:2g	upper
 lexicon_case	ko-KR	en-US:3g	upper
 lexicon_case	ko-KR	en-US:4g	upper
 lexicon_case	ko-KR	en-US:5g	upper
+lexicon_case	ko-KR	en-US:6g	upper
 # The company 3M is a capital (쓰리엠); lowercase 3m is meters (2026-10-01).
 lexicon_case	ko-KR	en-US:3m	upper
 # Group names 2PM and 2AM are capitals; 2pm is a time.

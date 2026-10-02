@@ -454,6 +454,290 @@ static ttf_status_t expression_letter(const ttf_engine_t *e, char letter, ttf_bu
     label = ttf_resource_get(e, "phone_letter", "ko-KR", key, NULL);
     return label ? ttf_buffer_puts(out, label) : TTF_ERESOURCE;
 }
+
+/* Written fallback (project-owner decision 2026-10-02): in Korean speech a span
+   the grammars rejected is read as written instead of kept (27만 천 원 이십칠만 천
+   원, 1970년 2월 29일, 4~5억 사에서 오억, 9번째라 아홉번째라, 52,7% 오십이 점 칠
+   퍼센트). Numbers read as cardinals, native before a native counter; a code
+   (a leading zero, five or more digits, hyphen groups, three or more letters,
+   letters before digits) is read run by run like an identifier (088-696-8173,
+   9034MDSAP); letters read as a unit or by name; ~ 에서, % 퍼센트, : 대; Hangul
+   and other text are copied. */
+static int fb_digit(char c) { return c >= '0' && c <= '9'; }
+static int fb_letter(char c) { return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'); }
+static int fb_chunk_char(char c) { return fb_digit(c) || fb_letter(c) || (c && strchr(".,:/~-+%", c)); }
+/* The longest counter written right after the number decides native (9번째,
+   4시간) or Sino (2월, 38분). */
+static int fb_native_after(const ttf_engine_t *e, const char *p, size_t n) {
+    char key[16];
+    size_t len = 0;
+    int native = 0;
+    while (len + 3 <= n && len + 3 < sizeof(key) && (unsigned char)p[len] >= 0xEA &&
+           (unsigned char)p[len] <= 0xED) {
+        const char *kind;
+        len += 3;
+        memcpy(key, p, len);
+        key[len] = '\0';
+        if ((kind = ttf_resource_get(e, "counter", "ko-KR", key, NULL)) ||
+            (kind = ttf_resource_get(e, "native_ordinal_suffix", "ko-KR", key, NULL)))
+            native = !strcmp(kind, "native");
+    }
+    return native;
+}
+static ttf_status_t fb_letters(const ttf_engine_t *e, const char *v, size_t n, ttf_buffer_t *out) {
+    char key[40];
+    const char *got;
+    size_t k;
+    if (n + 7 < sizeof(key)) {
+        memcpy(key, v, n);
+        key[n] = '\0';
+        /* 500ml 오백 밀리리터, 1,5L 일 점 오 리터, 2m 이 미터; other single capitals
+           are names (470G 사백칠십 지). */
+        got = n >= 2 || !strcmp(key, "L") || (v[0] >= 'a' && v[0] <= 'z')
+                  ? ttf_resource_get(e, "numeric_suffix", "*", key, NULL) : NULL;
+        if (got && !strncmp(got, "MEASURE:", 8) &&
+            (got = ttf_resource_get(e, "unit", "ko-KR", got + 8, NULL)))
+            return ttf_buffer_puts(out, got);
+        if (n >= 3) {
+            (void)snprintf(key, sizeof(key), "en-US:");
+            for (k = 0; k < n; ++k)
+                key[6 + k] = (char)(v[k] >= 'A' && v[k] <= 'Z' ? v[k] + 32 : v[k]);
+            key[6 + n] = '\0';
+            if ((got = ttf_resource_get(e, "lexicon", "ko-KR", key, NULL)))
+                return ttf_buffer_puts(out, got);
+        }
+    }
+    for (k = 0; k < n; ++k)
+        TRY(expression_letter(e, v[k], out));
+    return TTF_OK;
+}
+static int fb_is_code(const char *v, size_t n) {
+    size_t k, run = 0, caps = 0;
+    int letter_digit = 0, comma = 0, dot = 0, dots = 0;
+    for (k = 0; k < n; ++k) {
+        comma |= v[k] == ',';
+        dot |= v[k] == '.';
+        dots += v[k] == '.' && k + 1 < n && fb_digit(v[k + 1]);
+    }
+    for (k = 0; k < n; ++k) {
+        char c = v[k];
+        if (fb_digit(c)) {
+            if (!run && c == '0' && k + 1 < n && fb_digit(v[k + 1]) && (!k || (v[k - 1] != '.' && v[k - 1] != ',')))
+                return 1; /* 088, 0620G */
+            if (++run >= 5 && !comma)
+                return 1;
+            if (k && fb_letter(v[k - 1]))
+                letter_digit = 1;
+            caps = 0;
+        } else {
+            run = 0;
+            if (fb_letter(c)) {
+                if (c >= 'A' && c <= 'Z' && ++caps >= 3)
+                    return 1; /* 9034MDSAP */
+            } else
+                caps = 0;
+            if (c == '-' && k && k + 1 < n && (fb_digit(v[k - 1]) || fb_letter(v[k - 1])))
+                return 1; /* 83714L-63446, 8922-0918--3434 */
+        }
+    }
+    return dots >= 2 || (letter_digit && !comma && !dot) || (n && v[n - 1] == '-');
+}
+static ttf_status_t fb_code(const ttf_engine_t *e, const char *v, size_t n, ttf_buffer_t *out) {
+    size_t k = 0;
+    const char *separator = NULL;
+    while (k < n) {
+        char piece[TTF_IR_VALUE_SIZE], grouped[TTF_IR_VALUE_SIZE * 2];
+        size_t m = 0;
+        while (k < n && !strchr(".,:/~", v[k])) {
+            char c = v[k++];
+            if (c == '-' && (!m || piece[m - 1] == '-' || k == n || strchr(".,:/~", v[k])))
+                continue; /* 015- and -- read one 다시 or none */
+            if (m + 1 < sizeof(piece))
+                piece[m++] = (char)(c >= 'a' && c <= 'z' ? c - 32 : c);
+        }
+        piece[m] = '\0';
+        if (m) {
+            if (separator)
+                TRY(ttf_buffer_puts(out, separator));
+            TRY(ttf_ko_render_identifier(e, group_digit_runs(piece, grouped, sizeof(grouped)) ? grouped : piece, out));
+        }
+        if (k < n) {
+            separator = v[k] == '.' ? resource(e, "number", "decimal", " 점 ") : v[k] == ':' ? " 대 " : v[k] == '~' ? "에서 " : " ";
+            ++k;
+        }
+    }
+    return TTF_OK;
+}
+static ttf_status_t fb_plain(const ttf_engine_t *e, const char *v, size_t n, const char *after, size_t after_n,
+                             ttf_buffer_t *out) {
+    size_t k = 0;
+    int number_before = 0;
+    while (k < n) {
+        char c = v[k];
+        if (fb_digit(c) || (!k && (c == '-' || c == '+' || c == '.') && k + 1 < n && fb_digit(v[k + 1]))) {
+            char number[64];
+            size_t m = 0;
+            int decimal = 0;
+            if (c == '-' || c == '+')
+                number[m++] = v[k++];
+            while (k < n && m + 2 < sizeof(number)) {
+                if (fb_digit(v[k]))
+                    number[m++] = v[k++];
+                else if (v[k] == ',' && !decimal && k + 3 < n && fb_digit(v[k + 1]) &&
+                         fb_digit(v[k + 2]) && fb_digit(v[k + 3]) && (k + 4 >= n || !fb_digit(v[k + 4])))
+                    number[m++] = v[k++]; /* 25,000 */
+                else if (v[k] == ',' && !decimal && k + 1 < n && fb_digit(v[k + 1])) {
+                    size_t q = k + 1;
+                    while (q < n && fb_digit(v[q]))
+                        ++q;
+                    if (q - k - 1 > 2 || q >= n || !(v[q] == '%' || fb_letter(v[q])))
+                        break; /* 7,8월 is a list */
+                    number[m++] = '.'; /* 52,7% 오십이 점 칠 */
+                    ++k;
+                    decimal = 1;
+                } else if (v[k] == '.' && !decimal && k + 1 < n && fb_digit(v[k + 1])) {
+                    number[m++] = v[k++];
+                    decimal = 1;
+                } else
+                    break;
+            }
+            number[m] = '\0';
+            if (k == n && !decimal && m <= 2 && fb_digit(number[0]) && strcmp(number, "0") &&
+                fb_native_after(e, after, after_n))
+                TRY(native_number(e, number, out));
+            else
+                TRY(cardinal(e, number, out));
+            number_before = 1;
+            continue;
+        }
+        if (fb_letter(c)) {
+            size_t s = k;
+            while (k < n && fb_letter(v[k]))
+                ++k;
+            if (number_before)
+                TRY(ttf_buffer_puts(out, " "));
+            TRY(fb_letters(e, v + s, k - s, out));
+            number_before = 0;
+            continue;
+        }
+        number_before = 0;
+        ++k;
+        if (c == '%') {
+            int point = k < n && (v[k] == 'P' || v[k] == 'p');
+            TRY(ttf_buffer_puts(out, " "));
+            TRY(ttf_buffer_puts(out, point ? resource(e, "unit", "percentage_point", "퍼센트포인트")
+                                           : resource(e, "unit", "percent", "퍼센트")));
+            k += point;
+        } else if (c == '~')
+            TRY(ttf_buffer_puts(out, resource(e, "policy", "range_separator", "에서 ")));
+        else if (c == ':')
+            TRY(ttf_buffer_puts(out, " 대 "));
+        else if (c == ',')
+            TRY(ttf_buffer_puts(out, ", "));
+        else if (c == '/')
+            TRY(ttf_buffer_puts(out, " 슬래시 "));
+        else if (c == '-')
+            TRY(ttf_buffer_puts(out, resource(e, "identifier_render", "separator", " 다시 ")));
+        else if (c == '+')
+            TRY(ttf_buffer_puts(out, " 플러스 "));
+        else
+            TRY(ttf_buffer_append(out, &c, 1));
+    }
+    return TTF_OK;
+}
+/* ０９：０５ 아홉 시 오 분: a chunk shaped like a valid clock time reads as one. */
+static int fb_time(const ttf_engine_t *e, const char *v, size_t n, ttf_buffer_t *out, ttf_status_t *st) {
+    unsigned part[3] = {0, 0, 0}, count = 0, width = 0;
+    size_t k;
+    char number[8];
+    for (k = 0; k < n; ++k) {
+        if (fb_digit(v[k])) {
+            if (++width > 2)
+                return 0;
+            part[count] = part[count] * 10 + (unsigned)(v[k] - '0');
+        } else if (v[k] == ':' && width && (count || width <= 2) && count < 2) {
+            if (count && width != 2)
+                return 0;
+            ++count;
+            width = 0;
+        } else
+            return 0;
+    }
+    if (!count || width != 2 || part[0] > 23 || part[1] > 59 || part[2] > 59)
+        return 0;
+    (void)snprintf(number, sizeof(number), "%u", part[0]);
+    *st = part[0] >= 1 && part[0] <= 12 ? native_number(e, number, out) : cardinal(e, number, out);
+    if (*st == TTF_OK)
+        *st = ttf_buffer_puts(out, " 시");
+    for (k = 1; *st == TTF_OK && k <= count; ++k)
+        if (part[k]) {
+            (void)snprintf(number, sizeof(number), " ");
+            *st = ttf_buffer_puts(out, number);
+            (void)snprintf(number, sizeof(number), "%u", part[k]);
+            if (*st == TTF_OK)
+                *st = cardinal(e, number, out);
+            if (*st == TTF_OK)
+                *st = ttf_buffer_puts(out, k == 1 ? " 분" : " 초");
+        }
+    return 1;
+}
+static ttf_status_t written_read(const ttf_engine_t *e, const char *text, size_t length, ttf_buffer_t *out) {
+    char *v = (char *)malloc(length + 1);
+    size_t n = 0, k = 0;
+    ttf_status_t st = TTF_OK;
+    if (!v)
+        return TTF_ENOMEM;
+    while (k < length) {
+        const unsigned char *u = (const unsigned char *)text + k;
+        if (k + 3 <= length && u[0] == 0xEF && ((u[1] == 0xBC && u[2] >= 0x81) || (u[1] == 0xBD && u[2] <= 0x9E))) {
+            /* Fullwidth forms U+FF01..U+FF5E (１２，５００％) read like ASCII. */
+            v[n++] = (char)(u[1] == 0xBC ? u[2] - 0x60 : u[2] - 0x20);
+            k += 3;
+        } else if (k + 3 <= length && !memcmp(text + k, "\xe2\x88\xbc", 3)) {
+            v[n++] = '~'; /* ∼ */
+            k += 3;
+        } else if (k + 3 <= length && (!memcmp(text + k, "\xe2\x80\x89", 3) || !memcmp(text + k, "\xe2\x80\xaf", 3))) {
+            v[n++] = ' '; /* thin and narrow no-break spaces */
+            k += 3;
+        } else if (k + 2 <= length && !memcmp(text + k, "\xc2\xa0", 2)) {
+            v[n++] = ' '; /* no-break space */
+            k += 2;
+        } else
+            v[n++] = text[k++];
+    }
+    k = 0;
+    while (st == TTF_OK && k < n) {
+        size_t s = k, w;
+        int alnum = 0;
+        const char *currency = NULL;
+        /* $12,500 만 이천오백 달러: a currency prefix is read after its amount. */
+        for (w = 1; w <= 3 && !currency && k + w < n; w += 2) {
+            char key[8];
+            const char *code;
+            memcpy(key, v + k, w);
+            key[w] = '\0';
+            if (fb_digit(v[k + w]) && (code = ttf_resource_get(e, "currency_prefix", "*", key, NULL)) &&
+                (currency = ttf_resource_get(e, "currency", "ko-KR", code, NULL)))
+                s = k = k + w;
+        }
+        while (k < n && fb_chunk_char(v[k])) {
+            alnum |= fb_digit(v[k]) || fb_letter(v[k]);
+            ++k;
+        }
+        if (k > s && alnum && fb_time(e, v + s, k - s, out, &st)) {
+        } else if (k > s && alnum) {
+            st = fb_is_code(v + s, k - s) ? fb_code(e, v + s, k - s, out)
+                                         : fb_plain(e, v + s, k - s, v + k, n - k, out);
+            if (st == TTF_OK && currency && (st = ttf_buffer_puts(out, " ")) == TTF_OK)
+                st = ttf_buffer_puts(out, currency);
+        } else if (k > s)
+            st = ttf_buffer_append(out, v + s, k - s);
+        else
+            st = ttf_buffer_append(out, v + k++, 1);
+    }
+    free(v);
+    return st;
+}
 /* A canonical expression ("3 - 1 = 2") read with editable operator names and a
    relation template: {L} and {R} are the two sides, and {A/B} picks A after a
    final consonant (Korean particle), otherwise B. */
@@ -872,6 +1156,8 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         }
         return TTF_OK;
     case TTF_SEM_DIGIT_SEQUENCE:
+        if (!strcmp(s->unit, "written_fallback"))
+            return written_read(e, surface, length, out);
         if (!strcmp(s->unit, "financial_identifier") &&
             (!strcmp(s->rule, "ko:route-label") || !strcmp(s->rule, "ko:short-label"))) {
             /* 38A번 삼십팔에이번, 500-1A번 오백 다시 일에이번; 20F 이십 에프 (one
