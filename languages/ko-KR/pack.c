@@ -772,6 +772,27 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         return ttf_ko_speech_spelling(e, surface, length, 1, out);
     case TTF_SEM_NUMBER:
     case TTF_SEM_CARDINAL:
+        if (!strcmp(s->rule, "ko:number-list")) {
+            /* 1,2 일, 이 */
+            const char *p = s->value;
+            char part[8];
+            while (*p) {
+                size_t k = 0;
+                while (p[k] >= '0' && p[k] <= '9' && k + 1 < sizeof(part)) {
+                    part[k] = p[k];
+                    ++k;
+                }
+                part[k] = '\0';
+                TRY(cardinal(e, part, out));
+                p += k;
+                if (*p == ',') {
+                    TRY(ttf_buffer_puts(out, ", "));
+                    ++p;
+                } else if (*p)
+                    return TTF_EINVAL;
+            }
+            return TTF_OK;
+        }
         if (!strcmp(s->rule, "ko:model-number")) {
             const char *word = english_numeral(e, s->value);
             if (word)
@@ -805,6 +826,26 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         }
         return TTF_OK;
     case TTF_SEM_DIGIT_SEQUENCE:
+        if (!strcmp(s->unit, "financial_identifier") && !strcmp(s->rule, "ko:route-label")) {
+            char number[8];
+            size_t k = 0;
+            while (s->value[k] >= '0' && s->value[k] <= '9' && k + 1 < sizeof(number)) {
+                number[k] = s->value[k];
+                ++k;
+            }
+            number[k] = '\0';
+            TRY(cardinal(e, number, out));
+            for (; s->value[k]; ++k) {
+                char key[] = "letter.X";
+                const char *name;
+                key[7] = (char)(s->value[k] >= 'a' && s->value[k] <= 'z' ? s->value[k] - 32 : s->value[k]);
+                name = ttf_resource_get(e, "phone_letter", "ko-KR", key, NULL);
+                if (!name)
+                    return TTF_ERESOURCE;
+                TRY(ttf_buffer_puts(out, name));
+            }
+            return TTF_OK;
+        }
         if (!strcmp(s->unit, "financial_identifier") &&
             (!strcmp(s->rule, "ko:long-digit-identifier") || !strcmp(s->rule, "ko:alnum-identifier"))) {
             char grouped[TTF_IR_VALUE_SIZE * 2];

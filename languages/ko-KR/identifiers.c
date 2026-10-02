@@ -18,6 +18,9 @@ static int decimal_digit(char c) {
 static int number_word(const char *key, size_t n) {
     static const char suffix[] = "\xeb\xb2\x88\xed\x98\xb8"; /* 번호 */
     /* Bare 번호 names nothing in particular; 예매번호, 항공 번호 do. */
+    /* 제품코드, 상품코드: a word ending in 코드 names a code too (2026-10-02). */
+    if (n > 6 && !memcmp(key + n - 6, "\xec\xbd\x94\xeb\x93\x9c", 6))
+        return 1;
     if (n <= 6 || memcmp(key + n - 6, suffix, 6))
         return 0;
     return !strstr(key, "\xec\xa0\x84\xed\x99\x94") /* 전화 */ &&
@@ -349,7 +352,15 @@ static int unit_letters(const ttf_pack_input_t *in, size_t begin, size_t end) {
            ttf_resource_get(in->engine, "letter_unit", "ko-KR", key, NULL);
 }
 
+/* 38A번, 31B번 버스: a short digit-first label before the counter 번 is a route
+ * number, read as a cardinal with letter names (삼십팔에이번; 2026-10-02). */
+static int route_label(const ttf_pack_input_t *in, size_t end) {
+    return end + 3 <= in->length && !memcmp(in->text + end, "\xeb\xb2\x88", 3);
+}
+
 size_t ttf_ko_classify_alnum_identifier(const ttf_pack_input_t *in, ttf_semantic_t *semantic) {
+    char label_word[TTF_IR_VALUE_SIZE];
+    ttf_resource_layer_t label_layer = TTF_LAYER_COMMON;
     size_t begin = in->tokens[in->index].begin, end = begin, i, run = 0;
     size_t letters = 0, digits = 0, hyphens = 0, transitions = 0;
     int kind = 0, upper = 0, lower = 0; /* kind: 1 letter, 2 digit */
@@ -407,6 +418,9 @@ size_t ttf_ko_classify_alnum_identifier(const ttf_pack_input_t *in, ttf_semantic
           (ascii_letter(in->text[begin]) && transitions == 1 && !hyphens && digits >= 3) ||
           (decimal_digit(in->text[begin]) && transitions == 1 && !hyphens && digits >= 5 &&
            !unit_letters(in, begin + digits, end)) ||
+          (decimal_digit(in->text[begin]) && transitions == 1 && !hyphens &&
+           !unit_letters(in, begin + digits, end) &&
+           (route_label(in, end) || preceding_label(in, begin, label_word, sizeof(label_word), &label_layer))) ||
           (hyphens && digits >= 3)))
         return 0;
     /* A letter run that is a Korean loanword is a word with a number
@@ -438,7 +452,9 @@ size_t ttf_ko_classify_alnum_identifier(const ttf_pack_input_t *in, ttf_semantic
     memcpy(semantic->value, in->text + begin, end - begin);
     semantic->value[end - begin] = '\0';
     (void)snprintf(semantic->unit, sizeof(semantic->unit), "financial_identifier");
-    (void)snprintf(semantic->rule, sizeof(semantic->rule), "ko:alnum-identifier");
+    (void)snprintf(semantic->rule, sizeof(semantic->rule), "%s",
+                   decimal_digit(in->text[begin]) && digits < 5 && transitions == 1 && route_label(in, end)
+                       ? "ko:route-label" : "ko:alnum-identifier");
     semantic->type = TTF_SEM_DIGIT_SEQUENCE;
     semantic->input_end = end;
     semantic->layer = TTF_LAYER_COMMON;
@@ -1018,6 +1034,48 @@ size_t ttf_ko_classify_digit_identifier(const ttf_pack_input_t *in, ttf_semantic
               t[b - 1] == '+' || t[b - 1] == '.' || t[b - 1] == ','))
         return 0;
     a_end = digit_run(t, n, b);
+    /* 3:2로 승리, 40:34, 1:1 질문: a colon pair that is not a valid time (the
+       shared grammar rejects it as syntax.invalid-time) is a score or ratio read
+       with 대 (project-owner decision 2026-10-02). A two-digit group with a
+       leading zero (24:00) still looks like a time and stays preserved. */
+    if (a_end + 1 < n && t[a_end] == ':' && decimal_digit(t[a_end + 1])) {
+        size_t c = a_end + 1, c_end = digit_run(t, n, c), la = a_end - b, lb = c_end - c;
+        ttf_semantic_t shared = {0};
+        size_t consumed;
+        if (la > 3 || lb > 3 || (la > 1 && t[b] == '0') || (lb > 1 && t[c] == '0') ||
+            (c_end < n && (t[c_end] == ':' || t[c_end] == '.' || t[c_end] == '-' || alnum(t[c_end]))))
+            return 0;
+        shared.struct_size = sizeof(shared);
+        consumed = ttf_classify_universal(in, &shared);
+        if (!consumed || shared.type != TTF_SEM_TEXT || strcmp(shared.rule, "syntax.invalid-time") ||
+            shared.input_end != c_end)
+            return 0;
+        memcpy(s->value, t + b, la);
+        s->value[la] = '\0';
+        memcpy(s->secondary, t + c, lb);
+        s->secondary[lb] = '\0';
+        s->unit[0] = '\0';
+        return classified(in, s, c_end, TTF_SEM_RANGE, "ko:score");
+    }
+    /* 1,2라인: small numbers joined by commas without thousands grouping are a
+       list read one by one (일, 이라인). A counter or unit after it keeps the
+       shared grammar. */
+    if (a_end + 1 < n && t[a_end] == ',' && decimal_digit(t[a_end + 1]) && a_end - b <= 2) {
+        size_t p = a_end, used = a_end - b;
+        while (p + 1 < n && t[p] == ',' && decimal_digit(t[p + 1])) {
+            size_t q = digit_run(t, n, p + 1);
+            if (q - (p + 1) > 2)
+                return 0;
+            p = q;
+        }
+        if (p - b >= sizeof(s->value) || (p < n && (alnum(t[p]) || t[p] == '.')) || quantity_word(in, p, 0))
+            return 0;
+        (void)used;
+        memcpy(s->value, t + b, p - b);
+        s->value[p - b] = '\0';
+        s->secondary[0] = s->unit[0] = '\0';
+        return classified(in, s, p, TTF_SEM_CARDINAL, "ko:number-list");
+    }
     if (a_end + 1 < n && (t[a_end] == '.' || t[a_end] == ',' || t[a_end] == ':' || t[a_end] == '/') &&
         decimal_digit(t[a_end + 1]))
         return 0;

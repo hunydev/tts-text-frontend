@@ -2,6 +2,13 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Read a colon pair that is not a valid time as a score or ratio with 대 (3:2로
+  승리 삼 대 이로, 1:1 질문 일 대 일; project-owner decision, 24:00 stays); short
+  digit-first labels before 번 as routes (38A번 삼십팔에이번) or after a 번호/코드
+  label as codes (제품번호 6456A 육사오육 에이); small comma lists one by one (1,2라인
+  일, 이라인); phone numbers before words such as 개인 (the counter 개 must end
+  the word); apparel multipliers 7-9 (8XL) and 3DS, 8D. Contract
+  ko_jev_leaks2_v24 (17 cases); Korean benchmark +156, -0.
 - Read numbers that /jev-eval left unread: a compound amount with two or more
   numbers before an attached ending (5억 1,317만 원어치의, 3백2십만 원하는);
   만 after a quantity with its own unit (1시간 만에, 5~6년 만에); an ordinal

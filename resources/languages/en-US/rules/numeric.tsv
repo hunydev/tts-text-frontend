@@ -224,6 +224,10 @@ semantic_term	*	2ne1	ALNUM_TERM:en-US
 semantic_term	*	2tv	ALNUM_TERM:en-US
 semantic_term	*	4D	ALNUM_TERM:en-US
 semantic_term	*	4d	ALNUM_TERM:en-US
+semantic_term	*	3DS	ALNUM_TERM:en-US
+semantic_term	*	3ds	ALNUM_TERM:en-US
+semantic_term	*	8D	ALNUM_TERM:en-US
+semantic_term	*	8d	ALNUM_TERM:en-US
 semantic_term	*	4K	ALNUM_TERM:en-US
 semantic_term	*	4k	ALNUM_TERM:en-US
 semantic_term	*	8K	ALNUM_TERM:en-US

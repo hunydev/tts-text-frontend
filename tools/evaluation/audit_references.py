@@ -14,6 +14,7 @@ import re
 import sys
 
 ACTIVE_JSONL = (
+    "ko_jev_leaks2_v24",
     "ko_jev_leaks_v24",
     "ko_digit_codes_v24",
     "ko_list_break_v24",

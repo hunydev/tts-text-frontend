@@ -255,6 +255,11 @@ static int quantity_tail(const ttf_pack_input_t *in, size_t at, ttf_resource_lay
             (letter(in->text[p]) || digit(in->text[p])))
             continue;
         suffix = ttf_resource_get(in->engine, "numeric_suffix", "*", key, NULL);
+        /* 010-1234-5678 개인 폰: a Hangul suffix only counts when its word ends
+           there; 개 is not a counter in 개인 or 개월 (2026-10-02). */
+        if (suffix && p + 3 <= in->length && (unsigned char)in->text[p - 1] >= 0x80 &&
+            (unsigned char)in->text[p] >= 0xea && (unsigned char)in->text[p] <= 0xed)
+            suffix = NULL;
         if (suffix) {
             /* A pack may use a numeric suffix as a number designator after a
                telephone. Keep it outside the PHONE span; do not confuse it

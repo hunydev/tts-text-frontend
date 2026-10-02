@@ -588,3 +588,6 @@ range_unit_rank	ko-KR	일	4
 range_unit_rank	ko-KR	주	5
 range_unit_rank	ko-KR	개월	6
 range_unit_rank	ko-KR	년	7
+# Colon scores and number lists (2026-10-02) win over the shared rejection.
+classifier_priority	ko-KR	ko:number-list	100
+classifier_priority	ko-KR	ko:route-label	100
