@@ -181,7 +181,9 @@ numeric_suffix	*	그릇	COUNTER:그릇
 counter	ko-KR	접시	native
 numeric_suffix	*	접시	COUNTER:접시
 counter	ko-KR	군데	native
+counter	ko-KR	정거장	native
 numeric_suffix	*	군데	COUNTER:군데
+numeric_suffix	*	정거장	COUNTER:정거장
 counter	ko-KR	가지	native
 numeric_suffix	*	가지	COUNTER:가지
 counter	ko-KR	줄	native
@@ -309,6 +311,16 @@ quantity_tail	ko-KR	이었는데	1
 quantity_tail	ko-KR	였던	1
 quantity_tail	ko-KR	이었던	1
 quantity_tail	ko-KR	라서	1
+# After a quantity (2026-10-02): 시간만, 달러고, 월경, 원짜리, 원선, 원씩을.
+quantity_tail	ko-KR	만	1
+quantity_tail	ko-KR	고	1
+quantity_tail	ko-KR	경	1
+quantity_tail	ko-KR	짜리	1
+quantity_tail	ko-KR	선	1
+quantity_tail	ko-KR	씩을	1
+quantity_tail	ko-KR	씩은	1
+quantity_tail	ko-KR	씩이	1
+quantity_tail	ko-KR	씩의	1
 quantity_tail	ko-KR	이며	1
 quantity_tail	ko-KR	이고	1
 quantity_tail	ko-KR	이면	1
@@ -488,6 +500,9 @@ lexicon_case	ko-KR	en-US:4g	upper
 lexicon_case	ko-KR	en-US:5g	upper
 # The company 3M is a capital (쓰리엠); lowercase 3m is meters (2026-10-01).
 lexicon_case	ko-KR	en-US:3m	upper
+# Group names 2PM and 2AM are capitals; 2pm is a time.
+lexicon_case	ko-KR	en-US:2pm	upper
+lexicon_case	ko-KR	en-US:2am	upper
 # Digit identifiers (2026-10-01, project-owner decision). Two digit groups joined
 # by a hyphen are an identifier read digit by digit with 다시 (27022-8080 이칠공이이
 # 다시 팔공팔공); 에서 is the fallback for ascending groups with a unit or counter
@@ -602,3 +617,31 @@ classifier_priority	ko-KR	ko:number-list	100
 classifier_priority	ko-KR	ko:route-label	10
 # Ranges ending in a short label (0~3M; 2026-10-02).
 classifier_priority	ko-KR	ko:label-range	10
+# Units from the Korean benchmark references (2026-10-02).
+unit	ko-KR	mJ	밀리줄
+unit	ko-KR	Ah	암페어시
+unit	ko-KR	mmHg	수은주밀리미터
+unit	ko-KR	km/L	킬로미터 퍼 리터
+# Measures of one family read each side of an ascending range on their own
+# (500mL~3L 오백 밀리리터에서 삼 리터).
+range_unit_family	ko-KR	mL	volume
+range_unit_family	ko-KR	L	volume
+range_unit_family	ko-KR	mm	length
+range_unit_family	ko-KR	cm	length
+range_unit_family	ko-KR	m	length
+range_unit_family	ko-KR	km	length
+range_unit_family	ko-KR	mg	weight
+range_unit_family	ko-KR	g	weight
+range_unit_family	ko-KR	kg	weight
+range_unit_rank	ko-KR	mL	20
+range_unit_rank	ko-KR	L	21
+range_unit_rank	ko-KR	mm	30
+range_unit_rank	ko-KR	cm	31
+range_unit_rank	ko-KR	m	32
+range_unit_rank	ko-KR	km	33
+range_unit_rank	ko-KR	mg	40
+range_unit_rank	ko-KR	g	41
+range_unit_rank	ko-KR	kg	42
+classifier_priority	ko-KR	ko:dimensions	10
+classifier_priority	ko-KR	ko:fraction-measure	10
+classifier_priority	ko-KR	ko:numeral-word	10

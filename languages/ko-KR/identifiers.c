@@ -390,12 +390,20 @@ static int short_label(const ttf_pack_input_t *in, size_t begin, size_t digits, 
         return 0;
     /* A Korean sentence, or no other Latin word around it (I wear 3XL shirts. stays English). */
     if (!korean_neighbour(in, end)) {
+        /* 44, 45A, 45B의: any Hangul in the sentence makes it Korean; with none
+           (I wear 3XL shirts.) only a lone label in a Korean-default engine reads. */
+        int hangul = 0;
         for (i = 0; i < in->token_count; ++i)
-            if (i != in->index && in->tokens[i].script == TTF_SCRIPT_LATIN &&
-                !(in->tokens[i].begin >= begin && in->tokens[i].end <= end))
+            if (in->tokens[i].script == TTF_SCRIPT_HANGUL)
+                hangul = 1;
+        if (!hangul) {
+            for (i = 0; i < in->token_count; ++i)
+                if (i != in->index && in->tokens[i].script == TTF_SCRIPT_LATIN &&
+                    !(in->tokens[i].begin >= begin && in->tokens[i].end <= end))
+                    return 0;
+            if (in->engine->config.default_language && strcmp(in->engine->config.default_language, "ko-KR"))
                 return 0;
-        if (in->engine->config.default_language && strcmp(in->engine->config.default_language, "ko-KR"))
-            return 0;
+        }
     }
     return 1;
 }
@@ -1033,9 +1041,23 @@ size_t ttf_ko_classify_model_number(const ttf_pack_input_t *in, ttf_semantic_t *
         return 0;
     while (e < n && decimal_digit(t[e]))
         ++e;
-    if (e - b > 2 || (e < n && (alnum(t[e]) || t[e] == '.' || t[e] == ',' || t[e] == '-' ||
+    {
+        size_t l = e;
+        while (l < n && t[l] >= 'A' && t[l] <= 'Z' && l - e < 2)
+            ++l;
+        if (l > e && !(l < n && alnum(t[l])))
+            e = l; /* 6S, 13X */
+    }
+    if (e - b > 4 || (e < n && (alnum(t[e]) || t[e] == '.' || t[e] == ',' || t[e] == '-' ||
                                 t[e] == ':' || t[e] == '/')))
         return 0;
+    {
+        size_t d = b;
+        while (d < e && decimal_digit(t[d]))
+            ++d;
+        if (d - b > 2)
+            return 0;
+    }
     word = in->index - 1;
     if (in->tokens[word].script == TTF_SCRIPT_WHITESPACE) {
         if (word == 0 || in->tokens[word].end - in->tokens[word].begin != 1 || t[in->tokens[word].begin] != ' ')
@@ -1083,6 +1105,58 @@ size_t ttf_ko_classify_digit_identifier(const ttf_pack_input_t *in, ttf_semantic
               t[b - 1] == '+' || t[b - 1] == '.' || t[b - 1] == ','))
         return 0;
     a_end = digit_run(t, n, b);
+    /* 48X160cm, 21x14.8cm: dimensions with a unit read with 곱하기; 1/8g: a
+       fraction with a unit (팔 분의 일 그램); 3.3T: a decimal with one letter
+       (삼 점 삼 티); 3Bay, 2Room: a digit before an English word reads an
+       English numeral (쓰리베이). 2026-10-02. */
+    {
+        size_t p = a_end, c, c_end, u;
+        const char *unit;
+        char key[16];
+        if (p < n && (t[p] == 'x' || t[p] == 'X' || t[p] == '/') && p + 1 < n && decimal_digit(t[p + 1])) {
+            c = p + 1;
+            c_end = digit_run(t, n, c);
+            if (t[p] != '/' && c_end + 1 < n && t[c_end] == '.' && decimal_digit(t[c_end + 1]))
+                c_end = digit_run(t, n, c_end + 1);
+            for (u = c_end; u < n && latin_letter(t[u]) && u - c_end < 8; ++u) {
+            }
+            if (u > c_end && u - c_end < sizeof(key) && !(u < n && alnum(t[u]))) {
+                memcpy(key, t + c_end, u - c_end);
+                key[u - c_end] = '\0';
+                unit = ttf_resource_get(in->engine, "numeric_suffix", "*", key, NULL);
+                if (unit && !strncmp(unit, "MEASURE:", 8) && u - b < sizeof(s->value)) {
+                    memcpy(s->value, t + b, c_end - b);
+                    s->value[c_end - b] = '\0';
+                    (void)snprintf(s->unit, sizeof(s->unit), "%s", unit + 8);
+                    s->secondary[0] = '\0';
+                    return classified(in, s, u, TTF_SEM_MEASURE, t[p] == '/' ? "ko:fraction-measure" : "ko:dimensions");
+                }
+            }
+        }
+        if (p + 1 < n && t[p] == '.' && decimal_digit(t[p + 1])) {
+            c_end = digit_run(t, n, p + 1);
+            if (c_end < n && t[c_end] >= 'A' && t[c_end] <= 'Z' && !(c_end + 1 < n && alnum(t[c_end + 1])) &&
+                !unit_letters(in, c_end, c_end + 1) && c_end + 1 - b < sizeof(s->value)) {
+                memcpy(s->value, t + b, c_end + 1 - b);
+                s->value[c_end + 1 - b] = '\0';
+                (void)snprintf(s->unit, sizeof(s->unit), "financial_identifier");
+                return classified(in, s, c_end + 1, TTF_SEM_DIGIT_SEQUENCE, "ko:short-label");
+            }
+        }
+        if (a_end - b == 1 && p + 3 < n && t[p] >= 'A' && t[p] <= 'Z' && t[p + 1] >= 'a' && t[p + 1] <= 'z') {
+            u = p + 1;
+            while (u < n && t[u] >= 'a' && t[u] <= 'z')
+                ++u;
+            if (u - p >= 3 && !(u < n && alnum(t[u])) && u - b < sizeof(s->value)) {
+                memcpy(s->value, t + b, u - b);
+                s->value[u - b] = '\0';
+                s->unit[0] = s->secondary[0] = '\0';
+                (void)snprintf(s->source_lang, sizeof(s->source_lang), "en-US");
+                s->lexical_class = TTF_LEX_ALNUM_TERM;
+                return classified(in, s, u, TTF_SEM_ALNUM_TERM, "ko:numeral-word");
+            }
+        }
+    }
     /* 3x3 농구 삼 대 삼: two small numbers joined by x (2026-10-02). */
     if (a_end + 1 < n && t[a_end] == 'x' && decimal_digit(t[a_end + 1]) && a_end - b <= 2) {
         size_t c = a_end + 1, c_end = digit_run(t, n, c);
@@ -1143,8 +1217,12 @@ size_t ttf_ko_classify_digit_identifier(const ttf_pack_input_t *in, ttf_semantic
                 return 0;
             p = q;
         }
-        if (p - b >= sizeof(s->value) || (p < n && (alnum(t[p]) || t[p] == '.')) || quantity_word(in, p, 0))
-            return 0;
+        {
+            int kind = quantity_word(in, p, 0);
+            /* 1,2호, 3,4번 출구: a numbering counter keeps the list (일, 이호). */
+            if (p - b >= sizeof(s->value) || (p < n && (alnum(t[p]) || t[p] == '.')) || (kind && kind != 'L'))
+                return 0;
+        }
         (void)used;
         memcpy(s->value, t + b, p - b);
         s->value[p - b] = '\0';

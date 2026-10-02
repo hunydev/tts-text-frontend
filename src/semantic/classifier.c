@@ -658,6 +658,33 @@ static int currency_name_suffix(const ttf_pack_input_t *in, size_t start, ttf_se
 }
 /* Trailing quantity units retain their semantic identity in the IR. In
    particular percentage points and basis points are not converted to percent. */
+/* 3 평화, 503-00-10156 평화정공은: a Hangul unit written after a space is a unit
+   only when its word ends there or the rest is a declared particle or tail
+   (3 평을); otherwise it begins another word (2026-10-02). */
+static int spaced_suffix_word(const ttf_pack_input_t *in, size_t p, size_t end) {
+    size_t rest = end, pack;
+    char key[64];
+    if (!p || (in->text[p - 1] != ' ' && in->text[p - 1] != '\t') || (unsigned char)in->text[p] < 0x80)
+        return 1;
+    while (rest < in->length && (unsigned char)in->text[rest] >= 0xea && (unsigned char)in->text[rest] <= 0xed &&
+           rest + 3 <= in->length)
+        rest += 3;
+    if (rest == end)
+        return 1;
+    if (rest - end >= sizeof(key))
+        return 0;
+    memcpy(key, in->text + end, rest - end);
+    key[rest - end] = '\0';
+    for (pack = 0; pack < in->engine->pack_count; ++pack) {
+        const char *tag = in->engine->packs[pack]->language_tag;
+        /* A one-syllable unit only takes a particle (547324544478 말고 is not
+           말 + 고); longer units also take quantity tails (30억 달러고). */
+        if (ttf_resource_get(in->engine, "particle", tag, key, NULL) ||
+            (end - p > 3 && ttf_resource_get(in->engine, "quantity_tail", tag, key, NULL)))
+            return 1;
+    }
+    return 0;
+}
 static int quantity_suffix(const ttf_pack_input_t *in, size_t p, ttf_semantic_t *out, size_t *end,
                            ttf_semantic_type_t *type, int allow_range) {
     const char *value;
@@ -668,7 +695,7 @@ static int quantity_suffix(const ttf_pack_input_t *in, size_t p, ttf_semantic_t 
         return 1;
     }
     if (resource_prefix(in, "numeric_suffix", p, &value, end, &layer) &&
-        quantity_tail(in, *end, allow_range)) {
+        quantity_tail(in, *end, allow_range) && spaced_suffix_word(in, p, *end)) {
         const char *colon = strchr(value, ':');
         if (!strncmp(value, "COUNTER:", 8))
             *type = TTF_SEM_COUNTER;
@@ -1146,6 +1173,26 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
 
     /* A numeric-looking keycap is one pictographic object, not a cardinal.
        Preserve its complete source bytes for the configurable character pass. */
+    if (digit(s[b])) {
+        /* 03wlswk@test.com: a local part may start with digits (2026-10-02). */
+        int at = 0, dot = 0;
+        q = b;
+        while (q < n && ((s[q] >= 'a' && s[q] <= 'z') || (s[q] >= 'A' && s[q] <= 'Z') || digit(s[q]) ||
+                         s[q] == '.' || s[q] == '-' || s[q] == '_' || s[q] == '+' || s[q] == '@')) {
+            if (s[q] == '@') {
+                if (at || q == b)
+                    break;
+                at = 1;
+            }
+            if (at && s[q] == '.')
+                dot = 1;
+            ++q;
+        }
+        while (q > b && s[q - 1] == '.')
+            --q;
+        if (at && dot && s[q - 1] != '@')
+            return finish(in, out, q, TTF_SEM_EMAIL, "syntax.email");
+    }
     if (digit(s[b]) || s[b] == '#' || s[b] == '*') {
         size_t cluster_end = b + 1;
         if (n - cluster_end >= 3 && !memcmp(s + cluster_end, "\xef\xb8\x8f", 3))

@@ -1,5 +1,9 @@
 # Productive numeric tails and explicit building-context aliases.
 quantity_tail_head	ko-KR	대	1
+quantity_tail_head	ko-KR	선	1
+quantity_tail_head	ko-KR	짜리	1
+quantity_tail_head	ko-KR	경	1
+quantity_tail_head	ko-KR	씩	1
 quantity_tail	ko-KR	면	1
 floor_alias	ko-KR	F	floor
 unit	ko-KR	floor	층

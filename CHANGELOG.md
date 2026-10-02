@@ -2,6 +2,21 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Read numbers the Korean benchmark left unread: 2PM and 2AM as group names
+  투피엠, 투에이엠 (project-owner decision; times are written 오후 2시); a single
+  digit before a capitalized English word with English numerals (3Bay 스리베이);
+  dimensions and fractions with a unit (30x40cm 삼십 곱하기 사십 센티미터, 1/2컵);
+  a decimal before one capital (3.3T); model numbers with trailing letters (6S
+  식스에스); e-mail addresses that start with digits; two-group codes that start
+  with 0 (031-120); a labelled code of five or more digits is grouped like a
+  plain code (주문번호 547324544478 오사칠삼 이사오사 사사칠팔). A Hangul unit after
+  a space counts only when it ends the word or takes a particle (3 평화 stays
+  삼 평화); a scale after a space must end its word (920만 조회); 1백만 reads
+  일백만 in speech; an endpoint with its own unit no longer shares the next
+  scale (4-6cm만). Units mJ, Ah, mmHg, km/L; counters 군데, 정거장; range families
+  for volume, length and weight. Contract ko_bench_leaks_v24 (34 cases);
+  updated expectations keep previous values in notes. Korean benchmark +118, -0
+  (leftover digits or Latin 202 to 110 sentences); English unchanged.
 - Lexicon: Genesis G70, G80, G90 read 지칠공, 지팔공, 지구공, and the card name 2v4
   reads 이브이포 (project-owner decision). Korean benchmark +8, -0.
 - Keep the Hangul written after a number, Latin text or symbol: particle

@@ -351,8 +351,10 @@ static ttf_status_t render_label(const ttf_engine_t *e, const char *v, size_t n,
         if (v[k] >= '0' && v[k] <= '9') {
             char number[16];
             size_t m = 0;
-            while (k < n && v[k] >= '0' && v[k] <= '9' && m + 1 < sizeof(number))
-                number[m++] = v[k++];
+            while (k < n && ((v[k] >= '0' && v[k] <= '9') ||
+                             (v[k] == '.' && m && k + 1 < n && v[k + 1] >= '0' && v[k + 1] <= '9')) &&
+                   m + 1 < sizeof(number))
+                number[m++] = v[k++]; /* 3.3T 삼 점 삼 티 */
             number[m] = '\0';
             TRY(cardinal(e, number, out));
             if (spaced && k < n && v[k] != '-')
@@ -828,9 +830,19 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             return TTF_OK;
         }
         if (!strcmp(s->rule, "ko:model-number")) {
-            const char *word = english_numeral(e, s->value);
-            if (word)
-                return ttf_buffer_puts(out, word);
+            char digits[4];
+            size_t k = 0;
+            const char *word;
+            while (s->value[k] >= '0' && s->value[k] <= '9' && k + 1 < sizeof(digits)) {
+                digits[k] = s->value[k];
+                ++k;
+            }
+            digits[k] = '\0';
+            word = english_numeral(e, digits);
+            if (word || !s->value[k]) {
+                TRY(word ? ttf_buffer_puts(out, word) : cardinal(e, digits, out));
+                return s->value[k] ? render_label(e, s->value + k, strlen(s->value + k), 0, out) : TTF_OK;
+            }
         }
         return cardinal(e, s->value, out);
     case TTF_SEM_ORDINAL:
@@ -865,9 +877,11 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             /* 38A번 삼십팔에이번, 500-1A번 오백 다시 일에이번; 20F 이십 에프 (one
                change of kind keeps a space), 2v4 이브이사. */
             size_t runs = 0, k;
+#define LABEL_DIGIT(c) (((c) >= '0' && (c) <= '9') || (c) == '.')
             for (k = 0; s->value[k]; ++k)
-                if (!k || (s->value[k] >= '0' && s->value[k] <= '9') != (s->value[k - 1] >= '0' && s->value[k - 1] <= '9'))
+                if (!k || LABEL_DIGIT(s->value[k]) != LABEL_DIGIT(s->value[k - 1]))
                     ++runs;
+#undef LABEL_DIGIT
             return render_label(e, s->value, strlen(s->value),
                                 !strcmp(s->rule, "ko:short-label") && runs == 2, out);
         }
@@ -885,7 +899,9 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             return render_label(e, tilde + 1, strlen(tilde + 1), 1, out);
         }
         if (!strcmp(s->unit, "financial_identifier") &&
-            (!strcmp(s->rule, "ko:long-digit-identifier") || !strcmp(s->rule, "ko:alnum-identifier"))) {
+            (!strcmp(s->rule, "ko:long-digit-identifier") || !strcmp(s->rule, "ko:alnum-identifier") ||
+             (!strcmp(s->rule, "ko:labeled-identifier") && !strchr(s->value, '-') &&
+              !(surface && length >= 3 && !memcmp(surface + length - 3, "\xeb\xb2\x88", 3))))) {
             char grouped[TTF_IR_VALUE_SIZE * 2];
             if (group_digit_runs(s->value, grouped, sizeof(grouped)))
                 return ttf_ko_render_identifier(e, grouped, out);
@@ -1001,6 +1017,32 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     case TTF_SEM_PERCENT:
         return quantity(e, s->value, resource(e, "unit", "%", "퍼센트"), 0, out);
     case TTF_SEM_MEASURE:
+        if (!strcmp(s->rule, "ko:dimensions") || !strcmp(s->rule, "ko:fraction-measure")) {
+            /* 48X160cm 사십팔 곱하기 백육십 센티미터; 1/8g 팔 분의 일 그램 */
+            const char *v = s->value;
+            char left[48], right[48];
+            size_t k = strcspn(v, "xX/");
+            if (!v[k] || k >= sizeof(left) || strlen(v + k + 1) >= sizeof(right))
+                return TTF_EINVAL;
+            memcpy(left, v, k);
+            left[k] = '\0';
+            strcpy(right, v + k + 1);
+            if (v[k] == '/') {
+                TRY(cardinal(e, right, out));
+                TRY(ttf_buffer_puts(out, " "));
+                TRY(ttf_buffer_puts(out, resource(e, "number", "fraction_of", "분의")));
+                TRY(ttf_buffer_puts(out, " "));
+                TRY(cardinal(e, left, out));
+            } else {
+                TRY(cardinal(e, left, out));
+                TRY(ttf_buffer_puts(out, " "));
+                TRY(ttf_buffer_puts(out, resource(e, "math_operator", "*", "곱하기")));
+                TRY(ttf_buffer_puts(out, " "));
+                TRY(cardinal(e, right, out));
+            }
+            TRY(ttf_buffer_puts(out, " "));
+            return ttf_buffer_puts(out, resource(e, "unit", s->unit, s->unit));
+        }
         TRY(ttf_buffer_puts(out, resource(e, "quantity_prefix", s->unit, "")));
         return quantity(e, s->value, resource(e, "unit", s->unit, s->unit), 0, out);
     case TTF_SEM_RANGE: {
@@ -1515,12 +1557,30 @@ static size_t compound_amount(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     }
     if (p >= n || text[p] < '0' || text[p] > '9')
         return 0;
+    /* 1백만, 1천만: a written 1 before 십, 백 or 천 and then directly 만, 억 or 조
+       reads 일 (일백만), which the shared number grammar keeps; the compound
+       total would drop it. 1천5백만 and 1천571 stay 천오백만, 천오백칠십일. */
+    if (text[p] == '1' && (p + 1 >= n || text[p + 1] < '0' || text[p + 1] > '9') &&
+        in->engine->frontend_options.output_mode == TTF_OUTPUT_SPEECH) {
+        unsigned minor, major;
+        size_t w = scale_at(in, p + 1, &minor);
+        if (w && minor < 4 && scale_at(in, p + 1 + w, &major) && major >= 4)
+            return 0;
+    }
     if (!decimal_parse(text, n, &p, &pending))
         valid = 0;
     end = p;
     for (;;) {
         q = skip_spaces(text, n, p);
         width = scale_at(in, q, &power);
+        /* 920만 조회: 조 that begins the word 조회 after a space is not a scale. */
+        if (width && q > p && !quantity_boundary(in, q + width) &&
+            !quantity_resource_at(in, "numeric_suffix", q + width, &end) &&
+            !(q + width < n && text[q + width] >= '0' && text[q + width] <= '9')) {
+            unsigned next_power;
+            if (!scale_at(in, q + width, &next_power))
+                width = 0;
+        }
         if (width) {
             ++scales;
             if (power < 4) {
@@ -1762,9 +1822,10 @@ static size_t compound_currency_range(const ttf_pack_input_t *in, ttf_semantic_t
             }
             /* 1시간 만에, 6년 만에: after an endpoint with its own unit and a space,
                만 is the bound noun (2026-10-02). */
-            if (scale_width && scale_start > second.input_end &&
+            if (scale_width &&
                 (second.type == TTF_SEM_COUNTER || second.type == TTF_SEM_MEASURE ||
-                 second.type == TTF_SEM_CURRENCY || second.type == TTF_SEM_TIME))
+                 second.type == TTF_SEM_CURRENCY || second.type == TTF_SEM_TIME ||
+                 second.type == TTF_SEM_PERCENT))
                 scale_width = 0;
             /* 조회, 억지: a word that only begins with a scale is not one. */
             if (scale_width && !quantity_boundary(in, scale_start + scale_width) &&

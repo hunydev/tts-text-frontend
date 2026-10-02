@@ -405,8 +405,9 @@ static int identifier_fallback(const ttf_semantic_t *sem, const char *surface, s
     /* A malformed phone number (0X/0XX, a 3-4 digit middle, a 3-5 digit last
        group: 010-1234-56789) keeps its visible error; 077-19-254985 or
        080-434-146780 is not phone-shaped and is read as an identifier. */
-    if (surface[0] == '0' && (first == 2 || first == 3) &&
-        (groups != 3 || (widths[1] >= 3 && widths[1] <= 4 && widths[2] >= 3 && widths[2] <= 5)))
+    /* 031-120, 01-126834560: two groups are not a malformed phone (2026-10-02). */
+    if (surface[0] == '0' && (first == 2 || first == 3) && groups == 3 &&
+        widths[1] >= 3 && widths[1] <= 4 && widths[2] >= 3 && widths[2] <= 5)
         return 0;
     /* A YYYY-MM-DD shape that is not a date (2026-13-45) keeps its visible
        error, like a malformed phone number; 3883-0661-9521 is an identifier. */
@@ -1245,9 +1246,15 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
                 tag(sem->render_lang, source->language_tag);
         } else if ((sem->type == TTF_SEM_EMAIL || sem->type == TTF_SEM_URL ||
                     !strcmp(sem->unit, "@handle")) &&
-                   e->frontend_options.output_mode == TTF_OUTPUT_SPEECH)
-            st = ttf_electronic_render(e, source, renderer, text + tokens[i].begin,
+                   e->frontend_options.output_mode == TTF_OUTPUT_SPEECH) {
+            /* 03wlswk@test.com: an address that starts with digits takes the
+               source language of its Latin letters, so test still reads 테스트. */
+            const ttf_language_pack_t *address_source = source;
+            if (!address_source)
+                address_source = script_pack(e, TTF_SCRIPT_LATIN);
+            st = ttf_electronic_render(e, address_source, renderer, text + tokens[i].begin,
                                        end - tokens[i].begin, &normalized);
+        }
         else if ((sem->type == TTF_SEM_EMAIL || sem->type == TTF_SEM_URL ||
                   sem->type == TTF_SEM_VERSION || sem->type == TTF_SEM_IP_ADDRESS ||
                   !strcmp(sem->unit, "@number-sign") || !strcmp(sem->unit, "@handle")) &&

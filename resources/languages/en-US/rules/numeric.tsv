@@ -229,6 +229,9 @@ semantic_term	*	3ds	ALNUM_TERM:en-US
 semantic_term	*	8D	ALNUM_TERM:en-US
 semantic_term	*	8d	ALNUM_TERM:en-US
 semantic_term	*	2v4	ALNUM_TERM:en-US
+# Group names (2026-10-02): times are written 오후 2시 or 2:00 PM.
+semantic_term	*	2PM	ALNUM_TERM:en-US
+semantic_term	*	2AM	ALNUM_TERM:en-US
 semantic_term	*	2V4	ALNUM_TERM:en-US
 semantic_term	*	4K	ALNUM_TERM:en-US
 semantic_term	*	4k	ALNUM_TERM:en-US
@@ -391,3 +394,21 @@ roman_cue	en-US	mustafa	regnal
 roman_cue	en-US	abdul	regnal
 classifier_priority	en-US	en.roman.cardinal	10
 classifier_priority	en-US	en.roman.regnal	10
+# Units from the Korean benchmark references (2026-10-02); Kg and w are the
+# capital and lowercase spellings of kg and W.
+numeric_suffix	*	mJ	MEASURE:mJ
+numeric_suffix	*	Ah	MEASURE:Ah
+numeric_suffix	*	mmHg	MEASURE:mmHg
+numeric_suffix	*	km/l	MEASURE:km/L
+numeric_suffix	*	km/L	MEASURE:km/L
+numeric_suffix	*	Kg	MEASURE:kg
+numeric_suffix	*	w	MEASURE:W
+unit	en-US	mJ.one	millijoule
+unit	en-US	mJ.many	millijoules
+unit	en-US	Ah.one	ampere-hour
+unit	en-US	Ah.many	ampere-hours
+unit	en-US	mmHg.one	millimeter of mercury
+unit	en-US	mmHg.many	millimeters of mercury
+unit	en-US	km/L.one	kilometer per liter
+unit	en-US	km/L.many	kilometers per liter
+quantity_range_separator	*	∼	1
