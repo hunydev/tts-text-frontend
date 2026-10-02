@@ -358,7 +358,42 @@ static int route_label(const ttf_pack_input_t *in, size_t end) {
     return end + 3 <= in->length && !memcmp(in->text + end, "\xeb\xb2\x88", 3);
 }
 
+/* 20F, 470G, 1234AB: up to four digits then one to three letters, not a unit
+ * (5A, 500M keep the unit grammar) and not a meridiem (2PM): read as the number
+ * and the letter names, 이십 에프 (project-owner decision 2026-10-02; it was
+ * left unread under unreadable=preserve). */
+static int short_label(const ttf_pack_input_t *in, size_t begin, size_t digits, size_t end) {
+    size_t letters = end - begin - digits, i;
+    char key[8];
+    if (!digits || digits > 4 || !letters || letters > 3 || !decimal_digit(in->text[begin]) ||
+        in->text[begin] == '0')
+        return 0;
+    for (i = begin; i < begin + digits; ++i)
+        if (!decimal_digit(in->text[i]))
+            return 0;
+    memcpy(key, in->text + begin + digits, letters);
+    key[letters] = '\0';
+    for (i = 0; i < letters; ++i)
+        key[i] = (char)(key[i] >= 'a' && key[i] <= 'z' ? key[i] - 32 : key[i]);
+    /* Units, meridiems, English ordinals (11st) and decades (90s) keep their grammar. */
+    if (unit_letters(in, begin + digits, end) ||
+        ttf_resource_get(in->engine, "time_suffix", "*", key, NULL) || !strcmp(key, "ST") ||
+        !strcmp(key, "ND") || !strcmp(key, "RD") || !strcmp(key, "TH") || !strcmp(key, "S"))
+        return 0;
+    /* A Korean sentence, or no other Latin word around it (I wear 3XL shirts. stays English). */
+    if (!korean_neighbour(in, end)) {
+        for (i = 0; i < in->token_count; ++i)
+            if (i != in->index && in->tokens[i].script == TTF_SCRIPT_LATIN &&
+                !(in->tokens[i].begin >= begin && in->tokens[i].end <= end))
+                return 0;
+        if (in->engine->config.default_language && strcmp(in->engine->config.default_language, "ko-KR"))
+            return 0;
+    }
+    return 1;
+}
+
 size_t ttf_ko_classify_alnum_identifier(const ttf_pack_input_t *in, ttf_semantic_t *semantic) {
+    int short_form = 0;
     char label_word[TTF_IR_VALUE_SIZE];
     ttf_resource_layer_t label_layer = TTF_LAYER_COMMON;
     size_t begin = in->tokens[in->index].begin, end = begin, i, run = 0;
@@ -421,6 +456,7 @@ size_t ttf_ko_classify_alnum_identifier(const ttf_pack_input_t *in, ttf_semantic
           (decimal_digit(in->text[begin]) && transitions == 1 && !hyphens &&
            !unit_letters(in, begin + digits, end) &&
            (route_label(in, end) || preceding_label(in, begin, label_word, sizeof(label_word), &label_layer))) ||
+          (short_form = short_label(in, begin, digits, end)) != 0 ||
           (hyphens && digits >= 3)))
         return 0;
     /* A letter run that is a Korean loanword is a word with a number
@@ -447,14 +483,16 @@ size_t ttf_ko_classify_alnum_identifier(const ttf_pack_input_t *in, ttf_semantic
     }
     for (i = in->index; i < in->token_count && in->tokens[i].begin < end; ++i) {
     }
-    if (in->tokens[i - 1].end != end || !korean_neighbour(in, end))
+    if (in->tokens[i - 1].end != end || (!short_form && !korean_neighbour(in, end)))
         return 0;
     memcpy(semantic->value, in->text + begin, end - begin);
     semantic->value[end - begin] = '\0';
     (void)snprintf(semantic->unit, sizeof(semantic->unit), "financial_identifier");
     (void)snprintf(semantic->rule, sizeof(semantic->rule), "%s",
                    decimal_digit(in->text[begin]) && digits < 5 && transitions == 1 && route_label(in, end)
-                       ? "ko:route-label" : "ko:alnum-identifier");
+                       ? "ko:route-label"
+                   : short_form && !preceding_label(in, begin, label_word, sizeof(label_word), &label_layer)
+                       ? "ko:short-label" : "ko:alnum-identifier");
     semantic->type = TTF_SEM_DIGIT_SEQUENCE;
     semantic->input_end = end;
     semantic->layer = TTF_LAYER_COMMON;

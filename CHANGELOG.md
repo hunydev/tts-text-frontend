@@ -2,6 +2,12 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Read short digit-first labels as the number and the letter names instead of
+  leaving them as written (20F 이십 에프, 1234AB 천이백삼십사 에이비, 5A 오 에이;
+  project-owner decision). Units, meridiems (2PM), English ordinals, decades and
+  English sentences keep their grammar. {@address} reads F after a number as a
+  floor (20F 이십 층, B1F 지하 일 층). Contract ko_short_labels_v24 (10 cases); 13
+  expectations updated with previous values in notes. Korean benchmark +48, -0.
 - Read a colon pair that is not a valid time as a score or ratio with 대 (3:2로
   승리 삼 대 이로, 1:1 질문 일 대 일; project-owner decision, 24:00 stays); short
   digit-first labels before 번 as routes (38A번 삼십팔에이번) or after a 번호/코드

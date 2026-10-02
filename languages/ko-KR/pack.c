@@ -826,7 +826,10 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         }
         return TTF_OK;
     case TTF_SEM_DIGIT_SEQUENCE:
-        if (!strcmp(s->unit, "financial_identifier") && !strcmp(s->rule, "ko:route-label")) {
+        if (!strcmp(s->unit, "financial_identifier") &&
+            (!strcmp(s->rule, "ko:route-label") || !strcmp(s->rule, "ko:short-label"))) {
+            /* 38A번 삼십팔에이번; 20F 이십 에프 (the short label keeps a space). */
+            int spaced = !strcmp(s->rule, "ko:short-label");
             char number[8];
             size_t k = 0;
             while (s->value[k] >= '0' && s->value[k] <= '9' && k + 1 < sizeof(number)) {
@@ -835,6 +838,8 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             }
             number[k] = '\0';
             TRY(cardinal(e, number, out));
+            if (spaced && s->value[k])
+                TRY(ttf_buffer_puts(out, " "));
             for (; s->value[k]; ++k) {
                 char key[] = "letter.X";
                 const char *name;

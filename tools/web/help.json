@@ -346,11 +346,11 @@
           }
         },
         {
-          "text": "20F 안내",
+          "text": "470G 모델",
           "outputs": {
-            "preserve": "20F 안내",
-            "drop": "20F 안내",
-            "read": "이영에프 안내"
+            "preserve": "470G 모델",
+            "drop": "470G 모델",
+            "read": "사칠영지 모델"
           }
         }
       ]

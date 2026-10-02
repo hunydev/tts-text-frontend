@@ -48,6 +48,36 @@ ttf_status_t ttf_ko_address(const ttf_engine_t *e, const char *s, size_t n, ttf_
     p = 0;
     while (p < n && st == TTF_OK) {
         size_t end = p;
+        /* 20F 이십 층, B1F 지하 일 층: a floor written with F (2026-10-02). */
+        {
+            size_t q = p + ((s[p] == 'B' || s[p] == 'b') && p + 1 < n && digit(s[p + 1])), r = q;
+            while (r < n && digit(s[r])) ++r;
+            if (r > q && (q == p || s[p] == 'B' || s[p] == 'b') && r < n && (s[r] == 'F' || s[r] == 'f') &&
+                (r + 1 == n || !alpha(s[r + 1])) && (!p || !alpha(s[p - 1]) || q > p) && r - q < 8) {
+                ttf_semantic_t part = {0};
+                const char *floor = ttf_resource_get(e, "unit", "ko-KR", "floor", NULL);
+                const char *below = ttf_resource_get(e, "quantity_prefix", "ko-KR", "basement_floor", NULL);
+                if (!floor)
+                    return TTF_ERESOURCE;
+                if (q > p)
+                    st = ttf_buffer_puts(out, below ? below : "지하 ");
+                part.struct_size = sizeof(part);
+                part.type = TTF_SEM_CARDINAL;
+                memcpy(part.value, s + q, r - q);
+                ttf_trace_stage(e, TTF_TRACE_POLICY, p, r + 1);
+                if (st == TTF_OK)
+                    st = ttf_trace_resource(e, "unit", "ko-KR", "floor", floor, "explicit-address-floor",
+                                            SIZE_MAX);
+                if (st == TTF_OK)
+                    st = pack->verbalize(e, &part, s + q, r - q, out);
+                if (st == TTF_OK)
+                    st = ttf_buffer_puts(out, " ");
+                if (st == TTF_OK)
+                    st = ttf_buffer_puts(out, floor);
+                p = r + 1;
+                continue;
+            }
+        }
         if (digit(s[p])) {
             ttf_semantic_t part = {0};
             const char *key, *policy;

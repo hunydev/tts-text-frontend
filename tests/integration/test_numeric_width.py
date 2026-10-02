@@ -64,6 +64,8 @@ for lang in ('ko-KR','en-US'):
     assert flatten(e.stream(raw,[1]*len(raw)))==result,(source,result)
  finally:e.close()
 
+# 2026-10-02: a short digit-first label reads as number + letter names (２０F 이십 에프;
+# it was kept as written).
 # Earlier fullwidth fields must not shift subsequent control/code input offsets,
 # or make the annotated ASCII-only value contracts accept wide digits.
 # invalid_control=error keeps the strict failure under test (default: ignore).
@@ -74,7 +76,7 @@ try:
                          ('３개 `１２３원`','세 개 `１２３원`'),
                          ('３개 /tmp/１２３.txt','세 개 /tmp/１２３.txt'),
                          ('３개 [[note]]{@skip}끝','세 개 끝'),
-                         ('２０F 타워','２０F 타워'), ('2０F 타워','2０F 타워')]:
+                         ('２０F 타워','이십 에프 타워'), ('2０F 타워','이십 에프 타워')]:
   raw=source.encode();r=e.normalize(raw);assert r['text']==expected,r
   assert flatten(e.stream(raw,[1]*len(raw)))==r
  for source in ['３개 [[１２]]{@digits}','３개 [[서울시 １２]]{@address}']:
