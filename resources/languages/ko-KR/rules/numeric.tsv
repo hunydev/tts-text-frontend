@@ -300,6 +300,15 @@ quantity_tail	ko-KR	야	1
 quantity_tail	ko-KR	인가요	1
 quantity_tail	ko-KR	이었고	1
 quantity_tail	ko-KR	였고	1
+quantity_tail	ko-KR	여서	1
+quantity_tail	ko-KR	이어서	1
+quantity_tail	ko-KR	여도	1
+quantity_tail	ko-KR	이어도	1
+quantity_tail	ko-KR	였는데	1
+quantity_tail	ko-KR	이었는데	1
+quantity_tail	ko-KR	였던	1
+quantity_tail	ko-KR	이었던	1
+quantity_tail	ko-KR	라서	1
 quantity_tail	ko-KR	이며	1
 quantity_tail	ko-KR	이고	1
 quantity_tail	ko-KR	이면	1
@@ -590,4 +599,6 @@ range_unit_rank	ko-KR	개월	6
 range_unit_rank	ko-KR	년	7
 # Colon scores and number lists (2026-10-02) win over the shared rejection.
 classifier_priority	ko-KR	ko:number-list	100
-classifier_priority	ko-KR	ko:route-label	100
+classifier_priority	ko-KR	ko:route-label	10
+# Ranges ending in a short label (0~3M; 2026-10-02).
+classifier_priority	ko-KR	ko:label-range	10

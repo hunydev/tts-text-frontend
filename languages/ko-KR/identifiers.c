@@ -363,14 +363,22 @@ static int route_label(const ttf_pack_input_t *in, size_t end) {
  * and the letter names, 이십 에프 (project-owner decision 2026-10-02; it was
  * left unread under unreadable=preserve). */
 static int short_label(const ttf_pack_input_t *in, size_t begin, size_t digits, size_t end) {
-    size_t letters = end - begin - digits, i;
+    size_t letters = end - begin - digits, i, lead = 0;
     char key[8];
     if (!digits || digits > 4 || !letters || letters > 3 || !decimal_digit(in->text[begin]) ||
         in->text[begin] == '0')
         return 0;
-    for (i = begin; i < begin + digits; ++i)
-        if (!decimal_digit(in->text[i]))
-            return 0;
+    while (begin + lead < end && decimal_digit(in->text[begin + lead]))
+        ++lead;
+    /* 2v4: digits, letters, digits (two changes of kind) read run by run. */
+    if (lead < digits) {
+        size_t p = begin + lead;
+        while (p < end && !decimal_digit(in->text[p]))
+            ++p;
+        while (p < end && decimal_digit(in->text[p]))
+            ++p;
+        return p == end && korean_neighbour(in, end);
+    }
     memcpy(key, in->text + begin + digits, letters);
     key[letters] = '\0';
     for (i = 0; i < letters; ++i)
@@ -456,7 +464,9 @@ size_t ttf_ko_classify_alnum_identifier(const ttf_pack_input_t *in, ttf_semantic
           (decimal_digit(in->text[begin]) && transitions == 1 && !hyphens &&
            !unit_letters(in, begin + digits, end) &&
            (route_label(in, end) || preceding_label(in, begin, label_word, sizeof(label_word), &label_layer))) ||
-          (short_form = short_label(in, begin, digits, end)) != 0 ||
+          ((transitions == 1 || transitions == 2) && !hyphens &&
+           (short_form = short_label(in, begin, digits, end)) != 0) ||
+          (decimal_digit(in->text[begin]) && hyphens && route_label(in, end) && digits <= 8) ||
           (hyphens && digits >= 3)))
         return 0;
     /* A letter run that is a Korean loanword is a word with a number
@@ -489,7 +499,8 @@ size_t ttf_ko_classify_alnum_identifier(const ttf_pack_input_t *in, ttf_semantic
     semantic->value[end - begin] = '\0';
     (void)snprintf(semantic->unit, sizeof(semantic->unit), "financial_identifier");
     (void)snprintf(semantic->rule, sizeof(semantic->rule), "%s",
-                   decimal_digit(in->text[begin]) && digits < 5 && transitions == 1 && route_label(in, end)
+                   decimal_digit(in->text[begin]) && route_label(in, end) &&
+                           ((digits < 5 && transitions == 1) || (hyphens && digits <= 8))
                        ? "ko:route-label"
                    : short_form && !preceding_label(in, begin, label_word, sizeof(label_word), &label_layer)
                        ? "ko:short-label" : "ko:alnum-identifier");
@@ -1072,6 +1083,32 @@ size_t ttf_ko_classify_digit_identifier(const ttf_pack_input_t *in, ttf_semantic
               t[b - 1] == '+' || t[b - 1] == '.' || t[b - 1] == ','))
         return 0;
     a_end = digit_run(t, n, b);
+    /* 3x3 농구 삼 대 삼: two small numbers joined by x (2026-10-02). */
+    if (a_end + 1 < n && t[a_end] == 'x' && decimal_digit(t[a_end + 1]) && a_end - b <= 2) {
+        size_t c = a_end + 1, c_end = digit_run(t, n, c);
+        if (c_end - c <= 2 && !(c_end < n && (alnum(t[c_end]) || t[c_end] == '.'))) {
+            memcpy(s->value, t + b, a_end - b);
+            s->value[a_end - b] = '\0';
+            memcpy(s->secondary, t + c, c_end - c);
+            s->secondary[c_end - c] = '\0';
+            s->unit[0] = '\0';
+            return classified(in, s, c_end, TTF_SEM_RANGE, "ko:score");
+        }
+    }
+    /* 0~3M 영에서 삼 엠: a range ending in a short label that is not a unit. */
+    if (a_end + 1 < n && t[a_end] == '~' && decimal_digit(t[a_end + 1]) && a_end - b <= 4) {
+        size_t c = a_end + 1, c_end = digit_run(t, n, c), l = c_end;
+        while (l < n && latin_letter(t[l]) && l - c_end < 4)
+            ++l;
+        if (l > c_end && l - c_end <= 3 && c_end - c <= 4 && !(l < n && alnum(t[l])) &&
+            !unit_letters(in, c_end, l) && l - b < sizeof(s->value)) {
+            memcpy(s->value, t + b, l - b);
+            s->value[l - b] = '\0';
+            s->secondary[0] = '\0';
+            (void)snprintf(s->unit, sizeof(s->unit), "financial_identifier");
+            return classified(in, s, l, TTF_SEM_DIGIT_SEQUENCE, "ko:label-range");
+        }
+    }
     /* 3:2로 승리, 40:34, 1:1 질문: a colon pair that is not a valid time (the
        shared grammar rejects it as syntax.invalid-time) is a score or ratio read
        with 대 (project-owner decision 2026-10-02). A two-digit group with a

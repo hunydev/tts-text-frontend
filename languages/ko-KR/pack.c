@@ -342,6 +342,40 @@ static ttf_status_t quantity(const ttf_engine_t *e, const char *value, const cha
     return ttf_buffer_puts(out, unit);
 }
 
+/* A label read run by run: digits as a cardinal, letters by name, a hyphen as
+   다시; spaced puts a space between a number and letters (20F 이십 에프). */
+static ttf_status_t render_label(const ttf_engine_t *e, const char *v, size_t n, int spaced,
+                                 ttf_buffer_t *out) {
+    size_t k = 0;
+    while (k < n) {
+        if (v[k] >= '0' && v[k] <= '9') {
+            char number[16];
+            size_t m = 0;
+            while (k < n && v[k] >= '0' && v[k] <= '9' && m + 1 < sizeof(number))
+                number[m++] = v[k++];
+            number[m] = '\0';
+            TRY(cardinal(e, number, out));
+            if (spaced && k < n && v[k] != '-')
+                TRY(ttf_buffer_puts(out, " "));
+        } else if (v[k] == '-') {
+            TRY(ttf_buffer_puts(out, resource(e, "identifier_render", "separator", " 다시 ")));
+            ++k;
+        } else {
+            char key[] = "letter.X";
+            const char *name;
+            key[7] = (char)(v[k] >= 'a' && v[k] <= 'z' ? v[k] - 32 : v[k]);
+            name = ttf_resource_get(e, "phone_letter", "ko-KR", key, NULL);
+            if (!name)
+                return TTF_ERESOURCE;
+            TRY(ttf_buffer_puts(out, name));
+            ++k;
+            if (spaced && k < n && v[k] >= '0' && v[k] <= '9')
+                TRY(ttf_buffer_puts(out, " "));
+        }
+    }
+    return TTF_OK;
+}
+
 /* A run of five or more digits in a code is read in equal groups of five,
    four or three, the largest that divides it (5, 6 3-3, 8 4-4, 9 3-3-3, 10 5-5,
    12 4-4-4); otherwise five first, or four when only seven are left, and the
@@ -828,28 +862,27 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     case TTF_SEM_DIGIT_SEQUENCE:
         if (!strcmp(s->unit, "financial_identifier") &&
             (!strcmp(s->rule, "ko:route-label") || !strcmp(s->rule, "ko:short-label"))) {
-            /* 38A번 삼십팔에이번; 20F 이십 에프 (the short label keeps a space). */
-            int spaced = !strcmp(s->rule, "ko:short-label");
-            char number[8];
-            size_t k = 0;
-            while (s->value[k] >= '0' && s->value[k] <= '9' && k + 1 < sizeof(number)) {
-                number[k] = s->value[k];
-                ++k;
-            }
-            number[k] = '\0';
-            TRY(cardinal(e, number, out));
-            if (spaced && s->value[k])
-                TRY(ttf_buffer_puts(out, " "));
-            for (; s->value[k]; ++k) {
-                char key[] = "letter.X";
-                const char *name;
-                key[7] = (char)(s->value[k] >= 'a' && s->value[k] <= 'z' ? s->value[k] - 32 : s->value[k]);
-                name = ttf_resource_get(e, "phone_letter", "ko-KR", key, NULL);
-                if (!name)
-                    return TTF_ERESOURCE;
-                TRY(ttf_buffer_puts(out, name));
-            }
-            return TTF_OK;
+            /* 38A번 삼십팔에이번, 500-1A번 오백 다시 일에이번; 20F 이십 에프 (one
+               change of kind keeps a space), 2v4 이브이사. */
+            size_t runs = 0, k;
+            for (k = 0; s->value[k]; ++k)
+                if (!k || (s->value[k] >= '0' && s->value[k] <= '9') != (s->value[k - 1] >= '0' && s->value[k - 1] <= '9'))
+                    ++runs;
+            return render_label(e, s->value, strlen(s->value),
+                                !strcmp(s->rule, "ko:short-label") && runs == 2, out);
+        }
+        if (!strcmp(s->unit, "financial_identifier") && !strcmp(s->rule, "ko:label-range")) {
+            /* 0~3M 영에서 삼 엠 */
+            const char *tilde = strchr(s->value, '~');
+            char left[16];
+            size_t ln = tilde ? (size_t)(tilde - s->value) : 0;
+            if (!tilde || !ln || ln >= sizeof(left))
+                return TTF_EINVAL;
+            memcpy(left, s->value, ln);
+            left[ln] = '\0';
+            TRY(cardinal(e, left, out));
+            TRY(ttf_buffer_puts(out, resource(e, "policy", "range_separator", "에서 ")));
+            return render_label(e, tilde + 1, strlen(tilde + 1), 1, out);
         }
         if (!strcmp(s->unit, "financial_identifier") &&
             (!strcmp(s->rule, "ko:long-digit-identifier") || !strcmp(s->rule, "ko:alnum-identifier"))) {
@@ -1711,6 +1744,22 @@ static size_t compound_currency_range(const ttf_pack_input_t *in, ttf_semantic_t
             unsigned ignored_power;
             size_t scale_start = skip_spaces(in->text, in->length, second.input_end), suffix_width;
             size_t scale_width = scale_at(in, scale_start, &ignored_power);
+            /* 33-53-666846-99만: after a code of three or more hyphen groups or a
+               group of five or more digits, 만 is the particle (only). */
+            if (scale_width) {
+                size_t back = scale_start, hyphens = 0, run = 0, longest = 0;
+                while (back > in->tokens[in->index].begin &&
+                       ((in->text[back - 1] >= '0' && in->text[back - 1] <= '9') || in->text[back - 1] == '-')) {
+                    --back;
+                    if (in->text[back] == '-') {
+                        ++hyphens;
+                        run = 0;
+                    } else if (++run > longest)
+                        longest = run;
+                }
+                if (hyphens >= 2 || longest >= 5)
+                    scale_width = 0;
+            }
             /* 1시간 만에, 6년 만에: after an endpoint with its own unit and a space,
                만 is the bound noun (2026-10-02). */
             if (scale_width && scale_start > second.input_end &&
