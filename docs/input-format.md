@@ -137,6 +137,24 @@ not an audio duration or a guaranteed pause length of a downstream voice.
 This replaces the v0.22 position marker (`앞{@break:1}뒤` inserted a separator at
 that position without reading the preceding word differently).
 
+## Join control (2026-10-03)
+
+`X{@join}` is the opposite of `{@break}`: the atom or `[[group]]` X is read as
+usual and the spaces between the readings are dropped (project-owner request).
+
+| Input | Output (ko-KR) |
+|---|---|
+| `[[너 나 안 본 지 두 달 다 되 감]]{@join}` | `너나안본지두달다되감` |
+| `오늘 [[3시 반에 만나]]{@join} 알겠지?` | `오늘 세시반에만나 알겠지?` |
+| `[[GV70 사러 간다]]{@join}` | `지브이칠공사러간다` |
+| `[[너 나]]{@join}는 친구` | `너나는 친구` |
+
+The group is normalized on its own with the engine's options, then spaces, tabs
+and line breaks are removed from the reading; text around the control keeps its
+spacing. Inspect reports one `CUSTOM` span with `rule=control.pattern`,
+`unit=@join`; the trace records `JOIN` (the inner read adds no events). An
+unknown name such as `{@joinx}` is ignored like any invalid control.
+
 ## Language-pack patterns
 
 An unescaped `@` at the beginning of a payload selects a named pattern:

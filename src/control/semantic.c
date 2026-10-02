@@ -261,6 +261,26 @@ ttf_status_t ttf_semantic_control(const ttf_engine_t *e, const ttf_semantic_t *r
         return TTF_OK; /* Caller owns adjoining whitespace, just like a literal. */
     if (!strncmp(name, "@break:", 7) && name[7] >= '1' && name[7] <= '3' && !name[8])
         return spelled_with_breaks(e, pack, request, text, n, name[7] - '0', out);
+    if (!strcmp(name, "@join")) {
+        /* [[너 나 안 본 지]]{@join} 너나안본지, the opposite of {@break}: the
+           group is read as usual (3시 반 세시반) and the spaces between the
+           readings are dropped (2026-10-03). The inner read keeps no trace of
+           its own; the control span and its trace event cover the group. */
+        ttf_engine_t view = *e;
+        ttf_result_t inner = {0};
+        size_t k;
+        view.trace_state = NULL;
+        view.context_memo = NULL;
+        status = ttf_process_unit(&view, text, n, 0, &inner);
+        for (k = 0; status == TTF_OK && k < inner.length; ++k)
+            if (inner.text[k] != ' ' && inner.text[k] != '\t' && inner.text[k] != '\n' && inner.text[k] != '\r')
+                status = ttf_buffer_append(out, inner.text + k, 1);
+        ttf_result_free(&inner);
+        if (status == TTF_OK)
+            status = ttf_trace_emit(e, TTF_TRACE_SELECTED, TTF_LAYER_USER, 0, pack->language_tag,
+                                    "control-semantic", name, "JOIN", "", "", SIZE_MAX);
+        return status;
+    }
     if (n >= sizeof(ir.value))
         return TTF_ELIMIT;
     if (!strcmp(name, "@cardinal") || !strcmp(name, "@decimal")) {

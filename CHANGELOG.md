@@ -2,6 +2,10 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Add the join control, the opposite of {@break} (project-owner request):
+  [[너 나 안 본 지 두 달 다 되 감]]{@join} reads 너나안본지두달다되감 and
+  [[3시 반에 만나]]{@join} 세시반에만나; the group is read as usual and the spaces
+  between the readings are dropped. Contract ko_join_control_v24 (6 cases).
 - Read rejected numbers as written in Korean speech instead of keeping them
   (project-owner decision; option numeric_fallback=preserve, CLI
   --numeric-fallback, web 숫자 폴백): 27만 천 원 이십칠만 천 원, 1970년 2월 29일,

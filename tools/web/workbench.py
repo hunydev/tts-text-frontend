@@ -8,6 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 MAX_TEXT_BYTES = 16384
 CORPORA = {
+    "ko-join-control-v24": ("Korean join control v24", "ko_join_control_v24.jsonl"),
     "ko-written-fallback-v24": ("Korean written fallback v24", "ko_written_fallback_v24.jsonl"),
     "ko-numeral-words-v24": ("Korean numeral words v24", "ko_numeral_words_v24.jsonl"),
     "ko-bench-leaks-v24": ("벤치마크 숫자·영문 누락", "ko_bench_leaks_v24.jsonl"),
