@@ -2,6 +2,12 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Engine start-up: a record validated when its file loads is not validated
+  again by ttf_engine_freeze or the CLI report while only the engine and pack
+  validators are registered (a custom validator still re-checks every row),
+  and an accepted record skips the UTF-8 diagnostic sanitizing pass. Debug
+  start-up with all resources 62 ms to 35 ms (without the places lexicon 15 ms
+  to 10 ms).
 - lexicon_case restricts only entries of its own layer or below: a domain,
   customer or user entry above it keeps applying to an all-capital surface
   (customer MY 마이, finance ETF 이티에프). Five contract rows follow the common

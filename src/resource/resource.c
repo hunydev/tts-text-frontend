@@ -22,8 +22,8 @@ static void entry_free(ttf_entry_t *p) {
     free(p->value);
     free(p);
 }
-ttf_status_t ttf_resource_set(ttf_engine_t *e, const char *kind, const char *lang, const char *key,
-                              const char *value, ttf_resource_layer_t layer) {
+static ttf_status_t resource_insert(ttf_engine_t *e, const char *kind, const char *lang, const char *key,
+                                   const char *value, ttf_resource_layer_t layer, ttf_entry_t **inserted) {
     size_t h;
     ttf_entry_t *p;
     if (e->resource_order == SIZE_MAX)
@@ -51,7 +51,13 @@ ttf_status_t ttf_resource_set(ttf_engine_t *e, const char *kind, const char *lan
     h = bucket(kind, lang, p->key);
     p->next = e->resources[h];
     e->resources[h] = p;
+    if (inserted)
+        *inserted = p;
     return TTF_OK;
+}
+ttf_status_t ttf_resource_set(ttf_engine_t *e, const char *kind, const char *lang, const char *key,
+                              const char *value, ttf_resource_layer_t layer) {
+    return resource_insert(e, kind, lang, key, value, layer, NULL);
 }
 static const ttf_entry_t *find_entry(const ttf_engine_t *e, const char *kind, const char *lang,
                                      const char *key) {
@@ -173,11 +179,18 @@ static ttf_status_t parse_tsv(ttf_engine_t *e, const ttf_engine_t *owner, char *
         {
             ttf_resource_record_t row = {sizeof(row), f[0], f[1], f[2], f[3], layer};
             int validated;
+            ttf_entry_t *entry = NULL;
             ttf_status_t st = ttf_validate_resource_record(owner, &row, &validated, d);
             if (st == TTF_OK)
-                st = ttf_resource_set(e, f[0], f[1], f[2], f[3], layer);
+                st = resource_insert(e, f[0], f[1], f[2], f[3], layer, &entry);
             if (st != TTF_OK)
                 return st;
+            /* Engine-wide validation reuses this result instead of validating the
+               row again (2026-10-03: start-up checked every row three times). */
+            if (owner->validator_count == owner->builtin_validators) { /* deterministic only */
+                entry->checked = validated ? 1 : 2;
+                entry->checked_validators = owner->validator_count;
+            }
         }
     }
     return TTF_OK;

@@ -127,7 +127,16 @@ ttf_status_t ttf_validate_resource_record(const ttf_engine_t *e, const ttf_resou
             continue;
         d->message[0] = 0;
         status = v->validate_record(r, &handled, d, v->userdata);
-        diagnostic_sanitize(d);
+        /* Only a rejection exposes the diagnostic; an accepted record just keeps
+           the strings terminated (the UTF-8 sanitizing pass per record and
+           validator dominated engine start-up; 2026-10-03). */
+        if (status == TTF_OK) {
+            d->struct_size = sizeof(*d);
+            d->path[sizeof(d->path) - 1] = d->kind[sizeof(d->kind) - 1] = 0;
+            d->language[sizeof(d->language) - 1] = d->key[sizeof(d->key) - 1] = 0;
+            d->message[sizeof(d->message) - 1] = 0;
+        } else
+            diagnostic_sanitize(d);
         if (handled)
             *validated = 1;
         if (status != TTF_OK) {
@@ -195,9 +204,19 @@ ttf_status_t ttf_engine_validate_resources(const ttf_engine_t *e,
         ttf_resource_record_t record = {sizeof(record), entry->kind,  entry->lang,
                                         entry->key,     entry->value, entry->layer};
         int validated;
-        status = ttf_validate_resource_record(e, &record, &validated, diagnostic);
-        if (status != TTF_OK)
-            break;
+        /* A registered custom validator may depend on outside state: check again. */
+        if (entry->checked && entry->checked_validators == e->validator_count &&
+            e->validator_count == e->builtin_validators)
+            validated = entry->checked == 1; /* validated when loaded, same validators */
+        else {
+            status = ttf_validate_resource_record(e, &record, &validated, diagnostic);
+            if (status != TTF_OK)
+                break;
+            if (setup && e->validator_count == e->builtin_validators) {
+                ((ttf_entry_t *)entry)->checked = validated ? 1 : 2;
+                ((ttf_entry_t *)entry)->checked_validators = e->validator_count;
+            }
+        }
         if (report) {
             ++report->records;
             if (validated)

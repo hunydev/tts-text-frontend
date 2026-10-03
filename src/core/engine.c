@@ -170,6 +170,7 @@ ttf_status_t ttf_engine_create_ex(const ttf_config_t *cfg, ttf_engine_t **out,
     st = ttf_engine_register_resource_validator(e, &ttf_resource_validator_core);
     if (st == TTF_OK)
         st = ttf_register_builtins(e);
+    e->builtin_validators = e->validator_count;
     if (st == TTF_OK)
         st = load_manifest(e, diagnostic, 0);
     if (st != TTF_OK) {

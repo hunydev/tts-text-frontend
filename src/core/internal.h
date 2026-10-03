@@ -30,6 +30,11 @@ typedef struct ttf_entry {
     struct ttf_entry *cjk_next;
     size_t cjk_length;
     uint32_t cjk_first;
+    /* Record validation already done at load: 0 none, 1 handled, 2 not handled
+       by any validator, with the validator count it ran under (a validator
+       registered later re-checks the row). */
+    unsigned char checked;
+    size_t checked_validators;
 } ttf_entry_t;
 /* Owner of the detached CJK rows; word buckets only borrow entry pointers.
    Request-local engine views copy this pointer, never the bucket arrays. */
@@ -61,6 +66,7 @@ struct ttf_engine {
     size_t pack_count, resource_order;
     const ttf_resource_validator_t *validators[TTF_MAX_RESOURCE_VALIDATORS];
     size_t validator_count;
+    size_t builtin_validators; /* engine and pack validators; a row check is reused only with no others */
     ttf_entry_t *resources[TTF_HASH_BUCKETS];
     ttf_entry_t *boundary_cues;
     ttf_entry_t *rules;
