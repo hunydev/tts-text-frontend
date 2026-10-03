@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "sources": [
+    {
+      "id": "wikidata-places-2026-10-03",
+      "title": "Wikidata Korean and English labels of places in South Korea",
+      "url": "https://www.wikidata.org/",
+      "kind": "open-data",
+      "checked_at": "2026-10-03",
+      "note": "Structured data under CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/). Collected by tools/lexicon/places/collect_places.py (items with country South Korea, coordinates, Korean and English labels); an English label counts only when its Revised Romanization syllables spell the Korean label. Labels are community data, not pronunciation authority; no synthesized audio."
+    }
+  ]
+}

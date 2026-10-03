@@ -72,27 +72,41 @@ for tsv in (Path(resources) / "languages/ko-KR/rules").glob("*.tsv"):
         if len(cells) == 4 and cells[0] == "lexicon_case" and cells[3] == "upper":
             UPPER.add(cells[2].split(":", 1)[1])
 # A large optional pack (brands) is checked in one stream: one probe per line.
+# Large generated packs run as one stream each: the brands domain pack and the
+# system places category (about 10,000 Wikidata place names, 2026-10-03).
 BATCHED = {"brands"}
+BATCHED_CATEGORIES = {"places"}
+
+
+def batch_key(row):
+    if row.get("scope", "system") in BATCHED:
+        return row["scope"]
+    if row.get("scope", "system") == "system" and row["category"] in BATCHED_CATEGORIES:
+        return "category:" + row["category"]
+    return None
+
+
 batches = {}
 for row in records:
-    scope = row.get("scope", "system")
-    if scope in BATCHED:
-        batches.setdefault(scope, []).append(row)
+    if batch_key(row):
+        batches.setdefault(batch_key(row), []).append(row)
 for scope, rows in sorted(batches.items()):
     probes = [(row, term) for row in rows for term in [row["term"], *row["aliases"]]]
     text = "".join(term + "의 발음을 확인합니다.\n" for _, term in probes)
+    system = scope.startswith("category:")
     output, spans, _ = run_stream(
-        text, overlay=("--domain", str(Path(resources) / "domains" / scope / "ko-KR/lexicon.tsv")))
+        text, overlay=() if system else ("--domain", str(Path(resources) / "domains" / scope / "ko-KR/lexicon.tsv")))
     lines = output.split("\n")
     for k, (row, term) in enumerate(probes):
         if k >= len(lines) or lines[k] != row["pronunciation"] + "의 발음을 확인합니다.":
             failures.append((row["id"], term, row["pronunciation"], lines[k] if k < len(lines) else None))
-    domain_hits = sum(1 for _, _, span in spans if span["lexicon"] == "lexicon:domain")
+    layer = "lexicon:system" if system else "lexicon:domain"
+    domain_hits = sum(1 for _, _, span in spans if span["lexicon"] == layer)
     if domain_hits < len(probes):
-        failures.append((scope, "domain lexicon spans", len(probes), domain_hits))
+        failures.append((scope, layer + " spans", len(probes), domain_hits))
     checks += len(probes)
 for row in records:
-    if row.get("scope", "system") in BATCHED:
+    if batch_key(row):
         continue
     for term in [row["term"], *row["aliases"]]:
         if term in UPPER:

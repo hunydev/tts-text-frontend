@@ -2,6 +2,14 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Read romanized South Korean place names in Korean (project-owner request):
+  Incheon 인천, Jamsil 잠실, Gangnam 강남, Myeongdong 명동, Dokdo 독도. A new system
+  lexicon category places (9,407 entries) comes from Wikidata (CC0) places in
+  South Korea whose English label is the Revised Romanization of the Korean
+  label; English words and names are kept out unless they are the place's own
+  English label (Seoul stays, Guam and hail do not). Contract
+  ko_place_names_v24 (10 cases); the lexicon inventory test checks the category
+  in one stream. Korean and English benchmarks unchanged; docs/place-names.ko.md.
 - Brand pack: the FTC franchise list now includes base year 2026 (8,668 rows,
   collected 2026-10-03; 2017-2025 unchanged). 50 new owner-registered readings
   (Bean Plus 빈플러스, Dear Burger 디어버거, Millhaus 밀하우스, Busan Ritual Coffee
