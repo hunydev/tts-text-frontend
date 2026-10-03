@@ -926,6 +926,21 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
         for (j = 0; j < n; ++j)
             if (in->text[t->begin + j] < 'A' || in->text[t->begin + j] > 'Z')
                 all_upper = 0;
+        /* tv, sns, kbs, www in Korean text: a short word with no vowel letter is
+           letters, not a word (트브, 스느스 before; 2026-10-03). y counts as a vowel
+           except first (sky, gym stay words; ytn is letters); declared
+           abbreviations (Mr, Dr) keep their reading. */
+        if (!all_upper && consumed == 1 && n >= 2 && n <= 6 && !res(in->engine, "abbreviation", key)) {
+            int vowel = 0;
+            size_t k;
+            for (j = 0; j < n; ++j)
+                vowel |= strchr("aeiou", key[j]) != NULL || (j && key[j] == 'y');
+            for (k = 0; !vowel && k < in->token_count; ++k)
+                if (in->tokens[k].script == TTF_SCRIPT_HANGUL) {
+                    all_upper = 1;
+                    break;
+                }
+        }
         if (all_upper) {
             out->type = TTF_SEM_INITIALISM;
             out->lexical_class = TTF_LEX_INITIALISM;

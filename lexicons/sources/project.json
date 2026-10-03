@@ -72,6 +72,14 @@
       "kind": "editorial-policy",
       "checked_at": "2026-10-01",
       "note": "The company name 3M is read 쓰리엠 and a meter reading is requested with 3M{@unit}. Project decision, not independent linguistic approval; no synthesized audio."
+    },
+    {
+      "id": "project-english-common-v24",
+      "title": "Project readings of common English words in Korean context, v24",
+      "url": "https://www.korean.go.kr/front/page/pageView.do?mn_id=97&page_id=P000124",
+      "kind": "editorial-policy",
+      "checked_at": "2026-10-03",
+      "note": "Authored by the project from the 외래어 표기법 English rules and established usage. Words were chosen by frequency in local Korean-context text whose spelling guess was wrong; no reading is copied from a corpus."
     }
   ]
 }

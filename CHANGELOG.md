@@ -2,6 +2,14 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Read English words in Korean text by Korean usage (project-owner request).
+  A short lowercase word with no vowel letter is letters (tv 티브이, sns
+  에스엔에스, www 더블유더블유더블유; was 트브, 스느스, 우우우). 283 common English
+  words are authored by the 외래어 표기법 English rules and established usage (of
+  오브, with 위드, Korea 코리아, Life 라이프, Time 타임, James 제임스, Guam 괌, ost
+  오에스티), all lexicon_case lower so AS, IS and HMM stay letters; codes keep
+  their reading (EBS8102, you501073). Contract ko_english_words_v24 (13 cases).
+  Korean benchmark +80, -0; English unchanged; docs/english-words.ko.md.
 - Read romanized South Korean place names in Korean (project-owner request):
   Incheon 인천, Jamsil 잠실, Gangnam 강남, Myeongdong 명동, Dokdo 독도. A new system
   lexicon category places (9,407 entries) comes from Wikidata (CC0) places in

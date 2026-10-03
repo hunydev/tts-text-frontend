@@ -414,7 +414,7 @@ size_t ttf_ko_classify_alnum_identifier(const ttf_pack_input_t *in, ttf_semantic
     ttf_resource_layer_t label_layer = TTF_LAYER_COMMON;
     size_t begin = in->tokens[in->index].begin, end = begin, i, run = 0;
     size_t letters = 0, digits = 0, hyphens = 0, transitions = 0;
-    int kind = 0, upper = 0, lower = 0; /* kind: 1 letter, 2 digit */
+    int kind = 0, upper = 0, lower = 0, long_run; /* kind: 1 letter, 2 digit */
     char before, after;
     if (begin == in->length || !alnum(in->text[begin]))
         return 0;
@@ -478,8 +478,18 @@ size_t ttf_ko_classify_alnum_identifier(const ttf_pack_input_t *in, ttf_semantic
           (hyphens && digits >= 3)))
         return 0;
     /* A letter run that is a Korean loanword is a word with a number
-     * (top100, TOP100 탑백), not a code; two-letter runs stay codes. */
-    for (i = begin; i < end;) {
+     * (top100, TOP100 탑백), not a code; two-letter runs stay codes. A run of
+     * five or more digits keeps the code (you501073), and an all-capital run
+     * whose entry is lexicon_case lower is letters (EBS8102, AIR4930;
+     * 2026-10-03). */
+    for (i = begin, long_run = 0; i < end && !long_run;) {
+        size_t stop = i;
+        while (stop < end && decimal_digit(in->text[stop]))
+            ++stop;
+        long_run = stop - i >= 5;
+        i = stop > i ? stop : i + 1;
+    }
+    for (i = begin; i < end && !long_run;) {
         size_t start = i;
         int lowercase = 1;
         char key[TTF_IR_VALUE_SIZE + 8];
@@ -493,8 +503,11 @@ size_t ttf_ko_classify_alnum_identifier(const ttf_pack_input_t *in, ttf_semantic
                 key[used++] = (char)(in->text[k] >= 'A' && in->text[k] <= 'Z' ? in->text[k] + 32
                                                                                    : in->text[k]);
             key[used] = 0;
-            if (ttf_resource_get(in->engine, "lexicon", "ko-KR", key, NULL))
-                return 0;
+            if (ttf_resource_get(in->engine, "lexicon", "ko-KR", key, NULL)) {
+                const char *rule = ttf_resource_get(in->engine, "lexicon_case", "ko-KR", key, NULL);
+                if (!(rule && !strcmp(rule, "lower") && !lowercase))
+                    return 0;
+            }
         }
         if (i == start)
             ++i;
