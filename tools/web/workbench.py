@@ -127,6 +127,7 @@ DEFAULTS = dict(
     invalid_control="ignore",
     numeric_fallback="read",
     brand_lexicon="off",
+    english_dictionary="off",
     max_control_bytes=4096,
     sentence_split=True,
     phrase_split=True,
@@ -222,6 +223,7 @@ def validate(request, corpus=False):
         ("invalid_control", ("ignore", "error")),
         ("numeric_fallback", ("read", "preserve")),
         ("brand_lexicon", ("off", "on")),
+        ("english_dictionary", ("off", "cmu")),
         ("domain", ("none", "finance", "finance-vocabulary")),
     ]:
         if opts[key] not in allowed:

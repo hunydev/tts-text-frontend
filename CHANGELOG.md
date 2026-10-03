@@ -2,6 +2,12 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Web option english_dictionary=cmu (영어 발음 사전): loads the CMUdict runtime
+  export (not in Git; benchmark/generated/cmudict-runtime-full or
+  TTF_CMU_RUNTIME) as the domain layer so English words outside the lexicons
+  take its pronunciation (Helsinki 헬싱키). Off by default; authored lexicons
+  still win (Korea 코리아). Test cmu_english_dictionary_option uses a synthetic
+  export. The matrix help example now reads My 마이 (common word lexicon).
 - Read English words in Korean text by Korean usage (project-owner request).
   A short lowercase word with no vowel letter is letters (tv 티브이, sns
   에스엔에스, www 더블유더블유더블유; was 트브, 스느스, 우우우). 283 common English

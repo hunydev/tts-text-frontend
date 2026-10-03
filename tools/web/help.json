@@ -448,8 +448,8 @@
           "text": "My friend 민수 bought 3 books.",
           "outputs": {
             "auto": "My friend 민수 bought three books.",
-            "declared": "미 프린드 민수 바우그흐트 삼 부크스.",
-            "legacy": "미 프린드 민수 바우그흐트 삼 부크스."
+            "declared": "마이 프린드 민수 바우그흐트 삼 부크스.",
+            "legacy": "마이 프린드 민수 바우그흐트 삼 부크스."
           }
         }
       ]
@@ -496,6 +496,12 @@
           }
         }
       ]
+    },
+    {
+      "id": "english-dictionary",
+      "key": "english_dictionary",
+      "desc": "사전에 없는 영어 단어를 CMU 영어 발음 사전(약 11만 7천 단어)의 발음으로 읽습니다. 켜지 않으면 철자 규칙으로 추측합니다(Helsinki 헬신키 → 헬싱키). 미국식 발음을 옮기므로 관례 표기와 다를 수 있고(Golf 갈프), 직접 작성한 사전·브랜드·사용자 사전이 우선합니다. 사전 파일은 저장소에 없고 서버의 CMU importer 내보내기를 씁니다.",
+      "examples": []
     },
     {
       "id": "brand-lexicon",

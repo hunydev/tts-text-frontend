@@ -4,8 +4,18 @@ Run only in the isolated worker. No web request can select a library/resource pa
 """
 
 import ctypes as C
+import os
 import tempfile
 from pathlib import Path
+
+
+def cmu_runtime():
+    """The CMUdict runtime export loaded by english_dictionary=cmu (2026-10-03)."""
+    explicit = os.environ.get("TTF_CMU_RUNTIME")
+    if explicit:
+        return Path(explicit)
+    return (Path(__file__).resolve().parents[2] /
+            "benchmark/generated/cmudict-runtime-full/pronunciation.tsv")
 
 Z = C.c_size_t
 I = C.c_int
@@ -261,6 +271,14 @@ class Engine:
                 self.load(resources / "domains/finance/ko-KR/rules.tsv", 2)
             if options.get("brand_lexicon") == "on":
                 self.load(resources / "domains/brands/ko-KR/lexicon.tsv", 2)
+            if options.get("english_dictionary") == "cmu":
+                # Optional CMUdict pronunciations (BSD-style, not in Git): the importer's local
+                # runtime export, or TTF_CMU_RUNTIME. Authored lexicons still win over it.
+                path = cmu_runtime()
+                if not path.is_file():
+                    raise ValueError("CMU pronunciation export not found: " + str(path) +
+                                     " (see benchmark/importers/cmudict/README.md)")
+                self.load(path, 2)
             for path, layer in overrides:
                 self.load(path, layer)
             if options.get("customer_tsv"):
