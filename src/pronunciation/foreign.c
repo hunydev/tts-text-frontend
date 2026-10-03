@@ -71,9 +71,14 @@ ttf_status_t ttf_foreign_lookup(const ttf_engine_t *e, const char *source, const
     *hit = ttf_resource_get(e, "lexicon", target, key, layer);
     /* lexicon_case: lower entries (kg, cm) do not apply to an all-capital
        surface (KG이니시스, KB국민은행 are letters); upper entries (5G, 4G) apply
-       only to a surface without lowercase letters (생강 2g is a measure). */
+       only to a surface without lowercase letters (생강 2g is a measure). The
+       rule restricts entries of its own layer or below: a domain, customer or
+       user entry above it (MY 마이, ETF 이티에프) keeps applying (2026-10-03). */
     if (*hit && n >= 2) {
-        const char *rule = ttf_resource_get(e, "lexicon_case", target, key, NULL);
+        ttf_resource_layer_t rule_layer = TTF_LAYER_COMMON;
+        const char *rule = ttf_resource_get(e, "lexicon_case", target, key, &rule_layer);
+        if (rule && *layer > rule_layer)
+            rule = NULL;
         int capitals = 1, lowercase = 0;
         for (i = 0; i < n; i++) {
             if (text[i] >= 'a' && text[i] <= 'z')

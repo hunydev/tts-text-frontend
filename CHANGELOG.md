@@ -2,6 +2,11 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- lexicon_case restricts only entries of its own layer or below: a domain,
+  customer or user entry above it keeps applying to an all-capital surface
+  (customer MY 마이, finance ETF 이티에프). Five contract rows follow the common
+  English words (my_name 마이 언더스코어 네임, report.txt 리포트.티엑스티,
+  test_case 테스트 언더스코어 케이스) with previous values in notes.
 - Web option english_dictionary=cmu (영어 발음 사전): loads the CMUdict runtime
   export (not in Git; benchmark/generated/cmudict-runtime-full or
   TTF_CMU_RUNTIME) as the domain layer so English words outside the lexicons
