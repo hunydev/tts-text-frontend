@@ -33,7 +33,7 @@
 <label>카테고리<select id="category"><option value="">전체</option></select></label>
 <label>원본 주제<select id="theme" disabled><option value="">전체</option></select></label>
 <label>수정 방향<select id="route"><option value="">전체</option><option value="pattern">패턴 후보</option><option value="lexicon">사전 후보</option><option value="context-control">문맥·명시 제어 후보</option><option value="review">검토 필요</option></select></label>
-<label>결과<select id="status"><option value="different">공백 외 차이</option><option value="spacing">공백만 다름</option><option value="variant">정책 변이만 다름</option><option value="exact">정확 일치</option><option value="unaligned">구간 정렬 실패</option><option value="unscorable">참조 미채점</option><option value="error">엔진 오류</option><option value="">전체</option></select></label>
+<label>결과<select id="status"><option value="different">공백 외 차이</option><option value="spacing">공백만 다름</option><option value="variant">정책 변이만 다름</option><option value="similar">변경 영역 유사(v4)</option><option value="exact">정확 일치</option><option value="unaligned">구간 정렬 실패</option><option value="unscorable">참조 미채점</option><option value="error">엔진 오류</option><option value="">전체</option></select></label>
 <label>원문 검색<input id="query" maxlength="200" placeholder="숫자·단어 검색"></label><label class="check"><input type="checkbox" id="flagged">검토 신호만</label><button id="search" class="primary">조회</button>
 </div><p id="case-count" aria-live="polite"></p><div class="quality-scroll"><table><thead><tr><th>원문</th><th>제공 참조</th><th>실제 출력</th><th>진단</th></tr></thead><tbody id="cases"></tbody></table></div><div class="toolbar"><button id="prev" class="secondary">이전</button><span id="page"></span><button id="next" class="secondary">다음</button></div>
 </section>

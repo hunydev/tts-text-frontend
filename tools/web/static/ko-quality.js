@@ -1,6 +1,6 @@
 "use strict";
 const $ = id => document.getElementById(id);
-const names = {pattern:"패턴 후보",lexicon:"사전 후보","context-control":"문맥·명시 제어 후보",review:"검토 필요",exact:"정확 일치",spacing:"공백만 다름",variant:"정책 변이만 다름",different:"공백·정책 변이 외 차이",unaligned:"정렬 실패",unscorable:"미채점",error:"엔진 오류"};
+const names = {pattern:"패턴 후보",lexicon:"사전 후보","context-control":"문맥·명시 제어 후보",review:"검토 필요",exact:"정확 일치",spacing:"공백만 다름",variant:"정책 변이만 다름",similar:"변경 영역 유사(v4)",different:"공백·정책 변이 외 차이",unaligned:"정렬 실패",unscorable:"미채점",error:"엔진 오류"};
 const state = {reports:[],data:null,baseline:null,page:0,detail:null,sequence:0,runSequence:0,detailSequence:0};
 const number = v => Number(v).toLocaleString("ko-KR");
 const percent = v => v===null || v===undefined ? "—" : (v*100).toFixed(2)+"%";
@@ -10,14 +10,15 @@ async function get(path,args={}){const r=await fetch(path+"?"+new URLSearchParam
 function safely(fn){return (...args)=>Promise.resolve().then(()=>fn(...args)).catch(e=>message(e.message,true));}
 function download(name,data){const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)+"\n"],{type:"application/json"}));const a=node("a");a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 function option(value,text){const e=node("option",text);e.value=value;return e;}
-function card(title,value,detail){const e=node("div");e.className="quality-card";e.append(node("span",title),node("strong",value),node("small",detail));return e;}
-function bar(m){const e=node("div");e.className="bar";e.title=`정확 ${percent(m.exact_rate)} / 공백 제거 ${percent(m.compact_rate)}`;for(const [kind,v] of [["exact",m.exact_rate||0],["spacing",m.scorable?m.spacing_only/m.scorable:0]]){const x=node("span");x.className=kind;x.style.width=(v*100)+"%";e.append(x);}return e;}
+function card(title,value,detail,kind){const e=node("div");e.className="quality-card"+(kind?" "+kind:"");e.append(node("span",title),node("strong",value),node("small",detail));return e;}
+function bar(m){const e=node("div");e.className="bar";e.title=`정확 ${percent(m.exact_rate)} / 공백 제거 ${percent(m.compact_rate)}`+(m.similar_rate!==undefined?` / 변경 영역 유사(v4) ${percent(m.similar_rate)}`:"");const near=m.similar_rate!==undefined&&m.scorable?(m.similar-m.compact)/m.scorable:0;for(const [kind,v] of [["exact",m.exact_rate||0],["spacing",m.scorable?m.spacing_only/m.scorable:0],["similar",near]]){const x=node("span");x.className=kind;x.style.width=(v*100)+"%";e.append(x);}return e;}
 function delta(current,old){if(!old)return "—";const one=(a,b)=>a===null||b===null?"—":((a-b)*100>=0?"+":"")+((a-b)*100).toFixed(2)+"pp";return `정확 ${one(current.exact_rate,old.exact_rate)} / 공백 ${one(current.compact_rate,old.compact_rate)}`+(current.variant_rate!==undefined&&old.variant_rate!==undefined?` / 변이 ${one(current.variant_rate,old.variant_rate)}`:"");}
 function render(){
  const r=state.data,m=r.sentences;$("cards").replaceChildren(
   card("정확 일치",percent(m.exact_rate),`${number(m.exact)} / ${number(m.scorable)}문장`),
   card("공백 제거 일치",percent(m.compact_rate),`${number(m.compact)} / ${number(m.scorable)}문장`),
-  ...(m.variant_rate!==undefined?[card("정책 변이 무시 일치",percent(m.variant_rate),`${number(m.variant)} / ${number(m.scorable)}문장 · 영/공·숫자 사이 구분자`)]:[card("공백만 다른 문장",number(m.spacing_only),"정확 불일치 중 공백 제거 후 일치")]),
+  ...(m.variant_rate!==undefined?[card("정책 변이 무시 일치",percent(m.variant_rate),`${number(m.variant)} / ${number(m.scorable)}문장 · 영/공·숫자 사이 구분자`+(m.punctuation_only!==undefined?`·문장부호(v3, ${number(m.punctuation_only)})`:""))]:[card("공백만 다른 문장",number(m.spacing_only),"정확 불일치 중 공백 제거 후 일치")]),
+  ...(m.similar_rate!==undefined?[card("변경 영역 유사 (v4)",percent(m.similar_rate),`${number(m.similar)} / ${number(m.scorable)}문장 · 바뀐 구간 유사도 ≥ 0.85, 숫자 차이 제외`,"similar")]:[]),
   card("전체 입력",number(m.total),`미채점 ${number(m.unscorable)} · 엔진 오류 ${number(m.errors)}`));
  $("provenance").textContent=`${r.created_at} · 원본 ${r.source.split} · 엔진 ${r.engine.library_sha256.slice(0,12)} · HEAD ${r.engine.git_head.slice(0,7)}${r.engine.git_dirty?" + 작업 중 변경":""}`;
  const comparable=state.baseline&&state.baseline.comparison_key===r.comparison_key;

@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
+import difflib
 import json
 from pathlib import Path
 import re
@@ -11,6 +12,7 @@ import sqlite3
 import subprocess
 import sys
 import time
+import unicodedata
 import zlib
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -19,7 +21,7 @@ from benchmark.common import digest_json, ensure_output, sha256, tree_hash
 from benchmark.evaluators.evaluate import Backend, align_span
 from benchmark.importers.korean_release.import_release import compact, ROUTES
 
-METRIC_VERSION = 'ko-reference-agreement-v2'
+METRIC_VERSION = 'ko-reference-agreement-v4'
 OPTIONS = dict(input_format='plain',output_mode='speech',unreadable='preserve',
                hanja='passthrough',kana='passthrough',render_policy='phonetic',
                brackets='read',unknown_foreign='guess',decorative='follow',initialism='spell')
@@ -39,19 +41,93 @@ VARIANT_FOLDS = (
 LEADING_ILMAN = re.compile('(?<![가-힣])(?<![공영일이삼사오육칠팔구십백천만억조] )일만')
 
 
-def variant(text):
+def unpunctuated(text):
+    """v3: punctuation (Unicode P*) is not read aloud; a reference that adds a final period the
+    source lacks, or drops the source's 1·2 middle dot, differs only in prosody marks."""
+    return ''.join(ch for ch in text if not unicodedata.category(ch).startswith('P'))
+
+
+def _v2(text):
     text = compact(LEADING_ILMAN.sub('만', text))
     for pattern, replacement in VARIANT_FOLDS:
         text = pattern.sub(replacement, text)
     return text
 
 
+def variant(text):
+    return unpunctuated(_v2(text))
+
+
+# v4: compare only what each side rewrote. Both the reference and the output are diffed against
+# the source; the rewritten source stretches are merged, and the two readings of each stretch
+# (with two characters of shared context on each side) are compared by jamo similarity. A
+# difference that touches a number syllable (digits, 점, 십 백 천 만 억 조 경, native numbers)
+# is never similar: one wrong digit must not pass. 프로 and 퍼센트 are folded.
+SIMILAR_THRESHOLD = 0.85
+SIMILAR_CONTEXT = 2
+NUMBER_SYLLABLES = set('공영일이삼사오육칠팔구십백천만억조경점') | set(
+    '하나둘셋넷다섯여섯일곱여덟아홉열스물서른마흔쉰예순일흔여든아흔한두세네')
+
+
+def _plain(text):
+    return variant(text).replace('프로', '퍼센트')
+
+
+def _jamo_ratio(a, b):
+    a, b = unicodedata.normalize('NFD', a), unicodedata.normalize('NFD', b)
+    return 1.0 if a == b else difflib.SequenceMatcher(None, a, b, autojunk=False).ratio()
+
+
+def _rewrites(src, tgt):
+    ops = difflib.SequenceMatcher(None, src, tgt, autojunk=False).get_opcodes()
+
+    def left(pos):  # target offset where a rewrite starting at pos begins
+        for tag, i1, i2, j1, j2 in ops:
+            if tag == 'equal' and i1 < pos <= i2:
+                return j1 + pos - i1
+        return 0
+
+    def right(pos):  # target offset where a rewrite ending at pos ends
+        for tag, i1, i2, j1, j2 in ops:
+            if tag == 'equal' and i1 <= pos < i2:
+                return j1 + pos - i1
+        return len(tgt)
+    return [(i1, i2) for tag, i1, i2, j1, j2 in ops if tag != 'equal'], left, right
+
+
+def similar(source, expected, actual):
+    """(similar, worst stretch similarity) of an output to a reference, judged on rewritten stretches."""
+    src, ref, out = _plain(source), _plain(expected), _plain(actual)
+    if ref == out:
+        return True, 1.0
+    ref_spans, ref_left, ref_right = _rewrites(src, ref)
+    out_spans, out_left, out_right = _rewrites(src, out)
+    merged = []
+    for a, b in sorted(ref_spans + out_spans):
+        if merged and a <= merged[-1][1]:
+            merged[-1][1] = max(merged[-1][1], b)
+        else:
+            merged.append([a, b])
+    worst = 1.0
+    for a, b in merged:
+        r, o = ref[ref_left(a):ref_right(b)], out[out_left(a):out_right(b)]
+        if r == o:
+            continue
+        for tag, i1, i2, j1, j2 in difflib.SequenceMatcher(None, r, o, autojunk=False).get_opcodes():
+            if tag != 'equal' and (set(r[i1:i2]) | set(o[j1:j2])) & NUMBER_SYLLABLES:
+                return False, 0.0
+        before = src[max(0, a - SIMILAR_CONTEXT):a]
+        after = src[b:b + SIMILAR_CONTEXT]
+        worst = min(worst, _jamo_ratio(before + r + after, before + o + after))
+    return worst >= SIMILAR_THRESHOLD, round(worst, 4)
+
+
 def metric():
     return dict(total=0,scorable=0,unscorable=0,errors=0,unaligned=0,exact=0,
-                compact=0,spacing_only=0,variant=0,different=0)
+                compact=0,spacing_only=0,variant=0,punctuation_only=0,similar=0,different=0)
 
 
-def add(m, expected, actual, error=None, unaligned=False):
+def add(m, expected, actual, error=None, unaligned=False, source=None):
     m['total'] += 1
     m['errors'] += bool(error)
     m['unaligned'] += bool(unaligned)
@@ -62,16 +138,20 @@ def add(m, expected, actual, error=None, unaligned=False):
     exact = actual is not None and actual == expected
     loose = actual is not None and compact(actual) == compact(expected)
     folded = loose or (actual is not None and variant(actual) == variant(expected))
+    near = folded or (actual is not None and source is not None and similar(source, expected, actual)[0])
     m['exact'] += exact; m['compact'] += loose
     m['spacing_only'] += loose and not exact
     m['variant'] += folded
+    m['punctuation_only'] += folded and not loose and _v2(actual) != _v2(expected)
+    m['similar'] += near
     m['different'] += not folded
 
 
 def finish(m):
     return dict(m,exact_rate=m['exact']/m['scorable'] if m['scorable'] else None,
                 compact_rate=m['compact']/m['scorable'] if m['scorable'] else None,
-                variant_rate=m['variant']/m['scorable'] if m['scorable'] else None)
+                variant_rate=m['variant']/m['scorable'] if m['scorable'] else None,
+                similar_rate=m['similar']/m['scorable'] if m['scorable'] else None)
 
 
 def read_reviews(path):
@@ -181,22 +261,26 @@ def run(import_dir, library, resources, output, reviews_path=None, label='', bac
                         error=str(exc)
                 expected=row['expected'];cat=row['category_en'];rev=reviews.get(row['id'])
                 primary=rev.get('route',row['route']) if rev else row['route']
-                add(sentences,expected,actual,error);add(category[cat]['sentences'],expected,actual,error)
-                if not flags_here: add(clean,expected,actual,error)
+                src=row['text']
+                add(sentences,expected,actual,error,source=src);add(category[cat]['sentences'],expected,actual,error,source=src)
+                if not flags_here: add(clean,expected,actual,error,source=src)
                 if row['pair_group'] not in seen:
-                    add(unique,expected,actual,error);seen.add(row['pair_group'])
+                    add(unique,expected,actual,error,source=src);seen.add(row['pair_group'])
                 flags.update(flags_here);category[cat]['flagged']+=bool(flags_here)
                 if rev:
                     review_counts[rev['status']]+=1
                     if rev['status'] in ('accepted','corrected'):
-                        add(reviewed,rev.get('expected',expected) if rev['status']=='corrected' else expected,actual,error)
+                        add(reviewed,rev.get('expected',expected) if rev['status']=='corrected' else expected,actual,error,source=src)
                 # Adjusted: every sentence except review exclusions, corrections applied.
                 if not (rev and rev['status']=='excluded'):
                     fixed=rev['expected'] if rev and rev['status']=='corrected' else expected
-                    add(adjusted,fixed,actual,error);add(category[cat]['adjusted'],fixed,actual,error)
+                    add(adjusted,fixed,actual,error,source=src);add(category[cat]['adjusted'],fixed,actual,error,source=src)
+                near=(similar(src,expected,actual) if expected is not None and actual is not None
+                      else (False,None))
                 status=('unscorable' if expected is None else 'error' if error else
                         'exact' if actual==expected else 'spacing' if compact(actual)==compact(expected) else
-                        'variant' if variant(actual)==variant(expected) else 'different')
+                        'variant' if variant(actual)==variant(expected) else
+                        'similar' if near[0] else 'different')
                 status_counts[status]+=1
                 projected=[]
                 for s in row['spans']:
@@ -218,7 +302,7 @@ def run(import_dir, library, resources, output, reviews_path=None, label='', bac
                     projected.append(detail)
                     db.execute('INSERT INTO spans(case_id,category,theme,route,status,details) VALUES(?,?,?,?,?,?)',
                                (row['id'],cat,s['theme'],s['route'],st,zlib.compress(json.dumps(detail,ensure_ascii=False).encode(),1)))
-                detail=dict(row,actual=actual,error=error,status=status,flags=flags_here,route=primary,
+                detail=dict(row,actual=actual,error=error,status=status,similarity=near[1],flags=flags_here,route=primary,
                             review=rev,spans=projected,engine_spans=result['spans'] if result else [])
                 db.execute('INSERT INTO cases VALUES(?,?,?,?,?,?,?,?)',
                     (row['id'],cat,primary,status,bool(flags_here),row['input_group'],row['text'],zlib.compress(json.dumps(detail,ensure_ascii=False).encode(),1)))
@@ -267,9 +351,16 @@ def run(import_dir, library, resources, output, reviews_path=None, label='', bac
                                 adjusted='All sentences minus review exclusions, with review corrections applied; '
                                          'equals the raw headline when no review file is given. Compare engines only on the same review file.',
                                 routes='Source-shape suggestions, not correctness verdicts. No lexicon or controls injected into evaluation.',
-                                variant='Compact, plus a symmetric fold inside digit runs only: zero 영/공, the '
-                                        'separator 다시/에 between digits and a leading 일만/만. Readings such as '
-                                        'native digits or 서른/삼십 are not folded.',
+                                variant='v3: compact, plus a symmetric fold inside digit runs only: zero 영/공, the '
+                                        'separator 다시/에 between digits and a leading 일만/만, and punctuation '
+                                        '(not read aloud) removed on both sides. Readings such as native digits or '
+                                        '서른/삼십 are not folded.',
+                                similar='v4 (sentences only): the source stretches each side rewrote are merged and '
+                                        'their two readings compared with two characters of shared context; a '
+                                        'sentence is similar when every stretch has jamo similarity >= %.2f and no '
+                                        'difference touches a number syllable (digits, 점, 십 백 천 만 억 조 경, native '
+                                        'numbers). 프로/퍼센트 are folded. A lenient view next to the strict scores, '
+                                        'not a correctness verdict.' % SIMILAR_THRESHOLD,
                                 themes='Dataset topics, not semiotic class truth.',timing='Wall time of report generation, not native throughput or audio latency.'))
         db.close()
         report['database_sha256']=sha256(output/'report.sqlite')

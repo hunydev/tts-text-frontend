@@ -2,6 +2,16 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Korean benchmark metric v4 (ko-reference-agreement-v4; raw scores
+  unchanged). v3: the variant fold also removes punctuation on both sides, so a
+  reference that adds a final period the source lacks or drops the source's
+  middle dot no longer counts as a difference (526 sentences; counted as
+  punctuation_only). v4 similar (sentences): the source stretches each side
+  rewrote are merged and compared by jamo similarity with two characters of
+  context; similar when every stretch is >= 0.85 and no difference touches a
+  number syllable (공일공 일이삼사에 일이삼사 ~ 공일공 일이삼사 일이삼사; 일이삼사 vs
+  천이백삼십사 stays different). The /ko-quality page shows v4 with a red card
+  and bar and a 변경 영역 유사(v4) status filter.
 - Brand pack: the 227 review entries whose label matched a KIPRIS trademark
   spelling were reviewed one by one (delegated by the project owner): 212
   accepted, 12 accepted with a corrected reading (Fremantle 프리맨틀, Hyundai
