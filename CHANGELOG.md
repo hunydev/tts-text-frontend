@@ -2,6 +2,11 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Brand pack: the FTC franchise list now includes base year 2026 (8,668 rows,
+  collected 2026-10-03; 2017-2025 unchanged). 50 new owner-registered readings
+  (Bean Plus 빈플러스, Dear Burger 디어버거, Millhaus 밀하우스, Busan Ritual Coffee
+  부산리추얼커피); the FTC pack has 1,347 entries and 68 wait for review. Source
+  record ftc-franchise-brands-2026-10-03.
 - Add the join control, the opposite of {@break} (project-owner request):
   [[너 나 안 본 지 두 달 다 되 감]]{@join} reads 너나안본지두달다되감 and
   [[3시 반에 만나]]{@join} 세시반에만나; the group is read as usual and the spaces

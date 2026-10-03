@@ -34,7 +34,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from build_pack import KEY, PROBE, ROOT, Engine, apply_decisions, review_note, similarity, slug  # noqa: E402
 
-SOURCE = "ftc-franchise-brands-2026-09-30"
+SOURCE = "ftc-franchise-brands-2026-10-03"  # 2017-2026 base years, collected 2026-10-03
 HANGUL = r"[가-힣]+(?: [가-힣]+)*"
 LATIN = r"[A-Za-z][A-Za-z&'.\- ]*[A-Za-z.]|[A-Za-z]"
 PAIRS = (re.compile(r"^(?P<ko>%s)\s*\((?P<en>%s)\)$" % (HANGUL, LATIN)),

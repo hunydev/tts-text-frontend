@@ -19,7 +19,7 @@
 | 출처 | 라이선스 | 쓰는 것 | 항목 |
 |---|---|---|---|
 | Wikidata 회사·브랜드 | CC0 | 영어 이름과 한국어 레이블 | 4,888 |
-| 공정거래위원회 가맹정보 브랜드 목록 (2017~2025) | 이용허락범위 제한 없음 | `코드런(CODE RUN)`처럼 한글과 로마자를 함께 등록한 브랜드명 | 1,297 |
+| 공정거래위원회 가맹정보 브랜드 목록 (2017~2026) | 이용허락범위 제한 없음 | `코드런(CODE RUN)`처럼 한글과 로마자를 함께 등록한 브랜드명 | 1,347 |
 
 두 사전 모두 `lexicons/ko-KR/brand-*.jsonl` 원본에서 `manage.py build`로 만든다. 검토 상태는 모두 pending이다.
 
@@ -101,7 +101,7 @@
 python3 tools/lexicon/brands/collect_wikidata.py benchmark/generated/brand-lexicon/wikidata
 python3 tools/lexicon/brands/build_pack.py benchmark/generated/brand-lexicon/wikidata \
   benchmark/generated/brand-lexicon/pack-report --library build/libtts_text_frontend.so
-python3 tools/lexicon/brands/collect_ftc.py benchmark/generated/brand-lexicon/ftc 2017 2018 2019 2020 2021 2022 2023 2024 2025
+python3 tools/lexicon/brands/collect_ftc.py benchmark/generated/brand-lexicon/ftc 2017 2018 2019 2020 2021 2022 2023 2024 2025 2026
 python3 tools/lexicon/brands/build_ftc.py benchmark/generated/brand-lexicon/ftc \
   benchmark/generated/brand-lexicon/ftc-report --library build/libtts_text_frontend.so
 ```
@@ -114,7 +114,8 @@ python3 tools/lexicon/brands/build_ftc.py benchmark/generated/brand-lexicon/ftc 
 
 - 레이블과 등록명은 발음의 권위가 아니다. 소유자 표기를 따르므로 `Refresh Bowl` → 리프레쉬보울처럼 외래어 표기법과 다를 수 있다.
 - 무작위 60건을 확인한 Wikidata 정밀도는 약 95%다.
-- 검토 대기는 Wikidata 1,459건, 공정위 64건이다.
+- 검토 대기는 Wikidata 1,459건, 공정위 68건이다.
+- 공정위 2026년 기준 데이터(8,668행)는 2026-10-03에 받았다. 2017~2025년은 9월 30일 수집분과 같고, 2026년에서 표기 50건이 새로 들어왔다(빈플러스, 디어버거, 밀하우스, 부산리추얼커피 등).
 - `F&F Entertainment`처럼 `&`로 이은 약어가 앞에 오는 이름 3건은 약어 규칙이 먼저 잡아 팩에서 빠진다.
 - 별칭·단어 대응 규칙은 Jev 점수로 확인했다(`docs/lexicon-maintenance.ko.md`). 규칙으로 빠지거나 바뀐 Wikidata 항목 256건 중 133건이 Jev 0.5 미만이었다. 전체 평균은 약 5%다. Wikidata 팩의 0.5 미만은 253건에서 127건으로, 0.3 미만은 95건에서 34건으로 줄었다.
 - 계약은 `tests/evaluation/ko_brand_lexicon_v24.jsonl` 22건이다. 로딩, 여러 단어 조회, 조사 호응, 대문자 단어, 약어 보호, 연결 부호를 확인하며, 구현 전에 작성했다.
