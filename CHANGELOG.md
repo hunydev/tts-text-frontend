@@ -2,6 +2,10 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Brand pack: the remaining 167 review entries were checked against KIPRIS
+  (2026-10-04); of 21 matches, 13 accepted, 3 accepted with the reading of the
+  written name (American Airlines 아메리칸 에어라인스, Korea Zinc 코리아 징크), 5
+  not added. Wikidata pack 5,108 entries, FTC 1,350.
 - Korean benchmark metric v4 (ko-reference-agreement-v4; raw scores
   unchanged). v3: the variant fold also removes punctuation on both sides, so a
   reference that adds a final period the source lacks or drops the source's

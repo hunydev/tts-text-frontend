@@ -113,6 +113,11 @@
   SOLVANG 쏠뱅(같은 키가 Wikidata Solvang 솔방).
 - 결과: Wikidata 팩 4,888 → 5,093건(+205), 공정위 팩 1,347 → 1,349건(+2). 4건(Honor, People,
   Dr Pepper, Yeongnam Air)은 이제 기본 엔진이 같은 읽기를 내서 넣지 않았다.
+- 2026-10-04 추가분: 아직 조회하지 않은 검토 대기 167건을 조회해 21건이 일치했다. 그대로 채택
+  13건(McDonald's 맥도날드, Tod's 토즈, Decca 데카, Swiss Re 스위스리 등), 읽기를 고쳐 채택 3건
+  (American Airlines 아메리칸 항공 → 아메리칸 에어라인스, Korea Zinc 고려아연 → 코리아 징크, Sony Music
+  Entertainment Japan → … 재팬). 번역 레이블이지만 엔진이 이미 쓰인 대로 읽는 4건(Jeju Air, Busan Bank 등)과
+  Wikidata 팩에 같은 키가 있는 공정위 Pullman은 넣지 않았다. Wikidata 팩 5,108건, 공정위 팩 1,350건.
 - 현재 엔진으로 빌더를 다시 돌리면 검토와 무관한 변동이 생긴다(Wikidata +113, −190; 공정위 +32, −13).
   빠지는 쪽은 대부분 엔진이 이제 같게 읽는 항목이고, 들어오는 쪽에는 검토하지 않은 레이블이 섞여
   있어(enditi engineering 비파괴 엔지니어링) 이번에는 반영하지 않았다.
