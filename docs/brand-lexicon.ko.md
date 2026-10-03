@@ -95,6 +95,28 @@
    - 복수형 누락: `the hundreds` 더헌드레드
    Jev는 복수형 차이를 거의 구분하지 못한다. 그래서 복수형을 바로잡은 항목(`spaces` 스페이시스, `dean foods` 딘 푸즈)은 점수가 오히려 내려갔다.
 
+## KIPRIS 교차 확인 검토 (2026-10-04)
+
+검토 대기 항목 가운데 KIPRIS 상표 표기(한글·영문 병기 상표명, 권리자명)와 Wikidata 한국어 레이블이
+일치한 227건을 하나씩 검토했다(검토자 Claude, 프로젝트 소유자 위임). KIPRIS 자료는 팩에 넣지 않고,
+읽기는 Wikidata(또는 공정위) 표기를 쓴다. 결정은 `lexicons/reviews/decisions/brands.jsonl`의
+`accept` 행으로 남고 빌더가 다시 만들 때도 지킨다.
+
+- 그대로 채택 212건: Dyson 다이슨, Accenture 액센츄어, Bacchus 박카스, Carrefour 까르푸, Laneige 라네즈,
+  Lock & Lock 락앤락, Domino's Pizza 도미노피자, Kumho Tire 금호타이어. 대문자 표기라도 단어로 읽는
+  브랜드(POSCO 포스코, IMAX 아이맥스, SPAO 스파오)는 검토로 채택하면 대문자 규칙의 예외가 된다.
+- 읽기를 고쳐 채택 12건: 레이블이 다른 이름이거나 단어를 더하고 빼거나 번역한 경우다(Fremantle
+  프리맨틀미디어 → 프리맨틀, Merrill 메릴린치 → 메릴, Hyundai Steel 현대제철 → 현대스틸, Korail Retail
+  코레일유통 → 코레일 리테일, Pelicana Chicken 페리카나 → 페리카나 치킨, Wemakeprice 위메프 →
+  위메이크프라이스).
+- 채택하지 않음 3건: Hermes(한국어 문장에서는 대개 패션 브랜드 에르메스), Tongrentang 동인당(한자음),
+  SOLVANG 쏠뱅(같은 키가 Wikidata Solvang 솔방).
+- 결과: Wikidata 팩 4,888 → 5,093건(+205), 공정위 팩 1,347 → 1,349건(+2). 4건(Honor, People,
+  Dr Pepper, Yeongnam Air)은 이제 기본 엔진이 같은 읽기를 내서 넣지 않았다.
+- 현재 엔진으로 빌더를 다시 돌리면 검토와 무관한 변동이 생긴다(Wikidata +113, −190; 공정위 +32, −13).
+  빠지는 쪽은 대부분 엔진이 이제 같게 읽는 항목이고, 들어오는 쪽에는 검토하지 않은 레이블이 섞여
+  있어(enditi engineering 비파괴 엔지니어링) 이번에는 반영하지 않았다.
+
 ## 3. 다시 만들기
 
 ```bash

@@ -32,7 +32,8 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from build_pack import KEY, PROBE, ROOT, Engine, apply_decisions, review_note, similarity, slug  # noqa: E402
+from build_pack import (KEY, PROBE, ROOT, Engine, apply_decisions, promoted, review_note,  # noqa: E402
+                        similarity, slug)
 
 SOURCE = "ftc-franchise-brands-2026-10-03"  # 2017-2026 base years, collected 2026-10-03
 HANGUL = r"[가-힣]+(?: [가-힣]+)*"
@@ -159,7 +160,9 @@ def main():
             review.extend(dict(x, reason="conflict") for x in rows)
         else:
             accepted.append(rows[0])
-    accepted = apply_decisions(accepted, "ftc", stats)
+    lift = promoted(review, "ftc", stats)
+    review = [r for r in review if r not in lift]
+    accepted = apply_decisions(accepted + lift, "ftc", stats)
     args.report.mkdir(parents=True, exist_ok=True)
     (args.report / "candidates.jsonl").write_text("".join(json.dumps(c, ensure_ascii=False) + "\n" for c in accepted),
                                                   encoding="utf-8")

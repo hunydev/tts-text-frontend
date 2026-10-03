@@ -2,6 +2,15 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Brand pack: the 227 review entries whose label matched a KIPRIS trademark
+  spelling were reviewed one by one (delegated by the project owner): 212
+  accepted, 12 accepted with a corrected reading (Fremantle 프리맨틀, Hyundai
+  Steel 현대스틸), 3 left out (Hermes, Tongrentang, SOLVANG). Decisions use a
+  new accept action in lexicons/reviews/decisions/brands.jsonl; an accepted
+  capital brand (POSCO 포스코, IMAX 아이맥스) bypasses the capital-letters rule.
+  Wikidata pack 4,888 to 5,093 entries, FTC 1,347 to 1,349; no KIPRIS data is
+  stored. Rebuild drift from the newer engine is not applied
+  (docs/brand-lexicon.ko.md).
 - Engine start-up: a record validated when its file loads is not validated
   again by ttf_engine_freeze or the CLI report while only the engine and pack
   validators are registered (a custom validator still re-checks every row),

@@ -102,7 +102,8 @@ def decisions(source):
 
     lexicons/reviews/decisions/brands.jsonl records a reviewer's drop or fix of a
     generated entry, so a rebuild keeps it; a fix replaces the reading and the
-    note keeps the collected one."""
+    note keeps the collected one. An accept promotes an entry left for review,
+    optionally with a corrected reading (2026-10-04)."""
     path = ROOT / "lexicons/reviews/decisions/brands.jsonl"
     out = {}
     if path.exists():
@@ -114,12 +115,26 @@ def decisions(source):
     return out
 
 
+def promoted(review, source, stats):
+    """Entries left for review that a reviewer accepted."""
+    reviewed = decisions(source)
+    out = [r for r in review if reviewed.get(r["term"], {}).get("action") == "accept"]
+    stats["review-accepted"] += len(out)
+    return out
+
+
 def apply_decisions(entries, source, stats):
     """Drop or correct reviewed entries; entries are dicts with term/pronunciation."""
     reviewed = decisions(source)
     kept = []
     for entry in entries:
         d = reviewed.get(entry["term"])
+        if d and d["action"] == "accept":
+            if d.get("pronunciation") and d["pronunciation"] != entry["pronunciation"]:
+                entry = dict(entry, collected=entry["pronunciation"], pronunciation=d["pronunciation"])
+            entry = dict(entry, review=d)
+            kept.append(entry)
+            continue
         if d and d["action"] == "drop":
             stats["review-dropped"] += 1
             continue
@@ -135,6 +150,9 @@ def review_note(c):
     d = c.get("review")
     if not d:
         return ""
+    if d["action"] == "accept":
+        corrected = " (collected %s)" % c["collected"] if c.get("collected") else ""
+        return " Accepted from review %s by %s%s: %s." % (d["reviewed_at"], d["reviewer"], corrected, d["reason"])
     return " Reading corrected in review %s by %s (collected %s): %s." % (
         d["reviewed_at"], d["reviewer"], c["collected"], d["reason"])
 
@@ -195,6 +213,7 @@ def main():
     rows = [json.loads(l) for p in sorted(args.wikidata.glob("*.jsonl"))
             for l in p.read_text(encoding="utf-8").splitlines() if l.strip()]
     stats = collections.Counter()
+    accepted_terms = decisions("wikidata")
     by_key = collections.defaultdict(list)
     for row in rows:
         if row["cls"] in EXCLUDED_CLASSES:
@@ -218,7 +237,8 @@ def main():
             if not ko:
                 stats["korean-not-hangul"] += 1
                 continue
-            if not any(ch.islower() for ch in form):
+            # A reviewer can accept a capital brand read as a word (POSCO 포스코, IMAX 아이맥스).
+            if not any(ch.islower() for ch in form) and accepted_terms.get(term, {}).get("action") != "accept":
                 stats["all-capital"] += 1
                 continue
             if term in other_brand_terms:
@@ -267,7 +287,9 @@ def main():
                                                   encoding="utf-8")
     (args.report / "review.jsonl").write_text("".join(json.dumps(c, ensure_ascii=False) + "\n"
                                                       for c in decided if c["status"] == "review"), encoding="utf-8")
-    accepted = apply_decisions([c for c in decided if c["status"] == "accept"], "wikidata", stats)
+    accepted = apply_decisions([c for c in decided if c["status"] == "accept"] +
+                               promoted([c for c in decided if c["status"] == "review"], "wikidata", stats),
+                               "wikidata", stats)
 
     def record(c):
         return dict(id="brand-wd-%s-%s" % (c["qid"].lower(), slug(c["term"])),
