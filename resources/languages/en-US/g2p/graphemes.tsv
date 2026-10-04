@@ -202,3 +202,79 @@ g2p	en-US	ves$	V S
 g2p	en-US	^oxid	AO K . S AY D
 g2p	en-US	icke	IH K IH
 g2p	en-US	^color	K AH L ER
+
+# Loanword spelling rules tuned on the 표준국어대사전 English loanwords (2026-10-05): magic e
+# (face 페이스, sideline 사이드라인), final a (camera 카메라), -ism 즘, micro- 마이크로, -meter 미터,
+# nk 탱커, tch 노치, dge 배지, au/-all 오, y as 아이 (hybrid, typewriter). Each rule was kept only when it
+# gained on the development words without losses; see docs/english-words.ko.md.
+g2p	en-US	ace$	EY S
+g2p	en-US	ide$	AY D
+g2p	en-US	ite$	AY T
+g2p	en-US	ime$	AY M
+g2p	en-US	ike$	AY K
+g2p	en-US	ipe$	AY P
+g2p	en-US	ire$	AY ER
+g2p	en-US	ire	AY ER
+g2p	en-US	aking	EY K IH NG
+g2p	en-US	aper	EY P ER
+g2p	en-US	a$	AA
+g2p	en-US	ism$	IH Z AX M
+g2p	en-US	^micro	M AY K R OW
+g2p	en-US	^bio	B AY OW
+g2p	en-US	^cyc	S AY K
+g2p	en-US	^kn	N
+g2p	en-US	^chr	K R
+g2p	en-US	^chor	K AO R
+g2p	en-US	meter	M IY T ER
+g2p	en-US	ook	UH K
+g2p	en-US	head	HH EH D
+g2p	en-US	ey$	IY
+g2p	en-US	cer	S ER
+g2p	en-US	air	EH ER
+g2p	en-US	dle$	D L
+g2p	en-US	ape$	EY P
+g2p	en-US	ane$	EY N
+g2p	en-US	ame$	EY M
+g2p	en-US	ase$	EY S
+g2p	en-US	ave$	EY V
+g2p	en-US	ize$	AY Z
+g2p	en-US	ute$	UW T
+g2p	en-US	aping	EY P IH NG
+g2p	en-US	ating	EY T IH NG
+g2p	en-US	rive$	R AY V
+g2p	en-US	^chl	K L
+g2p	en-US	cle$	K L
+g2p	en-US	gle$	G L
+g2p	en-US	zard$	Z ER D
+g2p	en-US	^hy	HH AY
+g2p	en-US	^ty	T AY
+g2p	en-US	byte	B AY T
+g2p	en-US	ype	AY P
+g2p	en-US	nk	NG K
+g2p	en-US	ngle$	NG G L
+g2p	en-US	au	AO
+g2p	en-US	all$	AO L
+g2p	en-US	ball	B AO L
+g2p	en-US	alk	AO K
+g2p	en-US	^shoo	SH UW
+g2p	en-US	ole$	OW L
+g2p	en-US	iding	AY D IH NG
+g2p	en-US	azing	EY Z IH NG
+g2p	en-US	dge	JH
+g2p	en-US	tch	CH
+g2p	en-US	qua	K W AO
+g2p	en-US	ckle$	K L
+g2p	en-US	^uni	Y UW N IH
+g2p	en-US	^mile	M AY L
+g2p	en-US	ider$	AY D ER
+g2p	en-US	^time	T AY M
+g2p	en-US	^ky	K AY
+g2p	en-US	ault	AO L T
+g2p	en-US	^proo	P R UW
+g2p	en-US	iking	AY K IH NG
+g2p	en-US	iming	AY M IH NG
+g2p	en-US	ading	EY D IH NG
+g2p	en-US	asing	EY S IH NG
+g2p	en-US	gue$	G
+g2p	en-US	dead	D EH D
+g2p	en-US	ealth	EH L TH

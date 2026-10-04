@@ -2,6 +2,17 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- English loanword spelling (plan item 5): 71 g2p rules tuned on the
+  표준국어대사전 English loanwords (magic e 페이스, final a 카메라, -ism 즘,
+  micro- 마이크로, -meter 미터, nk, tch, dge, au, y as 아이), kept only when they
+  gained on the development words without losses; the Korean mapper writes
+  power 파워, shag 섀그 and teamwork 팀워크. Held-out agreement 40.7% → 48.4%
+  (CMU option 52.9% → 55.3%). 44 acronyms read as words (KOSPI 코스피, NIMBY
+  님비, DRAM 디램, TOEIC 토익, ...), all-capital only. Contract
+  ko_acronym_words_v24 (18 cases); three tests that pinned the old spelling
+  guess updated (baba 배바, Samsonite without the brand pack 샘소나이트, the CMU
+  option test now uses Worcester). Korean benchmark +6, -1 (Belize 벨라이즈);
+  English unchanged.
 - Unit symbols (plan item 4): prefixed SI units (mSv, kΩ, μg, MeV, ...), the
   squared unit characters left unread (㏊ 헥타르, ㎍/㎥ 마이크로그램 퍼
   세제곱미터, ㎿, ㎤, ㏈) and Bq/㎏ in both languages. A bare V, A or J (and

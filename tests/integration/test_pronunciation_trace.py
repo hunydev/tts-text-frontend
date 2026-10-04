@@ -27,7 +27,8 @@ SCENARIOS = (
     # An ordinary dictionary homograph is not consulted for a dotted initialism.
     ("U.S.는 표기입니다.", "U.S.", "유에스는 표기입니다.", "initialism", "common",
      ((3, "pronunciation\ten-US\tus\tAH S\n"),)),
-    ("baba는 표기입니다.", "baba", "배배는 표기입니다.", "grapheme-g2p-prototype", "system", ()),
+    # A word-final a reads AA since the loanword rules of 2026-10-05 (camera 카메라); was 배배.
+    ("baba는 표기입니다.", "baba", "배바는 표기입니다.", "grapheme-g2p-prototype", "system", ()),
     ("baba는 표기입니다.", "baba", "바바는 표기입니다.", "grapheme-g2p-prototype", "domain",
      ((2, "g2p\ten-US\tba\tB AA\n"),)),
     ("baba는 표기입니다.", "baba", "비비는 표기입니다.", "grapheme-g2p-prototype", "customer",

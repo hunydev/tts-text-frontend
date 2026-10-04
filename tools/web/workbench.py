@@ -8,6 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 MAX_TEXT_BYTES = 16384
 CORPORA = {
+    "ko-acronym-words-v24": ("Korean acronyms read as words v24", "ko_acronym_words_v24.jsonl"),
     "ko-unit-symbols-v24": ("Unit symbols v24", "ko_unit_symbols_v24.jsonl"),
     "ko-hanja-stdict-v24": ("Korean Hanja from the 표준국어대사전 v24", "ko_hanja_stdict_v24.jsonl"),
     "ko-hanja-rules-v24": ("Korean Hanja reading rules v24", "ko_hanja_rules_v24.jsonl"),

@@ -2670,7 +2670,7 @@ static ttf_status_t render_phones(const ttf_engine_t *e, const ttf_pronunciation
     char phones[128][24];
     size_t count = 0, pos = 0, i, pending_index = SIZE_MAX, glide_index = SIZE_MAX;
     size_t word_begin = out->length;
-    int pending = -1, glide = 0;
+    int pending = -1, glide = 0, glide_next = 0;
     if (strcmp(p->alphabet, "ttf-phones-v1") != 0 && strcmp(p->alphabet, "ARPABET") != 0 &&
         strcmp(p->alphabet, "arpabet") != 0)
         return TTF_EINVAL;
@@ -2754,6 +2754,8 @@ static ttf_status_t render_phones(const ttf_engine_t *e, const ttf_pronunciation
                     v = 17;
                 else if (v == 5)
                     v = 7;
+                else if (v == 1)
+                    v = 3;
             }
             /* Korean loanword spelling drops the r-colouring after a vowel:
                market is 마켓, not 마르케트. The policy is a resource flag. */
@@ -2768,7 +2770,10 @@ static ttf_status_t render_phones(const ttf_engine_t *e, const ttf_pronunciation
             }
             /* Nasals/laterals close syllables before a consonant or word end. */
             if (i + 1 < count && (i + 2 == count || vowel(e, phones[i + 2]) < 0) &&
-                (i + 2 == count || (strcmp(phones[i + 2], "W") && strcmp(phones[i + 2], "Y")))) {
+                (i + 2 == count || strcmp(phones[i + 2], "Y")) &&
+                (i + 2 == count || strcmp(phones[i + 2], "W") || !strcmp(phones[i + 1], "M") ||
+                 !strcmp(phones[i + 1], "N") || !strcmp(phones[i + 1], "NG") ||
+                 !strcmp(phones[i + 1], "L"))) {
                 /* An explicit boundary from the data closes the syllable whatever
                    the phonological default is: up.loading 업로딩. */
                 int boundary = i + 2 < count && !strcmp(phones[i + 2], ".");
@@ -2790,6 +2795,8 @@ static ttf_status_t render_phones(const ttf_engine_t *e, const ttf_pronunciation
                     coda_index = ++i;
                 }
             }
+            /* 파워, 타워: AW before ER gives its u-tail to the next syllable as w. */
+            int aw_glide = !strcmp(phone, "AW") && i + 1 < count && !strcmp(phones[i + 1], "ER");
             {
                 int tail = !strcmp(phone, "AY") || !strcmp(phone, "EY") || !strcmp(phone, "OY") ||
                            !strcmp(phone, "AW");
@@ -2821,6 +2828,10 @@ static ttf_status_t render_phones(const ttf_engine_t *e, const ttf_pronunciation
                 TRY(put_syllable(out, 11, 20, cod));
                 TRY(traced_algorithm(e, "diphthong-tail", out->data + begin, "i-tail",
                                      phone_index));
+            } else if (aw_glide) {
+                glide_next = 1;
+                TRY(traced_algorithm(e, "diphthong-tail", out->data + begin, "u-tail-as-w",
+                                     phone_index));
             } else if (strcmp(phone, "AW") == 0) {
                 TRY(put_syllable(out, 11, 13, cod));
                 TRY(traced_algorithm(e, "diphthong-tail", out->data + begin, "u-tail",
@@ -2835,7 +2846,8 @@ static ttf_status_t render_phones(const ttf_engine_t *e, const ttf_pronunciation
                 TRY(traced_algorithm(e, "linking-r", "", "r-before-vowel", i));
             } else
                 pending = -1;
-            glide = 0;
+            glide = glide_next;
+            glide_next = 0;
         } else if (c >= 0) {
             /* 심플, 프리즘: a sonorant that ends a word after another consonant is
                the coda of the inserted vowel, not a syllable of its own. */

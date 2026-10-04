@@ -80,6 +80,14 @@
       "kind": "editorial-policy",
       "checked_at": "2026-10-03",
       "note": "Authored by the project from the 외래어 표기법 English rules and established usage. Words were chosen by frequency in local Korean-context text whose spelling guess was wrong; no reading is copied from a corpus."
+    },
+    {
+      "id": "project-authored-v24-acronym-words",
+      "title": "Project acronym word-readings, v24 (표준국어대사전 survey)",
+      "url": "https://stdict.korean.go.kr",
+      "kind": "editorial-policy",
+      "checked_at": "2026-10-05",
+      "note": "Acronyms the 표준국어대사전 lists as loanwords read as words, kept by hand only when still read that way in current Korean. The dictionary (CC BY-SA 2.0 KR) is confirming evidence; the readings are the common Korean ones. No human approval and no synthesized audio."
     }
   ]
 }
