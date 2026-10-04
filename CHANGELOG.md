@@ -2,6 +2,15 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- 표준국어대사전 loanwords as a dictionary (plan item 5, project-owner
+  decision): 6,789 lowercase loanword spellings (camera 카메라, ambulance
+  앰뷸런스, chocolate 초콜릿) in loanwords/stdict_loanwords.tsv, CC BY-SA 2.0
+  KR, built by tools/lexicon/stdict_loanwords.py. New resource kind loanword:
+  read only when no project lexicon entry exists, never a declared word (so
+  ham7239 and part25 keep their label readings), not for all-capital
+  surfaces, also for address words (blog 블로그). Contract
+  ko_stdict_loanwords_v24 (15 cases). NIKL corpus: 58 of 1,491 sentences with
+  a lowercase word change; a hand-checked sample were all improvements.
 - Hanja word readings from the 표준국어대사전 (plan item 3-3, project-owner
   decision): 4,932 words the character rules miss (列車 열차, 樂山樂水
   요산요수, 敗北 패배, 遊說 유세) in cjk/cjk_words_stdict.tsv, CC BY-SA 2.0 KR,

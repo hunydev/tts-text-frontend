@@ -103,6 +103,9 @@ ttf_status_t ttf_electronic_control(const ttf_engine_t *engine, const ttf_semant
 /* Shared explicit Semantic IR controls, called by opting-in language packs. */
 ttf_status_t ttf_semantic_control(const ttf_engine_t *engine, const ttf_semantic_t *request,
                                   const char *text, size_t length, ttf_buffer_t *out);
+ttf_status_t ttf_foreign_loanword(const ttf_engine_t *engine, const char *source, const char *target,
+                                  const char *text, size_t n, const char **hit,
+                                  ttf_resource_layer_t *layer);
 ttf_status_t ttf_foreign_lookup(const ttf_engine_t *engine, const char *source, const char *target,
                                 const char *text, size_t length, const char **hit,
                                 ttf_resource_layer_t *layer);

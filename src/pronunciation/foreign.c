@@ -46,8 +46,24 @@ static ttf_status_t pronunciation_provenance(const ttf_pronunciation_t *pron, ch
     (void)snprintf(trace, 64, "%s", path);
     return TTF_OK;
 }
+static ttf_status_t lookup_kind(const ttf_engine_t *e, const char *kind, const char *source,
+                                const char *target, const char *text, size_t n, const char **hit,
+                                ttf_resource_layer_t *layer);
 ttf_status_t ttf_foreign_lookup(const ttf_engine_t *e, const char *source, const char *target,
                                 const char *text, size_t n, const char **hit,
+                                ttf_resource_layer_t *layer) {
+    return lookup_kind(e, "lexicon", source, target, text, n, hit, layer);
+}
+/* A dictionary loanword spelling (loanword, 2026-10-05): read when a word has no
+   declared reading, but never a declared word itself, so letter-digit labels
+   (ham7239) and phrase decisions keep following the project lexicon only. */
+ttf_status_t ttf_foreign_loanword(const ttf_engine_t *e, const char *source, const char *target,
+                                  const char *text, size_t n, const char **hit,
+                                  ttf_resource_layer_t *layer) {
+    return lookup_kind(e, "loanword", source, target, text, n, hit, layer);
+}
+static ttf_status_t lookup_kind(const ttf_engine_t *e, const char *kind, const char *source,
+                                const char *target, const char *text, size_t n, const char **hit,
                                 ttf_resource_layer_t *layer) {
     char *key;
     size_t a, i;
@@ -68,7 +84,7 @@ ttf_status_t ttf_foreign_lookup(const ttf_engine_t *e, const char *source, const
     for (i = a + 1; i < a + n + 1; i++)
         if (key[i] >= 'A' && key[i] <= 'Z')
             key[i] += 'a' - 'A';
-    *hit = ttf_resource_get(e, "lexicon", target, key, layer);
+    *hit = ttf_resource_get(e, kind, target, key, layer);
     /* lexicon_case: lower entries (kg, cm) do not apply to an all-capital
        surface (KG이니시스, KB국민은행 are letters); upper entries (5G, 4G) apply
        only to a surface without lowercase letters (생강 2g is a measure). The
@@ -88,6 +104,9 @@ ttf_status_t ttf_foreign_lookup(const ttf_engine_t *e, const char *source, const
         }
         if (rule && ((!strcmp(rule, "lower") && capitals) ||
                      (!strcmp(rule, "upper") && lowercase)))
+            *hit = NULL;
+        /* A loanword is always lower-case only: PET, CAT are initialisms. */
+        if (capitals && !strcmp(kind, "loanword"))
             *hit = NULL;
     }
     free(key);
@@ -273,6 +292,18 @@ static ttf_status_t render_at(const ttf_engine_t *e, const ttf_language_pack_t *
         st = ttf_trace_foreign_lexicon(e, source->language_tag, target->language_tag, text, n,
                                        "whole-part-lexicon");
         return st == TTF_OK ? ttf_buffer_puts(out, hit) : st;
+    }
+    if (lexical != TTF_LEX_INITIALISM) {
+        st = ttf_foreign_loanword(e, source->language_tag, target->language_tag, text, n, &hit,
+                                  layer);
+        if (st != TTF_OK)
+            return st;
+        if (hit) {
+            snprintf(trace, 64, "loanword:%s", ttf_layer_name(*layer));
+            st = ttf_trace_emit(e, TTF_TRACE_SELECTED, *layer, 0, target->language_tag, "loanword",
+                                source->language_tag, hit, hit, "whole-part-loanword", SIZE_MAX);
+            return st == TTF_OK ? ttf_buffer_puts(out, hit) : st;
+        }
     }
     /* R&D: letter runs keep initialism phones; the joiner follows the output
        mode, a target symbol name in speech and the written mark in text. */

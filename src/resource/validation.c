@@ -450,6 +450,13 @@ static ttf_status_t core_record(const ttf_resource_record_t *r, int *handled,
                        ? status
                        : ttf_validation_error(d, "lexicon key requires source-language:word or a "
                                                  "supported bounded phrase");
+    } else if (!strcmp(kind, "loanword")) {
+        const char *w = strchr(key, ':');
+        int ok = w && w > key && w[1] && strlen(key) < 64 && *value;
+        for (w = w ? w + 1 : key; ok && *w; ++w)
+            ok = *w >= 'a' && *w <= 'z';
+        if (!ok)
+            return ttf_validation_error(d, "loanword requires source-language:lowercase-word and a reading");
     } else if (!strcmp(kind, "exact")) {
         /* Literal key and literal replacement are intentionally unrestricted. */
     } else if (!strcmp(kind, "pattern")) {

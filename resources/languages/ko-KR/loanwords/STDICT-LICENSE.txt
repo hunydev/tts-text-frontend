@@ -1,0 +1,14 @@
+stdict_loanwords.tsv
+
+Source: 국립국어원 표준국어대사전 (National Institute of Korean Language, Standard
+Korean Language Dictionary), https://stdict.korean.go.kr
+
+The dictionary's content is distributed under the Creative Commons
+Attribution-ShareAlike 2.0 Korea license (CC BY-SA 2.0 KR):
+https://creativecommons.org/licenses/by-sa/2.0/kr/
+
+stdict_loanwords.tsv is adapted from it (loanword spellings taken from the
+dictionary by tools/lexicon/stdict_loanwords.py) and is licensed under CC BY-SA
+2.0 KR as well. This applies to that file only; the other files in this
+repository keep their own licenses. Redistribute the file with this notice and
+keep any changes to it under the same license.
