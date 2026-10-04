@@ -45,6 +45,7 @@ languages/ko-KR/cjk/kana_readings.tsv
 languages/ko-KR/cjk/hanja_readings.tsv
 languages/ko-KR/cjk/cjk_words.tsv
 languages/ko-KR/cjk/hanja_rules.tsv
+languages/ko-KR/cjk/hanja_readings_stdict.tsv
 languages/en-US/rules/abbreviations-dotted.tsv
 languages/ko-KR/rules/speech-characters.tsv
 languages/en-US/rules/speech-characters.tsv

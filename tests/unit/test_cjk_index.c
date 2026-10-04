@@ -96,7 +96,7 @@ int main(int argc, char **argv) {
                        (char)(0x80 | (cp & 63)), 0};
         CHECK(ttf_resource_set(e, "cjk_word", "ko-KR", key, "가", TTF_LAYER_SYSTEM) == TTF_OK);
     }
-    CHECK(checked_freeze(e, 8426) == 0);
+    CHECK(checked_freeze(e, 9330) == 0);
     CHECK(rules(e) == rules(base));
     for (i = 0; i < TTF_HASH_BUCKETS; ++i) {
         const ttf_entry_t *p;

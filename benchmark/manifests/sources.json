@@ -858,6 +858,50 @@
       "automatic_download": false,
       "rights_conflicts": [],
       "research_document": "docs/korean-reference-benchmark.ko.md"
+    },
+    {
+      "id": "nikl-stdict-hanja-readings",
+      "title": "국립국어원 표준국어대사전 — Hanja character readings",
+      "artifact_type": "data",
+      "source_url": "https://stdict.korean.go.kr",
+      "pin": {
+        "kind": "download-date-and-local-sha256",
+        "revision": "2026-09-06",
+        "sha256": "3df86053aef1f3de637608658cdacad7010ab2a83f860d1065bdfed290fac5bb"
+      },
+      "license": {
+        "declared": "CC-BY-SA-2.0-KR",
+        "status": "official-license-checked",
+        "evidence_urls": [
+          "https://creativecommons.org/licenses/by-sa/2.0/kr/"
+        ]
+      },
+      "commercial_use": {
+        "assessment": "permitted-with-conditions",
+        "note": "Attribution; adapted material under the same license."
+      },
+      "redistribution": {
+        "assessment": "permitted-with-conditions",
+        "conditions": [
+          "Attribute 국립국어원 표준국어대사전.",
+          "Keep hanja_readings_stdict.tsv and changes to it under CC BY-SA 2.0 KR."
+        ]
+      },
+      "attribution": [
+        "국립국어원 표준국어대사전"
+      ],
+      "vendoring": {
+        "committed": false,
+        "upstream_files_in_product": [
+          "resources/languages/ko-KR/cjk/hanja_readings_stdict.tsv",
+          "resources/languages/ko-KR/cjk/STDICT-LICENSE.txt"
+        ],
+        "project_policy": "Only per-character readings derived by tools/cjk/stdict_readings.py; the dump, definitions and examples stay out of the repository."
+      },
+      "inspection": "Dictionary copyright policy (CC BY-SA 2.0 KR) checked 2026-10-04; project-owner decision to ship the derived table.",
+      "automatic_download": false,
+      "rights_conflicts": [],
+      "research_document": "docs/cjk-korean-reading.ko.md"
     }
   ]
 }

@@ -11,7 +11,8 @@ typedef struct {
 
 int ttf_cjk_manifest_selected(const ttf_engine_t *e, const char *path, int deferred) {
     const char *prefix = "languages/ko-KR/cjk/";
-    const char *names[] = {"hanja_readings", "kana_readings", "cjk_words", "hanja_rules"};
+    const char *names[] = {"hanja_readings", "kana_readings", "cjk_words", "hanja_rules",
+                           "hanja_readings_stdict"};
     size_t i;
     if (!strncmp(path, prefix, strlen(prefix))) {
         path += strlen(prefix);
@@ -22,7 +23,7 @@ int ttf_cjk_manifest_selected(const ttf_engine_t *e, const char *path, int defer
                  !strcmp(path + n, ".ttfb"))) {
                 int han = e->frontend_options.hanja == TTF_HANJA_KOREAN;
                 int kana = e->frontend_options.kana == TTF_KANA_KOREAN;
-                return deferred && (i == 0 || i == 3 ? han : i == 1 ? kana : han || kana);
+                return deferred && (i == 0 || i >= 3 ? han : i == 1 ? kana : han || kana);
             }
         }
     }

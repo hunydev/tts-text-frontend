@@ -2,6 +2,13 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Han characters outside KS X 1001/1002 (強, 絕, 豐, 姊, 郎, ...) read with the
+  hanja option from a table derived from the 표준국어대사전's Hanja words
+  (project-owner decision, option D): 904 characters in
+  cjk/hanja_readings_stdict.tsv, licensed CC BY-SA 2.0 KR on its own
+  (STDICT-LICENSE.txt), built by tools/cjk/stdict_readings.py. Held-out check
+  97.9%; dictionary Hanja words 95.92% → 97.29%, no character left unread.
+  Contract ko_hanja_stdict_v24 (15 cases).
 - Hanja reading rules (hanja=korean, plan item 3-1): 렬/률 read 열/율 after a
   vowel or ㄴ (比率 비율, 旋律 선율) and 不 reads 부 before ㄷ/ㅈ (不正 부정,
   不動産 부동산), in a new hand-authored cjk/hanja_rules.tsv loaded with the
