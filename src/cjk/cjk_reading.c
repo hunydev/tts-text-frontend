@@ -11,7 +11,7 @@ typedef struct {
 
 int ttf_cjk_manifest_selected(const ttf_engine_t *e, const char *path, int deferred) {
     const char *prefix = "languages/ko-KR/cjk/";
-    const char *names[] = {"hanja_readings", "kana_readings", "cjk_words"};
+    const char *names[] = {"hanja_readings", "kana_readings", "cjk_words", "hanja_rules"};
     size_t i;
     if (!strncmp(path, prefix, strlen(prefix))) {
         path += strlen(prefix);
@@ -22,7 +22,7 @@ int ttf_cjk_manifest_selected(const ttf_engine_t *e, const char *path, int defer
                  !strcmp(path + n, ".ttfb"))) {
                 int han = e->frontend_options.hanja == TTF_HANJA_KOREAN;
                 int kana = e->frontend_options.kana == TTF_KANA_KOREAN;
-                return deferred && (i == 0 ? han : i == 1 ? kana : han || kana);
+                return deferred && (i == 0 || i == 3 ? han : i == 1 ? kana : han || kana);
             }
         }
     }
@@ -223,6 +223,51 @@ static ttf_status_t row_trace(const ttf_engine_t *e, const char *lang,
     return ttf_trace_resource(e, row->kind, lang, row->key, row->key, detail, SIZE_MAX);
 }
 
+/* Hand-authored reading rules over the generated table (hanja_rules.tsv):
+   hanja_soft_after 렬 열 after a vowel or ㄴ (比率 비율, 旋律 선율), and
+   hanja_before_initial 不:ㄷ 부 before a syllable with that initial (不正 부정). */
+static uint32_t rule_syllable(const ttf_entry_t *rule) {
+    uint32_t cp = 0;
+    size_t w;
+    if (!rule || ttf_utf8_decode(rule->value, strlen(rule->value), &cp, &w) != 1 || !syllable(cp))
+        return 0;
+    return cp;
+}
+
+static const ttf_entry_t *soft_after(const ttf_engine_t *e, const char *lang, uint32_t rendered,
+                                     uint32_t last) {
+    char key[5];
+    unsigned final;
+    if (!syllable(last))
+        return NULL;
+    final = (last - 0xac00) % 28;
+    if (final != 0 && final != 4)               /* none or ㄴ */
+        return NULL;
+    encode(rendered, key);
+    return ttf_resource_entry(e, "hanja_soft_after", lang, key);
+}
+
+static const ttf_entry_t *before_initial(const ttf_engine_t *e, const char *lang, const char *key,
+                                         const char *next, size_t n) {
+    static const uint16_t jamo[19] = {0x3131, 0x3132, 0x3134, 0x3137, 0x3138, 0x3139, 0x3141,
+                                      0x3142, 0x3143, 0x3145, 0x3146, 0x3147, 0x3148, 0x3149,
+                                      0x314a, 0x314b, 0x314c, 0x314d, 0x314e};
+    const ttf_entry_t *reading;
+    char next_key[9], rule_key[16], letter[5];
+    uint32_t cp, first;
+    size_t width = n ? cluster(next, n, &cp) : 0, w;
+    if (!width || ttf_script_of(cp) != TTF_SCRIPT_HAN)
+        return NULL;
+    encode(cp, next_key);
+    reading = ttf_resource_entry(e, "hanja_reading", lang, next_key);
+    if (!reading || ttf_utf8_decode(reading->value, strlen(reading->value), &first, &w) != 1 ||
+        !syllable(first))
+        return NULL;
+    encode(jamo[(first - 0xac00) / 588], letter);
+    snprintf(rule_key, sizeof(rule_key), "%s:%s", key, letter);
+    return ttf_resource_entry(e, "hanja_before_initial", lang, rule_key);
+}
+
 ttf_status_t ttf_cjk_render(const ttf_engine_t *e, const char *lang, const char *text,
                             size_t length, ttf_semantic_t *sem, ttf_buffer_t *out,
                             char lexicon[64], ttf_resource_layer_t *pronunciation_layer) {
@@ -356,6 +401,16 @@ ttf_status_t ttf_cjk_render(const ttf_engine_t *e, const char *lang, const char 
                 }
                 rendered = changed;
             }
+            if (script == TTF_SCRIPT_HAN && st == TTF_OK) {
+                const ttf_entry_t *rule = initial ? NULL : soft_after(e, lang, rendered, last);
+                if (!rule)
+                    rule = before_initial(e, lang, key, text + at + used, length - at - used);
+                if (rule_syllable(rule)) {
+                    st = row_trace(e, lang, rule, at, at + used, "cjk-hanja-rule");
+                    rendered = rule_syllable(rule);
+                    if (rule->layer > sem->layer) sem->layer = rule->layer;
+                }
+            }
             if (st == TTF_OK) {
                 char encoded[5];
                 last_position = out->length;
@@ -430,7 +485,19 @@ ttf_status_t ttf_cjk_validate(const ttf_resource_record_t *r, int *handled,
     else if (!strcmp(r->kind, "kana_mark"))
         valid = kana_key(r->key, 1, 0) &&
                 ttf_validation_enum(r->value, "sokuon|moraic-n|long-vowel");
-    else if (!strcmp(r->kind, "kana_long_after")) {
+    else if (!strcmp(r->kind, "hanja_soft_after"))
+        valid = one_cp(r->key, &cp) && syllable(cp) && one_cp(r->value, &cp) && syllable(cp);
+    else if (!strcmp(r->kind, "hanja_before_initial")) {
+        const char *sep = strchr(r->key, ':');
+        char han[5];
+        valid = 0;
+        if (sep && sep > r->key && sep - r->key < 5) {
+            memcpy(han, r->key, (size_t)(sep - r->key)); han[sep - r->key] = 0;
+            valid = one_cp(han, &cp) && ttf_script_of(cp) == TTF_SCRIPT_HAN &&
+                    one_cp(sep + 1, &cp) && cp >= 0x3131 && cp <= 0x314e &&
+                    one_cp(r->value, &cp) && syllable(cp);
+        }
+    } else if (!strcmp(r->kind, "kana_long_after")) {
         char vowel[5];
         const char *sep = strchr(r->key, ':');
         valid = 0;

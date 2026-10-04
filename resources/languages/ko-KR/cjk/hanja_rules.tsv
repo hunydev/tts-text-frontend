@@ -1,0 +1,10 @@
+# Hand-authored Hanja reading rules over the generated hanja_readings.tsv (2026-10-04).
+# Loaded with hanja=korean only. See docs/cjk-korean-reading.ko.md.
+#
+# 한글 맞춤법 제11항 붙임 1: after a vowel or ㄴ, 렬 and 률 are written 열 and 율
+# (比率 비율, 旋律 선율, 分裂 분열); after other final consonants they stay (法律 법률).
+hanja_soft_after	ko-KR	렬	열
+hanja_soft_after	ko-KR	률	율
+# 不 reads 부 before a syllable beginning with ㄷ or ㅈ (不正 부정, 不動産 부동산, 不得已 부득이).
+hanja_before_initial	ko-KR	不:ㄷ	부
+hanja_before_initial	ko-KR	不:ㅈ	부

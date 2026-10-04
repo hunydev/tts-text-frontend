@@ -113,9 +113,11 @@ ttf_status_t ttf_register_builtins(ttf_engine_t *e);
 ttf_status_t ttf_lexicon_canonical_key(const char *key, char **out);
 void ttf_phrase_index(ttf_engine_t *engine);
 ttf_status_t ttf_cjk_index(ttf_engine_t *engine);
-/* Exactly the six resource kinds separated at freeze (not all kana_* kinds). */
+/* Exactly the eight resource kinds separated at freeze (not all kana_* kinds). */
 static inline int ttf_cjk_resource_kind(const char *kind) {
-    if (kind[0] == 'h') return !strcmp(kind, "hanja_reading");
+    if (kind[0] == 'h')
+        return !strcmp(kind, "hanja_reading") || !strcmp(kind, "hanja_soft_after") ||
+               !strcmp(kind, "hanja_before_initial");
     if (kind[0] == 'c') return !strcmp(kind, "cjk_word");
     return kind[0] == 'k' && (!strcmp(kind, "kana_reading") || !strcmp(kind, "kana_mark") ||
                              !strcmp(kind, "kana_fold") || !strcmp(kind, "kana_long_after"));

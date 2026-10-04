@@ -2,6 +2,11 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Hanja reading rules (hanja=korean, plan item 3-1): 렬/률 read 열/율 after a
+  vowel or ㄴ (比率 비율, 旋律 선율) and 不 reads 부 before ㄷ/ㅈ (不正 부정,
+  不動産 부동산), in a new hand-authored cjk/hanja_rules.tsv loaded with the
+  option. On the 표준국어대사전 Hanja words (local check only) agreement goes
+  95.41% → 95.92% (+958, -13). Contract ko_hanja_rules_v24 (20 cases).
 - 개 compounds as their own counters (plan item 2): 개국 and 개년 Sino (3개국
   삼 개국, 5개년 오 개년), 개사, 개소, 개교 native up to 9 and 개동 up to 19, set
   by number from the benchmark references. Contract ko_gae_counters_v24 (12
