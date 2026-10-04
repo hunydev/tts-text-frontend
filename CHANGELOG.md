@@ -2,6 +2,14 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Counting units from the 표준국어대사전 list (project-owner request), with
+  native limits set by number from the Korean benchmark references: new native
+  counters 곳, 건, 박스, 봉, 포기, 돈, 차례, 접, 홉, 축, 냥, 포대, 게임, 개조 (3곳 세 곳,
+  1돈 한 돈, 25건 이십오 건), and limits on 평 (30평 삼십 평), 병, 권, 통.
+  Words such as 건물, 봉투, 접종, 축구 are not the counters. Contract
+  ko_dict_counters_v24 (14 cases); two v21 rows updated with previous values
+  in notes (33평 서른세 평 → 삼십삼 평). Korean benchmark +1,113, -77; English
+  unchanged.
 - Read 배 as a counter (project-owner request: 2배 두 배): native up to 19,
   Sino from 20 and for decimals (new counter_native_max), following the
   benchmark references; a range past the limit is Sino (2~4.1배 이에서 사 점

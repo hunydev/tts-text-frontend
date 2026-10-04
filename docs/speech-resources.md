@@ -332,6 +332,12 @@ larger count or a decimal is Sino. 배 is a native counter with limit 19 (2배 �
 1.5배 58 : 0). A range whose second endpoint passes the limit is Sino at both ends (2~4.1배 이에서 사 점 일 배);
 two small adjacent counts still contract (2~3배 두세 배).
 
+Counting units from the 표준국어대사전 list (2026-10-04): the dictionary names the candidates (its definitions
+and examples are not stored), and the Korean benchmark references decide by number whether and up to where
+each reads native. New native counters: 곳, 건 (to 19), 박스 (19), 봉 (10), 포기, 돈 (20), 차례, 접, 홉, 축 (10),
+냥 (19), 포대, 게임, 개조 (19); limits on existing ones: 평 (10; 30평 삼십 평), 병 (19), 권 (39), 통 (39).
+Units with mixed or scarce evidence (가구, 상, 매, 계단) are left out, and 명 keeps its earlier native policy.
+
 `numeric_suffix_word * <word> 1` names a word that starts with a numeric suffix but is not that suffix, so the
 number keeps its plain reading: 5배수 오배수, 2배속, 1배럴, 2배스, 배율.
 
