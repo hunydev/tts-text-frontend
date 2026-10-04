@@ -183,8 +183,18 @@ numeric_suffix	*	그릇	COUNTER:그릇
 counter	ko-KR	접시	native
 numeric_suffix	*	접시	COUNTER:접시
 counter	ko-KR	군데	native
+# 2배 두 배 ... 19배 열아홉 배; 20배 이십 배 and 1.5배 일 점 오 배 are Sino (2026-10-04).
+counter	ko-KR	배	native
+counter_native_max	ko-KR	배	19
 counter	ko-KR	정거장	native
 numeric_suffix	*	군데	COUNTER:군데
+numeric_suffix	*	배	COUNTER:배
+# Words that start with 배 are not the counter (5배수 오배수, 2배속, 1배럴, 2배스).
+numeric_suffix_word	*	배수	1
+numeric_suffix_word	*	배속	1
+numeric_suffix_word	*	배럴	1
+numeric_suffix_word	*	배율	1
+numeric_suffix_word	*	배스	1
 numeric_suffix	*	정거장	COUNTER:정거장
 counter	ko-KR	가지	native
 numeric_suffix	*	가지	COUNTER:가지

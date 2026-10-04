@@ -324,6 +324,17 @@ A colon that the grammar rejected as a time (24:00) stays preserved, English wor
 
 A backtick closed by an apostrophe (`가을야구'의) is a quote mark, not inline code, and `speech_preserve * `` 1` keeps it like `'`. A capital letter after a capitalized initialism (GTX A) is a label, not the English article, so the run keeps Korean context.
 
+## Native count limit and suffix words (2026-10-04)
+
+`counter_native_max ko-KR <unit> <1..99>` limits a native counter: a whole count up to the value is native, a
+larger count or a decimal is Sino. 배 is a native counter with limit 19 (2배 두 배, 10배 열 배, 19배 열아홉 배;
+20배 이십 배, 1.5배 일 점 오 배), following the Korean benchmark references (2배 161 native : 15 Sino, 20배 7 : 4,
+1.5배 58 : 0). A range whose second endpoint passes the limit is Sino at both ends (2~4.1배 이에서 사 점 일 배);
+two small adjacent counts still contract (2~3배 두세 배).
+
+`numeric_suffix_word * <word> 1` names a word that starts with a numeric suffix but is not that suffix, so the
+number keeps its plain reading: 5배수 오배수, 2배속, 1배럴, 2배스, 배율.
+
 ## Particle agreement (2026-10-02)
 
 `policy ko-KR particle_agreement off` (resources/languages/ko-KR/rules/speech.tsv) keeps the Hangul written after a reading as written: 성수동1가 reads 성수동일가, 5kg로 reads 오 킬로그램로. The engine option `particle_agreement=on` (CLI `--particle-agreement on`, web 조사 맞춤) or the policy value `on` restores the agreement table (`particle_form`: 3랑 삼이랑, 5kg로 오 킬로그램으로).

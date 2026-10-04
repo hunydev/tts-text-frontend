@@ -467,6 +467,14 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "counter reading must be native, sino or english");
     }
+    if (SAME(k, "counter_native_max")) {
+        *handled = 1;
+        if ((status = bounded_key(r, 32, d)) != TTF_OK)
+            return status;
+        return ttf_validation_integer(v, 1, 99, NULL)
+                   ? TTF_OK
+                   : ttf_validation_error(d, "counter_native_max must be an integer in 1..99");
+    }
     if (SAME(k, "ordinal_policy")) {
         *handled = 1;
         return SAME(key, "large") && SAME(v, "sino")

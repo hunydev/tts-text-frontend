@@ -2,6 +2,12 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Read 배 as a counter (project-owner request: 2배 두 배): native up to 19,
+  Sino from 20 and for decimals (new counter_native_max), following the
+  benchmark references; a range past the limit is Sino (2~4.1배 이에서 사 점
+  일 배). numeric_suffix_word keeps 5배수, 2배속, 1배럴 as words. Contract
+  ko_counter_bae_v24 (10 cases); two 1.5배 rows take the counter spacing 일 점
+  오 배. Korean benchmark +359, -5; English unchanged.
 - Brand pack: the remaining 167 review entries were checked against KIPRIS
   (2026-10-04); of 21 matches, 13 accepted, 3 accepted with the reading of the
   written name (American Airlines 아메리칸 에어라인스, Korea Zinc 코리아 징크), 5

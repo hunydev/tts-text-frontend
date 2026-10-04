@@ -935,8 +935,15 @@ static int metric_unit(const ttf_engine_t *e, const char *unit) {
 /* Range endpoints read with native numerals: native counters, frequency and
    whole clock hours (두세 시). */
 static int native_endpoint(const ttf_engine_t *e, const ttf_semantic_t *endpoint) {
+    const char *max;
     if (endpoint->type == TTF_SEM_TIME)
         return 1;
+    /* counter_native_max: a range ending in a decimal or a count above it is Sino
+       (2~4.1배 이에서 사 점 일 배, 20~30배 이십에서 삼십 배; 2026-10-04). */
+    if (endpoint->type == TTF_SEM_COUNTER &&
+        (max = ttf_resource_get(e, "counter_native_max", "ko-KR", endpoint->unit, NULL)) &&
+        (strchr(endpoint->value, '.') || strlen(endpoint->value) > 2 || atoi(endpoint->value) > atoi(max)))
+        return 0;
     return endpoint->type == TTF_SEM_COUNTER &&
            (!strcmp(endpoint->secondary, "frequency") ||
             (strcmp(endpoint->secondary, "identifier") &&
@@ -1060,6 +1067,10 @@ static ttf_status_t range_first_bare(const ttf_engine_t *e, const ttf_semantic_t
         !second_written_decimal(surface + i, length - i) && plain_integer(s->value, &value) &&
         plain_integer(written, &as_written) && as_written < value)
         return cardinal(e, written, out);
+    const char *max = ttf_resource_get(e, "counter_native_max", "ko-KR", s->unit, NULL);
+    /* 2~4.1배 이에서 사 점 일 배: the second endpoint past the native limit makes the range Sino. */
+    if (max && (strchr(s->secondary, '.') || strlen(s->secondary) > 2 || atoi(s->secondary) > atoi(max)))
+        return cardinal(e, s->value, out);
     if (native_endpoint(e, endpoint) && endpoint->type == TTF_SEM_COUNTER &&
         plain_integer(s->value, &value) && value <= 99 &&
         standalone_native(e, s->value, out) == TTF_OK)
@@ -1292,11 +1303,17 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
                 return ttf_buffer_puts(out, resource(e, "unit", s->unit, s->unit));
             }
         }
-        return quantity(e, s->value, resource(e, "unit", s->unit, s->unit),
-                        !strcmp(s->secondary, "frequency") ||
-                            (strcmp(s->secondary, "identifier") &&
-                             strcmp(resource(e, "counter", s->unit, "sino"), "native") == 0),
-                        out);
+        {
+            int native = !strcmp(s->secondary, "frequency") ||
+                         (strcmp(s->secondary, "identifier") &&
+                          strcmp(resource(e, "counter", s->unit, "sino"), "native") == 0);
+            /* counter_native_max: 2배 두 배 up to 19배 열아홉 배; a larger count or a
+               decimal is Sino (20배 이십 배, 1.5배 일 점 오 배; 2026-10-04). */
+            const char *max = ttf_resource_get(e, "counter_native_max", "ko-KR", s->unit, NULL);
+            if (native && max && (strchr(month, '.') || strlen(month) > 2 || atoi(month) > atoi(max)))
+                native = 0;
+            return quantity(e, s->value, resource(e, "unit", s->unit, s->unit), native, out);
+        }
     }
     case TTF_SEM_CURRENCY:
         return quantity(e, s->value, resource(e, "currency", s->unit, s->unit), 0, out);

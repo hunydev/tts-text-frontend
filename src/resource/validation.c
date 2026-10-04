@@ -329,6 +329,9 @@ static ttf_status_t core_record(const ttf_resource_record_t *r, int *handled,
         if (strlen(key) >= 64 || !typed_value(value, "COUNTER|CURRENCY|MEASURE", 32, 0))
             return ttf_validation_error(d, "numeric_suffix requires COUNTER:unit, CURRENCY:unit or "
                                            "MEASURE:unit with unit under 32 bytes");
+    } else if (!strcmp(kind, "numeric_suffix_word")) {
+        if (strlen(key) >= 64 || strcmp(value, "1"))
+            return ttf_validation_error(d, "numeric_suffix_word requires a word under 64 bytes and value 1");
     } else if (!strcmp(kind, "currency_name")) {
         const char *colon = strchr(value, ':');
         char currency[32];

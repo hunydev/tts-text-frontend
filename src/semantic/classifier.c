@@ -685,6 +685,26 @@ static int spaced_suffix_word(const ttf_pack_input_t *in, size_t p, size_t end) 
     }
     return 0;
 }
+/* numeric_suffix_word: a longer word that starts with a numeric suffix is not
+   that suffix (3배수 삼배수, 1배럴: 배수 and 배럴 are words, not the counter 배;
+   2026-10-04). The word may be followed by anything (5배수를). */
+static int suffix_word(const ttf_pack_input_t *in, size_t p, size_t end) {
+    char key[64];
+    size_t q = end, extra;
+    for (extra = 0; extra < 3 && q < in->length; ++extra) {
+        uint32_t cp;
+        size_t width;
+        if (ttf_utf8_decode(in->text + q, in->length - q, &cp, &width) != 1 ||
+            ttf_script_of(cp) != TTF_SCRIPT_HANGUL || q + width - p >= sizeof(key))
+            break;
+        q += width;
+        memcpy(key, in->text + p, q - p);
+        key[q - p] = '\0';
+        if (ttf_resource_get(in->engine, "numeric_suffix_word", "*", key, NULL))
+            return 1;
+    }
+    return 0;
+}
 static int quantity_suffix(const ttf_pack_input_t *in, size_t p, ttf_semantic_t *out, size_t *end,
                            ttf_semantic_type_t *type, int allow_range) {
     const char *value;
@@ -695,7 +715,8 @@ static int quantity_suffix(const ttf_pack_input_t *in, size_t p, ttf_semantic_t 
         return 1;
     }
     if (resource_prefix(in, "numeric_suffix", p, &value, end, &layer) &&
-        quantity_tail(in, *end, allow_range) && spaced_suffix_word(in, p, *end)) {
+        quantity_tail(in, *end, allow_range) && spaced_suffix_word(in, p, *end) &&
+        !suffix_word(in, p, *end)) {
         const char *colon = strchr(value, ':');
         if (!strncmp(value, "COUNTER:", 8))
             *type = TTF_SEM_COUNTER;
