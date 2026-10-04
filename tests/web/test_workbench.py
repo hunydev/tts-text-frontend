@@ -217,10 +217,11 @@ try:
         "phone_onset\tko-KR\tAE\t0\n"
         "g2p\ten-US\tbxxx\tB IY\n"
     ), "chunk_bytes": 1, "chunk_sizes": [1, 2, 3]}
-    traced, _ = run("baba는 표기입니다.", opts=trace_options)
-    assert traced["text"] == "버버는 표기입니다."
+    # babab, not baba: a word-final a reads AA since the loanword rules of 2026-10-05.
+    traced, _ = run("babab는 표기입니다.", opts=trace_options)
+    assert traced["text"] == "버버브는 표기입니다.", traced["text"]
     source_rows = [event for event in traced["trace"] if event["kind"] == "g2p"]
-    assert len(source_rows) == 4 and all(event["layer"] == "system" and
+    assert len(source_rows) == 5 and all(event["layer"] == "system" and
                                        event["stage"] == "source-pronunciation" and
                                        event["key"] in ("b", "a") for event in source_rows), traced
     target_rows = [event for event in traced["trace"] if event["kind"] == "phone_vowel"]
@@ -229,12 +230,12 @@ try:
                                        event["key"] == "AE" for event in target_rows), traced
     assert not any(event["kind"] == "phone_onset" and event["key"] == "AE"
                    for event in traced["trace"]), traced
-    streamed, stream_events = run("baba는 표기입니다.", "stream", trace_options)
+    streamed, stream_events = run("babab는 표기입니다.", "stream", trace_options)
     assert streamed["text"] == traced["text"] and streamed["spans"] == traced["spans"]
     assert streamed["trace"] == traced["trace"]
     assert all(event["trace_version"] == 1 and isinstance(event["trace"], list)
                for event in stream_events if event["event"] == "segment")
-    verified, _ = run("baba는 표기입니다.", "verify", trace_options)
+    verified, _ = run("babab는 표기입니다.", "verify", trace_options)
     assert verified["verification"]["passed"] and all(
         item["trace_match"] for item in verified["verification"]["variants"]), verified
     legacy, legacy_events = run(trace_text, "stream", {"detailed_trace": False, "chunk_bytes": 1})

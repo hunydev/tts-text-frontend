@@ -16,7 +16,7 @@ D1 `auto` 기본, D2 현재 동작 유지, D3 그대로 둠, D4 `declared` 포�
 
 | 입력 (speech) | 현재 출력 | 기대 |
 |---|---|---|
-| `My friend 민수 bought 3 books yesterday.` | 미 프린드 민수 바우그흐트 삼 부크스 예스터데이. | My friend 민수 bought three books yesterday. |
+| `My friend 민수 bought 3 books yesterday.` | 미 프린드 민수 바우그흐트 삼 북스 예스터데이. | My friend 민수 bought three books yesterday. |
 | `I love 김치 and 3 cats.` | 아이 로브 김치 and three cats. | I love 김치 and three cats. |
 | `The word 사랑 means love.` | The word 사랑 민스 로브. | 그대로 |
 | `She said "안녕하세요" twice.` | 시 세이드 "안녕하세요" 트위스. | 그대로 |

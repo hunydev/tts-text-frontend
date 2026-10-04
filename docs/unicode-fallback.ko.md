@@ -84,7 +84,7 @@ python3 tools/unicode_fallback/build.py --ucd <ucd-17.0.0> --cldr <cldr-release-
 - 이름에 숫자가 있으면(`1st place medal`, `키 캡, 10`) fallback을 끈 채로 한 번 더 정규화한다
   (`first place medal`, `키 캡, 십`).
 - 해당 언어에 이름이 없고 `symbol_fallback=on`이면 영어 파일의 이름을 쓴다. 영어가 아닌 문장에서는 그
-  이름을 외래어 렌더러로 읽는다(`∢` → 스퍼리컬 애얼). 음차가 어색할 수 있어서 `native`를 두었다.
+  이름을 외래어 렌더러로 읽는다(`∢` → 스퍼리컬 앵글). 음차가 어색할 수 있어서 `native`를 두었다.
 - 이름의 언어는 그 구간의 render 언어다. 문장 언어 라우팅(`docs/matrix-language.ko.md`)을 따르므로
   영어 문장의 이모지는 영어 이름으로 읽는다.
 - text 모드는 바꾸지 않는다.
@@ -108,7 +108,7 @@ named option `symbol_fallback`(CLI `--symbol-fallback`, 웹 "기호·이모지 �
 | `👍🏽` | 올린 엄지, 갈색 피부 | thumbs up, medium skin tone |
 | `❤️` | 빨간색 하트 | red heart |
 | `🥇` | 금메달 | first place medal |
-| `∢` | 스퍼리컬 애얼 (`native`면 그대로) | spherical angle |
+| `∢` | 스퍼리컬 앵글 (`native`면 그대로) | spherical angle |
 | `🍔‍🍟` (등록 안 된 ZWJ) | 그대로 | 그대로 |
 
 ## 5. 검증과 한계

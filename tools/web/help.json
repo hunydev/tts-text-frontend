@@ -448,8 +448,8 @@
           "text": "My friend 민수 bought 3 books.",
           "outputs": {
             "auto": "My friend 민수 bought three books.",
-            "declared": "마이 프린드 민수 바우그흐트 삼 부크스.",
-            "legacy": "마이 프린드 민수 바우그흐트 삼 부크스."
+            "declared": "마이 프린드 민수 바우그흐트 삼 북스.",
+            "legacy": "마이 프린드 민수 바우그흐트 삼 북스."
           }
         }
       ]
@@ -462,7 +462,7 @@
         {
           "text": "점심은 🍔 ∢",
           "outputs": {
-            "on": "점심은 햄버거 스퍼리컬 애얼",
+            "on": "점심은 햄버거 스퍼리컬 앵글",
             "native": "점심은 햄버거 ∢",
             "off": "점심은 🍔 ∢"
           }
@@ -511,7 +511,7 @@
         {
           "text": "Ericsson과 Samsonite",
           "outputs": {
-            "off": "어릭슨과 샘소닛",
+            "off": "어릭슨과 샘소나이트",
             "on": "에릭슨과 샘소나이트"
           }
         }
