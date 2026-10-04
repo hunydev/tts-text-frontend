@@ -96,7 +96,7 @@ int main(int argc, char **argv) {
                        (char)(0x80 | (cp & 63)), 0};
         CHECK(ttf_resource_set(e, "cjk_word", "ko-KR", key, "가", TTF_LAYER_SYSTEM) == TTF_OK);
     }
-    CHECK(checked_freeze(e, 9330) == 0);
+    CHECK(checked_freeze(e, 14262) == 0);
     CHECK(rules(e) == rules(base));
     for (i = 0; i < TTF_HASH_BUCKETS; ++i) {
         const ttf_entry_t *p;
@@ -107,8 +107,10 @@ int main(int argc, char **argv) {
             previous = p->cjk_length; ++indexed;
         }
     }
-    CHECK(indexed == 18006); /* five effective word rows + user lexicon + stress */
-    CHECK(e->cjk->max_length == 4);
+    /* five effective word rows + user lexicon + stress, and the 4932 dictionary
+       words of cjk_words_stdict.tsv (two to six characters) since 2026-10-05 */
+    CHECK(indexed == 18006 + 4932);
+    CHECK(e->cjk->max_length == 6);
     CHECK(!strcmp(ttf_resource_get(e, "hanja_reading", "ko-KR", "山", NULL), "산"));
     CHECK(!strcmp(ttf_resource_get(e, "hanja_reading", "xx-Test", "山", NULL), "뫼"));
     CHECK(normalized(e, "音樂", "사용자"));

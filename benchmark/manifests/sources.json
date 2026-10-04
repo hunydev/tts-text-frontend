@@ -894,9 +894,10 @@
         "committed": false,
         "upstream_files_in_product": [
           "resources/languages/ko-KR/cjk/hanja_readings_stdict.tsv",
+          "resources/languages/ko-KR/cjk/cjk_words_stdict.tsv",
           "resources/languages/ko-KR/cjk/STDICT-LICENSE.txt"
         ],
-        "project_policy": "Only per-character readings derived by tools/cjk/stdict_readings.py; the dump, definitions and examples stay out of the repository."
+        "project_policy": "Only per-character and per-word Hanja readings derived by tools/cjk/stdict_readings.py; the dump, definitions and examples stay out of the repository."
       },
       "inspection": "Dictionary copyright policy (CC BY-SA 2.0 KR) checked 2026-10-04; project-owner decision to ship the derived table.",
       "automatic_download": false,

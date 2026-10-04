@@ -268,7 +268,7 @@ choices, not claims that E.164 defines TTS reading or every supported local form
 | [Unicode Unihan](https://www.unicode.org/reports/tr38/), 제공된 subset의 version header **18.0.0** | [Unicode License v3](https://www.unicode.org/license.txt). 사용·변경·상업적 배포를 고지 조건 하에 허용한다. | copyright/permission notice를 데이터 또는 동봉 문서에 유지. `resources/languages/ko-KR/cjk/UNICODE-LICENSE.txt` 동봉. 승인된 부분 추출본 `data/cjk/unihan-k-subset.txt` 및 생성 독음 TSV만 저장소에 포함하며 원본 zip은 반입하지 않는다. |
 | 외래어 표기법, 문화체육관광부 고시; 제2장 표 4 및 일본어 표기 규정, 조회 2026-09-27 | [저작권법 제7조 제2호](https://www.law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1029423769)의 국가 고시 등 비보호 저작물 근거를 기록한다. 이 기록은 법률 자문이나 웹사이트 전체 자료에 대한 허가가 아니다. | [국립국어원 어문 규범](https://www.korean.go.kr/kornorms/main/main.do)의 고시 출처와 규정 위치를 생성 TSV 머리말에 유지한다. 자체 작성 가나 대응표/규칙을 상업용 리소스로 사용하며 웹 설명·사전·예문집은 수집하지 않는다. |
 
-| [국립국어원 표준국어대사전](https://stdict.korean.go.kr), 2026-09-06 내려받은 JSON | [CC BY-SA 2.0 KR](https://creativecommons.org/licenses/by-sa/2.0/kr/) (사전 저작권 정책; 다중 매체와 출전 있는 용례 제외). 상업적 이용 허용, 저작자 표시, 변경물 같은 라이선스. | 한자어 표제어에서 글자 독음만 뽑은 `resources/languages/ko-KR/cjk/hanja_readings_stdict.tsv`와 고지 `STDICT-LICENSE.txt`만 포함한다. 그 파일만 CC BY-SA 2.0 KR이며 원본·뜻풀이·용례는 반입하지 않는다 (2026-10-04, 프로젝트 소유자 결정). |
+| [국립국어원 표준국어대사전](https://stdict.korean.go.kr), 2026-09-06 내려받은 JSON | [CC BY-SA 2.0 KR](https://creativecommons.org/licenses/by-sa/2.0/kr/) (사전 저작권 정책; 다중 매체와 출전 있는 용례 제외). 상업적 이용 허용, 저작자 표시, 변경물 같은 라이선스. | 한자어 표제어에서 뽑은 글자 독음 `resources/languages/ko-KR/cjk/hanja_readings_stdict.tsv`, 단어 독음 `cjk_words_stdict.tsv`(2026-10-05)와 고지 `STDICT-LICENSE.txt`만 포함한다. 그 파일들만 CC BY-SA 2.0 KR이며 원본·뜻풀이·용례는 반입하지 않는다 (2026-10-04, 프로젝트 소유자 결정). |
 
 Unihan version은 사용자가 준비한 subset의 header에서 고정했고 파일 SHA256은
 `benchmark/manifests/sources.json`에 기록한다. 원본 zip을 다시 다운로드하여 대조했다는

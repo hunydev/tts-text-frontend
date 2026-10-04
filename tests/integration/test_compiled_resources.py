@@ -78,15 +78,15 @@ with tempfile.TemporaryDirectory(prefix="ttf-resource-test-") as temp:
         for resource in (endings, binary):
             result = normalize(resource)
             assert result.returncode == 0 and result.stdout == expected + "\n", result
-    # Manifest consumers still see all five CJK files (three generated tables,
-    # the hand-authored hanja_rules.tsv and hanja_readings_stdict.tsv). Their compiled forms
+    # Manifest consumers still see all six CJK files (three generated tables,
+    # the hand-authored hanja_rules.tsv and the two stdict tables). Their compiled forms
     # retain conditional freeze loading and exactly the same output/trace.
     compiled_root = Path(temp) / "resources"
     shutil.copytree(resources, compiled_root)
     manifest = (compiled_root / "manifest.ttfm").read_text(encoding="utf-8")
     paths = [line for line in manifest.splitlines()
              if line.startswith("languages/ko-KR/cjk/")]
-    assert len(paths) == 5, paths
+    assert len(paths) == 6, paths
     for i, relative in enumerate(paths):
         src = compiled_root / relative
         dst = src.with_suffix(".bin" if i % 2 else ".ttfb")

@@ -14,6 +14,7 @@ import re
 import sys
 
 ACTIVE_JSONL = (
+    "ko_hanja_stdict_words_v24",
     "ko_acronym_words_v24",
     "ko_unit_symbols_v24",
     "ko_hanja_stdict_v24",

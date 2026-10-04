@@ -2,6 +2,12 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Hanja word readings from the 표준국어대사전 (plan item 3-3, project-owner
+  decision): 4,932 words the character rules miss (列車 열차, 樂山樂水
+  요산요수, 敗北 패배, 遊說 유세) in cjk/cjk_words_stdict.tsv, CC BY-SA 2.0 KR,
+  loaded with the hanja option; words with two dictionary readings are left
+  out. Unseen-word check +164, -6; dictionary Hanja words 97.29% → 99.93%.
+  Contract ko_hanja_stdict_words_v24 (17 cases).
 - English loanword spelling (plan item 5): 71 g2p rules tuned on the
   표준국어대사전 English loanwords (magic e 페이스, final a 카메라, -ism 즘,
   micro- 마이크로, -meter 미터, nk, tch, dge, au, y as 아이), kept only when they

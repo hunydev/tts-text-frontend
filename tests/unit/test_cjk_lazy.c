@@ -42,6 +42,8 @@ int main(int argc, char **argv) {
     const char *valid_rules = "hanja_soft_after\tko-KR\t률\t율\n";
     const char *stdict = "languages/ko-KR/cjk/hanja_readings_stdict.tsv";
     const char *valid_stdict = "hanja_reading\tko-KR\t\xe5\xbc\xb7\t강\n"; /* U+5F37 */
+    const char *words = "languages/ko-KR/cjk/cjk_words_stdict.tsv";
+    const char *valid_words = "cjk_word\tko-KR\t列車\t열차\n";
     const char *valid_han = "hanja_reading\tko-KR\t山\t산\n";
     const char *valid_kana = "kana_reading\tko-KR\tか\t카\n";
     const char *valid_word = "cjk_word\tko-KR\t音樂\t음악\n";
@@ -66,6 +68,7 @@ int main(int argc, char **argv) {
         snprintf(path, sizeof(path), "%s/%s", argv[2], word); remove(path);
         snprintf(path, sizeof(path), "%s/%s", argv[2], rules); remove(path);
         snprintf(path, sizeof(path), "%s/%s", argv[2], stdict); remove(path);
+        snprintf(path, sizeof(path), "%s/%s", argv[2], words); remove(path);
         CHECK(create(argv[2], mode, &e) == 0);
         CHECK(ttf_engine_freeze(e) == TTF_OK && records(e) == base_records);
         ttf_engine_destroy(e);
@@ -76,10 +79,12 @@ int main(int argc, char **argv) {
         CHECK(put(argv[2], word, mode ? valid_word : "invalid\n"));
         CHECK(put(argv[2], rules, mode & 1 ? valid_rules : "invalid\n"));
         CHECK(put(argv[2], stdict, mode & 1 ? valid_stdict : "invalid\n"));
+        CHECK(put(argv[2], words, mode & 1 ? valid_words : "invalid\n"));
         CHECK(create(argv[2], mode, &e) == 0);
         CHECK(records(e) == base_records);
         CHECK(ttf_engine_freeze(e) == TTF_OK);
-        CHECK(records(e) == base_records + (size_t)(3 * (!!(mode & 1)) + (!!(mode & 2)) + !!mode));
+        CHECK(records(e) == base_records + (size_t)(4 * (!!(mode & 1)) + (!!(mode & 2)) + !!mode));
+        CHECK(!!ttf_resource_get(e, "cjk_word", "ko-KR", "列車", NULL) == !!(mode & 1));
         CHECK(!!ttf_resource_get(e, "hanja_reading", "ko-KR", "\xe5\xbc\xb7", NULL) == !!(mode & 1));
         CHECK(!!ttf_resource_get(e, "hanja_reading", "ko-KR", "山", NULL) == !!(mode & 1));
         CHECK(!!ttf_resource_get(e, "hanja_soft_after", "ko-KR", "률", NULL) == !!(mode & 1));
@@ -92,7 +97,8 @@ int main(int argc, char **argv) {
     }
     /* The word table fails after two successful loads (the rule file loads
        after it). Retain explicit rows. */
-    CHECK(put(argv[2], rules, valid_rules) && put(argv[2], stdict, valid_stdict));
+    CHECK(put(argv[2], rules, valid_rules) && put(argv[2], stdict, valid_stdict) &&
+          put(argv[2], words, valid_words));
     CHECK(put(argv[2], han, valid_han) && put(argv[2], kana, valid_kana));
     CHECK(put(argv[2], word, "cjk_word\tko-KR\t音樂\tUNK\n"));
     CHECK(create(argv[2], 3, &e) == 0);
@@ -111,14 +117,14 @@ int main(int argc, char **argv) {
     CHECK(ttf_engine_freeze(e) == TTF_ERESOURCE);
     CHECK(records(e) == base_records + 2 && checkpoint == e->resource_order && !e->cjk && !e->frozen);
     reject = 0;
-    CHECK(ttf_engine_freeze(e) == TTF_OK && records(e) == base_records + 7);
-    CHECK(e->resource_order == checkpoint + 5);
+    CHECK(ttf_engine_freeze(e) == TTF_OK && records(e) == base_records + 8);
+    CHECK(e->resource_order == checkpoint + 6);
     CHECK(ttf_resource_entry(e, "hanja_reading", "ko-KR", "山") == original);
     CHECK(!strcmp(ttf_resource_get(e, "cjk_word", "ko-KR", "音樂", NULL), "고객"));
     ttf_engine_destroy(e);
     /* Production manifest counts, both explicit and compiled-in NULL roots. */
     for (mode = -1; mode < 4; ++mode) {
-        size_t added = mode <= 0 ? 0 : (mode & 1 ? 9024 : 0) + (mode & 2 ? 301 : 0) + 5;
+        size_t added = mode <= 0 ? 0 : (mode & 1 ? 13956 : 0) + (mode & 2 ? 301 : 0) + 5;
         CHECK(create(mode == 3 ? NULL : argv[1], mode, &e) == 0);
         CHECK(records(e) == base_records);
         CHECK(ttf_engine_freeze(e) == TTF_OK && records(e) == base_records + added);

@@ -12,7 +12,7 @@ typedef struct {
 int ttf_cjk_manifest_selected(const ttf_engine_t *e, const char *path, int deferred) {
     const char *prefix = "languages/ko-KR/cjk/";
     const char *names[] = {"hanja_readings", "kana_readings", "cjk_words", "hanja_rules",
-                           "hanja_readings_stdict"};
+                           "hanja_readings_stdict", "cjk_words_stdict"};
     size_t i;
     if (!strncmp(path, prefix, strlen(prefix))) {
         path += strlen(prefix);
