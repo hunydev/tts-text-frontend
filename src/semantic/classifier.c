@@ -705,6 +705,14 @@ static int suffix_word(const ttf_pack_input_t *in, size_t p, size_t end) {
     }
     return 0;
 }
+static int cued_suffix(const ttf_pack_input_t *in, size_t p, size_t end) {
+    char key[64];
+    if (end <= p || end - p >= sizeof(key))
+        return 1;
+    memcpy(key, in->text + p, end - p);
+    key[end - p] = '\0';
+    return ttf_numeric_suffix_cued(in->engine, key, in->text, in->length);
+}
 static int quantity_suffix(const ttf_pack_input_t *in, size_t p, ttf_semantic_t *out, size_t *end,
                            ttf_semantic_type_t *type, int allow_range) {
     const char *value;
@@ -716,7 +724,7 @@ static int quantity_suffix(const ttf_pack_input_t *in, size_t p, ttf_semantic_t 
     }
     if (resource_prefix(in, "numeric_suffix", p, &value, end, &layer) &&
         quantity_tail(in, *end, allow_range) && spaced_suffix_word(in, p, *end) &&
-        !suffix_word(in, p, *end)) {
+        !suffix_word(in, p, *end) && cued_suffix(in, p, *end)) {
         const char *colon = strchr(value, ':');
         if (!strncmp(value, "COUNTER:", 8))
             *type = TTF_SEM_COUNTER;

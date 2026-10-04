@@ -196,3 +196,234 @@ unit	en-US	W_per_kg.one	watt per kilogram
 unit	en-US	W_per_kg.many	watts per kilogram
 unit	en-US	cc.one	c c
 unit	en-US	cc.many	c c
+
+# Unit symbols from the 표준국어대사전 survey (2026-10-04): prefixed SI units, squared unit
+# characters (U+3380..U+33DF) and the fine-dust concentration ㎍/㎥. V, A, J, MJ and GJ need a cue word.
+numeric_suffix	*	V	MEASURE:V
+numeric_suffix	*	A	MEASURE:A
+numeric_suffix	*	J	MEASURE:J
+numeric_suffix	*	mV	MEASURE:mV
+numeric_suffix	*	㎷	MEASURE:mV
+numeric_suffix	*	kA	MEASURE:kA
+numeric_suffix	*	㎄	MEASURE:kA
+numeric_suffix	*	μA	MEASURE:uA
+numeric_suffix	*	µA	MEASURE:uA
+numeric_suffix	*	㎂	MEASURE:uA
+numeric_suffix	*	VA	MEASURE:VA
+numeric_suffix	*	kVA	MEASURE:kVA
+numeric_suffix	*	MVA	MEASURE:MVA
+numeric_suffix	*	mW	MEASURE:mW
+numeric_suffix	*	㎽	MEASURE:mW
+numeric_suffix	*	㎿	MEASURE:MW
+numeric_suffix	*	㎸	MEASURE:kV
+numeric_suffix	*	㎃	MEASURE:mA
+numeric_suffix	*	kN	MEASURE:kN
+numeric_suffix	*	MJ	MEASURE:MJ
+numeric_suffix	*	GJ	MEASURE:GJ
+numeric_suffix	*	kΩ	MEASURE:kohm
+numeric_suffix	*	㏀	MEASURE:kohm
+numeric_suffix	*	MΩ	MEASURE:Mohm
+numeric_suffix	*	㏁	MEASURE:Mohm
+numeric_suffix	*	mΩ	MEASURE:mohm
+numeric_suffix	*	μF	MEASURE:uF
+numeric_suffix	*	µF	MEASURE:uF
+numeric_suffix	*	nF	MEASURE:nF
+numeric_suffix	*	pF	MEASURE:pF
+numeric_suffix	*	Bq	MEASURE:Bq
+numeric_suffix	*	㏃	MEASURE:Bq
+numeric_suffix	*	kBq	MEASURE:kBq
+numeric_suffix	*	MBq	MEASURE:MBq
+numeric_suffix	*	Sv	MEASURE:Sv
+numeric_suffix	*	㏜	MEASURE:Sv
+numeric_suffix	*	mSv	MEASURE:mSv
+numeric_suffix	*	μSv	MEASURE:uSv
+numeric_suffix	*	µSv	MEASURE:uSv
+numeric_suffix	*	Gy	MEASURE:Gy
+numeric_suffix	*	㏉	MEASURE:Gy
+numeric_suffix	*	mGy	MEASURE:mGy
+numeric_suffix	*	lx	MEASURE:lux
+numeric_suffix	*	㏓	MEASURE:lux
+numeric_suffix	*	lm	MEASURE:lm
+numeric_suffix	*	㏐	MEASURE:lm
+numeric_suffix	*	dL	MEASURE:dL
+numeric_suffix	*	㎗	MEASURE:dL
+numeric_suffix	*	kL	MEASURE:kL
+numeric_suffix	*	㎘	MEASURE:kL
+numeric_suffix	*	μL	MEASURE:uL
+numeric_suffix	*	µL	MEASURE:uL
+numeric_suffix	*	㎕	MEASURE:uL
+numeric_suffix	*	μg	MEASURE:ug
+numeric_suffix	*	µg	MEASURE:ug
+numeric_suffix	*	㎍	MEASURE:ug
+numeric_suffix	*	ng	MEASURE:ng
+numeric_suffix	*	μm	MEASURE:um
+numeric_suffix	*	µm	MEASURE:um
+numeric_suffix	*	㎛	MEASURE:um
+numeric_suffix	*	㎚	MEASURE:nm
+numeric_suffix	*	ns	MEASURE:ns
+numeric_suffix	*	㎱	MEASURE:ns
+numeric_suffix	*	μs	MEASURE:us
+numeric_suffix	*	µs	MEASURE:us
+numeric_suffix	*	㎲	MEASURE:us
+numeric_suffix	*	㎳	MEASURE:ms
+numeric_suffix	*	THz	MEASURE:THz
+numeric_suffix	*	㎔	MEASURE:THz
+numeric_suffix	*	TWh	MEASURE:TWh
+numeric_suffix	*	eV	MEASURE:eV
+numeric_suffix	*	keV	MEASURE:keV
+numeric_suffix	*	MeV	MEASURE:MeV
+numeric_suffix	*	GeV	MEASURE:GeV
+numeric_suffix	*	Å	MEASURE:angstrom
+numeric_suffix	*	Å	MEASURE:angstrom
+numeric_suffix	*	mbar	MEASURE:mbar
+numeric_suffix	*	mmol	MEASURE:mmol
+numeric_suffix	*	m³	MEASURE:cubic_m
+numeric_suffix	*	㎥	MEASURE:cubic_m
+numeric_suffix	*	cm³	MEASURE:cubic_cm
+numeric_suffix	*	㎤	MEASURE:cubic_cm
+numeric_suffix	*	cm²	MEASURE:square_cm
+numeric_suffix	*	㎠	MEASURE:square_cm
+numeric_suffix	*	km³	MEASURE:cubic_km
+numeric_suffix	*	㎦	MEASURE:cubic_km
+numeric_suffix	*	mm²	MEASURE:square_mm
+numeric_suffix	*	㎟	MEASURE:square_mm
+numeric_suffix	*	㎪	MEASURE:kPa
+numeric_suffix	*	MPa	MEASURE:MPa
+numeric_suffix	*	㎫	MEASURE:MPa
+numeric_suffix	*	GPa	MEASURE:GPa
+numeric_suffix	*	㎬	MEASURE:GPa
+numeric_suffix	*	㎩	MEASURE:Pa
+numeric_suffix	*	㏈	MEASURE:dB
+numeric_suffix	*	㎈	MEASURE:cal
+numeric_suffix	*	㏖	MEASURE:mol
+numeric_suffix	*	㏊	MEASURE:ha
+numeric_suffix	*	㎑	MEASURE:kHz
+numeric_suffix	*	㎧	MEASURE:m_per_second
+numeric_suffix	*	㎍/㎥	MEASURE:ug_per_cubic_m
+numeric_suffix	*	μg/m³	MEASURE:ug_per_cubic_m
+numeric_suffix	*	µg/m³	MEASURE:ug_per_cubic_m
+numeric_suffix	*	㎍/m³	MEASURE:ug_per_cubic_m
+numeric_suffix	*	μg/㎥	MEASURE:ug_per_cubic_m
+numeric_suffix	*	µg/㎥	MEASURE:ug_per_cubic_m
+numeric_suffix	*	mg/L	MEASURE:mg_per_L
+numeric_suffix_cue	*	V	전압|전원|볼트|배터리|충전|콘센트|어댑터|직류|교류|전기|전력|플러그|AC|DC|volt|battery|outlet|power|charger
+numeric_suffix_cue	*	A	전류|암페어|충전|퓨즈|차단기|어댑터|amp|current|fuse|charger
+numeric_suffix_cue	*	J	에너지|열량|칼로리|kcal|cal|joule|energy
+numeric_suffix_cue	*	MJ	에너지|열량|칼로리|kcal|cal|joule|energy
+numeric_suffix_cue	*	GJ	에너지|열량|칼로리|kcal|cal|joule|energy
+unit	en-US	V.one	volt
+unit	en-US	V.many	volts
+unit	en-US	A.one	ampere
+unit	en-US	A.many	amperes
+unit	en-US	J.one	joule
+unit	en-US	J.many	joules
+unit	en-US	mV.one	millivolt
+unit	en-US	mV.many	millivolts
+unit	en-US	kA.one	kiloampere
+unit	en-US	kA.many	kiloamperes
+unit	en-US	uA.one	microampere
+unit	en-US	uA.many	microamperes
+unit	en-US	VA.one	volt-ampere
+unit	en-US	VA.many	volt-amperes
+unit	en-US	kVA.one	kilovolt-ampere
+unit	en-US	kVA.many	kilovolt-amperes
+unit	en-US	MVA.one	megavolt-ampere
+unit	en-US	MVA.many	megavolt-amperes
+unit	en-US	mW.one	milliwatt
+unit	en-US	mW.many	milliwatts
+unit	en-US	kN.one	kilonewton
+unit	en-US	kN.many	kilonewtons
+unit	en-US	MJ.one	megajoule
+unit	en-US	MJ.many	megajoules
+unit	en-US	GJ.one	gigajoule
+unit	en-US	GJ.many	gigajoules
+unit	en-US	kohm.one	kilohm
+unit	en-US	kohm.many	kilohms
+unit	en-US	Mohm.one	megohm
+unit	en-US	Mohm.many	megohms
+unit	en-US	mohm.one	milliohm
+unit	en-US	mohm.many	milliohms
+unit	en-US	uF.one	microfarad
+unit	en-US	uF.many	microfarads
+unit	en-US	nF.one	nanofarad
+unit	en-US	nF.many	nanofarads
+unit	en-US	pF.one	picofarad
+unit	en-US	pF.many	picofarads
+unit	en-US	Bq.one	becquerel
+unit	en-US	Bq.many	becquerels
+unit	en-US	kBq.one	kilobecquerel
+unit	en-US	kBq.many	kilobecquerels
+unit	en-US	MBq.one	megabecquerel
+unit	en-US	MBq.many	megabecquerels
+unit	en-US	Sv.one	sievert
+unit	en-US	Sv.many	sieverts
+unit	en-US	mSv.one	millisievert
+unit	en-US	mSv.many	millisieverts
+unit	en-US	uSv.one	microsievert
+unit	en-US	uSv.many	microsieverts
+unit	en-US	Gy.one	gray
+unit	en-US	Gy.many	grays
+unit	en-US	mGy.one	milligray
+unit	en-US	mGy.many	milligrays
+unit	en-US	lm.one	lumen
+unit	en-US	lm.many	lumens
+unit	en-US	dL.one	deciliter
+unit	en-US	dL.many	deciliters
+unit	en-US	kL.one	kiloliter
+unit	en-US	kL.many	kiloliters
+unit	en-US	uL.one	microliter
+unit	en-US	uL.many	microliters
+unit	en-US	ug.one	microgram
+unit	en-US	ug.many	micrograms
+unit	en-US	ng.one	nanogram
+unit	en-US	ng.many	nanograms
+unit	en-US	um.one	micrometer
+unit	en-US	um.many	micrometers
+unit	en-US	ns.one	nanosecond
+unit	en-US	ns.many	nanoseconds
+unit	en-US	us.one	microsecond
+unit	en-US	us.many	microseconds
+unit	en-US	THz.one	terahertz
+unit	en-US	THz.many	terahertz
+unit	en-US	TWh.one	terawatt hour
+unit	en-US	TWh.many	terawatt hours
+unit	en-US	eV.one	electronvolt
+unit	en-US	eV.many	electronvolts
+unit	en-US	keV.one	kiloelectronvolt
+unit	en-US	keV.many	kiloelectronvolts
+unit	en-US	MeV.one	megaelectronvolt
+unit	en-US	MeV.many	megaelectronvolts
+unit	en-US	GeV.one	gigaelectronvolt
+unit	en-US	GeV.many	gigaelectronvolts
+unit	en-US	angstrom.one	angstrom
+unit	en-US	angstrom.many	angstroms
+unit	en-US	mbar.one	millibar
+unit	en-US	mbar.many	millibars
+unit	en-US	mmol.one	millimole
+unit	en-US	mmol.many	millimoles
+unit	en-US	cubic_m.one	cubic meter
+unit	en-US	cubic_m.many	cubic meters
+unit	en-US	cubic_cm.one	cubic centimeter
+unit	en-US	cubic_cm.many	cubic centimeters
+unit	en-US	square_cm.one	square centimeter
+unit	en-US	square_cm.many	square centimeters
+unit	en-US	cubic_km.one	cubic kilometer
+unit	en-US	cubic_km.many	cubic kilometers
+unit	en-US	square_mm.one	square millimeter
+unit	en-US	square_mm.many	square millimeters
+unit	en-US	MPa.one	megapascal
+unit	en-US	MPa.many	megapascals
+unit	en-US	GPa.one	gigapascal
+unit	en-US	GPa.many	gigapascals
+unit	en-US	ug_per_cubic_m.one	microgram per cubic meter
+unit	en-US	ug_per_cubic_m.many	micrograms per cubic meter
+unit	en-US	mg_per_L.one	milligram per liter
+unit	en-US	mg_per_L.many	milligrams per liter
+numeric_suffix	*	Bq/kg	MEASURE:Bq_per_kg
+numeric_suffix	*	Bq/㎏	MEASURE:Bq_per_kg
+numeric_suffix	*	Bq/L	MEASURE:Bq_per_L
+numeric_suffix	*	Bq/ℓ	MEASURE:Bq_per_L
+unit	en-US	Bq_per_kg.one	becquerel per kilogram
+unit	en-US	Bq_per_kg.many	becquerels per kilogram
+unit	en-US	Bq_per_L.one	becquerel per liter
+unit	en-US	Bq_per_L.many	becquerels per liter

@@ -2,6 +2,13 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Unit symbols (plan item 4): prefixed SI units (mSv, kΩ, μg, MeV, ...), the
+  squared unit characters left unread (㏊ 헥타르, ㎍/㎥ 마이크로그램 퍼
+  세제곱미터, ㎿, ㎤, ㏈) and Bq/㎏ in both languages. A bare V, A or J (and
+  MJ, GJ) is a unit only with a cue word in the sentence (new
+  numeric_suffix_cue: 220V 전원 이백이십 볼트; 모니터 253V stays 브이). Contract
+  ko_unit_symbols_v24 (24 cases). Korean benchmark +14, -0; English unchanged;
+  161 NIKL corpus sentences change, all checked.
 - Han characters outside KS X 1001/1002 (強, 絕, 豐, 姊, 郎, ...) read with the
   hanja option from a table derived from the 표준국어대사전's Hanja words
   (project-owner decision, option D): 904 characters in

@@ -329,6 +329,14 @@ static ttf_status_t core_record(const ttf_resource_record_t *r, int *handled,
         if (strlen(key) >= 64 || !typed_value(value, "COUNTER|CURRENCY|MEASURE", 32, 0))
             return ttf_validation_error(d, "numeric_suffix requires COUNTER:unit, CURRENCY:unit or "
                                            "MEASURE:unit with unit under 32 bytes");
+    } else if (!strcmp(kind, "numeric_suffix_cue")) {
+        const char *w;
+        int ok = *key && strlen(key) < 64 && *value && value[0] != '|' && value[strlen(value) - 1] != '|' &&
+                 !strstr(value, "||");
+        for (w = value; ok && *w; ++w)
+            ok = (unsigned char)*w >= 32 && *w != 127;
+        if (!ok)
+            return ttf_validation_error(d, "numeric_suffix_cue requires a suffix and '|'-separated cue words");
     } else if (!strcmp(kind, "numeric_suffix_word")) {
         if (strlen(key) >= 64 || strcmp(value, "1"))
             return ttf_validation_error(d, "numeric_suffix_word requires a word under 64 bytes and value 1");

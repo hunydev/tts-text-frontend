@@ -345,6 +345,24 @@ Units with mixed or scarce evidence (가구, 상, 매, 계단) are left out, and
 `numeric_suffix_word * <word> 1` names a word that starts with a numeric suffix but is not that suffix, so the
 number keeps its plain reading: 5배수 오배수, 2배속, 1배럴, 2배스, 배율.
 
+## Unit symbols (2026-10-04)
+
+Unit symbols from the 표준국어대사전 survey read as units in both languages (shared `numeric_suffix`, labels in
+each language's measurements.tsv):
+
+- Prefixed SI symbols: mV, kA, μA, VA, kVA, MVA, mW, kN, kΩ, MΩ, mΩ, μF, nF, pF, Bq, kBq, MBq, Sv, mSv, μSv, Gy,
+  mGy, lm, dL, kL, μL, μg, ng, μm, ns, μs, THz, TWh, eV, keV, MeV, GeV, Å, mbar, mmol, MPa, GPa, m³, cm³, cm²,
+  km³, mm²; μ also as the micro sign µ (U+00B5).
+- The squared unit characters U+3380..U+33DF that were left unread: ㎤ ㎠ ㎥ ㎦ ㎟ ㎕ ㎗ ㎘ ㎍ ㎛ ㎚ ㎱ ㎲ ㎳ ㎸ ㎽ ㎿
+  ㏃ ㏉ ㏜ ㏓ ㏐ ㎄ ㎃ ㎂ ㎷ ㏀ ㏁ ㎈ ㏈ ㎪ ㎫ ㎬ ㎩ ㎧ ㏖ ㏊ ㎑ ㎔ (6.5㏊ 육 점 오 헥타르, 50㎿ 오십 메가와트).
+- Concentrations: ㎍/㎥ and μg/m³ 마이크로그램 퍼 세제곱미터 (micrograms per cubic meter), mg/L, Bq/㎏, Bq/L.
+
+`numeric_suffix_cue * <suffix> <word|word|...>` makes a suffix a unit only when one of the cue words occurs in the
+text. V, A, J, MJ and GJ carry cues (전압, 전원, 배터리, 충전, 전류, 에너지, 칼로리, kcal, battery, power, energy,
+...): 220V 전원 이백이십 볼트 전원, 5V 2A 충전 오 볼트 이 암페어, but 모니터 253V 이백오십삼 브이, 45A 사십오 에이 and
+제품번호 8876GJ keep the label reading, as in the Korean benchmark where these letters after a number are mostly
+model names and codes. The cue check also applies to the Korean digit-letter label rule (3.7V 배터리 삼 점 칠 볼트).
+
 ## Event dates (2026-10-04)
 
 An event named by its month and day reads as a name in speech output: the month as a number and the day digit by

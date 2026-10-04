@@ -348,7 +348,8 @@ static int unit_letters(const ttf_pack_input_t *in, size_t begin, size_t end) {
         return 0;
     memcpy(key, in->text + begin, end - begin);
     key[end - begin] = 0;
-    return ttf_resource_get(in->engine, "numeric_suffix", "*", key, NULL) ||
+    return (ttf_resource_get(in->engine, "numeric_suffix", "*", key, NULL) &&
+            ttf_numeric_suffix_cued(in->engine, key, in->text, in->length)) ||
            ttf_resource_get(in->engine, "letter_unit", "ko-KR", key, NULL);
 }
 
