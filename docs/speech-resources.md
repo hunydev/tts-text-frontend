@@ -338,6 +338,10 @@ each reads native. New native counters: 곳, 건 (to 19), 박스 (19), 봉 (10),
 냥 (19), 포대, 게임, 개조 (19); limits on existing ones: 평 (10; 30평 삼십 평), 병 (19), 권 (39), 통 (39).
 Units with mixed or scarce evidence (가구, 상, 매, 계단) are left out, and 명 keeps its earlier native policy.
 
+개 compounds are counters of their own (2026-10-04), so the reading no longer follows 개: 개국 and 개년 are Sino
+(3개국 삼 개국, 5개년 오 개년; references 105 : 10 and 5 : 0), 개사, 개소, 개교 native up to 9 (7개사 일곱 개사,
+15개사 십오 개사) and 개동 up to 19.
+
 `numeric_suffix_word * <word> 1` names a word that starts with a numeric suffix but is not that suffix, so the
 number keeps its plain reading: 5배수 오배수, 2배속, 1배럴, 2배스, 배율.
 

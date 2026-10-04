@@ -2,6 +2,11 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- 개 compounds as their own counters (plan item 2): 개국 and 개년 Sino (3개국
+  삼 개국, 5개년 오 개년), 개사, 개소, 개교 native up to 9 and 개동 up to 19, set
+  by number from the benchmark references. Contract ko_gae_counters_v24 (12
+  cases). Korean benchmark +142, -26 (the minority native readings such as
+  12개사 열두 개사); English unchanged.
 - Event dates read as names (plan item 1 from the 표준국어대사전 survey): 6·25
   전쟁 육이오 전쟁, 5.18민주화운동 오일팔, 3·1절 삼일절, 6·10 육십, 12·12 십이십이.
   Known dates (event_date) read so after a middle dot anywhere; otherwise an

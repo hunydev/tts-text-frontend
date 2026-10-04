@@ -144,6 +144,23 @@ counter	ko-KR	시간	native
 numeric_suffix	*	시간	COUNTER:시간
 counter	ko-KR	개월	sino
 numeric_suffix	*	개월	COUNTER:개월
+# 개 compounds by number from the benchmark references (2026-10-04).
+counter	ko-KR	개국	sino
+counter	ko-KR	개년	sino
+counter	ko-KR	개사	native
+counter_native_max	ko-KR	개사	9
+counter	ko-KR	개소	native
+counter_native_max	ko-KR	개소	9
+counter	ko-KR	개교	native
+counter_native_max	ko-KR	개교	9
+counter	ko-KR	개동	native
+counter_native_max	ko-KR	개동	19
+numeric_suffix	*	개국	COUNTER:개국
+numeric_suffix	*	개년	COUNTER:개년
+numeric_suffix	*	개사	COUNTER:개사
+numeric_suffix	*	개소	COUNTER:개소
+numeric_suffix	*	개교	COUNTER:개교
+numeric_suffix	*	개동	COUNTER:개동
 unit	ko-KR	L	리터
 unit	ko-KR	mL	밀리리터
 unit	ko-KR	°C	도
