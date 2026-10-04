@@ -3,4 +3,5 @@
 #include "tts_text_frontend/ttf_language_pack.h"
 size_t ttf_ko_classify_floor(const ttf_pack_input_t *, ttf_semantic_t *);
 size_t ttf_ko_classify_basement(const ttf_pack_input_t *, ttf_semantic_t *);
+size_t ttf_ko_classify_event_date(const ttf_pack_input_t *, ttf_semantic_t *);
 #endif

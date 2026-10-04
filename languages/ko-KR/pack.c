@@ -1169,6 +1169,31 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     case TTF_SEM_DIGIT_SEQUENCE:
         if (!strcmp(s->unit, "written_fallback"))
             return written_read(e, surface, length, out);
+        if (!strcmp(s->unit, "event_date")) {
+            /* 6·25 육이오, 6·10 육십: the month as a number, the day digit by
+               digit unless it is round or the month has two digits (12·12
+               십이십이, 12.16 십이십육); a declared reading wins. */
+            const char *reading = ttf_resource_get(e, "event_date", "ko-KR", s->value, NULL);
+            const char *dot = strstr(s->value, "\xc2\xb7");
+            char part[4];
+            size_t k;
+            if (reading && strcmp(reading, "1") && strcmp(reading, "0"))
+                return ttf_buffer_puts(out, reading);
+            if (!dot || dot == s->value || dot - s->value > 2)
+                return TTF_EINVAL;
+            memcpy(part, s->value, (size_t)(dot - s->value));
+            part[dot - s->value] = '\0';
+            TRY(cardinal(e, part, out));
+            dot += 2;
+            if (strlen(dot) < 2 || dot[1] == '0' || dot - 2 - s->value == 2)
+                return cardinal(e, dot, out);
+            for (k = 0; dot[k]; ++k) {
+                part[0] = dot[k];
+                part[1] = '\0';
+                TRY(cardinal(e, part, out));
+            }
+            return TTF_OK;
+        }
         if (!strcmp(s->unit, "financial_identifier") &&
             (!strcmp(s->rule, "ko:route-label") || !strcmp(s->rule, "ko:short-label"))) {
             /* 38A번 삼십팔에이번, 500-1A번 오백 다시 일에이번; 20F 이십 에프 (one
@@ -2396,6 +2421,9 @@ static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     if (identifier)
         return identifier;
     if (in->engine->frontend_options.output_mode == TTF_OUTPUT_SPEECH) {
+        identifier = ttf_ko_classify_event_date(in, s);
+        if (identifier)
+            return identifier;
         identifier = ttf_ko_classify_card(in, s);
         if (identifier)
             return identifier;

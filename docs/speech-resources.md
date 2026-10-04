@@ -341,6 +341,23 @@ Units with mixed or scarce evidence (가구, 상, 매, 계단) are left out, and
 `numeric_suffix_word * <word> 1` names a word that starts with a numeric suffix but is not that suffix, so the
 number keeps its plain reading: 5배수 오배수, 2배속, 1배럴, 2배스, 배율.
 
+## Event dates (2026-10-04)
+
+An event named by its month and day reads as a name in speech output: the month as a number and the day digit by
+digit, as the Korean benchmark references do (6·25 전쟁 육이오 전쟁, 5·18 오일팔, 4·19 사일구, 3·1절 삼일절,
+8.31 부동산 대책 팔삼일). A round day reads as a number (6·10 민주항쟁 육십), and so does the day after a
+two-digit month (12·12 사태 십이십이, 12.16 대책 십이십육).
+
+- `event_date ko-KR <M·D> 1` declares a known event date. With a middle dot (·, ㆍ, ‧, ・) it reads so anywhere
+  (6·25 때, 제주 4·3을). A value other than 0 or 1 is the reading itself.
+- `event_date_word ko-KR <word> 1|attached|known|0` names a word that marks an event right after the date (one
+  space at most; the longest prefix of the following Hangul run wins). `1` works for any month-day pair and either
+  separator (6.13지방선거, 7·10 부동산대책); `attached` only without a space (3·1절); `known` only confirms a
+  declared date (5.18 광주민주화운동, 4.3평화공원).
+- Without such a word a period stays a decimal (평균자책점 5.18을 오 점 일팔을, 규모 4.3의) and an undeclared middle-dot
+  pair stays a list (1·2학년). A known date with a period and only a particle (4.19는, 5.18을 맞아) is left as a
+  decimal on purpose.
+
 ## Particle agreement (2026-10-02)
 
 `policy ko-KR particle_agreement off` (resources/languages/ko-KR/rules/speech.tsv) keeps the Hangul written after a reading as written: 성수동1가 reads 성수동일가, 5kg로 reads 오 킬로그램로. The engine option `particle_agreement=on` (CLI `--particle-agreement on`, web 조사 맞춤) or the policy value `on` restores the agreement table (`particle_form`: 3랑 삼이랑, 5kg로 오 킬로그램으로).

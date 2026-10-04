@@ -2,6 +2,12 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Event dates read as names (plan item 1 from the 표준국어대사전 survey): 6·25
+  전쟁 육이오 전쟁, 5.18민주화운동 오일팔, 3·1절 삼일절, 6·10 육십, 12·12 십이십이.
+  Known dates (event_date) read so after a middle dot anywhere; otherwise an
+  event word (event_date_word) must follow, so 5.18을 and 1·2학년 keep their
+  decimal and list readings. Contract ko_event_dates_v24 (24 cases). Korean
+  benchmark +211, -0; English unchanged.
 - Counting units from the 표준국어대사전 list (project-owner request), with
   native limits set by number from the Korean benchmark references: new native
   counters 곳, 건, 박스, 봉, 포기, 돈, 차례, 접, 홉, 축, 냥, 포대, 게임, 개조 (3곳 세 곳,

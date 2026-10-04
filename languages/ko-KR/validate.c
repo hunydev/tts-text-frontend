@@ -400,6 +400,22 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    : ttf_validation_error(
                          d, "floor_basement_prefix requires uppercase ASCII and basement_floor");
     }
+    if (SAME(k, "event_date")) {
+        unsigned month = 0, day = 0;
+        char tail = 0;
+        *handled = 1;
+        return sscanf(key, "%u\xc2\xb7%u%c", &month, &day, &tail) == 2 && month >= 1 && month <= 12 &&
+                       day >= 1 && day <= 31 && label(v) && strlen(v) < 64
+                   ? TTF_OK
+                   : ttf_validation_error(d, "event_date requires a month-day key and 0|1 or a reading");
+    }
+    if (SAME(k, "event_date_word")) {
+        *handled = 1;
+        return label(key) && strlen(key) < 64 && !strchr(key, ' ') &&
+                       ttf_validation_enum(v, "0|1|attached|known")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "event_date_word requires one word and 0|1|attached|known");
+    }
     if (SAME(k, "floor_alias")) {
         *handled = 1;
         return strlen(key) == 1 && key[0] >= 'A' && key[0] <= 'Z' && SAME(v, "floor")
