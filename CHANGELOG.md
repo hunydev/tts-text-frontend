@@ -11,6 +11,8 @@
   held-out 48.4% → 49.1%. Hanja words with two dictionary readings stay on
   the character rules: corpus frequency of the Hangul forms counts homophones
   (人質 would become 인지), so no default is taken from it.
+  speakable_sweep may take up to 600 s: the loanword table adds about 10 ms
+  to each of its ~6,000 CLI starts.
 - 표준국어대사전 loanwords as a dictionary (plan item 5, project-owner
   decision): 6,789 lowercase loanword spellings (camera 카메라, ambulance
   앰뷸런스, chocolate 초콜릿) in loanwords/stdict_loanwords.tsv, CC BY-SA 2.0

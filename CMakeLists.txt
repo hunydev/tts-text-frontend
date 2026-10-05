@@ -692,8 +692,10 @@ if(BUILD_TESTING)
     add_test(NAME speakable_sweep COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_speakable.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
+    # About 6,000 separate CLI runs, so engine start-up dominates; the 표준국어대사전
+    # loanword table (2026-10-05) adds about 10 ms to each start.
     set_tests_properties(speakable_sweep PROPERTIES
-      TIMEOUT $<IF:$<OR:$<BOOL:${TTF_ENABLE_ASAN}>,$<BOOL:${TTF_ENABLE_UBSAN}>>,1800,300>)
+      TIMEOUT $<IF:$<OR:$<BOOL:${TTF_ENABLE_ASAN}>,$<BOOL:${TTF_ENABLE_UBSAN}>>,1800,600>)
     add_test(NAME range_semantics COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_range_semantics.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
