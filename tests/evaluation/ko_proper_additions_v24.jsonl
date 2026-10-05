@@ -1,0 +1,1 @@
+{"id": "ko-proper-additions-v24-belize", "category": "ko/proper-nouns", "text": "멕시코 Belize 비자를 받았다", "expected": "멕시코 벨리즈 비자를 받았다", "default_language": "ko-KR", "output_mode": "speech", "input_format": "plain", "unreadable": "preserve", "notes": "Authored 2026-10-05 before the entry: Belize is 벨리즈, as the Korean benchmark reference reads it."}

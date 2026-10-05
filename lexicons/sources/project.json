@@ -88,6 +88,14 @@
       "kind": "editorial-policy",
       "checked_at": "2026-10-05",
       "note": "Acronyms the 표준국어대사전 lists as loanwords read as words, kept by hand only when still read that way in current Korean. The dictionary (CC BY-SA 2.0 KR) is confirming evidence; the readings are the common Korean ones. No human approval and no synthesized audio."
+    },
+    {
+      "id": "project-proper-nouns-v24",
+      "title": "Project readings of foreign proper nouns, v24",
+      "url": "https://www.korean.go.kr/front/page/pageView.do?mn_id=97&page_id=P000124",
+      "kind": "editorial-policy",
+      "checked_at": "2026-10-05",
+      "note": "Foreign proper nouns whose spelling guess is wrong in Korean-context text, read with their established Korean spelling (외래어 표기법 and common usage). No human approval and no synthesized audio."
     }
   ]
 }

@@ -2,6 +2,15 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Remaining items before plan item 6: a declared event date with a period
+  and only a particle reads as the event when the sentence names one (new
+  event_date_cue: 40주년 5.18을 맞아 광주 오일팔, 4.19는 ... 부정선거 사일구;
+  평균자책점은 4.19를 stays a decimal), 7·10 칠일영; Belize 벨리즈 (new
+  proper-additions-v24 lexicon); a third round of 14 loanword spelling rules
+  (ripple 리플, sandal 샌들, output 아웃풋, fringe 프린지, column 칼럼),
+  held-out 48.4% → 49.1%. Hanja words with two dictionary readings stay on
+  the character rules: corpus frequency of the Hangul forms counts homophones
+  (人質 would become 인지), so no default is taken from it.
 - 표준국어대사전 loanwords as a dictionary (plan item 5, project-owner
   decision): 6,789 lowercase loanword spellings (camera 카메라, ambulance
   앰뷸런스, chocolate 초콜릿) in loanwords/stdict_loanwords.tsv, CC BY-SA 2.0

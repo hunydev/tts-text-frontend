@@ -409,6 +409,12 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "event_date requires a month-day key and 0|1 or a reading");
     }
+    if (SAME(k, "event_date_cue")) {
+        *handled = 1;
+        return label(key) && strlen(key) < 24 && !strchr(key, ' ') && ttf_validation_enum(v, "0|1")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "event_date_cue requires one short word and 0|1");
+    }
     if (SAME(k, "event_date_word")) {
         *handled = 1;
         return label(key) && strlen(key) < 64 && !strchr(key, ' ') &&

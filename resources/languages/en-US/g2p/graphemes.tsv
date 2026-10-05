@@ -278,3 +278,19 @@ g2p	en-US	asing	EY S IH NG
 g2p	en-US	gue$	G
 g2p	en-US	dead	D EH D
 g2p	en-US	ealth	EH L TH
+# Round 3 (2026-10-05): doubled consonant + le (리플, 드리블), -dal 들, out- 아웃, -nge 지, -ange 에인지,
+# -ower 워, -mn ㅁ (칼럼), xy- 자이, -isure 저. Kept only with gains and no losses on the development words.
+g2p	en-US	ttle$	T L
+g2p	en-US	dal$	D AX L
+g2p	en-US	^out	AW T .
+g2p	en-US	ange$	EY N JH
+g2p	en-US	nge$	N JH
+g2p	en-US	ange	EY N JH
+g2p	en-US	pple$	P L
+g2p	en-US	bble$	B L
+g2p	en-US	ffle$	F L
+g2p	en-US	ower$	AW ER
+g2p	en-US	uyer	AY ER
+g2p	en-US	mn$	M
+g2p	en-US	^xy	Z AY
+g2p	en-US	isure	ZH ER

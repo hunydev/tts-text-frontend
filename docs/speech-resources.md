@@ -378,7 +378,10 @@ two-digit month (12·12 사태 십이십이, 12.16 대책 십이십육).
   declared date (5.18 광주민주화운동, 4.3평화공원).
 - Without such a word a period stays a decimal (평균자책점 5.18을 오 점 일팔을, 규모 4.3의) and an undeclared middle-dot
   pair stays a list (1·2학년). A known date with a period and only a particle (4.19는, 5.18을 맞아) is left as a
-  decimal on purpose.
+  decimal on purpose, unless a particle follows the date and the sentence names the event (2026-10-05):
+  `event_date_cue ko-KR <word> 1`
+  (광주, 주년, 기념, 민주, 혁명, 부정선거 ...) anywhere in the sentence makes 40주년 5.18을 맞아 광주를 오일팔을 and
+  4.19는 ... 부정선거 사일구는; 평균자책점은 4.19를 stays 사 점 일구. 7·10 is declared with its reading 칠일영.
 
 ## Particle agreement (2026-10-02)
 

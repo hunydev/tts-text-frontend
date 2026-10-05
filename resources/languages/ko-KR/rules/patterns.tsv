@@ -53,6 +53,7 @@ event_date	ko-KR	8·15	1
 event_date	ko-KR	9·11	1
 event_date	ko-KR	10·26	1
 event_date	ko-KR	12·12	1
+event_date	ko-KR	7·10	칠일영
 event_date	ko-KR	1·21	1
 event_date	ko-KR	2·28	1
 event_date	ko-KR	3·15	1
@@ -124,3 +125,25 @@ event_date_word	ko-KR	제주	known
 event_date_word	ko-KR	공원	known
 event_date_word	ko-KR	평화	known
 event_date_word	ko-KR	자유	known
+# A declared date with a period and only a particle after it reads as the event when the
+# sentence names one of these (2026-10-05): 5.18을 맞아 광주를, 4.19는 ... 부정선거. Not 운동:
+# 걷기 운동 ... 2.8킬로미터 is a distance.
+event_date_cue	ko-KR	광주	1
+event_date_cue	ko-KR	제주	1
+event_date_cue	ko-KR	주년	1
+event_date_cue	ko-KR	기념	1
+event_date_cue	ko-KR	민주	1
+event_date_cue	ko-KR	혁명	1
+event_date_cue	ko-KR	항쟁	1
+event_date_cue	ko-KR	전쟁	1
+event_date_cue	ko-KR	부정선거	1
+event_date_cue	ko-KR	의거	1
+event_date_cue	ko-KR	희생자	1
+event_date_cue	ko-KR	유공자	1
+event_date_cue	ko-KR	묘지	1
+event_date_cue	ko-KR	참전	1
+event_date_cue	ko-KR	광복	1
+event_date_cue	ko-KR	독립	1
+event_date_cue	ko-KR	만세	1
+event_date_cue	ko-KR	학살	1
+event_date_cue	ko-KR	진상	1

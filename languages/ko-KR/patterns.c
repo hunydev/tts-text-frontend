@@ -204,6 +204,45 @@ static const char *event_word(const ttf_pack_input_t *in, size_t p, ttf_resource
     return NULL;
 }
 
+/* 5.18을 맞아 광주를, 4.19는 ... 부정선거: a declared date written with a period
+   and only a particle after it is the event when the sentence names one
+   (event_date_cue); 평균자책점 4.19를 stays a decimal. */
+static int sentence_cue(const ttf_pack_input_t *in) {
+    char key[24];
+    size_t p, width;
+    for (p = 0; p + 6 <= in->length; ++p) {
+        if ((unsigned char)in->text[p] < 0xea || (unsigned char)in->text[p] > 0xed)
+            continue;
+        for (width = 6; width <= 15 && p + width <= in->length; width += 3) {
+            const char *value;
+            if ((unsigned char)in->text[p + width - 3] < 0xea ||
+                (unsigned char)in->text[p + width - 3] > 0xed)
+                break;
+            memcpy(key, in->text + p, width);
+            key[width] = 0;
+            value = ttf_resource_get(in->engine, "event_date_cue", "ko-KR", key, NULL);
+            if (value && !strcmp(value, "1"))
+                return 1;
+        }
+    }
+    return 0;
+}
+
+/* The date ends with a particle: one or two syllables starting with 은는이가을를의에로와과도만. */
+static int particle_after(const ttf_pack_input_t *in, size_t p) {
+    static const char *const first[] = {"은", "는", "이", "가", "을", "를", "의", "에", "로", "와", "과", "도", "만"};
+    size_t run = p, i;
+    while (run + 3 <= in->length && (unsigned char)in->text[run] >= 0xea &&
+           (unsigned char)in->text[run] <= 0xed)
+        run += 3;
+    if (run == p || run - p > 6)
+        return 0;
+    for (i = 0; i < sizeof(first) / sizeof(first[0]); ++i)
+        if (!memcmp(in->text + p, first[i], 3))
+            return 1;
+    return 0;
+}
+
 size_t ttf_ko_classify_event_date(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     const char *t = in->text, *known, *word;
     size_t n = in->length, b = in->tokens[in->index].begin, m_end, sep, d, d_end, next, consumed;
@@ -248,6 +287,8 @@ size_t ttf_ko_classify_event_date(const ttf_pack_input_t *in, ttf_semantic_t *ou
     if (word && (!strcmp(word, "0") || (!strcmp(word, "attached") && spaced) ||
                  (!strcmp(word, "known") && !known)))
         word = NULL;
+    if (!word && period && known && !spaced && particle_after(in, d_end) && sentence_cue(in))
+        word = "cue";
     if (!word && (period || !known))
         return 0;
     (void)snprintf(out->value, sizeof(out->value), "%s", key);
