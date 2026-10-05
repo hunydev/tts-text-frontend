@@ -30,6 +30,7 @@ lexicon	ko-KR	en-US:gatt	가트
 lexicon	ko-KR	en-US:gif	기프
 lexicon	ko-KR	en-US:gpu	지피유
 lexicon	ko-KR	en-US:hdd	에이치디디
+lexicon	ko-KR	en-US:hdtv	에이치디티비
 lexicon	ko-KR	en-US:html	에이치티엠엘
 lexicon	ko-KR	en-US:http	에이치티티피
 lexicon	ko-KR	en-US:https	에이치티티피에스
@@ -37,6 +38,7 @@ lexicon	ko-KR	en-US:iata	아이아타
 lexicon	ko-KR	en-US:ielts	아이엘츠
 lexicon	ko-KR	en-US:ip	아이피
 lexicon	ko-KR	en-US:kaist	카이스트
+lexicon	ko-KR	en-US:kal	칼
 lexicon	ko-KR	en-US:katusa	카투사
 lexicon	ko-KR	en-US:kist	키스트
 lexicon	ko-KR	en-US:kosdaq	코스닥
@@ -70,15 +72,19 @@ lexicon	ko-KR	en-US:sram	에스램
 lexicon	ko-KR	en-US:ssd	에스에스디
 lexicon	ko-KR	en-US:swift	스위프트
 lexicon	ko-KR	en-US:tcp	티씨피
+lexicon	ko-KR	en-US:tgv	테제베
 lexicon	ko-KR	en-US:toefl	토플
 lexicon	ko-KR	en-US:toeic	토익
 lexicon	ko-KR	en-US:tts	티티에스
+lexicon	ko-KR	en-US:tv	티비
+lexicon	ko-KR	en-US:tvn	티비엔
 lexicon	ko-KR	en-US:udp	유디피
 lexicon	ko-KR	en-US:uefa	우에파
 lexicon	ko-KR	en-US:unesco	유네스코
 lexicon	ko-KR	en-US:unicef	유니세프
 lexicon	ko-KR	en-US:url	유알엘
 lexicon	ko-KR	en-US:usb	유에스비
+lexicon	ko-KR	en-US:vkospi	브이코스피
 lexicon	ko-KR	en-US:vpn	브이피엔
 lexicon	ko-KR	en-US:wipo	와이포
 lexicon	ko-KR	en-US:xl	엑스라지

@@ -437,6 +437,12 @@ if(BUILD_TESTING)
     add_test(NAME identifier_fallback_evaluation COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources identifier_fallback_v22.jsonl 19)
+    add_test(NAME ko_bench_lexicon_v24_evaluation COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources ko_bench_lexicon_v24.jsonl 9)
+    add_test(NAME ko_model_names_v24_evaluation COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources ko_model_names_v24.jsonl 11)
     add_test(NAME ko_beon_frequency_v24_evaluation COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources ko_beon_frequency_v24.jsonl 22)
@@ -457,7 +463,7 @@ if(BUILD_TESTING)
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources ko_acronym_words_v24.jsonl 18)
     add_test(NAME ko_unit_symbols_v24_evaluation COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
-      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources ko_unit_symbols_v24.jsonl 24)
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources ko_unit_symbols_v24.jsonl 27)
     add_test(NAME ko_hanja_stdict_v24_evaluation COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources ko_hanja_stdict_v24.jsonl 15)

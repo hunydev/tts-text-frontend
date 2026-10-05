@@ -49,10 +49,13 @@ media 미디어|deal 딜|metal 메탈|powder 파우더|horizon 호라이즌|incu
 genome 게놈|open 오픈|magnesium 마그네슘|sustainability 서스테이너빌리티|reality 리얼리티|
 james 제임스|michael 마이클|george 조지|mike 마이크|williams 윌리엄스|edward 에드워드|alan 앨런|
 ost 오에스티|ebs 이비에스|ott 오티티|abc 에이비씨|vod 브이오디|vip 브이아이피|ok 오케이|ev 이브이|epl 이피엘|
-ocn 오씨엔|iot 아이오티|imf 아이엠에프|dna 디엔에이|adhd 에이디에이치디|iptv 아이피티브이|etf 이티에프|eu 이유|
+ocn 오씨엔|iot 아이오티|imf 아이엠에프|dna 디엔에이|adhd 에이디에이치디|iptv 아이피티비|etf 이티에프|eu 이유|
 ic 아이씨|rotc 알오티씨|cu 씨유|kpop 케이팝|xbox 엑스박스|kcal 킬로칼로리|dr 닥터|hmm 흠|gym 짐|
 ha 하|haha 하하|hahaha 하하하|hankook 한국|guam 괌
 """
+
+
+CASE_FREE = {"iptv"}
 
 
 def main():
@@ -104,7 +107,9 @@ def main():
     text = rules.read_text(encoding="utf-8")
     if begin in text:
         text = text[:text.index(begin)] + text[text.index(end) + len(end):]
-    block = begin + "".join("lexicon_case\tko-KR\ten-US:%s\tlower\n" % r["term"] for r in rows) + end
+    # IPTV is written in capitals and reads 티비 like TV (2026-10-06), so it is not lower-case only.
+    block = begin + "".join("lexicon_case\tko-KR\ten-US:%s\tlower\n" % r["term"] for r in rows
+                            if r["term"] not in CASE_FREE) + end
     rules.write_text(text.rstrip("\n") + "\n" + block, encoding="utf-8")
     print("entries", len(rows), "skipped (owned)", skipped)
     subprocess.run([sys.executable, str(ROOT / "tools/lexicon/manage.py"), "build"], check=True)

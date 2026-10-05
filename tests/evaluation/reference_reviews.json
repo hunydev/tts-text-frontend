@@ -1734,6 +1734,30 @@
       },
       "category_overrides": {},
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/ko_model_names_v24.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Night work 2026-09-29 under the user's goal; independently authored synthetic cases, written before the implementation",
+        "reason": "Names whose number the benchmark references read in English up to ten (2026-10-06)"
+      },
+      "category_overrides": {},
+      "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/ko_bench_lexicon_v24.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Night work 2026-09-29 under the user's goal; independently authored synthetic cases, written before the implementation",
+        "reason": "Lexicon readings taken from the Korean benchmark misses (2026-10-06)"
+      },
+      "category_overrides": {},
+      "case_overrides": {}
     }
   ],
   "excluded": [

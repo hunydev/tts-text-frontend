@@ -14,6 +14,8 @@ import re
 import sys
 
 ACTIVE_JSONL = (
+    "ko_bench_lexicon_v24",
+    "ko_model_names_v24",
     "ko_beon_frequency_v24",
     "ko_dae_rank_v24",
     "ko_proper_additions_v24",

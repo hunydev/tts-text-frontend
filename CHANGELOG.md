@@ -2,6 +2,22 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Lexicon items from the Korean benchmark misses (project-owner request):
+  readings the references use at least twice and twice as often as the
+  other reading. 42 model_name entries read the number after them in
+  English up to ten (시즌 1 시즌 원, 윈도우 10을 윈도우 텐을, 오메가3를
+  오메가쓰리를, 빅5 병원 빅파이브 병원; 시즌 is mixed 51 : 38 and added on
+  request); three reads 쓰리 (427 : 48, was 스리); TV reads 티비 (699 : 300,
+  was 티브이) with tvN 티비엔, HDTV 에이치디티비 and IPTV 아이피티비; KAL 칼,
+  TGV 테제베 and VKOSPI 브이코스피 in capitals. CCTV (씨씨티브이 36 : 18) and
+  MZ (엠제트 18 : 7) keep their letter readings. Ten earlier contracts that
+  recorded 스리 or 티브이 are updated with their previous values in notes.
+- Fullwidth Latin in a unit or suffix symbol matches its ASCII entry: 63ｍ
+  육십삼 미터, 5ｋｇ 오 킬로그램, also under an explicit {@unit} control.
+- Contracts ko_model_names_v24 (11) and ko_bench_lexicon_v24 (9), and 3
+  fullwidth rows in ko_unit_symbols_v24. Korean benchmark +915, -260
+  (adjusted 82.39% → 82.85%); the losses are TV sentences whose references
+  write 티브이.
 - Number readings in context (plan item 6, from the 표준국어대사전 number
   examples): a score written N 대 M or N대 M reads Sino like 3:2 (3 대 2 삼 대
   이); N대 before a rank or generation word reads Sino (5대 은행, 18대 대통령,

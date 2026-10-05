@@ -205,15 +205,26 @@ static int quantity_space_before(const ttf_pack_input_t *in, size_t position) {
 static int resource_prefix(const ttf_pack_input_t *in, const char *kind, size_t p,
                            const char **value, size_t *end, ttf_resource_layer_t *layer) {
     char key[64];
-    size_t n = in->length - p;
-    if (n >= sizeof(key))
-        n = sizeof(key) - 1;
+    size_t source[64], n = 0, at = p;
+    /* Fullwidth ASCII (63ｍ, 5ｋｇ; U+FF01..U+FF5E) matches its ASCII key: source[k]
+       is the input offset after the k-th key byte (2026-10-06). */
+    while (at < in->length && n < sizeof(key) - 1) {
+        const unsigned char *c = (const unsigned char *)in->text + at;
+        if (in->length - at >= 3 && c[0] == 0xef &&
+            ((c[1] == 0xbc && c[2] >= 0x81) || (c[1] == 0xbd && c[2] <= 0x9e))) {
+            key[n] = (char)(c[1] == 0xbc ? c[2] - 0x60 : c[2] - 0x20);
+            at += 3;
+        } else {
+            key[n] = in->text[at];
+            at += 1;
+        }
+        source[n++] = at;
+    }
     for (; n; --n) {
-        memcpy(key, in->text + p, n);
         key[n] = '\0';
         *value = ttf_resource_get(in->engine, kind, "*", key, layer);
         if (*value) {
-            *end = p + n;
+            *end = source[n - 1];
             return 1;
         }
     }
