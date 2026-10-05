@@ -54,9 +54,10 @@ ttf_status_t ttf_foreign_lookup(const ttf_engine_t *e, const char *source, const
                                 ttf_resource_layer_t *layer) {
     return lookup_kind(e, "lexicon", source, target, text, n, hit, layer);
 }
-/* A dictionary loanword spelling (loanword, 2026-10-05): read when a word has no
-   declared reading, but never a declared word itself, so letter-digit labels
-   (ham7239) and phrase decisions keep following the project lexicon only. */
+/* A dictionary loanword spelling (loanword, 2026-10-05): the guess for a word with
+   no declared reading (unknown_foreign=guess only), never a declared word itself,
+   so letter-digit labels (ham7239), addresses, handles and phrase decisions keep
+   following the project lexicon only. */
 ttf_status_t ttf_foreign_loanword(const ttf_engine_t *e, const char *source, const char *target,
                                   const char *text, size_t n, const char **hit,
                                   ttf_resource_layer_t *layer) {
@@ -293,7 +294,7 @@ static ttf_status_t render_at(const ttf_engine_t *e, const ttf_language_pack_t *
                                        "whole-part-lexicon");
         return st == TTF_OK ? ttf_buffer_puts(out, hit) : st;
     }
-    if (lexical != TTF_LEX_INITIALISM) {
+    if (lexical != TTF_LEX_INITIALISM && e->unknown_foreign_policy == TTF_UNKNOWN_FOREIGN_GUESS) {
         st = ttf_foreign_loanword(e, source->language_tag, target->language_tag, text, n, &hit,
                                   layer);
         if (st != TTF_OK)

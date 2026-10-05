@@ -63,17 +63,6 @@ static ttf_status_t chunk(const ttf_engine_t *e, const ttf_language_pack_t *sour
                                                n, "address-lexicon");
                 return st == TTF_OK ? ttf_buffer_puts(out, hit) : st;
             }
-            /* blog 블로그, mail 메일: an address word may also be a dictionary loanword. */
-            st = ttf_foreign_loanword(e, source->language_tag, target->language_tag, key, n, &hit,
-                                      &layer);
-            if (st != TTF_OK)
-                return st;
-            if (hit) {
-                st = ttf_trace_emit(e, TTF_TRACE_SELECTED, layer, 0, target->language_tag,
-                                    "loanword", source->language_tag, hit, hit, "address-loanword",
-                                    SIZE_MAX);
-                return st == TTF_OK ? ttf_buffer_puts(out, hit) : st;
-            }
         }
     }
     ttf_trace_stage(e, TTF_TRACE_POLICY, part, part + n);

@@ -8,8 +8,9 @@
   KR, built by tools/lexicon/stdict_loanwords.py. New resource kind loanword:
   read only when no project lexicon entry exists, never a declared word (so
   ham7239 and part25 keep their label readings), not for all-capital
-  surfaces, also for address words (blog 블로그). Contract
-  ko_stdict_loanwords_v24 (15 cases). NIKL corpus: 58 of 1,491 sentences with
+  surfaces, nor in addresses and handles, and only under
+  unknown_foreign=guess (the default). Contract
+  ko_stdict_loanwords_v24 (15 cases). NIKL corpus: 50 of 1,491 sentences with
   a lowercase word change; a hand-checked sample were all improvements.
 - Hanja word readings from the 표준국어대사전 (plan item 3-3, project-owner
   decision): 4,932 words the character rules miss (列車 열차, 樂山樂水
