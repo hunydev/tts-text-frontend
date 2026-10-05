@@ -2349,8 +2349,9 @@ static int band_role(const ttf_pack_input_t *in, const ttf_semantic_t *s) {
         for (i = in->index; i < in->token_count; ++i) {
             const ttf_token_t *t = &in->tokens[i];
             if (t->begin <= p && p < t->end) {
-                if (t->script == TTF_SCRIPT_HANGUL && t->begin == p)
-                    cue = band_cue(in, "counter_band_after", t->begin, t->end);
+                /* The word may start inside the counter's own token (4대째, 2대나). */
+                if (t->script == TTF_SCRIPT_HANGUL)
+                    cue = band_cue(in, "counter_band_after", p, t->end);
                 break;
             }
         }

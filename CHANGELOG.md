@@ -2,6 +2,15 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Number readings in context (plan item 6, from the 표준국어대사전 number
+  examples): a score written N 대 M or N대 M reads Sino like 3:2 (3 대 2 삼 대
+  이); N대 before a rank or generation word reads Sino (5대 은행, 18대 대통령,
+  4대 보험, 4대째); 번 counting occurrences reads native with frequency cues
+  chosen from the benchmark references (5번이나 다섯 번이나, 10번 이상, 3번
+  정도, 하루에, 무려) while route, queue and list numbers stay Sino; 정보 is not
+  the counter 정. Contracts ko_dae_rank_v24 (25) and ko_beon_frequency_v24
+  (22). Korean benchmark +753, -7 (adjusted 81.86% → 82.39%); English
+  unchanged.
 - Korean reference validator v2 (project-owner request): records whose spans
   carry no source offsets are checked too. The source's Hangul must reach the
   reference in order; digits, Latin, Han, symbols and bracketed one-syllable

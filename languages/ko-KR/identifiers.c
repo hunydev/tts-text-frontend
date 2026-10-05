@@ -240,6 +240,39 @@ static int following_label(const ttf_pack_input_t *in, size_t end, char *matched
     return 0;
 }
 
+/* After N번, a frequency cue (counter_role_tail 이나/만/씩, or counter_role_after
+   이상/정도/넘게 on the next word) makes it a count: 비밀번호를 5번이나 입력. */
+static int frequency_after_count(const ttf_pack_input_t *in, size_t p) {
+    char key[64];
+    size_t q = p, width;
+    const char *value;
+    while (q + 3 <= in->length && (unsigned char)in->text[q] >= 0xea && (unsigned char)in->text[q] <= 0xed &&
+           q - p + 3 < sizeof(key))
+        q += 3;
+    if (q > p) {
+        memcpy(key, in->text + p, q - p);
+        key[q - p] = '\0';
+        value = ttf_resource_get(in->engine, "counter_role_tail", "ko-KR", key, NULL);
+        return value && !strcmp(value, "frequency");
+    }
+    while (q < in->length && (in->text[q] == ' ' || in->text[q] == '\t'))
+        ++q;
+    if (q == p)
+        return 0;
+    /* The longest cue wins, as in the counter role (연습문제 is a number, 연습 a count). */
+    const char *best = NULL;
+    for (width = 3; q + width <= in->length && width < sizeof(key); width += 3) {
+        if ((unsigned char)in->text[q + width - 3] < 0xea || (unsigned char)in->text[q + width - 3] > 0xed)
+            break;
+        memcpy(key, in->text + q, width);
+        key[width] = '\0';
+        value = ttf_resource_get(in->engine, "counter_role_after", "ko-KR", key, NULL);
+        if (value)
+            best = value;
+    }
+    return best && !strcmp(best, "frequency");
+}
+
 size_t ttf_ko_classify_identifier(const ttf_pack_input_t *in, ttf_semantic_t *semantic) {
     size_t begin = in->tokens[in->index].begin, end = begin, i;
     char label[TTF_IR_VALUE_SIZE];
@@ -274,7 +307,8 @@ size_t ttf_ko_classify_identifier(const ttf_pack_input_t *in, ttf_semantic_t *se
         size_t digits = 0;
         for (const char *c = semantic->value; *c; ++c)
             digits += decimal_digit(*c);
-        if (digits < 5 && !short_code_label(in, label))
+        if ((digits < 5 && !short_code_label(in, label)) ||
+            (digits <= 2 && frequency_after_count(in, end + 3)))
             return 0;
         end += 3;
     }
@@ -1196,6 +1230,43 @@ size_t ttf_ko_classify_digit_identifier(const ttf_pack_input_t *in, ttf_semantic
     if (a_end + 1 < n && t[a_end] == 'x' && decimal_digit(t[a_end + 1]) && a_end - b <= 2) {
         size_t c = a_end + 1, c_end = digit_run(t, n, c);
         if (c_end - c <= 2 && !(c_end < n && (alnum(t[c_end]) || t[c_end] == '.'))) {
+            memcpy(s->value, t + b, a_end - b);
+            s->value[a_end - b] = '\0';
+            memcpy(s->secondary, t + c, c_end - c);
+            s->secondary[c_end - c] = '\0';
+            s->unit[0] = '\0';
+            return classified(in, s, c_end, TTF_SEM_RANGE, "ko:score");
+        }
+    }
+    /* 3 대 2로, 6 대 1이: a score or ratio written with 대 between spaced numbers
+       reads Sino like 3:2 (benchmark references 85 : 0; 2026-10-05). */
+    if (a_end - b <= 3 && a_end + 6 <= n && !memcmp(t + a_end, " \xeb\x8c\x80 ", 5) &&
+        decimal_digit(t[a_end + 5])) {
+        size_t c = a_end + 5, c_end = digit_run(t, n, c);
+        if (c_end - c <= 3 && !(c_end < n && (alnum(t[c_end]) || t[c_end] == '.' || t[c_end] == ',')) &&
+            !(a_end - b > 1 && t[b] == '0') && !(c_end - c > 1 && t[c] == '0')) {
+            memcpy(s->value, t + b, a_end - b);
+            s->value[a_end - b] = '\0';
+            memcpy(s->secondary, t + c, c_end - c);
+            s->secondary[c_end - c] = '\0';
+            s->unit[0] = '\0';
+            return classified(in, s, c_end, TTF_SEM_RANGE, "ko:score");
+        }
+    }
+    /* 35대 1로: the same score with 대 against the first number. The second
+       number takes only a particle, so 35대 1년 stays a count and a year. */
+    if (a_end - b <= 3 && a_end + 5 <= n && !memcmp(t + a_end, "\xeb\x8c\x80 ", 4) &&
+        decimal_digit(t[a_end + 4])) {
+        static const char *const particles[] = {"로", "으", "의", "이", "을", "를", "은", "는", "에", "과", "와", "도", "까"};
+        size_t c = a_end + 4, c_end = digit_run(t, n, c), k;
+        int ok = c_end - c <= 3 && !(c_end < n && (alnum(t[c_end]) || t[c_end] == '.' || t[c_end] == ',')) &&
+                 !(c_end - c > 1 && t[c] == '0');
+        if (ok && c_end + 3 <= n && (unsigned char)t[c_end] >= 0xea && (unsigned char)t[c_end] <= 0xed) {
+            ok = 0;
+            for (k = 0; k < sizeof(particles) / sizeof(particles[0]); ++k)
+                ok |= !memcmp(t + c_end, particles[k], 3);
+        }
+        if (ok) {
             memcpy(s->value, t + b, a_end - b);
             s->value[a_end - b] = '\0';
             memcpy(s->secondary, t + c, c_end - c);

@@ -1710,6 +1710,30 @@
       },
       "category_overrides": {},
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/ko_dae_rank_v24.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Night work 2026-09-29 under the user's goal; independently authored synthetic cases, written before the implementation",
+        "reason": "N 대 M scores and N대 before rank words, from the 표준국어대사전 number examples (2026-10-05)"
+      },
+      "category_overrides": {},
+      "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/ko_beon_frequency_v24.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Night work 2026-09-29 under the user's goal; independently authored synthetic cases, written before the implementation",
+        "reason": "번 counting occurrences with cues chosen from the benchmark references (2026-10-05)"
+      },
+      "category_overrides": {},
+      "case_overrides": {}
     }
   ],
   "excluded": [

@@ -63,3 +63,84 @@ counter_role_after	ko-KR	정류장	identifier
 counter_role_after	ko-KR	노선	identifier
 # Direct attached distributive marker; identifier context still takes precedence.
 counter_role_tail	ko-KR	씩	frequency
+
+# Frequency cues for 번 chosen from the Korean benchmark references (2026-10-05): at least
+# five uses with 90% native readings (의 87%, 147 : 22). Identifier cues still outrank them.
+counter_role_tail	ko-KR	이나	frequency
+counter_role_tail	ko-KR	만	frequency
+counter_role_tail	ko-KR	밖에	frequency
+counter_role_tail	ko-KR	의	frequency
+particle	ko-KR	밖에	1
+quantity_lookahead_tail	ko-KR	밖에	1
+counter_role_after	ko-KR	이상	frequency
+counter_role_after	ko-KR	정도	frequency
+counter_role_after	ko-KR	넘	frequency
+counter_role_after	ko-KR	만에	frequency
+counter_role_after	ko-KR	출석	frequency
+counter_role_after	ko-KR	떨어	frequency
+counter_role_after	ko-KR	했	frequency
+counter_role_before	ko-KR	주일에	frequency
+boundary_word	ko-KR	주일에	1
+counter_role_before	ko-KR	무려	frequency
+boundary_word	ko-KR	무려	1
+counter_role_before	ko-KR	달에	frequency
+boundary_word	ko-KR	달에	1
+counter_role_before	ko-KR	벌써	frequency
+boundary_word	ko-KR	벌써	1
+counter_role_before	ko-KR	년에	frequency
+boundary_word	ko-KR	년에	1
+counter_role_before	ko-KR	년간	frequency
+boundary_word	ko-KR	년간	1
+counter_role_before	ko-KR	전화를	frequency
+boundary_word	ko-KR	전화를	1
+# Route words keep a route number Sino even with a frequency tail (마을버스 32번의, 76번의 배차).
+counter_role_before	ko-KR	마을버스	identifier
+boundary_word	ko-KR	마을버스	1
+counter_role_before	ko-KR	시내버스	identifier
+boundary_word	ko-KR	시내버스	1
+counter_role_before	ko-KR	급행	identifier
+boundary_word	ko-KR	급행	1
+counter_role_before	ko-KR	간선	identifier
+boundary_word	ko-KR	간선	1
+counter_role_before	ko-KR	지선	identifier
+boundary_word	ko-KR	지선	1
+counter_role_before	ko-KR	광역	identifier
+boundary_word	ko-KR	광역	1
+counter_role_before	ko-KR	직행	identifier
+boundary_word	ko-KR	직행	1
+counter_role_before	ko-KR	순환	identifier
+boundary_word	ko-KR	순환	1
+counter_role_before	ko-KR	좌석	identifier
+boundary_word	ko-KR	좌석	1
+counter_role_after	ko-KR	배차	identifier
+counter_role_after	ko-KR	마을버스	identifier
+counter_role_after	ko-KR	시내버스	identifier
+counter_role_after	ko-KR	버스로	identifier
+counter_role_after	ko-KR	버스는	identifier
+# Numbers in a list or a queue (37번과 38번의, 대기번호가 12번이나) are identifiers.
+counter_role_before	ko-KR	번과	identifier
+boundary_word	ko-KR	번과	1
+counter_role_before	ko-KR	번이나	identifier
+boundary_word	ko-KR	번이나	1
+counter_role_before	ko-KR	번	identifier
+boundary_word	ko-KR	번	1
+counter_role_before	ko-KR	순번이	identifier
+boundary_word	ko-KR	순번이	1
+counter_role_before	ko-KR	대기번호	identifier
+boundary_word	ko-KR	대기번호	1
+counter_role_before	ko-KR	대기번호가	identifier
+boundary_word	ko-KR	대기번호가	1
+counter_role_before	ko-KR	예약번호	identifier
+boundary_word	ko-KR	예약번호	1
+counter_role_before	ko-KR	예약번호가	identifier
+boundary_word	ko-KR	예약번호가	1
+counter_role_before	ko-KR	심야버스	identifier
+boundary_word	ko-KR	심야버스	1
+counter_role_after	ko-KR	종점	identifier
+# 37번과 38번: after the first count is read, its particle stands alone before the next number.
+counter_role_before	ko-KR	과	identifier
+boundary_word	ko-KR	과	1
+counter_role_before	ko-KR	와	identifier
+boundary_word	ko-KR	와	1
+counter_role_before	ko-KR	이나	identifier
+boundary_word	ko-KR	이나	1

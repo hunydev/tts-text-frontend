@@ -270,6 +270,7 @@ numeric_suffix_word	*	축하	1
 numeric_suffix_word	*	곳곳	1
 numeric_suffix_word	*	포기하	1
 numeric_suffix_word	*	돈가스	1
+numeric_suffix_word	*	정보	1
 numeric_suffix	*	정거장	COUNTER:정거장
 counter	ko-KR	가지	native
 numeric_suffix	*	가지	COUNTER:가지

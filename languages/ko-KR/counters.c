@@ -137,6 +137,16 @@ static int role(const ttf_pack_input_t *in, size_t begin, size_t end, ttf_resour
                role. Keep stronger identifier evidence from either side. */
             current = role_value(ttf_resource_get(in->engine, "counter_role_tail", "ko-KR",
                                                  key, &source));
+            /* 21번이나 23번: 이나 before another number joins a list (or), it does
+               not count occurrences (3번씩 3일 still counts). */
+            {
+                size_t after = token->end;
+                while (after < in->length && (in->text[after] == ' ' || in->text[after] == '\t'))
+                    ++after;
+                if (current == 1 && !strcmp(key, "\xec\x9d\xb4\xeb\x82\x98") && after < in->length &&
+                    in->text[after] >= '0' && in->text[after] <= '9')
+                    current = 0;
+            }
             if (current && current >= found) {
                 found = current;
                 if (source > *layer)
