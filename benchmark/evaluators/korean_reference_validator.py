@@ -27,7 +27,7 @@ import re
 import sys
 from pathlib import Path
 
-VERSION = "korean-reference-validator/1"
+VERSION = "korean-reference-validator/2"
 SINO_DIGIT = {"영": 0, "공": 0, "일": 1, "이": 2, "삼": 3, "사": 4, "오": 5,
               "육": 6, "륙": 6, "칠": 7, "팔": 8, "구": 9}
 SMALL = {"십": 10, "백": 100, "천": 1000}
@@ -54,6 +54,17 @@ INTEGER = re.compile(r"(\d{1,3}(?:,\d{3})+|\d+)([가-힣]*)")
 DASHED = re.compile(r"\d+(?:-\d+)+")
 HANGUL_WORD = re.compile(r"[가-힣]{2,}")
 NOT_JUDGED_CATEGORIES = {"dialect"}          # dialect readings are the category's purpose
+# v2 text check (records whose spans carry no usable offsets): punctuation a reading may
+# drop or keep; ~ - / · and other symbols are readable and stay variable.
+TEXT_PUNCT = re.compile(r"[\s\.,!?;:'\"“”‘’()\[\]{}<>《》〈〉「」『』…]+")
+TEXT_ABBREV = re.compile(r"\([가-힣]\)")              # (사) 사단법인, (주) 주식회사
+VARIABLE = "\x00"
+# Particles a reference may adapt to the reading of the number right before them.
+ALLOMORPHS = {frozenset(pair) for pair in (
+    ("은", "는"), ("이", "가"), ("을", "를"), ("와", "과"), ("로", "으로"), ("이에요", "에요"),
+    ("이라고", "라고"), ("이라는", "라는"), ("이다", "다"), ("이고", "고"), ("이며", "며"),
+    ("이나", "나"), ("이랑", "랑"), ("이야", "야"), ("이었", "였"), ("이면", "면"), ("이라", "라"),
+    ("이지만", "지만"), ("이니", "니"), ("아", "야"), ("이여", "여"))}
 
 
 def compact(text):
@@ -220,6 +231,58 @@ class Validator:
                 return "korean-text-edited", "%s → %s" % (source or "∅", target or "∅")
         return None
 
+    @staticmethod
+    def literal_judged(record):
+        """check_literal could align every span to its source bytes."""
+        at = 0
+        for span in sorted(record.get("spans") or [], key=lambda s: s.get("begin") or -1):
+            begin, end = span.get("begin"), span.get("end")
+            if begin is None or end is None or begin < at:
+                return False
+            at = end
+        return True
+
+    @staticmethod
+    def check_text(record):
+        """Korean prose the reference dropped, added or changed, without span offsets (v2).
+
+        Every Hangul syllable of the source must reach the reference in order. Digits,
+        Latin, Han, symbols and bracketed one-syllable abbreviations are variable: any
+        reading may stand there, and so may text right next to them. A particle right
+        after a variable stretch may take the form its reading needs (이에요/에요)."""
+        text = TEXT_PUNCT.sub("", TEXT_ABBREV.sub(VARIABLE, record.get("text") or ""))
+        fixed = re.sub(VARIABLE + "+", VARIABLE,
+                       "".join(ch if "가" <= ch <= "힣" else VARIABLE for ch in text))
+        reference = TEXT_PUNCT.sub("", TEXT_ABBREV.sub("", record.get("expected") or ""))
+        pattern = "".join("(.*?)" if ch == VARIABLE else re.escape(ch) for ch in fixed)
+        if re.fullmatch(pattern, reference, re.S):
+            return None
+        matcher = difflib.SequenceMatcher(None, fixed, reference, autojunk=False)
+        for op, i1, i2, j1, j2 in matcher.get_opcodes():
+            source, target = fixed[i1:i2], reference[j1:j2]
+            if op == "equal":
+                continue
+            if VARIABLE in source:
+                # A reading replaces the variable stretch; the Korean on its edges must
+                # survive (2%를 → 이 퍼센트 drops 를). Korean between two variable
+                # stretches belongs to the reading (10만~20만 → 일이십만).
+                lead, tail = source.split(VARIABLE)[0], source.split(VARIABLE)[-1]
+                if lead and not target.startswith(lead):
+                    return "korean-text-edited", "%s → %s" % (source.replace(VARIABLE, "…"), target or "∅")
+                if tail and not target.endswith(tail) and tail not in ("이", "으") and not any(
+                        target.endswith(form) for pair in ALLOMORPHS if tail in pair for form in pair):
+                    return "korean-text-edited", "%s → %s" % (source.replace(VARIABLE, "…"), target or "∅")
+                continue
+            before = i1 > 0 and fixed[i1 - 1] == VARIABLE
+            after = i2 < len(fixed) and fixed[i2] == VARIABLE
+            if before and (frozenset((source, target)) in ALLOMORPHS or
+                           (source in ("이", "으") and not target) or (target == "으" and not source)):
+                continue                                 # 하나에요, 칠로 / 칠으로
+            if op == "insert" and (before or after):
+                continue                                 # the reading of the variable stretch
+            return "korean-text-edited", "%s → %s" % (source or "∅", target or "∅")
+        return None
+
     def check_record(self, record):
         if record.get("expected") is None:
             return None
@@ -230,6 +293,9 @@ class Validator:
         raw = (record.get("text") or "").encode("utf-8")
         reasons = [v for v in (self.check_span(s, raw) for s in record.get("spans") or []) if v]
         literal = self.check_literal(record)
+        if not literal and not self.literal_judged(record):
+            self.stats["text_judged_unaligned"] += 1
+            literal = self.check_text(record)
         if literal:
             reasons.append(literal)
         return reasons or None
@@ -269,7 +335,8 @@ def main(argv=None):
                    records_judged=stats["records"], spans=stats["spans"],
                    spans_aligned=stats["spans_aligned"],
                    spans_value_judged=stats["spans_value_judged"],
-                   not_judged_category_records=stats["not_judged_category"]),
+                   not_judged_category_records=stats["not_judged_category"],
+                   text_judged_unaligned_records=stats["text_judged_unaligned"]),
               sys.stdout, ensure_ascii=False, indent=2)
     sys.stdout.write("\n")
     return 0

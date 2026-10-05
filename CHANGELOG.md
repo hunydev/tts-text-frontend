@@ -2,6 +2,14 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Korean reference validator v2 (project-owner request): records whose spans
+  carry no source offsets are checked too. The source's Hangul must reach the
+  reference in order; digits, Latin, Han, symbols and bracketed one-syllable
+  abbreviations are variable, and a particle adapted to the reading before it
+  is not an error. 283 more references that dropped, added or changed the
+  source's words (50분 거리에 있는 교회로 → 거리에 교회로, 롯데몰 → 롯데마트) are
+  excluded; reference-errors-v2.jsonl has 353 entries (v1 70). Reports now use
+  v2, so their adjusted scores are compared with v2 reports only.
 - Remaining items before plan item 6: a declared event date with a period
   and only a particle reads as the event when the sentence names one (new
   event_date_cue: 40주년 5.18을 맞아 광주 오일팔, 4.19는 ... 부정선거 사일구;

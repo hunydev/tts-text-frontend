@@ -60,6 +60,28 @@ class ReferenceErrors(unittest.TestCase):
   for r in cases:
    with self.subTest(r['text'],spoken=r['spans'][0]['spoken']):self.assertEqual(codes(r),[])
 
+ def test_unaligned_text_edits(self):
+  """Spans without offsets: the source's Korean prose must still reach the reference unchanged (v2)."""
+  def unaligned(text,expected):
+   r=record(text,expected,[]);r['spans']=[dict(written='?',spoken='?',begin=None,end=None)];return r
+  flagged=[
+   unaligned('50분 거리에 있는 교회로 간다','오십 분 거리에 교회로 간다'),      # a word dropped
+   unaligned('딸 주민등록번호 0300','딸의 주민등록번호 공삼공공'),          # a word added
+   unaligned('롯데몰에 3년 전 생겼다','롯데마트에 삼 년 전 생겼다'),        # a word changed
+   unaligned('2%를 적립해 준다','이 퍼센트 적립해 준다')]                  # a particle dropped
+  for r in flagged:
+   with self.subTest(r['text']):self.assertEqual(codes(r),['korean-text-edited'])
+  kept=[
+   unaligned('압구정역~역삼역 구간','압구정역에서 역삼역 구간'),           # ~ is read
+   unaligned('9711이에요','구칠일일에요'),                                 # copula after a vowel reading
+   unaligned('9711로 보내','구칠일일로 보내'),
+   unaligned('10만~20만 원대','일이십만 원대'),                            # a contracted range
+   unaligned('(사)기능한국인회','사단법인 기능한국인회'),                   # an abbreviation in brackets
+   unaligned('3개를 샀다','세 개를 샀다'),
+   unaligned('GDP는 3% 올랐다','지디피는 삼 퍼센트 올랐다')]
+  for r in kept:
+   with self.subTest(r['text']):self.assertEqual(codes(r),[])
+
  def test_unscorable_reference_is_skipped(self):
   r=record('25개','스물여섯 개',[('25개','스물여섯 개')]);r['expected']=None
   self.assertIsNone(Validator().check_record(r))

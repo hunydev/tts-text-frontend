@@ -222,14 +222,14 @@ overlay hash는 `comparison_key`에 들어가 기본 출력 보고서와 비교�
 
 `benchmark/evaluators/korean_reference_validator.py`는 **원문과 제공 참조만** 읽는다.
 엔진 출력을 보지 않으므로 어떤 엔진을 평가하든 같은 문장이 제외된다. 판정 결과는
-`status: excluded`, `reviewer: auto:korean-reference-validator/1` 검토 파일로 쓴다.
+`status: excluded`, `reviewer: auto:korean-reference-validator/2` 검토 파일로 쓴다.
 
 ```sh
 python3 benchmark/evaluators/korean_reference_validator.py \
   --import-dir benchmark/generated/ko-release/import-v1 \
-  --reviews-out benchmark/generated/ko-release/reviews/reference-errors-v1.jsonl
+  --reviews-out benchmark/generated/ko-release/reviews/reference-errors-v2.jsonl
 python3 benchmark/evaluators/korean_release.py ... \
-  --reviews benchmark/generated/ko-release/reviews/reference-errors-v1.jsonl --out ...
+  --reviews benchmark/generated/ko-release/reviews/reference-errors-v2.jsonl --out ...
 ```
 
 보수적으로 판정한다. 한자어·고유어·혼합(백스무)·한 자리씩(둘 영 하나 구)·서수(셋째 주)·
@@ -243,6 +243,14 @@ python3 benchmark/evaluators/korean_release.py ... \
 | `non-number-syllable` | 숫자 자리에 숫자가 아닌 음절 | 15명 → 십모 명 |
 | `identifier-digits` | 한 자리씩 읽은 번호의 숫자가 다름 | 015-… → 공오일 다시 … |
 | `korean-text-edited` | TN 대상이 아닌 한국어를 바꿈 | 동홍주공 → 동흥주공, 철수는 → 철수가 |
+
+**v2 (2026-10-05).** 주석 구간에 원문 위치가 없어 v1이 원문 대조를 건너뛰던 1,321문장도 본다. 원문의
+숫자·영문·한자·기호(~ - / 포함)와 괄호 속 한 글자 약어((사) 사단법인)는 아무 읽기나 올 수 있는 자리로
+두고, 나머지 한글 음절은 참조에 순서대로 그대로 있어야 한다. 숫자 읽기 바로 뒤 조사의 이형태(하나이에요 →
+하나에요, 칠로/칠으로, 은/는)와 숫자 자리 사이의 한글(10만~20만 → 일이십만)은 오류가 아니다. 참조가 원문
+단어를 빠뜨리거나(50분 거리에 있는 교회로 → 거리에 교회로), 더하거나(무려, 북구), 바꾼(롯데몰 → 롯데마트,
+치량, 2%를 → 이 퍼센트) 경우를 `korean-text-edited`로 제외한다. 엔진은 원문을 읽으므로 이런 참조와는 맞을
+수 없다. v1의 70건은 그대로이고 283건이 더해져 353건이다(무작위 30건 검토에서 모두 실제 어긋남).
 
 AI Hub 159 `import-v1`에서 142,191문장(사투리 57문장 제외)을 검사해 70문장(0.05%)을
 제외했다. 구간 272,244개 중 98.7%는 경계가 원문과 맞고, 값까지 판정한 구간은 52.0%다.
