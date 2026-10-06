@@ -2,6 +2,11 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- A lowercase identifier of five or more letters is spelled when it has no
+  vowel or follows 아이디 (lkdfs392 엘케이디에프에스 삼구이, was 르크드프스삼백구십이;
+  project-owner report); a long word with a vowel keeps its reading
+  (boeing747). Three contracts join ko_owner_judgements_v24 (27). Korean
+  benchmark +15, -0 (adjusted 82.98%); English unchanged.
 - Readings the project owner marked wrong on /jev-eval, fixed where the
   benchmark references agree (docs/korean-number-identifiers.ko.md 5-2): a
   bare run of seven or more digits in Korean text is read digit by digit

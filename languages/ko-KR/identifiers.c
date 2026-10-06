@@ -605,7 +605,7 @@ size_t ttf_ko_classify_alnum_identifier(const ttf_pack_input_t *in, ttf_semantic
     ttf_resource_layer_t label_layer = TTF_LAYER_COMMON;
     size_t begin = in->tokens[in->index].begin, end = begin, i, run = 0;
     size_t letters = 0, digits = 0, hyphens = 0, transitions = 0;
-    int kind = 0, upper = 0, lower = 0, long_run; /* kind: 1 letter, 2 digit */
+    int kind = 0, upper = 0, lower = 0, long_run, wordlike = 0; /* kind: 1 letter, 2 digit */
     char before, after;
     if (begin == in->length || !alnum(in->text[begin]))
         return 0;
@@ -630,9 +630,12 @@ size_t ttf_ko_classify_alnum_identifier(const ttf_pack_input_t *in, ttf_semantic
                 ++letters;
                 upper |= c >= 'A' && c <= 'Z';
                 lower |= c >= 'a' && c <= 'z';
-                /* A mixed-case or long letter run is a word (iPhone15, Boeing747). */
-                if ((upper && lower) || run > 4)
+                /* A mixed-case run is a word (iPhone15); a long one is too unless it
+                   has no vowel or follows 아이디 (lkdfs392, checked below). */
+                if (upper && lower)
                     return 0;
+                if (run > 4)
+                    wordlike = 1;
             } else
                 ++digits;
             ++end;
@@ -668,6 +671,9 @@ size_t ttf_ko_classify_alnum_identifier(const ttf_pack_input_t *in, ttf_semantic
         if (vowelless && ttf_resource_get(in->engine, "lexicon", "ko-KR", whole, NULL))
             vowelless = 0;
     }
+    /* Boeing747 is a word with a number; lkdfs392 and 아이디 hello123 are codes. */
+    if (wordlike && !vowelless && !labelled)
+        return 0;
     after = end < in->length ? in->text[end] : ' ';
     if (after == '@' || after == '_' || after == '%' ||
         ((after == '.' || after == ',' || after == '/' || after == ':') && end + 1 < in->length &&
