@@ -33,6 +33,23 @@ A case passes only when:
 
 A malformed or incomplete protocol is an evaluation error, never a passing case.
 
+## Fast Korean benchmark check
+
+`benchmark/evaluators/korean_quick.py` scores the local Korean release benchmark
+(`benchmark/generated/ko-release`, ignored) with the report's options and the
+reference-error exclusions, without writing a report:
+
+```sh
+python3 benchmark/evaluators/korean_quick.py build/libtts_text_frontend.so resources \
+  /tmp/candidate.jsonl.gz --baseline /tmp/previous.jsonl.gz
+```
+
+It prints raw and adjusted variant agreement and, with a baseline, writes
+`candidate.diff.json` with every sentence that was gained or lost. `--jobs`
+(default 2) splits the sentences over engine processes; the numbers do not
+depend on it. On the 2-core VM a run takes about 3.5 minutes (one process took
+about 15). The full report (`korean_release.py`) is still what /ko-quality shows.
+
 ## Corpus and coverage
 
 `tests/evaluation/cases.jsonl` contains 109 explicit reference cases in 18

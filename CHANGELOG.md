@@ -2,6 +2,19 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Faster checks (project-owner request: one Korean fix took hours of
+  checking). tools/ci/run.sh quick and full run the text-evaluation tests once,
+  in the release build, instead of in the gcc build as well (the engine has no
+  assert(), so the builds agree; 160 tests, about 16 minutes); ctest runs
+  CI_JOBS tests at once, and tests with a wall-clock limit are RUN_SERIAL; the
+  text-evaluation job clears its own artifacts first, so a previous run no
+  longer fails it. speakable_sweep reads its 6,000 inputs through one engine
+  per pass when the shared library is available (4 minutes to under a
+  second; the same outputs as the CLI on a 600-input sample); sanitizer builds
+  keep the CLI. New benchmark/evaluators/korean_quick.py checks the Korean
+  release benchmark on two processes (about 3.5 minutes instead of 15).
+  Sampling byte splits in quick was tried and dropped: those loops take
+  little time, the CLI starts (about 40 ms each) do.
 - Lexicon items from the Korean benchmark misses (project-owner request):
   readings the references use at least twice and twice as often as the
   other reading. 42 model_name entries read the number after them in

@@ -8,6 +8,11 @@
 #
 # Jobs never overlap. On the 2-core VM the GCC and sanitizer suites must not run
 # together: timing gates such as the 30k-number check are deliberate limits.
+# Inside a job ctest runs CI_JOBS tests at once; tests with a wall-clock limit
+# are RUN_SERIAL in CMakeLists.txt. quick and full run the text-evaluation tests
+# once, in the release build, not again in the gcc build (the engine has no
+# assert(), so both builds give the same output); a gcc job run by itself still
+# runs everything (2026-10-06).
 # Build trees go to build-ci-* (ignored), so a developer's build/ is untouched.
 set -euo pipefail
 
@@ -16,13 +21,14 @@ cd "$ROOT"
 JOBS=${CI_JOBS:-2}
 OUT=${CI_BUILD_ROOT:-build-ci}
 ARTIFACTS=${CI_ARTIFACTS:-artifacts/evaluation}
+EVAL_TESTS='cli_stream_json|evaluation|lexicon|external_|korean_release_|context_score_cache|context_cache_compatibility'
 
 build_and_test() {  # build-dir compiler [cmake args...]
   local dir=$1 compiler=$2
   shift 2
   cmake -S . -B "$dir" -DCMAKE_C_COMPILER="$compiler" -DCMAKE_BUILD_TYPE=Debug "$@"
   cmake --build "$dir" --parallel "$JOBS"
-  ctest --test-dir "$dir" --output-on-failure
+  ctest --test-dir "$dir" --output-on-failure --parallel "$JOBS" ${CTEST_EXCLUDE:+-E "$CTEST_EXCLUDE"}
 }
 
 release_build() {
@@ -43,8 +49,9 @@ job_sanitizers() {
 job_text_evaluation() {
   local ttf="$OUT-release/ttf"
   release_build
-  ctest --test-dir "$OUT-release" --output-on-failure \
-    -R 'cli_stream_json|evaluation|lexicon|external_|korean_release_|context_score_cache|context_cache_compatibility'
+  ctest --test-dir "$OUT-release" --output-on-failure --parallel "$JOBS" -R "$EVAL_TESTS"
+  # evaluate.py refuses an existing output directory, and a previous run leaves them.
+  rm -rf "${ARTIFACTS:?}"
   evaluate() {  # corpus output-name
     python3 tools/evaluation/evaluate.py --ttf "$ttf" --resources resources \
       --corpus "tests/evaluation/$1" --output-dir "$ARTIFACTS/$2"
@@ -109,11 +116,17 @@ run() {
 }
 
 case "${1:-}" in
-  quick) for job in gcc text-evaluation; do run "$job"; done ;;
-  full) for job in gcc clang sanitizers text-evaluation; do run "$job"; done ;;
+  quick)
+    CTEST_EXCLUDE=$EVAL_TESTS run gcc
+    run text-evaluation
+    ;;
+  full)
+    CTEST_EXCLUDE=$EVAL_TESTS run gcc
+    for job in clang sanitizers text-evaluation; do run "$job"; done
+    ;;
   gcc | clang | sanitizers | text-evaluation | web-browser) run "$1" ;;
   *)
-    sed -n '2,11p' "$0" >&2
+    sed -n "2,/^# Build trees/p" "$0" >&2
     exit 64
     ;;
 esac

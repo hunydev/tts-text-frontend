@@ -701,9 +701,11 @@ if(BUILD_TESTING)
     # Each check is a separate CLI run, so an instrumented build needs room.
     set_tests_properties(option_matrix PROPERTIES
       TIMEOUT $<IF:$<OR:$<BOOL:${TTF_ENABLE_ASAN}>,$<BOOL:${TTF_ENABLE_UBSAN}>>,1200,300>)
+    # Uninstrumented builds sweep through the shared library (one engine per pass).
     add_test(NAME speakable_sweep COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_speakable.py
-      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources
+      $<$<NOT:$<OR:$<BOOL:${TTF_ENABLE_ASAN}>,$<BOOL:${TTF_ENABLE_UBSAN}>>>:$<TARGET_FILE:tts_text_frontend_shared>>)
     # About 6,000 separate CLI runs, so engine start-up dominates; the 표준국어대사전
     # loanword table (2026-10-05) adds about 10 ms to each start.
     set_tests_properties(speakable_sweep PROPERTIES
@@ -907,3 +909,11 @@ install(TARGETS tts_text_frontend_static tts_text_frontend_shared ttf ttf_bench
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 install(DIRECTORY resources/ DESTINATION ${CMAKE_INSTALL_DATADIR}/tts-text-frontend/resources)
+
+# Tests with a wall-clock limit (a first-line or 30k-numeral timeout) run alone
+# when ctest runs tests in parallel (tools/ci/run.sh, 2026-10-06).
+foreach(serial_test numeric_width_native phone_scanner_bounds context_score_cache context_cache_compatibility context_cache_byte_splits cli_stream_json content_context_and_lexicon detailed_pronunciation_trace_cli)
+  if(TEST ${serial_test})
+    set_tests_properties(${serial_test} PROPERTIES RUN_SERIAL TRUE)
+  endif()
+endforeach()

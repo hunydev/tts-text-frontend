@@ -12,12 +12,18 @@ Two passes over generated inputs, from project-authored fragments only:
 * The default `preserve` keeps what the project deliberately refuses to
   interpret, and docs/speech-resources.md records those contracts, so that pass
   allows the inputs named below and nothing else.
+
+With a shared library as the third argument the inputs go through one engine
+per pass instead of one CLI start each (2026-10-06: about 6,000 starts took four
+minutes); instrumented builds pass none and keep the CLI.
 """
 import re
 import subprocess
 import sys
+from pathlib import Path
 
 cli, resources = sys.argv[1:3]
+library = sys.argv[3] if len(sys.argv) > 3 else None
 KOREAN = ("안내", "가격은", "제품", "문의", "총", "약", "제", "번", "층")
 ENGLISH = ("the", "call", "page", "see", "about", "room")
 NUMERIC = ("12", "3.5", "1/2", "2026-09-25", "09:30", "5%", "1,200원", "10kg", "3-5", "0.5",
@@ -49,18 +55,40 @@ def cases(words):
             yield f"{other} {word} {other}"
 
 
-def sweep(language, words, unsayable, policy, exempt):
-    inputs = list(cases(words))
-    failures = []
+def outputs(language, policy, inputs):
+    """(text, output or None, error) for each input."""
+    if library:
+        sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "tools/web"))
+        from native import Engine
+        engine = Engine(Path(library).resolve(), Path(resources).resolve(),
+                        dict(default_language=language, output_mode="speech", unreadable=policy))
+        try:
+            for text in inputs:
+                try:
+                    yield text, engine.normalize(text.encode())["text"], None
+                except ValueError as error:
+                    yield text, None, f"error: {str(error)[:80]}"
+        finally:
+            engine.close()
+        return
     for text in inputs:
         result = subprocess.run(
             [cli, "normalize", "--resources", resources, "--language", language,
              "--output-mode", "speech", "--unreadable", policy, "--", text],
             capture_output=True, timeout=10)
         if result.returncode:
-            failures.append((text, f"exit {result.returncode}: {result.stderr.decode()[:80]}"))
+            yield text, None, f"exit {result.returncode}: {result.stderr.decode()[:80]}"
+        else:
+            yield text, result.stdout.decode().rstrip("\n"), None
+
+
+def sweep(language, words, unsayable, policy, exempt):
+    inputs = list(cases(words))
+    failures = []
+    for text, output, error in outputs(language, policy, inputs):
+        if error:
+            failures.append((text, error))
             continue
-        output = result.stdout.decode().rstrip("\n")
         if exempt and any(keep in output for keep in DOCUMENTED_PRESERVE):
             continue
         left = unsayable.search(output)
