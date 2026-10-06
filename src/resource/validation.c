@@ -155,6 +155,12 @@ ttf_status_t ttf_validate_resource_record(const ttf_engine_t *e, const ttf_resou
     }
     return TTF_OK;
 }
+/* The record was validated when loaded, by the same built-in validators. A
+   registered custom validator may depend on outside state, so it checks again. */
+static int already_checked(const ttf_engine_t *e, const ttf_entry_t *entry) {
+    return entry->checked && entry->checked_validators == e->validator_count &&
+           e->validator_count == e->builtin_validators;
+}
 static int declaration_order(const void *left, const void *right) {
     const ttf_entry_t *a = *(const ttf_entry_t *const *)left;
     const ttf_entry_t *b = *(const ttf_entry_t *const *)right;
@@ -163,7 +169,7 @@ static int declaration_order(const void *left, const void *right) {
 ttf_status_t ttf_engine_validate_resources(const ttf_engine_t *e,
                                            ttf_resource_validation_report_t *report,
                                            ttf_resource_diagnostic_t *diagnostic) {
-    size_t count = 0, bucket, i, table;
+    size_t count = 0, unchecked = 0, bucket, i, table;
     const ttf_entry_t **rows;
     ttf_resource_diagnostic_t local;
     ttf_status_t status = TTF_OK;
@@ -192,10 +198,15 @@ ttf_status_t ttf_engine_validate_resources(const ttf_engine_t *e,
     i = 0;
     for (table = 0; table < (e->cjk ? 2u : 1u); ++table) for (bucket = 0; bucket < TTF_HASH_BUCKETS; ++bucket) {
         const ttf_entry_t *entry;
-        for (entry = table ? e->cjk->resources[bucket] : e->resources[bucket]; entry; entry = entry->next)
+        for (entry = table ? e->cjk->resources[bucket] : e->resources[bucket]; entry; entry = entry->next) {
             rows[i++] = entry;
+            unchecked += !already_checked(e, entry);
+        }
     }
-    if (count > 1)
+    /* Declaration order only decides which failing record is reported first; when
+       every record was checked at load there is nothing to order (2026-10-06:
+       sorting all rows twice per start was 40% of engine start-up). */
+    if (count > 1 && unchecked)
         qsort(rows, count, sizeof(*rows), declaration_order);
     if (setup)
         setup->validating = 1;
@@ -204,10 +215,8 @@ ttf_status_t ttf_engine_validate_resources(const ttf_engine_t *e,
         ttf_resource_record_t record = {sizeof(record), entry->kind,  entry->lang,
                                         entry->key,     entry->value, entry->layer};
         int validated;
-        /* A registered custom validator may depend on outside state: check again. */
-        if (entry->checked && entry->checked_validators == e->validator_count &&
-            e->validator_count == e->builtin_validators)
-            validated = entry->checked == 1; /* validated when loaded, same validators */
+        if (already_checked(e, entry))
+            validated = entry->checked == 1;
         else {
             status = ttf_validate_resource_record(e, &record, &validated, diagnostic);
             if (status != TTF_OK)
@@ -287,18 +296,20 @@ static int typed_value(const char *value, const char *types, size_t limit, int l
     return language ? identifier(colon + 1, limit, 1)
                     : colon[1] && strlen(colon + 1) < limit && !strchr(colon + 1, ':');
 }
+/* First byte before strcmp, as in the language validators (start-up, 2026-10-06). */
+#define KIND(name) (kind[0] == (name)[0] && !strcmp(kind, (name)))
 static ttf_status_t core_record(const ttf_resource_record_t *r, int *handled,
                                 ttf_resource_diagnostic_t *d, void *userdata) {
     const char *kind = r->kind, *key = r->key, *value = r->value;
     long number;
     (void)userdata;
     *handled = 1;
-    if (!strcmp(kind, "classifier_priority")) {
+    if (KIND("classifier_priority")) {
         if (strlen(key) >= sizeof(((ttf_semantic_t *)0)->rule) ||
             !ttf_validation_integer(value, -1000, 1000, NULL))
             return ttf_validation_error(
                 d, "classifier_priority requires a rule ID under 64 bytes and integer -1000..1000");
-    } else if (!strcmp(kind, "phone_policy")) {
+    } else if (KIND("phone_policy")) {
         long maximum = !strcmp(key, "extension_max_digits") ? TTF_IR_VALUE_SIZE - 1 : 15;
         if (strcmp(r->language, "*") ||
             !ttf_validation_enum(key, "international_min_digits|international_max_digits|"
@@ -306,12 +317,12 @@ static ttf_status_t core_record(const ttf_resource_record_t *r, int *handled,
             !ttf_validation_integer(value, 1, maximum, NULL))
             return ttf_validation_error(d, "phone_policy requires common '*' namespace, a known "
                                            "digit limit and integer 1..15 (extension 1..95)");
-    } else if (!strcmp(kind, "numeric_policy")) {
+    } else if (KIND("numeric_policy")) {
         if (strcmp(r->language, "*") || strcmp(key, "leading_zero_min_digits") ||
             !ttf_validation_integer(value, 2, TTF_IR_VALUE_SIZE - 1, NULL))
             return ttf_validation_error(d, "numeric_policy requires common '*' namespace, "
                                            "leading_zero_min_digits and integer 2..95");
-    } else if (!strcmp(kind, "numeric_group_separator")) {
+    } else if (KIND("numeric_group_separator")) {
         uint32_t cp;
         size_t width, n = strlen(key);
         if (ttf_utf8_decode(key, n, &cp, &width) != 1 || width != n ||
@@ -320,16 +331,16 @@ static ttf_status_t core_record(const ttf_resource_record_t *r, int *handled,
             !ttf_validation_enum(value, "0|3"))
             return ttf_validation_error(d, "numeric_group_separator requires one supported "
                                            "horizontal Unicode space or comma, and value 0 or 3");
-    } else if (!strcmp(kind, "currency_scale")) {
+    } else if (KIND("currency_scale")) {
         if (strlen(key) >= 64 || !ttf_validation_integer(value, 3, 18, &number) || number % 3)
             return ttf_validation_error(
                 d,
                 "currency_scale requires a key under 64 bytes and an integer power 3,6,9,12,15,18");
-    } else if (!strcmp(kind, "numeric_suffix")) {
+    } else if (KIND("numeric_suffix")) {
         if (strlen(key) >= 64 || !typed_value(value, "COUNTER|CURRENCY|MEASURE", 32, 0))
             return ttf_validation_error(d, "numeric_suffix requires COUNTER:unit, CURRENCY:unit or "
                                            "MEASURE:unit with unit under 32 bytes");
-    } else if (!strcmp(kind, "numeric_suffix_cue")) {
+    } else if (KIND("numeric_suffix_cue")) {
         const char *w;
         int ok = *key && strlen(key) < 64 && *value && value[0] != '|' && value[strlen(value) - 1] != '|' &&
                  !strstr(value, "||");
@@ -337,10 +348,10 @@ static ttf_status_t core_record(const ttf_resource_record_t *r, int *handled,
             ok = (unsigned char)*w >= 32 && *w != 127;
         if (!ok)
             return ttf_validation_error(d, "numeric_suffix_cue requires a suffix and '|'-separated cue words");
-    } else if (!strcmp(kind, "numeric_suffix_word")) {
+    } else if (KIND("numeric_suffix_word")) {
         if (strlen(key) >= 64 || strcmp(value, "1"))
             return ttf_validation_error(d, "numeric_suffix_word requires a word under 64 bytes and value 1");
-    } else if (!strcmp(kind, "currency_name")) {
+    } else if (KIND("currency_name")) {
         const char *colon = strchr(value, ':');
         char currency[32];
         if (!lower_words(key, 96) || !colon || colon == value ||
@@ -352,53 +363,53 @@ static ttf_status_t core_record(const ttf_resource_record_t *r, int *handled,
         currency[colon - value] = 0;
         if (!identifier(currency, sizeof(currency), 0))
             return ttf_validation_error(d, "currency_name has an invalid currency ID");
-    } else if (!strcmp(kind, "currency_prefix")) {
+    } else if (KIND("currency_prefix")) {
         if (strlen(key) >= 64 || !identifier(value, 32, 0))
             return ttf_validation_error(
                 d, "currency_prefix requires a key under 64 bytes and currency ID under 32 bytes");
-    } else if (!strcmp(kind, "currency_name_cue")) {
+    } else if (KIND("currency_name_cue")) {
         if (!lower_words(key, 64) || strchr(key, ' ') ||
             (strcmp(value, "1") && !identifier(value, 32, 0)))
             return ttf_validation_error(
                 d, "currency_name_cue requires one lowercase ASCII word and 1 or a currency ID");
-    } else if (!strcmp(kind, "currency_name_ambiguous") ||
-               !strcmp(kind, "currency_name_mass_tail")) {
-        if (!lower_words(key, !strcmp(kind, "currency_name_ambiguous") ? 96 : 64) ||
-            (!strcmp(kind, "currency_name_mass_tail") && strchr(key, ' ')) ||
+    } else if (KIND("currency_name_ambiguous") ||
+               KIND("currency_name_mass_tail")) {
+        if (!lower_words(key, KIND("currency_name_ambiguous") ? 96 : 64) ||
+            (KIND("currency_name_mass_tail") && strchr(key, ' ')) ||
             !ttf_validation_enum(value, "0|1"))
             return ttf_validation_error(
                 d, "currency name guard requires canonical lowercase ASCII key and value 0 or 1");
-    } else if (!strcmp(kind, "ordinal_suffix")) {
+    } else if (KIND("ordinal_suffix")) {
         if (strlen(key) >= 64 || !identifier(value, TTF_LANGUAGE_TAG_SIZE, 1))
             return ttf_validation_error(
                 d, "ordinal_suffix requires a key under 64 bytes and a source language tag");
-    } else if (!strcmp(kind, "ordinal_tail")) {
+    } else if (KIND("ordinal_tail")) {
         size_t i;
         for (i = 0; key[i] >= '0' && key[i] <= '9'; ++i) {
         }
         if (!i || key[i] || i >= TTF_IR_VALUE_SIZE || strlen(value) >= 64)
             return ttf_validation_error(
                 d, "ordinal_tail requires a decimal tail and suffix under 64 bytes");
-    } else if (!strcmp(kind, "semantic_term")) {
+    } else if (KIND("semantic_term")) {
         if (strlen(key) >= 64 ||
             !typed_value(value, "WORD|INITIALISM|ACRONYM|ALNUM_TERM", TTF_LANGUAGE_TAG_SIZE, 1))
             return ttf_validation_error(d, "semantic_term requires WORD, INITIALISM, ACRONYM or "
                                            "ALNUM_TERM followed by :source-language");
-    } else if (!strcmp(kind, "time_suffix")) {
+    } else if (KIND("time_suffix")) {
         if (strlen(key) >= 64 || !ttf_validation_enum(value, "AM|PM"))
             return ttf_validation_error(d,
                                         "time_suffix requires a key under 64 bytes and AM or PM");
-    } else if (!strcmp(kind, "quantity_range_separator") || !strcmp(kind, "numeric_continuation") ||
-               !strcmp(kind, "boundary_word") || !strcmp(kind, "boundary_period") ||
-               !strcmp(kind, "quantity_lookahead_tail")) {
-        size_t limit = (!strcmp(kind, "boundary_word") || !strcmp(kind, "boundary_period") ||
-                        !strcmp(kind, "quantity_lookahead_tail"))
+    } else if (KIND("quantity_range_separator") || KIND("numeric_continuation") ||
+               KIND("boundary_word") || KIND("boundary_period") ||
+               KIND("quantity_lookahead_tail")) {
+        size_t limit = (KIND("boundary_word") || KIND("boundary_period") ||
+                        KIND("quantity_lookahead_tail"))
                            ? 96
                            : 64;
         if (strlen(key) >= limit || !ttf_validation_enum(value, "0|1"))
             return ttf_validation_error(
                 d, "boundary/continuation flag requires a bounded key and value 0 or 1");
-    } else if (!strcmp(kind, "context_connector")) {
+    } else if (KIND("context_connector")) {
         uint32_t cp;
         size_t width, n = strlen(key);
         if (ttf_utf8_decode(key, n, &cp, &width) != 1 || width != n ||
@@ -407,17 +418,17 @@ static ttf_status_t core_record(const ttf_resource_record_t *r, int *handled,
             strcmp(value, "number"))
             return ttf_validation_error(d, "context_connector requires one punctuation/symbol "
                                            "codepoint and the number marker");
-    } else if (!strcmp(kind, "boundary_syntax")) {
+    } else if (KIND("boundary_syntax")) {
         if (strcmp(key, "dotted_initials"))
             *handled = 0;
         else if (!ttf_validation_enum(value, "0|1"))
             return ttf_validation_error(d, "dotted_initials boundary flag must be 0 or 1");
-    } else if (!strcmp(kind, "protection")) {
+    } else if (KIND("protection")) {
         if (!ttf_validation_enum(key, "code|markup|path"))
             *handled = 0;
         else if (!ttf_validation_enum(value, "0|1"))
             return ttf_validation_error(d, "protection policy must be 0 or 1");
-    } else if (!strcmp(kind, "protected_tag")) {
+    } else if (KIND("protected_tag")) {
         size_t i;
         if (strlen(key) >= 64 || key[0] < 'a' || key[0] > 'z')
             return ttf_validation_error(
@@ -428,11 +439,11 @@ static ttf_status_t core_record(const ttf_resource_record_t *r, int *handled,
                 return ttf_validation_error(d, "protected_tag has an invalid tag name");
         if (!ttf_validation_enum(value, "opaque|transparent"))
             return ttf_validation_error(d, "protected_tag policy must be opaque or transparent");
-    } else if (!strcmp(kind, "abbreviation") && !strcmp(r->language, "*")) {
+    } else if (KIND("abbreviation") && !strcmp(r->language, "*")) {
         if (strlen(key) >= 64 || strcmp(value, "protected"))
             return ttf_validation_error(
                 d, "common abbreviation requires a key under 64 bytes and protected value");
-    } else if (!strcmp(kind, "lexicon")) {
+    } else if (KIND("lexicon")) {
         char *canonical = NULL;
         const char *colon = strchr(key, ':');
         char source[TTF_LANGUAGE_TAG_SIZE];
@@ -450,16 +461,16 @@ static ttf_status_t core_record(const ttf_resource_record_t *r, int *handled,
                        ? status
                        : ttf_validation_error(d, "lexicon key requires source-language:word or a "
                                                  "supported bounded phrase");
-    } else if (!strcmp(kind, "loanword")) {
+    } else if (KIND("loanword")) {
         const char *w = strchr(key, ':');
         int ok = w && w > key && w[1] && strlen(key) < 64 && *value;
         for (w = w ? w + 1 : key; ok && *w; ++w)
             ok = *w >= 'a' && *w <= 'z';
         if (!ok)
             return ttf_validation_error(d, "loanword requires source-language:lowercase-word and a reading");
-    } else if (!strcmp(kind, "exact")) {
+    } else if (KIND("exact")) {
         /* Literal key and literal replacement are intentionally unrestricted. */
-    } else if (!strcmp(kind, "pattern")) {
+    } else if (KIND("pattern")) {
         const char *p = key;
         while (*p) {
             if (!strncmp(p, "{digits}", 8))

@@ -516,10 +516,13 @@ int main(int argc, char **argv) {
             exit_code = report("write validation report", TTF_EIO);
         goto done;
     }
-    status = ttf_engine_validate_resources(engine, &validation, &diagnostic);
-    if (status == TTF_OK)
-        status = ttf_engine_freeze(engine);
+    /* Freezing validates every resource; validate again only to name the failing
+       record (validating first as well doubled that work at every start, 2026-10-06). */
+    status = ttf_engine_freeze(engine);
     if (status != TTF_OK) {
+        ttf_status_t rejected = ttf_engine_validate_resources(engine, &validation, &diagnostic);
+        if (rejected != TTF_OK)
+            status = rejected;
         exit_code = resource_report("freeze engine", status, &diagnostic);
         goto done;
     }

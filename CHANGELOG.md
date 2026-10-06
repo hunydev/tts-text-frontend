@@ -2,6 +2,16 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Engine start-up 42 ms → 20.5 ms (one CLI start with the shipped
+  resources; outputs unchanged, Korean benchmark 0 changed). The Korean and
+  English validators and the core record validator compare the first byte of
+  a resource kind before strcmp (about 2.5 million strcmp calls per start went
+  through their kind chains); validation skips sorting the rows by declaration
+  order when every row was already checked at load (the order only picks which
+  failing row is reported); the CLI freezes first and validates again only to
+  name a failing record, instead of validating before freezing as well. The
+  test suite starts the CLI thousands of times, so the full ctest runs in
+  about 9.5 minutes on 2 jobs (Release).
 - Faster checks (project-owner request: one Korean fix took hours of
   checking). tools/ci/run.sh quick and full run the text-evaluation tests once,
   in the release build, instead of in the gcc build as well (the engine has no

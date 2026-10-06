@@ -5,7 +5,9 @@
 #include "../../src/cjk/cjk_reading.h"
 
 #define KO "ko-KR"
-#define SAME(a, b) (!strcmp((a), (b)))
+/* The first byte rejects most of the hundreds of kind names before strcmp
+   (start-up profile 2026-10-06: about 2 million calls per engine). */
+#define SAME(a, b) ((a)[0] == (b)[0] && !strcmp((a), (b)))
 
 static int label(const char *text) {
     const unsigned char *p = (const unsigned char *)text;
