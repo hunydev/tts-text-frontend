@@ -439,7 +439,7 @@ if(BUILD_TESTING)
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources identifier_fallback_v22.jsonl 19)
     add_test(NAME en_digits_left_v25_evaluation COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
-      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources en_digits_left_v25.jsonl 18)
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources en_digits_left_v25.jsonl 19)
     add_test(NAME en_bare_years_v25_evaluation COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources en_bare_years_v25.jsonl 11)
