@@ -15,6 +15,7 @@ import ko_reports
 import en_reports
 import jev
 import jev_eval
+import value_check
 
 sys.path.insert(0, str(ROOT / "tools/lexicon"))
 from manage import inventory
@@ -102,6 +103,8 @@ class Handler(BaseHTTPRequestHandler):
                     return self.json(200, jev_eval.systems(root, args.get("set")))
                 if path == "/api/jev-eval/system":
                     return self.json(200, jev_eval.load_system(root, args.get("set"), args.get("system")))
+                if path == "/api/jev-eval/labels":
+                    return self.json(200, jev_eval.labels(root, args.get("set")))
             except jev_eval.EvalError as exc:
                 return self.json(exc.status, {"error": str(exc)})
             return self.json(404, {"error": "Not found"})
@@ -147,7 +150,7 @@ class Handler(BaseHTTPRequestHandler):
     def do_POST(self):
         path = urlsplit(self.path).path
         if path not in ("/api/run", "/api/corpus", "/api/judge", "/api/jev-eval/save", "/api/jev-eval/fill",
-                        "/api/jev-eval/score"):
+                        "/api/jev-eval/score", "/api/jev-eval/label"):
             return self.json(404, {"error": "Not found"})
         if (
             self.headers.get("Content-Type", "").split(";")[0].strip()
@@ -276,6 +279,8 @@ class Handler(BaseHTTPRequestHandler):
                                  speech=body.get("output_mode", "speech") == "speech")
         except jev.JudgeError as exc:
             return self.json(exc.status, {"error": str(exc)})
+        if body.get("language") == "ko-KR" and body.get("output_mode", "speech") == "speech":
+            result["value"] = value_check.check(body["text"], body["normalized"])
         return self.json(200, result)
 
 
@@ -294,6 +299,9 @@ class Handler(BaseHTTPRequestHandler):
         try:
             if path == "/api/jev-eval/save":
                 return self.json(200, jev_eval.save(root, body.get("set"), body.get("system"), body.get("outputs")))
+            if path == "/api/jev-eval/label":
+                return self.json(200, jev_eval.set_label(root, body.get("set"), body.get("id"), body.get("output"),
+                                                         body.get("label")))
             if path == "/api/jev-eval/fill":
                 jev_eval.sentences(root, body.get("set"))
                 if not SLOTS.acquire(blocking=False):

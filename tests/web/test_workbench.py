@@ -449,7 +449,7 @@ try:
         assert "secret-test-key" not in json.dumps(judged)
         checks += 1
     assert len(sent) == 1 and sent[0][0] == "Bearer secret-test-key", sent
-    assert judged["unread"] == [], judged
+    assert judged["unread"] == [] and judged["value"]["status"] == "ok", judged
     assert jev.unread("코로나 십구로 인해 30~40명, KB 5%", "ko-KR") == ["30~40", "KB", "5", "%"]
     with urllib.request.urlopen(base + "/api/jev/instructions") as response:
         shown = json.load(response)
@@ -487,6 +487,7 @@ try:
         "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in sentences), encoding="utf-8")
     (eval_root / "t1/meta.json").write_text(json.dumps(dict(source="fixture", per_category=3)), encoding="utf-8")
     server.jev_eval_root = eval_root
+    import jev_eval as jev_eval_module
     batches = []
 
     def fake_batch(pairs, language, cache, progress=None):
@@ -525,6 +526,8 @@ try:
     with urllib.request.urlopen(base + "/api/jev-eval/system?set=t1&system=legacy-tn") as response:
         stored = json.load(response)
     assert stored["scores"]["s0"]["passed"] and not stored["scores"]["s1"]["passed"], stored["scores"]
+    assert stored["scores"]["s0"]["verdict"] == "pass" and stored["scores"]["s1"]["verdict"] == "fail"
+    assert stored["scores"]["s0"]["value"]["status"] == "ok" and stored["verdict_version"] == jev_eval_module.VERDICT_VERSION
     with urllib.request.urlopen(base + "/api/jev-eval/systems?set=t1") as response:
         assert json.load(response)["systems"][0]["summary"]["overall"]["pass_rate"] == 0.5
     # One row with an edited output: only that row is scored, others keep theirs.
@@ -536,6 +539,40 @@ try:
     with urllib.request.urlopen(base + "/api/jev-eval/system?set=t1&system=legacy-tn") as response:
         stored = json.load(response)
     assert stored["scores"]["s0"]["passed"] and stored["outputs"]["s1"] == "다섯 개를 샀다."
+    # A changed value fails whatever Jev says (0.9 here); a middle score needs a person.
+    with post("/api/jev-eval/score", dict(set="t1", system="legacy-tn", ids=["s1"],
+                                           patch={"s1": "여섯 개를 샀다."})) as response:
+        row = [json.loads(line) for line in response][-1]["scores"]["s1"]
+    assert row["verdict"] == "fail" and row["value"]["findings"][0]["written"] == "5" and row["jev_passed"], row
+    code = jev_eval_module.value_check.check("비밀번호 3321번", "비밀번호 삼삼이일 번")
+    amount = jev_eval_module.value_check.check("비밀번호 3321번", "비밀번호 삼천삼백이십일 번")
+    assert code["forms"] == ["digits"] and amount["forms"] == ["whole"], (code, amount)
+    assert jev_eval_module.verdict(0.5, [], code, False) == "review"
+    assert jev_eval_module.verdict(0.05, [], code, True) == "pass"
+    assert jev_eval_module.verdict(0.05, [], amount, True) == "fail"
+    mixed = jev_eval_module.value_check.check("사업자 번호 128-00-93554 업체에 500만 원", "사업자 번호 일이팔 다시 공공 다시 구삼오오사 업체에 오백만 원")
+    assert jev_eval_module.verdict(0.6, [], mixed, True) == "pass", mixed
+    assert jev_eval_module.verdict(0.2, [], dict(status="unknown"), False) == "fail"
+    with post("/api/jev-eval/score", dict(set="t1", system="legacy-tn", ids=["s1"],
+                                           patch={"s1": "다섯 개를 샀다."})) as response:
+        assert [json.loads(line) for line in response][-1]["scores"]["s1"]["verdict"] == "pass"
+    # A person's judgements are stored per sentence and output, and can be withdrawn.
+    with post("/api/jev-eval/label", dict(set="t1", id="s1", output="다섯 개를 샀다.", label="correct")) as response:
+        assert json.load(response)["count"] == 1
+    with urllib.request.urlopen(base + "/api/jev-eval/labels?set=t1") as response:
+        assert [(x["id"], x["label"]) for x in json.load(response)["labels"]] == [("s1", "correct")]
+    with post("/api/jev-eval/label", dict(set="t1", id="s1", output="다섯 개를 샀다.", label=None)) as response:
+        assert json.load(response)["count"] == 0
+    for bad in (dict(set="t1", id="zz", output="x", label="correct"), dict(set="t1", id="s1", output="x", label="maybe"),
+                dict(set="t1", id="s1", output="", label="wrong")):
+        try:
+            post("/api/jev-eval/label", bad)
+        except urllib.error.HTTPError as e:
+            assert e.code == 400, e.code
+            checks += 1
+        else:
+            raise AssertionError("invalid label accepted")
+    checks += 4
     # A system that was never saved can be scored row by row.
     with post("/api/jev-eval/score", dict(set="t1", system="new-tn", ids=["s2"],
                                            patch={"s2": "오늘 두 시에 만나요."})) as response:

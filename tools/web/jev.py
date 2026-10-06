@@ -168,6 +168,13 @@ class Judge:
 
 
 PASS = 0.7
+REVIEW = 0.3
+# The page's verdict (tools/web/jev_eval.py verdict), shown with the request.
+VERDICT_RULE = (
+    "인정: 값 대조(tools/web/value_check.py)에서 숫자 값이 바뀌지 않았고, 결과에 숫자·로마자·기호가 남지 않았고, "
+    "Jev %.1f 이상. 번호류(※)는 Jev가 자리를 대조하지 못하므로 값 대조가 일치하고 세 자리 이상 숫자를 모두 한 자리씩 읽었으면 Jev 점수와 관계없이 인정(금액처럼 읽으면 Jev 기준). "
+    "불인정: 값 불일치, 원문 표기 남음, 또는 Jev %.1f 미만. 그 밖(Jev %.1f~%.1f, 값 대조 판단 불가인 번호류)은 확인 필요."
+    % (PASS, REVIEW, REVIEW, PASS))
 
 # Shown on /jev-eval with the exact request (2026-10-06, project-owner request:
 # the instruction Jev gets must be visible).
@@ -184,6 +191,9 @@ HISTORY = (
     "한국어 질문 시험 (2026-10-06): v3와 v4를 내용 그대로 한국어로 옮겨 같은 600쌍으로 비교. AUC v3 0.921 → "
     "한국어 0.901, v4 0.940 → 0.928. 한국어 v3는 정답 점수가 전체적으로 낮아짐(중앙값 0.79 → 0.73, 0.7에서 정답 "
     "인정 72% → 62.7%). 질문은 영어 유지.",
+    "값 대조와 세 단계 판정 (2026-10-06): 숫자 값은 코드로 대조(value_check.py, 오답 300개 중 292개 검출, "
+    "정답 300개 모두 통과, 참조 4만 문장 중 0.14%만 불일치). 판정은 인정·확인 필요·불인정 세 단계, 사람 판단(맞음·틀림)을 "
+    "모아 보정에 씀.",
 )
 
 
@@ -192,6 +202,7 @@ def instructions():
     return dict(
         endpoint=URL, model=MODEL, question_id=QUESTION_ID, pass_threshold=PASS,
         pass_rule="noul >= %.1f, and for Korean no digits, Latin letters or symbols left in spoken" % PASS,
+        verdict_rule=VERDICT_RULE, review_threshold=REVIEW,
         unread_pattern=UNREAD.pattern, history=list(HISTORY),
         languages={language: dict(
             name=name, calibrated=language == "ko-KR",

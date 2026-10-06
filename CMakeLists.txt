@@ -878,6 +878,8 @@ if(BUILD_TESTING)
         --library $<TARGET_FILE:tts_text_frontend_shared>)
       add_executable(ttf_web_abi tests/web/abi_layout.c)
       target_link_libraries(ttf_web_abi PRIVATE tts_text_frontend_static ttf_build_flags)
+      add_test(NAME web_value_check COMMAND ${Python3_EXECUTABLE}
+        ${CMAKE_CURRENT_SOURCE_DIR}/tests/web/test_value_check.py)
       add_test(NAME web_workbench COMMAND ${Python3_EXECUTABLE}
         ${CMAKE_CURRENT_SOURCE_DIR}/tests/web/test_workbench.py
         $<TARGET_FILE:tts_text_frontend_shared> ${CMAKE_CURRENT_SOURCE_DIR}/resources

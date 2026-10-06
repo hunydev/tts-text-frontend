@@ -11,6 +11,7 @@ outputs. Pass = noul >= 0.7 and no digits, Latin letters or symbols left.
     python3 jev_eval.py normalize LIBRARY RESOURCES SENTENCES.jsonl   # this engine's outputs as JSON
 """
 import datetime
+import hashlib
 import json
 import re
 import sys
@@ -21,12 +22,57 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 sys.path.insert(0, str(HERE))
 import jev  # noqa: E402
+import value_check  # noqa: E402
 
 DEFAULT_ROOT = ROOT / "benchmark/generated/jev-eval"
 CACHE = ROOT / "benchmark/generated/jev-cache/ko-KR.jsonl"
 NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 ._-]{0,47}$")
 MAX_OUTPUT = 4000
 SCORING = threading.Lock()
+LABELING = threading.Lock()
+# Long digit strings read one by one: Jev cannot compare them digit by digit, so the value
+# check decides (also marked ※ on the page).
+WEAK = {"business_number", "id_card_number", "generated_number", "personal_id_number", "finance_bank",
+        "phone_number"}
+VERDICT_VERSION = 2
+LABELS = ("correct", "wrong")
+
+
+# A number written before one of these is an amount or a count, not a code (500만 원, 2020년).
+AMOUNT_AFTER = set("만억천원명개년월일시분초세살회층배점위건대곳권장%")
+
+
+def read_digit_by_digit(value):
+    """Every code-like number (three or more digits, no , . ~ /, not before 만 원 명 년 …)
+    was read one digit at a time."""
+    after = value.get("after") or [""] * len(value.get("tokens", []))
+    return all(form == "digits" for token, form, nxt in zip(value.get("tokens", []), value.get("forms", []), after)
+               if sum(c.isdigit() for c in token) >= 3 and not set(token) & set(",.~/") and nxt not in AMOUNT_AFTER)
+
+
+def verdict(noul, unread, value, weak):
+    """pass, review or fail (2026-10-06): the value check and Jev each judge what they can.
+
+    Code compares the numbers; Jev judges sense and convention, with its uncertain middle
+    band left to a person (docs.typesafe.ai: route 0.3-0.7 to review). In code categories a
+    matching value read digit by digit passes whatever Jev says, since Jev cannot compare the
+    digits; a code read as an amount (비밀번호 3321 삼천삼백이십일) goes by Jev.
+    """
+    if unread or value["status"] == "mismatch":
+        return "fail"
+    if weak and value["status"] == "ok" and read_digit_by_digit(value):
+        return "pass"
+    if noul >= jev.PASS:
+        return "pass"
+    return "fail" if noul < jev.REVIEW else "review"
+
+
+def judged(row, output, noul, model):
+    left = jev.unread(output, "ko-KR")
+    value = value_check.check(row["text"], output)
+    v = verdict(noul, left, value, row["category_en"] in WEAK)
+    return dict(noul=noul, model=model, unread=left, output=output, value=value, verdict=v,
+                passed=v == "pass", jev_passed=noul >= jev.PASS and not left)
 
 
 class EvalError(Exception):
@@ -74,12 +120,32 @@ def load_system(root, set_id, name):
     path = system_path(root, set_id, name)
     if not path.is_file():
         raise EvalError(404, "저장된 결과가 없습니다")
-    return json.loads(path.read_text(encoding="utf-8"))
+    return refresh(path, sentences(root, set_id)[1])
+
+
+def refresh(path, rows):
+    """Re-judge stored scores when the verdict rules changed; no Jev call, the scores stay."""
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if data.get("verdict_version") == VERDICT_VERSION:
+        return data
+    by_id = {r["id"]: r for r in rows}
+    scores = data.get("scores", {})
+    for k, s in list(scores.items()):
+        if k in by_id:
+            scores[k] = judged(by_id[k], s["output"], s["noul"], s["model"])
+    extra = {k: v for k, v in (data.get("summary") or {}).items() if k in ("newly_scored", "question")}
+    data.update(scores=scores, verdict_version=VERDICT_VERSION,
+                summary=dict(summarize(rows, data.get("outputs", {}), scores), **extra))
+    tmp = path.with_suffix(".tmp")
+    tmp.write_text(json.dumps(data, ensure_ascii=False) + "\n", encoding="utf-8")
+    tmp.replace(path)
+    return data
 
 
 def summarize(rows, outputs, scores):
     def metric():
-        return dict(sentences=0, filled=0, scored=0, passed=0, total=0.0, low=0, unread=0)
+        return dict(sentences=0, filled=0, scored=0, passed=0, review=0, failed=0, jev_passed=0,
+                    value_mismatch=0, value_unknown=0, total=0.0, low=0, unread=0)
 
     overall, cats, names = metric(), {}, {}
     for r in rows:
@@ -93,6 +159,11 @@ def summarize(rows, outputs, scores):
             if s and s.get("output") == outputs.get(r["id"]):
                 x["scored"] += 1
                 x["passed"] += s["passed"]
+                x["review"] += s.get("verdict") == "review"
+                x["failed"] += s.get("verdict") == "fail"
+                x["jev_passed"] += s.get("jev_passed", s["passed"])
+                x["value_mismatch"] += (s.get("value") or {}).get("status") == "mismatch"
+                x["value_unknown"] += (s.get("value") or {}).get("status") == "unknown"
                 x["total"] += s["noul"]
                 x["low"] += s["noul"] < 0.4
                 x["unread"] += bool(s["unread"])
@@ -100,7 +171,8 @@ def summarize(rows, outputs, scores):
     def finish(m):
         n = m.pop("total")
         return dict(m, mean=round(n / m["scored"], 4) if m["scored"] else None,
-                    pass_rate=m["passed"] / m["scored"] if m["scored"] else None)
+                    pass_rate=m["passed"] / m["scored"] if m["scored"] else None,
+                    jev_pass_rate=m["jev_passed"] / m["scored"] if m["scored"] else None)
 
     return dict(overall=finish(overall),
                 categories=[dict(id=k, name=names[k], **finish(v)) for k, v in cats.items()])
@@ -110,8 +182,9 @@ def systems(root, set_id):
     path = set_dir(root, set_id) / "systems"
     out = []
     if path.is_dir():
+        rows = sentences(root, set_id)[1]
         for p in sorted(path.glob("*.json")):
-            data = json.loads(p.read_text(encoding="utf-8"))
+            data = refresh(p, rows)
             out.append(dict(system=data["system"], updated_at=data["updated_at"], scored_at=data.get("scored_at"),
                             summary=data.get("summary")))
     return dict(set_id=set_id, systems=out)
@@ -191,10 +264,9 @@ def score(root, set_id, name, progress=None, batch=None, ids=None, patch=None):
             if not out or (wanted is not None and r["id"] not in wanted):
                 continue
             value, model = scored[(r["text"], out)]
-            left = jev.unread(out, "ko-KR")
-            scores[r["id"]] = dict(noul=value, model=model, unread=left, output=out,
-                                   passed=value >= jev.PASS and not left)
+            scores[r["id"]] = judged(r, out, value, model)
         data["scores"] = scores
+        data["verdict_version"] = VERDICT_VERSION
         data["scored_at"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
         data["summary"] = dict(summarize(rows, outputs, scores), newly_scored=fresh, question=jev.QUESTION_ID)
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -205,6 +277,37 @@ def score(root, set_id, name, progress=None, batch=None, ids=None, patch=None):
                     scores={k: scores[k] for k in (wanted if wanted is not None else scores) if k in scores})
     finally:
         SCORING.release()
+
+
+def labels(root, set_id):
+    """A person's judgements (correct / wrong) of sentence and output pairs, for calibration."""
+    path = set_dir(root, set_id) / "labels.json"
+    data = json.loads(path.read_text(encoding="utf-8")) if path.is_file() else {}
+    return dict(set_id=set_id, labels=list(data.values()))
+
+
+def set_label(root, set_id, row_id, output, label):
+    meta, rows = sentences(root, set_id)
+    if row_id not in {r["id"] for r in rows}:
+        raise EvalError(400, "평가셋에 없는 id입니다")
+    if not isinstance(output, str) or not output.strip() or len(output) > MAX_OUTPUT or "\0" in output:
+        raise EvalError(400, "결과는 %d자 이내 문자열이어야 합니다" % MAX_OUTPUT)
+    if label is not None and label not in LABELS:
+        raise EvalError(400, "판단은 correct, wrong, null 중 하나입니다")
+    output = output.strip()
+    key = row_id + "\t" + hashlib.sha256(output.encode()).hexdigest()[:16]
+    path = set_dir(root, set_id) / "labels.json"
+    with LABELING:
+        data = json.loads(path.read_text(encoding="utf-8")) if path.is_file() else {}
+        if label is None:
+            data.pop(key, None)
+        else:
+            data[key] = dict(id=row_id, output=output, label=label,
+                             at=datetime.datetime.now(datetime.timezone.utc).isoformat())
+        tmp = path.with_suffix(".tmp")
+        tmp.write_text(json.dumps(data, ensure_ascii=False, indent=0) + "\n", encoding="utf-8")
+        tmp.replace(path)
+    return dict(id=row_id, output=output, label=label, count=len(data))
 
 
 def normalize_main(library, resources, sentences_path):

@@ -3,7 +3,11 @@ const $ = (id) => document.getElementById(id);
 const PAGE = 100;
 // Long digit strings read one by one: Jev cannot compare them digit by digit.
 const WEAK = new Set(["business_number", "id_card_number", "generated_number", "personal_id_number", "finance_bank", "phone_number"]);
-const state = { set: null, rows: [], outputs: {}, scores: {}, systems: [], page: 0, dirty: false, busy: false };
+const state = { set: null, rows: [], outputs: {}, scores: {}, labels: new Map(), systems: [], page: 0, dirty: false, busy: false };
+const VERDICT = { pass: "인정", review: "확인 필요", fail: "불인정" };
+// Older stored scores have no verdict until the server re-judges them.
+const verdictOf = (s) => s.verdict || (s.passed ? "pass" : "fail");
+const labelOf = (r) => { const out = state.outputs[r.id]; return out ? state.labels.get(r.id + "\t" + out) : undefined; };
 const number = (v) => Number(v).toLocaleString("ko-KR");
 const percent = (v) => (v === null || v === undefined ? "—" : (v * 100).toFixed(1) + "%");
 // 10. 01. 17:15 KST: Korean time (UTC+9) whatever the viewer time zone; a dash when never done.
@@ -40,7 +44,8 @@ function renderCompare() {
   $("cards").replaceChildren(...scored.map((s) => {
     const o = s.summary.overall, e = node("div"); e.className = "quality-card jev";
     const t = node("small", timing(s)); t.className = "jev-time";
-    e.append(node("span", s.system), node("strong", percent(o.pass_rate)), node("small", `인정 ${number(o.passed)} / ${number(o.scored)} · 평균 ${o.mean} · 채움 ${number(o.filled)}/${number(o.sentences)}`), t);
+    e.append(node("span", s.system), node("strong", percent(o.pass_rate)),
+      node("small", `인정 ${number(o.passed)} · 확인 필요 ${number(o.review ?? 0)} · 불인정 ${number(o.failed ?? 0)} / ${number(o.scored)} · 값 불일치 ${number(o.value_mismatch ?? 0)} · Jev만 ${percent(o.jev_pass_rate)} · 평균 ${o.mean}`), t);
     return e;
   }));
   const head = node("tr"); head.append(node("th", "카테고리"), node("th", "문장"));
@@ -55,7 +60,7 @@ function renderCompare() {
       const m = id ? s.summary.categories.find((c) => c.id === id) : s.summary.overall;
       const cell = node("td"); cell.className = "jev-text";
       cell.append(node("span", m ? percent(m.pass_rate) : "—"));
-      if (m && m.pass_rate !== null) { const b = node("div"); b.className = "bar jev-bar"; const x = node("span"); x.style.width = m.pass_rate * 100 + "%"; b.append(x); cell.append(b); cell.title = `인정 ${m.passed}/${m.scored} · 평균 ${m.mean} · 원문 표기 남음 ${m.unread}`; }
+      if (m && m.pass_rate !== null) { const b = node("div"); b.className = "bar jev-bar"; const x = node("span"); x.style.width = m.pass_rate * 100 + "%"; b.append(x); cell.append(b); cell.title = `인정 ${m.passed} · 확인 필요 ${m.review ?? 0} · 불인정 ${m.failed ?? 0} / ${m.scored} · 값 불일치 ${m.value_mismatch ?? 0} · Jev만 ${percent(m.jev_pass_rate)} · 평균 ${m.mean} · 원문 표기 남음 ${m.unread}`; }
       tr.append(cell);
     }
     return tr;
@@ -67,8 +72,10 @@ function visible() {
     if (cat && r.category_en !== cat) return false;
     const s = scoreOf(r);
     if (view === "empty") return !state.outputs[r.id];
-    if (view === "fail") return s && !s.passed;
-    if (view === "pass") return s && s.passed;
+    if (view === "fail" || view === "review" || view === "pass") return s && verdictOf(s) === view;
+    if (view === "value") return s && s.value && s.value.status === "mismatch";
+    if (view === "labeled") return labelOf(r) !== undefined;
+    if (view === "disagree") { const l = labelOf(r); return s && l && (l === "correct") !== (verdictOf(s) === "pass"); }
     return true;
   });
   if (!sort) return rows;
@@ -103,6 +110,9 @@ function renderRows() {
   const slice = rows.slice(state.page * PAGE, (state.page + 1) * PAGE);
   $("rows").replaceChildren(...slice.map((r) => {
     const tr = node("tr"), input = node("div"), cell = node("td"), result = node("div"), button = node("button", "평가");
+    const human = node("div"), yes = node("button", "맞음"), no = node("button", "틀림");
+    human.className = "human-label"; yes.type = no.type = "button";
+    yes.title = "이 결과가 맞다고 판단합니다 (다시 누르면 취소)"; no.title = "이 결과가 틀렸다고 판단합니다 (다시 누르면 취소)";
     input.className = "editable"; input.setAttribute("role", "textbox"); input.setAttribute("aria-label", "TN 결과");
     input.setAttribute("data-placeholder", "TN 결과 입력");
     try { input.contentEditable = "plaintext-only"; } catch { input.contentEditable = "true"; }
@@ -110,13 +120,32 @@ function renderRows() {
     input.textContent = state.outputs[r.id] || "";
     input.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); input.blur(); } });
     const paint = () => {
-      const s = scoreOf(r);
-      result.className = "jev-text row-result" + (s ? (s.passed ? " pass" : " fail") : "");
-      result.textContent = s ? `${s.noul.toFixed(2)} ${s.passed ? "인정" : "불인정"}` : state.outputs[r.id] ? (state.scores[r.id] ? "수정됨" : "미평가") : "—";
-      result.title = s ? `Jev ${s.noul} · ${s.model}${s.unread.length ? " · 남은 원문 표기: " + s.unread.join(" ") : ""}` : "";
+      const s = scoreOf(r), v = s ? verdictOf(s) : null, value = s && s.value;
+      result.className = "jev-text row-result" + (v ? " " + v : "");
+      result.textContent = s ? `${s.noul.toFixed(2)} ${VERDICT[v]}` : state.outputs[r.id] ? (state.scores[r.id] ? "수정됨" : "미평가") : "—";
+      const why = [];
+      if (value && value.status === "mismatch") why.push("값 불일치: " + value.findings.map((f) => `${f.written} → ${f.spoken}(${f.read_as.join("/")})`).join(", "));
+      else if (value && value.status === "unknown") why.push("값 대조 판단 불가");
+      else if (value && value.numbers) why.push("값 대조 일치");
+      if (s && s.unread.length) why.push("남은 원문 표기: " + s.unread.join(" "));
+      result.title = s ? [`Jev ${s.noul} · ${s.model}`].concat(why).join(" · ") : "";
+      if (value && value.status === "mismatch") result.textContent += " ·값";
       if (s && s.unread.length) result.textContent += " ·표기";
+      const l = labelOf(r);
+      yes.className = "secondary label-button" + (l === "correct" ? " on" : "");
+      no.className = "secondary label-button" + (l === "wrong" ? " on" : "");
+      yes.disabled = no.disabled = !state.outputs[r.id];
       button.disabled = state.busy || !state.outputs[r.id];
     };
+    const mark = (label) => safely(async () => {
+      const out = state.outputs[r.id];
+      const next = labelOf(r) === label ? null : label;
+      await post("/api/jev-eval/label", { set: state.set.id, id: r.id, output: out, label: next });
+      if (next) state.labels.set(r.id + "\t" + out, next); else state.labels.delete(r.id + "\t" + out);
+      paint(); renderAgreement();
+    });
+    yes.addEventListener("click", mark("correct")); no.addEventListener("click", mark("wrong"));
+    human.append(yes, no);
     input.addEventListener("input", () => {
       const value = input.textContent.replace(/\s+/g, " ").trim();
       if (value) state.outputs[r.id] = value; else delete state.outputs[r.id];
@@ -125,7 +154,7 @@ function renderRows() {
     button.className = "secondary row-score"; button.title = "이 문장 하나만 Jev로 평가합니다";
     button.addEventListener("click", safely(() => scoreRows([r.id], paint)));
     paint();
-    cell.className = "col-jev"; cell.append(result, button);
+    cell.className = "col-jev"; cell.append(result, button, human);
     const source = node("td"), sourceBox = node("div"), output = node("td"), outputBox = node("div");
     sourceBox.className = outputBox.className = "cell-with-copy";
     sourceBox.append(node("span", r.text), copyButton("원문 복사", () => r.text));
@@ -139,7 +168,28 @@ function renderRows() {
   $("page").textContent = `${state.page + 1} / ${pages}`;
   $("prev").disabled = state.page === 0; $("next").disabled = state.page + 1 >= pages;
 }
-function renderAll() { renderInfo(); renderCompare(); renderRows(); }
+// Automatic verdicts against a person's judgements, for the loaded system's current outputs.
+function renderAgreement() {
+  const rows = state.rows.filter((r) => labelOf(r) !== undefined && scoreOf(r));
+  const box = $("agreement");
+  if (!rows.length) { box.textContent = `저장된 사람 판단 ${number(state.labels.size)}개 · 지금 불러온 시스템의 결과와 겹치는 판단이 아직 없습니다.`; return; }
+  const table = node("table"), head = node("tr");
+  head.append(node("th", "사람 판단"), node("th", "인정"), node("th", "확인 필요"), node("th", "불인정"), node("th", "Jev만 0.7 이상"));
+  table.append(head);
+  let agree = 0, jevAgree = 0;
+  for (const [label, name] of [["correct", "맞음"], ["wrong", "틀림"]]) {
+    const sel = rows.filter((r) => labelOf(r) === label), tr = node("tr");
+    const count = (v) => sel.filter((r) => verdictOf(scoreOf(r)) === v).length;
+    const jev = sel.filter((r) => scoreOf(r).noul >= 0.7 && !scoreOf(r).unread.length).length;
+    tr.append(node("td", `${name} ${number(sel.length)}`), node("td", number(count("pass"))), node("td", number(count("review"))), node("td", number(count("fail"))), node("td", number(jev)));
+    table.append(tr);
+    agree += label === "correct" ? count("pass") : count("fail");
+    jevAgree += label === "correct" ? jev : sel.length - jev;
+  }
+  const lead = node("p", `사람 판단 ${number(rows.length)}개와 비교: 자동 판정이 같은 결론(맞음→인정, 틀림→불인정) ${percent(agree / rows.length)}, Jev만 0.7 기준 ${percent(jevAgree / rows.length)}. 확인 필요는 어느 쪽도 아닌 것으로 셉니다.`);
+  box.replaceChildren(lead, table);
+}
+function renderAll() { renderInfo(); renderCompare(); renderRows(); renderAgreement(); }
 
 async function loadSystems() {
   const r = await get("/api/jev-eval/systems", { set: state.set.id });
@@ -151,6 +201,8 @@ async function loadSystems() {
 async function loadSet(id) {
   const r = await get("/api/jev-eval/set", { set: id });
   state.set = { id, meta: r.meta }; state.rows = r.rows; state.outputs = {}; state.scores = {}; state.dirty = false; state.page = 0;
+  const l = await get("/api/jev-eval/labels", { set: id });
+  state.labels = new Map(l.labels.map((x) => [x.id + "\t" + x.output, x.label]));
   $("category").replaceChildren(option("", "전체"), ...[...new Map(r.rows.map((x) => [x.category_en, x.category])).entries()].map(([k, v]) => option(k, v + (WEAK.has(k) ? " ※" : ""))));
   await loadSystems(); renderAll();
 }
@@ -312,7 +364,7 @@ safely(async () => {
 // The request Jev gets, as tools/web/jev.py builds it (shown for transparency).
 async function renderInstructions() {
   const d = await get("/api/jev/instructions");
-  const meta = [["모델", d.model], ["엔드포인트", d.endpoint], ["질문 ID", d.question_id], ["인정 기준", d.pass_rule]];
+  const meta = [["모델", d.model], ["엔드포인트", d.endpoint], ["질문 ID", d.question_id], ["Jev 단독 기준", d.pass_rule], ["페이지 판정", d.verdict_rule]];
   $("jev-meta").replaceChildren(...meta.flatMap(([k, v]) => [node("dt", k), node("dd", v)]));
   $("jev-requests").replaceChildren(...Object.entries(d.languages).map(([tag, lang]) => {
     const box = node("details");

@@ -500,18 +500,26 @@ async function judgeResult() {
     if (!response.ok) throw Error(data.error || "Jev 채점 실패");
     let [kind, label] = jevVerdict(data.noul);
     const left = data.unread || [];
+    const value = data.value;
     if (left.length && kind === "good") {
       kind = "mid";
       label = "직접 확인 권장";
     }
+    if (value && value.status === "mismatch") {
+      kind = "bad";
+      label = "숫자 값이 바뀜";
+    }
     box.className = `jev-result jev-${kind}`;
     box.textContent =
+      (value && value.status === "mismatch"
+        ? `값 대조: ${value.findings.map((f) => `${f.written} → ${f.spoken}(${f.read_as.join("/")})`).join(", ")} · `
+        : value && value.status === "ok" && value.numbers ? "값 대조: 숫자 일치 · " : "") +
       (left.length ? `읽지 않은 표기가 남아 있음: ${left.join(" ")} · ` : "") +
       `Jev ${data.noul.toFixed(2)} · ${label} (${data.model}` +
       (data.calibrated ? "" : ", 이 언어는 보정 전") +
       ")" +
       " — 참조 문장 하나와 비교하지 않고, 이 읽기가 원문의 올바른 읽기인지 판단한 확률입니다." +
-      " 숫자 값 오류는 잘 잡고 여러 정답 변이형은 함께 인정하지만, 미세한 발음 차이는 놓칠 수 있습니다.";
+      " 여러 정답 변이형은 함께 인정하지만, 숫자를 자리별로 대조하지 못해 숫자 값은 따로 코드로 대조합니다.";
   } catch (e) {
     box.className = "jev-result jev-bad";
     box.textContent = e.message;

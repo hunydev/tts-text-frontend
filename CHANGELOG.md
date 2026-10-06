@@ -2,6 +2,22 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Jev results get a number check in code (project-owner request after the
+  Jev review): tools/web/value_check.py turns every number in the input into
+  its acceptable Korean readings (Sino, digit by digit with Sino or native
+  names, native, English, decimals, fractions, compressed ranges) anchored by
+  the input's Hangul, and reports ok, mismatch (another value, e.g. 14789
+  일사칠팔이) or unknown. On the Jev test pairs: 300 correct outputs ok, 300
+  one-digit errors 292 mismatch and none ok; 40,000 benchmark references
+  98.6% ok, 0.14% mismatch, about half of them reference errors. /jev-eval
+  judges each sentence pass, review or fail (value mismatch, unread form or
+  Jev under 0.3 fail; Jev 0.7 or more passes; codes pass on a matching value
+  read digit by digit whatever Jev says, a code read as an amount goes by
+  Jev; the rest needs a person), re-judges stored scores
+  without calling Jev, shows the Jev-only rate beside it, and stores a
+  person's correct/wrong judgements (labels.json) with an agreement table.
+  The workbench Jev result shows the number check. Contract
+  tests/web/test_value_check.py (32 cases).
 - The Jev request is shown on /jev-eval (Jev 질문 구조: model, endpoint, the
   exact context, question and criteria per language, the pass rule and the
   question history; GET /api/jev/instructions), linked from the workbench.
