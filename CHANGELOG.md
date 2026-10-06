@@ -17,7 +17,11 @@
   without calling Jev, shows the Jev-only rate beside it, and stores a
   person's correct/wrong judgements (labels.json) with an agreement table.
   The workbench Jev result shows the number check. Contract
-  tests/web/test_value_check.py (32 cases).
+  tests/web/test_value_check.py (32 cases). Verdict version 3 follows the
+  project owner's first 100 judgements (Jev 0.03-0.10: 92 correct, 8 wrong):
+  a code followed by 번 may be read as one number, a code named just before
+  it (우편번호 51393) is judged like a code category, and letters written
+  against digits must be spelled (csk01 크스크영일 goes by Jev).
 - The Jev request is shown on /jev-eval (Jev 질문 구조: model, endpoint, the
   exact context, question and criteria per language, the pass rule and the
   question history; GET /api/jev/instructions), linked from the workbench.

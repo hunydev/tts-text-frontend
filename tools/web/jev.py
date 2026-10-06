@@ -172,7 +172,7 @@ REVIEW = 0.3
 # The page's verdict (tools/web/jev_eval.py verdict), shown with the request.
 VERDICT_RULE = (
     "인정: 값 대조(tools/web/value_check.py)에서 숫자 값이 바뀌지 않았고, 결과에 숫자·로마자·기호가 남지 않았고, "
-    "Jev %.1f 이상. 번호류(※)는 Jev가 자리를 대조하지 못하므로 값 대조가 일치하고 세 자리 이상 숫자를 모두 한 자리씩 읽었으면 Jev 점수와 관계없이 인정(금액처럼 읽으면 Jev 기준). "
+    "Jev %.1f 이상. 번호류(※)와 앞에 번호·코드·우편 같은 말이 있는 번호는 Jev가 자리를 대조하지 못하므로, 값 대조가 일치하고 번호를 한 자리씩(뒤에 '번'이 오면 하나의 수로도) 읽었고 숫자에 붙은 로마자를 글자 이름으로 읽었으면 Jev 점수와 관계없이 인정. "
     "불인정: 값 불일치, 원문 표기 남음, 또는 Jev %.1f 미만. 그 밖(Jev %.1f~%.1f, 값 대조 판단 불가인 번호류)은 확인 필요."
     % (PASS, REVIEW, REVIEW, PASS))
 

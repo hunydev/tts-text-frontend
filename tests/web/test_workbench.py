@@ -547,9 +547,17 @@ try:
     code = jev_eval_module.value_check.check("비밀번호 3321번", "비밀번호 삼삼이일 번")
     amount = jev_eval_module.value_check.check("비밀번호 3321번", "비밀번호 삼천삼백이십일 번")
     assert code["forms"] == ["digits"] and amount["forms"] == ["whole"], (code, amount)
-    assert jev_eval_module.verdict(0.5, [], code, False) == "review"
+    assert jev_eval_module.verdict(0.5, [], code, False) == "pass"  # 비밀번호 names the code
+    count = jev_eval_module.value_check.check("5개를 샀다.", "다섯 개를 샀다.")
+    assert jev_eval_module.verdict(0.5, [], count, False) == "review"
     assert jev_eval_module.verdict(0.05, [], code, True) == "pass"
-    assert jev_eval_module.verdict(0.05, [], amount, True) == "fail"
+    assert jev_eval_module.verdict(0.05, [], amount, True) == "pass"  # 번 follows: whole reading accepted
+    pin = jev_eval_module.value_check.check("비밀번호 8469를 눌렀다", "비밀번호 팔천사백육십구를 눌렀다")
+    assert jev_eval_module.verdict(0.07, [], pin, True) == "fail", pin
+    postal = jev_eval_module.value_check.check("우편번호는 51393입니다", "우편번호는 오일삼구삼입니다")
+    assert jev_eval_module.verdict(0.09, [], postal, False) == "pass", postal
+    login = jev_eval_module.value_check.check("아이디 csk01을", "아이디 크스크영일을")
+    assert login["latin"] == [dict(run="csk", spelled=False)] and jev_eval_module.verdict(0.04, [], login, True) == "fail"
     mixed = jev_eval_module.value_check.check("사업자 번호 128-00-93554 업체에 500만 원", "사업자 번호 일이팔 다시 공공 다시 구삼오오사 업체에 오백만 원")
     assert jev_eval_module.verdict(0.6, [], mixed, True) == "pass", mixed
     assert jev_eval_module.verdict(0.2, [], dict(status="unknown"), False) == "fail"

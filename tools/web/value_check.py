@@ -15,7 +15,8 @@ reference errors such as 1933년 천구백구십삼).
 
     ok        every number has an acceptable reading in its place; `forms` says per number
               whether it was read digit by digit ("digits") or as one number ("whole"), and
-              `after` gives the character written after it
+              `after` gives the character written after it, `before` the 12 characters before
+              it, and `latin` whether each Latin run written against a digit was spelled
     mismatch  the result has the same shape but a number reads as another value
     unknown   the shapes differ (dropped or added words, a reading form not covered)
 
@@ -170,15 +171,21 @@ UNIT = {"kg": "킬로그램|킬로", "g": "그램|그람", "mg": "밀리그램",
 FREE = "(?:[^영공일이삼사오육륙칠팔구십백천만억]{1,%d}?)?"
 
 
-def latin_pattern(run):
+def latin_pattern(run, name=None):
+    """A Latin run: its unit name, its letter names, or a wildcard (a word read some way).
+    With `name`, the unit and letter readings are a named group, so a match tells whether
+    the run was spelled (csk01 씨에스케이영일) or read some other way (크스크영일)."""
     width = 6 * len(run) + 6
-    alts = []
+    spelled = []
     if run.lower() in UNIT:
-        alts.append(UNIT[run.lower()])
+        spelled.append(UNIT[run.lower()])
     if len(run) <= 5:
-        alts.append("".join("(?:%s)" % LETTER[c] for c in run.upper()))
-    alts.append(FREE % width)
-    return "(?:%s)" % "|".join("(?:%s)" % a for a in alts)
+        spelled.append("".join("(?:%s)" % LETTER[c] for c in run.upper()))
+    if not spelled:
+        return FREE % width
+    group = "|".join("(?:%s)" % a for a in spelled)
+    group = "(?P<%s>%s)" % (name, group) if name else "(?:%s)" % group
+    return "(?:%s|%s)" % (group, FREE % width)
 
 
 TOKEN = re.compile(r"(?P<space>\s+)|(?P<range>(?<![\d.,])\d+(?:,\d{3})*~\d+(?:,\d{3})*(?![\d.,]))|(?P<frac>(?<![\d/])\d+/\d+(?![\d/]))|"
@@ -206,9 +213,11 @@ def compact(text):
 
 
 def build(written, exact=True):
-    """Pattern for the whole result; numbers as named groups n0, n1, ..."""
-    parts, numbers = [], []
-    for m in TOKEN.finditer(fold(written)):
+    """Pattern for the whole result: numbers as named groups n0, n1, ..., and Latin runs
+    written against a digit as l0, l1, ... (exact patterns only)."""
+    parts, numbers, latin = [], [], []
+    folded = fold(written)
+    for m in TOKEN.finditer(folded):
         kind, text = m.lastgroup, m.group(0)
         if kind == "space":
             continue
@@ -233,12 +242,19 @@ def build(written, exact=True):
                 readings(b), readings(a), readings(a), FREE % 12, readings(b))
             parts.append("(?P<%s>%s)" % (name, body))
         elif kind == "latin":
-            parts.append(latin_pattern(text))
+            # Only runs written against a digit (csk01, 4047D) are tracked: identifiers.
+            touching = folded[m.start() - 1:m.start()].isdigit() or folded[m.end():m.end() + 1].isdigit()
+            # Words longer than five letters have no spelling alternative and are not tracked.
+            spellable = text.lower() in UNIT or len(text) <= 5
+            name = "l%d" % len(latin) if touching and exact and spellable else None
+            if name:
+                latin.append(text)
+            parts.append(latin_pattern(text, name))
         elif text in SYMBOL:
             parts.append("(?:(?:%s)|%s)" % (SYMBOL[text], FREE % 6))
         else:
             parts.append(FREE % 6)
-    return "".join(parts), numbers
+    return "".join(parts), numbers, latin
 
 
 NATIVE_VALUE = [(w, v) for v, ws in enumerate(NATIVE_UNIT) if v for w in ws.split("|")] + \
@@ -336,17 +352,20 @@ def check(written, spoken):
     if not re.search(r"\d", written):
         return dict(status="ok", numbers=0, findings=[])
     target = compact(spoken)
-    pattern, numbers = build(written)
+    pattern, numbers, latin_runs = build(written)
     try:
         ok = re.fullmatch(pattern, target)
         if ok:
             forms = ["digits" if digit_sequence(ok.group("n%d" % i)) is not None else "whole"
                      for i in range(len(numbers))]
             folded = fold(written)
-            after = [folded[m.end():m.end() + 1] for m in TOKEN.finditer(folded)
-                     if m.lastgroup in ("num", "range", "frac")]
-            return dict(status="ok", numbers=len(numbers), findings=[], tokens=numbers, forms=forms, after=after)
-        generic, _ = build(written, exact=False)
+            spans = [m for m in TOKEN.finditer(folded) if m.lastgroup in ("num", "range", "frac")]
+            after = [folded[m.end():m.end() + 1] for m in spans]
+            before = [folded[max(0, m.start() - 12):m.start()] for m in spans]
+            latin = [dict(run=run, spelled=ok.group("l%d" % i) is not None) for i, run in enumerate(latin_runs)]
+            return dict(status="ok", numbers=len(numbers), findings=[], tokens=numbers, forms=forms, after=after,
+                        before=before, latin=latin)
+        generic, _, _ = build(written, exact=False)
         m = re.fullmatch(generic, target)
     except re.error:
         return dict(status="unknown", numbers=len(numbers), findings=[], reason="pattern")

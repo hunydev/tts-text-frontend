@@ -34,34 +34,57 @@ LABELING = threading.Lock()
 # check decides (also marked ※ on the page).
 WEAK = {"business_number", "id_card_number", "generated_number", "personal_id_number", "finance_bank",
         "phone_number"}
-VERDICT_VERSION = 2
+VERDICT_VERSION = 3
 LABELS = ("correct", "wrong")
 
 
 # A number written before one of these is an amount or a count, not a code (500만 원, 2020년).
 AMOUNT_AFTER = set("만억천원명개년월일시분초세살회층배점위건대곳권장%")
+# A code named just before the number (우편번호 51393, 제품코드 4047D).
+CODE_CUE = re.compile(r"번호|코드|우편|계좌|비밀|핀|송장|주문|예약|사번|학번|아이디|ID|No", re.I)
+
+
+def codes(value):
+    """(form, after, before) of the code-like numbers: three or more digits, no , . ~ /, not
+    before 만 원 명 년 …"""
+    n = len(value.get("tokens", []))
+    rows = zip(value.get("tokens", []), value.get("forms", []), value.get("after") or [""] * n,
+               value.get("before") or [""] * n)
+    return [(form, nxt, prev) for token, form, nxt, prev in rows
+            if sum(c.isdigit() for c in token) >= 3 and not set(token) & set(",.~/") and nxt not in AMOUNT_AFTER]
+
+
+def codes_read_acceptably(value):
+    """Codes read one digit at a time, or as one number when 번 follows (예약번호 129번
+    백이십구 번: the project owner's judgements, 2026-10-06), and letters in identifiers
+    spelled (csk01 크스크영일 is wrong)."""
+    return (all(form == "digits" or nxt == "번" for form, nxt, prev in codes(value)) and
+            all(x["spelled"] for x in value.get("latin", [])))
 
 
 def read_digit_by_digit(value):
-    """Every code-like number (three or more digits, no , . ~ /, not before 만 원 명 년 …)
-    was read one digit at a time."""
-    after = value.get("after") or [""] * len(value.get("tokens", []))
-    return all(form == "digits" for token, form, nxt in zip(value.get("tokens", []), value.get("forms", []), after)
-               if sum(c.isdigit() for c in token) >= 3 and not set(token) & set(",.~/") and nxt not in AMOUNT_AFTER)
+    """Kept for version 2 callers: codes acceptable as above."""
+    return codes_read_acceptably(value)
 
 
 def verdict(noul, unread, value, weak):
     """pass, review or fail (2026-10-06): the value check and Jev each judge what they can.
 
     Code compares the numbers; Jev judges sense and convention, with its uncertain middle
-    band left to a person (docs.typesafe.ai: route 0.3-0.7 to review). In code categories a
-    matching value read digit by digit passes whatever Jev says, since Jev cannot compare the
-    digits; a code read as an amount (비밀번호 3321 삼천삼백이십일) goes by Jev.
+    band left to a person (docs.typesafe.ai: route 0.3-0.7 to review). A matching value whose
+    codes are read acceptably passes whatever Jev says, since Jev cannot compare digits: in
+    code categories, and elsewhere when the code is named before it (우편번호 51393). A code
+    read as an amount without 번 (비밀번호 8469를 팔천사백육십구) goes by Jev.
+
+    Version 3 follows the project owner's first 100 judgements (Jev 0.03-0.10, 2026-10-06):
+    92 correct, 8 wrong; version 2 agreed on 83, Jev alone at 0.7 on 8.
     """
     if unread or value["status"] == "mismatch":
         return "fail"
-    if weak and value["status"] == "ok" and read_digit_by_digit(value):
-        return "pass"
+    if value["status"] == "ok" and codes_read_acceptably(value):
+        cued = any(CODE_CUE.search(prev) for form, nxt, prev in codes(value))
+        if weak or cued:
+            return "pass"
     if noul >= jev.PASS:
         return "pass"
     return "fail" if noul < jev.REVIEW else "review"
