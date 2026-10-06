@@ -169,6 +169,34 @@ class Judge:
 
 PASS = 0.7
 
+# Shown on /jev-eval with the exact request (2026-10-06, project-owner request:
+# the instruction Jev gets must be visible).
+HISTORY = (
+    "v1: 질문과 판정 기준만 보냄. 한자어 숫자를 비슷한 낱말로 읽음(2층 이 층을 '이 층'으로, 4회를 '사회'로).",
+    "v2 (2026-10-01): 한국어 읽기 관례를 맥락에 추가. 번호를 한 자리씩 '다시'로 읽으라고 정해서 맞는 전화·버스·호수 읽기를 낮게 봄.",
+    "v3 (2026-10-01, 현재): 맞는 읽기를 여러 개 나열. 검토한 정답 67개·오류 31개에서 AUC v1 0.59, v2 0.94, v3 0.90. "
+    "0.7에서 통과한 오류 v1 29%, v2 0%, v3 0%. 숫자 하나 틀린 문장 0.18, 정답 0.82.",
+    "검토 (2026-10-06): ko-v1에서 참조와 같게 읽은 3,349문장 중 29%가 0.7 미만. 번호류(한 자리씩 읽는 번호) "
+    "64~92%, 그 밖 5~43%. 정답 300문장과 숫자 하나만 바꾼 오답 300문장으로 개선안을 시험: 관례 보강(v4)은 정답 "
+    "인정 72%→84%, 오답 통과 6.7%→12.7%; 어절마다 묻기(v5)는 86.7%, 15.0%. 같은 오답 통과율에서 비교하면 v3와 "
+    "비슷해, 질문 문구는 점수를 전체적으로 올리거나 내릴 뿐 맞고 틀림을 더 잘 가리지는 못함. 번호류는 Jev가 "
+    "숫자를 자리별로 대조하지 못해 문구로 고칠 수 없음. 질문은 v3 유지.",
+)
+
+
+def instructions():
+    """What every Jev request carries, with the texts as placeholders."""
+    return dict(
+        endpoint=URL, model=MODEL, question_id=QUESTION_ID, pass_threshold=PASS,
+        pass_rule="noul >= %.1f, and for Korean no digits, Latin letters or symbols left in spoken" % PASS,
+        unread_pattern=UNREAD.pattern, history=list(HISTORY),
+        languages={language: dict(
+            name=name, calibrated=language == "ko-KR",
+            request={"model": MODEL,
+                     "state": {"written": "<원문>", "spoken": "<TN 결과>", "context": context(language)},
+                     "questions": {"reading_correct": question(language)}})
+            for language, name in LANGUAGES.items()})
+
 
 def cache_key(written, spoken, language):
     return hashlib.sha256(json.dumps([QUESTION_ID, language, written, spoken]).encode()).hexdigest()

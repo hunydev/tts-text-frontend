@@ -308,3 +308,21 @@ safely(async () => {
   await loadSet(r.sets[0].set_id);
   message("시스템을 고르거나 새 이름을 입력하고, 결과를 채운 뒤 Jev 평가를 실행하세요.");
 })();
+
+// The request Jev gets, as tools/web/jev.py builds it (shown for transparency).
+async function renderInstructions() {
+  const d = await get("/api/jev/instructions");
+  const meta = [["모델", d.model], ["엔드포인트", d.endpoint], ["질문 ID", d.question_id], ["인정 기준", d.pass_rule]];
+  $("jev-meta").replaceChildren(...meta.flatMap(([k, v]) => [node("dt", k), node("dd", v)]));
+  $("jev-requests").replaceChildren(...Object.entries(d.languages).map(([tag, lang]) => {
+    const box = node("details");
+    box.open = tag === "ko-KR";
+    box.append(node("summary", `${lang.name} (${tag})${lang.calibrated ? "" : " · 보정 안 됨"}`));
+    const pre = node("pre", JSON.stringify(lang.request, null, 2));
+    pre.className = "jev-request";
+    box.append(pre);
+    return box;
+  }));
+  $("jev-history").replaceChildren(...d.history.map((h) => node("li", h)));
+}
+safely(renderInstructions)();

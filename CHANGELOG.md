@@ -2,6 +2,16 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- The Jev request is shown on /jev-eval (Jev 질문 구조: model, endpoint, the
+  exact context, question and criteria per language, the pass rule and the
+  question history; GET /api/jev/instructions), linked from the workbench.
+  Review (project-owner request): 29% of the ko-v1 outputs that equal the
+  reference score under 0.7, mostly digit-by-digit codes. On 300 correct
+  outputs and 300 one-digit errors, richer conventions (v4) passed 84% / 12.7%
+  and per-fragment questions (v5) 86.7% / 15.0%, against 72% / 6.7% for v3;
+  at an equal error rate they are no better, and Jev cannot check codes digit
+  by digit. The question stays v3; docs/korean-benchmark-representative.ko.md
+  has the numbers.
 - Engine start-up 42 ms → 20.5 ms (one CLI start with the shipped
   resources; outputs unchanged, Korean benchmark 0 changed). The Korean and
   English validators and the core record validator compare the first byte of

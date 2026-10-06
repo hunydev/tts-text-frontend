@@ -105,6 +105,8 @@ class Handler(BaseHTTPRequestHandler):
             except jev_eval.EvalError as exc:
                 return self.json(exc.status, {"error": str(exc)})
             return self.json(404, {"error": "Not found"})
+        if path == "/api/jev/instructions":
+            return self.json(200, jev.instructions())
         if path == "/api/catalog":
             return self.json(200, catalog())
         if path == "/api/health":
