@@ -13,7 +13,7 @@
   one quarter, 3/4 three quarters, 2/3 two thirds; references 51 : 0 against
   over; fraction_denominator), and an English mixed number reads "two and one
   half". Nine contracts that pinned "over" record their previous values.
-  Contract en_digits_left_v25 (18). English benchmark speech +632, -39
+  Contract en_digits_left_v25 (19). English benchmark speech +632, -39
   (85.51% → 86.52%), text +525, -9; Korean unchanged; against wetext 87.48% :
   68.38%.
 - English bare years (project-owner goal after the wetext comparison): a
