@@ -2,6 +2,21 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Readings the project owner marked wrong on /jev-eval, fixed where the
+  benchmark references agree (docs/korean-number-identifiers.ko.md 5-2): a
+  bare run of seven or more digits in Korean text is read digit by digit
+  (200487201 조은희 학생은; references 1354 : 0); a label after a code of four
+  or more digits (8469를 비밀번호로, was five or more), a length phrase between
+  label and number (비밀번호 네 자리 1834) and 로 끝나는/시작하는 (8282로 끝나는
+  번호) mark codes; declared service numbers (112, 119, 114 …) read digit by
+  digit near a call cue (119에 신고) and stay values otherwise (114명, 119개,
+  120만 원, 무명로 119); 외교후 112 002 reads both groups digit by digit;
+  오이스터 joins model_name; lowercase letters with digits after 아이디 are
+  spelled (아이디 sun38 에스유엔 삼팔, abc123 에이비씨 일이삼), and three or
+  more lowercase letters without a vowel too (csk01 씨에스케이 공일; mp4 stays
+  엠피포). Three-digit plate fronts stay values (references 371 : 273).
+  Contract ko_owner_judgements_v24 (24). Korean benchmark +170, -0 (adjusted
+  82.85% → 82.97%); English unchanged.
 - Jev results get a number check in code (project-owner request after the
   Jev review): tools/web/value_check.py turns every number in the input into
   its acceptable Korean readings (Sino, digit by digit with Sino or native

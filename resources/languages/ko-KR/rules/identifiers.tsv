@@ -237,3 +237,35 @@ short_code_label	ko-KR	암호	1
 short_code_label	ko-KR	인증번호	1
 short_code_label	ko-KR	핀번호	1
 short_code_label	ko-KR	예매번호	1
+
+# 아이디 sun38: lowercase letters with digits after this label are a code
+# (references spell 538 of 554 lowercase identifiers; 2026-10-06). ID is not a
+# label: it also starts English text (ID 0-123-45678-9).
+identifier_label	ko-KR	아이디	digits
+
+# Service numbers read digit by digit when a call cue is near (119에 신고,
+# 114에 전화해서, 전화번호가 112와 113); without one they stay values (114명,
+# 119개). Project-owner judgements and references, 2026-10-06.
+service_number	ko-KR	112	1
+service_number	ko-KR	113	1
+service_number	ko-KR	114	1
+service_number	ko-KR	119	1
+service_number	ko-KR	120	1
+service_number	ko-KR	122	1
+service_number	ko-KR	125	1
+service_number	ko-KR	131	1
+service_number	ko-KR	132	1
+service_number	ko-KR	182	1
+service_number	ko-KR	1330	1
+service_number	ko-KR	1345	1
+service_number	ko-KR	1350	1
+service_number	ko-KR	1366	1
+service_number	ko-KR	1388	1
+call_cue	ko-KR	전화	1
+call_cue	ko-KR	신고	1
+call_cue	ko-KR	상황실	1
+call_cue	ko-KR	구급	1
+call_cue	ko-KR	출동	1
+call_cue	ko-KR	문의	1
+call_cue	ko-KR	연락	1
+call_cue	ko-KR	번호	1

@@ -240,6 +240,123 @@ static int following_label(const ttf_pack_input_t *in, size_t end, char *matched
     return 0;
 }
 
+static int korean_neighbour(const ttf_pack_input_t *in, size_t end);
+
+/* 비밀번호 네 자리 1834, 핀 번호 6자리 451233: a length phrase (a count and 자리)
+ * between the label and the number. Returns where the phrase starts, or begin. */
+static size_t length_phrase(const ttf_pack_input_t *in, size_t begin) {
+    static const char *const counts[] = {"한", "두", "세", "네", "다섯", "여섯", "일곱", "여덟", "아홉", "열",
+                                         "열두", "열세", "열네", "열여섯"};
+    size_t p = begin, k;
+    while (p && horizontal_space(in->text[p - 1]))
+        --p;
+    if (p < 6 || memcmp(in->text + p - 6, "자리", 6))
+        return begin;
+    p -= 6;
+    while (p && horizontal_space(in->text[p - 1]))
+        --p;
+    if (p && decimal_digit(in->text[p - 1])) {
+        while (p && decimal_digit(in->text[p - 1]))
+            --p;
+    } else {
+        size_t best = 0;
+        for (k = 0; k < sizeof(counts) / sizeof(counts[0]); ++k) {
+            size_t n = strlen(counts[k]);
+            if (n <= p && n > best && !memcmp(in->text + p - n, counts[k], n) &&
+                (p == n || horizontal_space(in->text[p - n - 1])))
+                best = n;
+        }
+        if (!best)
+            return begin;
+        p -= best;
+    }
+    return p;
+}
+
+/* 8282로 끝나는 번호, 070으로 시작하는 번호: the number is the start or end of
+ * another number, so it is read digit by digit (references 18 : 0). */
+static int ends_with_cue(const ttf_pack_input_t *in, size_t end) {
+    static const char *const cues[] = {"로 끝나", "으로 끝나", "로 시작", "으로 시작"};
+    size_t k;
+    for (k = 0; k < sizeof(cues) / sizeof(cues[0]); ++k) {
+        size_t n = strlen(cues[k]);
+        if (end + n <= in->length && !memcmp(in->text + end, cues[k], n))
+            return 1;
+    }
+    return 0;
+}
+
+/* A counter or unit as the next word (1000000 원): a quantity, not a code. */
+static int counter_follows(const ttf_pack_input_t *in, size_t end) {
+    size_t p = end, width;
+    char key[16];
+    while (p < in->length && horizontal_space(in->text[p]))
+        ++p;
+    for (width = 3; width <= 12 && p + width <= in->length; width += 3) {
+        if ((unsigned char)in->text[p + width - 3] < 0xEA || (unsigned char)in->text[p + width - 3] > 0xED)
+            break;
+        memcpy(key, in->text + p, width);
+        key[width] = '\0';
+        if (ttf_resource_get(in->engine, "numeric_suffix", "*", key, NULL) ||
+            ttf_resource_get(in->engine, "counter", "ko-KR", key, NULL))
+            return 1;
+    }
+    return 0;
+}
+
+/* 112에 신고, 114에 전화해서, 전화번호가 112와 113: a declared service number
+ * (service_number) with a call cue (call_cue: 전화, 신고, 상황실 …) within twenty
+ * syllables either side is a phone number read digit by digit. Without a cue it
+ * stays a value (114명, 119개, 113번 버스). */
+static int service_number(const ttf_pack_input_t *in, size_t begin, size_t end) {
+    char key[16];
+    size_t from, to, p, width;
+    if (end - begin >= sizeof(key))
+        return 0;
+    memcpy(key, in->text + begin, end - begin);
+    key[end - begin] = '\0';
+    if (!ttf_resource_get(in->engine, "service_number", "ko-KR", key, NULL))
+        return 0;
+    /* 120만 원 is an amount; 무명로 119, 무명로7길 120 are addresses. */
+    if (end + 3 <= in->length && (!memcmp(in->text + end, "만", 3) || !memcmp(in->text + end, "억", 3) ||
+                                  !memcmp(in->text + end, "천", 3)))
+        return 0;
+    for (p = begin; p && horizontal_space(in->text[p - 1]); --p) {
+    }
+    if (p >= 3 && (!memcmp(in->text + p - 3, "로", 3) || !memcmp(in->text + p - 3, "길", 3)))
+        return 0;
+    from = begin > 60 ? begin - 60 : 0;
+    to = end + 60 < in->length ? end + 60 : in->length;
+    for (p = from; p < to; ++p) {
+        if ((unsigned char)in->text[p] < 0xEA || (unsigned char)in->text[p] > 0xED)
+            continue;
+        for (width = 6; width <= 9 && p + width <= to; width += 3) {
+            memcpy(key, in->text + p, width);
+            key[width] = '\0';
+            if (ttf_resource_get(in->engine, "call_cue", "ko-KR", key, NULL))
+                return 1;
+        }
+    }
+    return 0;
+}
+
+/* 외교후 112 002: a diplomatic plate, two groups of three digits after 외교 and
+ * one syllable, read digit by digit (references 2 : 0). */
+static size_t diplomatic_plate(const ttf_pack_input_t *in, size_t begin) {
+    size_t p = begin, q;
+    if (begin < 10 || in->text[begin - 1] != ' ' || memcmp(in->text + begin - 10, "외교", 6))
+        return 0;
+    for (q = 0; q < 3; ++q, ++p)
+        if (p >= in->length || !decimal_digit(in->text[p]))
+            return 0;
+    if (p >= in->length || in->text[p] != ' ')
+        return 0;
+    for (++p, q = 0; q < 3; ++q, ++p)
+        if (p >= in->length || !decimal_digit(in->text[p]))
+            return 0;
+    return p < in->length && decimal_digit(in->text[p]) ? 0 : p;
+}
+
 /* After N번, a frequency cue (counter_role_tail 이나/만/씩, or counter_role_after
    이상/정도/넘게 on the next word) makes it a count: 비밀번호를 5번이나 입력. */
 static int frequency_after_count(const ttf_pack_input_t *in, size_t p) {
@@ -277,18 +394,57 @@ size_t ttf_ko_classify_identifier(const ttf_pack_input_t *in, ttf_semantic_t *se
     size_t begin = in->tokens[in->index].begin, end = begin, i;
     char label[TTF_IR_VALUE_SIZE];
     ttf_resource_layer_t layer = TTF_LAYER_COMMON;
-    int before;
+    int before, cue = 0;
+    size_t plate;
     if (begin == in->length || !decimal_digit(in->text[begin]))
         return 0;
+    if ((plate = diplomatic_plate(in, begin)) != 0 && labelled_tail(in, plate)) {
+        memcpy(semantic->value, in->text + begin, plate - begin);
+        semantic->value[plate - begin] = '\0';
+        (void)snprintf(semantic->unit, sizeof(semantic->unit), "financial_identifier");
+        (void)snprintf(semantic->rule, sizeof(semantic->rule), "ko:diplomatic-plate");
+        semantic->type = TTF_SEM_DIGIT_SEQUENCE;
+        semantic->input_end = plate;
+        semantic->layer = TTF_LAYER_COMMON;
+        for (i = in->index; i < in->token_count && in->tokens[i].begin < plate; ++i) {
+        }
+        return i - in->index;
+    }
     before = preceding_label(in, begin, label, sizeof(label), &layer);
+    if (!before) {
+        size_t phrase = length_phrase(in, begin);
+        if (phrase != begin)
+            before = preceding_label(in, phrase, label, sizeof(label), &layer);
+    }
     while (end < in->length && decimal_digit(in->text[end]))
         ++end;
-    if (!before && !(end - begin >= 5 && !(end < in->length && in->text[end] == '-') &&
-                     following_label(in, end, label, sizeof(label))))
-        return 0;
+    /* A label after a code of four or more digits (8469를 비밀번호로; references
+       54 : 0, 2026-10-06; it was five or more). */
+    if (!before && !(end - begin >= 4 && !(end < in->length && in->text[end] == '-') &&
+                     following_label(in, end, label, sizeof(label)))) {
+        int joined = end < in->length && (in->text[end] == '-' || in->text[end] == ',' ||
+                                          in->text[end] == '.' || in->text[end] == ':');
+        /* Without a label (2026-10-06, project-owner judgements and references):
+           the start or end of a number (8282로 끝나는), a bare run of seven or more
+           digits (200487201 조은희 학생은; 1354 : 0), or a service number with a call
+           cue (119에 신고). */
+        /* Only in a Korean sentence; a run starting with 0 is left to the phone
+           grammar (01012345678). */
+        if (joined || !korean_neighbour(in, end))
+            return 0;
+        if (end - begin >= 2 && ends_with_cue(in, end))
+            cue = 1;
+        else if (end - begin >= 7 && in->text[begin] != '0' && !counter_follows(in, end))
+            cue = 2;
+        else if (service_number(in, begin, end))
+            cue = 3;
+        else
+            return 0;
+        label[0] = '\0';
+    }
     /* A word ending in 번호 that is not a declared label only marks a code of
        four or more digits (번호 3번을 keeps its counter reading). */
-    if (end - begin < 4 && !ttf_resource_get(in->engine, "identifier_label", "ko-KR", label, NULL))
+    if (!cue && end - begin < 4 && !ttf_resource_get(in->engine, "identifier_label", "ko-KR", label, NULL))
         return 0;
     while (end + 1 < in->length && in->text[end] == '-' && decimal_digit(in->text[end + 1])) {
         ++end;
@@ -489,6 +645,29 @@ size_t ttf_ko_classify_alnum_identifier(const ttf_pack_input_t *in, ttf_semantic
     }
     if (!letters || !digits || end - begin >= sizeof(semantic->value))
         return 0;
+    /* 아이디 sun38, 아이디 abc123: a label before lowercase letters with digits makes
+       them a code, spelled even when the letters are a word (references 538
+       spelled against 16 words inside e-mail addresses; 2026-10-06). Upper-case
+       words keep their reading (쿠폰 코드 SAVE20 세이브 트웬티). */
+    int labelled = ascii_letter(in->text[begin]) && transitions == 1 && !hyphens &&
+                   in->text[begin] >= 'a' && in->text[begin] <= 'z' &&
+                   preceding_label(in, begin, label_word, sizeof(label_word), &label_layer);
+    /* csk01: three or more lowercase letters without a vowel cannot be a word
+       (크스크); a declared whole word keeps its reading (mp4 엠피포). */
+    int vowelless = 0;
+    if (ascii_letter(in->text[begin]) && transitions == 1 && !hyphens && letters >= 3) {
+        char whole[TTF_IR_VALUE_SIZE + 8];
+        size_t used = (size_t)snprintf(whole, sizeof(whole), "en-US:");
+        vowelless = 1;
+        for (i = begin; i < end && ascii_letter(in->text[i]); ++i)
+            if (!(in->text[i] >= 'a' && in->text[i] <= 'z') || strchr("aeiouy", in->text[i]))
+                vowelless = 0;
+        for (i = begin; i < end && used + 1 < sizeof(whole); ++i)
+            whole[used++] = in->text[i];
+        whole[used] = '\0';
+        if (vowelless && ttf_resource_get(in->engine, "lexicon", "ko-KR", whole, NULL))
+            vowelless = 0;
+    }
     after = end < in->length ? in->text[end] : ' ';
     if (after == '@' || after == '_' || after == '%' ||
         ((after == '.' || after == ',' || after == '/' || after == ':') && end + 1 < in->length &&
@@ -500,7 +679,7 @@ size_t ttf_ko_classify_alnum_identifier(const ttf_pack_input_t *in, ttf_semantic
     /* Digits then letters with five or more digits (516123813ZC) is a code too,
      * like a plain run of five or more digits; shorter ones (20F, 5A, 470G) stay
      * ambiguous labels. */
-    if (!((transitions >= 2 && end - begin >= 5) ||
+    if (!(labelled || vowelless || (transitions >= 2 && end - begin >= 5) ||
           (ascii_letter(in->text[begin]) && transitions == 1 && !hyphens && digits >= 3) ||
           (decimal_digit(in->text[begin]) && transitions == 1 && !hyphens && digits >= 5 &&
            !unit_letters(in, begin + digits, end)) ||
@@ -517,7 +696,7 @@ size_t ttf_ko_classify_alnum_identifier(const ttf_pack_input_t *in, ttf_semantic
      * five or more digits keeps the code (you501073), and an all-capital run
      * whose entry is lexicon_case lower is letters (EBS8102, AIR4930;
      * 2026-10-03). */
-    for (i = begin, long_run = 0; i < end && !long_run;) {
+    for (i = begin, long_run = labelled; i < end && !long_run;) {
         size_t stop = i;
         while (stop < end && decimal_digit(in->text[stop]))
             ++stop;

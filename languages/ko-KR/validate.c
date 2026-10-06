@@ -612,7 +612,7 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
             return ttf_validation_error(d, "unknown Korean policy key");
     } else if (SAME(k, "digit_label_counter") || SAME(k, "digit_range_scale") ||
                SAME(k, "digit_range_cue") || SAME(k, "score_cue") || SAME(k, "model_name") ||
-               SAME(k, "short_code_label")) {
+               SAME(k, "short_code_label") || SAME(k, "service_number") || SAME(k, "call_cue")) {
         *handled = 1;
         if ((status = bounded_key(r, 64, d)) != TTF_OK)
             return status;

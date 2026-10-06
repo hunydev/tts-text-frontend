@@ -685,6 +685,8 @@ model_name	ko-KR	맥북	1
 model_name	ko-KR	픽셀	1
 model_name	ko-KR	플레이스테이션	1
 model_name	ko-KR	엑스박스	1
+# 오이스터2 유모차 오이스터투 (project-owner judgement, 2026-10-06).
+model_name	ko-KR	오이스터	1
 # Names whose number the Korean benchmark references read in English up to ten, at least
 # twice and twice as often as in Korean (2026-10-06); 시즌 is mixed (51 : 38) and kept on request.
 model_name	ko-KR	아이오닉	1
