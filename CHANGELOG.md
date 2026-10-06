@@ -2,6 +2,13 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- English TN compared with VoxCPM2's built-in normalizer (wetext 0.1.8 as
+  VoxCPM2 calls it): benchmark/evaluators/compare_wetext.py scores both on
+  the same sentences with the English scorer. Speech variant agreement on
+  30,308 sentences: ours 84.91%, wetext 68.38%; on a new held-out Sproat set
+  of 11,135 sentences never used for development (sproat-heldout-shard58)
+  87.32% against 72.97%. wetext leads on NeMo EngConf (58.44% : 26.84%) and
+  on years read as cardinals by us (Act of 1964); docs/english-vs-wetext.ko.md.
 - A lowercase identifier of five or more letters is spelled when it has no
   vowel or follows 아이디 (lkdfs392 엘케이디에프에스 삼구이, was 르크드프스삼백구십이;
   project-owner report); a long word with a vowel keeps its reading
