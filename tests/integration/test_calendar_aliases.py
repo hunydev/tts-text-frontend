@@ -73,7 +73,7 @@ assert event["layer"] == "customer" and event["disposition"] == "selected", even
 
 # Disabling one abbreviation must not disable its full-name sibling.
 run_cases(dict(customer_tsv="weekday_label\ten-US\tfri\t0\n"),
-          [("5/8(Fri)", "five over eight(Fri)"),
+          [("5/8(Fri)", "five eighths(Fri)"),  # was five over eight (fractions, 2026-10-07)
            ("5/8(Friday)", "May eighth(Friday)")])
 
 # The supported 31-byte key also accepts the optional abbreviation period.

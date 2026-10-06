@@ -421,3 +421,12 @@ unit	en-US	mmHg.many	millimeters of mercury
 unit	en-US	km/L.one	kilometer per liter
 unit	en-US	km/L.many	kilometers per liter
 quantity_range_separator	*	∼	1
+
+# Fraction denominators with their own words, singular|plural (1/2 one half, 3/4 three
+# quarters); other denominators up to 16 are ordinals with -s (2026-10-07).
+fraction_denominator	en-US	2	half|halves
+fraction_denominator	en-US	4	quarter|quarters
+
+# A mixed number (1 -1/2) wins over the shared invalid-range text of the same span
+# (2026-10-07).
+classifier_priority	en-US	en.mixed-fraction	10

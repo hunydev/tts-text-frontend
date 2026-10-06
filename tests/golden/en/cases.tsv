@@ -72,7 +72,7 @@ $-1	minus one dollar
 -1 kg	minus one kilogram
 1.25 kg	one point two five kilograms
 10 cm	ten centimeters
-1/2	one over two
+1/2	one half
 -3/4	minus three over four
 22/7	twenty two over seven
 # Malformed or unsupported structures remain unchanged instead of partial normalization.
@@ -110,7 +110,7 @@ $ 1234,567	$ 1234,567
 123abc	123abc
 3.5.7	3.5.7
 192.168.0.1	192.168.0.1
-1 / 2	one over two
+1 / 2	one half
 -3 / 4	minus three over four
 1 / 0	1 / 0
 3 g	three grams

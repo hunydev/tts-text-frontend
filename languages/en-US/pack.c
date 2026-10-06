@@ -286,7 +286,9 @@ static ttf_status_t date_year(const ttf_engine_t *e, unsigned year, const char *
         return card(e, year, b);
     if (strcmp(style, "calendar"))
         return TTF_ERESOURCE;
-    if (year < 1000 || (year >= 2000 && year <= 2009) || year % 1000 == 0)
+    /* A three-digit year reads the same way (453 four fifty three, the English
+       references; 2026-10-07). */
+    if (year < 100 || (year >= 2000 && year <= 2009) || year % 1000 == 0)
         return card(e, year, b);
     century = year / 100;
     remainder = year % 100;
@@ -834,6 +836,73 @@ static size_t roman_numeral(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     out->input_end = t->end;
     return 1;
 }
+/* 2 1/2, 1-1/2, 1 -1/2: a whole number, a space or hyphen, and a proper fraction
+   with a denominator up to 16 is one mixed number (two and one half) in English
+   text; Hangul, Han or Kana in the 64 bytes before keeps the parts apart. */
+static size_t mixed_fraction(const ttf_pack_input_t *in, ttf_semantic_t *out) {
+    const char *s = in->text;
+    size_t n = in->length, begin = in->tokens[in->index].begin, p = begin, whole_end, num_begin, num_end,
+           den_begin, den_end, i, from = begin > 64 ? begin - 64 : 0;
+    unsigned long num, den;
+    if (begin && (isdigit((unsigned char)s[begin - 1]) || s[begin - 1] == '/' || s[begin - 1] == '.' ||
+                  s[begin - 1] == ',' || s[begin - 1] == '-'))
+        return 0;
+    for (i = from; i < begin; ++i)
+        if ((unsigned char)s[i] >= 0xE3 && (unsigned char)s[i] <= 0xED)
+            return 0;
+    while (p < n && isdigit((unsigned char)s[p]))
+        ++p;
+    if (p == begin || p - begin > 3)
+        return 0;
+    whole_end = p;
+    if (p < n && s[p] == ' ')
+        ++p;
+    if (p < n && s[p] == '-')
+        ++p;
+    if (p == whole_end || p >= n || !isdigit((unsigned char)s[p]))
+        return 0;
+    num_begin = p;
+    while (p < n && isdigit((unsigned char)s[p]))
+        ++p;
+    num_end = p;
+    if (p >= n || s[p] != '/')
+        return 0;
+    den_begin = ++p;
+    while (p < n && isdigit((unsigned char)s[p]))
+        ++p;
+    den_end = p;
+    if (den_end == den_begin || num_end - num_begin > 2 || den_end - den_begin > 2 ||
+        (p < n && (isalnum((unsigned char)s[p]) || s[p] == '/' || s[p] == '.' || s[p] == '-')))
+        return 0;
+    num = strtoul(s + num_begin, NULL, 10);
+    den = strtoul(s + den_begin, NULL, 10);
+    if (!num || num >= den || den < 2 || den > 16)
+        return 0;
+    /* English only: no Hangul, Han or Kana within 16 bytes after either (2 1/2개),
+       and an English default or a Latin word in the window before. */
+    for (i = den_end; i < n && i < den_end + 16; ++i)
+        if ((unsigned char)s[i] >= 0xE3 && (unsigned char)s[i] <= 0xED)
+            return 0;
+    {
+        const char *lang = in->engine->config.default_language;
+        int latin = 0;
+        for (i = from; i + 1 < begin; ++i)
+            latin |= isalpha((unsigned char)s[i]) && isalpha((unsigned char)s[i + 1]);
+        if (!latin && !(lang && !strncmp(lang, "en", 2)))
+            return 0;
+    }
+    (void)snprintf(out->unit, sizeof(out->unit), "mixed:%.*s", (int)(whole_end - begin), s + begin);
+    (void)snprintf(out->value, sizeof(out->value), "%lu", num);
+    (void)snprintf(out->secondary, sizeof(out->secondary), "%lu", den);
+    out->type = TTF_SEM_FRACTION;
+    (void)snprintf(out->rule, sizeof(out->rule), "en.mixed-fraction");
+    (void)snprintf(out->source_lang, sizeof(out->source_lang), "%s", EN);
+    out->input_end = den_end;
+    for (i = in->index; i < in->token_count && in->tokens[i].begin < den_end; ++i) {
+    }
+    return i - in->index;
+}
+
 static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     const ttf_token_t *t = &in->tokens[in->index];
     char key[96];
@@ -843,6 +912,9 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     if (date_tokens)
         return date_tokens;
     date_tokens = ttf_en_classify_date(in, out);
+    if (date_tokens)
+        return date_tokens;
+    date_tokens = mixed_fraction(in, out);
     if (date_tokens)
         return date_tokens;
     date_tokens = ttf_en_classify_abbreviation(in, out);
@@ -1388,11 +1460,43 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         }
         return TTF_OK;
     }
-    case TTF_SEM_FRACTION:
+    case TTF_SEM_FRACTION: {
+        /* 1/4 one quarter, 3/4 three quarters, 2/3 two thirds, 3/8 three eighths:
+           a proper fraction names its denominator (the English references 51 : 0
+           against "over", 2026-10-07); half and quarter are data
+           (fraction_denominator), other denominators are ordinals with -s. Other
+           fractions keep "over" (24/7). A mixed number (2 1/2) carries its whole
+           part in the unit (mixed:2) and reads "two and one half". */
+        char *end_num, *end_den, key[8];
+        unsigned long num = strtoul(s->value, &end_num, 10), den = strtoul(s->secondary, &end_den, 10);
+        const char *named;
+        if (!strncmp(s->unit, "mixed:", 6)) {
+            if ((st = numeric(e, s->unit + 6, b)) != TTF_OK || (st = space(b)) != TTF_OK ||
+                (st = word(e, b, "number", "and")) != TTF_OK || (st = space(b)) != TTF_OK)
+                return st;
+        }
+        if (s->value[0] && s->secondary[0] && !*end_num && !*end_den && num >= 1 && num < den &&
+            den >= 2 && den <= 16) {
+            (void)snprintf(key, sizeof(key), "%lu", den);
+            named = res(e, "fraction_denominator", key);
+            if ((st = card(e, (unsigned)num, b)) != TTF_OK || (st = space(b)) != TTF_OK)
+                return st;
+            if (named) {
+                const char *bar = strchr(named, '|');
+                if (!bar)
+                    return TTF_ERESOURCE;
+                return num == 1 ? ttf_buffer_append(b, named, (size_t)(bar - named))
+                                : ttf_buffer_puts(b, bar + 1);
+            }
+            if ((st = ordinal(e, (unsigned)den, b)) != TTF_OK)
+                return st;
+            return num == 1 ? TTF_OK : ttf_buffer_puts(b, "s");
+        }
         if ((st = numeric(e, s->value, b)) != TTF_OK || (st = space(b)) != TTF_OK ||
             (st = word(e, b, "number", "fraction_over")) != TTF_OK || (st = space(b)) != TTF_OK)
             return st;
         return numeric(e, s->secondary, b);
+    }
     case TTF_SEM_CURRENCY: {
         const char *dot = strchr(s->value, '.');
         const char *minor_policy = res(e, "currency_minor_digits", s->unit);

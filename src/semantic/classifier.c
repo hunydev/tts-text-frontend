@@ -275,6 +275,23 @@ static int structured_tail(const ttf_pack_input_t *in, size_t p) {
            ((s[p] == '.' || s[p] == ',' || s[p] == '-') && p + 1 < n && digit(s[p + 1]));
 }
 static size_t invalid_numeric_end(const ttf_pack_input_t *in, size_t start);
+/* 1957 - 1974 - Bryantsev: a hyphen with a space on both sides and a word after
+   it ends the range as a dash; 1-2-3 and 1 - 2 - 3 stay one preserved chain. */
+static int dash_after(const ttf_pack_input_t *in, size_t end) {
+    const char *s = in->text;
+    size_t n = in->length, p = end;
+    if (p >= n || s[p] != ' ')
+        return 0;
+    while (p < n && s[p] == ' ')
+        ++p;
+    if (p + 1 >= n || s[p] != '-' || s[p + 1] != ' ')
+        return 0;
+    p += 1;
+    while (p < n && s[p] == ' ')
+        ++p;
+    return p < n && ((s[p] >= 'A' && s[p] <= 'Z') || (s[p] >= 'a' && s[p] <= 'z'));
+}
+
 static size_t preserve(const ttf_pack_input_t *in, ttf_semantic_t *out, size_t end,
                        const char *rule) {
     size_t p = in->tokens[in->index].begin;
@@ -1054,11 +1071,20 @@ static size_t repeated_quantity_range(const ttf_pack_input_t *in, ttf_semantic_t
     if (!p)
         return 0;
     separator = skip_quantity_space(in, p);
+    /* Scene 2:--: a doubled hyphen in the separator place is a dash too. */
+    if (in->text[separator] == '-' && separator + 1 < in->length && in->text[separator + 1] == '-' &&
+        (separator + 2 >= in->length || !digit(in->text[separator + 2])))
+        return 0;
     p = quantity_separator(in, separator, &delimiter_layer);
     if (!p)
         return 0;
     start = skip_quantity_space(in, p);
     if (start >= in->length)
+        return 0;
+    /* Scene 2:--: a doubled hyphen after the separator is a dash, not a negative
+       endpoint (2026-10-07). */
+    if (in->text[start] == '-' && start + 1 < in->length && in->text[start + 1] == '-' &&
+        (start + 2 >= in->length || !digit(in->text[start + 2])))
         return 0;
     end = quantity_endpoint(in, start, &second, 1);
     /* Preserve the established non-currency range grammar. Bare provisional
@@ -1649,9 +1675,10 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
         ttf_resource_layer_t separator_layer = TTF_LAYER_COMMON;
         size_t separator_end = quantity_separator(in, q, &separator_layer);
         int legacy_hyphen = q < n && s[q] == '-';
-        /* 1899--seventeen: a doubled hyphen before a word is a dash after the
-           number, not an interval; the number is read and the dash kept. */
-        if (legacy_hyphen && q + 2 < n && s[q + 1] == '-' && ascii_letter(s[q + 2]))
+        /* 1899--seventeen, CHAPTER 16 -- Sold: a doubled hyphen not followed by a
+           digit is a dash after the number, not an interval; the number is read
+           and the dash kept (the spaced form kept its digits until 2026-10-07). */
+        if (legacy_hyphen && q + 1 < n && s[q + 1] == '-' && (q + 2 == n || !digit(s[q + 2])))
             return finish(in, out, p, TTF_SEM_CARDINAL, "syntax.cardinal");
         /* Keep the established bare-hyphen compatibility grammar; resource
            delimiters additionally provide explicit ranges such as 1~2. */
@@ -1678,7 +1705,8 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
                         out->layer = separator_layer;
                     return finish(in, out, suffix_end, TTF_SEM_RANGE, "syntax.quantity-range");
                 }
-                if (quantity_separator(in, skip_quantity_space(in, end), NULL))
+                if (quantity_separator(in, skip_quantity_space(in, end), NULL) &&
+                    !dash_after(in, end))
                     return preserve(in, out, range_chain_end(in, end), "syntax.invalid-range");
                 if (legacy_hyphen && identifier_pair(s, b, p, start, end))
                     return preserve(in, out, ttf_numeric_atom_end(in, end), "syntax.invalid-range");

@@ -71,7 +71,7 @@
 {"id": "en-quantity-dollar-spaced", "category": "en/quantities", "text": "$ 12.50", "expected": "twelve dollars and fifty cents", "default_language": "en-US"}
 {"id": "en-quantity-percent-spaced", "category": "en/quantities", "text": "12.5 %", "expected": "twelve point five percent", "default_language": "en-US"}
 {"id": "en-quantity-decimal-singular-unit", "category": "en/quantities", "text": "1.0kg", "expected": "one point zero kilogram", "default_language": "en-US"}
-{"id": "en-half", "category": "en/fraction", "text": "1/2", "expected": "one over two", "default_language": "en-US", "expected_spans": [{"surface": "1/2", "semantic_type": "FRACTION"}]}
+{"id": "en-half", "category": "en/fraction", "text": "1/2", "expected": "one half", "default_language": "en-US", "expected_spans": [{"surface": "1/2", "semantic_type": "FRACTION"}], "notes": " Updated 2026-10-07 (project-owner request to read the English digits left unread; the English references read proper fractions with a denominator word 51 times and with 'over' 0 times). Was: one over two"}
 {"id": "en-negative-fraction", "category": "en/fraction", "text": "-3/4", "expected": "minus three over four", "default_language": "en-US", "expected_spans": [{"surface": "-3/4", "semantic_type": "FRACTION"}]}
 {"id": "en-time-seconds", "category": "en/date-time", "text": "14:30:05", "expected": "fourteen thirty and five seconds", "default_language": "en-US", "expected_spans": [{"surface": "14:30:05", "semantic_type": "TIME"}]}
 {"id": "en-time-singular-second", "category": "en/date-time", "text": "09:00:01", "expected": "nine o'clock and one second", "default_language": "en-US", "expected_spans": [{"surface": "09:00:01", "semantic_type": "TIME"}]}

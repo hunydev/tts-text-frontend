@@ -161,6 +161,48 @@ static size_t comment_end(const char *s, size_t length, size_t begin) {
     return 0;
 }
 
+/* `` Nepal Census 2001 `` and ``The year 1964'': a double backtick that opens
+   prose is a TeX quote in English text (the English evaluation corpora write
+   quotes this way; 225 sentences kept their digits unread as code, 2026-10-07).
+   The content must look like prose: a word of two or more letters, a space, and
+   none of the characters that mark code. */
+static int tex_quote(const char *s, size_t begin, size_t end) {
+    size_t p, run = 0;
+    int word = 0, space = 0;
+    for (p = begin; p < end; ++p) {
+        char c = s[p];
+        if (strchr("{};=<>\\$_|`", c))
+            return 0;
+        if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
+            if (++run >= 2)
+                word = 1;
+        } else {
+            run = 0;
+            space |= c == ' ';
+        }
+    }
+    return word && space;
+}
+
+/* The opening alone decides, so a stream that sees the text in pieces agrees with
+   a batch and a long quote is not cut as unclosed code: "`` " and a word of two or
+   more letters and a space (`` Nepal Census), or "``" and a capitalised word and a
+   space (``The year). 1 is prose, 0 is not, -1 needs more text. */
+static int tex_opening(const char *s, size_t length, size_t p) {
+    size_t q = p, w;
+    int padded = q < length && s[q] == ' ';
+    q += padded;
+    if (q >= length)
+        return -1;
+    for (w = q; w < length && ((s[w] >= 'a' && s[w] <= 'z') || (s[w] >= 'A' && s[w] <= 'Z')); ++w) {
+    }
+    if (w == length)
+        return -1;
+    if (w - q < 2 || s[w] != ' ')
+        return 0;
+    return padded || (s[q] >= 'A' && s[q] <= 'Z');
+}
+
 static int backticks(const char *s, size_t length, size_t begin, int final,
                      ttf_resource_layer_t layer, ttf_protected_match_t *out) {
     size_t count = 0, p = begin;
@@ -175,6 +217,27 @@ static int backticks(const char *s, size_t length, size_t begin, int final,
     if (p == length)
         return result(out, length, "code", final ? "protected.unclosed-code" : "protected.code",
                       layer, final);
+    if (count == 2) {
+        int prose = tex_opening(s, length, p);
+        /* Moving `` ( PDF ): an odd number of double-backtick runs before it on the
+           line means this run closes a TeX quote. */
+        size_t q = begin, runs = 0;
+        while (q && s[q - 1] != '\n' && s[q - 1] != '\r') {
+            if (q >= 2 && s[q - 1] == '`' && s[q - 2] == '`' && (q == 2 || s[q - 3] != '`') &&
+                (s[q] != '`')) {
+                ++runs;
+                q -= 2;
+                continue;
+            }
+            --q;
+        }
+        if (runs % 2)
+            return 0;
+        if (prose > 0)
+            return 0;
+        if (prose < 0 && !final)
+            return result(out, length, "code", "protected.code", layer, 0);
+    }
     while (p < length) {
         size_t close_begin;
         if (s[p] != '`') {
@@ -188,6 +251,10 @@ static int backticks(const char *s, size_t length, size_t begin, int final,
                                          (s[p + 1] >= 'A' && s[p + 1] <= 'Z')))
                     return 0;
             }
+            /* ``The year 1964'': two apostrophes close a TeX quote. */
+            if (count == 2 && s[p] == '\'' && p + 1 < length && s[p + 1] == '\'' &&
+                tex_quote(s, begin + 2, p))
+                return 0;
             ++p;
             continue;
         }
@@ -198,7 +265,9 @@ static int backticks(const char *s, size_t length, size_t begin, int final,
         if (p == length && !final)
             return result(out, length, "code", "protected.code", layer, 0);
         if (p - close_begin == count)
-            return result(out, p, "code", "protected.code", layer, 1);
+            return count == 2 && tex_quote(s, begin + 2, close_begin)
+                       ? 0
+                       : result(out, p, "code", "protected.code", layer, 1);
     }
     return result(out, length, "code", final ? "protected.unclosed-code" : "protected.code",
                   layer, final);

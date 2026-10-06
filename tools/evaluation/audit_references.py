@@ -14,6 +14,7 @@ import re
 import sys
 
 ACTIVE_JSONL = (
+    "en_digits_left_v25",
     "en_bare_years_v25",
     "ko_owner_judgements_v24",
     "ko_bench_lexicon_v24",

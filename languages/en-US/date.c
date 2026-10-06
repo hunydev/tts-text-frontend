@@ -275,7 +275,10 @@ static size_t named_date(const ttf_pack_input_t *in, ttf_semantic_t *out, size_t
     if (has_year) {
         end = year.end;
         year_value = year.value;
-        valid = valid && year.valid && year.digits == 4 && year.value != 0;
+        /* She died July 18, 453: a three-digit year after a month and day too
+           (2026-10-07). */
+        valid = valid && year.valid && year.value != 0 &&
+                (year.digits == 4 || (year.digits == 3 && year.value >= 100));
     }
     valid = valid && valid_day(year_value, month, day.value);
     if (valid) {

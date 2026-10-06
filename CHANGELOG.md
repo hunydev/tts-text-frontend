@@ -2,6 +2,20 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- English outputs that still carried digits (project-owner request; 346 of
+  30,308 evaluation sentences, wetext none) are down to 144: a double backtick
+  that opens prose is a TeX quote, not code (`` Nepal Census 2001 ``; decided
+  from the opening so streams agree, and an odd run on the line closes it);
+  a doubled hyphen after a number or a separator is a dash (CHAPTER 16 --,
+  Scene 2:--); a spaced hyphen before a word ends a range (1957 - 1974 -
+  Bryantsev); a named date takes a three-digit year (July 18, 453 four fifty
+  three); proper fractions up to sixteenths read with their denominator (1/4
+  one quarter, 3/4 three quarters, 2/3 two thirds; references 51 : 0 against
+  over; fraction_denominator), and an English mixed number reads "two and one
+  half". Nine contracts that pinned "over" record their previous values.
+  Contract en_digits_left_v25 (18). English benchmark speech +632, -39
+  (85.51% → 86.52%), text +525, -9; Korean unchanged; against wetext 87.48% :
+  68.38%.
 - English bare years (project-owner goal after the wetext comparison): a
   four-digit number from 1100 to 2099 in English text reads as a year without
   a cue (Civil Rights Act of 1964 nineteen sixty four; references 6537 years

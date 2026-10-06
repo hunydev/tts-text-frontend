@@ -412,6 +412,13 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "syllable cluster value must be 0 or 1");
     }
+    if (SAME(k, "fraction_denominator")) {
+        *handled = 1;
+        const char *bar = strchr(v, '|');
+        if (!ttf_validation_integer(key, 2, 16, NULL) || !bar || bar == v || !bar[1] || strchr(bar + 1, '|'))
+            return ttf_validation_error(d, "fraction_denominator needs a key 2..16 and singular|plural");
+        return TTF_OK;
+    }
     if (SAME(k, "date_policy")) {
         *handled = 1;
         if (ttf_validation_enum(key, "named_year_style|numeric_year_style|year_style"))
