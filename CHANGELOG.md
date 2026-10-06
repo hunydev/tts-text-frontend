@@ -2,6 +2,22 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- English bare years (project-owner goal after the wetext comparison): a
+  four-digit number from 1100 to 2099 in English text reads as a year without
+  a cue (Civil Rights Act of 1964 nineteen sixty four; references 6537 years
+  : 88 cardinals). It stays a cardinal before a unit or count word (1146
+  miles, 1500 soldiers, 1996 degrees), after a label (page 1965) or a
+  quantity word (rose to 1965, paid 1865, The count is 2026, a list after
+  scores were), when it stands alone, or near Hangul, Han or Kana; the test
+  reads the same bounded window as the cue rules so streams agree with
+  batches. New date_policy uncued_min_year and date_year_label_before /
+  date_year_quantity_before tables. Contract en_bare_years_v25 (11); the
+  v21 contract "1965 was the year" records its previous cardinal, and the
+  phone parenthesis row uses ( 3003 and 3005 ). English benchmark speech
+  +400, -0 (83.52% → 85.51%), text +374, -0; Korean unchanged. Against
+  VoxCPM2's wetext: 86.84% : 68.38%, held-out 89.13% : 72.97%. A Jev check on
+  600 sentences where the two differ: 81.5% : 79.2% at 0.7, so most of the
+  reference gap is spelling habit (docs/english-vs-wetext.ko.md).
 - English TN compared with VoxCPM2's built-in normalizer (wetext 0.1.8 as
   VoxCPM2 calls it): benchmark/evaluators/compare_wetext.py scores both on
   the same sentences with the English scorer. Speech variant agreement on

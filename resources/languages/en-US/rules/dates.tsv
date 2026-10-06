@@ -32,6 +32,11 @@ date_policy	en-US	year_style	calendar
 # Only contextual bare-year detection is restricted by these limits.
 date_policy	en-US	min_year	1000
 date_policy	en-US	max_year	2099
+# Without a cue, a four-digit number from uncued_min_year to max_year is a year
+# unless a quantity word follows (the references read 6537 such numbers as years
+# and 88 as cardinals, those before a unit or count word; 2026-10-07). A value
+# above max_year turns this off.
+date_policy	en-US	uncued_min_year	1100
 date_word	en-US	the	the
 date_word	en-US	of	of
 
@@ -275,3 +280,101 @@ weekday	en-US	4	Thursday
 weekday	en-US	5	Friday
 weekday	en-US	6	Saturday
 weekday	en-US	7	Sunday
+# Units and counts after a bare number keep the cardinal (1996 degrees, 1900 hrs;
+# references, 2026-10-07).
+date_year_quantity	en-US	degree	1
+date_year_quantity	en-US	degrees	1
+date_year_quantity	en-US	fathom	1
+date_year_quantity	en-US	fathoms	1
+date_year_quantity	en-US	hr	1
+date_year_quantity	en-US	hrs	1
+date_year_quantity	en-US	mm	1
+date_year_quantity	en-US	cm	1
+date_year_quantity	en-US	km	1
+date_year_quantity	en-US	kg	1
+date_year_quantity	en-US	m	1
+date_year_quantity	en-US	usd	1
+# Without a cue, these words right before a number keep its cardinal: a label
+# (page 1965, chapter 1965) or a quantity (rose to 1965, paid 1865, scores were
+# 1200 , 1400 and 1600; the v21/v23 contracts). The quantity words may also stand
+# one word earlier.
+date_year_label_before	en-US	page	1
+date_year_label_before	en-US	pages	1
+date_year_label_before	en-US	p	1
+date_year_label_before	en-US	pp	1
+date_year_label_before	en-US	chapter	1
+date_year_label_before	en-US	chapters	1
+date_year_label_before	en-US	no	1
+date_year_label_before	en-US	nos	1
+date_year_label_before	en-US	room	1
+date_year_label_before	en-US	vol	1
+date_year_label_before	en-US	volume	1
+date_year_label_before	en-US	issue	1
+date_year_label_before	en-US	fig	1
+date_year_label_before	en-US	figure	1
+date_year_label_before	en-US	table	1
+date_year_label_before	en-US	section	1
+date_year_label_before	en-US	flight	1
+date_year_label_before	en-US	route	1
+date_year_label_before	en-US	platform	1
+date_year_label_before	en-US	gate	1
+date_year_label_before	en-US	exit	1
+date_year_label_before	en-US	highway	1
+date_year_label_before	en-US	hwy	1
+date_year_label_before	en-US	ext	1
+date_year_label_before	en-US	extension	1
+date_year_label_before	en-US	model	1
+date_year_label_before	en-US	number	1
+date_year_label_before	en-US	pin	1
+date_year_label_before	en-US	code	1
+date_year_quantity_before	en-US	rose	1
+date_year_quantity_before	en-US	fell	1
+date_year_quantity_before	en-US	increased	1
+date_year_quantity_before	en-US	decreased	1
+date_year_quantity_before	en-US	grew	1
+date_year_quantity_before	en-US	dropped	1
+date_year_quantity_before	en-US	climbed	1
+date_year_quantity_before	en-US	reached	1
+date_year_quantity_before	en-US	totaled	1
+date_year_quantity_before	en-US	totalled	1
+date_year_quantity_before	en-US	paid	1
+date_year_quantity_before	en-US	pay	1
+date_year_quantity_before	en-US	cost	1
+date_year_quantity_before	en-US	costs	1
+date_year_quantity_before	en-US	scored	1
+date_year_quantity_before	en-US	score	1
+date_year_quantity_before	en-US	scores	1
+date_year_quantity_before	en-US	earned	1
+date_year_quantity_before	en-US	weighs	1
+date_year_quantity_before	en-US	weighed	1
+date_year_quantity_before	en-US	measured	1
+date_year_quantity_before	en-US	population	1
+date_year_quantity_before	en-US	temperature	1
+date_year_quantity_before	en-US	salary	1
+date_year_quantity_before	en-US	price	1
+date_year_quantity_before	en-US	prices	1
+date_year_quantity_before	en-US	count	1
+# Count nouns after a bare number (In April, 1500 soldiers died).
+date_year_quantity	en-US	soldier	1
+date_year_quantity	en-US	soldiers	1
+date_year_quantity	en-US	troops	1
+date_year_quantity	en-US	men	1
+date_year_quantity	en-US	women	1
+date_year_quantity	en-US	children	1
+date_year_quantity	en-US	students	1
+date_year_quantity	en-US	members	1
+date_year_quantity	en-US	residents	1
+date_year_quantity	en-US	families	1
+date_year_quantity	en-US	households	1
+date_year_quantity	en-US	deaths	1
+date_year_quantity	en-US	casualties	1
+date_year_quantity	en-US	cases	1
+date_year_quantity	en-US	points	1
+date_year_quantity	en-US	games	1
+date_year_quantity	en-US	goals	1
+date_year_quantity	en-US	runs	1
+date_year_quantity	en-US	yards	1
+date_year_quantity	en-US	tons	1
+date_year_quantity	en-US	tonnes	1
+date_year_quantity	en-US	acres	1
+date_year_quantity	en-US	hectares	1

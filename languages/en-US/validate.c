@@ -418,7 +418,7 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
             return ttf_validation_enum(v, "cardinal|calendar")
                        ? TTF_OK
                        : ttf_validation_error(d, "date year style must be cardinal or calendar");
-        if (ttf_validation_enum(key, "min_year|max_year"))
+        if (ttf_validation_enum(key, "min_year|max_year|uncued_min_year"))
             return ttf_validation_integer(v, 1, 9999, NULL)
                        ? TTF_OK
                        : ttf_validation_error(d, "date year limit must be an integer in 1..9999");
@@ -546,7 +546,8 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    : ttf_validation_error(d, "date_year_cue_after value must be 0 or 1");
     }
     if (SAME(k, "date_year_cue") || SAME(k, "date_year_quantity") ||
-        SAME(k, "date_year_interval")) {
+        SAME(k, "date_year_interval") || SAME(k, "date_year_label_before") ||
+        SAME(k, "date_year_quantity_before")) {
         *handled = 1;
         /* An opening bracket introduces a year the way a determiner does, so the
            cue table also holds the bracket itself: "( 1965 )". */

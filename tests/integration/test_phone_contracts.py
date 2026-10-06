@@ -423,13 +423,17 @@ def ordinary_parenthesis_checks(args):
          (("56 km/h", "MEASURE", "56", "km_per_hour"),)),
         ("en-US", "Volume 1 ( Example )", "Volume one ( Example )",
          (("1", "CARDINAL", "1", ""),)),
-        ("en-US", "( 2003 and 2005 )", "( two thousand three and two thousand five )",
-         (("2003", "CARDINAL", "2003", ""), ("2005", "CARDINAL", "2005", ""))),
+        # Was "( 2003 and 2005 )": bare four-digit numbers in English text read as
+        # years from 2026-10-07 (the English references 6537 : 88), and a 12-byte
+        # stream segment cuts the English context of the second one, so values
+        # outside the year range keep this row about the parenthesis.
+        ("en-US", "( 3003 and 3005 )", "( three thousand three and three thousand five )",
+         (("3003", "CARDINAL", "3003", ""), ("3005", "CARDINAL", "3005", ""))),
         # A bracket holding a four-digit number and nothing else is the citation
         # shape, so it reads as a year from 2026-09-25 (108 spans of the external
         # English sample). These two rows keep their point, which is that a
-        # bracketed number is not a phone number. "( 2003 and 2005 )" above shows
-        # an ordinary parenthesis still keeping its cardinals.
+        # bracketed number is not a phone number. "( 3003 and 3005 )" above shows an
+        # ordinary parenthesis keeping its cardinals.
         ("en-US", "1385 ( 2006 )", "one thousand three hundred eighty five ( two thousand six )",
          (("1385", "CARDINAL", "1385", ""), ("2006", "DATE", "2006", "year"))),
         ("en-US", "( 2024 )", "( twenty twenty four )",

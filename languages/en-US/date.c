@@ -524,6 +524,92 @@ static int month_cue(const ttf_pack_input_t *in, size_t start, size_t stop,
     return 1;
 }
 
+/* Uncued years apply to English text only, judged from the same bounded window
+   the cue rules read, so a stream decides like a batch: on the line of the number,
+   no Hangul, Han or Kana in the 64 bytes before it, and an English word there or
+   right after the number (two in a non-English default, so 1234{@break:1} stays
+   Korean). A lone number keeps its cardinal (2026), and so does a number alone on
+   its line (in, a newline, 1998). */
+static int english_text(const ttf_pack_input_t *in, size_t start, size_t end) {
+    size_t from = start > 64 ? start - 64 : 0, p, q, words = 0;
+    const char *lang = in->engine->config.default_language;
+    for (p = start; p > from; --p) {
+        unsigned char c = (unsigned char)in->text[p - 1];
+        if (c == '\n' || c == '\r')
+            break;
+        if (c >= 0xE3 && c <= 0xED)
+            return 0; /* a lead byte of Kana, Han or Hangul */
+    }
+    for (q = p; q < start; ++q)
+        if (ascii_alpha(in->text[q]) && (q == p || !ascii_alpha(in->text[q - 1]))) {
+            size_t w = q;
+            while (w < start && ascii_alpha(in->text[w]))
+                ++w;
+            words += w - q >= 2;
+        }
+    q = skip_horizontal(in->text, in->length, end);
+    p = q;
+    while (q < in->length && ascii_alpha(in->text[q]))
+        ++q;
+    words += q - p >= 2;
+    return words >= (lang && !strncmp(lang, "en", 2) ? 1u : 2u);
+}
+
+/* The word before a number, skipping earlier list members (1200 , 1400 and), so a
+   list is judged by the word that introduces it. *second gets the word before. */
+static int previous_words(const ttf_pack_input_t *in, size_t start, char *first, char *second, size_t size) {
+    size_t p = start, k;
+    char *words[2] = {first, second};
+    first[0] = second[0] = '\0';
+    for (;;) {
+        size_t q = p, digits = 0;
+        while (q && horizontal(in->text[q - 1]))
+            --q;
+        if (q && in->text[q - 1] == ',')
+            --q;
+        else if (q >= 3 && (!memcmp(in->text + q - 3, "and", 3) || !memcmp(in->text + q - 3, " or", 3)))
+            q -= 3;
+        else
+            break;
+        while (q && horizontal(in->text[q - 1]))
+            --q;
+        while (q && ascii_digit(in->text[q - 1])) {
+            --q;
+            ++digits;
+        }
+        if (digits != 4)
+            break;
+        p = q;
+    }
+    for (k = 0; k < 2; ++k) {
+        size_t end, begin, n;
+        while (p && (horizontal(in->text[p - 1]) || in->text[p - 1] == ','))
+            --p;
+        end = p;
+        while (p && ascii_alpha(in->text[p - 1]))
+            --p;
+        begin = p;
+        if (begin == end || end - begin >= size)
+            break;
+        for (n = 0; n < end - begin; ++n)
+            words[k][n] = ascii_lower(in->text[begin + n]);
+        words[k][n] = '\0';
+    }
+    return first[0] != '\0';
+}
+
+/* page 1965, rose to 1965, paid 1865, scores were 1200 , 1400 and 1600: a label or
+   a quantity word before the number keeps the cardinal (date_year_label_before,
+   date_year_quantity_before). */
+static int quantity_before(const ttf_pack_input_t *in, size_t start) {
+    char first[32], second[32];
+    if (!previous_words(in, start, first, second, sizeof(first)))
+        return 0;
+    return ttf_resource_get(in->engine, "date_year_label_before", EN, first, NULL) ||
+           ttf_resource_get(in->engine, "date_year_quantity_before", EN, first, NULL) ||
+           (second[0] && ttf_resource_get(in->engine, "date_year_quantity_before", EN, second, NULL));
+}
+
 static size_t contextual_year(const ttf_pack_input_t *in, ttf_semantic_t *out, size_t start) {
     date_number_t number;
     size_t consumed;
@@ -531,10 +617,16 @@ static size_t contextual_year(const ttf_pack_input_t *in, ttf_semantic_t *out, s
     ttf_resource_layer_t layer = TTF_LAYER_COMMON;
     if (!ascii_digit(in->text[start]))
         return 0;
+    int cued;
     number = number_at(in, start, 0);
-    if (!number.valid || number.digits != 4 || following_quantity(in, number.end) ||
-        (!preceding_cue(in, start, number.end, &layer) && !following_cue(in, number.end, &layer) &&
-         !interval_continuation(in, start, &layer) && !month_cue(in, start, number.end, &layer)))
+    if (!number.valid || number.digits != 4 || following_quantity(in, number.end))
+        return 0;
+    cued = preceding_cue(in, start, number.end, &layer) || following_cue(in, number.end, &layer) ||
+           interval_continuation(in, start, &layer) || month_cue(in, start, number.end, &layer);
+    /* Without a cue, a value from uncued_min_year up is still a year (Act of 1964,
+       a closing "1894."; 2026-10-07). */
+    if (!cued && (number.value < policy_year(in, "uncued_min_year", 10000, &layer) ||
+                  !english_text(in, start, number.end) || quantity_before(in, start)))
         return 0;
     if (number.end < in->length && in->text[number.end] == ',' && number.end + 1 < in->length &&
         ascii_digit(in->text[number.end + 1]))
