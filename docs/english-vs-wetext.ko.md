@@ -142,7 +142,7 @@ wetext(VoxCPM2)는 마지막에 남은 숫자를 모두 inflect로 읽어 버리
 | `99.9FM`, `1/7th` | ninety nine point nine FM, one seventh |
 | `23d` | twenty three d (참조와 같음) |
 
-같이 고친 것: `Micah 6:6-8` chapter six verses six to eight(책 이름 `scripture_book` 뒤의 장:절-절만; `John 3:16` 단일 절과 `9:00-17:00` 시각은 그대로), `2007 Apr 24` two thousand seven April twenty fourth(연-월-일 순서 그대로), 띄어 쓴 ISBN(`0 - 486 - 43365- X`), 마침표가 붙은 4자리 숫자만 있는 줄(`1716.` seventeen sixteen; 참조 33줄 모두 연도, 소유자가 권장 방향으로 결정을 맡김. `2026`처럼 마침표가 없으면 일반 수 그대로). 계약 `en_fallback_v27.jsonl` 23건; 원문 보존을 고정했던 계약 3건(`1255.`, `at 13pm`, `1861--1865`)은 notes에 이전 값을 남겼습니다.
+같이 고친 것: `Micah 6:6-8` chapter six verses six to eight(책 이름 `scripture_book` 뒤의 장:절-절만; `John 3:16` 단일 절과 `9:00-17:00` 시각은 그대로), `2007 Apr 24` two thousand seven April twenty fourth(연-월-일 순서 그대로), 띄어 쓴 ISBN(`0 - 486 - 43365- X`), 마침표가 붙은 4자리 숫자만 있는 줄(`1716.` seventeen sixteen; 참조 33줄 모두 연도, 소유자가 권장 방향으로 결정을 맡김. `2026`처럼 마침표가 없으면 일반 수 그대로). 계약 `en_fallback_v27.jsonl` 23건; 원문 보존을 고정했던 계약 7건(`1255.`, `at 13pm`, `1861--1865`, `3XL` 2건, `75t`, `20F`·`11st`)은 notes에 이전 값을 남겼습니다.
 
 | | 전 | 후 |
 |---|---|---|

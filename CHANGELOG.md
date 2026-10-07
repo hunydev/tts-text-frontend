@@ -10,7 +10,7 @@
   chapter six verses six to eight; scripture_book), year-first dates (2007 Apr
   24), spaced ISBN groups, and a lone NNNN. line as a year (owner left the
   choice to the recommendation; 2026 without the period stays a cardinal).
-  Contract en_fallback_v27 (23); three guard contracts record their previous
+  Contract en_fallback_v27 (23); seven guard contracts record their previous
   values. English benchmark speech 87.11% → 87.58% (+91, -0); Korean
   unchanged; unread digits 75 → 7 sentences; against wetext 88.27% : 68.38%.
 - English gaps against wetext (project-owner question: does wetext read anything
