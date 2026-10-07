@@ -2,6 +2,14 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Circled and parenthesized letters read (project-owner request): Ⓐ ⓐ ⒜ read
+  as the letter (English A, Korean 에이), Korean ㉠ ㈀ as the jamo name (기역)
+  and ㉮ ㈎ as the syllable (가), where they were kept as written while ①
+  already read (speech_symbol rows). A circled or parenthesized character
+  joins a registered particle right after it (①과 일과, ㉮와 가와), while a
+  noun keeps its space (⑷항 사 항) and other symbols keep theirs (*을 별표 을)
+  (speech_output.c particle_next). Contract enclosed_letters_v35 (7). Korean
+  and English benchmarks unchanged.
 - The written function word chooses the reading (project-owner idea): in Korean the
   particle attached to a reading shows whether the writer's reading ended in a
   vowel or a consonant, and when ours disagrees an alternative that agrees

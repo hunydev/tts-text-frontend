@@ -137,6 +137,36 @@ static int symbol_spaced(const ttf_engine_t *e, const char *language, const char
 /* The Unicode spoken fallback names a character, or the complete emoji
    sequence starting there, that no table above reads. *consumed is 0 when it
    has no allowed name, so the unreadable policy decides as before. */
+/* A registered particle right after a circled or parenthesized character (①과,
+   ㉮와 …): its name joins it (일과, 가와), while a noun keeps its space (⑷항 사 항).
+   Other symbols keep their space (*을 별표 을; 2026-10-08). */
+static int enclosed_mark(uint32_t cp) {
+    return (cp >= 0x2460 && cp <= 0x24ff) || (cp >= 0x2776 && cp <= 0x2793) ||
+           (cp >= 0x3200 && cp <= 0x32ff);
+}
+static int particle_next(const ttf_engine_t *e, const char *lang, const char *s, size_t n,
+                         const char *right, size_t right_length) {
+    char key[16];
+    size_t width;
+    if (!n) {
+        s = right;
+        n = right_length;
+    }
+    for (width = 12; width >= 3; width -= 3) {
+        uint32_t cp;
+        size_t w;
+        if (width > n || width >= sizeof(key))
+            continue;
+        memcpy(key, s, width);
+        key[width] = 0;
+        if (!ttf_resource_get(e, "particle", lang, key, NULL))
+            continue;
+        if (width == n || ttf_utf8_decode(s + width, n - width, &cp, &w) != 1 ||
+            cp < 0xac00 || cp > 0xd7a3)
+            return 1;
+    }
+    return 0;
+}
 static ttf_status_t unicode_fallback(const ttf_engine_t *e, const ttf_language_pack_t *renderer,
                                      const char *lang, const char *text, size_t length,
                                      size_t at, int prev_spoken, ttf_buffer_t *out,
@@ -279,7 +309,10 @@ ttf_status_t ttf_speech_output(const ttf_engine_t *e, const ttf_language_pack_t 
                 status = ttf_buffer_puts(&out, " ");
             if (status == TTF_OK)
                 status = ttf_buffer_puts(&out, mapped);
-            pending_space = spaced;
+            pending_space = spaced && !(enclosed_mark(cp) &&
+                                        particle_next(e, lang, text->data + at + width,
+                                                      text->length - at - width, right,
+                                                      right_length));
         } else if ((cp >= '0' && cp <= '9') || (cp >= 'A' && cp <= 'Z') ||
                    (cp >= 'a' && cp <= 'z')) {
             size_t before = out.length, attempt = ttf_trace_mark(e);
