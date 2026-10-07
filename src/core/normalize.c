@@ -470,6 +470,10 @@ static int written_fallback(const ttf_engine_t *e, const ttf_language_pack_t *re
                  (i + 2 < length && (unsigned char)surface[i] == 0xEF && /* fullwidth digits */
                   (unsigned char)surface[i + 1] == 0xBC && (unsigned char)surface[i + 2] >= 0x90 &&
                   (unsigned char)surface[i + 2] <= 0x99);
+    /* The English reading is ASCII: a fullwidth span keeps its width guard. */
+    for (i = 0; digit && !strcmp(renderer->language_tag, "en-US") && i < length; ++i)
+        if ((unsigned char)surface[i] >= 0x80)
+            return 0;
     for (i = 0; digit && i < sizeof(rules) / sizeof(rules[0]); ++i)
         if (!strncmp(sem->rule, rules[i], strlen(rules[i])))
             return 1;
