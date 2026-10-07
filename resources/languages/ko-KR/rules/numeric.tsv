@@ -1114,3 +1114,10 @@ lexicon_case	ko-KR	en-US:hahaha	lower
 lexicon_case	ko-KR	en-US:hankook	lower
 lexicon_case	ko-KR	en-US:guam	lower
 # END english-common-v24 lexicon_case
+# Score cues found in the Jev review (2쿼터를 30-48로 마쳤다, 2-0으로 잡고; 2026-10-07).
+score_cue	ko-KR	잡고	1
+score_cue	ko-KR	쿼터	1
+score_cue	ko-KR	마쳤	1
+score_cue	ko-KR	이닝	1
+score_cue	ko-KR	전반	1
+score_cue	ko-KR	후반	1

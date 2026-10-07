@@ -1194,8 +1194,30 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             }
             return TTF_OK;
         }
+        if (!strcmp(s->unit, "batting_average")) {
+            /* 0.212 이할 일푼 이리, 0.091 구푼 일리, 0.300 삼할. */
+            static const char *const names[] = {"할", "푼", "리"};
+            int any = 0;
+            size_t k;
+            if (strlen(s->value) != 3 || strspn(s->value, "0123456789") != 3)
+                return TTF_EINVAL;
+            for (k = 0; k < 3; ++k) {
+                char digit[2] = {s->value[k], 0};
+                if (s->value[k] == '0')
+                    continue;
+                if (any)
+                    TRY(ttf_buffer_puts(out, " "));
+                TRY(cardinal(e, digit, out));
+                TRY(ttf_buffer_puts(out, names[k]));
+                any = 1;
+            }
+            if (!any)
+                TRY(cardinal(e, "0", out));
+            return s->secondary[0] ? ttf_buffer_puts(out, s->secondary) : TTF_OK;
+        }
         if (!strcmp(s->unit, "financial_identifier") &&
-            (!strcmp(s->rule, "ko:route-label") || !strcmp(s->rule, "ko:short-label"))) {
+            (!strcmp(s->rule, "ko:route-label") || !strcmp(s->rule, "ko:short-label") ||
+             !strcmp(s->rule, "ko:lot-number"))) {
             /* 38A번 삼십팔에이번, 500-1A번 오백 다시 일에이번; 20F 이십 에프 (one
                change of kind keeps a space), 2v4 이브이사. */
             size_t runs = 0, k;
@@ -2422,6 +2444,12 @@ static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     if (identifier)
         return identifier;
     if (in->engine->frontend_options.output_mode == TTF_OUTPUT_SPEECH) {
+        identifier = ttf_ko_classify_lot_number(in, s);
+        if (identifier)
+            return identifier;
+        identifier = ttf_ko_classify_batting_average(in, s);
+        if (identifier)
+            return identifier;
         identifier = ttf_ko_classify_event_date(in, s);
         if (identifier)
             return identifier;

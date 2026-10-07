@@ -269,3 +269,34 @@ call_cue	ko-KR	출동	1
 call_cue	ko-KR	문의	1
 call_cue	ko-KR	연락	1
 call_cue	ko-KR	번호	1
+# Hotlines read digit by digit with a call cue (1391 아동학대, 1399 불량식품, 1339,
+# 1301 검찰; Jev review 2026-10-07).
+service_number	ko-KR	1301	1
+service_number	ko-KR	1331	1
+service_number	ko-KR	1333	1
+service_number	ko-KR	1339	1
+service_number	ko-KR	1355	1
+service_number	ko-KR	1357	1
+service_number	ko-KR	1372	1
+service_number	ko-KR	1377	1
+service_number	ko-KR	1379	1
+service_number	ko-KR	1382	1
+service_number	ko-KR	1390	1
+service_number	ko-KR	1391	1
+service_number	ko-KR	1393	1
+service_number	ko-KR	1398	1
+service_number	ko-KR	1399	1
+call_cue	ko-KR	이용	1
+# A password or keypad sentence (pin_cue; 2026-10-07).
+pin_cue	ko-KR	비밀번호	1
+pin_cue	ko-KR	번호키	1
+pin_cue	ko-KR	패스워드	1
+pin_cue	ko-KR	암호	1
+pin_cue	ko-KR	핀번호	1
+pin_cue	ko-KR	도어락	1
+pin_cue	ko-KR	비번	1
+# Rates read 할, 푼, 리 (타율 0.212 이할 일푼 이리; 2026-10-07).
+rate_cue	ko-KR	타율	1
+rate_cue	ko-KR	출루율	1
+rate_cue	ko-KR	장타율	1
+rate_cue	ko-KR	승률	1

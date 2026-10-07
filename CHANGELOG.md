@@ -2,6 +2,17 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Korean sentences Jev failed, judged by hand (project owner: Jev is not always
+  right; about half were already correct, 4.3사건 사삼사건, 2세 이 세): hotlines
+  1301, 1339, 1382, 1391, 1399 … read digit by digit with a call cue (call_cue
+  이용 added), a four- to eight-digit code in a password or keypad sentence
+  or keyed in (pin_cue; 3043을 입력 삼공사삼; list members too), 231-29번지 이백삼십일
+  다시 이십구번지 (not a range), 타율 0.212 이할 일푼 이리 with the following
+  particle agreeing (육리를; rate_cue), score cues 잡고/쿼터/마쳤/이닝/전반/후반,
+  and 경기 counting with native numbers (아홉 경기; references 176 : 24). Bus
+  routes keep their values (the references 277 : 212 against digits), and
+  plates keep 삼십일후 (owner judgement). Contract ko_jev_fixes_v31 (20). Korean
+  benchmark +768, -29; Korean Jev passed 3448 → 3461, failed 82 → 72.
 - EngConf misses reviewed by hand: St./Dr./Ave./Rd./Blvd./Ln. after a name read
   as street words (Grey St. The fare was Grey Saint; St. Louis stays Saint;
   abbreviation_street), Maj./Gen./Col./Capt./Lt./Sgt./Gov. titles, US states

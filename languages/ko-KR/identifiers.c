@@ -191,8 +191,9 @@ static int short_code_label(const ttf_pack_input_t *in, const char *label) {
 /* After a labelled number: a particle, the copula (2021034인, 210547이다) or the
  * counter 번 (63107508번이). */
 static int labelled_tail(const ttf_pack_input_t *in, size_t end) {
+    /* 이 인 입 번, and 뒤 (1385뒤에 *을 누르는; 2026-10-07) */
     static const char *const heads[] = {"\xec\x9d\xb4", "\xec\x9d\xb8", "\xec\x9e\x85",
-                                        "\xeb\xb2\x88"}; /* 이 인 입 번 */
+                                        "\xeb\xb2\x88", "\xeb\x92\xa4"};
     size_t k;
     if (valid_tail(in, end))
         return 1;
@@ -340,6 +341,41 @@ static int service_number(const ttf_pack_input_t *in, size_t begin, size_t end) 
     return 0;
 }
 
+/* A declared cue word (kind) in the window [from, to) on the line. */
+static int cue_in(const ttf_pack_input_t *in, const char *kind, size_t from, size_t to) {
+    size_t p, width;
+    char key[16];
+    for (p = from; p + 6 <= to; ++p) {
+        if (in->text[p] == '\n')
+            return 0;
+        if ((unsigned char)in->text[p] < 0xEA || (unsigned char)in->text[p] > 0xED)
+            continue;
+        for (width = 6; width <= 12 && p + width <= to; width += 3) {
+            memcpy(key, in->text + p, width);
+            key[width] = '\0';
+            if (ttf_resource_get(in->engine, kind, "ko-KR", key, NULL))
+                return 1;
+        }
+    }
+    return 0;
+}
+
+/* 비밀번호가 … 3043을 입력, 번호키로 바꾸고 1385로, ATM에서 2501, 3412, 2014번을 입력:
+ * a code of four to eight digits in a sentence about a password or keypad
+ * (pin_cue within 32 syllables before, on the line) or keyed in (입력 within 14
+ * syllables after) is read digit by digit (Jev review, 2026-10-07). */
+static int pin_context(const ttf_pack_input_t *in, size_t begin, size_t end) {
+    size_t from = begin > 96 ? begin - 96 : 0, p, to = end + 42 < in->length ? end + 42 : in->length;
+    for (p = begin; p > from && in->text[p - 1] != '\n'; --p) {
+    }
+    if (cue_in(in, "pin_cue", p, begin))
+        return 1;
+    for (p = end; p + 6 <= to && in->text[p] != '\n'; ++p)
+        if (!memcmp(in->text + p, "입력", 6))
+            return 1;
+    return 0;
+}
+
 /* 외교후 112 002: a diplomatic plate, two groups of three digits after 외교 and
  * one syllable, read digit by digit (references 2 : 0). */
 static size_t diplomatic_plate(const ttf_pack_input_t *in, size_t begin) {
@@ -390,6 +426,78 @@ static int frequency_after_count(const ttf_pack_input_t *in, size_t p) {
     return best && !strcmp(best, "frequency");
 }
 
+/* 231-29번지: a lot number, two groups of up to four digits before 번지, is not a
+ * range; each group is a number joined by 다시 (산 12-3번지 십이 다시 삼번지;
+ * Jev review, 2026-10-07). */
+size_t ttf_ko_classify_lot_number(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    size_t begin = in->tokens[in->index].begin, p = begin, dash, end, i;
+    if (begin && (decimal_digit(in->text[begin - 1]) || in->text[begin - 1] == '-' ||
+                  ((in->text[begin - 1] | 0x20) >= 'a' && (in->text[begin - 1] | 0x20) <= 'z')))
+        return 0;
+    while (p < in->length && decimal_digit(in->text[p]) && p - begin < 5)
+        ++p;
+    if (p == begin || p - begin > 4 || p >= in->length || in->text[p] != '-' || in->text[begin] == '0')
+        return 0;
+    dash = p++;
+    while (p < in->length && decimal_digit(in->text[p]) && p - dash <= 5)
+        ++p;
+    end = p;
+    if (end == dash + 1 || end - dash - 1 > 4 || in->text[dash + 1] == '0' ||
+        end + 6 > in->length || memcmp(in->text + end, "번지", 6))
+        return 0;
+    memcpy(s->value, in->text + begin, end - begin);
+    s->value[end - begin] = '\0';
+    (void)snprintf(s->unit, sizeof(s->unit), "financial_identifier");
+    (void)snprintf(s->rule, sizeof(s->rule), "ko:lot-number");
+    s->type = TTF_SEM_DIGIT_SEQUENCE;
+    s->input_end = end;
+    s->layer = TTF_LAYER_COMMON;
+    for (i = in->index; i < in->token_count && in->tokens[i].begin < end; ++i) {
+    }
+    return i - in->index;
+}
+
+/* 타율 0.212 이할 일푼 이리: a rate with three decimals after 타율, 출루율, 장타율 or
+ * 승률 (rate_cue) reads 할, 푼 and 리 as Korean broadcasts do (Jev review,
+ * 2026-10-07). */
+size_t ttf_ko_classify_batting_average(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    size_t begin = in->tokens[in->index].begin, from = begin > 30 ? begin - 30 : 0, i;
+    if (begin + 5 > in->length || in->text[begin] != '0' || in->text[begin + 1] != '.' ||
+        !decimal_digit(in->text[begin + 2]) || !decimal_digit(in->text[begin + 3]) ||
+        !decimal_digit(in->text[begin + 4]) ||
+        (begin + 5 < in->length && (decimal_digit(in->text[begin + 5]) || in->text[begin + 5] == '.')) ||
+        (begin && (decimal_digit(in->text[begin - 1]) || in->text[begin - 1] == '.')))
+        return 0;
+    if (!cue_in(in, "rate_cue", from, begin))
+        return 0;
+    memcpy(s->value, in->text + begin + 2, 3);
+    s->value[3] = '\0';
+    (void)snprintf(s->unit, sizeof(s->unit), "batting_average");
+    (void)snprintf(s->rule, sizeof(s->rule), "ko:batting-average");
+    s->type = TTF_SEM_DIGIT_SEQUENCE;
+    s->input_end = begin + 5;
+    /* 승률 0.576을 오할 칠푼 육리를: the reading ends in a vowel unless it is 할 or
+       푼, so a following 을, 이, 은, 과 or 으로 takes its vowel form; the particle
+       is part of the span and recorded in secondary. */
+    {
+        static const char *const pairs[][2] = {{"으로", "로"}, {"을", "를"}, {"이", "가"},
+                                               {"은", "는"}, {"과", "와"}};
+        size_t k;
+        for (k = 0; s->value[2] != '0' && k < sizeof(pairs) / sizeof(pairs[0]); ++k) {
+            size_t m = strlen(pairs[k][0]);
+            if (begin + 5 + m <= in->length && !memcmp(in->text + begin + 5, pairs[k][0], m)) {
+                (void)snprintf(s->secondary, sizeof(s->secondary), "%s", pairs[k][1]);
+                s->input_end = begin + 5 + m;
+                break;
+            }
+        }
+    }
+    s->layer = TTF_LAYER_COMMON;
+    for (i = in->index; i < in->token_count && in->tokens[i].begin < s->input_end; ++i) {
+    }
+    return i - in->index;
+}
+
 size_t ttf_ko_classify_identifier(const ttf_pack_input_t *in, ttf_semantic_t *semantic) {
     size_t begin = in->tokens[in->index].begin, end = begin, i;
     char label[TTF_IR_VALUE_SIZE];
@@ -422,15 +530,20 @@ size_t ttf_ko_classify_identifier(const ttf_pack_input_t *in, ttf_semantic_t *se
        54 : 0, 2026-10-06; it was five or more). */
     if (!before && !(end - begin >= 4 && !(end < in->length && in->text[end] == '-') &&
                      following_label(in, end, label, sizeof(label)))) {
-        int joined = end < in->length && (in->text[end] == '-' || in->text[end] == ',' ||
-                                          in->text[end] == '.' || in->text[end] == ':');
+        /* 2501, 3412: a comma before a space ends a list item, not a group. */
+        int joined = end < in->length &&
+                     (in->text[end] == '-' || in->text[end] == '.' || in->text[end] == ':' ||
+                      (in->text[end] == ',' && end + 1 < in->length && decimal_digit(in->text[end + 1])));
         /* Without a label (2026-10-06, project-owner judgements and references):
            the start or end of a number (8282로 끝나는), a bare run of seven or more
            digits (200487201 조은희 학생은; 1354 : 0), or a service number with a call
            cue (119에 신고). */
         /* Only in a Korean sentence; a run starting with 0 is left to the phone
            grammar (01012345678). */
-        if (joined || !korean_neighbour(in, end))
+        /* ATM에서 2501, 3412, 2014번을 입력: a list member keyed in has no Korean
+           neighbour of its own. */
+        if (joined || (!korean_neighbour(in, end) &&
+                       !(end - begin >= 4 && end - begin <= 8 && pin_context(in, begin, end))))
             return 0;
         if (end - begin >= 2 && ends_with_cue(in, end))
             cue = 1;
@@ -438,9 +551,17 @@ size_t ttf_ko_classify_identifier(const ttf_pack_input_t *in, ttf_semantic_t *se
             cue = 2;
         else if (service_number(in, begin, end))
             cue = 3;
+        else if (end - begin >= 4 && end - begin <= 8 && in->text[begin] != '0' &&
+                 (!counter_follows(in, end) ||
+                  (end + 3 <= in->length && !memcmp(in->text + end, "\xeb\xb2\x88", 3))) &&
+                 pin_context(in, begin, end))
+            cue = 4;
         else
             return 0;
         label[0] = '\0';
+        /* A short code keeps 번 with it (비밀번호 7537번 칠오삼칠번). */
+        if (cue == 4)
+            (void)snprintf(label, sizeof(label), "%s", "비밀번호");
     }
     /* A word ending in 번호 that is not a declared label only marks a code of
        four or more digits (번호 3번을 keeps its counter reading). */

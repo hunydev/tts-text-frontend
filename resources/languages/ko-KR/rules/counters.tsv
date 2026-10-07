@@ -242,3 +242,8 @@ counter_noun_tail	ko-KR	이하	1
 counter_noun_tail	ko-KR	초과	1
 classifier_priority	ko-KR	ko:counted-noun	10
 classifier_priority	ko-KR	ko:counted-noun-range	10
+# 9경기 아홉 경기: games count with native numbers (2026-10-07).
+counter	ko-KR	경기	native
+numeric_suffix	*	경기	COUNTER:경기
+classifier_priority	ko-KR	ko:lot-number	100
+classifier_priority	ko-KR	ko:batting-average	100
