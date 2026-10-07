@@ -444,8 +444,11 @@ def ordinary_parenthesis_checks(args):
         ("ko-KR", "( 3개 )", "( 세 개 )", (("3개", "COUNTER", "3", "개"),)),
         ("en-US", "(1 2 3 4 5 6 7)", "(one two three four five six seven)",
          tuple((str(value), "CARDINAL", str(value), "") for value in range(1, 8))),
-        ("en-US", "ISBN 978-1-4028-9462-6", "ISBN 978-1-4028-9462-6",
-         (("978-1-4028-9462-6", "TEXT", "", ""),)),
+        # Was: ISBN 978-1-4028-9462-6 kept as TEXT; an ISBN now reads digit by digit
+        # like the English references (identifier_label isbn, 2026-10-07).
+        ("en-US", "ISBN 978-1-4028-9462-6",
+         "ISBN nine seven eight one four zero two eight nine four six two six",
+         (("978-1-4028-9462-6", "DIGIT_SEQUENCE", "978-1-4028-9462-6", "financial_identifier"),)),
         ("en-US", "ID 0-123-45678-9", "ID 0-123-45678-9",
          (("0-123-45678-9", "TEXT", "", ""),)),
     )

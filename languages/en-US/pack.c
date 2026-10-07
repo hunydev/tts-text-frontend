@@ -282,8 +282,14 @@ static ttf_status_t date_year(const ttf_engine_t *e, unsigned year, const char *
     unsigned century, remainder;
     if (!style)
         style = !strcmp(policy, "numeric_year_style") ? "cardinal" : "calendar";
-    if (!strcmp(style, "cardinal"))
+    /* cardinal-from-2000: 2026-09-16 two thousand twenty six as before, while
+       1997-04-10 reads nineteen ninety seven, not one thousand nine hundred
+       ninety seven (the English references read ISO years before 2000 so;
+       2026-10-07). */
+    if (!strcmp(style, "cardinal") || (!strcmp(style, "cardinal-from-2000") && year >= 2000))
         return card(e, year, b);
+    if (!strcmp(style, "cardinal-from-2000"))
+        style = "calendar";
     if (strcmp(style, "calendar"))
         return TTF_ERESOURCE;
     /* A three-digit year reads the same way (453 four fifty three, the English

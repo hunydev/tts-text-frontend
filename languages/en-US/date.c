@@ -622,6 +622,20 @@ static int quantity_before(const ttf_pack_input_t *in, size_t start) {
     char first[32], second[32];
     if (!previous_words(in, start, first, second, sizeof(first)))
         return 0;
+    /* "is 2026." opening a segment: the word that decides (The count is) is in
+       an earlier segment, so a lone copula keeps the cardinal (2026-10-07). */
+    if (!second[0] && (!strcmp(first, "is") || !strcmp(first, "was") || !strcmp(first, "are") ||
+                       !strcmp(first, "were") || !strcmp(first, "be"))) {
+        size_t p = start;
+        while (p && (horizontal(in->text[p - 1]) || in->text[p - 1] == ','))
+            --p;
+        while (p && ascii_alpha(in->text[p - 1]))
+            --p;
+        while (p && horizontal(in->text[p - 1]))
+            --p;
+        if (!p)
+            return 1;
+    }
     return ttf_resource_get(in->engine, "date_year_label_before", EN, first, NULL) ||
            ttf_resource_get(in->engine, "date_year_quantity_before", EN, first, NULL) ||
            (second[0] && ttf_resource_get(in->engine, "date_year_quantity_before", EN, second, NULL));

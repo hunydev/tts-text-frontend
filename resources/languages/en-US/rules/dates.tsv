@@ -27,9 +27,10 @@ month_alias	en-US	dec	12
 
 # Reading policy. calendar and cardinal are the only accepted style values.
 date_policy	en-US	named_year_style	calendar
-# ISO dates read their year like other calendar years: the English references
-# read 109 of 113 ISO years so (1997-04-10 nineteen ninety seven; 2026-10-07).
-date_policy	en-US	numeric_year_style	calendar
+# ISO dates before 2000 read their year as a calendar year (1997-04-10 nineteen
+# ninety seven, as the English references do); from 2000 the cardinal stays
+# (2026-09-16 two thousand twenty six; 2026-10-07).
+date_policy	en-US	numeric_year_style	cardinal-from-2000
 date_policy	en-US	year_style	calendar
 # Only contextual bare-year detection is restricted by these limits.
 date_policy	en-US	min_year	1000

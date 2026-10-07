@@ -500,8 +500,11 @@ ttf_status_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, i
                    depends on it (from 1918 to 1923, the # 7 seed), and the next
                    segment cannot see it (2026-10-07). After a word an unseen next
                    token waits for more input, so a stream cuts where a batch does;
-                   after a literal or punctuation the cut stays immediate. */
-                if (!i || (tokens[i - 1].script != TTF_SCRIPT_LATIN &&
+                   after a literal, punctuation or a line break the cut stays
+                   immediate. */
+                if (!i || memchr(s + t->begin, '\n', t->end - t->begin) ||
+                    memchr(s + t->begin, '\r', t->end - t->begin) ||
+                    (tokens[i - 1].script != TTF_SCRIPT_LATIN &&
                            tokens[i - 1].script != TTF_SCRIPT_HANGUL &&
                            tokens[i - 1].script != TTF_SCRIPT_HAN &&
                            tokens[i - 1].script != TTF_SCRIPT_KANA)) {

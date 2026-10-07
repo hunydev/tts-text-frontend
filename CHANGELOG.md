@@ -8,10 +8,12 @@
   (112에, 2-1로) or inside a TeX quote, so a number keeps its context (from 1918
   to 1923, the # 7 seed; an unseen next token waits, so streams cut like
   batches). # 7 number seven, No. 5 number five, Rev./Hon. titles, km2/m2/mi²
-  squares and lbs, ISO years read as calendar years (numeric_year_style),
+  squares and lbs, ISO years before 2000 read as calendar years (numeric_year_style
+  cardinal-from-2000; 2026-09-16 keeps two thousand twenty six),
   English m/d/yyyy dates month first (25/12/1999 day first; 6/17/13 thirteen),
   capital ordinals (24TH), THURSDAY as a word, years split as 19 44, ISBN digits
-  with a final X, and a silent dash after a period or colon keeps a space.
+  with a final X (the phone contract that kept an ISBN records its previous
+  value), and a silent dash after a period or colon keeps a space.
   Contract en_wetext_gaps_v26 (35). English benchmark speech 86.52% → 87.11%,
   text 83.16% → 83.54%; Korean +28, -0; against wetext 87.96% : 68.38%;
   sentences with unread digits 145 → 75, wetext-only 771 → 693.

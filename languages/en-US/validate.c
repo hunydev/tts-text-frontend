@@ -422,7 +422,7 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     if (SAME(k, "date_policy")) {
         *handled = 1;
         if (ttf_validation_enum(key, "named_year_style|numeric_year_style|year_style"))
-            return ttf_validation_enum(v, "cardinal|calendar")
+            return ttf_validation_enum(v, "cardinal|calendar|cardinal-from-2000")
                        ? TTF_OK
                        : ttf_validation_error(d, "date year style must be cardinal or calendar");
         if (ttf_validation_enum(key, "min_year|max_year|uncued_min_year"))
