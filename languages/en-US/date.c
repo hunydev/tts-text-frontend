@@ -279,6 +279,25 @@ static size_t named_date(const ttf_pack_input_t *in, ttf_semantic_t *out, size_t
         end = month_at(in, q, &month, &layer);
         if (end == q)
             return 0;
+        /* 2007 Apr 24, Epub 2014 Aug 2: year, month, day (the references read
+           them in that order; 2026-10-07). */
+        if (day.valid && !day.ordinal && day.digits == 4) {
+            size_t r = skip_horizontal(in->text, in->length, end);
+            date_number_t date_day;
+            if (r > end && r < in->length && ascii_digit(in->text[r])) {
+                date_day = number_at(in, r, 0);
+                if (date_day.valid && date_day.digits <= 2 && date_day.value &&
+                    (date_day.end == in->length || (!ascii_digit(in->text[date_day.end]) &&
+                                                    !ascii_alpha(in->text[date_day.end]) &&
+                                                    in->text[date_day.end] != ':')) &&
+                    valid_day(day.value, month, date_day.value)) {
+                    (void)snprintf(out->value, sizeof(out->value), "%04u-%02u-%02u", day.value,
+                                   month, date_day.value);
+                    (void)snprintf(out->secondary, sizeof(out->secondary), "ymd");
+                    return finish(in, out, date_day.end, 1, layer, "en.date.named-ymd");
+                }
+            }
+        }
         if (attached_tail(in, end)) {
             end = malformed_end(in, end);
             day.valid = 0;
@@ -572,6 +591,24 @@ static int english_text(const ttf_pack_input_t *in, size_t start, size_t end) {
     return words >= (lang && !strncmp(lang, "en", 2) ? 1u : 2u);
 }
 
+/* 1716. alone on its line, in an English default: a year heading (the English
+   references read 33 such lines as years; 2026 without the period stays a
+   cardinal; 2026-10-07). */
+static int year_line(const ttf_pack_input_t *in, size_t start, size_t end) {
+    const char *lang = in->engine->config.default_language;
+    size_t p = start;
+    if (!lang || strncmp(lang, "en", 2))
+        return 0;
+    while (p && horizontal(in->text[p - 1]))
+        --p;
+    if (p && in->text[p - 1] != '\n' && in->text[p - 1] != '\r')
+        return 0;
+    if (end >= in->length || in->text[end] != '.')
+        return 0;
+    p = skip_horizontal(in->text, in->length, end + 1);
+    return p == in->length || in->text[p] == '\n' || in->text[p] == '\r';
+}
+
 /* The word before a number, skipping earlier list members (1200 , 1400 and), so a
    list is judged by the word that introduces it. *second gets the word before. */
 static int previous_words(const ttf_pack_input_t *in, size_t start, char *first, char *second, size_t size) {
@@ -657,7 +694,8 @@ static size_t contextual_year(const ttf_pack_input_t *in, ttf_semantic_t *out, s
     /* Without a cue, a value from uncued_min_year up is still a year (Act of 1964,
        a closing "1894."; 2026-10-07). */
     if (!cued && (number.value < policy_year(in, "uncued_min_year", 10000, &layer) ||
-                  !english_text(in, start, number.end) || quantity_before(in, start)))
+                  !(english_text(in, start, number.end) || year_line(in, start, number.end)) ||
+                  quantity_before(in, start)))
         return 0;
     if (number.end < in->length && in->text[number.end] == ',' && number.end + 1 < in->length &&
         ascii_digit(in->text[number.end + 1]))

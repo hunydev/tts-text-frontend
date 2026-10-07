@@ -2,6 +2,17 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- English speech reads rejected numeric spans as written, like the Korean
+  written fallback (project-owner decision: read leftover digits as wetext
+  does; protected code stays): 97X ninety seven X, 3771A digit by digit, 787s
+  seven eighty sevens, 12pm-2pm twelve p m to two p m, 1861--1865 as years,
+  99.9FM, 1/7th one seventh. Also scripture ranges after a book name (Micah 6:6-8
+  chapter six verses six to eight; scripture_book), year-first dates (2007 Apr
+  24), spaced ISBN groups, and a lone NNNN. line as a year (owner left the
+  choice to the recommendation; 2026 without the period stays a cardinal).
+  Contract en_fallback_v27 (23); three guard contracts record their previous
+  values. English benchmark speech 87.11% → 87.58% (+91, -0); Korean
+  unchanged; unread digits 75 → 7 sentences; against wetext 88.27% : 68.38%.
 - English gaps against wetext (project-owner question: does wetext read anything
   we do not, and do digits or symbols pass through). A segment no longer starts
   with a number after a word, nor cuts right after a word carrying a number

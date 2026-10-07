@@ -129,3 +129,27 @@ wetext(VoxCPM2)는 마지막에 남은 숫자를 모두 inflect로 읽어 버리
 
 남은 75문장: URL·DOI 속 숫자, `6:14-16` 장절, `1.1.3` 버전 표기 일부, `75F`, `12pm-2pm`, `99.9FM`, `787s` 같은 붙은 단위·모델명, `23d` 같은 옛 서수.
 
+## 남은 숫자를 끝까지 읽기 (2026-10-07)
+
+프로젝트 소유자 결정: 영어 speech도 한국어 written fallback(2026-10-02 결정)처럼, 분류기가 거절한 숫자 덩어리를 쓴 대로 읽습니다. wetext/VoxCPM2가 마지막에 남은 숫자를 모두 읽는 것과 같은 목적입니다. 코드(백틱, `<code>`)와 경로처럼 보호된 부분은 한국어와 같이 보존합니다. URL·이메일 속 숫자는 원래부터 읽고 있었습니다. text 출력은 쓴 대로 둡니다.
+
+| 쓴 형태 | 읽기 |
+|---|---|
+| `97X`, `6a`, `32mo` | ninety seven X, six a, thirty two mo (글자는 그대로) |
+| `3771A` | three seven seven one A (네 자리 이상·0으로 시작하면 한 자리씩) |
+| `787s`, `690s`, `18s` | seven eighty sevens, six nineties, eighteens (세 자리 복수는 둘로 나눠 읽음, 참조와 같음) |
+| `12pm-2pm`, `1861--1865` | twelve p m to two p m, eighteen sixty one to eighteen sixty five (숫자 사이 대시 하나는 범위) |
+| `99.9FM`, `1/7th` | ninety nine point nine FM, one seventh |
+| `23d` | twenty three d (참조와 같음) |
+
+같이 고친 것: `Micah 6:6-8` chapter six verses six to eight(책 이름 `scripture_book` 뒤의 장:절-절만; `John 3:16` 단일 절과 `9:00-17:00` 시각은 그대로), `2007 Apr 24` two thousand seven April twenty fourth(연-월-일 순서 그대로), 띄어 쓴 ISBN(`0 - 486 - 43365- X`), 마침표가 붙은 4자리 숫자만 있는 줄(`1716.` seventeen sixteen; 참조 33줄 모두 연도, 소유자가 권장 방향으로 결정을 맡김. `2026`처럼 마침표가 없으면 일반 수 그대로). 계약 `en_fallback_v27.jsonl` 23건; 원문 보존을 고정했던 계약 3건(`1255.`, `at 13pm`, `1861--1865`)은 notes에 이전 값을 남겼습니다.
+
+| | 전 | 후 |
+|---|---|---|
+| 숫자가 남은 문장 | 75 | 7 |
+| wetext만 맞은 문장 | 693 | 615 |
+| 전체 일치율 (wetext 68.38%) | 87.96% | 88.27% |
+| 영어 벤치마크 speech | 87.11% | 87.58% (+91, -0) |
+
+한국어는 변화가 없습니다. 남은 7문장은 코드로 잘못 잡힌 TeX 따옴표 안(`` `` 91 `` ``)과 윗첨자 `²`입니다.
+

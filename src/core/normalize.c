@@ -452,11 +452,18 @@ static ttf_status_t read_identifier(const ttf_engine_t *e, const ttf_language_pa
 static int written_fallback(const ttf_engine_t *e, const ttf_language_pack_t *renderer,
                             const ttf_semantic_t *sem, const char *surface, size_t length) {
     static const char *const rules[] = {"syntax.invalid-", "syntax.unsupported-", "syntax.width-",
-                                        "ko:invalid-",     "ko:unsupported-",     "ko:ambiguous-"};
+                                        "ko:invalid-",     "ko:unsupported-",     "ko:ambiguous-",
+                                        "en.date.invalid"};
     size_t i;
     int digit = 0;
+    /* English speech reads them as written too (75F seventy five F, 787s seven
+       eighty sevens), as wetext reads every leftover digit; text output keeps
+       the written form (project-owner decision 2026-10-07). */
     if (e->numeric_fallback_off || sem->type != TTF_SEM_TEXT || !renderer ||
-        strcmp(renderer->language_tag, "ko-KR") || !strcmp(sem->rule, "syntax.invalid-time"))
+        !strcmp(sem->rule, "syntax.invalid-time") ||
+        (strcmp(renderer->language_tag, "ko-KR") &&
+         (strcmp(renderer->language_tag, "en-US") ||
+          e->frontend_options.output_mode != TTF_OUTPUT_SPEECH)))
         return 0;
     for (i = 0; i < length; ++i)
         digit |= (surface[i] >= '0' && surface[i] <= '9') ||

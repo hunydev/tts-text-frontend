@@ -604,6 +604,11 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    : ttf_validation_error(d, "expected at most 128 bounded uppercase phone tokens "
                                              "with stress 0..2, letter.A or the boundary .");
     }
+    if (SAME(k, "scripture_book")) {
+        *handled = 1;
+        if (!lowercase_letters(key, 23) || !SAME(v, "1"))
+            return ttf_validation_error(d, "scripture_book requires a lowercase book name and 1");
+    }
     if (SAME(k, "letter_name")) {
         *handled = 1;
         if (!lowercase_letters(key, 1))

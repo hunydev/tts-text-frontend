@@ -62,6 +62,27 @@ size_t ttf_en_classify_identifier(const ttf_pack_input_t *in, ttf_semantic_t *se
         while (end < in->length && decimal_digit(in->text[end]))
             ++end;
     }
+    /* ISBN 0 - 486 - 43365- X: an ISBN may space its groups (2026-10-07). */
+    while (!strcmp(label, "isbn")) {
+        size_t p = end;
+        while (p < in->length && in->text[p] == ' ')
+            ++p;
+        if (p >= in->length || in->text[p] != '-')
+            break;
+        ++p;
+        while (p < in->length && in->text[p] == ' ')
+            ++p;
+        if (p < in->length && decimal_digit(in->text[p])) {
+            while (p < in->length && decimal_digit(in->text[p]))
+                ++p;
+            end = p;
+        } else if (p < in->length && (in->text[p] == 'X' || in->text[p] == 'x') &&
+                   valid_tail(in, p + 1)) {
+            end = p + 1;
+            break;
+        } else
+            break;
+    }
     /* ISBN 1-86508-123-X: an ISBN-10 check digit may be X (2026-10-07). */
     if (!strcmp(label, "isbn") && end < in->length) {
         size_t x = end + (in->text[end] == '-');
@@ -90,6 +111,8 @@ ttf_status_t ttf_en_render_identifier(const ttf_engine_t *engine, const char *va
     for (; *value; ++value) {
         const char *rendered;
         ttf_status_t status;
+        if (*value == ' ')
+            continue;
         if (*value == '-') {
             rendered = ttf_resource_get(engine, "identifier_render", "en-US", "separator", NULL);
             if (!rendered)

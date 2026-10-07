@@ -14,6 +14,7 @@ import re
 import sys
 
 ACTIVE_JSONL = (
+    "en_fallback_v27",
     "en_wetext_gaps_v26",
     "en_digits_left_v25",
     "en_bare_years_v25",

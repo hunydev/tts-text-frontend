@@ -339,14 +339,187 @@ static ttf_status_t date_decade(const ttf_engine_t *e, unsigned value, ttf_buffe
     return word(e, b, "decade_plural", key);
 }
 
+/* The plural of a number's last word: seven sevens, fifty fifties, six sixes. */
+static ttf_status_t plural_last(ttf_buffer_t *b, size_t from) {
+    size_t end = b->length;
+    if (end <= from)
+        return TTF_OK;
+    if (b->data[end - 1] == 'y') {
+        b->length = end - 1;
+        b->data[b->length] = '\0';
+        return ttf_buffer_puts(b, "ies");
+    }
+    return ttf_buffer_puts(b, b->data[end - 1] == 'x' ? "es" : "s");
+}
+static ttf_status_t gap(ttf_buffer_t *b) {
+    return b->length && b->data[b->length - 1] != ' ' ? space(b) : TTF_OK;
+}
+static int ascii_digit_at(const char *s, size_t n, size_t i) {
+    return i < n && s[i] >= '0' && s[i] <= '9';
+}
+static int ascii_letter_at(const char *s, size_t n, size_t i) {
+    return i < n && ((s[i] >= 'a' && s[i] <= 'z') || (s[i] >= 'A' && s[i] <= 'Z'));
+}
+/* A rejected numeric span read as written (the English counterpart of the Korean
+   written fallback, project-owner decision 2026-10-07): runs of up to three digits
+   are cardinals, longer runs and leading zeros are digits, a decimal point is
+   "point", grouped thousands are one number, a plural s after a number makes its
+   last word plural and a three-digit plural reads as a pair (787s seven eighty
+   sevens, 690s six nineties); letters stay letters (97X ninety seven X, 6a six a)
+   and a meridiem is read (12pm twelve p m). One hyphen between two numbers is a
+   range (to); other marks keep their speech names. */
+static ttf_status_t written(const ttf_engine_t *e, const char *s, size_t n, ttf_buffer_t *b) {
+    size_t i = 0, hyphens = 0, k;
+    ttf_status_t st = TTF_OK;
+    for (k = 0; k < n; ++k)
+        hyphens += s[k] == '-' && (!k || s[k - 1] != '-');
+    while (i < n && st == TTF_OK) {
+        if (ascii_digit_at(s, n, i)) {
+            size_t j = i, d;
+            uint64_t v = 0;
+            while (ascii_digit_at(s, n, j) && j - i < 18)
+                v = v * 10 + (uint64_t)(s[j++] - '0');
+            d = j - i;
+            /* 10/618,543: grouped thousands are one number. */
+            while (d <= 3 && j + 3 < n + 1 && s[j] == ',' && ascii_digit_at(s, n, j + 1) &&
+                   ascii_digit_at(s, n, j + 2) && ascii_digit_at(s, n, j + 3) &&
+                   !ascii_digit_at(s, n, j + 4) && v < 1000000000000ULL) {
+                v = v * 1000 + (uint64_t)((s[j + 1] - '0') * 100 + (s[j + 2] - '0') * 10 + (s[j + 3] - '0'));
+                j += 4;
+                d = 3;
+            }
+            if ((st = gap(b)) != TTF_OK)
+                break;
+            if (j < n && s[j] == 's' && !ascii_letter_at(s, n, j + 1) && s[i] != '0' && d <= 4) {
+                size_t from;
+                if (d == 4) {
+                    st = date_decade(e, (unsigned)v, b);
+                } else if (d == 3 && v % 100) {
+                    if ((st = card(e, v / 100, b)) == TTF_OK && (st = space(b)) == TTF_OK) {
+                        if (v % 100 < 10 && (st = word(e, b, "number", "oh")) == TTF_OK)
+                            st = space(b);
+                        from = b->length;
+                        if (st == TTF_OK && (st = card(e, v % 100, b)) == TTF_OK)
+                            st = plural_last(b, from);
+                    }
+                } else {
+                    from = b->length;
+                    if ((st = card(e, v, b)) == TTF_OK)
+                        st = plural_last(b, from);
+                }
+                i = j + 1;
+                continue;
+            }
+            /* 1/7th, 2/3rd: a fraction written with an ordinal (one seventh, two
+               thirds). */
+            if (d <= 3 && j + 3 < n + 1 && s[j] == '/' && ascii_digit_at(s, n, j + 1)) {
+                size_t f = j + 1;
+                uint64_t den = 0;
+                while (ascii_digit_at(s, n, f) && f - j <= 3)
+                    den = den * 10 + (uint64_t)(s[f++] - '0');
+                if (den > 1 && f + 1 < n + 1 && f + 2 <= n && !ascii_letter_at(s, n, f + 2) &&
+                    ((s[f] == 't' && s[f + 1] == 'h') || (s[f] == 'r' && s[f + 1] == 'd') ||
+                     (s[f] == 'n' && s[f + 1] == 'd') || (s[f] == 's' && s[f + 1] == 't'))) {
+                    size_t from;
+                    if ((st = card(e, v, b)) == TTF_OK && (st = space(b)) == TTF_OK) {
+                        from = b->length;
+                        if ((st = ordinal(e, den, b)) == TTF_OK && v != 1)
+                            st = plural_last(b, from);
+                    }
+                    i = f + 2;
+                    continue;
+                }
+            }
+            /* 1861--1865: a lone four-digit year reads as a year; with a letter
+               attached (3771A) or longer it is a code read digit by digit. */
+            if (d == 4 && s[i] != '0' && v >= 1100 && v <= 2099 && !ascii_letter_at(s, n, j) &&
+                !(i && ascii_letter_at(s, n, i - 1)))
+                st = date_year(e, (unsigned)v, "year_style", b);
+            else if ((s[i] == '0' && d > 1) || d >= 4) {
+                char run[24];
+                memcpy(run, s + i, d);
+                run[d] = '\0';
+                st = digits(e, run, b);
+            } else
+                st = card(e, v, b);
+            i = j;
+            /* 99.9, 1.1.3: a point and the digits after it. */
+            while (st == TTF_OK && i + 1 < n && s[i] == '.' && ascii_digit_at(s, n, i + 1)) {
+                char run[24];
+                size_t f = i + 1;
+                while (ascii_digit_at(s, n, f) && f - i - 1 < sizeof(run) - 1)
+                    ++f;
+                memcpy(run, s + i + 1, f - i - 1);
+                run[f - i - 1] = '\0';
+                if ((st = space(b)) == TTF_OK && (st = word(e, b, "number", "point")) == TTF_OK &&
+                    (st = space(b)) == TTF_OK)
+                    st = digits(e, run, b);
+                i = f;
+            }
+        } else if (ascii_letter_at(s, n, i)) {
+            size_t j = i;
+            char key[8];
+            const char *meridiem;
+            while (ascii_letter_at(s, n, j))
+                ++j;
+            if ((st = gap(b)) != TTF_OK)
+                break;
+            meridiem = NULL;
+            if (j - i == 2) {
+                key[0] = (char)(s[i] & ~0x20);
+                key[1] = (char)(s[i + 1] & ~0x20);
+                key[2] = '\0';
+                meridiem = res(e, "meridiem", key);
+            }
+            st = meridiem ? ttf_buffer_puts(b, meridiem) : ttf_buffer_append(b, s + i, j - i);
+            i = j;
+        } else if (s[i] == ' ' || s[i] == '\t') {
+            st = gap(b);
+            ++i;
+        } else if (s[i] == '-' && hyphens == 1 && i && i + 1 < n) {
+            if ((st = gap(b)) == TTF_OK && (st = ttf_buffer_puts(b, "to")) == TTF_OK)
+                st = space(b);
+            while (i < n && s[i] == '-')
+                ++i;
+        } else if (s[i] == '-' || s[i] == ':' || s[i] == '_') {
+            st = gap(b);
+            ++i;
+        } else {
+            char key[2] = {s[i], '\0'};
+            const char *name = (unsigned char)s[i] < 128 ? res(e, "speech_symbol", key) : NULL;
+            if (name && strcmp(key, ".") && strcmp(key, ",")) {
+                if ((st = gap(b)) == TTF_OK && (st = ttf_buffer_puts(b, name)) == TTF_OK)
+                    st = space(b);
+            } else
+                st = ttf_buffer_append(b, s + i, 1);
+            ++i;
+        }
+    }
+    while (st == TTF_OK && b->length && b->data[b->length - 1] == ' ')
+        b->data[--b->length] = '\0';
+    return st;
+}
+/* Genesis 6:14-16: chapter six verses fourteen to sixteen (the references). */
+static ttf_status_t scripture(const ttf_engine_t *e, const char *value, ttf_buffer_t *b) {
+    unsigned chapter, first, last;
+    ttf_status_t st;
+    if (sscanf(value, "%u:%u-%u", &chapter, &first, &last) != 3)
+        return TTF_EINVAL;
+    if ((st = ttf_buffer_puts(b, "chapter ")) != TTF_OK || (st = card(e, chapter, b)) != TTF_OK ||
+        (st = ttf_buffer_puts(b, " verses ")) != TTF_OK || (st = card(e, first, b)) != TTF_OK ||
+        (st = ttf_buffer_puts(b, " to ")) != TTF_OK)
+        return st;
+    return card(e, last, b);
+}
+
 static ttf_status_t date(const ttf_engine_t *e, const ttf_semantic_t *s, ttf_buffer_t *b) {
     unsigned year = 0, month = 0, day = 0;
     int consumed = 0, fields, has_year = 1, has_month = 1, has_day = 1, short_year = 0;
-    int day_first = !strcmp(s->secondary, "dmy");
+    int day_first = !strcmp(s->secondary, "dmy"), year_first = !strcmp(s->secondary, "ymd");
     char key[16];
     const char *policy = s->secondary[0] ? "named_year_style" : "numeric_year_style";
     ttf_status_t st;
-    if (s->secondary[0] && strcmp(s->secondary, "mdy") && !day_first)
+    if (s->secondary[0] && strcmp(s->secondary, "mdy") && !day_first && !year_first)
         return TTF_EINVAL;
     if (!strcmp(s->unit, "decade")) {
         if (sscanf(s->value, "%u%n", &year, &consumed) != 1 || s->value[consumed])
@@ -384,6 +557,14 @@ static ttf_status_t date(const ttf_engine_t *e, const ttf_semantic_t *s, ttf_buf
         return TTF_EINVAL;
     if (!has_month)
         return date_year(e, year, policy, b);
+    /* 2007 Apr 24: year, month and day in the written order. */
+    if (year_first && has_year && has_day) {
+        (void)snprintf(key, sizeof(key), "%u", month);
+        if ((st = date_year(e, year, policy, b)) != TTF_OK || (st = space(b)) != TTF_OK ||
+            (st = word(e, b, "month", key)) != TTF_OK || (st = space(b)) != TTF_OK)
+            return st;
+        return ordinal(e, day, b);
+    }
     if (day_first && has_day) {
         if ((st = word(e, b, "date_word", "the")) != TTF_OK || (st = space(b)) != TTF_OK ||
             (st = ordinal(e, day, b)) != TTF_OK || (st = space(b)) != TTF_OK ||
@@ -921,6 +1102,66 @@ static size_t mixed_fraction(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     return i - in->index;
 }
 
+/* Micah 6:6-8 after a book name (scripture_book): chapter six verses six to eight. A
+   verse never starts with 0, so a clock range (9:00-17:00) is not one. */
+static size_t scripture_verse(const ttf_pack_input_t *in, ttf_semantic_t *out) {
+    const char *s = in->text;
+    size_t n = in->length, start = in->tokens[in->index].begin, p = start, w, q, i;
+    unsigned field[3] = {0, 0, 0};
+    char key[24];
+    ttf_resource_layer_t layer = TTF_LAYER_COMMON;
+    if (!ascii_digit_at(s, n, p) || (p && s[p - 1] != ' '))
+        return 0;
+    w = p - 1;
+    while (w && s[w - 1] == ' ')
+        --w;
+    q = w;
+    while (q && ascii_letter_at(s, n, q - 1))
+        --q;
+    if (q == w || w - q >= sizeof(key))
+        return 0;
+    for (i = 0; i < w - q; ++i)
+        key[i] = (char)(s[q + i] | 0x20);
+    key[w - q] = '\0';
+    if (!ttf_resource_get(in->engine, "scripture_book", EN, key, &layer))
+        return 0;
+    for (i = 0; i < 3; ++i) {
+        size_t d = p;
+        if (i == 1) {
+            if (p >= n || s[p] != ':')
+                return 0;
+            d = ++p;
+        } else if (i == 2) {
+            while (p < n && s[p] == ' ')
+                ++p;
+            if (p >= n || s[p] != '-')
+                return 0;
+            ++p;
+            while (p < n && s[p] == ' ')
+                ++p;
+            d = p;
+        }
+        if (i && s[d] == '0')
+            return 0;
+        while (ascii_digit_at(s, n, p) && p - d < 3)
+            field[i] = field[i] * 10 + (unsigned)(s[p++] - '0');
+        if (p == d || ascii_digit_at(s, n, p))
+            return 0;
+    }
+    if (ascii_letter_at(s, n, p) || (p < n && (s[p] == ':' || s[p] == '-')) || field[2] <= field[1])
+        return 0;
+    (void)snprintf(out->value, sizeof(out->value), "%u:%u-%u", field[0], field[1], field[2]);
+    (void)snprintf(out->unit, sizeof(out->unit), "scripture");
+    (void)snprintf(out->source_lang, sizeof(out->source_lang), "%s", EN);
+    (void)snprintf(out->rule, sizeof(out->rule), "en.scripture-verse");
+    out->type = TTF_SEM_DIGIT_SEQUENCE;
+    out->input_end = p;
+    out->layer = layer;
+    for (i = in->index; i < in->token_count && in->tokens[i].begin < p; ++i) {
+    }
+    return i - in->index;
+}
+
 static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     const ttf_token_t *t = &in->tokens[in->index];
     char key[96];
@@ -933,6 +1174,9 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     if (date_tokens)
         return date_tokens;
     date_tokens = mixed_fraction(in, out);
+    if (date_tokens)
+        return date_tokens;
+    date_tokens = scripture_verse(in, out);
     if (date_tokens)
         return date_tokens;
     date_tokens = ttf_en_classify_abbreviation(in, out);
@@ -1408,6 +1652,10 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     case TTF_SEM_DIGIT_SEQUENCE:
         if (!strcmp(s->unit, "financial_identifier"))
             return ttf_en_render_identifier(e, s->value, b);
+        if (!strcmp(s->unit, "written_fallback"))
+            return written(e, surface, length, b);
+        if (!strcmp(s->unit, "scripture"))
+            return scripture(e, s->value, b);
         return digits(e, s->value, b);
     case TTF_SEM_PHONE:
         return phone(e, s, b);
