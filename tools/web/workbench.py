@@ -8,6 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 MAX_TEXT_BYTES = 16384
 CORPORA = {
+    "en-segment-context-v28": ("English segment context v28", "en_segment_context_v28.jsonl"),
     "en-fallback-v27": ("English written fallback v27", "en_fallback_v27.jsonl"),
     "en-wetext-gaps-v26": ("English gaps against wetext v26", "en_wetext_gaps_v26.jsonl"),
     "en-digits-left-v25": ("English digits left (v25)", "en_digits_left_v25.jsonl"),

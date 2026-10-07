@@ -2,6 +2,13 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- A segment's classifiers see the last 64 bytes of the previous segment, so a
+  number at a segment start keeps the words before it (Douglas Haig born. 1880.
+  eighteen eighty; ( b . 1952 )). Only classification sees the prefix: routing,
+  output and spans are unchanged, and batch and stream share the units. A month
+  name that ends a sentence is not a cue (May. 2026 stays a cardinal). Contract
+  en_segment_context_v28 (7). English benchmark speech 87.58% → 87.67% (+16,
+  -0); Korean unchanged; against wetext 88.34% : 68.38%.
 - English speech reads rejected numeric spans as written, like the Korean
   written fallback (project-owner decision: read leftover digits as wetext
   does; protected code stays): 97X ninety seven X, 3771A digit by digit, 787s

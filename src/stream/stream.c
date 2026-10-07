@@ -8,6 +8,7 @@ struct ttf_stream {
     ttf_trace_state_t *trace;
     void *userdata;
     ttf_buffer_t pending;
+    ttf_buffer_t left; /* up to 64 bytes before the pending unit */
     size_t input_offset, segments;
     size_t validated, wait_scanned;
     ttf_boundary_wait_t wait;
@@ -84,7 +85,8 @@ static ttf_status_t drain(ttf_stream_t *s, int final) {
             return st;
         if (!boundary)
             return control_limit_exceeded(s) ? TTF_ELIMIT : TTF_OK;
-        st = ttf_process_unit(s->engine, s->pending.data, boundary, s->input_offset, &result);
+        st = ttf_process_unit_context(s->engine, s->left.data, s->left.length, s->pending.data,
+                                      boundary, s->input_offset, &result);
         if (st == TTF_OK)
             st = ttf_trace_status(s->engine);
         if (st != TTF_OK) {
@@ -110,6 +112,22 @@ static ttf_status_t drain(ttf_stream_t *s, int final) {
         ttf_trace_segment_clear(s->trace);
         if (st != TTF_OK)
             return st;
+        {
+            /* Keep the last 64 bytes for the next unit's classifiers, starting
+               at a UTF-8 boundary. */
+            size_t keep = boundary < 64 ? boundary : 64, drop;
+            st = ttf_buffer_append(&s->left, s->pending.data + boundary - keep, keep);
+            if (st != TTF_OK)
+                return st;
+            drop = s->left.length > 64 ? s->left.length - 64 : 0;
+            while (drop < s->left.length && ((unsigned char)s->left.data[drop] & 0xC0) == 0x80)
+                ++drop;
+            if (drop) {
+                memmove(s->left.data, s->left.data + drop, s->left.length - drop);
+                s->left.length -= drop;
+                s->left.data[s->left.length] = 0;
+            }
+        }
         s->segments++;
         s->input_offset += boundary;
         s->pending.length -= boundary;
@@ -225,6 +243,7 @@ ttf_status_t ttf_stream_flush(ttf_stream_t *s) {
 void ttf_stream_destroy(ttf_stream_t *s) {
     if (s && !s->busy) {
         ttf_buffer_free(&s->pending);
+        ttf_buffer_free(&s->left);
         ttf_trace_state_destroy(s->trace);
         free(s->engine_view);
         free(s);

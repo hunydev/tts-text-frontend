@@ -797,6 +797,20 @@ done:
 }
 ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t length, size_t offset,
                               ttf_result_t *out) {
+    return ttf_process_unit_context(e, NULL, 0, text, length, offset, out);
+}
+/* A segment cut leaves the words before a number in the previous unit (born.
+   1880., ( b . 1952 )). The classifiers already read a bounded window before a
+   token (64 bytes), so they receive the previous segment's tail in front of the
+   unit, with token offsets moved past it; what they return is moved back. Only
+   classification sees it: routing, rendering and spans are unchanged, and a
+   stream decides like a batch because both cut the same units (2026-10-07). */
+ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
+                                      size_t context_length, const char *text, size_t length,
+                                      size_t offset, ttf_result_t *out) {
+    char *context_text = NULL;
+    const char *context_base = NULL;
+    ttf_token_t *context_tokens = NULL;
     ttf_context_memo_t memo = {0};
     ttf_numeric_width_t width_view = {0};
     ttf_engine_t context_view = *e;
@@ -1028,6 +1042,35 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
                 classification.length = width_view.scan[classification.length];
                 classification.tokens = width_view.tokens;
             }
+            if (context_length) {
+                const char *base = classification.text;
+                size_t base_length = width_view.text ? width_view.length : length, k;
+                if (context_base != base) {
+                    char *grown = (char *)realloc(context_text, context_length + base_length + 1);
+                    if (!grown) {
+                        st = TTF_ENOMEM;
+                        goto fail;
+                    }
+                    context_text = grown;
+                    memcpy(context_text, prefix, context_length);
+                    memcpy(context_text + context_length, base, base_length);
+                    context_text[context_length + base_length] = '\0';
+                    context_base = base;
+                }
+                if (!context_tokens &&
+                    !(context_tokens = (ttf_token_t *)malloc(count * sizeof(*context_tokens)))) {
+                    st = TTF_ENOMEM;
+                    goto fail;
+                }
+                for (k = 0; k < count; ++k) {
+                    context_tokens[k] = classification.tokens[k];
+                    context_tokens[k].begin += context_length;
+                    context_tokens[k].end += context_length;
+                }
+                classification.text = context_text;
+                classification.length += context_length;
+                classification.tokens = context_tokens;
+            }
             consumed = ttf_classify_universal(&classification, sem);
             for (j = 0; j < e->pack_count; j++)
                 if (e->packs[j]->classify && strcmp(sem->unit, "@math")) {
@@ -1110,6 +1153,11 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
                     }
                 }
             consumed = ttf_numeric_width_guard(&classification, sem, consumed);
+            if (context_length) {
+                if (consumed)
+                    sem->input_end -= context_length;
+                classification.length -= context_length;
+            }
             if (width_view.text && consumed) {
                 if (sem->input_end > classification.length) {
                     st = TTF_ERESOURCE;
@@ -1545,8 +1593,12 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
     free(tokens);
     free(scopes);
     free(regions);
+    free(context_text);
+    free(context_tokens);
     return TTF_OK;
 fail:
+    free(context_text);
+    free(context_tokens);
     ttf_context_memo_clear(&memo);
     ttf_numeric_width_free(&width_view);
     free(tokens);

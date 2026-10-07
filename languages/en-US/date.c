@@ -594,6 +594,23 @@ static int english_text(const ttf_pack_input_t *in, size_t start, size_t end) {
 /* 1716. alone on its line, in an English default: a year heading (the English
    references read 33 such lines as years; 2026 without the period stays a
    cardinal; 2026-10-07). */
+/* May. 2026: a month name that ends a sentence is not this number's cue, and
+   the number keeps its cardinal (the v13 guards; now that a segment sees the
+   previous one, 2026-10-07). */
+static int month_sentence_before(const ttf_pack_input_t *in, size_t start) {
+    size_t p = start, w;
+    unsigned month = 0;
+    ttf_resource_layer_t layer = TTF_LAYER_COMMON;
+    while (p && horizontal(in->text[p - 1]))
+        --p;
+    if (!p || in->text[p - 1] != '.')
+        return 0;
+    w = --p;
+    while (p && ascii_alpha(in->text[p - 1]))
+        --p;
+    return w > p && month_at(in, p, &month, &layer) == w && month;
+}
+
 static int year_line(const ttf_pack_input_t *in, size_t start, size_t end) {
     const char *lang = in->engine->config.default_language;
     size_t p = start;
@@ -695,7 +712,7 @@ static size_t contextual_year(const ttf_pack_input_t *in, ttf_semantic_t *out, s
        a closing "1894."; 2026-10-07). */
     if (!cued && (number.value < policy_year(in, "uncued_min_year", 10000, &layer) ||
                   !(english_text(in, start, number.end) || year_line(in, start, number.end)) ||
-                  quantity_before(in, start)))
+                  quantity_before(in, start) || month_sentence_before(in, start)))
         return 0;
     if (number.end < in->length && in->text[number.end] == ',' && number.end + 1 < in->length &&
         ascii_digit(in->text[number.end + 1]))

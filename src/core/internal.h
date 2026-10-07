@@ -156,6 +156,11 @@ int ttf_math_expression(const char *text, size_t n, ttf_semantic_t *out);
 /* Normalize one stable context unit; shared by batch and streaming. */
 ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t length,
                               size_t input_offset, ttf_result_t *out);
+/* The same, with up to 64 bytes of the text before the unit for the
+   classifiers' bounded look-back (the previous segment of a stream). */
+ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *context,
+                                      size_t context_length, const char *text, size_t length,
+                                      size_t input_offset, ttf_result_t *out);
 /* A planner hint only permits skipping bytes that cannot change an incomplete
    literal. It is request-local and never changes the public streaming ABI. */
 typedef enum {
