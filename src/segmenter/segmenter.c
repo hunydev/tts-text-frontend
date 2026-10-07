@@ -528,7 +528,8 @@ ttf_status_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, i
                    without inspecting unavailable future input. */
                 if (previous &&
                     ((s[previous - 1] >= '0' && s[previous - 1] <= '9') || s[previous - 1] == '/' ||
-                     s[previous - 1] == ':' || s[previous - 1] == '+' || s[previous - 1] == '-')) {
+                     s[previous - 1] == ':' || s[previous - 1] == '+' || s[previous - 1] == '-' ||
+                     s[previous - 1] == '#')) {
                     at += w;
                     continue;
                 }

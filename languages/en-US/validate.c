@@ -604,6 +604,13 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    : ttf_validation_error(d, "expected at most 128 bounded uppercase phone tokens "
                                              "with stress 0..2, letter.A or the boundary .");
     }
+    if (SAME(k, "us_state") || SAME(k, "caps_word")) {
+        *handled = 1;
+        if (!lowercase_letters(key, SAME(k, "us_state") ? 2 : 3) ||
+            (SAME(k, "us_state") && strlen(key) != 2) || (SAME(k, "caps_word") && !SAME(v, "1")) ||
+            strlen(v) >= TTF_IR_VALUE_SIZE)
+            return ttf_validation_error(d, "us_state needs a two-letter key and a name; caps_word a short word and 1");
+    }
     if (SAME(k, "scripture_book")) {
         *handled = 1;
         if (!lowercase_letters(key, 23) || !SAME(v, "1"))
@@ -614,7 +621,7 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
         if (!lowercase_letters(key, 1))
             return ttf_validation_error(d, "letter_name key must be one lowercase ASCII letter");
     } else if (SAME(k, "abbreviation") || SAME(k, "abbreviation_expansion") ||
-               SAME(k, "abbreviation_number")) {
+               SAME(k, "abbreviation_number") || SAME(k, "abbreviation_street")) {
         /* Common protected abbreviations use a generic marker and may include
          * periods (e.g/i.e); the core validator owns that namespace. */
         if (wildcard && SAME(k, "abbreviation"))
@@ -625,7 +632,8 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                                         "abbreviation key must be 1..95 lowercase ASCII letters");
         if (SAME(k, "abbreviation") && !SAME(v, "preserve"))
             return ttf_validation_error(d, "abbreviation marker supports preserve only");
-        if ((SAME(k, "abbreviation_expansion") || SAME(k, "abbreviation_number")) &&
+        if ((SAME(k, "abbreviation_expansion") || SAME(k, "abbreviation_number") ||
+             SAME(k, "abbreviation_street")) &&
             strlen(v) >= TTF_IR_VALUE_SIZE)
             return ttf_validation_error(
                 d, "abbreviation expansion exceeds the semantic value capacity");
@@ -825,6 +833,7 @@ static ttf_status_t engine(const ttf_engine_t *e, ttf_resource_diagnostic_t *d, 
             }
             if ((SAME(entry->kind, "abbreviation_expansion") ||
                  SAME(entry->kind, "abbreviation_number") ||
+                 SAME(entry->kind, "abbreviation_street") ||
                  SAME(entry->kind, "abbreviation_dotted")) &&
                 (SAME(entry->lang, EN) || SAME(entry->lang, "*"))) {
                 value = ttf_resource_get(e, entry->kind, EN, entry->key, NULL);

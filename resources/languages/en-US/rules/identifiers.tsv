@@ -7,3 +7,5 @@ identifier_render	en-US	zero	zero
 identifier_render	en-US	separator	 
 # An ISBN reads digit by digit (the English references; 2026-10-07).
 identifier_label	en-US	isbn	digits
+# A PubMed id reads digit by digit (2026-10-07).
+identifier_label	en-US	pmid	digits

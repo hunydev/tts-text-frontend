@@ -1164,6 +1164,56 @@ static size_t scripture_verse(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     return i - in->index;
 }
 
+/* 1/2 oz. one half ounce: a unit word after a proper fraction (2026-10-07). */
+static size_t fraction_unit(const ttf_pack_input_t *in, ttf_semantic_t *out) {
+    const char *s = in->text, *measure;
+    size_t n = in->length, begin = in->tokens[in->index].begin, p = begin, num_end, den_begin, u, i;
+    unsigned long num, den;
+    char key[16], name[24];
+    if (begin && (isdigit((unsigned char)s[begin - 1]) || s[begin - 1] == '/' || s[begin - 1] == '.'))
+        return 0;
+    while (p < n && isdigit((unsigned char)s[p]) && p - begin < 2)
+        ++p;
+    num_end = p;
+    if (p == begin || p >= n || s[p] != '/')
+        return 0;
+    den_begin = ++p;
+    while (p < n && isdigit((unsigned char)s[p]) && p - den_begin < 2)
+        ++p;
+    if (p == den_begin || p + 1 >= n || s[p] != ' ' || !isalpha((unsigned char)s[p + 1]))
+        return 0;
+    num = strtoul(s + begin, NULL, 10);
+    den = strtoul(s + den_begin, NULL, 10);
+    if (!num || num >= den || den < 2 || den > 16 || num_end == begin)
+        return 0;
+    u = p + 1;
+    while (u < n && isalpha((unsigned char)s[u]) && u - p - 1 < sizeof(key) - 1)
+        ++u;
+    if (u < n && isalnum((unsigned char)s[u]))
+        return 0;
+    memcpy(key, s + p + 1, u - p - 1);
+    key[u - p - 1] = '\0';
+    measure = ttf_resource_get(in->engine, "numeric_suffix", "*", key, NULL);
+    if (!measure || strncmp(measure, "MEASURE:", 8) || strlen(measure + 8) + 6 >= sizeof(name))
+        return 0;
+    (void)snprintf(name, sizeof(name), "%s.one", measure + 8);
+    if (!ttf_resource_get(in->engine, "unit", EN, name, NULL))
+        return 0;
+    for (i = begin > 64 ? begin - 64 : 0; i < begin; ++i)
+        if ((unsigned char)s[i] >= 0xE3 && (unsigned char)s[i] <= 0xED)
+            return 0;
+    (void)snprintf(out->unit, sizeof(out->unit), "unit:%s", measure + 8);
+    (void)snprintf(out->value, sizeof(out->value), "%lu", num);
+    (void)snprintf(out->secondary, sizeof(out->secondary), "%lu", den);
+    out->type = TTF_SEM_FRACTION;
+    (void)snprintf(out->rule, sizeof(out->rule), "en.fraction-unit");
+    (void)snprintf(out->source_lang, sizeof(out->source_lang), "%s", EN);
+    out->input_end = u;
+    for (i = in->index; i < in->token_count && in->tokens[i].begin < u; ++i) {
+    }
+    return i - in->index;
+}
+
 static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     const ttf_token_t *t = &in->tokens[in->index];
     char key[96];
@@ -1179,6 +1229,9 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     if (date_tokens)
         return date_tokens;
     date_tokens = scripture_verse(in, out);
+    if (date_tokens)
+        return date_tokens;
+    date_tokens = fraction_unit(in, out);
     if (date_tokens)
         return date_tokens;
     date_tokens = ttf_en_classify_abbreviation(in, out);
@@ -1276,6 +1329,27 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
                     all_upper = 1;
                     break;
                 }
+        }
+        /* THERE IS NO BODY, Silent NO More: a short capital word that is a common
+           English word (caps_word) next to a capitalized word is that word, not
+           letters; NO between lowercase words stays n o (2026-10-07). */
+        if (all_upper && n <= 3 && res(in->engine, "caps_word", key)) {
+            size_t k = in->index, neighbours = 0;
+            while (k && in->tokens[k - 1].script == TTF_SCRIPT_WHITESPACE)
+                --k;
+            if (k && in->tokens[k - 1].script == TTF_SCRIPT_LATIN &&
+                in->tokens[k - 1].end - in->tokens[k - 1].begin >= 3 &&
+                in->text[in->tokens[k - 1].begin] >= 'A' && in->text[in->tokens[k - 1].begin] <= 'Z')
+                ++neighbours;
+            k = in->index + consumed;
+            while (k < in->token_count && in->tokens[k].script == TTF_SCRIPT_WHITESPACE)
+                ++k;
+            if (k < in->token_count && in->tokens[k].script == TTF_SCRIPT_LATIN &&
+                in->tokens[k].end - in->tokens[k].begin >= 3 &&
+                in->text[in->tokens[k].begin] >= 'A' && in->text[in->tokens[k].begin] <= 'Z')
+                ++neighbours;
+            if (neighbours)
+                all_upper = 0;
         }
         if (all_upper) {
             out->type = TTF_SEM_INITIALISM;
@@ -1696,7 +1770,8 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             return st;
         if ((st = space(b)) != TTF_OK)
             return st;
-        if (!min && !strcmp(s->rule, "syntax.hour-meridiem")) {
+        if (!min && (!strcmp(s->rule, "syntax.hour-meridiem") || s->secondary[0])) {
+            /* 4:00 a.m. four a m: the meridiem replaces o'clock (2026-10-07). */
             /* 5pm, 7 a.m.: the meridiem replaces o'clock (five p m); a written
                8:00 AM keeps its o'clock reading. */
         } else if (!min) {
@@ -1753,12 +1828,20 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
                 const char *bar = strchr(named, '|');
                 if (!bar)
                     return TTF_ERESOURCE;
-                return num == 1 ? ttf_buffer_append(b, named, (size_t)(bar - named))
-                                : ttf_buffer_puts(b, bar + 1);
-            }
-            if ((st = ordinal(e, (unsigned)den, b)) != TTF_OK)
+                st = num == 1 ? ttf_buffer_append(b, named, (size_t)(bar - named))
+                              : ttf_buffer_puts(b, bar + 1);
+            } else if ((st = ordinal(e, (unsigned)den, b)) == TTF_OK && num != 1)
+                st = ttf_buffer_puts(b, "s");
+            if (st != TTF_OK)
                 return st;
-            return num == 1 ? TTF_OK : ttf_buffer_puts(b, "s");
+            if (!strncmp(s->unit, "unit:", 5)) {
+                char name[32];
+                (void)snprintf(name, sizeof(name), "%s.one", s->unit + 5);
+                if ((st = space(b)) != TTF_OK)
+                    return st;
+                return word(e, b, "unit", name);
+            }
+            return TTF_OK;
         }
         if ((st = numeric(e, s->value, b)) != TTF_OK || (st = space(b)) != TTF_OK ||
             (st = word(e, b, "number", "fraction_over")) != TTF_OK || (st = space(b)) != TTF_OK)

@@ -178,3 +178,16 @@ wetext(VoxCPM2)는 마지막에 남은 숫자를 모두 inflect로 읽어 버리
 
 영어 벤치마크 speech 87.67% → 88.03% (+69, -0), 한국어 변화 없음.
 
+## EngConf 오류 정리 (2026-10-07)
+
+일부러 어려운 문장 231개(EngConf) 중 틀린 문장을 직접 보고 실제 오류를 고쳤습니다(계약 `en_engconf_v30.jsonl` 23건).
+
+- 이름 뒤 `St.`/`Dr.`/`Ave.`/`Rd.`/`Blvd.`/`Ln.`은 Street/Drive…(`Grey St. The fare`가 Grey Saint The fare였음; 문장이 이어지면 마침표는 문장 끝으로 남김). 이름 앞(`St. Louis`, `Mount St. Helens`)은 Saint 그대로, 대문자 `DR`(저자 이니셜)은 제외. 앞 세그먼트 문맥이 보이게 되어 `Oak Dr.`를 보존하던 이전 계약 5곳은 notes에 이전 값을 남기고 바꿈.
+- 직함: `Maj.` `Gen.` `Col.` `Capt.` `Lt.` `Sgt.` `Gov.` + 이름.
+- 미국 주: 도시 이름과 쉼표 뒤의 두 글자(`Kansas City, MO.` Missouri, `NEW YORK, N.Y.` New York). 도시가 소문자를 포함한 낱말이어야 하고(`SM, MD`는 그대로), `D.C.`는 참조처럼 d c.
+- 시각: `3.01 A.M.` three oh one a m, 정각 + 오전/오후는 o'clock을 빼고 `four a m`(이전 계약 2곳 notes에 이전 값). 문장 끝 `a.m.`의 마지막 점은 문장 끝으로 남기고, `a.m.`/`p.m.` 뒤에서는 문장을 자르지 않음.
+- 대문자 문장의 짧은 낱말(`THERE IS NO BODY`의 NO, `caps_word`), `VOL 24 NO 39` number.
+- `1/2 oz.` one half ounce, `V75S` vee seventy five ess, `PMID` 숫자 한 자리씩, `# 40`이 세그먼트 경계에서 갈라지지 않게.
+
+결과: 영어 speech 88.03% → 88.14% (EngConf 35.5% → 41.6%), text 84.12% → 84.20%, 한국어 변화 없음.
+

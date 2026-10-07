@@ -1842,6 +1842,18 @@
       },
       "category_overrides": {},
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/en_engconf_v30.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Night work 2026-09-29 under the user's goal; independently authored synthetic cases, written before the implementation",
+        "reason": "Project-owner request 2026-10-07: real English errors from EngConf misses"
+      },
+      "category_overrides": {},
+      "case_overrides": {}
     }
   ],
   "excluded": [

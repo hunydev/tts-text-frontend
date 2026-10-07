@@ -32,8 +32,9 @@ REFERENCES = (
     ("09:00", "nine o'clock", "09:00"),
     ("09:00:01", "nine o'clock and one second", "09:00:01"),
     ("12:00", "twelve o'clock", "12:00"),
-    ("12:00 AM", "twelve o'clock a m", "12:00"),
-    ("12:00 PM", "twelve o'clock p m", "12:00"),
+    # Was twelve o'clock a m / p m: a meridiem replaces o'clock (2026-10-07).
+    ("12:00 AM", "twelve a m", "12:00"),
+    ("12:00 PM", "twelve p m", "12:00"),
     ("9:05 AM", "nine oh five a m", "09:05"),
     ("24:00", "24:00", None),  # Existing unsupported end-of-day notation policy.
     ("00:00 AM", "00:00 AM", None),  # Mixed 00-hour and 12-hour suffix.

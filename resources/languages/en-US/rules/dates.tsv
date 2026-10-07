@@ -382,3 +382,6 @@ date_year_quantity	en-US	tons	1
 date_year_quantity	en-US	tonnes	1
 date_year_quantity	en-US	acres	1
 date_year_quantity	en-US	hectares	1
+# A dotted meridiem is not a sentence end: 9 a.m. tomorrow (2026-10-07).
+boundary_period	en-US	a.m	1
+boundary_period	en-US	p.m	1

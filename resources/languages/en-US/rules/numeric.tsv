@@ -204,6 +204,9 @@ time_suffix	*	am	AM
 time_suffix	*	pm	PM
 time_suffix	*	a.m.	AM
 time_suffix	*	p.m.	PM
+# Capital dotted meridiems (3.01 A.M.; 2026-10-07).
+time_suffix	*	A.M.	AM
+time_suffix	*	P.M.	PM
 meridiem	en-US	AM	a m
 meridiem	en-US	PM	p m
 

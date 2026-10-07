@@ -160,3 +160,89 @@ initial_continuation	en-US	(	1
 initial_continuation	en-US	"	1
 initial_continuation	en-US	&	1
 initial_continuation	en-US	:	1
+# Street names: after a capitalized name and before no other name (Main St. Street;
+# St. Louis keeps Saint; 2026-10-07).
+abbreviation_street	en-US	st	Street
+abbreviation_street	en-US	dr	Drive
+abbreviation_street	en-US	ave	Avenue
+abbreviation_street	en-US	rd	Road
+abbreviation_street	en-US	blvd	Boulevard
+abbreviation_street	en-US	ln	Lane
+# Ranks and offices before a name (Maj. Gen. Gordon Granger; 2026-10-07).
+abbreviation_expansion	en-US	maj	Major
+abbreviation_expansion	en-US	gen	General
+abbreviation_expansion	en-US	col	Colonel
+abbreviation_expansion	en-US	capt	Captain
+abbreviation_expansion	en-US	lt	Lieutenant
+abbreviation_expansion	en-US	sgt	Sergeant
+abbreviation_expansion	en-US	gov	Governor
+# Short common words that stay words among capitalized words (THERE IS NO BODY).
+caps_word	en-US	no	1
+caps_word	en-US	is	1
+caps_word	en-US	in	1
+caps_word	en-US	on	1
+caps_word	en-US	of	1
+caps_word	en-US	to	1
+caps_word	en-US	at	1
+caps_word	en-US	by	1
+caps_word	en-US	be	1
+caps_word	en-US	we	1
+caps_word	en-US	he	1
+caps_word	en-US	me	1
+caps_word	en-US	my	1
+caps_word	en-US	so	1
+caps_word	en-US	go	1
+caps_word	en-US	if	1
+caps_word	en-US	an	1
+caps_word	en-US	as	1
+# US states after a city and a comma (Kansas City, MO.; 2026-10-07).
+us_state	en-US	al	Alabama
+us_state	en-US	ak	Alaska
+us_state	en-US	az	Arizona
+us_state	en-US	ar	Arkansas
+us_state	en-US	ca	California
+us_state	en-US	co	Colorado
+us_state	en-US	ct	Connecticut
+us_state	en-US	de	Delaware
+us_state	en-US	fl	Florida
+us_state	en-US	ga	Georgia
+us_state	en-US	hi	Hawaii
+us_state	en-US	id	Idaho
+us_state	en-US	il	Illinois
+us_state	en-US	in	Indiana
+us_state	en-US	ia	Iowa
+us_state	en-US	ks	Kansas
+us_state	en-US	ky	Kentucky
+us_state	en-US	la	Louisiana
+us_state	en-US	me	Maine
+us_state	en-US	md	Maryland
+us_state	en-US	ma	Massachusetts
+us_state	en-US	mi	Michigan
+us_state	en-US	mn	Minnesota
+us_state	en-US	ms	Mississippi
+us_state	en-US	mo	Missouri
+us_state	en-US	mt	Montana
+us_state	en-US	ne	Nebraska
+us_state	en-US	nv	Nevada
+us_state	en-US	nh	New Hampshire
+us_state	en-US	nj	New Jersey
+us_state	en-US	nm	New Mexico
+us_state	en-US	ny	New York
+us_state	en-US	nc	North Carolina
+us_state	en-US	nd	North Dakota
+us_state	en-US	oh	Ohio
+us_state	en-US	ok	Oklahoma
+us_state	en-US	or	Oregon
+us_state	en-US	pa	Pennsylvania
+us_state	en-US	ri	Rhode Island
+us_state	en-US	sc	South Carolina
+us_state	en-US	sd	South Dakota
+us_state	en-US	tn	Tennessee
+us_state	en-US	tx	Texas
+us_state	en-US	ut	Utah
+us_state	en-US	vt	Vermont
+us_state	en-US	va	Virginia
+us_state	en-US	wa	Washington
+us_state	en-US	wv	West Virginia
+us_state	en-US	wi	Wisconsin
+us_state	en-US	wy	Wyoming

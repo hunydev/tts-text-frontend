@@ -71,6 +71,33 @@ static int following_name(const ttf_pack_input_t *in, size_t end) {
     return p > end && p < in->length && upper(in->text[p]) && p + 1 < in->length &&
            (alpha(in->text[p + 1]) || in->text[p + 1] == '.');
 }
+/* The capitalized word just before start (Grey St., Kansas City, MO). */
+static int capitalized_before(const ttf_pack_input_t *in, size_t start, size_t gap_max) {
+    size_t p = start, w;
+    while (p && horizontal(in->text[p - 1]) && start - p < gap_max)
+        --p;
+    if (p == start && gap_max)
+        return 0;
+    w = p;
+    while (p && alpha(in->text[p - 1]))
+        --p;
+    return w > p && upper(in->text[p]);
+}
+/* A capitalized word after a period that starts a new sentence rather than a
+   name (Grey St. The fare). */
+static int sentence_word(const ttf_pack_input_t *in, size_t p) {
+    static const char *const words[] = {"The", "A", "An", "It", "He", "She", "We", "They", "I",
+                                        "This", "That", "There", "These", "Those", "In", "On",
+                                        "At", "But", "And", "His", "Her", "Our", "Their", "You",
+                                        "My", "If", "When", "Then", "So", "As"};
+    size_t i, w = p;
+    while (w < in->length && alpha(in->text[w]))
+        ++w;
+    for (i = 0; i < sizeof(words) / sizeof(words[0]); ++i)
+        if (strlen(words[i]) == w - p && !memcmp(words[i], in->text + p, w - p))
+            return 1;
+    return 0;
+}
 static int following_digit(const ttf_pack_input_t *in, size_t end) {
     size_t p = end;
     while (p < in->length && horizontal(in->text[p]))
@@ -155,10 +182,70 @@ size_t ttf_en_classify_abbreviation(const ttf_pack_input_t *in, ttf_semantic_t *
     if (token->script != TTF_SCRIPT_LATIN || !left_boundary(in, start))
         return 0;
     n = token->end - start;
+    /* Kansas City, MO. / NEW YORK, N.Y. / Austin, TX in: a state after a city and
+       a comma reads its name (us_state; 2026-10-07). */
+    if (start >= 3 && in->text[start - 1] == ' ' && in->text[start - 2] == ',' &&
+        capitalized_before(in, start - 2, 0) &&
+        ((in->text[start - 3] >= 'a' && in->text[start - 3] <= 'z') ||
+         (n == 1 && start + 1 < in->length && in->text[start + 1] == '.')) &&
+        upper(in->text[start])) {
+        char state[3] = {0, 0, 0};
+        size_t end = 0;
+        if (n == 2 && upper(in->text[start + 1]))
+            end = token->end;
+        else if (n == 1 && start + 3 < in->length && in->text[start + 1] == '.' &&
+                 upper(in->text[start + 2]) && in->text[start + 3] == '.' &&
+                 (start + 4 == in->length || !alpha(in->text[start + 4])))
+            end = start + 3;
+        if (end && (end == in->length || !alpha(in->text[end + (in->text[end] == '.' ? 1 : 0)]) ||
+                    in->text[end] == ' ')) {
+            state[0] = lower(in->text[start]);
+            state[1] = lower(in->text[end - 1]);
+            expansion = lookup(in->engine, "us_state", state, NULL);
+            if (expansion && strlen(expansion) < sizeof(out->value) &&
+                (end == in->length || in->text[end] == ' ' || in->text[end] == '.' ||
+                 in->text[end] == ',' || in->text[end] == ';' || in->text[end] == ')')) {
+                out->type = TTF_SEM_ABBREVIATION;
+                out->lexical_class = TTF_LEX_WORD;
+                /* N.Y. at a sentence end keeps its last period as the full stop. */
+                out->input_end = end;
+                (void)lookup(in->engine, "us_state", state, out);
+                (void)snprintf(out->value, sizeof(out->value), "%s", state);
+                (void)snprintf(out->secondary, sizeof(out->secondary), "state");
+                (void)snprintf(out->source_lang, sizeof(out->source_lang), "%s", EN);
+                (void)snprintf(out->rule, sizeof(out->rule), "en.abbreviation.state");
+                return token_count(in, out->input_end);
+            }
+        }
+    }
     if (n < sizeof(key) && token->end < in->length && in->text[token->end] == '.') {
         for (i = 0; i < n; ++i)
             key[i] = lower(in->text[start + i]);
         key[n] = '\0';
+        /* Grey St. The fare, Main St. right now, Circle Dr., Santa Maria: after a
+           capitalized name and before no other name, St. is Street (it was Grey
+           Saint The fare; 2026-10-07). The period stays when a sentence follows. */
+        expansion = lookup(in->engine, "abbreviation_street", key, NULL);
+        if (expansion && strlen(expansion) < sizeof(out->value) && capitalized_before(in, start, 4) &&
+            !(n > 1 && upper(in->text[start + 1]))) {
+            size_t q = token->end + 1;
+            int next_name, new_sentence;
+            while (q < in->length && horizontal(in->text[q]))
+                ++q;
+            new_sentence = q == in->length || (q > token->end + 1 && upper(in->text[q]) && sentence_word(in, q));
+            next_name = q > token->end + 1 && q < in->length && upper(in->text[q]) && !new_sentence;
+            if (!next_name) {
+                out->type = TTF_SEM_ABBREVIATION;
+                out->lexical_class = TTF_LEX_WORD;
+                out->input_end = new_sentence ? token->end : token->end + 1;
+                (void)lookup(in->engine, "abbreviation_street", key, out);
+                (void)snprintf(out->value, sizeof(out->value), "%s", key);
+                (void)snprintf(out->secondary, sizeof(out->secondary), "street");
+                (void)snprintf(out->source_lang, sizeof(out->source_lang), "%s", EN);
+                (void)snprintf(out->rule, sizeof(out->rule), "en.abbreviation.street");
+                return token_count(in, out->input_end);
+            }
+        }
         expansion = lookup(in->engine, "abbreviation_expansion", key, NULL);
         if (expansion && following_name(in, token->end + 1)) {
             if (strlen(expansion) >= sizeof(out->value))
@@ -236,7 +323,8 @@ size_t ttf_en_classify_abbreviation(const ttf_pack_input_t *in, ttf_semantic_t *
         while (p && horizontal(in->text[p - 1]))
             --p;
         if (p != start && p && (alpha(in->text[p - 1]) || in->text[p - 1] == '(' ||
-                                in->text[p - 1] == ',')) {
+                                in->text[p - 1] == ',' ||
+                                (in->text[p - 1] >= '0' && in->text[p - 1] <= '9'))) {
             expansion = lookup(in->engine, "abbreviation_number", "no", NULL);
             if (expansion && strcmp(expansion, "preserve") && strlen(expansion) < sizeof(out->value)) {
                 out->type = TTF_SEM_ABBREVIATION;
@@ -366,6 +454,15 @@ ttf_status_t ttf_en_verbalize_abbreviation(const ttf_engine_t *engine, const ttf
             if (status == TTF_OK && lookup(engine, "abbreviation_dotted_period", s->value, NULL))
                 status = ttf_trace_resource(engine, "abbreviation_dotted_period", EN, s->value,
                                             s->value, "dotted-abbreviation-period", SIZE_MAX);
+            return status == TTF_OK ? ttf_buffer_puts(out, value) : status;
+        }
+        if (!strcmp(s->secondary, "street") || !strcmp(s->secondary, "state")) {
+            const char *kind = !strcmp(s->secondary, "street") ? "abbreviation_street" : "us_state";
+            value = lookup(engine, kind, s->value, NULL);
+            if (!value)
+                return ttf_buffer_append(out, surface, length);
+            status = ttf_trace_resource(engine, kind, EN, s->value, s->value, "abbreviation-reading",
+                                        SIZE_MAX);
             return status == TTF_OK ? ttf_buffer_puts(out, value) : status;
         }
         if (!strcmp(s->secondary, "number")) {

@@ -200,13 +200,13 @@ with tempfile.TemporaryDirectory(prefix="ttf-policy-validation-") as directory:
 
     # Title expansion requires the matching period to remain inside a context
     # unit. A later overlay can supply its boundary marker before freeze.
-    source.write_text("abbreviation_expansion\ten-US\tcapt\tCaptain\n", encoding="utf-8")
+    source.write_text("abbreviation_expansion\ten-US\tbrig\tBrigadier\n", encoding="utf-8")
     report = validate(source, success=False)
     require(report["diagnostic"]["kind"] == "abbreviation" and
-            report["diagnostic"]["key"] == "capt" and
+            report["diagnostic"]["key"] == "brig" and
             report["diagnostic"]["line"] == 0, report)
-    source.write_text("abbreviation_expansion\ten-US\tcapt\tCaptain\n"
-                      "abbreviation\ten-US\tcapt\tpreserve\n", encoding="utf-8")
+    source.write_text("abbreviation_expansion\ten-US\tbrig\tBrigadier\n"
+                      "abbreviation\ten-US\tbrig\tpreserve\n", encoding="utf-8")
     validate(source, "--require-complete-validation")
     rendered = invoke([CLI, "normalize", "--resources", RESOURCES, "--language", "en-US",
                        "--customer", source, "Rev. Rowan"])

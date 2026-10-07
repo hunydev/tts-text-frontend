@@ -11,7 +11,7 @@ from native import Engine, flatten
 
 library, resources = map(lambda s: Path(s).resolve(), sys.argv[1:])
 corpus = ROOT / 'tests/evaluation/abbreviation_dotted_v21.jsonl'
-assert hashlib.sha256(corpus.read_bytes()).hexdigest() == 'b7c1d5a34ec18816b996cdb0d189cd1fb2344cf27878cd1026cc029cca521382'
+assert hashlib.sha256(corpus.read_bytes()).hexdigest() == '0fa4d5732b75bbc69cdd93066eb1bd90a8529ced68203c4ab410bbba784222cd'  # Oak Dr./Oak St. now Drive/Street (2026-10-07)
 rows = [json.loads(line) for line in corpus.read_text().splitlines()]
 checks = 0
 rng = random.Random(210927)

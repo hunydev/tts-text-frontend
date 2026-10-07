@@ -2,6 +2,15 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- EngConf misses reviewed by hand: St./Dr./Ave./Rd./Blvd./Ln. after a name read
+  as street words (Grey St. The fare was Grey Saint; St. Louis stays Saint;
+  abbreviation_street), Maj./Gen./Col./Capt./Lt./Sgt./Gov. titles, US states
+  after a city and a comma (us_state), dotted A.M./P.M. times and no o'clock
+  before a meridiem (four a m), short capital words among capitals
+  (caps_word), VOL 24 NO 39, 1/2 oz., V75S, PMID digits, and # kept with its
+  number across a segment cut. Seven contracts that kept Oak Dr. or o'clock
+  record their previous values. Contract en_engconf_v30 (23). English speech
+  88.03% → 88.14% (EngConf 35.5% → 41.6%); Korean unchanged.
 - Low English Jev scores reviewed by hand (project owner: Jev is not always right):
   a written article before a day-first date is not repeated (the 9th October),
   a capital No before a number inside a sentence reads number (Route NO 128),

@@ -1502,6 +1502,15 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
         }
         if (q < n && digit(s[q])) {
             q = integer(s, n, q);
+            /* V75S: one or two capitals after the digits belong to the term
+               (it was vee seventy fiveS; 2026-10-07). */
+            {
+                size_t r = q;
+                while (r < n && r - q < 3 && s[r] >= 'A' && s[r] <= 'Z')
+                    ++r;
+                if (r > q && r - q <= 2 && (r == n || !(ascii_letter(s[r]) || digit(s[r]))))
+                    q = r;
+            }
             out->lexical_class = TTF_LEX_ALNUM_TERM;
             return finish(in, out, q, TTF_SEM_ALNUM_TERM, "syntax.alnum");
         }
@@ -1619,6 +1628,16 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
             copy_value(out->secondary, sizeof(out->secondary), meridiem, strlen(meridiem))) {
             (void)snprintf(out->value, sizeof(out->value), "%02u:%02u", hour, minute);
             out->layer = meridiem_layer > out->layer ? meridiem_layer : out->layer;
+            /* died at 3.01 A.M. / at 5 p.m. The: a dotted meridiem that ends the
+               sentence leaves its last dot as the full stop (2026-10-07). */
+            if (suffix_end > at && s[suffix_end - 1] == '.' && suffix_end - at >= 3) {
+                size_t r = suffix_end;
+                while (r < n && (s[r] == ' ' || s[r] == '\t'))
+                    ++r;
+                if (r == n || s[r] == '\n' || s[r] == '\r' || s[r] == '"' || s[r] == ')' ||
+                    (r > suffix_end && s[r] >= 'A' && s[r] <= 'Z'))
+                    --suffix_end;
+            }
             return finish(in, out, suffix_end, TTF_SEM_TIME,
                           at > a_end + 1 && s[a_end] == '.' ? "syntax.time" : "syntax.hour-meridiem");
         }

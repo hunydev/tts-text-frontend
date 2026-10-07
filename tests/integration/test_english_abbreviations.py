@@ -28,7 +28,7 @@ REFERENCES = (
     ("en-US", "NASA uses GPU.", "NASA uses GPU."),
     ("en-US", "Apple released the iPhone.", "Apple released the iPhone."),
     ("en-US", "THE FILM", "THE FILM"),
-    ("en-US", "Oak Dr.", "Oak Dr."),
+    ("en-US", "Oak Dr.", "Oak Drive."),  # was Oak Dr. (street suffix after a name, 2026-10-07)
     ("en-US", "Dr.", "Dr."),
     ("en-US", "Dr. lower", "Dr. lower"),
     ("en-US", "Dr.\nRowan", "Dr.\nRowan"),
