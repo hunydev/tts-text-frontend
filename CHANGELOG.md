@@ -2,6 +2,14 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Low English Jev scores reviewed by hand (project owner: Jev is not always right):
+  a written article before a day-first date is not repeated (the 9th October),
+  a capital No before a number inside a sentence reads number (Route NO 128),
+  STORY XXIII, ISBN groups split by spaces, and in English a pronounceable host
+  label reads as a word (Scrum.com, reasonradionetwork.com; spiegel.de records
+  its previous value). Kept on purpose: spelled capitals and NNNN. year lines.
+  Contract en_jev_fixes_v29 (12). Jev (600 sentences) 81.5% → 84.5% (wetext
+  79.2%); English benchmark speech 87.67% → 88.03% (+69, -0); Korean unchanged.
 - A segment's classifiers see the last 64 bytes of the previous segment, so a
   number at a segment start keeps the words before it (Douglas Haig born. 1880.
   eighteen eighty; ( b . 1952 )). Only classification sees the prefix: routing,

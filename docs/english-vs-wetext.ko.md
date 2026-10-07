@@ -161,3 +161,20 @@ wetext(VoxCPM2)는 마지막에 남은 숫자를 모두 inflect로 읽어 버리
 - 계약 `en_segment_context_v28.jsonl` 7건.
 - 결과: 영어 speech 87.58% → 87.67% (+16, -0), text 83.92% → 84.01%, 한국어 변화 없음, wetext 대비 88.34% : 68.38%.
 
+## 영어 Jev 재평가와 낮은 점수 문장 처리 (2026-10-07)
+
+아침의 600문장(두 시스템 출력이 다른 문장 무작위)을 다시 판정했습니다. Jev가 항상 맞지는 않으므로 wetext가 0.1 넘게 앞선 문장을 직접 보고 실제 오류만 고쳤습니다.
+
+| | 아침 | 지금 | wetext |
+|---|---|---|---|
+| Jev 0.7 이상 | 81.5% | **84.5%** | 79.2% |
+| 평균 | 0.816 | 0.831 | 0.798 |
+| wetext가 0.1 넘게 앞섬 | 70 | 46 | |
+| 숫자가 남은 결과 | 12 | 0 | 0 |
+
+고친 것 (계약 `en_jev_fixes_v29.jsonl` 12건): `the 9th October`의 관사 중복(the the ninth), `Route NO 128` number, `STORY XXIII` twenty three(`roman_cue story`), 띄어 쓴 ISBN 묶음(`ISBN 968 5005 59 1`), 영어에서 발음 가능한 호스트 이름은 낱말로(`Scrum.com` Scrum dot com, `reasonradionetwork.com`; 두 글자·네 자음 연속·짧은 소문자 계정·대문자는 그대로 철자. `spiegel.de` 계약은 notes에 이전 값을 남기고 바꿈).
+
+그대로 둔 것(판단): 대문자 약어를 철자로 읽는 정책(`DNA` d n a; TTS에서 같은 소리, Jev는 쓴 형태를 선호), 마침표가 붙은 단독 4자리 줄의 연도 읽기(`1231.` twelve thirty one; Jev는 일반 수를 더 높게 봤지만 책의 연표 머리글이 대부분이고 참조 33줄 모두 연도).
+
+영어 벤치마크 speech 87.67% → 88.03% (+69, -0), 한국어 변화 없음.
+

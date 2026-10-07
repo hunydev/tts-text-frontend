@@ -246,6 +246,15 @@ static int optional_year(const ttf_pack_input_t *in, size_t end, date_number_t *
     return 1;
 }
 
+static int article_before(const ttf_pack_input_t *in, size_t start) {
+    size_t p = start;
+    while (p && horizontal(in->text[p - 1]))
+        --p;
+    return p != start && p >= 3 && (in->text[p - 3] | 0x20) == 't' &&
+           (in->text[p - 2] | 0x20) == 'h' && (in->text[p - 1] | 0x20) == 'e' &&
+           (p == 3 || !ascii_alpha(in->text[p - 4]));
+}
+
 static size_t named_date(const ttf_pack_input_t *in, ttf_semantic_t *out, size_t start) {
     unsigned month = 0, year_value = 0;
     size_t p, q, end;
@@ -322,7 +331,10 @@ static size_t named_date(const ttf_pack_input_t *in, ttf_semantic_t *out, size_t
             (void)snprintf(out->value, sizeof(out->value), "--%02u-%02u", month, day.value);
             (void)snprintf(out->unit, sizeof(out->unit), "month-day");
         }
-        (void)snprintf(out->secondary, sizeof(out->secondary), "%s", month_first ? "mdy" : "dmy");
+        /* the 9th October: the written article is the reading's article, so it is
+           not said twice (2026-10-07). */
+        (void)snprintf(out->secondary, sizeof(out->secondary), "%s",
+                       month_first ? "mdy" : article_before(in, start) ? "dmyn" : "dmy");
     }
     return finish(in, out, end, valid, layer, "en.date.named");
 }

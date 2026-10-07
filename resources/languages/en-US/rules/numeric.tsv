@@ -274,6 +274,8 @@ numeric_suffix	*	㎐	MEASURE:Hz
 roman_cue	en-US	chapter	cardinal
 roman_cue	en-US	book	cardinal
 roman_cue	en-US	part	cardinal
+# STORY XXIII story twenty three (2026-10-07).
+roman_cue	en-US	story	cardinal
 roman_cue	en-US	volume	cardinal
 roman_cue	en-US	section	cardinal
 roman_cue	en-US	canto	cardinal

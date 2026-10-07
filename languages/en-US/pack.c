@@ -515,7 +515,8 @@ static ttf_status_t scripture(const ttf_engine_t *e, const char *value, ttf_buff
 static ttf_status_t date(const ttf_engine_t *e, const ttf_semantic_t *s, ttf_buffer_t *b) {
     unsigned year = 0, month = 0, day = 0;
     int consumed = 0, fields, has_year = 1, has_month = 1, has_day = 1, short_year = 0;
-    int day_first = !strcmp(s->secondary, "dmy"), year_first = !strcmp(s->secondary, "ymd");
+    int bare_article = !strcmp(s->secondary, "dmyn");
+    int day_first = !strcmp(s->secondary, "dmy") || bare_article, year_first = !strcmp(s->secondary, "ymd");
     char key[16];
     const char *policy = s->secondary[0] ? "named_year_style" : "numeric_year_style";
     ttf_status_t st;
@@ -566,7 +567,8 @@ static ttf_status_t date(const ttf_engine_t *e, const ttf_semantic_t *s, ttf_buf
         return ordinal(e, day, b);
     }
     if (day_first && has_day) {
-        if ((st = word(e, b, "date_word", "the")) != TTF_OK || (st = space(b)) != TTF_OK ||
+        if ((!bare_article &&
+             ((st = word(e, b, "date_word", "the")) != TTF_OK || (st = space(b)) != TTF_OK)) ||
             (st = ordinal(e, day, b)) != TTF_OK || (st = space(b)) != TTF_OK ||
             (st = word(e, b, "date_word", "of")) != TTF_OK || (st = space(b)) != TTF_OK)
             return st;

@@ -226,6 +226,31 @@ size_t ttf_en_classify_abbreviation(const ttf_pack_input_t *in, ttf_semantic_t *
             return token_count(in, out->input_end);
         }
     }
+    /* Route NO 128, Route No 138: a capital No inside a sentence before a number
+       reads its number word without the period too; a lowercase no stays a word
+       (2026-10-07). */
+    if (n == 2 && upper(in->text[start]) && (in->text[start + 1] | 0x20) == 'o' &&
+        (in->text[start] | 0x20) == 'n' && token->end < in->length && in->text[token->end] == ' ' &&
+        following_digit(in, token->end)) {
+        size_t p = start;
+        while (p && horizontal(in->text[p - 1]))
+            --p;
+        if (p != start && p && (alpha(in->text[p - 1]) || in->text[p - 1] == '(' ||
+                                in->text[p - 1] == ',')) {
+            expansion = lookup(in->engine, "abbreviation_number", "no", NULL);
+            if (expansion && strcmp(expansion, "preserve") && strlen(expansion) < sizeof(out->value)) {
+                out->type = TTF_SEM_ABBREVIATION;
+                out->lexical_class = TTF_LEX_WORD;
+                out->input_end = token->end;
+                (void)lookup(in->engine, "abbreviation_number", "no", out);
+                (void)snprintf(out->value, sizeof(out->value), "no");
+                (void)snprintf(out->secondary, sizeof(out->secondary), "number");
+                (void)snprintf(out->source_lang, sizeof(out->source_lang), "%s", EN);
+                (void)snprintf(out->rule, sizeof(out->rule), "en.abbreviation.number");
+                return token_count(in, out->input_end);
+            }
+        }
+    }
     if (n != 1 || !upper(in->text[start]))
         return 0;
     p = start;

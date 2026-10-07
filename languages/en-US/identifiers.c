@@ -64,9 +64,21 @@ size_t ttf_en_classify_identifier(const ttf_pack_input_t *in, ttf_semantic_t *se
     }
     /* ISBN 0 - 486 - 43365- X: an ISBN may space its groups (2026-10-07). */
     while (!strcmp(label, "isbn")) {
-        size_t p = end;
+        size_t p = end, k, digits = 0;
+        for (k = begin; k < end; ++k)
+            digits += decimal_digit(in->text[k]);
         while (p < in->length && in->text[p] == ' ')
             ++p;
+        /* ISBN 968 5005 59 1: one space between groups, up to 13 digits. */
+        if (p == end + 1 && p < in->length && decimal_digit(in->text[p]) && digits < 13) {
+            size_t q = p;
+            while (q < in->length && decimal_digit(in->text[q]))
+                ++q;
+            if (digits + (q - p) > 13)
+                break;
+            end = q;
+            continue;
+        }
         if (p >= in->length || in->text[p] != '-')
             break;
         ++p;

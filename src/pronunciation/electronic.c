@@ -65,6 +65,27 @@ static ttf_status_t chunk(const ttf_engine_t *e, const ttf_language_pack_t *sour
             }
         }
     }
+    /* Scrum.com, reasonradionetwork.com: in English a host label that is a
+       capitalized word or a long lowercase run, with a vowel and no four
+       consonants in a row, reads as a word (the English references; wetext
+       too). Short lowercase labels (jdoe), capitals (BBC) and digits stay
+       spelled (2026-10-07). */
+    if (word && !strcmp(target->language_tag, "en-US") && n >= 4 && n < 40 &&
+        ((text[0] >= 'A' && text[0] <= 'Z' && text[1] >= 'a' && text[1] <= 'z') || n >= 6)) {
+        size_t run = 0, longest = 0, vowels = 0, upper = 0;
+        for (i = 0; i < n; ++i) {
+            int vowel = strchr("aeiouy", key[i]) != NULL;
+            vowels += vowel;
+            upper += i && text[i] >= 'A' && text[i] <= 'Z';
+            run = vowel ? 0 : run + 1;
+            if (run > longest)
+                longest = run;
+        }
+        if (vowels && longest <= 3 && !upper) {
+            ttf_trace_stage(e, TTF_TRACE_POLICY, part, part + n);
+            return ttf_buffer_append(out, text, n);
+        }
+    }
     ttf_trace_stage(e, TTF_TRACE_POLICY, part, part + n);
     return spell(e, target, text, n, out);
 }
