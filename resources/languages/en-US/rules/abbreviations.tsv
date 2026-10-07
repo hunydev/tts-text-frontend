@@ -9,6 +9,10 @@ abbreviation_expansion	en-US	ft	Fort
 abbreviation_expansion	en-US	mr	Mister
 abbreviation_expansion	en-US	mrs	Missus
 abbreviation_expansion	en-US	prof	Professor
+abbreviation_expansion	en-US	rev	Reverend
+abbreviation_expansion	en-US	hon	Honorable
+# No. 5 number five: only before a number (No. I will not stays).
+abbreviation_number	en-US	no	number
 # Existing undotted initialisms keep their text spelling by default.
 # Options: preserve, letters (g p u), names (gee pee you).
 # Unknown ALL-CAPS words never acquire an English spelling pronunciation by default.

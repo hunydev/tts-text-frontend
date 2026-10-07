@@ -5,3 +5,5 @@ identifier_label	en-US	reference	digits
 identifier_label	en-US	transaction id	digits
 identifier_render	en-US	zero	zero
 identifier_render	en-US	separator	 
+# An ISBN reads digit by digit (the English references; 2026-10-07).
+identifier_label	en-US	isbn	digits

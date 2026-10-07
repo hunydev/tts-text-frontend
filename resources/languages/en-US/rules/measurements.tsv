@@ -427,3 +427,17 @@ unit	en-US	Bq_per_kg.one	becquerel per kilogram
 unit	en-US	Bq_per_kg.many	becquerels per kilogram
 unit	en-US	Bq_per_L.one	becquerel per liter
 unit	en-US	Bq_per_L.many	becquerels per liter
+# Squared units written with a plain 2 and pounds (the English references: km2
+# square kilometers 19 of 19, lbs pounds 29 of 29; 2026-10-07).
+numeric_suffix	*	km2	MEASURE:square_km
+numeric_suffix	*	/km2	MEASURE:per_square_km
+numeric_suffix	*	m2	MEASURE:square_m
+numeric_suffix	*	mi²	MEASURE:square_mi
+numeric_suffix	*	mi2	MEASURE:square_mi
+numeric_suffix	*	/mi²	MEASURE:per_square_mi
+numeric_suffix	*	/mi2	MEASURE:per_square_mi
+unit	en-US	square_mi.one	square mile
+unit	en-US	square_mi.many	square miles
+unit	en-US	per_square_mi.one	per square mile
+unit	en-US	per_square_mi.many	per square miles
+numeric_suffix	*	lbs	MEASURE:lb

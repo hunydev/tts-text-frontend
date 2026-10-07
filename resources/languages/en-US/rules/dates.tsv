@@ -27,7 +27,9 @@ month_alias	en-US	dec	12
 
 # Reading policy. calendar and cardinal are the only accepted style values.
 date_policy	en-US	named_year_style	calendar
-date_policy	en-US	numeric_year_style	cardinal
+# ISO dates read their year like other calendar years: the English references
+# read 109 of 113 ISO years so (1997-04-10 nineteen ninety seven; 2026-10-07).
+date_policy	en-US	numeric_year_style	calendar
 date_policy	en-US	year_style	calendar
 # Only contextual bare-year detection is restricted by these limits.
 date_policy	en-US	min_year	1000
@@ -257,6 +259,7 @@ decade_plural	en-US	1000	thousands
 # A decade is more specific than the generic "digits with a tail" fallback.
 classifier_priority	en-US	en.date.decade	10
 classifier_priority	en-US	en.date.year-range	10
+classifier_priority	en-US	en.date.slash	10
 
 # Adjacent date(label) only; Monday=1, Sunday=7, 0 disables an alias.
 weekday_label	en-US	mon	1

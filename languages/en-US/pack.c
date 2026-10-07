@@ -335,7 +335,7 @@ static ttf_status_t date_decade(const ttf_engine_t *e, unsigned value, ttf_buffe
 
 static ttf_status_t date(const ttf_engine_t *e, const ttf_semantic_t *s, ttf_buffer_t *b) {
     unsigned year = 0, month = 0, day = 0;
-    int consumed = 0, fields, has_year = 1, has_month = 1, has_day = 1;
+    int consumed = 0, fields, has_year = 1, has_month = 1, has_day = 1, short_year = 0;
     int day_first = !strcmp(s->secondary, "dmy");
     char key[16];
     const char *policy = s->secondary[0] ? "named_year_style" : "numeric_year_style";
@@ -366,9 +366,14 @@ static ttf_status_t date(const ttf_engine_t *e, const ttf_semantic_t *s, ttf_buf
     } else if (!s->unit[0]) {
         if (sscanf(s->value, "%u-%u-%u%n", &year, &month, &day, &consumed) != 3)
             return TTF_EINVAL;
+    } else if (!strcmp(s->unit, "short-year")) {
+        /* 6/17/13: a two-digit year as written (thirteen, oh eight, oh oh). */
+        if (sscanf(s->value, "%u-%u-%u%n", &year, &month, &day, &consumed) != 3 || year > 99)
+            return TTF_EINVAL;
+        short_year = 1;
     } else
         return TTF_EINVAL;
-    if (s->value[consumed] || (has_year && (!year || year > 9999)) ||
+    if (s->value[consumed] || (has_year && !short_year && (!year || year > 9999)) ||
         (has_month && (!month || month > 12)) || (has_day && (!day || day > 31)))
         return TTF_EINVAL;
     if (!has_month)
@@ -389,6 +394,13 @@ static ttf_status_t date(const ttf_engine_t *e, const ttf_semantic_t *s, ttf_buf
     if (has_year) {
         if ((st = space(b)) != TTF_OK)
             return st;
+        if (short_year && year < 10) {
+            if ((st = word(e, b, "number", "oh")) != TTF_OK || (st = space(b)) != TTF_OK)
+                return st;
+            return year ? card(e, year, b) : word(e, b, "number", "oh");
+        }
+        if (short_year)
+            return card(e, year, b);
         return date_year(e, year, policy, b);
     }
     return TTF_OK;

@@ -608,7 +608,8 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
         *handled = 1;
         if (!lowercase_letters(key, 1))
             return ttf_validation_error(d, "letter_name key must be one lowercase ASCII letter");
-    } else if (SAME(k, "abbreviation") || SAME(k, "abbreviation_expansion")) {
+    } else if (SAME(k, "abbreviation") || SAME(k, "abbreviation_expansion") ||
+               SAME(k, "abbreviation_number")) {
         /* Common protected abbreviations use a generic marker and may include
          * periods (e.g/i.e); the core validator owns that namespace. */
         if (wildcard && SAME(k, "abbreviation"))
@@ -619,7 +620,8 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                                         "abbreviation key must be 1..95 lowercase ASCII letters");
         if (SAME(k, "abbreviation") && !SAME(v, "preserve"))
             return ttf_validation_error(d, "abbreviation marker supports preserve only");
-        if (SAME(k, "abbreviation_expansion") && strlen(v) >= TTF_IR_VALUE_SIZE)
+        if ((SAME(k, "abbreviation_expansion") || SAME(k, "abbreviation_number")) &&
+            strlen(v) >= TTF_IR_VALUE_SIZE)
             return ttf_validation_error(
                 d, "abbreviation expansion exceeds the semantic value capacity");
     } else if (SAME(k, "date_word")) {
@@ -817,6 +819,7 @@ static ttf_status_t engine(const ttf_engine_t *e, ttf_resource_diagnostic_t *d, 
                                        "selected pronunciation variant is missing");
             }
             if ((SAME(entry->kind, "abbreviation_expansion") ||
+                 SAME(entry->kind, "abbreviation_number") ||
                  SAME(entry->kind, "abbreviation_dotted")) &&
                 (SAME(entry->lang, EN) || SAME(entry->lang, "*"))) {
                 value = ttf_resource_get(e, entry->kind, EN, entry->key, NULL);

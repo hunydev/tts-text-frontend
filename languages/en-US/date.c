@@ -229,6 +229,20 @@ static int optional_year(const ttf_pack_input_t *in, size_t end, date_number_t *
     if (p == in->length || !ascii_digit(in->text[p]))
         return 0;
     *year = number_at(in, p, 0);
+    /* 21 January 19 44: a year written as its century and the rest (the
+       references read nineteen forty four; 2026-10-07). */
+    if (year->valid && year->digits == 2 && year->value >= 10 && year->value <= 20) {
+        size_t q = skip_horizontal(in->text, in->length, year->end);
+        if (q > year->end && q + 2 <= in->length && ascii_digit(in->text[q]) &&
+            ascii_digit(in->text[q + 1]) && (q + 2 == in->length || !ascii_digit(in->text[q + 2]))) {
+            date_number_t rest = number_at(in, q, 0);
+            if (rest.valid && rest.digits == 2) {
+                year->value = year->value * 100 + rest.value;
+                year->digits = 4;
+                year->end = rest.end;
+            }
+        }
+    }
     return 1;
 }
 
@@ -753,6 +767,78 @@ static size_t bracketed_weekday(const ttf_pack_input_t *in, ttf_semantic_t *out,
     return 0;
 }
 
+/* English text on this line: no Hangul, Han or Kana in the 64 bytes before or
+   the 16 after, and an English default or an English word before. */
+static int english_line(const ttf_pack_input_t *in, size_t start, size_t end) {
+    size_t from = start > 64 ? start - 64 : 0, to = end + 16 < in->length ? end + 16 : in->length, p;
+    const char *lang = in->engine->config.default_language;
+    int word = 0;
+    for (p = start; p > from; --p) {
+        unsigned char c = (unsigned char)in->text[p - 1];
+        if (c == '\n' || c == '\r')
+            break;
+        if (c >= 0xE3 && c <= 0xED)
+            return 0;
+        word |= ascii_alpha((char)c) && p >= 2 && ascii_alpha(in->text[p - 2]);
+    }
+    for (p = end; p < to && in->text[p] != '\n'; ++p)
+        if ((unsigned char)in->text[p] >= 0xE3 && (unsigned char)in->text[p] <= 0xED)
+            return 0;
+    return word || (lang && !strncmp(lang, "en", 2));
+}
+
+/* 6/25/1940, 02/15/2017, 6/17/13: an English month/day/year reads month first,
+   as the references do (10/02/2017 October second); a first field over 12 is the
+   day (25/12/1999 the twenty fifth of December). A two-digit year reads as
+   written (13 thirteen, 00 oh oh). English text only (2026-10-07). */
+static size_t slash_month_day_year(const ttf_pack_input_t *in, ttf_semantic_t *out, size_t start) {
+    static const unsigned days[] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    unsigned field[3] = {0, 0, 0}, digits[3] = {0, 0, 0}, month, day, swap;
+    size_t p = start, k;
+    ttf_resource_layer_t layer = TTF_LAYER_COMMON;
+    for (k = 0; k < 3; ++k) {
+        if (k) {
+            if (p >= in->length || in->text[p] != '/')
+                return 0;
+            ++p;
+        }
+        while (p < in->length && ascii_digit(in->text[p]) && digits[k] < 5) {
+            field[k] = field[k] * 10 + (unsigned)(in->text[p] - '0');
+            ++digits[k];
+            ++p;
+        }
+        if (!digits[k])
+            return 0;
+    }
+    if (digits[0] > 2 || digits[1] > 2 || (digits[2] != 2 && digits[2] != 4))
+        return 0;
+    if (p < in->length &&
+        (ascii_digit(in->text[p]) || ascii_alpha(in->text[p]) || in->text[p] == '/' ||
+         ((in->text[p] == '.' || in->text[p] == '-' || in->text[p] == ':') && p + 1 < in->length &&
+          ascii_digit(in->text[p + 1]))))
+        return 0;
+    month = field[0];
+    day = field[1];
+    swap = month > 12 && day <= 12;
+    if (swap) {
+        month = field[1];
+        day = field[0];
+    }
+    if (!month || month > 12 || !day || day > days[month - 1] || !english_line(in, start, p))
+        return 0;
+    if (digits[2] == 4) {
+        if (field[2] < policy_year(in, "min_year", 1000, &layer) ||
+            field[2] > policy_year(in, "max_year", 2099, &layer))
+            return 0;
+        (void)snprintf(out->value, sizeof(out->value), "%04u-%02u-%02u", field[2], month, day);
+    } else {
+        (void)snprintf(out->value, sizeof(out->value), "%02u-%02u-%02u", field[2], month, day);
+        (void)snprintf(out->unit, sizeof(out->unit), "short-year");
+    }
+    (void)snprintf(out->secondary, sizeof(out->secondary), "%s", swap ? "dmy" : "mdy");
+    return finish(in, out, p, 1, layer, "en.date.slash");
+}
+
 size_t ttf_en_classify_date(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     size_t start, named;
     if (!in || !out || in->index >= in->token_count)
@@ -761,6 +847,9 @@ size_t ttf_en_classify_date(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     if (start >= in->length || !left_boundary(in, start))
         return 0;
     named = bracketed_weekday(in, out, start);
+    if (named)
+        return named;
+    named = slash_month_day_year(in, out, start);
     if (named)
         return named;
     named = named_date(in, out, start);

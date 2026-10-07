@@ -113,6 +113,11 @@ ordinal_suffix	*	st	en-US
 ordinal_suffix	*	nd	en-US
 ordinal_suffix	*	rd	en-US
 ordinal_suffix	*	th	en-US
+# 24TH, 22ND in capitals (2026-10-07).
+ordinal_suffix	*	ST	en-US
+ordinal_suffix	*	ND	en-US
+ordinal_suffix	*	RD	en-US
+ordinal_suffix	*	TH	en-US
 currency_prefix	*	$	USD
 # Longest decimal-tail match selects a valid written ordinal suffix.
 ordinal_tail	en-US	11	th

@@ -241,8 +241,24 @@ ttf_status_t ttf_speech_output(const ttf_engine_t *e, const ttf_language_pack_t 
                still separates the words on either side. */
             status = ttf_trace_resource(e, "speech_silent", lang, key, key, "final-silent-mark",
                                         SIZE_MAX);
-            if (PREV_SPOKEN())
-                pending_space = 1;
+            /* INGREDIENTS.--To, manner:--Dissolve: after clause punctuation the
+               dash still separates the words (2026-10-07). */
+            {
+                size_t k = left_length;
+                char last = '\0';
+                if (out.length)
+                    last = out.data[out.length - 1];
+                else {
+                    while (k && left[k - 1] == '-')
+                        --k;
+                    last = k ? left[k - 1] : '\0';
+                }
+                if (PREV_SPOKEN() ||
+                    (last && strchr(".,;:!?", last) &&
+                     word_follows(text->data + at + width, text->length - at - width, right,
+                                  right_length)))
+                    pending_space = 1;
+            }
         } else if ((mapped = ttf_resource_get(e, "speech_symbol", lang, key, NULL))) {
             int spaced = symbol_spaced(e, lang, key);
             const char *prefix = word_follows(text->data + at + width, text->length - at - width,

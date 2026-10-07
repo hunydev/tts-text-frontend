@@ -62,6 +62,13 @@ size_t ttf_en_classify_identifier(const ttf_pack_input_t *in, ttf_semantic_t *se
         while (end < in->length && decimal_digit(in->text[end]))
             ++end;
     }
+    /* ISBN 1-86508-123-X: an ISBN-10 check digit may be X (2026-10-07). */
+    if (!strcmp(label, "isbn") && end < in->length) {
+        size_t x = end + (in->text[end] == '-');
+        if (x < in->length && (in->text[x] == 'X' || in->text[x] == 'x') &&
+            valid_tail(in, x + 1))
+            end = x + 1;
+    }
     if (!valid_tail(in, end) || end - begin >= sizeof(semantic->value))
         return 0;
     memcpy(semantic->value, in->text + begin, end - begin);
@@ -95,6 +102,11 @@ ttf_status_t ttf_en_render_identifier(const ttf_engine_t *engine, const char *va
                            : ttf_resource_get(engine, "number", "en-US", key, NULL);
             if (!rendered && *value == '0')
                 rendered = ttf_resource_get(engine, "number", "en-US", "0", NULL);
+            if (previous_digit && (status = ttf_buffer_puts(output, " ")) != TTF_OK)
+                return status;
+            previous_digit = 1;
+        } else if (*value == 'X' || *value == 'x') {
+            rendered = "X";
             if (previous_digit && (status = ttf_buffer_puts(output, " ")) != TTF_OK)
                 return status;
             previous_digit = 1;

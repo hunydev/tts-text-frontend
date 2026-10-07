@@ -71,6 +71,12 @@ static int following_name(const ttf_pack_input_t *in, size_t end) {
     return p > end && p < in->length && upper(in->text[p]) && p + 1 < in->length &&
            (alpha(in->text[p + 1]) || in->text[p + 1] == '.');
 }
+static int following_digit(const ttf_pack_input_t *in, size_t end) {
+    size_t p = end;
+    while (p < in->length && horizontal(in->text[p]))
+        ++p;
+    return p < in->length && in->text[p] >= '0' && in->text[p] <= '9';
+}
 /* Preserve a terminal punctuation mark at a complete unit's end, newline, or
    closing quotation. The segmenter protects initial periods until safe input
    is available, so this does not depend on arbitrary input chunk boundaries. */
@@ -165,6 +171,22 @@ size_t ttf_en_classify_abbreviation(const ttf_pack_input_t *in, ttf_semantic_t *
             (void)snprintf(out->secondary, sizeof(out->secondary), "title");
             (void)snprintf(out->source_lang, sizeof(out->source_lang), "%s", EN);
             (void)snprintf(out->rule, sizeof(out->rule), "en.abbreviation.title");
+            return token_count(in, out->input_end);
+        }
+        /* No. 5, no. 7: a number abbreviation before digits reads its word
+           (number five); without a number it keeps its text (2026-10-07). */
+        expansion = lookup(in->engine, "abbreviation_number", key, NULL);
+        if (expansion && strcmp(expansion, "preserve") && following_digit(in, token->end + 1)) {
+            if (strlen(expansion) >= sizeof(out->value))
+                return 0;
+            out->type = TTF_SEM_ABBREVIATION;
+            out->lexical_class = TTF_LEX_WORD;
+            out->input_end = token->end + 1;
+            (void)lookup(in->engine, "abbreviation_number", key, out);
+            (void)snprintf(out->value, sizeof(out->value), "%s", key);
+            (void)snprintf(out->secondary, sizeof(out->secondary), "number");
+            (void)snprintf(out->source_lang, sizeof(out->source_lang), "%s", EN);
+            (void)snprintf(out->rule, sizeof(out->rule), "en.abbreviation.number");
             return token_count(in, out->input_end);
         }
         expansion = lookup(in->engine, "abbreviation_dotted", key, NULL);
@@ -288,8 +310,12 @@ static int pronounceable(const ttf_engine_t *engine, const char *word, size_t le
             continue;
         if (!run || i == length)
             return 0;
+        /* Inside a word an s may follow the coda (THURS-DAY, 2026-10-07); a
+           final rs stays letters (IRS). */
         for (split = 1; split < i - run; ++split)
-            if (cluster(engine, "syllable_coda", word + run, split) &&
+            if ((cluster(engine, "syllable_coda", word + run, split) ||
+                 (split > 1 && word[run + split - 1] == 's' &&
+                  cluster(engine, "syllable_coda", word + run, split - 1))) &&
                 cluster(engine, "syllable_onset", word + run + split, i - run - split))
                 break;
         if (split >= i - run)
@@ -315,6 +341,14 @@ ttf_status_t ttf_en_verbalize_abbreviation(const ttf_engine_t *engine, const ttf
             if (status == TTF_OK && lookup(engine, "abbreviation_dotted_period", s->value, NULL))
                 status = ttf_trace_resource(engine, "abbreviation_dotted_period", EN, s->value,
                                             s->value, "dotted-abbreviation-period", SIZE_MAX);
+            return status == TTF_OK ? ttf_buffer_puts(out, value) : status;
+        }
+        if (!strcmp(s->secondary, "number")) {
+            value = lookup(engine, "abbreviation_number", s->value, NULL);
+            if (!value || !strcmp(value, "preserve"))
+                return ttf_buffer_append(out, surface, length);
+            status = ttf_trace_resource(engine, "abbreviation_number", EN, s->value, s->value,
+                                        "number-abbreviation-reading", SIZE_MAX);
             return status == TTF_OK ? ttf_buffer_puts(out, value) : status;
         }
         if (!strcmp(s->secondary, "bare")) {

@@ -368,6 +368,7 @@ ttf_status_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, i
     cue_scope_cache_t cue_caches[3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
     uint32_t quote_stack[32];
     size_t quote_depth = 0;
+    int tex_open = 0;
     ttf_status_t status =
         ttf_tokenize_protected(e, s, n, final, &tokens, &count, &regions, &region_count);
     *boundary = 0;
@@ -440,11 +441,19 @@ ttf_status_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, i
             if (ttf_utf8_decode(s + at, n - at, &cp, &w) != 1)
                 goto done;
             chars++;
+            /* A TeX quote (`` ... `` or `` ... '') is a quotation too: a cut
+               inside it leaves its closing marks to open code in the next
+               segment (2026-10-07). */
+            if (cp == '`' && at + 1 < n && s[at + 1] == '`' && (!at || s[at - 1] != '`'))
+                tex_open = !tex_open;
+            else if (cp == '\'' && tex_open && at + 1 < n && s[at + 1] == '\'' &&
+                     (!at || s[at - 1] != '\''))
+                tex_open = 0;
             if (quote_depth && cp == quote_stack[quote_depth - 1])
                 quote_depth--;
             else if (ttf_quote_closer(cp) && quote_depth < 32)
                 quote_stack[quote_depth++] = ttf_quote_closer(cp);
-            if (e->config.sentence_split && !quote_depth) {
+            if (e->config.sentence_split && !quote_depth && !tex_open) {
                 if (cp == '\n')
                     sentence = 1;
                 else if (cp == '.' || cp == '!' || cp == '?' || cp == 0x3002 || cp == 0xff01 ||
@@ -465,7 +474,7 @@ ttf_status_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, i
                 selected = at + w;
                 goto done;
             }
-            if (!quote_depth && t->script == TTF_SCRIPT_WHITESPACE &&
+            if (!quote_depth && !tex_open && t->script == TTF_SCRIPT_WHITESPACE &&
                 ((e->config.phrase_split && chars >= target) ||
                  chars >= e->config.max_segment_length)) {
                 size_t previous = at;
@@ -487,6 +496,30 @@ ttf_status_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, i
                     at += w;
                     continue;
                 }
+                /* A number keeps the word before it in its segment: its reading
+                   depends on it (from 1918 to 1923, the # 7 seed), and the next
+                   segment cannot see it (2026-10-07). After a word an unseen next
+                   token waits for more input, so a stream cuts where a batch does;
+                   after a literal or punctuation the cut stays immediate. */
+                if (!i || (tokens[i - 1].script != TTF_SCRIPT_LATIN &&
+                           tokens[i - 1].script != TTF_SCRIPT_HANGUL &&
+                           tokens[i - 1].script != TTF_SCRIPT_HAN &&
+                           tokens[i - 1].script != TTF_SCRIPT_KANA)) {
+                    /* no word before: nothing to keep */
+                } else if (i + 1 < count) {
+                    size_t next = tokens[i + 1].begin;
+                    if (next < n && s[next] == '#' && next + 1 < n && s[next + 1] == ' ')
+                        next += 2;
+                    else if (next < n && s[next] == '#')
+                        ++next;
+                    if (next >= n ? !final : (s[next] >= '0' && s[next] <= '9')) {
+                        at += w;
+                        continue;
+                    }
+                } else if (!final) {
+                    at += w;
+                    continue;
+                }
                 /* A number, sign, currency prefix or fraction separator may
                    bind to the following token even across spaces. Retain it
                    without inspecting unavailable future input. */
@@ -495,6 +528,23 @@ ttf_status_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, i
                      s[previous - 1] == ':' || s[previous - 1] == '+' || s[previous - 1] == '-')) {
                     at += w;
                     continue;
+                }
+                /* 112에 신고, 2-1로 앞서: a number with an attached particle keeps
+                   the word after it in its segment too (2026-10-07). */
+                {
+                    size_t k = previous, steps = 0;
+                    int numeric = 0;
+                    while (k && steps < 32 && s[k - 1] != ' ' && s[k - 1] != '\t' &&
+                           s[k - 1] != '\n' && s[k - 1] != '\r') {
+                        numeric |= s[k - 1] >= '0' && s[k - 1] <= '9';
+                        --k;
+                        ++steps;
+                    }
+                    /* A protected literal (code) is not a number. */
+                    if (numeric && i && tokens[i - 1].script != TTF_SCRIPT_SYMBOL) {
+                        at += w;
+                        continue;
+                    }
                 }
                 if (quantity_before_space(e, s, tokens, i, previous)) {
                     at += w;
