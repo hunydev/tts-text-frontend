@@ -14,6 +14,7 @@ import re
 import sys
 
 ACTIVE_JSONL = (
+    "ko_bench_fixes_v32",
     "ko_jev_fixes_v31",
     "en_engconf_v30",
     "en_jev_fixes_v29",

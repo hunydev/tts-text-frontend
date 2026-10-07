@@ -295,9 +295,9 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     }
     if (SAME(k, "speech_silent")) {
         *handled = 1;
-        return symbol_key(key) && ttf_validation_enum(v, "0|1")
+        return symbol_key(key) && ttf_validation_enum(v, "0|1|between")
                    ? TTF_OK
-                   : ttf_validation_error(d, "speech_silent requires one symbol and 0|1 flag");
+                   : ttf_validation_error(d, "speech_silent requires one symbol and 0|1|between");
     }
     if (SAME(k, "speech_lengthening")) {
         *handled = 1;
@@ -613,7 +613,8 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     } else if (SAME(k, "digit_label_counter") || SAME(k, "digit_range_scale") ||
                SAME(k, "digit_range_cue") || SAME(k, "score_cue") || SAME(k, "model_name") ||
                SAME(k, "short_code_label") || SAME(k, "service_number") || SAME(k, "call_cue") ||
-               SAME(k, "pin_cue") || SAME(k, "rate_cue")) {
+               SAME(k, "pin_cue") || SAME(k, "rate_cue") ||
+               SAME(k, "clothing_cue")) {
         *handled = 1;
         if ((status = bounded_key(r, 64, d)) != TTF_OK)
             return status;

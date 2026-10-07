@@ -236,7 +236,12 @@ ttf_status_t ttf_speech_output(const ttf_engine_t *e, const ttf_language_pack_t 
             if (status == TTF_OK)
                 status = ttf_buffer_append(&out, key, width);
         } else if (ttf_resource_get(e, "speech_silent", lang, key, NULL) &&
-                   !strcmp(ttf_resource_get(e, "speech_silent", lang, key, NULL), "1")) {
+                   (!strcmp(ttf_resource_get(e, "speech_silent", lang, key, NULL), "1") ||
+                    /* K-팝, U-보금자리론: between two spoken words only (2026-10-07) */
+                    (!strcmp(ttf_resource_get(e, "speech_silent", lang, key, NULL), "between") &&
+                     PREV_SPOKEN() &&
+                     word_follows(text->data + at + width, text->length - at - width, right,
+                                  right_length)))) {
             /* A path or bracket mark outside an expression is not spoken; it
                still separates the words on either side. */
             status = ttf_trace_resource(e, "speech_silent", lang, key, key, "final-silent-mark",

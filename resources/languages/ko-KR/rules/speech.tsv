@@ -231,3 +231,5 @@ latin_possessive	ko-KR	s	스
 # (2026-10-02, project-owner decision): the written Hangul is kept as written, as
 # a following word is not always a particle (성수동1가). Set on to restore.
 policy	ko-KR	particle_agreement	off
+# A hyphen between two spoken words is a joiner, not 하이픈 (K-팝 케이 팝; 2026-10-07).
+speech_silent	ko-KR	-	between

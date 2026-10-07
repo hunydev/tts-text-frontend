@@ -498,6 +498,54 @@ size_t ttf_ko_classify_batting_average(const ttf_pack_input_t *in, ttf_semantic_
     return i - in->index;
 }
 
+/* 수완 03번, 종로 08번: a route number with a leading zero reads its digits (it
+ * was 세 번); 70-2번, 330-1번: a branch route, a smaller number after the hyphen,
+ * reads its numbers joined by 다시 (3-5번 문제 stays a range; 2026-10-07). */
+size_t ttf_ko_classify_route_number(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    size_t begin = in->tokens[in->index].begin, p = begin, dash = 0, end, i;
+    unsigned first = 0, second = 0;
+    if (begin && (decimal_digit(in->text[begin - 1]) || in->text[begin - 1] == '-' ||
+                  in->text[begin - 1] == '.' || in->text[begin - 1] == ',' ||
+                  ((in->text[begin - 1] | 0x20) >= 'a' && (in->text[begin - 1] | 0x20) <= 'z')))
+        return 0;
+    while (p < in->length && decimal_digit(in->text[p]) && p - begin < 5)
+        first = first * 10 + (unsigned)(in->text[p++] - '0');
+    if (p == begin)
+        return 0;
+    end = p;
+    if (p + 1 < in->length && in->text[p] == '-' && decimal_digit(in->text[p + 1])) {
+        dash = p++;
+        while (p < in->length && decimal_digit(in->text[p]) && p - dash <= 3)
+            second = second * 10 + (unsigned)(in->text[p++] - '0');
+        end = p;
+    }
+    if (end + 3 > in->length || memcmp(in->text + end, "\xeb\xb2\x88", 3) ||
+        (end + 6 <= in->length && !memcmp(in->text + end, "번지", 6)))
+        return 0;
+    if (!dash) {
+        if (end - begin < 2 || end - begin > 3 || in->text[begin] != '0')
+            return 0;
+        memcpy(s->value, in->text + begin, end - begin);
+        s->value[end - begin] = '\0';
+        (void)snprintf(s->unit, sizeof(s->unit), "leading_zero");
+        (void)snprintf(s->rule, sizeof(s->rule), "ko:route-zero");
+    } else {
+        if (dash - begin > 3 || end - dash - 1 > 2 || in->text[begin] == '0' ||
+            in->text[dash + 1] == '0' || !second || second >= first)
+            return 0;
+        memcpy(s->value, in->text + begin, end - begin);
+        s->value[end - begin] = '\0';
+        (void)snprintf(s->unit, sizeof(s->unit), "financial_identifier");
+        (void)snprintf(s->rule, sizeof(s->rule), "ko:lot-number");
+    }
+    s->type = TTF_SEM_DIGIT_SEQUENCE;
+    s->input_end = end;
+    s->layer = TTF_LAYER_COMMON;
+    for (i = in->index; i < in->token_count && in->tokens[i].begin < end; ++i) {
+    }
+    return i - in->index;
+}
+
 size_t ttf_ko_classify_identifier(const ttf_pack_input_t *in, ttf_semantic_t *semantic) {
     size_t begin = in->tokens[in->index].begin, end = begin, i;
     char label[TTF_IR_VALUE_SIZE];
@@ -900,7 +948,9 @@ size_t ttf_ko_classify_card(const ttf_pack_input_t *in, ttf_semantic_t *semantic
     }
     if (p + 1 < in->length && in->text[p] == ' ' && decimal_digit(in->text[p + 1]))
         return 0;
-    if (!valid_tail(in, p) || p - begin >= sizeof(semantic->value))
+    /* 6900번 카드로: 번 after the card number names it (2026-10-07). */
+    if ((!valid_tail(in, p) && !(p + 3 <= in->length && !memcmp(in->text + p, "\xeb\xb2\x88", 3))) ||
+        p - begin >= sizeof(semantic->value))
         return 0;
     for (i = in->index; i < in->token_count && in->tokens[i].begin < p; ++i) {
     }
@@ -1173,6 +1223,21 @@ size_t ttf_ko_classify_apparel_size(const ttf_pack_input_t *in, ttf_semantic_t *
 /* Korean women's clothing sizes 44..99 (two equal digits) before 사이즈 are
  * read digit by digit: 55사이즈 -> 오오사이즈. Men's sizes (95, 100) read as
  * values. The word after the number is a resource (clothing_size_word). */
+/* A counter or unit word as this token (66세, 55명): not a size. */
+static int raw_counter_word(const ttf_pack_input_t *in, const ttf_token_t *t) {
+    char key[16];
+    size_t width;
+    for (width = 3; width <= 9 && t->begin + width <= t->end; width += 3) {
+        const char *value;
+        memcpy(key, in->text + t->begin, width);
+        key[width] = '\0';
+        value = ttf_resource_get(in->engine, "numeric_suffix", "*", key, NULL);
+        if (value && strcmp(key, "반"))
+            return 1;
+    }
+    return 0;
+}
+
 size_t ttf_ko_classify_clothing_size(const ttf_pack_input_t *in, ttf_semantic_t *semantic) {
     size_t begin = in->tokens[in->index].begin, p = begin + 2, i;
     const ttf_token_t *next = NULL;
@@ -1188,7 +1253,64 @@ size_t ttf_ko_classify_clothing_size(const ttf_pack_input_t *in, ttf_semantic_t 
             break;
         } else if (in->tokens[i].script != TTF_SCRIPT_WHITESPACE ||
                    in->tokens[i].end - in->tokens[i].begin != 1)
-            return 0;
+            break;
+    /* 펄블랙 66을, 55라면, 44, 55, 66 등, 55반~66사이즈, 55~77사이즈: without 사이즈
+       right after, a doubled size in a clothing sentence (clothing_cue within
+       30 syllables) is a size too, unless a counter follows (66세, 55명;
+       2026-10-07). */
+    {
+        size_t from = begin > 90 ? begin - 90 : 0, to = p + 90 < in->length ? p + 90 : in->length;
+        char after = p < in->length ? in->text[p] : ' ';
+        int half = p + 3 <= in->length && !memcmp(in->text + p, "반", 3);
+        int digit_next = p + 1 < in->length && decimal_digit(in->text[p + 1]);
+        int scale = p + 3 <= in->length && (!memcmp(in->text + p, "만", 3) || !memcmp(in->text + p, "천", 3) ||
+                                            !memcmp(in->text + p, "억", 3) || !memcmp(in->text + p, "백", 3));
+        int tail_ok = !scale && (after == ' ' || ((after == ',' || after == '.') && !digit_next) ||
+                                 after == '~' || half || valid_tail(in, p) || p == in->length);
+        /* 88, 91, 94: a list with a number that is not a doubled size is a list of values. */
+        if (tail_ok) {
+            size_t q = p;
+            while (q < in->length && (in->text[q] == ',' || in->text[q] == ' ' || in->text[q] == '\''))
+                ++q;
+            if (q > p && q + 1 < in->length && decimal_digit(in->text[q]) &&
+                (in->text[q + 1] != in->text[q] || in->text[q] < '4' ||
+                 (q + 2 < in->length && decimal_digit(in->text[q + 2]))))
+                tail_ok = 0;
+        }
+        /* '82, 85, 88': the list before matters too. */
+        if (tail_ok && begin >= 2) {
+            size_t q = begin;
+            while (q && (in->text[q - 1] == ' ' || in->text[q - 1] == '\''))
+                --q;
+            if (q && in->text[q - 1] == ',' && q >= 3 && decimal_digit(in->text[q - 2]) &&
+                (in->text[q - 2] != in->text[q - 3] || (q >= 4 && decimal_digit(in->text[q - 4]))))
+                tail_ok = 0;
+        }
+        if (tail_ok && !(next && next->begin == p && !half && !valid_tail(in, p)) &&
+            !(next && raw_counter_word(in, next)) && cue_in(in, "clothing_cue", from, to)) {
+            size_t q = p + (half ? 3 : 0), r;
+            memcpy(semantic->value, in->text + begin, 2);
+            semantic->value[2] = '\0';
+            if (half)
+                (void)snprintf(semantic->value + 2, sizeof(semantic->value) - 2, "%s", "반");
+            /* 55~77: the second size joins with 에서. */
+            if (q + 3 <= in->length && in->text[q] == '~' && decimal_digit(in->text[q + 1]) &&
+                in->text[q + 1] == in->text[q + 2] && in->text[q + 1] >= '4' &&
+                !(q + 3 < in->length && decimal_digit(in->text[q + 3]))) {
+                r = strlen(semantic->value);
+                (void)snprintf(semantic->value + r, sizeof(semantic->value) - r, "~%.2s", in->text + q + 1);
+                q += 3;
+            }
+            (void)snprintf(semantic->unit, sizeof(semantic->unit), "clothing_size");
+            (void)snprintf(semantic->rule, sizeof(semantic->rule), "ko:clothing-size");
+            semantic->type = TTF_SEM_DIGIT_SEQUENCE;
+            semantic->input_end = q;
+            semantic->layer = TTF_LAYER_COMMON;
+            for (i = in->index; i < in->token_count && in->tokens[i].begin < q; ++i) {
+            }
+            return i - in->index;
+        }
+    }
     if (!next)
         return 0;
     for (i = 1; i <= next->end - next->begin && i < sizeof(word); ++i) {

@@ -1194,6 +1194,25 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             }
             return TTF_OK;
         }
+        if (!strcmp(s->unit, "clothing_size")) {
+            /* 66 육육, 55반 오오반, 55~77 오오에서 칠칠. */
+            const char *v = s->value;
+            while (*v) {
+                if (*v >= '0' && *v <= '9' && v[1] >= '0' && v[1] <= '9') {
+                    char pair[3] = {v[0], v[1], 0};
+                    TRY(ttf_ko_render_identifier(e, pair, out));
+                    v += 2;
+                } else if (*v == '~') {
+                    TRY(ttf_buffer_puts(out, "에서 "));
+                    ++v;
+                } else {
+                    size_t w = ((unsigned char)*v & 0xf0) == 0xe0 ? 3 : 1; /* 반 */
+                    TRY(ttf_buffer_append(out, v, w));
+                    v += w;
+                }
+            }
+            return TTF_OK;
+        }
         if (!strcmp(s->unit, "batting_average")) {
             /* 0.212 이할 일푼 이리, 0.091 구푼 일리, 0.300 삼할. */
             static const char *const names[] = {"할", "푼", "리"};
@@ -2445,6 +2464,9 @@ static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         return identifier;
     if (in->engine->frontend_options.output_mode == TTF_OUTPUT_SPEECH) {
         identifier = ttf_ko_classify_lot_number(in, s);
+        if (identifier)
+            return identifier;
+        identifier = ttf_ko_classify_route_number(in, s);
         if (identifier)
             return identifier;
         identifier = ttf_ko_classify_batting_average(in, s);

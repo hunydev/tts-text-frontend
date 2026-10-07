@@ -2,6 +2,15 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Korean benchmark misses sampled by hand (most are reference habits: 하나/둘 digit
+  names, plate fronts, spacing); real errors fixed: a card number before 번
+  (6900번 카드로), route numbers with a leading zero (수완 03번 공삼번, it was 세
+  번) and branch routes (70-2번 칠십 다시 이번; 3-5번 문제 stays a range), 뿐 as a
+  particle (하루에 다섯 번뿐), a hyphen between two spoken words is not said
+  (K-팝 케이 팝; speech_silent between), 컵 with native numbers, and clothing
+  sizes in a clothing sentence (펄블랙 66을 육육을, 55~77사이즈 오오에서 칠칠; not
+  before 만, a decimal, an amount or a list of values; clothing_cue). Contract
+  ko_bench_fixes_v32 (23). Korean benchmark +797, -4 (84.08%).
 - Korean sentences Jev failed, judged by hand (project owner: Jev is not always
   right; about half were already correct, 4.3사건 사삼사건, 2세 이 세): hotlines
   1301, 1339, 1382, 1391, 1399 … read digit by digit with a call cue (call_cue

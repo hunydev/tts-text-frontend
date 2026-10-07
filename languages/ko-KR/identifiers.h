@@ -16,6 +16,7 @@ size_t ttf_ko_classify_model_number(const ttf_pack_input_t *input, ttf_semantic_
 size_t ttf_ko_classify_card(const ttf_pack_input_t *input, ttf_semantic_t *semantic);
 size_t ttf_ko_classify_alnum_identifier(const ttf_pack_input_t *input, ttf_semantic_t *semantic);
 size_t ttf_ko_classify_lot_number(const ttf_pack_input_t *input, ttf_semantic_t *semantic);
+size_t ttf_ko_classify_route_number(const ttf_pack_input_t *input, ttf_semantic_t *semantic);
 size_t ttf_ko_classify_batting_average(const ttf_pack_input_t *input, ttf_semantic_t *semantic);
 ttf_status_t ttf_ko_render_identifier(const ttf_engine_t *engine, const char *value,
                                       ttf_buffer_t *output);

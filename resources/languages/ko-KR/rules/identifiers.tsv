@@ -300,3 +300,25 @@ rate_cue	ko-KR	타율	1
 rate_cue	ko-KR	출루율	1
 rate_cue	ko-KR	장타율	1
 rate_cue	ko-KR	승률	1
+# Words that make a doubled number a clothing size (펄블랙 66을; 2026-10-07).
+clothing_cue	ko-KR	사이즈	1
+clothing_cue	ko-KR	치수	1
+clothing_cue	ko-KR	의류	1
+clothing_cue	ko-KR	옷	1
+clothing_cue	ko-KR	원피스	1
+clothing_cue	ko-KR	재킷	1
+clothing_cue	ko-KR	자켓	1
+clothing_cue	ko-KR	셔츠	1
+clothing_cue	ko-KR	티셔츠	1
+clothing_cue	ko-KR	바지	1
+clothing_cue	ko-KR	팬츠	1
+clothing_cue	ko-KR	레깅스	1
+clothing_cue	ko-KR	스커트	1
+clothing_cue	ko-KR	치마	1
+clothing_cue	ko-KR	블라우스	1
+clothing_cue	ko-KR	코트	1
+clothing_cue	ko-KR	니트	1
+clothing_cue	ko-KR	정장	1
+clothing_cue	ko-KR	상의	1
+clothing_cue	ko-KR	하의	1
+clothing_cue	ko-KR	입	1

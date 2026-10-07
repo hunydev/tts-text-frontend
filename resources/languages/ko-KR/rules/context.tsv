@@ -91,3 +91,14 @@ particle	ko-KR	야말로	1
 particle	ko-KR	이야말로	1
 particle	ko-KR	라든지	1
 particle	ko-KR	이라든지	1
+# 하루에 다섯 번뿐이다: 뿐 is a particle (2026-10-07).
+particle	ko-KR	뿐	1
+particle	ko-KR	뿐이다	1
+particle	ko-KR	뿐이었다	1
+particle	ko-KR	뿐인	1
+particle	ko-KR	뿐이야	1
+particle	ko-KR	뿐이고	1
+particle	ko-KR	뿐만	1
+# 55라면, 66이라면 (2026-10-07).
+particle	ko-KR	라면	1
+particle	ko-KR	이라면	1

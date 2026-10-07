@@ -247,3 +247,8 @@ counter	ko-KR	경기	native
 numeric_suffix	*	경기	COUNTER:경기
 classifier_priority	ko-KR	ko:lot-number	100
 classifier_priority	ko-KR	ko:batting-average	100
+# 2컵 두 컵 (2026-10-07).
+counter	ko-KR	컵	native
+numeric_suffix	*	컵	COUNTER:컵
+classifier_priority	ko-KR	ko:route-zero	100
+classifier_priority	ko-KR	ko:clothing-size	100
