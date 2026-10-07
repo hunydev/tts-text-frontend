@@ -503,7 +503,8 @@ ttf_status_t ttf_en_verbalize_abbreviation(const ttf_engine_t *engine, const ttf
         engine->frontend_options.output_mode == TTF_OUTPUT_SPEECH) {
         char speech_key[TTF_IR_VALUE_SIZE + 24];
         (void)snprintf(speech_key, sizeof(speech_key), "%s_speech",
-                       pronounceable(engine, key, used) ? "pronounceable" : s->secondary);
+                       !strncmp(s->secondary, "article_", 8) ? s->secondary
+                       : pronounceable(engine, key, used) ? "pronounceable" : s->secondary);
         style = lookup(engine, "initialism_policy", speech_key, NULL);
     }
     if (!style)

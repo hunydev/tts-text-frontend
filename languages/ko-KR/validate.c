@@ -293,6 +293,13 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    : ttf_validation_error(
                          d, "bracket_pair requires language * and one opening and closing symbol");
     }
+    if (SAME(k, "particle_reading")) {
+        const char *bar = strchr(v, '|');
+        *handled = 1;
+        return bar && bar > v && bar[1] && strlen(key) < 32 && strlen(v) < 96
+                   ? TTF_OK
+                   : ttf_validation_error(d, "particle_reading needs alternative|digits or alternative|LETTER");
+    }
     if (SAME(k, "speech_silent")) {
         *handled = 1;
         return symbol_key(key) && ttf_validation_enum(v, "0|1|between")

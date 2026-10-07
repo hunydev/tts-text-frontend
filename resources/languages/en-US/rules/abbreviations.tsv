@@ -52,6 +52,11 @@ context_neutral	en-US	dotted_initials	1
 # word (NASA, FIFA, EXCEL). The syllable tables below decide that.
 initialism_policy	en-US	inferred_speech	letters
 initialism_policy	en-US	pronounceable_speech	preserve
+# a SCSI is said as a word, an LED letter by letter (the article; 2026-10-08).
+initialism_policy	en-US	article_word	preserve
+initialism_policy	en-US	article_letters	preserve
+initialism_policy	en-US	article_word_speech	preserve
+initialism_policy	en-US	article_letters_speech	letters
 # Word-initial clusters of ordinary words written in capitals (CHRIST, SCHOONER,
 # KNOT, GHOST) and word-final doubled letters and digraphs (STILL, LIGHT, SEARCH, TOWN).
 syllable_onset	en-US	chr	1

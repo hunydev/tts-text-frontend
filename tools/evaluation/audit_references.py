@@ -14,6 +14,8 @@ import re
 import sys
 
 ACTIVE_JSONL = (
+    "en_article_reading_v34",
+    "ko_particle_reading_v33",
     "ko_bench_fixes_v32",
     "ko_jev_fixes_v31",
     "en_engconf_v30",

@@ -706,6 +706,127 @@ static ttf_status_t particle_agreement(const ttf_engine_t *e, const ttf_language
     return ttf_buffer_puts(normalized, value);
 }
 
+/* The final consonant (jongseong index, 0 none, 8 ㄹ) of the last syllable of
+   b, or -1 when it does not end in a Hangul syllable. */
+static int last_final(const char *data, size_t length) {
+    size_t start = length;
+    uint32_t cp;
+    size_t width;
+    while (start && ((unsigned char)data[start - 1] & 0xc0) == 0x80)
+        --start;
+    if (!start || ttf_utf8_decode(data + start - 1, length - start + 1, &cp, &width) != 1 ||
+        cp < 0xac00 || cp > 0xd7a3)
+        return -1;
+    return (int)((cp - 0xac00) % 28);
+}
+/* Whether a reading ending in final fits the written particle key, from its
+   particle_form "consonant|vowel[|rieul]" entry; -1 when key is no particle. */
+static int particle_fits(const ttf_engine_t *e, const char *lang, const char *key, int final) {
+    char forms[96], *vowel, *rieul;
+    const char *value = ttf_resource_get(e, "particle_form", lang, key, NULL);
+    if (!value || strlen(value) >= sizeof(forms))
+        return -1;
+    memcpy(forms, value, strlen(value) + 1);
+    vowel = strchr(forms, '|');
+    if (!vowel)
+        return -1;
+    *vowel++ = 0;
+    rieul = strchr(vowel, '|');
+    if (rieul)
+        *rieul++ = 0;
+    value = !final ? vowel : final == 8 && rieul ? rieul : forms;
+    return !strcmp(value, key);
+}
+/* The writer's particle tells how they read the word before it: L와 is 라지와
+   (엘 would take 과), 5281를 ends in 하나 and 6422을 in 둘 (the Korean references
+   read codes so), TIME이 is 타임이. When the reading before a directly attached
+   particle disagrees with it, an alternative that agrees replaces the end of
+   that reading: particle_reading "alternative|scope" for the last word (scope
+   digits: a digit sequence or phone number; or the exact written letter), or the
+   lexicon word for a spelled all-letter span. The particle stays as written
+   (project-owner idea, 2026-10-08). */
+static ttf_status_t particle_reading(const ttf_engine_t *e, const ttf_language_pack_t *renderer,
+                                     const char *text, size_t offset, const char *source,
+                                     size_t source_length, ttf_buffer_t *output, ttf_result_t *out) {
+    char key[32], word[64], alt[96];
+    const char *lang = renderer->language_tag, *value, *surface;
+    ttf_span_t *previous;
+    size_t width, surface_length, i;
+    int final;
+    if (e->frontend_options.output_mode != TTF_OUTPUT_SPEECH || strcmp(lang, "ko-KR") ||
+        !source_length || source_length >= sizeof(key) || !out->span_count || !output->length)
+        return TTF_OK;
+    memcpy(key, source, source_length);
+    key[source_length] = 0;
+    final = last_final(output->data, output->length);
+    if (final < 0 || particle_fits(e, lang, key, final) != 0)
+        return TTF_OK;
+    previous = &out->spans[out->span_count - 1];
+    if (previous->end != output->length || previous->input_begin < offset)
+        return TTF_OK;
+    surface = text + (previous->input_begin - offset);
+    surface_length = previous->input_end - previous->input_begin;
+    /* A spelled all-letter span with a lexicon word that fits (TIME이 타임이). */
+    if (surface_length >= 2 && surface_length + 7 < sizeof(word)) {
+        /* Only an all-capital run the engine itself chose to spell (an inferred
+           initialism); an explicit policy (Apple spelled on request) stays. */
+        int letters = previous->semantic.type == TTF_SEM_INITIALISM;
+        for (i = 0; i < surface_length; ++i)
+            letters &= surface[i] >= 'A' && surface[i] <= 'Z';
+        if (letters) {
+            (void)snprintf(word, sizeof(word), "en-US:");
+            for (i = 0; i < surface_length; ++i)
+                word[6 + i] = (char)(surface[i] >= 'A' && surface[i] <= 'Z' ? surface[i] + 32 : surface[i]);
+            word[6 + surface_length] = 0;
+            value = ttf_resource_get(e, "lexicon", lang, word, NULL);
+            if (value && strcmp(value, output->data + previous->begin) &&
+                particle_fits(e, lang, key, last_final(value, strlen(value))) == 1) {
+                output->length = previous->begin;
+                output->data[output->length] = 0;
+                ttf_status_t st = ttf_buffer_puts(output, value);
+                previous->end = output->length;
+                if (st == TTF_OK)
+                    st = ttf_trace_emit(e, TTF_TRACE_SELECTED, TTF_LAYER_COMMON, 0, lang, "decision",
+                                        "particle-reading", word, value, "particle-chooses-word", SIZE_MAX);
+                return st;
+            }
+        }
+    }
+    /* The last word of the reading: one to three syllables. */
+    for (width = 3; width <= 9 && width <= output->length - previous->begin; width += 3) {
+        char *bar;
+        memcpy(word, output->data + output->length - width, width);
+        word[width] = 0;
+        value = ttf_resource_get(e, "particle_reading", lang, word, NULL);
+        if (!value || strlen(value) >= sizeof(alt))
+            continue;
+        memcpy(alt, value, strlen(value) + 1);
+        bar = strchr(alt, '|');
+        if (!bar)
+            continue;
+        *bar++ = 0;
+        if (!strcmp(bar, "digits")
+                ? !((previous->semantic.type == TTF_SEM_DIGIT_SEQUENCE &&
+                     strcmp(previous->semantic.unit, "clothing_size")) ||
+                    previous->semantic.type == TTF_SEM_PHONE)
+                : !(strlen(bar) == surface_length && !memcmp(bar, surface, surface_length)))
+            continue;
+        if (particle_fits(e, lang, key, last_final(alt, strlen(alt))) != 1)
+            continue;
+        output->length -= width;
+        output->data[output->length] = 0;
+        {
+            ttf_status_t st = ttf_buffer_puts(output, alt);
+            previous->end = output->length;
+            if (st == TTF_OK)
+                st = ttf_trace_emit(e, TTF_TRACE_SELECTED, TTF_LAYER_COMMON, 0, lang, "decision",
+                                    "particle-reading", word, alt, "particle-chooses-reading", SIZE_MAX);
+            return st;
+        }
+    }
+    return TTF_OK;
+}
+
 /* Declared bracket pairs mark an aside. The policy decides whether its content
    is read, left out of the reading, or kept exactly as written. */
 static uint32_t bracket_closer(const ttf_engine_t *e, const char *text, size_t length) {
@@ -1532,8 +1653,15 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
               ((!strcmp(out->spans[out->span_count - 1].semantic.unit, "@unreadable-cluster")) ||
                (ttf_script_legacy(out->spans[out->span_count - 1].script) == TTF_SCRIPT_OTHER &&
                 !strcmp(out->spans[out->span_count - 1].semantic.rule, "identity")))))
-            st = particle_agreement(e, renderer, text + tokens[i].begin, end - tokens[i].begin,
-                                    &output, &normalized);
+        {
+            if (normalized.length == end - tokens[i].begin &&
+                !memcmp(normalized.data, text + tokens[i].begin, normalized.length))
+                st = particle_reading(e, renderer, text, offset, text + tokens[i].begin,
+                                      end - tokens[i].begin, &output, out);
+            if (st == TTF_OK)
+                st = particle_agreement(e, renderer, text + tokens[i].begin, end - tokens[i].begin,
+                                        &output, &normalized);
+        }
         if (st == TTF_OK && e->frontend_options.output_mode == TTF_OUTPUT_SPEECH) {
             /* A removed span leaves its neighboring spaces behind. Keep one. */
             size_t b = 0;

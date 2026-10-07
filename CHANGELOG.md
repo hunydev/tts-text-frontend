@@ -2,6 +2,19 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- The written function word chooses the reading (project-owner idea): in Korean the
+  particle attached to a reading shows whether the writer's reading ended in a
+  vowel or a consonant, and when ours disagrees an alternative that agrees
+  replaces its end, the particle staying as written (normalize.c
+  particle_reading; particle_reading resources): L와 라지와, S과 스몰과, a code
+  ending 5281를 오이팔하나를 / 6422을 육사이둘을 (the references read codes so), 20여
+  t이 톤이, and a spelled capital word with a fitting lexicon word (TIME이 타임이;
+  only an inferred initialism, an explicit spelling policy stays). In English an
+  article "an" before a consonant letter whose name starts with a vowel sound
+  means letters (an LED l e d); "a" is no cue (a RADM, rear admiral). A scan of
+  the Korean benchmark outputs found about 1,000 particle/reading
+  disagreements. Contracts ko_particle_reading_v33 (10), en_article_reading_v34
+  (5). Korean benchmark +47, -0; English unchanged.
 - Korean benchmark misses sampled by hand (most are reference habits: 하나/둘 digit
   names, plate fronts, spacing); real errors fixed: a card number before 번
   (6900번 카드로), route numbers with a leading zero (수완 03번 공삼번, it was 세

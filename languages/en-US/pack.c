@@ -1356,9 +1356,31 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
             out->lexical_class = TTF_LEX_INITIALISM;
         }
     }
+    /* an LED, an FAQ: the writer's article shows the first sound they said. After
+       "an", a run starting with a consonant letter whose name starts with a vowel
+       sound (F ef, L el, S ess …) was said letter by letter (an LED el ee dee,
+       not led; project-owner idea, 2026-10-08). "a" before such a run is no cue:
+       an abbreviation is often said as its expansion (a RADM, a rear admiral). */
+    const char *inferred = "inferred";
+    if (out->type == TTF_SEM_INITIALISM && !kind && t->begin >= 2) {
+        size_t p = t->begin, w;
+        while (p && (in->text[p - 1] == ' ' || in->text[p - 1] == '\t'))
+            --p;
+        w = p;
+        while (p && ((in->text[p - 1] | 0x20) >= 'a' && (in->text[p - 1] | 0x20) <= 'z'))
+            --p;
+        if (w < t->begin && (!p || !((in->text[p - 1] | 0x20) >= 'a' && (in->text[p - 1] | 0x20) <= 'z'))) {
+            char first = in->text[t->begin];
+            int vowel_name = strchr("AEFHILMNORSX", first) != NULL;
+            int consonant_letter = !strchr("AEIOU", first);
+            if (w - p == 2 && (in->text[p] | 0x20) == 'a' && (in->text[p + 1] | 0x20) == 'n' &&
+                     vowel_name && consonant_letter)
+                inferred = "article_letters";
+        }
+    }
     if (out->type == TTF_SEM_INITIALISM)
         ttf_en_initialism_policy(in->engine, out, in->text + t->begin, n,
-                                 kind ? "known" : "inferred");
+                                 kind ? "known" : inferred);
     if (consumed == 1 && t->end < in->length && in->text[t->end] == '.' &&
         res(in->engine, "abbreviation", key)) {
         out->type = TTF_SEM_ABBREVIATION;

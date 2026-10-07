@@ -102,3 +102,13 @@ particle	ko-KR	뿐만	1
 # 55라면, 66이라면 (2026-10-07).
 particle	ko-KR	라면	1
 particle	ko-KR	이라면	1
+# Readings the writer's particle can choose (L와 라지와, 5281를 오이팔하나를, 6422을
+# 육사이둘을; 2026-10-08). "alternative|digits" applies to digit sequences and phone
+# numbers; "alternative|L" only to that written letter.
+particle_reading	ko-KR	일	하나|digits
+particle_reading	ko-KR	이	둘|digits
+particle_reading	ko-KR	사	넷|digits
+particle_reading	ko-KR	오	다섯|digits
+particle_reading	ko-KR	엘	라지|L
+particle_reading	ko-KR	에스	스몰|S
+particle_reading	ko-KR	티	톤|t

@@ -437,7 +437,8 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
            covers a run that reads as an English word (NASA). */
         if (SAME(k, "initialism_policy") &&
             !ttf_validation_enum(key, "dotted|known|inferred|dotted_speech|known_speech|"
-                                      "inferred_speech|pronounceable_speech"))
+                                      "inferred_speech|pronounceable_speech|article_word|"
+                                      "article_letters|article_word_speech|article_letters_speech"))
             return ttf_validation_error(d, "unknown initialism_policy key");
         if (SAME(k, "initialism_text") && !lowercase_letters(key, TTF_IR_VALUE_SIZE - 1))
             return ttf_validation_error(d, "initialism_text key must be lowercase ASCII letters");
