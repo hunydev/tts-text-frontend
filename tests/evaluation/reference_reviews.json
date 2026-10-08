@@ -2010,6 +2010,18 @@
       },
       "category_overrides": {},
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/ja_range_mark_v44.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Independently authored synthetic cases, written before the implementation",
+        "reason": "Project-owner request 2026-10-08: 〜 before kanji reads から"
+      },
+      "category_overrides": {},
+      "case_overrides": {}
     }
   ],
   "excluded": [

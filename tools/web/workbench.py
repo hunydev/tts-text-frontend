@@ -8,6 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 MAX_TEXT_BYTES = 16384
 CORPORA = {
+    "ja-range-mark-v44": ("Japanese range mark v44", "ja_range_mark_v44.jsonl"),
     "ja-rules-v43": ("Japanese rule fixes v43", "ja_rules_v43.jsonl"),
     "en-ref-fixes-v42": ("English reference-reviewed fixes v42", "en_ref_fixes_v42.jsonl"),
     "ko-pin-cues-v41": ("Korean PIN cues v41", "ko_pin_cues_v41.jsonl"),

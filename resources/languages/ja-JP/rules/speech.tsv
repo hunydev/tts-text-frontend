@@ -234,3 +234,9 @@ speech_range_mark	ja-JP	〜	から
 speech_range_mark	ja-JP	～	から
 speech_range_mark	ja-JP	~	から
 speech_range_mark	ja-JP	∼	から
+# After hiragana, or after katakana before kana or the end, a wave mark is a long
+# vowel (すご〜い すごーい, ス〜パ〜 スーパー), not a range (2026-10-08).
+speech_kana_lengthening	ja-JP	〜	ー
+speech_kana_lengthening	ja-JP	～	ー
+speech_kana_lengthening	ja-JP	~	ー
+speech_kana_lengthening	ja-JP	∼	ー

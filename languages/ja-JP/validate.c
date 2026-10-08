@@ -130,6 +130,12 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "half_suffix requires a counter and 0|1");
     }
+    if (SAME(k, "speech_kana_lengthening")) {
+        *handled = 1;
+        return symbol_key(key) && label(v)
+                   ? TTF_OK
+                   : ttf_validation_error(d, "speech_kana_lengthening requires one mark and a reading");
+    }
     if (SAME(k, "speech_range_mark")) {
         *handled = 1;
         return symbol_key(key) && label(v)

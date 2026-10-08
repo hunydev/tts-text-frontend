@@ -77,6 +77,56 @@ const char *ttf_speech_range_mark(const ttf_engine_t *e, const char *language, c
     return ttf_resource_get(e, "speech_range_mark", language, key, NULL);
 }
 
+static int kana_at(const char *s, size_t n, int hiragana_only) {
+    uint32_t cp;
+    size_t width;
+    if (!n || ttf_utf8_decode(s, n, &cp, &width) != 1)
+        return 0;
+    if (cp >= 0x3041 && cp <= 0x309f)
+        return 1;
+    return !hiragana_only && ttf_script_of(cp) == TTF_SCRIPT_KANA;
+}
+
+/* すご〜い, ス〜パ〜: `speech_kana_lengthening` reads a mark written after
+   hiragana, or after katakana before kana or the end, as a long vowel; a mark
+   after kanji or a number stays a range (月曜〜金曜). `source_left` is the
+   source text before the mark, since the committed output is already kana. */
+const char *ttf_speech_kana_lengthening(const ttf_engine_t *e, const char *language,
+                                        const char *source_left, size_t source_left_length,
+                                        const char *span, size_t span_length, const char *right,
+                                        size_t right_length) {
+    char key[8];
+    size_t start = source_left_length;
+    const char *reading;
+    if (!span_length || span_length >= sizeof(key))
+        return NULL;
+    memcpy(key, span, span_length);
+    key[span_length] = 0;
+    if (!(reading = ttf_resource_get(e, "speech_kana_lengthening", language, key, NULL)))
+        return NULL;
+    while (start && ((unsigned char)source_left[start - 1] & 0xc0) == 0x80)
+        --start;
+    if (!start)
+        return NULL;
+    source_left += start - 1;
+    source_left_length -= start - 1;
+    /* ラーメン〜, そうっ〜: no vowel to lengthen after ん, っ or ー, so it is dropped. */
+    {
+        static const char *const mute[] = {"ん", "ン", "っ", "ッ", "ー"};
+        size_t m;
+        for (m = 0; m < sizeof(mute) / sizeof(mute[0]); ++m)
+            if (source_left_length >= 3 && !memcmp(source_left, mute[m], 3) &&
+                (kana_at(right, right_length, 0) || !spoken_at(e, language, right, right_length)))
+                return "";
+    }
+    if (kana_at(source_left, source_left_length, 1))
+        return reading;
+    if (kana_at(source_left, source_left_length, 0) &&
+        (kana_at(right, right_length, 0) || !spoken_at(e, language, right, right_length)))
+        return reading;
+    return NULL;
+}
+
 int ttf_speech_lengthening_span(const ttf_engine_t *e, const char *language, const char *left,
                                 size_t left_length, const char *span, size_t span_length,
                                 const char *right, size_t right_length) {
