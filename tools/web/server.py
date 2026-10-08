@@ -12,6 +12,7 @@ from pathlib import Path
 from urllib.parse import urlsplit
 from workbench import ROOT, catalog, validate
 import ko_reports
+import ja_reports
 import en_reports
 import jev
 import jev_eval
@@ -134,6 +135,21 @@ class Handler(BaseHTTPRequestHandler):
             return self.json(200, catalog())
         if path == "/api/health":
             return self.json(200, dict(ok=True, version=catalog()["version"]))
+        if path.startswith("/api/ja-quality/"):
+            from urllib.parse import parse_qs
+            query = {k: v[0] for k, v in parse_qs(urlsplit(self.path).query).items()}
+            root = ja_reports.DEFAULT_ROOT
+            try:
+                if path == "/api/ja-quality/runs":
+                    return self.json(200, ja_reports.runs(root))
+                if path == "/api/ja-quality/summary":
+                    return self.json(200, ja_reports.summary(root, query.get("run")))
+                if path == "/api/ja-quality/cases":
+                    return self.json(200, ja_reports.cases(root, query.get("run"), query.get("kind", "span-miss"),
+                                                           query.get("q", "")[:100], query.get("offset", "0")))
+            except (OSError, ValueError) as error:
+                return self.json(404 if isinstance(error, FileNotFoundError) else 400, {"error": str(error)})
+            return self.json(404, {"error": "Not found"})
         if path == "/api/languages":
             try:
                 return self.json(200, language_status(self.server.library, self.server.resources))
@@ -161,6 +177,8 @@ class Handler(BaseHTTPRequestHandler):
             "/languages": "languages.html",
             "/languages.js": "languages.js",
             "/languages.css": "languages.css",
+            "/ja-quality": "ja-quality.html",
+            "/ja-quality.js": "ja-quality.js",
             "/jev-eval.js": "jev-eval.js",
         }
         if path not in names:

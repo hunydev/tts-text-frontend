@@ -165,7 +165,12 @@ static int power10(unsigned exponent, uint64_t *out) {
 /* A group separator before exactly three digits: 1,000 or １，０００ (the view
    folds the digits, not the comma). Returns its width. */
 static size_t group_separator(const char *s, size_t n, size_t p) {
-    size_t g = s[p] == ',' ? 1 : (p + 3 <= n && !memcmp(s + p, "\xef\xbc\x8c", 3)) ? 3 : 0;
+    /* １、０００: JSUT style writes a Japanese comma; before fewer digits it lists. */
+    size_t g =
+        s[p] == ',' ? 1
+        : (p + 3 <= n && (!memcmp(s + p, "\xef\xbc\x8c", 3) || !memcmp(s + p, "\xe3\x80\x81", 3)))
+            ? 3
+            : 0;
     if (!g || p + g + 3 > n || !digit(s[p + g]) || !digit(s[p + g + 1]) || !digit(s[p + g + 2]))
         return 0;
     return p + g + 3 < n && digit(s[p + g + 3]) ? 0 : g;
@@ -273,7 +278,8 @@ static size_t parse_number(const ttf_engine_t *e, const char *s, size_t n, ja_nu
         for (k = 0; k < p; ++k) {
             if (s[k] == ',')
                 continue;
-            if (k + 3 <= p && !memcmp(s + k, "\xef\xbc\x8c", 3)) {
+            if (k + 3 <= p &&
+                (!memcmp(s + k, "\xef\xbc\x8c", 3) || !memcmp(s + k, "\xe3\x80\x81", 3))) {
                 k += 2;
                 continue;
             }
@@ -448,6 +454,9 @@ static ttf_status_t counted(const ttf_engine_t *e, const ja_number_t *x, const c
     }
 }
 
+static ttf_status_t digits_each(const ttf_engine_t *e, const char *s, size_t n, int lengthen,
+                                ttf_buffer_t *b);
+
 static ttf_status_t counter_named(const ttf_engine_t *e, const ja_number_t *x, const char *key,
                                   int date_day, ttf_buffer_t *b) {
     const char *spec = res(e, "counter", key);
@@ -579,6 +588,22 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     }
     if (!digit(text[begin]) && !(text[begin] == '-' && begin + 1 < n && digit(text[begin + 1])))
         return 0;
+    /* 内線214, 請求書1111: after a number label the digits read one by one. */
+    if (digit(text[begin])) {
+        size_t k, q = begin;
+        while (q < n && digit(text[q]))
+            ++q;
+        for (k = 3; k <= 15 && k <= begin; k += 3) {
+            char cue[16];
+            memcpy(cue, text + begin - k, k);
+            cue[k] = 0;
+            if (q - begin >= 2 && q - begin < sizeof(s->value) && res(e, "digit_cue", cue) &&
+                (q >= n || !(text[q] == '.' || text[q] == ','))) {
+                snprintf(s->value, sizeof(s->value), "%.*s", (int)(q - begin), text + begin);
+                return finish(in, s, q, TTF_SEM_DIGIT_SEQUENCE, "ja.digit-cue", "");
+            }
+        }
+    }
     if (begin && (digit(text[begin - 1]) || text[begin - 1] == '.' || text[begin - 1] == ',' ||
                   (text[begin - 1] >= 'A' && text[begin - 1] <= 'Z') ||
                   (text[begin - 1] >= 'a' && text[begin - 1] <= 'z')))
@@ -614,9 +639,13 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             used += rw + used2;
             nl = nl2;
         } else if (!cw && !x.scale_word && pairs == 0) {
-            /* 1万: a written scale alone is still a Japanese number. */
+            /* 1万: a written scale alone is still a Japanese number, and so is a
+               number grouped with a Japanese comma (1、000). */
             const char *q = text + p;
             size_t k, mark = 0;
+            for (k = 0; k + 3 <= used; ++k)
+                if (!memcmp(q + k, "\xe3\x80\x81", 3))
+                    mark = 1;
             for (k = 0; k + 3 <= used; ++k) {
                 size_t w;
                 unsigned ex;
@@ -777,14 +806,20 @@ static ttf_status_t letters(const ttf_engine_t *e, const char *s, size_t n, ttf_
     return any ? TTF_OK : TTF_EINVAL;
 }
 
-static ttf_status_t digits_each(const ttf_engine_t *e, const char *s, size_t n, ttf_buffer_t *b) {
+static ttf_status_t digits_each(const ttf_engine_t *e, const char *s, size_t n, int lengthen,
+                                ttf_buffer_t *b) {
     size_t i;
     for (i = 0; i < n; ++i) {
         char key[2] = {s[i], 0};
+        const char *lengthened;
         ttf_status_t st;
         if (!digit(s[i]))
             return TTF_EINVAL;
-        if ((st = word(e, b, "number", key)) != TTF_OK)
+        /* にー, ごー: phone numbers and digit sequences lengthen 2 and 5; a
+           digit spelled among letters (B2 ビーに) does not. */
+        lengthened = lengthen ? res(e, "digit", key) : NULL;
+        st = lengthened ? ttf_buffer_puts(b, lengthened) : word(e, b, "number", key);
+        if (st != TTF_OK)
             return st;
     }
     return TTF_OK;
@@ -895,7 +930,7 @@ static ttf_status_t alnum(const ttf_engine_t *e, const char *s, size_t n, ttf_bu
                 snprintf(value, sizeof(value), "%.*s", (int)(j - i), s + i);
                 st = plain_number(e, value, b);
             } else
-                st = digits_each(e, s + i, j - i, b);
+                st = digits_each(e, s + i, j - i, 1, b);
         } else if ((s[i] >= 'A' && s[i] <= 'Z') || (s[i] >= 'a' && s[i] <= 'z')) {
             int upper = 1;
             while (j < n && ((s[j] >= 'A' && s[j] <= 'Z') || (s[j] >= 'a' && s[j] <= 'z'))) {
@@ -925,7 +960,7 @@ static ttf_status_t phone(const ttf_engine_t *e, const char *v, ttf_buffer_t *b)
             if (separator && any && (st = word(e, b, "number", "phone_separator")) != TTF_OK)
                 return st;
             separator = 0;
-            if ((st = digits_each(e, v + i, 1, b)) != TTF_OK)
+            if ((st = digits_each(e, v + i, 1, 1, b)) != TTF_OK)
                 return st;
             any = 1;
         } else if (v[i] == '+') {
@@ -957,7 +992,7 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             return st;
         return plain_number(e, s->value, b);
     case TTF_SEM_DIGIT_SEQUENCE:
-        return digits_each(e, s->value, strlen(s->value), b);
+        return digits_each(e, s->value, strlen(s->value), 1, b);
     case TTF_SEM_PHONE:
         return phone(e, s->value, b);
     case TTF_SEM_PERCENT:
@@ -1044,7 +1079,7 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             size_t n = v == surface ? length : strlen(v);
             size_t i;
             for (i = 0; i < n; ++i) {
-                st = digit(v[i]) ? digits_each(e, v + i, 1, b) : letters(e, v + i, 1, b);
+                st = digit(v[i]) ? digits_each(e, v + i, 1, 0, b) : letters(e, v + i, 1, b);
                 if (st != TTF_OK)
                     return st;
             }

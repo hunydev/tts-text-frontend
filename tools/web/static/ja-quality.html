@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>일본어 TN 지표 · TTF Lab</title>
+  <link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/ko-quality.css"><link rel="stylesheet" href="/languages.css">
+  <script src="/ja-quality.js" defer></script>
+</head>
+<body>
+<header class="mast"><a href="/" class="brand"><span class="brandmark">Tt</span><span>TTF <b>Lab</b><small>JAPANESE TN / JSUT READINGS</small></span></a><div class="mast-right"><a href="/">텍스트 검사</a><a href="/languages">언어팩 현황</a><a href="/ko-quality">한국어 TN 지표</a><a href="/en-quality">영어 TN 지표</a></div></header>
+<main class="quality-main">
+<section class="intro"><div><p class="eyebrow">일본어 TN · 측정과 비교</p><h1>숫자를 어떻게 읽었는지,<br>사람이 붙인 읽기와 비교하세요.</h1><p class="lead">JSUT BASIC5000의 수동 히라가나 읽기(kana_level2)를 참조로 씁니다. 숫자를 히라가나로 푼 공개 평가셋이 없어, 모든 시스템의 출력을 같은 읽기기(pyopenjtalk)로 읽어 비교합니다. 읽기기의 한자 오류는 모두에게 같으므로 차이는 숫자 처리에서 나옵니다.</p></div></section>
+<p id="notice" role="status" aria-live="polite">측정 기록을 불러오는 중입니다.</p>
+<section class="quality-panel"><div class="toolbar"><label>측정 기록<select id="run"></select></label></div>
+<p id="provenance" class="small"></p>
+<p class="reference-note">참조는 JSUT 작성자의 읽기이며 정책이 다른 읽기(27日 なのか/ななにち, 8回 はちかい/はっかい 등)가 섞여 있습니다. <b>조정</b> 점수는 검토 파일(benchmark/manifests/ja-jsut-review.json)의 참조 오류와 정책 차이 문장을 모든 시스템에서 뺀 값입니다. <b>숫자 구간 정확도</b>는 읽기기 없이 우리 숫자 구간의 읽기가 참조 읽기에 순서대로 있는지 봅니다.</p>
+<div id="cards" class="quality-cards"></div>
+<div class="quality-scroll"><table><thead><tr><th>범위</th><th>문장</th><th>pyopenjtalk 단독</th><th>wetext + 읽기기</th><th>NeMo + 읽기기</th><th>우리 + 읽기기</th><th>우리 (숫자 가타카나) + 읽기기</th><th>숫자 구간 (우리)</th></tr></thead><tbody id="subsets"></tbody></table></div>
+<p class="small">문장 칸: 정확 일치 수 / 문장 수 (문자 오류율 CER). 범위: digits = 아라비아 숫자가 있는 문장, kanji-numeral = 한자 숫자만 있는 문장(우리는 그대로 둠), digits-adjusted = 검토 문장을 뺀 digits.</p>
+</section>
+<section class="quality-panel"><h2>사례 살펴보기</h2><div class="toolbar filters">
+<label>보기<select id="kind"><option value="span-miss">숫자 구간이 틀린 문장</option><option value="ours-worse">pyopenjtalk만 맞은 문장</option><option value="ours-better">우리만 맞은 문장</option><option value="ours-miss">우리 문장 불일치</option><option value="reviewed">검토 문장</option><option value="all">전체</option></select></label>
+<label>원문·참조 검색<input id="query" maxlength="100" placeholder="숫자·단어"></label><button id="search" class="primary">조회</button>
+</div><p id="case-count" aria-live="polite"></p>
+<div class="quality-scroll"><table class="matrix"><thead><tr><th>원문</th><th>참조 읽기</th><th>우리 출력</th><th>숫자 구간</th><th>읽기 비교 (우리 / pyopenjtalk / wetext / NeMo)</th></tr></thead><tbody id="cases"></tbody></table></div>
+<div class="toolbar"><button id="prev" class="secondary">이전</button><span id="page"></span><button id="next" class="secondary">다음</button></div>
+</section>
+</main>
+</body>
+</html>

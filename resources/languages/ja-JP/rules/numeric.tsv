@@ -20,6 +20,9 @@ number	ja-JP	version_separator	てん
 number	ja-JP	plus	プラス
 number	ja-JP	mixed	と
 number	ja-JP	ordinal_prefix	だい
+# Digit by digit (phone numbers, codes) 2 and 5 lengthen: にー, ごー (2026-10-08).
+digit	ja-JP	2	にー
+digit	ja-JP	5	ごー
 meridiem	ja-JP	AM	ごぜん
 meridiem	ja-JP	PM	ごご
 # Place values; sound changes are data (さんびゃく, ろっぴゃく, はっせん).

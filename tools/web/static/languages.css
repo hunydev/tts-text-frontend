@@ -16,3 +16,4 @@
 .scope-grid table{table-layout:fixed}.scope-grid td{overflow-wrap:anywhere}.scope-grid td:nth-child(1){width:150px}.scope-grid td:nth-child(2){width:70px}
 .scope-grid table td:first-child{white-space:nowrap}
 .kinds{font-size:12px;color:#475b65;line-height:1.8}
+.matrix div.err{color:#a32932}

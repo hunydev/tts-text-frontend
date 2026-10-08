@@ -71,7 +71,7 @@ counter	ja-JP	パーセント	パーセント:p10
 counter	ja-JP	ページ	ページ:p10
 counter	ja-JP	ポイント	ポイント:p10
 counter	ja-JP	メートル	メートル:-
-counter	ja-JP	キロ	キロ:-
+counter	ja-JP	キロ	キロ:k
 counter	ja-JP	グラム	グラム:-
 counter	ja-JP	センチ	センチ:s
 counter	ja-JP	ミリ	ミリ:-
@@ -101,7 +101,8 @@ counter_reading	ja-JP	日:10	とおか
 counter_reading	ja-JP	日:14	じゅうよっか
 counter_reading	ja-JP	日:20	はつか
 counter_reading	ja-JP	日:24	にじゅうよっか
-counter_reading	ja-JP	日:*7	しちにち
+# 17日, 27日 ななにち, as the JSUT readings (2026-10-08). Was: しちにち.
+counter_reading	ja-JP	日:*7	ななにち
 counter_reading	ja-JP	日:*9	くにち
 counter_reading	ja-JP	date_day:1	ついたち
 counter_reading	ja-JP	月:4	しがつ
@@ -115,3 +116,45 @@ counter_reading	ja-JP	年:*4	よねん
 counter_reading	ja-JP	円:*4	よえん
 counter_reading	ja-JP	歳:20	はたち
 counter_reading	ja-JP	才:20	はたち
+# Counters the JSUT measurement showed (2026-10-08).
+counter	ja-JP	服	ふく:h
+counter	ja-JP	等	とう:t
+counter	ja-JP	脚	きゃく:k
+counter	ja-JP	世紀	せいき:s
+counter	ja-JP	組	くみ:-
+counter	ja-JP	粒	つぶ:-
+counter	ja-JP	セント	セント:s
+counter	ja-JP	床	しょう:s
+counter	ja-JP	チーム	チーム:t
+counter_reading	ja-JP	組:1	ひとくみ
+counter_reading	ja-JP	組:2	ふたくみ
+counter_reading	ja-JP	粒:1	ひとつぶ
+counter_reading	ja-JP	粒:2	ふたつぶ
+# Katakana units written as words (2026-10-08).
+counter	ja-JP	フィート	フィート:-
+counter	ja-JP	インチ	インチ:-
+counter	ja-JP	ヤード	ヤード:-
+counter	ja-JP	マイル	マイル:-
+counter	ja-JP	トン	トン:-
+counter	ja-JP	リットル	リットル:-
+counter	ja-JP	カロリー	カロリー:k
+counter	ja-JP	キロメートル	キロメートル:k
+counter	ja-JP	キログラム	キログラム:k
+counter	ja-JP	センチメートル	センチメートル:s
+counter	ja-JP	ミリメートル	ミリメートル:-
+counter	ja-JP	バイト	バイト:-
+counter	ja-JP	ワット	ワット:-
+counter	ja-JP	ボルト	ボルト:-
+counter	ja-JP	ヘクタール	ヘクタール:-
+counter	ja-JP	号室	ごうしつ:-
+# A number right after a label reads digit by digit: 内線214 にーいちよん.
+digit_cue	ja-JP	内線	1
+digit_cue	ja-JP	局番	1
+digit_cue	ja-JP	請求書	1
+digit_cue	ja-JP	番号	1
+digit_cue	ja-JP	口座	1
+digit_cue	ja-JP	品番	1
+digit_cue	ja-JP	型番	1
+digit_cue	ja-JP	会員番号	1
+digit_cue	ja-JP	暗証番号	1
+digit_cue	ja-JP	郵便番号	1

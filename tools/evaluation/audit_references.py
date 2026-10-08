@@ -14,6 +14,7 @@ import re
 import sys
 
 ACTIVE_JSONL = (
+    "ja_bench_fixes_v38",
     "ja_phase2_v37",
     "ja_pack_v36",
     "enclosed_letters_v35",

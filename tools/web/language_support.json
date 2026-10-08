@@ -255,10 +255,11 @@
       "gaps": [
         "한자 숫자",
         "TTS 모델 청취 비교(A/B)",
-        "일본어 평가셋·비교 TN 측정"
+        "원어민 검수 자체 평가셋 (상용화 판단 기준)"
       ],
       "docs": [
-        "docs/japanese-pack.ko.md"
+        "docs/japanese-pack.ko.md",
+        "/ja-quality (JSUT 측정)"
       ]
     }
   },

@@ -1,0 +1,14 @@
+{
+  "source": "JSUT BASIC5000 kana_level2 (sarulab-speech/jsut-label 1978271ca6212e1ea742da8f149160f5679e8971, CC-BY-SA 4.0)",
+  "reviewed": "2026-10-08",
+  "policy": "Reference errors are removed from the adjusted score; policy variants are readings our policy chooses differently where both are used. Adjusted scores leave both out for every system. Raw scores keep everything.",
+  "cases": {
+    "BASIC5000_0139": {"class": "policy-variant", "note": "27日: this reference reads なのか, two other JSUT references read ななにち (our policy)."},
+    "BASIC5000_0376": {"class": "reference-error", "note": "Reference typo さんんじゅーにち for 30日."},
+    "BASIC5000_0702": {"class": "policy-variant", "note": "Phone groups joined by the long-vowel mark ー; the reference reads digits with pauses, we read the groups as numbers."},
+    "BASIC5000_0912": {"class": "policy-variant", "note": "418号室 read digit by digit here, while 318号室 and 360号室 read as numbers (our policy)."},
+    "BASIC5000_1951": {"class": "policy-variant", "note": "8回 はちかい in the reference; はっかい is the common counter form (our policy)."},
+    "BASIC5000_2258": {"class": "policy-variant", "note": "Phone groups joined by ー read digit by digit in the reference."},
+    "BASIC5000_2704": {"class": "policy-variant", "note": "1、2日 read いち、ににち; we read ふつか (the day count)."}
+  }
+}

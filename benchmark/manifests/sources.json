@@ -905,6 +905,47 @@
       "automatic_download": false,
       "rights_conflicts": [],
       "research_document": "docs/cjk-korean-reading.ko.md"
+    },
+    {
+      "id": "jsut-label-basic5000",
+      "title": "JSUT BASIC5000 kana labels (sarulab-speech/jsut-label)",
+      "artifact_type": "dataset",
+      "source_url": "https://github.com/sarulab-speech/jsut-label",
+      "pin": {
+        "kind": "git-commit",
+        "revision": "1978271ca6212e1ea742da8f149160f5679e8971"
+      },
+      "license": {
+        "declared": "CC-BY-SA-4.0",
+        "status": "repository-readme",
+        "evidence_urls": [
+          "https://github.com/sarulab-speech/jsut-label",
+          "https://creativecommons.org/licenses/by-sa/4.0/"
+        ]
+      },
+      "commercial_use": {
+        "assessment": "permitted-with-conditions",
+        "note": "Labels only; the JSUT audio corpus has separate non-commercial terms and is not used."
+      },
+      "redistribution": {
+        "assessment": "permitted-with-conditions",
+        "conditions": [
+          "Attribution; derived label files under CC-BY-SA 4.0.",
+          "Project policy keeps the file local (benchmark/generated/ja-jsut)."
+        ]
+      },
+      "attribution": [
+        "Sarulab (University of Tokyo), jsut-label contributors"
+      ],
+      "vendoring": {
+        "committed": false,
+        "upstream_files_in_product": [],
+        "project_policy": "Measurement reference only; no labels copied into packs or contracts."
+      },
+      "inspection": "Raw text_kana/basic5000.yaml fetched 2026-10-08 for benchmark/evaluators/japanese_jsut.py.",
+      "automatic_download": false,
+      "rights_conflicts": [],
+      "research_document": "docs/japanese-benchmark.ko.md"
     }
   ]
 }

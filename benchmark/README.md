@@ -22,6 +22,7 @@ benchmark/
     evaluate.py             # contextual sentence/span/class agreement
     compare.py              # fixed-reference before/after differences
     english_sentences.py    # English-only sentence agreement across corpora
+    japanese_jsut.py        # Japanese readings vs JSUT BASIC5000 (docs/japanese-benchmark.ko.md)
   manifests/sources.json    # source revisions and rights boundaries
   generated/                # ignored local data/results; never commit
 ```

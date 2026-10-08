@@ -2,6 +2,18 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Japanese measurement (docs/japanese-benchmark.ko.md, workbench /ja-quality):
+  JSUT BASIC5000 hand-made kana readings (CC-BY-SA 4.0, local only) as the
+  reference, every system read by pyopenjtalk: on the 253 digit sentences ours
+  203, pyopenjtalk alone 199, wetext 196, NeMo 196 exact; our number-span
+  accuracy 96.6% (adjusted 100%, review file benchmark/manifests/
+  ja-jsut-review.json). Fixes found by the measurement, contract first
+  (ja_bench_fixes_v38, 21): counters 服 等 脚 世紀 組 粒 セント 床 チーム and
+  katakana units, 100キロ ひゃっキロ, 17日/27日 ななにち (was しちにち), a
+  Japanese comma before three digits groups a number (１、０００), digit
+  readings in phone numbers and codes lengthen 2 and 5 (にー, ごー; the phase 1
+  phone contract records the change), and a number after a label (内線, 局番,
+  請求書, 番号 …) reads digit by digit.
 - Japanese phase 2 (project-owner policy; docs/japanese-pack.ko.md): a sentence
   with hiragana grammar (hiragana with kanji or katakana in one word, or attached
   to a number or word: 明日は, 3時に, iPhoneを), or only kana and no Latin word,

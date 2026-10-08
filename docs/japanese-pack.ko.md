@@ -84,6 +84,12 @@
 - 제어: `@year`(ねん), `@version`(ブイにてんいち…), `@ordinal`(だいさん), 숫자가 섞인 `@alphabet`.
 - 계약 `ja_phase2_v37` (21).
 
+## 측정 (2026-10-08)
+
+JSUT BASIC5000 읽기와 비교한다(`docs/japanese-benchmark.ko.md`, 워크벤치 `/ja-quality`). 숫자 문장
+253개에서 우리 203, pyopenjtalk 단독 199, wetext 196, NeMo 196 문장 일치. 숫자 구간 정확도 96.6%
+(조정 100%). 측정에서 찾은 빈틈은 계약 `ja_bench_fixes_v38`로 고쳤다.
+
 ## 다음 단계 후보
 
 - 한자 숫자(`三人`, `二〇二四年`) 읽기
