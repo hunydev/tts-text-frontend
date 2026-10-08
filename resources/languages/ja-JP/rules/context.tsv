@@ -1,7 +1,10 @@
-# The Japanese pack reads only text declared ja-JP (phase 1): it never scores
-# or classifies in a Korean or English request, and stays out of their traces.
+# Declared-only: the pack never scores, classifies or owns a script in a Korean
+# or English request (it stays out of their traces) except in a kana sentence.
 context	ja-JP	declared_only	1
 context	ja-JP	absorb_foreign	1
+# A sentence with hiragana grammar and no Hangul is Japanese in any request
+# (phase 2, project owner 2026-10-08); Korean kana/hanja options keep Korean.
+context	ja-JP	kana_sentence	1
 # Pack readings over the same extent as a shared one (USB: katakana letter names).
 classifier_priority	ja-JP	ja.initialism	50
 classifier_priority	ja-JP	ja.alnum	50

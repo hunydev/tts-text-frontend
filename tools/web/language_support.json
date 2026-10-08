@@ -2,142 +2,595 @@
   "updated": "2026-10-08",
   "note": "판별 근거·범위·한계는 사람이 정리한 내용입니다(tools/web/language_support.json). 팩·리소스·계약 수와 예시 출력은 페이지를 열 때 저장소와 빌드된 엔진에서 직접 읽습니다.",
   "routing": [
-    {"order": 1, "status": "implemented", "rule": "요청 언어 고정", "detail": "matrix=declared이면 모든 문장을 요청 언어(default_language)로 읽습니다."},
-    {"order": 2, "status": "implemented", "rule": "괄호·인용은 투표하지 않음", "detail": "짝이 맞는 괄호와 인용 안의 단어는 문장 언어 투표에서 빠지고 바깥 문장의 언어를 따릅니다."},
-    {"order": 3, "status": "implemented", "rule": "부착 문법이 가장 강한 근거", "detail": "다른 문자에 공백 없이 붙은 자기 문자 토큰(meeting은, 3시에, \"…\"라고)은 그 팩의 문법 증거입니다. 현재 한국어만 선언(attached_grammar 1)."},
-    {"order": 4, "status": "implemented", "rule": "단어 투표", "detail": "문자 체계를 소유한 팩별로 단어 수를 셉니다(한국어 어절 가중치 sentence_word_weight). 한 글자, 대문자 약어, 앞 단어에 이어진 조각은 투표하지 않습니다. 2표 이상이면서 단독 1위일 때만 문장 언어가 됩니다."},
-    {"order": 5, "status": "implemented", "rule": "정하지 못하면 요청 언어", "detail": "한 단어뿐이거나 동점이면 요청 언어를 씁니다."},
-    {"order": 6, "status": "implemented", "rule": "흡수 여부", "detail": "흡수하는 팩(absorb_foreign 1, 한국어)은 문장 안의 영어·숫자·기호, 옵션에 따라 한자·가나까지 자기 말로 읽습니다. 흡수하지 않는 팩(영어)은 다른 문자 단어를 그대로 둡니다."},
-    {"order": 7, "status": "implemented", "rule": "일본어는 선언 전용", "detail": "ja-JP는 요청 언어가 ja-JP일 때만 동작합니다(declared_only 1). 다른 요청에서는 점수·분류·문자 체계 소유를 하지 않아 한국어·영어 결과와 추적이 바뀌지 않습니다."},
-    {"order": 8, "status": "planned", "rule": "히라가나 → 일본어 문장 (일본어 2단계)", "detail": "히라가나가 있는 문장은 일본어 문장으로 보고 한국어 분기를 타지 않습니다. 한글 부착 문법이 함께 있으면 한국어가 이깁니다(「ありがとう」라고 말했다 → 한국어). 가타카나만 있는 것은 약한 근거입니다."},
-    {"order": 9, "status": "planned", "rule": "한자만 있는 문장 → 중국어 우선", "detail": "중국어 팩을 추가하면 히라가나 없이 한자만 있는 문장을 중국어로 먼저 봅니다. 그 전까지는 요청 언어를 따릅니다."}
+    {
+      "order": 1,
+      "status": "implemented",
+      "rule": "요청 언어 고정",
+      "detail": "matrix=declared이면 모든 문장을 요청 언어(default_language)로 읽습니다."
+    },
+    {
+      "order": 2,
+      "status": "implemented",
+      "rule": "괄호·인용은 투표하지 않음",
+      "detail": "짝이 맞는 괄호와 인용 안의 단어는 문장 언어 투표에서 빠지고 바깥 문장의 언어를 따릅니다."
+    },
+    {
+      "order": 3,
+      "status": "implemented",
+      "rule": "부착 문법이 가장 강한 근거",
+      "detail": "다른 문자에 공백 없이 붙은 자기 문자 토큰(meeting은, 3시에, \"…\"라고)은 그 팩의 문법 증거입니다. 현재 한국어만 선언(attached_grammar 1)."
+    },
+    {
+      "order": 4,
+      "status": "implemented",
+      "rule": "단어 투표",
+      "detail": "문자 체계를 소유한 팩별로 단어 수를 셉니다(한국어 어절 가중치 sentence_word_weight). 한 글자, 대문자 약어, 앞 단어에 이어진 조각은 투표하지 않습니다. 2표 이상이면서 단독 1위일 때만 문장 언어가 됩니다."
+    },
+    {
+      "order": 5,
+      "status": "implemented",
+      "rule": "정하지 못하면 요청 언어",
+      "detail": "한 단어뿐이거나 동점이면 요청 언어를 씁니다."
+    },
+    {
+      "order": 6,
+      "status": "implemented",
+      "rule": "흡수 여부",
+      "detail": "흡수하는 팩(absorb_foreign 1, 한국어)은 문장 안의 영어·숫자·기호, 옵션에 따라 한자·가나까지 자기 말로 읽습니다. 흡수하지 않는 팩(영어)은 다른 문자 단어를 그대로 둡니다."
+    },
+    {
+      "order": 7,
+      "status": "implemented",
+      "rule": "일본어는 선언 전용 (가나 문장은 예외)",
+      "detail": "ja-JP는 요청 언어가 ja-JP이거나 8번 가나 문장일 때만 동작합니다(declared_only 1). 그 밖에는 점수·분류·문자 체계 소유를 하지 않아 한국어·영어 문장의 결과와 추적이 바뀌지 않습니다."
+    },
+    {
+      "order": 8,
+      "status": "implemented",
+      "rule": "히라가나 문법 → 일본어 문장",
+      "detail": "한글이 하나도 없고, 히라가나가 한자·가타카나와 한 단어에 있거나(明日は) 숫자·단어에 붙어 있거나(3時に, iPhoneを), 가나만 있고 로마자 단어가 없으면 일본어 문장입니다. 문장 전체를 일본어 팩이 읽고 한국어 분기를 타지 않습니다. 한글이 있으면 한국어 문장(「ありがとう」라고), 영어 문장 속 홀로 선 가나 단어는 근거가 아닙니다(I read ありがとう 5 times). --kana/--hanja korean 옵션이나 matrix=declared에서는 적용하지 않습니다."
+    },
+    {
+      "order": 9,
+      "status": "planned",
+      "rule": "한자만 있는 문장 → 중국어 우선",
+      "detail": "중국어 팩을 추가하면 히라가나 없이 한자만 있는 문장을 중국어로 먼저 봅니다. 그 전까지는 요청 언어를 따릅니다."
+    }
   ],
   "languages": {
     "ko-KR": {
       "name": "한국어",
       "status": "운영",
       "activation": "자동 (문장 언어 판별)",
-      "evidence": ["한글 단어 (어절 가중치)", "다른 문자에 붙은 조사·어미 (부착 문법, 가장 강함)"],
-      "scope": [
-        {"area": "숫자", "level": "full", "note": "한자어·고유어 수 선택, 소수·분수·음수·범위, 자릿수 읽기"},
-        {"area": "조수사·단위", "level": "full", "note": "조수사 수백 개와 고유어/한자어 선택, 측정 단위, 의류 사이즈"},
-        {"area": "날짜·시간·요일", "level": "full", "note": "연월일 여러 순서, 시각, 기간, 요일"},
-        {"area": "통화", "level": "full", "note": "기호·코드·한글 화폐 이름, 만/억 단위"},
-        {"area": "전화·식별번호", "level": "full", "note": "전화, 계좌·카드·차량번호, 주소 번지, 번호 라벨 단서"},
-        {"area": "이메일·URL", "level": "full", "note": "speech에서 글자·단어 읽기"},
-        {"area": "영어 단어", "level": "full", "note": "외래어 사전과 추정 음차 (사과 → Apple 애플)"},
-        {"area": "한자·가나", "level": "partial", "note": "옵션(--hanja/--kana korean)일 때만 한국어 독음·음차"},
-        {"area": "조사 단서", "level": "full", "note": "붙은 조사로 읽기 선택 (L와 라지와)"},
-        {"area": "원문자·기호", "level": "full", "note": "①, ㉠, Ⓐ, 기호 이름"}
+      "evidence": [
+        "한글 단어 (어절 가중치)",
+        "다른 문자에 붙은 조사·어미 (부착 문법, 가장 강함)"
       ],
-      "gaps": ["한자 독음은 옵션일 때만 적용", "벤치마크 참조와 정책이 다른 영역은 docs/korean-reference-benchmark.ko.md 참고"],
-      "docs": ["docs/matrix-language.ko.md", "docs/korean-counters.md", "docs/explicit-pattern-controls.ko.md"]
+      "scope": [
+        {
+          "area": "숫자",
+          "level": "full",
+          "note": "한자어·고유어 수 선택, 소수·분수·음수·범위, 자릿수 읽기"
+        },
+        {
+          "area": "조수사·단위",
+          "level": "full",
+          "note": "조수사 수백 개와 고유어/한자어 선택, 측정 단위, 의류 사이즈"
+        },
+        {
+          "area": "날짜·시간·요일",
+          "level": "full",
+          "note": "연월일 여러 순서, 시각, 기간, 요일"
+        },
+        {
+          "area": "통화",
+          "level": "full",
+          "note": "기호·코드·한글 화폐 이름, 만/억 단위"
+        },
+        {
+          "area": "전화·식별번호",
+          "level": "full",
+          "note": "전화, 계좌·카드·차량번호, 주소 번지, 번호 라벨 단서"
+        },
+        {
+          "area": "이메일·URL",
+          "level": "full",
+          "note": "speech에서 글자·단어 읽기"
+        },
+        {
+          "area": "영어 단어",
+          "level": "full",
+          "note": "외래어 사전과 추정 음차 (사과 → Apple 애플)"
+        },
+        {
+          "area": "한자·가나",
+          "level": "partial",
+          "note": "옵션(--hanja/--kana korean)일 때만 한국어 독음·음차"
+        },
+        {
+          "area": "조사 단서",
+          "level": "full",
+          "note": "붙은 조사로 읽기 선택 (L와 라지와)"
+        },
+        {
+          "area": "원문자·기호",
+          "level": "full",
+          "note": "①, ㉠, Ⓐ, 기호 이름"
+        }
+      ],
+      "gaps": [
+        "한자 독음은 옵션일 때만 적용",
+        "벤치마크 참조와 정책이 다른 영역은 docs/korean-reference-benchmark.ko.md 참고"
+      ],
+      "docs": [
+        "docs/matrix-language.ko.md",
+        "docs/korean-counters.md",
+        "docs/explicit-pattern-controls.ko.md"
+      ]
     },
     "en-US": {
       "name": "영어",
       "status": "운영",
       "activation": "자동 (문장 언어 판별)",
-      "evidence": ["라틴 문자 단어"],
-      "scope": [
-        {"area": "숫자", "level": "full", "note": "기수·서수·연도 읽기, 소수·분수(one half)"},
-        {"area": "날짜·시간", "level": "full", "note": "월 이름·숫자 날짜, 시각, a.m./p.m."},
-        {"area": "통화", "level": "full", "note": "기호·코드, cents, million/billion"},
-        {"area": "단위", "level": "full", "note": "단수/복수 단위 이름"},
-        {"area": "전화·식별번호", "level": "full", "note": "전화, ISBN 등"},
-        {"area": "약어", "level": "full", "note": "Dr. St. No. 주 이름, 이니셜 철자 읽기, 관사 단서(an LED)"},
-        {"area": "이메일·URL", "level": "full", "note": "speech에서 글자·단어 읽기"},
-        {"area": "다른 문자 단어", "level": "none", "note": "한글·한자·가나 단어는 그대로 둠 (흡수하지 않음)"},
-        {"area": "원문자·기호", "level": "full", "note": "①, Ⓐ, 기호 이름"}
+      "evidence": [
+        "라틴 문자 단어"
       ],
-      "gaps": ["남은 숫자는 마지막에 숫자로 읽음 (written fallback)"],
-      "docs": ["docs/en-coverage.md", "docs/english-dates.md", "docs/english-vs-wetext.ko.md"]
+      "scope": [
+        {
+          "area": "숫자",
+          "level": "full",
+          "note": "기수·서수·연도 읽기, 소수·분수(one half)"
+        },
+        {
+          "area": "날짜·시간",
+          "level": "full",
+          "note": "월 이름·숫자 날짜, 시각, a.m./p.m."
+        },
+        {
+          "area": "통화",
+          "level": "full",
+          "note": "기호·코드, cents, million/billion"
+        },
+        {
+          "area": "단위",
+          "level": "full",
+          "note": "단수/복수 단위 이름"
+        },
+        {
+          "area": "전화·식별번호",
+          "level": "full",
+          "note": "전화, ISBN 등"
+        },
+        {
+          "area": "약어",
+          "level": "full",
+          "note": "Dr. St. No. 주 이름, 이니셜 철자 읽기, 관사 단서(an LED)"
+        },
+        {
+          "area": "이메일·URL",
+          "level": "full",
+          "note": "speech에서 글자·단어 읽기"
+        },
+        {
+          "area": "다른 문자 단어",
+          "level": "none",
+          "note": "한글·한자·가나 단어는 그대로 둠 (흡수하지 않음)"
+        },
+        {
+          "area": "원문자·기호",
+          "level": "full",
+          "note": "①, Ⓐ, 기호 이름"
+        }
+      ],
+      "gaps": [
+        "남은 숫자는 마지막에 숫자로 읽음 (written fallback)"
+      ],
+      "docs": [
+        "docs/en-coverage.md",
+        "docs/english-dates.md",
+        "docs/english-vs-wetext.ko.md"
+      ]
     },
     "ja-JP": {
       "name": "일본어",
-      "status": "1단계",
-      "activation": "요청 언어가 ja-JP일 때만 (선언 전용)",
-      "evidence": ["현재 자동 판별 없음", "2단계 예정: 히라가나"],
-      "scope": [
-        {"area": "숫자", "level": "full", "note": "히라가나, 만 단위, 소수(いってんご), 숫자 뒤 千万億兆"},
-        {"area": "조수사", "level": "full", "note": "약 75개, 음 변화(さんぼん·いっぷん·さんがい), 특수 읽기(ひとり·はたち·ついたち)"},
-        {"area": "날짜·시간", "level": "partial", "note": "年月日·時分秒·10:30, 1일은 ついたち/いちにち 구분. 요일 （水） 미지원"},
-        {"area": "통화", "level": "partial", "note": "円·¥·$·€·₩·£·元 (조수사 방식)"},
-        {"area": "단위", "level": "full", "note": "가타카나 단위 이름 (ごキログラム)"},
-        {"area": "로마자", "level": "partial", "note": "2~4자 대문자 약어와 짧은 영숫자(A4, MP3)만 가타카나 글자 이름. 단어는 그대로"},
-        {"area": "한자 숫자·한자 읽기", "level": "none", "note": "三人, 二〇二四年 그대로. 한자 읽기는 TTS 모델에 맡김"},
-        {"area": "원문자·기호 이름", "level": "none", "note": "아직 없음"},
-        {"area": "문장 분할", "level": "full", "note": "공백 없는 。뒤, 、 구절, 최대 길이에서 가나·한자 사이"}
+      "status": "2단계",
+      "activation": "요청 언어 ja-JP, 또는 다른 요청 속 가나 문장 (자동)",
+      "evidence": [
+        "히라가나 문법 (한자·가타카나와 한 단어, 숫자·단어에 붙음)",
+        "가나만 있고 로마자 단어 없음",
+        "한글이 있으면 제외"
       ],
-      "gaps": ["자동 문장 판별(2단계)", "한자 숫자", "요일", "원문자·기호 이름", "TTS 모델 청취 비교(A/B)"],
-      "docs": ["docs/japanese-pack.ko.md"]
+      "scope": [
+        {
+          "area": "숫자",
+          "level": "full",
+          "note": "히라가나, 만 단위, 소수(いってんご), 숫자 뒤 千万億兆"
+        },
+        {
+          "area": "조수사",
+          "level": "full",
+          "note": "약 75개, 음 변화(さんぼん·いっぷん·さんがい), 특수 읽기(ひとり·はたち·ついたち)"
+        },
+        {
+          "area": "날짜·시간",
+          "level": "full",
+          "note": "年月日·時分秒·10:30, 1일은 ついたち/いちにち 구분, 요일 （水） すいようび"
+        },
+        {
+          "area": "통화",
+          "level": "partial",
+          "note": "円·¥·$·€·₩·£·元 (조수사 방식)"
+        },
+        {
+          "area": "단위",
+          "level": "full",
+          "note": "가타카나 단위 이름 (ごキログラム)"
+        },
+        {
+          "area": "로마자",
+          "level": "partial",
+          "note": "2~4자 대문자 약어와 짧은 영숫자(A4, MP3)만 가타카나 글자 이름. 단어는 그대로"
+        },
+        {
+          "area": "이메일·URL",
+          "level": "full",
+          "note": "글자·기호 이름, 도메인 단어(コム, イグザンプル)"
+        },
+        {
+          "area": "한자 숫자·한자 읽기",
+          "level": "none",
+          "note": "三人, 二〇二四年 그대로. 한자 읽기는 TTS 모델에 맡김"
+        },
+        {
+          "area": "원문자·기호 이름",
+          "level": "full",
+          "note": "①まるいち ⑴かっこいち Ⓐエー, ASCII 기호·그리스 문자 이름, R&D アールアンドディー"
+        },
+        {
+          "area": "문장 분할",
+          "level": "full",
+          "note": "공백 없는 。뒤, 、 구절, 최대 길이에서 가나·한자 사이"
+        }
+      ],
+      "gaps": [
+        "한자 숫자",
+        "TTS 모델 청취 비교(A/B)",
+        "일본어 평가셋·비교 TN 측정"
+      ],
+      "docs": [
+        "docs/japanese-pack.ko.md"
+      ]
     }
   },
   "planned": [
-    {"tag": "zh-CN", "name": "중국어", "note": "한자만 있는 문장을 우선 처리 예정 (일본어 다음)"}
+    {
+      "tag": "zh-CN",
+      "name": "중국어",
+      "note": "한자만 있는 문장을 우선 처리 예정 (일본어 다음)"
+    }
   ],
   "samples": [
-    {"id": "cardinal", "area": "기수", "text": "12345"},
-    {"id": "decimal", "area": "소수", "text": "3.14"},
-    {"id": "fraction", "area": "분수", "text": "1/2"},
-    {"id": "negative", "area": "음수", "text": "-5"},
-    {"id": "percent", "area": "백분율", "text": "10%"},
-    {"id": "range", "area": "범위", "text": "3~5"},
-    {"id": "currency", "area": "통화 ($)", "text": "$5"},
-    {"id": "currency-yen", "area": "통화 (¥)", "text": "¥1,000"},
-    {"id": "measure", "area": "단위", "text": "5kg"},
-    {"id": "date", "area": "날짜 (ISO)", "text": "2024-10-08"},
-    {"id": "time", "area": "시각", "text": "10:30"},
-    {"id": "phone", "area": "전화", "text": "010-1234-5678"},
-    {"id": "ordinal", "area": "서수 (영어식)", "text": "1st"},
-    {"id": "initialism", "area": "대문자 약어", "text": "USB"},
-    {"id": "alnum", "area": "영숫자", "text": "A4"},
-    {"id": "email", "area": "이메일", "text": "a1@b2.com"},
-    {"id": "url", "area": "URL", "text": "https://example.com/a"},
-    {"id": "version", "area": "버전", "text": "v2.1.3"},
-    {"id": "ip", "area": "IP", "text": "192.168.0.1"},
-    {"id": "enclosed", "area": "원문자", "text": "① Ⓐ"},
-    {"id": "symbol", "area": "기호", "text": "R&D"},
-    {"id": "counter", "area": "조수사 (언어별 문장)", "text": "3 apples", "texts": {"ko-KR": "사과 3개", "en-US": "3 apples", "ja-JP": "りんご3個"}},
-    {"id": "date-native", "area": "날짜 (언어별 문장)", "text": "October 8, 2024", "texts": {"ko-KR": "2024년 10월 8일", "en-US": "October 8, 2024", "ja-JP": "2024年10月8日"}},
-    {"id": "time-native", "area": "시각 (언어별 문장)", "text": "3:15 p.m.", "texts": {"ko-KR": "오후 3시 15분", "en-US": "3:15 p.m.", "ja-JP": "午後3時15分"}},
-    {"id": "mixed-ko", "area": "혼합: 한국어 문장", "text": "오늘 meeting은 3시에 R&D실에서"},
-    {"id": "mixed-en", "area": "혼합: 영어 문장", "text": "I love 김치 and 3 cats."},
-    {"id": "mixed-ja", "area": "혼합: 일본어 문장", "text": "明日は3時に会いましょう。"},
-    {"id": "kanji-only", "area": "혼합: 한자만", "text": "東京大學 2024年"}
+    {
+      "id": "cardinal",
+      "area": "기수",
+      "text": "12345"
+    },
+    {
+      "id": "decimal",
+      "area": "소수",
+      "text": "3.14"
+    },
+    {
+      "id": "fraction",
+      "area": "분수",
+      "text": "1/2"
+    },
+    {
+      "id": "negative",
+      "area": "음수",
+      "text": "-5"
+    },
+    {
+      "id": "percent",
+      "area": "백분율",
+      "text": "10%"
+    },
+    {
+      "id": "range",
+      "area": "범위",
+      "text": "3~5"
+    },
+    {
+      "id": "currency",
+      "area": "통화 ($)",
+      "text": "$5"
+    },
+    {
+      "id": "currency-yen",
+      "area": "통화 (¥)",
+      "text": "¥1,000"
+    },
+    {
+      "id": "measure",
+      "area": "단위",
+      "text": "5kg"
+    },
+    {
+      "id": "date",
+      "area": "날짜 (ISO)",
+      "text": "2024-10-08"
+    },
+    {
+      "id": "time",
+      "area": "시각",
+      "text": "10:30"
+    },
+    {
+      "id": "phone",
+      "area": "전화",
+      "text": "010-1234-5678"
+    },
+    {
+      "id": "ordinal",
+      "area": "서수 (영어식)",
+      "text": "1st"
+    },
+    {
+      "id": "initialism",
+      "area": "대문자 약어",
+      "text": "USB"
+    },
+    {
+      "id": "alnum",
+      "area": "영숫자",
+      "text": "A4"
+    },
+    {
+      "id": "email",
+      "area": "이메일",
+      "text": "a1@b2.com"
+    },
+    {
+      "id": "url",
+      "area": "URL",
+      "text": "https://example.com/a"
+    },
+    {
+      "id": "version",
+      "area": "버전",
+      "text": "v2.1.3"
+    },
+    {
+      "id": "ip",
+      "area": "IP",
+      "text": "192.168.0.1"
+    },
+    {
+      "id": "enclosed",
+      "area": "원문자",
+      "text": "① Ⓐ"
+    },
+    {
+      "id": "symbol",
+      "area": "기호",
+      "text": "R&D"
+    },
+    {
+      "id": "counter",
+      "area": "조수사 (언어별 문장)",
+      "text": "3 apples",
+      "texts": {
+        "ko-KR": "사과 3개",
+        "en-US": "3 apples",
+        "ja-JP": "りんご3個"
+      }
+    },
+    {
+      "id": "date-native",
+      "area": "날짜 (언어별 문장)",
+      "text": "October 8, 2024",
+      "texts": {
+        "ko-KR": "2024년 10월 8일",
+        "en-US": "October 8, 2024",
+        "ja-JP": "2024年10月8日"
+      }
+    },
+    {
+      "id": "time-native",
+      "area": "시각 (언어별 문장)",
+      "text": "3:15 p.m.",
+      "texts": {
+        "ko-KR": "오후 3시 15분",
+        "en-US": "3:15 p.m.",
+        "ja-JP": "午後3時15分"
+      }
+    },
+    {
+      "id": "mixed-ko",
+      "area": "혼합: 한국어 문장",
+      "text": "오늘 meeting은 3시에 R&D실에서"
+    },
+    {
+      "id": "mixed-en",
+      "area": "혼합: 영어 문장",
+      "text": "I love 김치 and 3 cats."
+    },
+    {
+      "id": "mixed-ja",
+      "area": "혼합: 일본어 문장",
+      "text": "明日は3時に会いましょう。"
+    },
+    {
+      "id": "kanji-only",
+      "area": "혼합: 한자만",
+      "text": "東京大學 2024年"
+    }
   ],
   "controls": [
-    {"id": "literal", "name": "{발음}", "text": "K7{케이세븐}"},
-    {"id": "native", "name": "@native", "text": "7{@native}"},
-    {"id": "sino", "name": "@sino", "text": "123{@sino}"},
-    {"id": "alphabet", "name": "@alphabet", "text": "ABC{@alphabet}"},
-    {"id": "address", "name": "@address", "text": "[[테헤란로 123-4]]{@address}"},
-    {"id": "email", "name": "@email", "text": "[[a1@b2.com]]{@email}"},
-    {"id": "url", "name": "@url", "text": "[[q1/a2]]{@url}"},
-    {"id": "cardinal", "name": "@cardinal", "text": "1234{@cardinal}"},
-    {"id": "digits", "name": "@digits", "text": "1234{@digits}"},
-    {"id": "digits-n", "name": "@digits:N", "text": "1234{@digits:2}"},
-    {"id": "decimal", "name": "@decimal", "text": "[[3.5]]{@decimal}"},
-    {"id": "ordinal", "name": "@ordinal", "text": "3{@ordinal}"},
-    {"id": "year", "name": "@year", "text": "[[1984]]{@year}"},
-    {"id": "date", "name": "@date", "text": "[[2024-10-08]]{@date}"},
-    {"id": "date-mdy", "name": "@date-mdy", "text": "[[10/08/2024]]{@date-mdy}"},
-    {"id": "date-dmy", "name": "@date-dmy", "text": "[[08/10/2024]]{@date-dmy}"},
-    {"id": "time", "name": "@time", "text": "[[10:30]]{@time}"},
-    {"id": "currency", "name": "@currency", "text": "[[$5]]{@currency}"},
-    {"id": "percent", "name": "@percent", "text": "[[10%]]{@percent}"},
-    {"id": "measure", "name": "@measure", "text": "[[5kg]]{@measure}"},
-    {"id": "unit", "name": "@unit", "text": "3M{@unit}"},
-    {"id": "counter", "name": "@counter", "text": "[[3개]]{@counter}"},
-    {"id": "fraction", "name": "@fraction", "text": "[[9/25]]{@fraction}"},
-    {"id": "range", "name": "@range", "text": "[[3~5]]{@range}"},
-    {"id": "score", "name": "@score", "text": "10:10{@score}"},
-    {"id": "math", "name": "@math", "text": "4-3{@math}"},
-    {"id": "phone", "name": "@phone", "text": "[[010-1234-5678]]{@phone}"},
-    {"id": "version", "name": "@version", "text": "[[v2.1.3]]{@version}"},
-    {"id": "ip", "name": "@ip", "text": "[[192.168.0.1]]{@ip}"},
-    {"id": "preserve", "name": "@preserve", "text": "[[A&B]]{@preserve}"},
-    {"id": "skip", "name": "@skip", "text": "앞 [[A&B]]{@skip} 뒤"},
-    {"id": "break", "name": "@break:N", "text": "1234{@break:2}"},
-    {"id": "join", "name": "@join", "text": "[[너 나]]{@join}"}
+    {
+      "id": "literal",
+      "name": "{발음}",
+      "text": "K7{케이세븐}"
+    },
+    {
+      "id": "native",
+      "name": "@native",
+      "text": "7{@native}"
+    },
+    {
+      "id": "sino",
+      "name": "@sino",
+      "text": "123{@sino}"
+    },
+    {
+      "id": "alphabet",
+      "name": "@alphabet",
+      "text": "ABC{@alphabet}"
+    },
+    {
+      "id": "address",
+      "name": "@address",
+      "text": "[[테헤란로 123-4]]{@address}"
+    },
+    {
+      "id": "email",
+      "name": "@email",
+      "text": "[[a1@b2.com]]{@email}"
+    },
+    {
+      "id": "url",
+      "name": "@url",
+      "text": "[[q1/a2]]{@url}"
+    },
+    {
+      "id": "cardinal",
+      "name": "@cardinal",
+      "text": "1234{@cardinal}"
+    },
+    {
+      "id": "digits",
+      "name": "@digits",
+      "text": "1234{@digits}"
+    },
+    {
+      "id": "digits-n",
+      "name": "@digits:N",
+      "text": "1234{@digits:2}"
+    },
+    {
+      "id": "decimal",
+      "name": "@decimal",
+      "text": "[[3.5]]{@decimal}"
+    },
+    {
+      "id": "ordinal",
+      "name": "@ordinal",
+      "text": "3{@ordinal}"
+    },
+    {
+      "id": "year",
+      "name": "@year",
+      "text": "[[1984]]{@year}"
+    },
+    {
+      "id": "date",
+      "name": "@date",
+      "text": "[[2024-10-08]]{@date}"
+    },
+    {
+      "id": "date-mdy",
+      "name": "@date-mdy",
+      "text": "[[10/08/2024]]{@date-mdy}"
+    },
+    {
+      "id": "date-dmy",
+      "name": "@date-dmy",
+      "text": "[[08/10/2024]]{@date-dmy}"
+    },
+    {
+      "id": "time",
+      "name": "@time",
+      "text": "[[10:30]]{@time}"
+    },
+    {
+      "id": "currency",
+      "name": "@currency",
+      "text": "[[$5]]{@currency}"
+    },
+    {
+      "id": "percent",
+      "name": "@percent",
+      "text": "[[10%]]{@percent}"
+    },
+    {
+      "id": "measure",
+      "name": "@measure",
+      "text": "[[5kg]]{@measure}"
+    },
+    {
+      "id": "unit",
+      "name": "@unit",
+      "text": "3M{@unit}"
+    },
+    {
+      "id": "counter",
+      "name": "@counter",
+      "text": "[[3개]]{@counter}"
+    },
+    {
+      "id": "fraction",
+      "name": "@fraction",
+      "text": "[[9/25]]{@fraction}"
+    },
+    {
+      "id": "range",
+      "name": "@range",
+      "text": "[[3~5]]{@range}"
+    },
+    {
+      "id": "score",
+      "name": "@score",
+      "text": "10:10{@score}"
+    },
+    {
+      "id": "math",
+      "name": "@math",
+      "text": "4-3{@math}"
+    },
+    {
+      "id": "phone",
+      "name": "@phone",
+      "text": "[[010-1234-5678]]{@phone}"
+    },
+    {
+      "id": "version",
+      "name": "@version",
+      "text": "[[v2.1.3]]{@version}"
+    },
+    {
+      "id": "ip",
+      "name": "@ip",
+      "text": "[[192.168.0.1]]{@ip}"
+    },
+    {
+      "id": "preserve",
+      "name": "@preserve",
+      "text": "[[A&B]]{@preserve}"
+    },
+    {
+      "id": "skip",
+      "name": "@skip",
+      "text": "앞 [[A&B]]{@skip} 뒤"
+    },
+    {
+      "id": "break",
+      "name": "@break:N",
+      "text": "1234{@break:2}"
+    },
+    {
+      "id": "join",
+      "name": "@join",
+      "text": "[[너 나]]{@join}"
+    }
   ]
 }

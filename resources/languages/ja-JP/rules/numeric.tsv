@@ -19,6 +19,7 @@ number	ja-JP	phone_separator	の
 number	ja-JP	version_separator	てん
 number	ja-JP	plus	プラス
 number	ja-JP	mixed	と
+number	ja-JP	ordinal_prefix	だい
 meridiem	ja-JP	AM	ごぜん
 meridiem	ja-JP	PM	ごご
 # Place values; sound changes are data (さんびゃく, ろっぴゃく, はっせん).

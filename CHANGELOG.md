@@ -2,6 +2,21 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Japanese phase 2 (project-owner policy; docs/japanese-pack.ko.md): a sentence
+  with hiragana grammar (hiragana with kanji or katakana in one word, or attached
+  to a number or word: 明日は, 3時に, iPhoneを), or only kana and no Latin word,
+  and no Hangul, is a Japanese sentence in a Korean or English request too; the
+  whole sentence goes to ja-JP and skips the Korean branches (context ja-JP
+  kana_sentence; core kana_sentence in the matrix routes). A Hangul word keeps a
+  sentence Korean, a standalone kana word in an English sentence and katakana
+  alone are no evidence, kanji-only sentences follow the request language, and
+  the Korean kana/hanja options and matrix=declared keep their behaviour. A
+  declared-only pack is classified only where it is the context. In ja-JP:
+  email and URL read with Japanese symbol names and domain words (they failed
+  the request before), ① まるいち, ⑴ かっこいち, Ⓐ エー, symbol and Greek names,
+  R&D アールアンドディー, weekday marks （水） すいようび, and the @year,
+  @version, @ordinal (だいさん) and digit @alphabet controls. Contract
+  ja_phase2_v37 (21).
 - Japanese pack, phase 1 (ja-JP; project-owner request; docs/japanese-pack.ko.md):
   in a request declared ja-JP, numbers, counters, dates, times, currency and
   units read in hiragana with the counter sound changes (3本 さんぼん, 6匹

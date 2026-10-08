@@ -16,6 +16,15 @@ static int label(const char *text) {
     return 1;
 }
 
+/* One character: a symbol, punctuation, enclosed form or kanji. */
+static int symbol_key(const char *key) {
+    uint32_t cp;
+    size_t width, length = strlen(key);
+    return length && ttf_utf8_decode(key, length, &cp, &width) == 1 && width == length && cp > 32 &&
+           cp != 127 && !(cp >= '0' && cp <= '9') && !(cp >= 'A' && cp <= 'Z') &&
+           !(cp >= 'a' && cp <= 'z');
+}
+
 static int decimal(const char *text, size_t limit) {
     size_t n = 0;
     for (; text[n]; ++n)
@@ -65,7 +74,8 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
         *handled = 1;
         return (decimal(key, 1) ||
                 ttf_validation_enum(key, "zero_integer|point|minus|range|fraction|"
-                                         "phone_separator|version_separator|plus|mixed")) &&
+                                         "phone_separator|version_separator|plus|mixed|"
+                                         "ordinal_prefix")) &&
                        label(v)
                    ? TTF_OK
                    : ttf_validation_error(d,
@@ -126,9 +136,40 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "meridiem requires AM|PM and a reading");
     }
+    if (SAME(k, "speech_symbol") || SAME(k, "weekday_mark")) {
+        *handled = 1;
+        return symbol_key(key) && label(v)
+                   ? TTF_OK
+                   : ttf_validation_error(
+                         d, "speech_symbol/weekday_mark requires one character and a reading");
+    }
+    if (SAME(k, "speech_silent")) {
+        *handled = 1;
+        return symbol_key(key) && ttf_validation_enum(v, "0|1")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "speech_silent requires one symbol and 0|1");
+    }
+    if (SAME(k, "speech_join")) {
+        *handled = 1;
+        return (SAME(key, "alphabet") || SAME(key, "symbol")) &&
+                       ttf_validation_enum(v, "none|space")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "speech_join supports alphabet|symbol=none|space");
+    }
+    if (SAME(k, "electronic_word")) {
+        size_t i;
+        *handled = 1;
+        for (i = 0; key[i]; ++i)
+            if (key[i] < 'a' || key[i] > 'z')
+                return ttf_validation_error(d, "electronic_word requires a lowercase ASCII key");
+        return i && i < 64 && label(v)
+                   ? TTF_OK
+                   : ttf_validation_error(d, "electronic_word requires a reading");
+    }
     if (SAME(k, "context")) {
         *handled = 1;
-        return ttf_validation_enum(key, "declared_only|absorb_foreign|attached_grammar") &&
+        return ttf_validation_enum(key,
+                                   "declared_only|absorb_foreign|attached_grammar|kana_sentence") &&
                        ttf_validation_enum(v, "0|1")
                    ? TTF_OK
                    : ttf_validation_error(d, "context requires a known flag and 0|1");

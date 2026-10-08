@@ -530,10 +530,26 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     const char *text = in->text;
     size_t begin, p, n = in->length, pairs = 0, nl = 0;
     char norm[TTF_IR_VALUE_SIZE];
-    if (!declared(e) || in->index >= in->token_count)
+    /* The core calls this only where ja-JP is the context: a declared request
+       or a kana sentence (phase 2). */
+    if (in->index >= in->token_count)
         return 0;
     t = &in->tokens[in->index];
     begin = t->begin;
+    if (t->script == TTF_SCRIPT_LATIN && t->end - begin <= 3 && t->end + 1 < n &&
+        text[t->end] == '&' && text[t->end + 1] >= 'A' && text[t->end + 1] <= 'Z' &&
+        (!begin || !alpha(text[begin - 1]))) {
+        size_t q = t->end + 1, k;
+        int caps = 1;
+        for (k = begin; k < t->end; ++k)
+            caps &= text[k] >= 'A' && text[k] <= 'Z';
+        while (q < n && text[q] >= 'A' && text[q] <= 'Z' && q - t->end <= 3)
+            ++q;
+        if (caps && q - t->end - 1 <= 3 && (q >= n || !alpha(text[q]))) {
+            snprintf(s->value, sizeof(s->value), "%.*s", (int)(q - begin), text + begin);
+            return finish(in, s, q, TTF_SEM_INITIALISM, "ja.initialism", "");
+        }
+    }
     if (t->script == TTF_SCRIPT_LATIN && initialism(text + begin, t->end - begin) &&
         (t->end >= n || !((text[t->end] >= 'a' && text[t->end] <= 'z') || digit(text[t->end])))) {
         snprintf(s->value, sizeof(s->value), "%.*s", (int)(t->end - begin), text + begin);
@@ -646,6 +662,29 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     if (!pairs)
         return 0;
     norm[nl] = 0;
+    /* 12月25日（水）, 10月8日(火): a weekday mark after a day reads ようび. */
+    if (nl >= 3 && !strcmp(norm + nl - 3, "\xe6\x97\xa5")) {
+        size_t open = p < n && text[p] == '('                                ? 1
+                      : (p + 3 <= n && !memcmp(text + p, "\xef\xbc\x88", 3)) ? 3
+                                                                             : 0;
+        char day[4];
+        if (open && p + open + 3 < n) {
+            size_t q = p + open + 3;
+            size_t close = q < n && text[q] == ')'                                ? 1
+                           : (q + 3 <= n && !memcmp(text + q, "\xef\xbc\x89", 3)) ? 3
+                                                                                  : 0;
+            memcpy(day, text + p + open, 3);
+            day[3] = 0;
+            if (close && res(e, "weekday_mark", day) && nl + 6 < sizeof(norm)) {
+                norm[nl++] = '(';
+                memcpy(norm + nl, day, 3);
+                nl += 3;
+                norm[nl++] = ')';
+                norm[nl] = 0;
+                p = q + close;
+            }
+        }
+    }
     snprintf(s->value, sizeof(s->value), "%s", norm);
     return finish(in, s, p, TTF_SEM_COUNTER, "ja.counter", "@ja");
 }
@@ -658,6 +697,18 @@ static ttf_status_t render_chain(const ttf_engine_t *e, const char *v, ttf_buffe
     while (p < n) {
         ja_number_t x;
         char key[32], norm[TTF_IR_VALUE_SIZE];
+        if (v[p] == '(') {
+            /* (水) すいようび */
+            char day[4];
+            if (p + 5 > n || v[p + 4] != ')')
+                return TTF_EINVAL;
+            memcpy(day, v + p + 1, 3);
+            day[3] = 0;
+            if ((st = word(e, b, "weekday_mark", day)) != TTF_OK)
+                return st;
+            p += 5;
+            continue;
+        }
         size_t nl = 0, used = parse_number(e, v + p, n - p, &x, norm, sizeof(norm), &nl), cw, rw;
         if (!used)
             return TTF_EINVAL;
@@ -710,7 +761,12 @@ static ttf_status_t letters(const ttf_engine_t *e, const char *s, size_t n, ttf_
         ttf_status_t st;
         if (key[0] >= 'a' && key[0] <= 'z')
             key[0] = (char)(key[0] - 'a' + 'A');
-        if (key[0] == '.' || key[0] == '-' || key[0] == '&')
+        if (key[0] == '&') {
+            if ((st = word(e, b, "speech_symbol", "&")) != TTF_OK)
+                return st;
+            continue;
+        }
+        if (key[0] == '.' || key[0] == '-')
             continue;
         if (key[0] < 'A' || key[0] > 'Z')
             return TTF_EINVAL;
@@ -894,7 +950,11 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         return measure(e, s, surface, length, b);
     case TTF_SEM_CARDINAL:
     case TTF_SEM_NUMBER:
+        return plain_number(e, s->value, b);
     case TTF_SEM_ORDINAL:
+        /* 3{@ordinal}, 1st: だいさん, だいいち */
+        if ((st = word(e, b, "number", "ordinal_prefix")) != TTF_OK)
+            return st;
         return plain_number(e, s->value, b);
     case TTF_SEM_DIGIT_SEQUENCE:
         return digits_each(e, s->value, strlen(s->value), b);
@@ -909,6 +969,8 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     case TTF_SEM_TIME:
         return time_reading(e, s, b);
     case TTF_SEM_DATE:
+        if (!strcmp(s->unit, "year"))
+            return value_counted(e, s->value, "年", 0, b);
         if (s->unit[0])
             return TTF_EINVAL;
         return date_reading(e, s->value, b);
@@ -947,6 +1009,9 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     case TTF_SEM_VERSION:
     case TTF_SEM_IP_ADDRESS: {
         size_t i = 0, n = strlen(s->value);
+        while (i < n && alpha(s->value[i]))
+            if ((st = letters(e, s->value + i++, 1, b)) != TTF_OK)
+                return st;
         while (i < n) {
             size_t j = i;
             char part[24];
@@ -977,9 +1042,13 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         if (!strcmp(s->unit, "@alphabet")) {
             const char *v = !strcmp(s->secondary, "control-surface") ? surface : s->value;
             size_t n = v == surface ? length : strlen(v);
-            if (n == 1 && digit(v[0]))
-                return digits_each(e, v, 1, b);
-            return letters(e, v, n, b);
+            size_t i;
+            for (i = 0; i < n; ++i) {
+                st = digit(v[i]) ? digits_each(e, v + i, 1, b) : letters(e, v + i, 1, b);
+                if (st != TTF_OK)
+                    return st;
+            }
+            return n ? TTF_OK : TTF_EINVAL;
         }
         if (!strcmp(s->unit, "@counter"))
             return TTF_EINVAL;

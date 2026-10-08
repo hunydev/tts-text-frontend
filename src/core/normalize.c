@@ -281,9 +281,68 @@ static void sentence_bounds(const ttf_pack_input_t *in, size_t index, size_t *be
         ++index;
     *end = index < n ? index + 1 : n;
 }
+/* Hiragana in a token that also holds kanji or katakana (明日は), or attached to a
+   neighbouring word or number (3時に, iPhoneを), is Japanese grammar. */
+static int hiragana_token(const ttf_pack_input_t *in, size_t k, size_t begin, size_t end,
+                          int *grammar) {
+    const ttf_token_t *t = &in->tokens[k];
+    size_t at = t->begin;
+    int hiragana = 0, other = 0;
+    while (at < t->end) {
+        uint32_t cp;
+        size_t w;
+        if (ttf_utf8_decode(in->text + at, t->end - at, &cp, &w) != 1)
+            break;
+        if (cp >= 0x3041 && cp <= 0x309f)
+            hiragana = 1;
+        else if ((cp >= 0x30a1 && cp <= 0x30fa) || (cp >= 0x3400 && cp <= 0x9fff))
+            other = 1;
+        at += w;
+    }
+    if (!hiragana)
+        return 0;
+    *grammar |= other ||
+                (k > begin && in->tokens[k - 1].end == t->begin &&
+                 in->tokens[k - 1].script != TTF_SCRIPT_WHITESPACE &&
+                 in->tokens[k - 1].script != TTF_SCRIPT_PUNCTUATION) ||
+                (k + 1 < end && in->tokens[k + 1].begin == t->end &&
+                 in->tokens[k + 1].script != TTF_SCRIPT_WHITESPACE &&
+                 in->tokens[k + 1].script != TTF_SCRIPT_PUNCTUATION);
+    return 1;
+}
+/* A kana sentence (2026-10-08, project owner): with hiragana grammar, or only
+   kana and no Latin word, and no Hangul at all, the sentence belongs to the pack
+   declaring `context <tag> kana_sentence 1` (ja-JP), every token included. A
+   Hangul word keeps the sentence out (「ありがとう」라고 stays Korean); the Korean
+   kana/hanja reading options keep their Korean sentences; a standalone kana word
+   in an English sentence is no grammar. */
+static const ttf_language_pack_t *kana_sentence(const ttf_engine_t *e, const ttf_pack_input_t *in,
+                                                size_t begin, size_t end) {
+    const ttf_language_pack_t *pack = NULL;
+    size_t j, k;
+    int grammar = 0, hiragana = 0, latin = 0;
+    if (e->frontend_options.kana == TTF_KANA_KOREAN || e->frontend_options.hanja == TTF_HANJA_KOREAN)
+        return NULL;
+    for (j = 0; j < e->pack_count && !pack; ++j)
+        if (pack_flag(e, e->packs[j], "kana_sentence", 0))
+            pack = e->packs[j];
+    if (!pack)
+        return NULL;
+    for (k = begin; k < end; ++k) {
+        if (in->tokens[k].script == TTF_SCRIPT_HANGUL)
+            return NULL;
+        if (in->tokens[k].script == TTF_SCRIPT_LATIN)
+            latin = 1;
+        else
+            hiragana |= hiragana_token(in, k, begin, end, &grammar);
+    }
+    return grammar || (hiragana && !latin) ? pack : NULL;
+}
 static void matrix_route(const ttf_engine_t *e, const ttf_pack_input_t *in, size_t begin,
                          size_t end, matrix_route_t *routes) {
     char why[40];
+    const ttf_language_pack_t *kana =
+        e->matrix_policy == TTF_MATRIX_DECLARED ? NULL : kana_sentence(e, in, begin, end);
     const ttf_language_pack_t *matrix = e->matrix_policy == TTF_MATRIX_DECLARED
                                             ? ttf_find_pack(e, e->default_language)
                                             : sentence_matrix(e, in, begin, end, why);
@@ -291,6 +350,14 @@ static void matrix_route(const ttf_engine_t *e, const ttf_pack_input_t *in, size
     size_t k;
     if (e->matrix_policy == TTF_MATRIX_DECLARED)
         snprintf(why, sizeof(why), "matrix=%s(declared)", matrix ? matrix->language_tag : "und");
+    if (kana) {
+        snprintf(why, sizeof(why), "matrix=%s(kana)", kana->language_tag);
+        for (k = begin; k < end; ++k) {
+            routes[k - begin].pack = kana;
+            memcpy(routes[k - begin].why, why, sizeof(why));
+        }
+        return;
+    }
     for (k = begin; k < end; ++k) {
         const ttf_language_pack_t *owner = script_pack(e, in->tokens[k].script);
         routes[k - begin].pack = forced && (!owner || owner == matrix) ? matrix : NULL;
@@ -1209,7 +1276,10 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
             }
             consumed = ttf_classify_universal(&classification, sem);
             for (j = 0; j < e->pack_count; j++)
-                if (e->packs[j]->classify && strcmp(sem->unit, "@math")) {
+                /* A declared-only pack classifies only where it is the context
+                   (its declared request or a kana sentence). */
+                if (e->packs[j]->classify && strcmp(sem->unit, "@math") &&
+                    (!undeclared(e, j) || context == e->packs[j])) {
                     ttf_semantic_t candidate;
                     size_t n;
                     long candidate_priority = 0;
