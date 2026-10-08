@@ -160,6 +160,7 @@ class Handler(BaseHTTPRequestHandler):
             "/perf.js": "perf.js",
             "/languages": "languages.html",
             "/languages.js": "languages.js",
+            "/languages.css": "languages.css",
             "/jev-eval.js": "jev-eval.js",
         }
         if path not in names:
