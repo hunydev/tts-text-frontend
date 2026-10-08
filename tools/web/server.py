@@ -21,6 +21,26 @@ sys.path.insert(0, str(ROOT / "tools/lexicon"))
 from manage import inventory
 
 STATIC = Path(__file__).with_name("static")
+LANGUAGE_CACHE = {}
+LANGUAGE_LOCK = threading.Lock()
+
+
+def language_status(library, resources):
+    """Language support status (/languages), recomputed when the library, the
+    curated facts or the resource manifest change. Runs in its own process."""
+    here = Path(__file__).resolve().parent
+    stamp = tuple(Path(p).stat().st_mtime_ns for p in (
+        library, here / "language_support.json", Path(resources) / "manifest.ttfm"))
+    with LANGUAGE_LOCK:
+        if LANGUAGE_CACHE.get("stamp") == stamp:
+            return LANGUAGE_CACHE["value"]
+        done = subprocess.run([sys.executable, str(here / "language_status.py"), str(library),
+                               str(resources)], capture_output=True, timeout=180, check=False)
+        if done.returncode:
+            raise ValueError(done.stderr.decode(errors="replace")[-400:] or "language status failed")
+        value = json.loads(done.stdout)
+        LANGUAGE_CACHE.update(stamp=stamp, value=value)
+        return value
 SLOTS = threading.BoundedSemaphore(4)
 MAX_BODY = 262144
 MAX_OUTPUT = 32 * 1024 * 1024
@@ -114,6 +134,11 @@ class Handler(BaseHTTPRequestHandler):
             return self.json(200, catalog())
         if path == "/api/health":
             return self.json(200, dict(ok=True, version=catalog()["version"]))
+        if path == "/api/languages":
+            try:
+                return self.json(200, language_status(self.server.library, self.server.resources))
+            except (OSError, ValueError, subprocess.SubprocessError) as error:
+                return self.json(503, {"error": str(error)})
         if path == "/api/lexicon":
             try:
                 return self.json(200, inventory(ROOT))
@@ -133,6 +158,8 @@ class Handler(BaseHTTPRequestHandler):
             "/jev-eval": "jev-eval.html",
             "/perf": "perf.html",
             "/perf.js": "perf.js",
+            "/languages": "languages.html",
+            "/languages.js": "languages.js",
             "/jev-eval.js": "jev-eval.js",
         }
         if path not in names:
