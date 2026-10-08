@@ -2,6 +2,12 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Korean 번 counts (project-owner request): an event verb right after N번 makes
+  it a count with a native numeral (3번 말했다 세 번, 2번 말씀드렸습니다 두 번,
+  5번 봤다 다섯 번), 55 counter_role_after frequency cues; label nouns keep the
+  number (3번 출구 삼 번, 5번 버스 오 번). Cues that also mean entering, arriving
+  or pressing (들어, 왔, 눌렀) were left out: the benchmark lost bus and button
+  numbers with them. Contract ko_beon_count_v40 (16). Korean benchmark +25, -0.
 - Japanese kanji numerals (project-owner decision; docs/japanese-pack.ko.md): in
   a Japanese sentence a kanji numeral with a counter (三本 さんぼん, 一人 ひとり,
   十月八日), a place structure (二千二十四) or a positional form (二〇二四年)
