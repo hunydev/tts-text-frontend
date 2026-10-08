@@ -671,6 +671,14 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         ++pairs;
         if (!cw)
             break;
+        if (p + 3 <= n && !memcmp(text + p, "\xe4\xb8\xad", 3) && res(e, "long_suffix", key) &&
+            nl + 4 < sizeof(norm)) {
+            memcpy(norm + nl, text + p, 3);
+            nl += 3;
+            norm[nl] = 0;
+            p += 3;
+            break;
+        }
         /* 3分の1 さんぶんのいち: a written fraction, not minutes. */
         if (!strcmp(key, "分") && p + 4 <= n && !memcmp(text + p, NO, 3) && digit(text[p + 3])) {
             ja_number_t y;
@@ -773,6 +781,216 @@ static ttf_status_t render_chain(const ttf_engine_t *e, const char *v, ttf_buffe
             return st;
         snprintf(previous, sizeof(previous), "%s", key);
         p += cw;
+        /* 一日中 いちにちじゅう */
+        if (p + 3 <= n && !memcmp(v + p, "\xe4\xb8\xad", 3) && res(e, "long_suffix", key)) {
+            if ((st = ttf_buffer_puts(b, "じゅう")) != TTF_OK)
+                return st;
+            p += 3;
+        }
+    }
+    return TTF_OK;
+}
+
+/* Kanji numerals (2026-10-08): 〇一二三四五六七八九 digits, 十百千 places, 万億兆 myriads. */
+static int kanji_digit(uint32_t cp) {
+    static const uint32_t digits[10] = {0x3007, 0x4e00, 0x4e8c, 0x4e09, 0x56db,
+                                        0x4e94, 0x516d, 0x4e03, 0x516b, 0x4e5d};
+    int d;
+    for (d = 0; d < 10; ++d)
+        if (digits[d] == cp)
+            return d;
+    return -1;
+}
+
+static int kanji_place(uint32_t cp) {
+    return cp == 0x5341 ? 1 : cp == 0x767e ? 2 : cp == 0x5343 ? 3 : 0;
+}
+
+static int kanji_myriad(uint32_t cp) {
+    return cp == 0x4e07 ? 4 : cp == 0x5104 ? 8 : cp == 0x5146 ? 12 : 0;
+}
+
+static int kanji_numeral(uint32_t cp) {
+    return kanji_digit(cp) >= 0 || kanji_place(cp) || kanji_myriad(cp);
+}
+
+/* 三 3, 二千二十四 2024, 二〇二四 2024, 三十五万 350000. Returns bytes used;
+ *shape is 1 for one character, 2 for a place structure, 3 for positional digits. */
+static size_t kanji_number(const char *s, size_t n, char *out, size_t size, int *shape) {
+    uint64_t total = 0, section = 0, current = 0;
+    size_t at = 0, chars = 0, positional = 0;
+    int places = 0, zero = 0, have = 0;
+    char digits[24];
+    while (at < n) {
+        uint32_t cp;
+        size_t w;
+        int d, place, myriad;
+        if (ttf_utf8_decode(s + at, n - at, &cp, &w) != 1 || !kanji_numeral(cp))
+            break;
+        d = kanji_digit(cp);
+        place = kanji_place(cp);
+        myriad = kanji_myriad(cp);
+        if (!chars && myriad)
+            return 0;
+        if (d >= 0) {
+            if (positional + 1 >= sizeof(digits))
+                return 0;
+            digits[positional++] = (char)('0' + d);
+            zero |= d == 0;
+            current = current * 10 + (uint64_t)d;
+            have = 1;
+        } else if (place) {
+            uint64_t factor = place == 1 ? 10 : place == 2 ? 100 : 1000;
+            section += (have ? current : 1) * factor;
+            current = 0;
+            have = 0;
+            places = 1;
+        } else {
+            uint64_t factor = 1;
+            int k;
+            for (k = 0; k < myriad; ++k)
+                factor *= 10;
+            total += (section + current) * factor;
+            section = current = 0;
+            have = 0;
+            places = 1;
+        }
+        at += w;
+        ++chars;
+    }
+    if (!chars)
+        return 0;
+    if (!places) {
+        digits[positional] = 0;
+        /* Positional reading needs 〇 or three or more digits (九九 stays). */
+        if (chars > 1 && !zero && chars < 3)
+            return 0;
+        *shape = chars == 1 ? 1 : 3;
+        snprintf(out, size, "%s", digits);
+        return at;
+    }
+    if (zero)
+        return 0;
+    /* A lone 十, 百 or 千 is one character like 三 (千葉 stays without a counter). */
+    *shape = chars == 1 ? 1 : 2;
+    snprintf(out, size, "%llu", (unsigned long long)(total + section + current));
+    return at;
+}
+
+static ttf_status_t render_chain(const ttf_engine_t *e, const char *v, ttf_buffer_t *b);
+
+/* In a Japanese sentence a kanji numeral reads like digits when it carries a
+   counter (三本), a place structure (二千二十四) or a positional form (二〇二四).
+   A lone 一 stays, a 十分 not after 時 stays (じゅうぶん, enough), and words
+   that only look like numbers stay through kanji_word (八百屋, 三日月). */
+static ttf_status_t kanji_numerals(const ttf_engine_t *e, const char *s, size_t n,
+                                   ttf_buffer_t *b) {
+    size_t at = 0;
+    uint32_t previous = 0;
+    ttf_status_t st;
+    while (at < n) {
+        uint32_t cp;
+        size_t w, k, p, chars[8], count = 0, pairs = 0, nl = 0;
+        char norm[TTF_IR_VALUE_SIZE];
+        if (ttf_utf8_decode(s + at, n - at, &cp, &w) != 1)
+            return ttf_buffer_append(b, s + at, n - at);
+        /* Exceptions: the longest listed word starting here stays as written. */
+        for (p = at; p < n && count < 8;) {
+            uint32_t c2;
+            size_t w2;
+            if (ttf_utf8_decode(s + p, n - p, &c2, &w2) != 1)
+                break;
+            p += w2;
+            chars[count++] = p;
+        }
+        for (k = count; k > 1; --k) {
+            char key[32];
+            if (chars[k - 1] - at >= sizeof(key))
+                continue;
+            memcpy(key, s + at, chars[k - 1] - at);
+            key[chars[k - 1] - at] = 0;
+            if (res(e, "kanji_word", key))
+                break;
+        }
+        if (k > 1) {
+            if ((st = ttf_buffer_append(b, s + at, chars[k - 1] - at)) != TTF_OK)
+                return st;
+            at = chars[k - 1];
+            previous = 0;
+            continue;
+        }
+        if (kanji_numeral(cp) && !kanji_numeral(previous) && !kanji_myriad(cp)) {
+            p = at;
+            norm[0] = 0;
+            for (;;) {
+                char digits[24], key[32];
+                int shape = 0;
+                size_t used = kanji_number(s + p, n - p, digits, sizeof(digits), &shape), cw;
+                if (!used)
+                    break;
+                cw = counter_at(e, s + p + used, n - p - used, key, sizeof(key));
+                /* 十分: minutes after 時, otherwise maybe じゅうぶん. */
+                if (cw && !strcmp(key, "分") && !strcmp(digits, "10") && used == 3 && !pairs &&
+                    !(at >= 3 && !memcmp(s + at - 3, "\xe6\x99\x82", 3)))
+                    cw = 0, shape = 1;
+                /* 四つ葉 よつば: Nつ before a kanji is a compound. */
+                if (cw && !strcmp(key, "つ") && p + used + cw < n) {
+                    uint32_t next;
+                    size_t nw;
+                    if (ttf_utf8_decode(s + p + used + cw, n - p - used - cw, &next, &nw) == 1 &&
+                        next >= 0x4e00 && next <= 0x9fff)
+                        cw = 0, shape = 1;
+                }
+                if (!cw && (pairs || shape == 1))
+                    break;
+                if (nl + strlen(digits) + cw + 1 >= sizeof(norm))
+                    break;
+                memcpy(norm + nl, digits, strlen(digits));
+                nl += strlen(digits);
+                memcpy(norm + nl, s + p + used, cw);
+                nl += cw;
+                norm[nl] = 0;
+                p += used + cw;
+                ++pairs;
+                if (!cw)
+                    break;
+                /* 三分の一 さんぶんのいち */
+                if (!strcmp(key, "分") && p + 3 < n && !memcmp(s + p, NO, 3)) {
+                    char second[24];
+                    int shape2 = 0;
+                    size_t used2 =
+                        kanji_number(s + p + 3, n - p - 3, second, sizeof(second), &shape2);
+                    if (used2 && nl + 3 + strlen(second) + 1 < sizeof(norm)) {
+                        memcpy(norm + nl, NO, 3);
+                        nl += 3;
+                        memcpy(norm + nl, second, strlen(second));
+                        nl += strlen(second);
+                        norm[nl] = 0;
+                        p += 3 + used2;
+                    }
+                    break;
+                }
+                if (p + 3 <= n && !memcmp(s + p, "\xe4\xb8\xad", 3) && res(e, "long_suffix", key) &&
+                    nl + 4 < sizeof(norm)) {
+                    memcpy(norm + nl, s + p, 3);
+                    nl += 3;
+                    norm[nl] = 0;
+                    p += 3;
+                    break;
+                }
+            }
+            if (pairs) {
+                if ((st = render_chain(e, norm, b)) != TTF_OK)
+                    return st;
+                at = p;
+                previous = 0;
+                continue;
+            }
+        }
+        if ((st = ttf_buffer_append(b, s + at, w)) != TTF_OK)
+            return st;
+        previous = cp;
+        at += w;
     }
     return TTF_OK;
 }
@@ -1090,6 +1308,16 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         if (!strcmp(s->unit, "@email") || !strcmp(s->unit, "@url"))
             return ttf_electronic_control(e, s, surface, length, b);
         return ttf_semantic_control(e, s, surface, length, b);
+    case TTF_SEM_WORD: {
+        size_t i;
+        for (i = 0; i + 3 <= length; ++i) {
+            uint32_t cp;
+            size_t w;
+            if (ttf_utf8_decode(surface + i, length - i, &cp, &w) == 1 && kanji_numeral(cp))
+                return kanji_numerals(e, surface, length, b);
+        }
+        return ttf_buffer_append(b, surface, length);
+    }
     default:
         return ttf_buffer_append(b, surface, length);
     }

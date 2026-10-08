@@ -124,6 +124,18 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "currency requires an ISO code and a counter");
     }
+    if (SAME(k, "long_suffix")) {
+        *handled = 1;
+        return label(key) && strlen(key) < 32 && ttf_validation_enum(v, "0|1")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "long_suffix requires a counter and 0|1");
+    }
+    if (SAME(k, "kanji_word")) {
+        *handled = 1;
+        return label(key) && strlen(key) < 32 && ttf_validation_enum(v, "0|1")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "kanji_word requires a word under 32 bytes and 0|1");
+    }
     if (SAME(k, "digit_cue")) {
         *handled = 1;
         return label(key) && strlen(key) < 16 && ttf_validation_enum(v, "0|1")

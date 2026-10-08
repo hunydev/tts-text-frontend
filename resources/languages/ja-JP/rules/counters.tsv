@@ -147,6 +147,16 @@ counter	ja-JP	ワット	ワット:-
 counter	ja-JP	ボルト	ボルト:-
 counter	ja-JP	ヘクタール	ヘクタール:-
 counter	ja-JP	号室	ごうしつ:-
+# 一日中, 一年中: 中 after these counts reads じゅう.
+long_suffix	ja-JP	日	1
+long_suffix	ja-JP	年	1
+long_suffix	ja-JP	晩	1
+long_suffix	ja-JP	週間	1
+long_suffix	ja-JP	か月	1
+long_suffix	ja-JP	ヶ月	1
+counter	ja-JP	晩	ばん:-
+counter_reading	ja-JP	晩:1	ひとばん
+counter_reading	ja-JP	晩:2	ふたばん
 # A number right after a label reads digit by digit: 内線214 にーいちよん.
 digit_cue	ja-JP	内線	1
 digit_cue	ja-JP	局番	1

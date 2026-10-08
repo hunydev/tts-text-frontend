@@ -2,6 +2,16 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Japanese kanji numerals (project-owner decision; docs/japanese-pack.ko.md): in
+  a Japanese sentence a kanji numeral with a counter (三本 さんぼん, 一人 ひとり,
+  十月八日), a place structure (二千二十四) or a positional form (二〇二四年)
+  reads like digits, as do 三分の一 and 一日中; a lone 一 or 千, 十分 not after
+  時, Nつ before a kanji (四つ葉) and listed words (kanji_word: 八百屋, 三日月,
+  五月雨, 一行 …) stay. Korean and kanji-only sentences are untouched. The
+  phase 1 contract row that kept 三人 records the change. Checked against the
+  503 JSUT kanji-numeral sentences (the reader already reads them, so this is a
+  regression guard; remaining losses are reader effects and variants).
+  Contract ja_kanji_numerals_v39 (37).
 - Japanese measurement (docs/japanese-benchmark.ko.md, workbench /ja-quality):
   JSUT BASIC5000 hand-made kana readings (CC-BY-SA 4.0, local only) as the
   reference, every system read by pyopenjtalk: on the 253 digit sentences ours
