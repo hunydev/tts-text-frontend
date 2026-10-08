@@ -92,3 +92,23 @@ math_operator	ja-JP	≤	しょうなりイコール
 math_operator	ja-JP	≥	だいなりイコール
 math_operator	ja-JP	≦	しょうなりイコール
 math_operator	ja-JP	≧	だいなりイコール
+# score_cue / ratio_cue: words near N-M or N:M that make it a score or a ratio
+# read with たい (3-2で勝利 さんたいに, 1:20の縮尺 いちたいにじゅう; 2026-10-09).
+score_cue	ja-JP	勝	1
+score_cue	ja-JP	負	1
+score_cue	ja-JP	敗	1
+score_cue	ja-JP	引き分け	1
+score_cue	ja-JP	逆転	1
+score_cue	ja-JP	同点	1
+score_cue	ja-JP	完封	1
+score_cue	ja-JP	試合	1
+score_cue	ja-JP	スコア	1
+score_cue	ja-JP	得点	1
+score_cue	ja-JP	点差	1
+score_cue	ja-JP	リード	1
+score_cue	ja-JP	戦	1
+ratio_cue	ja-JP	比	1
+ratio_cue	ja-JP	割合	1
+ratio_cue	ja-JP	縮尺	1
+ratio_cue	ja-JP	配合	1
+ratio_cue	ja-JP	対比	1

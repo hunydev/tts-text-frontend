@@ -79,6 +79,7 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
         return (decimal(key, 1) ||
                 ttf_validation_enum(key, "zero_integer|point|minus|range|fraction|"
                                          "phone_separator|version_separator|version_prefix|"
+                                         "score_separator|power|"
                                          "plus|mixed|"
                                          "ordinal_prefix")) &&
                        label(v)
@@ -195,6 +196,12 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
         return decimal(key, 3) && label(v)
                    ? TTF_OK
                    : ttf_validation_error(d, "latin_ordinal requires a number and a reading");
+    }
+    if (SAME(k, "score_cue") || SAME(k, "ratio_cue")) {
+        *handled = 1;
+        return label(key) && strlen(key) <= 12 && SAME(v, "1")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "score_cue/ratio_cue requires a word and 1");
     }
     if (SAME(k, "math_operator")) {
         *handled = 1;

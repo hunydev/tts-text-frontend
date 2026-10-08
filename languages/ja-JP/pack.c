@@ -506,7 +506,7 @@ static size_t counter_at(const ttf_engine_t *e, const char *s, size_t n, char *k
 }
 
 static int range_mark(const char *s, size_t n, size_t *width) {
-    if (n >= 1 && s[0] == '~') {
+    if (n >= 1 && (s[0] == '~' || s[0] == '-')) {
         *width = 1;
         return 1;
     }
@@ -538,6 +538,41 @@ static size_t finish(const ttf_pack_input_t *in, ttf_semantic_t *s, size_t end,
     snprintf(s->rule, sizeof(s->rule), "%s", rule);
     snprintf(s->unit, sizeof(s->unit), "%s", unit);
     return count;
+}
+
+/* A cue word (score_cue, ratio_cue) within window bytes after `after` or
+ * before `before`, inside the sentence. */
+static int cue_near(const ttf_engine_t *e, const char *kind, const char *text, size_t n,
+                    size_t before, size_t after, size_t window) {
+    size_t start = before > window ? before - window : 0, p, k;
+    /* Stay inside the sentence: 。 or a line break ends the window. */
+    for (k = start; k < before; ++k)
+        if ((k + 3 <= before && !memcmp(text + k, "\xe3\x80\x82", 3)) || text[k] == '\n')
+            start = k + 1;
+    while (start < before && ((unsigned char)text[start] & 0xc0) == 0x80)
+        ++start;
+    for (p = start; p < n && p < after + window; ++p) {
+        size_t len, chars = 0;
+        if (((unsigned char)text[p] & 0xc0) == 0x80 || (p >= before && p < after))
+            continue;
+        if (p >= after && ((p + 3 <= n && !memcmp(text + p, "\xe3\x80\x82", 3)) || text[p] == '\n'))
+            break;
+        for (len = 0; p + len < n && chars < 4;) {
+            char key[16];
+            size_t w = 1;
+            unsigned char c = (unsigned char)text[p + len];
+            if (c >= 0xf0) w = 4; else if (c >= 0xe0) w = 3; else if (c >= 0xc0) w = 2;
+            if (len + w >= sizeof(key))
+                break;
+            len += w;
+            ++chars;
+            memcpy(key, text + p, len);
+            key[len] = 0;
+            if (res(e, kind, key))
+                return 1;
+        }
+    }
+    return 0;
 }
 
 /* A Latin word in a Japanese sentence (2026-10-08, ja-tn-eval-v1 gaps):
@@ -737,6 +772,46 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             !res(e, "unit", unit)) {
             snprintf(s->value, sizeof(s->value), "%.*s", (int)(r - begin), text + begin);
             return finish(in, s, r, TTF_SEM_ALNUM_TERM, "ja.alnum", "");
+        }
+    }
+    /* 3:1の割合 さんたいいち, 3-2で勝利 さんたいに (2026-10-09): N:M or N-M with a
+       cue nearby, or N:M whose second part has one digit (not minutes). */
+    if (digit(text[begin]) && !(begin && (digit(text[begin - 1]) || alpha(text[begin - 1]) ||
+                                          text[begin - 1] == '-' || text[begin - 1] == ':' ||
+                                          text[begin - 1] == '.'))) {
+        size_t q = begin, r;
+        char key[32];
+        while (q < n && digit(text[q]))
+            ++q;
+        if (q - begin <= 3 && q + 1 < n && (text[q] == ':' || text[q] == '-') && digit(text[q + 1])) {
+            r = q + 1;
+            while (r < n && digit(text[r]))
+                ++r;
+            if (r - q - 1 <= 3 &&
+                (r >= n || !(digit(text[r]) || alpha(text[r]) || text[r] == ':' || text[r] == '-' ||
+                             text[r] == '.' || text[r] == '/')) &&
+                !counter_at(e, text + r, n - r, key, sizeof(key)) && r - begin < sizeof(s->value)) {
+                int score = cue_near(e, "score_cue", text, n, begin, r, 40);
+                int ratio = text[q] == ':' &&
+                            (r - q - 1 == 1 || cue_near(e, "ratio_cue", text, n, begin, r, 15));
+                if (score || ratio) {
+                    snprintf(s->value, sizeof(s->value), "%.*s", (int)(r - begin), text + begin);
+                    return finish(in, s, r, TTF_SEM_SYMBOL, "ja.score", "@score");
+                }
+            }
+        }
+    }
+    /* 10² じゅうのにじょう, 5³ ごのさんじょう */
+    if (digit(text[begin])) {
+        size_t q = begin;
+        while (q < n && digit(text[q]))
+            ++q;
+        if (q - begin <= 6 && q + 2 <= n && (unsigned char)text[q] == 0xc2 &&
+            ((unsigned char)text[q + 1] == 0xb2 || (unsigned char)text[q + 1] == 0xb3) &&
+            q - begin + 2 < sizeof(s->value)) {
+            snprintf(s->value, sizeof(s->value), "%.*s%c", (int)(q - begin), text + begin,
+                     (unsigned char)text[q + 1] == 0xb2 ? '2' : '3');
+            return finish(in, s, q + 2, TTF_SEM_SYMBOL, "ja.power", "@power");
         }
     }
     /* 内線214, 請求書1111: after a number label the digits read one by one. */
@@ -1397,6 +1472,22 @@ static ttf_status_t expression(const ttf_engine_t *e, const char *v, ttf_buffer_
     return TTF_OK;
 }
 
+/* 3-2 さんたいに, 10:10 じゅうたいじゅう: two numbers around - or : read with たい. */
+static ttf_status_t score(const ttf_engine_t *e, const char *v, ttf_buffer_t *b) {
+    const char *mark = strpbrk(v, ":-");
+    char left[16], right[16];
+    ttf_status_t st;
+    if (!mark || mark == v || (size_t)(mark - v) >= sizeof(left) || strlen(mark + 1) >= sizeof(right) ||
+        !mark[1])
+        return TTF_EINVAL;
+    snprintf(left, sizeof(left), "%.*s", (int)(mark - v), v);
+    snprintf(right, sizeof(right), "%s", mark + 1);
+    if ((st = plain_number(e, left, b)) != TTF_OK ||
+        (st = word(e, b, "number", "score_separator")) != TTF_OK)
+        return st;
+    return plain_number(e, right, b);
+}
+
 static ttf_status_t phone(const ttf_engine_t *e, const char *v, ttf_buffer_t *b) {
     size_t i;
     int separator = 0, any = 0;
@@ -1547,6 +1638,21 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     case TTF_SEM_SYMBOL:
         if (!strcmp(s->unit, "@expression"))
             return expression(e, s->value, b);
+        if (!strcmp(s->unit, "@score"))
+            return score(e, s->value, b);
+        if (!strcmp(s->unit, "@power")) {
+            size_t k = strlen(s->value);
+            char base[24];
+            if (k < 2 || k >= sizeof(base))
+                return TTF_EINVAL;
+            snprintf(base, sizeof(base), "%.*s", (int)(k - 1), s->value);
+            if ((st = plain_number(e, base, b)) != TTF_OK || (st = ttf_buffer_puts(b, "の")) != TTF_OK)
+                return st;
+            snprintf(base, sizeof(base), "%c", s->value[k - 1]);
+            if ((st = plain_number(e, base, b)) != TTF_OK)
+                return st;
+            return word(e, b, "number", "power");
+        }
         return ttf_buffer_append(b, surface, length);
     case TTF_SEM_INITIALISM:
         if (letters(e, surface, length, b) == TTF_OK)
@@ -1568,6 +1674,8 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         }
         if (!strcmp(s->unit, "@counter"))
             return TTF_EINVAL;
+        if (!strcmp(s->unit, "@score"))
+            return score(e, s->value, b);
         if (!strcmp(s->unit, "@email") || !strcmp(s->unit, "@url"))
             return ttf_electronic_control(e, s, surface, length, b);
         return ttf_semantic_control(e, s, surface, length, b);

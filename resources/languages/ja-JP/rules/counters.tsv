@@ -245,3 +245,5 @@ counter_reading	ja-JP	株:1	ひとかぶ
 counter_reading	ja-JP	株:2	ふたかぶ
 half_suffix	ja-JP	畳	1
 counter	ja-JP	次元	じげん:-
+# 2の3乗 にのさんじょう (2026-10-09).
+counter	ja-JP	乗	じょう:-

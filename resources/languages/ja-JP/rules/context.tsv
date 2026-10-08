@@ -14,3 +14,5 @@ classifier_priority	ja-JP	ja.latin-abbreviation	50
 classifier_priority	ja-JP	ja.latin-ordinal	50
 classifier_priority	ja-JP	ja.letter	50
 classifier_priority	ja-JP	ja.version	50
+classifier_priority	ja-JP	ja.score	50
+classifier_priority	ja-JP	ja.power	50

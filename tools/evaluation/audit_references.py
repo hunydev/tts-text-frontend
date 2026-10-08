@@ -14,6 +14,7 @@ import re
 import sys
 
 ACTIVE_JSONL = (
+    "ja_scores_v47",
     "ja_counters_v46",
     "ja_gaps_v45",
     "ja_range_mark_v44",
