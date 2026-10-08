@@ -63,6 +63,9 @@ struct ttf_engine {
     struct ttf_trace_state *trace_state;   /* Request view only; frozen owner stays NULL. */
     struct ttf_context_memo *context_memo; /* Unit-local context callback view only. */
     const ttf_language_pack_t *packs[TTF_MAX_PACKS];
+    /* A declared-only pack (context <tag> declared_only 1) in a request for
+       another language, cached at freeze: per-token lookups cost 8%. */
+    unsigned char undeclared[TTF_MAX_PACKS];
     size_t pack_count, resource_order;
     const ttf_resource_validator_t *validators[TTF_MAX_RESOURCE_VALIDATORS];
     size_t validator_count;

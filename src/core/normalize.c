@@ -76,17 +76,20 @@ static context_scope_t *quote_scopes(const char *text, size_t length, const ttf_
 }
 /* A pack read only when declared (context declared_only 1, ja-JP) owns no
    script in another request: kana in a Korean sentence stays Korean. */
-static int undeclared(const ttf_engine_t *e, const ttf_language_pack_t *pack) {
-    const char *flag = ttf_resource_get(e, "context", pack->language_tag, "declared_only", NULL);
+static int undeclared(const ttf_engine_t *e, size_t j) {
+    const char *flag;
+    if (e->frozen)
+        return e->undeclared[j];
+    flag = ttf_resource_get(e, "context", e->packs[j]->language_tag, "declared_only", NULL);
     return flag && strcmp(flag, "0") &&
-           (!e->default_language || strcmp(e->default_language, pack->language_tag));
+           (!e->default_language || strcmp(e->default_language, e->packs[j]->language_tag));
 }
 static const ttf_language_pack_t *script_pack(const ttf_engine_t *e, ttf_script_t script) {
     const ttf_language_pack_t *best = NULL;
     int score = 0;
     size_t j;
     for (j = 0; j < e->pack_count; j++) {
-        int n = e->packs[j]->script_score && !undeclared(e, e->packs[j])
+        int n = e->packs[j]->script_score && !undeclared(e, j)
                     ? e->packs[j]->script_score(script)
                     : 0;
         if (n > score) {
@@ -351,7 +354,7 @@ static const ttf_language_pack_t *context_pack(const ttf_engine_t *e, const ttf_
         int n = e->packs[j]->context_score ? e->packs[j]->context_score(in) : 0;
         size_t used = strlen(trace);
         /* A pack read only when declared (ja-JP) is silent elsewhere. */
-        if (!n && pack_flag(e, e->packs[j], "declared_only", 0))
+        if (!n && undeclared(e, j))
             continue;
         if (used < 191)
             snprintf(trace + used, 192 - used, "%s%s=%d", used ? " " : "",

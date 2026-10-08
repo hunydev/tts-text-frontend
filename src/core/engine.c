@@ -264,6 +264,11 @@ ttf_status_t ttf_engine_freeze(ttf_engine_t *e) {
         }
     }
     ttf_phrase_index(e);
+    for (bucket = 0; bucket < e->pack_count; ++bucket) {
+        const char *tag = e->packs[bucket]->language_tag,
+                   *flag = ttf_resource_get(e, "context", tag, "declared_only", NULL);
+        e->undeclared[bucket] = flag && strcmp(flag, "0") && strcmp(e->default_language, tag);
+    }
     e->frozen = 1;
     return TTF_OK;
 }
