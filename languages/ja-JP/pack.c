@@ -531,6 +531,99 @@ static size_t finish(const ttf_pack_input_t *in, ttf_semantic_t *s, size_t end,
     return count;
 }
 
+/* A Latin word in a Japanese sentence (2026-10-08, ja-tn-eval-v1 gaps):
+ * No. ナンバー, Mr. ミスター (latin_abbreviation), No.1 ナンバーワン; NATO ナトー
+ * (latin_word); v1.2.3 / Ver.2.0 バージョン...; a single letter next to Japanese
+ * (Aランチ, ビタミンC, x軸) reads its letter name, while one among English words
+ * (I love you, a pen) stays English. */
+static size_t latin(const ttf_pack_input_t *in, ttf_semantic_t *s, const ttf_token_t *t) {
+    const ttf_engine_t *e = in->engine;
+    const char *text = in->text, *reading;
+    size_t begin = t->begin, end = t->end, n = in->length, len = end - begin;
+    char key[16];
+    if (len + 2 > sizeof(key))
+        return 0;
+    memcpy(key, text + begin, len);
+    key[len] = 0;
+    /* B'z, it's: a letter joined by an apostrophe stays English. */
+    if (begin && (alpha(text[begin - 1]) || text[begin - 1] == '\''))
+        return 0;
+    /* v1.2.3, ver2.1, Ver.2.0, Version 3.1.4 */
+    if (!strcmp(key, "v") || !strcmp(key, "V") || !strcmp(key, "ver") || !strcmp(key, "Ver") ||
+        !strcmp(key, "VER") || !strcmp(key, "version") || !strcmp(key, "Version")) {
+        size_t q = end, groups = 0;
+        if (q < n && (text[q] == '.' || text[q] == ' ') && len > 1)
+            ++q;
+        while (q < n && digit(text[q])) {
+            while (q < n && digit(text[q]))
+                ++q;
+            ++groups;
+            if (q + 1 < n && text[q] == '.' && digit(text[q + 1]))
+                ++q;
+            else
+                break;
+        }
+        if (groups >= 2 && (q >= n || !(alpha(text[q]) || digit(text[q])))) {
+            snprintf(s->secondary, sizeof(s->secondary), "v");
+            return finish(in, s, q, TTF_SEM_VERSION, "ja.version", "");
+        }
+    }
+    /* No.1 ナンバーワン; No. ナンバー, etc. エトセトラ */
+    if (end < n && text[end] == '.') {
+        key[len] = '.';
+        key[len + 1] = 0;
+        if (!strcmp(key, "No.") && end + 2 <= n && text[end + 1] == '1' &&
+            (end + 2 >= n || !(digit(text[end + 2]) || text[end + 2] == '.'))) {
+            snprintf(s->value, sizeof(s->value), "ナンバーワン");
+            return finish(in, s, end + 2, TTF_SEM_ABBREVIATION, "ja.latin-abbreviation", "");
+        }
+        if ((reading = res(e, "latin_abbreviation", key)) && strlen(reading) < sizeof(s->value)) {
+            snprintf(s->value, sizeof(s->value), "%s", reading);
+            return finish(in, s, end + 1, TTF_SEM_ABBREVIATION, "ja.latin-abbreviation", "");
+        }
+        key[len] = 0;
+    }
+    if (end < n && (alpha(text[end]) || digit(text[end])))
+        return 0;
+    if ((reading = res(e, "latin_abbreviation", key)) && strlen(reading) < sizeof(s->value)) {
+        snprintf(s->value, sizeof(s->value), "%s", reading);
+        return finish(in, s, end, TTF_SEM_ABBREVIATION, "ja.latin-abbreviation", "");
+    }
+    /* COVID-19 goes on to the hyphen term below. */
+    if ((reading = res(e, "latin_word", key)) && strlen(reading) < sizeof(s->value) &&
+        !(end + 1 < n && text[end] == '-' && digit(text[end + 1]))) {
+        snprintf(s->value, sizeof(s->value), "%s", reading);
+        return finish(in, s, end, TTF_SEM_ABBREVIATION, "ja.latin-word", "");
+    }
+    /* F-15, AK-47: capitals, a hyphen and a number read as one term. */
+    if ((len <= 3 || res(e, "latin_word", key)) && end + 1 < n && text[end] == '-' &&
+        digit(text[end + 1])) {
+        size_t q = end + 1, k;
+        int caps = 1;
+        for (k = begin; k < end; ++k)
+            caps &= text[k] >= 'A' && text[k] <= 'Z';
+        while (q < n && digit(text[q]) && q - end <= 5)
+            ++q;
+        if (caps && q - end - 1 <= 4 &&
+            (q >= n || !(alpha(text[q]) || digit(text[q]) || text[q] == '-' || text[q] == '.')) &&
+            q - begin < sizeof(s->value)) {
+            snprintf(s->value, sizeof(s->value), "%.*s", (int)(q - begin), text + begin);
+            return finish(in, s, q, TTF_SEM_ALNUM_TERM, "ja.alnum", "");
+        }
+    }
+    if (len == 1 && !(end < n && (text[end] == '.' || text[end] == '\'' || text[end] == '&' ||
+                                  (text[end] == '-' && end + 1 < n && alpha(text[end + 1]))))) {
+        /* English context: a Latin word one space before or after. */
+        if (begin >= 2 && text[begin - 1] == ' ' && alpha(text[begin - 2]))
+            return 0;
+        if (end + 1 < n && text[end] == ' ' && alpha(text[end + 1]))
+            return 0;
+        snprintf(s->value, sizeof(s->value), "%s", key);
+        return finish(in, s, end, TTF_SEM_INITIALISM, "ja.letter", "");
+    }
+    return 0;
+}
+
 /* 3本, 2024年10月8日, 4時15分, 1万円, 3〜5個, -5度: digits with written counters
  * become one counted span; the value keeps the normalized source. */
 static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
@@ -545,6 +638,30 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         return 0;
     t = &in->tokens[in->index];
     begin = t->begin;
+    if (t->script == TTF_SCRIPT_LATIN) {
+        size_t claimed = latin(in, s, t);
+        if (claimed)
+            return claimed;
+    }
+    /* 1st ファースト, 10th テンス (latin_ordinal). */
+    if (digit(text[begin])) {
+        size_t q = begin;
+        char key[8];
+        const char *reading;
+        while (q < n && digit(text[q]))
+            ++q;
+        if (q - begin < sizeof(key) && q + 2 <= n &&
+            (!strncmp(text + q, "st", 2) || !strncmp(text + q, "nd", 2) ||
+             !strncmp(text + q, "rd", 2) || !strncmp(text + q, "th", 2)) &&
+            (q + 2 >= n || !(alpha(text[q + 2]) || digit(text[q + 2])))) {
+            memcpy(key, text + begin, q - begin);
+            key[q - begin] = 0;
+            if ((reading = res(e, "latin_ordinal", key)) && strlen(reading) < sizeof(s->value)) {
+                snprintf(s->value, sizeof(s->value), "%s", reading);
+                return finish(in, s, q + 2, TTF_SEM_ABBREVIATION, "ja.latin-ordinal", "");
+            }
+        }
+    }
     if (t->script == TTF_SCRIPT_LATIN && t->end - begin <= 3 && t->end + 1 < n &&
         text[t->end] == '&' && text[t->end + 1] >= 'A' && text[t->end + 1] <= 'Z' &&
         (!begin || !alpha(text[begin - 1]))) {
@@ -580,7 +697,13 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             digits += is_digit;
             ++q;
         }
-        if (ok && letters && digits && q - begin <= 10 &&
+        /* PM2.5, F2.8: one decimal part after the digits (2026-10-08). */
+        if (ok && letters && was_digit == 1 && q + 1 < n && text[q] == '.' && digit(text[q + 1])) {
+            ++q;
+            while (q < n && digit(text[q]))
+                ++q;
+        }
+        if (ok && letters && digits && q - begin <= 14 &&
             (q >= n || (text[q] != '.' && text[q] != ','))) {
             snprintf(s->value, sizeof(s->value), "%.*s", (int)(q - begin), text + begin);
             return finish(in, s, q, TTF_SEM_ALNUM_TERM, "ja.alnum", "");
@@ -1169,7 +1292,13 @@ static ttf_status_t alnum(const ttf_engine_t *e, const char *s, size_t n, ttf_bu
             char value[24];
             while (j < n && digit(s[j]))
                 ++j;
-            if (j - i <= 4) {
+            if (j - i <= 4 && j + 1 < n && s[j] == '.' && digit(s[j + 1])) {
+                ++j;
+                while (j < n && digit(s[j]) && j - i < 20)
+                    ++j;
+                snprintf(value, sizeof(value), "%.*s", (int)(j - i), s + i);
+                st = plain_number(e, value, b);
+            } else if (j - i <= 4) {
                 snprintf(value, sizeof(value), "%.*s", (int)(j - i), s + i);
                 st = plain_number(e, value, b);
             } else
@@ -1180,13 +1309,62 @@ static ttf_status_t alnum(const ttf_engine_t *e, const char *s, size_t n, ttf_bu
                 upper &= s[j] >= 'A' && s[j] <= 'Z';
                 ++j;
             }
-            st = (upper && j - i <= 5) || (j - i <= 3 && j < n && digit(s[j]))
+            char key[16] = "";
+            const char *reading = NULL;
+            if (upper && j - i < sizeof(key)) {
+                memcpy(key, s + i, j - i);
+                key[j - i] = 0;
+                reading = res(e, "latin_word", key);
+            }
+            /* COVID-19 コビッドじゅうきゅう: a latin_word keeps its reading. */
+            st = reading ? ttf_buffer_puts(b, reading)
+                 : (upper && j - i <= 5) || (j - i <= 3 && j < n && digit(s[j]))
                      ? letters(e, s + i, j - i, b)
                      : ttf_buffer_append(b, s + i, j - i);
+        } else if (s[i] == '-' && i && alpha(s[i - 1]) && i + 1 < n && digit(s[i + 1])) {
+            ++j; /* F-15 エフじゅうご */
+            st = TTF_OK;
         } else {
             ++j;
             st = ttf_buffer_append(b, s + i, 1);
         }
+        if (st != TTF_OK)
+            return st;
+        i = j;
+    }
+    return TTF_OK;
+}
+
+/* x = 3 エックスイコールさん, 2 + 3 = 5 にたすさんイコールご: the classifier writes the
+   expression with spaces between numbers, letters and operators. */
+static ttf_status_t expression(const ttf_engine_t *e, const char *v, ttf_buffer_t *b) {
+    size_t i = 0, n = strlen(v);
+    ttf_status_t st;
+    while (i < n) {
+        size_t j = i, k, numeric = 1, letter = 1;
+        char part[32];
+        while (j < n && v[j] != ' ')
+            ++j;
+        if (j == i) {
+            ++i;
+            continue;
+        }
+        if (j - i >= sizeof(part))
+            return TTF_EINVAL;
+        memcpy(part, v + i, j - i);
+        part[j - i] = 0;
+        for (k = 0; part[k]; ++k) {
+            numeric &= digit(part[k]) || part[k] == '.' || part[k] == ',';
+            letter &= alpha(part[k]);
+        }
+        if (numeric && digit(part[0]))
+            st = plain_number(e, part, b);
+        else if (letter)
+            st = letters(e, part, j - i, b);
+        else if (res(e, "math_operator", part))
+            st = word(e, b, "math_operator", part);
+        else
+            st = word(e, b, "speech_symbol", part);
         if (st != TTF_OK)
             return st;
         i = j;
@@ -1299,30 +1477,52 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     }
     case TTF_SEM_VERSION:
     case TTF_SEM_IP_ADDRESS: {
-        size_t i = 0, n = strlen(s->value);
-        while (i < n && alpha(s->value[i]))
-            if ((st = letters(e, s->value + i++, 1, b)) != TTF_OK)
-                return st;
+        /* v1.2.3 バージョンいってんにてんさん; 192.168.0.1 reads each part digit by
+           digit. The parts come from the written surface. */
+        const char *v = s->value[0] ? s->value : surface;
+        size_t i = 0, n = s->value[0] ? strlen(s->value) : length;
+        int ip = s->type == TTF_SEM_IP_ADDRESS;
+        while (i < n && !digit(v[i]))
+            ++i;
+        if (i && (st = word(e, b, "number", "version_prefix")) != TTF_OK)
+            return st;
         while (i < n) {
             size_t j = i;
             char part[24];
-            while (j < n && digit(s->value[j]))
+            unsigned long value;
+            while (j < n && digit(v[j]))
                 ++j;
             if (j == i || j - i >= sizeof(part))
                 return TTF_EINVAL;
-            snprintf(part, sizeof(part), "%.*s", (int)(j - i), s->value + i);
-            if ((st = plain_number(e, part, b)) != TTF_OK)
+            snprintf(part, sizeof(part), "%.*s", (int)(j - i), v + i);
+            value = strtoul(part, NULL, 10);
+            st = ip || (j - i > 1 && part[0] == '0') ? digits_each(e, part, j - i, 0, b)
+                                                     : plain_number(e, part, b);
+            if (st != TTF_OK)
                 return st;
             if (j < n) {
-                if (s->value[j] != '.' ||
-                    (st = word(e, b, "number", "version_separator")) != TTF_OK)
-                    return st == TTF_OK ? TTF_EINVAL : st;
+                if (v[j] != '.')
+                    return TTF_EINVAL;
+                /* 1.5 いってん, 2.10.1 にてんじゅってん */
+                if (!ip && value && (value % 10 == 1 || value % 100 == 10) &&
+                    (st = geminate(b)) != TTF_OK)
+                    return st;
+                if ((st = word(e, b, "number", "version_separator")) != TTF_OK)
+                    return st;
                 ++j;
             }
             i = j;
         }
         return TTF_OK;
     }
+    case TTF_SEM_ABBREVIATION:
+        if (!s->value[0])
+            return TTF_EINVAL;
+        return ttf_buffer_puts(b, s->value);
+    case TTF_SEM_SYMBOL:
+        if (!strcmp(s->unit, "@expression"))
+            return expression(e, s->value, b);
+        return ttf_buffer_append(b, surface, length);
     case TTF_SEM_INITIALISM:
         if (letters(e, surface, length, b) == TTF_OK)
             return TTF_OK;

@@ -457,7 +457,7 @@
 {"id": "ja-tn-v1-counter-082", "category": "counter", "text": "7枚のカード。", "expected": "ななまいのカード。", "targets": [{"written": "7枚", "readings": ["ななまい"], "keep": false}], "note": "", "source": "06-counter.txt:82"}
 {"id": "ja-tn-v1-counter-083", "category": "counter", "text": "9枚の皿。", "expected": "きゅうまいの皿。", "targets": [{"written": "9枚", "readings": ["きゅうまい"], "keep": false}], "note": "", "source": "06-counter.txt:83"}
 {"id": "ja-tn-v1-counter-084", "category": "counter", "text": "1頭の馬。", "expected": "いっとうの馬。", "targets": [{"written": "1頭", "readings": ["いっとう"], "keep": false}], "note": "", "source": "06-counter.txt:84"}
-{"id": "ja-tn-v1-counter-085", "category": "counter", "text": "8頭の牛。", "expected": "はっとうの牛。", "targets": [{"written": "8頭", "readings": ["はっとう"], "keep": false}], "note": "", "source": "06-counter.txt:85"}
+{"id": "ja-tn-v1-counter-085", "category": "counter", "text": "8頭の牛。", "expected": "はっとうの牛。", "targets": [{"written": "8頭", "readings": ["はっとう", "はちとう"], "keep": false}], "note": "", "source": "06-counter.txt:85"}
 {"id": "ja-tn-v1-counter-086", "category": "counter", "text": "10頭の象。", "expected": "じゅっとうの象。", "targets": [{"written": "10頭", "readings": ["じゅっとう", "じっとう"], "keep": false}], "note": "", "source": "06-counter.txt:86"}
 {"id": "ja-tn-v1-counter-087", "category": "counter", "text": "1羽のすずめ。", "expected": "いちわのすずめ。", "targets": [{"written": "1羽", "readings": ["いちわ"], "keep": false}], "note": "", "source": "06-counter.txt:87"}
 {"id": "ja-tn-v1-counter-088", "category": "counter", "text": "3羽のうさぎ。", "expected": "さんばのうさぎ。", "targets": [{"written": "3羽", "readings": ["さんば", "さんわ"], "keep": false}], "note": "", "source": "06-counter.txt:88"}
@@ -484,8 +484,8 @@
 {"id": "ja-tn-v1-counter-109", "category": "counter", "text": "1杯目。", "expected": "いっぱいめ。", "targets": [{"written": "1杯目", "readings": ["いっぱいめ"], "keep": false}], "note": "", "source": "06-counter.txt:109"}
 {"id": "ja-tn-v1-counter-110", "category": "counter", "text": "1足目。", "expected": "いっそくめ。", "targets": [{"written": "1足目", "readings": ["いっそくめ"], "keep": false}], "note": "", "source": "06-counter.txt:110"}
 {"id": "ja-tn-v1-counter-111", "category": "counter", "text": "1対1の勝負。", "expected": "いったいいちの勝負。", "targets": [{"written": "1対1", "readings": ["いったいいち"], "keep": false}], "note": "", "source": "06-counter.txt:111"}
-{"id": "ja-tn-v1-counter-112", "category": "counter", "text": "1人前の料理。", "expected": "いちにんまえの料理。", "targets": [{"written": "1人前", "readings": ["いちにんまえ"], "keep": false}], "note": "", "source": "06-counter.txt:112"}
-{"id": "ja-tn-v1-counter-113", "category": "counter", "text": "2人前のパスタ。", "expected": "ににんまえのパスタ。", "targets": [{"written": "2人前", "readings": ["ににんまえ"], "keep": false}], "note": "", "source": "06-counter.txt:113"}
+{"id": "ja-tn-v1-counter-112", "category": "counter", "text": "1人前の料理。", "expected": "いちにんまえの料理。", "targets": [{"written": "1人前", "readings": ["いちにんまえ", "ひとりまえ"], "keep": false}], "note": "", "source": "06-counter.txt:112"}
+{"id": "ja-tn-v1-counter-113", "category": "counter", "text": "2人前のパスタ。", "expected": "ににんまえのパスタ。", "targets": [{"written": "2人前", "readings": ["ににんまえ", "ふたりまえ"], "keep": false}], "note": "", "source": "06-counter.txt:113"}
 {"id": "ja-tn-v1-counter-114", "category": "counter", "text": "1種類だけ。", "expected": "いっしゅるいだけ。", "targets": [{"written": "1種類", "readings": ["いっしゅるい"], "keep": false}], "note": "", "source": "06-counter.txt:114"}
 {"id": "ja-tn-v1-counter-115", "category": "counter", "text": "1週遅れ。", "expected": "いっしゅう遅れ。", "targets": [{"written": "1週", "readings": ["いっしゅう"], "keep": false}], "note": "", "source": "06-counter.txt:115"}
 {"id": "ja-tn-v1-counter-116", "category": "counter", "text": "1周年記念。", "expected": "いっしゅう年記念。", "targets": [{"written": "1周", "readings": ["いっしゅう"], "keep": false}], "note": "", "source": "06-counter.txt:116"}

@@ -25,6 +25,10 @@ static int symbol_key(const char *key) {
            !(cp >= 'a' && cp <= 'z');
 }
 
+static int alpha_ascii(char c) {
+    return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z');
+}
+
 static int decimal(const char *text, size_t limit) {
     size_t n = 0;
     for (; text[n]; ++n)
@@ -74,7 +78,8 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
         *handled = 1;
         return (decimal(key, 1) ||
                 ttf_validation_enum(key, "zero_integer|point|minus|range|fraction|"
-                                         "phone_separator|version_separator|plus|mixed|"
+                                         "phone_separator|version_separator|version_prefix|"
+                                         "plus|mixed|"
                                          "ordinal_prefix")) &&
                        label(v)
                    ? TTF_OK
@@ -165,6 +170,37 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
         return decimal(key, 1) && label(v)
                    ? TTF_OK
                    : ttf_validation_error(d, "digit requires 0..9 and a reading");
+    }
+    if (SAME(k, "latin_word")) {
+        size_t i;
+        *handled = 1;
+        for (i = 0; key[i]; ++i)
+            if (key[i] < 'A' || key[i] > 'Z')
+                break;
+        return !key[i] && i >= 2 && i <= 10 && label(v)
+                   ? TTF_OK
+                   : ttf_validation_error(d, "latin_word requires 2-10 capital letters and a reading");
+    }
+    if (SAME(k, "latin_abbreviation")) {
+        size_t i;
+        *handled = 1;
+        for (i = 0; alpha_ascii(key[i]); ++i)
+            ;
+        return i && i <= 8 && (!key[i] || (key[i] == '.' && !key[i + 1])) && label(v)
+                   ? TTF_OK
+                   : ttf_validation_error(d, "latin_abbreviation requires letters, an optional period and a reading");
+    }
+    if (SAME(k, "latin_ordinal")) {
+        *handled = 1;
+        return decimal(key, 3) && label(v)
+                   ? TTF_OK
+                   : ttf_validation_error(d, "latin_ordinal requires a number and a reading");
+    }
+    if (SAME(k, "math_operator")) {
+        *handled = 1;
+        return symbol_key(key) && label(v)
+                   ? TTF_OK
+                   : ttf_validation_error(d, "math_operator requires one operator and a reading");
     }
     if (SAME(k, "letter_name")) {
         *handled = 1;

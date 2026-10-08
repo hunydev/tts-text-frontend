@@ -9,3 +9,8 @@ context	ja-JP	kana_sentence	1
 classifier_priority	ja-JP	ja.initialism	50
 classifier_priority	ja-JP	ja.alnum	50
 classifier_priority	ja-JP	ja.digit-cue	50
+classifier_priority	ja-JP	ja.latin-word	50
+classifier_priority	ja-JP	ja.latin-abbreviation	50
+classifier_priority	ja-JP	ja.latin-ordinal	50
+classifier_priority	ja-JP	ja.letter	50
+classifier_priority	ja-JP	ja.version	50

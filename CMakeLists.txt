@@ -446,6 +446,9 @@ if(BUILD_TESTING)
     add_test(NAME ko_beon_count_v40_evaluation COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources ko_beon_count_v40.jsonl 16)
+    add_test(NAME ja_gaps_v45_evaluation COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources ja_gaps_v45.jsonl 44)
     add_test(NAME ja_range_mark_v44_evaluation COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources ja_range_mark_v44.jsonl 12)
