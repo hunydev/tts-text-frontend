@@ -2,6 +2,20 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Japanese pack, phase 1 (ja-JP; project-owner request; docs/japanese-pack.ko.md):
+  in a request declared ja-JP, numbers, counters, dates, times, currency and
+  units read in hiragana with the counter sound changes (3本 さんぼん, 6匹
+  ろっぴき, 1人 ひとり, 4月1日 しがつついたち, 9時10分 くじじゅっぷん, 1万円
+  いちまんえん, 3分の1 さんぶんのいち), unit and letter names in katakana (5kg
+  ごキログラム, USB ユーエスビー, A4 エーよん), while kanji, kana and Latin words
+  stay written for the speech model. Counters, special readings and units are
+  data (resources/languages/ja-JP). The pack is declared-only (context
+  declared_only): it neither scores, classifies nor owns a script in a Korean
+  or English request, and stays out of their context traces. Segments: a CJK
+  full stop ends a sentence without a following space, 、 is a phrase cut (not
+  between digits), and text without spaces cuts between kana or kanji at the
+  length limit. Workbench language list adds ja-JP. Contract ja_pack_v36 (69),
+  test ja_segments. Korean and English benchmarks unchanged.
 - Circled and parenthesized letters read (project-owner request): Ⓐ ⓐ ⒜ read
   as the letter (English A, Korean 에이), Korean ㉠ ㈀ as the jamo name (기역)
   and ㉮ ㈎ as the syllable (가), where they were kept as written while ①

@@ -14,6 +14,7 @@ import re
 import sys
 
 ACTIVE_JSONL = (
+    "ja_pack_v36",
     "enclosed_letters_v35",
     "en_article_reading_v34",
     "ko_particle_reading_v33",

@@ -1,0 +1,7 @@
+# The Japanese pack reads only text declared ja-JP (phase 1): it never scores
+# or classifies in a Korean or English request, and stays out of their traces.
+context	ja-JP	declared_only	1
+context	ja-JP	absorb_foreign	1
+# Pack readings over the same extent as a shared one (USB: katakana letter names).
+classifier_priority	ja-JP	ja.initialism	50
+classifier_priority	ja-JP	ja.alnum	50

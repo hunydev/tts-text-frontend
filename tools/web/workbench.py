@@ -8,6 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 MAX_TEXT_BYTES = 16384
 CORPORA = {
+    "ja-pack-v36": ("Japanese pack phase 1 v36", "ja_pack_v36.jsonl"),
     "enclosed-letters-v35": ("Enclosed letters v35", "enclosed_letters_v35.jsonl"),
     "en-article-reading-v34": ("English article-chosen readings v34", "en_article_reading_v34.jsonl"),
     "ko-particle-reading-v33": ("Korean particle-chosen readings v33", "ko_particle_reading_v33.jsonl"),
@@ -233,7 +234,7 @@ def validate(request, corpus=False):
         raise ValueError("알 수 없는 설정입니다.")
     opts = dict(DEFAULTS, **given)
     for key, allowed in [
-        ("default_language", ("ko-KR", "en-US")),
+        ("default_language", ("ko-KR", "en-US", "ja-JP")),
         ("render_policy", ("phonetic", "preserve", "semantic")),
         ("input_format", ("plain", "annotated")),
         ("output_mode", ("text", "speech")),

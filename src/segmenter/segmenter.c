@@ -6,6 +6,21 @@
 static char ascii_fold(char c) {
     return c >= 'A' && c <= 'Z' ? (char)(c + ('a' - 'A')) : c;
 }
+/* 」』）】〕〉》 close a Japanese quotation or bracket. */
+static int cjk_closer(uint32_t cp) {
+    return cp == 0x300d || cp == 0x300f || cp == 0xff09 || cp == 0x3011 || cp == 0x3015 ||
+           cp == 0x3009 || cp == 0x300b || cp == 0x3017 || cp == 0x3019 || cp == ')' ||
+           cp == ']' || cp == '"' || cp == '\'' || cp == 0x201d || cp == 0x2019;
+}
+static int cjk_letter(uint32_t cp) {
+    ttf_script_t script = ttf_script_of(cp);
+    return script == TTF_SCRIPT_HAN || script == TTF_SCRIPT_KANA;
+}
+static int cjk_letter_at(const char *s, size_t n) {
+    uint32_t cp;
+    size_t w;
+    return ttf_utf8_decode(s, n, &cp, &w) == 1 && cjk_letter(cp);
+}
 static int horizontal_space(char c) {
     return c == ' ' || c == '\t';
 }
@@ -463,6 +478,13 @@ ttf_status_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, i
                     if ((has_next && ttf_script_of(next) == TTF_SCRIPT_WHITESPACE) ||
                         (!has_next && final))
                         sentence = 1;
+                    /* 晴れです。明日は: Japanese writes no space after its full stop;
+                       a closing mark or another stop after it continues the sentence
+                       (2026-10-08). */
+                    if (has_next && cp >= 0x3000 && !cjk_closer(next) &&
+                        next != 0x3002 && next != 0xff01 && next != 0xff1f && next != '!' &&
+                        next != '?' && ttf_script_of(next) != TTF_SCRIPT_WHITESPACE)
+                        sentence = 1;
                     if (cp == '.' && protected_period(e, s, at))
                         sentence = 0;
                     if (cp == '.' && sentence &&
@@ -471,6 +493,21 @@ ttf_status_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, i
                 }
             }
             if (sentence) {
+                selected = at + w;
+                goto done;
+            }
+            /* 、 is where Japanese text without spaces takes a phrase cut; at the
+               length limit a cut falls between two kana or kanji (2026-10-08). */
+            if (!tex_open && at + w > protected_until &&
+                ((!quote_depth && (cp == 0x3001 || cp == 0xff0c) &&
+                  /* １２，５００: a comma between digits groups a number; after a
+                     digit an unseen next character waits for more input. */
+                  !(at && s[at - 1] >= '0' && s[at - 1] <= '9' &&
+                    (at + w >= n ? !final : s[at + w] >= '0' && s[at + w] <= '9')) &&
+                  ((e->config.phrase_split && chars >= target) ||
+                   chars >= e->config.max_segment_length)) ||
+                 (chars >= e->config.max_segment_length && cjk_letter(cp) && at + w < n &&
+                  cjk_letter_at(s + at + w, n - at - w)))) {
                 selected = at + w;
                 goto done;
             }
