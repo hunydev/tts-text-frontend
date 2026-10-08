@@ -102,6 +102,8 @@ def probe(library, resources, tags, items, input_format):
         try:
             row = {}
             for item in items:
+                if item.get("only") and tag not in item["only"]:
+                    continue
                 text = item.get("texts", {}).get(tag, item.get("text"))
                 if text is None:
                     continue

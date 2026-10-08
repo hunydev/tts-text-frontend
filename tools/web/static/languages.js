@@ -84,19 +84,24 @@ function matrix(headId, bodyId, items, results, tags, label) {
   $(headId).append(head);
   for (const item of items) {
     const tr = node("tr");
-    tr.append(node("td", item.area || item.name, "area"));
+    const name = node("td", item.area || item.name, "area");
+    if (item.only) name.append(node("span", item.only.join(", ") + " 전용", "only"));
+    tr.append(name);
     const inputs = new Set(tags.map((t) => (item.texts || {})[t] || item.text));
-    tr.append(node("td", inputs.size === 1 ? item.text : "언어별 문장", "input"));
+    tr.append(node("td", inputs.size === 1 ? item.text : "언어별 문장 (칸 아래)", "input"));
     for (const tag of tags) {
       const r = (results[tag] || {})[item.id];
       let cell;
-      if (!r) cell = node("td", "—", "out same");
+      if (item.only && !item.only.includes(tag)) {
+        cell = node("td", "—", "out same");
+        cell.title = item.only.join(", ") + " 전용 제어";
+      } else if (!r) cell = node("td", "—", "out same");
       else if (r.error) {
         cell = node("td", label === "제어" ? "미지원" : "오류", "out err");
         cell.title = r.error;
       } else {
         cell = node("td", r.output, "out" + (r.unchanged ? " same" : ""));
-        if (inputs.size > 1) cell.title = "입력: " + r.input;
+        if (inputs.size > 1) cell.append(node("span", r.input, "cell-input"));
       }
       tr.append(cell);
     }
