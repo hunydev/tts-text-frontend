@@ -2,6 +2,31 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Korean PIN cues and 번 counts from the benchmark review (owner: keep speaker
+  variants such as 둘/하나 digits, 스무/이십, 티비/티브이 as they are): a code
+  reads digit by digit when its password label follows the number (5141인
+  비밀번호), a copula ending follows (9234였다) or it is pressed (2120을 눌러), a
+  short code may start with 0 (0714번); 틀려/틀렸/오류/잘못 after N번 count, but
+  N번을 틀려 stays a question number. Contract ko_pin_cues_v41 (12). Korean
+  benchmark +44, -0 (adjusted 84.16%).
+- English fixes from the benchmark review: Roman numerals of two or more I/V/X
+  letters read as cardinals without a cue (Prime BEEF III three, XIII), a
+  numbering word wins over a dotted initial (CHAPTER V. five) and Type, Level,
+  Grade … are numbering words; period-less st, dr, mt read as titles before a
+  name and st, ave, dr as street words after one (st Kilda Saint, York st
+  Street; the references 61 : 0; three negative bare-abbreviation contracts and
+  one EngConf row record the change), sr, bros, cwt in lower case; an unknown
+  three-letter capital word ending in a vowel is letters (USA u s a, CEO, EPA)
+  unless it is a common short word (short_word). Measured alternatives kept
+  out: regnal after any capitalized name and an XX exception both lost
+  references. Contract en_ref_fixes_v42 (20). English speech 88.15% to 90.83%,
+  text 84.20% to 86.80%, EngConf 42% to 52%.
+- Japanese rule fixes: ranges with a unit or percent (3〜5km さんからごキロメートル;
+  10〜20% spelled its digits before), 〜 between spoken readings reads から,
+  泊 発 歩 品 敗 take ぱ after 3 and 4 (さんぱく), 年度 代 年代 counters, 半 after
+  a count (12時半 じゅうにじはん), digits with capital letters (3LDK さんエルディーケー,
+  4K). Known gap: 〜 merged with following kanji (午前10時〜午後3時). Contract
+  ja_rules_v43 (12).
 - Korean 번 counts (project-owner request): an event verb right after N번 makes
   it a count with a native numeral (3번 말했다 세 번, 2번 말씀드렸습니다 두 번,
   5번 봤다 다섯 번), 55 counter_role_after frequency cues; label nouns keep the

@@ -605,6 +605,24 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    : ttf_validation_error(d, "expected at most 128 bounded uppercase phone tokens "
                                              "with stress 0..2, letter.A or the boundary .");
     }
+    if (SAME(k, "short_word")) {
+        *handled = 1;
+        return lowercase_letters(key, 3) && strlen(key) == 3 && SAME(v, "1")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "short_word requires a three-letter lowercase key and 1");
+    }
+    if (SAME(k, "abbreviation_bare_lower")) {
+        *handled = 1;
+        return lowercase_letters(key, 8) && label(v) && strlen(v) < 64
+                   ? TTF_OK
+                   : ttf_validation_error(d, "abbreviation_bare_lower requires a lowercase key and a reading");
+    }
+    if (SAME(k, "bare_title")) {
+        *handled = 1;
+        return lowercase_letters(key, 6) && SAME(v, "1")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "bare_title requires a short lowercase key and 1");
+    }
     if (SAME(k, "us_state") || SAME(k, "caps_word")) {
         *handled = 1;
         if (!lowercase_letters(key, SAME(k, "us_state") ? 2 : 3) ||

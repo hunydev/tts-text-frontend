@@ -229,3 +229,8 @@ weekday_mark	ja-JP	金	きんようび
 weekday_mark	ja-JP	土	どようび
 weekday_mark	ja-JP	日	にちようび
 weekday_mark	ja-JP	祝	しゅくじつ
+# A range mark between spoken readings is から (午前10時〜午後3時; 2026-10-08).
+speech_range_mark	ja-JP	〜	から
+speech_range_mark	ja-JP	～	から
+speech_range_mark	ja-JP	~	から
+speech_range_mark	ja-JP	∼	から

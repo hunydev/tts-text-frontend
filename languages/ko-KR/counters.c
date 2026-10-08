@@ -99,7 +99,7 @@ static int role_value(const char *value) {
 
 static int role(const ttf_pack_input_t *in, size_t begin, size_t end, ttf_resource_layer_t *layer) {
     size_t i, p = begin, q;
-    int found = 0;
+    int found = 0, case_particle = 0;
     ttf_resource_layer_t right_layer = TTF_LAYER_COMMON;
     char key[96];
     while (p && (in->text[p - 1] == ' ' || in->text[p - 1] == '\t'))
@@ -155,6 +155,12 @@ static int role(const ttf_pack_input_t *in, size_t begin, size_t end, ttf_resour
             if (ttf_resource_get(in->engine, "particle", "ko-KR", key, NULL) ||
                 ttf_resource_get(in->engine, "quantity_tail", "ko-KR", key, NULL))
                 p = token->end;
+            /* 5번을 틀려: with a case particle, 틀리다 names what went wrong
+               (question 5), not how often; other verbs keep counting (20번을
+               읽고). Measured: the wider rule lost 43 benchmark counts (2026-10-08). */
+            case_particle = !strcmp(key, "을") || !strcmp(key, "를") || !strcmp(key, "이") ||
+                            !strcmp(key, "가") || !strcmp(key, "은") || !strcmp(key, "는") ||
+                            !strcmp(key, "의");
             break;
         }
     }
@@ -167,7 +173,8 @@ static int role(const ttf_pack_input_t *in, size_t begin, size_t end, ttf_resour
     if (q) {
         int current =
             role_value(ttf_resource_get(in->engine, "counter_role_after", "ko-KR", key, NULL));
-        if (current >= found && current) {
+        if (current >= found && current &&
+            !(case_particle && current == 1 && !strncmp(key, "틀", 3))) {
             found = current;
             if (right_layer > *layer)
                 *layer = right_layer;

@@ -4,11 +4,11 @@
 counter	ja-JP	本	ほん:h
 counter	ja-JP	匹	ひき:h
 counter	ja-JP	杯	はい:h
-counter	ja-JP	発	はつ:h
-counter	ja-JP	泊	はく:h
-counter	ja-JP	品	ひん:h
-counter	ja-JP	歩	ほ:h
-counter	ja-JP	敗	はい:h
+counter	ja-JP	発	はつ:f
+counter	ja-JP	泊	はく:f
+counter	ja-JP	品	ひん:f
+counter	ja-JP	歩	ほ:f
+counter	ja-JP	敗	はい:f
 counter	ja-JP	分	ふん:f
 counter	ja-JP	分間	かん:f:分
 counter	ja-JP	個	こ:k
@@ -168,3 +168,17 @@ digit_cue	ja-JP	型番	1
 digit_cue	ja-JP	会員番号	1
 digit_cue	ja-JP	暗証番号	1
 digit_cue	ja-JP	郵便番号	1
+# 泊 発 歩 品 敗 take ぱ after 3 and 4 like 分 (さんぱく; 2026-10-08). Was: class h.
+counter	ja-JP	年度	ど:-:年
+counter	ja-JP	代	だい:-
+counter	ja-JP	年代	だい:-:年
+# 半 after these counts reads はん (12時半, 3時間半).
+half_suffix	ja-JP	時	1
+half_suffix	ja-JP	時間	1
+half_suffix	ja-JP	年	1
+half_suffix	ja-JP	年間	1
+half_suffix	ja-JP	か月	1
+half_suffix	ja-JP	ヶ月	1
+half_suffix	ja-JP	日	1
+half_suffix	ja-JP	週間	1
+half_suffix	ja-JP	世紀	1

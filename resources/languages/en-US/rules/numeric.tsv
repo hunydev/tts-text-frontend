@@ -498,3 +498,16 @@ scripture_book	en-US	james	1
 scripture_book	en-US	peter	1
 scripture_book	en-US	jude	1
 scripture_book	en-US	revelation	1
+# Numbering words (Type II diabetes; 2026-10-08).
+roman_cue	en-US	type	cardinal
+roman_cue	en-US	level	cardinal
+roman_cue	en-US	grade	cardinal
+roman_cue	en-US	series	cardinal
+roman_cue	en-US	tier	cardinal
+roman_cue	en-US	round	cardinal
+roman_cue	en-US	step	cardinal
+roman_cue	en-US	group	cardinal
+roman_cue	en-US	league	cardinal
+roman_cue	en-US	zone	cardinal
+roman_cue	en-US	category	cardinal
+roman_cue	en-US	schedule	cardinal

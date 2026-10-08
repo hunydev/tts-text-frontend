@@ -124,6 +124,18 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "currency requires an ISO code and a counter");
     }
+    if (SAME(k, "half_suffix")) {
+        *handled = 1;
+        return label(key) && strlen(key) < 32 && ttf_validation_enum(v, "0|1")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "half_suffix requires a counter and 0|1");
+    }
+    if (SAME(k, "speech_range_mark")) {
+        *handled = 1;
+        return symbol_key(key) && label(v)
+                   ? TTF_OK
+                   : ttf_validation_error(d, "speech_range_mark requires one mark and a reading");
+    }
     if (SAME(k, "long_suffix")) {
         *handled = 1;
         return label(key) && strlen(key) < 32 && ttf_validation_enum(v, "0|1")

@@ -588,6 +588,25 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     }
     if (!digit(text[begin]) && !(text[begin] == '-' && begin + 1 < n && digit(text[begin + 1])))
         return 0;
+    /* 3LDK, 4K, 5G: a short number with capital letters (2026-10-08). */
+    if (digit(text[begin])) {
+        size_t q = begin, r;
+        while (q < n && digit(text[q]))
+            ++q;
+        r = q;
+        while (r < n && text[r] >= 'A' && text[r] <= 'Z')
+            ++r;
+        char unit[8] = "";
+        if (r > q && r - q < sizeof(unit))
+            memcpy(unit, text + q, r - q), unit[r - q] = 0;
+        /* 100KB, 3L stay measures (a unit row). */
+        if (q - begin <= 4 && r > q && r - q <= 4 &&
+            (r >= n || !(alpha(text[r]) || digit(text[r]))) && r - begin < sizeof(s->value) &&
+            !res(e, "unit", unit)) {
+            snprintf(s->value, sizeof(s->value), "%.*s", (int)(r - begin), text + begin);
+            return finish(in, s, r, TTF_SEM_ALNUM_TERM, "ja.alnum", "");
+        }
+    }
     /* 内線214, 請求書1111: after a number label the digits read one by one. */
     if (digit(text[begin])) {
         size_t k, q = begin;
@@ -671,8 +690,9 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         ++pairs;
         if (!cw)
             break;
-        if (p + 3 <= n && !memcmp(text + p, "\xe4\xb8\xad", 3) && res(e, "long_suffix", key) &&
-            nl + 4 < sizeof(norm)) {
+        if (p + 3 <= n && nl + 4 < sizeof(norm) &&
+            ((!memcmp(text + p, "\xe4\xb8\xad", 3) && res(e, "long_suffix", key)) ||
+             (!memcmp(text + p, "\xe5\x8d\x8a", 3) && res(e, "half_suffix", key)))) {
             memcpy(norm + nl, text + p, 3);
             nl += 3;
             norm[nl] = 0;
@@ -781,9 +801,13 @@ static ttf_status_t render_chain(const ttf_engine_t *e, const char *v, ttf_buffe
             return st;
         snprintf(previous, sizeof(previous), "%s", key);
         p += cw;
-        /* 一日中 いちにちじゅう */
+        /* 一日中 いちにちじゅう, 12時半 じゅうにじはん */
         if (p + 3 <= n && !memcmp(v + p, "\xe4\xb8\xad", 3) && res(e, "long_suffix", key)) {
             if ((st = ttf_buffer_puts(b, "じゅう")) != TTF_OK)
+                return st;
+            p += 3;
+        } else if (p + 3 <= n && !memcmp(v + p, "\xe5\x8d\x8a", 3) && res(e, "half_suffix", key)) {
+            if ((st = ttf_buffer_puts(b, "はん")) != TTF_OK)
                 return st;
             p += 3;
         }
@@ -970,8 +994,9 @@ static ttf_status_t kanji_numerals(const ttf_engine_t *e, const char *s, size_t 
                     }
                     break;
                 }
-                if (p + 3 <= n && !memcmp(s + p, "\xe4\xb8\xad", 3) && res(e, "long_suffix", key) &&
-                    nl + 4 < sizeof(norm)) {
+                if (p + 3 <= n && nl + 4 < sizeof(norm) &&
+                    ((!memcmp(s + p, "\xe4\xb8\xad", 3) && res(e, "long_suffix", key)) ||
+                     (!memcmp(s + p, "\xe5\x8d\x8a", 3) && res(e, "half_suffix", key)))) {
                     memcpy(norm + nl, s + p, 3);
                     nl += 3;
                     norm[nl] = 0;
@@ -1251,8 +1276,21 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         }
         if (!strcmp(s->unit, "year"))
             counter = "年";
-        else if (s->unit[0] && !(counter = currency_counter(e, s->unit)))
-            return TTF_EINVAL;
+        else if (!strcmp(s->unit, "percent"))
+            counter = "%";
+        else if (s->unit[0] && !(counter = currency_counter(e, s->unit))) {
+            /* 3〜5km さんからごキロメートル: a measure unit reads after the second number. */
+            const char *spec = res(e, "unit", s->unit);
+            ja_number_t y;
+            char norm[TTF_IR_VALUE_SIZE];
+            size_t nl = 0, n = strlen(s->secondary);
+            if (!spec || !n || parse_number(e, s->secondary, n, &y, norm, sizeof(norm), &nl) != n)
+                return TTF_EINVAL;
+            if ((st = plain_number(e, s->value, b)) != TTF_OK ||
+                (st = word(e, b, "number", "range")) != TTF_OK)
+                return st;
+            return counted(e, &y, s->unit, spec, 0, b);
+        }
         if ((st = plain_number(e, s->value, b)) != TTF_OK ||
             (st = word(e, b, "number", "range")) != TTF_OK)
             return st;

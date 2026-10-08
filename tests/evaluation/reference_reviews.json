@@ -1974,6 +1974,42 @@
       },
       "category_overrides": {},
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/ko_pin_cues_v41.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Night work 2026-09-29 under the user's goal; independently authored synthetic cases, written before the implementation",
+        "reason": "Project-owner request 2026-10-08: Korean PIN cues and 번 counts from the benchmark review"
+      },
+      "category_overrides": {},
+      "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/en_ref_fixes_v42.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Night work 2026-09-29 under the user's goal; independently authored synthetic cases, written before the implementation",
+        "reason": "Project-owner request 2026-10-08: English fixes from the benchmark review"
+      },
+      "category_overrides": {},
+      "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/ja_rules_v43.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Night work 2026-09-29 under the user's goal; independently authored synthetic cases, written before the implementation",
+        "reason": "Project-owner request 2026-10-08: Japanese rule fixes"
+      },
+      "category_overrides": {},
+      "case_overrides": {}
     }
   ],
   "excluded": [

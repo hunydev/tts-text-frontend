@@ -928,6 +928,9 @@ static size_t hyphen_letters(const ttf_pack_input_t *in, ttf_semantic_t *out) {
    Pope Benedict XVI) an ordinal read with "the". The cue words are data
    (roman_cue). Initials such as Louis C, the pronoun I and bare letters
    without a cue are left alone. */
+static int alpha_char(char c) {
+    return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z');
+}
 static unsigned roman_value(const char *s, size_t n) {
     static const char *const thousands[] = {"", "M", "MM", "MMM"};
     static const char *const hundreds[] = {"", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"};
@@ -973,42 +976,72 @@ static unsigned roman_value(const char *s, size_t n) {
                    hundreds[value / 100 % 10], tens[value / 10 % 10], ones[value % 10]);
     return strlen(canonical) == n && !memcmp(canonical, s, n) ? value : 0;
 }
-static size_t roman_numeral(const ttf_pack_input_t *in, ttf_semantic_t *out) {
+/* III, VII, XIII: two or more of I, V and X, a whole word, read as a cardinal
+   without a cue (Prime BEEF III, from VI to VIII, a heading XIII; the English
+   references 250 : 4 for "the third"). A lone I, V or X needs a cue. */
+static int roman_standalone(const ttf_pack_input_t *in, const ttf_token_t *t) {
+    size_t p, n = t->end - t->begin;
+    if (n < 2)
+        return 0;
+    for (p = t->begin; p < t->end; ++p)
+        if (in->text[p] != 'I' && in->text[p] != 'V' && in->text[p] != 'X')
+            return 0;
+    if (t->begin && (alpha_char(in->text[t->begin - 1]) || in->text[t->begin - 1] == '-'))
+        return 0;
+    return !(t->end < in->length && (alpha_char(in->text[t->end]) || in->text[t->end] == '-' ||
+                                     (in->text[t->end] >= '0' && in->text[t->end] <= '9')));
+}
+
+static size_t roman_numeral(const ttf_pack_input_t *in, ttf_semantic_t *out, int cardinal_only) {
     const ttf_token_t *t = &in->tokens[in->index], *space_token, *word;
     size_t n = t->end - t->begin, i, p;
     char key[32];
-    const char *cue;
+    const char *cue = NULL;
     unsigned value;
-    int capitalized = 1;
-    if (t->script != TTF_SCRIPT_LATIN || n > 15 || in->index < 2)
+    int capitalized = 1, ok = 1;
+    if (t->script != TTF_SCRIPT_LATIN || n > 15)
         return 0;
     value = roman_value(in->text + t->begin, n);
     if (!value)
         return 0;
-    space_token = &in->tokens[in->index - 1];
-    word = &in->tokens[in->index - 2];
-    if (space_token->script != TTF_SCRIPT_WHITESPACE || word->script != TTF_SCRIPT_LATIN ||
-        word->end != space_token->begin || word->end - word->begin >= sizeof(key))
-        return 0;
-    for (p = space_token->begin; p < space_token->end; ++p)
-        if (in->text[p] != ' ')
-            return 0;
-    for (i = 0, p = word->begin; p < word->end; ++p, ++i) {
-        char c = in->text[p];
-        if (c >= 'A' && c <= 'Z') {
-            if (i)
+    if (in->index < 2)
+        ok = 0;
+    else {
+        space_token = &in->tokens[in->index - 1];
+        word = &in->tokens[in->index - 2];
+        if (space_token->script != TTF_SCRIPT_WHITESPACE || word->script != TTF_SCRIPT_LATIN ||
+            word->end != space_token->begin || word->end - word->begin >= sizeof(key))
+            ok = 0;
+        for (p = space_token->begin; ok && p < space_token->end; ++p)
+            if (in->text[p] != ' ')
+                ok = 0;
+        for (i = 0, p = word->begin; ok && p < word->end; ++p, ++i) {
+            char c = in->text[p];
+            if (c >= 'A' && c <= 'Z') {
+                if (i)
+                    capitalized = 0;
+                c = (char)(c + 32);
+            } else if (c < 'a' || c > 'z')
+                ok = 0;
+            else if (!i)
                 capitalized = 0;
-            c = (char)(c + 32);
-        } else if (c < 'a' || c > 'z')
-            return 0;
-        else if (!i)
-            capitalized = 0;
-        key[i] = c;
+            key[i] = c;
+        }
+        if (ok) {
+            key[i] = '\0';
+            cue = res(in->engine, "roman_cue", key);
+        }
     }
-    key[i] = '\0';
-    cue = res(in->engine, "roman_cue", key);
-    if (!cue)
+    if (cardinal_only && (!cue || strcmp(cue, "cardinal")))
         return 0;
+    if (!cue) {
+        if (!roman_standalone(in, t))
+            return 0;
+        /* Measured: reading it as regnal after any capitalized name (Astor IV)
+           lost more references than it gained (90.83% to 90.71%), so names
+           need a regnal cue (roman_cue). */
+        cue = "cardinal";
+    }
     if (!strcmp(cue, "regnal")) {
         /* A regnal numeral is written with I, V and X after a capitalized
            name; a lone I is the pronoun unless punctuation or "of" follows. */
@@ -1234,12 +1267,16 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     date_tokens = fraction_unit(in, out);
     if (date_tokens)
         return date_tokens;
+    /* CHAPTER V.: a numbering word before a dotted initial. */
+    date_tokens = roman_numeral(in, out, 1);
+    if (date_tokens)
+        return date_tokens;
     date_tokens = ttf_en_classify_abbreviation(in, out);
     if (date_tokens)
         return date_tokens;
     if (t->script != TTF_SCRIPT_LATIN || n >= sizeof(key))
         return 0;
-    date_tokens = roman_numeral(in, out);
+    date_tokens = roman_numeral(in, out, 0);
     if (date_tokens)
         return date_tokens;
     date_tokens = ampersand_initialism(in, out);

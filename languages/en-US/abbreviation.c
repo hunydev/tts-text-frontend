@@ -292,10 +292,59 @@ size_t ttf_en_classify_abbreviation(const ttf_pack_input_t *in, ttf_semantic_t *
             return token_count(in, out->input_end);
         }
     }
+    /* York st, McKinley ave, st Kilda, dr Smith, mt Eden: without a period a
+       street word after a capitalized name and before no other name reads as a
+       street, and a title word (bare_title) before a name reads as a title, as
+       with the period (the English references, 2026-10-08). */
+    if (n >= 2 && n < 5 && n < sizeof(key) &&
+        (token->end == in->length || strchr(" ,;:)", in->text[token->end])) &&
+        !upper(in->text[start + 1])) {
+        for (i = 0; i < n; ++i)
+            key[i] = lower(in->text[start + i]);
+        key[n] = '\0';
+        expansion = lookup(in->engine, "abbreviation_street", key, NULL);
+        if (expansion && strlen(expansion) < sizeof(out->value) && capitalized_before(in, start, 4) &&
+            !following_name(in, token->end)) {
+            out->type = TTF_SEM_ABBREVIATION;
+            out->lexical_class = TTF_LEX_WORD;
+            out->input_end = token->end;
+            (void)lookup(in->engine, "abbreviation_street", key, out);
+            (void)snprintf(out->value, sizeof(out->value), "%s", key);
+            (void)snprintf(out->secondary, sizeof(out->secondary), "street");
+            (void)snprintf(out->source_lang, sizeof(out->source_lang), "%s", EN);
+            (void)snprintf(out->rule, sizeof(out->rule), "en.abbreviation.street-bare");
+            return token_count(in, out->input_end);
+        }
+        expansion = lookup(in->engine, "abbreviation_expansion", key, NULL);
+        if (expansion && lookup(in->engine, "bare_title", key, NULL) && following_name(in, token->end) &&
+            strlen(expansion) < sizeof(out->value)) {
+            out->type = TTF_SEM_ABBREVIATION;
+            out->lexical_class = TTF_LEX_WORD;
+            out->input_end = token->end;
+            (void)lookup(in->engine, "abbreviation_expansion", key, out);
+            (void)snprintf(out->value, sizeof(out->value), "%s", key);
+            (void)snprintf(out->secondary, sizeof(out->secondary), "title");
+            (void)snprintf(out->source_lang, sizeof(out->source_lang), "%s", EN);
+            (void)snprintf(out->rule, sizeof(out->rule), "en.abbreviation.title-bare");
+            return token_count(in, out->input_end);
+        }
+        /* Smith sr, Warner bros: lower-case only, so SR (a company) stays. */
+        expansion = lookup(in->engine, "abbreviation_bare_lower", key, NULL);
+        if (expansion && strlen(expansion) < sizeof(out->value)) {
+            out->type = TTF_SEM_ABBREVIATION;
+            out->lexical_class = TTF_LEX_WORD;
+            out->input_end = token->end;
+            (void)lookup(in->engine, "abbreviation_bare_lower", key, out);
+            (void)snprintf(out->value, sizeof(out->value), "%s", key);
+            (void)snprintf(out->secondary, sizeof(out->secondary), "bare_lower");
+            (void)snprintf(out->source_lang, sizeof(out->source_lang), "%s", EN);
+            (void)snprintf(out->rule, sizeof(out->rule), "en.abbreviation.bare-lower");
+            return token_count(in, out->input_end);
+        }
+    }
     /* A few abbreviations are unambiguous without their period, so the data may
        declare an expansion that applies to the bare token: "vol 1", "Records
-       ltd". A token whose bare reading is contested, such as st or dr, is not
-       declared and keeps its text. */
+       ltd". */
     if (n < sizeof(key) && (token->end == in->length || in->text[token->end] != '.')) {
         for (i = 0; i < n; ++i)
             key[i] = lower(in->text[start + i]);
@@ -397,6 +446,14 @@ static int pronounceable(const ttf_engine_t *engine, const char *word, size_t le
     size_t i = 0, vowels = 0, split;
     if (length < 3)
         return 0;
+    /* USA, CEO, EPA, UFO: an unknown three-letter capital word ending in a vowel
+       is letters (the English references, 2026-10-08), unless it is a common
+       short word (short_word: ONE, TWO, SHE); END, NEW keep the word test. */
+    if (length == 3 && strchr("aeiou", word[2])) {
+        char key[4] = {word[0], word[1], word[2], 0};
+        if (!lookup(engine, "short_word", key, NULL))
+            return 0;
+    }
     for (i = 0; i < length; ++i)
         if (strchr("aeiouy", word[i]))
             ++vowels;
@@ -473,8 +530,10 @@ ttf_status_t ttf_en_verbalize_abbreviation(const ttf_engine_t *engine, const ttf
                                         "number-abbreviation-reading", SIZE_MAX);
             return status == TTF_OK ? ttf_buffer_puts(out, value) : status;
         }
-        if (!strcmp(s->secondary, "bare")) {
-            value = lookup(engine, "abbreviation_bare", s->value, NULL);
+        if (!strcmp(s->secondary, "bare") || !strcmp(s->secondary, "bare_lower")) {
+            value = lookup(engine, !strcmp(s->secondary, "bare") ? "abbreviation_bare"
+                                                                  : "abbreviation_bare_lower",
+                           s->value, NULL);
             return value && strcmp(value, "preserve") ? ttf_buffer_puts(out, value)
                                                       : ttf_buffer_append(out, surface, length);
         }

@@ -191,9 +191,9 @@ static int short_code_label(const ttf_pack_input_t *in, const char *label) {
 /* After a labelled number: a particle, the copula (2021034인, 210547이다) or the
  * counter 번 (63107508번이). */
 static int labelled_tail(const ttf_pack_input_t *in, size_t end) {
-    /* 이 인 입 번, and 뒤 (1385뒤에 *을 누르는; 2026-10-07) */
+    /* 이 인 입 번, 뒤 (1385뒤에 *을 누르는; 2026-10-07) and 였 (9234였다; 2026-10-08) */
     static const char *const heads[] = {"\xec\x9d\xb4", "\xec\x9d\xb8", "\xec\x9e\x85",
-                                        "\xeb\xb2\x88", "\xeb\x92\xa4"};
+                                        "\xeb\xb2\x88", "\xeb\x92\xa4", "\xec\x98\x80"};
     size_t k;
     if (valid_tail(in, end))
         return 1;
@@ -366,12 +366,21 @@ static int cue_in(const ttf_pack_input_t *in, const char *kind, size_t from, siz
  * syllables after) is read digit by digit (Jev review, 2026-10-07). */
 static int pin_context(const ttf_pack_input_t *in, size_t begin, size_t end) {
     size_t from = begin > 96 ? begin - 96 : 0, p, to = end + 42 < in->length ? end + 42 : in->length;
+    size_t near = end + 30 < in->length ? end + 30 : in->length;
     for (p = begin; p > from && in->text[p - 1] != '\n'; --p) {
     }
     if (cue_in(in, "pin_cue", p, begin))
         return 1;
+    /* 5141인 비밀번호, 9112인 현관 비밀번호: the label a few syllables after (2026-10-08). */
+    for (p = end; p < near && in->text[p] != '\n'; ++p) {
+    }
+    if (cue_in(in, "pin_cue", end, p))
+        return 1;
+    /* Keyed in or pressed: 입력, 눌러/누르/누른/눌렀 (2120을 눌러; 2026-10-08). */
     for (p = end; p + 6 <= to && in->text[p] != '\n'; ++p)
-        if (!memcmp(in->text + p, "입력", 6))
+        if (!memcmp(in->text + p, "입력", 6) || !memcmp(in->text + p, "눌러", 6) ||
+            !memcmp(in->text + p, "누르", 6) || !memcmp(in->text + p, "누른", 6) ||
+            !memcmp(in->text + p, "눌렀", 6))
             return 1;
     return 0;
 }
@@ -599,7 +608,10 @@ size_t ttf_ko_classify_identifier(const ttf_pack_input_t *in, ttf_semantic_t *se
             cue = 2;
         else if (service_number(in, begin, end))
             cue = 3;
-        else if (end - begin >= 4 && end - begin <= 8 && in->text[begin] != '0' &&
+        /* A short code may start with 0 (생일인 0714번; 2026-10-08): phone
+           numbers are longer than six digits. */
+        else if (end - begin >= 4 && end - begin <= 8 &&
+                 (in->text[begin] != '0' || end - begin <= 6) &&
                  (!counter_follows(in, end) ||
                   (end + 3 <= in->length && !memcmp(in->text + end, "\xeb\xb2\x88", 3))) &&
                  pin_context(in, begin, end))

@@ -200,3 +200,9 @@ counter_role_after	ko-KR	이사했	frequency
 counter_role_after	ko-KR	결혼했	frequency
 counter_role_after	ko-KR	이겼	frequency
 counter_role_after	ko-KR	졌	frequency
+# Errors after N번 are counts too (5번 틀려서, 5번 오류로; 2026-10-08).
+counter_role_after	ko-KR	틀려	frequency
+counter_role_after	ko-KR	틀렸	frequency
+counter_role_after	ko-KR	틀리	frequency
+counter_role_after	ko-KR	오류	frequency
+counter_role_after	ko-KR	잘못	frequency
