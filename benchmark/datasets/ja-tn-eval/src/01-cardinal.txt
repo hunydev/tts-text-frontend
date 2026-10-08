@@ -1,0 +1,78 @@
+# Japanese TN evaluation set v1, authored 2026-10-08 (project owner request).
+# One entry per line: category<TAB>markup[<TAB>note]
+# {written|reading}: the written span and its spoken reading (hiragana numbers,
+# katakana letters and units). A span covers the number and the counter or unit
+# that changes with it. Alternatives: a/b, [x,y] choice, (x) optional.
+# {written|=reading}: the span stays as written; the reading is still scored.
+cardinal	参加者は{5名|ごめい}だった。
+cardinal	在庫が{0|ぜろ/れい}になった。
+cardinal	答えは{7|なな/しち}です。
+cardinal	{9|きゅう/く}が好きな数字だ。
+cardinal	全部で{14問|じゅうよんもん}ある。
+cardinal	{19ページ|じゅうきゅうページ}を開いてください。
+cardinal	残りは{40問|よんじゅうもん}です。
+cardinal	定員は{70名|ななじゅうめい}です。
+cardinal	{100点|ひゃく[てん,ってん]}満点のテスト。
+cardinal	{300人|さんびゃくにん}が集まった。
+cardinal	{600メートル|ろっぴゃくメートル}先に駅がある。
+cardinal	{800年|はっぴゃくねん}の歴史がある寺。
+cardinal	{1000人|せんにん}以上が参加した。
+cardinal	{3000人|さんぜんにん}の観客。
+cardinal	{8000人|はっせんにん}規模のイベント。
+cardinal	{10000歩|いちまんぽ}を目標に歩く。
+cardinal	{1,000台|せんだい}を出荷した。
+cardinal	{1,234件|せんにひゃくさんじゅうよんけん}の応募があった。
+cardinal	{12,345人|いちまんにせんさんびゃくよんじゅうごにん}が来場した。
+cardinal	{123,456件|じゅうにまんさんぜんよんひゃくごじゅうろっけん}のデータ。
+cardinal	人口は{1,234,567人|ひゃくにじゅうさんまんよんせんごひゃくろくじゅうななにん}だ。
+cardinal	{10,000,000回|[いっ,]せんまんかい}再生された。
+cardinal	{100,000,000円|いちおくえん}の損失。
+cardinal	約{3億人|さんおくにん}が利用している。
+cardinal	{1兆円|いっちょうえん}規模の市場。
+cardinal	{10兆円|[じゅっ,じっ]ちょうえん}を超えた。
+cardinal	{2500万人|にせんごひゃくまんにん}が視聴した。
+cardinal	{1億2千万人|いちおくにせんまんにん}の国民。
+cardinal	{1億2000万人|いちおくにせんまんにん}の国民。
+cardinal	{3万5千人|さんまんごせんにん}が参加。
+cardinal	{108|ひゃくはち}の煩悩。
+cardinal	{365日|さんびゃくろくじゅうごにち}休まず営業。
+cardinal	{1001夜|せんいちや}物語。
+cardinal	{2001人目|にせんいちにんめ}の来場者。
+cardinal	{1010件|せんじゅっけん/せんじっけん}の記録。
+cardinal	{10010円|いちまんじゅうえん}の請求。
+cardinal	{100100円|じゅうまんひゃくえん}を振り込んだ。
+cardinal	{1100キロ|せんひゃくキロ}の道のり。
+cardinal	{6600件|ろくせんろっぴゃっけん}の苦情。
+cardinal	{8800円|はっせんはっぴゃくえん}の商品。
+cardinal	{3300人|さんぜんさんびゃくにん}が署名した。
+cardinal	{9999円|きゅうせんきゅうひゃくきゅうじゅうきゅうえん}で販売中。
+cardinal	{40000人|よんまんにん}収容のスタジアム。
+cardinal	{70000人|ななまんにん}が避難した。
+cardinal	{1000000|ひゃくまん}ダウンロードを突破。
+cardinal	{30000000円|さんぜんまんえん}の予算。
+cardinal	{800000000円|はちおくえん}の赤字。
+cardinal	およそ{6000種類|ろくせんしゅるい}ある。
+cardinal	{２０人|にじゅうにん}が参加した。
+cardinal	{１２３番|ひゃくにじゅうさんばん}のバス。
+cardinal	{１，０００円|せんえん}札。
+cardinal	{12 345件|いちまんにせんさんびゃくよんじゅうごけん}のログ。
+cardinal	{1万円|いちまんえん}札を両替した。
+cardinal	{10万人|じゅうまんにん}の署名が集まった。
+cardinal	{100万円|ひゃくまんえん}の賞金。
+cardinal	{1000万人|[いっ,]せんまんにん}が視聴した。
+cardinal	{1千万円|いっせんまんえん}の宝くじ。
+cardinal	{5千円|ごせんえん}で足りる。
+cardinal	{2万5000人|にまんごせんにん}が観戦した。
+cardinal	{1.5億円|いってんごおくえん}の契約。
+cardinal	{3.2万人|さんてんにまんにん}の会員。
+cardinal	{0.5兆円|[れい,ぜろ]てんごちょうえん}の規模。
+cardinal	数字の{1|いち}から{10|じゅう}まで数える。
+cardinal	{11人|じゅういちにん}のメンバー。
+cardinal	{1985|せんきゅうひゃくはちじゅうご}は素数ではない。
+cardinal	{256色|にひゃくごじゅうろくしょく}表示。
+cardinal	{1024ピクセル|せんにじゅうよんピクセル}。
+cardinal	{4096通り|よんせんきゅうじゅうろくとおり}の組み合わせ。
+cardinal	{65536色|ろくまんごせんごひゃくさんじゅうろくしょく}。
+cardinal	{1|いち}足す{1|いち}は{2|に}。
+cardinal	{12|じゅうに}と{13|じゅうさん}の間。
+cardinal	合計{4個|よんこ}です。
