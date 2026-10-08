@@ -835,7 +835,7 @@
 {"id": "ja-tn-v1-unit-061", "category": "unit", "text": "10lb。", "expected": "じゅっポンド。", "targets": [{"written": "10lb", "readings": ["じゅっポンド", "じっポンド", "じゅうポンド"], "keep": false}], "note": "", "source": "10-unit.txt:61"}
 {"id": "ja-tn-v1-unit-062", "category": "unit", "text": "3oz。", "expected": "さんオンス。", "targets": [{"written": "3oz", "readings": ["さんオンス"], "keep": false}], "note": "", "source": "10-unit.txt:62"}
 {"id": "ja-tn-v1-unit-063", "category": "unit", "text": "100mph。", "expected": "じそくひゃくマイルまいじ。", "targets": [{"written": "100mph", "readings": ["じそくひゃくマイルまいじ", "じそくひゃくマイル", "ひゃくマイルまいじ", "ひゃくマイル"], "keep": false}], "note": "", "source": "10-unit.txt:63"}
-{"id": "ja-tn-v1-unit-064", "category": "unit", "text": "1光年。", "expected": "いちこうねん。", "targets": [{"written": "1光年", "readings": ["いちこうねん"], "keep": false}], "note": "", "source": "10-unit.txt:64"}
+{"id": "ja-tn-v1-unit-064", "category": "unit", "text": "1光年。", "expected": "いちこうねん。", "targets": [{"written": "1光年", "readings": ["いちこうねん", "いっこうねん"], "keep": false}], "note": "", "source": "10-unit.txt:64"}
 {"id": "ja-tn-v1-unit-065", "category": "unit", "text": "3万トン級の船。", "expected": "さんまんトン級の船。", "targets": [{"written": "3万トン", "readings": ["さんまんトン"], "keep": false}], "note": "", "source": "10-unit.txt:65"}
 {"id": "ja-tn-v1-unit-066", "category": "unit", "text": "1mol。", "expected": "いちモル。", "targets": [{"written": "1mol", "readings": ["いちモル"], "keep": false}], "note": "", "source": "10-unit.txt:66"}
 {"id": "ja-tn-v1-unit-067", "category": "unit", "text": "pH7。", "expected": "ピーエイチなな。", "targets": [{"written": "pH7", "readings": ["ピーエイチなな", "ペーハーなな"], "keep": false}], "note": "", "source": "10-unit.txt:67"}
@@ -1148,7 +1148,7 @@
 {"id": "ja-tn-v1-score-003", "category": "score", "text": "1対0の完封。", "expected": "いちたいぜろの完封。", "targets": [{"written": "1対0", "readings": ["いちたいぜろ", "いちたいれい"], "keep": false}], "note": "", "source": "14-address-score.txt:23"}
 {"id": "ja-tn-v1-score-004", "category": "score", "text": "0-0の引き分け。", "expected": "ぜろたいぜろの引き分け。", "targets": [{"written": "0-0", "readings": ["ぜろたいぜろ", "れいたいれい"], "keep": false}], "note": "", "source": "14-address-score.txt:24"}
 {"id": "ja-tn-v1-score-005", "category": "score", "text": "2-1で逆転。", "expected": "にたいいちで逆転。", "targets": [{"written": "2-1", "readings": ["にたいいち"], "keep": false}], "note": "", "source": "14-address-score.txt:25"}
-{"id": "ja-tn-v1-score-006", "category": "score", "text": "10対3。", "expected": "じゅうたいさん。", "targets": [{"written": "10対3", "readings": ["じゅうたいさん"], "keep": false}], "note": "", "source": "14-address-score.txt:26"}
+{"id": "ja-tn-v1-score-006", "category": "score", "text": "10対3。", "expected": "じゅうたいさん。", "targets": [{"written": "10対3", "readings": ["じゅうたいさん", "じゅったいさん"], "keep": false}], "note": "", "source": "14-address-score.txt:26"}
 {"id": "ja-tn-v1-score-007", "category": "score", "text": "4勝1敗。", "expected": "よんしょういっぱい。", "targets": [{"written": "4勝1敗", "readings": ["よんしょういっぱい"], "keep": false}], "note": "", "source": "14-address-score.txt:27"}
 {"id": "ja-tn-v1-score-008", "category": "score", "text": "2勝3敗。", "expected": "にしょうさんぱい。", "targets": [{"written": "2勝3敗", "readings": ["にしょうさんぱい"], "keep": false}], "note": "", "source": "14-address-score.txt:28"}
 {"id": "ja-tn-v1-score-009", "category": "score", "text": "10勝5敗。", "expected": "じゅっしょうごはい。", "targets": [{"written": "10勝5敗", "readings": ["じゅっしょうごはい", "じっしょうごはい"], "keep": false}], "note": "", "source": "14-address-score.txt:29"}

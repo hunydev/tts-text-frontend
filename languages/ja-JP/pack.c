@@ -134,6 +134,7 @@ typedef struct {
     uint64_t value;         /* whole value, or the integer part of a decimal */
     char fraction[32];      /* decimal digits after the point */
     const char *scale_word; /* 1.5万: a decimal before a written scale */
+    int nan;                /* 何本 なんぼん: reads なん with the sound change of 3 */
 } ja_number_t;
 
 static int scale_mark(const ttf_engine_t *e, const char *s, size_t n, size_t *width,
@@ -381,6 +382,13 @@ static ttf_status_t counted(const ttf_engine_t *e, const ja_number_t *x, const c
         return ttf_buffer_puts(b, reading);
     }
     owner = key;
+    /* 何日 なんにち, not みっか: なん takes the sound change of 3 without its
+       special readings. */
+    if (x->nan) {
+        if ((st = ttf_buffer_puts(b, "なん")) != TTF_OK)
+            return st;
+        goto sound_change;
+    }
     if (date_day) {
         snprintf(special_key, sizeof(special_key), "date_day:%llu", (unsigned long long)x->value);
         special = res(e, "counter_reading", special_key);
@@ -402,6 +410,7 @@ static ttf_status_t counted(const ttf_engine_t *e, const ja_number_t *x, const c
     }
     if ((st = integer_reading(e, x->value, b)) != TTF_OK)
         return st;
+sound_change:
     end = ending(x->value);
     {
         static const unsigned gem5[] = {1, 6, 8, 10, 100}, gem3[] = {1, 8, 10};
@@ -1066,6 +1075,22 @@ static ttf_status_t kanji_numerals(const ttf_engine_t *e, const char *s, size_t 
             previous = 0;
             continue;
         }
+        /* 何本 なんぼん, 何階 なんがい (2026-10-09). */
+        if (cp == 0x4f55 && !kanji_numeral(previous)) {
+            char key[32];
+            size_t cw = counter_at(e, s + at + w, n - at - w, key, sizeof(key));
+            const char *spec = cw ? res(e, "counter", key) : NULL;
+            if (spec && strcmp(key, "つ")) {
+                ja_number_t x = {0};
+                x.value = 3;
+                x.nan = 1;
+                if ((st = counted(e, &x, key, spec, 0, b)) != TTF_OK)
+                    return st;
+                at += w + cw;
+                previous = 0;
+                continue;
+            }
+        }
         if (kanji_numeral(cp) && !kanji_numeral(previous) && !kanji_myriad(cp)) {
             p = at;
             norm[0] = 0;
@@ -1551,7 +1576,8 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         for (i = 0; i + 3 <= length; ++i) {
             uint32_t cp;
             size_t w;
-            if (ttf_utf8_decode(surface + i, length - i, &cp, &w) == 1 && kanji_numeral(cp))
+            if (ttf_utf8_decode(surface + i, length - i, &cp, &w) == 1 &&
+                (kanji_numeral(cp) || cp == 0x4f55))
                 return kanji_numerals(e, surface, length, b);
         }
         return ttf_buffer_append(b, surface, length);
