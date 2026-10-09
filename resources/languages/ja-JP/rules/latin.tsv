@@ -112,3 +112,13 @@ ratio_cue	ja-JP	割合	1
 ratio_cue	ja-JP	縮尺	1
 ratio_cue	ja-JP	配合	1
 ratio_cue	ja-JP	対比	1
+latin_word	ja-JP	JAN	ジャン
+latin_word	ja-JP	FAX	ファックス
+latin_word	ja-JP	TEL	テル
+latin_abbreviation	ja-JP	TEL.	テル
+latin_abbreviation	ja-JP	Tel.	テル
+latin_abbreviation	ja-JP	Fax	ファックス
+latin_abbreviation	ja-JP	Ctrl	コントロール
+latin_abbreviation	ja-JP	Alt	オルト
+latin_abbreviation	ja-JP	Esc	エスケープ
+latin_abbreviation	ja-JP	Del	デリート

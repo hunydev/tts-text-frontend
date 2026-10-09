@@ -79,7 +79,7 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
         return (decimal(key, 1) ||
                 ttf_validation_enum(key, "zero_integer|point|minus|range|fraction|"
                                          "phone_separator|version_separator|version_prefix|"
-                                         "score_separator|power|"
+                                         "score_separator|power|postal_prefix|basement|"
                                          "plus|mixed|"
                                          "ordinal_prefix")) &&
                        label(v)
@@ -196,6 +196,31 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
         return decimal(key, 3) && label(v)
                    ? TTF_OK
                    : ttf_validation_error(d, "latin_ordinal requires a number and a reading");
+    }
+    if (SAME(k, "counter_block") || SAME(k, "digit_after_cue") || SAME(k, "english_counter") ||
+        SAME(k, "rate_cue")) {
+        *handled = 1;
+        return label(key) && strlen(key) <= 18 && SAME(v, "1")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "a cue or block word requires a word and 1");
+    }
+    if (SAME(k, "english_number")) {
+        *handled = 1;
+        return decimal(key, 2) && label(v)
+                   ? TTF_OK
+                   : ttf_validation_error(d, "english_number requires a number and a reading");
+    }
+    if (SAME(k, "grade_prefix") || SAME(k, "alnum_word")) {
+        *handled = 1;
+        return label(key) && strlen(key) < 16 && label(v)
+                   ? TTF_OK
+                   : ttf_validation_error(d, "grade_prefix/alnum_word requires a key and a reading");
+    }
+    if (SAME(k, "speech_range_open")) {
+        *handled = 1;
+        return symbol_key(key) && label(v)
+                   ? TTF_OK
+                   : ttf_validation_error(d, "speech_range_open requires one mark and a reading");
     }
     if (SAME(k, "score_cue") || SAME(k, "ratio_cue") || SAME(k, "date_cue") ||
         SAME(k, "fraction_cue")) {

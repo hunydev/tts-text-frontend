@@ -127,6 +127,32 @@ const char *ttf_speech_kana_lengthening(const ttf_engine_t *e, const char *langu
     return NULL;
 }
 
+/* 3,000円〜。 10時〜: `speech_range_open` reads a wave mark written after a
+   kanji or a digit, with nothing spoken after it, as an open range. */
+const char *ttf_speech_range_open(const ttf_engine_t *e, const char *language,
+                                  const char *source_left, size_t source_left_length,
+                                  const char *span, size_t span_length, const char *right,
+                                  size_t right_length) {
+    char key[8];
+    size_t start = source_left_length, width;
+    uint32_t cp;
+    ttf_script_t script;
+    const char *reading;
+    if (!span_length || span_length >= sizeof(key) || spoken_at(e, language, right, right_length))
+        return NULL;
+    memcpy(key, span, span_length);
+    key[span_length] = 0;
+    if (!(reading = ttf_resource_get(e, "speech_range_open", language, key, NULL)))
+        return NULL;
+    while (start && ((unsigned char)source_left[start - 1] & 0xc0) == 0x80)
+        --start;
+    if (!start || ttf_utf8_decode(source_left + start - 1, source_left_length - start + 1, &cp,
+                                  &width) != 1)
+        return NULL;
+    script = ttf_script_of(cp);
+    return script == TTF_SCRIPT_HAN || script == TTF_SCRIPT_DIGIT ? reading : NULL;
+}
+
 int ttf_speech_lengthening_span(const ttf_engine_t *e, const char *language, const char *left,
                                 size_t left_length, const char *span, size_t span_length,
                                 const char *right, size_t right_length) {

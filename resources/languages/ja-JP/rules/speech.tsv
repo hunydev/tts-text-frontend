@@ -276,3 +276,7 @@ speech_symbol	ja-JP	♀	めす
 speech_symbol	ja-JP	∴	ゆえに
 speech_symbol	ja-JP	∵	なぜなら
 speech_symbol	ja-JP	‰	パーミル
+# A wave mark after a count at the end reads から (3,000円〜, 10時〜; 2026-10-09).
+speech_range_open	ja-JP	〜	から
+speech_range_open	ja-JP	～	から
+speech_range_open	ja-JP	~	から

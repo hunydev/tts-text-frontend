@@ -1589,6 +1589,26 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
                                              end - tokens[i].begin)
                          : ttf_buffer_puts(&normalized, reading);
         } else if ((sem->type == TTF_SEM_SYMBOL || sem->type == TTF_SEM_TEXT ||
+                    sem->type == TTF_SEM_WORD) &&
+                   !sem->unit[0] &&
+                   (reading = ttf_speech_range_open(
+                        e, renderer->language_tag, text, tokens[i].begin, text + tokens[i].begin,
+                        end - tokens[i].begin, text + end, length - end))) {
+            char mark[8];
+            size_t mark_length = end - tokens[i].begin;
+            ttf_trace_stage(e, TTF_TRACE_POLICY, 0, mark_length);
+            if (mark_length >= sizeof(mark))
+                mark_length = sizeof(mark) - 1;
+            memcpy(mark, text + tokens[i].begin, mark_length);
+            mark[mark_length] = 0;
+            st = ttf_trace_resource(e, "speech_range_open", renderer->language_tag, mark, reading,
+                                    "open-range-reading", SIZE_MAX);
+            if (st == TTF_OK)
+                st = e->frontend_options.output_mode == TTF_OUTPUT_TEXT
+                         ? ttf_buffer_append(&normalized, text + tokens[i].begin,
+                                             end - tokens[i].begin)
+                         : ttf_buffer_puts(&normalized, reading);
+        } else if ((sem->type == TTF_SEM_SYMBOL || sem->type == TTF_SEM_TEXT ||
                   sem->type == TTF_SEM_WORD) &&
                  !sem->unit[0] &&
                  (reading = ttf_speech_range_mark(

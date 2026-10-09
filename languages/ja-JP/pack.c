@@ -135,6 +135,7 @@ typedef struct {
     char fraction[32];      /* decimal digits after the point */
     const char *scale_word; /* 1.5万: a decimal before a written scale */
     int nan;                /* 何本 なんぼん: reads なん with the sound change of 3 */
+    int plain;              /* 10-20歳: no whole-value special reading (はたち) */
 } ja_number_t;
 
 static int scale_mark(const ttf_engine_t *e, const char *s, size_t n, size_t *width,
@@ -393,7 +394,7 @@ static ttf_status_t counted(const ttf_engine_t *e, const ja_number_t *x, const c
         snprintf(special_key, sizeof(special_key), "date_day:%llu", (unsigned long long)x->value);
         special = res(e, "counter_reading", special_key);
     }
-    if (!special) {
+    if (!special && !x->plain) {
         snprintf(special_key, sizeof(special_key), "%s:%llu", owner, (unsigned long long)x->value);
         special = res(e, "counter_reading", special_key);
     }
@@ -494,12 +495,24 @@ static size_t counter_at(const ttf_engine_t *e, const char *s, size_t n, char *k
         at += w;
         widths[count++] = at;
     }
+    /* 1足す いち足す: a counter_block word is not a counter. */
+    for (k = count; k > 0; --k) {
+        char block[32];
+        if (widths[k - 1] >= sizeof(block))
+            continue;
+        memcpy(block, s, widths[k - 1]);
+        block[widths[k - 1]] = 0;
+        if (res(e, "counter_block", block))
+            return 0;
+    }
     for (k = count; k > 0; --k) {
         if (widths[k - 1] >= size)
             continue;
         memcpy(key, s, widths[k - 1]);
         key[widths[k - 1]] = 0;
-        if (res(e, "counter", key))
+        /* 5ch, 3t: a Latin counter ends before another Latin letter (5chan). */
+        if (res(e, "counter", key) &&
+            !(alpha(key[widths[k - 1] - 1]) && widths[k - 1] < n && alpha(s[widths[k - 1]])))
             return widths[k - 1];
     }
     return 0;
@@ -612,6 +625,38 @@ static size_t latin(const ttf_pack_input_t *in, ttf_semantic_t *s, const ttf_tok
             return finish(in, s, q, TTF_SEM_VERSION, "ja.version", "");
         }
     }
+    /* AM10:00 ごぜんじゅうじ, PM 3:30 */
+    if (len == 2 && (key[0] == 'A' || key[0] == 'a' || key[0] == 'P' || key[0] == 'p') &&
+        (key[1] == 'M' || key[1] == 'm')) {
+        size_t q = end, h;
+        if (q < n && text[q] == ' ')
+            ++q;
+        h = q;
+        while (q < n && digit(text[q]) && q - h < 2)
+            ++q;
+        if (q > h && q + 2 < n && text[q] == ':' && digit(text[q + 1]) && digit(text[q + 2]) &&
+            (q + 3 >= n || !digit(text[q + 3])) && q + 3 - h < sizeof(s->value)) {
+            snprintf(s->value, sizeof(s->value), "%.*s", (int)(q + 3 - h), text + h);
+            snprintf(s->secondary, sizeof(s->secondary), "%cM", key[0] == 'a' || key[0] == 'A' ? 'A' : 'P');
+            return finish(in, s, q + 3, TTF_SEM_TIME, "ja.meridiem-time", "");
+        }
+    }
+    /* B1F ちかいっかい */
+    if (len == 1 && key[0] == 'B' && end + 1 < n && digit(text[end])) {
+        size_t q = end;
+        while (q < n && digit(text[q]) && q - end < 2)
+            ++q;
+        if (q < n && text[q] == 'F' && (q + 1 >= n || !(alpha(text[q + 1]) || digit(text[q + 1])))) {
+            snprintf(s->value, sizeof(s->value), "%.*s", (int)(q - end), text + end);
+            return finish(in, s, q + 1, TTF_SEM_SYMBOL, "ja.basement", "@basement");
+        }
+    }
+    /* P.10 ページじゅう */
+    if (len == 1 && (key[0] == 'P' || key[0] == 'p') && end + 1 < n && text[end] == '.' &&
+        digit(text[end + 1])) {
+        snprintf(s->value, sizeof(s->value), "ページ");
+        return finish(in, s, end + 1, TTF_SEM_ABBREVIATION, "ja.page", "");
+    }
     /* No.1 ナンバーワン; No. ナンバー, etc. エトセトラ */
     if (end < n && text[end] == '.') {
         key[len] = '.';
@@ -626,6 +671,21 @@ static size_t latin(const ttf_pack_input_t *in, ttf_semantic_t *s, const ttf_tok
             return finish(in, s, end + 1, TTF_SEM_ABBREVIATION, "ja.latin-abbreviation", "");
         }
         key[len] = 0;
+    }
+    /* JAN 4901…, ISBN978-4-…: a Latin number label and its digits are one code. */
+    if (len >= 2 && initialism(key, len) && res(e, "digit_cue", key)) {
+        size_t q = end + (end < n && text[end] == ' '), r = q;
+        while (r < n && digit(text[r]))
+            ++r;
+        while (r + 1 < n && text[r] == '-' && digit(text[r + 1])) {
+            ++r;
+            while (r < n && digit(text[r]))
+                ++r;
+        }
+        if (r - q >= 4 && (r >= n || !(alpha(text[r]) || digit(text[r]))) && r - begin < sizeof(s->value)) {
+            snprintf(s->value, sizeof(s->value), "%.*s", (int)(r - begin), text + begin);
+            return finish(in, s, r, TTF_SEM_SYMBOL, "ja.code", "@code");
+        }
     }
     if (end < n && (alpha(text[end]) || digit(text[end])))
         return 0;
@@ -646,9 +706,9 @@ static size_t latin(const ttf_pack_input_t *in, ttf_semantic_t *s, const ttf_tok
         int caps = 1;
         for (k = begin; k < end; ++k)
             caps &= text[k] >= 'A' && text[k] <= 'Z';
-        while (q < n && digit(text[q]) && q - end <= 5)
+        while (q < n && digit(text[q]) && q - end <= 9)
             ++q;
-        if (caps && q - end - 1 <= 4 &&
+        if (caps && q - end - 1 <= 8 &&
             (q >= n || !(alpha(text[q]) || digit(text[q]) || text[q] == '-' || text[q] == '.')) &&
             q - begin < sizeof(s->value)) {
             snprintf(s->value, sizeof(s->value), "%.*s", (int)(q - begin), text + begin);
@@ -686,6 +746,162 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         size_t claimed = latin(in, s, t);
         if (claimed)
             return claimed;
+    }
+    /* ￥12,800 いちまんにせんはっぴゃくえん */
+    if (begin + 3 < n && !memcmp(text + begin, "\xef\xbf\xa5", 3) && digit(text[begin + 3])) {
+        ja_number_t x;
+        size_t nl2 = 0, used = parse_number(e, text + begin + 3, n - begin - 3, &x, norm, sizeof(norm), &nl2);
+        if (used && !x.negative && nl2 + 4 < sizeof(s->value)) {
+            snprintf(s->value, sizeof(s->value), "%.*s円", (int)nl2, norm);
+            return finish(in, s, begin + 3 + used, TTF_SEM_COUNTER, "ja.yen", "@ja");
+        }
+    }
+    /* #拡散希望 ハッシュタグ */
+    if (text[begin] == '#' && begin + 1 < n && (unsigned char)text[begin + 1] >= 0xe3) {
+        snprintf(s->value, sizeof(s->value), "ハッシュタグ");
+        return finish(in, s, begin + 1, TTF_SEM_ABBREVIATION, "ja.hashtag", "");
+    }
+    /* 〒100-0001 ゆうびんばんごう… */
+    if (begin + 11 <= n && !memcmp(text + begin, "\xe3\x80\x92", 3) && digit(text[begin + 3]) &&
+        digit(text[begin + 4]) && digit(text[begin + 5]) && text[begin + 6] == '-' &&
+        digit(text[begin + 7]) && digit(text[begin + 8]) && digit(text[begin + 9]) &&
+        digit(text[begin + 10]) && (begin + 11 >= n || !digit(text[begin + 11]))) {
+        snprintf(s->value, sizeof(s->value), "%.8s", text + begin + 3);
+        return finish(in, s, begin + 11, TTF_SEM_SYMBOL, "ja.postal", "@postal");
+    }
+    /* 打率.325 さんわりにぶごりん, .300バッター さんわり */
+    if (text[begin] == '.' && begin + 4 <= n && digit(text[begin + 1]) && digit(text[begin + 2]) &&
+        digit(text[begin + 3]) && text[begin + 1] != '0' && (begin + 4 >= n || !digit(text[begin + 4])) &&
+        !(begin && digit(text[begin - 1])) && cue_near(e, "rate_cue", text, n, begin, begin + 4, 12)) {
+        size_t vl = (size_t)snprintf(s->value, sizeof(s->value), "%c割", text[begin + 1]);
+        if (text[begin + 2] != '0')
+            vl += (size_t)snprintf(s->value + vl, sizeof(s->value) - vl, "%c分", text[begin + 2]);
+        if (text[begin + 3] != '0')
+            snprintf(s->value + vl, sizeof(s->value) - vl, "%c厘", text[begin + 3]);
+        return finish(in, s, begin + 4, TTF_SEM_COUNTER, "ja.rate", "@ja");
+    }
+    /* 小6 しょうろく, 中2 ちゅうに: a school grade before one digit (not 中2階). */
+    if ((t->script == TTF_SCRIPT_HAN || t->script == TTF_SCRIPT_KANA) && t->end - begin >= 3 &&
+        t->end + 1 <= n && digit(text[t->end]) &&
+        !(t->end + 1 < n && (digit(text[t->end + 1]) || text[t->end + 1] == '.' || alpha(text[t->end + 1])))) {
+        char g[4], key2[32];
+        uint32_t before = 0;
+        size_t bw;
+        memcpy(g, text + t->end - 3, 3);
+        g[3] = 0;
+        if (t->end - 3 > begin) {
+            size_t k = t->end - 3;
+            do
+                --k;
+            while (k > begin && ((unsigned char)text[k] & 0xc0) == 0x80);
+            if (ttf_utf8_decode(text + k, t->end - 3 - k, &before, &bw) != 1)
+                before = 0;
+        }
+        if (res(e, "grade_prefix", g) && ttf_script_of(before) != TTF_SCRIPT_HAN &&
+            !counter_at(e, text + t->end + 1, n - t->end - 1, key2, sizeof(key2)) &&
+            t->end + 1 - begin < sizeof(s->value)) {
+            snprintf(s->value, sizeof(s->value), "%.*s", (int)(t->end + 1 - begin), text + begin);
+            return finish(in, s, t->end + 1, TTF_SEM_SYMBOL, "ja.grade", "@grade");
+        }
+    }
+    if (digit(text[begin]) && !(begin && (digit(text[begin - 1]) || alpha(text[begin - 1]) ||
+                                          text[begin - 1] == '-' || text[begin - 1] == '.'))) {
+        size_t q = begin, r, parts = 1;
+        char key2[32];
+        const char *reading;
+        while (q < n && digit(text[q]))
+            ++q;
+        /* ベスト4 ベストフォー */
+        if (begin >= 9 && !memcmp(text + begin - 9, "ベスト", 9) && q - begin <= 2 &&
+            (q >= n || !digit(text[q]))) {
+            char d[4];
+            snprintf(d, sizeof(d), "%.*s", (int)(q - begin), text + begin);
+            if ((reading = res(e, "english_number", d))) {
+                snprintf(s->value, sizeof(s->value), "%s", reading);
+                return finish(in, s, q, TTF_SEM_ABBREVIATION, "ja.english-number", "");
+            }
+        }
+        /* 2アウト ツーアウト */
+        if (q - begin <= 2) {
+            size_t k, best = 0;
+            for (k = q + 3; k <= n && k <= q + 18; k += 3) {
+                char w[24];
+                memcpy(w, text + q, k - q);
+                w[k - q] = 0;
+                if (res(e, "english_counter", w))
+                    best = k;
+            }
+            if (best) {
+                char d[4];
+                snprintf(d, sizeof(d), "%.*s", (int)(q - begin), text + begin);
+                if ((reading = res(e, "english_number", d)) &&
+                    strlen(reading) + best - q < sizeof(s->value)) {
+                    snprintf(s->value, sizeof(s->value), "%s%.*s", reading, (int)(best - q), text + q);
+                    return finish(in, s, best, TTF_SEM_ABBREVIATION, "ja.english-number", "");
+                }
+            }
+        }
+        /* 1日から3日まで ついたち: the first day of a day range. */
+        if (q - begin == 1 && text[begin] == '1' && q + 3 <= n && !memcmp(text + q, "日", 3)) {
+            size_t a = q + 3, w;
+            if (a + 6 <= n && !memcmp(text + a, "から", 6))
+                a += 6;
+            else if (range_mark(text + a, n - a, &w) && text[a] != '-')
+                a += w;
+            else
+                a = 0;
+            if (a && a < n && digit(text[a])) {
+                while (a < n && digit(text[a]))
+                    ++a;
+                if (a + 3 <= n && !memcmp(text + a, "日", 3) && (reading = res(e, "counter_reading", "date_day:1"))) {
+                    snprintf(s->value, sizeof(s->value), "%s", reading);
+                    return finish(in, s, q + 3, TTF_SEM_ABBREVIATION, "ja.day-one", "");
+                }
+            }
+        }
+        /* 2F にかい, 1F〜3F */
+        if (q - begin <= 3 && q < n && text[q] == 'F' &&
+            (q + 1 >= n || !(alpha(text[q + 1]) || digit(text[q + 1])))) {
+            snprintf(s->value, sizeof(s->value), "%.*s階", (int)(q - begin), text + begin);
+            return finish(in, s, q + 1, TTF_SEM_COUNTER, "ja.floor", "@ja");
+        }
+        /* 03（1234）5678 */
+        if (text[begin] == '0' && q - begin >= 2 && q - begin <= 4) {
+            size_t open = q < n && text[q] == '(' ? 1 : (q + 3 <= n && !memcmp(text + q, "（", 3)) ? 3 : 0;
+            if (open) {
+                size_t m = q + open, m2, close;
+                while (m < n && digit(text[m]) && m - q - open < 4)
+                    ++m;
+                close = m < n && text[m] == ')' ? 1 : (m + 3 <= n && !memcmp(text + m, "）", 3)) ? 3 : 0;
+                m2 = m + close;
+                while (m2 < n && digit(text[m2]))
+                    ++m2;
+                if (m > q + open && close && m2 - m - close >= 3 && m2 - m - close <= 4 &&
+                    (m2 >= n || !digit(text[m2]))) {
+                    snprintf(s->value, sizeof(s->value), "%.*s-%.*s-%.*s", (int)(q - begin), text + begin,
+                             (int)(m - q - open), text + q + open, (int)(m2 - m - close), text + m + close);
+                    return finish(in, s, m2, TTF_SEM_PHONE, "ja.phone-paren", "");
+                }
+            }
+        }
+        /* 3-12-5 さんのじゅうにのご: a block address. */
+        r = q;
+        if (text[begin] != '0' && q - begin <= 2) {
+            while (r + 1 < n && text[r] == '-' && digit(text[r + 1]) && parts < 4) {
+                size_t z = r + 1;
+                while (z < n && digit(text[z]))
+                    ++z;
+                if (z - r - 1 > 3)
+                    break;
+                r = z;
+                ++parts;
+            }
+            if (parts == 3 && (r >= n || !(digit(text[r]) || alpha(text[r]) || text[r] == '-' || text[r] == '.')) &&
+                !counter_at(e, text + r, n - r, key2, sizeof(key2)) && r - begin < sizeof(s->value)) {
+                snprintf(s->value, sizeof(s->value), "%.*s", (int)(r - begin), text + begin);
+                return finish(in, s, r, TTF_SEM_SYMBOL, "ja.address", "@ja-address");
+            }
+        }
     }
     /* 1st ファースト, 10th テンス (latin_ordinal). */
     if (digit(text[begin])) {
@@ -771,6 +987,9 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             (r >= n || !(alpha(text[r]) || digit(text[r]))) && r - begin < sizeof(s->value) &&
             !res(e, "unit", unit)) {
             snprintf(s->value, sizeof(s->value), "%.*s", (int)(r - begin), text + begin);
+            /* 第2G だいにジー: after 第 the digits stay Japanese. */
+            if (begin >= 3 && !memcmp(text + begin - 3, "\xe7\xac\xac", 3))
+                snprintf(s->secondary, sizeof(s->secondary), "after-dai");
             return finish(in, s, r, TTF_SEM_ALNUM_TERM, "ja.alnum", "");
         }
     }
@@ -887,20 +1106,46 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             return finish(in, s, q + 2, TTF_SEM_SYMBOL, "ja.power", "@power");
         }
     }
-    /* 内線214, 請求書1111: after a number label the digits read one by one. */
+    /* 内線214, 暗証番号は1234, ISBN978-4-…: after a number label (a particle or a space
+       may come between) the digits read one by one; hyphen groups keep の. */
     if (digit(text[begin])) {
-        size_t k, q = begin;
+        size_t k, q = begin, cb = begin, groups = 1;
+        char key2[32];
+        int gap = 0;
         while (q < n && digit(text[q]))
             ++q;
-        for (k = 3; k <= 15 && k <= begin; k += 3) {
+        while (q + 1 < n && text[q] == '-' && digit(text[q + 1])) {
+            ++q;
+            while (q < n && digit(text[q]))
+                ++q;
+            ++groups;
+        }
+        if (cb >= 3 && (!memcmp(text + cb - 3, "は", 3) || !memcmp(text + cb - 3, "が", 3) ||
+                        !memcmp(text + cb - 3, "を", 3) || !memcmp(text + cb - 3, "：", 3)))
+            cb -= 3, gap = 1;
+        else if (cb >= 1 && (text[cb - 1] == ' ' || text[cb - 1] == ':'))
+            cb -= 1, gap = 1;
+        for (k = 2; k <= 15 && k <= cb; ++k) {
             char cue[16];
-            memcpy(cue, text + begin - k, k);
+            if (((unsigned char)text[cb - k] & 0xc0) == 0x80)
+                continue;
+            memcpy(cue, text + cb - k, k);
             cue[k] = 0;
             if (q - begin >= 2 && q - begin < sizeof(s->value) && res(e, "digit_cue", cue) &&
-                (q >= n || !(text[q] == '.' || text[q] == ','))) {
+                (q >= n || !(text[q] == '.' || text[q] == ',')) &&
+                !(gap && (q - begin < 4 || counter_at(e, text + q, n - q, key2, sizeof(key2))))) {
                 snprintf(s->value, sizeof(s->value), "%.*s", (int)(q - begin), text + begin);
-                return finish(in, s, q, TTF_SEM_DIGIT_SEQUENCE, "ja.digit-cue", "");
+                return finish(in, s, q, groups > 1 ? TTF_SEM_PHONE : TTF_SEM_DIGIT_SEQUENCE,
+                              "ja.digit-cue", "");
             }
+        }
+        /* 117で時報, 177の天気予報: a service number before its cue word. */
+        if (groups == 1 && q - begin >= 3 && q - begin <= 4 && text[begin] == '1' &&
+            (q >= n || !(text[q] == '.' || text[q] == ',')) &&
+            !counter_at(e, text + q, n - q, key2, sizeof(key2)) &&
+            cue_near(e, "digit_after_cue", text, n, q, q, 15)) {
+            snprintf(s->value, sizeof(s->value), "%.*s", (int)(q - begin), text + begin);
+            return finish(in, s, q, TTF_SEM_DIGIT_SEQUENCE, "ja.digit-cue", "");
         }
     }
     if (begin && (digit(text[begin - 1]) || text[begin - 1] == '.' || text[begin - 1] == ',' ||
@@ -1023,13 +1268,16 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         }
     }
     snprintf(s->value, sizeof(s->value), "%s", norm);
-    return finish(in, s, p, TTF_SEM_COUNTER, "ja.counter", "@ja");
+    /* 3t, 5ch: a Latin counter outranks the core's unreadable-number span. */
+    return finish(in, s, p, TTF_SEM_COUNTER, p && alpha(text[p - 1]) ? "ja.latin-counter" : "ja.counter",
+                  "@ja");
 }
 
 /* Re-read a classified span: pairs of number and counter, a range, a scale. */
 static ttf_status_t render_chain(const ttf_engine_t *e, const char *v, ttf_buffer_t *b) {
     size_t n = strlen(v), p = 0;
     char previous[32] = "";
+    int after_range = 0;
     ttf_status_t st;
     while (p < n) {
         ja_number_t x;
@@ -1051,10 +1299,17 @@ static ttf_status_t render_chain(const ttf_engine_t *e, const char *v, ttf_buffe
             return TTF_EINVAL;
         p += used;
         if (range_mark(v + p, n - p, &rw)) {
-            if ((st = number_reading(e, &x, b)) != TTF_OK ||
-                (st = word(e, b, "number", "range")) != TTF_OK)
+            /* 2〜3日 ふつかからみっか: with 日 or つ both ends take the counter. */
+            ja_number_t y;
+            char k2[32];
+            size_t nl2 = 0, u2 = parse_number(e, v + p + rw, n - p - rw, &y, norm, sizeof(norm), &nl2);
+            size_t c2 = u2 ? counter_at(e, v + p + rw + u2, n - p - rw - u2, k2, sizeof(k2)) : 0;
+            st = c2 && (!strcmp(k2, "日") || !strcmp(k2, "つ")) ? counter_named(e, &x, k2, 0, b)
+                                                               : number_reading(e, &x, b);
+            if (st != TTF_OK || (st = word(e, b, "number", "range")) != TTF_OK)
                 return st;
             p += rw;
+            after_range = 1;
             continue;
         }
         cw = counter_at(e, v + p, n - p, key, sizeof(key));
@@ -1076,7 +1331,13 @@ static ttf_status_t render_chain(const ttf_engine_t *e, const char *v, ttf_buffe
             p += used;
             continue;
         }
-        st = counter_named(e, &x, key, !strcmp(previous, "月") && !strcmp(key, "日"), b);
+        if (after_range && (!strcmp(key, "歳") || !strcmp(key, "才")))
+            x.plain = 1; /* 10-20歳 にじゅっさい, not はたち */
+        after_range = 0;
+        if (!strcmp(previous, "割") && !strcmp(key, "分"))
+            st = counted(e, &x, key, "ぶ:-", 0, b); /* 3割2分 さんわりにぶ */
+        else
+            st = counter_named(e, &x, key, !strcmp(previous, "月") && !strcmp(key, "日"), b);
         if (st != TTF_OK)
             return st;
         snprintf(previous, sizeof(previous), "%s", key);
@@ -1235,6 +1496,20 @@ static ttf_status_t kanji_numerals(const ttf_engine_t *e, const char *s, size_t 
                 if ((st = counted(e, &x, key, spec, 0, b)) != TTF_OK)
                     return st;
                 at += w + cw;
+                previous = 0;
+                continue;
+            }
+        }
+        /* 〇〇さん: a run of 〇 not next to another numeral is a placeholder (まるまる). */
+        if (cp == 0x3007 && !kanji_numeral(previous)) {
+            size_t q = at, nw;
+            uint32_t next = 0;
+            while (q + 3 <= n && !memcmp(s + q, "\xe3\x80\x87", 3))
+                q += 3;
+            if (q >= n || ttf_utf8_decode(s + q, n - q, &next, &nw) != 1 || !kanji_numeral(next)) {
+                if ((st = ttf_buffer_append(b, s + at, q - at)) != TTF_OK)
+                    return st;
+                at = q;
                 previous = 0;
                 continue;
             }
@@ -1456,15 +1731,48 @@ static ttf_status_t measure(const ttf_engine_t *e, const ttf_semantic_t *s, cons
 }
 
 /* A4 エーよん, MP3 エムピーさん; a longer word keeps its letters. */
-static ttf_status_t alnum(const ttf_engine_t *e, const char *s, size_t n, ttf_buffer_t *b) {
+static ttf_status_t alnum(const ttf_engine_t *e, const char *s, size_t n, int japanese,
+                          ttf_buffer_t *b) {
     size_t i = 0;
     ttf_status_t st;
+    {
+        char whole[16];
+        const char *reading;
+        if (n < sizeof(whole)) {
+            memcpy(whole, s, n);
+            whole[n] = 0;
+            if ((reading = res(e, "alnum_word", whole)))
+                return ttf_buffer_puts(b, reading); /* B2B ビートゥービー */
+        }
+    }
     while (i < n) {
         size_t j = i;
         if (digit(s[i])) {
             char value[24];
             while (j < n && digit(s[j]))
                 ++j;
+            /* F1 エフワン, H2O エイチツーオー, 3D スリーディー: one digit after letters, or
+               before a single D or G, reads in English; A4, B5 (paper) stay Japanese. */
+            if (j - i == 1 && !(j + 1 < n && s[j] == '.')) {
+                char d[2] = {s[i], 0};
+                size_t h = i;
+                int caps = 0, lower = 0;
+                while (h && alpha(s[h - 1])) {
+                    --h;
+                    caps |= s[h] >= 'A' && s[h] <= 'Z';
+                    lower |= s[h] >= 'a' && s[h] <= 'z';
+                }
+                /* pH7 (mixed case) and M8 (a thread size) keep Japanese digits, as do A4, B5. */
+                int after = i && alpha(s[i - 1]) && !(caps && lower) && !(i - h == 1 && s[h] == 'M');
+                int paper = after && i == 1 && (s[0] == 'A' || s[0] == 'B') && s[i] >= '3' && s[i] <= '6';
+                int dg = !i && j + 1 == n && (s[j] == 'D' || s[j] == 'G');
+                if (!japanese && ((after && !paper) || dg)) {
+                    if ((st = word(e, b, "english_number", d)) != TTF_OK)
+                        return st;
+                    i = j;
+                    continue;
+                }
+            }
             if (j - i <= 4 && j + 1 < n && s[j] == '.' && digit(s[j + 1])) {
                 ++j;
                 while (j < n && digit(s[j]) && j - i < 20)
@@ -1727,6 +2035,72 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             return expression(e, s->value, b);
         if (!strcmp(s->unit, "@score"))
             return score(e, s->value, b);
+        if (!strcmp(s->unit, "@code")) {
+            /* JAN 4901… ジャン よんきゅう…: the label, then digits (hyphen groups with の). */
+            size_t k = 0, len = strlen(s->value);
+            char label[16];
+            const char *word_reading;
+            while (k < len && alpha(s->value[k]) && k + 1 < sizeof(label))
+                ++k;
+            memcpy(label, s->value, k);
+            label[k] = 0;
+            word_reading = res(e, "latin_word", label);
+            st = word_reading ? ttf_buffer_puts(b, word_reading) : letters(e, label, k, b);
+            if (st != TTF_OK)
+                return st;
+            if (k < len && s->value[k] == ' ') {
+                if ((st = ttf_buffer_puts(b, " ")) != TTF_OK)
+                    return st;
+                ++k;
+            }
+            return strchr(s->value + k, '-') ? phone(e, s->value + k, b)
+                                             : digits_each(e, s->value + k, len - k, 1, b);
+        }
+        if (!strcmp(s->unit, "@postal")) {
+            if ((st = word(e, b, "number", "postal_prefix")) != TTF_OK)
+                return st;
+            return phone(e, s->value, b);
+        }
+        if (!strcmp(s->unit, "@basement")) {
+            if ((st = word(e, b, "number", "basement")) != TTF_OK)
+                return st;
+            return value_counted(e, s->value, "階", 0, b);
+        }
+        if (!strcmp(s->unit, "@ja-address")) {
+            /* 3-12-5 さんのじゅうにのご */
+            size_t i = 0, k = strlen(s->value);
+            while (i < k) {
+                size_t j = i;
+                char part[8];
+                while (j < k && digit(s->value[j]))
+                    ++j;
+                if (j == i || j - i >= sizeof(part))
+                    return TTF_EINVAL;
+                snprintf(part, sizeof(part), "%.*s", (int)(j - i), s->value + i);
+                if ((st = plain_number(e, part, b)) != TTF_OK)
+                    return st;
+                if (j < k && (st = word(e, b, "number", "phone_separator")) != TTF_OK)
+                    return st;
+                i = j + 1;
+            }
+            return TTF_OK;
+        }
+        if (!strcmp(s->unit, "@grade")) {
+            /* 息子は小6 息子はしょうろく: the words before the grade read as usual. */
+            size_t k = strlen(s->value);
+            char g[4], d[2];
+            if (k < 4)
+                return TTF_EINVAL;
+            if (k > 4 && (st = kanji_numerals(e, s->value, k - 4, b)) != TTF_OK)
+                return st;
+            memcpy(g, s->value + k - 4, 3);
+            g[3] = 0;
+            d[0] = s->value[k - 1];
+            d[1] = 0;
+            if ((st = word(e, b, "grade_prefix", g)) != TTF_OK)
+                return st;
+            return plain_number(e, d, b);
+        }
         if (!strcmp(s->unit, "@power")) {
             size_t k = strlen(s->value);
             char base[24];
@@ -1746,7 +2120,7 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             return TTF_OK;
         return ttf_buffer_append(b, surface, length);
     case TTF_SEM_ALNUM_TERM:
-        return alnum(e, surface, length, b);
+        return alnum(e, surface, length, !strcmp(s->secondary, "after-dai"), b);
     case TTF_SEM_CUSTOM:
         if (!strcmp(s->unit, "@alphabet")) {
             const char *v = !strcmp(s->secondary, "control-surface") ? surface : s->value;

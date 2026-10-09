@@ -15,6 +15,10 @@ const char *ttf_speech_kana_lengthening(const ttf_engine_t *engine, const char *
                                         const char *source_left, size_t source_left_length,
                                         const char *span, size_t span_length, const char *right,
                                         size_t right_length);
+const char *ttf_speech_range_open(const ttf_engine_t *engine, const char *language,
+                                  const char *source_left, size_t source_left_length,
+                                  const char *span, size_t span_length, const char *right,
+                                  size_t right_length);
 const char *ttf_speech_range_mark(const ttf_engine_t *engine, const char *language,
                                   const char *left, size_t left_length, const char *span,
                                   size_t span_length, const char *right, size_t right_length);

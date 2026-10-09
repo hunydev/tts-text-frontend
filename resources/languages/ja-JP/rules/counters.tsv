@@ -247,3 +247,18 @@ half_suffix	ja-JP	畳	1
 counter	ja-JP	次元	じげん:-
 # 2の3乗 にのさんじょう (2026-10-09).
 counter	ja-JP	乗	じょう:-
+# ja-tn-eval-v1 gaps 7-8 (2026-10-09; readings reviewed by Claude as the native speaker).
+counter_reading	ja-JP	番:110	ひゃくとおばん
+counter	ja-JP	厘	りん:-
+counter	ja-JP	分咲き	ぶざき:-
+counter	ja-JP	代目	だいめ:-
+counter	ja-JP	ch	チャンネル:-
+counter	ja-JP	t	トン:-
+# counter_block: a word that starts like a counter but is not one (1足す いち足す).
+counter_block	ja-JP	足す	1
+counter_block	ja-JP	足し	1
+counter_block	ja-JP	足さ	1
+counter_block	ja-JP	足せ	1
+counter_block	ja-JP	足そ	1
+counter_block	ja-JP	足り	1
+counter_block	ja-JP	足ら	1
