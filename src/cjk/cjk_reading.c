@@ -11,6 +11,16 @@ typedef struct {
 
 int ttf_cjk_manifest_selected(const ttf_engine_t *e, const char *path, int deferred) {
     const char *prefix = "languages/ko-KR/cjk/";
+    const char *phonemes = "languages/ko-KR/pronunciation/stdict_phonemes";
+    /* The Korean pronunciation dictionary (19k rows) loads at freeze only when the
+       output may need it: pronunciation=hangul, or annotated input ({@pronounce}).
+       Other engines start as fast as before (2026-10-10). */
+    if (!strncmp(path, phonemes, strlen(phonemes))) {
+        const char *rest = path + strlen(phonemes);
+        if (!strcmp(rest, ".tsv") || !strcmp(rest, ".bin") || !strcmp(rest, ".ttfb"))
+            return deferred && (e->phoneme_output ||
+                                e->frontend_options.input_format == TTF_INPUT_ANNOTATED);
+    }
     const char *names[] = {"hanja_readings", "kana_readings", "cjk_words", "hanja_rules",
                            "hanja_readings_stdict", "cjk_words_stdict"};
     size_t i;

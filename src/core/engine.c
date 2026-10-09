@@ -195,7 +195,8 @@ ttf_status_t ttf_engine_freeze(ttf_engine_t *e) {
     checkpoint = e->resource_order;
     status = TTF_OK;
     if (e->frontend_options.hanja == TTF_HANJA_KOREAN ||
-        e->frontend_options.kana == TTF_KANA_KOREAN) {
+        e->frontend_options.kana == TTF_KANA_KOREAN || e->phoneme_output ||
+        e->frontend_options.input_format == TTF_INPUT_ANNOTATED) {
         ttf_resource_diagnostic_init(&diagnostic);
         status = load_manifest(e, &diagnostic, 1);
     }
