@@ -553,6 +553,13 @@ static size_t finish(const ttf_pack_input_t *in, ttf_semantic_t *s, size_t end,
     return count;
 }
 
+static int day_one_after(const ttf_engine_t *e, const char *s, size_t n);
+
+/* 後半, 前半: after a count these are words, not 後 ご / 前 まえ. */
+static int half_word(const char *s, size_t n) {
+    return n >= 6 && !memcmp(s + 3, "\xe5\x8d\x8a", 3);
+}
+
 /* A cue word (score_cue, ratio_cue) within window bytes after `after` or
  * before `before`, inside the sentence. */
 static int cue_near(const ttf_engine_t *e, const char *kind, const char *text, size_t n,
@@ -715,6 +722,33 @@ static size_t latin(const ttf_pack_input_t *in, ttf_semantic_t *s, const ttf_tok
             return finish(in, s, q, TTF_SEM_ALNUM_TERM, "ja.alnum", "");
         }
     }
+    /* O型 オーがた, AB型, B組 ビーぐみ, X線 エックスせん (letter_suffix). */
+    if (len <= 3 && initialism(key, len) + (len == 1 && key[0] >= 'A' && key[0] <= 'Z') && end < n) {
+        size_t k, best = 0;
+        const char *suffix = NULL;
+        for (k = 3; k <= 6 && end + k <= n; k += 3) {
+            char w[8];
+            const char *r;
+            memcpy(w, text + end, k);
+            w[k] = 0;
+            if ((r = res(e, "letter_suffix", w)))
+                best = k, suffix = r;
+        }
+        if (suffix) {
+            size_t i, vl = 0;
+            for (i = 0; i < len; ++i) {
+                char c[2] = {key[i], 0};
+                const char *name = res(e, "letter_name", c);
+                if (!name || vl + strlen(name) >= sizeof(s->value))
+                    return 0;
+                vl += (size_t)snprintf(s->value + vl, sizeof(s->value) - vl, "%s", name);
+            }
+            if (vl + strlen(suffix) >= sizeof(s->value))
+                return 0;
+            snprintf(s->value + vl, sizeof(s->value) - vl, "%s", suffix);
+            return finish(in, s, end + best, TTF_SEM_ABBREVIATION, "ja.letter-suffix", "");
+        }
+    }
     if (len == 1 && !(end < n && (text[end] == '.' || text[end] == '\'' || text[end] == '&' ||
                                   (text[end] == '-' && end + 1 < n && alpha(text[end + 1]))))) {
         /* English context: a Latin word one space before or after. */
@@ -742,6 +776,88 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         return 0;
     t = &in->tokens[in->index];
     begin = t->begin;
+    /* B'z ビーズ, Wi-Fi ワイファイ, 7-Eleven セブンイレブン (latin_phrase). */
+    if ((t->script == TTF_SCRIPT_LATIN || digit(text[begin])) && !(begin && (alpha(text[begin - 1]) ||
+                                                                               digit(text[begin - 1])))) {
+        size_t q = begin;
+        char key[24];
+        const char *reading;
+        while (q < n && (alpha(text[q]) || digit(text[q]) || text[q] == '-' || text[q] == '\'') &&
+               q - begin < sizeof(key) - 1)
+            ++q;
+        while (q > begin) {
+            memcpy(key, text + begin, q - begin);
+            key[q - begin] = 0;
+            if ((q >= n || !(alpha(text[q]) || digit(text[q]))) &&
+                (reading = res(e, "latin_phrase", key)) && strlen(reading) < sizeof(s->value)) {
+                snprintf(s->value, sizeof(s->value), "%s", reading);
+                return finish(in, s, q, TTF_SEM_ABBREVIATION, "ja.latin-phrase", "");
+            }
+            if (text[q - 1] != '-' && text[q - 1] != '\'')
+                break;
+            --q;
+        }
+    }
+    /* ファイナルファンタジーⅦ セブン: a Roman numeral after katakana reads in English. */
+    if (begin + 3 <= n && (unsigned char)text[begin] == 0xe2 && (unsigned char)text[begin + 1] == 0x85 &&
+        (unsigned char)text[begin + 2] >= 0xa0 && (unsigned char)text[begin + 2] <= 0xab && begin >= 3) {
+        uint32_t prev;
+        size_t pw;
+        char d[8];
+        const char *reading;
+        if (ttf_utf8_decode(text + begin - 3, 3, &prev, &pw) == 1 && prev >= 0x30a1 && prev <= 0x30fc) {
+            snprintf(d, sizeof(d), "%d", (unsigned char)text[begin + 2] - 0xa0 + 1);
+            if ((reading = res(e, "english_number", d))) {
+                snprintf(s->value, sizeof(s->value), "%s", reading);
+                return finish(in, s, begin + 3, TTF_SEM_ABBREVIATION, "ja.roman-english", "");
+            }
+        }
+    }
+    /* .pdf ドットピーディーエフ */
+    if (text[begin] == '.' && begin + 2 < n && alpha(text[begin + 1])) {
+        size_t q = begin + 1;
+        char ext[8];
+        const char *reading;
+        while (q < n && text[q] >= 'a' && text[q] <= 'z' && q - begin <= 5)
+            ++q;
+        if (q - begin - 1 < sizeof(ext) && (q >= n || !(alpha(text[q]) || digit(text[q]) || text[q] == '.'))) {
+            memcpy(ext, text + begin + 1, q - begin - 1);
+            ext[q - begin - 1] = 0;
+            if ((reading = res(e, "file_extension", ext)) && strlen(reading) + 12 < sizeof(s->value)) {
+                snprintf(s->value, sizeof(s->value), "ドット%s", reading);
+                return finish(in, s, q, TTF_SEM_ABBREVIATION, "ja.extension", "");
+            }
+        }
+    }
+    /* 月〜金 げつからきん: one-character weekdays around a range mark. */
+    if ((t->script == TTF_SCRIPT_HAN || t->script == TTF_SCRIPT_KANA) && t->end - begin >= 3) {
+        char a[4], z[4];
+        size_t w = 0, at = t->end;
+        uint32_t before = 0;
+        size_t bw;
+        memcpy(a, text + at - 3, 3);
+        a[3] = 0;
+        if (at - 3 > begin) {
+            size_t k = at - 3;
+            do
+                --k;
+            while (k > begin && ((unsigned char)text[k] & 0xc0) == 0x80);
+            if (ttf_utf8_decode(text + k, at - 3 - k, &before, &bw) != 1)
+                before = 0;
+        }
+        if (res(e, "weekday_short", a) && ttf_script_of(before) != TTF_SCRIPT_HAN &&
+            range_mark(text + at, n - at, &w) && text[at] != '-' && at + w + 3 <= n) {
+            memcpy(z, text + at + w, 3);
+            z[3] = 0;
+            if (res(e, "weekday_short", z) &&
+                !(at + w + 6 <= n && !memcmp(text + at + w + 3, "曜", 3)) &&
+                at + w + 3 - begin < sizeof(s->value)) {
+                snprintf(s->value, sizeof(s->value), "%.*s", (int)(at + w + 3 - begin), text + begin);
+                snprintf(s->secondary, sizeof(s->secondary), "%u", (unsigned)w);
+                return finish(in, s, at + w + 3, TTF_SEM_SYMBOL, "ja.weekday-range", "@weekday-range");
+            }
+        }
+    }
     if (t->script == TTF_SCRIPT_LATIN) {
         size_t claimed = latin(in, s, t);
         if (claimed)
@@ -811,6 +927,56 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         const char *reading;
         while (q < n && digit(text[q]))
             ++q;
+        /* 1:23:45のタイム いちじかんにじゅうさんぷんよんじゅうごびょう: a duration. */
+        if (q - begin <= 2 && q + 6 <= n && text[q] == ':' && digit(text[q + 1]) && digit(text[q + 2]) &&
+            text[q + 3] == ':' && digit(text[q + 4]) && digit(text[q + 5]) &&
+            (q + 6 >= n || !digit(text[q + 6]))) {
+            size_t k, cue = 0;
+            for (k = 3; k <= 15 && q + 6 + k <= n && !cue; k += 3) {
+                char w[16];
+                memcpy(w, text + q + 6, k);
+                w[k] = 0;
+                cue = res(e, "duration_cue", w) != NULL;
+            }
+            for (k = 6; k <= 15 && k <= begin && !cue; k += 3) {
+                char w[16];
+                memcpy(w, text + begin - k, k);
+                w[k] = 0;
+                cue = res(e, "duration_cue", w) != NULL;
+            }
+            if (cue) {
+                unsigned long h = strtoul(text + begin, NULL, 10), m = strtoul(text + q + 1, NULL, 10),
+                              sec = strtoul(text + q + 4, NULL, 10);
+                size_t vl = 0;
+                if (h)
+                    vl += (size_t)snprintf(s->value + vl, sizeof(s->value) - vl, "%lu時間", h);
+                if (m)
+                    vl += (size_t)snprintf(s->value + vl, sizeof(s->value) - vl, "%lu分", m);
+                if (sec || !vl)
+                    snprintf(s->value + vl, sizeof(s->value) - vl, "%lu秒", sec);
+                return finish(in, s, q + 6, TTF_SEM_COUNTER, "ja.duration", "@ja");
+            }
+        }
+        /* 12 345件 いちまんにせん…: digits grouped by spaces before a counter. */
+        if (q - begin <= 3 && q + 4 <= n && text[q] == ' ' && digit(text[q + 1])) {
+            size_t z = q, nd = q - begin;
+            char joined[24];
+            memcpy(joined, text + begin, q - begin);
+            while (z + 4 <= n && text[z] == ' ' && digit(text[z + 1]) && digit(text[z + 2]) && digit(text[z + 3]) &&
+                   (z + 4 >= n || !digit(text[z + 4])) && nd + 3 < sizeof(joined)) {
+                memcpy(joined + nd, text + z + 1, 3);
+                nd += 3;
+                z += 4;
+            }
+            joined[nd] = 0;
+            if (z > q && counter_at(e, text + z, n - z, key2, sizeof(key2))) {
+                size_t cw2 = counter_at(e, text + z, n - z, key2, sizeof(key2));
+                if (nd + cw2 < sizeof(s->value)) {
+                    snprintf(s->value, sizeof(s->value), "%s%.*s", joined, (int)cw2, text + z);
+                    return finish(in, s, z + cw2, TTF_SEM_COUNTER, "ja.space-grouped", "@ja");
+                }
+            }
+        }
         /* ベスト4 ベストフォー */
         if (begin >= 9 && !memcmp(text + begin - 9, "ベスト", 9) && q - begin <= 2 &&
             (q >= n || !digit(text[q]))) {
@@ -850,6 +1016,11 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                 a += w;
             else
                 a = 0;
+            if (!a && day_one_after(e, text + q + 3, n - q - 3) &&
+                (reading = res(e, "counter_reading", "date_day:1"))) {
+                snprintf(s->value, sizeof(s->value), "%s", reading);
+                return finish(in, s, q + 3, TTF_SEM_ABBREVIATION, "ja.day-one", "");
+            }
             if (a && a < n && digit(text[a])) {
                 while (a < n && digit(text[a]))
                     ++a;
@@ -1217,7 +1388,9 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             break;
         if (p + 3 <= n && nl + 4 < sizeof(norm) &&
             ((!memcmp(text + p, "\xe4\xb8\xad", 3) && res(e, "long_suffix", key)) ||
-             (!memcmp(text + p, "\xe5\x8d\x8a", 3) && res(e, "half_suffix", key)))) {
+             (!memcmp(text + p, "\xe5\x8d\x8a", 3) && res(e, "half_suffix", key)) ||
+             (!memcmp(text + p, "\xe5\xbe\x8c", 3) && res(e, "after_suffix", key) && !half_word(text + p, n - p)) ||
+             (!memcmp(text + p, "\xe5\x89\x8d", 3) && res(e, "before_suffix", key) && !half_word(text + p, n - p)))) {
             memcpy(norm + nl, text + p, 3);
             nl += 3;
             norm[nl] = 0;
@@ -1295,6 +1468,9 @@ static ttf_status_t render_chain(const ttf_engine_t *e, const char *v, ttf_buffe
             continue;
         }
         size_t nl = 0, used = parse_number(e, v + p, n - p, &x, norm, sizeof(norm), &nl), cw, rw;
+        size_t start = b->length;
+        int issen = p + 4 <= n && v[p] == '1' && !memcmp(v + p + 1, "\xe5\x8d\x83", 3) &&
+                    !(p && digit(v[p - 1]));
         if (!used)
             return TTF_EINVAL;
         p += used;
@@ -1331,6 +1507,23 @@ static ttf_status_t render_chain(const ttf_engine_t *e, const char *v, ttf_buffe
             p += used;
             continue;
         }
+        if (issen) {
+            /* 1千万円 いっせんまんえん: the written 1 before 千 is read. */
+            ttf_buffer_t tmp = {0};
+            st = counter_named(e, &x, key, 0, &tmp);
+            if (st == TTF_OK)
+                st = tmp.length >= 6 && !memcmp(tmp.data, "せん", 6) ? ttf_buffer_puts(b, "いっ") : TTF_OK;
+            if (st == TTF_OK)
+                st = ttf_buffer_append(b, tmp.data, tmp.length);
+            ttf_buffer_free(&tmp);
+            if (st != TTF_OK)
+                return st;
+            snprintf(previous, sizeof(previous), "%s", key);
+            p += cw;
+            after_range = 0;
+            (void)start;
+            continue;
+        }
         if (after_range && (!strcmp(key, "歳") || !strcmp(key, "才")))
             x.plain = 1; /* 10-20歳 にじゅっさい, not はたち */
         after_range = 0;
@@ -1351,9 +1544,32 @@ static ttf_status_t render_chain(const ttf_engine_t *e, const char *v, ttf_buffe
             if ((st = ttf_buffer_puts(b, "はん")) != TTF_OK)
                 return st;
             p += 3;
+        } else if (p + 3 <= n && !memcmp(v + p, "\xe5\xbe\x8c", 3) && res(e, "after_suffix", key) &&
+                   !half_word(v + p, n - p)) {
+            if ((st = ttf_buffer_puts(b, "ご")) != TTF_OK) /* 3日後 みっかご */
+                return st;
+            p += 3;
+        } else if (p + 3 <= n && !memcmp(v + p, "\xe5\x89\x8d", 3) && res(e, "before_suffix", key) &&
+                   !half_word(v + p, n - p)) {
+            if ((st = ttf_buffer_puts(b, "まえ")) != TTF_OK) /* 10分前 じゅっぷんまえ */
+                return st;
+            p += 3;
         }
     }
     return TTF_OK;
+}
+
+/* 付け, から営業 …: a day_one_cue right after 1日 makes it the first of the month. */
+static int day_one_after(const ttf_engine_t *e, const char *s, size_t n) {
+    size_t k;
+    for (k = 3; k <= n && k <= 15; k += 3) {
+        char key[16];
+        memcpy(key, s, k);
+        key[k] = 0;
+        if (res(e, "day_one_cue", key))
+            return 1;
+    }
+    return 0;
 }
 
 /* Kanji numerals (2026-10-08): 〇一二三四五六七八九 digits, 十百千 places, 万億兆 myriads. */
@@ -1500,6 +1716,40 @@ static ttf_status_t kanji_numerals(const ttf_engine_t *e, const char *s, size_t 
                 continue;
             }
         }
+        /* ファイナルファンタジーⅦ セブン: a Roman numeral after katakana reads in English. */
+        if (cp >= 0x2160 && cp <= 0x216b && previous >= 0x30a1 && previous <= 0x30fc) {
+            char d[8];
+            const char *reading;
+            snprintf(d, sizeof(d), "%u", (unsigned)(cp - 0x2160 + 1));
+            if ((reading = res(e, "english_number", d))) {
+                if ((st = ttf_buffer_puts(b, reading)) != TTF_OK)
+                    return st;
+                at += w;
+                previous = 0;
+                continue;
+            }
+        }
+        /* 二・二六事件 にーにーろく: kanji digits around ・ read one by one. */
+        if (kanji_digit(cp) > 0 && !kanji_numeral(previous) && at + w + 3 < n &&
+            !memcmp(s + at + w, "\xe3\x83\xbb", 3)) {
+            size_t q = at + w + 3, count = 0, nw;
+            uint32_t c2 = 0;
+            char digits[8];
+            int d = kanji_digit(cp);
+            digits[count++] = (char)('0' + d);
+            while (q < n && count < 4 && ttf_utf8_decode(s + q, n - q, &c2, &nw) == 1 && kanji_digit(c2) > 0) {
+                digits[count++] = (char)('0' + kanji_digit(c2));
+                q += nw;
+            }
+            if (count >= 2 && count <= 3 &&
+                !(q < n && ttf_utf8_decode(s + q, n - q, &c2, &nw) == 1 && kanji_numeral(c2))) {
+                if ((st = digits_each(e, digits, count, 1, b)) != TTF_OK)
+                    return st;
+                at = q;
+                previous = 0;
+                continue;
+            }
+        }
         /* 〇〇さん: a run of 〇 not next to another numeral is a placeholder (まるまる). */
         if (cp == 0x3007 && !kanji_numeral(previous)) {
             size_t q = at, nw;
@@ -1567,7 +1817,9 @@ static ttf_status_t kanji_numerals(const ttf_engine_t *e, const char *s, size_t 
                 }
                 if (p + 3 <= n && nl + 4 < sizeof(norm) &&
                     ((!memcmp(s + p, "\xe4\xb8\xad", 3) && res(e, "long_suffix", key)) ||
-                     (!memcmp(s + p, "\xe5\x8d\x8a", 3) && res(e, "half_suffix", key)))) {
+                     (!memcmp(s + p, "\xe5\x8d\x8a", 3) && res(e, "half_suffix", key)) ||
+                     (!memcmp(s + p, "\xe5\xbe\x8c", 3) && res(e, "after_suffix", key) && !half_word(s + p, n - p)) ||
+                     (!memcmp(s + p, "\xe5\x89\x8d", 3) && res(e, "before_suffix", key) && !half_word(s + p, n - p)))) {
                     memcpy(norm + nl, s + p, 3);
                     nl += 3;
                     norm[nl] = 0;
@@ -1576,8 +1828,27 @@ static ttf_status_t kanji_numerals(const ttf_engine_t *e, const char *s, size_t 
                 }
             }
             if (pairs) {
-                if ((st = render_chain(e, norm, b)) != TTF_OK)
+                size_t mark = b->length;
+                /* 一日付け, 一日から営業 ついたち */
+                if (!strcmp(norm, "1日") && day_one_after(e, s + p, n - p)) {
+                    if ((st = word(e, b, "counter_reading", "date_day:1")) != TTF_OK)
+                        return st;
+                } else if ((st = render_chain(e, norm, b)) != TTF_OK)
                     return st;
+                /* 一千万 いっせんまん */
+                if (n - at >= 6 && !memcmp(s + at, "\xe4\xb8\x80\xe5\x8d\x83", 6) &&
+                    b->length - mark >= 6 && !memcmp(b->data + mark, "せん", 6)) {
+                    ttf_buffer_t tmp = {0};
+                    st = ttf_buffer_append(&tmp, b->data + mark, b->length - mark);
+                    b->length = mark;
+                    if (st == TTF_OK)
+                        st = ttf_buffer_puts(b, "いっ");
+                    if (st == TTF_OK)
+                        st = ttf_buffer_append(b, tmp.data, tmp.length);
+                    ttf_buffer_free(&tmp);
+                    if (st != TTF_OK)
+                        return st;
+                }
                 at = p;
                 previous = 0;
                 continue;
@@ -1735,6 +2006,10 @@ static ttf_status_t alnum(const ttf_engine_t *e, const char *s, size_t n, int ja
                           ttf_buffer_t *b) {
     size_t i = 0;
     ttf_status_t st;
+    if (n >= 3 && n <= 4 && s[0] == 'R' && digit(s[1]) && digit(s[2]) && (n == 3 || digit(s[3]))) {
+        ttf_status_t rs = letters(e, s, 1, b);
+        return rs == TTF_OK ? digits_each(e, s + 1, n - 1, 1, b) : rs;
+    }
     {
         char whole[16];
         const char *reading;
@@ -2056,6 +2331,23 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             return strchr(s->value + k, '-') ? phone(e, s->value + k, b)
                                              : digits_each(e, s->value + k, len - k, 1, b);
         }
+        if (!strcmp(s->unit, "@weekday-range")) {
+            /* 営業は月〜土 営業はげつからど */
+            size_t k = strlen(s->value), w = (size_t)strtoul(s->secondary, NULL, 10);
+            char a[4], z[4];
+            if (k < 6 + w)
+                return TTF_EINVAL;
+            if (k > 6 + w && (st = kanji_numerals(e, s->value, k - 6 - w, b)) != TTF_OK)
+                return st;
+            memcpy(a, s->value + k - 6 - w, 3);
+            a[3] = 0;
+            memcpy(z, s->value + k - 3, 3);
+            z[3] = 0;
+            if ((st = word(e, b, "weekday_short", a)) != TTF_OK ||
+                (st = word(e, b, "number", "range")) != TTF_OK)
+                return st;
+            return word(e, b, "weekday_short", z);
+        }
         if (!strcmp(s->unit, "@postal")) {
             if ((st = word(e, b, "number", "postal_prefix")) != TTF_OK)
                 return st;
@@ -2146,7 +2438,7 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             uint32_t cp;
             size_t w;
             if (ttf_utf8_decode(surface + i, length - i, &cp, &w) == 1 &&
-                (kanji_numeral(cp) || cp == 0x4f55))
+                (kanji_numeral(cp) || cp == 0x4f55 || (cp >= 0x2160 && cp <= 0x216b)))
                 return kanji_numerals(e, surface, length, b);
         }
         return ttf_buffer_append(b, surface, length);

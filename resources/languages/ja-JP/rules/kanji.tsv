@@ -65,3 +65,9 @@ kanji_word	ja-JP	三つ子	1
 kanji_word	ja-JP	三つ編み	1
 kanji_word	ja-JP	三つ巴	1
 kanji_word	ja-JP	一つ目小僧	1
+kanji_word	ja-JP	三軒茶屋	1
+# 2026-10-09: words whose numeral is not a count (百合 ゆり, 手八丁口八丁).
+kanji_word	ja-JP	百合	1
+kanji_word	ja-JP	手八丁	1
+kanji_word	ja-JP	口八丁	1
+kanji_word	ja-JP	八丁堀	1

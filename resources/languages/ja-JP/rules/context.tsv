@@ -33,3 +33,10 @@ classifier_priority	ja-JP	ja.basement	50
 classifier_priority	ja-JP	ja.page	50
 classifier_priority	ja-JP	ja.code	50
 classifier_priority	ja-JP	ja.latin-counter	50
+classifier_priority	ja-JP	ja.latin-phrase	50
+classifier_priority	ja-JP	ja.duration	50
+classifier_priority	ja-JP	ja.weekday-range	50
+classifier_priority	ja-JP	ja.letter-suffix	50
+classifier_priority	ja-JP	ja.extension	50
+classifier_priority	ja-JP	ja.roman-english	50
+classifier_priority	ja-JP	ja.space-grouped	50

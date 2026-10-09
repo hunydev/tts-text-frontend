@@ -198,7 +198,8 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    : ttf_validation_error(d, "latin_ordinal requires a number and a reading");
     }
     if (SAME(k, "counter_block") || SAME(k, "digit_after_cue") || SAME(k, "english_counter") ||
-        SAME(k, "rate_cue")) {
+        SAME(k, "rate_cue") || SAME(k, "after_suffix") || SAME(k, "before_suffix") ||
+        SAME(k, "duration_cue") || SAME(k, "day_one_cue")) {
         *handled = 1;
         return label(key) && strlen(key) <= 18 && SAME(v, "1")
                    ? TTF_OK
@@ -210,7 +211,8 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "english_number requires a number and a reading");
     }
-    if (SAME(k, "grade_prefix") || SAME(k, "alnum_word")) {
+    if (SAME(k, "grade_prefix") || SAME(k, "alnum_word") || SAME(k, "weekday_short") ||
+        SAME(k, "file_extension") || SAME(k, "letter_suffix") || SAME(k, "latin_phrase")) {
         *handled = 1;
         return label(key) && strlen(key) < 16 && label(v)
                    ? TTF_OK
