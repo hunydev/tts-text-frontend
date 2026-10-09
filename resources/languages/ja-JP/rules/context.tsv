@@ -16,3 +16,5 @@ classifier_priority	ja-JP	ja.letter	50
 classifier_priority	ja-JP	ja.version	50
 classifier_priority	ja-JP	ja.score	50
 classifier_priority	ja-JP	ja.power	50
+classifier_priority	ja-JP	ja.slash-date	50
+classifier_priority	ja-JP	ja.slash-fraction	50

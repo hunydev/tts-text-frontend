@@ -774,6 +774,79 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             return finish(in, s, r, TTF_SEM_ALNUM_TERM, "ja.alnum", "");
         }
     }
+    /* 3/15に提出 さんがつじゅうごにち, 1/20の確率 にじゅうぶんのいち (2026-10-09): M/D is a
+       fraction with a counter or a fraction cue after it, and a date with a
+       weekday mark, a date range or a date cue; otherwise the core decides. */
+    if (digit(text[begin]) && !(begin && (digit(text[begin - 1]) || text[begin - 1] == '/' ||
+                                          text[begin - 1] == '.' || alpha(text[begin - 1])))) {
+        size_t q = begin, r, cw;
+        char key[32];
+        while (q < n && digit(text[q]))
+            ++q;
+        if (q - begin <= 2 && q + 1 < n && text[q] == '/' && digit(text[q + 1])) {
+            unsigned long m = strtoul(text + begin, NULL, 10), d;
+            r = q + 1;
+            while (r < n && digit(text[r]))
+                ++r;
+            d = strtoul(text + q + 1, NULL, 10);
+            if (r - q - 1 <= 3 && (r >= n || !(digit(text[r]) || text[r] == '/' || text[r] == '.' ||
+                                              alpha(text[r])))) {
+                static const unsigned days[13] = {0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+                int date = m >= 1 && m <= 12 && d >= 1 && d <= days[m] && r - q - 1 <= 2;
+                size_t open = r < n && text[r] == '(' ? 1
+                              : (r + 3 <= n && !memcmp(text + r, "\xef\xbc\x88", 3)) ? 3 : 0;
+                size_t close = 0, w;
+                char day[4] = "";
+                int weekday = 0, range = 0;
+                if (open && r + open + 3 < n) {
+                    size_t z = r + open + 3;
+                    close = z < n && text[z] == ')' ? 1
+                            : (z + 3 <= n && !memcmp(text + z, "\xef\xbc\x89", 3)) ? 3 : 0;
+                    memcpy(day, text + r + open, 3);
+                    day[3] = 0;
+                    weekday = close && res(e, "weekday_mark", day);
+                }
+                /* 5/3〜5/5: a slash date next to another one across a range mark. */
+                if (range_mark(text + r, n - r, &w) && text[r] != '-' && r + w + 2 < n &&
+                    digit(text[r + w]) && (text[r + w + 1] == '/' || (digit(text[r + w + 1]) &&
+                                                                       text[r + w + 2] == '/')))
+                    range = 1;
+                {
+                    size_t mark = SIZE_MAX;
+                    if (begin >= 3 && (!memcmp(text + begin - 3, "\xe3\x80\x9c", 3) ||
+                                       !memcmp(text + begin - 3, "\xef\xbd\x9e", 3)))
+                        mark = begin - 3;
+                    else if (begin >= 1 && text[begin - 1] == '~')
+                        mark = begin - 1;
+                    if (mark != SIZE_MAX && mark >= 3 && digit(text[mark - 1]) &&
+                        (text[mark - 2] == '/' || (digit(text[mark - 2]) && text[mark - 3] == '/')))
+                        range = 1;
+                }
+                cw = counter_at(e, text + r, n - r, key, sizeof(key));
+                if (cw && strcmp(key, "日") && cw < 16) {
+                    char unit[sizeof(s->unit)];
+                    snprintf(unit, sizeof(unit), "counter:%.15s", key);
+                    snprintf(s->value, sizeof(s->value), "%lu", m);
+                    snprintf(s->secondary, sizeof(s->secondary), "%lu", d);
+                    return finish(in, s, r + cw, TTF_SEM_FRACTION, "ja.slash-fraction", unit);
+                }
+                if (cue_near(e, "fraction_cue", text, n, begin, r, 12)) {
+                    snprintf(s->value, sizeof(s->value), "%lu", m);
+                    snprintf(s->secondary, sizeof(s->secondary), "%lu", d);
+                    return finish(in, s, r, TTF_SEM_FRACTION, "ja.slash-fraction", "");
+                }
+                if (date && (weekday || range || cue_near(e, "date_cue", text, n, begin, r, 18))) {
+                    snprintf(s->value, sizeof(s->value), "%lu\xe6\x9c\x88%lu\xe6\x97\xa5", m, d);
+                    if (weekday) {
+                        size_t vl = strlen(s->value);
+                        snprintf(s->value + vl, sizeof(s->value) - vl, "(%s)", day);
+                        r += open + 3 + close;
+                    }
+                    return finish(in, s, r, TTF_SEM_COUNTER, "ja.slash-date", "@ja");
+                }
+            }
+        }
+    }
     /* 3:1の割合 さんたいいち, 3-2で勝利 さんたいに (2026-10-09): N:M or N-M with a
        cue nearby, or N:M whose second part has one digit (not minutes). */
     if (digit(text[begin]) && !(begin && (digit(text[begin - 1]) || alpha(text[begin - 1]) ||
@@ -1543,10 +1616,24 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     case TTF_SEM_DATE:
         if (!strcmp(s->unit, "year"))
             return value_counted(e, s->value, "年", 0, b);
+        /* --03-15 さんがつじゅうごにち */
+        if (!strcmp(s->unit, "month-day") && !strncmp(s->value, "--", 2))
+            return date_reading(e, s->value + 1, b);
         if (s->unit[0])
             return TTF_EINVAL;
         return date_reading(e, s->value, b);
     case TTF_SEM_FRACTION:
+        /* 1/250秒 にひゃくごじゅうぶんのいちびょう: the counter reads after. */
+        if (!strncmp(s->unit, "counter:", 8)) {
+            const char *spec = res(e, "counter", s->unit + 8), *colon;
+            if (!spec || !(colon = strchr(spec, ':')))
+                return TTF_ERESOURCE;
+            if ((st = plain_number(e, s->secondary, b)) != TTF_OK ||
+                (st = word(e, b, "number", "fraction")) != TTF_OK ||
+                (st = plain_number(e, s->value, b)) != TTF_OK)
+                return st;
+            return ttf_buffer_append(b, spec, (size_t)(colon - spec));
+        }
         if (s->unit[0] && strncmp(s->unit, "mixed:", 6))
             return TTF_EINVAL;
         if (!strncmp(s->unit, "mixed:", 6) && ((st = plain_number(e, s->unit + 6, b)) != TTF_OK ||

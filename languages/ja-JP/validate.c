@@ -197,11 +197,12 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "latin_ordinal requires a number and a reading");
     }
-    if (SAME(k, "score_cue") || SAME(k, "ratio_cue")) {
+    if (SAME(k, "score_cue") || SAME(k, "ratio_cue") || SAME(k, "date_cue") ||
+        SAME(k, "fraction_cue")) {
         *handled = 1;
         return label(key) && strlen(key) <= 12 && SAME(v, "1")
                    ? TTF_OK
-                   : ttf_validation_error(d, "score_cue/ratio_cue requires a word and 1");
+                   : ttf_validation_error(d, "score_cue/ratio_cue/date_cue/fraction_cue requires a word and 1");
     }
     if (SAME(k, "math_operator")) {
         *handled = 1;
