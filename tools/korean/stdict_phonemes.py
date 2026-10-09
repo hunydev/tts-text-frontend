@@ -70,11 +70,16 @@ def main():
     ap.add_argument("--out", default=str(ROOT / "resources/languages/ko-KR/pronunciation/stdict_phonemes.tsv"))
     args = ap.parse_args()
     entries = collections.defaultdict(list)
+    verbs, nouns = set(), set()
     for line in Path(args.data).read_text(encoding="utf-8").splitlines()[1:]:
         f = line.split("\t")
         if len(f) < 5:
             continue
         word = f[0].replace("-", "").replace("^", "")
+        if HANGUL.match(word) and ("동사" in f[3] or "형용사" in f[3]) and word.endswith("다") and len(word) >= 2:
+            verbs.add(word[:-1])
+        if HANGUL.match(word) and "명사" in f[3]:
+            nouns.add(word)
         variants = [colloquial(v.replace("ː", "")) for v in f[4].split("|")
                     if HANGUL.match(v.replace("ː", "") or "-") and len(v.replace("ː", "")) == len(word)]
         if HANGUL.match(word) and variants:
@@ -84,6 +89,9 @@ def main():
     engine = Engine(Path(args.library), Path(args.resources),
                     dict(default_language="ko-KR", output_mode="speech", pronunciation="hangul"))
     rows, same, differ = [], 0, 0
+    # Only a ㄴ coda comes from an ㄹ stem (알다 + ㄴ다 안다); ㅁ stems are never ambiguous.
+    ambiguous = {stem for stem in verbs if (ord(stem[-1]) - 0xAC00) % 28 == 4 and
+                 stem[:-1] + chr(ord(stem[-1]) - (ord(stem[-1]) - 0xAC00) % 28 + 8) in verbs}
     try:
         for word in sorted(entries):
             rule = engine.normalize(word.encode())["text"]
@@ -93,14 +101,32 @@ def main():
                 if word.endswith("의"):
                     rows.append((word, rule))
                 continue
+            if word.endswith("다") and word[:-1] in ambiguous:
+                continue
             differ += 1
             # Colloquial: the last variant (허용: 맛있다 마싣따) of the most common entry, but
             # not one that only reads ㅚ as ㅞ (회의 회이, not 훼이): ㅚ stays ㅚ everywhere.
             rows.append((word, collections.Counter(pick(word, v) for v in entries[word]).most_common(1)[0][0]))
     finally:
         engine.close()
-    Path(args.out).write_text(HEADER + "".join("phoneme_word\tko-KR\t%s\t%s\n" % r for r in rows),
-                              encoding="utf-8")
+    # Phase 2: verb stems in ㄴ or ㅁ (2 when the ㄹ stem of the same shape exists:
+    # 안- and 알-), and nouns spelled like such a stem with an ending (남자, 참고).
+    rules_file = Path(args.resources) / "languages/ko-KR/rules/phoneme.tsv"
+    endings = [l.split("\t")[2] for l in rules_file.read_text(encoding="utf-8").splitlines()
+               if l.startswith("phoneme_ending\t")]
+    stems = []
+    for stem in sorted(verbs):
+        coda = (ord(stem[-1]) - 0xAC00) % 28
+        if coda not in (4, 16):
+            continue
+        rieul = stem[:-1] + chr(ord(stem[-1]) - coda + 8)
+        stems.append((stem, "2" if coda == 4 and rieul in verbs else "1"))
+    blocked = sorted({stem + ending for stem, _ in stems for ending in endings if stem + ending in nouns})
+    text = HEADER + "".join("phoneme_word\tko-KR\t%s\t%s\n" % r for r in rows)
+    text += "".join("phoneme_stem\tko-KR\t%s\t%s\n" % r for r in stems)
+    text += "".join("phoneme_noun\tko-KR\t%s\t1\n" % w for w in blocked)
+    Path(args.out).write_text(text, encoding="utf-8")
+    print("stems %d, same-spelling nouns %d" % (len(stems), len(blocked)))
     print("words %d, rules agree %d (%.1f%%), exceptions %d, rows %d"
           % (len(entries), same, 100 * same / max(1, len(entries)), differ, len(rows)))
 

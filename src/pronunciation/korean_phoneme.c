@@ -15,7 +15,10 @@
  *      nasalization, liquidization, ㄹ after ㅁ ㅇ ㄱ ㅂ, obstruent tensing,
  *      and the colloquial vowels (initial 의 으, other 의 이, the particle 의 으,
  *      ㅖ after a consonant ㅔ, 져 저).
- * Rules apply inside a word only; ㄴ insertion and compound tensing come from
+ * Rules apply inside a word, plus three marks across a single space (phase 2): a
+ * bound noun after the adnominal ㄹ is tensed (할 수 할 쑤), ㄴ is inserted before
+ * 일 after an adnominal ㄴ or ㄹ (할 일이 할 리리), and an object before a verb form
+ * picks the verb (신발을 신고 신꼬). Compound tensing and other ㄴ insertion come from
  * the dictionary. Text that is not Hangul is left as it is. */
 
 enum { O_G, O_GG, O_N, O_D, O_DD, O_R, O_M, O_B, O_BB, O_S, O_SS, O_NG, O_J, O_JJ, O_CH, O_K, O_T, O_P, O_H };
@@ -27,8 +30,13 @@ enum { V_A = 0, V_AE = 1, V_YA = 2, V_YAE = 3, V_EO = 4, V_E = 5, V_YEO = 6, V_Y
        V_U = 13, V_YU = 17, V_EU = 18, V_UI = 19, V_I = 20 };
 
 typedef struct {
-    int o, v, c, fixed;
+    int o, v, c, fixed, tense;
 } syl_t;
+
+/* The word before this one, when a single space separates them. */
+typedef struct {
+    int adjacent, coda, object, numeral, aux_next;
+} word_ctx_t;
 
 #define MAX_WORD 64
 
@@ -208,8 +216,8 @@ static void boundary(syl_t *l, syl_t *r) {
     }
     if (c == C_L && o == O_N)
         o = O_R;                                              /* 칼날 칼랄 */
-    if (trigger)
-        o = tense(o);                                         /* 학교 학꾜, 읽다 익따 */
+    if (trigger || r->tense)
+        o = tense(o);                                         /* 학교 학꾜, 읽다 익따, 신고 신꼬 */
     l->c = c;
     r->o = o;
 }
@@ -255,6 +263,7 @@ static int decode_word(const char *text, size_t n, syl_t *s, size_t limit) {
         s[count].v = (int)(cp % 588 / 28);
         s[count].c = (int)(cp % 28);
         s[count].fixed = 0;
+        s[count].tense = 0;
         ++count;
     }
     return i == n ? (int)count : -1;
@@ -276,14 +285,56 @@ static const char *lookup(const ttf_engine_t *e, const char *kind, const char *t
     return ttf_resource_get(e, kind, "ko-KR", key, NULL);
 }
 
+/* Phase 2 (2026-10-10): marks that need the shape of an inflected word.
+ *   신고 신꼬, 감다 감따, 남습니다 남씀니다: a verb stem in ㄴ or ㅁ (phoneme_stem)
+ *     tenses its ending (phoneme_ending, 제24항), unless the word is a noun of the
+ *     same spelling (phoneme_noun: 남자, 참고, 신고) with no object before it, or the
+ *     stem is also an ㄹ stem before 다 (안다 is 알다 + ㄴ다 as often as 안다).
+ *   할게 할께, 갈지 갈찌, 할수록 할쑤록: an ending after the adnominal ㄹ
+ *     (phoneme_l_ending, 제27항). */
+static void inflection_marks(const ttf_engine_t *e, const char *text, size_t bytes, syl_t *s, int n,
+                             const word_ctx_t *ctx) {
+    int k;
+    for (k = n - 1; k >= 1; --k) {
+        const char *stem = lookup(e, "phoneme_stem", text, (size_t)k * 3);
+        if (!stem || !lookup(e, "phoneme_ending", text + k * 3, bytes - (size_t)k * 3))
+            continue;
+        if (stem[0] == '2' && s[k].o == O_D && s[k].v == V_A)
+            break;
+        /* 신고 접수 (noun), 신발을 신고 / 남지 않았다 (verb): an object before it or an
+           auxiliary after it picks the verb. */
+        if (lookup(e, "phoneme_noun", text, bytes) &&
+            !(ctx && ((ctx->adjacent && ctx->object) || ctx->aux_next)))
+            break;
+        s[k].tense = 1;
+        break;
+    }
+    for (k = 0; k + 1 < n; ++k)
+        if (s[k].c == C_L && lookup(e, "phoneme_l_ending", text + (k + 1) * 3, bytes - (size_t)(k + 1) * 3)) {
+            s[k + 1].tense = 1;
+            break;
+        }
+}
+
 /* Read one word (n syllables, 3 bytes each) into out (same size). */
-static void read_word(const ttf_engine_t *e, const char *text, size_t bytes, syl_t *out) {
+static void read_word(const ttf_engine_t *e, const char *text, size_t bytes, syl_t *out,
+                      const word_ctx_t *ctx) {
     syl_t s[MAX_WORD], p[MAX_WORD];
     int n = decode_word(text, bytes, s, MAX_WORD), particle = -1;
     const char *hit;
     int k;
     if (n <= 0)
         return;
+    /* 할 일이 할 리리, 하는 일은 하는 니른: ㄴ before 일 after an adnominal ㄴ or ㄹ
+       (제29항); the word is then read by the rules. */
+    if (ctx && ctx->adjacent && !ctx->numeral && (ctx->coda == C_N || ctx->coda == C_L) && n >= 2 &&
+        s[0].o == O_NG &&
+        s[0].v == V_I && s[0].c == C_L && lookup(e, "phoneme_suffix", text + 3, bytes - 3)) {
+        s[0].o = ctx->coda == C_L ? O_R : O_N;
+        memcpy(out, s, (size_t)n * sizeof(*s));
+        apply_rules(out, (size_t)n, -1);
+        return;
+    }
     memcpy(out, s, (size_t)n * sizeof(*s));
     hit = lookup(e, "phoneme_word", text, bytes);
     if (hit && decode_word(hit, strlen(hit), p, MAX_WORD) == n) {
@@ -311,12 +362,15 @@ static void read_word(const ttf_engine_t *e, const char *text, size_t bytes, syl
     /* 나라의 나라으: a final 의 is the particle unless the word is listed (회의). */
     if (n >= 2 && s[n - 1].o == O_NG && s[n - 1].v == V_UI && s[n - 1].c == C_0)
         particle = n - 1;
+    inflection_marks(e, text, bytes, out, n, ctx);
     apply_rules(out, (size_t)n, particle);
 }
 
 ttf_status_t ttf_korean_phonemize(const ttf_engine_t *e, char *text, size_t length, size_t begin,
                                   size_t end) {
-    size_t at = 0;
+    size_t at = 0, prev_end = SIZE_MAX;
+    int next_numeral = 0, next_object = 0;
+    word_ctx_t ctx = {0, C_0, 0, 0, 0};
     if (!e || (!text && length) || begin > end || end > length)
         return TTF_EINVAL;
     while (at < length) {
@@ -334,18 +388,61 @@ ttf_status_t ttf_korean_phonemize(const ttf_engine_t *e, char *text, size_t leng
                cp >= 0xac00 && cp <= 0xd7a3)
             stop += 3;
         at = stop;
-        if (stop <= begin || start >= end || (stop - start) / 3 > MAX_WORD)
-            continue;
+        ctx.adjacent = prev_end != SIZE_MAX && start == prev_end + 1 && text[prev_end] == ' ';
         {
-            syl_t out[MAX_WORD];
+            size_t q;
+            next_numeral = 1;
+            for (q = start; q + 3 <= stop && next_numeral; q += 3) {
+                char syl[4] = {text[q], text[q + 1], text[q + 2], 0};
+                next_numeral = ttf_resource_get(e, "phoneme_numeral", "ko-KR", syl, NULL) != NULL;
+            }
+            /* 신발을 신고: an object particle before a verb form. */
+            next_object = stop - start >= 6 &&
+                          (!memcmp(text + stop - 3, "을", 3) || !memcmp(text + stop - 3, "를", 3));
+        }
+        if (!(stop <= begin || start >= end || (stop - start) / 3 > MAX_WORD)) {
+            syl_t out[MAX_WORD], last;
             size_t i, count = (stop - start) / 3;
-            read_word(e, text + start, stop - start, out);
+            char first[4];
+            /* The written word decides the next word's context, before rewriting. */
+            decode_word(text + stop - 3, 3, &last, 1);
+            memcpy(first, text + start, 3);
+            first[3] = 0;
+            /* 남지 않았다, 남지 마: the next word, after a single space, is an auxiliary
+               (the whole word, or its first syllable for 않 못 있 싶 계). */
+            ctx.aux_next = 0;
+            if (stop + 4 <= length && text[stop] == ' ') {
+                size_t z = stop + 1;
+                char key[16], one[4] = {text[stop + 1], text[stop + 2], text[stop + 3], 0};
+                const char *hit;
+                while (z + 3 <= length && z - stop - 1 < 12 && (unsigned char)text[z] >= 0xea &&
+                       (unsigned char)text[z] <= 0xed)
+                    z += 3;
+                memcpy(key, text + stop + 1, z - stop - 1);
+                key[z - stop - 1] = 0;
+                if (ttf_resource_get(e, "phoneme_aux", "ko-KR", key, NULL))
+                    ctx.aux_next = 1;
+                else if ((hit = ttf_resource_get(e, "phoneme_aux", "ko-KR", one, NULL)) && !strcmp(hit, "1"))
+                    ctx.aux_next = 1;
+            }
+            read_word(e, text + start, stop - start, out, &ctx);
+            /* 할 수 할 쑤, 갈 것 갈 껏: a bound noun after the adnominal ㄹ (제27항). */
+            if (ctx.adjacent && ctx.coda == C_L && ttf_resource_get(e, "phoneme_bound", "ko-KR", first, NULL))
+                out[0].o = tense(out[0].o);
             for (i = 0; i < count; ++i) {
                 size_t pos = start + i * 3;
                 if (pos >= begin && pos + 3 <= end)
                     encode(&out[i], text + pos);
             }
+            ctx.coda = last.c;
+        } else {
+            syl_t last;
+            ctx.coda = decode_word(text + stop - 3, 3, &last, 1) == 1 ? last.c : C_0;
         }
+        /* 1일에 일 이레: a word of Sino numerals is not an adnominal (no ㄴ insertion after it). */
+        ctx.numeral = next_numeral;
+        ctx.object = next_object;
+        prev_end = stop;
     }
     return TTF_OK;
 }

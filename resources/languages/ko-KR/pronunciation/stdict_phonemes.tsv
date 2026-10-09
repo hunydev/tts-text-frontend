@@ -95,6 +95,7 @@ phoneme_word	ko-KR	가슴소리	가슴쏘리
 phoneme_word	ko-KR	가슴속	가슴쏙
 phoneme_word	ko-KR	가시권	가시꿘
 phoneme_word	ko-KR	가시범하늘소	가시범하늘쏘
+phoneme_word	ko-KR	가시뿔게	가시뿔게
 phoneme_word	ko-KR	가시연밥	가시연빱
 phoneme_word	ko-KR	가시철사	가시철싸
 phoneme_word	ko-KR	가시철조망	가시철쪼망
@@ -227,6 +228,7 @@ phoneme_word	ko-KR	간호법	간호뻡
 phoneme_word	ko-KR	간흡충증	간흡충쯩
 phoneme_word	ko-KR	갈강병	갈강뼝
 phoneme_word	ko-KR	갈건야복	갈건냐복
+phoneme_word	ko-KR	갈게	갈게
 phoneme_word	ko-KR	갈고리걸쇠	갈고리걸쐬
 phoneme_word	ko-KR	갈고리나방과	갈고리나방꽈
 phoneme_word	ko-KR	갈대	갈때
@@ -287,7 +289,6 @@ phoneme_word	ko-KR	갈수	갈쑤
 phoneme_word	ko-KR	갈수기	갈쑤기
 phoneme_word	ko-KR	갈수년	갈쑤년
 phoneme_word	ko-KR	갈수량	갈쑤량
-phoneme_word	ko-KR	갈수록	갈쑤록
 phoneme_word	ko-KR	갈수위	갈쑤위
 phoneme_word	ko-KR	갈식	갈씩
 phoneme_word	ko-KR	갈식행자	갈씨캥자
@@ -362,6 +363,7 @@ phoneme_word	ko-KR	감실보	감실뽀
 phoneme_word	ko-KR	감실장	감실짱
 phoneme_word	ko-KR	감싸안다	감싸안따
 phoneme_word	ko-KR	감열성	가멸썽
+phoneme_word	ko-KR	감열지	가멸지
 phoneme_word	ko-KR	감염병	가몀뼝
 phoneme_word	ko-KR	감염성	가몀썽
 phoneme_word	ko-KR	감염증	가몀쯩
@@ -492,7 +494,6 @@ phoneme_word	ko-KR	개미사돈과	개미사돈꽈
 phoneme_word	ko-KR	개미살이좀벌과	개미사리좀벌꽈
 phoneme_word	ko-KR	개발자	개발짜
 phoneme_word	ko-KR	개발주의	개발주이
-phoneme_word	ko-KR	개발지	개발찌
 phoneme_word	ko-KR	개방법	개방뻡
 phoneme_word	ko-KR	개방성	개방썽
 phoneme_word	ko-KR	개방주의	개방주이
@@ -533,7 +534,6 @@ phoneme_word	ko-KR	개장성	개장썽
 phoneme_word	ko-KR	개전법	개전뻡
 phoneme_word	ko-KR	개정건	개정껀
 phoneme_word	ko-KR	개정법	개정뻡
-phoneme_word	ko-KR	개질지	개질찌
 phoneme_word	ko-KR	개천가	개천까
 phoneme_word	ko-KR	개체주의	개체주이
 phoneme_word	ko-KR	개최권	개최꿘
@@ -541,7 +541,6 @@ phoneme_word	ko-KR	개탄조	개탄쪼
 phoneme_word	ko-KR	개편열	개편녈
 phoneme_word	ko-KR	개평방법	개평방뻡
 phoneme_word	ko-KR	개평법	개평뻡
-phoneme_word	ko-KR	개활지	개활찌
 phoneme_word	ko-KR	객관법	객꽌뻡
 phoneme_word	ko-KR	객관성	객꽌썽
 phoneme_word	ko-KR	객관세	객꽌쎄
@@ -633,13 +632,13 @@ phoneme_word	ko-KR	건건사사	건껀사사
 phoneme_word	ko-KR	건견율	건견뉼
 phoneme_word	ko-KR	건곤일색	건고닐쌕
 phoneme_word	ko-KR	건골독어	건골또거
-phoneme_word	ko-KR	건길지	건길찌
 phoneme_word	ko-KR	건너따옴법	건너따옴뻡
 phoneme_word	ko-KR	건달기	건달끼
 phoneme_word	ko-KR	건망성	건망썽
 phoneme_word	ko-KR	건망증	건망쯩
 phoneme_word	ko-KR	건물주	건물쭈
 phoneme_word	ko-KR	건물질	건물찔
+phoneme_word	ko-KR	건믈게	건믈게
 phoneme_word	ko-KR	건법	건뻡
 phoneme_word	ko-KR	건부병	건부뼝
 phoneme_word	ko-KR	건설대	건설때
@@ -670,6 +669,7 @@ phoneme_word	ko-KR	건칠상	건칠쌍
 phoneme_word	ko-KR	건평세	건평쎄
 phoneme_word	ko-KR	건피증	건피쯩
 phoneme_word	ko-KR	걷어안다	거더안따
+phoneme_word	ko-KR	걸걸	걸걸
 phoneme_word	ko-KR	걸대	걸때
 phoneme_word	ko-KR	걸대하다	걸때하다
 phoneme_word	ko-KR	걸대히	걸때히
@@ -799,7 +799,6 @@ phoneme_word	ko-KR	견인증	겨닌쯩
 phoneme_word	ko-KR	견종법	견종뻡
 phoneme_word	ko-KR	견줌급	견줌끕
 phoneme_word	ko-KR	견줌법	견줌뻡
-phoneme_word	ko-KR	견출지	견출찌
 phoneme_word	ko-KR	결격	결껵
 phoneme_word	ko-KR	결격하다	결껴카다
 phoneme_word	ko-KR	결골	결꼴
@@ -1019,7 +1018,6 @@ phoneme_word	ko-KR	결제창	결쩨창
 phoneme_word	ko-KR	결제하다	결쩨하다
 phoneme_word	ko-KR	결주	결쭈
 phoneme_word	ko-KR	결증	결쯩
-phoneme_word	ko-KR	결지	결찌
 phoneme_word	ko-KR	결지하다	결찌하다
 phoneme_word	ko-KR	결진	결찐
 phoneme_word	ko-KR	결진하다	결찐하다
@@ -1167,7 +1165,6 @@ phoneme_word	ko-KR	계란국	게란꾹
 phoneme_word	ko-KR	계란빛	게란삗
 phoneme_word	ko-KR	계란유골	게란뉴골
 phoneme_word	ko-KR	계림유사	게림뉴사
-phoneme_word	ko-KR	계림일지	게리밀찌
 phoneme_word	ko-KR	계림팔도	게림팔또
 phoneme_word	ko-KR	계면조	게면쪼
 phoneme_word	ko-KR	계면조원	게면쪼원
@@ -1422,7 +1419,6 @@ phoneme_word	ko-KR	골중하다	골쭝하다
 phoneme_word	ko-KR	골증	골쯩
 phoneme_word	ko-KR	골증열	골쯩녈
 phoneme_word	ko-KR	골증증	골쯩쯩
-phoneme_word	ko-KR	골지	골찌
 phoneme_word	ko-KR	골질	골찔
 phoneme_word	ko-KR	골패세	골패쎄
 phoneme_word	ko-KR	골풀과	골풀꽈
@@ -1481,6 +1477,7 @@ phoneme_word	ko-KR	공명장	공명짱
 phoneme_word	ko-KR	공명주의	공명주이
 phoneme_word	ko-KR	공모가	공모까
 phoneme_word	ko-KR	공무원증	공무원쯩
+phoneme_word	ko-KR	공물지	공물지
 phoneme_word	ko-KR	공민권	공민꿘
 phoneme_word	ko-KR	공민권법	공민꿘뻡
 phoneme_word	ko-KR	공밥	공빱
@@ -1508,7 +1505,6 @@ phoneme_word	ko-KR	공성야전	공성냐전
 phoneme_word	ko-KR	공성약지	공성냑찌
 phoneme_word	ko-KR	공성약지하다	공성냑찌하다
 phoneme_word	ko-KR	공성탄신연화	공성탄신년화
-phoneme_word	ko-KR	공성탈지	공성탈찌
 phoneme_word	ko-KR	공성탈지하다	공성탈찌하다
 phoneme_word	ko-KR	공세포법	공세포뻡
 phoneme_word	ko-KR	공소권	공소꿘
@@ -1683,7 +1679,6 @@ phoneme_word	ko-KR	관인요금	과닌뇨금
 phoneme_word	ko-KR	관재수	관재쑤
 phoneme_word	ko-KR	관절농증	관절롱쯩
 phoneme_word	ko-KR	관절염	관절렴
-phoneme_word	ko-KR	관절지	관절찌
 phoneme_word	ko-KR	관절지폐	관절찌페
 phoneme_word	ko-KR	관제권	관제꿘
 phoneme_word	ko-KR	관주인	관쭈인
@@ -1695,7 +1690,6 @@ phoneme_word	ko-KR	관풍찰속	관풍찰쏙
 phoneme_word	ko-KR	관풍찰속하다	관풍찰쏘카다
 phoneme_word	ko-KR	관할권	관할꿘
 phoneme_word	ko-KR	관할서	관할써
-phoneme_word	ko-KR	관할지	관할찌
 phoneme_word	ko-KR	관형격	관형껵
 phoneme_word	ko-KR	관형구	관형꾸
 phoneme_word	ko-KR	관형법	관형뻡
@@ -2137,7 +2131,6 @@ phoneme_word	ko-KR	굴절학	굴쩔학
 phoneme_word	ko-KR	굴족강	굴쪽깡
 phoneme_word	ko-KR	굴종	굴쫑
 phoneme_word	ko-KR	굴종하다	굴쫑하다
-phoneme_word	ko-KR	굴지	굴찌
 phoneme_word	ko-KR	굴지계수	굴찌게수
 phoneme_word	ko-KR	굴지계일	굴찌게일
 phoneme_word	ko-KR	굴지근	굴찌근
@@ -2163,7 +2156,6 @@ phoneme_word	ko-KR	굽혀폄성	구펴폄썽
 phoneme_word	ko-KR	굿옷	구돋
 phoneme_word	ko-KR	굿일	군닐
 phoneme_word	ko-KR	굿일꾼	군닐꾼
-phoneme_word	ko-KR	궁궐지	궁궐찌
 phoneme_word	ko-KR	궁글대	궁글때
 phoneme_word	ko-KR	궁금증	궁금쯩
 phoneme_word	ko-KR	궁기	궁끼
@@ -2223,7 +2215,6 @@ phoneme_word	ko-KR	궐종	궐쫑
 phoneme_word	ko-KR	궐종서부	궐쫑서부
 phoneme_word	ko-KR	궐중	궐쭝
 phoneme_word	ko-KR	궐증	궐쯩
-phoneme_word	ko-KR	궐지	궐찌
 phoneme_word	ko-KR	궐지하다	궐찌하다
 phoneme_word	ko-KR	궐직	궐찍
 phoneme_word	ko-KR	궐직하다	궐찌카다
@@ -2343,6 +2334,7 @@ phoneme_word	ko-KR	그믐밤	그믐빰
 phoneme_word	ko-KR	그믐장	그믐짱
 phoneme_word	ko-KR	그을음병	그으름뼝
 phoneme_word	ko-KR	그전번	그전뻔
+phoneme_word	ko-KR	그칠지	그칠지
 phoneme_word	ko-KR	극기주의	극끼주이
 phoneme_word	ko-KR	극단론	극딴논
 phoneme_word	ko-KR	극단론자	극딴논자
@@ -2352,7 +2344,6 @@ phoneme_word	ko-KR	극도법	극또뻡
 phoneme_word	ko-KR	극명성	긍명썽
 phoneme_word	ko-KR	극사실주의	극싸실주이
 phoneme_word	ko-KR	극산병	극싼뼝
-phoneme_word	ko-KR	극선일지	극써닐찌
 phoneme_word	ko-KR	극성병	극썽뼝
 phoneme_word	ko-KR	극소점	극쏘쩜
 phoneme_word	ko-KR	극영화	긍녕화
@@ -2469,6 +2460,7 @@ phoneme_word	ko-KR	금망유리	금망뉴리
 phoneme_word	ko-KR	금문자	금문짜
 phoneme_word	ko-KR	금물가	금물까
 phoneme_word	ko-KR	금물결	금물껼
+phoneme_word	ko-KR	금발게	금발게
 phoneme_word	ko-KR	금법	금뻡
 phoneme_word	ko-KR	금빛	금삗
 phoneme_word	ko-KR	금빛돌비늘	금삗똘비늘
@@ -2581,14 +2573,11 @@ phoneme_word	ko-KR	기린영양	기린녕양
 phoneme_word	ko-KR	기마경찰대	기마경찰때
 phoneme_word	ko-KR	기만성	기만썽
 phoneme_word	ko-KR	기면증	기면쯩
-phoneme_word	ko-KR	기명절지	기명절찌
-phoneme_word	ko-KR	기명절지도	기명절찌도
 phoneme_word	ko-KR	기명절지화	기명절찌화
 phoneme_word	ko-KR	기모내의	기모내이
 phoneme_word	ko-KR	기민성	기민썽
 phoneme_word	ko-KR	기발이승	기발리승
 phoneme_word	ko-KR	기범연의	기범녀니
-phoneme_word	ko-KR	기별지	기별찌
 phoneme_word	ko-KR	기보법	기보뻡
 phoneme_word	ko-KR	기복출사	기복출싸
 phoneme_word	ko-KR	기복출사하다	기복출싸하다
@@ -2700,6 +2689,7 @@ phoneme_word	ko-KR	긴잎회양목	긴니푀양목
 phoneme_word	ko-KR	긴자진한잎	긴자진한닙
 phoneme_word	ko-KR	긴장병	긴장뼝
 phoneme_word	ko-KR	긴장증	긴장쯩
+phoneme_word	ko-KR	긴집게발게	긴집께발게
 phoneme_word	ko-KR	긴촉이음	긴총니음
 phoneme_word	ko-KR	긴화살여뀌	긴화살려뀌
 phoneme_word	ko-KR	길가	길까
@@ -2764,7 +2754,6 @@ phoneme_word	ko-KR	길주	길쭈
 phoneme_word	ko-KR	길주군	길쭈군
 phoneme_word	ko-KR	길주요	길쭈요
 phoneme_word	ko-KR	길즉대흉	길쯕때흉
-phoneme_word	ko-KR	길지	길찌
 phoneme_word	ko-KR	길짐	길찜
 phoneme_word	ko-KR	길짐승	길찜승
 phoneme_word	ko-KR	길징	길찡
@@ -2776,7 +2765,6 @@ phoneme_word	ko-KR	김달순	김달쑨
 phoneme_word	ko-KR	김발	김빨
 phoneme_word	ko-KR	김부의	김부이
 phoneme_word	ko-KR	김순의	김수니
-phoneme_word	ko-KR	김알지	기말찌
 phoneme_word	ko-KR	김의	기미
 phoneme_word	ko-KR	김일손	기밀쏜
 phoneme_word	ko-KR	김장감	김장깜
@@ -2973,7 +2961,6 @@ phoneme_word	ko-KR	낟알기	나달끼
 phoneme_word	ko-KR	낟알짚	나달찝
 phoneme_word	ko-KR	날개멸과	날개멸꽈
 phoneme_word	ko-KR	날개힘살	날개힘쌀
-phoneme_word	ko-KR	날걸	날껄
 phoneme_word	ko-KR	날구멍	날꾸멍
 phoneme_word	ko-KR	날귀	날뀌
 phoneme_word	ko-KR	날다람쥐	날따람쥐
@@ -3299,6 +3286,7 @@ phoneme_word	ko-KR	녹말가루	농말까루
 phoneme_word	ko-KR	녹말값	농말깝
 phoneme_word	ko-KR	녹말유	농말류
 phoneme_word	ko-KR	녹말잎	농말립
+phoneme_word	ko-KR	녹말지	농말지
 phoneme_word	ko-KR	녹말질	농말찔
 phoneme_word	ko-KR	녹사의	녹싸이
 phoneme_word	ko-KR	녹색하늘소	녹쌔카늘쏘
@@ -3312,7 +3300,6 @@ phoneme_word	ko-KR	논골	논꼴
 phoneme_word	ko-KR	논귀	논뀌
 phoneme_word	ko-KR	논길	논낄
 phoneme_word	ko-KR	논김	논낌
-phoneme_word	ko-KR	논다	논따
 phoneme_word	ko-KR	논다랑이	논따랑이
 phoneme_word	ko-KR	논도랑	논또랑
 phoneme_word	ko-KR	논두렁	논뚜렁
@@ -3985,7 +3972,6 @@ phoneme_word	ko-KR	대용유	대용뉴
 phoneme_word	ko-KR	대용융법	대용융뻡
 phoneme_word	ko-KR	대우법	대우뻡
 phoneme_word	ko-KR	대원의	대워니
-phoneme_word	ko-KR	대월지	대월찌
 phoneme_word	ko-KR	대위법	대위뻡
 phoneme_word	ko-KR	대유법	대유뻡
 phoneme_word	ko-KR	대율사	대율싸
@@ -4352,6 +4338,7 @@ phoneme_word	ko-KR	동물욕	동물룍
 phoneme_word	ko-KR	동물유	동물류
 phoneme_word	ko-KR	동물적	동물쩍
 phoneme_word	ko-KR	동물주의	동물주이
+phoneme_word	ko-KR	동물지	동물지
 phoneme_word	ko-KR	동물질	동물찔
 phoneme_word	ko-KR	동반병	동반뼝
 phoneme_word	ko-KR	동발이음	동발리음
@@ -4973,7 +4960,7 @@ phoneme_word	ko-KR	말좌하다	말쫘하다
 phoneme_word	ko-KR	말주머니	말쭈머니
 phoneme_word	ko-KR	말주변	말쭈변
 phoneme_word	ko-KR	말증	말쯩
-phoneme_word	ko-KR	말지	말찌
+phoneme_word	ko-KR	말지도	말지도
 phoneme_word	ko-KR	말직	말찍
 phoneme_word	ko-KR	말집	말찝
 phoneme_word	ko-KR	말짓기증	말짇끼쯩
@@ -5275,10 +5262,12 @@ phoneme_word	ko-KR	모내기법	모내기뻡
 phoneme_word	ko-KR	모내의	모내이
 phoneme_word	ko-KR	모듬연장	모듬년장
 phoneme_word	ko-KR	모래기	모래끼
+phoneme_word	ko-KR	모말게	모말게
 phoneme_word	ko-KR	모말집	모말찝
 phoneme_word	ko-KR	모멸적	모멸쩍
 phoneme_word	ko-KR	모몰염치	모몰렴치
 phoneme_word	ko-KR	모몰염치하다	모몰렴치하다
+phoneme_word	ko-KR	모밀게	모밀게
 phoneme_word	ko-KR	모반죄	모반쬐
 phoneme_word	ko-KR	모반증	모반쯩
 phoneme_word	ko-KR	모방성	모방썽
@@ -5390,7 +5379,6 @@ phoneme_word	ko-KR	몰인격하다	모린껴카다
 phoneme_word	ko-KR	몰자비	몰짜비
 phoneme_word	ko-KR	몰자한	몰짜한
 phoneme_word	ko-KR	몰정하다	몰쩡하다
-phoneme_word	ko-KR	몰지	몰찌
 phoneme_word	ko-KR	몸값	몸깝
 phoneme_word	ko-KR	몸결	몸껼
 phoneme_word	ko-KR	몸고생	몸꼬생
@@ -5434,6 +5422,7 @@ phoneme_word	ko-KR	몽한약	몽한냑
 phoneme_word	ko-KR	묏등	뫼뜽
 phoneme_word	ko-KR	묏바람	뫼빠람
 phoneme_word	ko-KR	묏자리	뫼짜리
+phoneme_word	ko-KR	묘관찰지	묘관찰지
 phoneme_word	ko-KR	묘길상	묘길쌍
 phoneme_word	ko-KR	묘법연화경	묘범년화경
 phoneme_word	ko-KR	묘법연화경언해	묘범년화경언해
@@ -5469,6 +5458,7 @@ phoneme_word	ko-KR	무농염철사	무농염철싸
 phoneme_word	ko-KR	무뇌증	무뇌쯩
 phoneme_word	ko-KR	무뇨증	무뇨쯩
 phoneme_word	ko-KR	무늬곤봉하늘소	무니곤봉하늘쏘
+phoneme_word	ko-KR	무늬발게	무니발게
 phoneme_word	ko-KR	무단결석	무단결썩
 phoneme_word	ko-KR	무단결석하다	무단결써카다
 phoneme_word	ko-KR	무당연유	무당녀뉴
@@ -5479,6 +5469,7 @@ phoneme_word	ko-KR	무덤길	무덤낄
 phoneme_word	ko-KR	무도덕주의	무도덕쭈이
 phoneme_word	ko-KR	무도병	무도뼝
 phoneme_word	ko-KR	무도수	무도쑤
+phoneme_word	ko-KR	무딘이빨게	무디니빨게
 phoneme_word	ko-KR	무료승차권	무료승차꿘
 phoneme_word	ko-KR	무루법	무루뻡
 phoneme_word	ko-KR	무른철심	무른철씸
@@ -5499,6 +5490,7 @@ phoneme_word	ko-KR	무발생	무발쌩
 phoneme_word	ko-KR	무방향성	무방향썽
 phoneme_word	ko-KR	무벌적	무벌쩍
 phoneme_word	ko-KR	무부세	무부쎄
+phoneme_word	ko-KR	무분별지	무분별지
 phoneme_word	ko-KR	무불성	무불썽
 phoneme_word	ko-KR	무비일색	무비일쌕
 phoneme_word	ko-KR	무사불섭	무사불썹
@@ -5536,7 +5528,6 @@ phoneme_word	ko-KR	무언용사	무언뇽사
 phoneme_word	ko-KR	무언증	무언쯩
 phoneme_word	ko-KR	무역별장	무역뼐짱
 phoneme_word	ko-KR	무연관성	무연관썽
-phoneme_word	ko-KR	무열지	무열찌
 phoneme_word	ko-KR	무열지곡	무열찌곡
 phoneme_word	ko-KR	무염산증	무염산쯩
 phoneme_word	ko-KR	무용건	무용껀
@@ -5620,7 +5611,6 @@ phoneme_word	ko-KR	문권	문꿘
 phoneme_word	ko-KR	문기둥	문끼둥
 phoneme_word	ko-KR	문기수	문끼수
 phoneme_word	ko-KR	문길	문낄
-phoneme_word	ko-KR	문다	문따
 phoneme_word	ko-KR	문단론	문단논
 phoneme_word	ko-KR	문동개	문똥개
 phoneme_word	ko-KR	문둥병	문둥뼝
@@ -6088,7 +6078,6 @@ phoneme_word	ko-KR	밀종	밀쫑
 phoneme_word	ko-KR	밀주	밀쭈
 phoneme_word	ko-KR	밀주하다	밀쭈하다
 phoneme_word	ko-KR	밀줏집	밀쭏찝
-phoneme_word	ko-KR	밀지	밀찌
 phoneme_word	ko-KR	밀직부사	밀찍뿌사
 phoneme_word	ko-KR	밀직사	밀찍싸
 phoneme_word	ko-KR	밀직사사	밀찍싸사
@@ -6181,8 +6170,10 @@ phoneme_word	ko-KR	바탕감	바탕깜
 phoneme_word	ko-KR	박리주의	방니주이
 phoneme_word	ko-KR	박문약례	방문냥네
 phoneme_word	ko-KR	박문약례하다	방문냥네하다
+phoneme_word	ko-KR	박물지	방물지
 phoneme_word	ko-KR	박빙여림	박삥녀림
 phoneme_word	ko-KR	박빙여림하다	박삥녀림하다
+phoneme_word	ko-KR	박뿔게	박뿔게
 phoneme_word	ko-KR	박산가루	박싼까루
 phoneme_word	ko-KR	박산로	박싼노
 phoneme_word	ko-KR	박애주의	바개주이
@@ -6290,7 +6281,6 @@ phoneme_word	ko-KR	반찬속	반찬쏙
 phoneme_word	ko-KR	반체제성	반체제썽
 phoneme_word	ko-KR	반추증	반추쯩
 phoneme_word	ko-KR	반출증	반출쯩
-phoneme_word	ko-KR	반출지	반출찌
 phoneme_word	ko-KR	반치법	반치뻡
 phoneme_word	ko-KR	반턱이음	반텅니음
 phoneme_word	ko-KR	반토굴집	반토굴찝
@@ -6324,7 +6314,6 @@ phoneme_word	ko-KR	발광균류	발광균뉴
 phoneme_word	ko-KR	발광멸과	발광멸꽈
 phoneme_word	ko-KR	발굴대	발굴때
 phoneme_word	ko-KR	발굴자	발굴짜
-phoneme_word	ko-KR	발굴지	발굴찌
 phoneme_word	ko-KR	발굽	발꿉
 phoneme_word	ko-KR	발굽행	발꾸팽
 phoneme_word	ko-KR	발권	발꿘
@@ -6564,7 +6553,6 @@ phoneme_word	ko-KR	발주저리	발쭈저리
 phoneme_word	ko-KR	발주처	발쭈처
 phoneme_word	ko-KR	발주하다	발쭈하다
 phoneme_word	ko-KR	발줄	발쭐
-phoneme_word	ko-KR	발지	발찌
 phoneme_word	ko-KR	발진	발찐
 phoneme_word	ko-KR	발진관	발찐관
 phoneme_word	ko-KR	발진기	발찐기
@@ -7008,6 +6996,7 @@ phoneme_word	ko-KR	변호권	변호꿘
 phoneme_word	ko-KR	변호사법	변호사뻡
 phoneme_word	ko-KR	변화법	변화뻡
 phoneme_word	ko-KR	별건	별껀
+phoneme_word	ko-KR	별게	별게
 phoneme_word	ko-KR	별격	별껵
 phoneme_word	ko-KR	별단	별딴
 phoneme_word	ko-KR	별당	별땅
@@ -7099,7 +7088,6 @@ phoneme_word	ko-KR	별주부전	별쭈부전
 phoneme_word	ko-KR	별줄	별쭐
 phoneme_word	ko-KR	별중승	별쭝승
 phoneme_word	ko-KR	별증	별쯩
-phoneme_word	ko-KR	별지	별찌
 phoneme_word	ko-KR	별집	별찝
 phoneme_word	ko-KR	볏짚이엉	볃찌비엉
 phoneme_word	ko-KR	병결생	병결쌩
@@ -7151,7 +7139,6 @@ phoneme_word	ko-KR	보건림	보건님
 phoneme_word	ko-KR	보격	보껵
 phoneme_word	ko-KR	보결생	보결쌩
 phoneme_word	ko-KR	보고장	보고짱
-phoneme_word	ko-KR	보골지	보골찌
 phoneme_word	ko-KR	보관료	보관뇨
 phoneme_word	ko-KR	보관료율	보관뇨율
 phoneme_word	ko-KR	보관림	보관님
@@ -7355,7 +7342,6 @@ phoneme_word	ko-KR	부권제	부꿘제
 phoneme_word	ko-KR	부기법	부기뻡
 phoneme_word	ko-KR	부기장	부기짱
 phoneme_word	ko-KR	부끄럼성	부끄럼썽
-phoneme_word	ko-KR	부녀필지	부녀필찌
 phoneme_word	ko-KR	부단염불	부단념불
 phoneme_word	ko-KR	부달시의	부달시이
 phoneme_word	ko-KR	부담짐	부담찜
@@ -7411,7 +7397,6 @@ phoneme_word	ko-KR	부인병	부인뼝
 phoneme_word	ko-KR	부인약	부인냑
 phoneme_word	ko-KR	부인용	부인뇽
 phoneme_word	ko-KR	부인의	부이니
-phoneme_word	ko-KR	부인필지	부인필찌
 phoneme_word	ko-KR	부자연성	부자연썽
 phoneme_word	ko-KR	부저병	부저뼝
 phoneme_word	ko-KR	부절여루	부절려루
@@ -7495,6 +7480,7 @@ phoneme_word	ko-KR	분문열호하다	분문녈호하다
 phoneme_word	ko-KR	분발심	분발씸
 phoneme_word	ko-KR	분배세	분배쎄
 phoneme_word	ko-KR	분법	분뻡
+phoneme_word	ko-KR	분별지	분별지
 phoneme_word	ko-KR	분부세	분부쎄
 phoneme_word	ko-KR	분산법	분산뻡
 phoneme_word	ko-KR	분산성	분산썽
@@ -7569,6 +7555,7 @@ phoneme_word	ko-KR	불거웃	불꺼욷
 phoneme_word	ko-KR	불건성유	불건성뉴
 phoneme_word	ko-KR	불건유	불건뉴
 phoneme_word	ko-KR	불것	불껃
+phoneme_word	ko-KR	불게	불게
 phoneme_word	ko-KR	불견실성	불견실썽
 phoneme_word	ko-KR	불결실	불결씰
 phoneme_word	ko-KR	불결실하다	불결씰하다
@@ -7908,7 +7895,6 @@ phoneme_word	ko-KR	불좌대	불쫘대
 phoneme_word	ko-KR	불좌수	불쫘수
 phoneme_word	ko-KR	불줄	불쭐
 phoneme_word	ko-KR	불줄기	불쭐기
-phoneme_word	ko-KR	불지	불찌
 phoneme_word	ko-KR	불집	불찝
 phoneme_word	ko-KR	불철저	불철쩌
 phoneme_word	ko-KR	불철저성	불철쩌썽
@@ -8108,7 +8094,6 @@ phoneme_word	ko-KR	빙점	빙쩜
 phoneme_word	ko-KR	빙점법	빙쩜뻡
 phoneme_word	ko-KR	빙점하	빙쩜하
 phoneme_word	ko-KR	빙정점	빙정쩜
-phoneme_word	ko-KR	빙천설지	빙천설찌
 phoneme_word	ko-KR	빙탄불상용	빙탄불쌍용
 phoneme_word	ko-KR	빙판길	빙판낄
 phoneme_word	ko-KR	빙하성	빙하썽
@@ -8153,6 +8138,7 @@ phoneme_word	ko-KR	뽕잎피나무	뽕닙피나무
 phoneme_word	ko-KR	뾰족날개나방과	뾰종날개나방꽈
 phoneme_word	ko-KR	뿌리꼴잎	뿌리꼴립
 phoneme_word	ko-KR	뿌리꽂이법	뿌리꼬지뻡
+phoneme_word	ko-KR	뿔게	뿔게
 phoneme_word	ko-KR	뿔나방과	뿔라방꽈
 phoneme_word	ko-KR	뿔논병아리	뿔론뼝아리
 phoneme_word	ko-KR	뿔다귀	뿔따귀
@@ -8222,7 +8208,6 @@ phoneme_word	ko-KR	사문유취	사문뉴취
 phoneme_word	ko-KR	사미율의	사미유리
 phoneme_word	ko-KR	사미할식	사미할씩
 phoneme_word	ko-KR	사민집	사민찝
-phoneme_word	ko-KR	사민필지	사민필찌
 phoneme_word	ko-KR	사반맹증	사반맹쯩
 phoneme_word	ko-KR	사발고의	사발고이
 phoneme_word	ko-KR	사발밥	사발빱
@@ -8311,7 +8296,6 @@ phoneme_word	ko-KR	사장보법	사장보뻡
 phoneme_word	ko-KR	사장조	사장쪼
 phoneme_word	ko-KR	사전죄	사전쬐
 phoneme_word	ko-KR	사절단	사절딴
-phoneme_word	ko-KR	사절지	사절찌
 phoneme_word	ko-KR	사정권	사정꿘
 phoneme_word	ko-KR	사정세	사정쎄
 phoneme_word	ko-KR	사제권	사제꿘
@@ -8493,7 +8477,6 @@ phoneme_word	ko-KR	산짐승	산찜승
 phoneme_word	ko-KR	산집	산찝
 phoneme_word	ko-KR	산천물색	산천물쌕
 phoneme_word	ko-KR	산출가	산출까
-phoneme_word	ko-KR	산출지	산출찌
 phoneme_word	ko-KR	산취법	산취뻡
 phoneme_word	ko-KR	산통계	산통께
 phoneme_word	ko-KR	산파법	산파뻡
@@ -8802,6 +8785,7 @@ phoneme_word	ko-KR	상정예문	상정네문
 phoneme_word	ko-KR	상제법	상제뻡
 phoneme_word	ko-KR	상종가	상종까
 phoneme_word	ko-KR	상지구법	상지구뻡
+phoneme_word	ko-KR	상질지	상질지
 phoneme_word	ko-KR	상징법	상징뻡
 phoneme_word	ko-KR	상징성	상징썽
 phoneme_word	ko-KR	상징주의	상징주이
@@ -8934,7 +8918,6 @@ phoneme_word	ko-KR	생전예수재	생전네수재
 phoneme_word	ko-KR	생정불신	생정불씬
 phoneme_word	ko-KR	생정불신하다	생정불씬하다
 phoneme_word	ko-KR	생존권	생존꿘
-phoneme_word	ko-KR	생지살지	생지살찌
 phoneme_word	ko-KR	생지살지하다	생지살찌하다
 phoneme_word	ko-KR	생지주의	생지주이
 phoneme_word	ko-KR	생질색	생질쌕
@@ -8949,6 +8932,7 @@ phoneme_word	ko-KR	생활용수	생활룡수
 phoneme_word	ko-KR	생활용품	생활룡품
 phoneme_word	ko-KR	생활적	생활쩍
 phoneme_word	ko-KR	생활점	생활쩜
+phoneme_word	ko-KR	생활지	생활지
 phoneme_word	ko-KR	생활필수품	생활필쑤품
 phoneme_word	ko-KR	서교증	서교쯩
 phoneme_word	ko-KR	서구권	서구꿘
@@ -8981,7 +8965,6 @@ phoneme_word	ko-KR	서자잠	서짜잠
 phoneme_word	ko-KR	서자지	서짜지
 phoneme_word	ko-KR	서정성	서정썽
 phoneme_word	ko-KR	서차법	서차뻡
-phoneme_word	ko-KR	서출지	서출찌
 phoneme_word	ko-KR	서향집	서향찝
 phoneme_word	ko-KR	석가일대	석까일때
 phoneme_word	ko-KR	석과불식	석꽈불씩
@@ -9386,7 +9369,6 @@ phoneme_word	ko-KR	소두증	소두쯩
 phoneme_word	ko-KR	소둔로	소둔노
 phoneme_word	ko-KR	소득세법	소득쎄뻡
 phoneme_word	ko-KR	소리글자	소리글짜
-phoneme_word	ko-KR	소림일지	소리밀찌
 phoneme_word	ko-KR	소말제	소말쩨
 phoneme_word	ko-KR	소매가	소매까
 phoneme_word	ko-KR	소매가격	소매까격
@@ -9401,7 +9383,6 @@ phoneme_word	ko-KR	소백의	소배기
 phoneme_word	ko-KR	소백장의	소백짱이
 phoneme_word	ko-KR	소법	소뻡
 phoneme_word	ko-KR	소변여력	소변녀력
-phoneme_word	ko-KR	소별지	소별찌
 phoneme_word	ko-KR	소불개의	소불개이
 phoneme_word	ko-KR	소불여의	소부려이
 phoneme_word	ko-KR	소비세	소비쎄
@@ -9996,7 +9977,6 @@ phoneme_word	ko-KR	술주정꾼	술쭈정꾼
 phoneme_word	ko-KR	술주정뱅이	술쭈정뱅이
 phoneme_word	ko-KR	술주정하다	술쭈정하다
 phoneme_word	ko-KR	술중	술쭝
-phoneme_word	ko-KR	술지	술찌
 phoneme_word	ko-KR	술직	술찍
 phoneme_word	ko-KR	술직하다	술찌카다
 phoneme_word	ko-KR	술집	술찝
@@ -10153,6 +10133,7 @@ phoneme_word	ko-KR	식물병학	싱물뼝학
 phoneme_word	ko-KR	식물상	싱물쌍
 phoneme_word	ko-KR	식물성	싱물썽
 phoneme_word	ko-KR	식물유	싱물류
+phoneme_word	ko-KR	식물지	싱물지
 phoneme_word	ko-KR	식물질	싱물찔
 phoneme_word	ko-KR	식민주의	싱민주이
 phoneme_word	ko-KR	식민지주의	싱민지주이
@@ -10530,7 +10511,6 @@ phoneme_word	ko-KR	실증성	실쯩썽
 phoneme_word	ko-KR	실증적	실쯩적
 phoneme_word	ko-KR	실증주의	실쯩주이
 phoneme_word	ko-KR	실증하다	실쯩하다
-phoneme_word	ko-KR	실지	실찌
 phoneme_word	ko-KR	실지로	실찌로
 phoneme_word	ko-KR	실지보리	실찌보리
 phoneme_word	ko-KR	실지적	실찌적
@@ -10740,6 +10720,7 @@ phoneme_word	ko-KR	아긋아긋하다	아그다그타다
 phoneme_word	ko-KR	아깆아깆	아기다긷
 phoneme_word	ko-KR	아깆아깆하다	아기다기타다
 phoneme_word	ko-KR	아누달용왕	아누달룡왕
+phoneme_word	ko-KR	아누달지	아누달지
 phoneme_word	ko-KR	아담성	아담썽
 phoneme_word	ko-KR	아동병	아동뼝
 phoneme_word	ko-KR	아동용	아동뇽
@@ -10840,7 +10821,6 @@ phoneme_word	ko-KR	안깃	안낃
 phoneme_word	ko-KR	안깃선	안낃썬
 phoneme_word	ko-KR	안내장	안내짱
 phoneme_word	ko-KR	안녕질서	안녕질써
-phoneme_word	ko-KR	안다	안따
 phoneme_word	ko-KR	안다리	안따리
 phoneme_word	ko-KR	안단	안딴
 phoneme_word	ko-KR	안단감	안딴깜
@@ -10993,7 +10973,6 @@ phoneme_word	ko-KR	알족	알쪽
 phoneme_word	ko-KR	알족하다	알쪼카다
 phoneme_word	ko-KR	알주	알쭈
 phoneme_word	ko-KR	알주하다	알쭈하다
-phoneme_word	ko-KR	알지	알찌
 phoneme_word	ko-KR	알지하다	알찌하다
 phoneme_word	ko-KR	알집	알찝
 phoneme_word	ko-KR	알천양산촌	알천냥산촌
@@ -11078,7 +11057,6 @@ phoneme_word	ko-KR	애이불상	애이불쌍
 phoneme_word	ko-KR	애이불상하다	애이불쌍하다
 phoneme_word	ko-KR	애인여기	애인녀기
 phoneme_word	ko-KR	애인여기하다	애인녀기하다
-phoneme_word	ko-KR	애지휼지	애지휼찌
 phoneme_word	ko-KR	애지휼지하다	애지휼찌하다
 phoneme_word	ko-KR	애찬성	애찬썽
 phoneme_word	ko-KR	애타주의	애타주이
@@ -11401,8 +11379,10 @@ phoneme_word	ko-KR	여사건	여사껀
 phoneme_word	ko-KR	여산약해	여산냐캐
 phoneme_word	ko-KR	여산약해하다	여산냐캐하다
 phoneme_word	ko-KR	여섯꽃잎	여섣꼰닙
+phoneme_word	ko-KR	여섯발게	여섣빨게
 phoneme_word	ko-KR	여섯잇단음표	여서딛따늠표
 phoneme_word	ko-KR	여섯잎꽃	여선닙꼳
+phoneme_word	ko-KR	여실지	여실지
 phoneme_word	ko-KR	여싯여싯	여시뎌싣
 phoneme_word	ko-KR	여싯여싯하다	여시뎌시타다
 phoneme_word	ko-KR	여염집	여염찝
@@ -11750,7 +11730,6 @@ phoneme_word	ko-KR	열중되다	열쭝되다
 phoneme_word	ko-KR	열중쉬어	열쭝쉬여
 phoneme_word	ko-KR	열중하다	열쭝하다
 phoneme_word	ko-KR	열증	열쯩
-phoneme_word	ko-KR	열지	열찌
 phoneme_word	ko-KR	열지하다	열찌하다
 phoneme_word	ko-KR	열진	열찐
 phoneme_word	ko-KR	열진하다	열찐하다
@@ -11860,6 +11839,7 @@ phoneme_word	ko-KR	영향권	영향꿘
 phoneme_word	ko-KR	영향성	영향썽
 phoneme_word	ko-KR	영험약초	영험냑초
 phoneme_word	ko-KR	영화법	영화뻡
+phoneme_word	ko-KR	옆길게	엽낄게
 phoneme_word	ko-KR	옆아가미	여바가미
 phoneme_word	ko-KR	옆얼굴	여벌굴
 phoneme_word	ko-KR	옆옆이	염녀피
@@ -12176,6 +12156,7 @@ phoneme_word	ko-KR	요점	요쩜
 phoneme_word	ko-KR	요주의	요주이
 phoneme_word	ko-KR	요지주의	요지주이
 phoneme_word	ko-KR	요행수	요행쑤
+phoneme_word	ko-KR	욕불게	욕뿔게
 phoneme_word	ko-KR	욕심보	욕씸뽀
 phoneme_word	ko-KR	욕의	요기
 phoneme_word	ko-KR	욧잇	욘닏
@@ -12238,7 +12219,6 @@ phoneme_word	ko-KR	용혈수	용혈쑤
 phoneme_word	ko-KR	우가원소	우까원소
 phoneme_word	ko-KR	우각유	우강뉴
 phoneme_word	ko-KR	우골유	우골류
-phoneme_word	ko-KR	우골지	우골찌
 phoneme_word	ko-KR	우긋우긋	우그두귿
 phoneme_word	ko-KR	우긋우긋하다	우그두그타다
 phoneme_word	ko-KR	우기성	우기썽
@@ -12606,7 +12586,6 @@ phoneme_word	ko-KR	월족형	월쪼켱
 phoneme_word	ko-KR	월종	월쫑
 phoneme_word	ko-KR	월주	월쭈
 phoneme_word	ko-KR	월중	월쭝
-phoneme_word	ko-KR	월지	월찌
 phoneme_word	ko-KR	월지국	월찌국
 phoneme_word	ko-KR	월지악전	월찌악쩐
 phoneme_word	ko-KR	월직사자	월찍싸자
@@ -12656,6 +12635,7 @@ phoneme_word	ko-KR	위헌성	위헌썽
 phoneme_word	ko-KR	위험성	위험썽
 phoneme_word	ko-KR	위황병	위황뼝
 phoneme_word	ko-KR	윗강여각	윋깡녀각
+phoneme_word	ko-KR	윗길지	윋낄지
 phoneme_word	ko-KR	윗눈시울	윈눈씨울
 phoneme_word	ko-KR	윗당줄	윋땅쭐
 phoneme_word	ko-KR	윗막이문골	윈마기문꼴
@@ -12715,7 +12695,6 @@ phoneme_word	ko-KR	유산여행	유산녀행
 phoneme_word	ko-KR	유산염	유산념
 phoneme_word	ko-KR	유산율	유산뉼
 phoneme_word	ko-KR	유색야채	유생냐채
-phoneme_word	ko-KR	유서필지	유서필찌
 phoneme_word	ko-KR	유선염	유선념
 phoneme_word	ko-KR	유선증	유선쯩
 phoneme_word	ko-KR	유소성	유소썽
@@ -13023,7 +13002,6 @@ phoneme_word	ko-KR	의유당관북유람일기	으유당관붕뉴라밀기
 phoneme_word	ko-KR	의의	으이
 phoneme_word	ko-KR	의인법	으인뻡
 phoneme_word	ko-KR	의인주의	으인주이
-phoneme_word	ko-KR	의자궐지	으자궐찌
 phoneme_word	ko-KR	의장권	으장꿘
 phoneme_word	ko-KR	의장법	으장뻡
 phoneme_word	ko-KR	의점	으쩜
@@ -13064,6 +13042,7 @@ phoneme_word	ko-KR	이락유정	이랑뉴정
 phoneme_word	ko-KR	이론값	이론깝
 phoneme_word	ko-KR	이롱증	이롱쯩
 phoneme_word	ko-KR	이륜행실도	이륜행실또
+phoneme_word	ko-KR	이를지	이를지
 phoneme_word	ko-KR	이름값	이름깝
 phoneme_word	ko-KR	이름법	이름뻡
 phoneme_word	ko-KR	이름자	이름짜
@@ -13326,7 +13305,6 @@ phoneme_word	ko-KR	인지세법	인지쎄뻡
 phoneme_word	ko-KR	인지의	인지이
 phoneme_word	ko-KR	인진대황알약	인진대황알략
 phoneme_word	ko-KR	인찰소	인찰쏘
-phoneme_word	ko-KR	인찰지	인찰찌
 phoneme_word	ko-KR	인출불성	인출불썽
 phoneme_word	ko-KR	인출선	인출썬
 phoneme_word	ko-KR	인허장	인허짱
@@ -13896,7 +13874,6 @@ phoneme_word	ko-KR	일증	일쯩
 phoneme_word	ko-KR	일증월가	일쯩월가
 phoneme_word	ko-KR	일증월가하다	일쯩월가하다
 phoneme_word	ko-KR	일증하다	일쯩하다
-phoneme_word	ko-KR	일지	일찌
 phoneme_word	ko-KR	일지군	일찌군
 phoneme_word	ko-KR	일지록	일찌록
 phoneme_word	ko-KR	일지반전	일찌반전
@@ -14498,7 +14475,6 @@ phoneme_word	ko-KR	적대성	적때썽
 phoneme_word	ko-KR	적도권	적또꿘
 phoneme_word	ko-KR	적도의	적또이
 phoneme_word	ko-KR	적륜법	정뉸뻡
-phoneme_word	ko-KR	적멸지도	정멸찌도
 phoneme_word	ko-KR	적모구증	정모구쯩
 phoneme_word	ko-KR	적반병	적빤뼝
 phoneme_word	ko-KR	적발권	적빨꿘
@@ -14846,7 +14822,6 @@ phoneme_word	ko-KR	절중하다	절쭝하다
 phoneme_word	ko-KR	절증	절쯩
 phoneme_word	ko-KR	절증지원	절쯩지원
 phoneme_word	ko-KR	절증지하다	절쯩지하다
-phoneme_word	ko-KR	절지	절찌
 phoneme_word	ko-KR	절지동물	절찌동물
 phoneme_word	ko-KR	절지동물문	절찌동물문
 phoneme_word	ko-KR	절지림	절찌림
@@ -15202,7 +15177,6 @@ phoneme_word	ko-KR	조임대	조임때
 phoneme_word	ko-KR	조작주의	조작쭈이
 phoneme_word	ko-KR	조절대	조절때
 phoneme_word	ko-KR	조절적	조절쩍
-phoneme_word	ko-KR	조절지	조절찌
 phoneme_word	ko-KR	조정된몸돌	조정된몸똘
 phoneme_word	ko-KR	조정법	조정뻡
 phoneme_word	ko-KR	조정점	조정쩜
@@ -15296,7 +15270,6 @@ phoneme_word	ko-KR	졸종	졸쫑
 phoneme_word	ko-KR	졸중	졸쭝
 phoneme_word	ko-KR	졸중풍	졸쭝풍
 phoneme_word	ko-KR	졸중하다	졸쭝하다
-phoneme_word	ko-KR	졸지	졸찌
 phoneme_word	ko-KR	졸지풍파	졸찌풍파
 phoneme_word	ko-KR	졸지하다	졸찌하다
 phoneme_word	ko-KR	졸직이	졸찌기
@@ -15503,7 +15476,6 @@ phoneme_word	ko-KR	주흘산	주흘싼
 phoneme_word	ko-KR	죽마구의	중마구이
 phoneme_word	ko-KR	죽술연명	죽쑬련명
 phoneme_word	ko-KR	죽술연명하다	죽쑬련명하다
-phoneme_word	ko-KR	죽외일지	주괴일찌
 phoneme_word	ko-KR	죽을고	주글꼬
 phoneme_word	ko-KR	죽을병	주글뼝
 phoneme_word	ko-KR	죽을상	주글쌍
@@ -15627,6 +15599,7 @@ phoneme_word	ko-KR	중점주의	중쩜주이
 phoneme_word	ko-KR	중졸자	중졸짜
 phoneme_word	ko-KR	중종보	중종뽀
 phoneme_word	ko-KR	중질유	중질류
+phoneme_word	ko-KR	중질지	중질지
 phoneme_word	ko-KR	중출장	중출짱
 phoneme_word	ko-KR	중측연	중층년
 phoneme_word	ko-KR	중치법	중치뻡
@@ -15675,7 +15648,6 @@ phoneme_word	ko-KR	증명법	증명뻡
 phoneme_word	ko-KR	증발산	증발싼
 phoneme_word	ko-KR	증발산량	증발싼냥
 phoneme_word	ko-KR	증발열	증발렬
-phoneme_word	ko-KR	증발지	증발찌
 phoneme_word	ko-KR	증산류	증산뉴
 phoneme_word	ko-KR	증살법	증살뻡
 phoneme_word	ko-KR	증소불의	증소부리
@@ -15739,7 +15711,6 @@ phoneme_word	ko-KR	지복연인	지봉녀닌
 phoneme_word	ko-KR	지복연인하다	지봉녀닌하다
 phoneme_word	ko-KR	지봉유설	지봉뉴설
 phoneme_word	ko-KR	지분권	지분꿘
-phoneme_word	ko-KR	지불지	지불찌
 phoneme_word	ko-KR	지붕돌	지붕똘
 phoneme_word	ko-KR	지붕돌받침	지붕똘받침
 phoneme_word	ko-KR	지붕보	지붕뽀
@@ -15783,6 +15754,7 @@ phoneme_word	ko-KR	지채과	지채꽈
 phoneme_word	ko-KR	지촌법	지촌뻡
 phoneme_word	ko-KR	지침법	지침뻡
 phoneme_word	ko-KR	지탱점	지탱쩜
+phoneme_word	ko-KR	지탱할지	지탱할지
 phoneme_word	ko-KR	지필연	지필련
 phoneme_word	ko-KR	지필연묵	지필련묵
 phoneme_word	ko-KR	지하권	지하꿘
@@ -15822,7 +15794,6 @@ phoneme_word	ko-KR	직전법	직쩐뻡
 phoneme_word	ko-KR	직통열차	직통녈차
 phoneme_word	ko-KR	직할대	지칼때
 phoneme_word	ko-KR	직할시	지칼씨
-phoneme_word	ko-KR	직할지	지칼찌
 phoneme_word	ko-KR	직행열차	지캥녈차
 phoneme_word	ko-KR	진갈색	진갈쌕
 phoneme_word	ko-KR	진공염	진공념
@@ -15981,6 +15952,7 @@ phoneme_word	ko-KR	짐배	짐빼
 phoneme_word	ko-KR	짐삯	짐싹
 phoneme_word	ko-KR	짐승발자국유	짐승발짜궁뉴
 phoneme_word	ko-KR	집게손가락	집께손까락
+phoneme_word	ko-KR	집결지	집껼지
 phoneme_word	ko-KR	집단주의	집딴주이
 phoneme_word	ko-KR	집단토의법	집딴토이뻡
 phoneme_word	ko-KR	집도의	집또이
@@ -16041,6 +16013,7 @@ phoneme_word	ko-KR	차력약	차령냑
 phoneme_word	ko-KR	차렵이불	차렴니불
 phoneme_word	ko-KR	차례건	차레껀
 phoneme_word	ko-KR	차별적	차별쩍
+phoneme_word	ko-KR	차별지	차별지
 phoneme_word	ko-KR	차분법	차분뻡
 phoneme_word	ko-KR	차신차의	차신차이
 phoneme_word	ko-KR	차아염소산염	차아염소산념
@@ -16104,7 +16077,6 @@ phoneme_word	ko-KR	찰주악기	찰쭈악끼
 phoneme_word	ko-KR	찰주하다	찰쭈하다
 phoneme_word	ko-KR	찰중	찰쭝
 phoneme_word	ko-KR	찰중하다	찰쭝하다
-phoneme_word	ko-KR	찰지	찰찌
 phoneme_word	ko-KR	찰지하다	찰찌하다
 phoneme_word	ko-KR	찰직	찰찍
 phoneme_word	ko-KR	찰직하다	찰찌카다
@@ -16417,7 +16389,6 @@ phoneme_word	ko-KR	철주하다	철쭈하다
 phoneme_word	ko-KR	철중쟁쟁	철쭝쟁쟁
 phoneme_word	ko-KR	철중쟁쟁하다	철쭝쟁쟁하다
 phoneme_word	ko-KR	철증	철쯩
-phoneme_word	ko-KR	철지	철찌
 phoneme_word	ko-KR	철지지원	철찌지원
 phoneme_word	ko-KR	철지하다	철찌하다
 phoneme_word	ko-KR	철직	철찍
@@ -16740,7 +16711,6 @@ phoneme_word	ko-KR	출물상	출물쌍
 phoneme_word	ko-KR	출발선	출발썬
 phoneme_word	ko-KR	출발역	출발력
 phoneme_word	ko-KR	출발점	출발쩜
-phoneme_word	ko-KR	출발지	출발찌
 phoneme_word	ko-KR	출사	출싸
 phoneme_word	ko-KR	출사샘	출싸샘
 phoneme_word	ko-KR	출사일	출싸일
@@ -16977,6 +16947,7 @@ phoneme_word	ko-KR	친정집	친정찝
 phoneme_word	ko-KR	친행길	친행낄
 phoneme_word	ko-KR	친화성	친화썽
 phoneme_word	ko-KR	칠감	칠깜
+phoneme_word	ko-KR	칠게	칠게
 phoneme_word	ko-KR	칠괘법	칠괘뻡
 phoneme_word	ko-KR	칠당	칠땅
 phoneme_word	ko-KR	칠대	칠때
@@ -17086,7 +17057,6 @@ phoneme_word	ko-KR	칠중주	칠쭝주
 phoneme_word	ko-KR	칠중주곡	칠쭝주곡
 phoneme_word	ko-KR	칠중창	칠쭝창
 phoneme_word	ko-KR	칠증	칠쯩
-phoneme_word	ko-KR	칠지	칠찌
 phoneme_word	ko-KR	칠지단장	칠찌단장
 phoneme_word	ko-KR	칠진	칠찐
 phoneme_word	ko-KR	칠진만보	칠찐만보
@@ -17354,7 +17324,6 @@ phoneme_word	ko-KR	탈주병	탈쭈병
 phoneme_word	ko-KR	탈주자	탈쭈자
 phoneme_word	ko-KR	탈주하다	탈쭈하다
 phoneme_word	ko-KR	탈증	탈쯩
-phoneme_word	ko-KR	탈지	탈찌
 phoneme_word	ko-KR	탈지대두박	탈찌대두박
 phoneme_word	ko-KR	탈지되다	탈찌되다
 phoneme_word	ko-KR	탈지면	탈찌면
@@ -17419,6 +17388,7 @@ phoneme_word	ko-KR	턱솔이음	턱쏠리음
 phoneme_word	ko-KR	턱열장	텅녈짱
 phoneme_word	ko-KR	턱이음	텅니음
 phoneme_word	ko-KR	턱잎	텅닙
+phoneme_word	ko-KR	털게	털게
 phoneme_word	ko-KR	털구멍	털꾸멍
 phoneme_word	ko-KR	털내의	털래이
 phoneme_word	ko-KR	털두꺼비하늘소	털두꺼비하늘쏘
@@ -17470,6 +17440,7 @@ phoneme_word	ko-KR	토지법	토지뻡
 phoneme_word	ko-KR	토지세	토지쎄
 phoneme_word	ko-KR	토질병	토질뼝
 phoneme_word	ko-KR	토호열신	토호열씬
+phoneme_word	ko-KR	톱날게	톰날게
 phoneme_word	ko-KR	톱양	톰냥
 phoneme_word	ko-KR	톱하늘소	토파늘쏘
 phoneme_word	ko-KR	통가지의	통가지이
@@ -17968,7 +17939,6 @@ phoneme_word	ko-KR	표음자	표음짜
 phoneme_word	ko-KR	표음주의	표음주이
 phoneme_word	ko-KR	표의	표이
 phoneme_word	ko-KR	표의자	표이짜
-phoneme_word	ko-KR	표이출지	표이출찌
 phoneme_word	ko-KR	표이출지하다	표이출찌하다
 phoneme_word	ko-KR	표정가	표정까
 phoneme_word	ko-KR	표제지건	표제지껀
@@ -17985,6 +17955,7 @@ phoneme_word	ko-KR	푼수데기	푼수떼기
 phoneme_word	ko-KR	푼전입미	푼전님미
 phoneme_word	ko-KR	풀가루	풀까루
 phoneme_word	ko-KR	풀감	풀깜
+phoneme_word	ko-KR	풀게	풀게
 phoneme_word	ko-KR	풀기	풀끼
 phoneme_word	ko-KR	풀단	풀딴
 phoneme_word	ko-KR	풀대	풀때
@@ -18152,7 +18123,6 @@ phoneme_word	ko-KR	필주	필쭈
 phoneme_word	ko-KR	필주하다	필쭈하다
 phoneme_word	ko-KR	필중	필쭝
 phoneme_word	ko-KR	필중하다	필쭝하다
-phoneme_word	ko-KR	필지	필찌
 phoneme_word	ko-KR	필지어서	필찌어서
 phoneme_word	ko-KR	필지어서하다	필찌어서하다
 phoneme_word	ko-KR	필지하다	필찌하다
@@ -18205,6 +18175,7 @@ phoneme_word	ko-KR	학생증	학쌩쯩
 phoneme_word	ko-KR	학설법	학썰뻡
 phoneme_word	ko-KR	학술적	학쑬쩍
 phoneme_word	ko-KR	학술제	학쑬쩨
+phoneme_word	ko-KR	학술지	학쑬지
 phoneme_word	ko-KR	학술회의	학쑬회이
 phoneme_word	ko-KR	학습용	학씀뇽
 phoneme_word	ko-KR	학안록	하간녹
@@ -18531,7 +18502,6 @@ phoneme_word	ko-KR	허위넘다	허위넘따
 phoneme_word	ko-KR	허위문자	허위문짜
 phoneme_word	ko-KR	허유권	허유꿘
 phoneme_word	ko-KR	허의	허이
-phoneme_word	ko-KR	허장실지	허장실찌
 phoneme_word	ko-KR	허점	허쩜
 phoneme_word	ko-KR	허증	허쯩
 phoneme_word	ko-KR	허채증	허채쯩
@@ -18681,7 +18651,6 @@ phoneme_word	ko-KR	혈종	혈쫑
 phoneme_word	ko-KR	혈주	혈쭈
 phoneme_word	ko-KR	혈중	혈쭝
 phoneme_word	ko-KR	혈증	혈쯩
-phoneme_word	ko-KR	혈지	혈찌
 phoneme_word	ko-KR	혈지하다	혈찌하다
 phoneme_word	ko-KR	혈징	혈찡
 phoneme_word	ko-KR	혈철소	혈철쏘
@@ -18757,6 +18726,7 @@ phoneme_word	ko-KR	호령바람	호령빠람
 phoneme_word	ko-KR	호롱불	호롱뿔
 phoneme_word	ko-KR	호리벌과	호리벌꽈
 phoneme_word	ko-KR	호말지리	호말찌리
+phoneme_word	ko-KR	호미글게	호미글게
 phoneme_word	ko-KR	호밀짚	호밀찝
 phoneme_word	ko-KR	호박엿	호방녇
 phoneme_word	ko-KR	호박유	호방뉴
@@ -18836,7 +18806,6 @@ phoneme_word	ko-KR	홀이름씨	홀리름씨
 phoneme_word	ko-KR	홀저하다	홀쩌하다
 phoneme_word	ko-KR	홀저히	홀쩌히
 phoneme_word	ko-KR	홀제	홀쩨
-phoneme_word	ko-KR	홀지	홀찌
 phoneme_word	ko-KR	홀지에	홀찌에
 phoneme_word	ko-KR	홀지풍파	홀찌풍파
 phoneme_word	ko-KR	홈이음	홈니음
@@ -18918,7 +18887,6 @@ phoneme_word	ko-KR	화제성	화제썽
 phoneme_word	ko-KR	화조월석	화조월썩
 phoneme_word	ko-KR	화증	화쯩
 phoneme_word	ko-KR	화증머리	화쯩머리
-phoneme_word	ko-KR	화천월지	화처눨찌
 phoneme_word	ko-KR	화충협의	화충혀비
 phoneme_word	ko-KR	화통간	화통깐
 phoneme_word	ko-KR	화투장	화투짱
@@ -18933,6 +18901,7 @@ phoneme_word	ko-KR	화환신용장	화환시뇽짱
 phoneme_word	ko-KR	화훼절지화	화훼절찌화
 phoneme_word	ko-KR	확대법	확때뻡
 phoneme_word	ko-KR	확대회의	확때회이
+phoneme_word	ko-KR	확률지	황뉼지
 phoneme_word	ko-KR	확산권	확싼꿘
 phoneme_word	ko-KR	확산성	확싼썽
 phoneme_word	ko-KR	확신성	확씬썽
@@ -19080,7 +19049,6 @@ phoneme_word	ko-KR	활주하다	활쭈하다
 phoneme_word	ko-KR	활죽	활쭉
 phoneme_word	ko-KR	활줄	활쭐
 phoneme_word	ko-KR	활줌통	활쭘통
-phoneme_word	ko-KR	활지	활찌
 phoneme_word	ko-KR	활집	활찝
 phoneme_word	ko-KR	황가루	황까루
 phoneme_word	ko-KR	황갈색	황갈쌕
@@ -19140,7 +19108,6 @@ phoneme_word	ko-KR	회사법	회사뻡
 phoneme_word	ko-KR	회삿돈	회사똔
 phoneme_word	ko-KR	회수권	회수꿘
 phoneme_word	ko-KR	회신료	회신뇨
-phoneme_word	ko-KR	회신멸지	회신멸찌
 phoneme_word	ko-KR	회심병	회심뼝
 phoneme_word	ko-KR	회완법	회완뻡
 phoneme_word	ko-KR	회원권	회원꿘
@@ -19305,6 +19272,7 @@ phoneme_word	ko-KR	흑피증	흑피쯩
 phoneme_word	ko-KR	흔동일세	흔동일쎄
 phoneme_word	ko-KR	흔동일세하다	흔동일쎄하다
 phoneme_word	ko-KR	흘가휴의	흘가휴이
+phoneme_word	ko-KR	흘게	흘게
 phoneme_word	ko-KR	흘림기둥	흘림끼둥
 phoneme_word	ko-KR	흘수	흘쑤
 phoneme_word	ko-KR	흘수선	흘쑤선
@@ -19388,7 +19356,6 @@ phoneme_word	ko-KR	힐신	힐씬
 phoneme_word	ko-KR	힐조	힐쪼
 phoneme_word	ko-KR	힐주	힐쭈
 phoneme_word	ko-KR	힐주하다	힐쭈하다
-phoneme_word	ko-KR	힐지	힐찌
 phoneme_word	ko-KR	힘덩이	힘떵이
 phoneme_word	ko-KR	힘살	힘쌀
 phoneme_word	ko-KR	힘양	힘냥
@@ -19398,3 +19365,147 @@ phoneme_word	ko-KR	힘줄	힘쭐
 phoneme_word	ko-KR	힘줄기	힘쭐기
 phoneme_word	ko-KR	힘줄끈	힘쭐끈
 phoneme_word	ko-KR	힘줄집	힘쭐집
+phoneme_stem	ko-KR	가다듬	1
+phoneme_stem	ko-KR	가로안	1
+phoneme_stem	ko-KR	감	1
+phoneme_stem	ko-KR	감싸안	1
+phoneme_stem	ko-KR	거머안	1
+phoneme_stem	ko-KR	거울삼	1
+phoneme_stem	ko-KR	걷어안	1
+phoneme_stem	ko-KR	걸터듬	1
+phoneme_stem	ko-KR	검	1
+phoneme_stem	ko-KR	검디검	1
+phoneme_stem	ko-KR	곧추안	1
+phoneme_stem	ko-KR	굽이감	1
+phoneme_stem	ko-KR	귀담	1
+phoneme_stem	ko-KR	그러담	1
+phoneme_stem	ko-KR	그러안	1
+phoneme_stem	ko-KR	극터듬	1
+phoneme_stem	ko-KR	깜	1
+phoneme_stem	ko-KR	깨다듬	1
+phoneme_stem	ko-KR	껌	1
+phoneme_stem	ko-KR	껴안	1
+phoneme_stem	ko-KR	꿰신	1
+phoneme_stem	ko-KR	끌안	1
+phoneme_stem	ko-KR	끌어안	1
+phoneme_stem	ko-KR	남	1
+phoneme_stem	ko-KR	내리감	1
+phoneme_stem	ko-KR	내뿜	1
+phoneme_stem	ko-KR	넘	1
+phoneme_stem	ko-KR	논	2
+phoneme_stem	ko-KR	눈감	1
+phoneme_stem	ko-KR	늦심	1
+phoneme_stem	ko-KR	다듬	1
+phoneme_stem	ko-KR	담	1
+phoneme_stem	ko-KR	더듬	1
+phoneme_stem	ko-KR	덧신	1
+phoneme_stem	ko-KR	덧심	1
+phoneme_stem	ko-KR	되감	1
+phoneme_stem	ko-KR	되넘	1
+phoneme_stem	ko-KR	뒤넘	1
+phoneme_stem	ko-KR	떠안	1
+phoneme_stem	ko-KR	뛰어넘	1
+phoneme_stem	ko-KR	말미암	1
+phoneme_stem	ko-KR	머금	1
+phoneme_stem	ko-KR	모심	1
+phoneme_stem	ko-KR	몸담	1
+phoneme_stem	ko-KR	문	2
+phoneme_stem	ko-KR	받아안	1
+phoneme_stem	ko-KR	보듬	1
+phoneme_stem	ko-KR	부둥켜안	1
+phoneme_stem	ko-KR	부여안	1
+phoneme_stem	ko-KR	붙안	1
+phoneme_stem	ko-KR	비다듬	1
+phoneme_stem	ko-KR	뼘	1
+phoneme_stem	ko-KR	뿜	1
+phoneme_stem	ko-KR	삭심	1
+phoneme_stem	ko-KR	살아남	1
+phoneme_stem	ko-KR	삼	1
+phoneme_stem	ko-KR	서슴	1
+phoneme_stem	ko-KR	숨	1
+phoneme_stem	ko-KR	신	1
+phoneme_stem	ko-KR	심	1
+phoneme_stem	ko-KR	싸안	1
+phoneme_stem	ko-KR	쓰다듬	1
+phoneme_stem	ko-KR	쓸어안	1
+phoneme_stem	ko-KR	안	2
+phoneme_stem	ko-KR	어루더듬	1
+phoneme_stem	ko-KR	얼더듬	1
+phoneme_stem	ko-KR	얼싸안	1
+phoneme_stem	ko-KR	일삼	1
+phoneme_stem	ko-KR	일심	1
+phoneme_stem	ko-KR	자랑삼	1
+phoneme_stem	ko-KR	잗다듬	1
+phoneme_stem	ko-KR	장난삼	1
+phoneme_stem	ko-KR	잦다듬	1
+phoneme_stem	ko-KR	재주넘	1
+phoneme_stem	ko-KR	주장삼	1
+phoneme_stem	ko-KR	주제넘	1
+phoneme_stem	ko-KR	지르감	1
+phoneme_stem	ko-KR	지르신	1
+phoneme_stem	ko-KR	짓다듬	1
+phoneme_stem	ko-KR	참	1
+phoneme_stem	ko-KR	참고삼	1
+phoneme_stem	ko-KR	처담	1
+phoneme_stem	ko-KR	치감	1
+phoneme_stem	ko-KR	치더듬	1
+phoneme_stem	ko-KR	치뿜	1
+phoneme_stem	ko-KR	품	1
+phoneme_stem	ko-KR	한물넘	1
+phoneme_stem	ko-KR	허위넘	1
+phoneme_stem	ko-KR	휘감	1
+phoneme_stem	ko-KR	휘더듬	1
+phoneme_noun	ko-KR	감고	1
+phoneme_noun	ko-KR	감소	1
+phoneme_noun	ko-KR	감자	1
+phoneme_noun	ko-KR	감지	1
+phoneme_noun	ko-KR	검고	1
+phoneme_noun	ko-KR	검소	1
+phoneme_noun	ko-KR	검자	1
+phoneme_noun	ko-KR	검지	1
+phoneme_noun	ko-KR	남고	1
+phoneme_noun	ko-KR	남소	1
+phoneme_noun	ko-KR	남자	1
+phoneme_noun	ko-KR	남지	1
+phoneme_noun	ko-KR	논고	1
+phoneme_noun	ko-KR	논다니	1
+phoneme_noun	ko-KR	논소	1
+phoneme_noun	ko-KR	논자	1
+phoneme_noun	ko-KR	논지	1
+phoneme_noun	ko-KR	담고	1
+phoneme_noun	ko-KR	담소	1
+phoneme_noun	ko-KR	담자	1
+phoneme_noun	ko-KR	담지	1
+phoneme_noun	ko-KR	더듬자	1
+phoneme_noun	ko-KR	문고	1
+phoneme_noun	ko-KR	문자	1
+phoneme_noun	ko-KR	문지	1
+phoneme_noun	ko-KR	삼고	1
+phoneme_noun	ko-KR	삼다	1
+phoneme_noun	ko-KR	삼소	1
+phoneme_noun	ko-KR	삼자	1
+phoneme_noun	ko-KR	삼지	1
+phoneme_noun	ko-KR	신고	1
+phoneme_noun	ko-KR	신고서	1
+phoneme_noun	ko-KR	신고자	1
+phoneme_noun	ko-KR	신소	1
+phoneme_noun	ko-KR	신자	1
+phoneme_noun	ko-KR	신지	1
+phoneme_noun	ko-KR	신지도	1
+phoneme_noun	ko-KR	심고	1
+phoneme_noun	ko-KR	심소	1
+phoneme_noun	ko-KR	심지	1
+phoneme_noun	ko-KR	안고	1
+phoneme_noun	ko-KR	안다니	1
+phoneme_noun	ko-KR	안소	1
+phoneme_noun	ko-KR	안자	1
+phoneme_noun	ko-KR	안지	1
+phoneme_noun	ko-KR	참게	1
+phoneme_noun	ko-KR	참고	1
+phoneme_noun	ko-KR	참고서	1
+phoneme_noun	ko-KR	참소	1
+phoneme_noun	ko-KR	참자	1
+phoneme_noun	ko-KR	참지	1
+phoneme_noun	ko-KR	품고	1
+phoneme_noun	ko-KR	품자	1
+phoneme_noun	ko-KR	품지	1

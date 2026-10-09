@@ -653,11 +653,26 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
         return strlen(r->key) == strlen(v) && strlen(v) % 3 == 0
                    ? TTF_OK
                    : ttf_validation_error(d, "phoneme_word requires a Hangul word and a reading of the same length");
-    } else if (SAME(k, "phoneme_suffix")) {
+    } else if (SAME(k, "phoneme_suffix") || SAME(k, "phoneme_ending") || SAME(k, "phoneme_l_ending") ||
+               SAME(k, "phoneme_bound") || SAME(k, "phoneme_noun") || SAME(k, "phoneme_numeral")) {
         *handled = 1;
         if ((status = bounded_key(r, 64, d)) != TTF_OK)
             return status;
-        return SAME(v, "1") ? TTF_OK : ttf_validation_error(d, "phoneme_suffix supports 1 only");
+        return SAME(v, "1") ? TTF_OK : ttf_validation_error(d, "Korean pronunciation marker supports 1 only");
+    } else if (SAME(k, "phoneme_aux")) {
+        *handled = 1;
+        if ((status = bounded_key(r, 16, d)) != TTF_OK)
+            return status;
+        return SAME(v, "1") || SAME(v, "2")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "phoneme_aux supports 1 (first syllable) or 2 (whole word)");
+    } else if (SAME(k, "phoneme_stem")) {
+        *handled = 1;
+        if ((status = bounded_key(r, 64, d)) != TTF_OK)
+            return status;
+        return SAME(v, "1") || SAME(v, "2")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "phoneme_stem supports 1, or 2 for a stem that is also an ㄹ stem");
     } else if (SAME(k, "particle") || SAME(k, "quantity_tail") || SAME(k, "quantity_tail_head")) {
         *handled = 1;
         if ((status = bounded_key(r, SAME(k, "particle") ? 64 : 128, d)) != TTF_OK)
