@@ -120,7 +120,7 @@
         {
           "area": "발음열 출력",
           "level": "partial",
-          "note": "pronunciation=phoneme 옵션·{@phoneme} 제어. 구어 기준 한글 발음열, 장음 없음. 표준발음법 규칙과 표준국어대사전 예외 19,395개 (1단계: 활용형 경음·ㄴ 첨가는 사전에 있는 단어만)"
+          "note": "pronunciation=hangul 옵션·{@pronounce} 제어. 구어 기준 한글 발음열, 장음 없음. 표준발음법 규칙과 표준국어대사전 예외 19,395개 (1단계: 활용형 경음·ㄴ 첨가는 사전에 있는 단어만)"
         }
       ],
       "gaps": [
@@ -643,9 +643,9 @@
       "text": "[[New York]]{@join}"
     },
     {
-      "id": "phoneme",
-      "name": "@phoneme",
-      "text": "[[국물이 맛있다]]{@phoneme}",
+      "id": "pronounce",
+      "name": "@pronounce",
+      "text": "[[국물이 맛있다]]{@pronounce}",
       "only": [
         "ko-KR"
       ]

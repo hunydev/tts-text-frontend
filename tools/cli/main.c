@@ -34,7 +34,7 @@ static void usage(FILE *out) {
           "          --symbol-fallback on|native|off\n"
           "          --max-control-bytes N --invalid-control ignore|error\n"
           "          --particle-agreement off|on --numeric-fallback read|preserve\n"
-          "          --pronunciation orthographic|phoneme\n"
+          "          --pronunciation orthographic|hangul\n"
           "Stream options: --chunk-bytes N (default 4096)\n",
           out);
 }
@@ -328,7 +328,7 @@ int main(int argc, char **argv) {
                 else
                     frontend.kana = !strcmp(argv[i], "korean") ? TTF_KANA_KOREAN : TTF_KANA_PASSTHROUGH;
             } else if (!strcmp(arg, "--pronunciation")) {
-                valid = !strcmp(argv[i], "orthographic") || !strcmp(argv[i], "phoneme");
+                valid = !strcmp(argv[i], "orthographic") || !strcmp(argv[i], "hangul");
                 pronunciation = argv[i];
             } else if (!strcmp(arg, "--spacing")) {
                 valid = !strcmp(argv[i], "orthographic") || !strcmp(argv[i], "reading-unit");

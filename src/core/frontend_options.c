@@ -81,7 +81,7 @@ ttf_status_t ttf_engine_set_option(ttf_engine_t *engine, const char *name, const
     if (!strcmp(name, "pronunciation")) {
         if (!strcmp(value, "orthographic"))
             engine->phoneme_output = 0;
-        else if (!strcmp(value, "phoneme"))
+        else if (!strcmp(value, "hangul"))
             engine->phoneme_output = 1;
         else
             return TTF_EINVAL;

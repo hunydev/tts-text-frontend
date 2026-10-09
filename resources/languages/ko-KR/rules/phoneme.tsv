@@ -1,4 +1,4 @@
-# Korean pronunciation output (pronunciation=phoneme, {@phoneme}; 2026-10-09).
+# Korean pronunciation output (pronunciation=hangul, {@pronounce}; 2026-10-09).
 # phoneme_suffix: a particle or ending after a listed word (물고기를 물꼬기를).
 phoneme_suffix	ko-KR	이	1
 phoneme_suffix	ko-KR	가	1

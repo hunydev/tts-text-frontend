@@ -6,7 +6,7 @@
 
 Input: the local 표준국어대사전 pronunciation table (headword, ..., pronunciation;
 CC BY-SA 2.0 KR, never committed). Each headword is read by the engine's own
-rules (pronunciation=phoneme with this file empty) and compared with the
+rules (pronunciation=hangul with this file empty) and compared with the
 dictionary pronunciation after the same colloquial vowel readings (initial 의 으,
 other 의 이, ㅖ after a consonant ㅔ, 져 저) and with the length mark removed.
 Only the words the rules read differently are written, plus every word ending
@@ -82,7 +82,7 @@ def main():
     # The rules are measured without the dictionary: empty the file first.
     Path(args.out).write_text(HEADER, encoding="utf-8")
     engine = Engine(Path(args.library), Path(args.resources),
-                    dict(default_language="ko-KR", output_mode="speech", pronunciation="phoneme"))
+                    dict(default_language="ko-KR", output_mode="speech", pronunciation="hangul"))
     rows, same, differ = [], 0, 0
     try:
         for word in sorted(entries):

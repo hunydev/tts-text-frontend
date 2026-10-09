@@ -631,7 +631,7 @@ static const ttf_language_pack_t *electronic_context(const ttf_engine_t *e,
     free(tokens);
     return pack;
 }
-/* [[민주주의의 의의]]{@phoneme}: the span is normalized like plain text, then its
+/* [[민주주의의 의의]]{@pronounce}: the span is normalized like plain text, then its
    Hangul is read as spoken (ttf_korean_phonemize) after the whole unit is done,
    so the words around it still decide liaison. */
 static ttf_status_t phoneme_control(const ttf_engine_t *e, const char *text,
@@ -1201,8 +1201,8 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
         if (region_index < region_count && regions[region_index].begin == tokens[i].begin) {
             const ttf_protected_match_t *literal = &regions[region_index++].match;
             if (literal->control.kind == TTF_CONTROL_PATTERN && literal->control.grouped &&
-                literal->control.payload_end - literal->control.payload_begin == 8 &&
-                !memcmp(text + literal->control.payload_begin, "@phoneme", 8)) {
+                literal->control.payload_end - literal->control.payload_begin == 10 &&
+                !memcmp(text + literal->control.payload_begin, "@pronounce", 10)) {
                 st = phoneme_control(e, text, &literal->control, offset, &output, out, &capacity,
                                      &phoneme_regions, &phoneme_count, &phoneme_cap);
                 if (st != TTF_OK)
@@ -1897,7 +1897,7 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
     st = ttf_buffer_append(&output, "", 0);
     if (st != TTF_OK)
         goto fail;
-    /* pronunciation=phoneme reads the whole unit; {@phoneme} reads its spans. */
+    /* pronunciation=hangul reads the whole unit; {@pronounce} reads its spans. */
     if (e->phoneme_output)
         st = ttf_korean_phonemize(e, output.data, output.length, 0, output.length);
     for (size_t k = 0; st == TTF_OK && !e->phoneme_output && k + 1 < phoneme_count; k += 2)

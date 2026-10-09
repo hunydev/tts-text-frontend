@@ -265,7 +265,7 @@ def validate(request, corpus=False):
         ("matrix", ("auto", "legacy", "declared")),
         ("symbol_fallback", ("on", "native", "off")),
         ("particle_agreement", ("off", "on")),
-        ("pronunciation", ("orthographic", "phoneme")),
+        ("pronunciation", ("orthographic", "hangul")),
         ("invalid_control", ("ignore", "error")),
         ("numeric_fallback", ("read", "preserve")),
         ("brand_lexicon", ("off", "on")),

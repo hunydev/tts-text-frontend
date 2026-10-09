@@ -47,7 +47,7 @@ def frontend_settings(case: dict) -> dict:
                            ("symbol_fallback", ("on", "native", "off")),
                            ("particle_agreement", ("off", "on")),
                            ("numeric_fallback", ("read", "preserve")),
-                           ("pronunciation", ("orthographic", "phoneme")),
+                           ("pronunciation", ("orthographic", "hangul")),
                            ("hanja", ("passthrough", "korean")),
                            ("kana", ("passthrough", "korean")),
                            ("unknown_foreign", ("guess", "spell", "preserve"))):
