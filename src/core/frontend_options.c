@@ -78,6 +78,15 @@ ttf_status_t ttf_engine_set_option(ttf_engine_t *engine, const char *name, const
             return TTF_EINVAL;
         return TTF_OK;
     }
+    if (!strcmp(name, "pronunciation")) {
+        if (!strcmp(value, "orthographic"))
+            engine->phoneme_output = 0;
+        else if (!strcmp(value, "phoneme"))
+            engine->phoneme_output = 1;
+        else
+            return TTF_EINVAL;
+        return TTF_OK;
+    }
     if (!strcmp(name, "symbol_fallback")) {
         if (!strcmp(value, "on"))
             engine->symbol_fallback_policy = TTF_SYMBOL_FALLBACK_ON;

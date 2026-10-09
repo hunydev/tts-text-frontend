@@ -218,7 +218,8 @@ def corpus(request, library, resources):
                     # Named policies a row declares (decorative, matrix, ...) apply too.
                     **{key: row[key] for key in ("brackets", "unknown_foreign", "decorative",
                                                  "initialism", "spacing", "matrix",
-                                                 "symbol_fallback") if key in row},
+                                                 "symbol_fallback", "particle_agreement",
+                                                 "pronunciation") if key in row},
                 },
             )
         )["options"]

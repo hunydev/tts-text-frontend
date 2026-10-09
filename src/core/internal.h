@@ -54,6 +54,7 @@ struct ttf_engine {
     ttf_decorative_policy_t decorative_policy;
     ttf_initialism_policy_t initialism_policy;
     int reading_unit_spacing; /* spacing=reading-unit; 0 keeps resource spacing */
+    int phoneme_output;       /* pronunciation=phoneme: Hangul read as spoken (2026-10-09) */
     ttf_matrix_policy_t matrix_policy; /* matrix=auto (0), legacy or declared */
     ttf_symbol_fallback_policy_t symbol_fallback_policy; /* symbol_fallback=on (0) */
     /* Mapped Unicode fallback files per pack slot; the frozen owner closes them. */
@@ -137,8 +138,11 @@ static inline int ttf_numeric_suffix_cued(const ttf_engine_t *e, const char *key
     }
     return 0;
 }
-/* Exactly the eight resource kinds separated at freeze (not all kana_* kinds). */
+/* Exactly the nine resource kinds separated at freeze (not all kana_* kinds): the
+   CJK readings and the Korean pronunciation dictionary (phoneme_word, 2026-10-09),
+   large tables whose rows would otherwise lengthen every ordinary lookup. */
 static inline int ttf_cjk_resource_kind(const char *kind) {
+    if (kind[0] == 'p') return !strcmp(kind, "phoneme_word");
     if (kind[0] == 'h')
         return !strcmp(kind, "hanja_reading") || !strcmp(kind, "hanja_soft_after") ||
                !strcmp(kind, "hanja_before_initial");

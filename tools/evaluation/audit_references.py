@@ -14,6 +14,7 @@ import re
 import sys
 
 ACTIVE_JSONL = (
+    "ko_phoneme_v51",
     "ja_rest_v50",
     "ja_gaps78_v49",
     "ja_slash_dates_v48",

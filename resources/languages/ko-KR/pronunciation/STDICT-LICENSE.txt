@@ -1,0 +1,16 @@
+stdict_phonemes.tsv
+
+Source: 국립국어원 표준국어대사전 (National Institute of Korean Language, Standard
+Korean Language Dictionary), https://stdict.korean.go.kr
+
+The dictionary's content is distributed under the Creative Commons
+Attribution-ShareAlike 2.0 Korea license (CC BY-SA 2.0 KR):
+https://creativecommons.org/licenses/by-sa/2.0/kr/
+
+stdict_phonemes.tsv is adapted from it (headword pronunciations taken from the
+dictionary by tools/korean/stdict_phonemes.py, with the vowel length removed and
+the colloquial vowel readings of this frontend applied; only the words whose
+pronunciation the frontend's rules miss, and the words ending in 의, are kept)
+and is licensed under CC BY-SA 2.0 KR as well. This applies to that file only;
+the other files in this repository keep their own licenses. Redistribute the
+file with this notice and keep any changes to it under the same license.

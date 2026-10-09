@@ -1,3 +1,4 @@
+#include "../pronunciation/korean_phoneme.h"
 #include "internal.h"
 #include "speech_output.h"
 #include "../cjk/cjk_reading.h"
@@ -630,6 +631,52 @@ static const ttf_language_pack_t *electronic_context(const ttf_engine_t *e,
     free(tokens);
     return pack;
 }
+/* [[민주주의의 의의]]{@phoneme}: the span is normalized like plain text, then its
+   Hangul is read as spoken (ttf_korean_phonemize) after the whole unit is done,
+   so the words around it still decide liaison. */
+static ttf_status_t phoneme_control(const ttf_engine_t *e, const char *text,
+                                    const ttf_control_match_t *control, size_t offset,
+                                    ttf_buffer_t *output, ttf_result_t *out, size_t *capacity,
+                                    size_t **regions, size_t *region_count, size_t *region_cap) {
+    ttf_buffer_t base = {0};
+    ttf_result_t inner;
+    ttf_engine_t view = *e;
+    size_t begin = output->length, k;
+    ttf_status_t st = ttf_control_decode(text, control->base_begin, control->base_end, &base);
+    if (st != TTF_OK)
+        return st;
+    view.phoneme_output = 0;
+    st = ttf_process_unit(&view, base.data ? base.data : "", base.length, offset + control->base_begin,
+                          &inner);
+    ttf_buffer_free(&base);
+    if (st != TTF_OK)
+        return st;
+    st = ttf_buffer_append(output, inner.text, inner.length);
+    for (k = 0; st == TTF_OK && k < inner.span_count; ++k) {
+        ttf_span_t span = inner.spans[k];
+        span.begin += begin;
+        span.end += begin;
+        if (!k)
+            span.input_begin = span.semantic.input_begin = offset + control->begin;
+        if (k + 1 == inner.span_count)
+            span.input_end = span.semantic.input_end = offset + control->end;
+        st = add_span(out, &span, capacity);
+    }
+    ttf_result_free(&inner);
+    if (st != TTF_OK)
+        return st;
+    if (*region_count + 2 > *region_cap) {
+        size_t next = *region_cap ? *region_cap * 2 : 8;
+        size_t *grown = realloc(*regions, next * sizeof(**regions));
+        if (!grown)
+            return TTF_ENOMEM;
+        *regions = grown;
+        *region_cap = next;
+    }
+    (*regions)[(*region_count)++] = begin;
+    (*regions)[(*region_count)++] = output->length;
+    return TTF_OK;
+}
 static ttf_status_t render_control(const ttf_engine_t *e, const ttf_pack_input_t *in,
                                    const ttf_control_match_t *control, size_t offset,
                                    ttf_span_t *span, ttf_buffer_t *output) {
@@ -1028,6 +1075,7 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
     ttf_status_t st;
     ttf_control_match_t rejected = {0};
     size_t trace_mark = ttf_trace_mark(e);
+    size_t *phoneme_regions = NULL, phoneme_count = 0, phoneme_cap = 0;
     int ignore = 0;
     context_view.context_memo = &memo;
     memset(out, 0, sizeof(*out));
@@ -1152,6 +1200,17 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
         }
         if (region_index < region_count && regions[region_index].begin == tokens[i].begin) {
             const ttf_protected_match_t *literal = &regions[region_index++].match;
+            if (literal->control.kind == TTF_CONTROL_PATTERN && literal->control.grouped &&
+                literal->control.payload_end - literal->control.payload_begin == 8 &&
+                !memcmp(text + literal->control.payload_begin, "@phoneme", 8)) {
+                st = phoneme_control(e, text, &literal->control, offset, &output, out, &capacity,
+                                     &phoneme_regions, &phoneme_count, &phoneme_cap);
+                if (st != TTF_OK)
+                    goto fail;
+                removed_before = 0;
+                ++i;
+                continue;
+            }
             if (literal->control.kind != TTF_CONTROL_NONE) {
                 ttf_pack_input_t control_input = {text, length, tokens, count, i, e};
                 if (scopes[i].end) {
@@ -1838,6 +1897,16 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
     st = ttf_buffer_append(&output, "", 0);
     if (st != TTF_OK)
         goto fail;
+    /* pronunciation=phoneme reads the whole unit; {@phoneme} reads its spans. */
+    if (e->phoneme_output)
+        st = ttf_korean_phonemize(e, output.data, output.length, 0, output.length);
+    for (size_t k = 0; st == TTF_OK && !e->phoneme_output && k + 1 < phoneme_count; k += 2)
+        st = ttf_korean_phonemize(e, output.data, output.length, phoneme_regions[k],
+                                  phoneme_regions[k + 1]);
+    free(phoneme_regions);
+    phoneme_regions = NULL;
+    if (st != TTF_OK)
+        goto fail;
     out->text = output.data;
     out->length = output.length;
     ttf_context_memo_clear(&memo);
@@ -1849,6 +1918,7 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
     free(context_tokens);
     return TTF_OK;
 fail:
+    free(phoneme_regions);
     free(context_text);
     free(context_tokens);
     ttf_context_memo_clear(&memo);

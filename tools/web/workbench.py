@@ -8,6 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 MAX_TEXT_BYTES = 16384
 CORPORA = {
+    "ko-phoneme-v51": ("한국어 발음열 출력 1단계 (구어, 한글)", "ko_phoneme_v51.jsonl"),
     "ja-rest-v50": ("Japanese remaining gaps v50", "ja_rest_v50.jsonl"),
     "ja-gaps78-v49": ("Japanese gaps 7-8 v49", "ja_gaps78_v49.jsonl"),
     "ja-slash-dates-v48": ("Japanese slash dates v48", "ja_slash_dates_v48.jsonl"),
@@ -167,6 +168,7 @@ DEFAULTS = dict(
     matrix="auto",
     symbol_fallback="on",
     particle_agreement="off",
+    pronunciation="orthographic",
     invalid_control="ignore",
     numeric_fallback="read",
     brand_lexicon="off",
@@ -263,6 +265,7 @@ def validate(request, corpus=False):
         ("matrix", ("auto", "legacy", "declared")),
         ("symbol_fallback", ("on", "native", "off")),
         ("particle_agreement", ("off", "on")),
+        ("pronunciation", ("orthographic", "phoneme")),
         ("invalid_control", ("ignore", "error")),
         ("numeric_fallback", ("read", "preserve")),
         ("brand_lexicon", ("off", "on")),
@@ -534,7 +537,8 @@ def catalog():
                 text=row["text"], expected=row["expected"],
                 options={key: row[key] for key in (
                     "default_language", "input_format", "output_mode", "unreadable", "brackets", "unknown_foreign",
-                    "decorative", "initialism", "spacing", "matrix", "symbol_fallback", "particle_agreement"
+                    "decorative", "initialism", "spacing", "matrix", "symbol_fallback", "particle_agreement",
+                    "pronunciation"
                 ) if key in row},
                 reference_review=reviewed_cases[(relative, row["id"])],
             ))

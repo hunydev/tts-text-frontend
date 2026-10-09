@@ -28,6 +28,7 @@ FRONTEND_DEFAULTS = {"output_mode": "text", "input_format": "plain",
                      "unreadable": "preserve", "brackets": "read", "unknown_foreign": "guess",
                      "decorative": "follow", "initialism": "spell", "spacing": "orthographic", "matrix": "auto", "symbol_fallback": "on",
                      "particle_agreement": "off", "numeric_fallback": "read",
+                     "pronunciation": "orthographic",
                      "max_control_bytes": 4096,
                      "hanja": "passthrough", "kana": "passthrough"}
 
@@ -46,6 +47,7 @@ def frontend_settings(case: dict) -> dict:
                            ("symbol_fallback", ("on", "native", "off")),
                            ("particle_agreement", ("off", "on")),
                            ("numeric_fallback", ("read", "preserve")),
+                           ("pronunciation", ("orthographic", "phoneme")),
                            ("hanja", ("passthrough", "korean")),
                            ("kana", ("passthrough", "korean")),
                            ("unknown_foreign", ("guess", "spell", "preserve"))):

@@ -34,6 +34,7 @@ static void usage(FILE *out) {
           "          --symbol-fallback on|native|off\n"
           "          --max-control-bytes N --invalid-control ignore|error\n"
           "          --particle-agreement off|on --numeric-fallback read|preserve\n"
+          "          --pronunciation orthographic|phoneme\n"
           "Stream options: --chunk-bytes N (default 4096)\n",
           out);
 }
@@ -244,7 +245,8 @@ int main(int argc, char **argv) {
     ttf_frontend_options_t frontend;
     const char *invalid_control = NULL, *particle_agreement = NULL, *numeric_fallback = NULL;
     const char *bracket_policy = NULL, *unknown_foreign = NULL, *decorative = NULL,
-               *initialism = NULL, *spacing = NULL, *matrix = NULL, *symbol_fallback = NULL;
+               *initialism = NULL, *spacing = NULL, *matrix = NULL, *symbol_fallback = NULL,
+               *pronunciation = NULL;
     ttf_trace_options_t trace_options;
     int is_trace = 0, trace_limit_set = 0;
     ttf_engine_t *engine = NULL;
@@ -298,6 +300,7 @@ int main(int argc, char **argv) {
              !strcmp(arg, "--kana") || !strcmp(arg, "--spacing") || !strcmp(arg, "--matrix") ||
              !strcmp(arg, "--symbol-fallback") || !strcmp(arg, "--invalid-control") ||
              !strcmp(arg, "--particle-agreement") || !strcmp(arg, "--numeric-fallback") ||
+             !strcmp(arg, "--pronunciation") ||
              !strcmp(arg, "--max-control-bytes"))) {
             int valid = 1;
             if (++i == argc) {
@@ -324,6 +327,9 @@ int main(int argc, char **argv) {
                     frontend.hanja = !strcmp(argv[i], "korean") ? TTF_HANJA_KOREAN : TTF_HANJA_PASSTHROUGH;
                 else
                     frontend.kana = !strcmp(argv[i], "korean") ? TTF_KANA_KOREAN : TTF_KANA_PASSTHROUGH;
+            } else if (!strcmp(arg, "--pronunciation")) {
+                valid = !strcmp(argv[i], "orthographic") || !strcmp(argv[i], "phoneme");
+                pronunciation = argv[i];
             } else if (!strcmp(arg, "--spacing")) {
                 valid = !strcmp(argv[i], "orthographic") || !strcmp(argv[i], "reading-unit");
                 spacing = argv[i];
@@ -476,6 +482,8 @@ int main(int argc, char **argv) {
         status = ttf_engine_set_option(engine, "initialism", initialism);
     if (status == TTF_OK && spacing)
         status = ttf_engine_set_option(engine, "spacing", spacing);
+    if (status == TTF_OK && pronunciation)
+        status = ttf_engine_set_option(engine, "pronunciation", pronunciation);
     if (status == TTF_OK && matrix)
         status = ttf_engine_set_option(engine, "matrix", matrix);
     if (status == TTF_OK && symbol_fallback)

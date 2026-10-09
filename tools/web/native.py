@@ -261,7 +261,7 @@ class Engine:
                                       ("decorative", "follow"), ("initialism", "spell"),
                                       ("spacing", "orthographic"), ("matrix", "auto"),
                                       ("symbol_fallback", "on"), ("invalid_control", "ignore"), ("numeric_fallback", "read"),
-                                      ("particle_agreement", "off")):
+                                      ("particle_agreement", "off"), ("pronunciation", "orthographic")):
                     if options.get(name, default) != default:
                         self.check(self.lib.ttf_engine_set_option(
                             self.handle, name.encode(), options[name].encode()))

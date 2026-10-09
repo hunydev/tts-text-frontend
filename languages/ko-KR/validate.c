@@ -646,6 +646,18 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
         if (!decimal_key(key, TTF_IR_VALUE_SIZE - 1) || (key[0] == '0' && key[1]))
             return ttf_validation_error(
                 d, "ordinal_first key must be a canonical decimal integer without leading zeros");
+    } else if (SAME(k, "phoneme_word")) {
+        *handled = 1;
+        if ((status = bounded_key(r, 192, d)) != TTF_OK)
+            return status;
+        return strlen(r->key) == strlen(v) && strlen(v) % 3 == 0
+                   ? TTF_OK
+                   : ttf_validation_error(d, "phoneme_word requires a Hangul word and a reading of the same length");
+    } else if (SAME(k, "phoneme_suffix")) {
+        *handled = 1;
+        if ((status = bounded_key(r, 64, d)) != TTF_OK)
+            return status;
+        return SAME(v, "1") ? TTF_OK : ttf_validation_error(d, "phoneme_suffix supports 1 only");
     } else if (SAME(k, "particle") || SAME(k, "quantity_tail") || SAME(k, "quantity_tail_head")) {
         *handled = 1;
         if ((status = bounded_key(r, SAME(k, "particle") ? 64 : 128, d)) != TTF_OK)
