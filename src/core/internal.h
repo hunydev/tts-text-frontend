@@ -142,7 +142,11 @@ static inline int ttf_numeric_suffix_cued(const ttf_engine_t *e, const char *key
    CJK readings and the Korean pronunciation dictionary (phoneme_word, 2026-10-09),
    large tables whose rows would otherwise lengthen every ordinary lookup. */
 static inline int ttf_cjk_resource_kind(const char *kind) {
-    if (kind[0] == 'p') return !strcmp(kind, "phoneme_word");
+    /* Every lookup passes here and 'p' kinds (particle, phone_*) are frequent:
+       test "phoneme_" by characters before any string compare. */
+    if (kind[0] == 'p')
+        return kind[1] == 'h' && kind[2] == 'o' && kind[3] == 'n' && kind[4] == 'e' &&
+               kind[5] == 'm' && kind[6] == 'e' && kind[7] == '_' && !strcmp(kind + 8, "word");
     if (kind[0] == 'h')
         return !strcmp(kind, "hanja_reading") || !strcmp(kind, "hanja_soft_after") ||
                !strcmp(kind, "hanja_before_initial");
