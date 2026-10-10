@@ -79,7 +79,13 @@ typedef struct {
    leaves words of another script as written. "symbol_fallback" = on|native|off
    (speech: a symbol or emoji sequence no rule reads is named from
    <resources>/unicode-fallback/<language>.idx/.dat/.seq; on also uses the
-   English files; off keeps the unreadable policy). */
+   English files; off keeps the unreadable policy), "particle_agreement" =
+   off|on (Korean particle after a reading: keep it as written, or agree it with
+   the reading), "numeric_fallback" = read|preserve (a number the grammar
+   rejects is read as spoken, or kept), "invalid_control" = ignore|error (an
+   unknown control is dropped, or the call fails), "pronunciation" =
+   orthographic|hangul (hangul writes Korean as it is pronounced, colloquial and
+   without vowel length: 국물이 궁무리; see docs/korean-phoneme.ko.md). */
 TTF_API ttf_status_t ttf_engine_set_option(ttf_engine_t *engine, const char *name,
                                            const char *value);
 

@@ -64,7 +64,10 @@ offsets refer to the original request.
 `ttf_pronunciation_t` is a separate representation containing an alphabet name,
 space-separated phone symbols and provenance. This keeps future phoneme output
 separate from normalized text. Current API exposes pronunciation callbacks for
-packs; a final phoneme-sequence request/output API remains future work.
+packs; a final phoneme-sequence request/output API remains future work. Korean has a
+text-level pronunciation output instead (`pronunciation=hangul`, a Hangul
+pronunciation string in the normalized text; see korean-phoneme.ko.md), which is not
+a phone-symbol API.
 
 An explicit pack identifier classification outranks generic numeric/date/phone
 syntax only when both cover the same token count and byte extent. Exact/pattern

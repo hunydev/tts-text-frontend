@@ -58,3 +58,6 @@ for semantic numbers/ordinals. A target pack without phonetic rendering callback
 preserves source spoken text, sets render language to the source, and records
 `preserved:no-renderer` in inspection. A phoneme-only output API can build on pronunciation
 callbacks later; the current top-level result is normalized text with semantic spans.
+Korean can already write that text as a Hangul pronunciation string
+(`pronunciation=hangul`, [Korean pronunciation output](korean-phoneme.ko.md)); it is
+text, not phone symbols.

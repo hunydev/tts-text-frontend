@@ -155,6 +155,20 @@ spacing. Inspect reports one `CUSTOM` span with `rule=control.pattern`,
 `unit=@join`; the trace records `JOIN` (the inner read adds no events). An
 unknown name such as `{@joinx}` is ignored like any invalid control.
 
+## Pronounce control (2026-10-09)
+
+`[[group]]{@pronounce}` reads the group as usual and then writes its Korean as it
+is pronounced, like the engine option `pronunciation=hangul` for that group only
+(colloquial Hangul, no vowel length).
+
+| Input | Output (ko-KR) |
+|---|---|
+| `오늘 [[민주주의의 의의]]{@pronounce}를 배웠다.` | `오늘 민주주이으 으이를 배웠다.` |
+| `[[국물이 맛있다]]{@pronounce}` | `궁무리 마싣따` |
+
+A word next to the group still decides liaison inside it; text outside the group
+is not rewritten. See [Korean pronunciation output](korean-phoneme.ko.md).
+
 ## Language-pack patterns
 
 An unescaped `@` at the beginning of a payload selects a named pattern:

@@ -120,6 +120,15 @@ characters retain source spans with zero output length. Trace `final-*` policy
 part offsets refer to the pre-filter rendered text within that span; original
 `input_begin/end` and final `output_begin/end` remain the span boundaries.
 
+Named policies go through `ttf_engine_set_option(engine, name, value)` before
+freeze; the header lists every name and value. `pronunciation=hangul` writes the
+Korean output as it is pronounced (colloquial Hangul, no vowel length): the text
+is normalized first, then each Hangul word is rewritten in place, so numbers and
+English are read before they become a pronunciation string (`국물이 맛있다` →
+`궁무리 마싣따`). Spans keep their offsets because a syllable keeps its byte
+length. The annotated control `[[group]]{@pronounce}` applies it to one group. See
+[Korean pronunciation output](korean-phoneme.ko.md).
+
 See [input format](input-format.md) and [speech resources](speech-resources.md).
 
 ## Errors

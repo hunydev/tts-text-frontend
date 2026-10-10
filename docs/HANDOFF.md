@@ -1,6 +1,20 @@
 # 현재 작업 인수인계
 
-갱신: 2026-09-30. Release **0.20.0**, public ABI **v1**.
+갱신: 2026-10-10. Release **0.20.0**, public ABI **v1**.
+
+## 최근 인계: 일본어 평가셋과 한국어 발음열 출력 (2026-10-08~10)
+
+- **일본어:** 자체 평가셋 `benchmark/datasets/ja-tn-eval`(1,000문장, 작성자 원어민 검토)을 만들고, 찾은 빈틈을 계약 `ja_range_mark_v44`~`ja_rest_v50`으로 고쳤다.
+  - 평가셋 점수: 우리 97.3%, wetext 76.9%, NeMo 73.6%
+  - 상세: [japanese-benchmark.ko.md](japanese-benchmark.ko.md)
+- **한국어 발음열 출력(G2P):** 옵션 `pronunciation=hangul`, 제어 `{@pronounce}`. 구어 기준 한글 발음열이다.
+  - 표준발음법 규칙, 표준국어대사전 예외(`pronunciation/stdict_phonemes.tsv`, CC BY-SA 2.0 KR), 활용형, 동형어 문맥 단서, 합성어를 처리한다.
+  - 말뭉치 200문장 원어민 검토: 문장 94.5%, 어절 99.4%. 계약 `ko_phoneme_v51`~`v58`(203건).
+  - 사용자 결정으로 여기서 마무리했다. 상세와 남은 한계는 [korean-phoneme.ko.md](korean-phoneme.ko.md)에 있다.
+- **사전 재생성:** `python3 -I tools/korean/stdict_phonemes.py --library build/libtts_text_frontend.so --resources resources --data benchmark/generated/stdict-20260906/data/pronunciations.tsv --archive benchmark/generated/stdict-20260906/stdict.zip`
+  - 원본은 로컬 전용이다.
+  - 출력 파일을 손으로 고치지 않는다. 고칠 때는 생성기 목록(`MAIN_READINGS`, `VERB_FORMS`, `NOUN_ONLY`, `RULE_HOMOGRAPHS`)을 바꾼다.
+- **옵션을 끈 출력:** 한국어·영어·JSUT 벤치마크가 모두 변하지 않았다.
 
 ## 이번 인계: 엔진 2차 개선 — 한국어 명백한 오류·영어 형식 (2026-09-30)
 
