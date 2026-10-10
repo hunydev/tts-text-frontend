@@ -35,7 +35,7 @@ typedef struct {
 
 /* The word before this one, when a single space separates them. */
 typedef struct {
-    int adjacent, coda, object, numeral, aux_next, verb_before, verb_next, noun_next;
+    int adjacent, coda, object, numeral, aux_next, verb_before, verb_next, noun_next, counter;
 } word_ctx_t;
 
 #define MAX_WORD 64
@@ -303,6 +303,29 @@ static int verb_before(const ttf_engine_t *e, const char *w, size_t n) {
     return lookup(e, "phoneme_verb_before", w, n) || (n >= 6 && !memcmp(w + n - 3, "만", 3));
 }
 
+/* 할 수, 갈 거야, 갈 것이다, 올 듯하다: a bound noun alone or with a particle or ending;
+   거쳐, 수령, 지원 only start like one. */
+static int bound_word(const ttf_engine_t *e, const char *w, size_t n) {
+    if (n < 3 || !lookup(e, "phoneme_bound", w, 3))
+        return 0;
+    return n == 3 || lookup(e, "phoneme_suffix", w + 3, n - 3) || lookup(e, "phoneme_ending", w + 3, n - 3) ||
+           lookup(e, "phoneme_bound_tail", w + 3, n - 3);
+}
+
+/* A number: Sino numeral syllables (이천팔백만), a native numeral (한, 스물다섯), or an
+   ordinal in 째 (넷째). */
+static int number_word(const ttf_engine_t *e, const char *w, size_t n) {
+    size_t q;
+    if (n < 3)
+        return 0;
+    if (!memcmp(w + n - 3, "째", 3) || lookup(e, "phoneme_native_numeral", w, n))
+        return 1;
+    for (q = 0; q + 3 <= n; q += 3)
+        if (!lookup(e, "phoneme_numeral", w + q, 3))
+            return 0;
+    return 1;
+}
+
 /* Length of the Hangul word at s (3-byte syllables). */
 static size_t hangul_run(const char *s, size_t n) {
     size_t z = 0;
@@ -377,6 +400,14 @@ static void read_word(const ttf_engine_t *e, const char *text, size_t bytes, syl
         return;
     }
     memcpy(out, s, (size_t)n * sizeof(*s));
+    /* 넷째 주가 주가, 26건의 이시뷱 거느: after a number, a one-syllable counter with a
+       particle is read by the rules, not as a dictionary word (株價 주까, 建議 거니). */
+    if (ctx && ctx->adjacent && ctx->counter && n >= 2 && lookup(e, "phoneme_suffix", text + 3, bytes - 3)) {
+        if (s[n - 1].o == O_NG && s[n - 1].v == V_UI && s[n - 1].c == C_0)
+            particle = n - 1;
+        apply_rules(out, (size_t)n, particle);
+        return;
+    }
     hit = lookup(e, "phoneme_word", text, bytes);
     if (hit && decode_word(hit, strlen(hit), p, MAX_WORD) == n) {
         memcpy(out, p, (size_t)n * sizeof(*p));
@@ -425,7 +456,11 @@ int ttf_korean_phoneme_joined(const ttf_engine_t *e, const char *s, size_t prev_
         return 1;
     if ((coda == C_N || coda == C_L) && !memcmp(next, "일", 3))
         return 1;
-    if (coda == C_L && lookup(e, "phoneme_bound", next, 3))
+    if (coda == C_L && bound_word(e, next, n))
+        return 1;
+    /* 넷째 | 주가: a counter with a particle after a number. */
+    if (number_word(e, prev, pn) && n >= 6 && lookup(e, "phoneme_word", next, n) &&
+        lookup(e, "phoneme_suffix", next + 3, n - 3))
         return 1;
     /* 신고 | 다녔다, 신고 | 했다: a cue after a same-spelling noun. */
     if ((hit = lookup(e, "phoneme_noun", prev, pn)) && hit[0] == '1' &&
@@ -440,8 +475,8 @@ int ttf_korean_phoneme_joined(const ttf_engine_t *e, const char *s, size_t prev_
 ttf_status_t ttf_korean_phonemize(const ttf_engine_t *e, char *text, size_t length, size_t begin,
                                   size_t end) {
     size_t at = 0, prev_end = SIZE_MAX;
-    int next_numeral = 0, next_object = 0, next_verb_before = 0;
-    word_ctx_t ctx = {0, C_0, 0, 0, 0, 0, 0, 0};
+    int next_numeral = 0, next_object = 0, next_verb_before = 0, next_counter = 0;
+    word_ctx_t ctx = {0, C_0, 0, 0, 0, 0, 0, 0, 0};
     if (!e || (!text && length) || begin > end || end > length)
         return TTF_EINVAL;
     while (at < length) {
@@ -471,6 +506,7 @@ ttf_status_t ttf_korean_phonemize(const ttf_engine_t *e, char *text, size_t leng
             next_object = stop - start >= 6 &&
                           (!memcmp(text + stop - 3, "을", 3) || !memcmp(text + stop - 3, "를", 3));
             next_verb_before = verb_before(e, text + start, stop - start);
+            next_counter = number_word(e, text + start, stop - start);
         }
         if (!(stop <= begin || start >= end || (stop - start) / 3 > MAX_WORD)) {
             syl_t out[MAX_WORD], last;
@@ -504,7 +540,7 @@ ttf_status_t ttf_korean_phonemize(const ttf_engine_t *e, char *text, size_t leng
             }
             read_word(e, text + start, stop - start, out, &ctx);
             /* 할 수 할 쑤, 갈 것 갈 껏: a bound noun after the adnominal ㄹ (제27항). */
-            if (ctx.adjacent && ctx.coda == C_L && ttf_resource_get(e, "phoneme_bound", "ko-KR", first, NULL))
+            if (ctx.adjacent && ctx.coda == C_L && bound_word(e, text + start, stop - start))
                 out[0].o = tense(out[0].o);
             for (i = 0; i < count; ++i) {
                 size_t pos = start + i * 3;
@@ -520,6 +556,7 @@ ttf_status_t ttf_korean_phonemize(const ttf_engine_t *e, char *text, size_t leng
         ctx.numeral = next_numeral;
         ctx.object = next_object;
         ctx.verb_before = next_verb_before;
+        ctx.counter = next_counter;
         prev_end = stop;
     }
     return TTF_OK;
