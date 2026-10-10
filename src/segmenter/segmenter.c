@@ -1,4 +1,5 @@
 #include "../core/internal.h"
+#include "../pronunciation/korean_phoneme.h"
 #include "../protected/protected.h"
 #include "../semantic/numeric_grouping.h"
 #include "../semantic/phone.h"
@@ -520,6 +521,17 @@ ttf_status_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, i
                     continue;
                 }
                 if (ttf_phone_boundary_pending(e, s, at + w, tokens, i + 1)) {
+                    at += w;
+                    continue;
+                }
+                /* pronunciation=hangul: 남지 | 않았다 reads across the space, so the
+                   cut moves on; an unfinished next word waits for more input. */
+                if (e->phoneme_output && i && i + 1 < count && t->end - t->begin == 1 && s[t->begin] == ' ' &&
+                    tokens[i - 1].script == TTF_SCRIPT_HANGUL && tokens[i - 1].end == t->begin &&
+                    tokens[i + 1].script == TTF_SCRIPT_HANGUL &&
+                    ((tokens[i + 1].end >= n && !final) ||
+                     ttf_korean_phoneme_joined(e, s, tokens[i - 1].begin, tokens[i - 1].end,
+                                               tokens[i + 1].begin, tokens[i + 1].end))) {
                     at += w;
                     continue;
                 }

@@ -654,11 +654,18 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "phoneme_word requires a Hangul word and a reading of the same length");
     } else if (SAME(k, "phoneme_suffix") || SAME(k, "phoneme_ending") || SAME(k, "phoneme_l_ending") ||
-               SAME(k, "phoneme_bound") || SAME(k, "phoneme_noun") || SAME(k, "phoneme_numeral")) {
+               SAME(k, "phoneme_bound") || SAME(k, "phoneme_numeral")) {
         *handled = 1;
         if ((status = bounded_key(r, 64, d)) != TTF_OK)
             return status;
         return SAME(v, "1") ? TTF_OK : ttf_validation_error(d, "Korean pronunciation marker supports 1 only");
+    } else if (SAME(k, "phoneme_noun")) {
+        *handled = 1;
+        if ((status = bounded_key(r, 64, d)) != TTF_OK)
+            return status;
+        return SAME(v, "1") || SAME(v, "2")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "phoneme_noun supports 1 (cues pick the verb) or 2 (always a noun)");
     } else if (SAME(k, "phoneme_aux")) {
         *handled = 1;
         if ((status = bounded_key(r, 16, d)) != TTF_OK)

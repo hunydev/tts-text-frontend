@@ -288,12 +288,14 @@ static const char *lookup(const ttf_engine_t *e, const char *kind, const char *t
 /* Phase 2 (2026-10-10): marks that need the shape of an inflected word.
  *   신고 신꼬, 감다 감따, 남습니다 남씀니다: a verb stem in ㄴ or ㅁ (phoneme_stem)
  *     tenses its ending (phoneme_ending, 제24항), unless the word is a noun of the
- *     same spelling (phoneme_noun: 남자, 참고, 신고) with no object before it, or the
+ *     same spelling (phoneme_noun: 참고, 신고) with no object before it, or a noun
+ *     marked 2 (문자, 남자), or the
  *     stem is also an ㄹ stem before 다 (안다 is 알다 + ㄴ다 as often as 안다).
  *   할게 할께, 갈지 갈찌, 할수록 할쑤록: an ending after the adnominal ㄹ
  *     (phoneme_l_ending, 제27항). */
 static void inflection_marks(const ttf_engine_t *e, const char *text, size_t bytes, syl_t *s, int n,
                              const word_ctx_t *ctx) {
+    const char *hit;
     int k;
     for (k = n - 1; k >= 1; --k) {
         const char *stem = lookup(e, "phoneme_stem", text, (size_t)k * 3);
@@ -301,10 +303,10 @@ static void inflection_marks(const ttf_engine_t *e, const char *text, size_t byt
             continue;
         if (stem[0] == '2' && s[k].o == O_D && s[k].v == V_A)
             break;
-        /* 신고 접수 (noun), 신발을 신고 / 남지 않았다 (verb): an object before it or an
-           auxiliary after it picks the verb. */
-        if (lookup(e, "phoneme_noun", text, bytes) &&
-            !(ctx && ((ctx->adjacent && ctx->object) || ctx->aux_next)))
+        /* 신고 접수 (noun), 신발을 신고 / 신고 있다 (verb): an object before it or an
+           auxiliary after it picks the verb; a noun marked 2 (문자, 남자) takes no cue. */
+        if ((hit = lookup(e, "phoneme_noun", text, bytes)) &&
+            (hit[0] == '2' || !(ctx && ((ctx->adjacent && ctx->object) || ctx->aux_next))))
             break;
         s[k].tense = 1;
         break;
@@ -364,6 +366,37 @@ static void read_word(const ttf_engine_t *e, const char *text, size_t bytes, syl
         particle = n - 1;
     inflection_marks(e, text, bytes, out, n, ctx);
     apply_rules(out, (size_t)n, particle);
+}
+
+/* pronunciation=hangul reads a word with its neighbour: 남지 않았다 (an auxiliary),
+   할 수 (a bound noun after ㄹ), 할 일이 (ㄴ insertion), 구두를 신고 (an object before a
+   same-spelling noun). A segment cut between them would lose that reading. */
+int ttf_korean_phoneme_joined(const ttf_engine_t *e, const char *s, size_t prev_begin, size_t prev_end,
+                              size_t next_begin, size_t next_end) {
+    char key[16], first[4];
+    size_t n = next_end - next_begin;
+    const char *hit;
+    int coda;
+    uint32_t cp;
+    size_t w;
+    if (prev_end - prev_begin < 3 || n < 3 || n >= sizeof(key) ||
+        ttf_utf8_decode(s + prev_end - 3, 3, &cp, &w) != 1 || cp < 0xac00 || cp > 0xd7a3)
+        return 0;
+    coda = (int)((cp - 0xac00) % 28);
+    memcpy(key, s + next_begin, n);
+    key[n] = 0;
+    memcpy(first, key, 3);
+    first[3] = 0;
+    if (ttf_resource_get(e, "phoneme_aux", "ko-KR", key, NULL) ||
+        ((hit = ttf_resource_get(e, "phoneme_aux", "ko-KR", first, NULL)) && !strcmp(hit, "1")))
+        return 1;
+    if ((coda == C_N || coda == C_L) && !strcmp(first, "일"))
+        return 1;
+    if (coda == C_L && ttf_resource_get(e, "phoneme_bound", "ko-KR", first, NULL))
+        return 1;
+    return prev_end - prev_begin >= 6 &&
+           (!memcmp(s + prev_end - 3, "을", 3) || !memcmp(s + prev_end - 3, "를", 3)) &&
+           (hit = ttf_resource_get(e, "phoneme_noun", "ko-KR", key, NULL)) && hit[0] == '1';
 }
 
 ttf_status_t ttf_korean_phonemize(const ttf_engine_t *e, char *text, size_t length, size_t begin,
