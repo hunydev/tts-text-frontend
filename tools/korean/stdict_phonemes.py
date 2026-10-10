@@ -34,6 +34,17 @@ HANGUL = re.compile(r"^[가-힣]+$")
 # Homographs whose main entry is not clear enough to override the rules: both readings are
 # common (잠자리 dragonfly / 잠짜리 bed, 산발 散髮 / 山발, 진기 珍奇 / 津氣).
 RULE_HOMOGRAPHS = {"잠자리", "산발", "진기"}
+# Homographs whose examples do not decide them, read like the everyday sense: native review
+# of the ones used at least 3 times in local corpora (2026-10-10). Each reading must be one
+# of the dictionary's (after the colloquial vowels).
+MAIN_READINGS = {
+    "가정집": "가정찝", "개수": "개쑤", "건설사": "건설싸", "권수": "권쑤", "내과": "내꽈", "노인성": "노인썽",
+    "단가": "단까", "대권": "대꿘", "대수": "대쑤", "볼거리": "볼꺼리", "비법": "비뻡", "사증": "사쯩",
+    "산과": "산꽈", "상과": "상꽈", "송장": "송짱", "승수": "승쑤", "실사": "실싸", "약사법": "약싸뻡",
+    "외과": "외꽈", "운송장": "운송짱", "운전대": "운전때", "유가": "유까", "의과": "으꽈", "장미과": "장미꽈",
+    "장염": "장념", "전과": "전꽈", "진가": "진까", "철자": "철짜", "타점": "타쩜", "태권": "태꿘",
+    "한자": "한짜",
+}
 # Sino numeral syllables: a word made only of them is also a number read aloud (12 일이,
 # 01 공일), so its homograph entries (一二 일리) are not used.
 NUMERAL = set("영공일이삼사오육칠팔구십백천만억조")
@@ -142,6 +153,12 @@ def main():
             prons = [v for variants, _ in entries[word] for v in variants]
             main = (main_entry(rule, entries[word])
                     if word not in RULE_HOMOGRAPHS and not set(word) <= NUMERAL else None)
+            if word in MAIN_READINGS:
+                readings = {pick(word, v) for v, _ in entries[word]}
+                assert MAIN_READINGS[word] in readings, (word, readings)
+                homographs += 1
+                rows.append((word, MAIN_READINGS[word]))
+                continue
             if rule in prons and main:
                 homographs += 1
                 rows.append((word, pick(word, main)))
