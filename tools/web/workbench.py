@@ -14,6 +14,7 @@ CORPORA = {
     "ko-phoneme-v55": ("한국어 발음열 출력 동음이의어 주 항목", "ko_phoneme_v55.jsonl"),
     "ko-phoneme-v56": ("한국어 발음열 출력 동음이의어 원어민 검토", "ko_phoneme_v56.jsonl"),
     "ko-phoneme-v57": ("한국어 발음열 출력 의존 명사·단위 조사", "ko_phoneme_v57.jsonl"),
+    "ko-phoneme-v58": ("한국어 발음열 출력 합성어·하다 활용", "ko_phoneme_v58.jsonl"),
     "ko-phoneme-v51": ("한국어 발음열 출력 1단계 (구어, 한글)", "ko_phoneme_v51.jsonl"),
     "ja-rest-v50": ("Japanese remaining gaps v50", "ja_rest_v50.jsonl"),
     "ja-gaps78-v49": ("Japanese gaps 7-8 v49", "ja_gaps78_v49.jsonl"),

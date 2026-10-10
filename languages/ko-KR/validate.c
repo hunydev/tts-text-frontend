@@ -656,7 +656,8 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     } else if (SAME(k, "phoneme_suffix") || SAME(k, "phoneme_ending") || SAME(k, "phoneme_l_ending") ||
                SAME(k, "phoneme_bound") || SAME(k, "phoneme_numeral") || SAME(k, "phoneme_verb_before") ||
                SAME(k, "phoneme_verb_after") || SAME(k, "phoneme_bound_tail") ||
-               SAME(k, "phoneme_native_numeral")) {
+               SAME(k, "phoneme_native_numeral") || SAME(k, "phoneme_light_verb") ||
+               SAME(k, "phoneme_particle_end") || SAME(k, "phoneme_compound") || SAME(k, "phoneme_place")) {
         *handled = 1;
         if ((status = bounded_key(r, 64, d)) != TTF_OK)
             return status;

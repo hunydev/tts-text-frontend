@@ -380,6 +380,73 @@ static void inflection_marks(const ttf_engine_t *e, const char *text, size_t byt
         }
 }
 
+/* 칠십오 칠씨보, 팔십 팔씹: in a number, 십 after ㄹ (일, 칠, 팔) is tensed. */
+static void numeral_tensing(const ttf_engine_t *e, const char *text, const syl_t *s, int n, syl_t *out) {
+    int k;
+    for (k = 1; k < n && lookup(e, "phoneme_numeral", text + (size_t)k * 3, 3) &&
+                lookup(e, "phoneme_numeral", text + (size_t)(k - 1) * 3, 3);
+         ++k)
+        if (s[k - 1].c == C_L && !memcmp(text + (size_t)k * 3, "십", 3))
+            out[k].tense = 1;
+}
+
+/* Sino numeral syllables only (이천팔백, 공공칠일). */
+static int numeral_run(const ttf_engine_t *e, const char *w, size_t n) {
+    size_t q;
+    for (q = 0; q + 3 <= n; q += 3)
+        if (!lookup(e, "phoneme_numeral", w + q, 3))
+            return 0;
+    return n > 0;
+}
+
+/* See read_word: A (2+ syllables) + listed word D (2+) + a particle, a light verb or nothing. */
+static int compound_word(const ttf_engine_t *e, const char *text, size_t bytes, const syl_t *s, int n,
+                         syl_t *out) {
+    syl_t p[MAX_WORD];
+    int i, j;
+    for (i = 2; i + 2 <= n; ++i)
+        for (j = n; j >= i + 2; --j) {
+            const char *word = lookup(e, "phoneme_word", text + i * 3, (size_t)(j - i) * 3);
+            const char *rest = text + j * 3;
+            size_t rn = bytes - (size_t)j * 3;
+            int k;
+            if (!word || decode_word(word, strlen(word), p, MAX_WORD) != j - i)
+                continue;
+            /* 전문예술법인: 인 after a compound is more often 법인 than the copula. */
+            if (rn && ((!lookup(e, "phoneme_suffix", rest, rn) && !word_cue(e, "phoneme_light_verb", rest, rn)) ||
+                       (rn == 3 && !memcmp(rest, "인", 3))))
+                continue;
+            /* 맥주가 (맥주 + 가, not 주가), 초등학생과 (not 學生課), 고등학교의 (not 學校醫):
+               a listed word ending like a particle, up to three syllables or ending in 의. */
+            if ((j - i <= 3 || !memcmp(text + (j - 1) * 3, "의", 3)) &&
+                lookup(e, "phoneme_particle_end", text + (j - 1) * 3, 3) &&
+                !lookup(e, "phoneme_compound", text, (size_t)j * 3))
+                continue;
+            /* 공공칠일 (0071 read digit by digit): in a word of numeral syllables only a
+               listed word ending in a place value (팔십 팔씹) is a part. */
+            if (numeral_run(e, text, (size_t)j * 3) && !lookup(e, "phoneme_place", text + (j - 1) * 3, 3))
+                continue;
+            memcpy(out, s, (size_t)n * sizeof(*s));
+            for (k = i; k < j; ++k) {
+                out[k] = p[k - i];
+                out[k].fixed = k > i;
+            }
+            /* 대전의료원 대저니료원: the listed word's 의 is not word-initial here. */
+            if (s[i].o == O_NG && s[i].v == V_UI)
+                out[i].v = V_UI;
+            /* The written coda of the last syllable meets what follows (활동을 활똥을). */
+            if (rn)
+                out[j - 1].c = s[j - 1].c;
+            numeral_tensing(e, text, s, n, out);
+            /* 최고수준의 최고수주느: the particle 의 after it. */
+            apply_rules(out, (size_t)n, rn == 3 && !memcmp(rest, "의", 3) ? j : -1);
+            for (k = i; k < j; ++k)
+                out[k].fixed = 0;
+            return 1;
+        }
+    return 0;
+}
+
 /* Read one word (n syllables, 3 bytes each) into out (same size). */
 static void read_word(const ttf_engine_t *e, const char *text, size_t bytes, syl_t *out,
                       const word_ctx_t *ctx) {
@@ -416,7 +483,9 @@ static void read_word(const ttf_engine_t *e, const char *text, size_t bytes, syl
     /* 물고기를 물꼬기를: a listed word with a suffix keeps the word's reading. */
     for (k = n - 1; k >= 1; --k) {
         const char *word = lookup(e, "phoneme_word", text, (size_t)k * 3);
-        if (!word || !lookup(e, "phoneme_suffix", text + k * 3, bytes - (size_t)k * 3) ||
+        if (!word ||
+            !(lookup(e, "phoneme_suffix", text + k * 3, bytes - (size_t)k * 3) ||
+              (k >= 2 && word_cue(e, "phoneme_light_verb", text + k * 3, bytes - (size_t)k * 3))) ||
             decode_word(word, strlen(word), p, MAX_WORD) != k)
             continue;
         memcpy(out, p, (size_t)(k - 1) * sizeof(*p));
@@ -431,10 +500,17 @@ static void read_word(const ttf_engine_t *e, const char *text, size_t bytes, syl
         out[k - 1].fixed = 0;
         return;
     }
+    /* 공헌활동 공헌활똥, 정책평가를 (when listed): a compound of two or more syllables and a
+       listed word of two or more, with a particle, a light verb or nothing after it. A listed
+       word whose last syllable is also a particle (주가: 맥주 + 가) is left to the rules
+       unless the compound itself is listed (phoneme_compound). */
+    if (n >= 4 && compound_word(e, text, bytes, s, n, out))
+        return;
     /* 나라의 나라으: a final 의 is the particle unless the word is listed (회의). */
     if (n >= 2 && s[n - 1].o == O_NG && s[n - 1].v == V_UI && s[n - 1].c == C_0)
         particle = n - 1;
     inflection_marks(e, text, bytes, out, n, ctx);
+    numeral_tensing(e, text, s, n, out);
     apply_rules(out, (size_t)n, particle);
 }
 

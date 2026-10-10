@@ -446,3 +446,64 @@ phoneme_native_numeral	ko-KR	일흔여덟	1
 phoneme_native_numeral	ko-KR	일흔여섯	1
 phoneme_native_numeral	ko-KR	일흔일곱	1
 phoneme_native_numeral	ko-KR	일흔하나	1
+# phoneme_light_verb: the start of a 하다, 되다, 받다, 시키다, 당하다 form after a listed
+# word, which keeps its reading (평가받는다 평까반는다, 발생한다고 발쌩한다고; 2026-10-10).
+# 1 matches the first one to three syllables. A word of its own (壯大하다) is listed.
+# phoneme_particle_end: a last syllable that is also a particle or ending; a compound
+# ending in a listed word with one (외과, 평가, 단가) needs phoneme_compound.
+phoneme_particle_end	ko-KR	가	1
+phoneme_particle_end	ko-KR	이	1
+phoneme_particle_end	ko-KR	의	1
+phoneme_particle_end	ko-KR	은	1
+phoneme_particle_end	ko-KR	는	1
+phoneme_particle_end	ko-KR	을	1
+phoneme_particle_end	ko-KR	를	1
+phoneme_particle_end	ko-KR	도	1
+phoneme_particle_end	ko-KR	만	1
+phoneme_particle_end	ko-KR	와	1
+phoneme_particle_end	ko-KR	과	1
+phoneme_particle_end	ko-KR	로	1
+phoneme_particle_end	ko-KR	에	1
+phoneme_particle_end	ko-KR	서	1
+phoneme_particle_end	ko-KR	야	1
+phoneme_particle_end	ko-KR	나	1
+phoneme_particle_end	ko-KR	고	1
+phoneme_particle_end	ko-KR	며	1
+phoneme_particle_end	ko-KR	랑	1
+phoneme_particle_end	ko-KR	요	1
+phoneme_particle_end	ko-KR	다	1
+phoneme_particle_end	ko-KR	지	1
+# phoneme_place: a place value; in a word of numeral syllables a listed part must end in one
+# (천구백팔십 천구백팔씹, but 공공칠일 for 0071 stays 공공치릴).
+phoneme_place	ko-KR	십	1
+phoneme_place	ko-KR	백	1
+phoneme_place	ko-KR	천	1
+phoneme_place	ko-KR	만	1
+phoneme_place	ko-KR	억	1
+phoneme_place	ko-KR	조	1
+phoneme_light_verb	ko-KR	하	1
+phoneme_light_verb	ko-KR	한	1
+phoneme_light_verb	ko-KR	할	1
+phoneme_light_verb	ko-KR	함	1
+phoneme_light_verb	ko-KR	합	1
+phoneme_light_verb	ko-KR	해	1
+phoneme_light_verb	ko-KR	했	1
+phoneme_light_verb	ko-KR	되	1
+phoneme_light_verb	ko-KR	된	1
+phoneme_light_verb	ko-KR	될	1
+phoneme_light_verb	ko-KR	됨	1
+phoneme_light_verb	ko-KR	됩	1
+phoneme_light_verb	ko-KR	돼	1
+phoneme_light_verb	ko-KR	됐	1
+phoneme_light_verb	ko-KR	받	1
+phoneme_light_verb	ko-KR	시키	1
+phoneme_light_verb	ko-KR	시킨	1
+phoneme_light_verb	ko-KR	시킬	1
+phoneme_light_verb	ko-KR	시켜	1
+phoneme_light_verb	ko-KR	시켰	1
+phoneme_light_verb	ko-KR	시킵	1
+phoneme_light_verb	ko-KR	당하	1
+phoneme_light_verb	ko-KR	당한	1
+phoneme_light_verb	ko-KR	당할	1
+phoneme_light_verb	ko-KR	당해	1
+phoneme_light_verb	ko-KR	당했	1

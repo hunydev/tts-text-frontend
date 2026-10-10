@@ -144,12 +144,14 @@ def main():
     engine = Engine(Path(args.library), Path(args.resources),
                     dict(default_language="ko-KR", output_mode="speech", pronunciation="hangul"))
     rows, same, differ, homographs = [], 0, 0, 0
+    rules_reading = {}
     # Only a ㄴ coda comes from an ㄹ stem (알다 + ㄴ다 안다); ㅁ stems are never ambiguous.
     ambiguous = {stem for stem in verbs if (ord(stem[-1]) - 0xAC00) % 28 == 4 and
                  stem[:-1] + chr(ord(stem[-1]) - (ord(stem[-1]) - 0xAC00) % 28 + 8) in verbs}
     try:
         for word in sorted(entries):
             rule = engine.normalize(word.encode())["text"]
+            rules_reading[word] = rule
             prons = [v for variants, _ in entries[word] for v in variants]
             main = (main_entry(rule, entries[word])
                     if word not in RULE_HOMOGRAPHS and not set(word) <= NUMERAL else None)
@@ -194,6 +196,35 @@ def main():
     text += "".join("phoneme_stem\tko-KR\t%s\t%s\n" % r for r in stems)
     text += "".join("phoneme_noun\tko-KR\t%s\t%s\n" % (w, "2" if w in NOUN_ONLY else "1") for w in blocked)
     Path(args.out).write_text(text, encoding="utf-8")
+    # Self-check (2026-10-10): with the file in place a compound reading may take a listed
+    # word inside another headword (화점 in 백화점, 산기 in 계산기), alone or at the end of a
+    # compound (롯데백화점). Such a headword is written with its own reading.
+    guards = []
+    listed = {w for w, _ in rows}
+    for _ in range(2):
+        engine = Engine(Path(args.library), Path(args.resources),
+                        dict(default_language="ko-KR", output_mode="speech", pronunciation="hangul"))
+        try:
+            added = []
+            for word in sorted(entries):
+                if word in listed or len(word) < 3 or rules_reading.get(word) is None:
+                    continue
+                prons = {v for variants, _ in entries[word] for v in variants}
+                if rules_reading[word] not in prons:
+                    continue
+                # Alone, and as the end of a compound (가나 has no coda, so it changes nothing).
+                if ((len(word) >= 4 and engine.normalize(word.encode())["text"] not in prons) or
+                        engine.normalize(("가나" + word).encode())["text"] != "가나" + rules_reading[word]):
+                    added.append((word, rules_reading[word]))
+        finally:
+            engine.close()
+        if not added:
+            break
+        guards += added
+        listed.update(w for w, _ in added)
+        text += "".join("phoneme_word\tko-KR\t%s\t%s\n" % r for r in added)
+        Path(args.out).write_text(text, encoding="utf-8")
+    print("compound guards %d" % len(guards))
     print("stems %d, same-spelling nouns %d" % (len(stems), len(blocked)))
     print("words %d, rules agree %d (%.1f%%), exceptions %d, homograph main entries %d, rows %d"
           % (len(entries), same, 100 * same / max(1, len(entries)), differ, homographs, len(rows)))
