@@ -4,7 +4,7 @@
 
 ## 최근 인계: 일본어 평가셋과 한국어 발음열 출력 (2026-10-08~10)
 
-- **일본어:** 자체 평가셋 `benchmark/datasets/ja-tn-eval`(1,000문장, 작성자 원어민 검토)을 만들고, 찾은 빈틈을 계약 `ja_range_mark_v44`~`ja_rest_v50`으로 고쳤다.
+- **일본어:** 자체 평가셋 `benchmark/datasets/ja-tn-eval`(1,250개 항목·채점 span 1,343개, 작성자 원어민 검토)을 만들고, 찾은 빈틈을 계약 `ja_range_mark_v44`~`ja_rest_v50`으로 고쳤다.
   - 평가셋 점수: 우리 97.3%, wetext 76.9%, NeMo 73.6%
   - 상세: [japanese-benchmark.ko.md](japanese-benchmark.ko.md)
 - **한국어 발음열 출력(G2P):** 옵션 `pronunciation=hangul`, 제어 `{@pronounce}`. 구어 기준 한글 발음열이다.

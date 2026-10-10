@@ -31,8 +31,8 @@
   Words across a space are not linked. A native review of 200 random corpus
   sentences: 94.5% of sentences and 99.4% of words right. Contracts
   ko_phoneme_v51..v59 (211). Output with the option off is unchanged.
-- Japanese evaluation set ja-tn-eval-v1 (benchmark/datasets/ja-tn-eval, 1,000
-  sentences with references, native review by the author) and the gaps it found:
+- Japanese evaluation set ja-tn-eval-v1 (benchmark/datasets/ja-tn-eval, 1,250
+  entries with references, 1,343 scored spans, native review by the author) and the gaps it found:
   〜 before kanji, counters, ratios and scores, M/D dates, phone and code contexts,
   and the rest (contracts ja_range_mark_v44, ja_gaps_v45, ja_counters_v46,
   ja_scores_v47, ja_slash_dates_v48, ja_gaps78_v49, ja_rest_v50). On the set: ours

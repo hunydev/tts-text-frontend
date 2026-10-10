@@ -280,7 +280,7 @@
       "docs": [
         "docs/japanese-pack.ko.md",
         "docs/japanese-benchmark.ko.md",
-        "benchmark/datasets/ja-tn-eval (자체 평가셋 1,250건, 우리 97.3%·wetext 76.6%·NeMo 73.4%)",
+        "benchmark/datasets/ja-tn-eval (자체 평가셋 1,250건, 우리 97.3%·wetext 76.9%·NeMo 73.6%)",
         "/ja-quality (JSUT 측정)"
       ]
     }
