@@ -2,7 +2,8 @@
 """Build resources/languages/ko-KR/pronunciation/stdict_phonemes.tsv.
 
     python3 -I tools/korean/stdict_phonemes.py --library build/libtts_text_frontend.so \\
-        --resources resources --data benchmark/generated/stdict-20260906/data/pronunciations.tsv
+        --resources resources --data benchmark/generated/stdict-20260906/data/pronunciations.tsv \\
+        --archive benchmark/generated/stdict-20260906/stdict.zip
 
 Input: the local 표준국어대사전 pronunciation table (headword, ..., pronunciation;
 CC BY-SA 2.0 KR, never committed). Each headword is read by the engine's own
@@ -12,11 +13,16 @@ other 의 이, ㅖ after a consonant ㅔ, 져 저) and with the length mark remo
 Only the words the rules read differently are written, plus every word ending
 in 의 (so a final 의 is not taken for the particle). A headword is skipped when the rules match any
 of its entries or variants; otherwise the last variant (허용, the colloquial one) is kept.
+Homographs (2026-10-10): when the rules match only a rare entry, the main entry is kept
+instead (건수: 件數 건쑤, not 虔修 건수). The main entry is the one with clearly more usage
+examples in the dictionary (--archive, the JSON dump): at least 2, twice as many, and 2 more.
 """
 import argparse
 import collections
+import json
 import re
 import sys
+import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -25,6 +31,12 @@ from native import Engine  # noqa: E402
 
 HANGUL = re.compile(r"^[가-힣]+$")
 # Same-spelling words, measured on 1,963 uses in local corpora (2026-10-10, native review).
+# Homographs whose main entry is not clear enough to override the rules: both readings are
+# common (잠자리 dragonfly / 잠짜리 bed, 산발 散髮 / 山발, 진기 珍奇 / 津氣).
+RULE_HOMOGRAPHS = {"잠자리", "산발", "진기"}
+# Sino numeral syllables: a word made only of them is also a number read aloud (12 일이,
+# 01 공일), so its homograph entries (一二 일리) are not used.
+NUMERAL = set("영공일이삼사오육칠팔구십백천만억조")
 # A verb form far more often than the noun: read as the verb (목표로 삼고 삼꼬).
 VERB_FORMS = {"감고", "검고", "남고", "남지", "담고", "담자", "담지", "더듬자", "삼고", "삼다", "삼지", "삼자",
               "심고", "안고", "참자", "참지", "품고", "품지"}
@@ -69,14 +81,39 @@ def pick(word, variants):
     return variants[0]
 
 
+def examples(archive):
+    """Usage examples per entry (target_code) in the dictionary JSON dump."""
+    out = {}
+    with zipfile.ZipFile(archive) as z:
+        for name in z.namelist():
+            if name.endswith(".json"):
+                for item in json.loads(z.read(name))["channel"]["item"]:
+                    out[item["target_code"]] = sum(
+                        len(s.get("example_info") or []) for p in item["word_info"]["pos_info"]
+                        for c in p["comm_pattern_info"] for s in c["sense_info"] if s.get("type") == "일반어")
+    return out
+
+
+def main_entry(rule, entries):
+    """The variants of the entry the rules miss when it clearly outnumbers the ones they match."""
+    matched = max((n for v, n in entries if rule in v), default=0)
+    missed = [(n, v) for v, n in entries if rule not in v]
+    if not missed:
+        return None
+    n, v = max(missed, key=lambda x: x[0])
+    return v if n >= 2 and n >= 2 * matched and n - matched >= 2 else None
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--library", required=True)
     ap.add_argument("--resources", required=True)
     ap.add_argument("--data", required=True)
+    ap.add_argument("--archive", required=True, help="표준국어대사전 JSON dump (stdict.zip), for usage examples")
     ap.add_argument("--out", default=str(ROOT / "resources/languages/ko-KR/pronunciation/stdict_phonemes.tsv"))
     args = ap.parse_args()
     entries = collections.defaultdict(list)
+    usage = examples(args.archive)
     verbs, nouns = set(), set()
     for line in Path(args.data).read_text(encoding="utf-8").splitlines()[1:]:
         f = line.split("\t")
@@ -90,19 +127,25 @@ def main():
         variants = [colloquial(v.replace("ː", "")) for v in f[4].split("|")
                     if HANGUL.match(v.replace("ː", "") or "-") and len(v.replace("ː", "")) == len(word)]
         if HANGUL.match(word) and variants:
-            entries[word].append(variants)
+            entries[word].append((variants, usage.get(int(f[5]), 0) if len(f) > 5 and f[5].isdigit() else 0))
     # The rules are measured without the dictionary: empty the file first.
     Path(args.out).write_text(HEADER, encoding="utf-8")
     engine = Engine(Path(args.library), Path(args.resources),
                     dict(default_language="ko-KR", output_mode="speech", pronunciation="hangul"))
-    rows, same, differ = [], 0, 0
+    rows, same, differ, homographs = [], 0, 0, 0
     # Only a ㄴ coda comes from an ㄹ stem (알다 + ㄴ다 안다); ㅁ stems are never ambiguous.
     ambiguous = {stem for stem in verbs if (ord(stem[-1]) - 0xAC00) % 28 == 4 and
                  stem[:-1] + chr(ord(stem[-1]) - (ord(stem[-1]) - 0xAC00) % 28 + 8) in verbs}
     try:
         for word in sorted(entries):
             rule = engine.normalize(word.encode())["text"]
-            prons = [v for variants in entries[word] for v in variants]
+            prons = [v for variants, _ in entries[word] for v in variants]
+            main = (main_entry(rule, entries[word])
+                    if word not in RULE_HOMOGRAPHS and not set(word) <= NUMERAL else None)
+            if rule in prons and main:
+                homographs += 1
+                rows.append((word, pick(word, main)))
+                continue
             if rule in prons:
                 same += 1
                 if word.endswith("의"):
@@ -113,7 +156,7 @@ def main():
             differ += 1
             # Colloquial: the last variant (허용: 맛있다 마싣따) of the most common entry, but
             # not one that only reads ㅚ as ㅞ (회의 회이, not 훼이): ㅚ stays ㅚ everywhere.
-            rows.append((word, collections.Counter(pick(word, v) for v in entries[word]).most_common(1)[0][0]))
+            rows.append((word, collections.Counter(pick(word, v) for v, _ in entries[word]).most_common(1)[0][0]))
     finally:
         engine.close()
     # Phase 2: verb stems in ㄴ or ㅁ (2 when the ㄹ stem of the same shape exists:
@@ -135,8 +178,8 @@ def main():
     text += "".join("phoneme_noun\tko-KR\t%s\t%s\n" % (w, "2" if w in NOUN_ONLY else "1") for w in blocked)
     Path(args.out).write_text(text, encoding="utf-8")
     print("stems %d, same-spelling nouns %d" % (len(stems), len(blocked)))
-    print("words %d, rules agree %d (%.1f%%), exceptions %d, rows %d"
-          % (len(entries), same, 100 * same / max(1, len(entries)), differ, len(rows)))
+    print("words %d, rules agree %d (%.1f%%), exceptions %d, homograph main entries %d, rows %d"
+          % (len(entries), same, 100 * same / max(1, len(entries)), differ, homographs, len(rows)))
 
 
 if __name__ == "__main__":
