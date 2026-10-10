@@ -166,8 +166,9 @@ is pronounced, like the engine option `pronunciation=hangul` for that group only
 | `오늘 [[민주주의의 의의]]{@pronounce}를 배웠다.` | `오늘 민주주이으 으이를 배웠다.` |
 | `[[국물이 맛있다]]{@pronounce}` | `궁무리 마싣따` |
 
-A word next to the group still decides liaison inside it; text outside the group
-is not rewritten. The group is normalized on its own, like `{@join}`.
+A word the control touches is rewritten whole, so liaison across its edge stays
+consistent (`apple은{@pronounce}` → `애프른`, `[[국물]]{@pronounce}이` → `궁무리`); a word
+after a space is not rewritten. The group is normalized on its own, like `{@join}`.
 
 `X{@pronounce}` on one atom (2026-10-10) reads the atom in its sentence, with up
 to two words on each side, and rewrites only the atom's reading:

@@ -631,6 +631,16 @@ static const ttf_language_pack_t *electronic_context(const ttf_engine_t *e,
     free(tokens);
     return pack;
 }
+/* A precomposed Hangul syllable (3 UTF-8 bytes) at p. */
+static int hangul_syllable(const char *p) {
+    const unsigned char *u = (const unsigned char *)p;
+    uint32_t cp;
+    if (u[0] < 0xea || u[0] > 0xed || (u[1] & 0xc0) != 0x80 || (u[2] & 0xc0) != 0x80)
+        return 0;
+    cp = ((uint32_t)(u[0] & 0x0f) << 12) | ((uint32_t)(u[1] & 0x3f) << 6) | (uint32_t)(u[2] & 0x3f);
+    return cp >= 0xac00 && cp <= 0xd7a3;
+}
+
 /* Output ranges read digit by digit, for the pronunciation output: a phone number
    or a digit sequence (112 일일이), but not a date read that way (8·15 팔일오, which
    links as usual) or a reading with a place value (백십이). */
@@ -2057,9 +2067,17 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
         st = digit_regions(out, output.data, &digits, &digit_count);
         if (st == TTF_OK && e->phoneme_output)
             st = ttf_korean_phonemize(e, output.data, output.length, 0, output.length, digits, digit_count);
-        for (size_t k = 0; st == TTF_OK && !e->phoneme_output && k + 1 < phoneme_count; k += 2)
-            st = ttf_korean_phonemize(e, output.data, output.length, phoneme_regions[k],
-                                      phoneme_regions[k + 1], digits, digit_count);
+        for (size_t k = 0; st == TTF_OK && !e->phoneme_output && k + 1 < phoneme_count; k += 2) {
+            /* apple은{@pronounce} 애프른, [[국물]]{@pronounce}이 궁무리: a word the control
+               touches is rewritten whole, or liaison across its edge would double a
+               consonant (애플른); a word after a space stays as written (2026-10-10). */
+            size_t b = phoneme_regions[k], z = phoneme_regions[k + 1];
+            while (b >= 3 && hangul_syllable(output.data + b - 3))
+                b -= 3;
+            while (z + 3 <= output.length && hangul_syllable(output.data + z))
+                z += 3;
+            st = ttf_korean_phonemize(e, output.data, output.length, b, z, digits, digit_count);
+        }
         free(digits);
     }
     free(phoneme_regions);
