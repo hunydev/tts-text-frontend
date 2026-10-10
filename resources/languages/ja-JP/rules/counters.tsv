@@ -325,3 +325,15 @@ after_suffix	ja-JP	カ月	1
 before_suffix	ja-JP	カ月	1
 after_suffix	ja-JP	世紀	1
 before_suffix	ja-JP	世紀	1
+# around_suffix: 頃 ごろ after a time, date or age count (8時頃 はちじごろ, 8時半頃 はちじはんごろ;
+# 2026-10-11, after a TTS read はちじ頃 as ころ). 年頃 without a number stays a word.
+around_suffix	ja-JP	時	1
+around_suffix	ja-JP	分	1
+around_suffix	ja-JP	日	1
+around_suffix	ja-JP	月	1
+around_suffix	ja-JP	年	1
+around_suffix	ja-JP	年度	1
+around_suffix	ja-JP	世紀	1
+around_suffix	ja-JP	年代	1
+around_suffix	ja-JP	歳	1
+around_suffix	ja-JP	才	1

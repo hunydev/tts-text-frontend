@@ -2,6 +2,12 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Japanese 頃 after a time, date or age count reads ごろ (around_suffix): 8時頃
+  はちじごろ, 8時半頃 はちじはんごろ, 5月頃 ごがつごろ, 30歳頃 さんじゅっさいごろ; 年頃
+  without a number stays a word. Found by an OpenAI TTS -> STT check of 20
+  ja-tn-eval sentences (raw text 10/20 read right, our output 14/20): the TTS
+  read はちじ頃 as ころ. Contract ja_goro_v62 (9). The evaluation set and JSUT
+  are unchanged (their reader already read 頃 as ごろ).
 - A title number chosen by its particle (project-owner request): a number up to
   ten written right after a word is read with the English numeral, as after a
   listed product name, when only that reading fits the particle the writer chose:

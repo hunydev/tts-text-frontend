@@ -1390,11 +1390,20 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             ((!memcmp(text + p, "\xe4\xb8\xad", 3) && res(e, "long_suffix", key)) ||
              (!memcmp(text + p, "\xe5\x8d\x8a", 3) && res(e, "half_suffix", key)) ||
              (!memcmp(text + p, "\xe5\xbe\x8c", 3) && res(e, "after_suffix", key) && !half_word(text + p, n - p)) ||
-             (!memcmp(text + p, "\xe5\x89\x8d", 3) && res(e, "before_suffix", key) && !half_word(text + p, n - p)))) {
+             (!memcmp(text + p, "\xe5\x89\x8d", 3) && res(e, "before_suffix", key) && !half_word(text + p, n - p)) ||
+             (!memcmp(text + p, "\xe9\xa0\x83", 3) && res(e, "around_suffix", key)))) {
             memcpy(norm + nl, text + p, 3);
             nl += 3;
             norm[nl] = 0;
             p += 3;
+            /* 8時半頃 はちじはんごろ */
+            if (!memcmp(text + p - 3, "\xe5\x8d\x8a", 3) && p + 3 <= n && nl + 4 < sizeof(norm) &&
+                !memcmp(text + p, "\xe9\xa0\x83", 3) && res(e, "around_suffix", key)) {
+                memcpy(norm + nl, text + p, 3);
+                nl += 3;
+                norm[nl] = 0;
+                p += 3;
+            }
             break;
         }
         /* 3分の1 さんぶんのいち: a written fraction, not minutes. */
@@ -1552,6 +1561,17 @@ static ttf_status_t render_chain(const ttf_engine_t *e, const char *v, ttf_buffe
         } else if (p + 3 <= n && !memcmp(v + p, "\xe5\x89\x8d", 3) && res(e, "before_suffix", key) &&
                    !half_word(v + p, n - p)) {
             if ((st = ttf_buffer_puts(b, "まえ")) != TTF_OK) /* 10分前 じゅっぷんまえ */
+                return st;
+            p += 3;
+        } else if (p + 3 <= n && !memcmp(v + p, "\xe9\xa0\x83", 3) && res(e, "around_suffix", key)) {
+            if ((st = ttf_buffer_puts(b, "ごろ")) != TTF_OK) /* 8時頃 はちじごろ (2026-10-11) */
+                return st;
+            p += 3;
+        }
+        /* 8時半頃 はちじはんごろ */
+        if (p >= 3 && p + 3 <= n && !memcmp(v + p - 3, "\xe5\x8d\x8a", 3) && !memcmp(v + p, "\xe9\xa0\x83", 3) &&
+            res(e, "around_suffix", key)) {
+            if ((st = ttf_buffer_puts(b, "ごろ")) != TTF_OK)
                 return st;
             p += 3;
         }
@@ -1819,11 +1839,19 @@ static ttf_status_t kanji_numerals(const ttf_engine_t *e, const char *s, size_t 
                     ((!memcmp(s + p, "\xe4\xb8\xad", 3) && res(e, "long_suffix", key)) ||
                      (!memcmp(s + p, "\xe5\x8d\x8a", 3) && res(e, "half_suffix", key)) ||
                      (!memcmp(s + p, "\xe5\xbe\x8c", 3) && res(e, "after_suffix", key) && !half_word(s + p, n - p)) ||
-                     (!memcmp(s + p, "\xe5\x89\x8d", 3) && res(e, "before_suffix", key) && !half_word(s + p, n - p)))) {
+                     (!memcmp(s + p, "\xe5\x89\x8d", 3) && res(e, "before_suffix", key) && !half_word(s + p, n - p)) ||
+                     (!memcmp(s + p, "\xe9\xa0\x83", 3) && res(e, "around_suffix", key)))) {
                     memcpy(norm + nl, s + p, 3);
                     nl += 3;
                     norm[nl] = 0;
                     p += 3;
+                    if (!memcmp(s + p - 3, "\xe5\x8d\x8a", 3) && p + 3 <= n && nl + 4 < sizeof(norm) &&
+                        !memcmp(s + p, "\xe9\xa0\x83", 3) && res(e, "around_suffix", key)) {
+                        memcpy(norm + nl, s + p, 3);
+                        nl += 3;
+                        norm[nl] = 0;
+                        p += 3;
+                    }
                     break;
                 }
             }
