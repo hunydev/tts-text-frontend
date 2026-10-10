@@ -1036,6 +1036,44 @@ static ttf_status_t particle_reading(const ttf_engine_t *e, const ttf_language_p
             }
         }
     }
+    /* 디스트릭트9을 디스트릭트나인을, 아이언맨3를 아이언맨쓰리를: a number up to ten
+       written right after a word (a title) is read with the English numeral, as after a
+       listed product name (아이폰7 아이폰세븐), when only that reading fits the particle
+       (2026-10-10). A number after a space (숫자 9을) may be a plain number and stays;
+       가 and 로 may be the address units 街 and 路 (종로3가, 무명3로) and choose nothing. */
+    if (previous->semantic.type == TTF_SEM_CARDINAL && surface_length && surface_length <= 2 &&
+        (surface_length == 1 || surface[0] != '0') && previous->input_begin - offset >= 1 &&
+        strcmp(key, "가") && strcmp(key, "로")) {
+        static const char *const names[] = {"zero", "one", "two", "three", "four", "five",
+                                            "six",  "seven", "eight", "nine", "ten"};
+        size_t at = previous->input_begin - offset;
+        unsigned number = 0;
+        int digits = 1, attached;
+        uint32_t cp = 0;
+        size_t w;
+        for (i = 0; i < surface_length; ++i) {
+            digits &= surface[i] >= '0' && surface[i] <= '9';
+            number = number * 10 + (unsigned)(surface[i] - '0');
+        }
+        attached = (text[at - 1] >= 'A' && text[at - 1] <= 'Z') || (text[at - 1] >= 'a' && text[at - 1] <= 'z') ||
+                   (at >= 3 && ttf_utf8_decode(text + at - 3, 3, &cp, &w) == 1 && cp >= 0xac00 && cp <= 0xd7a3);
+        if (digits && attached && number <= 10) {
+            (void)snprintf(word, sizeof(word), "en-US:%s", names[number]);
+            value = ttf_resource_get(e, "lexicon", lang, word, NULL);
+            if (value && strcmp(value, output->data + previous->begin) &&
+                particle_fits(e, lang, key, last_final(value, strlen(value))) == 1) {
+                ttf_status_t st;
+                output->length = previous->begin;
+                output->data[output->length] = 0;
+                st = ttf_buffer_puts(output, value);
+                previous->end = output->length;
+                if (st == TTF_OK)
+                    st = ttf_trace_emit(e, TTF_TRACE_SELECTED, TTF_LAYER_COMMON, 0, lang, "decision",
+                                        "particle-reading", word, value, "particle-chooses-numeral", SIZE_MAX);
+                return st;
+            }
+        }
+    }
     /* The last word of the reading: one to three syllables. */
     for (width = 3; width <= 9 && width <= output->length - previous->begin; width += 3) {
         char *bar;

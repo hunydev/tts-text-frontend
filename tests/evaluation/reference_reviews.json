@@ -2202,6 +2202,18 @@
       },
       "category_overrides": {},
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/ko_particle_title_v60.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Independently authored synthetic cases, written before the implementation",
+        "reason": "Project-owner request 2026-10-10: a title number read in English when the particle needs it"
+      },
+      "category_overrides": {},
+      "case_overrides": {}
     }
   ],
   "excluded": [

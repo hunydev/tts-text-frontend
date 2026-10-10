@@ -2,6 +2,14 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- A title number chosen by its particle (project-owner request): a number up to
+  ten written right after a word is read with the English numeral, as after a
+  listed product name, when only that reading fits the particle the writer chose:
+  디스트릭트9을 디스트릭트나인을, 아이언맨3를 아이언맨쓰리를, 배민1으로 배민원으로;
+  when the Sino-Korean reading fits it stays (어벤져스2를 이를). A number after a space
+  (숫자 9을) and the particles 가 and 로, which may be the address units 街 and 路
+  (종로3가, 무명3로), choose nothing. Contract ko_particle_title_v60 (13). Korean
+  benchmark +5, -0 (the user's sentence 디스트릭트9을 is one of them).
 - Korean pronunciation output (project-owner request, 2026-10-09..10): the option
   pronunciation=hangul (CLI --pronunciation hangul, web 한국어 발음열) and the control
   [[group]]{@pronounce} write Korean as it is pronounced, colloquial and without

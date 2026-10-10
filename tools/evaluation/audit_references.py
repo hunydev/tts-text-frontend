@@ -14,6 +14,7 @@ import re
 import sys
 
 ACTIVE_JSONL = (
+    "ko_particle_title_v60",
     "ko_phoneme_v59",
     "ko_phoneme_v58",
     "ko_phoneme_v57",
