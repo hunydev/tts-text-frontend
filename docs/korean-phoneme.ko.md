@@ -9,7 +9,7 @@
   - 동형어 문맥 단서: 신고, 참고 …
   - 사전 단어 + 하다 꼴, 접미 합성어, 숫자의 ㄹ 뒤 '십'
 - **정확도:** 말뭉치 무작위 200문장 원어민 검토에서 문장 94.5%(189/200), 어절 99.4%(오류 13/2,289). 검토 기록은 로컬 `benchmark/generated/ko-g2p-eval/`에 있다.
-- **계약:** `tests/evaluation/ko_phoneme_v51.jsonl`~`ko_phoneme_v58.jsonl`, 모두 203건이다. 정답을 먼저 썼고, 검토는 작성자(Claude)가 원어민 역할로 했으며 독립 검토는 받지 않았다.
+- **계약:** `tests/evaluation/ko_phoneme_v51.jsonl`~`ko_phoneme_v59.jsonl`, 모두 211건이다. 정답을 먼저 썼고, 검토는 작성자(Claude)가 원어민 역할로 했으며 독립 검토는 받지 않았다.
 - **사전:** `resources/languages/ko-KR/pronunciation/stdict_phonemes.tsv`. CC BY-SA 2.0 KR이며 `tools/korean/stdict_phonemes.py`로만 다시 만든다. 규칙 목록은 `rules/phoneme.tsv`에 있다.
 - **남은 한계:** 아래 "남은 한계". 이 단계에서 G2P 개선은 마무리하며, 어절 사이 연음은 정책 결정 전까지 하지 않는다.
 
@@ -176,6 +176,19 @@
   - 현재: 문장 189/200 (94.5%), 어절 오류 13 (99.4%)
 - 계약 `tests/evaluation/ko_phoneme_v58.jsonl` (26건, 정답 먼저 작성).
 
+## 숫자 나열과 원자 제어 (2026-10-10)
+
+- **한 자리씩 읽은 숫자:** 전화번호(`PHONE`)와 숫자 나열(`DIGIT_SEQUENCE`) 구간이 대상이다. 날짜형(event_date)과 자릿값이 있는 읽기는 뺀다.
+  - 이 구간에서는 숫자 이름을 한 낱말씩으로 본다. ㄹ로 끝나는 숫자 뒤에 '일·이·육'이 오면 ㄹ을 덧내고, 사전 단어는 쓰지 않는다.
+  - 예: `112` 일릴리, `119` 일릴구, `010-6123-4567` 공일공 유길리삼 사오육칠
+  - 쓴 글자 `일일이`는 사전대로 일리리, 날짜형 `8·15`는 평소대로 파리로다.
+  - TN 구간 정보는 발음열 변환에 같이 넘긴다.
+- **원자 제어 `X{@pronounce}`:** 원자를 앞뒤 두 어절까지의 문맥과 함께 읽고, 원자의 읽기만 발음대로 바꾼다.
+  - 예: `112{@pronounce}에 신고해주세요.` 일릴리에 신고해주세요.
+  - `[[구간]]{@pronounce}`는 지금처럼 구간만 따로 읽는다.
+- v58 `guard-digits`는 정답을 `공공칠릴`로 고쳤다(Was: `공공치릴`, 정책 변경).
+- 계약 `tests/evaluation/ko_phoneme_v59.jsonl` (8건, 정답 먼저 작성): 구현 전 2/8, 구현 후 8/8.
+
 ## 남은 한계
 
 - **어절 경계를 넘는 현상:** 적용하지 않습니다(`옷 안` → `옫 안`, 표준 [오단]).
@@ -189,5 +202,5 @@
 
 ## 시험
 
-- 계약 `tests/evaluation/ko_phoneme_v51.jsonl` (50건), `ko_phoneme_v52.jsonl` (31건), `ko_phoneme_v53.jsonl` (17건), `ko_phoneme_v54.jsonl` (35건), `ko_phoneme_v55.jsonl` (13건), `ko_phoneme_v56.jsonl` (12건), `ko_phoneme_v57.jsonl` (19건), `ko_phoneme_v58.jsonl` (26건), 모두 정답 먼저 작성.
+- 계약 `tests/evaluation/ko_phoneme_v51.jsonl` (50건), `ko_phoneme_v52.jsonl` (31건), `ko_phoneme_v53.jsonl` (17건), `ko_phoneme_v54.jsonl` (35건), `ko_phoneme_v55.jsonl` (13건), `ko_phoneme_v56.jsonl` (12건), `ko_phoneme_v57.jsonl` (19건), `ko_phoneme_v58.jsonl` (26건), `ko_phoneme_v59.jsonl` (8건), 모두 정답 먼저 작성.
 - 생성기 출력의 "rules agree" 비율이 규칙 커버리지입니다.

@@ -631,10 +631,118 @@ static const ttf_language_pack_t *electronic_context(const ttf_engine_t *e,
     free(tokens);
     return pack;
 }
+/* Output ranges read digit by digit, for the pronunciation output: a phone number
+   or a digit sequence (112 일일이), but not a date read that way (8·15 팔일오, which
+   links as usual) or a reading with a place value (백십이). */
+static ttf_status_t digit_regions(const ttf_result_t *out, const char *text, size_t **digits,
+                                  size_t *count) {
+    size_t k, cap = 0;
+    static const char *const places[] = {"십", "백", "천", "만", "억", "조"};
+    for (k = 0; k < out->span_count; ++k) {
+        const ttf_span_t *span = &out->spans[k];
+        size_t q, p;
+        int place = 0;
+        if (!(span->semantic.type == TTF_SEM_PHONE ||
+              (span->semantic.type == TTF_SEM_DIGIT_SEQUENCE && strcmp(span->semantic.unit, "event_date"))) ||
+            span->end <= span->begin)
+            continue;
+        for (q = span->begin; q + 3 <= span->end && !place; ++q)
+            for (p = 0; p < sizeof(places) / sizeof(*places); ++p)
+                place |= !memcmp(text + q, places[p], 3);
+        if (place)
+            continue;
+        if (*count * 2 + 2 > cap) {
+            size_t next = cap ? cap * 2 : 8;
+            size_t *grown = realloc(*digits, next * sizeof(**digits));
+            if (!grown)
+                return TTF_ENOMEM;
+            *digits = grown;
+            cap = next;
+        }
+        (*digits)[*count * 2] = span->begin;
+        (*digits)[*count * 2 + 1] = span->end;
+        ++*count;
+    }
+    return TTF_OK;
+}
+
+/* X{@pronounce} on one atom: the atom's reading depends on its sentence (112에 신고
+   reads 112 digit by digit), so it is read with up to two words on each side and only
+   its own output is kept. Returns 0 when the atom's spans cannot be separated. */
+static size_t context_edge(const char *t, size_t at, size_t limit, int forward) {
+    size_t p = at, spaces = 0;
+    while (forward ? p < limit && p - at < 80 : p > limit && at - p < 80) {
+        char c = forward ? t[p] : t[p - 1];
+        if (c == '\n' || c == '{' || c == '}' || c == '[' || c == ']' || (c == ' ' && ++spaces > 2))
+            break;
+        p += forward ? 1 : (size_t)-1;
+    }
+    while (p > limit && p < at && ((unsigned char)t[p] & 0xC0) == 0x80)
+        ++p;
+    while (forward && p > at && p < limit && ((unsigned char)t[p] & 0xC0) == 0x80)
+        --p;
+    return p;
+}
+static int atom_in_context(const ttf_engine_t *e, const char *text, size_t length,
+                           const ttf_control_match_t *control, const ttf_buffer_t *base, size_t offset,
+                           ttf_buffer_t *output, ttf_result_t *out, size_t *capacity, ttf_status_t *status) {
+    size_t ls = context_edge(text, control->begin, 0, 0), re = context_edge(text, control->end, length, 1);
+    size_t left = control->begin - ls, k, obeg = SIZE_MAX, oend = 0, begin = output->length;
+    ttf_buffer_t ctx = {0};
+    ttf_result_t inner = {0};
+    ttf_engine_t view = *e;
+    int ok = 1;
+    view.phoneme_output = 0;
+    view.trace_state = NULL;
+    view.context_memo = NULL;
+    view.frontend_options.input_format = TTF_INPUT_PLAIN;
+    *status = ttf_buffer_append(&ctx, text + ls, left);
+    if (*status == TTF_OK)
+        *status = ttf_buffer_append(&ctx, base->data ? base->data : "", base->length);
+    if (*status == TTF_OK)
+        *status = ttf_buffer_append(&ctx, text + control->end, re - control->end);
+    if (*status == TTF_OK)
+        *status = ttf_process_unit(&view, ctx.data ? ctx.data : "", ctx.length,
+                                   offset + control->base_begin - left, &inner);
+    ttf_buffer_free(&ctx);
+    if (*status != TTF_OK)
+        return 1;
+    for (k = 0; k < inner.span_count; ++k) {
+        size_t ib = inner.spans[k].input_begin - (offset + control->base_begin - left),
+               ie = inner.spans[k].input_end - (offset + control->base_begin - left);
+        int inside = ib >= left && ie <= left + base->length, outside = ie <= left || ib >= left + base->length;
+        if (!inside && !outside)
+            ok = 0;
+        if (inside) {
+            obeg = inner.spans[k].begin < obeg ? inner.spans[k].begin : obeg;
+            oend = inner.spans[k].end > oend ? inner.spans[k].end : oend;
+        }
+    }
+    if (!ok || obeg == SIZE_MAX) {
+        ttf_result_free(&inner);
+        return 0;
+    }
+    *status = ttf_buffer_append(output, inner.text + obeg, oend - obeg);
+    for (k = 0; *status == TTF_OK && k < inner.span_count; ++k) {
+        ttf_span_t span = inner.spans[k];
+        if (span.begin < obeg || span.end > oend)
+            continue;
+        span.begin = span.begin - obeg + begin;
+        span.end = span.end - obeg + begin;
+        if (span.begin == begin)
+            span.input_begin = span.semantic.input_begin = offset + control->begin;
+        if (span.end == output->length)
+            span.input_end = span.semantic.input_end = offset + control->end;
+        *status = add_span(out, &span, capacity);
+    }
+    ttf_result_free(&inner);
+    return 1;
+}
+
 /* [[민주주의의 의의]]{@pronounce}: the span is normalized like plain text, then its
    Hangul is read as spoken (ttf_korean_phonemize) after the whole unit is done,
    so the words around it still decide liaison. */
-static ttf_status_t phoneme_control(const ttf_engine_t *e, const char *text,
+static ttf_status_t phoneme_control(const ttf_engine_t *e, const char *text, size_t length,
                                     const ttf_control_match_t *control, size_t offset,
                                     ttf_buffer_t *output, ttf_result_t *out, size_t *capacity,
                                     size_t **regions, size_t *region_count, size_t *region_cap) {
@@ -645,6 +753,12 @@ static ttf_status_t phoneme_control(const ttf_engine_t *e, const char *text,
     ttf_status_t st = ttf_control_decode(text, control->base_begin, control->base_end, &base);
     if (st != TTF_OK)
         return st;
+    if (!control->grouped && atom_in_context(e, text, length, control, &base, offset, output, out, capacity, &st)) {
+        ttf_buffer_free(&base);
+        if (st != TTF_OK)
+            return st;
+        goto region;
+    }
     view.phoneme_output = 0;
     st = ttf_process_unit(&view, base.data ? base.data : "", base.length, offset + control->base_begin,
                           &inner);
@@ -665,6 +779,7 @@ static ttf_status_t phoneme_control(const ttf_engine_t *e, const char *text,
     ttf_result_free(&inner);
     if (st != TTF_OK)
         return st;
+region:
     if (*region_count + 2 > *region_cap) {
         size_t next = *region_cap ? *region_cap * 2 : 8;
         size_t *grown = realloc(*regions, next * sizeof(**regions));
@@ -1200,10 +1315,11 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
         }
         if (region_index < region_count && regions[region_index].begin == tokens[i].begin) {
             const ttf_protected_match_t *literal = &regions[region_index++].match;
-            if (literal->control.kind == TTF_CONTROL_PATTERN && literal->control.grouped &&
+            /* [[group]]{@pronounce} and, since 2026-10-10, X{@pronounce} on one atom. */
+            if (literal->control.kind == TTF_CONTROL_PATTERN &&
                 literal->control.payload_end - literal->control.payload_begin == 10 &&
                 !memcmp(text + literal->control.payload_begin, "@pronounce", 10)) {
-                st = phoneme_control(e, text, &literal->control, offset, &output, out, &capacity,
+                st = phoneme_control(e, text, length, &literal->control, offset, &output, out, &capacity,
                                      &phoneme_regions, &phoneme_count, &phoneme_cap);
                 if (st != TTF_OK)
                     goto fail;
@@ -1898,11 +2014,16 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
     if (st != TTF_OK)
         goto fail;
     /* pronunciation=hangul reads the whole unit; {@pronounce} reads its spans. */
-    if (e->phoneme_output)
-        st = ttf_korean_phonemize(e, output.data, output.length, 0, output.length);
-    for (size_t k = 0; st == TTF_OK && !e->phoneme_output && k + 1 < phoneme_count; k += 2)
-        st = ttf_korean_phonemize(e, output.data, output.length, phoneme_regions[k],
-                                  phoneme_regions[k + 1]);
+    if (e->phoneme_output || phoneme_count) {
+        size_t *digits = NULL, digit_count = 0;
+        st = digit_regions(out, output.data, &digits, &digit_count);
+        if (st == TTF_OK && e->phoneme_output)
+            st = ttf_korean_phonemize(e, output.data, output.length, 0, output.length, digits, digit_count);
+        for (size_t k = 0; st == TTF_OK && !e->phoneme_output && k + 1 < phoneme_count; k += 2)
+            st = ttf_korean_phonemize(e, output.data, output.length, phoneme_regions[k],
+                                      phoneme_regions[k + 1], digits, digit_count);
+        free(digits);
+    }
     free(phoneme_regions);
     phoneme_regions = NULL;
     if (st != TTF_OK)

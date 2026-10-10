@@ -4,9 +4,11 @@
 
 /* Rewrite the Hangul syllables of text[begin, end) in place with their spoken
    form (colloquial, no length). Words are read whole, so a syllable next to the
-   range still decides liaison inside it; the byte length never changes. */
+   range still decides liaison inside it; the byte length never changes.
+   digits holds digit_count [begin, end) pairs of text read digit by digit (a phone
+   number or code: 112 일일이), whose digit names are separate words (일릴리). */
 ttf_status_t ttf_korean_phonemize(const ttf_engine_t *engine, char *text, size_t length, size_t begin,
-                                  size_t end);
+                                  size_t end, const size_t *digits, size_t digit_count);
 
 /* 1 when the Hangul words s[prev_begin, prev_end) and s[next_begin, next_end), one
    space apart, read together (남지 않았다, 할 수, 할 일이, 구두를 신고, 운동화만 신고,

@@ -9,7 +9,7 @@
   - 상세: [japanese-benchmark.ko.md](japanese-benchmark.ko.md)
 - **한국어 발음열 출력(G2P):** 옵션 `pronunciation=hangul`, 제어 `{@pronounce}`. 구어 기준 한글 발음열이다.
   - 표준발음법 규칙, 표준국어대사전 예외(`pronunciation/stdict_phonemes.tsv`, CC BY-SA 2.0 KR), 활용형, 동형어 문맥 단서, 합성어를 처리한다.
-  - 말뭉치 200문장 원어민 검토: 문장 94.5%, 어절 99.4%. 계약 `ko_phoneme_v51`~`v58`(203건).
+  - 말뭉치 200문장 원어민 검토: 문장 94.5%, 어절 99.4%. 계약 `ko_phoneme_v51`~`v59`(211건). 한 자리씩 읽은 숫자(112 일릴리)와 원자 제어 `X{@pronounce}`도 지원한다.
   - 사용자 결정으로 여기서 마무리했다. 상세와 남은 한계는 [korean-phoneme.ko.md](korean-phoneme.ko.md)에 있다.
 - **사전 재생성:** `python3 -I tools/korean/stdict_phonemes.py --library build/libtts_text_frontend.so --resources resources --data benchmark/generated/stdict-20260906/data/pronunciations.tsv --archive benchmark/generated/stdict-20260906/stdict.zip`
   - 원본은 로컬 전용이다.

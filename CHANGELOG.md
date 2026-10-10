@@ -16,9 +16,13 @@
     운전면허증 운전면허쯩)
   - numbers (칠십오 칠씨보)
 
+  - digits read one by one, as separate words (112 일릴리, 119 일릴구; the written
+    adverb 일일이 stays 일리리)
+
+  X{@pronounce} on one atom reads it in its sentence (112{@pronounce}에 신고 일릴리에).
   Words across a space are not linked. A native review of 200 random corpus
   sentences: 94.5% of sentences and 99.4% of words right. Contracts
-  ko_phoneme_v51..v58 (203). Output with the option off is unchanged.
+  ko_phoneme_v51..v59 (211). Output with the option off is unchanged.
 - Japanese evaluation set ja-tn-eval-v1 (benchmark/datasets/ja-tn-eval, 1,000
   sentences with references, native review by the author) and the gaps it found:
   〜 before kanji, counters, ratios and scores, M/D dates, phone and code contexts,

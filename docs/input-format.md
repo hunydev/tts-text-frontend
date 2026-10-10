@@ -167,7 +167,12 @@ is pronounced, like the engine option `pronunciation=hangul` for that group only
 | `[[국물이 맛있다]]{@pronounce}` | `궁무리 마싣따` |
 
 A word next to the group still decides liaison inside it; text outside the group
-is not rewritten. See [Korean pronunciation output](korean-phoneme.ko.md).
+is not rewritten. The group is normalized on its own, like `{@join}`.
+
+`X{@pronounce}` on one atom (2026-10-10) reads the atom in its sentence, with up
+to two words on each side, and rewrites only the atom's reading:
+`112{@pronounce}에 신고해주세요.` → `일릴리에 신고해주세요.` (112 is read digit by
+digit because of 신고). See [Korean pronunciation output](korean-phoneme.ko.md).
 
 ## Language-pack patterns
 

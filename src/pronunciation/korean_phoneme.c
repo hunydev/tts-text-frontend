@@ -36,6 +36,7 @@ typedef struct {
 /* The word before this one, when a single space separates them. */
 typedef struct {
     int adjacent, coda, object, numeral, aux_next, verb_before, verb_next, noun_next, counter;
+    int digits; /* leading syllables read digit by digit (112 일일이) */
 } word_ctx_t;
 
 #define MAX_WORD 64
@@ -456,6 +457,17 @@ static void read_word(const ttf_engine_t *e, const char *text, size_t bytes, syl
     int k;
     if (n <= 0)
         return;
+    /* 112 일일이 일릴리, 119 일릴구, 6123 유길리삼: digit names are separate words, so ㄹ
+       is added after a digit ending in ㄹ before 일, 이, 육 (as in 할 일 할 릴), and no
+       dictionary word is taken (일일이 is 일리리 only when written). */
+    if (ctx && ctx->digits > 0) {
+        memcpy(out, s, (size_t)n * sizeof(*s));
+        for (k = 1; k < n && k < ctx->digits; ++k)
+            if (s[k - 1].c == C_L && s[k].o == O_NG && (s[k].v == V_I || s[k].v == V_YU))
+                out[k].o = O_R;
+        apply_rules(out, (size_t)n, -1);
+        return;
+    }
     /* 할 일이 할 리리, 하는 일은 하는 니른: ㄴ before 일 after an adnominal ㄴ or ㄹ
        (제29항); the word is then read by the rules. */
     if (ctx && ctx->adjacent && !ctx->numeral && (ctx->coda == C_N || ctx->coda == C_L) && n >= 2 &&
@@ -548,11 +560,23 @@ int ttf_korean_phoneme_joined(const ttf_engine_t *e, const char *s, size_t prev_
             verb_before(e, prev, pn));
 }
 
+/* Syllables from at that lie in a digit-by-digit reading. */
+static int digit_syllables(const char *text, size_t at, size_t stop, const size_t *digits, size_t count) {
+    size_t k;
+    for (k = 0; k + 1 < count * 2; k += 2)
+        if (digits[k] <= at && at < digits[k + 1]) {
+            size_t until = digits[k + 1] < stop ? digits[k + 1] : stop;
+            (void)text;
+            return (int)((until - at) / 3);
+        }
+    return 0;
+}
+
 ttf_status_t ttf_korean_phonemize(const ttf_engine_t *e, char *text, size_t length, size_t begin,
-                                  size_t end) {
+                                  size_t end, const size_t *digits, size_t digit_count) {
     size_t at = 0, prev_end = SIZE_MAX;
     int next_numeral = 0, next_object = 0, next_verb_before = 0, next_counter = 0;
-    word_ctx_t ctx = {0, C_0, 0, 0, 0, 0, 0, 0, 0};
+    word_ctx_t ctx = {0, C_0, 0, 0, 0, 0, 0, 0, 0, 0};
     if (!e || (!text && length) || begin > end || end > length)
         return TTF_EINVAL;
     while (at < length) {
@@ -614,6 +638,7 @@ ttf_status_t ttf_korean_phonemize(const ttf_engine_t *e, char *text, size_t leng
                 else if ((hit = ttf_resource_get(e, "phoneme_aux", "ko-KR", one, NULL)) && !strcmp(hit, "1"))
                     ctx.aux_next = 1;
             }
+            ctx.digits = digit_syllables(text, start, stop, digits, digit_count);
             read_word(e, text + start, stop - start, out, &ctx);
             /* 할 수 할 쑤, 갈 것 갈 껏: a bound noun after the adnominal ㄹ (제27항). */
             if (ctx.adjacent && ctx.coda == C_L && bound_word(e, text + start, stop - start))
