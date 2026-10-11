@@ -2,6 +2,20 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Chinese (Simplified) pack zh-CN, phase 1, beta (project-owner request 2026-10-11;
+  Claude reviews as the native speaker). Numbers read as Chinese numerals with 零, 万/亿
+  and 二/两 (两个, 两千, 第二, 二月), years and codes digit by digit (一九九零年,
+  验证码一二三四五六, 拨打幺幺零), dates, times, durations and scores (十四点零五分,
+  两小时零五分三十秒, 二十一比十九), money (HK$100 一百港元), percent, fractions, ranges
+  (3～6岁 三到六岁), unit symbols (60km/h 六十公里每小时, -5℃ 零下五摄氏度), letters with
+  digits (CA一二三四, COVID十九) and simple maths (十除以二等于五). Routing: a hanzi
+  sentence with no Hangul, kana or non-Simplified character (han_foreign: 駅 國 時 …) goes
+  to zh-CN in any request except a Japanese one or the Korean hanja/kana options, and
+  only zh-CN classifies there; symbols take CLDR zh names (🍔 汉堡). Was: 我买了이个苹果。
+  in a Korean request; unicode_fallback_v24 北京 🍔 was 北京 햄버거, now 北京 汉堡. Contract
+  zh_pack_v64 (54). zh-tn-eval: 346/346 declared, 98.0% routed (the rest are
+  hanzi-free maths), wetext 85.5%; the set and the pack share an author, so this
+  includes overfitting. Korean, English, JSUT and ja-tn-eval: unchanged (Korean quick 0 changed sentences, English 90.83%/86.80%, JSUT 203/332, ja-tn-eval 97.3%).
 - Japanese is in production (project-owner decision, 2026-10-11; it was beta). Still to
   do: a human native review of the evaluation set (a 200-entry sample is prepared) and a
   listening comparison with the target TTS (VoxCPM2). An OpenAI TTS -> STT comparison of the

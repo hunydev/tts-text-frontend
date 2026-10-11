@@ -32,7 +32,12 @@ static const char *lookup(const ttf_engine_t *e, const char *kind, const char *l
     if (language)
         return ttf_resource_get(e, kind, language, key, layer);
     for (i = 0; i <= e->pack_count; ++i) {
-        const char *candidate = ttf_resource_get(
+        const char *candidate;
+        /* A declared-only pack outside its request (ja-JP, zh-CN) owns no phone
+           grammar; skipping it keeps this per-space scan from growing with packs. */
+        if (i < e->pack_count && e->frozen && e->undeclared[i])
+            continue;
+        candidate = ttf_resource_get(
             e, kind, i < e->pack_count ? e->packs[i]->language_tag : "*", key, &candidate_layer);
         if (candidate && (!best || candidate_layer > best_layer)) {
             best = candidate;

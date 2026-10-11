@@ -2250,6 +2250,18 @@
       },
       "category_overrides": {},
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/zh_pack_v64.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Independently authored synthetic cases, written before the implementation",
+        "reason": "Project-owner request 2026-10-11: Chinese (Simplified) pack phase 1, Claude as the native reviewer"
+      },
+      "category_overrides": {},
+      "case_overrides": {}
     }
   ],
   "excluded": [

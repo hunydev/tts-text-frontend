@@ -46,6 +46,11 @@ languages/ja-JP/rules/units.tsv
 languages/ja-JP/rules/speech.tsv
 languages/ja-JP/rules/kanji.tsv
 languages/ja-JP/rules/latin.tsv
+languages/zh-CN/rules/context.tsv
+languages/zh-CN/rules/numeric.tsv
+languages/zh-CN/rules/units.tsv
+languages/zh-CN/rules/cues.tsv
+languages/zh-CN/rules/foreign.tsv
 
 common/speech.tsv
 # Deferred until freeze, selected by hanja/kana options; kept visible to offline tools.

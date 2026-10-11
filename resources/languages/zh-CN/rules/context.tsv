@@ -1,0 +1,28 @@
+# Chinese (Simplified) pack, phase 1 (project owner 2026-10-11).
+# Declared-only: the pack never scores, classifies or owns a script in a Korean,
+# English or Japanese request except in a hanzi sentence.
+context	zh-CN	declared_only	1
+context	zh-CN	absorb_foreign	1
+context	zh-CN	han_sentence	1
+classifier_priority	zh-CN	zh.int	100
+classifier_priority	zh-CN	zh.digits	100
+classifier_priority	zh-CN	zh.year	100
+classifier_priority	zh-CN	zh.time	100
+classifier_priority	zh-CN	zh.duration	100
+classifier_priority	zh-CN	zh.timerange	100
+classifier_priority	zh-CN	zh.ratio	100
+classifier_priority	zh-CN	zh.percent	100
+classifier_priority	zh-CN	zh.pctrange	100
+classifier_priority	zh-CN	zh.permille	100
+classifier_priority	zh-CN	zh.vulgar	100
+classifier_priority	zh-CN	zh.neg	100
+classifier_priority	zh-CN	zh.money	100
+classifier_priority	zh-CN	zh.math	100
+classifier_priority	zh-CN	zh.latin	100
+classifier_priority	zh-CN	zh.to	100
+classifier_priority	zh-CN	zh.unit	100
+classifier_priority	zh-CN	zh.range	100
+classifier_priority	zh-CN	zh.yearrange	100
+classifier_priority	zh-CN	zh.frac	100
+classifier_priority	zh-CN	zh.date	100
+classifier_priority	zh-CN	zh.hanzi	100

@@ -1,8 +1,16 @@
 # 현재 작업 인수인계
 
-갱신: 2026-10-10. Release **0.20.0**, public ABI **v1**.
+갱신: 2026-10-11. Release **0.20.0**, public ABI **v1**.
 
-## 최근 인계: 일본어 평가셋과 한국어 발음열 출력 (2026-10-08~10)
+## 최근 인계: 중국어(간체) 팩 1단계 (2026-10-11)
+
+- 0단계: 자체 평가셋 `benchmark/datasets/zh-tn-eval`(322문장)로 wetext 85.5%, NeMo 66.8% 측정. [chinese-phase0.ko.md](chinese-phase0.ko.md)
+- 1단계: `languages/zh-CN` 팩(베타)과 한자 문장 라우팅(`han_sentence`, `src/core/normalize.c`). 계약 `zh_pack_v64`(54건).
+  - 평가셋: 요청 언어 zh-CN 100%, 한국어·영어 요청 속 한자 문장 98.0%. 같은 작성자라 과적합 포함.
+  - 한국어·영어·JSUT·일본어 평가셋: unchanged (Korean quick 0 changed sentences, English 90.83%/86.80%, JSUT 203/332, ja-tn-eval 97.3%).
+  - 남은 것: held-out 평가셋, 원어민 검수, VoxCPM2 청취 비교. 상세: [chinese-pack.ko.md](chinese-pack.ko.md)
+
+## 이전 인계: 일본어 평가셋과 한국어 발음열 출력 (2026-10-08~10)
 
 - **일본어:** 자체 평가셋 `benchmark/datasets/ja-tn-eval`(1,250개 항목·채점 span 1,343개, 작성자 원어민 검토)을 만들고, 찾은 빈틈을 계약 `ja_range_mark_v44`~`ja_rest_v50`으로 고쳤다.
   - 평가셋 점수: 우리 97.3%, wetext 76.9%, NeMo 73.6%

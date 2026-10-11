@@ -339,6 +339,61 @@ static const ttf_language_pack_t *kana_sentence(const ttf_engine_t *e, const ttf
     }
     return grammar || (hiragana && !latin) ? pack : NULL;
 }
+/* A hanzi sentence (2026-10-11, project owner: a kanji-only sentence prefers
+   Chinese): no Hangul, no kana, at least two hanzi, at least twice as many hanzi
+   as Latin words, and no character the pack lists as han_foreign (Japanese-only
+   or traditional forms: 駅 円 國 時) belongs to the pack declaring `context <tag>
+   han_sentence 1` (zh-CN), every token included. A request whose own pack takes
+   kana sentences (ja-JP) keeps its kanji sentences, and so do the Korean
+   kana/hanja reading options. */
+static const ttf_language_pack_t *han_sentence(const ttf_engine_t *e, const ttf_pack_input_t *in,
+                                               size_t begin, size_t end) {
+    const ttf_language_pack_t *pack = NULL,
+                              *declared = e->default_language ? ttf_find_pack(e, e->default_language)
+                                                              : NULL;
+    size_t j, k, han = 0, latin = 0;
+    if (e->frontend_options.kana == TTF_KANA_KOREAN || e->frontend_options.hanja == TTF_HANJA_KOREAN ||
+        (declared && pack_flag(e, declared, "kana_sentence", 0)))
+        return NULL;
+    for (j = 0; j < e->pack_count && !pack; ++j)
+        if (pack_flag(e, e->packs[j], "han_sentence", 0))
+            pack = e->packs[j];
+    if (!pack)
+        return NULL;
+    for (k = begin; k < end; ++k) {
+        const ttf_token_t *t = &in->tokens[k];
+        size_t at = t->begin;
+        if (t->script == TTF_SCRIPT_HANGUL || t->script == TTF_SCRIPT_KANA)
+            return NULL;
+        if (t->script == TTF_SCRIPT_LATIN) {
+            /* 60km/h: letters attached to a number are a unit, not a word. */
+            const ttf_token_t *prev = k > begin ? &in->tokens[k - 1] : NULL;
+            latin += !(prev && prev->end == t->begin &&
+                       (prev->script == TTF_SCRIPT_DIGIT ||
+                        (prev->end - prev->begin == 1 && strchr("/-.", in->text[prev->begin]))));
+            continue;
+        }
+        if (t->script == TTF_SCRIPT_DIGIT || t->script == TTF_SCRIPT_WHITESPACE)
+            continue;
+        while (at < t->end) {
+            uint32_t cp;
+            size_t w;
+            char key[5];
+            if (ttf_utf8_decode(in->text + at, t->end - at, &cp, &w) != 1 || w > 4)
+                break;
+            memcpy(key, in->text + at, w);
+            key[w] = '\0';
+            if (cp >= 0x3000 &&
+                ttf_resource_get(e, "han_foreign", pack->language_tag, key, NULL))
+                return NULL;
+            /* a hanzi may share a token with a symbol (10²是一百) */
+            han += (cp >= 0x3400 && cp <= 0x4dbf) || (cp >= 0x4e00 && cp <= 0x9fff) ||
+                   (cp >= 0xf900 && cp <= 0xfaff) || (cp >= 0x20000 && cp <= 0x3134f);
+            at += w;
+        }
+    }
+    return han >= 2 && han >= 2 * latin ? pack : NULL;
+}
 static void matrix_route(const ttf_engine_t *e, const ttf_pack_input_t *in, size_t begin,
                          size_t end, matrix_route_t *routes) {
     char why[40];
@@ -351,8 +406,12 @@ static void matrix_route(const ttf_engine_t *e, const ttf_pack_input_t *in, size
     size_t k;
     if (e->matrix_policy == TTF_MATRIX_DECLARED)
         snprintf(why, sizeof(why), "matrix=%s(declared)", matrix ? matrix->language_tag : "und");
-    if (kana) {
+    if (!kana && e->matrix_policy != TTF_MATRIX_DECLARED &&
+        (kana = han_sentence(e, in, begin, end)) != NULL)
+        snprintf(why, sizeof(why), "matrix=%s(han)", kana->language_tag);
+    else if (kana)
         snprintf(why, sizeof(why), "matrix=%s(kana)", kana->language_tag);
+    if (kana) {
         for (k = begin; k < end; ++k) {
             routes[k - begin].pack = kana;
             memcpy(routes[k - begin].why, why, sizeof(why));
@@ -1267,6 +1326,7 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
         const char *phrase_hit = NULL;
         ttf_buffer_t normalized = {0};
         int identifier_read = 0;
+        int han_context = 0;
         memset(&span, 0, sizeof(span));
         sem->struct_size = sizeof(*sem);
         sem->type = TTF_SEM_TEXT;
@@ -1498,11 +1558,19 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
                 classification.tokens = context_tokens;
             }
             consumed = ttf_classify_universal(&classification, sem);
+            /* Looked up once per token, not once per pack. */
+            han_context = context && context->classify &&
+                          pack_flag(e, context, "han_sentence", 0);
             for (j = 0; j < e->pack_count; j++)
                 /* A declared-only pack classifies only where it is the context
-                   (its declared request or a kana sentence). */
-                if (e->packs[j]->classify && strcmp(sem->unit, "@math") &&
-                    (!undeclared(e, j) || context == e->packs[j])) {
+                   (its declared request or a kana sentence). A hanzi-sentence
+                   pack (zh-CN) is the only pack classifying where it is the
+                   context, maths included: 1+1=2 in a Korean request is not
+                   일 더하기 일. */
+                if (e->packs[j]->classify &&
+                    (strcmp(sem->unit, "@math") || (han_context && context == e->packs[j])) &&
+                    (!undeclared(e, j) || context == e->packs[j]) &&
+                    !(han_context && context != e->packs[j])) {
                     ttf_semantic_t candidate;
                     size_t n;
                     long candidate_priority = 0;

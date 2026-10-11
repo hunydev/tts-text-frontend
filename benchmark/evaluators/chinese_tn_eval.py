@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
-"""Chinese (Simplified) TN evaluation on zh-tn-eval-v1: other TNs now, our pack later.
+"""Chinese (Simplified) TN evaluation on zh-tn-eval-v1: our zh-CN pack and other TNs.
 
 Outputs (run each with the Python that has the system):
   ~/venv-wetext/bin/python -I benchmark/evaluators/chinese_tn_eval.py run --system wetext
   ~/venv-nemo/bin/python -I benchmark/evaluators/chinese_tn_eval.py run --system nemo
   python3 -I benchmark/evaluators/chinese_tn_eval.py run --system raw
+  python3 -I benchmark/evaluators/chinese_tn_eval.py run --system ours \
+      --library build/libtts_text_frontend.so --resources resources
+ours declares zh-CN; ours-ko and ours-en send the same text in a Korean or an
+English request, where hanzi sentences are routed to zh-CN (han_sentence).
 Score every output present:
   python3 -I benchmark/evaluators/chinese_tn_eval.py score --tag NAME
 
@@ -32,7 +36,16 @@ def fold(s):
     return "".join(c for c in s if not c.isspace() and not unicodedata.category(c).startswith("P"))
 
 
-def normalizer(system):
+def normalizer(system, args=None):
+    if system in ("ours", "ours-ko", "ours-en"):
+        if not args or not args.library:
+            raise SystemExit("ours needs --library and --resources")
+        sys.path.insert(0, str(ROOT / "tools/web"))
+        from native import Engine
+        language = {"ours": "zh-CN", "ours-ko": "ko-KR", "ours-en": "en-US"}[system]
+        engine = Engine(Path(args.library), Path(args.resources),
+                        dict(default_language=language, output_mode="speech"))
+        return lambda t: engine.normalize(t.encode())["text"]
     if system == "raw":
         return lambda t: t
     if system == "wetext":
@@ -49,7 +62,7 @@ def normalizer(system):
 def run(args):
     rows = [json.loads(l) for l in DATA.open(encoding="utf-8")]
     OUT.mkdir(parents=True, exist_ok=True)
-    fn = normalizer(args.system)
+    fn = normalizer(args.system, args)
     start = time.time()
     with (OUT / f"output-{args.system}.jsonl").open("w", encoding="utf-8") as f:
         for r in rows:
@@ -124,6 +137,8 @@ def main():
     sub = ap.add_subparsers(dest="cmd", required=True)
     r = sub.add_parser("run")
     r.add_argument("--system", required=True)
+    r.add_argument("--library")
+    r.add_argument("--resources")
     s = sub.add_parser("score")
     s.add_argument("--tag", required=True)
     args = ap.parse_args()
