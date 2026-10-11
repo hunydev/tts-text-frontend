@@ -574,30 +574,35 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     if (in->tokens[in->index].script == TTF_SCRIPT_HAN ||
         in->tokens[in->index].script == TTF_SCRIPT_OTHER) {
         size_t z = p, end = in->tokens[in->index].end < n ? in->tokens[in->index].end : n;
+        int named = 0, math_start = 0;
+        char plen[24];
+        /* First an expression or an amount reaching past the run; the run before
+           it is read with its symbol names (Ⅲ期，显著性水平α=0.01). The prefix is
+           kept as a length, so a long run still fits. */
         while (z < end) {
             size_t cw = char_at(t, n, z, c);
             if (!cw)
                 break;
-            /* 水平α=0.01: an expression starting with a symbol or a Greek letter */
+            snprintf(plen, sizeof(plen), "%lu", (unsigned long)(z - p));
+            /* 水平α=0.01, 圆周率π≈3.14: an expression starting inside the run */
             if ((greek_at(e, t, n, z, &w) || symbol_at(t, n, z, &w) >= 0) &&
                 (m = maths(e, t, n, z)) != 0 && z + m > end) {
                 if (z > p)
-                    return finish2(in, s, z + m, "hanmath", t, p, z - p, z, m, "", "");
+                    return finish(in, s, z + m, "hanmath", t + z, m, plen);
+                math_start = 1;
                 break;
             }
-            /* 加½杯, Ⅲ期, β受体: a fraction, Roman or Greek letter inside a hanzi run */
-            if (res(e, "zh_vulgar", c) || res(e, "zh_roman", c) || res(e, "zh_greek", c))
-                return finish(in, s, end, "hanzi", "", 0, "");
-            /* 恤￥89: a currency sign at the end of a hanzi run */
+            /* 恤￥89: a currency sign at the end of the run */
             if (z + cw == end && end < n && digit(t[end]) && res(e, "zh_currency", c)) {
                 len = scan_number(t, n, end);
-                return finish2(in, s, end + len, "hanmoney", t, p, z - p, end, len, c, "");
+                return finish2(in, s, end + len, "hanmoney", t, end, len, end, 0, c, plen);
             }
-            /* 圆周率π≈3.14: an expression starting inside a hanzi run */
-            if (z > p && symbol_at(t, n, z, &w) >= 0 && (m = maths(e, t, n, z)) != 0 && z + m > end)
-                return finish2(in, s, z + m, "hanmath", t, p, z - p, z, m, "", "");
+            named |= res(e, "zh_vulgar", c) || res(e, "zh_roman", c) || res(e, "zh_greek", c);
             z += cw;
         }
+        /* 加½杯, Ⅲ期, β受体: a fraction, Roman or Greek letter inside the run */
+        if (named && !math_start)
+            return finish(in, s, end, "hanzi", "", 0, "");
     }
     /* 沪B·6Y819: the middle dot of a plate goes with the code after it */
     if (has(t, n, p, "·") && p && alpha(t[p - 1]) && p + 2 < n && digit(t[p + 2])) {
@@ -1410,6 +1415,25 @@ static ttf_status_t latin(const ttf_engine_t *e, ttf_buffer_t *b, const char *v)
     return TTF_OK;
 }
 
+/* A hanzi run as written, with ½ Ⅲ α replaced by their readings. */
+static ttf_status_t hanzi_text(const ttf_engine_t *e, ttf_buffer_t *b, const char *text, size_t length) {
+    size_t i = 0;
+    char ch[5];
+    while (i < length) {
+        size_t cw = char_at(text, length, i, ch);
+        const char *r = cw ? res(e, "zh_vulgar", ch) : NULL;
+        if (cw && !r)
+            r = res(e, "zh_roman", ch);
+        if (cw && !r)
+            r = res(e, "zh_greek", ch);
+        if (!cw)
+            return ttf_buffer_append(b, text + i, length - i);
+        TRY(r ? ttf_buffer_puts(b, r) : ttf_buffer_append(b, text + i, cw));
+        i += cw;
+    }
+    return TTF_OK;
+}
+
 /* "a|b|unit" into its parts. */
 static int split(const char *v, const char **a, size_t *an, const char **bp, size_t *bn,
                  const char **u) {
@@ -1573,22 +1597,15 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     }
     if (!strcmp(mode, "to"))
         return word(e, b, "range");
-    if (!strcmp(mode, "hanzi")) {
-        size_t i = 0;
-        char ch[5];
-        while (i < length) {
-            size_t cw = char_at(surface, length, i, ch);
-            const char *r = cw ? res(e, "zh_vulgar", ch) : NULL;
-            if (cw && !r)
-                r = res(e, "zh_roman", ch);
-            if (cw && !r)
-                r = res(e, "zh_greek", ch);
-            if (!cw)
-                return ttf_buffer_append(b, surface + i, length - i);
-            TRY(r ? ttf_buffer_puts(b, r) : ttf_buffer_append(b, surface + i, cw));
-            i += cw;
-        }
-        return TTF_OK;
+    if (!strcmp(mode, "hanzi"))
+        return hanzi_text(e, b, surface, length);
+    if (!strcmp(mode, "hanmath")) {
+        /* secondary: the length of the run before the expression */
+        size_t plen = (size_t)strtoul(s->secondary, NULL, 10);
+        if (plen > length)
+            return TTF_EINVAL;
+        TRY(hanzi_text(e, b, surface, plen));
+        return maths_reading(e, b, v);
     }
     if (!split(v, &a, &an, &bp, &bn, &u))
         return TTF_EINVAL;
@@ -1776,12 +1793,6 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         TRY(number(e, b, bp, bn, 0));
         return unit_word(e, b, u);
     }
-    if (!strcmp(mode, "hanmath")) {
-        char x[TTF_IR_VALUE_SIZE];
-        snprintf(x, sizeof(x), "%.*s", (int)bn, bp);
-        TRY(ttf_buffer_append(b, a, an));
-        return maths_reading(e, b, x);
-    }
     if (!strcmp(mode, "plusscale")) {
         /* 10万+ 十万多 */
         TRY(number(e, b, a, an, 1));
@@ -1789,11 +1800,13 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         return word(e, b, "approx_plus");
     }
     if (!strcmp(mode, "hanmoney")) {
+        /* a = the amount, u = the currency, secondary = the length of the run */
         const char *cur = res(e, "zh_currency", u);
-        if (!cur)
-            return TTF_ERESOURCE;
-        TRY(ttf_buffer_append(b, a, an));
-        TRY(number(e, b, bp, bn, 1));
+        size_t plen = (size_t)strtoul(s->secondary, NULL, 10);
+        if (!cur || plen > length)
+            return cur ? TTF_EINVAL : TTF_ERESOURCE;
+        TRY(hanzi_text(e, b, surface, plen));
+        TRY(count(e, b, a, an, 1));
         return ttf_buffer_puts(b, cur);
     }
     if (!strcmp(mode, "moneyrange")) {
