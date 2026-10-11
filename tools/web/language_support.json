@@ -351,14 +351,14 @@
         }
       ],
       "gaps": [
-        "held-out v3(496문장, 팩을 보지 않은 작성자, 코드 고정 뒤 검수): 우리 92.2%(2단계 89.9%), wetext 72.8%, NeMo 55.4%. 남은 유형: 화폐 뒤 '/' 단위, 공백 뒤 단위, 일부 코드·점수·기록 표기 (docs/chinese-pack.ko.md)",
+        "held-out v4(500문장, 팩을 보지 않은 작성자, 코드 고정 뒤 검수): 우리 90.6%(3단계 90.1%), wetext 70.9%, NeMo 54.9%. 새 셋마다 90~92%에 머묾. 남은 유형: IP 주소·포트 등 IT 표기, 로마 숫자·그리스 문자, 일부 SI 단위, 부품·배치 번호 (docs/chinese-pack.ko.md)",
         "대상 TTS(VoxCPM2) 청취 비교 미실시",
         "번체(zh-TW)는 범위 밖: 번체 글자가 있는 문장은 라우팅하지 않음"
       ],
       "docs": [
         "docs/chinese-pack.ko.md",
         "docs/chinese-phase0.ko.md",
-        "benchmark/datasets/zh-tn-eval (held-out v3 496문장: 우리 92.2%·wetext 72.8%·NeMo 55.4%)"
+        "benchmark/datasets/zh-tn-eval (held-out v4 500문장: 우리 90.6%·wetext 70.9%·NeMo 54.9%)"
       ]
     }
   },

@@ -2,6 +2,14 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Chinese pack phase 4: per units after money (15.6元/股 十五点六元每股, ¥599/晚, 美元/盎司), units
+  after a space (9.8 m/s²), MWh Ω N·m kJ mol⁻¹; fixed readings worse than the raw text found
+  by held-out v3 (stock codes and years in brackets, notice numbers 2025-083, 33,165亿 was
+  三万亿…, 618大促, 2:05.38, size codes, 1/1,000,000); scores before 战平, 9秒91, △DEF, T+0,
+  88折, 4!. Contract zh_pack4_v67 (35). A fourth held-out set (500 sentences): ours 90.6%
+  (phase 3 90.1%), wetext 70.9%: case-by-case fixes no longer generalize; the remaining
+  errors are IT notation, Roman and Greek symbols, SI units and part numbers. Korean,
+  English, JSUT and ja-tn-eval are unchanged.
 - Chinese pack phase 3: compound units read 每 (15mg/kg 十五毫克每千克, 72次/分 七十二次每分钟,
   5.2万/㎡), minutes and seconds 2'30" 两分三十秒, more measure words (两晚, 三室两厅), dates
   (6/18那天, 12.12 双十二, 11-08), service numbers (12306), spaced phone numbers, case and
