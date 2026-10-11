@@ -327,7 +327,7 @@
         {
           "area": "단위 기호",
           "level": "full",
-          "note": "kg km cm mm m L ml m² m³ km/h V W kW Hz hPa ℃ °C 등 → 公斤 公里 … 摄氏度, 음수 온도 零下"
+          "note": "kg km cm mm m L ml m² m³ km/h V W kW Hz hPa ℃ °C 등 → 公斤 公里 … 摄氏度, 음수 온도 零下, '/' 복합 단위는 每(15mg/kg 十五毫克每千克, 72次/分 七十二次每分钟), 분·초 기호 2'30\""
         },
         {
           "area": "번호·코드",
@@ -351,14 +351,14 @@
         }
       ],
       "gaps": [
-        "held-out v2(500문장, 팩을 보지 않은 작성자, 코드 고정 뒤 검수): 우리 90.2%(1단계 81.3%), wetext 72.3%, NeMo 53.9%. 남은 유형: '/' 복합 단위, 분·초 기호, 일부 양사·날짜·번호 표기, 아래첨자 (docs/chinese-pack.ko.md)",
+        "held-out v3(496문장, 팩을 보지 않은 작성자, 코드 고정 뒤 검수): 우리 92.2%(2단계 89.9%), wetext 72.8%, NeMo 55.4%. 남은 유형: 화폐 뒤 '/' 단위, 공백 뒤 단위, 일부 코드·점수·기록 표기 (docs/chinese-pack.ko.md)",
         "대상 TTS(VoxCPM2) 청취 비교 미실시",
         "번체(zh-TW)는 범위 밖: 번체 글자가 있는 문장은 라우팅하지 않음"
       ],
       "docs": [
         "docs/chinese-pack.ko.md",
         "docs/chinese-phase0.ko.md",
-        "benchmark/datasets/zh-tn-eval (held-out v2 500문장: 우리 90.2%·wetext 72.3%·NeMo 53.9%)"
+        "benchmark/datasets/zh-tn-eval (held-out v3 496문장: 우리 92.2%·wetext 72.8%·NeMo 55.4%)"
       ]
     }
   },

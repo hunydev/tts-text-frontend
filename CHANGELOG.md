@@ -2,6 +2,14 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Chinese pack phase 3: compound units read 每 (15mg/kg 十五毫克每千克, 72次/分 七十二次每分钟,
+  5.2万/㎡), minutes and seconds 2'30" 两分三十秒, more measure words (两晚, 三室两厅), dates
+  (6/18那天, 12.12 双十二, 11-08), service numbers (12306), spaced phone numbers, case and
+  standard numbers, subscripts (H₂O H二O), 95后, 10w+, No.1 第一, 4x4 四乘四. Fixed readings
+  worse than the raw text: $500万 (was 五百美元万), 132,500万, H:MM:SS after 以. The shared
+  invalid-range guard no longer holds a zh-CN span. Contract zh_pack3_v66 (39). A third
+  held-out set (496 sentences, opened after the code freeze): ours 92.2% (phase 2 89.9%),
+  wetext 72.8%. Korean, English, JSUT and ja-tn-eval are unchanged.
 - Faster resource lookups: the resource hash table has 8191 buckets (was 1021, shared
   with the word and phrase tables) and lives on the heap, so request views copy one
   pointer. A lookup walked about 24 rows; a 30,000-number stream took 45 s and now 12 s
