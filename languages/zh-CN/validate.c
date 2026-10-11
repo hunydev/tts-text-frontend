@@ -50,12 +50,13 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                                          "times|divide|equals|greater|less|power|power_end|"
                                          "square|root|greater_eq|less_eq|not_equal|"
                                          "approx_equal|cube_root|angle|pi|degree|"
-                                         "approx_plus|and_fraction")) &&
+                                         "approx_plus|and_fraction|per|ordinal|double")) &&
                        label(v)
                    ? TTF_OK
                    : ttf_validation_error(d, "number requires a digit or a named word and a reading");
     }
-    if (SAME(k, "zh_unit") || SAME(k, "zh_currency") || SAME(k, "zh_vulgar")) {
+    if (SAME(k, "zh_unit") || SAME(k, "zh_currency") || SAME(k, "zh_vulgar") ||
+        SAME(k, "zh_unit_per")) {
         *handled = 1;
         return short_key(key, 8) && label(v)
                    ? TTF_OK
@@ -67,12 +68,29 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
         SAME(k, "year_not") || SAME(k, "ratio_cue") || SAME(k, "duration_cue") ||
         SAME(k, "range_unit") || SAME(k, "length_cue") || SAME(k, "ratio_after") ||
         SAME(k, "count_before") || SAME(k, "code_after") || SAME(k, "room_before") || SAME(k, "room_not") ||
-        SAME(k, "holiday_after") || SAME(k, "date_cue") || SAME(k, "date_after")) {
+        SAME(k, "holiday_after") || SAME(k, "date_cue") || SAME(k, "date_after") ||
+        SAME(k, "standard_cue")) {
         *handled = 1;
         return cue(key) && SAME(v, "1")
                    ? TTF_OK
                    : ttf_validation_error(d, "a Chinese cue requires a word of one to four "
                                              "characters and the value 1");
+    }
+    if (SAME(k, "service_number")) {
+        size_t i;
+        *handled = 1;
+        for (i = 0; key[i]; ++i)
+            if (key[i] < '0' || key[i] > '9')
+                break;
+        return !key[i] && i >= 3 && i <= 6 && SAME(v, "1")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "service_number requires 3 to 6 digits and 1");
+    }
+    if (SAME(k, "per_hanzi")) {
+        *handled = 1;
+        return cue(key) && label(v)
+                   ? TTF_OK
+                   : ttf_validation_error(d, "per_hanzi requires a short word and its reading");
     }
     if (SAME(k, "han_foreign")) {
         uint32_t cp;
@@ -103,7 +121,7 @@ static ttf_status_t engine(const ttf_engine_t *e, ttf_resource_diagnostic_t *d, 
         "minutes",  "seconds", "plus",    "subtract", "times",  "divide", "equals",    "greater",
         "less",     "power",   "power_end", "square", "root", "greater_eq", "less_eq",
         "not_equal", "approx_equal", "cube_root", "angle", "pi", "degree", "approx_plus",
-        "and_fraction"};
+        "and_fraction", "per", "ordinal", "double"};
     size_t i;
     (void)userdata;
     if (!ttf_find_pack(e, ZH))

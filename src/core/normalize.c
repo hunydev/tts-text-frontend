@@ -1628,8 +1628,10 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
                        classified on its own. */
                     /* ...but a recognized phone number, or an identifier the shared
                        grammar already rejected as a range or phone, stays as it was. */
+                    /* A hanzi-sentence pack (zh-CN) owns its sentence: the shared
+                       guards do not hold its spans (120-140bpm, 11-08). */
                     int keeps_shared =
-                        candidate_priority >= 100 &&
+                        candidate_priority >= 100 && !(e->frozen && e->han_only[j]) &&
                         (sem->type == TTF_SEM_PHONE ||
                          (sem->type == TTF_SEM_TEXT && (!strcmp(sem->rule, "syntax.invalid-range") ||
                                                         !strcmp(sem->rule, "syntax.invalid-phone"))));
