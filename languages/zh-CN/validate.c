@@ -16,8 +16,9 @@ static int label(const char *text) {
     return 1;
 }
 
-/* A short word of one to four characters, used as a lookup key. */
-static int cue(const char *key) {
+/* A short key of one to `most` characters (a cue word up to four, a unit symbol
+   such as mmol/L up to eight). */
+static int short_key(const char *key, size_t most) {
     size_t n = strlen(key), at = 0, chars = 0;
     while (at < n) {
         uint32_t cp;
@@ -27,7 +28,10 @@ static int cue(const char *key) {
         at += width;
         ++chars;
     }
-    return chars >= 1 && chars <= 4 && n < 20;
+    return chars >= 1 && chars <= most && n < 20;
+}
+static int cue(const char *key) {
+    return short_key(key, 4);
 }
 
 static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
@@ -44,14 +48,16 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                                          "below_zero|percent|permille|fraction|range|ratio|year|"
                                          "month|day|oclock|hours|minutes|seconds|plus|subtract|"
                                          "times|divide|equals|greater|less|power|power_end|"
-                                         "square|root")) &&
+                                         "square|root|greater_eq|less_eq|not_equal|"
+                                         "approx_equal|cube_root|angle|pi|degree|"
+                                         "approx_plus|and_fraction")) &&
                        label(v)
                    ? TTF_OK
                    : ttf_validation_error(d, "number requires a digit or a named word and a reading");
     }
     if (SAME(k, "zh_unit") || SAME(k, "zh_currency") || SAME(k, "zh_vulgar")) {
         *handled = 1;
-        return cue(key) && label(v)
+        return short_key(key, 8) && label(v)
                    ? TTF_OK
                    : ttf_validation_error(d, "zh_unit/zh_currency/zh_vulgar require a short "
                                              "symbol and a reading");
@@ -59,7 +65,9 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     if (SAME(k, "liang_counter") || SAME(k, "code_cue") || SAME(k, "phone_cue") ||
         SAME(k, "phone_after") || SAME(k, "room_after") || SAME(k, "year_after") ||
         SAME(k, "year_not") || SAME(k, "ratio_cue") || SAME(k, "duration_cue") ||
-        SAME(k, "range_unit")) {
+        SAME(k, "range_unit") || SAME(k, "length_cue") || SAME(k, "ratio_after") ||
+        SAME(k, "count_before") || SAME(k, "code_after") || SAME(k, "room_before") || SAME(k, "room_not") ||
+        SAME(k, "holiday_after") || SAME(k, "date_cue") || SAME(k, "date_after")) {
         *handled = 1;
         return cue(key) && SAME(v, "1")
                    ? TTF_OK
@@ -93,7 +101,9 @@ static ttf_status_t engine(const ttf_engine_t *e, ttf_resource_diagnostic_t *d, 
         "yi",       "wanyi",   "point",   "minus",    "below_zero", "percent", "permille",
         "fraction", "range",   "ratio",   "year",     "month",  "day",    "oclock",    "hours",
         "minutes",  "seconds", "plus",    "subtract", "times",  "divide", "equals",    "greater",
-        "less",     "power",   "power_end", "square", "root"};
+        "less",     "power",   "power_end", "square", "root", "greater_eq", "less_eq",
+        "not_equal", "approx_equal", "cube_root", "angle", "pi", "degree", "approx_plus",
+        "and_fraction"};
     size_t i;
     (void)userdata;
     if (!ttf_find_pack(e, ZH))

@@ -67,6 +67,7 @@ struct ttf_engine {
     /* A declared-only pack (context <tag> declared_only 1) in a request for
        another language, cached at freeze: per-token lookups cost 8%. */
     unsigned char undeclared[TTF_MAX_PACKS];
+    unsigned char han_only[TTF_MAX_PACKS]; /* context han_sentence: classifies only as context */
     size_t pack_count, resource_order;
     const ttf_resource_validator_t *validators[TTF_MAX_RESOURCE_VALIDATORS];
     size_t validator_count;

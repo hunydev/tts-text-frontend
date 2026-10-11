@@ -26,3 +26,14 @@ classifier_priority	zh-CN	zh.yearrange	100
 classifier_priority	zh-CN	zh.frac	100
 classifier_priority	zh-CN	zh.date	100
 classifier_priority	zh-CN	zh.hanzi	100
+classifier_priority	zh-CN	zh.holiday	100
+classifier_priority	zh-CN	zh.mixedfrac	100
+classifier_priority	zh-CN	zh.monthday	100
+classifier_priority	zh-CN	zh.minsec	100
+classifier_priority	zh-CN	zh.moneyrange	100
+classifier_priority	zh-CN	zh.pctrange2	100
+classifier_priority	zh-CN	zh.range2	100
+classifier_priority	zh-CN	zh.compound	100
+classifier_priority	zh-CN	zh.hanmoney	100
+classifier_priority	zh-CN	zh.hanmath	100
+classifier_priority	zh-CN	zh.plusscale	100

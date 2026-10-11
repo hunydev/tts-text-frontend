@@ -49,3 +49,13 @@ zh_vulgar	zh-CN	⅓	三分之一
 zh_vulgar	zh-CN	⅔	三分之二
 zh_vulgar	zh-CN	¼	四分之一
 zh_vulgar	zh-CN	¾	四分之三
+number	zh-CN	greater_eq	大于等于
+number	zh-CN	less_eq	小于等于
+number	zh-CN	not_equal	不等于
+number	zh-CN	approx_equal	约等于
+number	zh-CN	cube_root	三次根号
+number	zh-CN	angle	角
+number	zh-CN	pi	派
+number	zh-CN	degree	度
+number	zh-CN	approx_plus	多
+number	zh-CN	and_fraction	又

@@ -345,7 +345,8 @@ static const ttf_language_pack_t *kana_sentence(const ttf_engine_t *e, const ttf
    or traditional forms: 駅 円 國 時) belongs to the pack declaring `context <tag>
    han_sentence 1` (zh-CN), every token included. A request whose own pack takes
    kana sentences (ja-JP) keeps its kanji sentences, and so do the Korean
-   kana/hanja reading options. */
+   kana/hanja reading options. In a zh-CN request one hanzi is enough (Galaxy
+   S24 Ultra售价8999元). */
 static const ttf_language_pack_t *han_sentence(const ttf_engine_t *e, const ttf_pack_input_t *in,
                                                size_t begin, size_t end) {
     const ttf_language_pack_t *pack = NULL,
@@ -392,6 +393,8 @@ static const ttf_language_pack_t *han_sentence(const ttf_engine_t *e, const ttf_
             at += w;
         }
     }
+    if (declared == pack)
+        return han >= 1 ? pack : NULL;
     return han >= 2 && han >= 2 * latin ? pack : NULL;
 }
 static void matrix_route(const ttf_engine_t *e, const ttf_pack_input_t *in, size_t begin,
@@ -1570,7 +1573,9 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
                 if (e->packs[j]->classify &&
                     (strcmp(sem->unit, "@math") || (han_context && context == e->packs[j])) &&
                     (!undeclared(e, j) || context == e->packs[j]) &&
-                    !(han_context && context != e->packs[j])) {
+                    !(han_context && context != e->packs[j]) &&
+                    !(context != e->packs[j] &&
+                      (e->frozen ? e->han_only[j] : pack_flag(e, e->packs[j], "han_sentence", 0)))) {
                     ttf_semantic_t candidate;
                     size_t n;
                     long candidate_priority = 0;
@@ -1649,7 +1654,14 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
                         classifier_priority = candidate_priority;
                     }
                 }
-            consumed = ttf_numeric_width_guard(&classification, sem, consumed);
+            /* In a hanzi sentence ， is a clause comma, never part of a number
+               (验证码是846201，5分钟): the full-width guard does not join across it. */
+            {
+                size_t comma = consumed ? sem->input_end : classification.tokens[i].begin;
+                if (!(han_context && comma + 3 <= classification.length &&
+                      !memcmp(classification.text + comma, "，", 3)))
+                    consumed = ttf_numeric_width_guard(&classification, sem, consumed);
+            }
             if (context_length) {
                 if (consumed)
                     sem->input_end -= context_length;
