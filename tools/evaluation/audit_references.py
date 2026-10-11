@@ -14,6 +14,7 @@ import re
 import sys
 
 ACTIVE_JSONL = (
+    "zh_pack4_v67",
     "zh_pack3_v66",
     "zh_pack2_v65",
     "zh_pack_v64",

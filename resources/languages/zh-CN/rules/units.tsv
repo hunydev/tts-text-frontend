@@ -87,3 +87,14 @@ zh_unit	zh-CN	Wh	瓦时
 zh_unit	zh-CN	m/s²	米每二次方秒
 zh_unit_per	zh-CN	kg	千克
 zh_unit_per	zh-CN	km	千米
+zh_unit	zh-CN	MWh	兆瓦时
+zh_unit	zh-CN	GWh	吉瓦时
+zh_unit	zh-CN	Ω	欧姆
+zh_unit	zh-CN	kΩ	千欧
+zh_unit	zh-CN	N	牛
+zh_unit	zh-CN	N·m	牛米
+zh_unit	zh-CN	kJ	千焦
+zh_unit	zh-CN	J	焦
+zh_unit	zh-CN	mol	摩尔
+zh_unit	zh-CN	mol⁻¹	每摩尔
+zh_unit	zh-CN	s⁻¹	每秒

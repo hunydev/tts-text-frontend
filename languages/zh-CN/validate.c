@@ -50,7 +50,8 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                                          "times|divide|equals|greater|less|power|power_end|"
                                          "square|root|greater_eq|less_eq|not_equal|"
                                          "approx_equal|cube_root|angle|pi|degree|"
-                                         "approx_plus|and_fraction|per|ordinal|double")) &&
+                                         "approx_plus|and_fraction|per|ordinal|double|"
+                                         "factorial|triangle")) &&
                        label(v)
                    ? TTF_OK
                    : ttf_validation_error(d, "number requires a digit or a named word and a reading");
@@ -69,7 +70,7 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
         SAME(k, "range_unit") || SAME(k, "length_cue") || SAME(k, "ratio_after") ||
         SAME(k, "count_before") || SAME(k, "code_after") || SAME(k, "room_before") || SAME(k, "room_not") ||
         SAME(k, "holiday_after") || SAME(k, "date_cue") || SAME(k, "date_after") ||
-        SAME(k, "standard_cue")) {
+        SAME(k, "standard_cue") || SAME(k, "score_after")) {
         *handled = 1;
         return cue(key) && SAME(v, "1")
                    ? TTF_OK
@@ -121,7 +122,7 @@ static ttf_status_t engine(const ttf_engine_t *e, ttf_resource_diagnostic_t *d, 
         "minutes",  "seconds", "plus",    "subtract", "times",  "divide", "equals",    "greater",
         "less",     "power",   "power_end", "square", "root", "greater_eq", "less_eq",
         "not_equal", "approx_equal", "cube_root", "angle", "pi", "degree", "approx_plus",
-        "and_fraction", "per", "ordinal", "double"};
+        "and_fraction", "per", "ordinal", "double", "factorial", "triangle"};
     size_t i;
     (void)userdata;
     if (!ttf_find_pack(e, ZH))

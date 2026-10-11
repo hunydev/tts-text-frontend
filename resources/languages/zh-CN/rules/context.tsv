@@ -49,3 +49,11 @@ classifier_priority	zh-CN	zh.ordno	100
 classifier_priority	zh-CN	zh.pressure	100
 classifier_priority	zh-CN	zh.dims	100
 classifier_priority	zh-CN	zh.scaleunit	100
+classifier_priority	zh-CN	zh.moneyper	100
+classifier_priority	zh-CN	zh.swim	100
+classifier_priority	zh-CN	zh.sechund	100
+classifier_priority	zh-CN	zh.mdtime	100
+classifier_priority	zh-CN	zh.daterange	100
+classifier_priority	zh-CN	zh.factorial	100
+classifier_priority	zh-CN	zh.triangle	100
+classifier_priority	zh-CN	zh.tplus	100

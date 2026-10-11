@@ -125,7 +125,16 @@ static ttf_status_t integer(const ttf_engine_t *e, ttf_buffer_t *b, const char *
                 TRY(word(e, b, place[k]));
             any = 1;
         }
-        if (g)
+        /* 33165,0000,0000 三万三千一百六十五亿: above 亿 the count of 亿 takes 万, and
+           万亿 only when no 亿 group follows (一万亿) */
+        if (g == 3) {
+            int yi_group = 0;
+            for (k = 0; k < 4; ++k) {
+                long at = (long)len - 12 + (long)k;
+                yi_group |= at >= 0 && d[at] != '0';
+            }
+            TRY(word(e, b, yi_group ? "wan" : "wanyi"));
+        } else if (g)
             TRY(word(e, b, scale[g]));
     }
     return TTF_OK;
@@ -258,7 +267,8 @@ static size_t unit_after(const ttf_engine_t *e, const char *t, size_t n, size_t 
         if (!w || (w == 1 ? !(alpha(c[0]) || c[0] == '/')
                           : strcmp(c, "℃") && strcmp(c, "°") && strcmp(c, "²") &&
                                 strcmp(c, "³") && strcmp(c, "·") && strcmp(c, "㎡") &&
-                                strcmp(c, "㎞") && strcmp(c, "μ")))
+                                strcmp(c, "㎞") && strcmp(c, "μ") && strcmp(c, "Ω") &&
+                                strcmp(c, "⁻") && strcmp(c, "¹")))
             break;
         q += w;
         ++steps;
@@ -270,6 +280,9 @@ static size_t unit_after(const ttf_engine_t *e, const char *t, size_t n, size_t 
         }
     }
     if (!best || (p + best < n && alpha(t[p + best]) && alpha(t[p + best - 1])))
+        return 0;
+    /* 5A级景区: a grade, not amperes */
+    if (best == 1 && t[p] == 'A' && has(t, n, p + 1, "级"))
         return 0;
     /* 88V61: one capital letter inside a code is no unit */
     if (best == 1 && t[p] >= 'A' && t[p] <= 'Z' && p + 1 < n && digit(t[p + 1]))
@@ -329,6 +342,25 @@ static size_t unit_spec(const ttf_engine_t *e, const char *t, size_t n, size_t p
         return 0;
     snprintf(spec, size, "%s", u1);
     return a;
+}
+
+/* A unit spec at p, or after one space when the unit starts with a letter. */
+static size_t spaced_unit(const ttf_engine_t *e, const char *t, size_t n, size_t p, char *spec,
+                          size_t size) {
+    size_t w = unit_spec(e, t, n, p, spec, size);
+    if (w || !(p + 1 < n && t[p] == ' ' && alpha(t[p + 1])))
+        return w;
+    w = unit_spec(e, t, n, p + 1, spec, size);
+    /* one letter after a space is too weak (3 A) */
+    return w > 1 ? w + 1 : 0;
+}
+
+/* A short hanzi run ending right before p+run: 元 美元 万元 次 (up to three). */
+static size_t hanzi_run(const char *t, size_t n, size_t p, size_t most) {
+    size_t q = p, k = 0;
+    while (k < most && q + 3 <= n && ((unsigned char)t[q] & 0xf0) == 0xe0)
+        q += 3, ++k;
+    return q - p;
 }
 
 /* ---- classification ---- */
@@ -536,7 +568,7 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     /* an expression may end in a unit: 3×10⁸m/s */
     if ((m = maths(e, t, n, p)) != 0) {
         char spec[48];
-        size_t uw = unit_spec(e, t, n, p + m, spec, sizeof(spec));
+        size_t uw = spaced_unit(e, t, n, p + m, spec, sizeof(spec));
         if (!uw)
             spec[0] = 0;
         return finish(in, s, p + m + uw, "math", t + p, m, spec);
@@ -558,12 +590,29 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                 return finish2(in, s, b2 + l2, "moneyrange", t, p + w, len, b2, l2, key, "");
             }
         }
+        /* ¥599/晚 五百九十九元每晚 */
+        if (q + 3 < n && t[q] == '/' && hanzi_run(t, n, q + 1, 3)) {
+            size_t hw = hanzi_run(t, n, q + 1, 1);
+            return finish2(in, s, q + 1 + hw, "moneyper", t, p + w, len, q + 1, hw, key, "");
+        }
         /* $500万 五百万美元 */
         if (has(t, n, q, "万") || has(t, n, q, "亿"))
             return finish2(in, s, q + 3, "moneyscale", t, p + w, len, q, 3, key, "");
         return finish(in, s, q, "money", t + p + w, len, key);
     }
 
+    /* △DEF 三角形DEF */
+    if (has(t, n, p, "△") && p + 3 < n && alpha(t[p + 3])) {
+        q = p + 3;
+        while (q < n && alpha(t[q]))
+            ++q;
+        return finish(in, s, q, "triangle", t + p + 3, q - p - 3, "");
+    }
+    /* T+0 T加零 */
+    if (alpha(t[p]) && p + 2 < n && t[p + 1] == '+' && digit(t[p + 2])) {
+        q = digits_end(t, n, p + 2);
+        return finish(in, s, q, "tplus", t + p, q - p, "");
+    }
     /* No.1 第一 */
     if ((has(t, n, p, "No.") || has(t, n, p, "NO.")) && p + 3 < n && digit(t[p + 3])) {
         q = digits_end(t, n, p + 3);
@@ -679,6 +728,27 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     if (char_at(t, n, q, c) && res(e, "zh_vulgar", c))
         return finish2(in, s, q + strlen(c), "mixedfrac", t, p, len, q, strlen(c), "", "");
 
+    /* 4!等于24 四的阶乘 */
+    if (q < n && t[q] == '!' && (has(t, n, q + 1, "=") || has(t, n, q + 1, "等于")) &&
+        !has(t, n, q + 1, "=="))
+        return finish(in, s, q + 1, "factorial", t + p, len, "");
+    /* 2:05.38 两分零五秒三八: minutes, seconds and hundredths */
+    if (len <= 2 && q + 4 < n && t[q] == ':' && digit(t[q + 1]) && digit(t[q + 2]) && t[q + 3] == '.' &&
+        digit(t[q + 4])) {
+        size_t z = digits_end(t, n, q + 4);
+        return finish2(in, s, z, "swim", t, p, len, q + 1, z - q - 1, "", "");
+    }
+    /* 9秒91 九秒九一 */
+    if (!memchr(t + p, '.', len) && has(t, n, q, "秒") && q + 4 < n && digit(t[q + 3]) &&
+        digit(t[q + 4]) && !(q + 5 < n && digit(t[q + 5])) && !unit_after(e, t, n, q + 5, key, sizeof(key)) &&
+        !has(t, n, q + 5, "秒"))
+        return finish2(in, s, q + 5, "sechund", t, p, len, q + 3, 2, "", "");
+    /* （002594） 〔2024〕: a code or a year alone in brackets reads digit by digit */
+    if (len >= 4 && len <= 6 && !memchr(t + p, '.', len) && !memchr(t + p, ',', len) &&
+        ((prev_is(t, p, "（") && has(t, n, q, "）")) || (prev_is(t, p, "(") && has(t, n, q, ")")) ||
+         (prev_is(t, p, "〔") && has(t, n, q, "〕")) || (prev_is(t, p, "【") && has(t, n, q, "】")) ||
+         (prev_is(t, p, "[") && has(t, n, q, "]"))))
+        return finish(in, s, q, "digits", t + p, len, "");
     /* 2'30" 两分三十秒, 4′08″: minutes and seconds */
     if (!memchr(t + p, '.', len) && (has(t, n, q, "'") || has(t, n, q, "′"))) {
         size_t mw = t[q] == '\'' ? 1 : 3, b2 = q + mw, z = digits_end(t, n, b2);
@@ -697,14 +767,22 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         if (!(b2 + l2 < n && alpha(t[b2 + l2]) && !unit_after(e, t, n, b2 + l2, key, sizeof(key))))
             return finish2(in, s, b2 + l2, "times", t, p, len, b2, l2, "", "");
     }
-    /* 72次/分 七十二次每分钟, 15元/斤, 5.2万/㎡: a hanzi measure per another */
-    if (char_at(t, n, q, c) && strlen(c) == 3 && q + 3 < n && t[q + 3] == '/') {
-        size_t at = q + 4, uw2;
-        char per[8];
-        if ((uw2 = unit_after(e, t, n, at, key, sizeof(key))) != 0)
-            return finish2(in, s, at + uw2, "perhan", t, p, len, q, 3, key, "unit");
-        if (char_at(t, n, at, per) && strlen(per) == 3 && (res(e, "per_hanzi", per) || res(e, "liang_counter", per)))
-            return finish2(in, s, at + 3, "perhan", t, p, len, q, 3, per, "hanzi");
+    /* 72次/分 七十二次每分钟, 15元/斤, 5.2万/㎡, 15.6元/股, 3,900美元/盎司: a hanzi
+       measure per another */
+    {
+        size_t hw = hanzi_run(t, n, q, 2);
+        if (hw && q + hw < n && t[q + hw] == '/') {
+            size_t at = q + hw + 1, uw2, pw = hanzi_run(t, n, at, 3), k;
+            char per[16];
+            if ((uw2 = unit_after(e, t, n, at, key, sizeof(key))) != 0)
+                return finish2(in, s, at + uw2, "perhan", t, p, len, q, hw, key, "unit");
+            /* the longest listed word after the slash, else one hanzi */
+            for (k = pw; k >= 3; k -= 3) {
+                snprintf(per, sizeof(per), "%.*s", (int)k, t + at);
+                if (k == 3 || res(e, "per_hanzi", per) || res(e, "liang_counter", per))
+                    return finish2(in, s, at + k, "perhan", t, p, len, q, hw, per, "hanzi");
+            }
+        }
     }
 
     /* Ratios and scores the clock cannot be: 2∶1 (the ratio colon), 1.5:1,
@@ -789,8 +867,17 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             if (mo >= 1 && mo <= 12 && me - y - 1 <= 2 && me + 1 < n && t[me] == sep) {
                 de = digits_end(t, n, me + 1);
                 dd = value_of(t, me + 1, de);
-                if (dd >= 1 && dd <= 31 && de - me - 1 <= 2)
+                if (dd >= 1 && dd <= 31 && de - me - 1 <= 2) {
+                    size_t rw, y2;
+                    if (range_mark(t, n, de, &rw) && (y2 = digits_end(t, n, de + rw)) - de - rw == 4 &&
+                        y2 < n && t[y2] == sep) {
+                        size_t m2 = digits_end(t, n, y2 + 1), d2;
+                        if (m2 < n && t[m2] == sep && (d2 = digits_end(t, n, m2 + 1)) > m2 + 1 &&
+                            d2 - m2 - 1 <= 2)
+                            return finish2(in, s, d2, "daterange", t, p, de - p, de + rw, d2 - de - rw, "", "");
+                    }
                     return finish2(in, s, de, "date", t, p, 4, y + 1, de - y - 1, "", "");
+                }
             }
         }
     }
@@ -800,6 +887,19 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     if (q + 1 < n && t[q] == '/' && digit(t[q + 1]) && !memchr(t + p, '.', len)) {
         size_t b2 = q + 1, z = digits_end(t, n, b2);
         long a = value_of(t, p, q), d = value_of(t, b2, z);
+        /* 205/55 R16, 175/92A: a size code, not a fraction */
+        if (len >= 3 && z - b2 >= 2 && z < n &&
+            ((t[z] == ' ' && z + 1 < n && t[z + 1] == 'R') || (alpha(t[z]) && !(z + 1 < n && alpha(t[z + 1]))))) {
+            if (alpha(t[z]))
+                ++z;
+            return finish(in, s, z, "digits", t + p, z - p, "");
+        }
+        /* 1/1,000,000 一百万分之一 */
+        if (z < n && t[z] == ',' && !memchr(t + p, ',', len)) {
+            size_t g = scan_number(t, n, b2);
+            if (b2 + g > z && !memchr(t + b2, '.', g))
+                return finish2(in, s, b2 + g, "frac", t, p, len, b2, g, "", "");
+        }
         if (a >= 1 && a <= 12 && d >= 1 && d <= 31 && (a > d || d > 12) &&
             (cue_before(e, "date_cue", t, p, 4) || word_after(e, "date_after", t, n, z)))
             return finish2(in, s, z, "monthday", t, p, len, b2, z - b2, "", "");
@@ -834,6 +934,14 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     if (len == 2 && q + 2 < n && t[q] == '-' && digit(t[q + 1]) && digit(t[q + 2]) &&
         !(q + 3 < n && (digit(t[q + 3]) || t[q + 3] == '.'))) {
         long mo = value_of(t, p, q), dd = value_of(t, q + 1, q + 3);
+        if (mo >= 1 && mo <= 12 && dd >= 1 && dd <= 31 && q + 6 < n && t[q + 3] == ' ' &&
+            digit(t[q + 4]) && (t[q + 5] == ':' || (digit(t[q + 5]) && t[q + 6] == ':'))) {
+            size_t c0 = q + 4, cm = digits_end(t, n, c0), ce;
+            if (cm + 2 < n && t[cm] == ':' && digit(t[cm + 1]) && digit(t[cm + 2])) {
+                ce = cm + 3;
+                return finish2(in, s, ce, "mdtime", t, p, len, q + 1, 2, "", "");
+            }
+        }
         if (mo >= 1 && mo <= 12 && dd >= 1 && dd <= 31 && !unit_after(e, t, n, q + 3, key, sizeof(key)) &&
             (t[p] == '0' || t[q + 1] == '0' ||
              (cue_before(e, "date_cue", t, p, 4) && !word_after(e, "liang_counter", t, n, q + 3) &&
@@ -844,6 +952,16 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
        以7-5赢下 七比五. */
     if (range_mark(t, n, q, &w) && q + w < n && digit(t[q + w])) {
         size_t b2 = q + w, l2 = scan_number(t, n, b2), uw;
+        /* 2025-083: a year and a zero-led serial is a notice number */
+        if (t[q] == '-' && is_year(t, p, len) && t[b2] == '0' && l2 >= 3 && !memchr(t + b2, '.', l2) &&
+            !(b2 + l2 < n && (t[b2 + l2] == '-' || t[b2 + l2] == '.' || t[b2 + l2] == '/')))
+            return finish(in, s, b2 + l2, "digits", t + p, b2 + l2 - p, "");
+        /* 1-1战平 一比一 */
+        if (t[q] == '-' && len <= 2 && l2 <= 2 && word_after(e, "score_after", t, n, b2 + l2)) {
+            char v[24];
+            snprintf(v, sizeof(v), "%.*s:%.*s", (int)len, t + p, (int)l2, t + b2);
+            return finish(in, s, b2 + l2, "ratio", v, strlen(v), "");
+        }
         /* 3-2-1108: a chain of hyphened groups is a code, not a range */
         if (t[q] == '-' && b2 + l2 + 1 < n && t[b2 + l2] == '-' && digit(t[b2 + l2 + 1])) {
             size_t z = b2 + l2;
@@ -883,6 +1001,8 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         /* 15mg/kg 十五毫克每千克, 2.7g/cm³, 80mg/100ml */
         if ((sw = unit_spec(e, t, n, q, spec, sizeof(spec))) > uw && strchr(spec, '#'))
             return finish2(in, s, q + sw, "unit", t, p, len, p, 0, spec, "");
+        if (!uw && (sw = spaced_unit(e, t, n, q, spec, sizeof(spec))) != 0)
+            return finish2(in, s, q + sw, "unit", t, p, len, p, 0, spec, "");
         if (uw) {
             if (range_mark(t, n, q + uw, &w) && q + uw + w < n && digit(t[q + uw + w])) {
                 size_t b2 = q + uw + w, l2 = scan_number(t, n, b2), uw2;
@@ -920,9 +1040,10 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         while (z < n && alpha(t[z]))
             ++z;
         if (z < n && digit(t[z]) && (y = z + scan_number(t, n, z)) &&
-            (uw = unit_after(e, t, n, y, key, sizeof(key))) != 0)
+            (uw = unit_after(e, t, n, y, key, sizeof(key))) != 0 &&
+            !(y + uw < n && (alnum(t[y + uw]) || t[y + uw] == '-')))
             return finish2(in, s, y + uw, "latinunit", t, p, z - p, z, y - z, key, "");
-        while (z < n && alnum(t[z]))
+        while (z < n && (alnum(t[z]) || (t[z] == '-' && z + 1 < n && alnum(t[z + 1]) && alnum(t[z - 1]))))
             ++z;
         return finish(in, s, z, "latin", t + p, z - p, "");
     }
@@ -953,8 +1074,14 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     }
     if (memchr(t + p, '.', len) || memchr(t + p, ',', len))
         return finish(in, s, q, "int", t + p, len, "");
+    /* 第2025097期 第二零二五零九七期 */
+    if (prev_is(t, p, "第") && len >= 5 && has(t, n, q, "期"))
+        return finish(in, s, q, "digits", t + p, len, "");
     if (prev_is(t, p, "第"))
         return finish(in, s, q, "int", t + p, len, "");
+    /* 88折 八八折, 618大促 六一八 */
+    if ((len == 2 && has(t, n, q, "折")) || (len == 3 && word_after(e, "holiday_after", t, n, q)))
+        return finish(in, s, q, "digits", t + p, len, "");
     if (len >= 3 && (cue_before(e, "phone_cue", t, p, 5) || word_after(e, "phone_after", t, n, q)))
         return finish(in, s, q, "digits", t + p, len, "yao");
     /* 验证码123456, 301房间, 502错误, 7号楼1502, 0571, 80后: a code reads digit by
@@ -975,7 +1102,7 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
           !has(t, n, q, "！") && !has(t, n, q, "？") && !has(t, n, q, "、") && !has(t, n, q, "）"))) {
         char num[8];
         snprintf(num, sizeof(num), "%.*s", (int)(len < 7 ? len : 7), t + p);
-        if (len < 7 && res(e, "service_number", num))
+        if (len < 7 && res(e, "service_number", num) && !prev_is(t, p, "等于") && !prev_is(t, p, "="))
             return finish(in, s, q, "digits", t + p, len, "yao");
     }
     /* 1990年, 1998那年, 1980年代, 2021款, 2035年前 (not 2000年历史, 将近1000年): a
@@ -1174,7 +1301,10 @@ static ttf_status_t unit_word(const ttf_engine_t *e, ttf_buffer_t *b, const char
         char u1[24];
         const char *at = strchr(hash + 1, '@');
         snprintf(u1, sizeof(u1), "%.*s", (int)(hash - unit), unit);
-        if (u1[0])
+        /* kg/m³ 千克每立方米: both parts of a per unit take the per reading */
+        if (u1[0] && (u = res(e, "zh_unit_per", u1)) != NULL)
+            TRY(ttf_buffer_puts(b, u));
+        else if (u1[0])
             TRY(unit_word(e, b, u1));
         TRY(word(e, b, "per"));
         if (at)
@@ -1275,7 +1405,7 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         const char *cur = res(e, "zh_currency", s->secondary);
         if (!cur)
             return TTF_ERESOURCE;
-        TRY(number(e, b, v, vn, 1));
+        TRY(count(e, b, v, vn, 1));
         return ttf_buffer_puts(b, cur);
     }
     if (!strcmp(mode, "math")) {
@@ -1284,6 +1414,19 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     }
     if (!strcmp(mode, "latin"))
         return latin(e, b, v);
+    if (!strcmp(mode, "factorial")) {
+        TRY(number(e, b, v, vn, 0));
+        return word(e, b, "factorial");
+    }
+    if (!strcmp(mode, "triangle")) {
+        TRY(word(e, b, "triangle"));
+        return ttf_buffer_append(b, v, vn);
+    }
+    if (!strcmp(mode, "tplus")) {
+        TRY(ttf_buffer_append(b, v, 1));
+        TRY(word(e, b, "plus"));
+        return number(e, b, v + 2, vn - 2, 0);
+    }
     if (!strcmp(mode, "ordno")) {
         TRY(word(e, b, "ordinal"));
         return number(e, b, v, vn, 0);
@@ -1337,6 +1480,64 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         TRY(unit_word(e, b, s->secondary));
         TRY(number(e, b, bp, bn, 0));
         return unit_word(e, b, u);
+    }
+    if (!strcmp(mode, "moneyper")) {
+        const char *cur = res(e, "zh_currency", u);
+        if (!cur)
+            return TTF_ERESOURCE;
+        TRY(count(e, b, a, an, 1));
+        TRY(ttf_buffer_puts(b, cur));
+        TRY(word(e, b, "per"));
+        return ttf_buffer_append(b, bp, bn);
+    }
+    if (!strcmp(mode, "swim")) {
+        /* a = minutes, b = SS.hh */
+        long ss = strtol(bp, NULL, 10);
+        const char *dot = memchr(bp, '.', bn);
+        TRY(count(e, b, a, an, 1));
+        TRY(word(e, b, "minutes"));
+        if (ss < 10)
+            TRY(word(e, b, "d0"));
+        TRY(integer(e, b, bp, dot ? (size_t)(dot - bp) : bn, 0));
+        TRY(word(e, b, "seconds"));
+        return dot ? digits_each(e, b, dot + 1, bn - (size_t)(dot + 1 - bp), 0) : TTF_OK;
+    }
+    if (!strcmp(mode, "sechund")) {
+        TRY(number(e, b, a, an, 0));
+        TRY(word(e, b, "seconds"));
+        return digits_each(e, b, bp, bn, 0);
+    }
+    if (!strcmp(mode, "mdtime")) {
+        /* a = MM, b = DD; the clock time follows the space in the surface */
+        const char *sp = memchr(surface, ' ', length);
+        TRY(integer(e, b, a, an, 0));
+        TRY(word(e, b, "month"));
+        TRY(integer(e, b, bp, bn, 0));
+        TRY(word(e, b, "day"));
+        if (!sp)
+            return TTF_EINVAL;
+        return clock(e, b, sp + 1, length - (size_t)(sp + 1 - surface), 0);
+    }
+    if (!strcmp(mode, "daterange")) {
+        /* a = first date text, b = second date text, both YYYY<sep>M<sep>D */
+        size_t k;
+        for (k = 0; k < 2; ++k) {
+            const char *d = k ? bp : a;
+            size_t dn = k ? bn : an, m1 = 4, m2;
+            if (k)
+                TRY(word(e, b, "range"));
+            for (m2 = m1 + 1; m2 < dn && digit(d[m2]); ++m2)
+                ;
+            if (m2 >= dn)
+                return TTF_EINVAL;
+            TRY(digits_each(e, b, d, 4, 0));
+            TRY(word(e, b, "year"));
+            TRY(integer(e, b, d + m1 + 1, m2 - m1 - 1, 0));
+            TRY(word(e, b, "month"));
+            TRY(integer(e, b, d + m2 + 1, dn - m2 - 1, 0));
+            TRY(word(e, b, "day"));
+        }
+        return TTF_OK;
     }
     if (!strcmp(mode, "pressure")) {
         TRY(number(e, b, a, an, 0));
