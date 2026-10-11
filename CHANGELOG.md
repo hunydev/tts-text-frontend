@@ -2,6 +2,13 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Chinese pack phase 5, by category: IPv4 addresses and ports (一九二点一六八点零点一冒号八零八零),
+  QQ and group numbers, HTTP statuses after 报, Roman numerals (Ⅲ期 三期), Greek letters by
+  name (α 阿尔法, 6σ 六西格玛, χ² 卡方), s d kN kn dL rpm dB, hyphened part and batch
+  numbers as codes, latitude and longitude, year-month (2026/08), 30 more measure words; 3A游戏
+  is no longer 三安. Contract zh_pack5_v68 (35). A fifth held-out set (487 sentences, everyday
+  and professional): ours 92.4% (phase 4 88.1%), wetext 66.2%, NeMo 49.9%. Korean, English,
+  JSUT and ja-tn-eval are unchanged.
 - Chinese pack phase 4: per units after money (15.6元/股 十五点六元每股, ¥599/晚, 美元/盎司), units
   after a space (9.8 m/s²), MWh Ω N·m kJ mol⁻¹; fixed readings worse than the raw text found
   by held-out v3 (stock codes and years in brackets, notice numbers 2025-083, 33,165亿 was
