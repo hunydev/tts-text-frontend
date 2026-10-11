@@ -88,7 +88,8 @@ def parse(line, where):
 
 SETS = {"eval": ("src", "zh-tn-eval-v1.jsonl", "zh-tn-v1"),
         "heldout": ("src-heldout", "zh-tn-heldout-v1.jsonl", "zh-tn-h1"),
-        "heldout2": ("src-heldout2", "zh-tn-heldout-v2.jsonl", "zh-tn-h2")}
+        "heldout2": ("src-heldout2", "zh-tn-heldout-v2.jsonl", "zh-tn-h2"),
+        "heldout3": ("src-heldout3", "zh-tn-heldout-v3.jsonl", "zh-tn-h3")}
 
 
 def main():
