@@ -57,3 +57,7 @@ classifier_priority	zh-CN	zh.daterange	100
 classifier_priority	zh-CN	zh.factorial	100
 classifier_priority	zh-CN	zh.triangle	100
 classifier_priority	zh-CN	zh.tplus	100
+classifier_priority	zh-CN	zh.ip	100
+classifier_priority	zh-CN	zh.coord	100
+classifier_priority	zh-CN	zh.numgreek	100
+classifier_priority	zh-CN	zh.yearmonth	100
