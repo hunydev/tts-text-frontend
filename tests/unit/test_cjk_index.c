@@ -9,7 +9,7 @@ static size_t rules(const ttf_engine_t *e) {
 }
 static size_t common_rows(const ttf_engine_t *e) {
     size_t i, n = 0;
-    for (i = 0; i < TTF_HASH_BUCKETS; ++i) {
+    for (i = 0; i < TTF_RESOURCE_BUCKETS; ++i) {
         const ttf_entry_t *p;
         for (p = e->resources[i]; p; p = p->next) ++n;
     }
@@ -29,7 +29,7 @@ static int checked_freeze(ttf_engine_t *e, size_t added) {
     ttf_resource_validation_report_init(&before);
     ttf_resource_validation_report_init(&after);
     CHECK(ttf_engine_validate_resources(e, &before, NULL) == TTF_OK);
-    for (i = 0; i < TTF_HASH_BUCKETS; ++i) {
+    for (i = 0; i < TTF_RESOURCE_BUCKETS; ++i) {
         const ttf_entry_t *p;
         for (p = e->resources[i]; p; p = p->next) {
             saved[at].entry = p;

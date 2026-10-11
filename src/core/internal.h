@@ -16,6 +16,10 @@ static inline ttf_script_t ttf_script_legacy(ttf_script_t script) {
 }
 
 #define TTF_HASH_BUCKETS 1021
+/* The resource table has its own, larger size (2026-10-11): with 1021 buckets
+   a lookup walked about 24 rows, and lookups were most of the run time. The
+   engine keeps it on the heap so request views copy one pointer. */
+#define TTF_RESOURCE_BUCKETS 8191
 #define TTF_PHRASE_WORDS 8
 #define TTF_PHRASE_INPUT 255
 
@@ -39,7 +43,7 @@ typedef struct ttf_entry {
 /* Owner of the detached CJK rows; word buckets only borrow entry pointers.
    Request-local engine views copy this pointer, never the bucket arrays. */
 typedef struct {
-    ttf_entry_t *resources[TTF_HASH_BUCKETS];
+    ttf_entry_t *resources[TTF_RESOURCE_BUCKETS];
     ttf_entry_t *words[TTF_HASH_BUCKETS];
     size_t max_length;
 } ttf_cjk_index_t;
@@ -72,7 +76,7 @@ struct ttf_engine {
     const ttf_resource_validator_t *validators[TTF_MAX_RESOURCE_VALIDATORS];
     size_t validator_count;
     size_t builtin_validators; /* engine and pack validators; a row check is reused only with no others */
-    ttf_entry_t *resources[TTF_HASH_BUCKETS];
+    ttf_entry_t **resources; /* TTF_RESOURCE_BUCKETS heads, allocated on first insert */
     ttf_entry_t *boundary_cues;
     ttf_entry_t *rules;
     ttf_entry_t *phrases[TTF_HASH_BUCKETS];

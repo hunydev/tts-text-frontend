@@ -107,7 +107,7 @@ invalid:
 void ttf_phrase_index(ttf_engine_t *engine) {
     size_t bucket;
     memset(engine->phrases, 0, sizeof(engine->phrases));
-    for (bucket = 0; bucket < TTF_HASH_BUCKETS; ++bucket) {
+    for (bucket = 0; bucket < TTF_RESOURCE_BUCKETS; ++bucket) {
         ttf_entry_t *entry;
         for (entry = engine->resources[bucket]; entry; entry = entry->next) {
             const char *word;

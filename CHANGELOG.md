@@ -2,6 +2,12 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Faster resource lookups: the resource hash table has 8191 buckets (was 1021, shared
+  with the word and phrase tables) and lives on the heap, so request views copy one
+  pointer. A lookup walked about 24 rows; a 30,000-number stream took 45 s and now 12 s
+  (Release). The context_cache numeric-30000 test, near its 60 s limit in the Debug CI
+  build, kept failing. Outputs are unchanged (Korean quick 0 changed, English, JSUT,
+  ja-tn-eval, zh sets, all contracts).
 - Chinese pack phase 2: maths (letters, superscripts, ≥ ≤ ≠ ≈ π ∠ ∛ °), more units
   (512GB 五百一十二GB, was 五一二GB; mmHg kcal nm ㎡ mmol/L h min), ratios (∶, 115:109,
   3:2:1), years (2035年前, 80后), dates (10.1假期 十一, 5·12), codes (502错误, plates),

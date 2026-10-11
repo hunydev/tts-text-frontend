@@ -13,7 +13,7 @@ static size_t bucket(const char *kind, const char *lang, const char *key) {
     h = hash_bytes(h, "\t");
     h = hash_bytes(h, lang);
     h = hash_bytes(h, "\t");
-    return hash_bytes(h, key) % TTF_HASH_BUCKETS;
+    return hash_bytes(h, key) % TTF_RESOURCE_BUCKETS;
 }
 static void entry_free(ttf_entry_t *p) {
     free(p->kind);
@@ -28,6 +28,9 @@ static ttf_status_t resource_insert(ttf_engine_t *e, const char *kind, const cha
     ttf_entry_t *p;
     if (e->resource_order == SIZE_MAX)
         return TTF_ELIMIT;
+    if (!e->resources &&
+        !(e->resources = (ttf_entry_t **)calloc(TTF_RESOURCE_BUCKETS, sizeof(*e->resources))))
+        return TTF_ENOMEM;
     p = (ttf_entry_t *)calloc(1, sizeof(*p));
     if (!p)
         return TTF_ENOMEM;
@@ -63,7 +66,9 @@ static const ttf_entry_t *find_entry(const ttf_engine_t *e, const char *kind, co
                                      const char *key) {
     const ttf_entry_t *p, *best = NULL;
     size_t h = bucket(kind, lang, key);
-    p = e->cjk && ttf_cjk_resource_kind(kind) ? e->cjk->resources[h] : e->resources[h];
+    p = e->cjk && ttf_cjk_resource_kind(kind) ? e->cjk->resources[h]
+        : e->resources                         ? e->resources[h]
+                                               : NULL;
     for (; p; p = p->next) {
         if (strcmp(kind, p->kind) || strcmp(lang, p->lang) || strcmp(key, p->key))
             continue;
@@ -94,8 +99,11 @@ const char *ttf_resource_get(const ttf_engine_t *e, const char *kind, const char
 }
 void ttf_resource_destroy(ttf_engine_t *e) {
     size_t i, table;
-    for (table = 0; table < (e->cjk ? 2u : 1u); ++table) for (i = 0; i < TTF_HASH_BUCKETS; i++) {
-        ttf_entry_t **head = table ? &e->cjk->resources[i] : &e->resources[i];
+    for (table = 0; table < (e->cjk ? 2u : 1u); ++table) for (i = 0; i < TTF_RESOURCE_BUCKETS; i++) {
+        ttf_entry_t **head;
+        if (!table && !e->resources)
+            break;
+        head = table ? &e->cjk->resources[i] : &e->resources[i];
         ttf_entry_t *p = *head;
         while (p) {
             ttf_entry_t *n = p->next;
@@ -104,12 +112,14 @@ void ttf_resource_destroy(ttf_engine_t *e) {
         }
         *head = NULL;
     }
+    free(e->resources);
+    e->resources = NULL;
     free(e->cjk); /* Word buckets borrow rows; never free their entries again. */
     e->cjk = NULL;
 }
 void ttf_resource_rollback(ttf_engine_t *e, size_t checkpoint) {
     size_t i;
-    for (i = 0; i < TTF_HASH_BUCKETS; ++i) {
+    for (i = 0; e->resources && i < TTF_RESOURCE_BUCKETS; ++i) {
         ttf_entry_t **at = &e->resources[i];
         while (*at) {
             ttf_entry_t *entry = *at;
@@ -269,8 +279,11 @@ ttf_status_t ttf_resource_load_ex(ttf_engine_t *e, const char *path, ttf_resourc
     free(data);
     if (st == TTF_OK && tmp->resource_order > SIZE_MAX - e->resource_order)
         st = TTF_ELIMIT;
+    if (st == TTF_OK && !e->resources &&
+        !(e->resources = (ttf_entry_t **)calloc(TTF_RESOURCE_BUCKETS, sizeof(*e->resources))))
+        st = TTF_ENOMEM;
     if (st == TTF_OK) {
-        for (i = 0; i < TTF_HASH_BUCKETS; i++) {
+        for (i = 0; tmp->resources && i < TTF_RESOURCE_BUCKETS; i++) {
             ttf_entry_t *p = tmp->resources[i];
             while (p) {
                 ttf_entry_t *next = p->next;
@@ -380,6 +393,7 @@ ttf_status_t ttf_lexicon_add(ttf_engine_t *e, ttf_resource_layer_t layer, const 
         remove_key(e, layer, render, key);
         h = bucket("lexicon", render, key);
         p = tmp.resources[h];
+        free(tmp.resources);
         p->order = e->resource_order++;
         p->next = e->resources[h];
         e->resources[h] = p;

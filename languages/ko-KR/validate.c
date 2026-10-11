@@ -781,7 +781,7 @@ static ttf_status_t engine(const ttf_engine_t *e, ttf_resource_diagnostic_t *d, 
     marker = ttf_resource_get(e, "ordinal_marker", KO, "prefix", NULL);
     if (marker && (status = cue_boundaries(e, marker, d)) != TTF_OK)
         return status;
-    for (bucket = 0; bucket < TTF_HASH_BUCKETS; ++bucket) {
+    for (bucket = 0; bucket < TTF_RESOURCE_BUCKETS; ++bucket) {
         const ttf_entry_t *entry;
         for (entry = e->resources[bucket]; entry; entry = entry->next) {
             const char *value;

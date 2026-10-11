@@ -122,7 +122,7 @@ ttf_status_t ttf_cjk_index(ttf_engine_t *e) {
     size_t bucket, table;
     ttf_cjk_index_t *index = calloc(1, sizeof(*index));
     if (!index) return TTF_ENOMEM; /* No entries have moved; freeze may be retried. */
-    for (bucket = 0; bucket < TTF_HASH_BUCKETS; ++bucket) {
+    for (bucket = 0; bucket < TTF_RESOURCE_BUCKETS; ++bucket) {
         ttf_entry_t **at = &e->resources[bucket];
         while (*at) {
             ttf_entry_t *entry = *at;
@@ -133,7 +133,7 @@ ttf_status_t ttf_cjk_index(ttf_engine_t *e) {
         }
     }
     e->cjk = index; /* The remaining operations cannot fail or allocate. */
-    for (table = 0; table < 2; ++table) for (bucket = 0; bucket < TTF_HASH_BUCKETS; ++bucket) {
+    for (table = 0; table < 2; ++table) for (bucket = 0; bucket < TTF_RESOURCE_BUCKETS; ++bucket) {
         ttf_entry_t *entry;
         for (entry = table ? index->resources[bucket] : e->resources[bucket];
              entry; entry = entry->next) {

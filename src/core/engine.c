@@ -154,6 +154,12 @@ ttf_status_t ttf_engine_create_ex(const ttf_config_t *cfg, ttf_engine_t **out,
     e = (ttf_engine_t *)calloc(1, sizeof(*e));
     if (!e)
         return TTF_ENOMEM;
+    /* An engine always owns its resource table, even with no rows. */
+    e->resources = (ttf_entry_t **)calloc(TTF_RESOURCE_BUCKETS, sizeof(*e->resources));
+    if (!e->resources) {
+        free(e);
+        return TTF_ENOMEM;
+    }
     e->config = *cfg;
     ttf_frontend_options_init(&e->frontend_options);
     e->frontend_options.output_mode = TTF_OUTPUT_TEXT;
@@ -219,7 +225,7 @@ ttf_status_t ttf_engine_freeze(ttf_engine_t *e) {
        cues must not scan pronunciation dictionaries during normalization. */
     e->rules = NULL;
     e->boundary_cues = NULL;
-    for (bucket = 0; bucket < TTF_HASH_BUCKETS; ++bucket) {
+    for (bucket = 0; bucket < TTF_RESOURCE_BUCKETS; ++bucket) {
         ttf_entry_t *entry;
         for (entry = e->resources[bucket]; entry; entry = entry->next) {
             int active = 0;
