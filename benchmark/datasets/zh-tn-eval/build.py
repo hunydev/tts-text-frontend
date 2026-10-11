@@ -91,7 +91,8 @@ SETS = {"eval": ("src", "zh-tn-eval-v1.jsonl", "zh-tn-v1"),
         "heldout2": ("src-heldout2", "zh-tn-heldout-v2.jsonl", "zh-tn-h2"),
         "heldout3": ("src-heldout3", "zh-tn-heldout-v3.jsonl", "zh-tn-h3"),
         "heldout4": ("src-heldout4", "zh-tn-heldout-v4.jsonl", "zh-tn-h4"),
-        "heldout5": ("src-heldout5", "zh-tn-heldout-v5.jsonl", "zh-tn-h5")}
+        "heldout5": ("src-heldout5", "zh-tn-heldout-v5.jsonl", "zh-tn-h5"),
+        "heldout6": ("src-heldout6", "zh-tn-heldout-v6.jsonl", "zh-tn-h6")}
 
 
 def main():
