@@ -2,6 +2,13 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Chinese pack phase 6, on the categories held-out v5 missed: units after a formula glued to
+  hanzi (λ=550nm), K C J F as units inside formulas, J·s Ω·m kJ/(kg·℃), μF nF pF μL μs ns hm²
+  r/min MJ GJ; standards (ISO 9001:2015, IATF 16949, GB/T 19001-2016) read digit by digit;
+  bare versions (2.4.1); zero cents dropped, ￥2.6万, currency codes (JPY 1,500,000), ¥32.5/kg;
+  +3价, 2核, 318国道; the phone cue no longer fires before an amount (手机起售价5499元).
+  Contract zh_pack6_v69 (32). A sixth held-out set (491 sentences): ours 92.5% (phase 5
+  91.4%), wetext 71.6%, NeMo 53.8%. Korean, English, JSUT and ja-tn-eval are unchanged.
 - Chinese pack phase 5, by category: IPv4 addresses and ports (一九二点一六八点零点一冒号八零八零),
   QQ and group numbers, HTTP statuses after 报, Roman numerals (Ⅲ期 三期), Greek letters by
   name (α 阿尔法, 6σ 六西格玛, χ² 卡方), s d kN kn dL rpm dB, hyphened part and batch

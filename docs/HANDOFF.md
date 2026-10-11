@@ -20,6 +20,9 @@
 - 5단계(범주 단위): IT 표기, 로마·그리스 기호, SI 단위, 번호 문맥. 계약 `zh_pack5_v68`(35건).
   - 최종 측정 held-out v5(487문장): 우리 92.4%(4단계 88.1%, +4.3%p), wetext 66.2%, NeMo 49.9%. 범주 단위가 사례별보다 잘 일반화됨.
   - 남은 유형(식 속 단위, 표준번호, 금액, 전화 단서 범위)은 [chinese-pack.ko.md](chinese-pack.ko.md).
+- 6단계(v5의 실패 범주): 식 속 단위, 표준·인증 번호, 버전, 금액 표기, 전화 단서 축소. 계약 `zh_pack6_v69`(32건).
+  - 최종 측정 held-out v6(491문장): 우리 92.5%(5단계 91.4%, +1.1%p), wetext 71.6%, NeMo 53.8%. 새로 틀린 구간 없음.
+  - 남은 유형(공백 뒤 로마자 단위, 二/两, 콜론, 날짜)은 [chinese-pack.ko.md](chinese-pack.ko.md).
 - 자원 해시 버킷 1021 → 8191(`TTF_RESOURCE_BUCKETS`, 엔진은 힙에 둠). 조회 한 번에 평균 24행을 훑던 것이 줄어 숫자 3만 개 처리 45초 → 12초. 출력 불변.
   - 한국어·영어·JSUT·일본어 평가셋: unchanged (Korean quick 0 changed sentences, English 90.83%/86.80%, JSUT 203/332, ja-tn-eval 97.3%).
   - 남은 것: held-out 평가셋, 원어민 검수, VoxCPM2 청취 비교. 상세: [chinese-pack.ko.md](chinese-pack.ko.md)
