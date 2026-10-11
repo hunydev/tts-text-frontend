@@ -2,6 +2,15 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Japanese fixes from an OpenAI TTS -> STT check of the 200-sentence review sample
+  (raw text read right 69.5%, our output 82.5%), where a kanji left between
+  readings was misread: 生 after 年 期 回 reads せい (1期生 いっきせい, 3年生の
+  さんねんせいの; 生まれ and 生活 stay), 中 between counts reads ちゅう (10人中9人
+  じゅうにんちゅうきゅうにん; 一日中 stays じゅう), 月 at the end of a kanji word before
+  an amount or a frequency reads つき (家賃月8.5万円 家賃つき…, 月2回 つきにかい;
+  今月 毎月 stay), and bit rates are read (1Gbps いちギガビーピーエス, a Japanese-only
+  latin_unit). Contract ja_tts_fixes_v63 (14). ja-tn-eval direct 87.8% to 88.5%;
+  the reader-based score and JSUT are unchanged.
 - Japanese 頃 after a time, date or age count reads ごろ (around_suffix): 8時頃
   はちじごろ, 8時半頃 はちじはんごろ, 5月頃 ごがつごろ, 30歳頃 さんじゅっさいごろ; 年頃
   without a number stays a word. Found by an OpenAI TTS -> STT check of 20

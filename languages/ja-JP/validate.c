@@ -199,6 +199,8 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     }
     if (SAME(k, "counter_block") || SAME(k, "digit_after_cue") || SAME(k, "english_counter") ||
         SAME(k, "rate_cue") || SAME(k, "after_suffix") || SAME(k, "before_suffix") || SAME(k, "around_suffix") ||
+        SAME(k, "student_suffix") || SAME(k, "month_word") || SAME(k, "month_rate_counter") ||
+        SAME(k, "latin_unit") ||
         SAME(k, "duration_cue") || SAME(k, "day_one_cue")) {
         *handled = 1;
         return label(key) && strlen(key) <= 18 && SAME(v, "1")

@@ -112,3 +112,15 @@ letter_name	ja-JP	X	エックス
 letter_name	ja-JP	Y	ワイ
 letter_name	ja-JP	Z	ゼット
 unit	ja-JP	mmHg	ミリエイチジー:-
+# Bit rates (2026-10-11): 1Gbps was not read.
+unit	ja-JP	bps	ビーピーエス:-
+unit	ja-JP	kbps	キロビーピーエス:-
+unit	ja-JP	Mbps	メガビーピーエス:-
+unit	ja-JP	Gbps	ギガビーピーエス:-
+unit	ja-JP	Tbps	テラビーピーエス:-
+# latin_unit: these Latin units are read by the Japanese pack itself (no global numeric_suffix).
+latin_unit	ja-JP	bps	1
+latin_unit	ja-JP	kbps	1
+latin_unit	ja-JP	Mbps	1
+latin_unit	ja-JP	Gbps	1
+latin_unit	ja-JP	Tbps	1

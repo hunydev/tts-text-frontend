@@ -484,6 +484,23 @@ static ttf_status_t value_counted(const ttf_engine_t *e, const char *value, cons
 }
 
 /* Longest counter written at s (本, 日間, ヶ月, パーセント, %). */
+/* 3年生の, 1期生。: 生 after the count is a student unless a word goes on (生まれ, 生活). */
+static int student_end(const char *s, size_t n) {
+    static const char *const next[] = {"の", "が", "は", "を", "に", "と", "も", "で", "へ", "や", "だ", "か"};
+    size_t k;
+    uint32_t cp;
+    size_t w;
+    if (!n || (unsigned char)s[0] < 0x80)
+        return 1;
+    for (k = 0; k < sizeof(next) / sizeof(*next); ++k)
+        if (n >= 3 && !memcmp(s, next[k], 3))
+            return 1;
+    if (ttf_utf8_decode(s, n, &cp, &w) != 1)
+        return 0;
+    /* Punctuation and symbols end the word; a kanji or another kana goes on. */
+    return ttf_script_of(cp) != TTF_SCRIPT_HAN && ttf_script_of(cp) != TTF_SCRIPT_KANA;
+}
+
 static size_t counter_at(const ttf_engine_t *e, const char *s, size_t n, char *key, size_t size) {
     size_t widths[8], count = 0, at = 0, k;
     while (at < n && count < 8) {
@@ -896,6 +913,23 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             snprintf(s->value + vl, sizeof(s->value) - vl, "%c厘", text[begin + 3]);
         return finish(in, s, begin + 4, TTF_SEM_COUNTER, "ja.rate", "@ja");
     }
+    /* 家賃月8.5万円 やちんつき…, 月2回 つきにかい: 月 at the end of a kanji word, right before
+       an amount or a frequency, is つき (2026-10-11); 今月 毎月 … are words (month_word). */
+    if (t->script == TTF_SCRIPT_HAN && t->end - begin >= 3 && t->end < n && digit(text[t->end]) &&
+        !memcmp(text + t->end - 3, "\xe6\x9c\x88", 3) && t->end - begin < sizeof(s->value)) {
+        char prev[4] = {0}, key2[32], nb[64];
+        size_t nl2 = 0, used, cw = 0;
+        ja_number_t x;
+        if (t->end - 3 > begin)
+            memcpy(prev, text + t->end - 6, 3);
+        used = parse_number(e, text + t->end, n - t->end, &x, nb, sizeof(nb), &nl2);
+        if (used)
+            cw = counter_at(e, text + t->end + used, n - t->end - used, key2, sizeof(key2));
+        if (!(prev[0] && res(e, "month_word", prev)) && cw && res(e, "month_rate_counter", key2)) {
+            snprintf(s->value, sizeof(s->value), "%.*s", (int)(t->end - begin), text + begin);
+            return finish(in, s, t->end, TTF_SEM_SYMBOL, "ja.month-rate", "@month-rate");
+        }
+    }
     /* 小6 しょうろく, 中2 ちゅうに: a school grade before one digit (not 中2階). */
     if ((t->script == TTF_SCRIPT_HAN || t->script == TTF_SCRIPT_KANA) && t->end - begin >= 3 &&
         t->end + 1 <= n && digit(text[t->end]) &&
@@ -1142,6 +1176,25 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     }
     if (!digit(text[begin]) && !(text[begin] == '-' && begin + 1 < n && digit(text[begin + 1])))
         return 0;
+    /* 1Gbps, 100Mbps: a Latin unit that only the Japanese table lists (latin_unit; bit rates,
+       2026-10-11). Units every language reads (GB, km) come from numeric_suffix. */
+    if (digit(text[begin]) && !(begin && (digit(text[begin - 1]) || alpha(text[begin - 1])))) {
+        size_t q = begin, r;
+        char unit[16];
+        while (q < n && (digit(text[q]) || (text[q] == '.' && q + 1 < n && digit(text[q + 1]))))
+            ++q;
+        r = q;
+        while (r < n && alpha(text[r]))
+            ++r;
+        if (r > q && r - q < sizeof(unit) && q - begin < sizeof(s->value) && !(r < n && digit(text[r]))) {
+            memcpy(unit, text + q, r - q);
+            unit[r - q] = 0;
+            if (res(e, "latin_unit", unit) && res(e, "unit", unit)) {
+                snprintf(s->value, sizeof(s->value), "%.*s", (int)(q - begin), text + begin);
+                return finish(in, s, r, TTF_SEM_MEASURE, "ja.latin-unit", unit);
+            }
+        }
+    }
     /* 3LDK, 4K, 5G: a short number with capital letters (2026-10-08). */
     if (digit(text[begin])) {
         size_t q = begin, r;
@@ -1391,7 +1444,9 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
              (!memcmp(text + p, "\xe5\x8d\x8a", 3) && res(e, "half_suffix", key)) ||
              (!memcmp(text + p, "\xe5\xbe\x8c", 3) && res(e, "after_suffix", key) && !half_word(text + p, n - p)) ||
              (!memcmp(text + p, "\xe5\x89\x8d", 3) && res(e, "before_suffix", key) && !half_word(text + p, n - p)) ||
-             (!memcmp(text + p, "\xe9\xa0\x83", 3) && res(e, "around_suffix", key)))) {
+             (!memcmp(text + p, "\xe9\xa0\x83", 3) && res(e, "around_suffix", key)) ||
+             (!memcmp(text + p, "\xe4\xb8\xad", 3) && p + 3 < n && digit(text[p + 3])) ||
+             (!memcmp(text + p, "\xe7\x94\x9f", 3) && res(e, "student_suffix", key) && student_end(text + p + 3, n - p - 3)))) {
             memcpy(norm + nl, text + p, 3);
             nl += 3;
             norm[nl] = 0;
@@ -1545,8 +1600,13 @@ static ttf_status_t render_chain(const ttf_engine_t *e, const char *v, ttf_buffe
         snprintf(previous, sizeof(previous), "%s", key);
         p += cw;
         /* 一日中 いちにちじゅう, 12時半 じゅうにじはん */
-        if (p + 3 <= n && !memcmp(v + p, "\xe4\xb8\xad", 3) && res(e, "long_suffix", key)) {
-            if ((st = ttf_buffer_puts(b, "じゅう")) != TTF_OK)
+        if (p + 3 <= n && !memcmp(v + p, "\xe4\xb8\xad", 3)) {
+            /* 一日中 いちにちじゅう; 10人中9人 じゅうにんちゅうきゅうにん (2026-10-11) */
+            if ((st = ttf_buffer_puts(b, res(e, "long_suffix", key) ? "じゅう" : "ちゅう")) != TTF_OK)
+                return st;
+            p += 3;
+        } else if (p + 3 <= n && !memcmp(v + p, "\xe7\x94\x9f", 3) && res(e, "student_suffix", key)) {
+            if ((st = ttf_buffer_puts(b, "せい")) != TTF_OK) /* 1期生 いっきせい (2026-10-11) */
                 return st;
             p += 3;
         } else if (p + 3 <= n && !memcmp(v + p, "\xe5\x8d\x8a", 3) && res(e, "half_suffix", key)) {
@@ -1840,7 +1900,9 @@ static ttf_status_t kanji_numerals(const ttf_engine_t *e, const char *s, size_t 
                      (!memcmp(s + p, "\xe5\x8d\x8a", 3) && res(e, "half_suffix", key)) ||
                      (!memcmp(s + p, "\xe5\xbe\x8c", 3) && res(e, "after_suffix", key) && !half_word(s + p, n - p)) ||
                      (!memcmp(s + p, "\xe5\x89\x8d", 3) && res(e, "before_suffix", key) && !half_word(s + p, n - p)) ||
-                     (!memcmp(s + p, "\xe9\xa0\x83", 3) && res(e, "around_suffix", key)))) {
+                     (!memcmp(s + p, "\xe9\xa0\x83", 3) && res(e, "around_suffix", key)) ||
+             (!memcmp(s + p, "\xe4\xb8\xad", 3) && p + 3 < n && digit(s[p + 3])) ||
+             (!memcmp(s + p, "\xe7\x94\x9f", 3) && res(e, "student_suffix", key) && student_end(s + p + 3, n - p - 3)))) {
                     memcpy(norm + nl, s + p, 3);
                     nl += 3;
                     norm[nl] = 0;
@@ -2404,6 +2466,14 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
                 i = j + 1;
             }
             return TTF_OK;
+        }
+        if (!strcmp(s->unit, "@month-rate")) {
+            size_t k = strlen(s->value);
+            if (k < 3)
+                return TTF_EINVAL;
+            if (k > 3 && (st = kanji_numerals(e, s->value, k - 3, b)) != TTF_OK)
+                return st;
+            return ttf_buffer_puts(b, "つき");
         }
         if (!strcmp(s->unit, "@grade")) {
             /* 息子は小6 息子はしょうろく: the words before the grade read as usual. */

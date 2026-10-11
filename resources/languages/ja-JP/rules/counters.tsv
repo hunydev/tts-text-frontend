@@ -337,3 +337,29 @@ around_suffix	ja-JP	世紀	1
 around_suffix	ja-JP	年代	1
 around_suffix	ja-JP	歳	1
 around_suffix	ja-JP	才	1
+# student_suffix: 生 せい after the count (1期生 いっきせい, 3年生の さんねんせいの; 2026-10-11),
+# unless a word goes on (2024年生まれ, 3年生活).
+student_suffix	ja-JP	年	1
+student_suffix	ja-JP	期	1
+student_suffix	ja-JP	回	1
+# 月 before an amount or a frequency reads つき (家賃月8.5万円, 月2回); month_word: the kanji before
+# 月 that make a word (今月 毎月 先月 …), month_rate_counter: the counts after it.
+month_word	ja-JP	今	1
+month_word	ja-JP	来	1
+month_word	ja-JP	先	1
+month_word	ja-JP	前	1
+month_word	ja-JP	翌	1
+month_word	ja-JP	毎	1
+month_word	ja-JP	同	1
+month_word	ja-JP	当	1
+month_word	ja-JP	本	1
+month_word	ja-JP	昨	1
+month_word	ja-JP	再	1
+month_word	ja-JP	隔	1
+month_word	ja-JP	歳	1
+month_word	ja-JP	年	1
+month_word	ja-JP	半	1
+month_word	ja-JP	正	1
+month_rate_counter	ja-JP	円	1
+month_rate_counter	ja-JP	回	1
+month_rate_counter	ja-JP	度	1

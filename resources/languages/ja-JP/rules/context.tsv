@@ -8,6 +8,7 @@ context	ja-JP	kana_sentence	1
 # Pack readings over the same extent as a shared one (USB: katakana letter names).
 classifier_priority	ja-JP	ja.initialism	50
 classifier_priority	ja-JP	ja.alnum	50
+classifier_priority	ja-JP	ja.latin-unit	50
 classifier_priority	ja-JP	ja.digit-cue	50
 classifier_priority	ja-JP	ja.latin-word	50
 classifier_priority	ja-JP	ja.latin-abbreviation	50
