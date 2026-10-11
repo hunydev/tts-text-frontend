@@ -61,3 +61,7 @@ classifier_priority	zh-CN	zh.ip	100
 classifier_priority	zh-CN	zh.coord	100
 classifier_priority	zh-CN	zh.numgreek	100
 classifier_priority	zh-CN	zh.yearmonth	100
+classifier_priority	zh-CN	zh.valence	100
+classifier_priority	zh-CN	zh.standard	100
+classifier_priority	zh-CN	zh.version	100
+classifier_priority	zh-CN	zh.moneyunit	100

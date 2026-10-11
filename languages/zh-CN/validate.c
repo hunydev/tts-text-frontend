@@ -52,13 +52,13 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                                          "approx_equal|cube_root|angle|pi|degree|"
                                          "approx_plus|and_fraction|per|ordinal|double|"
                                          "factorial|triangle|colon|chi_square|coord_N|"
-                                         "coord_S|coord_E|coord_W")) &&
+                                         "coord_S|coord_E|coord_W|positive|square_bare")) &&
                        label(v)
                    ? TTF_OK
                    : ttf_validation_error(d, "number requires a digit or a named word and a reading");
     }
     if (SAME(k, "zh_unit") || SAME(k, "zh_currency") || SAME(k, "zh_vulgar") ||
-        SAME(k, "zh_greek") || SAME(k, "zh_roman") ||
+        SAME(k, "zh_greek") || SAME(k, "zh_roman") || SAME(k, "zh_unit_math") ||
         SAME(k, "zh_unit_per")) {
         *handled = 1;
         return short_key(key, 8) && label(v)
@@ -73,7 +73,7 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
         SAME(k, "count_before") || SAME(k, "code_after") || SAME(k, "room_before") || SAME(k, "room_not") ||
         SAME(k, "holiday_after") || SAME(k, "date_cue") || SAME(k, "date_after") ||
         SAME(k, "standard_cue") || SAME(k, "score_after") || SAME(k, "status_cue") ||
-        SAME(k, "proportion_cue")) {
+        SAME(k, "proportion_cue") || SAME(k, "money_after")) {
         *handled = 1;
         return cue(key) && SAME(v, "1")
                    ? TTF_OK

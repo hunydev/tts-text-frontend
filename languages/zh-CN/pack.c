@@ -246,6 +246,26 @@ static int cue_before(const ttf_engine_t *e, const char *kind, const char *t, si
     return 0;
 }
 
+/* A listed word ending right at `end`, after skipping spaces back (GB/T 1804). */
+static int cue_ending(const ttf_engine_t *e, const char *kind, const char *t, size_t end, size_t most) {
+    size_t start;
+    char key[20];
+    while (end > 0 && t[end - 1] == ' ')
+        --end;
+    for (start = end; start > 0 && end - start < most;) {
+        --start;
+        while (start > 0 && ((unsigned char)t[start] & 0xc0) == 0x80)
+            --start;
+        if (end - start < sizeof(key)) {
+            memcpy(key, t + start, end - start);
+            key[end - start] = 0;
+            if (res(e, kind, key))
+                return 1;
+        }
+    }
+    return 0;
+}
+
 static int range_mark(const char *t, size_t n, size_t p, size_t *w) {
     static const char *const marks[] = {"~", "-", "～", "—", "–", "－", "〜"};
     size_t k;
@@ -327,15 +347,38 @@ static char subscript(const char *t, size_t n, size_t p, size_t *w) {
 
 /* A unit with an optional per part (phase 3): mg/kg mg#kg, g/cm³ g#cm³, 80mg/100ml
    mg#100@ml, ×10⁹/L #L. Returns the bytes consumed and writes the spec. */
+/* A unit, or two joined by a middle dot (Ω·m 欧姆米, kg·℃): spec u1&u2. */
+static size_t unit_pair(const ttf_engine_t *e, const char *t, size_t n, size_t p, char *out,
+                        size_t size) {
+    char u1[24], u2[24];
+    size_t a = unit_after(e, t, n, p, u1, sizeof(u1)), b;
+    if (!a)
+        return 0;
+    if (has(t, n, p + a, "·") && (b = unit_after(e, t, n, p + a + 2, u2, sizeof(u2))) != 0) {
+        int w = snprintf(out, size, "%s&%s", u1, u2);
+        if (w > 0 && (size_t)w < size)
+            return a + 2 + b;
+    }
+    snprintf(out, size, "%s", u1);
+    return a;
+}
+
 static size_t unit_spec(const ttf_engine_t *e, const char *t, size_t n, size_t p, char *spec,
                         size_t size) {
     char u1[24] = "", u2[24];
-    size_t a = unit_after(e, t, n, p, u1, sizeof(u1)), at = p + a, l, b;
+    size_t a = unit_pair(e, t, n, p, u1, sizeof(u1)), at = p + a, l, b;
     if (!a)
         u1[0] = 0;
+    /* kJ/(kg·℃) 千焦每千克摄氏度 */
+    if (at + 1 < n && t[at] == '/' && t[at + 1] == '(' && a &&
+        (b = unit_pair(e, t, n, at + 2, u2, sizeof(u2))) != 0 && at + 2 + b < n && t[at + 2 + b] == ')') {
+        int w = snprintf(spec, size, "%s#%s", u1, u2);
+        if (w > 0 && (size_t)w < size)
+            return a + 3 + b;
+    }
     if (at < n && t[at] == '/' && (a || at == p)) {
         l = scan_number(t, n, at + 1);
-        if ((b = unit_after(e, t, n, at + 1 + l, u2, sizeof(u2))) != 0) {
+        if ((b = unit_pair(e, t, n, at + 1 + l, u2, sizeof(u2))) != 0) {
             int w = l ? snprintf(spec, size, "%s#%.*s@%s", u1, (int)l, t + at + 1, u2)
                       : snprintf(spec, size, "%s#%s", u1, u2);
             if (w > 0 && (size_t)w < size)
@@ -457,6 +500,19 @@ static size_t function_name(const char *t, size_t n, size_t p) {
    A letter is a variable only when one letter stands alone (not 3D, PM2.5,
    km/h); a minus without a relation is a range (3-5), and a bare fraction or
    number is not maths. */
+/* K C J F after an expression: a unit read only there (resource zh_unit_math). */
+static size_t math_unit(const ttf_engine_t *e, const char *t, size_t n, size_t p, char *spec,
+                        size_t size) {
+    char k[2];
+    if (p >= n || !alpha(t[p]) || (p + 1 < n && alnum(t[p + 1])))
+        return 0;
+    k[0] = t[p], k[1] = 0;
+    if (!res(e, "zh_unit_math", k))
+        return 0;
+    snprintf(spec, size, "%s", k);
+    return 1;
+}
+
 /* A Greek letter at p (α σ χ β …): its reading, NULL if none. */
 static const char *greek_at(const ttf_engine_t *e, const char *t, size_t n, size_t p, size_t *w) {
     char c[5];
@@ -522,7 +578,7 @@ static size_t maths(const ttf_engine_t *e, const char *t, size_t n, size_t p) {
             if ((r + 1 < n && (alpha(t[r + 1]) || t[r + 1] == '/')) || (r > p && alpha(t[r - 1])) ||
                 (r > p && (digit(t[r - 1]) || (r >= p + 2 && superscript(t, n, r - 2, &w) && w == 2) ||
                            (r >= p + 3 && superscript(t, n, r - 3, &w) && w == 3)) &&
-                 unit_after(e, t, n, r, key, sizeof(key))))
+                 (unit_after(e, t, n, r, key, sizeof(key)) || math_unit(e, t, n, r, key, sizeof(key)))))
                 break;
             ++r;
             operand = 1;
@@ -587,14 +643,22 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             /* 水平α=0.01, 圆周率π≈3.14: an expression starting inside the run */
             if ((greek_at(e, t, n, z, &w) || symbol_at(t, n, z, &w) >= 0) &&
                 (m = maths(e, t, n, z)) != 0 && z + m > end) {
-                if (z > p)
-                    return finish(in, s, z + m, "hanmath", t + z, m, plen);
+                if (z > p) {
+                    char spec[48], sec[80];
+                    size_t uw = spaced_unit(e, t, n, z + m, spec, sizeof(spec));
+                    if (!uw)
+                        uw = math_unit(e, t, n, z + m, spec, sizeof(spec));
+                    snprintf(sec, sizeof(sec), "%s|%s", plen, uw ? spec : "");
+                    return finish(in, s, z + m + uw, "hanmath", t + z, m, sec);
+                }
                 math_start = 1;
                 break;
             }
             /* 恤￥89: a currency sign at the end of the run */
             if (z + cw == end && end < n && digit(t[end]) && res(e, "zh_currency", c)) {
                 len = scan_number(t, n, end);
+                if (has(t, n, end + len, "万") || has(t, n, end + len, "亿"))
+                    return finish2(in, s, end + len + 3, "hanmoney", t, end, len, end + len, 3, c, plen);
                 return finish2(in, s, end + len, "hanmoney", t, end, len, end, 0, c, plen);
             }
             named |= res(e, "zh_vulgar", c) || res(e, "zh_roman", c) || res(e, "zh_greek", c);
@@ -619,17 +683,28 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         char spec[48];
         size_t uw = spaced_unit(e, t, n, p + m, spec, sizeof(spec));
         if (!uw)
+            uw = math_unit(e, t, n, p + m, spec, sizeof(spec));
+        if (!uw)
             spec[0] = 0;
         return finish(in, s, p + m + uw, "math", t + p, m, spec);
     }
 
     /* Currency before the amount: ¥128 $9.99 HK$100 €20 £50 ₩10,000; a range
        ¥80～¥120 八十元到一百二十元. */
-    if ((w = word_after(e, "zh_currency", t, n, p)) != 0 && p + w < n && digit(t[p + w])) {
-        size_t w2;
+    if ((w = word_after(e, "zh_currency", t, n, p)) != 0 && p + w + 1 < n &&
+        (digit(t[p + w]) || (t[p + w] == ' ' && alpha(t[p]) && digit(t[p + w + 1])))) {
+        size_t w2, sp = t[p + w] == ' ';
+        snprintf(key, sizeof(key), "%.*s", (int)w, t + p);
+        w += sp;
         len = scan_number(t, n, p + w);
         q = p + w + len;
-        snprintf(key, sizeof(key), "%.*s", (int)w, t + p);
+        /* ¥28.5/kg 二十八点五元每千克 */
+        if (q + 1 < n && t[q] == '/') {
+            char spec[48];
+            size_t uw = unit_spec(e, t, n, q, spec, sizeof(spec));
+            if (uw && spec[0] == '#')
+                return finish2(in, s, q + uw, "moneyunit", t, p + w, len, q, 0, spec, key);
+        }
         if (range_mark(t, n, q, &w2)) {
             size_t b2 = q + w2, cw = word_after(e, "zh_currency", t, n, b2);
             if (cw == w && !memcmp(t + b2, t + p, w) && b2 + cw < n && digit(t[b2 + cw]))
@@ -647,6 +722,17 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         /* $500万 五百万美元 */
         if (has(t, n, q, "万") || has(t, n, q, "亿"))
             return finish2(in, s, q + 3, "moneyscale", t, p + w, len, q, 3, key, "");
+        /* ¥3,560.00 三千五百六十元: zero cents are not read */
+        {
+            const char *dot = memchr(t + p + w, '.', len);
+            size_t k2;
+            if (dot) {
+                for (k2 = (size_t)(dot - t) + 1; k2 < q && t[k2] == '0'; ++k2)
+                    ;
+                if (k2 == q)
+                    len = (size_t)(dot - t) - p - w;
+            }
+        }
         return finish(in, s, q, "money", t + p + w, len, key);
     }
 
@@ -686,12 +772,20 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         }
         if (digits_seen && q < n && t[q] == '+' && !(q + 1 < n && (digit(t[q + 1]) || alpha(t[q + 1]))))
             ++q;
+        if (digits_seen && q < n && digit(t[q - 1])) {
+            char spec[48];
+            size_t uw = unit_spec(e, t, n, q, spec, sizeof(spec));
+            if (uw && !(q + uw < n && alnum(t[q + uw])))
+                return finish2(in, s, q + uw, "latinunit", t, p, q - p, q, 0, spec, "");
+        }
         return digits_seen ? finish(in, s, q, "latin", t + p, q - p, "") : 0;
     }
 
-    /* +86 加八六 */
+    /* +86 加八六; +3价 正三价 */
     if (t[p] == '+' && p + 1 < n && digit(t[p + 1])) {
         q = digits_end(t, n, p + 1);
+        if (has(t, n, q, "价"))
+            return finish(in, s, q, "valence", t + p + 1, q - p - 1, "");
         return finish(in, s, q, "digits", t + p, q - p, "");
     }
 
@@ -759,11 +853,12 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         return finish(in, s, z, "digits", t + p, z - p, "");
     }
     /* GB 18580-2017, GB/T 19001-2016: a standard number reads digit by digit */
-    if (cue_before(e, "standard_cue", t, p, 3)) {
+    if (cue_ending(e, "standard_cue", t, p, 8)) {
         size_t z = p;
-        while (z < n && (digit(t[z]) || ((t[z] == '-' || t[z] == '.') && z + 1 < n && digit(t[z + 1]))))
+        while (z < n && (digit(t[z]) || ((t[z] == '-' || t[z] == '.' || t[z] == ':') && z + 1 < n &&
+                                         digit(t[z + 1]))))
             ++z;
-        return finish(in, s, z, "digits", t + p, z - p, "");
+        return finish(in, s, z, "standard", t + p, z - p, "");
     }
     /* 10.1假期 十一, 5.1小长假 五一: a holiday named by its date. */
     if (memchr(t + p, '.', len) && word_after(e, "holiday_after", t, n, q)) {
@@ -796,6 +891,23 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                 z = digits_end(t, n, z + 1);
             return finish(in, s, z, "ip", t + p, z - p, "");
         }
+    }
+    /* 3.6.2 三点六点二: a dotted version without letters */
+    {
+        size_t z = p, groups = 0;
+        while (groups < 4) {
+            size_t g0 = z;
+            z = digits_end(t, n, z);
+            if (z == g0 || z - g0 > 3)
+                break;
+            ++groups;
+            if (z + 1 < n && t[z] == '.' && digit(t[z + 1]))
+                ++z;
+            else
+                break;
+        }
+        if (groups == 3 && !(z < n && (digit(t[z]) || t[z] == '.' || t[z] == '%' || alpha(t[z]))))
+            return finish(in, s, z, "version", t + p, z - p, "");
     }
     /* 39°54′N 北纬三十九度五十四分 */
     if (has(t, n, q, "°") && !memchr(t + p, '.', len)) {
@@ -1065,6 +1177,20 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             snprintf(v, sizeof(v), "%.*s:%.*s", (int)len, t + p, (int)l2, t + b2);
             return finish(in, s, b2 + l2, "ratio", v, strlen(v), "");
         }
+        /* 配比16-16-16 十六比十六比十六 */
+        if (t[q] == '-' && b2 + l2 + 1 < n && t[b2 + l2] == '-' && digit(t[b2 + l2 + 1]) &&
+            cue_before(e, "proportion_cue", t, p, 4)) {
+            size_t z = b2 + l2;
+            char v[40];
+            while (z + 1 < n && t[z] == '-' && digit(t[z + 1]))
+                z = digits_end(t, n, z + 1);
+            if (z - p < sizeof(v)) {
+                size_t k2;
+                for (k2 = 0; k2 < z - p; ++k2)
+                    v[k2] = t[p + k2] == '-' ? ':' : t[p + k2];
+                return finish(in, s, z, "ratio", v, z - p, "");
+            }
+        }
         /* 3-2-1108: a chain of hyphened groups is a code, not a range */
         if (t[q] == '-' && b2 + l2 + 1 < n && t[b2 + l2] == '-' && digit(t[b2 + l2 + 1])) {
             size_t z = b2 + l2;
@@ -1102,7 +1228,7 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         char spec[48];
         size_t uw = unit_after(e, t, n, q, key, sizeof(key)), sw;
         /* 15mg/kg 十五毫克每千克, 2.7g/cm³, 80mg/100ml */
-        if ((sw = unit_spec(e, t, n, q, spec, sizeof(spec))) > uw && strchr(spec, '#'))
+        if ((sw = unit_spec(e, t, n, q, spec, sizeof(spec))) > uw && (strchr(spec, '#') || strchr(spec, '&')))
             return finish2(in, s, q + sw, "unit", t, p, len, p, 0, spec, "");
         if (!uw && (sw = spaced_unit(e, t, n, q, spec, sizeof(spec))) != 0)
             return finish2(in, s, q + sw, "unit", t, p, len, p, 0, spec, "");
@@ -1175,6 +1301,15 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         vn += has(t, n, q, "万") ? 4 : 8;
         return finish(in, s, q + 3, "int", v, vn, "count");
     }
+    /* 1,280.00元 一千二百八十元: zero cents are not read */
+    if (memchr(t + p, '.', len) && word_after(e, "money_after", t, n, q)) {
+        const char *dot = memchr(t + p, '.', len);
+        size_t k2;
+        for (k2 = (size_t)(dot - t) + 1; k2 < q && t[k2] == '0'; ++k2)
+            ;
+        if (k2 == q)
+            return finish(in, s, q, "int", t + p, (size_t)(dot - t) - p, "count");
+    }
     if (memchr(t + p, '.', len) || memchr(t + p, ',', len))
         return finish(in, s, q, "int", t + p, len, "");
     /* 第2025097期 第二零二五零九七期 */
@@ -1192,7 +1327,9 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     /* 88折 八八折, 618大促 六一八 */
     if ((len == 2 && has(t, n, q, "折")) || (len == 3 && word_after(e, "holiday_after", t, n, q)))
         return finish(in, s, q, "digits", t + p, len, "");
-    if (len >= 3 && (cue_before(e, "phone_cue", t, p, 5) || word_after(e, "phone_after", t, n, q)))
+    /* 手机售价3999元: a price or a count after a phone word is no phone number */
+    if (len >= 3 && (cue_before(e, "phone_cue", t, p, 5) || word_after(e, "phone_after", t, n, q)) &&
+        !word_after(e, "money_after", t, n, q) && !word_after(e, "liang_counter", t, n, q))
         return finish(in, s, q, "digits", t + p, len, "yao");
     /* 验证码123456, 301房间, 502错误, 7号楼1502, 0571, 80后: a code reads digit by
        digit. */
@@ -1202,7 +1339,7 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
          !word_after(e, "room_not", t, n, q)) ||
         (len >= 2 && t[p] == '0') || (len == 2 && has(t, n, q, "后")) ||
         /* GB 18580: a standard number; （2024）: a year in a case number */
-        (len >= 3 && cue_before(e, "standard_cue", t, p, 3)) ||
+        (len >= 3 && cue_ending(e, "standard_cue", t, p, 8)) ||
         (len == 4 && (prev_is(t, p, "（") || prev_is(t, p, "(")) &&
          (has(t, n, q, "）") || has(t, n, q, ")"))))
         return finish(in, s, q, "digits", t + p, len, "");
@@ -1351,6 +1488,14 @@ static ttf_status_t maths_reading(const ttf_engine_t *e, ttf_buffer_t *b, const 
             continue;
         }
         if (alpha(v[i])) {
+            size_t f = function_name(v, n, i);
+            /* sin²x sin平方x: a power of a function goes before its argument */
+            if (f && has(v, n, i + f, "²")) {
+                TRY(ttf_buffer_append(b, v + i, f));
+                TRY(word(e, b, "square_bare"));
+                i += f + 2;
+                continue;
+            }
             TRY(ttf_buffer_append(b, v + i, 1));
             after_operand = 1;
         }
@@ -1447,7 +1592,14 @@ static int split(const char *v, const char **a, size_t *an, const char **bp, siz
 }
 
 static ttf_status_t unit_word(const ttf_engine_t *e, ttf_buffer_t *b, const char *unit) {
-    const char *hash = strchr(unit, '#'), *u;
+    const char *hash = strchr(unit, '#'), *amp = strchr(unit, '&'), *u;
+    if (amp && (!hash || amp < hash)) {
+        /* Ω&m 欧姆米 */
+        char u1[24];
+        snprintf(u1, sizeof(u1), "%.*s", (int)(amp - unit), unit);
+        TRY(unit_word(e, b, u1));
+        return unit_word(e, b, amp + 1);
+    }
     if (hash) {
         /* u1#u2 u1每u2, u1#N@u2 u1每N u2 (80mg/100ml 八十毫克每一百毫升) */
         char u1[24];
@@ -1461,11 +1613,21 @@ static ttf_status_t unit_word(const ttf_engine_t *e, ttf_buffer_t *b, const char
         TRY(word(e, b, "per"));
         if (at)
             TRY(number(e, b, hash + 1, (size_t)(at - hash - 1), 0));
-        /* a per unit may read differently (mg/kg 毫克每千克) */
+        /* a per unit may read differently (mg/kg 毫克每千克, (kg·℃) 千克摄氏度) */
+        if (strchr(at ? at + 1 : hash + 1, '&')) {
+            const char *rest = at ? at + 1 : hash + 1, *a2 = strchr(rest, '&');
+            char p1[24];
+            snprintf(p1, sizeof(p1), "%.*s", (int)(a2 - rest), rest);
+            u = res(e, "zh_unit_per", p1);
+            TRY(u ? ttf_buffer_puts(b, u) : unit_word(e, b, p1));
+            return unit_word(e, b, a2 + 1);
+        }
         u = res(e, "zh_unit_per", at ? at + 1 : hash + 1);
         return u ? ttf_buffer_puts(b, u) : unit_word(e, b, at ? at + 1 : hash + 1);
     }
     u = unit[0] ? res(e, "zh_unit", unit) : "";
+    if (!u)
+        u = res(e, "zh_unit_math", unit);
     return u ? ttf_buffer_puts(b, u) : TTF_ERESOURCE;
 }
 
@@ -1566,6 +1728,31 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     }
     if (!strcmp(mode, "latin"))
         return latin(e, b, v);
+    if (!strcmp(mode, "valence")) {
+        TRY(word(e, b, "positive"));
+        return number(e, b, v, vn, 0);
+    }
+    if (!strcmp(mode, "standard") || !strcmp(mode, "version")) {
+        /* GB 7258.1-2017 七二五八点一二零一七; 3.6.2 三点六点二 */
+        size_t i = 0;
+        int version = !strcmp(mode, "version");
+        while (i < vn) {
+            if (digit(v[i])) {
+                size_t z = i;
+                while (z < vn && digit(v[z]))
+                    ++z;
+                TRY(version ? integer(e, b, v + i, z - i, 0) : digits_each(e, b, v + i, z - i, 0));
+                i = z;
+                continue;
+            }
+            if (v[i] == '.')
+                TRY(word(e, b, "point"));
+            else if (v[i] == ':')
+                TRY(word(e, b, "colon"));
+            ++i;
+        }
+        return TTF_OK;
+    }
     if (!strcmp(mode, "ip")) {
         /* 192.168.0.1:8080 一九二点一六八点零点一冒号八零八零 */
         size_t i;
@@ -1602,10 +1789,12 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     if (!strcmp(mode, "hanmath")) {
         /* secondary: the length of the run before the expression */
         size_t plen = (size_t)strtoul(s->secondary, NULL, 10);
+        const char *bar = strchr(s->secondary, '|');
         if (plen > length)
             return TTF_EINVAL;
         TRY(hanzi_text(e, b, surface, plen));
-        return maths_reading(e, b, v);
+        TRY(maths_reading(e, b, v));
+        return bar && bar[1] ? unit_word(e, b, bar + 1) : TTF_OK;
     }
     if (!split(v, &a, &an, &bp, &bn, &u))
         return TTF_EINVAL;
@@ -1790,7 +1979,8 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         char x[TTF_IR_VALUE_SIZE];
         snprintf(x, sizeof(x), "%.*s", (int)an, a);
         TRY(latin(e, b, x));
-        TRY(number(e, b, bp, bn, 0));
+        if (bn)
+            TRY(number(e, b, bp, bn, 0));
         return unit_word(e, b, u);
     }
     if (!strcmp(mode, "plusscale")) {
@@ -1807,7 +1997,18 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             return cur ? TTF_EINVAL : TTF_ERESOURCE;
         TRY(hanzi_text(e, b, surface, plen));
         TRY(count(e, b, a, an, 1));
+        if (bn)
+            TRY(ttf_buffer_append(b, bp, bn));
         return ttf_buffer_puts(b, cur);
+    }
+    if (!strcmp(mode, "moneyunit")) {
+        /* u = the per spec (#kg), secondary = the currency */
+        const char *cur = res(e, "zh_currency", s->secondary);
+        if (!cur)
+            return TTF_ERESOURCE;
+        TRY(count(e, b, a, an, 1));
+        TRY(ttf_buffer_puts(b, cur));
+        return unit_word(e, b, u);
     }
     if (!strcmp(mode, "moneyrange")) {
         const char *cur = res(e, "zh_currency", u);
