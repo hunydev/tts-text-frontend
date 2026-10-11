@@ -2,6 +2,15 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Chinese pack phase 2: maths (letters, superscripts, ≥ ≤ ≠ ≈ π ∠ ∛ °), more units
+  (512GB 五百一十二GB, was 五一二GB; mmHg kcal nm ㎡ mmol/L h min), ratios (∶, 115:109,
+  3:2:1), years (2035年前, 80后), dates (10.1假期 十一, 5·12), codes (502错误, plates),
+  ranges with units and currencies, 10万+. Engine: a zh-CN request reads any sentence
+  with hanzi as Chinese and zh-CN classifies only as the context (was: "at zh int"
+  leaked into English); ， between digits is a clause comma in a hanzi sentence (was:
+  846201，5 left unread). Contract zh_pack2_v65 (52). A second held-out set (500
+  sentences, opened after the code freeze): ours 90.2% (phase 1 81.3%), wetext 72.3%.
+  Korean, English, JSUT and ja-tn-eval are unchanged.
 - Chinese (Simplified) pack zh-CN, phase 1, beta (project-owner request 2026-10-11;
   Claude reviews as the native speaker). Numbers read as Chinese numerals with 零, 万/亿
   and 二/两 (两个, 两千, 第二, 二月), years and codes digit by digit (一九九零年,

@@ -8,6 +8,9 @@
 - 1단계: `languages/zh-CN` 팩(베타)과 한자 문장 라우팅(`han_sentence`, `src/core/normalize.c`). 계약 `zh_pack_v64`(54건).
   - 평가셋: 요청 언어 zh-CN 100%, 한국어·영어 요청 속 한자 문장 98.0%. 같은 작성자라 과적합 포함.
   - held-out 평가셋(496문장, 팩을 보지 않은 작성자, 측정 전 정답 고정): 우리 87.5%, wetext 75.5%, NeMo 60.1%. 실제 성능은 이쪽.
+- 2단계: held-out v1 실패 유형과 엔진 버그 2개(로마자 많은 문장의 표식 누출, 전각 쉼표)를 고침. 계약 `zh_pack2_v65`(52건).
+  - 최종 측정 held-out v2(500문장, 코드 고정 뒤 검수): 우리 90.2%(1단계 81.3%), wetext 72.3%, NeMo 53.9%. v1은 이제 개발용.
+  - 남은 유형과 원문보다 나빠지는 버그 5건은 [chinese-pack.ko.md](chinese-pack.ko.md)에 있다.
   - 한국어·영어·JSUT·일본어 평가셋: unchanged (Korean quick 0 changed sentences, English 90.83%/86.80%, JSUT 203/332, ja-tn-eval 97.3%).
   - 남은 것: held-out 평가셋, 원어민 검수, VoxCPM2 청취 비교. 상세: [chinese-pack.ko.md](chinese-pack.ko.md)
 

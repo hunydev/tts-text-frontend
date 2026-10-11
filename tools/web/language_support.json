@@ -342,7 +342,7 @@
         {
           "area": "수식",
           "level": "full",
-          "note": "加 减 乘 除以 等于 大于 小于, 的十次方, 的平方, 根号, x=3"
+          "note": "加 减 乘 除以 等于, ≥ ≤ ≠ ≈, 위첨자(的平方·的N次方), 문자 변수(y=2x+3), π ∠ ∛ ° sin, 식 안의 분수, 식 뒤 단위"
         },
         {
           "area": "한자·로마자",
@@ -351,14 +351,14 @@
         }
       ],
       "gaps": [
-        "held-out 평가셋(zh-tn-heldout-v1, 496문장, 팩을 보지 않은 작성자)에서 우리 87.5%, wetext 75.5%, NeMo 60.1%. 1차 평가셋 100%는 과적합. 남은 유형: 수식, 단위 기호, 비율·점수, 날짜 표기, 번호 문맥 (docs/chinese-pack.ko.md)",
+        "held-out v2(500문장, 팩을 보지 않은 작성자, 코드 고정 뒤 검수): 우리 90.2%(1단계 81.3%), wetext 72.3%, NeMo 53.9%. 남은 유형: '/' 복합 단위, 분·초 기호, 일부 양사·날짜·번호 표기, 아래첨자 (docs/chinese-pack.ko.md)",
         "대상 TTS(VoxCPM2) 청취 비교 미실시",
         "번체(zh-TW)는 범위 밖: 번체 글자가 있는 문장은 라우팅하지 않음"
       ],
       "docs": [
         "docs/chinese-pack.ko.md",
         "docs/chinese-phase0.ko.md",
-        "benchmark/datasets/zh-tn-eval (자체 평가셋 322문장 100%·held-out 496문장 87.5%, wetext 85.5%·75.5%)"
+        "benchmark/datasets/zh-tn-eval (held-out v2 500문장: 우리 90.2%·wetext 72.3%·NeMo 53.9%)"
       ]
     }
   },
