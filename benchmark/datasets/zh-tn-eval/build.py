@@ -9,7 +9,11 @@ hanzi (Simplified; numbers in Chinese numerals, Latin letters kept) and may list
 (optional). {written|=reading} keeps `written` in the expected text (a word the
 TN must leave alone).
 
-  python3 -I benchmark/datasets/zh-tn-eval/build.py   # writes zh-tn-eval-v1.jsonl
+  python3 -I benchmark/datasets/zh-tn-eval/build.py            # src/ -> zh-tn-eval-v1.jsonl
+  python3 -I benchmark/datasets/zh-tn-eval/build.py heldout    # src-heldout/ -> zh-tn-heldout-v1.jsonl
+
+The held-out set (2026-10-11) was written by authors who had not seen the pack
+or the first set, and its readings were reviewed and frozen before any system ran.
 """
 
 import itertools
@@ -21,7 +25,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 SPAN = re.compile(r"\{([^{}|]+)\|([^{}]*)\}")
-READING = re.compile("^[一-鿿〇A-Za-z]*$")
+READING = re.compile("^[一-鿿〇A-Za-z. -]*$")
 LIMIT = 64
 
 
@@ -81,9 +85,14 @@ def parse(line, where):
                 targets=targets, note=note)
 
 
+SETS = {"eval": ("src", "zh-tn-eval-v1.jsonl", "zh-tn-v1"),
+        "heldout": ("src-heldout", "zh-tn-heldout-v1.jsonl", "zh-tn-h1")}
+
+
 def main():
+    source, output, prefix = SETS[sys.argv[1] if len(sys.argv) > 1 else "eval"]
     rows, seen, errors = [], set(), []
-    for path in sorted((HERE / "src").glob("*.txt")):
+    for path in sorted((HERE / source).glob("*.txt")):
         for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
             if not line.strip() or line.startswith("#"):
                 continue
@@ -105,9 +114,9 @@ def main():
     counts = {}
     for row in rows:
         counts[row["category"]] = counts.get(row["category"], 0) + 1
-        row["id"] = "zh-tn-v1-%s-%03d" % (row["category"], counts[row["category"]])
+        row["id"] = "%s-%s-%03d" % (prefix, row["category"], counts[row["category"]])
     keys = ("id", "category", "text", "expected", "targets", "note", "source")
-    out = HERE / "zh-tn-eval-v1.jsonl"
+    out = HERE / output
     out.write_text("".join(json.dumps({k: r[k] for k in keys}, ensure_ascii=False) + "\n" for r in rows),
                    encoding="utf-8")
     print(json.dumps(dict(rows=len(rows), targets=sum(len(r["targets"]) for r in rows), categories=counts),

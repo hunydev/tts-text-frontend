@@ -11,6 +11,7 @@ ours declares zh-CN; ours-ko and ours-en send the same text in a Korean or an
 English request, where hanzi sentences are routed to zh-CN (han_sentence).
 Score every output present:
   python3 -I benchmark/evaluators/chinese_tn_eval.py score --tag NAME
+Add --set heldout to run or score the held-out set.
 
 wetext is VoxCPM2's own normalizer for Chinese. A span is right when one of its
 readings appears in the output after the previous span (outputs and readings are
@@ -28,6 +29,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 DATA = ROOT / "benchmark/datasets/zh-tn-eval/zh-tn-eval-v1.jsonl"
 OUT = ROOT / "benchmark/generated/zh-tn-eval"
+# --set heldout: the held-out set (written without seeing the pack), its own output folder.
+SETS = {"eval": (DATA, OUT),
+        "heldout": (ROOT / "benchmark/datasets/zh-tn-eval/zh-tn-heldout-v1.jsonl",
+                    ROOT / "benchmark/generated/zh-tn-heldout")}
 
 
 def fold(s):
@@ -141,7 +146,11 @@ def main():
     r.add_argument("--resources")
     s = sub.add_parser("score")
     s.add_argument("--tag", required=True)
+    for p in (r, s):
+        p.add_argument("--set", choices=sorted(SETS), default="eval")
     args = ap.parse_args()
+    global DATA, OUT
+    DATA, OUT = SETS[args.set]
     (run if args.cmd == "run" else score)(args)
 
 
