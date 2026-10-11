@@ -6,6 +6,7 @@
 
 - **일본어:** 자체 평가셋 `benchmark/datasets/ja-tn-eval`(1,250개 항목·채점 span 1,343개, 작성자 원어민 검토)을 만들고, 찾은 빈틈을 계약 `ja_range_mark_v44`~`ja_rest_v50`으로 고쳤다.
   - 평가셋 점수: 우리 97.3%, wetext 76.9%, NeMo 73.6%
+  - 2026-10-11 프로젝트 소유자 결정으로 **운영** 전환. 원어민 검수와 VoxCPM2 청취 비교가 남아 있다(OpenAI TTS→STT 비교는 원문 70.0%, TN 85.0%).
   - 상세: [japanese-benchmark.ko.md](japanese-benchmark.ko.md)
 - **한국어 발음열 출력(G2P):** 옵션 `pronunciation=hangul`, 제어 `{@pronounce}`. 구어 기준 한글 발음열이다.
   - 표준발음법 규칙, 표준국어대사전 예외(`pronunciation/stdict_phonemes.tsv`, CC BY-SA 2.0 KR), 활용형, 동형어 문맥 단서, 합성어를 처리한다.

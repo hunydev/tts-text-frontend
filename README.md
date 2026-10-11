@@ -4,7 +4,7 @@ Deterministic, resource-driven, multilingual and code-mixed text frontend for TT
 
 C11 native library for text normalization, context routing, foreign pronunciation,
 span metadata and incremental TTS callbacks. The initial packs are **ko-KR** and
-**en-US**, with a phase-1 **ja-JP** pack (docs/japanese-pack.ko.md). This is a working initial implementation; pronunciation quality and
+**en-US**, with a **ja-JP** pack in production since 2026-10-11 (docs/japanese-pack.ko.md). This is a working initial implementation; pronunciation quality and
 language detection are intentionally small, deterministic prototypes.
 
 ```text

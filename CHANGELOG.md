@@ -2,6 +2,10 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Japanese is in production (project-owner decision, 2026-10-11; it was beta). Still to
+  do: a human native review of the evaluation set (a 200-entry sample is prepared) and a
+  listening comparison with the target TTS (VoxCPM2). An OpenAI TTS -> STT comparison of the
+  200 entries read 70.0% right from the raw text and 85.0% from our output.
 - Japanese fixes from an OpenAI TTS -> STT check of the 200-sentence review sample
   (raw text read right 69.5%, our output 82.5%), where a kanji left between
   readings was misread: 生 after 年 期 回 reads せい (1期生 いっきせい, 3年生の
