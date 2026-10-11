@@ -11,6 +11,7 @@ TN must leave alone).
 
   python3 -I benchmark/datasets/zh-tn-eval/build.py            # src/ -> zh-tn-eval-v1.jsonl
   python3 -I benchmark/datasets/zh-tn-eval/build.py heldout    # src-heldout/ -> zh-tn-heldout-v1.jsonl
+  python3 -I benchmark/datasets/zh-tn-eval/build.py heldout2   # src-heldout2/ -> zh-tn-heldout-v2.jsonl
 
 The held-out set (2026-10-11) was written by authors who had not seen the pack
 or the first set, and its readings were reviewed and frozen before any system ran.
@@ -86,7 +87,8 @@ def parse(line, where):
 
 
 SETS = {"eval": ("src", "zh-tn-eval-v1.jsonl", "zh-tn-v1"),
-        "heldout": ("src-heldout", "zh-tn-heldout-v1.jsonl", "zh-tn-h1")}
+        "heldout": ("src-heldout", "zh-tn-heldout-v1.jsonl", "zh-tn-h1"),
+        "heldout2": ("src-heldout2", "zh-tn-heldout-v2.jsonl", "zh-tn-h2")}
 
 
 def main():

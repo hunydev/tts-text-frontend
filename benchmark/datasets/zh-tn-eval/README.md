@@ -43,3 +43,18 @@ cardinal, liang(二/两), year, decimal, currency, percent, fraction, negative(�
 - **고정:** 이 커밋으로 고정한 뒤에 측정했다. 측정 뒤에는 정답이 명백히 틀린 경우에만 고치고, 그때는 이 절에 적는다.
 - 빌드: `python3 -I benchmark/datasets/zh-tn-eval/build.py heldout`
 - 측정: `chinese_tn_eval.py run|score --set heldout`
+
+## Held-out 평가셋 v2 (zh-tn-heldout-v2, 2026-10-11)
+
+2단계는 v1의 실패 유형을 보고 고쳤다. 그래서 v1은 이제 개발용 셋이고, 최종 측정에는 따로 만든 v2를 쓴다.
+
+- **작성:** 팩도 이전 셋도 보지 않은 작성자 둘이 썼다(Claude 하위 에이전트, 저장소 접근 없음). C는 생활·여행·SNS 251문장, D는 교육·스포츠·정부·법·의료·산업 250문장이다.
+- **순서:** 2단계 코드를 커밋 065c0fa로 고정한 뒤에 처음 열었다.
+- **원어민 검수:** Claude가 시스템 출력을 보기 전에 했다. 틀린 정답은 없었고, 허용 읽기만 7곳 넓혔다.
+  - 两万/二万, 二公里, 二升
+  - 9999+의 多
+  - 2:01:09의 二小时, 17:00의 下午五点
+- **중복 제거:** held-out v1과 같은 1문장을 뺐다.
+- **결과:** 500문장. 이 커밋으로 고정한 뒤 측정했다.
+- 빌드: `build.py heldout2`
+- 측정: `chinese_tn_eval.py --set heldout2`

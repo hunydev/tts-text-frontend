@@ -32,7 +32,9 @@ OUT = ROOT / "benchmark/generated/zh-tn-eval"
 # --set heldout: the held-out set (written without seeing the pack), its own output folder.
 SETS = {"eval": (DATA, OUT),
         "heldout": (ROOT / "benchmark/datasets/zh-tn-eval/zh-tn-heldout-v1.jsonl",
-                    ROOT / "benchmark/generated/zh-tn-heldout")}
+                    ROOT / "benchmark/generated/zh-tn-heldout"),
+        "heldout2": (ROOT / "benchmark/datasets/zh-tn-eval/zh-tn-heldout-v2.jsonl",
+                     ROOT / "benchmark/generated/zh-tn-heldout2")}
 
 
 def fold(s):
