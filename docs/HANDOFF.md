@@ -7,6 +7,7 @@
 - 0단계: 자체 평가셋 `benchmark/datasets/zh-tn-eval`(322문장)로 wetext 85.5%, NeMo 66.8% 측정. [chinese-phase0.ko.md](chinese-phase0.ko.md)
 - 1단계: `languages/zh-CN` 팩(베타)과 한자 문장 라우팅(`han_sentence`, `src/core/normalize.c`). 계약 `zh_pack_v64`(54건).
   - 평가셋: 요청 언어 zh-CN 100%, 한국어·영어 요청 속 한자 문장 98.0%. 같은 작성자라 과적합 포함.
+  - held-out 평가셋(496문장, 팩을 보지 않은 작성자, 측정 전 정답 고정): 우리 87.5%, wetext 75.5%, NeMo 60.1%. 실제 성능은 이쪽.
   - 한국어·영어·JSUT·일본어 평가셋: unchanged (Korean quick 0 changed sentences, English 90.83%/86.80%, JSUT 203/332, ja-tn-eval 97.3%).
   - 남은 것: held-out 평가셋, 원어민 검수, VoxCPM2 청취 비교. 상세: [chinese-pack.ko.md](chinese-pack.ko.md)
 

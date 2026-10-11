@@ -351,14 +351,14 @@
         }
       ],
       "gaps": [
-        "평가셋 zh-tn-eval-v1은 팩과 같은 작성자(Claude)가 만들었고 팩은 그 빈틈을 보고 만들어 100%는 과적합 포함. held-out 평가셋과 원어민 검수가 필요",
+        "held-out 평가셋(zh-tn-heldout-v1, 496문장, 팩을 보지 않은 작성자)에서 우리 87.5%, wetext 75.5%, NeMo 60.1%. 1차 평가셋 100%는 과적합. 남은 유형: 수식, 단위 기호, 비율·점수, 날짜 표기, 번호 문맥 (docs/chinese-pack.ko.md)",
         "대상 TTS(VoxCPM2) 청취 비교 미실시",
         "번체(zh-TW)는 범위 밖: 번체 글자가 있는 문장은 라우팅하지 않음"
       ],
       "docs": [
         "docs/chinese-pack.ko.md",
         "docs/chinese-phase0.ko.md",
-        "benchmark/datasets/zh-tn-eval (자체 평가셋 322문장, 우리 100%·wetext 85.5%·NeMo 66.8%)"
+        "benchmark/datasets/zh-tn-eval (자체 평가셋 322문장 100%·held-out 496문장 87.5%, wetext 85.5%·75.5%)"
       ]
     }
   },
