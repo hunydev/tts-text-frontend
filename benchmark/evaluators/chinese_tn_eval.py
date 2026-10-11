@@ -38,7 +38,9 @@ SETS = {"eval": (DATA, OUT),
         "heldout3": (ROOT / "benchmark/datasets/zh-tn-eval/zh-tn-heldout-v3.jsonl",
                      ROOT / "benchmark/generated/zh-tn-heldout3"),
         "heldout4": (ROOT / "benchmark/datasets/zh-tn-eval/zh-tn-heldout-v4.jsonl",
-                     ROOT / "benchmark/generated/zh-tn-heldout4")}
+                     ROOT / "benchmark/generated/zh-tn-heldout4"),
+        "heldout5": (ROOT / "benchmark/datasets/zh-tn-eval/zh-tn-heldout-v5.jsonl",
+                     ROOT / "benchmark/generated/zh-tn-heldout5")}
 
 
 def fold(s):
