@@ -30,6 +30,16 @@ static int short_key(const char *key, size_t most) {
     }
     return chars >= 1 && chars <= most && n < 20;
 }
+/* A unit symbol: a short key, one inner space allowed (n mile). */
+static int unit_key(const char *key) {
+    char copy[24];
+    size_t n = strlen(key), i;
+    if (!n || n >= sizeof(copy) || key[0] == ' ' || key[n - 1] == ' ')
+        return 0;
+    for (i = 0; i <= n; ++i)
+        copy[i] = key[i] == ' ' && key[i + 1] != ' ' ? '_' : key[i];
+    return short_key(copy, 8);
+}
 static int cue(const char *key) {
     return short_key(key, 4);
 }
@@ -52,7 +62,8 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                                          "approx_equal|cube_root|angle|pi|degree|"
                                          "approx_plus|and_fraction|per|ordinal|double|"
                                          "factorial|triangle|colon|chi_square|coord_N|"
-                                         "coord_S|coord_E|coord_W|positive|square_bare")) &&
+                                         "coord_S|coord_E|coord_W|positive|square_bare|approx|tends_to|"
+                                         "infinity|hao")) &&
                        label(v)
                    ? TTF_OK
                    : ttf_validation_error(d, "number requires a digit or a named word and a reading");
@@ -61,7 +72,7 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
         SAME(k, "zh_greek") || SAME(k, "zh_roman") || SAME(k, "zh_unit_math") ||
         SAME(k, "zh_unit_per")) {
         *handled = 1;
-        return short_key(key, 8) && label(v)
+        return unit_key(key) && label(v)
                    ? TTF_OK
                    : ttf_validation_error(d, "zh_unit/zh_currency/zh_vulgar require a short "
                                              "symbol and a reading");
@@ -73,7 +84,8 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
         SAME(k, "count_before") || SAME(k, "code_after") || SAME(k, "room_before") || SAME(k, "room_not") ||
         SAME(k, "holiday_after") || SAME(k, "date_cue") || SAME(k, "date_after") ||
         SAME(k, "standard_cue") || SAME(k, "score_after") || SAME(k, "status_cue") ||
-        SAME(k, "proportion_cue") || SAME(k, "money_after")) {
+        SAME(k, "proportion_cue") || SAME(k, "money_after") || SAME(k, "service_cue") ||
+        SAME(k, "liang_not") || SAME(k, "schedule_word")) {
         *handled = 1;
         return cue(key) && SAME(v, "1")
                    ? TTF_OK

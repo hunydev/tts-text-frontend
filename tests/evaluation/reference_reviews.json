@@ -2322,6 +2322,18 @@
       },
       "category_overrides": {},
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/zh_pack7_v70.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Independently authored synthetic cases, written before the implementation",
+        "reason": "Project-owner request 2026-10-12: Chinese pack phase 7, category work after held-out v6"
+      },
+      "category_overrides": {},
+      "case_overrides": {}
     }
   ],
   "excluded": [

@@ -112,3 +112,7 @@ zh_roman	zh-CN	ⅸ	九
 zh_roman	zh-CN	ⅹ	十
 number	zh-CN	positive	正
 number	zh-CN	square_bare	平方
+number	zh-CN	approx	约
+number	zh-CN	tends_to	趋于
+number	zh-CN	infinity	无穷大
+number	zh-CN	hao	号

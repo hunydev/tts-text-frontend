@@ -65,3 +65,8 @@ classifier_priority	zh-CN	zh.valence	100
 classifier_priority	zh-CN	zh.standard	100
 classifier_priority	zh-CN	zh.version	100
 classifier_priority	zh-CN	zh.moneyunit	100
+classifier_priority	zh-CN	zh.approx	100
+classifier_priority	zh-CN	zh.hashno	100
+classifier_priority	zh-CN	zh.date8	100
+classifier_priority	zh-CN	zh.chainage	100
+classifier_priority	zh-CN	zh.mdrange	100

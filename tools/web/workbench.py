@@ -26,6 +26,7 @@ CORPORA = {
     "zh-pack4-v67": ("중국어(간체) 팩 4단계", "zh_pack4_v67.jsonl"),
     "zh-pack5-v68": ("중국어(간체) 팩 5단계", "zh_pack5_v68.jsonl"),
     "zh-pack6-v69": ("중국어(간체) 팩 6단계", "zh_pack6_v69.jsonl"),
+    "zh-pack7-v70": ("중국어(간체) 팩 7단계", "zh_pack7_v70.jsonl"),
     "ko-phoneme-v51": ("한국어 발음열 출력 1단계 (구어, 한글)", "ko_phoneme_v51.jsonl"),
     "ja-rest-v50": ("Japanese remaining gaps v50", "ja_rest_v50.jsonl"),
     "ja-gaps78-v49": ("Japanese gaps 7-8 v49", "ja_gaps78_v49.jsonl"),
