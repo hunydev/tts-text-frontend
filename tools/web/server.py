@@ -84,7 +84,7 @@ class Handler(BaseHTTPRequestHandler):
                 if path == "/api/ko-reports":
                     result = ko_reports.catalog(root)
                 elif path == "/api/ko-report":
-                    result = ko_reports.summary(root, args.get("run"))
+                    result = ko_reports.report(root, args.get("run"))
                 elif path == "/api/ko-spacing":
                     result = ko_reports.spacing(root, args.get("run"))
                 else:
@@ -109,6 +109,9 @@ class Handler(BaseHTTPRequestHandler):
                 return self.json(400, {"error": "보고서나 검색 조건을 확인하세요."})
             except OSError:
                 return self.json(503, {"error": "보고서를 읽을 수 없습니다."})
+        if path == "/api/decisions/instructions":
+            import decisions
+            return self.json(200, decisions.instructions())
         if path == "/api/jev/instructions":
             return self.json(200, jev.instructions())
         if path == "/api/catalog":

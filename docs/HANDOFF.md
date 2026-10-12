@@ -2,6 +2,13 @@
 
 갱신: 2026-10-11. Release **0.20.0**, public ABI **v1**.
 
+## 최근 인계: 한국어 벤치마크 마지막 단계 Decisions (2026-10-12)
+
+- 한국어 참조 벤치마크의 `공백 외 차이` 문장에만 OpenAI Decisions를 붙임(`tools/web/ko_decisions.py RUN` → `decisions-final.json`). `/ko-quality`에 검정(Decisions 인정)·회색(Decisions까지 틀림) 막대, 카드·열·필터.
+- 20261012-mixed: 공백 외 차이 21,687 중 인정 18,595, Decisions까지 틀림 3,092문장(2.17%). 판정은 양쪽으로 틀리므로 거친 지표.
+- 표본에서 본 엔진 쪽 의심: `15시` → `열다섯 시`, `50개입` → `쉰 개입`, 번호 끝자리 조사 단서(`7395으로` 칠삼구다섯, `9831를` 구팔삼하나).
+- OpenAI 키는 `~/.config/ttf/openai_api_key`. 상세: [korean-benchmark-representative.ko.md](korean-benchmark-representative.ko.md) 5절.
+
 ## 최근 인계: 벤치마크 마지막 단계 Jev, 영어부터 (2026-10-12)
 
 - `/jev-eval`(모든 문장을 Jev로 채점) 제거. 대신 참조 벤치마크의 불일치 문장에만 Jev를 붙여 "Jev까지 틀림"을 본다.

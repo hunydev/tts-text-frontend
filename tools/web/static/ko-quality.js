@@ -1,6 +1,6 @@
 "use strict";
 const $ = id => document.getElementById(id);
-const names = {pattern:"패턴 후보",lexicon:"사전 후보","context-control":"문맥·명시 제어 후보",review:"검토 필요",exact:"정확 일치",spacing:"공백만 다름",variant:"정책 변이만 다름",similar:"변경 영역 유사(v4)",different:"공백·정책 변이 외 차이",unaligned:"정렬 실패",unscorable:"미채점",error:"엔진 오류"};
+const names = {"final-wrong":"최종 틀림 (Decisions까지)","decisions-pass":"공백 외 차이 · Decisions 인정",pattern:"패턴 후보",lexicon:"사전 후보","context-control":"문맥·명시 제어 후보",review:"검토 필요",exact:"정확 일치",spacing:"공백만 다름",variant:"정책 변이만 다름",similar:"변경 영역 유사(v4)",different:"공백·정책 변이 외 차이",unaligned:"정렬 실패",unscorable:"미채점",error:"엔진 오류"};
 const state = {reports:[],data:null,baseline:null,page:0,detail:null,sequence:0,runSequence:0,detailSequence:0};
 const number = v => Number(v).toLocaleString("ko-KR");
 const percent = v => v===null || v===undefined ? "—" : (v*100).toFixed(2)+"%";
@@ -11,10 +11,13 @@ function safely(fn){return (...args)=>Promise.resolve().then(()=>fn(...args)).ca
 function download(name,data){const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)+"\n"],{type:"application/json"}));const a=node("a");a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 function option(value,text){const e=node("option",text);e.value=value;return e;}
 function card(title,value,detail,kind){const e=node("div");e.className="quality-card"+(kind?" "+kind:"");e.append(node("span",title),node("strong",value),node("small",detail));return e;}
-function bar(m){const e=node("div");e.className="bar";e.title=`정확 ${percent(m.exact_rate)} / 공백 제거 ${percent(m.compact_rate)}`+(m.similar_rate!==undefined?` / 변경 영역 유사(v4) ${percent(m.similar_rate)}`:"");const near=m.similar_rate!==undefined&&m.scorable?(m.similar-m.compact)/m.scorable:0;for(const [kind,v] of [["exact",m.exact_rate||0],["spacing",m.scorable?m.spacing_only/m.scorable:0],["similar",near]]){const x=node("span");x.className=kind;x.style.width=(v*100)+"%";e.append(x);}return e;}
+// Benchmark levels, then the `different` sentences Decisions accepts (black); gray is wrong even for Decisions.
+function bar(m,d,wide){const e=node("div");e.className="bar"+(wide?" wide":"");e.title=`정확 ${percent(m.exact_rate)} / 공백 제거 ${percent(m.compact_rate)}`+(m.similar_rate!==undefined?` / 변경 영역 유사(v4) ${percent(m.similar_rate)}`:"")+(d?` / Decisions 인정 +${percent(d.accepted_rate)} / Decisions까지 틀림 ${percent(d.final_wrong_rate)}`:"");const near=m.similar_rate!==undefined&&m.scorable?(m.similar-m.compact)/m.scorable:0;for(const [kind,v] of [["exact",m.exact_rate||0],["spacing",m.scorable?m.spacing_only/m.scorable:0],["similar",near],["seg-jev",d&&d.accepted_rate?d.accepted_rate:0]]){const x=node("span");x.className=kind;x.style.width=(Math.max(0,v)*100)+"%";e.append(x);}return e;}
+function decisionsNote(c){const d=c.decisions;if(!d)return "";return ` · Decisions ${d.p===null||d.p===undefined?"거부":d.p.toFixed(2)} ${d.accepted?"인정":"불인정"}${d.unread?"(원문 표기 남음)":""}${d.value==="mismatch"?"(숫자 값 다름)":""}`;}
 function delta(current,old){if(!old)return "—";const one=(a,b)=>a===null||b===null?"—":((a-b)*100>=0?"+":"")+((a-b)*100).toFixed(2)+"pp";return `정확 ${one(current.exact_rate,old.exact_rate)} / 공백 ${one(current.compact_rate,old.compact_rate)}`+(current.variant_rate!==undefined&&old.variant_rate!==undefined?` / 변이 ${one(current.variant_rate,old.variant_rate)}`:"");}
 function render(){
- const r=state.data,m=r.sentences;$("cards").replaceChildren(
+ const r=state.data,m=r.sentences,dz=r.decisions;$("overall-bar").replaceChildren(bar(m,dz&&dz.sentences,true));$("cards").replaceChildren(
+  card("Decisions까지 틀림",dz?percent(dz.sentences.final_wrong_rate):"—",dz?`${number(dz.sentences.final_wrong)}문장 · 공백 외 차이 ${number(dz.sentences.candidates)} 중 Decisions 인정 ${number(dz.sentences.accepted)}`:"Decisions 단계를 실행하지 않은 측정"),
   card("정확 일치",percent(m.exact_rate),`${number(m.exact)} / ${number(m.scorable)}문장`),
   card("공백 제거 일치",percent(m.compact_rate),`${number(m.compact)} / ${number(m.scorable)}문장`),
   ...(m.variant_rate!==undefined?[card("정책 변이 무시 일치",percent(m.variant_rate),`${number(m.variant)} / ${number(m.scorable)}문장 · 영/공·숫자 사이 구분자`+(m.punctuation_only!==undefined?`·문장부호(v3, ${number(m.punctuation_only)})`:""))]:[card("공백만 다른 문장",number(m.spacing_only),"정확 불일치 중 공백 제거 후 일치")]),
@@ -24,8 +27,8 @@ function render(){
  const comparable=state.baseline&&state.baseline.comparison_key===r.comparison_key;
  $("compare-note").textContent=state.baseline?(comparable?`이전 측정 대비: ${delta(m,state.baseline.sentences)}. 같은 입력·설정·평가기·검토 파일 기준입니다.`:"비교 불가: 데이터·설정·평가기 또는 검토 파일이 다릅니다. 증감 수치를 만들지 않습니다."):"같은 기준의 이전 기록을 선택하면 카테고리별 증감을 표시합니다. 첫 기록은 기준선이며 개선량이 아닙니다.";
  $("categories").replaceChildren();
- for(const c of r.categories){const tr=node("tr"),td=node("td"),button=node("button",c.name);button.className="text-button";button.addEventListener("click",safely(()=>{$("category").value=c.id;state.page=0;return loadCases();}));td.append(button,bar(c.sentences));const old=comparable?state.baseline.categories.find(x=>x.id===c.id)?.sentences:null;
- tr.append(td,node("td",number(c.sentences.scorable)),node("td",percent(c.sentences.exact_rate)),node("td",percent(c.sentences.compact_rate)),node("td",c.sentences.variant_rate!==undefined?percent(c.sentences.variant_rate):number(c.sentences.spacing_only)),node("td",`${number(c.sentences.unscorable)} / ${number(c.sentences.errors)}`),node("td",number(c.flagged)),node("td",delta(c.sentences,old)));$("categories").append(tr);}
+ for(const c of r.categories){const tr=node("tr"),td=node("td"),button=node("button",c.name);button.className="text-button";button.addEventListener("click",safely(()=>{$("category").value=c.id;state.page=0;return loadCases();}));const cd=dz?dz.categories[c.id]:null;td.append(button,bar(c.sentences,cd));const old=comparable?state.baseline.categories.find(x=>x.id===c.id)?.sentences:null;
+ tr.append(td,node("td",number(c.sentences.scorable)),node("td",percent(c.sentences.exact_rate)),node("td",percent(c.sentences.compact_rate)),node("td",c.sentences.variant_rate!==undefined?percent(c.sentences.variant_rate):number(c.sentences.spacing_only)),node("td",cd?`${percent(cd.final_wrong_rate)} (인정 ${number(cd.accepted)})`:"—"),node("td",`${number(c.sentences.unscorable)} / ${number(c.sentences.errors)}`),node("td",number(c.flagged)),node("td",delta(c.sentences,old)));$("categories").append(tr);}
  const ul=node("ul");
  for(const text of [
   `원본 ${number(r.source.counts.source_records)}건 → 가져온 문장 ${number(r.source.counts.imported)}건. 구조 오류 격리 ${number(r.source.counts.quarantined||0)}건. 미채점 문장도 전체 입력 수에 남습니다.`,
@@ -38,11 +41,12 @@ function render(){
   "정책 변이 무시는 공백 제거에 더해, 숫자 읽기 안에서만 영↔공, 숫자 사이 구분자 다시/에, 맨 앞 일만/만을 참조와 출력 양쪽에서 똑같이 접습니다. 사람마다 갈리는 표기 관행을 오류로 세지 않기 위한 보조 지표입니다. 고유어 숫자(하나·둘)나 서른/삼십 같은 읽기 선택은 접지 않습니다."]){ul.append(node("li",text));}
  for(const [flag,count] of Object.entries(r.flags))ul.append(node("li",`${flag}: ${number(count)}건`));$("audit").replaceChildren(ul);
  $("protocol").textContent=JSON.stringify({protocol:r.protocol,engine:r.engine,harness:r.harness,review_counts:r.review_counts,policy:r.policy},null,2);
+ $("decisions-about").replaceChildren(node("p",dz?`벤치마크(변경 영역 유사 단계까지)에서 맞았다고 나오지 않은 공백 외 차이 ${number(dz.sentences.candidates)}문장만 OpenAI Decisions(${dz.model})에 물었습니다. 인정 기준: ${dz.rule}. 인정(검정)이 아닌 나머지와 엔진 오류는 Decisions까지 틀림(회색)입니다. ${dz.scored_at||""}. Decisions도 긴 번호열의 한 자리 차이를 잘 못 잡으므로 숫자 값 대조를 함께 씁니다. 사투리 문장은 맞는 출력도 낮게 보는 경향이 있습니다.`:"이 측정에는 Decisions 단계가 없습니다. 실행: python3 tools/web/ko_decisions.py "+r.run_id));
  renderGroups();
 }
 function scopeOptions(){const span=$("scope").value==="span";$("theme").disabled=!span;
  if(!span)$("theme").value="";
- for(const o of $("status").options){o.disabled=span?["error","unscorable"].includes(o.value):o.value==="unaligned";}
+ for(const o of $("status").options){o.disabled=span?["error","unscorable","final-wrong","decisions-pass"].includes(o.value):o.value==="unaligned";}
  if($("status").selectedOptions[0]?.disabled)$("status").value="different";
 }
 function renderGroups(){const r=state.data;$("span-note").textContent=`전체 참조 구간 ${number(r.spans.total)}개, 엔진 출력과 경계 정렬 실패 ${number(r.spans.unaligned)}개. 정렬 실패를 분모에서 빼지 않습니다. 구간 점수와 문장 점수는 서로 다른 지표입니다.`;$("groups").replaceChildren();
@@ -82,7 +86,7 @@ async function loadRun(){const seq=++state.runSequence;const run=$("run").value;
  $("baseline").replaceChildren(option("","비교 안 함"),...state.reports.filter(x=>x.run_id!==run).map(x=>option(x.run_id,x.label+(x.comparison_key===r.comparison_key?"":" · 기준 다름"))));render();await Promise.all([loadCases(),loadSpacing(run)]);if(seq===state.runSequence)message("완료된 전체 측정입니다. 정답 검토와 수정 방향은 별도로 확인하세요.");}
 async function loadCases(){if(!state.data)return;scopeOptions();const seq=++state.sequence;const args={run:state.data.run_id,scope:$("scope").value,category:$("category").value,route:$("route").value,status:$("status").value,page:state.page,q:$("query").value,theme:$("theme").value};if($("flagged").checked)args.flagged="1";
  const r=await get("/api/ko-cases",args);if(seq!==state.sequence||state.data.run_id!==args.run)return;$("cases").replaceChildren();
- for(const c of r.entries){const s=c.selected_span;const tr=node("tr"),td=node("td"),b=node("button",s?s.written:c.text);b.className="text-button";b.setAttribute("aria-haspopup","dialog");b.setAttribute("aria-controls","detail");tr.addEventListener("click",safely(e=>{if(e.target.closest("button")||!window.getSelection()?.toString()){b.focus({preventScroll:true});return detail(c.id,s);}}));td.append(b);tr.append(td,node("td",(s?s.spoken:c.expected)??"참조 미채점"),node("td",(s?s.actual:c.actual)??"정렬 실패 또는 엔진 오류"),node("td",`${names[s?s.status:c.status]||c.status} · ${names[s?s.route:c.route]}${c.flags.length?" · 검토 신호 있음":""}`));$("cases").append(tr);}
+ for(const c of r.entries){const s=c.selected_span;const tr=node("tr"),td=node("td"),b=node("button",s?s.written:c.text);b.className="text-button";b.setAttribute("aria-haspopup","dialog");b.setAttribute("aria-controls","detail");tr.addEventListener("click",safely(e=>{if(e.target.closest("button")||!window.getSelection()?.toString()){b.focus({preventScroll:true});return detail(c.id,s);}}));td.append(b);tr.append(td,node("td",(s?s.spoken:c.expected)??"참조 미채점"),node("td",(s?s.actual:c.actual)??"정렬 실패 또는 엔진 오류"),node("td",`${names[s?s.status:c.status]||c.status}${decisionsNote(c)} · ${names[s?s.route:c.route]}${c.flags.length?" · 검토 신호 있음":""}`));$("cases").append(tr);}
  $("case-count").textContent=`${number(r.total)}건 중 ${r.entries.length?number(r.page*50+1):0}–${number(r.page*50+r.entries.length)} 표시`;
  $("page").textContent=`${r.page+1} / ${Math.max(1,Math.ceil(r.total/50))}`;$("prev").disabled=r.page===0;$("next").disabled=(r.page+1)*50>=r.total;}
 function detailField(box,title,text){const section=node("section"),value=node("p",text??"미채점 / 출력 없음");value.className="case-full-text";section.append(node("h3",title),value);box.append(section);}
@@ -121,4 +125,5 @@ for(const id of ["scope","category","theme","route","status","flagged"])$(id).ad
 $("prev").addEventListener("click",safely(()=>{state.page=Math.max(0,state.page-1);return loadCases();}));$("next").addEventListener("click",safely(()=>{state.page++;return loadCases();}));
 $("download").addEventListener("click",()=>state.data&&download(state.data.run_id+".json",state.data));
 $("review-export").addEventListener("click",()=>{const d=state.detail;if(d)download("review-proposal.json",{id:d.id,record_sha256:d.record_sha256,status:"needs-review",reviewer:"",reviewed_at:"",reason:"",route:d.route,expected:d.expected});});
+safely(async()=>{const i=await get("/api/decisions/instructions");$("decisions-request").textContent=JSON.stringify(i,null,2);})();
 safely(async()=>{const r=await get("/api/ko-reports");state.reports=r.reports;$("run").replaceChildren(...r.reports.map(x=>option(x.run_id,x.label)));if(!r.latest){message("아직 완료된 한국어 참조 보고서가 없습니다. 오프라인 평가가 끝나면 이 페이지에 표시됩니다.");return;}$("run").value=r.latest;await loadRun();})();

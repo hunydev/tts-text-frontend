@@ -2,6 +2,13 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- OpenAI Decisions as the last stage of the Korean benchmark: only the sentences left
+  `different` are judged (tools/web/ko_decisions.py, decisions-final.json; accepted at 0.7 with
+  nothing left unread and no changed number value). /ko-quality shows the black (Decisions
+  accepts) and gray (wrong even for Decisions) segments, a card, a category column, two filters
+  and the request. 20261012-mixed: 3,092 sentences (2.17%) wrong even for Decisions out of
+  21,687 judged; the judge errs both ways, so it is a coarse indicator. The leftover /jev-eval
+  navigation links are removed.
 - Jev as the last stage of the English benchmark: only the sentences the reference
   benchmark does not accept are sent to Jev (tools/web/en_jev.py, jev-final.json per report);
   /en-quality shows a colored progress bar (exact, spacing, case/punctuation, spelling variant,

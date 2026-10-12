@@ -53,6 +53,25 @@ class Reports(unittest.TestCase):
   with self.assertRaises(ValueError):ko_reports.arguments('run=a&run=b')
   (self.reports/'linked').symlink_to(self.reports/'test',target_is_directory=True)
   with self.assertRaises(ValueError):ko_reports.summary(self.reports,'linked')
+ def test_decisions_stage(self):
+  self.assertIsNone(self.get('/api/ko-report',run='test')['decisions'])
+  import ko_decisions
+  class Fake:
+   tokens=0
+   def score(self,written,spoken):return 0.9
+  cands=ko_decisions.candidates(self.reports,'test')
+  ko_decisions.score(self.reports,'test',judge=Fake(),workers=2)
+  d=self.get('/api/ko-report',run='test')['decisions'];m=self.get('/api/ko-report',run='test')['sentences']
+  self.assertEqual(d['sentences']['candidates'],len(cands))
+  self.assertEqual(d['sentences']['final_wrong'],m['scorable']-m['similar']-d['sentences']['accepted'])
+  self.assertEqual(self.get('/api/ko-cases',run='test',status='decisions-pass')['total'],d['sentences']['accepted'])
+  self.assertEqual(self.get('/api/ko-cases',run='test',status='final-wrong')['total'],
+                   self.get('/api/ko-cases',run='test',status='different')['total']-d['sentences']['accepted']+
+                   self.get('/api/ko-cases',run='test',status='error')['total'])
+  with self.assertRaises(urllib.error.HTTPError) as e:self.get('/api/ko-cases',run='test',scope='span',status='final-wrong')
+  self.assertEqual(e.exception.code,400)
+  i=self.get('/api/decisions/instructions');self.assertEqual(i['model'],'gpt-6-luna');self.assertNotIn('sk-',json.dumps(i))
+  (self.reports/'test'/'decisions-final.json').unlink()
  def test_assets(self):
   for path in ['/ko-quality','/ko-quality.js','/ko-quality.css']:
    with urllib.request.urlopen(self.base+path) as r:
