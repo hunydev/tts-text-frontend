@@ -12,7 +12,7 @@
   - English: 1M requests reads one million (K/M/B before a plural noun), requests/day reads per
     day, a bare ≥ reads greater than or equal to, 24/7 reads twenty four seven (a ratio of 24/7
     stays over), and v2.1 reads version two point one.
-  - Korean readings English 잉글리시, Tech 테크, Set 세트 and regex 레젝스 (never 정규식).
+  - Korean readings English 잉글리시, Tech 테크, Set 세트 (setup stays 셋업) and regex 레젝스 (never 정규식).
     Particles stay as written.
   - Contract mixed_lang2_v73 (32). Korean quick: changed 0 (142,255문장). English, JSUT, ja-tn-eval and the
     Chinese sets are unchanged.

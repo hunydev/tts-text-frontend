@@ -754,7 +754,7 @@ K0 + K1 밖이라 원문으로 남던 글자(強·絕·豐·姊·兔·郎 등)�
   - 단독 `≥`·`≤` → `greater than or equal to`·`less than or equal to`. 이전에는 CLDR 이름 `greater-than or equal`이었다.
   - `24/7` → `twenty four seven`(`fraction_idiom`). 단 `ratio of 24/7`은 `over`로 남는다(`fraction_idiom_not`).
   - `v2.1` → `version two point one`(`electronic_prefix`). 한국어 문장의 `v2.1.3 버전`은 `브이`로 남는다.
-- **한국어로 읽는 영어 낱말:** English 잉글리시(이전 엥리시), Tech 테크(텍), Set 세트(셋), regex 레젝스(리겍스). 대문자만 쓴 `SET`은 코드 안에서 철자로 남는다(`EL2SET021`, `lexicon_case lower`).
+- **한국어로 읽는 영어 낱말:** English 잉글리시(이전 엥리시), Tech 테크(텍), Set 세트(셋), regex 레젝스(리겍스). 복합어 setup·set-up은 `셋업` 그대로(ko_latin_joiners_v24). 대문자만 쓴 `SET`은 코드 안에서 철자로 남는다(`EL2SET021`, `lexicon_case lower`).
   `lexicons/ko-KR/english-common-v26.jsonl`, 근거 `project-english-common-v26`.
 - **확인:**
   - 계약 `mixed_lang2_v73`(32건)
