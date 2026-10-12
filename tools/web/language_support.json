@@ -363,17 +363,22 @@
           "area": "공백 뒤 단위·근삿값",
           "level": "partial",
           "note": "100~240 V 一百到两百四十伏, -0.35 V, 1 m处 一米处, mSv lx MeV Å n mile MVA dB(A), ~2 h 约两小时, ≈20 μm 约二十微米"
+        },
+        {
+          "area": "점 날짜·하이픈 점수·지수",
+          "level": "partial",
+          "note": "定于9.28开业 九月二十八日, 6.18购物节 六一八, 战成2-2 二比二, 建施-05 建施零五, 15-15-15 十五十五十五, 1e-3 一e负三, 东经120°15′, 08年那场 零八年"
         }
       ],
       "gaps": [
-        "held-out v7(491문장, 일상·전문 고르게, 코드 고정 뒤 검수): 우리 96.1%(6단계 93.2%), wetext 67.5%, NeMo 49.9%. 남은 유형: 단서 없는 점 월-일, 하이픈 점수, 문맥 번호, 식 뒤 공백 단위 (docs/chinese-pack.ko.md)",
+        "held-out v8(495문장, 중립 지시문, 코드 고정 뒤 검수): 우리 97.0%(7단계 96.9%), wetext 73.6%, NeMo 55.5%. 남은 오류는 범주마다 1~2건으로 흩어짐: 숫자 없는 식, 단서 거리, 공백 묶음 번호, 두 자리 연도 (docs/chinese-pack.ko.md)",
         "대상 TTS(VoxCPM2) 청취 비교 미실시",
         "번체(zh-TW)는 범위 밖: 번체 글자가 있는 문장은 라우팅하지 않음"
       ],
       "docs": [
         "docs/chinese-pack.ko.md",
         "docs/chinese-phase0.ko.md",
-        "benchmark/datasets/zh-tn-eval (held-out v7 491문장: 우리 96.1%·wetext 67.5%·NeMo 49.9%)"
+        "benchmark/datasets/zh-tn-eval (held-out v8 495문장: 우리 97.0%·wetext 73.6%·NeMo 55.5%)"
       ]
     }
   },

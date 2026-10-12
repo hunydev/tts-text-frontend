@@ -2,6 +2,13 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Chinese pack phase 8, on the categories held-out v7 missed: dotted month-days after a date
+  word or before an event word (定于9.28开业), shopping festivals by digits (6.18购物节 六一八),
+  hyphen scores (战成2-2 二比二), codes after a hanzi and a hyphen (建施-05), 15-15-15, ΔT=20 K,
+  μS cm⁻¹ bit, μ 缪, spaced mmHg, (30+50+30)m, degrees and minutes, 1e-3, ％, ⅕..⅞, two-digit
+  years (08年那场); 北纬30°15′N no longer repeats 北纬. Contract zh_pack8_v71 (27). An eighth
+  held-out set from the neutral prompt (495 sentences): ours 97.0% (phase 7 96.9%), wetext
+  73.6%, NeMo 55.5%. Korean, English, JSUT and ja-tn-eval are unchanged.
 - Chinese pack phase 7, on the categories held-out v6 missed: units after a space in ranges,
   negatives and expressions (100~240 V, -0.35 V, 1 m处), mSv lx MeV Å n mile MVA dB(A) and more;
   ~ and ≈ before a number read 约; 31 more measure words for 两 and 二年级; colon durations,
