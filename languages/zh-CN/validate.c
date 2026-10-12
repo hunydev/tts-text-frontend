@@ -85,7 +85,9 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
         SAME(k, "holiday_after") || SAME(k, "date_cue") || SAME(k, "date_after") ||
         SAME(k, "standard_cue") || SAME(k, "score_after") || SAME(k, "status_cue") ||
         SAME(k, "proportion_cue") || SAME(k, "money_after") || SAME(k, "service_cue") ||
-        SAME(k, "liang_not") || SAME(k, "schedule_word")) {
+        SAME(k, "liang_not") || SAME(k, "schedule_word") ||
+        SAME(k, "festival_digits") || SAME(k, "md_cue") || SAME(k, "md_after") ||
+        SAME(k, "score_cue") || SAME(k, "short_year_after")) {
         *handled = 1;
         return cue(key) && SAME(v, "1")
                    ? TTF_OK
