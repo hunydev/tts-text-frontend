@@ -358,17 +358,22 @@
           "area": "표준번호·버전·통화 코드",
           "level": "partial",
           "note": "ISO 9001:2015·GB/T 19001-2016(낱자, 点, 冒号), 버전 2.4.1, JPY 1,500,000 一百五十万日元, 1,280.00元(00 생략), ¥32.5/kg 每千克, +3价 正三价"
+        },
+        {
+          "area": "공백 뒤 단위·근삿값",
+          "level": "partial",
+          "note": "100~240 V 一百到两百四十伏, -0.35 V, 1 m处 一米处, mSv lx MeV Å n mile MVA dB(A), ~2 h 约两小时, ≈20 μm 约二十微米"
         }
       ],
       "gaps": [
-        "held-out v6(491문장, 일상·전문 고르게, 코드 고정 뒤 검수): 우리 92.5%(5단계 91.4%), wetext 71.6%, NeMo 53.8%. 남은 유형: 공백 뒤 로마자 단위, 二/两, 콜론의 기록·점수·비율 구분, 날짜 표기 (docs/chinese-pack.ko.md)",
+        "held-out v7(491문장, 일상·전문 고르게, 코드 고정 뒤 검수): 우리 96.1%(6단계 93.2%), wetext 67.5%, NeMo 49.9%. 남은 유형: 단서 없는 점 월-일, 하이픈 점수, 문맥 번호, 식 뒤 공백 단위 (docs/chinese-pack.ko.md)",
         "대상 TTS(VoxCPM2) 청취 비교 미실시",
         "번체(zh-TW)는 범위 밖: 번체 글자가 있는 문장은 라우팅하지 않음"
       ],
       "docs": [
         "docs/chinese-pack.ko.md",
         "docs/chinese-phase0.ko.md",
-        "benchmark/datasets/zh-tn-eval (held-out v6 491문장: 우리 92.5%·wetext 71.6%·NeMo 53.8%)"
+        "benchmark/datasets/zh-tn-eval (held-out v7 491문장: 우리 96.1%·wetext 67.5%·NeMo 49.9%)"
       ]
     }
   },

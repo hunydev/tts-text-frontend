@@ -2,6 +2,13 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Chinese pack phase 7, on the categories held-out v6 missed: units after a space in ranges,
+  negatives and expressions (100~240 V, -0.35 V, 1 m处), mSv lx MeV Å n mile MVA dB(A) and more;
+  ~ and ≈ before a number read 约; 31 more measure words for 两 and 二年级; colon durations,
+  scores and ratios by wider cues (1:10,000 一比一万); dates as eight digits, 2027.06 and
+  周报（9.22—9.26）; service numbers after 打, hex codes, 2#机组, chainages, n→∞, σ², pH=.
+  Contract zh_pack7_v70 (42). A seventh held-out set (491 sentences): ours 96.1% (phase 6
+  93.2%), wetext 67.5%, NeMo 49.9%. Korean, English, JSUT and ja-tn-eval are unchanged.
 - Chinese pack phase 6, on the categories held-out v5 missed: units after a formula glued to
   hanzi (λ=550nm), K C J F as units inside formulas, J·s Ω·m kJ/(kg·℃), μF nF pF μL μs ns hm²
   r/min MJ GJ; standards (ISO 9001:2015, IATF 16949, GB/T 19001-2016) read digit by digit;
