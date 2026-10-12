@@ -2,6 +2,15 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Mixed Korean/English/Chinese/Japanese text (project-owner sample): the hanja/kana reading
+  options now apply only inside Korean sentences and to bare words; a whole Chinese or Japanese
+  sentence (a full stop, or ten CJK characters) stays Chinese or Japanese (was read character by
+  character). 627 simplified and Japanese new-form characters take their traditional reading
+  (中国 중국). In zh-CN and ja-JP requests a Korean or English sentence keeps its own numbers and
+  letters (오전 9시 was 九시 or きゅう시; AI in an English sentence was エーアイ). I'll in a
+  Korean sentence is no longer I'l l. English days, months and 69 given names read correctly in
+  Korean (Friday 프라이데이, John 존, Alex 알렉스). Contract mixed_lang_v72 (41). Korean,
+  English, JSUT, ja-tn-eval and the Chinese sets are unchanged.
 - Chinese pack phase 8, on the categories held-out v7 missed: dotted month-days after a date
   word or before an event word (定于9.28开业), shopping festivals by digits (6.18购物节 六一八),
   hyphen scores (战成2-2 二比二), codes after a hanzi and a hyphen (建施-05), 15-15-15, ΔT=20 K,

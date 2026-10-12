@@ -2559,6 +2559,15 @@ static int context_score(const ttf_pack_input_t *in) {
     if (!declared(in->engine) || in->index >= in->token_count ||
         in->tokens[in->index].script == TTF_SCRIPT_HANGUL)
         return 0;
+    /* 오전 9시 in a Korean sentence, AI in an English one: their own language */
+    {
+        const ttf_language_pack_t *sentence = ttf_sentence_language(in);
+        /* hanzi (a name: 王明이) stay with the request pack, as written */
+        if (sentence && strcmp(sentence->language_tag, JA) &&
+            in->tokens[in->index].script != TTF_SCRIPT_HAN &&
+            in->tokens[in->index].script != TTF_SCRIPT_KANA)
+            return 0;
+    }
     return 1000;
 }
 

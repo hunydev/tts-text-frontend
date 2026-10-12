@@ -96,6 +96,14 @@
       "kind": "editorial-policy",
       "checked_at": "2026-10-05",
       "note": "Foreign proper nouns whose spelling guess is wrong in Korean-context text, read with their established Korean spelling (외래어 표기법 and common usage). No human approval and no synthesized audio."
+    },
+    {
+      "id": "project-english-names-v25",
+      "title": "Project readings of English day, month and given names in Korean context, v25",
+      "url": "https://www.korean.go.kr/front/page/pageView.do?mn_id=97&page_id=P000124",
+      "kind": "editorial-policy",
+      "checked_at": "2026-10-12",
+      "note": "English day and month names and common given names whose spelling guess was wrong in a mixed Korean/English text (Friday 프리데이, John 조흔), read with the 외래어 표기법 spelling or established usage. No human approval and no synthesized audio."
     }
   ]
 }

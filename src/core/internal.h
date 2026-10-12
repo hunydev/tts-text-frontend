@@ -101,6 +101,9 @@ ttf_status_t ttf_validate_resource_record(const ttf_engine_t *engine,
                                           const ttf_resource_record_t *record, int *validated,
                                           ttf_resource_diagnostic_t *diagnostic);
 const ttf_language_pack_t *ttf_find_pack(const ttf_engine_t *e, const char *tag);
+/* The decided language of the current token's sentence, NULL when undecided
+   (normalize.c; cached per request). */
+const ttf_language_pack_t *ttf_sentence_language(const ttf_pack_input_t *in);
 /* Lookup only, before a source verbalizer can replace the original spelling.
    A NULL hit is a normal miss; a hit remains engine-owned. */
 ttf_status_t ttf_electronic_render(const ttf_engine_t *engine, const ttf_language_pack_t *source,

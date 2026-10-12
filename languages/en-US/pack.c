@@ -1301,11 +1301,16 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
            spelled; only a word with a small letter joins its apostrophe. */
         if (in->text[separator->begin] == '\'') {
             const ttf_token_t *left = &in->tokens[in->index + consumed - 1];
-            size_t k;
+            size_t k, nn = next->end - next->begin;
+            const char *nx = in->text + next->begin;
+            /* I'll, I'm, I'd, I've: the pronoun I joins its contraction */
+            int pronoun = left->end - left->begin == 1 && in->text[left->begin] == 'I' &&
+                          ((nn == 1 && (nx[0] == 'm' || nx[0] == 'd')) ||
+                           (nn == 2 && ((nx[0] == 'l' && nx[1] == 'l') || (nx[0] == 'v' && nx[1] == 'e'))));
             for (k = left->begin; k < left->end; ++k)
                 if (in->text[k] >= 'a' && in->text[k] <= 'z')
                     break;
-            if (k == left->end)
+            if (k == left->end && !pronoun)
                 break;
         }
         /* Bound lookahead as well as the copied key. Otherwise an overlong
@@ -1356,7 +1361,10 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
            letters, not a word (트브, 스느스 before; 2026-10-03). y counts as a vowel
            except first (sky, gym stay words; ytn is letters); declared
            abbreviations (Mr, Dr) keep their reading. */
-        if (!all_upper && consumed == 1 && n >= 2 && n <= 6 && !res(in->engine, "abbreviation", key)) {
+        /* ...but never a contraction fragment after an apostrophe (I'll) */
+        if (!all_upper && consumed == 1 && n >= 2 && n <= 6 && !res(in->engine, "abbreviation", key) &&
+            !(t->begin >= 2 && in->text[t->begin - 1] == '\'' &&
+              ((in->text[t->begin - 2] | 0x20) >= 'a' && (in->text[t->begin - 2] | 0x20) <= 'z'))) {
             int vowel = 0;
             size_t k;
             for (j = 0; j < n; ++j)

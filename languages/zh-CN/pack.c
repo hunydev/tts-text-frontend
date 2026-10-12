@@ -2452,6 +2452,14 @@ static int context_score(const ttf_pack_input_t *in) {
         in->index >= in->token_count || in->tokens[in->index].script == TTF_SCRIPT_HANGUL ||
         in->tokens[in->index].script == TTF_SCRIPT_KANA)
         return 0;
+    /* 오전 9시 in a Korean sentence, 3 pm in an English one: their own language */
+    {
+        const ttf_language_pack_t *sentence = ttf_sentence_language(in);
+        /* hanzi (a name: 王明이) stay with the request pack, as written */
+        if (sentence && strcmp(sentence->language_tag, ZH) &&
+            in->tokens[in->index].script != TTF_SCRIPT_HAN)
+            return 0;
+    }
     return 1000;
 }
 

@@ -18,6 +18,7 @@ lexicon	ko-KR	en-US:analytics	애널리틱스
 lexicon	ko-KR	en-US:and	앤드
 lexicon	ko-KR	en-US:angels	에인절스
 lexicon	ko-KR	en-US:anything	애니싱
+lexicon	ko-KR	en-US:april	에이프릴
 lexicon	ko-KR	en-US:aquaculture	아쿠아컬처
 lexicon	ko-KR	en-US:arts	아츠
 lexicon	ko-KR	en-US:as	애즈
@@ -76,6 +77,7 @@ lexicon	ko-KR	en-US:council	카운슬
 lexicon	ko-KR	en-US:cu	씨유
 lexicon	ko-KR	en-US:data	데이터
 lexicon	ko-KR	en-US:deal	딜
+lexicon	ko-KR	en-US:december	디셈버
 lexicon	ko-KR	en-US:deep	딥
 lexicon	ko-KR	en-US:development	디벨롭먼트
 lexicon	ko-KR	en-US:device	디바이스
@@ -117,6 +119,7 @@ lexicon	ko-KR	en-US:excellence	엑설런스
 lexicon	ko-KR	en-US:excellent	엑설런트
 lexicon	ko-KR	en-US:exhibition	엑시비션
 lexicon	ko-KR	en-US:fair	페어
+lexicon	ko-KR	en-US:february	페브러리
 lexicon	ko-KR	en-US:fifteen	피프틴
 lexicon	ko-KR	en-US:fifteenth	피프틴스
 lexicon	ko-KR	en-US:fifth	피프스
@@ -138,6 +141,7 @@ lexicon	ko-KR	en-US:four	포
 lexicon	ko-KR	en-US:fourteen	포틴
 lexicon	ko-KR	en-US:fourteenth	포틴스
 lexicon	ko-KR	en-US:fourth	포스
+lexicon	ko-KR	en-US:friday	프라이데이
 lexicon	ko-KR	en-US:friendship	프렌드십
 lexicon	ko-KR	en-US:frontend	프런트엔드
 lexicon	ko-KR	en-US:full	풀
@@ -185,8 +189,11 @@ lexicon	ko-KR	en-US:iot	아이오티
 lexicon	ko-KR	en-US:iptv	아이피티비
 lexicon	ko-KR	en-US:is	이즈
 lexicon	ko-KR	en-US:james	제임스
+lexicon	ko-KR	en-US:january	재뉴어리
 lexicon	ko-KR	en-US:job	잡
 lexicon	ko-KR	en-US:journal	저널
+lexicon	ko-KR	en-US:july	줄라이
+lexicon	ko-KR	en-US:june	준
 lexicon	ko-KR	en-US:kcal	킬로칼로리
 lexicon	ko-KR	en-US:know	노
 lexicon	ko-KR	en-US:korea	코리아
@@ -209,9 +216,11 @@ lexicon	ko-KR	en-US:love	러브
 lexicon	ko-KR	en-US:magnesium	마그네슘
 lexicon	ko-KR	en-US:management	매니지먼트
 lexicon	ko-KR	en-US:manufacturing	매뉴팩처링
+lexicon	ko-KR	en-US:march	마치
 lexicon	ko-KR	en-US:martial	마셜
 lexicon	ko-KR	en-US:match	매치
 lexicon	ko-KR	en-US:materials	머티리얼즈
+lexicon	ko-KR	en-US:may	메이
 lexicon	ko-KR	en-US:me	미
 lexicon	ko-KR	en-US:media	미디어
 lexicon	ko-KR	en-US:merry	메리
@@ -225,6 +234,7 @@ lexicon	ko-KR	en-US:missus	미시즈
 lexicon	ko-KR	en-US:mister	미스터
 lexicon	ko-KR	en-US:model	모델
 lexicon	ko-KR	en-US:molecular	몰레큘러
+lexicon	ko-KR	en-US:monday	먼데이
 lexicon	ko-KR	en-US:mother	마더
 lexicon	ko-KR	en-US:movies	무비스
 lexicon	ko-KR	en-US:my	마이
@@ -239,8 +249,10 @@ lexicon	ko-KR	en-US:nineteenth	나인틴스
 lexicon	ko-KR	en-US:ninetieth	나인티스
 lexicon	ko-KR	en-US:ninety	나인티
 lexicon	ko-KR	en-US:ninth	나인스
+lexicon	ko-KR	en-US:november	노벰버
 lexicon	ko-KR	en-US:ocean	오션
 lexicon	ko-KR	en-US:ocn	오씨엔
+lexicon	ko-KR	en-US:october	옥토버
 lexicon	ko-KR	en-US:of	오브
 lexicon	ko-KR	en-US:offline	오프라인
 lexicon	ko-KR	en-US:ok	오케이
@@ -281,6 +293,7 @@ lexicon	ko-KR	en-US:safe	세이프
 lexicon	ko-KR	en-US:safety	세이프티
 lexicon	ko-KR	en-US:sale	세일
 lexicon	ko-KR	en-US:sample	샘플
+lexicon	ko-KR	en-US:saturday	새터데이
 lexicon	ko-KR	en-US:save	세이브
 lexicon	ko-KR	en-US:scholarship	스칼러십
 lexicon	ko-KR	en-US:school	스쿨
@@ -288,6 +301,7 @@ lexicon	ko-KR	en-US:science	사이언스
 lexicon	ko-KR	en-US:second	세컨드
 lexicon	ko-KR	en-US:senior	시니어
 lexicon	ko-KR	en-US:sensors	센서스
+lexicon	ko-KR	en-US:september	셉템버
 lexicon	ko-KR	en-US:server	서버
 lexicon	ko-KR	en-US:service	서비스
 lexicon	ko-KR	en-US:seven	세븐
@@ -314,6 +328,7 @@ lexicon	ko-KR	en-US:stewardship	스튜어드십
 lexicon	ko-KR	en-US:strategy	스트래티지
 lexicon	ko-KR	en-US:stream	스트림
 lexicon	ko-KR	en-US:summer	서머
+lexicon	ko-KR	en-US:sunday	선데이
 lexicon	ko-KR	en-US:supply	서플라이
 lexicon	ko-KR	en-US:surveillance	서베일런스
 lexicon	ko-KR	en-US:sustainability	서스테이너빌리티
@@ -338,6 +353,7 @@ lexicon	ko-KR	en-US:this	디스
 lexicon	ko-KR	en-US:thousand	사우전드
 lexicon	ko-KR	en-US:thousandth	사우전드스
 lexicon	ko-KR	en-US:three	쓰리
+lexicon	ko-KR	en-US:thursday	서즈데이
 lexicon	ko-KR	en-US:tier	티어
 lexicon	ko-KR	en-US:time	타임
 lexicon	ko-KR	en-US:times	타임스
@@ -350,6 +366,7 @@ lexicon	ko-KR	en-US:tour	투어
 lexicon	ko-KR	en-US:toxicology	톡시콜로지
 lexicon	ko-KR	en-US:travel	트래블
 lexicon	ko-KR	en-US:treatment	트리트먼트
+lexicon	ko-KR	en-US:tuesday	튜즈데이
 lexicon	ko-KR	en-US:twelfth	트웰프스
 lexicon	ko-KR	en-US:twelve	트웰브
 lexicon	ko-KR	en-US:twentieth	트웬티스
@@ -376,6 +393,7 @@ lexicon	ko-KR	en-US:watch	워치
 lexicon	ko-KR	en-US:we	위
 lexicon	ko-KR	en-US:wearable	웨어러블
 lexicon	ko-KR	en-US:web	웹
+lexicon	ko-KR	en-US:wednesday	웬즈데이
 lexicon	ko-KR	en-US:welfare	웰페어
 lexicon	ko-KR	en-US:white	화이트
 lexicon	ko-KR	en-US:williams	윌리엄스

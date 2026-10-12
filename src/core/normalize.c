@@ -107,6 +107,9 @@ static const ttf_language_pack_t *script_pack(const ttf_engine_t *e, ttf_script_
    of a script another pack owns, which keep their own reading. */
 typedef struct {
     const ttf_language_pack_t *pack; /* NULL: per-token scoring decides */
+    /* The sentence's decided language (kana or hanzi sentence, or a matrix chosen
+       by words or grammar); NULL when the sentence fell back to the default. */
+    const ttf_language_pack_t *sentence;
     char why[40];
 } matrix_route_t;
 typedef struct {
@@ -311,18 +314,62 @@ static int hiragana_token(const ttf_pack_input_t *in, size_t k, size_t begin, si
                  in->tokens[k + 1].script != TTF_SCRIPT_PUNCTUATION);
     return 1;
 }
+/* With the Korean hanja/kana reading options, a sentence without Hangul is still
+   Chinese or Japanese when it is a whole sentence: it ends in a full stop (a
+   closing quote or bracket may follow), or it has ten or more CJK characters. A
+   bare word (列車, とうきょう) stays with the request and is read (2026-10-12,
+   project owner: the options are for Chinese and Japanese inside Korean sentences;
+   before, they kept every sentence Korean and read whole Chinese sentences
+   character by character). */
+static int whole_sentence(const ttf_pack_input_t *in, size_t begin, size_t end) {
+    size_t k = end, cjk = 0;
+    while (k > begin) {
+        const ttf_token_t *t = &in->tokens[k - 1];
+        uint32_t cp;
+        size_t w;
+        if (t->script == TTF_SCRIPT_WHITESPACE) {
+            --k;
+            continue;
+        }
+        if (t->script != TTF_SCRIPT_PUNCTUATION ||
+            ttf_utf8_decode(in->text + t->begin, t->end - t->begin, &cp, &w) != 1)
+            break;
+        if (cp == 0x3002 || cp == 0xff01 || cp == 0xff1f || cp == 0xff0e || cp == '.' || cp == '!' ||
+            cp == '?')
+            return 1;
+        if (!(cp == '"' || cp == '\'' || cp == 0x201d || cp == 0x2019 || cp == 0x300d ||
+              cp == 0x300f || cp == 0xff09 || cp == ')' || cp == 0x3011))
+            break;
+        --k;
+    }
+    for (k = begin; k < end; ++k) {
+        size_t at = in->tokens[k].begin;
+        while (at < in->tokens[k].end) {
+            uint32_t cp;
+            size_t w;
+            if (ttf_utf8_decode(in->text + at, in->tokens[k].end - at, &cp, &w) != 1)
+                break;
+            cjk += (cp >= 0x3041 && cp <= 0x30ff) || (cp >= 0x3400 && cp <= 0x9fff);
+            at += w;
+        }
+    }
+    return cjk >= 10;
+}
+static int reading_options(const ttf_engine_t *e) {
+    return e->frontend_options.kana == TTF_KANA_KOREAN || e->frontend_options.hanja == TTF_HANJA_KOREAN;
+}
 /* A kana sentence (2026-10-08, project owner): with hiragana grammar, or only
    kana and no Latin word, and no Hangul at all, the sentence belongs to the pack
    declaring `context <tag> kana_sentence 1` (ja-JP), every token included. A
-   Hangul word keeps the sentence out (「ありがとう」라고 stays Korean); the Korean
-   kana/hanja reading options keep their Korean sentences; a standalone kana word
-   in an English sentence is no grammar. */
+   Hangul word keeps the sentence out (「ありがとう」라고 stays Korean); with the
+   Korean kana/hanja reading options only a whole sentence counts; a standalone kana
+   word in an English sentence is no grammar. */
 static const ttf_language_pack_t *kana_sentence(const ttf_engine_t *e, const ttf_pack_input_t *in,
                                                 size_t begin, size_t end) {
     const ttf_language_pack_t *pack = NULL;
     size_t j, k;
     int grammar = 0, hiragana = 0, latin = 0;
-    if (e->frontend_options.kana == TTF_KANA_KOREAN || e->frontend_options.hanja == TTF_HANJA_KOREAN)
+    if (reading_options(e) && !whole_sentence(in, begin, end))
         return NULL;
     for (j = 0; j < e->pack_count && !pack; ++j)
         if (pack_flag(e, e->packs[j], "kana_sentence", 0))
@@ -344,16 +391,16 @@ static const ttf_language_pack_t *kana_sentence(const ttf_engine_t *e, const ttf
    as Latin words, and no character the pack lists as han_foreign (Japanese-only
    or traditional forms: 駅 円 國 時) belongs to the pack declaring `context <tag>
    han_sentence 1` (zh-CN), every token included. A request whose own pack takes
-   kana sentences (ja-JP) keeps its kanji sentences, and so do the Korean
-   kana/hanja reading options. In a zh-CN request one hanzi is enough (Galaxy
-   S24 Ultra售价8999元). */
+   kana sentences (ja-JP) keeps its kanji sentences; with the Korean kana/hanja
+   reading options only a whole sentence counts. In a zh-CN request one hanzi is
+   enough (Galaxy S24 Ultra售价8999元). */
 static const ttf_language_pack_t *han_sentence(const ttf_engine_t *e, const ttf_pack_input_t *in,
                                                size_t begin, size_t end) {
     const ttf_language_pack_t *pack = NULL,
                               *declared = e->default_language ? ttf_find_pack(e, e->default_language)
                                                               : NULL;
     size_t j, k, han = 0, latin = 0;
-    if (e->frontend_options.kana == TTF_KANA_KOREAN || e->frontend_options.hanja == TTF_HANJA_KOREAN ||
+    if ((reading_options(e) && !whole_sentence(in, begin, end)) ||
         (declared && pack_flag(e, declared, "kana_sentence", 0)))
         return NULL;
     for (j = 0; j < e->pack_count && !pack; ++j)
@@ -417,6 +464,7 @@ static void matrix_route(const ttf_engine_t *e, const ttf_pack_input_t *in, size
     if (kana) {
         for (k = begin; k < end; ++k) {
             routes[k - begin].pack = kana;
+            routes[k - begin].sentence = kana;
             memcpy(routes[k - begin].why, why, sizeof(why));
         }
         return;
@@ -424,6 +472,8 @@ static void matrix_route(const ttf_engine_t *e, const ttf_pack_input_t *in, size
     for (k = begin; k < end; ++k) {
         const ttf_language_pack_t *owner = script_pack(e, in->tokens[k].script);
         routes[k - begin].pack = forced && (!owner || owner == matrix) ? matrix : NULL;
+        routes[k - begin].sentence =
+            e->matrix_policy == TTF_MATRIX_DECLARED || strstr(why, "(default") ? NULL : matrix;
         memcpy(routes[k - begin].why, why, sizeof(why));
     }
 }
@@ -474,6 +524,36 @@ static const ttf_language_pack_t *matrix_pack(const ttf_engine_t *e, const ttf_p
     }
     memcpy(why, route.why, 40);
     return route.pack;
+}
+/* The decided language of the current token's sentence (see matrix_route_t),
+   NULL when none is decided or the matrix policy is not auto. A pack that claims
+   every token of its own request (zh-CN, ja-JP) leaves a Korean or English
+   sentence to its language with it (2026-10-12, project owner: 오전 9시 in a zh-CN
+   request read 九시). */
+const ttf_language_pack_t *ttf_sentence_language(const ttf_pack_input_t *in) {
+    const ttf_engine_t *e = in->engine;
+    matrix_plan_t *plan;
+    matrix_route_t *routes;
+    const ttf_language_pack_t *found;
+    size_t begin, end;
+    if (!e || e->matrix_policy != TTF_MATRIX_AUTO || in->index >= in->token_count)
+        return NULL;
+    if (ttf_context_memo_enabled(in) &&
+        (plan = (matrix_plan_t *)ttf_context_memo_get(in, &matrix_memo_identity, build_matrix_plan,
+                                                      dispose_matrix_plan)))
+        return plan->routes[in->index].sentence;
+    sentence_bounds(in, in->index, &begin, &end);
+    routes = (matrix_route_t *)calloc(end - begin, sizeof(*routes));
+    if (!routes)
+        return NULL;
+    matrix_route(e, in, begin, end, routes);
+    found = routes[in->index - begin].sentence;
+    free(routes);
+    return found;
+}
+static int declared_only(const ttf_engine_t *e, size_t j) {
+    const char *flag = ttf_resource_get(e, "context", e->packs[j]->language_tag, "declared_only", NULL);
+    return flag && strcmp(flag, "0");
 }
 static const ttf_language_pack_t *context_pack(const ttf_engine_t *e, const ttf_pack_input_t *in,
                                                char trace[192]) {
@@ -1283,6 +1363,7 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
 ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
                                       size_t context_length, const char *text, size_t length,
                                       size_t offset, ttf_result_t *out) {
+    const ttf_language_pack_t *sentence_lang = NULL;
     char *context_text = NULL;
     const char *context_base = NULL;
     ttf_token_t *context_tokens = NULL;
@@ -1500,10 +1581,12 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
             scoped.index -= scopes[i].begin;
             snprintf(span.context_trace, sizeof(span.context_trace), "quotation");
             context = context_pack(e, &scoped, span.context_trace);
+            sentence_lang = ttf_sentence_language(&scoped);
         } else {
             ttf_pack_input_t scoped = in;
             scoped.engine = &context_view;
             context = context_pack(e, &scoped, span.context_trace);
+            sentence_lang = ttf_sentence_language(&scoped);
         }
         if (memo.status != TTF_OK) {
             st = memo.status;
@@ -1574,6 +1657,10 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
                     (strcmp(sem->unit, "@math") || (han_context && context == e->packs[j])) &&
                     (!undeclared(e, j) || context == e->packs[j]) &&
                     !(han_context && context != e->packs[j]) &&
+                    /* ja-JP in its own request leaves an English or Korean
+                       sentence alone (AI in an English sentence is not エーアイ). */
+                    !(context != e->packs[j] && sentence_lang && sentence_lang != e->packs[j] &&
+                      declared_only(e, j)) &&
                     !(context != e->packs[j] &&
                       (e->frozen ? e->han_only[j] : pack_flag(e, e->packs[j], "han_sentence", 0)))) {
                     ttf_semantic_t candidate;
