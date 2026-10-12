@@ -44,6 +44,8 @@ int main(int argc, char **argv) {
     const char *valid_stdict = "hanja_reading\tko-KR\t\xe5\xbc\xb7\t강\n"; /* U+5F37 */
     const char *words = "languages/ko-KR/cjk/cjk_words_stdict.tsv";
     const char *valid_words = "cjk_word\tko-KR\t列車\t열차\n";
+    const char *variants = "languages/ko-KR/cjk/hanja_readings_variants.tsv";
+    const char *valid_variants = "hanja_variant_reading\tko-KR\t国\t국\n";
     const char *valid_han = "hanja_reading\tko-KR\t山\t산\n";
     const char *valid_kana = "kana_reading\tko-KR\tか\t카\n";
     const char *valid_word = "cjk_word\tko-KR\t音樂\t음악\n";
@@ -69,6 +71,7 @@ int main(int argc, char **argv) {
         snprintf(path, sizeof(path), "%s/%s", argv[2], rules); remove(path);
         snprintf(path, sizeof(path), "%s/%s", argv[2], stdict); remove(path);
         snprintf(path, sizeof(path), "%s/%s", argv[2], words); remove(path);
+        snprintf(path, sizeof(path), "%s/%s", argv[2], variants); remove(path);
         CHECK(create(argv[2], mode, &e) == 0);
         CHECK(ttf_engine_freeze(e) == TTF_OK && records(e) == base_records);
         ttf_engine_destroy(e);
@@ -80,10 +83,12 @@ int main(int argc, char **argv) {
         CHECK(put(argv[2], rules, mode & 1 ? valid_rules : "invalid\n"));
         CHECK(put(argv[2], stdict, mode & 1 ? valid_stdict : "invalid\n"));
         CHECK(put(argv[2], words, mode & 1 ? valid_words : "invalid\n"));
+        CHECK(put(argv[2], variants, mode & 1 ? valid_variants : "invalid\n"));
         CHECK(create(argv[2], mode, &e) == 0);
         CHECK(records(e) == base_records);
         CHECK(ttf_engine_freeze(e) == TTF_OK);
-        CHECK(records(e) == base_records + (size_t)(4 * (!!(mode & 1)) + (!!(mode & 2)) + !!mode));
+        CHECK(records(e) == base_records + (size_t)(5 * (!!(mode & 1)) + (!!(mode & 2)) + !!mode));
+        CHECK(!!ttf_resource_get(e, "hanja_variant_reading", "ko-KR", "国", NULL) == !!(mode & 1));
         CHECK(!!ttf_resource_get(e, "cjk_word", "ko-KR", "列車", NULL) == !!(mode & 1));
         CHECK(!!ttf_resource_get(e, "hanja_reading", "ko-KR", "\xe5\xbc\xb7", NULL) == !!(mode & 1));
         CHECK(!!ttf_resource_get(e, "hanja_reading", "ko-KR", "山", NULL) == !!(mode & 1));
@@ -117,14 +122,16 @@ int main(int argc, char **argv) {
     CHECK(ttf_engine_freeze(e) == TTF_ERESOURCE);
     CHECK(records(e) == base_records + 2 && checkpoint == e->resource_order && !e->cjk && !e->frozen);
     reject = 0;
-    CHECK(ttf_engine_freeze(e) == TTF_OK && records(e) == base_records + 8);
-    CHECK(e->resource_order == checkpoint + 6);
+    /* six deferred files plus the one-row variant table left from the loop above */
+    CHECK(ttf_engine_freeze(e) == TTF_OK && records(e) == base_records + 9);
+    CHECK(e->resource_order == checkpoint + 7);
     CHECK(ttf_resource_entry(e, "hanja_reading", "ko-KR", "山") == original);
     CHECK(!strcmp(ttf_resource_get(e, "cjk_word", "ko-KR", "音樂", NULL), "고객"));
     ttf_engine_destroy(e);
     /* Production manifest counts, both explicit and compiled-in NULL roots. */
     for (mode = -1; mode < 4; ++mode) {
-        size_t added = mode <= 0 ? 0 : (mode & 1 ? 13956 : 0) + (mode & 2 ? 301 : 0) + 5;
+        /* hanja: 14583 rows, 627 of them hanja_readings_variants.tsv (2026-10-12) */
+        size_t added = mode <= 0 ? 0 : (mode & 1 ? 14583 : 0) + (mode & 2 ? 301 : 0) + 5;
         CHECK(create(mode == 3 ? NULL : argv[1], mode, &e) == 0);
         CHECK(records(e) == base_records);
         CHECK(ttf_engine_freeze(e) == TTF_OK && records(e) == base_records + added);

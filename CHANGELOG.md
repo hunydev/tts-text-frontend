@@ -6,7 +6,7 @@
   options now apply only inside Korean sentences and to bare words; a whole Chinese or Japanese
   sentence (a full stop, or ten CJK characters) stays Chinese or Japanese (was read character by
   character). 627 simplified and Japanese new-form characters take their traditional reading
-  (中国 중국). In zh-CN and ja-JP requests a Korean or English sentence keeps its own numbers and
+  inside Korean sentences (中国チーム에도 중국; a bare 中国 日本 keeps 중国 as frozen). In zh-CN and ja-JP requests a Korean or English sentence keeps its own numbers and
   letters (오전 9시 was 九시 or きゅう시; AI in an English sentence was エーアイ). I'll in a
   Korean sentence is no longer I'l l. English days, months and 69 given names read correctly in
   Korean (Friday 프라이데이, John 존, Alex 알렉스). Contract mixed_lang_v72 (41). Korean,

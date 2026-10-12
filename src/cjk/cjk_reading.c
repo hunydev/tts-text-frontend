@@ -281,7 +281,8 @@ static const ttf_entry_t *before_initial(const ttf_engine_t *e, const char *lang
 
 ttf_status_t ttf_cjk_render(const ttf_engine_t *e, const char *lang, const char *text,
                             size_t length, ttf_semantic_t *sem, ttf_buffer_t *out,
-                            char lexicon[64], ttf_resource_layer_t *pronunciation_layer) {
+                            char lexicon[64], ttf_resource_layer_t *pronunciation_layer,
+                            int korean_sentence) {
     size_t at = 0, last_position = 0;
     uint32_t last = 0;
     ttf_script_t previous = TTF_SCRIPT_OTHER;
@@ -337,6 +338,11 @@ ttf_status_t ttf_cjk_render(const ttf_engine_t *e, const char *lang, const char 
         }
         if (script == TTF_SCRIPT_HAN)
             reading = ttf_resource_entry(e, "hanja_reading", lang, key);
+        /* 中国チーム에도 중국: inside a Korean sentence a simplified or Japanese
+           new form takes its traditional reading; a bare 中国 日本 keeps it
+           (2026-10-12, project owner). */
+        if (script == TTF_SCRIPT_HAN && !reading && korean_sentence)
+            reading = ttf_resource_entry(e, "hanja_variant_reading", lang, key);
         if (script == TTF_SCRIPT_KANA) {
             first = glyph(e, lang, text + at, length - at);
             used = first.bytes;
@@ -483,7 +489,7 @@ ttf_status_t ttf_cjk_validate(const ttf_resource_record_t *r, int *handled,
                               ttf_resource_diagnostic_t *d) {
     uint32_t cp;
     int valid;
-    if (!strcmp(r->kind, "hanja_reading"))
+    if (!strcmp(r->kind, "hanja_reading") || !strcmp(r->kind, "hanja_variant_reading"))
         valid = one_cp(r->key, &cp) && ttf_script_of(cp) == TTF_SCRIPT_HAN &&
                 hangul_value(r->value, 1);
     else if (!strcmp(r->kind, "cjk_word"))

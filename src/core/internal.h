@@ -158,7 +158,8 @@ static inline int ttf_cjk_resource_kind(const char *kind) {
                kind[5] == 'm' && kind[6] == 'e' && kind[7] == '_' &&
                (!strcmp(kind + 8, "word") || !strcmp(kind + 8, "stem") || !strcmp(kind + 8, "noun"));
     if (kind[0] == 'h')
-        return !strcmp(kind, "hanja_reading") || !strcmp(kind, "hanja_soft_after") ||
+        return !strcmp(kind, "hanja_reading") || !strcmp(kind, "hanja_variant_reading") ||
+               !strcmp(kind, "hanja_soft_after") ||
                !strcmp(kind, "hanja_before_initial");
     if (kind[0] == 'c') return !strcmp(kind, "cjk_word");
     return kind[0] == 'k' && (!strcmp(kind, "kana_reading") || !strcmp(kind, "kana_mark") ||

@@ -14,7 +14,7 @@ size_t ttf_cjk_protect_until(const ttf_engine_t *engine, const char *text,
 ttf_status_t ttf_cjk_render(const ttf_engine_t *engine, const char *language,
                             const char *text, size_t length, ttf_semantic_t *semantic,
                             ttf_buffer_t *output, char lexicon[64],
-                            ttf_resource_layer_t *pronunciation_layer);
+                            ttf_resource_layer_t *pronunciation_layer, int korean_sentence);
 /* Shared by the KO resource validator and the runtime's bounded lookups. */
 ttf_status_t ttf_cjk_validate(const ttf_resource_record_t *record, int *handled,
                               ttf_resource_diagnostic_t *diagnostic);

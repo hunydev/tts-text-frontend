@@ -355,6 +355,16 @@ static int whole_sentence(const ttf_pack_input_t *in, size_t begin, size_t end) 
     }
     return cjk >= 10;
 }
+static void sentence_bounds(const ttf_pack_input_t *in, size_t index, size_t *begin, size_t *end);
+/* The sentence of token `index` has a Hangul word (a Korean sentence). */
+static int hangul_sentence(const ttf_pack_input_t *in, size_t index) {
+    size_t begin, end, k;
+    sentence_bounds(in, index, &begin, &end);
+    for (k = begin; k < end; ++k)
+        if (in->tokens[k].script == TTF_SCRIPT_HANGUL)
+            return 1;
+    return 0;
+}
 static int reading_options(const ttf_engine_t *e) {
     return e->frontend_options.kana == TTF_KANA_KOREAN || e->frontend_options.hanja == TTF_HANJA_KOREAN;
 }
@@ -2033,7 +2043,7 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
                    !strcmp(sem->rule, "identity") && ttf_cjk_applies(renderer->language_tag, span.script))
             st = ttf_cjk_render(e, renderer->language_tag, text + tokens[i].begin,
                                 end - tokens[i].begin, sem, &normalized,
-                                span.lexicon, &span.pronunciation_layer);
+                                span.lexicon, &span.pronunciation_layer, hangul_sentence(&in, i));
         else {
             st = renderer->verbalize(e, sem, render_text, render_length, &normalized);
             /* A reading the pack cannot produce (missing resource, value outside
