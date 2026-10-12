@@ -71,6 +71,22 @@ class Reports(unittest.TestCase):
   with self.assertRaises(urllib.error.HTTPError) as e:self.get('/api/ko-cases',run='test',scope='span',status='final-wrong')
   self.assertEqual(e.exception.code,400)
   i=self.get('/api/decisions/instructions');self.assertEqual(i['model'],'gpt-6-luna');self.assertNotIn('sk-',json.dumps(i))
+  # A Jev stage next to it: both-wrong lists what neither judge accepts, sorted by score.
+  import ko_jev
+  with self.assertRaises(urllib.error.HTTPError) as e:self.get('/api/ko-cases',run='test',status='both-wrong')
+  self.assertEqual(e.exception.code,400)
+  ko_jev.score(self.reports,'test',cache=self.reports/'jev-cache.jsonl',batch=lambda pairs,lang,cache,progress=None:({p:(0.2,'jev-test') for p in pairs},len(pairs)))
+  r=self.get('/api/ko-report',run='test');self.assertEqual(r['jev']['sentences']['accepted'],0)
+  self.assertEqual(r['both']['sentences']['accepted'],r['decisions']['sentences']['accepted'])
+  both=self.get('/api/ko-cases',run='test',status='both-wrong',sort='mean-asc')
+  different=self.get('/api/ko-cases',run='test',status='different')['total'];errors=self.get('/api/ko-cases',run='test',status='error')['total']
+  self.assertEqual(both['total'],different-r['both']['sentences']['accepted']+errors)
+  ordered=self.get('/api/ko-cases',run='test',status='different',sort='jev-desc')['entries']
+  self.assertTrue(all('jev' in e for e in ordered))
+  for bad in (dict(sort='bad'),dict(sort='mean-asc',scope='span')):
+   with self.assertRaises(urllib.error.HTTPError) as e:self.get('/api/ko-cases',run='test',**bad)
+   self.assertEqual(e.exception.code,400)
+  (self.reports/'test'/'jev-final.json').unlink()
   (self.reports/'test'/'decisions-final.json').unlink()
  def test_assets(self):
   for path in ['/ko-quality','/ko-quality.js','/ko-quality.css']:

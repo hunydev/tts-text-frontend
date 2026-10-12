@@ -2,6 +2,10 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Jev next to Decisions on the Korean benchmark: the same `different` sentences are judged by
+  Jev too (tools/web/ko_jev.py, jev-final.json). /ko-quality lists the sentences both judges
+  reject ("Jev·Decisions 모두 틀림", 2,388 sentences, 1.68% on 20261012-mixed) sorted by either
+  judge's score or their mean, ascending or descending; Decisions accepts 18,595, Jev 11,662.
 - OpenAI Decisions as the last stage of the Korean benchmark: only the sentences left
   `different` are judged (tools/web/ko_decisions.py, decisions-final.json; accepted at 0.7 with
   nothing left unread and no changed number value). /ko-quality shows the black (Decisions
