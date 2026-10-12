@@ -2,6 +2,10 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Chinese (zh-CN) is in production (project-owner decision, 2026-10-13; beta since
+  2026-10-11). An OpenAI TTS -> STT comparison of 200 held-out v8 sentences read 72.5% right
+  from the raw text and 96.0% from our output; still to do: a human native review of the
+  evaluation sets and a listening comparison with the target TTS (VoxCPM2).
 - Jev next to Decisions on the Korean benchmark: the same `different` sentences are judged by
   Jev too (tools/web/ko_jev.py, jev-final.json). /ko-quality lists the sentences both judges
   reject ("Jev·Decisions 모두 틀림", 2,388 sentences, 1.68% on 20261012-mixed) sorted by either
