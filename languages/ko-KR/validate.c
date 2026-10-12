@@ -252,6 +252,15 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    : ttf_validation_error(
                          d, "url_tld requires language *, a 2..24 lowercase ASCII key and 0|1");
     }
+    if (SAME(k, "address_spelled")) {
+        size_t i;
+        *handled = 1;
+        for (i = 0; key[i] >= 'a' && key[i] <= 'z'; ++i)
+            ;
+        return i && !key[i] && SAME(v, "1")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "address_spelled requires a lowercase ASCII key and 1");
+    }
     if (SAME(k, "electronic_word")) {
         *handled = 1;
         return lower_ascii_key(key, 1, 63) && label(v) && strlen(v) < 256

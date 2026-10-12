@@ -58,6 +58,11 @@ static ttf_status_t chunk(const ttf_engine_t *e, const ttf_language_pack_t *sour
                                     &layer);
             if (st != TTF_OK)
                 return st;
+            /* john.doe@gmail.com: a given name is an account name and stays spelled
+               (resource address_spelled, 2026-10-12) even though Korean text reads
+               John as 존. */
+            if (hit && ttf_resource_get(e, "address_spelled", target->language_tag, key, NULL))
+                hit = NULL;
             if (hit) {
                 st = ttf_trace_foreign_lexicon(e, source->language_tag, target->language_tag, key,
                                                n, "address-lexicon");
