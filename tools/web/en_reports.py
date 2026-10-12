@@ -3,6 +3,10 @@
 A report is a directory written by benchmark/evaluators/english_sentences.py:
 summary.json, results.jsonl (scored sentences) and out-of-scope.jsonl. Rows are
 untrusted text; the page renders them with textContent only.
+
+jev-final.json (tools/web/en_jev.py, 2026-10-12) holds Jev scores for the
+benchmark's misses only: a miss Jev accepts is counted apart, and what is left
+is wrong even for Jev.
 """
 import json
 from pathlib import Path
@@ -12,7 +16,8 @@ from urllib.parse import parse_qs
 
 DEFAULT_ROOT = Path(__file__).resolve().parents[2] / "benchmark/generated/en-eval/reports"
 LEVELS = ("exact", "compact", "loose", "variant")
-RESULTS = LEVELS + ("miss", "rejected", "error", "out-of-scope")
+RESULTS = LEVELS + ("miss", "rejected", "error", "out-of-scope", "jev-pass", "final-wrong")
+JEV_FILE = "jev-final.json"
 PAGE = 50
 _cache, _lock = {}, threading.Lock()
 
@@ -33,7 +38,8 @@ def report_path(root, run):
     path = Path(root).resolve() / run
     if path.is_symlink() or not path.is_dir():
         raise ValueError("report not found")
-    if any((path / name).is_symlink() for name in ("summary.json", "results.jsonl", "out-of-scope.jsonl")):
+    if any((path / name).is_symlink() for name in ("summary.json", "results.jsonl", "out-of-scope.jsonl",
+                                                   JEV_FILE)):
         raise ValueError("symlinked report files are not supported")
     return path
 
@@ -72,22 +78,38 @@ def catalog(root):
     return dict(reports=reports, latest=latest)
 
 
+def jev_scores(path):
+    """The Jev stage of a report: {threshold, model, scored_at, scores {id: noul}}, or None."""
+    file = Path(path) / JEV_FILE
+    if not file.is_file():
+        return None
+    with file.open(encoding="utf-8") as handle:
+        data = json.load(handle)
+    if data.get("schema_version") != 1 or not isinstance(data.get("scores"), dict):
+        raise ValueError("bad Jev stage file")
+    return data
+
+
 def rows(root, run):
     """Scored and out-of-scope rows, cached per file size and mtime."""
     path = report_path(root, run)
     summary(root, run)
-    files = [path / "results.jsonl", path / "out-of-scope.jsonl"]
+    files = [path / "results.jsonl", path / "out-of-scope.jsonl", path / JEV_FILE]
     key = (str(path),) + tuple((f.stat().st_mtime_ns, f.stat().st_size) if f.is_file() else None
                                for f in files)
     with _lock:
         if _cache.get(str(path), (None,))[0] == key:
             return _cache[str(path)][1]
     scored = []
+    stage = jev_scores(path)
+    jev = stage["scores"] if stage else {}
     with files[0].open(encoding="utf-8") as handle:
         for line in handle:
             row = json.loads(line)
             row["result"] = "error" if row.get("error") else row.get("level") or \
                 ("rejected" if row.get("rejected") else "miss")
+            if row["result"] == "miss" and row["id"] in jev:
+                row["jev"] = jev[row["id"]]
             scored.append(row)
     outside = []
     if files[1].is_file():
@@ -106,6 +128,53 @@ def rows(root, run):
 
 def matched(row):
     return row["result"] in LEVELS
+
+
+def report(root, run):
+    """summary() with the Jev stage counted overall and per dataset, when it was run.
+
+    accepted: misses Jev accepts; final_wrong: scorable sentences that neither the
+    benchmark (any level) nor Jev accepts (Jev-rejected or unscored misses, readings
+    the dataset marks wrong, engine errors)."""
+    data = summary(root, run)
+    stage = jev_scores(report_path(root, run))
+    if not stage:
+        return dict(data, jev=None)
+    threshold = float(stage.get("threshold", 0.7))
+    count = {}
+    for row in rows(root, run)[0]:
+        for key in ("all", row["dataset"]):
+            c = count.setdefault(key, dict(misses=0, scored=0, accepted=0))
+            if row["result"] == "miss":
+                c["misses"] += 1
+                if "jev" in row:
+                    c["scored"] += 1
+                    c["accepted"] += row["jev"] >= threshold
+
+    def finish(c, m):
+        scorable, matched_ = m.get("scorable", 0), m.get("variant", 0)
+        wrong = scorable - matched_ - c["accepted"]
+        return dict(c, final_wrong=wrong, final_wrong_rate=wrong / scorable if scorable else None,
+                    accepted_rate=c["accepted"] / scorable if scorable else None)
+
+    empty = dict(misses=0, scored=0, accepted=0)
+    return dict(data, jev=dict(
+        model=stage.get("model"), question=stage.get("question"), threshold=threshold,
+        scored_at=stage.get("scored_at"),
+        sentences=finish(count.get("all", empty), data["sentences"]),
+        datasets={k: finish(count.get(k, empty), v) for k, v in data["datasets"].items()}))
+
+
+def kept(row, result, threshold):
+    """Does a row pass the result filter?"""
+    if not result:
+        return True
+    accepted = row["result"] == "miss" and row.get("jev", -1) >= threshold
+    if result == "jev-pass":
+        return accepted
+    if result == "final-wrong":
+        return not matched(row) and not accepted
+    return row["result"] == result or (result == "miss" and row["result"] in ("rejected", "error"))
 
 
 def cases(root, args):
@@ -131,6 +200,8 @@ def cases(root, args):
         if summary(root, base)["comparison_key"] != summary(root, run)["comparison_key"]:
             raise ValueError("baseline was measured under a different protocol")
         before = {r["id"]: r for r in rows(root, base)[0]}
+    stage = jev_scores(report_path(root, run))
+    threshold = float(stage.get("threshold", 0.7)) if stage else 2.0
     source = outside if result == "out-of-scope" else scored
     selected = []
     for row in source:
@@ -138,8 +209,7 @@ def cases(root, args):
             continue
         if args.get("dataset") and row["dataset"] != args["dataset"]:
             continue
-        if result and result != "out-of-scope" and row["result"] != result and \
-                not (result == "miss" and row["result"] in ("rejected", "error")):
+        if result != "out-of-scope" and not kept(row, result, threshold):
             continue
         if query and query not in row["text"]:
             continue

@@ -15,7 +15,6 @@ import ko_reports
 import ja_reports
 import en_reports
 import jev
-import jev_eval
 import value_check
 
 sys.path.insert(0, str(ROOT / "tools/lexicon"))
@@ -102,7 +101,7 @@ class Handler(BaseHTTPRequestHandler):
                 if path == "/api/en-reports":
                     result = en_reports.catalog(root)
                 elif path == "/api/en-report":
-                    result = en_reports.summary(root, args.get("run"))
+                    result = en_reports.report(root, args.get("run"))
                 else:
                     result = en_reports.cases(root, args)
                 return self.json(200, result)
@@ -110,25 +109,6 @@ class Handler(BaseHTTPRequestHandler):
                 return self.json(400, {"error": "보고서나 검색 조건을 확인하세요."})
             except OSError:
                 return self.json(503, {"error": "보고서를 읽을 수 없습니다."})
-        if path.startswith("/api/jev-eval/"):
-            from urllib.parse import parse_qs
-            args = {k: v[0] for k, v in parse_qs(parsed.query).items()}
-            root = getattr(self.server, "jev_eval_root", jev_eval.DEFAULT_ROOT)
-            try:
-                if path == "/api/jev-eval/sets":
-                    return self.json(200, jev_eval.catalog(root))
-                if path == "/api/jev-eval/set":
-                    meta, rows = jev_eval.sentences(root, args.get("set"))
-                    return self.json(200, dict(meta=meta, rows=rows))
-                if path == "/api/jev-eval/systems":
-                    return self.json(200, jev_eval.systems(root, args.get("set")))
-                if path == "/api/jev-eval/system":
-                    return self.json(200, jev_eval.load_system(root, args.get("set"), args.get("system")))
-                if path == "/api/jev-eval/labels":
-                    return self.json(200, jev_eval.labels(root, args.get("set")))
-            except jev_eval.EvalError as exc:
-                return self.json(exc.status, {"error": str(exc)})
-            return self.json(404, {"error": "Not found"})
         if path == "/api/jev/instructions":
             return self.json(200, jev.instructions())
         if path == "/api/catalog":
@@ -171,7 +151,6 @@ class Handler(BaseHTTPRequestHandler):
             "/en-quality.js": "en-quality.js",
             "/lexicon": "lexicon.html",
             "/lexicon.js": "lexicon.js",
-            "/jev-eval": "jev-eval.html",
             "/perf": "perf.html",
             "/perf.js": "perf.js",
             "/languages": "languages.html",
@@ -179,7 +158,6 @@ class Handler(BaseHTTPRequestHandler):
             "/languages.css": "languages.css",
             "/ja-quality": "ja-quality.html",
             "/ja-quality.js": "ja-quality.js",
-            "/jev-eval.js": "jev-eval.js",
         }
         if path not in names:
             return self.json(404, {"error": "Not found"})
@@ -195,8 +173,7 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         path = urlsplit(self.path).path
-        if path not in ("/api/run", "/api/corpus", "/api/judge", "/api/jev-eval/save", "/api/jev-eval/fill",
-                        "/api/jev-eval/score", "/api/jev-eval/label"):
+        if path not in ("/api/run", "/api/corpus", "/api/judge"):
             return self.json(404, {"error": "Not found"})
         if (
             self.headers.get("Content-Type", "").split(";")[0].strip()
@@ -209,8 +186,6 @@ class Handler(BaseHTTPRequestHandler):
             return self.json(403, {"error": "다른 출처의 요청은 허용되지 않습니다."})
         if path == "/api/judge":
             return self.judge()
-        if path.startswith("/api/jev-eval/"):
-            return self.jev_eval(path)
         try:
             length = int(self.headers.get("Content-Length", "0"))
             if not 0 < length <= MAX_BODY:
@@ -328,64 +303,6 @@ class Handler(BaseHTTPRequestHandler):
         if body.get("language") == "ko-KR" and body.get("output_mode", "speech") == "speech":
             result["value"] = value_check.check(body["text"], body["normalized"])
         return self.json(200, result)
-
-
-    def jev_eval(self, path):
-        """Save TN outputs, fill them with this engine, or score them with Jev."""
-        root = getattr(self.server, "jev_eval_root", jev_eval.DEFAULT_ROOT)
-        try:
-            length = int(self.headers.get("Content-Length", "0"))
-            if not 0 < length <= 16 * 1024 * 1024:
-                raise ValueError
-            body = json.loads(self.rfile.read(length))
-            if not isinstance(body, dict):
-                raise ValueError
-        except (ValueError, UnicodeError):
-            return self.json(400, {"error": "요청 본문(JSON, 16 MiB 이내)을 확인하세요."})
-        try:
-            if path == "/api/jev-eval/save":
-                return self.json(200, jev_eval.save(root, body.get("set"), body.get("system"), body.get("outputs")))
-            if path == "/api/jev-eval/label":
-                return self.json(200, jev_eval.set_label(root, body.get("set"), body.get("id"), body.get("output"),
-                                                         body.get("label")))
-            if path == "/api/jev-eval/fill":
-                jev_eval.sentences(root, body.get("set"))
-                if not SLOTS.acquire(blocking=False):
-                    return self.json(429, {"error": "실행이 많습니다. 잠시 후 다시 시도하세요."})
-                try:
-                    done = subprocess.run(
-                        [sys.executable, str(Path(__file__).with_name("jev_eval.py")), "normalize",
-                         str(self.server.library), str(self.server.resources),
-                         str(jev_eval.set_dir(root, body["set"]) / "sentences.jsonl")],
-                        capture_output=True, timeout=600)
-                finally:
-                    SLOTS.release()
-                if done.returncode != 0:
-                    return self.json(500, {"error": "엔진 실행에 실패했습니다."})
-                return self.json(200, dict(outputs=json.loads(done.stdout)))
-            # score: stream progress lines, then the summary
-            self.response_headers(200, "application/x-ndjson; charset=utf-8")
-            self.end_headers()
-            lock = threading.Lock()
-
-            def emit(value):
-                with lock:
-                    self.wfile.write((json.dumps(value, ensure_ascii=False) + "\n").encode())
-                    self.wfile.flush()
-
-            try:
-                result = jev_eval.score(root, body.get("set"), body.get("system"),
-                                        progress=lambda d, n: emit(dict(event="progress", done=d, total=n)),
-                                        batch=getattr(self.server, "jev_batch", None),
-                                        ids=body.get("ids"), patch=body.get("patch"))
-                emit(dict(event="result", **result))
-            except jev_eval.EvalError as exc:
-                emit(dict(event="error", status=exc.status, message=str(exc)))
-            return None
-        except jev_eval.EvalError as exc:
-            return self.json(exc.status, {"error": str(exc)})
-        except subprocess.TimeoutExpired:
-            return self.json(504, {"error": "엔진 실행 시간이 초과되었습니다."})
 
 
 class Server(ThreadingHTTPServer):

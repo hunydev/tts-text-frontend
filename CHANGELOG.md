@@ -2,6 +2,13 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Jev as the last stage of the English benchmark: only the sentences the reference
+  benchmark does not accept are sent to Jev (tools/web/en_jev.py, jev-final.json per report);
+  /en-quality shows a colored progress bar (exact, spacing, case/punctuation, spelling variant,
+  then misses Jev accepts in black, the rest wrong even for Jev), a "wrong even for Jev" card and
+  column, and two case filters. Speech: 568 sentences (2.96%) wrong even for Jev, text 860
+  (4.48%); English Jev is uncalibrated, so these are lower bounds. The /jev-eval page that scored
+  every sentence with Jev is removed.
 - Mixed Korean/English/Chinese/Japanese text (project-owner sample): the hanja/kana reading
   options now apply only inside Korean sentences and to bare words; a whole Chinese or Japanese
   sentence (a full stop, or ten CJK characters) stays Chinese or Japanese (was read character by

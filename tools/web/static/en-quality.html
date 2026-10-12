@@ -13,13 +13,16 @@
 <p id="notice" role="status" aria-live="polite">완료된 측정을 불러오는 중입니다.</p>
 <section class="quality-panel"><div class="toolbar"><label>측정 기록<select id="run"></select></label><label>이전 기록과 비교<select id="baseline"><option value="">비교 안 함</option></select></label><button id="download" class="secondary">집계 JSON 내려받기</button></div>
 <p id="provenance" class="small"></p><p class="reference-note">참조는 자료 제작 시스템이나 작성자의 판단이며 사람이 보증한 정답이 아닙니다. 자료마다 구두점·대소문자 표기가 달라 <b>대소문자·구두점 무시</b>와 <b>영국/미국 철자 무시</b>(centre ↔ center) 단계를 함께 봅니다. speech와 text 출력 기록은 서로 비교하지 않습니다.</p>
-<div id="cards" class="quality-cards"></div><p id="compare-note" class="small"></p>
-<div class="quality-scroll"><table><thead><tr><th>자료</th><th>채점</th><th>정확 일치</th><th>공백 무시</th><th>대소문자·구두점 무시</th><th>철자 변형 무시</th><th>범위 밖 / 오류</th><th>이전 대비 (철자 변형 무시)</th></tr></thead><tbody id="datasets"></tbody></table></div>
+<div id="cards" class="quality-cards"></div>
+<div class="legend" id="legend"><span class="swatch exact"></span>정확 일치<span class="swatch spacing"></span>공백 무시<span class="swatch seg-loose"></span>대소문자·구두점 무시<span class="swatch similar"></span>철자 변형 무시(벤치마크 최종)<span class="swatch seg-jev"></span>불일치지만 Jev 인정<span class="swatch different"></span>Jev까지 틀림</div>
+<div id="overall-bar"></div><p id="compare-note" class="small"></p>
+<div class="quality-scroll"><table><thead><tr><th>자료</th><th>채점</th><th>정확 일치</th><th>공백 무시</th><th>대소문자·구두점 무시</th><th>철자 변형 무시</th><th>Jev까지 틀림</th><th>범위 밖 / 오류</th><th>이전 대비 (철자 변형 무시)</th></tr></thead><tbody id="datasets"></tbody></table></div>
 </section>
+<section class="quality-panel" id="jev-instructions"><h2>마지막 단계: Jev</h2><div id="jev-about"></div><details><summary>Jev에 보내는 요청 (영어)</summary><pre id="jev-request"></pre></details></section>
 <section class="quality-panel"><h2>범위와 판정 기준</h2><div id="audit"></div><details><summary>측정 조건 · 해시 · 비교 규칙</summary><pre id="protocol"></pre></details></section>
 <section class="quality-panel"><h2>사례 살펴보기</h2><div class="toolbar filters">
 <label>자료<select id="dataset"><option value="">전체</option></select></label>
-<label>결과<select id="result"><option value="miss">불일치</option><option value="rejected">알려진 오답과 같음</option><option value="variant">철자 변형 무시에서 일치</option><option value="loose">대소문자·구두점 무시에서 일치</option><option value="compact">공백 무시에서 일치</option><option value="exact">정확 일치</option><option value="error">엔진 오류</option><option value="out-of-scope">범위 밖 (채점 안 함)</option><option value="">전체</option></select></label>
+<label>결과<select id="result"><option value="miss">불일치</option><option value="final-wrong">최종 틀림 (Jev까지)</option><option value="jev-pass">불일치 · Jev 인정</option><option value="rejected">알려진 오답과 같음</option><option value="variant">철자 변형 무시에서 일치</option><option value="loose">대소문자·구두점 무시에서 일치</option><option value="compact">공백 무시에서 일치</option><option value="exact">정확 일치</option><option value="error">엔진 오류</option><option value="out-of-scope">범위 밖 (채점 안 함)</option><option value="">전체</option></select></label>
 <label>이전 기록 대비<select id="change" disabled><option value="">전체</option><option value="gained">새로 맞음</option><option value="lost">새로 틀림</option><option value="changed">출력이 바뀐 문장</option></select></label>
 <label>원문 검색<input id="query" maxlength="200" placeholder="단어·숫자 검색"></label><button id="search" class="primary">조회</button>
 </div><p id="case-count" aria-live="polite"></p><div class="quality-scroll"><table><thead><tr><th>원문</th><th>참조</th><th>실제 출력</th><th>판정</th></tr></thead><tbody id="cases"></tbody></table></div><div class="toolbar"><button id="prev" class="secondary">이전</button><span id="page"></span><button id="next" class="secondary">다음</button></div>

@@ -76,6 +76,27 @@ class Reports(unittest.TestCase):
   with self.assertRaises(ValueError):en_reports.arguments('run=a&run=b')
   (self.reports/'linked').symlink_to(self.reports/'before',target_is_directory=True)
   with self.assertRaises(ValueError):en_reports.summary(self.reports,'linked')
+ def test_jev_stage(self):
+  # No Jev stage: the report says so and the Jev filters find nothing.
+  self.assertIsNone(self.get('/api/en-report',run='after')['jev'])
+  self.assertEqual(self.get('/api/en-cases',run='after',result='jev-pass')['total'],0)
+  misses=[e for e in self.get('/api/en-cases',run='after',result='')['entries'] if e['result']=='miss']
+  self.assertTrue(misses)
+  import en_jev
+  calls=[]
+  def fake(pairs,language,cache,progress=None):
+   calls.append((list(pairs),language));return {p:(0.9,'jev-test') for p in pairs},len(pairs)
+  en_jev.score(self.reports,'after',cache=self.reports/'cache.jsonl',batch=fake)
+  self.assertEqual(calls[0][1],'en-US');self.assertEqual(len(calls[0][0]),len(misses))
+  r=self.get('/api/en-report',run='after')['jev']
+  s=r['sentences'];self.assertEqual((s['misses'],s['scored'],s['accepted']),(len(misses),len(misses),len(misses)))
+  summary=self.get('/api/en-report',run='after')['sentences']
+  self.assertEqual(s['final_wrong'],summary['scorable']-summary['variant']-s['accepted'])
+  self.assertEqual(self.get('/api/en-cases',run='after',result='jev-pass')['total'],len(misses))
+  wrong=self.get('/api/en-cases',run='after',result='final-wrong')['entries']
+  self.assertTrue(all(e['result'] in ('rejected','error') for e in wrong))  # the known wrong reading stays wrong
+  self.assertEqual(self.get('/api/en-cases',run='after',result='jev-pass')['entries'][0]['jev'],0.9)
+  (self.reports/'after'/'jev-final.json').unlink()
  def test_assets(self):
   for path in ['/en-quality','/en-quality.js']:
    with urllib.request.urlopen(self.base+path) as r:
