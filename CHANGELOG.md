@@ -2,6 +2,20 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Second mixed-text review (project-owner sample):
+  - An e-mail address or URL in a Chinese sentence no longer fails the request with invalid
+    resource. It reads abc 艾特 qq 点 com: a new resource kind `address_symbol`, digits read one by
+    one. An address no pack can read keeps its written form.
+  - A single-quoted phrase with a space, in a sentence without Hangul, is its own context, so
+    'Please send 3 files before 5:30 PM' inside an English quote is no longer read in Japanese.
+  - U+20A9 is spelled: 유 플러스 이공에이구, you plus two zero ay nine, ユー プラス にぜろエーきゅう.
+  - English: 1M requests reads one million (K/M/B before a plural noun), requests/day reads per
+    day, a bare ≥ reads greater than or equal to, 24/7 reads twenty four seven (a ratio of 24/7
+    stays over), and v2.1 reads version two point one.
+  - Korean readings English 잉글리시, Tech 테크, Set 세트 and regex 레젝스 (never 정규식).
+    Particles stay as written.
+  - Contract mixed_lang2_v73 (32). Korean quick: changed 0 (142,255문장). English, JSUT, ja-tn-eval and the
+    Chinese sets are unchanged.
 - Chinese (zh-CN) is in production (project-owner decision, 2026-10-13; beta since
   2026-10-11). An OpenAI TTS -> STT comparison of 200 held-out v8 sentences read 72.5% right
   from the raw text and 96.0% from our output; still to do: a human native review of the

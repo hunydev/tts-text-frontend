@@ -2523,6 +2523,23 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             }
             return n ? TTF_OK : TTF_EINVAL;
         }
+        /* U+20A9: ユー プラス にぜろエーきゅう, spelled like an address (2026-10-13). */
+        if (!strcmp(s->unit, "@codepoint")) {
+            const char *plus = ttf_resource_get(e, "speech_symbol", "ja-JP", "+", NULL);
+            size_t i;
+            if (e->frontend_options.output_mode != TTF_OUTPUT_SPEECH)
+                return ttf_buffer_append(b, surface, length);
+            if (!plus)
+                return TTF_ERESOURCE;
+            if ((st = letters(e, "U", 1, b)) != TTF_OK || (st = ttf_buffer_puts(b, " ")) != TTF_OK ||
+                (st = ttf_buffer_puts(b, plus)) != TTF_OK || (st = ttf_buffer_puts(b, " ")) != TTF_OK)
+                return st;
+            for (i = 0; s->value[i]; ++i)
+                if ((st = digit(s->value[i]) ? digits_each(e, s->value + i, 1, 0, b)
+                                             : letters(e, s->value + i, 1, b)) != TTF_OK)
+                    return st;
+            return TTF_OK;
+        }
         if (!strcmp(s->unit, "@counter"))
             return TTF_EINVAL;
         if (!strcmp(s->unit, "@score"))

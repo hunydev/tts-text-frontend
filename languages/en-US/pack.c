@@ -1247,6 +1247,135 @@ static size_t fraction_unit(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     return i - in->index;
 }
 
+/* As in mixed_fraction: an English-only window, no Hangul, Han or Kana within
+   64 bytes before or 16 after. */
+static int english_window(const ttf_pack_input_t *in, size_t begin, size_t end) {
+    size_t i;
+    for (i = begin > 64 ? begin - 64 : 0; i < in->length && i < end + 16; ++i)
+        if ((unsigned char)in->text[i] >= 0xE3 && (unsigned char)in->text[i] <= 0xED)
+            return 0;
+    return 1;
+}
+static size_t tokens_until(const ttf_pack_input_t *in, size_t end) {
+    size_t i;
+    for (i = in->index; i < in->token_count && in->tokens[i].begin < end; ++i) {
+    }
+    return i - in->index;
+}
+
+/* 1M requests, 5K items: a K/M/B count before a plural noun reads its scale
+   word (count_scale, 2026-10-13). 3M tape (a singular noun, a brand) keeps
+   its letters. */
+static size_t count_scale(const ttf_pack_input_t *in, ttf_semantic_t *out) {
+    const char *s = in->text, *scale;
+    size_t n = in->length, begin = in->tokens[in->index].begin, p = begin, w, end;
+    char key[2];
+    if (!isdigit((unsigned char)s[begin]) ||
+        (begin && (isalnum((unsigned char)s[begin - 1]) || strchr(".,$/-+", s[begin - 1]))))
+        return 0;
+    while (p < n && isdigit((unsigned char)s[p]))
+        ++p;
+    if (p - begin > 3)
+        return 0;
+    if (p + 1 < n && s[p] == '.' && isdigit((unsigned char)s[p + 1]))
+        for (++p; p < n && isdigit((unsigned char)s[p]);)
+            ++p;
+    if (p >= n || p - begin >= sizeof(out->value))
+        return 0;
+    key[0] = s[p];
+    key[1] = '\0';
+    if (!(scale = res(in->engine, "count_scale", key)))
+        return 0;
+    end = p + 1;
+    if (end + 1 >= n || s[end] != ' ')
+        return 0;
+    for (w = end + 1; w < n && s[w] >= 'a' && s[w] <= 'z';)
+        ++w;
+    if (w - end - 1 < 3 || (w < n && (isalnum((unsigned char)s[w]) || s[w] == '-' || s[w] == '\'')) ||
+        !(s[w - 1] == 's' || (w - end - 1 == 6 && !memcmp(s + end + 1, "people", 6))) ||
+        !english_window(in, begin, end))
+        return 0;
+    memcpy(out->value, s + begin, p - begin);
+    out->value[p - begin] = '\0';
+    (void)snprintf(out->secondary, sizeof(out->secondary), "%s", scale);
+    (void)snprintf(out->unit, sizeof(out->unit), "@scaled-count");
+    (void)snprintf(out->rule, sizeof(out->rule), "en.count-scale");
+    (void)snprintf(out->source_lang, sizeof(out->source_lang), "%s", EN);
+    out->type = TTF_SEM_CUSTOM;
+    out->input_end = end;
+    return tokens_until(in, end);
+}
+
+/* requests/day: a word over a time word reads per (per_word, 2026-10-13);
+   input/output keeps its slash. */
+static size_t per_slash(const ttf_pack_input_t *in, ttf_semantic_t *out) {
+    const char *s = in->text;
+    size_t at = in->tokens[in->index].begin, n = in->length, w, k = 0;
+    char key[16];
+    if (s[at] != '/' || in->tokens[in->index].end != at + 1 || !at ||
+        !isalpha((unsigned char)s[at - 1]))
+        return 0;
+    for (w = at + 1; w < n && isalpha((unsigned char)s[w]) && k + 1 < sizeof(key); ++w)
+        key[k++] = (char)tolower((unsigned char)s[w]);
+    key[k] = '\0';
+    if (!k || (w < n && (isalnum((unsigned char)s[w]) || s[w] == '/' || s[w] == '-')) ||
+        !res(in->engine, "per_word", key) || !english_window(in, at, w))
+        return 0;
+    (void)snprintf(out->value, sizeof(out->value), "%s", key);
+    (void)snprintf(out->unit, sizeof(out->unit), "@per");
+    (void)snprintf(out->rule, sizeof(out->rule), "en.per-slash");
+    (void)snprintf(out->source_lang, sizeof(out->source_lang), "%s", EN);
+    out->type = TTF_SEM_CUSTOM;
+    out->input_end = w;
+    return tokens_until(in, w);
+}
+
+/* 24/7: an idiom, not a fraction (fraction_idiom, 2026-10-13), except after a
+   word such as "ratio of" (fraction_idiom_not), where the fraction stays. */
+static size_t fraction_idiom(const ttf_pack_input_t *in, ttf_semantic_t *out) {
+    const char *s = in->text;
+    size_t n = in->length, begin = in->tokens[in->index].begin, p = begin, slash, end, w, last, k;
+    char key[16], previous[16];
+    if (!isdigit((unsigned char)s[begin]) ||
+        (begin && (isalnum((unsigned char)s[begin - 1]) || strchr("/.,-", s[begin - 1]))))
+        return 0;
+    while (p < n && isdigit((unsigned char)s[p]) && p - begin < 4)
+        ++p;
+    if (p >= n || s[p] != '/')
+        return 0;
+    slash = p++;
+    while (p < n && isdigit((unsigned char)s[p]) && p - slash < 5)
+        ++p;
+    end = p;
+    if (end == slash + 1 || end - begin >= sizeof(key) ||
+        (end < n && (isalnum((unsigned char)s[end]) || s[end] == '/' ||
+                     (s[end] == '.' && end + 1 < n && isdigit((unsigned char)s[end + 1])))))
+        return 0;
+    memcpy(key, s + begin, end - begin);
+    key[end - begin] = '\0';
+    if (!res(in->engine, "fraction_idiom", key) || !english_window(in, begin, end))
+        return 0;
+    for (w = begin; w && s[w - 1] == ' ';)
+        --w;
+    for (last = w; w && isalpha((unsigned char)s[w - 1]) && last - w < sizeof(previous) - 1;)
+        --w;
+    for (k = 0; w + k < last; ++k)
+        previous[k] = (char)tolower((unsigned char)s[w + k]);
+    previous[k] = '\0';
+    if (k && res(in->engine, "fraction_idiom_not", previous))
+        return 0;
+    memcpy(out->value, s + begin, slash - begin);
+    out->value[slash - begin] = '\0';
+    memcpy(out->secondary, s + slash + 1, end - slash - 1);
+    out->secondary[end - slash - 1] = '\0';
+    (void)snprintf(out->unit, sizeof(out->unit), "idiom");
+    (void)snprintf(out->rule, sizeof(out->rule), "en.fraction-idiom");
+    (void)snprintf(out->source_lang, sizeof(out->source_lang), "%s", EN);
+    out->type = TTF_SEM_FRACTION;
+    out->input_end = end;
+    return tokens_until(in, end);
+}
+
 static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     const ttf_token_t *t = &in->tokens[in->index];
     char key[96];
@@ -1262,6 +1391,15 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     if (date_tokens)
         return date_tokens;
     date_tokens = scripture_verse(in, out);
+    if (date_tokens)
+        return date_tokens;
+    date_tokens = count_scale(in, out);
+    if (date_tokens)
+        return date_tokens;
+    date_tokens = per_slash(in, out);
+    if (date_tokens)
+        return date_tokens;
+    date_tokens = fraction_idiom(in, out);
     if (date_tokens)
         return date_tokens;
     date_tokens = fraction_unit(in, out);
@@ -1678,9 +1816,14 @@ static ttf_status_t dotted_numbers(const ttf_engine_t *e, const ttf_semantic_t *
     if (!policy || !separator)
         return TTF_ERESOURCE;
     if (s->secondary[0]) {
+        /* v2.1: version two point one when electronic_prefix names the letter
+           (2026-10-13; the Japanese pack reads バージョン); otherwise spelled. */
+        char letter[2] = {(char)tolower((unsigned char)s->secondary[0]), 0};
+        const char *named = res(e, "electronic_prefix", letter);
         if (!length || surface[0] != s->secondary[0])
             return TTF_EINVAL;
-        if ((status = ttf_en_speech_spelling(e, surface, 1, 0, out)) != TTF_OK ||
+        if ((status = named ? ttf_buffer_puts(out, named)
+                            : ttf_en_speech_spelling(e, surface, 1, 0, out)) != TTF_OK ||
             (status = ttf_buffer_puts(out, " ")) != TTF_OK)
             return status;
         at = 1;
@@ -1764,6 +1907,22 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             return !strcmp(s->secondary, "control-surface")
                        ? ttf_en_speech_spelling(e, surface, length, 0, b)
                        : ttf_en_speech_spelling(e, s->value, strlen(s->value), 0, b);
+        if (!strcmp(s->unit, "@codepoint")) {
+            char point[sizeof(s->value) + 2];
+            if (e->frontend_options.output_mode != TTF_OUTPUT_SPEECH)
+                return ttf_buffer_append(b, surface, length);
+            (void)snprintf(point, sizeof(point), "U+%s", s->value);
+            return ttf_en_speech_spelling(e, point, strlen(point), 1, b);
+        }
+        /* 1M requests: one million (count_scale) */
+        if (!strcmp(s->unit, "@scaled-count")) {
+            if ((st = numeric(e, s->value, b)) != TTF_OK || (st = space(b)) != TTF_OK)
+                return st;
+            return word(e, b, "number", s->secondary);
+        }
+        /* requests/day: per day (per_word) */
+        if (!strcmp(s->unit, "@per"))
+            return (st = space(b)) != TTF_OK ? st : word(e, b, "per_word", s->value);
         if (!strcmp(s->unit, "@email") || !strcmp(s->unit, "@url"))
             return ttf_electronic_control(e, s, surface, length, b);
         if (!strcmp(s->unit, "@counter"))
@@ -1877,9 +2036,14 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
            (fraction_denominator), other denominators are ordinals with -s. Other
            fractions keep "over" (24/7). A mixed number (2 1/2) carries its whole
            part in the unit (mixed:2) and reads "two and one half". */
-        char *end_num, *end_den, key[8];
+        char *end_num, *end_den, key[8], idiom[sizeof(s->value) + sizeof(s->secondary)];
         unsigned long num = strtoul(s->value, &end_num, 10), den = strtoul(s->secondary, &end_den, 10);
         const char *named;
+        /* 24/7: twenty four seven (fraction_idiom) */
+        if (!strcmp(s->unit, "idiom")) {
+            (void)snprintf(idiom, sizeof(idiom), "%s/%s", s->value, s->secondary);
+            return word(e, b, "fraction_idiom", idiom);
+        }
         if (!strncmp(s->unit, "mixed:", 6)) {
             if ((st = numeric(e, s->unit + 6, b)) != TTF_OK || (st = space(b)) != TTF_OK ||
                 (st = word(e, b, "number", "and")) != TTF_OK || (st = space(b)) != TTF_OK)

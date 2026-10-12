@@ -1893,6 +1893,10 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         /* Shared objects in a Chinese sentence. */
         if (s->type == TTF_SEM_PHONE || s->type == TTF_SEM_DIGIT_SEQUENCE)
             return digits_each(e, b, surface, length, s->type == TTF_SEM_PHONE);
+        /* An address label (abc123@163.com): digits one by one, letters as written. */
+        if (s->type == TTF_SEM_CUSTOM && !strcmp(mode, "@alphabet"))
+            return !strcmp(s->secondary, "control-surface") ? digits_each(e, b, surface, length, 0)
+                                                           : digits_each(e, b, v, vn, 0);
         if ((s->type == TTF_SEM_CARDINAL || s->type == TTF_SEM_NUMBER) && vn &&
             strspn(v, "0123456789.,") == vn)
             return number(e, b, v, vn, 1);

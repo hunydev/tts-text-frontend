@@ -51,6 +51,16 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     *handled = 0;
     if (!SAME(r->language, ZH))
         return TTF_OK;
+    if (SAME(k, "address_symbol")) {
+        /* One printable ASCII mark read inside an e-mail address or URL. */
+        *handled = 1;
+        return key[0] > 32 && key[0] < 127 && !key[1] &&
+                       !((key[0] >= '0' && key[0] <= '9') || (key[0] >= 'a' && key[0] <= 'z') ||
+                         (key[0] >= 'A' && key[0] <= 'Z')) &&
+                       label(v)
+                   ? TTF_OK
+                   : ttf_validation_error(d, "address_symbol key is one ASCII mark with a reading");
+    }
     if (SAME(k, "number")) {
         *handled = 1;
         return ((key[0] == 'd' && key[1] >= '0' && key[1] <= '9' && !key[2]) ||

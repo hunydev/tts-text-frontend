@@ -1077,10 +1077,36 @@ static ttf_status_t range_first_bare(const ttf_engine_t *e, const ttf_semantic_t
         return TTF_OK;
     return cardinal(e, s->value, out);
 }
+/* U+20A9: 유 플러스 이공에이구. The hex digits are spelled and 0 reads 공, as in
+   other digit codes (2026-10-13). */
+static ttf_status_t codepoint(const ttf_engine_t *e, const char *hex, ttf_buffer_t *out) {
+    const char *plus = ttf_resource_get(e, "speech_symbol", "ko-KR", "+", NULL);
+    const char *zero = ttf_resource_get(e, "number", "ko-KR", "digits_zero", NULL);
+    ttf_status_t st;
+    size_t i;
+    if (!plus || !zero)
+        return TTF_ERESOURCE;
+    if (!*hex)
+        return TTF_EINVAL;
+    if ((st = ttf_ko_speech_spelling(e, "U", 1, 0, out)) != TTF_OK ||
+        (st = ttf_buffer_puts(out, " ")) != TTF_OK || (st = ttf_buffer_puts(out, plus)) != TTF_OK ||
+        (st = ttf_buffer_puts(out, " ")) != TTF_OK)
+        return st;
+    for (i = 0; hex[i]; ++i)
+        if ((st = hex[i] == '0' ? ttf_buffer_puts(out, zero)
+                                : ttf_ko_speech_spelling(e, hex + i, 1, 0, out)) != TTF_OK)
+            return st;
+    return TTF_OK;
+}
+
 static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, const char *surface,
                               size_t length, ttf_buffer_t *out) {
     switch (s->type) {
     case TTF_SEM_CUSTOM:
+        if (!strcmp(s->unit, "@codepoint"))
+            return e->frontend_options.output_mode == TTF_OUTPUT_SPEECH
+                       ? codepoint(e, s->value, out)
+                       : ttf_buffer_append(out, surface, length);
         if (!strcmp(s->unit, "@native"))
             return !s->value[0] && length ? TTF_ELIMIT : standalone_native(e, s->value, out);
         if (!strcmp(s->unit, "@sino"))

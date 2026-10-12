@@ -722,6 +722,48 @@ K0 + K1 밖이라 원문으로 남던 글자(強·絕·豐·姊·兔·郎 등)�
   - 로드: `hanja=korean`일 때만, 다른 CJK 표와 같은 지연 로드.
 - 계약: `mixed_lang_v72`(41건).
 
+### 6.8 혼합 문장 2차 검토 (2026-10-13)
+
+프로젝트 소유자가 준 두 번째 혼합 문장(요청 ko-KR, 한자·가나 독음 켬)에서 나온 문제를 고쳤다.
+조사는 손대지 않는다(`佐藤는` → `좌등는`: 글쓴이가 쓴 조사다). regex는 `레젝스`로 읽고 `정규식`으로 옮기지 않는다.
+
+- **중국어 문장 속 주소:** `邮箱是 abc@qq.com。` 같은 문장이 요청 전체를 `invalid resource`로 실패시켰다
+  (ko-KR·zh-CN·en-US 요청 모두. zh-CN에 주소 기호 읽기가 없었다).
+  - 이제 `abc 艾特 qq 点 com`으로 읽는다.
+  - 주소 안의 기호 읽기는 새 kind `address_symbol`이다(zh-CN 22개: 艾特 点 杠 下划线 冒号 斜杠 …). 없으면 `speech_symbol`을 쓴다.
+  - 주소 속 숫자는 하나씩 읽고(`163` 一六三), 글자는 그대로 둔다.
+  - 그래도 읽을 수 없는 주소는 원문을 남기고 trace에 `unrenderable-address-kept-literally`를 남긴다.
+    요청을 실패시키지 않는다.
+- **작은따옴표 인용:** `"… 'Please send 3 files to 中国团队 before 5:30 PM' or '明日の Zoom …'?"`가 통째로 일본어
+  문장이 되어 `さん files`, `ごごごじさんじゅっぷん`이 나왔다.
+  - 이제 ASCII `'`도 인용으로 짝을 짓는다. 단 조건이 있다.
+    - 여는 `'`는 공백·문장부호 뒤, 닫는 `'`는 공백·문장부호·끝 앞에 와야 한다.
+    - 안에 공백이 있어야 한다.
+    - 그 문장에 한글이 없어야 한다.
+  - 짝으로 보지 않는 경우: 아포스트로피(`Alex's`, `'90s`), 한 낱말 강조(`'AI'`), 한국어 문장 속 인용(`'RM 67-02' 모델`).
+  - `'明日の Zoom meeting starts at 9:00 AM'`은 문장 끝이 없어 6.7 정책상 온전한 일본어 문장이 아니다.
+    그래서 영어로 읽고(`nine a m`) `明日の`는 원문 그대로 둔다.
+- **코드 포인트:** `U+20A9`는 하나의 객체다(`syntax.codepoint`, 16진 4~6자리).
+  - 한국어: `유 플러스 이공에이구`(0은 공)
+  - 영어: `you plus two zero ay nine`
+  - 일본어: `ユー プラス にぜろエーきゅう`
+  - 이전: `유+20A9`, `Uplus twenty A nine`, `ユー+20A9`
+- **영어:**
+  - `1M requests` → `one million requests`(K·M·B 뒤에 복수 명사가 올 때만, `count_scale`). `3M tape`는 그대로 `three em`이다.
+  - `requests/day` → `requests per day`(시간 낱말 9개, `per_word`). `input/output`은 그대로 `slash`다.
+  - 단독 `≥`·`≤` → `greater than or equal to`·`less than or equal to`. 이전에는 CLDR 이름 `greater-than or equal`이었다.
+  - `24/7` → `twenty four seven`(`fraction_idiom`). 단 `ratio of 24/7`은 `over`로 남는다(`fraction_idiom_not`).
+  - `v2.1` → `version two point one`(`electronic_prefix`). 한국어 문장의 `v2.1.3 버전`은 `브이`로 남는다.
+- **한국어로 읽는 영어 낱말:** English 잉글리시(이전 엥리시), Tech 테크(텍), Set 세트(셋), regex 레젝스(리겍스). 대문자만 쓴 `SET`은 코드 안에서 철자로 남는다(`EL2SET021`, `lexicon_case lower`).
+  `lexicons/ko-KR/english-common-v26.jsonl`, 근거 `project-english-common-v26`.
+- **확인:**
+  - 계약 `mixed_lang2_v73`(32건)
+  - 한국어 quick: changed 0 (142,255문장)
+  - 영어 speech 90.83%·text 86.80%, JSUT 203/332, ja-tn-eval 97.3%, 중국어 9개 세트: 모두 그대로
+  - 계약 기대값 2건은 병합 전에 고쳤다. 사유는 각 계약 notes에 있다.
+    - `'明日の …'`: 처음에 `ごぜんくじ`로 썼으나 6.7 정책을 놓친 것이었다.
+    - `3M tape`: 기존 읽기가 `em`이다.
+
 ## 7. 가나 데이터와 문맥 규칙
 
 ### 7.1 왜 음소를 경유하지 않는가

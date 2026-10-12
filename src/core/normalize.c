@@ -40,6 +40,44 @@ typedef struct {
     size_t begin, end;
 } context_scope_t;
 
+/* Hangul anywhere in the sentence around tokens begin..end (bounded by . ! ?
+   。 ！ ？ before a space, or a line break). */
+static int hangul_around(const char *text, size_t length, const ttf_token_t *tokens, size_t count,
+                         size_t begin, size_t end) {
+    size_t k;
+    for (k = begin; k-- > 0;) {
+        uint32_t cp;
+        size_t width;
+        if (tokens[k].script == TTF_SCRIPT_HANGUL)
+            return 1;
+        if (tokens[k].script == TTF_SCRIPT_WHITESPACE &&
+            memchr(text + tokens[k].begin, '\n', tokens[k].end - tokens[k].begin))
+            break;
+        if (tokens[k].script == TTF_SCRIPT_PUNCTUATION && k + 1 < count &&
+            tokens[k + 1].script == TTF_SCRIPT_WHITESPACE &&
+            ttf_utf8_decode(text + tokens[k].begin, length - tokens[k].begin, &cp, &width) == 1 &&
+            (cp == '.' || cp == '!' || cp == '?' || cp == 0x3002 || cp == 0xff01 || cp == 0xff1f))
+            break;
+    }
+    for (k = begin; k < count; ++k) {
+        uint32_t cp;
+        size_t width;
+        if (tokens[k].script == TTF_SCRIPT_HANGUL)
+            return 1;
+        if (k < end)
+            continue;
+        if (tokens[k].script == TTF_SCRIPT_WHITESPACE &&
+            memchr(text + tokens[k].begin, '\n', tokens[k].end - tokens[k].begin))
+            break;
+        if (tokens[k].script == TTF_SCRIPT_PUNCTUATION &&
+            (k + 1 == count || tokens[k + 1].script == TTF_SCRIPT_WHITESPACE) &&
+            ttf_utf8_decode(text + tokens[k].begin, length - tokens[k].begin, &cp, &width) == 1 &&
+            (cp == '.' || cp == '!' || cp == '?' || cp == 0x3002 || cp == 0xff01 || cp == 0xff1f))
+            break;
+    }
+    return 0;
+}
+
 /* A complete quotation is an independent context window. Numeric/lexical
    classification still sees the original token stream and byte offsets. */
 static context_scope_t *quote_scopes(const char *text, size_t length, const ttf_token_t *tokens,
@@ -61,6 +99,35 @@ static context_scope_t *quote_scopes(const char *text, size_t length, const ttf_
             continue;
         if (ttf_utf8_decode(text + tokens[i].begin, length - tokens[i].begin, &cp, &width) != 1)
             continue;
+        /* 'Please send 3 files' inside a quotation: an ASCII single quote pairs
+           only as an opening mark after a space or mark and a closing one
+           before a space, mark or end, and only around words with a space in a
+           sentence without Hangul (2026-10-13). Apostrophes (Alex's, '90s), one
+           quoted word ('AI') and a quoted name in a Korean sentence ('RM 67-02'
+           모델) are not quotations. */
+        if (cp == '\'') {
+            int before = !i || tokens[i - 1].script == TTF_SCRIPT_WHITESPACE ||
+                         tokens[i - 1].script == TTF_SCRIPT_PUNCTUATION;
+            int after = i + 1 == count || tokens[i + 1].script == TTF_SCRIPT_WHITESPACE ||
+                        tokens[i + 1].script == TTF_SCRIPT_PUNCTUATION;
+            if (depth && closers[depth - 1] == '\'' && !before && after) {
+                size_t begin = starts[--depth] + 1;
+                int spaced = 0;
+                for (j = begin; j < i; ++j)
+                    spaced |= tokens[j].script == TTF_SCRIPT_WHITESPACE;
+                if (spaced && hangul_around(text, length, tokens, count, begin - 1, i + 1))
+                    spaced = 0;
+                for (j = begin; spaced && j < i; ++j)
+                    if (!scopes[j].end) {
+                        scopes[j].begin = begin;
+                        scopes[j].end = i;
+                    }
+            } else if (before && !after && depth < 32) {
+                starts[depth] = i;
+                closers[depth++] = '\'';
+            }
+            continue;
+        }
         if (depth && cp == closers[depth - 1]) {
             size_t begin = starts[--depth] + 1;
             for (j = begin; j < i; ++j)
@@ -1965,6 +2032,19 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
                 address_source = script_pack(e, TTF_SCRIPT_LATIN);
             st = ttf_electronic_render(e, address_source, renderer, text + tokens[i].begin,
                                        end - tokens[i].begin, &normalized);
+            /* An address the target cannot read (no symbol reading) keeps its
+               written form; it never fails the whole request (2026-10-13). */
+            if (st == TTF_EINVAL || st == TTF_ERESOURCE) {
+                ttf_buffer_free(&normalized);
+                st = ttf_buffer_append(&normalized, text + tokens[i].begin, end - tokens[i].begin);
+                if (st == TTF_OK) {
+                    ttf_trace_stage(e, TTF_TRACE_POLICY, 0, normalized.length);
+                    st = ttf_trace_emit(e, TTF_TRACE_SELECTED, TTF_LAYER_COMMON, 0,
+                                        renderer->language_tag, "decision", "address-fallback",
+                                        "", sem->rule, "unrenderable-address-kept-literally",
+                                        SIZE_MAX);
+                }
+            }
         }
         else if ((sem->type == TTF_SEM_EMAIL || sem->type == TTF_SEM_URL ||
                   sem->type == TTF_SEM_VERSION || sem->type == TTF_SEM_IP_ADDRESS ||

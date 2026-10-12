@@ -1245,6 +1245,22 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     if (b >= n)
         return 0;
 
+    /* U+20A9: a Unicode code point (4 to 6 hex digits) is one object; the
+       target pack spells it (2026-10-13). */
+    if (s[b] == 'U' && b + 2 < n && s[b + 1] == '+' &&
+        (!b || !(ascii_letter(s[b - 1]) || digit(s[b - 1])))) {
+        q = b + 2;
+        while (q < n && q - b < 9 &&
+               (digit(s[q]) || (s[q] >= 'A' && s[q] <= 'F') || (s[q] >= 'a' && s[q] <= 'f')))
+            ++q;
+        if (q - b >= 6 && q - b <= 8 &&
+            !(q < n && (ascii_letter(s[q]) || digit(s[q]) || s[q] == '_')) &&
+            copy_value(out->value, sizeof(out->value), s + b + 2, q - b - 2)) {
+            snprintf(out->unit, sizeof(out->unit), "@codepoint");
+            return finish(in, out, q, TTF_SEM_CUSTOM, "syntax.codepoint");
+        }
+    }
+
     /* A numeric-looking keycap is one pictographic object, not a cardinal.
        Preserve its complete source bytes for the configurable character pass. */
     if (digit(s[b])) {

@@ -297,3 +297,8 @@ speech_symbol	en-US	⒴	Y
 speech_symbol	en-US	Ⓩ	Z
 speech_symbol	en-US	ⓩ	Z
 speech_symbol	en-US	⒵	Z
+# A bare relation sign reads like the relation (CLDR names read greater-than or equal; 2026-10-13).
+speech_symbol	en-US	≤	less than or equal to
+speech_symbol	en-US	≥	greater than or equal to
+# v2.1: version two point one.
+electronic_prefix	en-US	v	version

@@ -871,6 +871,8 @@ lexicon_case	ko-KR	en-US:talk	lower
 lexicon_case	ko-KR	en-US:award	lower
 lexicon_case	ko-KR	en-US:awards	lower
 lexicon_case	ko-KR	en-US:air	lower
+# Set 세트 (english-common-v26); an all-capital SET in a code stays letters (EL2SET021, 2026-10-13).
+lexicon_case	ko-KR	en-US:set	lower
 lexicon_case	ko-KR	en-US:lab	lower
 lexicon_case	ko-KR	en-US:life	lower
 lexicon_case	ko-KR	en-US:live	lower

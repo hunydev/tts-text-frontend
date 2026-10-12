@@ -511,3 +511,23 @@ roman_cue	en-US	league	cardinal
 roman_cue	en-US	zone	cardinal
 roman_cue	en-US	category	cardinal
 roman_cue	en-US	schedule	cardinal
+# 1M requests, 5K items: a count scale before a plural noun (2026-10-13).
+count_scale	en-US	K	1000
+count_scale	en-US	M	1000000
+count_scale	en-US	B	1000000000
+classifier_priority	en-US	en.count-scale	10
+# 24/7 is an idiom; after these words it stays a fraction (a ratio of 24/7).
+fraction_idiom	en-US	24/7	twenty four seven
+fraction_idiom_not	en-US	of	1
+fraction_idiom_not	en-US	ratio	1
+classifier_priority	en-US	en.fraction-idiom	10
+# requests/day: a rate over a time word reads per.
+per_word	en-US	second	per second
+per_word	en-US	minute	per minute
+per_word	en-US	hour	per hour
+per_word	en-US	day	per day
+per_word	en-US	night	per night
+per_word	en-US	week	per week
+per_word	en-US	month	per month
+per_word	en-US	quarter	per quarter
+per_word	en-US	year	per year

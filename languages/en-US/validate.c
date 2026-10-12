@@ -412,6 +412,32 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "syllable cluster value must be 0 or 1");
     }
+    if (SAME(k, "count_scale")) {
+        *handled = 1;
+        return strlen(key) == 1 && strchr("KMB", key[0]) &&
+                       ttf_validation_enum(v, "1000|1000000|1000000000")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "count_scale maps K, M or B to 1000|1000000|1000000000");
+    }
+    if (SAME(k, "per_word") || SAME(k, "fraction_idiom_not") || SAME(k, "electronic_prefix")) {
+        *handled = 1;
+        if (!lowercase_letters(key, SAME(k, "electronic_prefix") ? 1 : 15))
+            return ttf_validation_error(d, "per_word, fraction_idiom_not and electronic_prefix need a lowercase key");
+        if (SAME(k, "fraction_idiom_not"))
+            return ttf_validation_enum(v, "1") ? TTF_OK
+                                               : ttf_validation_error(d, "fraction_idiom_not value must be 1");
+        return label(v) && strlen(v) < 64 ? TTF_OK
+                                          : ttf_validation_error(d, "a reading under 64 bytes is required");
+    }
+    if (SAME(k, "fraction_idiom")) {
+        const char *bar = strchr(key, '/');
+        *handled = 1;
+        if (!bar || bar == key || !bar[1] || strspn(key, "0123456789") != (size_t)(bar - key) ||
+            strspn(bar + 1, "0123456789") != strlen(bar + 1) || strlen(key) > 9)
+            return ttf_validation_error(d, "fraction_idiom key is digits/digits");
+        return label(v) && strlen(v) < 64 ? TTF_OK
+                                          : ttf_validation_error(d, "fraction_idiom needs a reading");
+    }
     if (SAME(k, "fraction_denominator")) {
         *handled = 1;
         const char *bar = strchr(v, '|');

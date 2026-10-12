@@ -110,15 +110,21 @@ ttf_status_t ttf_electronic_render(const ttf_engine_t *e, const ttf_language_pac
             st = chunk(e, source, target, text + at, end - at, at, out);
         } else {
             char key[2] = {text[at], 0};
-            const char *label;
+            /* A pack may read a mark differently inside an address than in running
+               text (zh-CN @ 艾特, 2026-10-13); otherwise the speech symbol applies. */
+            const char *label, *kind = "address_symbol";
             end = at + 1;
-            label = ttf_resource_get(e, "speech_symbol", target->language_tag, key, NULL);
+            label = ttf_resource_get(e, kind, target->language_tag, key, NULL);
+            if (!label) {
+                kind = "speech_symbol";
+                label = ttf_resource_get(e, kind, target->language_tag, key, NULL);
+            }
             if ((unsigned char)text[at] <= 32 || (unsigned char)text[at] >= 127)
                 return TTF_EINVAL;
             if (!label)
                 return TTF_ERESOURCE;
             ttf_trace_stage(e, TTF_TRACE_POLICY, at, end);
-            st = ttf_trace_resource(e, "speech_symbol", target->language_tag, key, key,
+            st = ttf_trace_resource(e, kind, target->language_tag, key, key,
                                     "address-spelling", SIZE_MAX);
             if (st == TTF_OK)
                 st = ttf_buffer_puts(out, label);

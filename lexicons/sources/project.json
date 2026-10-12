@@ -104,6 +104,14 @@
       "kind": "editorial-policy",
       "checked_at": "2026-10-12",
       "note": "English day and month names and common given names whose spelling guess was wrong in a mixed Korean/English text (Friday 프리데이, John 조흔), read with the 외래어 표기법 spelling or established usage. No human approval and no synthesized audio."
+    },
+    {
+      "id": "project-english-common-v26",
+      "title": "Project readings of common English words in Korean context, v26",
+      "url": "https://www.korean.go.kr/front/page/pageView.do?mn_id=97&page_id=P000124",
+      "kind": "editorial-policy",
+      "checked_at": "2026-10-13",
+      "note": "Common English words whose spelling guess was wrong in a mixed Korean/English text (English 엥리시, Set 셋, Tech 텍, regex 리겍스), read with the 외래어 표기법 spelling or established usage; regex 레젝스 by the project owner. No human approval and no synthesized audio."
     }
   ]
 }

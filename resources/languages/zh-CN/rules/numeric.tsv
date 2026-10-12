@@ -130,3 +130,27 @@ zh_vulgar	zh-CN	⅞	八分之七
 zh_vulgar	zh-CN	⅐	七分之一
 zh_vulgar	zh-CN	⅑	九分之一
 zh_vulgar	zh-CN	⅒	十分之一
+# address_symbol: a mark inside an e-mail address or URL in a Chinese sentence
+# (abc@qq.com: abc 艾特 qq 点 com; 2026-10-13). Letters stay as written.
+address_symbol	zh-CN	@	艾特
+address_symbol	zh-CN	.	点
+address_symbol	zh-CN	-	杠
+address_symbol	zh-CN	_	下划线
+address_symbol	zh-CN	:	冒号
+address_symbol	zh-CN	/	斜杠
+address_symbol	zh-CN	?	问号
+address_symbol	zh-CN	=	等于
+address_symbol	zh-CN	&	和
+address_symbol	zh-CN	#	井号
+address_symbol	zh-CN	%	百分号
+address_symbol	zh-CN	+	加
+address_symbol	zh-CN	~	波浪线
+address_symbol	zh-CN	!	感叹号
+address_symbol	zh-CN	$	美元符号
+address_symbol	zh-CN	'	单引号
+address_symbol	zh-CN	*	星号
+address_symbol	zh-CN	^	脱字符
+address_symbol	zh-CN	`	反引号
+address_symbol	zh-CN	{	左花括号
+address_symbol	zh-CN	|	竖线
+address_symbol	zh-CN	}	右花括号
