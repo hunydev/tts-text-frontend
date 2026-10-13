@@ -2,6 +2,13 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Vietnamese (vi-VN) is in production (project-owner decision, 2026-10-13).
+  - TTS -> STT comparison: OpenAI, all 257 held-out v6 sentences. 63.8% were read right from the
+    raw text and 93.8% from our output.
+  - The six TN issues it found are fixed: đ/USD, the word euro, +amounts, a card expiry 12/28,
+    spaced account numbers, double days 12.12 (contract vi_prod_v80, 9 cases).
+  - Still to do: a human native review of the evaluation sets and a listening comparison with
+    the target TTS (VoxCPM2).
 - Mark control: in annotated input, `{@mark}` and `{@mark:name}` mark a position without
   changing the reading (no output text; a space on both sides collapses to one).
   - Each marker is one zero-width span (rule control.mark, unit @mark, value = name), so a

@@ -4,7 +4,7 @@ Deterministic, resource-driven, multilingual and code-mixed text frontend for TT
 
 C11 native library for text normalization, context routing, foreign pronunciation,
 span metadata and incremental TTS callbacks. The initial packs are **ko-KR** and
-**en-US**, with a **ja-JP** pack in production since 2026-10-11 (docs/japanese-pack.ko.md). A **zh-CN** (Simplified Chinese) pack is in production since 2026-10-13 (beta from 2026-10-11; docs/chinese-pack.ko.md): it reads a zh-CN request and a hanzi-only sentence in any other request. This is a working initial implementation; pronunciation quality and
+**en-US**, with a **ja-JP** pack in production since 2026-10-11 (docs/japanese-pack.ko.md). A **zh-CN** (Simplified Chinese) pack is in production since 2026-10-13 (beta from 2026-10-11; docs/chinese-pack.ko.md): it reads a zh-CN request and a hanzi-only sentence in any other request. A **vi-VN** (Vietnamese, northern standard) pack is in production since 2026-10-13 (docs/vietnamese-pack.ko.md): it reads a vi-VN request and a Latin sentence written with Vietnamese letters in any other request. This is a working initial implementation; pronunciation quality and
 language detection are intentionally small, deterministic prototypes.
 
 ```text

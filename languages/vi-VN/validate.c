@@ -45,7 +45,7 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
         return ((key[0] == 'd' && key[1] >= '0' && key[1] <= '9' && !key[2]) ||
                 ttf_validation_enum(key, "hundred|ten|tens|zero_tens|one_after_tens|"
                                          "five_after_tens|four_after_tens|thousand|million|"
-                                         "billion|point|minus|percent|to|over|approx|day|month|"
+                                         "billion|point|minus|plus_sign|percent|to|over|approx|day|month|"
                                          "year|month4|hour|minute|second|ordinal1|ordinal4|dot|per|per_amount|night|times|weekday|sunday|addr_room|addr_ward|addr_district")) &&
                        label(v)
                    ? TTF_OK
@@ -62,7 +62,7 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     if (SAME(k, "vi_cue")) {
         /* the words before a number that decide its reading, |-separated */
         *handled = 1;
-        return ttf_validation_enum(key, "day|date|month|ordinal|roman|code|call|version|holiday|noday|daypart|sms|code_not|id5|id4|daywide|clock|deadline") && strlen(v) < 512 && *v
+        return ttf_validation_enum(key, "day|date|month|ordinal|roman|code|call|version|holiday|noday|daypart|sms|code_not|id5|id4|daywide|clock|deadline|expiry") && strlen(v) < 512 && *v
                    ? TTF_OK
                    : ttf_validation_error(d, "vi_cue requires day|date|month|ordinal and words");
     }

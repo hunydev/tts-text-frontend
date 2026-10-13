@@ -143,7 +143,10 @@ static ttf_status_t integer(const ttf_engine_t *e, ttf_buffer_t *b, const char *
 static ttf_status_t number(const ttf_engine_t *e, ttf_buffer_t *b, const char *v) {
     const char *comma;
     size_t n;
-    if (*v == '-') {
+    if (*v == '+') {
+        TRY(word(e, b, "plus_sign"));
+        ++v;
+    } else if (*v == '-') {
         TRY(word(e, b, "minus"));
         ++v;
     }
@@ -419,7 +422,7 @@ static size_t amount_tail(const ttf_engine_t *e, const char *t, size_t n, size_t
     if ((key[0] == '%' || key[0] == 'c' || mid[0]) && end + 1 < n && t[end] == '/' &&
         letter_at(t, n, end + 1)) {
         char unit[24];
-        size_t ue = suffix_at(e, t, n, end + 1, unit, sizeof(unit), "u");
+        size_t ue = suffix_at(e, t, n, end + 1, unit, sizeof(unit), "uc");
         ++end;
         if (ue && t[end] != ' ') {
             snprintf(per, pcap, "/%.22s", unit);
@@ -577,7 +580,7 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     /* sec and v hold two values; finish rejects what does not fit the IR */
     char key[24], sec[2 * TTF_IR_VALUE_SIZE + 8], v[2 * TTF_IR_VALUE_SIZE + 8], fl[4],
         w[TTF_IR_VALUE_SIZE];
-    int negative = 0, approx = 0;
+    int negative = 0, approx = 0, plus = 0;
     const char *prefix_currency = NULL;
     if (in->index >= in->token_count)
         return 0;
@@ -679,6 +682,10 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         size_t sw = t[q] == '-' ? 1 : 3;
         if (q + sw < n && digit(t[q + sw]))
             negative = 1, q += sw;
+    } else if (t[q] == '+' && q + 1 < n && digit(t[q + 1]) &&
+               (!q || t[q - 1] == ' ' || t[q - 1] == '(' || t[q - 1] == ':')) {
+        /* +15.000.000 VND cộng (a phone +84 is no amount: it has no grouping) */
+        plus = 1, ++q;
     }
     if (q >= n || !digit(t[q]))
         return 0;
@@ -688,7 +695,7 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     while (de < n && digit(t[de]))
         ++de;
     {
-        int plain = !negative && !prefix_currency && !approx;
+        int plain = !negative && !prefix_currency && !approx && !plus;
 
         /* lúc 22g: g without minutes is giờ after a clock cue (500g stays gam) */
         if (plain && p == q && de - q <= 2 && atoi(t + q) <= 24 && de < n && t[de] == 'g' &&
@@ -881,6 +888,7 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                     !(m1 + 1 < n && strchr("/.,", t[m1]) && digit(t[m1 + 1])) &&
                     ((sep == '/' && (previous_cue(e, t, p, "date") || d > m || coordinated(t, p, 0) ||
                                      cue_before(e, t, p, "deadline", 48))) ||
+                     (sep == '.' && d == m) ||
                      (sep != '/' && (previous_cue(e, t, p, "day") || previous_cue(e, t, p, "holiday") ||
                                      coordinated(t, p, 0) ||
                                      /* Ngày Nhà giáo 20.11; a dash pair after Mỗi ngày stays a range */
@@ -902,6 +910,13 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                     snprintf(v, sizeof(v), "%u/%u/", d, m);
                     return finish(in, s, m1, "date", v, day_said ? "" : "ngay");
                 }
+            }
+            /* hiệu lực đến 12/28: a card expiry, month and two-digit year */
+            if (sep == '/' && d >= 1 && d <= 12 && m1 - m0 == 2 &&
+                !(m1 < n && (digit(t[m1]) || letter_at(t, n, m1) || t[m1] == '/')) &&
+                cue_before(e, t, p, "expiry", 48)) {
+                snprintf(v, sizeof(v), "%u/20%.2s", d, t + m0);
+                return finish(in, s, m1, "monthyear", v, previous_cue(e, t, p, "month") ? "" : "thang");
             }
             if ((sep == '/' || sep == '-') && d >= 1 && d <= 12 && m1 - m0 == 4 &&
                 !(m1 < n && (digit(t[m1]) || letter_at(t, n, m1)))) {
@@ -1071,7 +1086,7 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             snprintf(key, sizeof(key), "c:%s", sym);
         }
         flags(t, n, p, end, fl, sizeof(fl));
-        snprintf(v, sizeof(v), "%s%s", negative ? "-" : "", a.value);
+        snprintf(v, sizeof(v), "%s%s", negative ? "-" : plus ? "+" : "", a.value);
         snprintf(sec, sizeof(sec), "%s|%s%s|%s|%s", key, fl, approx ? "~" : "", mid, per);
         return finish(in, s, end, "num", v, sec);
     }
