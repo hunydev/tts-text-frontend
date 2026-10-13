@@ -572,6 +572,236 @@ static int coordinated(const char *t, size_t p, int weekday) {
     }
 }
 
+/* ---- maths (owner sets, 2026-10-14) ---- */
+
+/* Marks of an expression and their number words; rel marks a relation, strong an
+   operator that alone makes an expression (7÷14 ngày is a range: ÷ needs a relation). */
+static const struct {
+    const char *mark, *key;
+    int rel, strong;
+} VI_MATH[] = {{"≥", "math_ge", 1, 0},     {"≤", "math_le", 1, 0},      {"≠", "math_ne", 1, 0},
+               {"≈", "math_approx", 1, 0}, {"=", "math_eq", 1, 0},      {">", "math_gt", 1, 0},
+               {"<", "math_lt", 1, 0},     {"×", "math_times", 0, 1},   {"·", "math_times", 0, 1},
+               {"÷", "math_div", 0, 0},    {"√", "math_root", 0, 1},    {"²", "math_square", 0, 0},
+               {"³", "math_cube", 0, 0},   {"+", "math_plus", 0, 0},    {"–", "math_minus", 0, 0},
+               {"−", "math_minus", 0, 0},  {"-", "math_minus", 0, 0},   {":", "math_div", 0, 0},
+               {"/", "math_div", 0, 0},    {"(", "math_open", 0, 0},    {")", "math_close", 0, 0},
+               {"!", "math_factorial", 0, 0}, {"π", "math_pi", 0, 0}, {"Δ", "math_delta", 0, 0},
+               {"°", "math_degree", 0, 0}, {"%", "percent", 0, 0}};
+
+static int math_mark(const char *t, size_t n, size_t p) {
+    size_t k;
+    for (k = 0; k < sizeof(VI_MATH) / sizeof(*VI_MATH); ++k) {
+        size_t w = strlen(VI_MATH[k].mark);
+        if (p + w <= n && !memcmp(t + p, VI_MATH[k].mark, w))
+            return (int)k;
+    }
+    return -1;
+}
+
+enum { M_NONE, M_NUMBER, M_NAME, M_MARK, M_TIMES_X };
+
+/* A Latin letter (ASCII or Vietnamese) at p; ², π and Δ are not. */
+static int latin_letter_at(const char *t, size_t n, size_t p) {
+    uint32_t cp;
+    size_t w;
+    if (p >= n)
+        return 0;
+    if ((unsigned char)t[p] < 0x80)
+        return alpha(t[p]);
+    return ttf_utf8_decode(t + p, n - p, &cp, &w) == 1 && ttf_script_of(cp) == TTF_SCRIPT_LATIN;
+}
+
+/* One element of an expression at p (no spaces): a number with its unit (120 km), a
+   variable or function name of at most three ASCII letters (x, ab, sin), a mark, or
+   the letter x between digits (4x100) or before one (x2). */
+static size_t math_element(const ttf_engine_t *e, const char *t, size_t n, size_t p, int *kind,
+                           int *mark, char *key, size_t cap) {
+    size_t l = p;
+    parsed_t a;
+    *kind = M_NONE, *mark = -1, key[0] = 0;
+    if (p >= n)
+        return 0;
+    if (digit(t[p]) && parse_number(t, n, p, &a)) {
+        size_t ue = a.end < n && t[a.end] != '/' ? suffix_at(e, t, n, a.end, key, cap, "u") : 0;
+        *kind = M_NUMBER;
+        if (ue && !letter_at(t, n, ue))
+            return ue - p;
+        key[0] = 0;
+        return a.end - p;
+    }
+    /* 4x100, 1920X1080; x2 (lowercase, its digits ending the word; X7G4LM is a code) */
+    if ((t[p] == 'x' || t[p] == 'X') && p + 1 < n && digit(t[p + 1]) &&
+        ((p && digit(t[p - 1])) || (t[p] == 'x' && (!p || t[p - 1] == ' ')))) {
+        size_t d = p + 1;
+        while (d < n && digit(t[d]))
+            ++d;
+        if (!latin_letter_at(t, n, d)) {
+            *kind = M_TIMES_X;
+            return 1;
+        }
+    }
+    if (alpha(t[p])) {
+        while (l < n && alpha(t[l]))
+            ++l;
+        if (l - p > 3 || latin_letter_at(t, n, l))
+            return 0;
+        /* a name of two or three letters is a function (sin, log) or a product of
+           variables written against a number or a mark (4ac, √ab); nay, cho are words */
+        if (l - p > 1 && !(l - p == 3 && (!strncmp(t + p, "sin", 3) || !strncmp(t + p, "cos", 3) ||
+                                          !strncmp(t + p, "tan", 3) || !strncmp(t + p, "cot", 3) ||
+                                          !strncmp(t + p, "log", 3))) &&
+            !(l - p == 2 && !strncmp(t + p, "ln", 2)) &&
+            !(p && (digit(t[p - 1]) || (unsigned char)t[p - 1] >= 0x80 || t[p - 1] == ')')))
+            return 0;
+        *kind = M_NAME;
+        return l - p;
+    }
+    if ((*mark = math_mark(t, n, p)) >= 0) {
+        *kind = M_MARK;
+        return strlen(VI_MATH[*mark].mark);
+    }
+    return 0;
+}
+
+/* The end of an expression starting at p, or 0. It needs a relation (=, >, ≥ ...),
+   a strong operator (×, ÷, √), + between numbers, x between digits, x2, or : after a
+   division cue (12:4 bằng mấy; 12:30 stays a time). */
+static size_t vi_maths(const ttf_engine_t *e, const char *t, size_t n, size_t p) {
+    size_t z = p, last = 0, len;
+    int rel = 0, strong = 0, numbers = 0, operands = 0, kind, mark, after_operand = 0, colon = 0, slash = 0;
+    char key[24];
+    while (z < n) {
+        size_t s = z;
+        if (z > p && t[z] == ' ')
+            s = z + 1;
+        if (!(len = math_element(e, t, n, s, &kind, &mark, key, sizeof(key))))
+            break;
+        if (kind == M_NUMBER || kind == M_NAME) {
+            /* 2 x: a name after a space after a name is prose (a b c) */
+            if (kind == M_NAME && after_operand && s > z)
+                break;
+            numbers += kind == M_NUMBER;
+            ++operands;
+            after_operand = 1;
+            last = s + len;
+        } else if (kind == M_TIMES_X) {
+            strong = 1;
+            after_operand = 0;
+        } else {
+            const char *m = VI_MATH[mark].mark;
+            rel |= VI_MATH[mark].rel;
+            strong |= VI_MATH[mark].strong;
+            /* Cô-si: a + b: a colon after a word is a label */
+            if (*m == ':' && s && t[s - 1] != ' ' && s + 1 < n && t[s + 1] == ' ')
+                break;
+            if (*m == ':')
+                colon = 1;
+            if (*m == '/')
+                slash = 1;
+            /* + between operands; - ( : / only inside a larger expression */
+            if (*m == '+' && after_operand && s + 1 < n && (digit(t[s + 1]) || t[s + 1] == ' '))
+                strong |= 2;
+            if (!strcmp(m, "π") || !strcmp(m, "Δ"))
+                ++operands;
+            if (*m == ')' || *m == '!' || *m == '%' || !strcmp(m, "°") || !strcmp(m, "²") || !strcmp(m, "³") ||
+                !strcmp(m, "π") || !strcmp(m, "Δ")) {
+                after_operand = 1;
+                last = s + len;
+            } else
+                after_operand = 0;
+        }
+        z = s + len;
+    }
+    /* a > b, S = a × b: letters alone need a relation */
+    if (!last || (!numbers && !rel) || operands < 2 - (strong & 1))
+        return 0;
+    if (!rel && !strong && colon) {
+        /* 12:4 bằng mấy, 480:2 là bao nhiêu, phép chia 81 : 9 */
+        size_t c = (size_t)((const char *)memchr(t + p, ':', last - p) - t);
+        int time = c + 3 <= last && digit(t[c + 1]) && digit(t[c + 2]) && c + 3 == last;
+        size_t from = p > 60 ? p - 60 : 0, to = last + 40 < n ? last + 40 : n, k;
+        int cue = 0;
+        for (k = from; !time && !cue && k < to; ++k)
+            cue = !strncmp(t + k, "bằng mấy", strlen("bằng mấy")) ||
+                  !strncmp(t + k, "bao nhiêu", strlen("bao nhiêu")) ||
+                  !strncmp(t + k, "phép chia", strlen("phép chia")) ||
+                  !strncmp(t + k, "bài toán", strlen("bài toán")) ||
+                  !strncmp(t + k, "Bài toán", strlen("Bài toán"));
+        if (time || !cue)
+            return 0;
+    } else if (!rel && !strong)
+        return 0;
+    (void)slash;
+    return last;
+}
+
+static ttf_status_t maths_reading(const ttf_engine_t *e, ttf_buffer_t *b, const char *v) {
+    size_t n = strlen(v), z = 0, len;
+    int kind, mark, after_operand = 0, previous_number = 0;
+    char key[24];
+    while (z < n) {
+        if (v[z] == ' ') {
+            ++z;
+            continue;
+        }
+        if (!(len = math_element(e, v, n, z, &kind, &mark, key, sizeof(key))))
+            return TTF_EINVAL;
+        if (kind == M_NUMBER) {
+            parsed_t a;
+            parse_number(v, n, z, &a);
+            TRY(number(e, b, a.value));
+            if (*key)
+                TRY(suffix(e, b, key));
+            after_operand = previous_number = 1;
+        } else if (kind == M_NAME) {
+            char name[4];
+            size_t i;
+            /* 4ac bốn a c, sin stays one name */
+            int function = len == 3 || (len == 2 && !strncmp(v + z, "ln", 2));
+            for (i = 0; i < len; ++i) {
+                snprintf(name, sizeof(name), "%.*s", function ? (int)len : 1, v + z + i);
+                TRY(put(b, name));
+                if (function)
+                    break;
+            }
+            after_operand = 1, previous_number = 0;
+        } else if (kind == M_TIMES_X) {
+            TRY(word(e, b, "math_times"));
+            after_operand = previous_number = 0;
+        } else {
+            const char *m = VI_MATH[mark].mark, *k = VI_MATH[mark].key;
+            size_t next = z + len;
+            int nk, nm;
+            char nkey[24];
+            while (next < n && v[next] == ' ')
+                ++next;
+            if ((*m == '-' || !strcmp(m, "–") || !strcmp(m, "−")) && !after_operand)
+                k = "math_negative";
+            /* 3/4 ba phần tư: a number over a number; x/4 x chia bốn */
+            if (*m == '/' && previous_number && math_element(e, v, n, next, &nk, &nm, nkey, sizeof(nkey)) &&
+                nk == M_NUMBER) {
+                parsed_t d;
+                parse_number(v, n, next, &d);
+                TRY(word(e, b, "over"));
+                if (!strcmp(d.value, "4"))
+                    TRY(word(e, b, "denominator4"));
+                else
+                    TRY(number(e, b, d.value));
+                z = d.end;
+                after_operand = 1, previous_number = 0;
+                continue;
+            }
+            TRY(word(e, b, k));
+            after_operand = *m == ')' || *m == '!' || *m == '%' || !strcmp(m, "°") || !strcmp(m, "²") ||
+                            !strcmp(m, "³") || !strcmp(m, "π") || !strcmp(m, "Δ");
+            previous_number = 0;
+        }
+        z += len;
+    }
+    return TTF_OK;
+}
+
 static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     const ttf_engine_t *e = in->engine;
     const char *t = in->text;
@@ -587,6 +817,18 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     p = in->tokens[in->index].begin;
     if (p >= n)
         return 0;
+
+    /* 7 × 8 = 56, S = a × b, (15 + 25) : 4 = 10, 4x100m, x2 */
+    if ((digit(t[p]) || alpha(t[p]) || t[p] == '(' || !strncmp(t + p, "√", 3) || !strncmp(t + p, "π", 2) ||
+         !strncmp(t + p, "Δ", 2)) &&
+        (!p || (!latin_letter_at(t, n, p - 1) && !digit(t[p - 1]) && t[p - 1] != '.' && t[p - 1] != ',' &&
+                t[p - 1] != '-'))) {
+        size_t m = vi_maths(e, t, n, p);
+        if (m && m - p < TTF_IR_VALUE_SIZE) {
+            snprintf(v, sizeof(v), "%.*s", (int)(m - p), t + p);
+            return finish(in, s, m, "math", v, "");
+        }
+    }
 
     if (alpha(t[p]) && (!p || !letter_at(t, n, p - 1))) {
         size_t re;
@@ -637,6 +879,27 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             }
             snprintf(v, sizeof(v), "%d|%s", r, year);
             return finish(in, s, re, "roman", v, previous_cue(e, t, p, "ordinal") ? "ord" : "");
+        }
+        /* SP-20481, HD-2026-00417, ERR-4021, SN-7A42K9: capitals, then hyphenated
+           groups of digits and capitals. Letters stay as written, the hyphens are
+           silent; a group of one or two digits reads as a number, any other digit
+           reads one by one (owner sets, 2026-10-14). */
+        {
+            size_t l = p, z;
+            int has_digit = 0;
+            while (l < n && t[l] >= 'A' && t[l] <= 'Z')
+                ++l;
+            z = l;
+            while (l > p && l - p <= 5 && z + 1 < n && t[z] == '-' &&
+                   (digit(t[z + 1]) || (t[z + 1] >= 'A' && t[z + 1] <= 'Z'))) {
+                for (++z; z < n && (digit(t[z]) || (t[z] >= 'A' && t[z] <= 'Z')); ++z)
+                    has_digit |= digit(t[z]);
+            }
+            if (has_digit && z - p < sizeof(v) && !letter_at(t, n, z) &&
+                !(z + 1 < n && (t[z] == '.' || t[z] == ',') && digit(t[z + 1]))) {
+                snprintf(v, sizeof(v), "%.*s", (int)(z - p), t + p);
+                return finish(in, s, z, "hcode", v, "");
+            }
         }
         /* A4, VN215: letters then digits. Letters stay as written; one or two
            digits read as a number, longer runs digit by digit. */
@@ -1165,7 +1428,40 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     mode += 4;
     if (strchr(s->secondary, '<'))
         TRY(ttf_buffer_puts(b, " "));
-    if (!strcmp(mode, "alnum") || !strcmp(mode, "numalpha")) {
+    if (!strcmp(mode, "math")) {
+        TRY(maths_reading(e, b, v));
+    } else if (!strcmp(mode, "hcode")) {
+        /* SP-20481: SP hai không bốn tám một */
+        const char *c = v;
+        while (*c) {
+            const char *g = c;
+            int letters = 0, digits = 0;
+            while (*c && *c != '-') {
+                letters |= !digit(*c);
+                digits |= digit(*c);
+                ++c;
+            }
+            if (!letters && c - g <= 2)
+                TRY(integer(e, b, g, (size_t)(c - g)));
+            else
+                for (; g < c; ) {
+                    const char *r = g;
+                    while (r < c && digit(*r) == digit(*g))
+                        ++r;
+                    if (digit(*g))
+                        TRY(digits_each(e, b, g, (size_t)(r - g)));
+                    else {
+                        char letter[16];
+                        snprintf(letter, sizeof(letter), "%.*s", (int)(r - g), g);
+                        TRY(put(b, letter));
+                    }
+                    g = r;
+                }
+            (void)digits;
+            if (*c == '-')
+                ++c;
+        }
+    } else if (!strcmp(mode, "alnum") || !strcmp(mode, "numalpha")) {
         int letters_first = mode[0] == 'a';
         size_t dn;
         field(v, 0, f0, sizeof(f0));

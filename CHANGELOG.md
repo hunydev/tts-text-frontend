@@ -17,6 +17,24 @@
   - Span accuracy, dev / test: ko 90.4→91.0 / 89.0→90.1, en 81.6→84.0 / 82.1→85.0, ja
     83.3→84.9 / 80.7→83.3, zh 93.1→93.6 / 94.7→95.6, vi 85.7→86.3 / 87.1→87.3. No dev span lost.
     Contract user_eval1_v81 (19).
+- User eval phase 2 (codes, labeled numbers, units and maths, 2026-10-14):
+  - English: code numbers (B214 b two fourteen, CR2032 c r twenty thirty two, KB5029331 one by
+    one), capital words before a number (SAVE20 save twenty), digits after PIN, ZIP, code,
+    passcode, extension, ext. and tracking number (spaced groups too), N11 numbers in English
+    text (dial 911), toll-free 1-800 (one eight hundred), short English words in addresses
+    (example.com/track), hrs, fl oz, sq ft, mpg, tbsp, tsp, L/min, MB/s, GB/s, mg/dL, mg/kg,
+    pct, and a month/day after a date word (ships 12/5 December fifth).
+  - Japanese: hyphenated codes (SK-0392 エスケーのぜろさんきゅうにー) and 24 counters (戸, 巻,
+    色, 条, 章, 戦, 項, 版, 子, 室, 年生 ...; 40肩 しじゅうかた).
+  - Chinese: code cues 号码, 序号, 行号, 信用代码; a listed service number before the word a
+    call takes (96110的来电); a route of three digits or more (818路 八一八路).
+  - Vietnamese: hyphenated codes (SP-20481 SP hai không bốn tám một) and maths expressions
+    (7 × 8 = 56, x² - 5x + 6 = 0, 12:4 bằng mấy, 4x100m, x2); 7÷14 ngày stays a range.
+  - Korean: COVID-19 코비드 일구, Wi-Fi 와이파이.
+  - Span accuracy, dev / test: ko 91.3 / 90.4, en 90.6 / 89.0, ja 87.5 / 84.6, zh 94.5 / 95.6,
+    vi 90.5 / 90.1. No dev span lost. Contract user_eval2_v82 (27).
+  - English benchmark: one sentence each in speech and text now differs from its reference
+    (ZIP code 26278 and PIN 503165 read digit by digit, the owner's reading).
 - Vietnamese (vi-VN) is in production (project-owner decision, 2026-10-13).
   - TTS -> STT comparison: OpenAI, all 257 held-out v6 sentences. 63.8% were read right from the
     raw text and 93.8% from our output.

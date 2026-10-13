@@ -920,6 +920,43 @@ static size_t slash_month_day_year(const ttf_pack_input_t *in, ttf_semantic_t *o
     return finish(in, out, p, 1, layer, "en.date.slash");
 }
 
+/* ships 12/5, on 1/2, starts 2/1: a month/day without a year right after a date
+   word (date_cue) is a date; a bare 1/2 stays a fraction (owner sets, 2026-10-14). */
+static size_t slash_month_day_cue(const ttf_pack_input_t *in, ttf_semantic_t *out, size_t start) {
+    static const unsigned days[] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    const char *t = in->text;
+    size_t n = in->length, p = start, q, w, k;
+    unsigned month = 0, day = 0, md = 0, dd = 0;
+    char key[24];
+    ttf_resource_layer_t layer = TTF_LAYER_COMMON;
+    while (p < n && ascii_digit(t[p]) && md < 3)
+        month = month * 10 + (unsigned)(t[p++] - '0'), ++md;
+    if (!md || md > 2 || p >= n || t[p] != '/')
+        return 0;
+    ++p;
+    while (p < n && ascii_digit(t[p]) && dd < 3)
+        day = day * 10 + (unsigned)(t[p++] - '0'), ++dd;
+    if (!dd || dd > 2 || !month || month > 12 || !day || day > days[month - 1])
+        return 0;
+    if (p < n && (ascii_digit(t[p]) || ascii_alpha(t[p]) || t[p] == '/' ||
+                  ((t[p] == '.' || t[p] == ',' || t[p] == '-') && p + 1 < n && ascii_digit(t[p + 1]))))
+        return 0;
+    for (q = start; q && t[q - 1] == ' '; --q)
+        ;
+    for (w = q; w && ascii_alpha(t[w - 1]); --w)
+        ;
+    if (w == q || q == start || q - w >= sizeof(key))
+        return 0;
+    for (k = 0; k < q - w; ++k)
+        key[k] = t[w + k] >= 'A' && t[w + k] <= 'Z' ? (char)(t[w + k] - 'A' + 'a') : t[w + k];
+    key[k] = 0;
+    if (!ttf_resource_get(in->engine, "date_cue", EN, key, &layer))
+        return 0;
+    (void)snprintf(out->value, sizeof(out->value), "--%02u-%02u", month, day);
+    (void)snprintf(out->unit, sizeof(out->unit), "month-day");
+    return finish(in, out, p, 1, layer, "en.date.slash-cue");
+}
+
 size_t ttf_en_classify_date(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     size_t start, named;
     if (!in || !out || in->index >= in->token_count)
@@ -931,6 +968,9 @@ size_t ttf_en_classify_date(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     if (named)
         return named;
     named = slash_month_day_year(in, out, start);
+    if (named)
+        return named;
+    named = slash_month_day_cue(in, out, start);
     if (named)
         return named;
     named = named_date(in, out, start);

@@ -1,11 +1,14 @@
 # Period-bearing forms reuse the established bare readings. Titles and ambiguous
 # St./Dr./No. are not context-free expansions. Boundary markers protect chunks.
 abbreviation_dotted	en-US	vol	volume
+# ext. 15 extension fifteen (owner sets, 2026-10-14)
+abbreviation_dotted	en-US	ext	extension
 abbreviation_dotted	en-US	ltd	limited
 abbreviation_dotted	en-US	vs	versus
 abbreviation_dotted	en-US	etc	etcetera
 abbreviation_dotted	en-US	jr	junior
 abbreviation	en-US	vol	preserve
+abbreviation	en-US	ext	preserve
 abbreviation	en-US	ltd	preserve
 abbreviation	en-US	jr	preserve
 # Unlike a company suffix, 'vs. Beta' continues before a capitalized operand.

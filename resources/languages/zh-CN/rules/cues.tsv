@@ -626,3 +626,24 @@ short_year_after	zh-CN	年结婚	1
 short_year_after	zh-CN	年的时候	1
 score_cue	zh-CN	盘	1
 score_cue	zh-CN	局	1
+# Owner evaluation sets (2026-10-14): more code labels, a service number before
+# the word a call takes, and the Alipay hotline.
+code_cue	zh-CN	号码	1
+code_cue	zh-CN	序号	1
+code_cue	zh-CN	行号	1
+code_cue	zh-CN	信用代码	1
+service_number	zh-CN	95188	1
+service_after	zh-CN	的	1
+service_after	zh-CN	打	1
+service_after	zh-CN	来电	1
+service_after	zh-CN	还	1
+service_after	zh-CN	是	1
+service_after	zh-CN	吗	1
+service_after	zh-CN	查	1
+service_after	zh-CN	拨	1
+service_after	zh-CN	热线	1
+service_after	zh-CN	电话	1
+service_after	zh-CN	咨询	1
+service_after	zh-CN	举报	1
+service_after	zh-CN	投诉	1
+service_after	zh-CN	求助	1

@@ -9,3 +9,15 @@ identifier_render	en-US	separator
 identifier_label	en-US	isbn	digits
 # A PubMed id reads digit by digit (2026-10-07).
 identifier_label	en-US	pmid	digits
+# Codes read digit by digit after their label (owner sets, 2026-10-14). ext. and the
+# N11 numbers (911, 311) are recognized in languages/en-US/identifiers.c.
+identifier_label	en-US	pin	digits
+identifier_label	en-US	pin is	digits
+identifier_label	en-US	zip	digits
+identifier_label	en-US	zip code	digits
+identifier_label	en-US	code	digits
+identifier_label	en-US	code is	digits
+identifier_label	en-US	passcode	digits
+identifier_label	en-US	passcode is	digits
+identifier_label	en-US	extension	digits
+identifier_label	en-US	tracking number	digits

@@ -385,3 +385,30 @@ date_year_quantity	en-US	hectares	1
 # A dotted meridiem is not a sentence end: 9 a.m. tomorrow (2026-10-07).
 boundary_period	en-US	a.m	1
 boundary_period	en-US	p.m	1
+# A month/day without a year after one of these words is a date (ships 12/5; owner sets, 2026-10-14).
+date_cue	en-US	on	1
+date_cue	en-US	ships	1
+date_cue	en-US	ship	1
+date_cue	en-US	shipped	1
+date_cue	en-US	starts	1
+date_cue	en-US	start	1
+date_cue	en-US	started	1
+date_cue	en-US	begins	1
+date_cue	en-US	ends	1
+date_cue	en-US	from	1
+date_cue	en-US	until	1
+date_cue	en-US	till	1
+date_cue	en-US	since	1
+date_cue	en-US	due	1
+date_cue	en-US	dated	1
+date_cue	en-US	through	1
+date_cue	en-US	thru	1
+date_cue	en-US	expires	1
+date_cue	en-US	effective	1
+date_cue	en-US	arrives	1
+date_cue	en-US	opens	1
+date_cue	en-US	closes	1
+date_cue	en-US	deadline	1
+date_cue	en-US	before	1
+date_cue	en-US	after	1
+classifier_priority	en-US	en.date.slash-cue	10

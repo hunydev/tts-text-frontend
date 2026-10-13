@@ -28,6 +28,28 @@ number	vi-VN	to	đến
 number	vi-VN	over	phần
 # 1/4 một phần tư (owner, 2026-10-14)
 number	vi-VN	denominator4	tư
+# Maths expressions (7 × 8 = 56 bảy nhân tám bằng năm mươi sáu; owner sets, 2026-10-14)
+number	vi-VN	math_eq	bằng
+number	vi-VN	math_approx	xấp xỉ
+number	vi-VN	math_ne	khác
+number	vi-VN	math_gt	lớn hơn
+number	vi-VN	math_lt	nhỏ hơn
+number	vi-VN	math_ge	lớn hơn hoặc bằng
+number	vi-VN	math_le	nhỏ hơn hoặc bằng
+number	vi-VN	math_plus	cộng
+number	vi-VN	math_minus	trừ
+number	vi-VN	math_negative	âm
+number	vi-VN	math_times	nhân
+number	vi-VN	math_div	chia
+number	vi-VN	math_root	căn
+number	vi-VN	math_square	bình phương
+number	vi-VN	math_cube	lập phương
+number	vi-VN	math_open	mở ngoặc
+number	vi-VN	math_close	đóng ngoặc
+number	vi-VN	math_factorial	giai thừa
+number	vi-VN	math_pi	pi
+number	vi-VN	math_delta	đen-ta
+number	vi-VN	math_degree	độ
 number	vi-VN	approx	khoảng
 number	vi-VN	day	ngày
 number	vi-VN	month	tháng
@@ -106,3 +128,5 @@ vi_service	vi-VN	116	1
 vi_service	vi-VN	117	1
 # Written forms read as a phrase.
 vi_idiom	vi-VN	24/7	hai mươi bốn trên bảy
+classifier_priority	vi-VN	vi.math	10
+classifier_priority	vi-VN	vi.hcode	10

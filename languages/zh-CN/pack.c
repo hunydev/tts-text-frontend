@@ -1552,6 +1552,9 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     if (len >= 3 && (cue_before(e, "phone_cue", t, p, 5) || word_after(e, "phone_after", t, n, q)) &&
         !word_after(e, "money_after", t, n, q) && !word_after(e, "liang_counter", t, n, q))
         return finish(in, s, q, "digits", t + p, len, "yao");
+    /* 818路公交: a route of three digits or more reads digit by digit */
+    if (len >= 3 && has(t, n, q, "路") && !memchr(t + p, '.', len))
+        return finish(in, s, q, "digits", t + p, len, "");
     /* 验证码123456, 301房间, 502错误, 7号楼1502, 0571, 80后: a code reads digit by
        digit. */
     if ((len >= 3 && (cue_before(e, "code_cue", t, p, 6) || word_after(e, "room_after", t, n, q) ||
@@ -1564,9 +1567,11 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         (len == 4 && (prev_is(t, p, "（") || prev_is(t, p, "(")) &&
          (has(t, n, q, "）") || has(t, n, q, ")"))))
         return finish(in, s, q, "digits", t + p, len, "");
-    /* 12306, 120: a listed service number, unless a measure word follows (110座桥) */
+    /* 12306, 120: a listed service number, unless a measure word follows (110座桥);
+       96110的来电, 114还能查: also before a word a call takes (service_after,
+       owner sets 2026-10-14) */
     if (len >= 3 && !word_after(e, "liang_counter", t, n, q) && !unit_after(e, t, n, q, key, sizeof(key)) &&
-        (cue_before(e, "service_cue", t, p, 2) ||
+        (cue_before(e, "service_cue", t, p, 2) || word_after(e, "service_after", t, n, q) ||
          !(q < n && ((unsigned char)t[q] & 0xf0) == 0xe0 && !has(t, n, q, "，") && !has(t, n, q, "。") &&
            !has(t, n, q, "！") && !has(t, n, q, "？") && !has(t, n, q, "、") && !has(t, n, q, "）")))) {
         char num[8];

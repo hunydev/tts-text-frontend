@@ -9,7 +9,7 @@ Each sentence is sent in a request of its own language (speech output). A span i
 one of its readings appears in the output after the previous span, after folding: NFKC, lower
 case, whitespace and punctuation removed. Per language:
   en-US  a gold single letter (w) also matches the engine's letter name (double you);
-  ja-JP  katakana = hiragana and ー = the vowel before it, and ー may be left out on either side (に = にー); a span that fails is also tried on
+  ja-JP  katakana = hiragana, トゥ = ツ, and ー = the vowel before it, and ー may be left out on either side (に = にー); a span that fails is also tried on
          the output's kana reading (pyopenjtalk, when installed), since kanji words stay kanji;
   zh-CN  〇 = 零, 圆 = 元, 两百/两千/两万/两亿 = 二…, 点半 = 点三十(分);
   vi-VN  gi-ga = ghi-ga, đề-xi-ben = đê-xi-ben (spelling variants);
@@ -84,6 +84,7 @@ def fold(s, lang):
     if lang == "ja-JP":
         s = "".join(chr(ord(c) - 0x60) if "ァ" <= c <= "ヶ" else c for c in s)
         s = "".join(VOWEL.get(s[i - 1], c) if c == "ー" and i else c for i, c in enumerate(s))
+        s = s.replace("とぅ", "つ")  # トゥー = ツー (two)
     elif lang == "zh-CN":
         s = s.replace("〇", "零").replace("圆", "元")
         s = re.sub("两(?=[百千万亿])", "二", s)

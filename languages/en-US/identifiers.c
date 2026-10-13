@@ -48,12 +48,40 @@ static int valid_tail(const ttf_pack_input_t *in, size_t end) {
     }
     return 0;
 }
+/* ext. 2204: the dotted label before a number (spaces skipped). */
+static int after_ext(const ttf_pack_input_t *in, size_t begin) {
+    size_t p = begin;
+    while (p && in->text[p - 1] == ' ')
+        --p;
+    return p >= 4 && (!memcmp(in->text + p - 4, "ext.", 4) || !memcmp(in->text + p - 4, "Ext.", 4)) &&
+           (p == 4 || !ascii_letter(in->text[p - 5]));
+}
+/* 911, 311, 511: a three-digit N11 service number reads digit by digit, in English
+   text only (the word before it is English; 무명2동 511의 stays a number). */
+static int n11(const ttf_pack_input_t *in, size_t begin) {
+    const char *t = in->text;
+    size_t n = in->length, w = begin;
+    while (w && (t[w - 1] == ' ' || t[w - 1] == ':' || t[w - 1] == ','))
+        --w;
+    if (!w || !ascii_letter(t[w - 1]) || (begin + 3 < n && (unsigned char)t[begin + 3] >= 0x80))
+        return 0;
+    return begin + 3 <= n && t[begin] >= '2' && t[begin] <= '9' && t[begin + 1] == '1' &&
+           t[begin + 2] == '1' && !(begin + 3 < n && (decimal_digit(t[begin + 3]) || t[begin + 3] == '/' ||
+                                                     t[begin + 3] == ',' || t[begin + 3] == '-')) &&
+           !(begin && (decimal_digit(t[begin - 1]) || t[begin - 1] == '/' || t[begin - 1] == '.' ||
+                       t[begin - 1] == '$' || t[begin - 1] == '-' || t[begin - 1] == '#'));
+}
 size_t ttf_en_classify_identifier(const ttf_pack_input_t *in, ttf_semantic_t *semantic) {
     size_t begin = in->tokens[in->index].begin, end = begin, i;
     char label[TTF_IR_VALUE_SIZE];
     ttf_resource_layer_t layer = TTF_LAYER_COMMON;
-    if (begin == in->length || !decimal_digit(in->text[begin]) ||
-        !ttf_phone_preceding_label(in, begin, "identifier_label", "en-US", label, &layer))
+    if (begin == in->length || !decimal_digit(in->text[begin]))
+        return 0;
+    if (after_ext(in, begin))
+        snprintf(label, sizeof(label), "ext");
+    else if (n11(in, begin) && valid_tail(in, begin + 3))
+        snprintf(label, sizeof(label), "n11");
+    else if (!ttf_phone_preceding_label(in, begin, "identifier_label", "en-US", label, &layer))
         return 0;
     while (end < in->length && decimal_digit(in->text[end]))
         ++end;
@@ -94,6 +122,17 @@ size_t ttf_en_classify_identifier(const ttf_pack_input_t *in, ttf_semantic_t *se
             break;
         } else
             break;
+    }
+    /* passcode is 482 915, tracking number 9400 1234 5678: groups of three or four
+       digits after one space (owner sets, 2026-10-14). */
+    while (strcmp(label, "isbn") && end + 4 <= in->length && in->text[end] == ' ' &&
+           decimal_digit(in->text[end + 1])) {
+        size_t q = end + 1;
+        while (q < in->length && decimal_digit(in->text[q]))
+            ++q;
+        if (q - end - 1 < 3 || q - end - 1 > 4 || q - begin >= sizeof(semantic->value))
+            break;
+        end = q;
     }
     /* ISBN 1-86508-123-X: an ISBN-10 check digit may be X (2026-10-07). */
     if (!strcmp(label, "isbn") && end < in->length) {

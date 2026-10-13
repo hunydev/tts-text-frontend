@@ -441,3 +441,39 @@ unit	en-US	square_mi.many	square miles
 unit	en-US	per_square_mi.one	per square mile
 unit	en-US	per_square_mi.many	per square miles
 numeric_suffix	*	lbs	MEASURE:lb
+
+# Abbreviations in the owner's evaluation sets (2026-10-14).
+numeric_suffix	*	hrs	MEASURE:hr
+numeric_suffix	*	fl oz	MEASURE:fl_oz
+unit	en-US	fl_oz.one	fluid ounce
+unit	en-US	fl_oz.many	fluid ounces
+numeric_suffix	*	sq ft	MEASURE:sq_ft
+unit	en-US	sq_ft.one	square foot
+unit	en-US	sq_ft.many	square feet
+numeric_suffix	*	mpg	MEASURE:mpg
+unit	en-US	mpg.one	mile per gallon
+unit	en-US	mpg.many	miles per gallon
+numeric_suffix	*	tbsp	MEASURE:tbsp
+unit	en-US	tbsp.one	tablespoon
+unit	en-US	tbsp.many	tablespoons
+numeric_suffix	*	tsp	MEASURE:tsp
+unit	en-US	tsp.one	teaspoon
+unit	en-US	tsp.many	teaspoons
+numeric_suffix	*	L/min	MEASURE:L_per_min
+unit	en-US	L_per_min.one	liter per minute
+unit	en-US	L_per_min.many	liters per minute
+numeric_suffix	*	MB/s	MEASURE:MB_per_s
+unit	en-US	MB_per_s.one	megabyte per second
+unit	en-US	MB_per_s.many	megabytes per second
+numeric_suffix	*	GB/s	MEASURE:GB_per_s
+unit	en-US	GB_per_s.one	gigabyte per second
+unit	en-US	GB_per_s.many	gigabytes per second
+numeric_suffix	*	mg/dL	MEASURE:mg_per_dL
+unit	en-US	mg_per_dL.one	milligram per deciliter
+unit	en-US	mg_per_dL.many	milligrams per deciliter
+numeric_suffix	*	mg/kg	MEASURE:mg_per_kg
+unit	en-US	mg_per_kg.one	milligram per kilogram
+unit	en-US	mg_per_kg.many	milligrams per kilogram
+numeric_suffix	*	pct	MEASURE:pct
+unit	en-US	pct.one	percent
+unit	en-US	pct.many	percent

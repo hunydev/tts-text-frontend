@@ -1612,6 +1612,18 @@ static ttf_status_t phone(const ttf_engine_t *e, const ttf_semantic_t *s, ttf_bu
             return status;
         ++value;
     }
+    /* 1-800-555-0123 one eight hundred five five five ...: a toll-free 800 area code
+       reads eight hundred (owner sets, 2026-10-14). */
+    if (!strncmp(value, "1-800-", 6) || !strncmp(value, "800-", 4)) {
+        if (*value == '1') {
+            if ((status = phone_digits(e, "1", out)) != TTF_OK || (status = space(out)) != TTF_OK)
+                return status;
+            value += 2;
+        }
+        if ((status = card(e, 800, out)) != TTF_OK)
+            return status;
+        value += 3;
+    }
     if ((status = phone_digits(e, value, out)) != TTF_OK)
         return status;
     if (s->secondary[0]) {
@@ -1625,6 +1637,58 @@ static ttf_status_t phone(const ttf_engine_t *e, const ttf_semantic_t *s, ttf_bu
 /* Same-language spoken labels keep ordinary words and spell isolated letters
    or uppercase initialisms. Source verbalization for a foreign target must
    retain its original atom so the generic composition pipeline can split it. */
+/* The number in a code (owner sets, 2026-10-14): five digits or more, or four after a
+   hyphen (PN-4432), one by one; four as two pairs (CR2032 twenty thirty two, UA 2314);
+   three as a digit and a pair (B214 two fourteen, ENG 401 four oh one, F-150 one
+   fifty), or one by one before a letter (WDT750SAKZ); fewer as a number. */
+static ttf_status_t code_pair(const ttf_engine_t *e, unsigned n, ttf_buffer_t *out) {
+    ttf_status_t st;
+    if (n >= 10)
+        return card(e, n, out);
+    if ((st = word(e, out, "number", "oh")) != TTF_OK)
+        return st;
+    if ((st = space(out)) != TTF_OK)
+        return st;
+    return card(e, n, out);
+}
+static ttf_status_t code_number(const ttf_engine_t *e, const char *v, size_t n, int hyphen_before,
+                                int letter_after, ttf_buffer_t *out) {
+    unsigned x = 0;
+    size_t i;
+    ttf_status_t st;
+    for (i = 0; i < n; ++i)
+        x = x * 10 + (unsigned)(v[i] - '0');
+    if (n >= 5 || (n == 4 && hyphen_before) || (n == 3 && letter_after))
+        return digits(e, v, out);
+    if (n == 4 && x % 100) {
+        if ((st = card(e, x / 100, out)) != TTF_OK || (st = space(out)) != TTF_OK)
+            return st;
+        return code_pair(e, x % 100, out);
+    }
+    if (n == 3 && x % 100) {
+        if ((st = card(e, x / 100, out)) != TTF_OK || (st = space(out)) != TTF_OK)
+            return st;
+        return code_pair(e, x % 100, out);
+    }
+    return card(e, x, out);
+}
+/* SAVE20, WELCOME10, SPRING15, COVID-19: capitals of four letters or more with a vowel
+   and no three consonants in a row (three may begin it: SPR, STR), before a number,
+   read as a word. */
+static int caps_word(const char *t, size_t n) {
+    size_t i, run = 0, vowels = 0;
+    if (n < 4)
+        return 0;
+    for (i = 0; i < n; ++i) {
+        int vowel = strchr("AEIOU", t[i]) != NULL;
+        vowels += vowel;
+        run = vowel ? 0 : run + 1;
+        if (run > 3 || (run == 3 && i != 2))
+            return 0;
+    }
+    return vowels > 0;
+}
+
 static ttf_status_t spoken_alnum(const ttf_engine_t *e, const char *text, size_t length,
                                  ttf_buffer_t *out) {
     size_t pos = 0;
@@ -1666,7 +1730,11 @@ static ttf_status_t spoken_alnum(const ttf_engine_t *e, const char *text, size_t
                 if (status != TTF_OK)
                     return status;
             }
-            status = digit_mode ? digits(e, value, out) : numeric(e, value, out);
+            status = digit_mode ? digits(e, value, out)
+                                : code_number(e, value, end - pos, pos && text[pos - 1] == '-',
+                                              end < length && ((text[end] >= 'a' && text[end] <= 'z') ||
+                                                               (text[end] >= 'A' && text[end] <= 'Z')),
+                                              out);
             if (status == TTF_OK)
                 status = ttf_trace_emit(e, TTF_TRACE_SELECTED, TTF_LAYER_COMMON, 0, EN, "decision",
                                         "alnum-number", value, value,
@@ -1680,7 +1748,17 @@ static ttf_status_t spoken_alnum(const ttf_engine_t *e, const char *text, size_t
                 ++end;
             }
             initialism = upper && end - pos >= 2;
-            if (upper || end - pos == 1)
+            if (upper && caps_word(text + pos, end - pos) && end < length &&
+                ((text[end] >= '0' && text[end] <= '9') ||
+                 (text[end] == '-' && end + 1 < length && text[end + 1] >= '0' && text[end + 1] <= '9'))) {
+                size_t k;
+                initialism = 0;
+                status = TTF_OK;
+                for (k = pos; k < end && status == TTF_OK; ++k) {
+                    char lower = (char)(text[k] - 'A' + 'a');
+                    status = ttf_buffer_append(out, &lower, 1);
+                }
+            } else if (upper || end - pos == 1)
                 status = ttf_en_speech_spelling(e, text + pos, end - pos, 0, out);
             else
                 status = ttf_buffer_append(out, text + pos, end - pos);

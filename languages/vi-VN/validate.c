@@ -46,7 +46,7 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                 ttf_validation_enum(key, "hundred|ten|tens|zero_tens|one_after_tens|"
                                          "five_after_tens|four_after_tens|thousand|million|"
                                          "billion|point|minus|plus_sign|percent|to|over|approx|day|month|"
-                                         "year|month4|hour|minute|second|ordinal1|ordinal4|denominator4|dot|per|per_amount|night|times|weekday|sunday|addr_room|addr_ward|addr_district")) &&
+                                         "year|month4|hour|minute|second|ordinal1|ordinal4|denominator4|math_eq|math_approx|math_ne|math_gt|math_lt|math_ge|math_le|math_plus|math_minus|math_negative|math_times|math_div|math_root|math_square|math_cube|math_open|math_close|math_factorial|math_pi|math_delta|math_degree|dot|per|per_amount|night|times|weekday|sunday|addr_room|addr_ward|addr_district")) &&
                        label(v)
                    ? TTF_OK
                    : ttf_validation_error(d, "number requires a digit or a named word and a reading");

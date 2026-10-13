@@ -723,6 +723,37 @@ static size_t latin(const ttf_pack_input_t *in, ttf_semantic_t *s, const ttf_tok
         snprintf(s->value, sizeof(s->value), "%s", reading);
         return finish(in, s, end, TTF_SEM_ABBREVIATION, "ja.latin-word", "");
     }
+    /* SK-0392 エスケーのぜろさんきゅうに, K-2024-003817, TXN-7F3A9C: capitals, then
+       hyphenated groups of digits and capitals. A hyphen reads の; a group with a
+       leading zero or five digits or more reads digit by digit. One letter before
+       one group of up to three digits (F-15) stays a plain term (owner sets,
+       2026-10-14). */
+    if (!begin || !(alpha(text[begin - 1]) || digit(text[begin - 1]))) {
+        size_t l = begin, q, groups = 0, longest = 0;
+        int zero = 0, has_digit = 0, mixed = 0;
+        while (l < n && text[l] >= 'A' && text[l] <= 'Z')
+            ++l;
+        q = l;
+        while (l > begin && l - begin <= 4 && q + 1 < n && text[q] == '-' &&
+               (digit(text[q + 1]) || (text[q + 1] >= 'A' && text[q + 1] <= 'Z'))) {
+            size_t g = ++q, run = 0;
+            zero |= text[g] == '0' && g + 1 < n && digit(text[g + 1]);
+            for (; q < n && (digit(text[q]) || (text[q] >= 'A' && text[q] <= 'Z')); ++q) {
+                has_digit |= digit(text[q]);
+                mixed |= !digit(text[q]) && has_digit;
+                run = digit(text[q]) ? run + 1 : 0;
+                if (run > longest)
+                    longest = run;
+            }
+            ++groups;
+        }
+        if (has_digit && q - begin < sizeof(s->value) && (q >= n || !(alpha(text[q]) || digit(text[q]))) &&
+            !(q + 1 < n && (text[q] == '.' || text[q] == ',') && digit(text[q + 1])) &&
+            (groups > 1 || zero || longest >= 4 || mixed)) {
+            snprintf(s->value, sizeof(s->value), "%.*s", (int)(q - begin), text + begin);
+            return finish(in, s, q, TTF_SEM_ALNUM_TERM, "ja.code", "code");
+        }
+    }
     /* F-15, AK-47: capitals, a hyphen and a number read as one term. */
     if ((len <= 3 || res(e, "latin_word", key)) && end + 1 < n && text[end] == '-' &&
         digit(text[end + 1])) {
@@ -2093,9 +2124,11 @@ static ttf_status_t measure(const ttf_engine_t *e, const ttf_semantic_t *s, cons
 
 /* A4 エーよん, MP3 エムピーさん; a longer word keeps its letters. */
 static ttf_status_t alnum(const ttf_engine_t *e, const char *s, size_t n, int japanese,
-                          ttf_buffer_t *b) {
+                          int code, ttf_buffer_t *b) {
     size_t i = 0;
     ttf_status_t st;
+    if (code)
+        japanese = 1;
     if (n >= 3 && n <= 4 && s[0] == 'R' && digit(s[1]) && digit(s[2]) && (n == 3 || digit(s[3]))) {
         ttf_status_t rs = letters(e, s, 1, b);
         return rs == TTF_OK ? digits_each(e, s + 1, n - 1, 1, b) : rs;
@@ -2144,6 +2177,8 @@ static ttf_status_t alnum(const ttf_engine_t *e, const char *s, size_t n, int ja
                     ++j;
                 snprintf(value, sizeof(value), "%.*s", (int)(j - i), s + i);
                 st = plain_number(e, value, b);
+            } else if (code && j - i > 1 && s[i] == '0') {
+                st = digits_each(e, s + i, j - i, 1, b);
             } else if (j - i <= 4) {
                 snprintf(value, sizeof(value), "%.*s", (int)(j - i), s + i);
                 st = plain_number(e, value, b);
@@ -2167,6 +2202,9 @@ static ttf_status_t alnum(const ttf_engine_t *e, const char *s, size_t n, int ja
                  : (upper && j - i <= 5) || (j - i <= 3 && j < n && digit(s[j]))
                      ? letters(e, s + i, j - i, b)
                      : ttf_buffer_append(b, s + i, j - i);
+        } else if (code && s[i] == '-') {
+            ++j;
+            st = word(e, b, "number", "phone_separator");
         } else if (s[i] == '-' && i && alpha(s[i - 1]) && i + 1 < n && digit(s[i + 1])) {
             ++j; /* F-15 エフじゅうご */
             st = TTF_OK;
@@ -2510,7 +2548,7 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             return TTF_OK;
         return ttf_buffer_append(b, surface, length);
     case TTF_SEM_ALNUM_TERM:
-        return alnum(e, surface, length, !strcmp(s->secondary, "after-dai"), b);
+        return alnum(e, surface, length, !strcmp(s->secondary, "after-dai"), !strcmp(s->unit, "code"), b);
     case TTF_SEM_CUSTOM:
         if (!strcmp(s->unit, "@alphabet")) {
             const char *v = !strcmp(s->secondary, "control-surface") ? surface : s->value;
