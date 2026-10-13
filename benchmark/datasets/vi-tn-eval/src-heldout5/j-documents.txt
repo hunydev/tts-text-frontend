@@ -1,0 +1,131 @@
+# Vietnamese TN held-out set 5 (j): official documents, contracts, invoices, timetables, reports, textbooks, papers
+cardinal	Theo kết quả điều tra, toàn tỉnh có {1.248|một [nghìn,ngàn] hai trăm bốn mươi tám} hộ nghèo và {356|ba trăm năm mươi sáu} hộ cận nghèo.
+cardinal	Căn cứ Điều {12|mười hai} Luật Đất đai, Ủy ban nhân dân xã có trách nhiệm quản lý quỹ đất công ích.
+cardinal	Hợp đồng này được lập thành {04|bốn} bản có giá trị pháp lý như nhau, mỗi bên giữ {02|hai} bản.
+cardinal	Trường Tiểu học Nguyễn Trãi năm học này tuyển mới {215|hai trăm mười [lăm,nhăm]} học sinh lớp một.
+cardinal	Thư viện hiện lưu giữ khoảng {45 000|bốn mươi [lăm,nhăm] [nghìn,ngàn]/bốn lăm [nghìn,ngàn]} đầu sách và {1 200|một [nghìn,ngàn] hai trăm/một [nghìn,ngàn] hai} tờ báo, tạp chí.
+cardinal	Mẫu nghiên cứu gồm {1.024|một [nghìn,ngàn] không trăm hai mươi [tư,bốn]} bệnh nhân được theo dõi liên tục trong ba năm.
+cardinal	Khoản {3|ba} Điều {7|bảy} của Nghị định quy định rõ thẩm quyền xử phạt vi phạm hành chính.
+cardinal	Dân số của thành phố tính đến cuối kỳ là {2.105.380|hai triệu một trăm [linh,lẻ] năm [nghìn,ngàn] ba trăm tám mươi} người.
+cardinal	Bài tập: Tính tổng của {387|ba trăm tám mươi bảy} và {1.506|một [nghìn,ngàn] năm trăm [linh,lẻ] sáu}.
+cardinal	Công trình sử dụng {12.000|mười hai [nghìn,ngàn]} viên gạch block và {850|tám trăm năm mươi/tám trăm rưởi} bao xi măng.
+cardinal	Đoàn kiểm tra đã rà soát {73|bảy mươi ba/bảy ba} hồ sơ, trong đó phát hiện {9|chín} hồ sơ chưa đầy đủ thủ tục.
+cardinal	Sách giáo khoa Toán lớp {5|năm} gồm {176|một trăm bảy mươi sáu} trang, chia thành bốn chương.
+decimal	Hệ số tương quan giữa hai biến đạt {0,87|không phẩy tám mươi bảy/không phẩy tám bảy}, cho thấy mối liên hệ chặt chẽ.
+decimal	Điểm trung bình cả năm của em là {8,25|tám phẩy hai mươi [lăm,nhăm]/tám phẩy hai lăm}.
+decimal	Giá trị pH của mẫu nước thải sau xử lý là {7,2|bảy phẩy hai}, nằm trong giới hạn cho phép.
+decimal	Hệ số ma sát trượt giữa hai bề mặt được xác định bằng {0,035|không phẩy không ba mươi [lăm,nhăm]/không phẩy không ba lăm/không phẩy không ba năm}.
+decimal	Theo bảng tra, hệ số an toàn của kết cấu lấy bằng {1,15|một phẩy mười [lăm,nhăm]/một phẩy một năm}.
+decimal	Hệ số Gini của khu vực nông thôn năm nay ước đạt {0,368|không phẩy ba trăm sáu mươi tám/không phẩy ba sáu tám}.
+decimal	Trong bài toán trên, nghiệm gần đúng của phương trình bằng {2,718|hai phẩy bảy trăm mười tám/hai phẩy bảy một tám}.
+decimal	Số pi được làm tròn đến hai chữ số thập phân là {3,14|ba phẩy mười bốn/ba phẩy một bốn}.
+decimal	Hệ số hiệu chỉnh cho mùa khô được lấy là {0,9|không phẩy chín}, còn mùa mưa là {1,1|một phẩy một}.
+decimal	Điểm chuẩn trúng tuyển ngành Y khoa năm nay là {27,45|hai mươi bảy phẩy bốn mươi [lăm,nhăm]/hai mươi bảy phẩy bốn lăm} điểm.
+percent	Tỷ lệ hộ gia đình sử dụng nước sạch trên địa bàn huyện đạt {92%|chín mươi hai phần trăm/chín hai phần trăm}.
+percent	Bên mua có trách nhiệm tạm ứng {30%|ba mươi phần trăm} giá trị hợp đồng trong vòng năm ngày làm việc kể từ ngày ký.
+percent	Thuế suất thuế giá trị gia tăng áp dụng cho mặt hàng này là {10 %|mười phần trăm}.
+percent	Hiệu suất thu hồi sản phẩm sau quá trình chiết tách đạt {78,5%|bảy mươi tám phẩy năm phần trăm/bảy tám phẩy năm phần trăm}.
+percent	Có tới {65%|sáu mươi [lăm,nhăm] phần trăm/sáu lăm phần trăm} số người được hỏi cho biết họ sử dụng phương tiện công cộng hằng ngày.
+percent	Tốc độ tăng trưởng tổng sản phẩm trên địa bàn năm nay ước đạt {7,02%|bảy phẩy không hai phần trăm}.
+percent	Độ ẩm tương đối của không khí trong kho phải duy trì dưới {60%|sáu mươi phần trăm}.
+percent	Lãi suất cho vay ưu đãi là {6,5%/năm|sáu phẩy năm phần trăm [một,mỗi,trên] năm/sáu rưỡi phần trăm [một,mỗi] năm}.
+percent	Tỷ lệ nảy mầm của hạt giống ở công thức đối chứng chỉ đạt {48%|bốn mươi tám phần trăm/bốn tám phần trăm}.
+percent	Sau khi được giảm {15%|mười [lăm,nhăm] phần trăm}, giá bán lẻ của sản phẩm vẫn cao hơn mức trung bình thị trường.
+negative	Nhiệt độ thấp nhất ghi nhận được tại đỉnh Fansipan đêm qua là {-2°C|âm hai [độ xê,độ]}.
+negative	Mẫu được bảo quản trong tủ đông ở nhiệt độ {−20 °C|âm hai mươi [độ xê,độ]} cho đến khi phân tích.
+negative	Lợi nhuận sau thuế của công ty quý này có mức tăng trưởng {-12,4%|âm mười hai phẩy bốn phần trăm} so với cùng kỳ.
+negative	Giải phương trình bậc hai ta được hai nghiệm là {-3|âm ba} và {5|năm}.
+negative	Cao độ đáy hố móng nằm ở mức {-4,50 m|âm bốn phẩy năm mươi mét/âm bốn phẩy năm mét/âm bốn mét rưỡi} so với cốt mặt đất tự nhiên.
+negative	Dòng tiền thuần từ hoạt động đầu tư trong kỳ là {-350 triệu đồng|âm ba trăm năm mươi triệu đồng/âm ba trăm rưởi triệu đồng}.
+ordinal	Kỳ họp {thứ 8|thứ tám} của Quốc hội khóa {XV|mười [lăm,nhăm]} dự kiến khai mạc vào cuối tháng mười.
+ordinal	Đây là lần {thứ 3|thứ ba} doanh nghiệp được trao danh hiệu Hàng Việt Nam chất lượng cao.
+ordinal	Nội dung chi tiết về phương pháp luận được trình bày tại Chương {IV|bốn} của giáo trình.
+ordinal	Văn kiện Đại hội đại biểu toàn quốc lần {thứ XIII|thứ mười ba} của Đảng đã được xuất bản thành sách.
+ordinal	Vận động viên của đoàn về {thứ 4|thứ tư} ở nội dung chạy cự ly trung bình nam.
+ordinal	Nền văn minh lúa nước đã hình thành ở châu thổ sông Hồng từ trước thế kỷ {X|mười} trước Công nguyên.
+ordinal	Người đứng tên {thứ 2|thứ hai} trên giấy chứng nhận quyền sử dụng đất phải ký xác nhận vào hồ sơ.
+ordinal	Phần {II|hai} của báo cáo tập trung phân tích những tồn tại, hạn chế và nguyên nhân.
+ordinal	Trường xếp {thứ 21|thứ hai mươi [mốt,một]} trong bảng xếp hạng các cơ sở giáo dục đại học năm nay.
+currency	Tổng giá trị hợp đồng là {1.250.000.000 đồng|một [tỷ,tỉ] hai trăm năm mươi triệu đồng/một [tỷ,tỉ] hai trăm rưởi triệu đồng}.
+currency	Tiền hàng chưa thuế: {4.500.000đ|bốn triệu năm trăm [nghìn,ngàn] đồng/bốn triệu rưỡi đồng}.
+currency	Mỗi thí sinh nộp lệ phí đăng ký dự thi là {350.000 VNĐ|ba trăm năm mươi [nghìn,ngàn] đồng/ba trăm năm mươi [nghìn,ngàn] việt nam đồng}.
+currency	Dự án được tài trợ {2,5 triệu USD|hai phẩy năm triệu [đô la mỹ,đô la,đô,u ét đê]/hai triệu rưỡi [đô la mỹ,đô la,đô,u ét đê]} từ nguồn vốn ODA.
+currency	Giá vé tham quan dành cho người lớn là {50.000đ|năm mươi [nghìn,ngàn] đồng/năm chục [nghìn,ngàn] đồng}, trẻ em được giảm một nửa.
+currency	Đơn giá nhân công áp dụng theo định mức là {285.000 đồng/công|hai trăm tám mươi [lăm,nhăm] [nghìn,ngàn] đồng [một,mỗi,trên] công}.
+currency	Khoản vay trị giá {€200.000|hai trăm [nghìn,ngàn] ơ rô} được giải ngân làm hai đợt.
+currency	Tổng cộng tiền thanh toán: {12.375.000 đồng|mười hai triệu ba trăm bảy mươi [lăm,nhăm] [nghìn,ngàn] đồng}.
+currency	Giá trị xuất khẩu nông sản của tỉnh đạt {1,2 tỷ USD|một phẩy hai [tỷ,tỉ] [đô la mỹ,đô la,đô,u ét đê]/một [tỷ,tỉ] hai [đô la mỹ,đô la,đô,u ét đê]}.
+currency	Mức lương cơ sở mới là {2.340.000 đồng/tháng|hai triệu ba trăm bốn mươi [nghìn,ngàn] đồng [một,mỗi,trên] tháng}.
+currency	Sinh viên quốc tế đóng học phí {$3,500|ba [nghìn,ngàn] năm trăm [đô la mỹ,đô la,đô]/ba [nghìn,ngàn] rưỡi [đô la mỹ,đô la,đô]} mỗi học kỳ.
+currency	Mệnh giá mỗi cổ phần là {10.000 đồng|mười [nghìn,ngàn] đồng}, tổng số cổ phần phát hành thêm là {5 triệu|năm triệu}.
+currency	Chi phí dự phòng của gói thầu được tính bằng {125 tr.đ|một trăm hai mươi [lăm,nhăm] triệu đồng}.
+date	Nghị định này có hiệu lực thi hành kể từ ngày {01/7/2024|[mùng một,mồng một,một] tháng bảy năm hai [nghìn,ngàn] không trăm hai mươi [tư,bốn]}.
+date	Hà Nội, ngày {15|mười [lăm,nhăm]} tháng {3|ba} năm {2023|hai [nghìn,ngàn] không trăm hai mươi ba}
+date	Hạn chót nộp hồ sơ dự tuyển là ngày {30-9-2025|ba mươi tháng chín năm hai [nghìn,ngàn] không trăm hai mươi [lăm,nhăm]}.
+date	Lô hàng được nhập kho ngày {05.11.2024|[mùng năm,mồng năm,năm] tháng mười một năm hai [nghìn,ngàn] không trăm hai mươi [tư,bốn]}.
+date	Báo cáo tài chính cho năm tài chính kết thúc ngày {31/12/2023|ba mươi [mốt,một] tháng mười hai năm hai [nghìn,ngàn] không trăm hai mươi ba}.
+date	Kỳ thi tốt nghiệp trung học phổ thông bắt đầu từ ngày {26/6|hai mươi sáu tháng sáu} với bài thi Ngữ văn.
+date	HSD: {08/2026|tháng tám năm hai [nghìn,ngàn] không trăm hai mươi sáu}
+date	Giấy phép lao động được cấp ngày {14/02/2022|mười bốn tháng hai năm hai [nghìn,ngàn] không trăm hai mươi hai}.
+date	Luật Doanh nghiệp được Quốc hội thông qua ngày {17/6/2020|mười bảy tháng sáu năm hai [nghìn,ngàn] không trăm hai mươi}.
+date	Phong trào Xô viết Nghệ Tĩnh bùng nổ vào năm {1930|một [nghìn,ngàn] chín trăm ba mươi}.
+date	Lễ ký kết biên bản ghi nhớ dự kiến tổ chức vào thứ Sáu, ngày {24/10|hai mươi [tư,bốn] tháng mười}.
+date	Giỗ Tổ Hùng Vương được tổ chức vào ngày {10/3|[mùng mười,mồng mười,mười] tháng ba} âm lịch hằng năm.
+date	Số liệu trong báo cáo được cập nhật đến hết ngày {2024-09-30|ba mươi tháng chín năm hai [nghìn,ngàn] không trăm hai mươi [tư,bốn]}.
+time	Phiên họp bắt đầu lúc {8h00|tám giờ/tám giờ không phút/tám giờ đúng}, đề nghị các đại biểu có mặt trước mười lăm phút.
+time	Đoàn tàu Thống Nhất khởi hành từ ga Hà Nội lúc {19:25|mười chín giờ hai mươi [lăm,nhăm]/mười chín giờ hai mươi [lăm,nhăm] phút/bảy giờ hai mươi [lăm,nhăm] tối}.
+time	Giờ làm việc từ thứ Hai đến thứ Sáu kết thúc lúc {17h|mười bảy giờ/năm giờ chiều}.
+time	Bệnh nhân nhập viện cấp cứu lúc {02:15|hai giờ mười [lăm,nhăm]/hai giờ mười [lăm,nhăm] phút} sáng.
+time	Chuyến xe buýt cuối cùng rời bến lúc {21g30|hai mươi [mốt,một] giờ ba mươi/hai mươi [mốt,một] giờ ba mươi phút/hai mươi [mốt,một] giờ rưỡi}.
+time	Mẫu không khí được lấy lúc {07:45|bảy giờ bốn mươi [lăm,nhăm]/bảy giờ bốn mươi [lăm,nhăm] phút/tám giờ kém mười [lăm,nhăm]} mỗi buổi sáng.
+time	Theo biên bản, vụ việc xảy ra vào khoảng {23h40'|hai mươi ba giờ bốn mươi phút/hai mươi ba giờ bốn mươi}.
+time	Kết quả đo được ghi lại tại thời điểm {14:30:15|mười bốn giờ ba mươi phút mười [lăm,nhăm] giây}.
+time	Hệ thống sẽ được khởi động lại lúc {0h00|không giờ/không giờ không phút/mười hai giờ đêm} ngày mai.
+range	Thời gian giải quyết thủ tục là {5-7|năm [đến,tới] bảy/năm bảy} ngày làm việc kể từ khi nhận đủ hồ sơ hợp lệ.
+range	Nhiệt độ trung bình vào mùa hè dao động trong khoảng {28–35°C|hai mươi tám [đến,tới] ba mươi [lăm,nhăm] [độ xê,độ]}.
+range	Giai đoạn {2021-2025|hai [nghìn,ngàn] không trăm hai mươi [mốt,một] [đến,tới] hai [nghìn,ngàn] không trăm hai mươi [lăm,nhăm]}, tỉnh ưu tiên đầu tư hạ tầng.
+range	Lớp năng khiếu dành cho trẻ từ {3–5|ba [đến,tới] năm} tuổi.
+range	Liều dùng cho người lớn là {500-1000 mg|năm trăm [đến,tới] một [nghìn,ngàn] mi li gam}, ngày hai lần.
+range	Thư viện mở cửa phục vụ bạn đọc từ {7h30-17h00|bảy giờ [ba mươi,rưỡi] [đến,tới] mười bảy giờ/bảy giờ [ba mươi,rưỡi] [đến,tới] năm giờ chiều}.
+range	Đề tài được thực hiện từ tháng {3/2023-12/2024|ba năm hai [nghìn,ngàn] không trăm hai mươi ba [đến,tới] tháng mười hai năm hai [nghìn,ngàn] không trăm hai mươi [tư,bốn]}.
+range	Chiều cao cây trưởng thành đạt {1,5-2 m|một phẩy năm [đến,tới] hai mét/một mét rưỡi [đến,tới] hai mét}.
+range	Học sinh làm các bài tập {12-15|mười hai [đến,tới] mười [lăm,nhăm]} trang {84|tám mươi [tư,bốn]} sách giáo khoa.
+range	Tỷ lệ lạm phát mục tiêu được duy trì ở mức {3,5–4%|ba phẩy năm [đến,tới] bốn phần trăm/ba rưỡi [đến,tới] bốn phần trăm}.
+unit	Tuyến đường cao tốc mới có tổng chiều dài {128 km|một trăm hai mươi tám [ki lô mét,cây số]}.
+unit	Diện tích sàn xây dựng của công trình là {2.450 m²|hai [nghìn,ngàn] bốn trăm năm mươi mét vuông}.
+unit	Khối lượng bê tông cần đổ cho phần móng ước tính {36,8 m3|ba mươi sáu phẩy tám mét khối}.
+unit	Mỗi viên nang chứa {250 mg|hai trăm năm mươi mi li gam/hai trăm rưởi mi li gam} hoạt chất.
+unit	Năng suất lúa vụ đông xuân đạt bình quân {6,8 tấn/ha|sáu phẩy tám tấn [trên,một,mỗi] héc ta}.
+unit	Nhà máy điện mặt trời có công suất lắp đặt {50 MW|năm mươi mê ga oát}.
+unit	Tốc độ tối đa cho phép trong khu dân cư là {50 km/h|năm mươi [ki lô mét,cây số] [trên,một,mỗi] giờ/năm mươi ki lô mét giờ}.
+unit	Hàm lượng amoni trong nước mặt không được vượt quá {0,3 mg/l|không phẩy ba mi li gam [trên,một,mỗi] lít}.
+unit	Khi nhập viện, bệnh nhân có huyết áp {140/90 mmHg|một trăm bốn mươi trên chín mươi mi li mét thủy ngân/một trăm bốn mươi chín mươi mi li mét thủy ngân}.
+unit	Lượng mưa trung bình năm của khu vực vào khoảng {1.800 mm|một [nghìn,ngàn] tám trăm mi li mét/một [nghìn,ngàn] tám mi li mét}.
+unit	Trong tháng, hộ gia đình đã tiêu thụ hết {215 kWh|hai trăm mười [lăm,nhăm] ki lô oát giờ/hai trăm mười [lăm,nhăm] số} điện.
+unit	Đường dây truyền tải {500 kV|năm trăm ki lô vôn} mạch ba được đóng điện vận hành đúng tiến độ.
+unit	Khối lượng tịnh: {500 g|năm trăm gam/năm lạng}
+unit	Thể tích dung dịch đệm cần pha cho mỗi lần thí nghiệm là {250 ml|hai trăm năm mươi mi li lít/hai trăm rưởi mi li lít}.
+code	Mọi thắc mắc xin liên hệ đường dây nóng {1900 1234|một chín không không một hai ba bốn}.
+code	Số điện thoại liên hệ của văn phòng: {(024) 3825 6789|không hai bốn ba tám hai năm sáu bảy tám chín}.
+code	Mã số thuế của doanh nghiệp là {0102345678|không một không hai ba bốn năm sáu bảy tám}.
+code	Nội dung kiểm định được nêu tại mục {4.2.3|bốn chấm hai chấm ba} của tiêu chuẩn.
+code	Người mua vui lòng chuyển khoản vào số tài khoản {0451 0003 82917|không bốn năm một không không không ba tám hai chín một bảy}.
+code	Mã bưu chính của phường là {700000|bảy không không không không không}.
+code	Hóa đơn số {0001528|không không không một năm hai tám/một [nghìn,ngàn] năm trăm hai mươi tám} đã được bên bán điều chỉnh.
+code	Hướng dẫn cài đặt này áp dụng cho phiên bản phần mềm {3.10.2|ba chấm mười chấm hai/ba chấm một không chấm hai}.
+latin	Công ty đạt chứng nhận ISO {9001:2015|chín [nghìn,ngàn] không trăm [linh,lẻ] một hai [nghìn,ngàn] không trăm mười [lăm,nhăm]/chín không không một hai [nghìn,ngàn] không trăm mười [lăm,nhăm]}.
+latin	Máy tính trong phòng thực hành được cài đặt hệ điều hành Windows {11|mười một} và bộ ứng dụng Microsoft Office.
+latin	Bài giảng hướng dẫn sinh viên lập trình bằng ngôn ngữ Python phiên bản {3.12|ba chấm mười hai/ba chấm một hai}.
+latin	Samsung Electronics Việt Nam công bố tổng kim ngạch xuất khẩu đạt {65 tỷ USD|sáu mươi [lăm,nhăm] [tỷ,tỉ] [đô la mỹ,đô la,đô,u ét đê]}.
+latin	Thiết bị hỗ trợ kết nối Bluetooth {5.3|năm chấm ba} và cổng sạc USB Type-C.
+latin	Hội thảo do Google và Đại học Quốc gia Hà Nội đồng tổ chức thu hút hơn {500|năm trăm} nhà nghiên cứu về AI.
+mixed	Từ ngày {12/8|mười hai tháng tám}, mức hỗ trợ tăng lên {1.500.000 đồng/người|một triệu [năm trăm nghìn,năm trăm ngàn,rưỡi] đồng [một,mỗi] người}.
+mixed	Chuyến bay khởi hành lúc {6h45|sáu giờ bốn mươi [lăm,nhăm]/bảy giờ kém mười [lăm,nhăm]} và hạ cánh sau khoảng {2,5 giờ|hai phẩy năm giờ/hai giờ rưỡi}.
+mixed	Năm {2023|hai [nghìn,ngàn] không trăm hai mươi ba}, doanh thu của tập đoàn tăng {18,6%|mười tám phẩy sáu phần trăm}, đạt {42.000 tỷ đồng|bốn mươi hai [nghìn,ngàn] [tỷ,tỉ] đồng}.
+mixed	Lô hàng gồm {120|một trăm hai mươi/một trăm hai} thùng, tổng khối lượng {3.600 kg|ba [nghìn,ngàn] sáu trăm [ki lô gam,ki lô,cân]/ba [nghìn,ngàn] sáu [ki lô gam,ki lô,cân]}.
+mixed	Mẫu thử được sấy ở {105 °C|một trăm [linh,lẻ] năm [độ xê,độ]} trong {24 giờ|hai mươi [tư,bốn] giờ}.
+mixed	Học sinh xếp hạng {thứ 2|thứ hai} toàn khối với điểm trung bình {9,15|chín phẩy mười [lăm,nhăm]/chín phẩy một năm}.
+mixed	Đơn giá {85.000 đ/kg|tám mươi [lăm,nhăm] [nghìn,ngàn] đồng [một,mỗi,trên] [ki lô gam,ki lô,cân]}, áp dụng từ ngày {1/3|[mùng một,mồng một,một] tháng ba}.
+mixed	Trong quý {II|hai}, sản lượng điện thương phẩm đạt {6,2 tỷ kWh|sáu phẩy hai [tỷ,tỉ] ki lô oát giờ/sáu [tỷ,tỉ] hai ki lô oát giờ}, tăng {9%|chín phần trăm}.
+mixed	Vụ tai nạn xảy ra lúc {22h15|hai mươi hai giờ mười [lăm,nhăm]/hai mươi hai giờ mười [lăm,nhăm] phút} ngày {3/4|[mùng ba,mồng ba,ba] tháng tư} trên quốc lộ {1A|một a}.
+mixed	Nhiệt độ ban đêm có thể xuống {-5°C|âm năm [độ xê,độ]}, độ ẩm không khí lên tới {95%|chín mươi [lăm,nhăm] phần trăm/chín lăm phần trăm}.

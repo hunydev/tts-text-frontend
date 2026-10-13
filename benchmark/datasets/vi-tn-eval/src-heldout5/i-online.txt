@@ -1,0 +1,127 @@
+# heldout5_i: news, forum, listings, SMS/chat, signs
+cardinal	Năm nay trường tuyển {1.250|một [nghìn,ngàn] hai trăm năm mươi} chỉ tiêu cho hệ chính quy.
+cardinal	Tính đến chiều qua, đã có {3.045|ba [nghìn,ngàn] không trăm bốn mươi [lăm,nhăm]} hộ dân được di dời đến nơi an toàn.
+cardinal	Bài viết này đã nhận được {21|hai mươi mốt} bình luận chỉ sau vài phút đăng.
+cardinal	Cả xã có {105|một trăm [linh,lẻ] năm} cụ ông, cụ bà đã ngoài tám mươi tuổi.
+cardinal	Lễ hội năm nay thu hút khoảng {2 000 000|hai triệu} lượt khách tham quan.
+cardinal	Kho còn {24|hai mươi [tư,bốn]} thùng nữa thôi, ai cần thì nhắn mình nhé.
+cardinal	Giải chạy năm nay có {12500|mười hai [nghìn,ngàn] năm trăm/mười hai [nghìn,ngàn] rưỡi} vận động viên đăng ký.
+cardinal	Theo quy định mới, mỗi lớp không quá {35|ba mươi [lăm,nhăm]} học sinh.
+cardinal	Trong tuần qua, cả nước ghi nhận {1.004|một [nghìn,ngàn] không trăm [linh,lẻ] [bốn,tư]} ca mắc sốt xuất huyết.
+cardinal	Cửa hàng chỉ còn {7|bảy} suất cuối cùng cho chương trình tri ân khách hàng.
+decimal	Bé nhà mình nặng {3,2|ba phẩy hai} cân lúc chào đời, mẹ tròn con vuông.
+decimal	Quán này trên Google Maps được {4.6|bốn [phẩy,chấm] sáu} sao, đáng để thử lắm.
+decimal	Chỉ số VN-Index đóng cửa ở mức {1.287,46|một [nghìn,ngàn] hai trăm tám mươi bảy phẩy bốn mươi sáu/một [nghìn,ngàn] hai trăm tám mươi bảy phẩy bốn sáu} điểm.
+decimal	Chiếc xe chỉ tiêu thụ khoảng {5,6|năm phẩy sáu} lít xăng cho mỗi trăm cây số.
+decimal	Hệ số lương hiện tại của chị ấy là {2,34|hai phẩy ba mươi [tư,bốn]/hai phẩy ba [tư,bốn]}.
+decimal	Con bé thi được {9,75|chín phẩy bảy mươi [lăm,nhăm]/chín phẩy bảy [lăm,nhăm]} môn Toán, cả nhà mừng lắm.
+decimal	Tuổi thọ trung bình của người Việt hiện nay là {73,7|bảy mươi ba phẩy bảy} tuổi.
+decimal	Trận động đất mạnh {4,1|bốn phẩy một} độ Richter xảy ra tại Kon Tum rạng sáng nay.
+percent	Siêu thị giảm giá tới {50%|năm mươi phần trăm} cho toàn bộ mặt hàng gia dụng.
+percent	Giá xăng tăng thêm {3,5%|ba phẩy năm phần trăm} so với kỳ điều hành trước.
+percent	Điện thoại còn có {15%|mười lăm phần trăm} pin mà quên mang sạc rồi.
+percent	Có tới {72 %|bảy mươi hai phần trăm} người được hỏi cho biết họ mua sắm trực tuyến mỗi tuần.
+percent	Lãi suất vay mua nhà ưu đãi chỉ {6,5%/năm|sáu phẩy năm phần trăm [một,mỗi,trên] năm} trong hai năm đầu.
+percent	Độ ẩm không khí ở Hà Nội lúc này lên tới {95%|chín mươi [lăm,nhăm] phần trăm}.
+percent	Shop đang xả hàng giảm {30%|ba mươi phần trăm} đến hết tháng này, nhanh tay nha các chị.
+percent	Thị phần của hãng đã tăng từ {18%|mười tám phần trăm} lên {24%|hai mươi [tư,bốn] phần trăm} chỉ trong một năm.
+negative	Đêm qua nhiệt độ trên đỉnh Fansipan xuống tới {-2°C|âm hai độ (xê)}.
+negative	Lợi nhuận sau thuế quý này của công ty là {-15,3|âm mười lăm phẩy ba} tỷ đồng.
+negative	Chỉ số giá tiêu dùng tháng này ở mức {-0,8%|âm không phẩy tám phần trăm} so với tháng trước.
+negative	Thịt đông lạnh cần được bảo quản ở nhiệt độ {−18°C|âm mười tám độ (xê)} trở xuống.
+negative	Đội chủ nhà hiện có hiệu số bàn thắng bại là {-7|âm bảy}.
+negative	Có thời điểm mực nước tại trạm đo chỉ còn {-0,3 m|âm không phẩy ba mét}.
+ordinal	Đây là lần thứ {3|ba} liên tiếp đội tuyển lọt vào trận chung kết.
+ordinal	Anh ấy về đích ở vị trí {thứ 1|thứ nhất} sau hơn bốn tiếng thi đấu.
+ordinal	Sáng nay, Quốc hội khóa {XV|mười lăm} khai mạc kỳ họp thứ {10|mười}.
+ordinal	Căn nhà nằm ở ngõ {thứ 4|thứ tư} tính từ đầu phố.
+ordinal	Các mẹ nhớ họp phụ huynh vào {thứ 7|thứ bảy} tuần này nhé.
+ordinal	Việt Nam hiện đứng {thứ 2|thứ hai/thứ nhì} thế giới về xuất khẩu gạo.
+ordinal	Thế kỷ {XXI|hai mươi mốt} đặt ra nhiều thách thức mới cho ngành giáo dục.
+ordinal	Chúc mừng sinh nhật lần thứ {18|mười tám} của em gái mình!
+currency	Giá vé vào cổng chỉ {50.000đ/người|năm mươi [nghìn,ngàn] đồng [một,mỗi] người}.
+currency	Áo thun cotton đủ size, giá {149k|một trăm bốn mươi chín [nghìn,ngàn,ca]/một trăm bốn chín [nghìn,ngàn,ca]}.
+currency	Căn hộ hai phòng ngủ được rao bán với giá {3,2 tỷ|ba phẩy hai [tỷ,tỉ]/ba [tỷ,tỉ] hai}.
+currency	Mình để lại con xe giá {12tr|mười hai triệu}, ai quan tâm thì nhắn riêng.
+currency	Lương khởi điểm cho vị trí này khoảng {1.500 USD|một [nghìn,ngàn] năm trăm [đô la mỹ,đô la,đô]/một [nghìn,ngàn] rưỡi [đô la mỹ,đô la,đô]}.
+currency	Tổng vốn đầu tư của dự án lên tới {2,1 tỷ USD|hai phẩy một [tỷ,tỉ] [đô la mỹ,đô la,đô]}.
+currency	Chị chuyển khoản giúp em {2.350.000 VNĐ|hai triệu ba trăm năm mươi [nghìn,ngàn] (việt nam) đồng} nhé.
+currency	Vé máy bay khứ hồi đi Singapore chỉ từ {$199|một trăm chín mươi chín [đô la mỹ,đô la,đô]}.
+currency	Phí giao hàng nội thành là {25k|hai mươi [lăm,nhăm] [nghìn,ngàn,ca]/hai [lăm,nhăm] [nghìn,ngàn,ca]}.
+currency	Một tô phở bò ở quán đầu ngõ giá {65.000|sáu mươi [lăm,nhăm] [nghìn,ngàn]} đồng.
+currency	Giá vàng miếng hôm nay ở mức {84,5 triệu đồng/lượng|tám mươi [tư,bốn] phẩy năm triệu đồng [một,mỗi] lượng/tám mươi [tư,bốn] triệu rưỡi (đồng) [một,mỗi] lượng}.
+currency	Tiền điện tháng này hết {1tr2|một triệu hai [,trăm nghìn,trăm ngàn]}, nóng quá bật điều hòa suốt.
+currency	Chiếc túi xách phiên bản giới hạn có giá {€2.800|hai [nghìn,ngàn] tám trăm ơ rô/hai [nghìn,ngàn] tám ơ rô}.
+currency	Mỗi suất học bổng trị giá {10.000.000đ|mười triệu đồng}.
+currency	Giá cà phê xuất khẩu đạt {4.200 USD/tấn|bốn [nghìn,ngàn] hai trăm [đô la mỹ,đô la,đô] [một,mỗi] tấn/bốn [nghìn,ngàn] hai [đô la mỹ,đô la,đô] [một,mỗi] tấn}.
+date	Hôm nay, ngày {13/10/2026|mười ba tháng mười năm hai [nghìn,ngàn] (không trăm) hai mươi sáu}, trời Hà Nội se lạnh.
+date	Kỳ thi dự kiến diễn ra vào ngày {26-6-2027|hai mươi sáu tháng sáu năm hai [nghìn,ngàn] (không trăm) hai mươi bảy}.
+date	Hạn chót nộp hồ sơ: {5/11|(ngày) [mùng năm,mồng năm,năm] tháng mười một}.
+date	Ngày {30.4.1975|ba mươi tháng tư năm một [nghìn,ngàn] chín trăm bảy mươi [lăm,nhăm]} là mốc son chói lọi của lịch sử dân tộc.
+date	Chương trình khuyến mãi áp dụng đến hết {31/12|(ngày) ba mươi mốt tháng mười hai}.
+date	Ngày {1/6|[mùng một,mồng một,một] tháng sáu} là Ngày Quốc tế Thiếu nhi.
+date	Hà Nội, ngày {15 tháng 8 năm 2026|mười lăm tháng tám năm hai [nghìn,ngàn] (không trăm) hai mươi sáu}
+date	Sản phẩm có hạn sử dụng đến {03/2028|tháng ba năm hai [nghìn,ngàn] (không trăm) hai mươi tám}.
+date	Năm {2025|hai [nghìn,ngàn] (không trăm) hai mươi [lăm,nhăm]}, kim ngạch xuất khẩu nông sản lập kỷ lục mới.
+date	Hợp đồng có hiệu lực kể từ ngày {01/01/2027|[mùng một,mồng một,một] tháng một năm hai [nghìn,ngàn] (không trăm) hai mươi bảy}.
+date	Lễ cưới sẽ được tổ chức vào Chủ nhật, {20/12|(ngày) hai mươi tháng mười hai}.
+date	Rằm tháng Giêng năm nay rơi vào ngày {3/3|[mùng ba,mồng ba,ba] tháng ba} dương lịch.
+date	Ngày sinh: {12/09/1998|mười hai tháng chín năm một [nghìn,ngàn] chín trăm chín mươi tám}
+time	Tàu Thống Nhất khởi hành từ ga Hà Nội lúc {19h25|mười chín giờ hai mươi [lăm,nhăm] (phút)}.
+time	Buổi họp giao ban bắt đầu lúc {8:00|tám giờ (không phút)}.
+time	Hẹn cậu {7h30|bảy giờ ba mươi (phút)/bảy giờ rưỡi} ở quán cũ nha.
+time	Trận đấu sẽ được truyền hình trực tiếp lúc {20 giờ 45|hai mươi giờ bốn mươi [lăm,nhăm] (phút)} tối nay.
+time	Hiện tượng nguyệt thực sẽ kéo dài đến {01:12|một giờ mười hai (phút)} sáng mai.
+time	Siêu thị đóng cửa lúc {22g|hai mươi hai giờ}, quý khách vui lòng thanh toán trước giờ này.
+time	Lúc đó đồng hồ mới chỉ {6 giờ kém 15|sáu giờ kém mười lăm}.
+time	Thành tích của cô ở cự ly marathon là {2:35:08|hai giờ ba mươi [lăm,nhăm] phút tám giây/hai tiếng ba mươi [lăm,nhăm] phút tám giây}.
+time	Buổi sáng làm việc đến {11h|mười một giờ}, buổi chiều bắt đầu lại từ {13h30|mười ba giờ ba mươi (phút)/mười ba giờ rưỡi}.
+time	Mình đặt báo thức lúc {5:45|năm giờ bốn mươi [lăm,nhăm] (phút)} mà vẫn ngủ quên.
+range	Thời gian giao hàng từ {3-5|ba [đến,tới] năm} ngày làm việc.
+range	Nhiệt độ cao nhất ở Bắc Bộ phổ biến {35-37°C|ba mươi [lăm,nhăm] [đến,tới] ba mươi bảy độ (xê)}.
+range	Lớp học kỹ năng sống dành cho trẻ từ {6–12|sáu [đến,tới] mười hai} tuổi.
+range	Giá căn hộ khu vực này dao động {45-60 triệu đồng/m²|bốn mươi [lăm,nhăm] [đến,tới] sáu mươi triệu đồng [một,mỗi,trên] mét vuông}.
+range	Hội chợ hàng Việt diễn ra từ ngày {12-15/11|mười hai [đến,tới] mười lăm tháng mười một}.
+range	Tránh đi qua cầu trong khung giờ cao điểm {17h-19h|mười bảy (giờ) [đến,tới] mười chín giờ}.
+range	Tuyển nhân viên bán hàng, lương {15-20tr|mười lăm [đến,tới] hai mươi triệu} tùy năng lực.
+range	Kế hoạch phát triển kinh tế giai đoạn {2021–2025|hai [nghìn,ngàn] (không trăm) hai mươi mốt [đến,tới] hai [nghìn,ngàn] (không trăm) hai mươi [lăm,nhăm]} đã hoàn thành.
+range	Mỗi ngày nên uống {1,5-2 lít|một phẩy năm [đến,tới] hai lít/một lít rưỡi [đến,tới] hai lít/một rưỡi [đến,tới] hai lít} nước.
+unit	Tốc độ tối đa cho phép trên tuyến đường này là {80km/h|tám mươi [ki lô mét,cây số] [trên,một,mỗi] giờ}.
+unit	Bán nhà mặt ngõ, diện tích {72m2|bảy mươi hai mét vuông}, sổ đỏ chính chủ.
+unit	Nắng nóng khiến nhiệt độ ngoài trời lên tới {41°C|bốn mươi mốt độ (xê)}.
+unit	Mỗi hộp sữa tươi có dung tích {180ml|một trăm tám (mươi) [mi li lít,mi li]}.
+unit	Gạo thơm đóng túi {5kg|năm [ki lô gam,ki lô,cân,ký]}, giao tận nhà.
+unit	Lượng mưa đo được tại Huế trong hai ngày qua lên đến {350 mm|ba trăm năm mươi mi li mét}.
+unit	Máy dùng pin {5.000 mAh|năm [nghìn,ngàn] mi li am pe giờ}, hỗ trợ sạc nhanh {45W|bốn mươi [lăm,nhăm] oát}.
+unit	Nữ, cao {1m65|một mét sáu mươi [lăm,nhăm]/một mét sáu [lăm,nhăm]}, tìm bạn đời nghiêm túc.
+unit	Cánh đồng lúa của hợp tác xã rộng hơn {200 ha|hai trăm héc ta}.
+unit	Mỗi viên thuốc chứa {500mg|năm trăm mi li gam} paracetamol.
+unit	Tháng này nhà mình dùng hết {320 kWh|ba trăm hai (mươi) [ki lô oát giờ,số,số điện]}.
+unit	Con cá ngừ đại dương nặng tới {120 kg|một trăm hai (mươi) [ki lô gam,ki lô,cân,ký]}.
+code	Mọi thắc mắc xin liên hệ tổng đài {1900 6789|một chín không không sáu bảy tám chín}.
+code	Số điện thoại của tôi là {0912.345.678|không chín một hai ba bốn năm sáu bảy tám}.
+code	Mã xác thực của bạn là {482913|bốn tám hai chín một ba}, tuyệt đối không chia sẻ cho bất kỳ ai.
+code	Hãy gọi ngay {115|một một năm/một trăm mười lăm} khi cần cấp cứu.
+code	Mã đơn hàng của chị là {58301247|năm tám ba không một hai bốn bảy} ạ.
+code	Nhà em ở số {12B|mười hai bê/mười hai b} ngõ {64|sáu mươi [tư,bốn]/sáu [tư,bốn]} phố Huế.
+code	Xe buýt số {32|ba mươi hai/ba hai} chạy tuyến Giáp Bát – Nhổn.
+code	Quốc lộ {1A|một a} đoạn qua Nghệ An đang bị ùn tắc kéo dài.
+code	Số tài khoản nhận tiền: {0071 0012 34567|không không bảy một không không một hai ba bốn năm sáu bảy}.
+code	Mã số thuế của doanh nghiệp là {0101234567|không một không một hai ba bốn năm sáu bảy}.
+latin	iPhone {17|mười bảy} Pro Max bản {256GB|hai trăm năm mươi sáu [gi ga bai,ghi ga bai,gi ga,ghi ga,gờ bê]} đang được giảm giá mạnh.
+latin	Samsung vừa trình làng Galaxy Z Fold {7|bảy} với thiết kế mỏng hơn.
+latin	Concert của BLACKPINK ở Mỹ Đình thu hút hơn {60.000|sáu mươi [nghìn,ngàn]} fan.
+latin	Mình mới order đôi Nike Air Force {1|một} size {42|bốn mươi hai/bốn hai}, chờ ship khoảng {3|ba} ngày.
+latin	Theo báo cáo của Google, có {78%|bảy mươi tám phần trăm} người dùng Việt Nam tìm kiếm bằng giọng nói.
+latin	Grab tăng giá cước thêm {2.000 đồng|hai [nghìn,ngàn] đồng} mỗi chuyến từ {1/11|(ngày) [mùng một,mồng một,một] tháng mười một}.
+mixed	Từ ngày {15/10|mười lăm tháng mười}, giá xăng RON {95|chín mươi [lăm,nhăm]/chín [lăm,nhăm]} giảm {320 đồng/lít|ba trăm hai mươi đồng [một,mỗi] lít}.
+mixed	Bão số {3|ba} đổ bộ vào đất liền lúc {14h|mười bốn giờ} với sức gió {120 km/h|một trăm hai (mươi) [ki lô mét,cây số] [trên,một,mỗi] giờ}.
+mixed	Thanh lý tủ lạnh {180L|một trăm tám (mươi) lít}, giá {2tr5|hai triệu rưỡi/hai triệu năm [,trăm nghìn,trăm ngàn]}, liên hệ {0987 654 321|không chín tám bảy sáu năm bốn ba hai một}.
+mixed	Khách sạn giảm {20%|hai mươi phần trăm} cho các đơn đặt phòng trước ngày {30/11|ba mươi tháng mười một}.
+mixed	Giờ mở cửa: {8h-17h|tám giờ [đến,tới] mười bảy giờ/tám [đến,tới] mười bảy giờ}, nghỉ {Thứ 2|thứ hai}.
+mixed	Cầu Rồng dài {666 m|sáu trăm sáu mươi sáu mét}, được khánh thành ngày {29/3/2013|hai mươi chín tháng ba năm hai [nghìn,ngàn] (không trăm) mười ba}.
+mixed	Quý khách đã nạp thành công {100.000đ|một trăm [nghìn,ngàn] đồng} lúc {09:15|chín giờ mười lăm (phút)} ngày {12/10|mười hai tháng mười}.
+mixed	Dự án gồm {2|hai} tòa tháp cao {35|ba mươi [lăm,nhăm]} tầng với tổng diện tích sàn {48.000 m²|bốn mươi tám [nghìn,ngàn] mét vuông}.
+mixed	Đội tuyển Việt Nam thắng {3-1|ba một} và vươn lên vị trí {thứ 2|thứ hai/thứ nhì} bảng đấu.
+mixed	Người đàn ông {45|bốn mươi [lăm,nhăm]} tuổi bị phạt {7,5 triệu đồng|bảy phẩy năm triệu đồng/bảy triệu rưỡi (đồng)} vì vi phạm nồng độ cồn.
+mixed	Chính hội đền Hùng vào ngày {10/3|[mùng mười,mồng mười,mười] tháng ba} âm lịch, dự kiến đón khoảng {500.000|năm trăm [nghìn,ngàn]} lượt khách.

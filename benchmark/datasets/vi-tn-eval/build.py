@@ -90,7 +90,8 @@ SETS = {"eval": ("src", "vi-tn-eval-v1.jsonl", "vi-tn-v1"),
         "heldout": ("src-heldout", "vi-tn-heldout-v1.jsonl", "vi-tn-h1"),
         "heldout2": ("src-heldout2", "vi-tn-heldout-v2.jsonl", "vi-tn-h2"),
         "heldout3": ("src-heldout3", "vi-tn-heldout-v3.jsonl", "vi-tn-h3"),
-        "heldout4": ("src-heldout4", "vi-tn-heldout-v4.jsonl", "vi-tn-h4")}
+        "heldout4": ("src-heldout4", "vi-tn-heldout-v4.jsonl", "vi-tn-h4"),
+        "heldout5": ("src-heldout5", "vi-tn-heldout-v5.jsonl", "vi-tn-h5")}
 
 
 def main():
