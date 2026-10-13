@@ -32,7 +32,10 @@ ttf_status_t ttf_tokenize_protected(const ttf_engine_t *engine, const char *text
             if (match.control.kind != TTF_CONTROL_NONE) {
                 match.end = match.control.end;
                 match.kind = "control";
-                match.rule = match.control.kind == TTF_CONTROL_ESCAPE    ? "control.escape"
+                match.rule = match.control.kind == TTF_CONTROL_ESCAPE ? "control.escape"
+                             : match.control.kind == TTF_CONTROL_PATTERN &&
+                                     match.control.base_begin == match.control.base_end
+                                 ? "control.mark"
                              : match.control.kind == TTF_CONTROL_PATTERN ? "control.pattern"
                                                                          : "control.literal";
                 match.layer = TTF_LAYER_COMMON;

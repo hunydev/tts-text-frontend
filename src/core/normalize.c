@@ -1189,6 +1189,28 @@ static ttf_status_t render_control(const ttf_engine_t *e, const ttf_pack_input_t
     ttf_buffer_t decoded = {0}, base = {0};
     const char *source_text = in->text + control->base_begin;
     ttf_status_t status;
+    if (control->kind == TTF_CONTROL_PATTERN && control->base_begin == control->base_end) {
+        /* {@mark:cough}: nothing is read. A zero-width span carries the name to the
+           stream callback (unit @mark, value cough) at its place in the output. */
+        size_t name = control->payload_begin + 5;
+        sem->type = TTF_SEM_CUSTOM;
+        sem->input_begin = span->input_begin = offset + control->begin;
+        sem->input_end = span->input_end = offset + control->end;
+        tag(sem->source_lang, "und");
+        tag(sem->context_lang, "und");
+        tag(sem->render_lang, "und");
+        tag(span->verbalizer, "identity");
+        span->script = TTF_SCRIPT_SYMBOL;
+        snprintf(sem->rule, sizeof(sem->rule), "control.mark");
+        snprintf(sem->unit, sizeof(sem->unit), "@mark");
+        if (name < control->payload_end)
+            snprintf(sem->value, sizeof(sem->value), "%.*s",
+                     (int)(control->payload_end - name - 1), in->text + name + 1);
+        ttf_trace_span_begin(e, span->input_begin, span->input_end);
+        ttf_trace_stage(e, TTF_TRACE_POLICY, 0, control->end - control->begin);
+        return ttf_trace_emit(e, TTF_TRACE_SELECTED, TTF_LAYER_USER, 0, "und", "input-control",
+                              "@mark", sem->value, sem->value, "position-mark", SIZE_MAX);
+    }
     context = context_pack(e, in, span->context_trace);
     if (!context)
         return TTF_EINVAL;
@@ -1611,7 +1633,7 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
     ttf_protected_region_t *regions = NULL;
     size_t region_count = 0, region_index = 0;
     size_t count = 0, i = 0, capacity = 0;
-    int removed_before = 0;
+    int removed_before = 0, mark_gap = 0;
     ttf_buffer_t output = {0};
     ttf_status_t st;
     ttf_control_match_t rejected = {0};
@@ -1776,7 +1798,9 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
                     st = add_span(out, &span, &capacity);
                 if (st != TTF_OK)
                     goto fail;
-                removed_before = 0;
+                /* the space after a marker collapses with the one before it */
+                removed_before = mark_gap = literal->control.kind == TTF_CONTROL_PATTERN &&
+                                            literal->control.base_begin == literal->control.base_end;
                 ++i;
                 continue;
             }
@@ -2431,8 +2455,9 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
                 st = particle_agreement(e, renderer, text + tokens[i].begin, end - tokens[i].begin,
                                         &output, &normalized);
         }
-        if (st == TTF_OK && e->frontend_options.output_mode == TTF_OUTPUT_SPEECH) {
-            /* A removed span leaves its neighboring spaces behind. Keep one. */
+        if (st == TTF_OK && (e->frontend_options.output_mode == TTF_OUTPUT_SPEECH || mark_gap)) {
+            /* A removed span (or a marker, in text output too) leaves its
+               neighboring spaces behind. Keep one. */
             size_t b = 0;
             while (b < normalized.length &&
                    (normalized.data[b] == ' ' || normalized.data[b] == '\t'))
@@ -2445,7 +2470,7 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
                 normalized.length = 0;
                 normalized.data[0] = 0;
             } else
-                removed_before = 0;
+                removed_before = mark_gap = 0;
         }
         if (st == TTF_OK)
             st = ttf_trace_status(e);

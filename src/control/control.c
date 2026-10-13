@@ -25,6 +25,38 @@ static int break_pattern(const char *text, size_t begin, size_t end) {
     return end - begin == 8 && !memcmp(text + begin, "@break:", 7) && text[begin + 7] >= '1' &&
            text[begin + 7] <= '3';
 }
+/* {@mark} and {@mark:name} (name [a-z][a-z0-9_-]{0,23}): a position marker with
+   no reading (2026-10-13). 1 a complete marker ending before *end, 0 not one,
+   -1 an unfinished prefix of one. */
+static int mark_at(const char *text, size_t length, size_t begin, size_t *end) {
+    static const char lead[] = "{@mark";
+    size_t k, p, name = 0;
+    for (k = 0; k + 1 < sizeof(lead); ++k) {
+        if (begin + k >= length)
+            return -1;
+        if (text[begin + k] != lead[k])
+            return 0;
+    }
+    p = begin + sizeof(lead) - 1;
+    if (p >= length)
+        return -1;
+    if (text[p] == '}') {
+        *end = p + 1;
+        return 1;
+    }
+    if (text[p] != ':')
+        return 0;
+    for (++p; p < length && text[p] != '}'; ++p, ++name)
+        if (name >= 24 || !((text[p] >= 'a' && text[p] <= 'z') ||
+                            (name && (digit(text[p]) || text[p] == '_' || text[p] == '-'))))
+            return 0;
+    if (p >= length)
+        return -1;
+    if (!name)
+        return 0;
+    *end = p + 1;
+    return 1;
+}
 static ttf_script_t script_at(const char *text, size_t length, size_t at, size_t *width) {
     uint32_t cp;
     *width = 0;
@@ -113,6 +145,11 @@ static ttf_status_t payload(const ttf_engine_t *engine, const char *text, size_t
             size_t i, n = p - match->payload_begin;
             if (!n)
                 return TTF_EINVAL;
+            /* a marker never binds an atom or a group: [[x]]{@mark} is malformed */
+            if (match->kind == TTF_CONTROL_PATTERN && n >= 5 &&
+                !memcmp(text + match->payload_begin, "@mark", 5) &&
+                (n == 5 || text[match->payload_begin + 5] == ':'))
+                return TTF_EINVAL;
             if (match->kind == TTF_CONTROL_PATTERN && !break_pattern(text, match->payload_begin, p) &&
                 !digits_pattern(text, match->payload_begin, p)) {
                 /* The public CUSTOM.unit field includes '@' and its terminator. */
@@ -160,7 +197,25 @@ ttf_status_t ttf_control_parse(const ttf_engine_t *engine, const char *text, siz
         match->complete = 1;
         return TTF_OK;
     }
-    if (text[begin] == '{' || text[begin] == '}')
+    if (text[begin] == '{') {
+        /* {@mark:cough}: the only control without a source atom */
+        size_t end = 0;
+        int mark = mark_at(text, length, begin, &end);
+        match->kind = TTF_CONTROL_PATTERN;
+        match->base_begin = match->base_end = begin;
+        match->payload_begin = begin + 1;
+        if (mark < 0)
+            return incomplete(engine, length, final, '}', match);
+        if (!mark)
+            return TTF_EINVAL;
+        if (end - begin > engine->frontend_options.max_control_bytes)
+            return TTF_ELIMIT;
+        match->payload_end = end - 1;
+        match->end = end;
+        match->complete = 1;
+        return TTF_OK;
+    }
+    if (text[begin] == '}')
         return TTF_EINVAL;
     if (text[begin] == '[' && begin + 1 < length && text[begin + 1] == '[') {
         int nonspace = 0;
@@ -209,6 +264,19 @@ ttf_status_t ttf_control_parse(const ttf_engine_t *engine, const char *text, siz
     base_end = atom_end(text, length, begin);
     if (base_end == begin || base_end == length || text[base_end] != '{')
         return TTF_OK;
+    {
+        /* 기침{@mark:cough}: a marker leaves the atom before it alone */
+        size_t ignored = 0;
+        int mark = mark_at(text, length, base_end, &ignored);
+        if (mark > 0)
+            return TTF_OK;
+        if (mark < 0 && !final) {
+            match->kind = TTF_CONTROL_PATTERN;
+            match->base_begin = begin;
+            match->base_end = base_end;
+            return incomplete(engine, length, final, '}', match);
+        }
+    }
     match->base_begin = begin;
     match->base_end = base_end;
     if (base_end - begin >= engine->frontend_options.max_control_bytes)

@@ -137,6 +137,40 @@ not an audio duration or a guaranteed pause length of a downstream voice.
 This replaces the v0.22 position marker (`앞{@break:1}뒤` inserted a separator at
 that position without reading the preceding word differently).
 
+## Mark control (2026-10-13)
+
+In annotated input, `{@mark}` and `{@mark:name}` mark a **position** for the
+application without changing what is read. A typical use is a non-speech sound:
+the voice reads the text, and the caller inserts a cough, a laugh or a breath where
+the marker was written.
+
+| Input (ko-KR) | Output text | Marker span |
+|---|---|---|
+| `안녕하세요 {@mark:cough} 반갑습니다.` | `안녕하세요 반갑습니다.` | `value=cough` at byte 16 |
+| `기침{@mark:cough} 소리가 났다.` | `기침 소리가 났다.` | `value=cough` after `기침` |
+| `{@mark} 시작합니다.` | `시작합니다.` | `value=""` at byte 0 |
+
+- **Name:** optional. When given, it is one lowercase ASCII letter followed by up
+  to 23 lowercase letters, digits, `_` or `-` (`cough`, `laugh`, `sigh_2`). The
+  engine does not interpret the name.
+- **Text:** the marker emits no characters in text or speech output, in every
+  language pack. A space on both sides collapses to one.
+- **Binding:** unlike other controls, a marker never binds the atom before it.
+  `1234{@mark}` reads `1234` normally, and the marker follows the reading. A marker
+  after a `[[group]]`, an empty or malformed name (`{@mark:}`, `{@mark:Cough}`) and
+  anything else in braces are malformed controls. They are `TTF_EINVAL` with
+  `invalid_control=error` and ordinary text otherwise.
+- **Callback:** each marker is one span in the segment with `begin == end`
+  (zero width, its byte position in `segment->text`):
+  - `semantic.type = CUSTOM`, `semantic.rule = control.mark`
+  - `semantic.unit = @mark`, `semantic.value = name` (empty for `{@mark}`)
+  - `input_begin`/`input_end` cover the marker in the input
+  The callback finds markers by `unit == "@mark"` and inserts its sound at `begin`.
+- **Stream:** a marker does not force a segment boundary. A marker split across
+  writes waits like any control, so every chunk division gives the same text,
+  spans and positions as a batch call. `max_control_bytes` covers the marker.
+- **Not interpreted:** plain input and protected code leave `{@mark}` as written.
+
 ## Join control (2026-10-03)
 
 `X{@join}` is the opposite of `{@break}`: the atom or `[[group]]` X is read as

@@ -2,7 +2,20 @@
 
 갱신: 2026-10-11. Release **0.20.0**, public ABI **v1**.
 
-## 최근 인계: 베트남어 팩 6단계 (2026-10-13, 브랜치 claude/vi-pack6)
+## 최근 인계: 위치 표시 제어 {@mark} (2026-10-13, 브랜치 claude/mark-control)
+
+- **구문:** annotated 입력의 `{@mark}`·`{@mark:cough}`는 읽기를 바꾸지 않는 위치 표시다(프로젝트 소유자 요청, 기본안).
+  - 출력 글자는 없다. 앞뒤 공백은 하나로 합친다.
+  - 앞 낱말에 붙지 않는다. `[[…]]{@mark}`, 빈 이름·대문자 이름은 잘못된 제어다.
+- **콜백:** 표시 자리에 길이 0 span 하나가 생긴다(`rule=control.mark`, `unit=@mark`, `value=이름`).
+  - 콜백은 `segment->spans`에서 `unit == "@mark"`를 찾아 `begin` 위치에 효과음을 넣는다.
+  - 세그먼트 경계는 바꾸지 않는다.
+- **테스트:** `tests/integration/test_mark_control.py`(29건)
+  - 배치와 스트림 3가지 분할(4096·7·1바이트)에서 같은 텍스트·span·위치
+  - 잘못된 표시 8종, plain 입력
+- 문서: [input-format.md](input-format.md) "Mark control".
+
+## 최근 인계: 베트남어 팩 6단계 (2026-10-13, main 반영)
 
 - **고친 것:** held-out v5 실패 유형($3,500, tr.đ, lúc 22g, hạn 뒤 d/m, 월/년 범위).
 - **측정:** held-out v6(코드 고정 뒤 처음 연 257문장)에서 **96.8%**다. 세 요청 언어가 같다.

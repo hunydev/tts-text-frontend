@@ -2,6 +2,12 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Mark control: in annotated input, `{@mark}` and `{@mark:name}` mark a position without
+  changing the reading (no output text; a space on both sides collapses to one).
+  - Each marker is one zero-width span (rule control.mark, unit @mark, value = name), so a
+    stream callback can insert a non-speech sound such as a cough at that offset.
+  - A marker never binds the atom before it, does not force a segment boundary, and gives the
+    same result in every chunk division (tests/integration/test_mark_control.py).
 - Vietnamese (vi-VN) phase 6:
   - Fixes: $3,500, tr.đ, lúc 22g, d/m after hạn, month/year ranges.
   - Bug fixes: a cue must be a whole word (khuyến mãi is not mã), and a dash pair after ngày
