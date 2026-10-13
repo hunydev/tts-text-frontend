@@ -1,0 +1,129 @@
+cardinal	Sau sáp nhập, cả nước hiện có {34|ba mươi [tư,bốn]} tỉnh, thành phố.
+cardinal	Trận lũ quét đã làm {1.250|một [nghìn,ngàn] hai trăm năm mươi/một [nghìn,ngàn] hai trăm rưởi} ngôi nhà bị ngập sâu.
+cardinal	Sân Mỹ Đình chật kín với gần {40.000|bốn mươi [nghìn,ngàn]/bốn chục [nghìn,ngàn]} khán giả đến cổ vũ.
+cardinal	Cho vào nồi {3|ba} củ hành tím và {2|hai} nhánh sả đập dập.
+cardinal	Cảm ơn {100|một trăm} nghìn bạn đã theo dõi kênh của mình!
+cardinal	Lực lượng chức năng đã huy động {205|hai trăm [linh,lẻ] năm} cán bộ, chiến sĩ tham gia cứu hộ.
+cardinal	Đội tuyển Việt Nam đã có {11|mười một} trận bất bại liên tiếp.
+cardinal	Từ đầu năm, quận đã tiếp nhận {2.408|hai [nghìn,ngàn] bốn trăm [linh,lẻ] tám} hồ sơ xin cấp phép xây dựng.
+cardinal	Đã {365|ba trăm sáu [mươi lăm,mươi nhăm,lăm]} ngày kể từ khi tụi mình về chung một nhà.
+cardinal	Đội chủ nhà thắng thuyết phục {3-1|ba một} trên sân Hàng Đẫy.	score
+decimal	Chỉ số chứng khoán tăng {8,74|tám phẩy bảy [mươi tư,mươi bốn,tư,bốn]} điểm, lên {1.682,35|một [nghìn,ngàn] sáu trăm tám mươi hai phẩy ba [mươi lăm,mươi nhăm,lăm]} điểm.
+decimal	Nguyễn Thị Oanh về đích với thành tích {9|chín} phút {58,6|năm mươi tám phẩy sáu} giây.
+decimal	Thêm {1,5|một phẩy năm/một rưỡi} thìa canh nước mắm để món canh đậm đà hơn.
+decimal	Điểm trung bình học kỳ của em đạt {9,25|chín phẩy hai [mươi lăm,mươi nhăm,lăm]}, cao nhất lớp.
+decimal	Vận động viên thể dục dụng cụ nhận {14,366|mười bốn phẩy ba trăm sáu mươi sáu/mười bốn phẩy ba sáu sáu} điểm ở nội dung nhảy chống.
+decimal	Dân số thành phố hiện vào khoảng {9,6 triệu|chín phẩy sáu triệu/chín triệu sáu [,trăm nghìn,trăm ngàn]} người.
+decimal	Vị trí tâm bão ở vào khoảng {17,5|mười bảy phẩy năm} độ Vĩ Bắc; {112,3|một trăm mười hai phẩy ba} độ Kinh Đông.
+decimal	Thủ môn Đặng Văn Lâm nhận điểm đánh giá {7,8|bảy phẩy tám} sau trận đấu.
+decimal	Sản phẩm được người dùng chấm {4,9|bốn phẩy chín} trên {5|năm} sao.
+decimal	Trận động đất có độ lớn {4,2|bốn phẩy hai} xảy ra tại khu vực Kon Plông.
+percent	Giá điện sinh hoạt bình quân tăng {4,8%|bốn phẩy tám phần trăm} kể từ hôm nay.
+percent	Giảm ngay {50%|năm mươi phần trăm} cho sản phẩm thứ hai trong đơn hàng.
+percent	Khả năng có mưa dông vào chiều tối nay là {80%|tám mươi phần trăm}.
+percent	Đội chủ nhà kiểm soát bóng tới {62%|sáu mươi hai phần trăm} trong hiệp một.
+percent	Nên chọn sô-cô-la đen có hàm lượng ca cao từ {70 %|bảy mươi phần trăm} trở lên.
+percent	Tỷ lệ hộ nghèo của tỉnh đã giảm xuống còn {1,05%|một phẩy không năm phần trăm}.
+percent	Pin điện thoại còn đúng {5%|năm phần trăm} mà đường về nhà còn xa lắm.
+percent	Kim ngạch xuất khẩu rau quả tăng {21%|hai mươi mốt phần trăm} so với cùng kỳ năm ngoái.
+percent	Nước ép nguyên chất {100%|một trăm phần trăm}, không đường, không chất bảo quản.
+negative	Đỉnh Mẫu Sơn ghi nhận nhiệt độ {-2°C|âm hai độ (xê)} vào sáng sớm nay.
+negative	Trên đỉnh Fansipan, nhiệt độ có lúc xuống tới {−4|âm bốn} độ.
+negative	Bảo quản thịt trong ngăn đá ở nhiệt độ {-18 độ C|âm mười tám độ (xê)} để giữ được lâu.
+negative	Sau {5|năm} vòng đấu, đội khách vẫn có hiệu số bàn thắng bại {-7|âm bảy}.
+negative	Chỉ số giá tiêu dùng tháng này ở mức {-0,3%|âm không phẩy ba phần trăm} so với tháng trước.
+negative	Đêm nay, nhiệt độ tại Bắc Kinh có thể xuống khoảng {-6℃|âm sáu độ (xê)}.
+negative	Lợi nhuận sau thuế quý {III|ba} của doanh nghiệp là {-125 tỷ đồng|âm một trăm hai mươi [lăm,nhăm] [tỷ,tỉ] đồng}.
+negative	Sáng nay Mộc Châu {-1 độ|âm một độ}, sương muối phủ trắng đồi chè luôn mọi người ơi!
+ordinal	Đội tuyển nữ Việt Nam giành {hạng 3|hạng ba} chung cuộc tại giải đấu.
+ordinal	Kỳ họp {thứ 10|thứ mười} của Quốc hội khóa {XV|mười lăm} khai mạc sáng nay.
+ordinal	Hà Nội là một trong những đô thị phát triển năng động nhất đầu thế kỷ {XXI|hai mươi mốt}.
+ordinal	Tay đua người Pháp về nhất, còn vận động viên chủ nhà xếp {thứ 4|thứ tư}.
+ordinal	Khách hàng {thứ 1000|thứ một [nghìn,ngàn]} sẽ nhận được một chiếc xe máy tay ga.
+ordinal	Lần {thứ 2|thứ hai} lên Đà Lạt mà vẫn mê như lần đầu.
+ordinal	Đây là danh hiệu {thứ 21|thứ hai mươi mốt} trong sự nghiệp của tay vợt này.
+ordinal	{Thứ 7|thứ bảy} tuần này, phố đi bộ quanh hồ Hoàn Kiếm tạm dừng hoạt động.
+ordinal	Bước {thứ 3|thứ ba} là ướp cá với nghệ và riềng trong {30|ba mươi} phút.
+ordinal	Sau vòng đấu này, đội bóng đất Cảng vươn lên {thứ 1|thứ nhất} trên bảng xếp hạng.
+currency	Giá vàng miếng hôm nay ở mức {135,5 triệu đồng/lượng|một trăm ba mươi [lăm,nhăm] phẩy năm triệu đồng [một,mỗi] lượng/một trăm ba mươi [lăm,nhăm] triệu rưỡi (đồng) [một,mỗi] lượng}.
+currency	Áo khoác gió chỉ còn {299k|hai trăm chín [mươi chín,chín] [nghìn,ngàn,ca]}, miễn phí giao hàng toàn quốc.
+currency	Bó rau muống ngoài chợ giờ đã lên {15.000đ|mười lăm [nghìn,ngàn] (đồng)}.
+currency	Gói cước dữ liệu di động chỉ {70.000 VNĐ/tháng|bảy mươi [nghìn,ngàn] [đồng,việt nam đồng] [một,mỗi,trên] tháng}.
+currency	Dự án có tổng vốn đầu tư {2,3 tỷ USD|hai phẩy ba [tỷ,tỉ] [đô la mỹ,đô la,đô]/hai [tỷ,tỉ] ba (trăm triệu) [đô la mỹ,đô la,đô]}.
+currency	Ly trà sữa {45 nghìn|bốn [mươi lăm,mươi nhăm,lăm] [nghìn,ngàn]} mà ngon xỉu luôn á.
+currency	Mức lương cơ sở hiện hành là {2.340.000 đồng/tháng|hai triệu ba trăm bốn mươi [nghìn,ngàn] đồng [một,mỗi,trên] tháng}.
+currency	Một ký thịt ba chỉ ở siêu thị hiện có giá {185 ngàn|một trăm tám [mươi lăm,mươi nhăm,lăm] [nghìn,ngàn]}.
+currency	Câu lạc bộ đã chi {3 triệu euro|ba triệu ơ rô} để chiêu mộ tiền đạo người Brazil.
+currency	Vé xem phim cuối tuần đồng giá {60K|sáu mươi [nghìn,ngàn,ca]}.
+currency	Doanh thu toàn ngành du lịch đạt hơn {840.000 tỷ đồng|tám trăm bốn mươi [nghìn,ngàn] [tỷ,tỉ] đồng}.
+currency	Vé xem ca nhạc bên Singapore tận {$250|hai trăm năm mươi đô (la)/hai trăm rưởi đô (la)} lận đó.
+date	Luật có hiệu lực thi hành từ ngày {01/01/2026|[mùng một,mồng một,một] tháng [một,giêng] năm hai [nghìn,ngàn] không trăm hai mươi sáu}.
+date	Từ ngày {15/10|mười lăm tháng mười}, không khí lạnh tăng cường ảnh hưởng đến các tỉnh miền Bắc.
+date	Trận chung kết lượt về diễn ra vào ngày {5-1-2027|[mùng năm,mồng năm,năm] tháng [một,giêng] năm hai [nghìn,ngàn] không trăm hai mươi bảy} trên sân Rajamangala.
+date	Ngày {30/4/1975|ba mươi tháng tư năm một [nghìn,ngàn] chín trăm bảy mươi [lăm,nhăm]} là mốc son chói lọi trong lịch sử dân tộc.
+date	Chương trình khuyến mãi kéo dài đến hết ngày {31.12|ba mươi mốt tháng mười hai}.
+date	Ngày {20 tháng 11 năm 2025|hai mươi tháng mười một năm hai [nghìn,ngàn] không trăm hai mươi [lăm,nhăm]}, các em học sinh tặng hoa tri ân thầy cô.
+date	Tết Nguyên đán Bính Ngọ rơi vào ngày {17/2/2026|mười bảy tháng hai năm hai [nghìn,ngàn] không trăm hai mươi sáu} dương lịch.
+date	Hạn sử dụng in trên bao bì: {12/03/2027|mười hai tháng ba năm hai [nghìn,ngàn] không trăm hai mươi bảy}.
+date	Hẹn gặp lại cả nhà vào dịp {14/2|mười bốn tháng hai} nha!
+date	Ngày {2/9/2025|[mùng hai,mồng hai,hai] tháng chín năm hai [nghìn,ngàn] không trăm hai mươi [lăm,nhăm]}, cả nước long trọng kỷ niệm {80|tám mươi} năm Quốc khánh.
+date	Dự báo thời tiết ngày mai, thứ Tư {14/10/2026|mười bốn tháng mười năm hai [nghìn,ngàn] không trăm hai mươi sáu}.
+date	Số liệu được tính đến hết {tháng 6/2026|tháng sáu năm hai [nghìn,ngàn] không trăm hai mươi sáu}.
+time	Bản tin thời sự tối được phát sóng lúc {19h|mười chín giờ} hằng ngày.
+time	Trận đấu sẽ bắt đầu lúc {19:30|mười chín giờ ba mươi (phút)/mười chín giờ rưỡi} tối nay.
+time	Khoảng {4h|bốn giờ} sáng mai, bão sẽ đi vào vùng biển phía đông Quảng Ngãi.
+time	Ninh xương với lửa nhỏ khoảng {1h30|một [giờ,tiếng] ba mươi (phút)/một [giờ,tiếng] rưỡi} để nước dùng ngọt thanh.
+time	Cửa hàng mở cửa từ {8h00|tám giờ} đến {22h00|hai mươi hai giờ} tất cả các ngày trong tuần.
+time	Vụ tai nạn xảy ra vào khoảng {23g15|hai mươi ba giờ mười lăm (phút)} đêm qua.
+time	{5h|năm giờ} sáng dậy chạy bộ, có ai cùng hội không nè?
+time	Bàn thắng duy nhất được ghi ở phút {90+3|chín mươi cộng ba}.
+time	Lễ thượng cờ diễn ra đúng {6:00|sáu giờ} sáng tại Quảng trường Ba Đình.
+time	Bản tin được cập nhật lúc {11:45|mười một giờ bốn [mươi lăm,mươi nhăm,lăm] (phút)/mười hai giờ kém mười lăm} trưa nay.
+range	Nhiệt độ cao nhất phổ biến {33-35°C|ba mươi ba [đến,tới] ba mươi [lăm,nhăm] độ (xê)}, có nơi trên {36°C|ba mươi sáu độ (xê)}.
+range	Lượng mưa phổ biến {50–100 mm|năm mươi [đến,tới] một trăm [mi li mét,li]}, cục bộ có nơi trên {150 mm|một trăm năm mươi [mi li mét,li]/một trăm rưởi [mi li mét,li]}.
+range	Nướng bánh trong {15-20|mười lăm [đến,tới,] hai mươi} phút cho đến khi mặt bánh vàng đều.
+range	Hội nghị xúc tiến đầu tư diễn ra từ {8-10/11|[mùng tám,mồng tám,tám] [đến,tới] [mùng mười,mồng mười,mười] tháng mười một} tại Hà Nội.
+range	Giảm giá {30-50%|ba mươi [đến,tới] năm mươi phần trăm} toàn bộ sản phẩm thời trang hè.
+range	Giá căn hộ chung cư khu vực này dao động {60–80 triệu đồng/m²|sáu mươi [đến,tới] tám mươi triệu đồng [một,mỗi,trên] mét vuông}.
+range	Gió mạnh cấp {6-7|sáu [đến,tới,] bảy}, giật cấp {9|chín}, biển động mạnh.
+range	Thời gian tiếp nhận hồ sơ: {7h30 – 11h30|bảy giờ [ba mươi,ba mươi phút,rưỡi] [đến,tới] mười một giờ [ba mươi,ba mươi phút,rưỡi]} các ngày làm việc.
+range	Mỗi ngày nên ăn {2-3|hai [đến,tới,] ba} phần rau xanh và trái cây.
+range	Kế hoạch phát triển kinh tế - xã hội giai đoạn {2026-2030|hai [nghìn,ngàn] không trăm hai mươi sáu [đến,tới,] hai [nghìn,ngàn] không trăm ba mươi} đã được thông qua.
+unit	Tâm bão hiện cách đất liền khoảng {250 km|hai trăm năm mươi [ki lô mét,cây số]/hai trăm rưởi [ki lô mét,cây số]}.
+unit	Sức gió mạnh nhất vùng gần tâm bão đạt {118 km/h|một trăm mười tám [ki lô mét,cây số] [trên,một,mỗi] giờ}.
+unit	Chuẩn bị {500g|năm trăm [gam,gờ ram]} bột mì, {2|hai} quả trứng gà và {200ml|hai trăm [mi li lít,mi li]} sữa tươi.
+unit	Cô xuất sắc giành huy chương vàng ở cự ly {1.500m|một [nghìn,ngàn] năm trăm mét/một [nghìn,ngàn] rưởi mét} nữ.
+unit	Mưa lớn kéo dài khiến {1.200 ha|một [nghìn,ngàn] hai trăm héc ta} lúa mùa bị ngập úng.
+unit	Sạt lở khiến khoảng {300 m³|ba trăm mét khối} đất đá tràn xuống mặt đường.
+unit	Mực nước sông Hồng tại Hà Nội lên mức {10,42 m|mười phẩy bốn [mươi hai,hai] mét}.
+unit	Hôm nay chạy được {21km|hai mươi mốt [ki lô mét,cây số]}, mệt rã rời nhưng vui!
+unit	Làm nóng lò nướng ở {180°C|một trăm tám mươi độ (xê)/một trăm tám độ (xê)} trong mười phút.
+unit	Túi gạo thơm {5kg|năm [ki lô gam,ki lô,cân,ký,kí]} đang được bán với giá ưu đãi.
+unit	Vận động viên đẩy tạ đạt thành tích {17,85 m|mười bảy phẩy tám [mươi lăm,mươi nhăm,lăm] mét}.
+unit	Đun sôi {1,5 lít|một phẩy năm lít/một lít rưỡi} nước rồi thả xương vào.
+code	Mọi thông tin chi tiết xin liên hệ tổng đài {1900 6868|một chín không không sáu tám sáu tám}.
+code	Khi phát hiện cháy nổ, người dân hãy gọi ngay số {114|một một bốn}.
+code	Gọi ngay {0987.654.321|không chín tám bảy sáu năm bốn ba hai một} để được tư vấn miễn phí.
+code	Ai nhặt được ví vui lòng liên hệ số {0912 345 678|không chín một hai ba bốn năm sáu bảy tám}, xin cảm ơn!
+code	Mã OTP của quý khách là {482916|bốn tám hai chín một sáu}, có hiệu lực trong {5|năm} phút.
+code	Thí sinh mang số báo danh {01004521|không một không không bốn năm hai một} vắng mặt ở buổi thi sáng nay.
+code	Đường dây nóng {1022|một không hai hai} của thành phố tiếp nhận phản ánh {24/7|hai mươi [tư,bốn] trên bảy/hai [tư,bốn] trên bảy}.
+code	Mã vạch bắt đầu bằng {893|tám chín ba} là hàng sản xuất tại Việt Nam.
+latin	iPhone {17|mười bảy} vừa chính thức lên kệ tại Việt Nam.
+latin	Ma-rốc, Tây Ban Nha và Bồ Đào Nha sẽ đồng đăng cai World Cup {2030|hai [nghìn,ngàn] không trăm ba mươi}.
+latin	Livestream lúc {20h30|hai mươi giờ ba mươi (phút)/hai mươi giờ rưỡi} tối nay, cả nhà nhớ hóng nha!
+latin	Nhà mạng đặt mục tiêu phủ sóng {5G|năm gờ/năm giê/năm G} tới mọi xã, phường trong năm nay.
+latin	Clip này đạt {1,2 triệu|một phẩy hai triệu/một triệu hai [,trăm nghìn,trăm ngàn]} view chỉ sau {1|một} đêm.
+latin	Kình ngư Nguyễn Huy Hoàng từng tranh tài tại SEA Games {33|ba mươi ba} ở Thái Lan.
+latin	Bộ Y tế khuyến cáo người dân tiếp tục phòng chống COVID-{19|mười chín} khi vào mùa lạnh.
+latin	Món gà này mình làm bằng nồi chiên không dầu Philips {4,1 lít|bốn phẩy một lít}.
+latin	Top {10|mười} quán cà phê view đẹp nhất Đà Lạt mà bạn nhất định phải ghé.
+mixed	Trả góp {0%|không phần trăm} lãi suất, chỉ từ {1.990.000đ|một triệu chín trăm chín mươi [nghìn,ngàn] (đồng)} mỗi tháng.
+mixed	Lúc {10h|mười giờ} ngày {13/10|mười ba tháng mười}, tâm bão cách quần đảo Hoàng Sa khoảng {150 km|một trăm năm mươi [ki lô mét,cây số]/một trăm rưởi [ki lô mét,cây số]}.
+mixed	Ướp {300g|ba trăm [gam,gờ ram]} thịt bò với {1|một} thìa dầu hào trong {15 phút|mười lăm phút}.
+mixed	Từ {15h|mười lăm giờ} ngày {9/10|[mùng chín,mồng chín,chín] tháng mười}, giá xăng tăng {520 đồng|năm trăm hai mươi đồng} mỗi lít.
+mixed	Đà Lạt {14°C|mười bốn độ (xê)} lúc {6h|sáu giờ} sáng, lạnh mà chill quá trời.
+mixed	Flash sale {12.12|mười hai tháng mười hai/mười hai mười hai} giảm đến {70%|bảy mươi phần trăm}, mở bán từ {0h|không giờ}.
+mixed	Năm {2025|hai [nghìn,ngàn] không trăm hai mươi [lăm,nhăm]}, Việt Nam đón {21,5 triệu|hai mươi mốt phẩy năm triệu/hai mươi mốt triệu rưỡi} lượt khách quốc tế.
+mixed	Hà Nội ngày mai có mưa rào, nhiệt độ {22-28°C|hai mươi hai [đến,tới] hai mươi tám độ (xê)}, độ ẩm {75%|bảy mươi [lăm,nhăm] phần trăm}.
+mixed	Tiền vệ số {8|tám} ghi bàn ở phút {67|sáu mươi bảy}, nâng tỷ số lên {2-0|hai không}.

@@ -1,0 +1,128 @@
+cardinal	Căn hộ nằm ở tầng {18|mười tám} của tòa B, gồm {3|ba} phòng ngủ và {2|hai} phòng vệ sinh.
+cardinal	Năm nay có {12.450|mười hai [nghìn,ngàn] bốn trăm năm mươi/mười hai [nghìn,ngàn] bốn trăm rưỡi} khách hàng nhận quà tri ân từ ngân hàng.
+cardinal	Kỳ thi tốt nghiệp năm nay có {1.071.393|một triệu (không trăm) bảy mươi mốt [nghìn,ngàn] ba trăm chín mươi ba} thí sinh đăng ký dự thi.
+cardinal	Bệnh viện tỉnh hiện có {1.205|một [nghìn,ngàn] hai trăm [linh,lẻ] năm} giường bệnh nội trú.
+cardinal	Đoàn tham quan gồm {45|bốn mươi [lăm,nhăm]} khách, được chia lên hai xe giường nằm.
+cardinal	Công ty dự kiến tuyển thêm {150|một trăm năm mươi/một trăm rưỡi} kỹ sư trong quý tới.
+cardinal	Dự án gồm {864|tám trăm sáu mươi [tư,bốn]} căn hộ chung cư và {32|ba mươi hai} căn nhà liền kề.
+cardinal	Đơn hàng của bạn có {7|bảy} sản phẩm đến từ {3|ba} nhà bán khác nhau.
+cardinal	Khu đô thị hiện có {2.031|hai [nghìn,ngàn] không trăm ba mươi mốt} hộ dân đang sinh sống.
+cardinal	Trường có {609|sáu trăm [linh,lẻ] chín} học sinh đạt danh hiệu học sinh giỏi năm học vừa qua.
+cardinal	Đại hội có {340|ba trăm bốn mươi} cổ đông tham dự, đại diện cho {98.765.432|chín mươi tám triệu bảy trăm sáu mươi [lăm,nhăm] [nghìn,ngàn] bốn trăm ba mươi hai} cổ phần.
+cardinal	Khu nghỉ dưỡng có {120|một trăm hai mươi/một trăm hai} phòng hướng biển và {6|sáu} biệt thự riêng.
+decimal	Điểm trung bình môn Toán học kỳ này của em đạt {8,75|tám phẩy bảy mươi [lăm,nhăm]/tám phẩy bảy lăm}.
+decimal	Thí sinh đạt tổng điểm {27,25|hai mươi bảy phẩy hai mươi [lăm,nhăm]/hai mươi bảy phẩy hai lăm} và trúng tuyển nguyện vọng đầu.
+decimal	Ứng viên cần có chứng chỉ IELTS tối thiểu {6.5|sáu chấm năm/sáu phẩy năm/sáu rưỡi}.
+decimal	Hệ số lương mới của nhân viên được điều chỉnh lên {2,34|hai phẩy ba mươi [tư,bốn]/hai phẩy ba bốn}.
+decimal	Điểm trung bình tích lũy của sinh viên là {3,62|ba phẩy sáu mươi hai/ba phẩy sáu hai} trên thang điểm {4|bốn}.
+decimal	Chỉ số INR của bệnh nhân hôm nay là {1,15|một phẩy mười lăm/một phẩy một lăm/một phẩy một năm}.
+decimal	Hệ số sử dụng đất của dự án được phê duyệt ở mức {3,5|ba phẩy năm} lần.
+decimal	Cửa hàng được khách mua đánh giá trung bình {4,9|bốn phẩy chín} trên {5|năm} sao.
+decimal	Mỗi cổ phiếu đang sở hữu sẽ nhận thêm {0,12|không phẩy mười hai/không phẩy một hai} cổ phiếu thưởng.
+percent	Lãi suất tiết kiệm kỳ hạn {12|mười hai} tháng được điều chỉnh lên {5,2%|năm phẩy hai phần trăm} mỗi năm.
+percent	Giảm ngay {30%|ba mươi phần trăm} cho đơn hàng đầu tiên đặt qua ứng dụng.
+percent	Tỷ lệ tốt nghiệp của toàn tỉnh năm nay đạt {99,4%|chín mươi chín phẩy bốn phần trăm}.
+percent	Tổng tiền trên hóa đơn đã bao gồm thuế giá trị gia tăng {8%|tám phần trăm}.
+percent	Doanh thu quý ba của tập đoàn tăng {17,5%|mười bảy phẩy năm phần trăm} so với cùng kỳ năm trước.
+percent	Khách hàng đặt cọc {10%|mười phần trăm} giá trị căn hộ ngay khi ký hợp đồng mua bán.
+percent	Phí rút tiền trước hạn được tính bằng {0,05%|không phẩy không năm phần trăm} trên số tiền giao dịch.
+percent	Độ bão hòa oxy trong máu của bệnh nhân đo được {96%|chín mươi sáu phần trăm}.
+percent	Công suất phòng của các khách sạn ven biển dịp lễ đạt gần {100 %|một trăm phần trăm}.
+negative	Số dư khả dụng sau giao dịch: {-1.250.000 VND|[âm,trừ] một triệu hai trăm năm mươi [nghìn,ngàn] (việt nam) đồng}.
+negative	Nhiệt độ ở đỉnh Mẫu Sơn đêm nay có thể xuống {-2°C|âm hai độ (xê)}.
+negative	Lợi nhuận sau thuế quý hai chênh lệch {-3,4%|âm ba phẩy bốn phần trăm} so với kế hoạch đề ra.
+negative	Biến động số dư {-85.000đ|[âm,trừ] tám mươi [lăm,nhăm] [nghìn,ngàn] đồng}, nội dung: thanh toán tiền điện.
+negative	Tủ đông bảo quản vắc xin phải luôn duy trì ở mức {-20°C|âm hai mươi độ (xê)}.
+negative	Chênh lệch tồn kho cuối kỳ được ghi nhận là {-14|âm mười bốn/trừ mười bốn} sản phẩm.
+negative	Chỉ số giá nhà tại khu vực ngoại thành ghi nhận mức {-0,6|âm không phẩy sáu} điểm trong tháng này.
+ordinal	Phòng khám chuyên khoa tim mạch tiếp nhận bệnh nhân vào {thứ 5|thứ năm} hằng tuần.
+ordinal	Em Minh Anh xếp {thứ 2|thứ hai/thứ nhì} toàn khối trong kỳ thi học sinh giỏi cấp thành phố.
+ordinal	Đây là lần {thứ 3|thứ ba} liên tiếp công ty được vinh danh trong danh sách doanh nghiệp tiêu biểu.
+ordinal	Đại hội đồng cổ đông lần {thứ XV|thứ mười lăm} sẽ được tổ chức tại trụ sở chính.
+ordinal	Vào ngày {thứ 4|thứ tư} của hành trình, đoàn sẽ đi du thuyền trên vịnh Hạ Long.
+ordinal	Khách hàng {thứ 1000|thứ một [nghìn,ngàn]} đặt hàng trong ngày sẽ nhận được phần quà đặc biệt.
+ordinal	Bệnh nhân hiện đang điều trị đợt hóa trị {thứ 6|thứ sáu} theo phác đồ.
+ordinal	Khoản vay bắt đầu trả gốc từ kỳ {thứ 7|thứ bảy} sau khi giải ngân.
+ordinal	Trường xếp {thứ 14|thứ mười bốn} cả nước về điểm thi trung bình các môn.
+currency	Tài khoản của quý khách vừa được cộng {+15.000.000 VND|cộng mười lăm triệu (việt nam) đồng}.
+currency	Tổng thanh toán cho đơn hàng là {459.000đ|bốn trăm năm mươi chín [nghìn,ngàn] đồng}, đã gồm phí đóng gói.
+currency	Phí vận chuyển {25k|hai mươi [lăm,nhăm] [nghìn,ngàn,ca]/hai lăm [nghìn,ngàn,ca]} được miễn cho đơn từ {300k|ba trăm [nghìn,ngàn,ca]}.
+currency	Tiền điện tháng này của hộ gia đình là {1.284.650|một triệu hai trăm tám mươi [tư,bốn] [nghìn,ngàn] sáu trăm năm mươi/một triệu hai trăm tám mươi [tư,bốn] [nghìn,ngàn] sáu trăm rưỡi} đồng.
+currency	Giá bán căn hộ hai phòng ngủ chỉ từ {2,8 tỷ|hai phẩy tám [tỷ,tỉ]/hai [tỷ,tỉ] tám (trăm)} đồng.
+currency	Giá vé khứ hồi Hà Nội đi Đà Nẵng hiện là {3.290.000 VNĐ|ba triệu hai trăm chín mươi [nghìn,ngàn] (việt nam) đồng}.
+currency	Học phí cho mỗi tín chỉ trong năm học mới là {450.000|bốn trăm năm mươi [nghìn,ngàn]} đồng.
+currency	Giá thuê văn phòng hạng A tại trung tâm là {18 USD/m²|mười tám [đô,đô la,đô la mỹ] [một,mỗi,trên] mét vuông}.
+currency	Quý khách được hoàn {50.000₫|năm mươi [nghìn,ngàn] đồng} vào ví sau khi đơn hàng hoàn tất.
+currency	Phí thường niên của thẻ tín dụng hạng chuẩn là {299.000 VND|hai trăm chín mươi chín [nghìn,ngàn] (việt nam) đồng}.
+currency	Giá đề xuất cho gói khám sức khỏe tổng quát là {1,5 triệu|một phẩy năm triệu/một triệu rưỡi/một triệu năm trăm [nghìn,ngàn]} đồng.
+currency	Tỷ giá bán ra hôm nay là {25.430 đ/USD|hai mươi [lăm,nhăm] [nghìn,ngàn] bốn trăm ba mươi đồng [một,mỗi,trên] [đô,đô la,đô la mỹ]}.
+currency	Giá phòng tiêu chuẩn tại khách sạn là {1.200.000đ/đêm|một triệu hai trăm [nghìn,ngàn] đồng [một,mỗi,] đêm}.
+currency	Khách lưu trú cần đặt cọc {€200|hai trăm [ơ rô,euro]} khi làm thủ tục nhận phòng.
+currency	Phụ phí hành lý quá cước là {$15|mười lăm [đô,đô la,đô la mỹ]} cho mỗi ki lô gam vượt quy định.
+currency	Mức lương thử việc của vị trí này là {15tr|mười lăm triệu} mỗi tháng.
+date	Hạn chót thanh toán hóa đơn tiền nước là ngày {25/10/2026|hai mươi [lăm,nhăm] tháng mười năm hai [nghìn,ngàn] không trăm hai mươi sáu}.
+date	Kết quả phúc khảo bài thi sẽ được công bố vào {08/11|(ngày) [mồng,mùng,] tám tháng mười một}.
+date	Ngày nhập viện: {03-09-2026|(ngày) [mồng,mùng,] ba tháng chín năm hai [nghìn,ngàn] không trăm hai mươi sáu}.
+date	Hợp đồng thuê nhà có hiệu lực kể từ {01.12.2026|(ngày) [mồng,mùng,] một tháng mười hai năm hai [nghìn,ngàn] không trăm hai mươi sáu}.
+date	Ngày sinh của người bệnh: {14/04/1988|(ngày) mười bốn tháng tư năm một [nghìn,ngàn] chín trăm tám mươi tám}.
+date	Giao dịch được ghi nhận vào ngày {2026-10-12|mười hai tháng mười năm hai [nghìn,ngàn] không trăm hai mươi sáu}.
+date	Lễ khai trương chi nhánh mới sẽ diễn ra vào {ngày 20 tháng 11 năm 2026|ngày hai mươi tháng mười một năm hai [nghìn,ngàn] không trăm hai mươi sáu}.
+date	Tour khởi hành ngày {6/11|[mồng,mùng,] sáu tháng mười một} và về đến Hà Nội ngày {9/11|[mồng,mùng,] chín tháng mười một}.
+date	Kỳ thi đánh giá năng lực đợt hai dự kiến tổ chức vào {tháng 5/2027|tháng năm năm hai [nghìn,ngàn] không trăm hai mươi bảy}.
+date	Giấy chứng nhận quyền sử dụng đất được cấp ngày {17/7/2015|mười bảy tháng bảy năm hai [nghìn,ngàn] không trăm mười lăm}.
+date	Thẻ của quý khách có hiệu lực đến {12/28|tháng mười hai năm hai [nghìn,ngàn] không trăm hai mươi tám/tháng mười hai năm hai mươi tám/mười hai trên hai mươi tám}.
+date	Công ty công bố báo cáo tài chính {quý III/2026|quý ba năm hai [nghìn,ngàn] không trăm hai mươi sáu} vào cuối tháng này.
+time	Chuyến bay sẽ cất cánh lúc {06:45|sáu giờ bốn mươi [lăm,nhăm] (phút)/bảy giờ kém mười lăm}.
+time	Bệnh nhân cần nhịn ăn hoàn toàn sau {22h|hai mươi hai giờ/mười giờ đêm} để chuẩn bị nội soi.
+time	Giao dịch chuyển khoản được thực hiện thành công lúc {14:32:08|mười bốn giờ ba mươi hai phút tám giây}.
+time	Thí sinh phải có mặt tại phòng thi trước {7h15|bảy giờ mười lăm (phút)}.
+time	Buổi họp toàn công ty sẽ bắt đầu lúc {9g30|chín giờ ba mươi (phút)/chín giờ rưỡi} sáng thứ Hai.
+time	Quý khách vui lòng trả phòng trước {12:00|mười hai giờ} trưa ngày khởi hành.
+time	Thời gian thực hiện thủ thuật dự kiến kéo dài khoảng {1h30'|một giờ ba mươi phút/một tiếng ba mươi phút/một tiếng rưỡi/một giờ rưỡi}.
+time	Đơn hàng sẽ được giao đến quý khách trước {18h00|mười tám giờ}.
+time	Mũi tiêm cuối cùng được ghi nhận lúc {20:05|hai mươi giờ năm phút/hai mươi giờ không năm (phút)}.
+range	Giờ làm việc của phòng giao dịch: {8:00 - 17:00|tám giờ [đến,tới] mười bảy giờ}.
+range	Thời gian giao hàng dự kiến từ {2-4|hai [đến,tới] bốn} ngày làm việc.
+range	Mức lương cho vị trí kế toán trưởng là {15 – 20 triệu|mười lăm [đến,tới] hai mươi triệu} đồng.
+range	Diện tích các căn hộ trong dự án từ {55–90 m²|năm mươi [lăm,nhăm] [đến,tới] chín mươi mét vuông}.
+range	Phòng khám mở cửa từ {T2–T7|thứ hai [đến,tới] thứ bảy}, nghỉ Chủ nhật.
+range	Điểm chuẩn ngành Y khoa dự kiến dao động {24–26|hai mươi [tư,bốn] [đến,tới] hai mươi sáu} điểm.
+range	Hội nghị khách hàng thường niên diễn ra từ ngày {15-17/11|mười lăm [đến,tới] (ngày) mười bảy tháng mười một}.
+range	Nhiệt độ tại Đà Lạt trong tuần dao động {16–23°C|mười sáu [đến,tới] hai mươi ba độ (xê)}.
+range	Giá thuê nhà nguyên căn trong hẻm dao động {6-8 triệu/tháng|sáu [đến,tới] tám triệu [một,mỗi,] tháng}.
+unit	Căn hộ có diện tích sử dụng {85,6 m²|tám mươi [lăm,nhăm] phẩy sáu mét vuông}, ban công hướng Đông Nam.
+unit	Bệnh nhân nặng {58 kg|năm mươi tám [ki lô gam,ki lô,cân]}, cao {1m62|một mét sáu mươi hai/một mét sáu hai}.
+unit	Lượng điện tiêu thụ trong kỳ là {245 kWh|hai trăm bốn mươi [lăm,nhăm] [ki lô oát giờ,số]}.
+unit	Lượng nước sinh hoạt tháng này của gia đình là {18 m³|mười tám [mét khối,khối]}.
+unit	Uống Paracetamol {500mg|năm trăm [mi li gam,mi li]} mỗi lần, cách nhau ít nhất {6|sáu} tiếng.
+unit	Khoảng cách từ dự án đến sân bay quốc tế chỉ khoảng {12 km|mười hai [ki lô mét,cây số,cây]}.
+unit	Mỗi hành khách được mang theo hành lý ký gửi tối đa {23kg|hai mươi ba [ki lô gam,ki lô,cân]}.
+unit	Lô đất có mặt tiền rộng {5,5m|năm phẩy năm mét/năm mét rưỡi/năm mét năm}, chiều dài {20m|hai mươi mét}.
+unit	Bệnh nhân được truyền {250 ml|hai trăm năm mươi [mi li lít,mi li]} dung dịch muối sinh lý.
+unit	Huyết áp đo lúc nhập viện là {130/85 mmHg|một trăm ba mươi trên tám mươi [lăm,nhăm] [mi li mét thủy ngân,mi li mét thuỷ ngân]}.
+unit	Thân nhiệt của trẻ lúc nhập viện là {38,5°C|ba mươi tám phẩy năm độ (xê)/ba mươi tám độ rưỡi}.
+unit	Tổng diện tích khu đất là {1.200 m2|một [nghìn,ngàn] hai trăm mét vuông}, đã có sổ đỏ.
+code	Mã đơn hàng của bạn là {2610134587|hai sáu một không một ba bốn năm tám bảy}, vui lòng lưu lại để tra cứu.
+code	Mã OTP của quý khách là {482915|bốn tám hai chín một năm}, tuyệt đối không chia sẻ cho người khác.
+code	Số điện thoại người nhận: {0905.123.456|không chín không năm một hai ba bốn năm sáu}.
+code	Mã hồ sơ bệnh án của người bệnh là {24015873|hai bốn không một năm tám bảy ba}.
+code	Số báo danh của thí sinh là {01004521|không một không không bốn năm hai một}.
+code	Mã số thuế của công ty: {0102345678|không một không hai ba bốn năm sáu bảy tám}.
+code	Số seri công tơ điện của hộ gia đình là {19087342|một chín không tám bảy ba bốn hai}.
+latin	Mẫu iPhone {17|mười bảy} Pro Max đang được giảm giá mạnh trên Shopee.
+latin	Bạn đã chuyển {500.000đ|năm trăm [nghìn,ngàn] đồng} qua MoMo cho người nhận thành công.
+latin	Vietnam Airlines tăng thêm {14|mười bốn} chuyến bay mỗi tuần trong mùa cao điểm Tết.
+latin	Samsung Galaxy Z Fold {7|bảy} được mở bán độc quyền từ cuối tuần này.
+latin	Thành viên hạng Gold đặt phòng qua Agoda được giảm thêm {12%|mười hai phần trăm}.
+latin	Chuyến Grab từ sân bay về khách sạn dài {7 km|bảy [ki lô mét,cây số,cây]}, cước phí {98.000đ|chín mươi tám [nghìn,ngàn] đồng}.
+latin	CEO sẽ chủ trì buổi town hall vào {thứ 6|thứ sáu} tuần này tại văn phòng chính.
+latin	Laptop MacBook Air {13 inch|mười ba [inh,in]} được bán kèm quà tặng trên Tiki.
+mixed	Ngày {12/10|mười hai tháng mười}, tài khoản {1903 4567 8901|một chín không ba bốn năm sáu bảy tám chín không một} nhận {2.000.000 VND|hai triệu (việt nam) đồng}.
+mixed	Chi phí khám và xét nghiệm là {850.000 ₫|tám trăm năm mươi [nghìn,ngàn] đồng}, bảo hiểm y tế chi trả {80%|tám mươi phần trăm}.
+mixed	Chuyến bay VN{215|hai một năm/hai trăm mười lăm} khởi hành lúc {07:10|bảy giờ mười (phút)} tại cửa số {12|mười hai}.
+mixed	Căn hộ {68 m²|sáu mươi tám mét vuông} được chào bán với giá {3,25 tỷ|ba phẩy hai mươi [lăm,nhăm] [tỷ,tỉ]/ba phẩy hai lăm [tỷ,tỉ]/ba [tỷ,tỉ] hai trăm năm mươi (triệu)} đồng.
+mixed	Học sinh đạt {9,5|chín phẩy năm/chín rưỡi} điểm môn Ngữ văn, xếp {thứ 1|thứ nhất} toàn trường.
+mixed	Kể từ {01/01/2027|(ngày) [mồng,mùng,] một tháng một năm hai [nghìn,ngàn] không trăm hai mươi bảy}, đơn giá nước sạch tăng thêm {6%|sáu phần trăm}.
+mixed	Bệnh nhân sốt {39°C|ba mươi chín độ (xê)} vào lúc {2h|hai giờ} sáng, đã được dùng thuốc hạ sốt.
+mixed	Ngày hội mua sắm {11.11|mười một tháng mười một/mười một mười một} giảm đến {50%|năm mươi phần trăm} cho hàng nghìn sản phẩm.
+mixed	Cổ tức tiền mặt tỷ lệ {12%|mười hai phần trăm}, tương đương {1.200|một [nghìn,ngàn] hai trăm/một [nghìn,ngàn] hai} đồng mỗi cổ phiếu, chi trả ngày {15/12|mười lăm tháng mười hai}.
