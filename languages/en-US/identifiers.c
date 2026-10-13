@@ -77,7 +77,7 @@ size_t ttf_en_classify_identifier(const ttf_pack_input_t *in, ttf_semantic_t *se
     ttf_resource_layer_t layer = TTF_LAYER_COMMON;
     if (begin == in->length || !decimal_digit(in->text[begin]))
         return 0;
-    if (after_ext(in, begin))
+    if (after_ext(in, begin) && in->text[begin] != '0')
         snprintf(label, sizeof(label), "ext");
     else if (n11(in, begin) && valid_tail(in, begin + 3))
         snprintf(label, sizeof(label), "n11");

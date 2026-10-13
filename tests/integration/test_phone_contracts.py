@@ -170,7 +170,8 @@ for case_id, surface, prefix in (
 REFERENCES.append(dict(
     id="extension-newline-boundary", category="phone/international", default_language="en-US",
     text="Phone: +12125550100\next. 0042",
-    expected="Phone: " + spoken_phone("+12125550100", "", "en-US") + "\next. zero zero four two",
+    # Was: "...\next. zero zero four two"; ext. reads extension since 2026-10-14 (owner sets).
+    expected="Phone: " + spoken_phone("+12125550100", "", "en-US") + "\nextension zero zero four two",
     expected_spans=[dict(surface="+12125550100", semantic_type="PHONE", value="+12125550100",
                          secondary="", unit="international", source_lang="und", context_lang="en-US"),
                     dict(surface="0042", semantic_type="DIGIT_SEQUENCE", value="0042", unit="leading_zero")]))
