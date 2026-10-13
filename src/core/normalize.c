@@ -521,6 +521,124 @@ static const ttf_language_pack_t *han_sentence(const ttf_engine_t *e, const ttf_
         return han >= 1 ? pack : NULL;
     return han >= 2 && han >= 2 * latin ? pack : NULL;
 }
+/* A Latin sentence written with a pack's own letters (`context <tag>
+   latin_sentence 1`, vi-VN) belongs to that pack, every token included
+   (2026-10-13). A word with a letter of latin_marks (ă đ ơ ư ạ ệ …) or a
+   combining dot below, hook above, horn or breve is strong evidence; a word of up
+   to seven letters with a letter of latin_weak (é ô à …, shared with French and
+   Spanish) counts only when the sentence has a strong word or two such words (a long
+   sentence is judged in windows, vòng … ngày);
+   a letter of latin_veto (ç ñ ü …) rules the sentence out, and so does a French,
+   Spanish or German word of latin_foreign (le, est, el, und) without a strong word. A counted word starting
+   with a small letter weighs two (tôi, có), a capitalized one one (a name: Nguyễn
+   Văn An); other Latin words of two letters or more weigh one. In another request
+   the counted weight must reach two and the other words'; in the pack's own request
+   a sentence is the pack's unless it has an English word of english_cue and no
+   counted weight at least the other words'. Hangul, kana or hanzi leave the
+   sentence alone. */
+static int letter_in(const char *set, const char *s, size_t w) {
+    char one[5];
+    if (!set || w > 4)
+        return 0;
+    memcpy(one, s, w);
+    one[w] = 0;
+    return strstr(set, one) != NULL;
+}
+/* 0 plain, 1 weak, 2 strong, -1 veto */
+static int marked_word(const char *strong, const char *weak, const char *veto, const char *s,
+                       size_t n) {
+    size_t at = 0, letters = 0;
+    int kind = 0;
+    while (at < n) {
+        uint32_t cp;
+        size_t w;
+        if (ttf_utf8_decode(s + at, n - at, &cp, &w) != 1)
+            return 0;
+        if (cp >= 0x80) {
+            if (letter_in(veto, s + at, w))
+                return -1;
+            if (cp == 0x323 || cp == 0x309 || cp == 0x31b || cp == 0x306 || letter_in(strong, s + at, w))
+                kind = 2;
+            else if (kind < 1 && ((cp >= 0x300 && cp <= 0x36f) || letter_in(weak, s + at, w)))
+                kind = 1;
+        }
+        letters += !(cp >= 0x300 && cp <= 0x36f);
+        at += w;
+    }
+    return kind == 1 && letters > 7 ? 0 : kind;
+}
+/* A capital first letter: A-Z, À-Þ, and the even (capital) Vietnamese letters
+   of Latin Extended-A and Extended Additional, Ơ and Ư. */
+static int capital_first(const char *s, size_t n) {
+    uint32_t cp;
+    size_t w;
+    if (ttf_utf8_decode(s, n, &cp, &w) != 1)
+        return 0;
+    return (cp >= 'A' && cp <= 'Z') || (cp >= 0xc0 && cp <= 0xde && cp != 0xd7) ||
+           (((cp >= 0x100 && cp <= 0x17f) || (cp >= 0x1ea0 && cp <= 0x1ef9)) && cp % 2 == 0) ||
+           cp == 0x1a0 || cp == 0x1af;
+}
+static const ttf_language_pack_t *latin_sentence(const ttf_engine_t *e, const ttf_pack_input_t *in,
+                                                 size_t begin, size_t end) {
+    const ttf_language_pack_t *pack = NULL,
+                              *declared = e->default_language ? ttf_find_pack(e, e->default_language)
+                                                              : NULL;
+    const char *strong, *weak, *veto;
+    size_t j, k;
+    unsigned counted = 0, weak_weight = 0, weak_words = 0, plain = 0, cue = 0, foreign = 0;
+    int strong_seen = 0;
+    for (j = 0; j < e->pack_count && !pack; ++j)
+        if (pack_flag(e, e->packs[j], "latin_sentence", 0))
+            pack = e->packs[j];
+    if (!pack)
+        return NULL;
+    strong = ttf_resource_get(e, "context", pack->language_tag, "latin_marks", NULL);
+    weak = ttf_resource_get(e, "context", pack->language_tag, "latin_weak", NULL);
+    veto = ttf_resource_get(e, "context", pack->language_tag, "latin_veto", NULL);
+    for (k = begin; k < end; ++k) {
+        const ttf_token_t *t = &in->tokens[k];
+        const ttf_token_t *prev = k > begin ? &in->tokens[k - 1] : NULL;
+        size_t n = t->end - t->begin;
+        int kind;
+        unsigned weight;
+        if (t->script == TTF_SCRIPT_HANGUL || t->script == TTF_SCRIPT_KANA ||
+            t->script == TTF_SCRIPT_HAN)
+            return NULL;
+        if (t->script != TTF_SCRIPT_LATIN ||
+            /* 60km, 15.000đ: letters attached to a number are a unit */
+            (prev && prev->end == t->begin && prev->script == TTF_SCRIPT_DIGIT))
+            continue;
+        kind = marked_word(strong, weak, veto, in->text + t->begin, n);
+        if (kind < 0)
+            return NULL;
+        weight = capital_first(in->text + t->begin, n) ? 1u : 2u;
+        if (kind == 2) {
+            strong_seen = 1;
+            counted += weight;
+        } else if (kind == 1) {
+            ++weak_words;
+            weak_weight += weight;
+        } else if (n >= 2 && !capital_code(in->text + t->begin, n)) {
+            char key[16];
+            size_t i;
+            ++plain;
+            if (n < sizeof(key)) {
+                for (i = 0; i < n; ++i)
+                    key[i] = (char)(in->text[t->begin + i] >= 'A' && in->text[t->begin + i] <= 'Z'
+                                        ? in->text[t->begin + i] + 32
+                                        : in->text[t->begin + i]);
+                key[n] = 0;
+                cue += ttf_resource_get(e, "english_cue", pack->language_tag, key, NULL) != NULL;
+                foreign += ttf_resource_get(e, "latin_foreign", pack->language_tag, key, NULL) != NULL;
+            }
+        }
+    }
+    if (strong_seen || weak_words >= 2)
+        counted += weak_weight;
+    if (declared == pack)
+        return !cue || (counted && counted >= plain) ? pack : NULL;
+    return counted >= 2 && counted >= plain && (strong_seen || !foreign) ? pack : NULL;
+}
 static void matrix_route(const ttf_engine_t *e, const ttf_pack_input_t *in, size_t begin,
                          size_t end, matrix_route_t *routes) {
     char why[40];
@@ -536,6 +654,9 @@ static void matrix_route(const ttf_engine_t *e, const ttf_pack_input_t *in, size
     if (!kana && e->matrix_policy != TTF_MATRIX_DECLARED &&
         (kana = han_sentence(e, in, begin, end)) != NULL)
         snprintf(why, sizeof(why), "matrix=%s(han)", kana->language_tag);
+    else if (!kana && e->matrix_policy != TTF_MATRIX_DECLARED &&
+             (kana = latin_sentence(e, in, begin, end)) != NULL)
+        snprintf(why, sizeof(why), "matrix=%s(latin)", kana->language_tag);
     else if (kana)
         snprintf(why, sizeof(why), "matrix=%s(kana)", kana->language_tag);
     if (kana) {
@@ -1723,7 +1844,8 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
             consumed = ttf_classify_universal(&classification, sem);
             /* Looked up once per token, not once per pack. */
             han_context = context && context->classify &&
-                          pack_flag(e, context, "han_sentence", 0);
+                          (pack_flag(e, context, "han_sentence", 0) ||
+                           pack_flag(e, context, "latin_sentence", 0));
             for (j = 0; j < e->pack_count; j++)
                 /* A declared-only pack classifies only where it is the context
                    (its declared request or a kana sentence). A hanzi-sentence
@@ -1739,7 +1861,9 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
                     !(context != e->packs[j] && sentence_lang && sentence_lang != e->packs[j] &&
                       declared_only(e, j)) &&
                     !(context != e->packs[j] &&
-                      (e->frozen ? e->han_only[j] : pack_flag(e, e->packs[j], "han_sentence", 0)))) {
+                      (e->frozen ? e->han_only[j]
+                                 : pack_flag(e, e->packs[j], "han_sentence", 0) ||
+                                       pack_flag(e, e->packs[j], "latin_sentence", 0)))) {
                     ttf_semantic_t candidate;
                     size_t n;
                     long candidate_priority = 0;

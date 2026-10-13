@@ -1,0 +1,124 @@
+# Vietnamese pack, phase 1 (project owner 2026-10-13; northern standard reading).
+# Declared-only: the pack never scores, classifies or owns a script in another
+# request except in a Latin sentence written with Vietnamese letters.
+context	vi-VN	declared_only	1
+context	vi-VN	absorb_foreign	1
+context	vi-VN	latin_sentence	1
+# Letters only Vietnamese writes (ă đ ơ ư ĩ ũ and U+1EA0-U+1EF9: ạ ả ấ ệ ở ữ …). A word with one is
+# strong evidence; so are the combining dot below, hook above, horn and breve.
+context	vi-VN	latin_marks	ăĂđĐơƠưƯĩĨũŨẠạẢảẤấẦầẨẩẪẫẬậẮắẰằẲẳẴẵẶặẸẹẺẻẼẽẾếỀềỂểỄễỆệỈỉỊịỌọỎỏỐốỒồỔổỖỗỘộỚớỜờỞởỠỡỢợỤụỦủỨứỪừỬửỮữỰựỲỳỴỵỶỷỸỹ
+# Letters Vietnamese shares with French, Spanish and Portuguese (é, ô, à …): a word of up to seven
+# letters with one counts only when the sentence has a strong word or two such words (Tôi có mèo);
+# référendum, café in a French sentence do not decide it (2026-10-13, English benchmark).
+context	vi-VN	latin_weak	àáâãèéêìíòóôõùúýÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚÝ
+# Letters Vietnamese never writes: a sentence with one is not Vietnamese.
+context	vi-VN	latin_veto	çÇœŒæÆîÎûÛëËïÏüÜñÑßøØåÅäÄöÖÿ
+# French, Spanish and German words: a sentence with one and no strong letter is not Vietnamese.
+latin_foreign	vi-VN	le	1
+latin_foreign	vi-VN	les	1
+latin_foreign	vi-VN	des	1
+latin_foreign	vi-VN	est	1
+latin_foreign	vi-VN	et	1
+latin_foreign	vi-VN	il	1
+latin_foreign	vi-VN	ils	1
+latin_foreign	vi-VN	elle	1
+latin_foreign	vi-VN	une	1
+latin_foreign	vi-VN	un	1
+latin_foreign	vi-VN	en	1
+latin_foreign	vi-VN	au	1
+latin_foreign	vi-VN	aux	1
+latin_foreign	vi-VN	dans	1
+latin_foreign	vi-VN	avec	1
+latin_foreign	vi-VN	pour	1
+latin_foreign	vi-VN	sur	1
+latin_foreign	vi-VN	el	1
+latin_foreign	vi-VN	los	1
+latin_foreign	vi-VN	las	1
+latin_foreign	vi-VN	del	1
+latin_foreign	vi-VN	por	1
+latin_foreign	vi-VN	para	1
+latin_foreign	vi-VN	es	1
+latin_foreign	vi-VN	der	1
+latin_foreign	vi-VN	die	1
+latin_foreign	vi-VN	das	1
+latin_foreign	vi-VN	und	1
+latin_foreign	vi-VN	ist	1
+# Unmarked English words that decide an English sentence in a vi-VN request.
+# Words that are also Vietnamese (in, to, do, so, may, me, an, my) are left out.
+english_cue	vi-VN	the	1
+english_cue	vi-VN	and	1
+english_cue	vi-VN	is	1
+english_cue	vi-VN	are	1
+english_cue	vi-VN	was	1
+english_cue	vi-VN	were	1
+english_cue	vi-VN	of	1
+english_cue	vi-VN	for	1
+english_cue	vi-VN	with	1
+english_cue	vi-VN	this	1
+english_cue	vi-VN	that	1
+english_cue	vi-VN	these	1
+english_cue	vi-VN	you	1
+english_cue	vi-VN	your	1
+english_cue	vi-VN	we	1
+english_cue	vi-VN	our	1
+english_cue	vi-VN	it	1
+english_cue	vi-VN	please	1
+english_cue	vi-VN	be	1
+english_cue	vi-VN	been	1
+english_cue	vi-VN	from	1
+english_cue	vi-VN	by	1
+english_cue	vi-VN	have	1
+english_cue	vi-VN	has	1
+english_cue	vi-VN	will	1
+english_cue	vi-VN	would	1
+english_cue	vi-VN	can	1
+english_cue	vi-VN	should	1
+english_cue	vi-VN	not	1
+english_cue	vi-VN	what	1
+english_cue	vi-VN	how	1
+english_cue	vi-VN	why	1
+english_cue	vi-VN	when	1
+english_cue	vi-VN	where	1
+english_cue	vi-VN	there	1
+english_cue	vi-VN	they	1
+english_cue	vi-VN	their	1
+english_cue	vi-VN	he	1
+english_cue	vi-VN	she	1
+english_cue	vi-VN	his	1
+english_cue	vi-VN	her	1
+english_cue	vi-VN	its	1
+english_cue	vi-VN	which	1
+english_cue	vi-VN	who	1
+english_cue	vi-VN	about	1
+english_cue	vi-VN	into	1
+english_cue	vi-VN	on	1
+english_cue	vi-VN	or	1
+english_cue	vi-VN	but	1
+english_cue	vi-VN	if	1
+english_cue	vi-VN	all	1
+english_cue	vi-VN	us	1
+# Words before a number that decide its reading (|-separated, both cases).
+vi_cue	vi-VN	day	ngày|Ngày|mùng|Mùng|mồng|Mồng
+vi_cue	vi-VN	date	ngày|Ngày|hôm|Hôm|từ|Từ|đến|Đến|tới|Tới|trước|sau|vào|Vào|mùng|Mùng|mồng|Mồng|đêm|sáng|chiều|tối|hạn|đợt
+vi_cue	vi-VN	month	tháng|Tháng
+vi_cue	vi-VN	ordinal	thứ|Thứ
+vi_cue	vi-VN	roman	kỷ|Kỷ|quý|Quý|thứ|Thứ|vùng|Vùng|khóa|Khóa|khoá|Khoá|phần|Phần|chương|Chương|mục|Mục|cấp|Cấp|hạng|Hạng|khu|Khu|đợt|Đợt|kỳ|Kỳ|tập|Tập|đoạn|Đoạn|loại|Loại|nhóm|Nhóm|hội|Hội|quân|Quân|lớp|Lớp
+vi_cue	vi-VN	code	mã|Mã|OTP|tổng đài|Tổng đài|hotline|Hotline|đường dây nóng|Đường dây nóng|số tài khoản|Số tài khoản|số hiệu|Số hiệu|số điện thoại|Số điện thoại|SĐT|sđt|mật khẩu|Mật khẩu|số hợp đồng|số hóa đơn|số CMND|số CCCD|PIN
+vi_cue	vi-VN	call	gọi|Gọi|quay số|bấm số
+vi_cue	vi-VN	version	bản|Bản
+classifier_priority	vi-VN	vi.num	100
+classifier_priority	vi-VN	vi.digits	100
+classifier_priority	vi-VN	vi.time	100
+classifier_priority	vi-VN	vi.date	100
+classifier_priority	vi-VN	vi.monthyear	100
+classifier_priority	vi-VN	vi.month	100
+classifier_priority	vi-VN	vi.ord	100
+classifier_priority	vi-VN	vi.frac	100
+classifier_priority	vi-VN	vi.range	100
+classifier_priority	vi-VN	vi.alnum	100
+classifier_priority	vi-VN	vi.numalpha	100
+classifier_priority	vi-VN	vi.timerange	100
+classifier_priority	vi-VN	vi.roman	100
+classifier_priority	vi-VN	vi.weekday	100
+classifier_priority	vi-VN	vi.version	100
+classifier_priority	vi-VN	vi.idiom	100

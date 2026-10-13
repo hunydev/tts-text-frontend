@@ -51,6 +51,9 @@ languages/zh-CN/rules/numeric.tsv
 languages/zh-CN/rules/units.tsv
 languages/zh-CN/rules/cues.tsv
 languages/zh-CN/rules/foreign.tsv
+languages/vi-VN/rules/context.tsv
+languages/vi-VN/rules/numeric.tsv
+languages/vi-VN/rules/units.tsv
 
 common/speech.tsv
 # Deferred until freeze, selected by hanja/kana options; kept visible to offline tools.

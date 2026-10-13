@@ -1,0 +1,93 @@
+# Vietnamese number words, northern standard (nghìn, linh). Southern variants
+# (ngàn, lẻ) and tư after mươi are accepted by the evaluation but not written.
+number	vi-VN	d0	không
+number	vi-VN	d1	một
+number	vi-VN	d2	hai
+number	vi-VN	d3	ba
+number	vi-VN	d4	bốn
+number	vi-VN	d5	năm
+number	vi-VN	d6	sáu
+number	vi-VN	d7	bảy
+number	vi-VN	d8	tám
+number	vi-VN	d9	chín
+number	vi-VN	hundred	trăm
+number	vi-VN	ten	mười
+number	vi-VN	tens	mươi
+number	vi-VN	zero_tens	linh
+number	vi-VN	one_after_tens	mốt
+number	vi-VN	five_after_tens	lăm
+number	vi-VN	four_after_tens	bốn
+number	vi-VN	thousand	nghìn
+number	vi-VN	million	triệu
+number	vi-VN	billion	tỷ
+number	vi-VN	point	phẩy
+number	vi-VN	minus	âm
+number	vi-VN	percent	phần trăm
+number	vi-VN	to	đến
+number	vi-VN	over	phần
+number	vi-VN	approx	khoảng
+number	vi-VN	day	ngày
+number	vi-VN	month	tháng
+number	vi-VN	year	năm
+number	vi-VN	month4	tư
+number	vi-VN	hour	giờ
+number	vi-VN	minute	phút
+number	vi-VN	second	giây
+number	vi-VN	ordinal1	nhất
+number	vi-VN	ordinal4	tư
+number	vi-VN	dot	chấm
+number	vi-VN	per	trên
+number	vi-VN	weekday	thứ
+# Scales written after a number: 50k năm mươi nghìn, 2tr hai triệu.
+vi_scale	vi-VN	k	nghìn
+vi_scale	vi-VN	K	nghìn
+vi_scale	vi-VN	tr	triệu
+# Currencies after (15.000đ, 20 USD) or before ($20, €5) a number.
+vi_currency	vi-VN	đ	đồng
+vi_currency	vi-VN	Đ	đồng
+vi_currency	vi-VN	₫	đồng
+vi_currency	vi-VN	VND	đồng
+vi_currency	vi-VN	VNĐ	đồng
+vi_currency	vi-VN	vnđ	đồng
+vi_currency	vi-VN	vnd	đồng
+vi_currency	vi-VN	USD	đô la Mỹ
+vi_currency	vi-VN	$	đô la
+vi_currency	vi-VN	€	ơ-rô
+vi_currency	vi-VN	EUR	ơ-rô
+vi_currency	vi-VN	£	bảng Anh
+vi_currency	vi-VN	GBP	bảng Anh
+vi_currency	vi-VN	¥	yên
+vi_currency	vi-VN	JPY	yên
+vi_currency	vi-VN	₩	won
+vi_currency	vi-VN	KRW	won
+vi_currency	vi-VN	CNY	nhân dân tệ
+# Address marks (an@gmail.com: an a còng gmail chấm com).
+address_symbol	vi-VN	@	a còng
+address_symbol	vi-VN	.	chấm
+address_symbol	vi-VN	-	gạch ngang
+address_symbol	vi-VN	_	gạch dưới
+address_symbol	vi-VN	/	gạch chéo
+address_symbol	vi-VN	:	hai chấm
+address_symbol	vi-VN	?	chấm hỏi
+address_symbol	vi-VN	=	bằng
+address_symbol	vi-VN	&	và
+address_symbol	vi-VN	#	thăng
+address_symbol	vi-VN	%	phần trăm
+address_symbol	vi-VN	+	cộng
+address_symbol	vi-VN	~	dấu ngã
+# Scale words between an amount and a currency (2,5 triệu USD).
+vi_scale_word	vi-VN	nghìn	1
+vi_scale_word	vi-VN	ngàn	1
+vi_scale_word	vi-VN	triệu	1
+vi_scale_word	vi-VN	tỷ	1
+vi_scale_word	vi-VN	tỉ	1
+# Service numbers read digit by digit after gọi (114 một một bốn).
+vi_service	vi-VN	111	1
+vi_service	vi-VN	112	1
+vi_service	vi-VN	113	1
+vi_service	vi-VN	114	1
+vi_service	vi-VN	115	1
+vi_service	vi-VN	116	1
+vi_service	vi-VN	117	1
+# Written forms read as a phrase.
+vi_idiom	vi-VN	24/7	hai mươi bốn trên bảy

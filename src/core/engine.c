@@ -277,6 +277,8 @@ ttf_status_t ttf_engine_freeze(ttf_engine_t *e) {
         e->undeclared[bucket] = flag && strcmp(flag, "0") && strcmp(e->default_language, tag);
         flag = ttf_resource_get(e, "context", tag, "han_sentence", NULL);
         e->han_only[bucket] = flag && strcmp(flag, "0");
+        flag = ttf_resource_get(e, "context", tag, "latin_sentence", NULL);
+        e->han_only[bucket] |= flag && strcmp(flag, "0");
     }
     e->frozen = 1;
     return TTF_OK;

@@ -1,0 +1,40 @@
+# Units after a number (one space allowed), read with the dictionary spelling.
+vi_unit	vi-VN	km	ki-lô-mét
+vi_unit	vi-VN	m	mét
+vi_unit	vi-VN	cm	xen-ti-mét
+vi_unit	vi-VN	mm	mi-li-mét
+vi_unit	vi-VN	kg	ki-lô-gam
+vi_unit	vi-VN	g	gam
+vi_unit	vi-VN	mg	mi-li-gam
+vi_unit	vi-VN	l	lít
+vi_unit	vi-VN	L	lít
+vi_unit	vi-VN	ml	mi-li-lít
+vi_unit	vi-VN	mL	mi-li-lít
+vi_unit	vi-VN	ha	héc-ta
+vi_unit	vi-VN	m2	mét vuông
+vi_unit	vi-VN	m²	mét vuông
+vi_unit	vi-VN	km2	ki-lô-mét vuông
+vi_unit	vi-VN	km²	ki-lô-mét vuông
+vi_unit	vi-VN	m3	mét khối
+vi_unit	vi-VN	m³	mét khối
+vi_unit	vi-VN	°C	độ xê
+vi_unit	vi-VN	°F	độ ép
+vi_unit	vi-VN	°	độ
+vi_unit	vi-VN	km/h	ki-lô-mét trên giờ
+vi_unit	vi-VN	m/s	mét trên giây
+vi_unit	vi-VN	kW	ki-lô-oát
+vi_unit	vi-VN	kWh	ki-lô-oát giờ
+vi_unit	vi-VN	W	oát
+vi_unit	vi-VN	GB	gi-ga-bai
+vi_unit	vi-VN	MB	mê-ga-bai
+vi_unit	vi-VN	TB	tê-ra-bai
+vi_unit	vi-VN	Hz	héc
+vi_unit	vi-VN	GHz	gi-ga-héc
+vi_unit	vi-VN	MHz	mê-ga-héc
+vi_unit	vi-VN	mAh	mi-li-am-pe giờ
+vi_unit	vi-VN	ms	mi-li-giây
+vi_unit	vi-VN	‰	phần nghìn
+vi_unit	vi-VN	MW	mê-ga-oát
+vi_unit	vi-VN	GW	gi-ga-oát
+vi_unit	vi-VN	kV	ki-lô-vôn
+vi_unit	vi-VN	V	vôn

@@ -48,7 +48,9 @@ ttf_script_t ttf_script_of(uint32_t c) {
         (c >= 0xd7b0 && c <= 0xd7ff))
         return TTF_SCRIPT_HANGUL;
     if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
-        (c >= 0xc0 && c <= 0x2af && c != 0xd7 && c != 0xf7))
+        (c >= 0xc0 && c <= 0x2af && c != 0xd7 && c != 0xf7) ||
+        /* Vietnamese ệ ở ữ (Latin Extended Additional) and decomposed tone marks */
+        (c >= 0x1e00 && c <= 0x1eff) || (c >= 0x300 && c <= 0x36f))
         return TTF_SCRIPT_LATIN;
     if ((c >= '0' && c <= '9') || (c >= 0xff10 && c <= 0xff19))
         return TTF_SCRIPT_DIGIT;
