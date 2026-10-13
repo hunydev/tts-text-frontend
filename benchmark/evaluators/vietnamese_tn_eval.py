@@ -22,7 +22,8 @@ ROOT = Path(__file__).resolve().parents[2]
 SETS = {"eval": ROOT / "benchmark/datasets/vi-tn-eval/vi-tn-eval-v1.jsonl",
         "heldout": ROOT / "benchmark/datasets/vi-tn-eval/vi-tn-heldout-v1.jsonl",
         "heldout2": ROOT / "benchmark/datasets/vi-tn-eval/vi-tn-heldout-v2.jsonl",
-        "heldout3": ROOT / "benchmark/datasets/vi-tn-eval/vi-tn-heldout-v3.jsonl"}
+        "heldout3": ROOT / "benchmark/datasets/vi-tn-eval/vi-tn-heldout-v3.jsonl",
+        "heldout4": ROOT / "benchmark/datasets/vi-tn-eval/vi-tn-heldout-v4.jsonl"}
 OUT = ROOT / "benchmark/generated/vi-tn-eval"
 LANG = {"ours": "vi-VN", "ours-en": "en-US", "ours-ko": "ko-KR"}
 

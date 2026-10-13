@@ -1,0 +1,131 @@
+# heldout4_g: everyday life, shopping, health, cooking, travel, school, local government
+cardinal	Lớp con năm nay có {32|ba mươi hai} học sinh, trong đó có {17|mười bảy} bạn nữ.
+cardinal	Năm nay phường có {1.250|một [nghìn,ngàn] hai trăm năm mươi} hộ đăng ký tiêm phòng cúm cho người cao tuổi.
+cardinal	Đơn hàng của chị gồm {3|ba} hộp sữa và {24|hai mươi [tư,bốn]} chai nước suối.
+cardinal	Thư viện trường vừa nhận thêm {2 500|hai [nghìn,ngàn] năm (trăm)/hai [nghìn,ngàn] [rưởi,rưỡi]} cuốn sách do phụ huynh quyên góp.
+cardinal	Từ khi đeo đồng hồ thông minh, mình đi bộ được {8.000|tám [nghìn,ngàn]} bước mỗi ngày.
+cardinal	Hội chợ ẩm thực cuối tuần thu hút hơn {15.000|mười lăm [nghìn,ngàn]} lượt khách.
+cardinal	Huyện đã trao {105|một trăm [linh,lẻ] năm} suất quà cho các gia đình khó khăn dịp Trung thu.
+cardinal	Bài kiểm tra cuối tuần có {12|mười hai} câu trắc nghiệm và {3|ba} câu tự luận.
+cardinal	Công thức bánh bông lan này cần {6|sáu} quả trứng gà và {80|tám mươi} gam đường.
+cardinal	Cửa hàng đã nhận được {1.048|một [nghìn,ngàn] [không trăm,lẻ] bốn mươi tám} lượt đánh giá năm sao trong đợt khuyến mãi.
+decimal	Bé nhà mình lúc mới sinh nặng {3,2 cân|ba phẩy hai cân/ba cân hai}.
+decimal	Điểm trung bình học kỳ vừa rồi của con là {8,75|tám phẩy [bảy mươi lăm,bảy mươi nhăm,bảy lăm,bảy nhăm]}.
+decimal	Chỉ số khối cơ thể của anh hiện là {23,5|hai mươi ba phẩy năm}, vẫn nằm trong mức bình thường.
+decimal	Gian hàng này được đánh giá trung bình {4,9|bốn phẩy chín} trên {5|năm} sao.
+decimal	Tỷ lệ chọi vào lớp {10|mười} của trường chuyên năm nay là {1,6|một phẩy sáu}.
+decimal	Hệ số lương khởi điểm của giáo viên mầm non là {2,34|hai phẩy [ba mươi tư,ba mươi bốn,ba tư,ba bốn]}.
+decimal	Gói hàng của bạn nặng {1,25|một phẩy [hai mươi lăm,hai mươi nhăm,hai lăm,hai nhăm]} cân nên phí vận chuyển sẽ cao hơn.
+decimal	Nhiệt độ của bé lúc sáng là {37,8|ba mươi bảy phẩy tám} độ, mẹ nên theo dõi thêm.
+decimal	Mỗi ngày nên uống khoảng {2,5 lít|hai phẩy năm lít/hai lít rưỡi} nước, nhất là khi tập luyện.
+decimal	Căn hộ cho thuê gần trường có diện tích {68,5|sáu mươi tám phẩy năm} mét vuông.
+percent	Toàn bộ áo khoác đang giảm {30%|ba mươi phần trăm} đến hết Chủ nhật.
+percent	Tỷ lệ học sinh đỗ tốt nghiệp của trường năm nay đạt {99,2%|chín mươi chín phẩy hai phần trăm}.
+percent	Khách thanh toán qua ví điện tử được hoàn tiền {5%|năm phần trăm} cho mỗi đơn hàng.
+percent	Sữa chua không đường chỉ chứa khoảng {3,5%|ba phẩy năm phần trăm} chất béo.
+percent	Có tới {65 %|sáu mươi [lăm,nhăm] phần trăm} người được khảo sát cho biết họ đặt đồ ăn qua mạng mỗi tuần.
+percent	Tỉnh đặt mục tiêu {100%|một trăm phần trăm} hồ sơ hành chính được xử lý trực tuyến vào cuối năm.
+percent	Pin điện thoại chỉ còn {15%|mười lăm phần trăm} mà mình lại quên mang sạc.
+percent	Giá phòng khách sạn ven biển mùa cao điểm tăng thêm {40%|bốn mươi phần trăm}.
+percent	Tập luyện đều đặn giúp giảm tới {35%|ba mươi [lăm,nhăm] phần trăm} nguy cơ mắc bệnh tim mạch.
+percent	Độ ẩm trong phòng ngủ nên duy trì ở mức {50%|năm mươi phần trăm} để bé ngủ ngon.
+negative	Nhiệt độ ở Sa Pa đêm qua xuống tới {-2°C|âm hai độ (xê)}, nhiều nơi xuất hiện băng giá.
+negative	Ngăn đá tủ lạnh nên để ở mức {-18°C|âm mười tám độ (xê)} để bảo quản thịt cá được lâu.
+negative	Ví điện tử của tôi đang hiển thị số dư {-120.000đ|[âm,trừ] một trăm hai mươi [nghìn,ngàn] đồng}, chắc là do lỗi hệ thống.
+negative	Kem thành phẩm phải được cấp đông ở {−25 độ|âm hai mươi [lăm,nhăm] độ} trước khi đóng thùng.
+negative	Khi đoàn mình đến Bắc Kinh, nhiệt độ ngoài trời chỉ {-7 độ C|âm bảy độ (xê)}.
+negative	Quỹ lớp tháng này chênh lệch thu chi là {-350.000|[âm,trừ] ba trăm năm mươi [nghìn,ngàn]} đồng, ban phụ huynh sẽ bổ sung sau.
+negative	Đoàn dã ngoại phải dời lịch vì dự báo trên đỉnh Mẫu Sơn có thể xuống {-1°C|âm một độ (xê)}.
+negative	Doanh thu quý này của cửa hàng tăng trưởng {-4,5%|âm bốn phẩy năm phần trăm} so với cùng kỳ năm ngoái.
+negative	Mắt trái của con đo được {-1,75|âm một phẩy [bảy mươi lăm,bảy mươi nhăm,bảy lăm,bảy nhăm]} độ nên cần cắt kính mới.
+negative	Bảng thi đua tuần này ghi lớp con bị {-5|âm năm/trừ năm} điểm vì có bạn đi học muộn.
+ordinal	Đây là lần thứ {3|ba} trong tháng người giao hàng để nhầm bưu kiện sang nhà hàng xóm.
+ordinal	Con gái tôi đứng thứ {2|hai} toàn khối trong kỳ thi học sinh giỏi Toán vừa rồi.
+ordinal	Lịch tập thể hình của tôi là {thứ 2|thứ hai}, {thứ 4|thứ tư} và {thứ 6|thứ sáu} hằng tuần.
+ordinal	Bé là con thứ {4|tư} trong nhà nên được ông bà cưng chiều nhất.
+ordinal	Kỹ năng số là yêu cầu bắt buộc đối với người lao động thế kỷ {XXI|hai mươi mốt}.
+ordinal	Đây là lần thứ {1|nhất} phường tổ chức ngày hội đổi rác thải nhựa lấy cây xanh.
+ordinal	Đội bóng của trường xếp thứ {14|mười bốn} trên tổng số {40|bốn mươi} đội tham gia giải.
+ordinal	Hội chợ hàng Việt lần thứ {24|hai mươi [tư,bốn]} sẽ khai mạc tại nhà văn hóa quận.
+ordinal	Học kỳ {II|hai} sẽ bắt đầu ngay sau kỳ nghỉ Tết Nguyên đán.
+ordinal	Bộ phim hoạt hình con thích nhất vừa ra mắt phần thứ {5|năm}.
+currency	Áo thun này giá {199.000đ|một trăm chín mươi chín [nghìn,ngàn] đồng}, mua hai cái được miễn phí vận chuyển.
+currency	Phí giao hàng nội thành chỉ {15k|mười lăm [nghìn,ngàn,ca]} thôi chị ơi.
+currency	Học phí bán trú năm học mới là {3.200.000|ba triệu hai/ba triệu hai trăm [nghìn,ngàn]} đồng mỗi tháng.
+currency	Vé máy bay khứ hồi Hà Nội đi Đà Nẵng tuần này có giá {1.890.000 VNĐ|một triệu tám trăm chín mươi [nghìn,ngàn] [đồng,việt nam đồng]}.
+currency	Phòng khách sạn gần trung tâm Băng Cốc có giá {45 USD|bốn mươi [lăm,nhăm] [đô la mỹ,đô la,đô,đô mỹ]} một đêm.
+currency	Gói tập thể hình {6|sáu} tháng đang giảm còn {2,4 triệu|hai phẩy bốn triệu/hai triệu tư/hai triệu bốn/hai triệu bốn trăm [nghìn,ngàn]}.
+currency	Ví điện tử vừa trừ {89.000₫|tám mươi chín [nghìn,ngàn] đồng} cho đơn đồ ăn tối qua.
+currency	Lệ phí cấp đổi giấy phép lái xe hiện nay là {135.000|một trăm ba mươi [lăm,nhăm] [nghìn,ngàn]} đồng.
+currency	Chiếc tai nghe này bên Mỹ chỉ bán {$129|một trăm hai mươi chín [đô la,đô,đô la mỹ]}.
+currency	Chiếc nồi chiên không dầu này đang có giá {1tr5|một triệu rưỡi/một triệu năm/một triệu năm trăm [nghìn,ngàn]}.
+date	Trường họp phụ huynh đầu năm vào Chủ nhật, ngày {18/10/2026|mười tám tháng mười năm hai [nghìn,ngàn] không trăm hai mươi sáu/mười tám tháng mười năm hai không hai sáu}.
+date	Đơn hàng của bạn dự kiến được giao vào ngày {16.10|mười sáu tháng mười}.
+date	Chuyến bay của chúng tôi khởi hành sáng {T7|thứ bảy}, ngày {24/10|hai mươi [tư,bốn] tháng mười}.
+date	Phường ngừng cấp nước ngày {05-11-2026|[mùng,mồng,] năm tháng mười một năm hai [nghìn,ngàn] không trăm hai mươi sáu/[mùng,mồng,] năm tháng mười một năm hai không hai sáu}.
+date	Sinh nhật con trai tôi là ngày {1/4|[mùng,mồng,] một tháng tư}, năm nào cả nhà cũng đi ăn lẩu.
+date	Hội chợ việc làm của quận sẽ diễn ra trong tháng {11/2026|mười một năm hai [nghìn,ngàn] không trăm hai mươi sáu/mười một năm hai không hai sáu}.
+date	Cô chủ nhiệm nhắc các em nộp bài thu hoạch muộn nhất vào thứ Sáu, ngày {23/10|hai mươi ba tháng mười}.
+date	Ngày Nhà giáo Việt Nam {20.11|hai mươi tháng mười một} năm nay rơi vào thứ Sáu.
+date	Thẻ bảo hiểm y tế của bà hết hạn ngày {31/12/2026|ba mươi mốt tháng mười hai năm hai [nghìn,ngàn] không trăm hai mươi sáu/ba mươi mốt tháng mười hai năm hai không hai sáu}.
+date	Phiếu giảm giá này có hiệu lực đến hết {15/11|ngày mười lăm tháng mười một/mười lăm tháng mười một}.
+time	Siêu thị mở cửa từ {7h30|bảy giờ ba mươi (phút)/bảy giờ rưỡi} sáng đến {22h|hai mươi hai giờ} hằng ngày.
+time	Lớp yoga buổi tối bắt đầu lúc {18:45|mười tám giờ bốn mươi [lăm,nhăm] (phút)}, các chị nhớ đến sớm.
+time	Bạn nhớ có mặt ở sân bay trước {5 giờ 15|năm giờ mười lăm (phút)} sáng nhé.
+time	Đồng hồ báo thức của tôi luôn đặt lúc {05:50|năm giờ năm mươi (phút)} để kịp chạy bộ.
+time	Bộ phận một cửa của phường tiếp dân buổi chiều đến {16h30|mười sáu giờ ba mươi (phút)/mười sáu giờ rưỡi}.
+time	Chuyến xe khách về quê xuất phát lúc {21g15|hai mươi mốt giờ mười lăm (phút)} tại bến xe phía Nam.
+time	Thuốc này uống ngày hai lần, vào lúc {8:00|tám giờ} và {20:00|hai mươi giờ}.
+time	Kết quả thi sẽ được công bố trên cổng thông tin vào {10h00|mười giờ} sáng mai.
+time	Thành tích chạy bán marathon của anh ấy là {1:05:32|một [giờ,tiếng] năm phút ba mươi hai giây}.
+time	Cửa hàng tiện lợi đầu ngõ mở cửa {24/7|hai [mươi tư,mươi bốn,tư,bốn] trên bảy/hai [mươi tư,mươi bốn,tư,bốn] bảy} nên rất tiện.
+range	Thời gian giao hàng dự kiến từ {3-5|ba [đến,tới] năm} ngày làm việc, không tính ngày lễ.
+range	Lớp học vẽ cuối tuần dành cho trẻ từ {6–10|sáu [đến,tới] mười} tuổi.
+range	Mỗi buổi tập nên kéo dài {30 - 45|ba mươi [đến,tới] bốn mươi [lăm,nhăm]} phút, xen kẽ nghỉ ngắn.
+range	Giá thuê nhà nghỉ ở khu phố cổ dao động {500k-800k|năm trăm [nghìn,ngàn,ca] [đến,tới] tám trăm [nghìn,ngàn,ca]/năm trăm [đến,tới] tám trăm [nghìn,ngàn,ca]} một đêm.
+range	Bộ phận một cửa tạm ngừng nhận hồ sơ từ {25/12 - 2/1|hai mươi [lăm,nhăm] tháng mười hai [đến,tới] [mùng,mồng,] hai tháng một} để tổng kết cuối năm.
+range	Giờ thăm bệnh nhân buổi chiều là {14h-16h|mười bốn giờ [đến,tới] mười sáu giờ}.
+range	Nhiệt độ ngày mai ở Đà Lạt dao động trong khoảng {16-22°C|mười sáu [đến,tới] hai mươi hai độ (xê)}.
+range	Học sinh từ lớp {1-5|một [đến,tới] năm} được miễn toàn bộ học phí theo chính sách mới.
+range	Hầm xương khoảng {2-3|hai [đến,tới] ba/hai ba} tiếng để nước dùng ngọt và trong.
+range	Người trưởng thành cần khoảng {1.800–2.200 kcal|một [nghìn,ngàn] tám (trăm) [đến,tới] hai [nghìn,ngàn] hai (trăm) [ki lô ca lo,ca lo]} mỗi ngày.
+unit	Cho {200 g|hai trăm gam} bột mì vào âu, thêm từ từ {150 ml|một trăm năm mươi [mi li lít,mi li]} sữa tươi rồi khuấy đều.
+unit	Nhà mình cách trường khoảng {2,5 km|hai phẩy năm [ki lô mét,cây số]/hai [ki lô mét,cây số,cây] rưỡi} nên con tự đạp xe đi học.
+unit	Bác sĩ khuyên tôi giảm khoảng {5kg|năm [ki lô gam,ki lô,cân,ký,kí]} trong ba tháng tới.
+unit	Bé nhà tôi đã cao {95 cm|chín mươi [lăm,nhăm] [xen ti mét,phân]} lúc tròn ba tuổi.
+unit	Căn hộ mẫu rộng {75m²|bảy mươi [lăm,nhăm] mét vuông}, có hai phòng ngủ và ban công.
+unit	Nướng bánh ở {180°C|một trăm tám mươi độ (xê)/một trăm tám độ (xê)} trong khoảng {25|hai mươi [lăm,nhăm]} phút cho đến khi vàng đều.
+unit	Một quả chuối cỡ vừa cung cấp khoảng {105 kcal|một trăm [linh,lẻ] năm [ki lô ca lo,ca lo]}.
+unit	Đổ thêm {1,5L|một phẩy năm lít/một lít rưỡi} nước lọc vào nồi rồi hầm nhỏ lửa.
+unit	Lô đất của gia đình ông có diện tích {120m2|một trăm hai mươi mét vuông/một trăm hai mét vuông} theo sổ đỏ mới cấp.
+unit	Tốc độ tối đa cho phép trong khu dân cư là {40 km/h|bốn mươi [ki lô mét,cây số] [trên,một] giờ}.
+code	Mã xác thực của bạn là {482913|bốn tám hai chín một ba}, vui lòng không chia sẻ cho bất kỳ ai.
+code	Mọi thắc mắc về đơn hàng xin liên hệ tổng đài {1900 6035|một chín không không sáu không ba năm}.
+code	Số điện thoại của cô chủ nhiệm là {0912.345.678|không chín một hai ba bốn năm sáu bảy tám}.
+code	Nhập mã FREESHIP{30|ba mươi/ba không} khi thanh toán để được miễn phí giao hàng.
+code	Bạn có thể tra cứu hành trình bưu kiện bằng mã vận đơn {8812 0457 3391|tám tám một hai không bốn năm bảy ba ba chín một}.
+code	Theo thẻ lên máy bay, anh ngồi ghế {12A|mười hai a}, sát cửa sổ.
+code	Khách sạn đã xếp cho gia đình mình phòng {305|ba trăm [linh,lẻ] năm/ba không năm/ba [linh,lẻ] năm} ở tầng trên cùng.
+code	Khi gặp tai nạn hoặc cần cấp cứu, hãy gọi ngay {115|một một năm/một trăm mười lăm}.
+code	Mã bưu chính của phường chúng tôi là {11108|một một một không tám}.
+code	Chuyến bay VN {255|hai năm năm/hai trăm năm mươi [lăm,nhăm]} đi Đà Lạt đã mở quầy làm thủ tục.
+latin	Mình vừa đặt mua iPhone {17|mười bảy} trên Shopee, mai là giao tới rồi.
+latin	Grab đang giảm {40%|bốn mươi phần trăm} cho các chuyến xe đi sân bay Tân Sơn Nhất.
+latin	Apple Watch nhắc tôi đứng dậy vận động sau mỗi {50|năm mươi} phút ngồi làm việc.
+latin	Cả lớp sẽ học qua Zoom vào tối {thứ 5|thứ năm} tuần này do giáo viên đi tập huấn.
+latin	Vé Vietjet Air đi Phú Quốc tuần sau chỉ còn {899k|tám trăm chín mươi chín [nghìn,ngàn,ca]}.
+latin	Mình đã đặt phòng trên Agoda cho {2|hai} người lớn và {1|một} trẻ em.
+latin	Con đang theo khóa IELTS cấp tốc với mục tiêu đạt {6.5|sáu chấm năm/sáu phẩy năm/sáu rưỡi}.
+latin	Netflix vừa tăng giá gói Premium lên {260.000|hai trăm sáu mươi [nghìn,ngàn]} đồng mỗi tháng.
+latin	Phường hướng dẫn người dân kích hoạt tài khoản định danh điện tử mức {2|hai} trên ứng dụng VNeID.
+latin	Mình hay xem video nấu ăn trên YouTube, công thức bánh flan này chỉ cần {4|bốn} nguyên liệu.
+mixed	Đặt trước {20h|hai mươi giờ} hôm nay, đơn từ {300.000đ|ba trăm [nghìn,ngàn] đồng} sẽ được giao trong vòng {2h|hai giờ/hai tiếng}.
+mixed	Lịch tiêm vắc xin sởi cho trẻ {9-18|chín [đến,tới] mười tám} tháng tuổi bắt đầu lúc {7h30|bảy giờ ba mươi (phút)/bảy giờ rưỡi} ngày {25/10|hai mươi [lăm,nhăm] tháng mười}.
+mixed	Từ quý {IV|bốn/tư} năm {2027|hai [nghìn,ngàn] không trăm hai mươi bảy/hai không hai bảy}, tuyến buýt sẽ dài thêm {3,5 km|ba phẩy năm [ki lô mét,cây số]/ba [ki lô mét,cây số,cây] rưỡi}.
+mixed	Chuyến du lịch Đà Nẵng {3N2Đ|ba ngày hai đêm} đang có giá {2.990.000đ|hai triệu chín trăm chín mươi [nghìn,ngàn] đồng} cho mỗi khách.
+mixed	Ướp {0,5 kg|không phẩy năm [ki lô gam,ki lô,cân,ký,kí]} sườn non với {2|hai} thìa nước mắm rồi nướng ở {200°C|hai trăm độ (xê)}.
+mixed	Kết quả xét nghiệm cho thấy đường huyết lúc đói là {5,6 mmol/L|năm phẩy sáu mi li mol trên lít}, mỡ máu tăng {12%|mười hai phần trăm} so với lần trước.
+mixed	Học sinh lớp {9|chín} nộp đơn đăng ký học thêm trước {17h00|mười bảy giờ} ngày {30/10|ba mươi tháng mười}.
+mixed	Phường tổ chức giải chạy {5km|năm [ki lô mét,cây số]} vì cộng đồng vào sáng {CN|chủ nhật}, ngày {8/11|[mùng,mồng,] tám tháng mười một}.
+mixed	Khách sạn nhận phòng từ {14:00|mười bốn giờ}, trả phòng trước {12:00|mười hai giờ} và phụ thu {10%|mười phần trăm} nếu trả muộn.
+mixed	Hành lý ký gửi {20kg|hai mươi [ki lô gam,ki lô,cân,ký,kí]} có giá {250.000đ|hai trăm năm mươi [nghìn,ngàn] đồng}, mua trước {3|ba} ngày sẽ rẻ hơn.

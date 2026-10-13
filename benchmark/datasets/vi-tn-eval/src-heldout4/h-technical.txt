@@ -1,0 +1,130 @@
+cardinal	Nhà máy hiện có {1.250|một [nghìn,ngàn] hai trăm năm mươi} công nhân làm việc theo ba ca.
+cardinal	Mỗi ngày tuyến xe buýt này phục vụ khoảng {18.400|mười tám [nghìn,ngàn] bốn trăm} lượt hành khách.
+cardinal	Bộ phụ kiện lắp đặt gồm {24|hai mươi [tư,bốn]} con vít, {4|bốn} chốt định vị và một cờ lê lục giác.
+cardinal	Bệnh viện đã tiếp nhận {317|ba trăm mười bảy} ca sốt xuất huyết kể từ đầu tháng.
+cardinal	Cơn bão làm tốc mái {2.105|hai [nghìn,ngàn] một trăm [linh,lẻ] năm} ngôi nhà tại các tỉnh ven biển.
+cardinal	Công ty hiện đang lưu hành {145.000.000|một trăm bốn mươi [lăm,nhăm] triệu} cổ phiếu phổ thông.
+cardinal	Kho dữ liệu vẫn còn {3 501|ba [nghìn,ngàn] năm trăm [linh,lẻ] một} bản ghi lỗi chưa được xử lý.
+cardinal	Mã nguồn của dự án hiện có hơn {40000|bốn mươi [nghìn,ngàn]} dòng lệnh.
+cardinal	Tháp giải nhiệt được lắp {16|mười sáu} quạt hướng trục cùng {32|ba mươi hai} vòi phun.
+cardinal	Trong đợt cao điểm, lực lượng cảnh sát giao thông đã lập biên bản {1.021|một [nghìn,ngàn] không trăm hai mươi mốt} trường hợp vi phạm nồng độ cồn.
+decimal	Hệ số an toàn của dầm chính được chọn bằng {1,5|một phẩy năm}.
+decimal	Chỉ số chính đóng cửa ở mức {1.287,46|một [nghìn,ngàn] hai trăm tám mươi bảy phẩy bốn mươi sáu} điểm.
+decimal	Hệ số beta của cổ phiếu này chỉ là {0,87|không phẩy tám mươi bảy}.
+decimal	Chỉ số tia cực tím vào giữa trưa nay đạt {10,2|mười phẩy hai}, ở ngưỡng rất cao.
+decimal	Chỉ số khối cơ thể {23,5|hai mươi ba phẩy năm} được xem là bình thường ở người trưởng thành.
+decimal	Thuật toán mới chạy nhanh gấp {2,3|hai phẩy ba} lần so với phiên bản trước.
+decimal	Độ pH của nước thải sau xử lý dao động quanh mức {7,2|bảy phẩy hai}.
+decimal	Hệ số thanh toán hiện hành của doanh nghiệp đạt {1,08|một phẩy không tám} lần.
+decimal	Hệ số công suất của động cơ đạt {0,92|không phẩy chín mươi hai} khi chạy đầy tải.
+decimal	Trận động đất có độ lớn {4,6|bốn phẩy sáu} xảy ra vào lúc rạng sáng.
+percent	Độ ẩm không khí trung bình trong ngày ở mức {85%|tám mươi [lăm,nhăm] phần trăm}.
+percent	Doanh thu thuần quý vừa qua tăng {12,6%|mười hai phẩy sáu phần trăm} so với cùng kỳ.
+percent	Thuốc mỡ bôi da này chứa {0,1%|không phẩy một phần trăm} hoạt chất.
+percent	Pin có thể sạc tới {50%|năm mươi phần trăm} chỉ trong nửa giờ.
+percent	Tỷ lệ lấp đầy các chuyến tàu dịp lễ đạt gần {98%|chín mươi tám phần trăm}.
+percent	Khả năng có mưa rào vào chiều nay khoảng {70 %|bảy mươi phần trăm}.
+percent	Nhóm cổ đông nội bộ nắm giữ {51,25%|năm mươi mốt phẩy hai mươi [lăm,nhăm] phần trăm} vốn điều lệ.
+percent	Bộ nhớ của máy chủ đã sử dụng hết {93%|chín mươi ba phần trăm} dung lượng.
+percent	Vắc xin cho hiệu quả bảo vệ khoảng {94,1%|chín mươi [tư,bốn] phẩy một phần trăm} trong thử nghiệm lâm sàng.
+percent	Thép chế tạo trục có hàm lượng các bon không vượt quá {0,45%|không phẩy bốn mươi [lăm,nhăm] phần trăm}.
+negative	Rạng sáng nay, nhiệt độ tại đỉnh Mẫu Sơn xuống tới {-1°C|âm một độ (xê)}.
+negative	Nhóm cổ phiếu ngân hàng giảm sâu, có mã đóng cửa ở mức {-6,9%|âm sáu phẩy chín phần trăm}.
+negative	Lợi nhuận sau thuế hợp nhất quý này là {-48 tỷ đồng|âm bốn mươi tám [tỷ,tỉ] đồng}.
+negative	Tủ cấp đông duy trì nhiệt độ {-18 °C|âm mười tám độ (xê)} để bảo quản thực phẩm lâu dài.
+negative	Một số loại vắc xin phải được bảo quản ở {−70°C|âm bảy mươi độ (xê)}.
+negative	Cao độ đáy móng của tòa nhà nằm ở {-4,5 m|âm bốn phẩy năm mét}.
+negative	Dòng tiền thuần từ hoạt động kinh doanh năm nay là {-312|âm ba trăm mười hai} tỷ đồng.
+negative	Hàm tìm kiếm sẽ trả về giá trị {-1|âm một} khi không tìm thấy phần tử.
+negative	Kết quả đo khúc xạ cho thấy mắt trái của bệnh nhân ở mức {-3,5|âm ba phẩy năm} độ.
+negative	Chênh lệch áp suất trong phòng cách ly được giữ ở mức {-15 Pa|âm mười lăm [pa,pát] xcan}.
+ordinal	Đây là lần {thứ 3|thứ ba} trong năm hãng phải triệu hồi mẫu xe này.
+ordinal	Cơn bão {thứ 4|thứ tư} trong mùa đang di chuyển vào vùng biển phía bắc.
+ordinal	Doanh nghiệp đứng {thứ 2|thứ hai} toàn ngành về thị phần thép xây dựng.
+ordinal	Người bệnh được chẩn đoán tăng huyết áp độ {II|hai} và cần dùng thuốc lâu dài.
+ordinal	Kết quả kinh doanh {quý III|quý ba} vượt xa kỳ vọng của giới phân tích.
+ordinal	Cầu Long Biên được xây dựng từ cuối thế kỷ {XIX|mười chín}.
+ordinal	Chương {thứ 5|thứ năm} của sách hướng dẫn trình bày cách bảo trì định kỳ.
+ordinal	Đây là bản vá bảo mật {thứ 21|thứ hai mươi mốt} được phát hành trong năm nay.
+ordinal	Bệnh nhân đang được điều trị ung thư phổi giai đoạn {IV|bốn}.
+ordinal	Đội thi công đã hoàn thành hạng mục {thứ 1|thứ nhất} trước thời hạn.
+currency	Giá điện sinh hoạt bậc một hiện là {1.893 đồng|một [nghìn,ngàn] tám trăm chín mươi ba đồng} mỗi số điện.
+currency	Vé xe buýt nội đô hiện có giá {7.000đ|bảy [nghìn,ngàn] đồng} một lượt.
+currency	Cổ phiếu chốt phiên hôm qua ở mức {28.350 đồng|hai mươi tám [nghìn,ngàn] ba trăm năm mươi đồng}.
+currency	Công ty dự kiến chi trả cổ tức tiền mặt {1.500 đồng|một [nghìn,ngàn] [năm trăm,rưỡi] đồng} cho mỗi cổ phiếu.
+currency	Một hộp thuốc huyết áp loại này có giá {245.000 VNĐ|hai trăm bốn mươi [lăm,nhăm] [nghìn,ngàn] [đồng,việt nam đồng]}.
+currency	Nhà máy linh kiện được đầu tư tổng cộng {1,2 tỷ USD|một phẩy hai [tỷ,tỉ] [đô la mỹ,đô la,đô,u ét đê]}.
+currency	Gói lưu trữ đám mây tính phí {$20|hai mươi [đô la,đô]} mỗi tháng.
+currency	Phí gửi ô tô tại nhà ga là {35k|ba mươi [lăm,nhăm] [nghìn,ngàn]/ba mươi [lăm,nhăm] ca/ba lăm [nghìn,ngàn]/ba lăm ca} cho hai giờ đầu.
+currency	Vốn hóa thị trường của tập đoàn đạt {450.000 tỷ đồng|bốn trăm năm mươi [nghìn,ngàn] [tỷ,tỉ] đồng}.
+currency	Tổng mức đầu tư tuyến cao tốc là {18.620 tỷ|mười tám [nghìn,ngàn] sáu trăm hai mươi [tỷ,tỉ]} đồng.
+date	Hệ thống sẽ tạm dừng để bảo trì vào ngày {15/11/2026|mười lăm tháng mười một năm hai [nghìn,ngàn] không trăm hai mươi sáu}.
+date	Giấy phép lưu hành thuốc có hiệu lực đến {31/12/2027|(ngày) ba mươi mốt tháng mười hai năm hai [nghìn,ngàn] không trăm hai mươi bảy}.
+date	Đợt rét đậm dự kiến kéo dài đến hết ngày {5/1|[mùng,mồng,] năm tháng [một,giêng]}.
+date	Đại hội đồng cổ đông thường niên được tổ chức ngày {25-4-2026|hai mươi [lăm,nhăm] tháng tư năm hai [nghìn,ngàn] không trăm hai mươi sáu}.
+date	Tuyến đường sắt đô thị chính thức vận hành thương mại từ {22.12.2024|(ngày) hai mươi hai tháng mười hai năm hai [nghìn,ngàn] không trăm hai mươi [tư,bốn]}.
+date	Báo cáo tài chính {quý IV/2025|quý [bốn,tư] (năm) hai [nghìn,ngàn] không trăm hai mươi [lăm,nhăm]} đã được kiểm toán.
+date	Lô thuốc này được sản xuất vào {tháng 03/2026|tháng ba (năm) hai [nghìn,ngàn] không trăm hai mươi sáu}.
+date	Hạn sử dụng in trên vỏ hộp là {08/2028|tháng tám (năm) hai [nghìn,ngàn] không trăm hai mươi tám}.
+date	Bản cập nhật hệ điều hành được phát hành ngày {2026-10-01|[mùng,mồng,] một tháng mười năm hai [nghìn,ngàn] không trăm hai mươi sáu}.
+date	Khu vực này sẽ bị cắt điện vào {thứ 2|thứ hai} ngày {19/10|mười chín tháng mười}.
+time	Chuyến bay khởi hành lúc {06:45|sáu giờ bốn mươi [lăm,nhăm] (phút)/bảy giờ kém mười lăm (phút)}.
+time	Phiên khớp lệnh buổi sáng kết thúc lúc {11h30|mười một giờ ba mươi (phút)/mười một giờ rưỡi}.
+time	Người bệnh uống liều cuối cùng trong ngày vào khoảng {20 giờ|hai mươi giờ}.
+time	Mưa dông có thể kéo dài từ chiều đến {22h|hai mươi hai giờ} đêm nay.
+time	Hệ thống sao lưu tự động chạy vào lúc {02:00|hai giờ (đúng)}.
+time	Đoàn tàu xuất phát từ ga Hà Nội lúc {19 giờ 30 phút|mười chín giờ ba mươi phút/mười chín giờ rưỡi}.
+time	Thí nghiệm nén mẫu bê tông kéo dài {01:25:40|một giờ hai mươi [lăm,nhăm] phút bốn mươi giây}.
+time	Buổi nghiệm thu thiết bị bắt đầu lúc {9g15|chín giờ mười lăm (phút)}.
+time	Đỉnh triều cường dự báo xuất hiện vào khoảng {17 giờ 45|mười bảy giờ bốn mươi [lăm,nhăm] (phút)/sáu giờ kém mười lăm (phút)}.
+time	Trận động đất xảy ra lúc {3:12|ba giờ mười hai (phút)} sáng.
+range	Nhiệt độ cao nhất phổ biến {33–35°C|ba mươi ba [đến,tới] ba mươi [lăm,nhăm] độ (xê)}.
+range	Người lớn uống {1-2 viên|một [đến,tới] hai viên/một hai viên} mỗi lần sau khi ăn.
+range	Thời gian giao hàng thường mất {3-5 ngày|ba [đến,tới] năm ngày} làm việc.
+range	Bộ nguồn chấp nhận điện áp đầu vào {100–240 V|một trăm [đến,tới] hai trăm bốn mươi vôn}.
+range	Lượng mưa phổ biến từ {50-100 mm|năm mươi [đến,tới] một trăm [mi li mét,li]}, có nơi cao hơn.
+range	Giá cổ phiếu dao động trong vùng {24.000–26.500 đồng|hai mươi [tư,bốn] [nghìn,ngàn] [đến,tới] hai mươi sáu [nghìn,ngàn] [năm trăm,rưỡi] đồng}.
+range	Thời gian phản hồi trung bình của dịch vụ là {120–150 ms|một trăm hai mươi [đến,tới] một trăm năm mươi mi li giây}.
+range	Kế hoạch đầu tư công giai đoạn {2021-2025|hai [nghìn,ngàn] không trăm hai mươi mốt [đến,tới] hai [nghìn,ngàn] không trăm hai mươi [lăm,nhăm]} đã được điều chỉnh.
+range	Thuốc này chỉ dùng cho trẻ từ {6–12 tuổi|sáu [đến,tới] mười hai tuổi}.
+range	Gió giật mạnh {40-60 km/h|bốn mươi [đến,tới] sáu mươi [ki lô mét,cây số] [trên,một,mỗi] giờ} ở vùng ven biển.
+unit	Động cơ điện có công suất tối đa {150 kW|một trăm năm mươi ki lô oát}.
+unit	Viên pin dung lượng {4.500 mAh|bốn [nghìn,ngàn] [năm trăm,rưỡi] mi li am pe (giờ)} cho thời gian dùng gần hai ngày.
+unit	Mỗi viên nang chứa {500 mg|năm trăm mi li gam} hoạt chất.
+unit	Nồng độ bụi siêu mịn đo được sáng nay là {78 µg/m³|bảy mươi tám mi crô gam trên mét khối}.
+unit	Ổ cứng gắn ngoài có dung lượng {2 TB|hai tê ra bai/hai tê bê}.
+unit	Sàn văn phòng được thiết kế cho hoạt tải {4 kN/m²|bốn ki lô niu tơn trên mét vuông}.
+unit	Trạm khí tượng Kỳ Anh đo được lượng mưa {286 mm|hai trăm tám mươi sáu [mi li mét,li]}.
+unit	Bể chứa nước sạch có dung tích {1.200 m³|một [nghìn,ngàn] hai trăm mét khối}.
+unit	Bệnh nhân được truyền tĩnh mạch {500 ml|năm trăm mi li lít} dung dịch muối sinh lý.
+unit	Bộ vi xử lý chạy ở xung nhịp {3,2 GHz|ba phẩy hai [gi ga,ghi ga] héc}.
+code	Khách hàng cần hỗ trợ vui lòng gọi tổng đài {1900 1234|một chín không không một hai ba bốn}.
+code	Đoạn {QL1A|quốc lộ một a} qua thị xã đang được thảm lại mặt đường.
+code	Trình duyệt báo lỗi {404|bốn không bốn/bốn trăm [linh,lẻ] bốn} khi truy cập trang cũ.
+code	Địa chỉ mặc định của bộ định tuyến là {192.168.1.1|một trăm chín mươi hai chấm một trăm sáu mươi tám chấm một chấm một/một chín hai chấm một sáu tám chấm một chấm một}.
+code	Người dùng nên cập nhật ứng dụng lên phiên bản {2.4.1|hai chấm bốn chấm một}.
+code	Lô thuốc mang số {240715|hai bốn không bảy một năm} đã bị thu hồi.
+code	Nhập mã xác thực {583 920|năm tám ba chín hai không} để hoàn tất giao dịch.
+code	Ứng dụng web mặc định lắng nghe trên cổng {8080|tám không tám không}.
+code	Khi gặp người bị nạn, hãy gọi ngay số cấp cứu {115|một một năm/một trăm mười lăm}.
+code	Mọi thắc mắc kỹ thuật xin liên hệ số {0243.826.1234|không hai bốn ba tám hai sáu một hai ba bốn}.
+latin	Chiếc iPhone mới hỗ trợ sạc nhanh với công suất tối đa {27 W|hai mươi bảy oát}.
+latin	Samsung dự kiến rót thêm {2 tỷ USD|hai [tỷ,tỉ] [đô la mỹ,đô la,đô,u ét đê]} vào các nhà máy tại Thái Nguyên.
+latin	Theo thống kê của Grab, lượng đặt xe trong giờ cao điểm tăng {30%|ba mươi phần trăm}.
+latin	Mẫu laptop này được trang bị {16 GB|mười sáu [gi ga,ghi ga] (bai)} RAM.
+latin	Hội đồng quản trị bổ nhiệm CEO mới, có hiệu lực từ ngày {1/11|[mùng,mồng,] một tháng mười một}.
+latin	Chỉ số Dow Jones giảm {1,2%|một phẩy hai phần trăm} trong phiên giao dịch đêm qua.
+latin	Microsoft vừa phát hành bản vá cho {68|sáu mươi tám} lỗ hổng bảo mật trên Windows.
+latin	Vietnam Airlines bổ sung {120|một trăm hai mươi} chuyến bay đêm trong dịp cao điểm Tết.
+latin	Router Wi-Fi mới đạt tốc độ truyền tối đa {2.400 Mbps|hai [nghìn,ngàn] bốn trăm mê ga bít (trên giây)}.
+latin	Pfizer cho biết lô vắc xin mới cần được bảo quản ở {2–8°C|hai [đến,tới] tám độ (xê)}.
+mixed	Ngày {12/10|mười hai tháng mười}, lượng mưa tại Huế đạt {420 mm|bốn trăm hai mươi [mi li mét,li]}, nhiệt độ thấp nhất {19°C|mười chín độ (xê)}.
+mixed	Huyết áp đo lúc {7h|bảy giờ} sáng là {150/95 mmHg|một trăm năm mươi trên chín mươi [lăm,nhăm] mi li mét thủy ngân}.
+mixed	Kết thúc phiên {13/10|mười ba tháng mười}, cổ phiếu tăng {4,8%|bốn phẩy tám phần trăm} lên {32.100 đồng|ba mươi hai [nghìn,ngàn] một trăm đồng}.
+mixed	Xe tải chạy hết {120 km|một trăm hai mươi [ki lô mét,cây số]} trong {1,5 giờ|một phẩy năm giờ/một giờ rưỡi}.
+mixed	Máy lọc nước công suất {60 W|sáu mươi oát}, lưu lượng {10 lít/giờ|mười lít [trên,một,mỗi] giờ}, giá {4,99 triệu đồng|bốn phẩy chín mươi chín triệu đồng/bốn triệu chín trăm chín mươi [nghìn,ngàn] đồng}.
+mixed	Lúc {16 giờ|mười sáu giờ}, tâm bão cách đảo Bạch Long Vĩ khoảng {150 km|một trăm năm mươi [ki lô mét,cây số]/một trăm rưỡi [ki lô mét,cây số]}, sức gió mạnh nhất cấp {10|mười}.
+mixed	Trẻ từ {2-6 tuổi|hai [đến,tới] sáu tuổi} uống {5 ml|năm mi li lít} mỗi lần, các lần cách nhau {6 giờ|sáu giờ}.
+mixed	Máy chủ ngừng hoạt động lúc {23:40|hai mươi ba giờ bốn mươi (phút)} ngày {30/9|ba mươi tháng chín}, ảnh hưởng tới {12.000|mười hai [nghìn,ngàn]} người dùng.
+mixed	Đoạn cao tốc dài {26,5 km|hai mươi sáu phẩy năm [ki lô mét,cây số]/hai mươi sáu [ki lô mét,cây số] rưỡi} với tổng vốn {7.600 tỷ đồng|bảy [nghìn,ngàn] sáu trăm [tỷ,tỉ] đồng} thông xe ngày {30/4|ba mươi tháng tư}.
+mixed	Trong quý {II|hai}, công ty lãi ròng {215 tỷ đồng|hai trăm mười lăm [tỷ,tỉ] đồng}, tăng {18%|mười tám phần trăm} so với cùng kỳ.
