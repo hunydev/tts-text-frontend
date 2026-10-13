@@ -46,13 +46,13 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                 ttf_validation_enum(key, "hundred|ten|tens|zero_tens|one_after_tens|"
                                          "five_after_tens|four_after_tens|thousand|million|"
                                          "billion|point|minus|percent|to|over|approx|day|month|"
-                                         "year|month4|hour|minute|second|ordinal1|ordinal4|dot|per|per_amount|weekday|sunday|addr_room|addr_ward|addr_district")) &&
+                                         "year|month4|hour|minute|second|ordinal1|ordinal4|dot|per|per_amount|night|times|weekday|sunday|addr_room|addr_ward|addr_district")) &&
                        label(v)
                    ? TTF_OK
                    : ttf_validation_error(d, "number requires a digit or a named word and a reading");
     }
     if (SAME(k, "vi_unit") || SAME(k, "vi_currency") || SAME(k, "vi_scale") ||
-        SAME(k, "address_symbol") || SAME(k, "vi_idiom")) {
+        SAME(k, "address_symbol") || SAME(k, "vi_idiom") || SAME(k, "vi_prefix")) {
         *handled = 1;
         return short_key(key, 15) && label(v)
                    ? TTF_OK
@@ -62,7 +62,7 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     if (SAME(k, "vi_cue")) {
         /* the words before a number that decide its reading, |-separated */
         *handled = 1;
-        return ttf_validation_enum(key, "day|date|month|ordinal|roman|code|call|version|holiday|noday|daypart") && strlen(v) < 512 && *v
+        return ttf_validation_enum(key, "day|date|month|ordinal|roman|code|call|version|holiday|noday|daypart|sms") && strlen(v) < 512 && *v
                    ? TTF_OK
                    : ttf_validation_error(d, "vi_cue requires day|date|month|ordinal and words");
     }
@@ -99,7 +99,7 @@ static ttf_status_t engine(const ttf_engine_t *e, ttf_resource_diagnostic_t *d, 
         "one_after_tens", "five_after_tens", "four_after_tens", "thousand", "million",
         "billion",   "point",    "minus",   "percent", "to",      "over",   "approx",
         "day",       "month",    "year",    "month4", "hour",     "minute", "second",
-        "ordinal1",  "ordinal4", "dot", "per", "per_amount", "weekday", "sunday", "addr_room", "addr_ward", "addr_district"};
+        "ordinal1",  "ordinal4", "dot", "per", "per_amount", "night", "times", "weekday", "sunday", "addr_room", "addr_ward", "addr_district"};
     size_t i;
     (void)userdata;
     if (!ttf_find_pack(e, VI))

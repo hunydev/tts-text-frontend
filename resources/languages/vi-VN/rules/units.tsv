@@ -42,3 +42,40 @@ vi_unit	vi-VN	mmHg	mi-li-mét thủy ngân
 vi_unit	vi-VN	nm	na-nô-mét
 vi_unit	vi-VN	µm	mi-crô-mét
 vi_unit	vi-VN	μm	mi-crô-mét
+# Phase 4: science and IT units.
+vi_unit	vi-VN	kcal	ki-lô-ca-lo
+vi_unit	vi-VN	cal	ca-lo
+vi_unit	vi-VN	J	jun
+vi_unit	vi-VN	kJ	ki-lô-jun
+vi_unit	vi-VN	Pa	pát-xcan
+vi_unit	vi-VN	kPa	ki-lô-pát-xcan
+vi_unit	vi-VN	MPa	mê-ga-pát-xcan
+vi_unit	vi-VN	atm	át-mốt-phe
+vi_unit	vi-VN	bar	ba
+vi_unit	vi-VN	µl	mi-crô-lít
+vi_unit	vi-VN	μl	mi-crô-lít
+vi_unit	vi-VN	µL	mi-crô-lít
+vi_unit	vi-VN	μL	mi-crô-lít
+vi_unit	vi-VN	dl	đề-xi-lít
+vi_unit	vi-VN	dm	đề-xi-mét
+vi_unit	vi-VN	cm²	xen-ti-mét vuông
+vi_unit	vi-VN	cm2	xen-ti-mét vuông
+vi_unit	vi-VN	mm²	mi-li-mét vuông
+vi_unit	vi-VN	cm³	xen-ti-mét khối
+vi_unit	vi-VN	cm3	xen-ti-mét khối
+vi_unit	vi-VN	dB	đề-xi-ben
+vi_unit	vi-VN	KB	ki-lô-bai
+vi_unit	vi-VN	kB	ki-lô-bai
+vi_unit	vi-VN	bps	bít trên giây
+vi_unit	vi-VN	kbps	ki-lô-bít trên giây
+vi_unit	vi-VN	Mbps	mê-ga-bít trên giây
+vi_unit	vi-VN	Gbps	gi-ga-bít trên giây
+vi_unit	vi-VN	mA	mi-li-am-pe
+vi_unit	vi-VN	kVA	ki-lô-vôn-am-pe
+vi_unit	vi-VN	Ω	ôm
+vi_unit	vi-VN	mol	mol
+vi_unit	vi-VN	mmol	mi-li-mol
+vi_unit	vi-VN	ppm	phần triệu
+vi_unit	vi-VN	lux	lux
+vi_unit	vi-VN	km/s	ki-lô-mét trên giây
+vi_unit	vi-VN	vòng/phút	vòng một phút

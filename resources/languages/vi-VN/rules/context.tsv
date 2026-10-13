@@ -99,14 +99,15 @@ english_cue	vi-VN	all	1
 english_cue	vi-VN	us	1
 # Words before a number that decide its reading (|-separated, both cases).
 vi_cue	vi-VN	day	ngày|Ngày|mùng|Mùng|mồng|Mồng
-vi_cue	vi-VN	date	ngày|Ngày|hôm|Hôm|từ|Từ|đến|Đến|tới|Tới|trước|Trước|sau|Sau|vào|Vào|mùng|Mùng|mồng|Mồng|đêm|Đêm|sáng|Sáng|trưa|Trưa|chiều|Chiều|tối|Tối|hạn|đợt
-vi_cue	vi-VN	holiday	lễ|Lễ|dịp|Dịp|Tết|tết
-vi_cue	vi-VN	noday	lễ|Lễ|dịp|Dịp|và|hoặc|Tết|tết
+vi_cue	vi-VN	date	khánh|Khánh|niệm|Niệm|ngày|Ngày|hôm|Hôm|từ|Từ|đến|Đến|tới|Tới|trước|Trước|sau|Sau|vào|Vào|mùng|Mùng|mồng|Mồng|đêm|Đêm|sáng|Sáng|trưa|Trưa|chiều|Chiều|tối|Tối|hạn|đợt
+vi_cue	vi-VN	holiday	khánh|Khánh|lễ|Lễ|dịp|Dịp|Tết|tết
+vi_cue	vi-VN	noday	khánh|Khánh|lễ|Lễ|dịp|Dịp|và|hoặc|Tết|tết
 vi_cue	vi-VN	daypart	sáng|Sáng|trưa|Trưa|chiều|Chiều|tối|Tối|đêm|Đêm
 vi_cue	vi-VN	month	tháng|Tháng
 vi_cue	vi-VN	ordinal	thứ|Thứ
 vi_cue	vi-VN	roman	kỷ|Kỷ|quý|Quý|thứ|Thứ|vùng|Vùng|khóa|Khóa|khoá|Khoá|phần|Phần|chương|Chương|mục|Mục|cấp|Cấp|hạng|Hạng|khu|Khu|đợt|Đợt|kỳ|Kỳ|tập|Tập|đoạn|Đoạn|loại|Loại|nhóm|Nhóm|hội|Hội|quân|Quân|lớp|Lớp|độ|Độ
-vi_cue	vi-VN	code	mã|Mã|OTP|tổng đài|Tổng đài|hotline|Hotline|đường dây nóng|Đường dây nóng|số tài khoản|Số tài khoản|số hiệu|Số hiệu|số điện thoại|Số điện thoại|SĐT|sđt|mật khẩu|Mật khẩu|số hợp đồng|số hóa đơn|số CMND|số CCCD|PIN
+vi_cue	vi-VN	code	mã|Mã|OTP|tổng đài|Tổng đài|hotline|Hotline|đường dây nóng|Đường dây nóng|số tài khoản|Số tài khoản|số hiệu|Số hiệu|số điện thoại|Số điện thoại|SĐT|sđt|mật khẩu|Mật khẩu|số hợp đồng|số hóa đơn|số CMND|số CCCD|PIN|số lô|Số lô|lô số|mã vận đơn
+vi_cue	vi-VN	sms	gửi tới|gửi đến|nhắn tới|nhắn đến|đầu số|Đầu số
 vi_cue	vi-VN	call	gọi|Gọi|quay số|bấm số
 vi_cue	vi-VN	version	bản|Bản
 classifier_priority	vi-VN	vi.num	100
@@ -129,3 +130,8 @@ classifier_priority	vi-VN	vi.date2	100
 classifier_priority	vi-VN	vi.daterange	100
 classifier_priority	vi-VN	vi.height	100
 classifier_priority	vi-VN	vi.addr	100
+classifier_priority	vi-VN	vi.tour	100
+classifier_priority	vi-VN	vi.dims	100
+# Road and route codes before a number (QL1A quốc lộ một A).
+vi_prefix	vi-VN	QL	quốc lộ
+vi_prefix	vi-VN	TL	tỉnh lộ

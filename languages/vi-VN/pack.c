@@ -480,6 +480,8 @@ static size_t dash_after(const char *t, size_t n, size_t q) {
         ++r;
     else if (r + 3 <= n && (!strncmp(t + r, "–", 3) || !strncmp(t + r, "—", 3)))
         r += 3;
+    else if (r + 2 <= n && !strncmp(t + r, "÷", 2))
+        r += 2;
     else
         return 0;
     while (r < n && t[r] == ' ')
@@ -615,7 +617,12 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             }
         }
         /* Thế kỷ XXI, quý II/2026, lần thứ XIV, vùng I */
-        if ((r = roman(t, n, p, &re)) != 0 && previous_cue(e, t, p, "roman")) {
+        if ((r = roman(t, n, p, &re)) != 0 &&
+            (previous_cue(e, t, p, "roman") ||
+             /* Quy hoạch điện VIII: I/V/X only, two letters or more, after a
+                lowercase word (CD, MC stay letters) */
+             (re - p >= 2 && strspn(t + p, "IVX") >= re - p && p >= 2 && t[p - 1] == ' ' &&
+              ((t[p - 2] >= 'a' && t[p - 2] <= 'z') || (unsigned char)t[p - 2] >= 0x80)))) {
             char year[8] = "";
             if (re + 4 < n + 0 && t[re] == '/' && digit(t[re + 1]) && digit(t[re + 2]) &&
                 digit(t[re + 3]) && digit(t[re + 4]) && !(re + 5 < n && digit(t[re + 5]))) {
@@ -629,16 +636,24 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         /* A4, VN215: letters then digits. Letters stay as written; one or two
            digits read as a number, longer runs digit by digit. */
         {
-            size_t l = p, d;
+            size_t l = p, d, u;
+            char prefix[16];
             while (l < n && alpha(t[l]))
                 ++l;
             d = l;
             while (d < n && digit(t[d]))
                 ++d;
-            if (d > l && l - p <= 8 && !letter_at(t, n, d) &&
-                !(d + 1 < n && (t[d] == '.' || t[d] == ',') && digit(t[d + 1]))) {
-                snprintf(v, sizeof(v), "%.*s|%.*s", (int)(l - p), t + p, (int)(d - l), t + l);
-                return finish(in, s, d, "alnum", v, "");
+            /* QL1A: one or two capitals after the digits */
+            for (u = d; u < n && u - d < 3 && t[u] >= 'A' && t[u] <= 'Z';)
+                ++u;
+            if (u > d && (u - d > 2 || letter_at(t, n, u)))
+                u = d;
+            if (d > l && l - p <= 8 && !letter_at(t, n, u) &&
+                !(u + 1 < n && (t[u] == '.' || t[u] == ',') && digit(t[u + 1]))) {
+                snprintf(prefix, sizeof(prefix), "%.*s", (int)(l - p), t + p);
+                snprintf(v, sizeof(v), "%s|%.*s|%.*s", res(e, "vi_prefix", prefix) ? res(e, "vi_prefix", prefix) : prefix,
+                         (int)(d - l), t + l, (int)(u - d), t + d);
+                return finish(in, s, u, "alnum", v, "");
             }
         }
         return 0;
@@ -672,6 +687,28 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         ++de;
     {
         int plain = !negative && !prefix_currency && !approx;
+
+        /* 4N3Đ bốn ngày ba đêm */
+        if (plain && p == q && de - q <= 2 && de + 1 < n && t[de] == 'N' && digit(t[de + 1])) {
+            size_t z2 = de + 1;
+            while (z2 < n && digit(t[z2]))
+                ++z2;
+            if (z2 - de - 1 <= 2 && z2 + 2 <= n && !strncmp(t + z2, "Đ", 2) && !letter_at(t, n, z2 + 2)) {
+                snprintf(v, sizeof(v), "%.*s|%.*s", (int)(de - q), t + q, (int)(z2 - de - 1), t + de + 1);
+                return finish(in, s, z2 + 2, "tour", v, "");
+            }
+        }
+        /* 2024-05-14, 2024/05/14: an ISO date */
+        if (plain && de - q == 4 && de + 5 < n && (t[de] == '-' || t[de] == '/') && digit(t[de + 1]) &&
+            digit(t[de + 2]) && t[de + 3] == t[de] && digit(t[de + 4]) && digit(t[de + 5]) &&
+            !(de + 6 < n && (digit(t[de + 6]) || letter_at(t, n, de + 6)))) {
+            unsigned mm = (unsigned)atoi(t + de + 1), dd = (unsigned)atoi(t + de + 4);
+            if (mm >= 1 && mm <= 12 && dd >= 1 && dd <= 31) {
+                snprintf(v, sizeof(v), "%u/%u/%.4s", dd, mm, t + q);
+                return finish(in, s, de + 6, "date", v,
+                              previous_cue(e, t, p, "day") || previous_cue(e, t, p, "noday") ? "" : "ngay");
+            }
+        }
 
         /* 1m78 một mét bảy mươi tám */
         if (plain && p == q && de - q <= 1 && de + 2 < n && t[de] == 'm' && digit(t[de + 1]) &&
@@ -732,6 +769,12 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                 char three_digits[4] = {t[q], t[q + 1], t[q + 2], 0};
                 if (res(e, "vi_service", three_digits) && cue_before(e, t, p, "call", 16))
                     return finish(in, s, de, "digits", three_digits, "");
+            }
+            /* gửi tới 8085: a short number right after a sending phrase */
+            if (plain && de - q >= 3 && de - q <= 6 && !letter_at(t, n, de) && !(de < n && digit(t[de])) &&
+                !(de + 1 < n && strchr(".,", t[de]) && digit(t[de + 1])) && cue_before(e, t, p, "sms", 12)) {
+                snprintf(v, sizeof(v), "%.*s", (int)(de - q), t + q);
+                return finish(in, s, de, "digits", v, "");
             }
         }
 
@@ -806,7 +849,10 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                         return finish(in, s, y, "date", v, day_said ? "" : "ngay");
                     }
                 }
-                if (!(m1 < n && (digit(t[m1]) || t[m1] == sep || letter_at(t, n, m1))) &&
+                if (!(m1 < n && (digit(t[m1]) || letter_at(t, n, m1) ||
+                                 /* ngày 30.6. ends the sentence */
+                                 (t[m1] == sep && !(sep == '.' && (m1 + 1 == n || t[m1 + 1] == ' ' ||
+                                                                   t[m1 + 1] == '\n'))))) &&
                     !(m1 + 1 < n && strchr("/.,", t[m1]) && digit(t[m1 + 1])) &&
                     ((sep == '/' && (previous_cue(e, t, p, "date") || d > m || coordinated(t, p, 0))) ||
                      (sep != '/' && (previous_cue(e, t, p, "day") || previous_cue(e, t, p, "holiday") ||
@@ -873,6 +919,33 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     if (!parse_number(t, n, q, &a))
         return 0;
     q = a.end;
+
+    /* dimensions: 60x90 cm, 40 × 30 × 20 cm, 1920x1080 */
+    if (!negative && !approx) {
+        size_t z1 = q, k2;
+        char dims[2 * TTF_IR_VALUE_SIZE + 8];
+        int count = 1;
+        snprintf(dims, sizeof(dims), "%s", a.value);
+        for (k2 = 0; k2 < 2; ++k2) {
+            size_t x = z1 + (z1 < n && t[z1] == ' ');
+            size_t w2 = x < n && (t[x] == 'x' || t[x] == 'X' || t[x] == '*') ? 1
+                        : x + 2 <= n && !strncmp(t + x, "×", 2) ? 2 : 0;
+            size_t y = x + w2 + (w2 && x + w2 < n && t[x + w2] == ' ');
+            if (!w2 || y >= n || !digit(t[y]) || !parse_number(t, n, y, &b) || b.leading_zero)
+                break;
+            if (strlen(dims) + strlen(b.value) + 2 >= sizeof(dims))
+                break;
+            strcat(dims, "|");
+            strcat(dims, b.value);
+            z1 = b.end;
+            ++count;
+        }
+        if (count >= 2 && !letter_at(t, n, z1)) {
+            char mid[24], per[24];
+            size_t end = amount_tail(e, t, n, z1, key, sizeof(key), mid, sizeof(mid), per, sizeof(per));
+            return finish(in, s, end, "dims", dims, key);
+        }
+    }
 
     /* ranges: 3-5, 2020–2025, 10-20%; a higher first number is a score (2-1) */
     if (!negative && !approx && (z = dash_after(t, n, q)) != 0 && digit(t[z]) &&
@@ -1017,6 +1090,29 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
                     : digits_each(e, b, letters_first ? f1 : f0, dn));
         if (!letters_first)
             TRY(put(b, f1));
+        else {
+            field(v, 2, f2, sizeof(f2));
+            if (*f2)
+                TRY(put(b, f2));
+        }
+    } else if (!strcmp(mode, "tour")) {
+        field(v, 0, f0, sizeof(f0));
+        field(v, 1, f1, sizeof(f1));
+        TRY(integer(e, b, f0, strlen(f0)));
+        TRY(word(e, b, "day"));
+        TRY(integer(e, b, f1, strlen(f1)));
+        TRY(word(e, b, "night"));
+    } else if (!strcmp(mode, "dims")) {
+        int k2;
+        for (k2 = 0; k2 < 3; ++k2) {
+            field(v, k2, f0, sizeof(f0));
+            if (!*f0)
+                break;
+            if (k2)
+                TRY(word(e, b, "times"));
+            TRY(number(e, b, f0));
+        }
+        TRY(suffix(e, b, s->secondary));
     } else if (!strcmp(mode, "digits"))
         TRY(digits_each(e, b, v, strlen(v)));
     else if (!strcmp(mode, "time"))
