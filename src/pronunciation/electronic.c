@@ -92,12 +92,12 @@ static ttf_status_t chunk(const ttf_engine_t *e, const ttf_language_pack_t *sour
        consonants in a row, reads as a word (the English references; wetext
        too). Short lowercase labels (jdoe), capitals (BBC) and digits stay
        spelled (2026-10-07). */
-    /* example.com/track, jess.m@: a lowercase label of four or five letters reads as a
-       word when it begins like an English word (a vowel or an English onset such as
-       tr, cl, j); jdoe and msmith stay spelled (owner sets, 2026-10-14). */
+    /* example.com/track: a lowercase label of five letters reads as a word when it
+       begins like an English word (a vowel or an English onset such as tr, cl); four
+       letters (site, john) and jdoe, msmith stay spelled (owner sets, 2026-10-14). */
     if (word && !strcmp(target->language_tag, "en-US") && n >= 4 && n < 40 &&
         ((text[0] >= 'A' && text[0] <= 'Z' && text[1] >= 'a' && text[1] <= 'z') || n >= 6 ||
-         english_onset(key, n))) {
+         (n >= 5 && english_onset(key, n)))) {
         size_t run = 0, longest = 0, vowels = 0, upper = 0;
         for (i = 0; i < n; ++i) {
             int vowel = strchr("aeiouy", key[i]) != NULL;

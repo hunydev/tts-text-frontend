@@ -751,7 +751,9 @@ static size_t latin(const ttf_pack_input_t *in, ttf_semantic_t *s, const ttf_tok
             !(q + 1 < n && (text[q] == '.' || text[q] == ',') && digit(text[q + 1])) &&
             (groups > 1 || zero || longest >= 4 || mixed)) {
             snprintf(s->value, sizeof(s->value), "%.*s", (int)(q - begin), text + begin);
-            return finish(in, s, q, TTF_SEM_ALNUM_TERM, "ja.code", "code");
+            /* A-12345 エーいちにーさんよんごー: one letter and one group keep the hyphen silent */
+            return finish(in, s, q, TTF_SEM_ALNUM_TERM, "ja.code",
+                          l - begin == 1 && groups == 1 ? "code-silent" : "code");
         }
     }
     /* F-15, AK-47: capitals, a hyphen and a number read as one term. */
@@ -2204,7 +2206,7 @@ static ttf_status_t alnum(const ttf_engine_t *e, const char *s, size_t n, int ja
                      : ttf_buffer_append(b, s + i, j - i);
         } else if (code && s[i] == '-') {
             ++j;
-            st = word(e, b, "number", "phone_separator");
+            st = code == 2 ? TTF_OK : word(e, b, "number", "phone_separator");
         } else if (s[i] == '-' && i && alpha(s[i - 1]) && i + 1 < n && digit(s[i + 1])) {
             ++j; /* F-15 エフじゅうご */
             st = TTF_OK;
@@ -2548,7 +2550,8 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             return TTF_OK;
         return ttf_buffer_append(b, surface, length);
     case TTF_SEM_ALNUM_TERM:
-        return alnum(e, surface, length, !strcmp(s->secondary, "after-dai"), !strcmp(s->unit, "code"), b);
+        return alnum(e, surface, length, !strcmp(s->secondary, "after-dai"),
+                     !strcmp(s->unit, "code") ? 1 : !strcmp(s->unit, "code-silent") ? 2 : 0, b);
     case TTF_SEM_CUSTOM:
         if (!strcmp(s->unit, "@alphabet")) {
             const char *v = !strcmp(s->secondary, "control-surface") ? surface : s->value;
