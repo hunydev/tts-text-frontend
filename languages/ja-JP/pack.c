@@ -310,9 +310,9 @@ static ttf_status_t number_reading(const ttf_engine_t *e, const ja_number_t *x, 
         st = integer_reading(e, x->value, b);
     if (st != TTF_OK)
         return st;
-    /* 1.5 いってんご, 8.5 はってんご, 10.5 じゅってんご, 150.8 ひゃくごじゅってんはち
-       (8 and every ten added 2026-10-14, owner sets) */
-    if (x->value && (ending(x->value) == 1 || ending(x->value) == 8 || ending(x->value) == 10) &&
+    /* 1.5 いってんご, 10.5 じゅってんご, 150.8 ひゃくごじゅってんはち (every ten added
+       2026-10-14, owner sets); 8.5 stays はちてんご (ja_tts_fixes_v63) */
+    if (x->value && (ending(x->value) == 1 || ending(x->value) == 10) &&
         (st = geminate(b)) != TTF_OK)
         return st;
     if ((st = word(e, b, "number", "point")) != TTF_OK)

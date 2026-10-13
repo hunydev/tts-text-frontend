@@ -41,7 +41,7 @@
   - English: 6'2" six foot two, a 65" TV sixty five inch, 1:10 one to ten after a ratio word,
     4 x 8 ft four by eight feet, Flight UA 2314 u a twenty three fourteen, Room 1408 fourteen oh
     eight (speech).
-  - Japanese: はってん, じゅってん before a decimal point, じゅっ before キロ units, 銭.
+  - Japanese: じゅってん before a decimal point (8.5 stays はちてんご), じゅっ before キロ units, 銭.
   - Chinese: an amount with a plus sign reads 正 (+0.15% 正百分之零点一五), 2站 两站.
   - Vietnamese: ℃ độ xê, CN chủ nhật after vào, T4 thứ tư, 7g sáng giờ, 48h giờ, a display's 4K
     bốn K, 4x100m and VX-2026-031 in longer sentences.
