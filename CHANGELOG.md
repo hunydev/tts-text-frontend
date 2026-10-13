@@ -22,7 +22,7 @@
     one), capital words before a number (SAVE20 save twenty), digits after PIN, ZIP, code,
     passcode, extension, ext. and tracking number (spaced groups too), N11 numbers in English
     text (dial 911), toll-free 1-800 (one eight hundred), short English words in addresses
-    (example.com/track), hrs, fl oz, sq ft, mpg, tbsp, tsp, L/min, MB/s, GB/s, mg/dL, mg/kg,
+    (five letters: example.com/track), hrs, fl oz, sq ft, mpg, tbsp, tsp, L/min, MB/s, GB/s, mg/dL, mg/kg,
     pct, and a month/day after a date word (ships 12/5 December fifth).
   - Japanese: hyphenated codes (SK-0392 エスケーのぜろさんきゅうにー) and 24 counters (戸, 巻,
     色, 条, 章, 戦, 項, 版, 子, 室, 年生 ...; 40肩 しじゅうかた).
@@ -31,7 +31,7 @@
   - Vietnamese: hyphenated codes (SP-20481 SP hai không bốn tám một) and maths expressions
     (7 × 8 = 56, x² - 5x + 6 = 0, 12:4 bằng mấy, 4x100m, x2); 7÷14 ngày stays a range.
   - Korean: COVID-19 코비드 일구, Wi-Fi 와이파이.
-  - Span accuracy, dev / test: ko 91.3 / 90.4, en 90.6 / 89.0, ja 87.5 / 84.6, zh 94.5 / 95.6,
+  - Span accuracy, dev / test: ko 91.3 / 90.4, en 90.4 / 87.6, ja 87.5 / 84.6, zh 94.5 / 95.6,
     vi 90.5 / 90.1. No dev span lost. Contract user_eval2_v82 (27).
   - English benchmark: one sentence each in speech and text now differs from its reference
     (ZIP code 26278 and PIN 503165 read digit by digit, the owner's reading).
