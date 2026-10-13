@@ -999,6 +999,9 @@ if(BUILD_TESTING)
     add_test(NAME multiword_boundary_guards COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_multiword_guards.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources)
+    add_test(NAME shared_unit_korean_readings COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_unit_readings.py
+      ${CMAKE_CURRENT_SOURCE_DIR}/resources)
     if(UNIX AND NOT TTF_ENABLE_ASAN AND NOT TTF_ENABLE_UBSAN)
       add_test(NAME numeric_width_byte_splits COMMAND ${Python3_EXECUTABLE}
         ${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/test_numeric_width.py
