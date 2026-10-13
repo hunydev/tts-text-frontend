@@ -2,6 +2,20 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Vietnamese (vi-VN) phase 1, in development (docs/vietnamese-pack.ko.md). Readings are northern
+  standard.
+  - Coverage: numbers (nghìn, linh, mốt, lăm; the dot groups thousands, the comma is the
+    decimal mark), dates, clocks, money, units, ordinals and Roman numerals, phone numbers and
+    codes digit by digit.
+  - Routing: a Latin sentence written with Vietnamese letters is routed to vi-VN in any request
+    (latin_sentence). Letters shared with French and Spanish count less, and French, Spanish and
+    German function words rule a sentence out. A sentence cut into units keeps its language.
+  - Tokenizer: U+1E00-U+1EFF and combining marks are now Latin (Việt was split into three
+    tokens).
+  - Held-out v1 (240 sentences, opened after the code freeze): 93.2% of spans. The gold was
+    cross-checked with an OpenAI model, and only disagreements were reviewed.
+  - Contract vi_pack1_v74 (49). Korean, English, JSUT, ja-tn-eval and the Chinese sets are
+    unchanged.
 - Second mixed-text review (project-owner sample):
   - An e-mail address or URL in a Chinese sentence no longer fails the request with invalid
     resource. It reads abc 艾特 qq 点 com: a new resource kind `address_symbol`, digits read one by

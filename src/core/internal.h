@@ -67,6 +67,10 @@ struct ttf_engine {
     int frozen, validating;
     struct ttf_trace_state *trace_state;   /* Request view only; frozen owner stays NULL. */
     struct ttf_context_memo *context_memo; /* Unit-local context callback view only. */
+    /* Unit-local view only: the previous unit's tail, so a sentence cut into
+       units keeps its language (latin_sentence). */
+    const char *unit_prefix;
+    size_t unit_prefix_length;
     const ttf_language_pack_t *packs[TTF_MAX_PACKS];
     /* A declared-only pack (context <tag> declared_only 1) in a request for
        another language, cached at freeze: per-token lookups cost 8%. */

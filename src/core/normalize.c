@@ -578,6 +578,38 @@ static int capital_first(const char *s, size_t n) {
            (((cp >= 0x100 && cp <= 0x17f) || (cp >= 0x1ea0 && cp <= 0x1ef9)) && cp % 2 == 0) ||
            cp == 0x1a0 || cp == 0x1af;
 }
+typedef struct {
+    unsigned counted, weak_weight, weak_words, plain, cue, foreign;
+    int strong_seen;
+} latin_tally_t;
+/* One Latin word into the tally; -1 for a veto letter. */
+static int latin_word(const ttf_engine_t *e, const ttf_language_pack_t *pack, const char *strong,
+                      const char *weak, const char *veto, const char *s, size_t n,
+                      latin_tally_t *t) {
+    int kind = marked_word(strong, weak, veto, s, n);
+    unsigned weight = capital_first(s, n) ? 1u : 2u;
+    if (kind < 0)
+        return -1;
+    if (kind == 2) {
+        t->strong_seen = 1;
+        t->counted += weight;
+    } else if (kind == 1) {
+        ++t->weak_words;
+        t->weak_weight += weight;
+    } else if (n >= 2 && !capital_code(s, n)) {
+        char key[16];
+        size_t i;
+        ++t->plain;
+        if (n < sizeof(key)) {
+            for (i = 0; i < n; ++i)
+                key[i] = (char)(s[i] >= 'A' && s[i] <= 'Z' ? s[i] + 32 : s[i]);
+            key[n] = 0;
+            t->cue += ttf_resource_get(e, "english_cue", pack->language_tag, key, NULL) != NULL;
+            t->foreign += ttf_resource_get(e, "latin_foreign", pack->language_tag, key, NULL) != NULL;
+        }
+    }
+    return 0;
+}
 static const ttf_language_pack_t *latin_sentence(const ttf_engine_t *e, const ttf_pack_input_t *in,
                                                  size_t begin, size_t end) {
     const ttf_language_pack_t *pack = NULL,
@@ -585,8 +617,7 @@ static const ttf_language_pack_t *latin_sentence(const ttf_engine_t *e, const tt
                                                               : NULL;
     const char *strong, *weak, *veto;
     size_t j, k;
-    unsigned counted = 0, weak_weight = 0, weak_words = 0, plain = 0, cue = 0, foreign = 0;
-    int strong_seen = 0;
+    latin_tally_t tally = {0};
     for (j = 0; j < e->pack_count && !pack; ++j)
         if (pack_flag(e, e->packs[j], "latin_sentence", 0))
             pack = e->packs[j];
@@ -595,12 +626,37 @@ static const ttf_language_pack_t *latin_sentence(const ttf_engine_t *e, const tt
     strong = ttf_resource_get(e, "context", pack->language_tag, "latin_marks", NULL);
     weak = ttf_resource_get(e, "context", pack->language_tag, "latin_weak", NULL);
     veto = ttf_resource_get(e, "context", pack->language_tag, "latin_veto", NULL);
+    /* The first sentence of a unit may have started in the previous one (a long
+       sentence is cut before its last number: … hiện là | -7.): its words there
+       count too, from the last sentence end of the tail. */
+    if (!begin && e->unit_prefix && e->unit_prefix_length) {
+        const char *p = e->unit_prefix;
+        size_t n = e->unit_prefix_length, from = n, at;
+        while (from && p[from - 1] != '\n' &&
+               !(from >= 2 && strchr(".!?", p[from - 2]) && p[from - 1] == ' '))
+            --from;
+        for (at = from; at < n;) {
+            size_t w = at;
+            while (w < n && p[w] != ' ' && p[w] != '\t' && !strchr(",;:()\"", p[w]))
+                ++w;
+            if (w > at) {
+                uint32_t cp;
+                size_t width;
+                if (ttf_utf8_decode(p + at, w - at, &cp, &width) == 1 &&
+                    ttf_script_of(cp) == TTF_SCRIPT_LATIN &&
+                    latin_word(e, pack, strong, weak, veto, p + at, w - at, &tally) < 0)
+                    return NULL;
+                if (ttf_utf8_decode(p + at, w - at, &cp, &width) == 1 &&
+                    (ttf_script_of(cp) == TTF_SCRIPT_HANGUL || ttf_script_of(cp) == TTF_SCRIPT_KANA ||
+                     ttf_script_of(cp) == TTF_SCRIPT_HAN))
+                    return NULL;
+            }
+            at = w + 1;
+        }
+    }
     for (k = begin; k < end; ++k) {
         const ttf_token_t *t = &in->tokens[k];
         const ttf_token_t *prev = k > begin ? &in->tokens[k - 1] : NULL;
-        size_t n = t->end - t->begin;
-        int kind;
-        unsigned weight;
         if (t->script == TTF_SCRIPT_HANGUL || t->script == TTF_SCRIPT_KANA ||
             t->script == TTF_SCRIPT_HAN)
             return NULL;
@@ -608,36 +664,17 @@ static const ttf_language_pack_t *latin_sentence(const ttf_engine_t *e, const tt
             /* 60km, 15.000đ: letters attached to a number are a unit */
             (prev && prev->end == t->begin && prev->script == TTF_SCRIPT_DIGIT))
             continue;
-        kind = marked_word(strong, weak, veto, in->text + t->begin, n);
-        if (kind < 0)
+        if (latin_word(e, pack, strong, weak, veto, in->text + t->begin, t->end - t->begin,
+                       &tally) < 0)
             return NULL;
-        weight = capital_first(in->text + t->begin, n) ? 1u : 2u;
-        if (kind == 2) {
-            strong_seen = 1;
-            counted += weight;
-        } else if (kind == 1) {
-            ++weak_words;
-            weak_weight += weight;
-        } else if (n >= 2 && !capital_code(in->text + t->begin, n)) {
-            char key[16];
-            size_t i;
-            ++plain;
-            if (n < sizeof(key)) {
-                for (i = 0; i < n; ++i)
-                    key[i] = (char)(in->text[t->begin + i] >= 'A' && in->text[t->begin + i] <= 'Z'
-                                        ? in->text[t->begin + i] + 32
-                                        : in->text[t->begin + i]);
-                key[n] = 0;
-                cue += ttf_resource_get(e, "english_cue", pack->language_tag, key, NULL) != NULL;
-                foreign += ttf_resource_get(e, "latin_foreign", pack->language_tag, key, NULL) != NULL;
-            }
-        }
     }
-    if (strong_seen || weak_words >= 2)
-        counted += weak_weight;
+    if (tally.strong_seen || tally.weak_words >= 2)
+        tally.counted += tally.weak_weight;
     if (declared == pack)
-        return !cue || (counted && counted >= plain) ? pack : NULL;
-    return counted >= 2 && counted >= plain && (strong_seen || !foreign) ? pack : NULL;
+        return !tally.cue || (tally.counted && tally.counted >= tally.plain) ? pack : NULL;
+    return tally.counted >= 2 && tally.counted >= tally.plain && (tally.strong_seen || !tally.foreign)
+               ? pack
+               : NULL;
 }
 static void matrix_route(const ttf_engine_t *e, const ttf_pack_input_t *in, size_t begin,
                          size_t end, matrix_route_t *routes) {
@@ -1582,6 +1619,8 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
     size_t *phoneme_regions = NULL, phoneme_count = 0, phoneme_cap = 0;
     int ignore = 0;
     context_view.context_memo = &memo;
+    context_view.unit_prefix = prefix;
+    context_view.unit_prefix_length = prefix ? context_length : 0;
     memset(out, 0, sizeof(*out));
     st = ttf_tokenize_protected(e, text, length, 1, &tokens, &count, &regions, &region_count);
     if (st != TTF_OK)

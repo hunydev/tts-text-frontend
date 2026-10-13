@@ -380,6 +380,54 @@
         "docs/chinese-phase0.ko.md",
         "benchmark/datasets/zh-tn-eval (held-out v8 495문장: 우리 97.0%·wetext 73.6%·NeMo 55.5%)"
       ]
+    },
+    "vi-VN": {
+      "name": "베트남어",
+      "status": "개발",
+      "activation": "요청 언어 vi-VN, 또는 다른 요청 속 베트남어 글자가 있는 라틴 문장 (자동)",
+      "evidence": [
+        "베트남어 고유 글자(ă đ ơ ư, 성조 부호 ạ ả ấ ệ …)가 있는 낱말, 또는 프랑스어·스페인어와 겹치는 부호 낱말 둘 이상",
+        "ç ñ ü 같은 글자, le·est·el 같은 낱말이 있으면 제외"
+      ],
+      "scope": [
+        {
+          "area": "숫자",
+          "level": "full",
+          "note": "nghìn·linh·mốt·lăm, 점 천 단위(15.000), 쉼표 소수(2,5), tỷ"
+        },
+        {
+          "area": "날짜·시각",
+          "level": "full",
+          "note": "ngày … tháng … năm, tháng tư, 9h30, 8h-17h"
+        },
+        {
+          "area": "금액·백분율·단위",
+          "level": "full",
+          "note": "đồng·VND·USD·50k, phần trăm, ki-lô-mét, %/năm trên"
+        },
+        {
+          "area": "서수·로마 숫자·요일",
+          "level": "full",
+          "note": "thứ nhất·thứ tư, thế kỷ XXI, T2-T6"
+        },
+        {
+          "area": "번호·코드",
+          "level": "partial",
+          "note": "전화·1900·mã 뒤 한 자리씩; 단서 없는 긴 코드, IP 주소는 아직"
+        },
+        {
+          "area": "날짜 범위·단위 축약",
+          "level": "partial",
+          "note": "20-25/11, 1m78, P.308, CN은 아직"
+        }
+      ],
+      "gaps": [
+        "held-out v1(240문장, 코드 고정 뒤): 93.2%. 남은 유형: 날짜 범위, 단서 없는 하이픈 날짜, 1m78, P.308, CN, 긴 코드, IP, mmHg (docs/vietnamese-pack.ko.md)",
+        "평가셋은 Claude 하위 에이전트 작성·Claude 검수·OpenAI 교차 확인; 사람 원어민 검수와 VoxCPM2 청취 비교 전"
+      ],
+      "docs": [
+        "docs/vietnamese-pack.ko.md"
+      ]
     }
   },
   "planned": [],
