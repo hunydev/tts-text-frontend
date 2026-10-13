@@ -1,0 +1,120 @@
+cardinal	Năm nay trường tuyển {1.250|một [nghìn,ngàn] hai trăm năm mươi} sinh viên chính quy cho ngành công nghệ thông tin.
+cardinal	Trong dịp nghỉ lễ vừa qua, bệnh viện đã tiếp nhận {387|ba trăm tám mươi bảy} ca cấp cứu.
+cardinal	Theo khoản {2|hai} Điều {15|mười lăm} của luật này, cơ quan có thẩm quyền phải trả lời trong vòng {30|ba mươi} ngày.
+cardinal	Trước khi sắp xếp lại đơn vị hành chính, cả nước có {63|sáu mươi ba} tỉnh, thành phố trực thuộc trung ương.
+cardinal	Ứng dụng ví điện tử này đã vượt mốc {2.000.000|hai triệu} lượt tải chỉ sau ba tháng ra mắt.
+cardinal	Kho hàng ở Bình Dương đang tồn khoảng {14.500|mười bốn [nghìn,ngàn] năm trăm/mười bốn [nghìn,ngàn] rưỡi} đơn chờ giao.
+cardinal	Đề án đặt mục tiêu đào tạo {105|một trăm [linh,lẻ] năm} tiến sĩ trong lĩnh vực vi mạch bán dẫn.
+cardinal	Hội đồng thi của tỉnh đã huy động {2.004|hai [nghìn,ngàn] không trăm [linh,lẻ] [bốn,tư]} cán bộ coi thi.
+cardinal	Dự luật được thông qua với {452|bốn trăm năm mươi hai} đại biểu Quốc hội tán thành.
+cardinal	Phòng thí nghiệm đã giải trình tự gen của {3.021|ba [nghìn,ngàn] không trăm hai mươi mốt} mẫu virus cúm.
+decimal	Điểm trung bình môn Toán của thí sinh cả nước năm nay là {6,45|sáu phẩy [bốn mươi lăm,bốn mươi nhăm,bốn lăm,bốn năm]}.
+decimal	Chỉ số khối cơ thể của bệnh nhân là {27,8|hai mươi bảy phẩy tám}, thuộc nhóm béo phì độ {I|một} theo chuẩn châu Á.
+decimal	Hệ số lương khởi điểm của giáo viên tiểu học hạng {III|ba} là {2,34|hai phẩy [ba mươi tư,ba mươi bốn,ba tư,ba bốn]}.
+decimal	Mẫu nước giếng có độ pH {7,4|bảy phẩy bốn}, nằm trong ngưỡng cho phép.
+decimal	Hệ số beta của cổ phiếu này là {1,18|một phẩy [mười tám,một tám]}, cho thấy biến động mạnh hơn thị trường chung.
+decimal	Sao Chức Nữ có cấp sao biểu kiến khoảng {0,03|không phẩy không ba}.
+decimal	Mỗi bệnh nhân trung bình lây cho {2,6|hai phẩy sáu} người khác nếu không có biện pháp phòng dịch.
+decimal	Chính phủ đặt mục tiêu đưa hệ số ICOR xuống dưới {5,5|năm phẩy năm}.
+decimal	Điểm chuẩn ngành Sư phạm Lịch sử năm nay là {28,75|hai mươi tám phẩy [bảy mươi lăm,bảy mươi nhăm,bảy lăm,bảy năm]}.
+decimal	Điểm giữa kỳ chiếm trọng số {0,3|không phẩy ba} trong tổng điểm học phần.
+percent	Lạm phát bình quân cả năm được kiểm soát ở mức {3,63%|ba phẩy [sáu mươi ba,sáu ba] phần trăm}.
+percent	Tỷ lệ trẻ được tiêm đủ mũi vắc xin sởi đạt {98%|chín mươi tám phần trăm}.
+percent	Lãi suất tiết kiệm kỳ hạn {12|mười hai} tháng hiện ở mức {4,8%/năm|bốn phẩy tám phần trăm [một năm,mỗi năm,trên năm,năm]}.
+percent	Doanh thu bán lẻ trực tuyến quý này tăng {25%|hai mươi [lăm,nhăm] phần trăm} so với cùng kỳ.
+percent	Thuế giá trị gia tăng với nhiều nhóm hàng được giảm từ {10%|mười phần trăm} xuống {8%|tám phần trăm}.
+percent	Chỉ khoảng {0,5%|không phẩy năm phần trăm} số hồ sơ nộp trực tuyến bị trả lại do sai sót.
+percent	Hãng này chiếm khoảng {41 %|bốn mươi mốt phần trăm} thị phần điện thoại thông minh trong nước.
+percent	Tỷ lệ thí sinh đỗ tốt nghiệp năm nay đạt {99,4%|chín mươi chín phẩy bốn phần trăm}.
+percent	Sau {500|năm trăm} chu kỳ sạc, pin vẫn giữ được {80%|tám mươi phần trăm} dung lượng ban đầu.
+percent	Chi ngân sách cho giáo dục và đào tạo không thấp hơn {20%|hai mươi phần trăm} tổng chi ngân sách nhà nước.
+negative	Sáng nay nhiệt độ trên đỉnh Fansipan xuống tới {-2°C|âm hai độ (xê)}.
+negative	Quỹ đầu tư ghi nhận tỷ suất lợi nhuận {-12,5%|âm mười hai phẩy năm phần trăm} trong năm tài chính vừa qua.
+negative	Loại vắc xin này phải được bảo quản ở nhiệt độ {−70 °C|âm bảy mươi độ (xê)}.
+negative	Cán cân vãng lai quý trước ở mức {-1,3|âm một phẩy ba} tỷ đô la.
+negative	Chỉ số sản xuất của ngành khai khoáng tăng trưởng {-4,7%|âm bốn phẩy bảy phần trăm}.
+negative	Đáy hầm lò sâu nhất của mỏ than nằm ở cốt {-350 m|âm ba trăm năm mươi mét}.
+negative	Kết quả đúng của phép tính là {-15|âm mười lăm}, không phải {15|mười lăm} như nhiều em đã viết.
+negative	Tài khoản thẻ tín dụng hiển thị số dư {-275.000đ|âm hai trăm bảy mươi [lăm,nhăm] [nghìn,ngàn] đồng} sau khi bị trừ phí thường niên.
+ordinal	Việt Nam hiện là nước xuất khẩu cà phê lớn {thứ 2|thứ hai} thế giới.
+ordinal	Kỳ họp {thứ 8|thứ tám} của Quốc hội khóa {XV|mười lăm} đã khai mạc sáng nay.
+ordinal	Đây là lần {thứ 4|thứ tư} giá xăng được điều chỉnh tăng trong tháng này.
+ordinal	Đội tuyển học sinh giỏi của tỉnh xếp {hạng 1|hạng [nhất,một]} toàn quốc ở môn Tin học.
+ordinal	Kỹ năng số là năng lực thiết yếu của người lao động trong thế kỷ {XXI|hai mươi mốt}.
+ordinal	Đến ngày {thứ 5|thứ năm} sau phẫu thuật, bệnh nhân đã có thể tự đi lại.
+ordinal	Ông là hiệu trưởng {thứ 12|thứ mười hai} của trường kể từ khi thành lập.
+ordinal	Đây là năm {thứ 3|thứ ba} liên tiếp ngân hàng dẫn đầu toàn ngành về lợi nhuận trước thuế.
+currency	Giá vàng miếng sáng nay được niêm yết ở mức {85,5 triệu đồng/lượng|tám mươi [lăm,nhăm] phẩy năm triệu đồng [một,mỗi,trên] lượng}.
+currency	Chiếc điện thoại mới có giá khởi điểm {24.990.000đ|hai mươi [tư,bốn] triệu chín trăm chín mươi [nghìn,ngàn] đồng}.
+currency	Học phí của sinh viên năm nhất là {1.850.000 đồng|một triệu tám trăm năm mươi [nghìn,ngàn] đồng} mỗi tháng.
+currency	Đơn hàng từ {500k|năm trăm [nghìn,ngàn,ca]} trở lên được miễn phí vận chuyển.
+currency	Công ty khởi nghiệp đã huy động được {120 triệu USD|một trăm hai mươi triệu [đô la mỹ,đô la,đô]} trong vòng gọi vốn mới nhất.
+currency	Mức phạt tối đa đối với tổ chức vi phạm là {200.000.000 VNĐ|hai trăm triệu [đồng,việt nam đồng]}.
+currency	Một ly cà phê muối ở quán này có giá {35.000₫|ba (mươi) [lăm,nhăm] [nghìn,ngàn] đồng}.
+currency	Sau đợt tăng vốn, vốn điều lệ của ngân hàng đạt {52.140 tỷ đồng|năm mươi hai [nghìn,ngàn] một trăm bốn mươi [tỷ,tỉ] đồng}.
+currency	Gói lưu trữ đám mây dung lượng lớn có giá {$15|mười lăm [đô la,đô] (mỹ)} mỗi tháng.
+currency	Liên minh châu Âu cam kết khoản viện trợ không hoàn lại {€500.000|năm trăm [nghìn,ngàn] ơ rô} cho dự án.
+currency	Theo quy định mới, lương tối thiểu vùng {I|một} tăng lên {4.960.000 đồng|bốn triệu chín trăm sáu mươi [nghìn,ngàn] đồng} mỗi tháng.
+currency	Laptop văn phòng tầm giá {15tr|mười lăm triệu} vẫn đủ đáp ứng nhu cầu học tập của sinh viên.
+date	Luật Đất đai sửa đổi chính thức có hiệu lực từ ngày {1/8/2024|[mùng một,mồng một,một] tháng tám năm hai [nghìn,ngàn] (không trăm) hai mươi [tư,bốn]}.
+date	Kỳ thi tốt nghiệp trung học phổ thông năm nay diễn ra trong hai ngày {26 và 27/6|hai mươi sáu và hai mươi bảy tháng sáu}.
+date	Hạn chót nộp hồ sơ quyết toán thuế thu nhập cá nhân là ngày {31/3|ba mươi mốt tháng ba}.
+date	Việt Nam ghi nhận ca nhiễm virus corona đầu tiên vào ngày {23-01-2020|hai mươi ba tháng [một,giêng] năm hai [nghìn,ngàn] (không trăm) hai mươi}.
+date	Dòng xe điện mới dự kiến được bán ra trong quý {III/2025|ba năm hai [nghìn,ngàn] (không trăm) hai mươi [lăm,nhăm]}.
+date	Ngày {20/11|hai mươi tháng mười một} hằng năm là ngày Nhà giáo Việt Nam.
+date	Báo cáo tài chính hợp nhất được lập cho năm tài chính kết thúc ngày {31.12.2023|ba mươi mốt tháng mười hai năm hai [nghìn,ngàn] (không trăm) hai mươi ba}.
+date	Bộ phận tiếp nhận hồ sơ làm việc cả sáng {T7|thứ bảy} và chiều {CN|chủ nhật}.
+date	Hiến pháp năm {2013|hai [nghìn,ngàn] (không trăm) mười ba} được Quốc hội thông qua ngày {28/11/2013|hai mươi tám tháng mười một năm hai [nghìn,ngàn] (không trăm) mười ba}.
+date	Bão Yagi đổ bộ vào các tỉnh ven biển miền Bắc ngày {07/09/2024|[mùng bảy,mồng bảy,bảy] tháng chín năm hai [nghìn,ngàn] (không trăm) hai mươi [tư,bốn]}.
+time	Phiên giao dịch buổi sáng trên sàn chứng khoán kết thúc lúc {11h30|mười một giờ [ba mươi,ba mươi phút,rưỡi]}.
+time	Cổng đăng ký học phần sẽ mở vào lúc {8:00|tám giờ} sáng thứ Hai tuần tới.
+time	Bệnh nhân cần nhịn ăn hoàn toàn từ {21h|hai (mươi) mốt giờ} tối hôm trước khi nội soi.
+time	Tên lửa đẩy được phóng lúc {05:47|năm giờ bốn mươi bảy (phút)} theo giờ Hà Nội.
+time	Cuộc họp trực tuyến của ban giám đốc bắt đầu lúc {14g15|mười bốn giờ mười lăm (phút)}.
+time	Sau sự cố, hệ thống chỉ mất {00:02:15|(không giờ) hai phút mười lăm giây} để khôi phục toàn bộ dữ liệu.
+time	Cổng dịch vụ công sẽ ngừng nhận hồ sơ vào {23h59|hai mươi ba giờ năm mươi chín (phút)} ngày cuối tháng.
+time	Ca mổ bắt đầu từ {9h15'|chín giờ mười lăm (phút)} và kéo dài gần bốn tiếng.
+range	Người bệnh nên nghỉ ngơi tại nhà {5–7|năm [đến,tới] bảy} ngày sau khi hết sốt.
+range	Lãi suất cho vay mua nhà hiện dao động {8-10%|tám [đến,tới] mười phần trăm/tám phần trăm [đến,tới] mười phần trăm} một năm.
+range	Nhiệt độ ở Hà Nội hôm nay dao động từ {28–35°C|hai mươi tám [đến,tới] ba mươi [lăm,nhăm] độ (xê)}.
+range	Hội nghị khoa học quốc tế về trí tuệ nhân tạo diễn ra từ ngày {12-14/10|mười hai [đến,tới] mười bốn tháng mười}.
+range	Trẻ em từ {6-11|sáu [đến,tới] mười một} tuổi được giảm {50%|năm mươi phần trăm} giá vé tham quan bảo tàng.
+range	Giá căn hộ chung cư ở khu vực này khoảng {60–80 triệu đồng/m²|sáu mươi [đến,tới] tám mươi triệu đồng [một,mỗi,trên] mét vuông}.
+range	Bộ phận một cửa tiếp công dân trong khung giờ {7h30-11h30|bảy giờ [ba mươi,rưỡi] [đến,tới] mười một giờ [ba mươi,rưỡi]}.
+range	Học sinh làm các bài tập {3-5|ba [đến,tới] năm} ở trang {45|bốn mươi [lăm,nhăm]} sách giáo khoa.
+range	Kế hoạch phát triển kinh tế - xã hội giai đoạn {2021-2025|hai [nghìn,ngàn] (không trăm) hai mươi mốt [đến,tới] hai [nghìn,ngàn] (không trăm) hai mươi [lăm,nhăm]} đã được thông qua.
+unit	Tuyến metro số {1|một} của Thành phố Hồ Chí Minh dài gần {20 km|hai mươi [ki lô mét,cây số]}.
+unit	Mỗi hành khách được mang tối đa {7 kg|bảy [ki lô gam,ki lô,cân,ký]} hành lý xách tay.
+unit	Bác sĩ khuyên bệnh nhân suy tim không uống quá {1.500 ml|một [nghìn,ngàn] năm trăm mi li lít} nước mỗi ngày.
+unit	Mỗi viên nén chứa {500mg|năm trăm mi li gam} paracetamol.
+unit	Huyết áp lý tưởng của người trưởng thành vào khoảng {120/80 mmHg|một trăm hai mươi trên tám mươi mi li mét thủy ngân}.
+unit	Trung tâm thương mại mới có tổng diện tích sàn {45.000 m²|bốn mươi [lăm,nhăm] [nghìn,ngàn] mét vuông}.
+unit	Nhà máy điện mặt trời này có công suất {50 MW|năm mươi mê ga oát}.
+unit	Hộ gia đình dùng trên {400 kWh|bốn trăm ki lô oát giờ/bốn trăm số (điện)} mỗi tháng sẽ phải trả giá điện bậc cao nhất.
+unit	Ô tô chỉ được chạy tối đa {50 km/h|năm mươi [ki lô mét,cây số] [trên,một,mỗi,] giờ} trong khu đông dân cư.
+unit	Vụ đông xuân năm nay, toàn tỉnh gieo cấy {12.000 ha|mười hai [nghìn,ngàn] héc ta} lúa.
+unit	Chiều cao trung bình của nam thanh niên Việt Nam hiện đạt {168,1 cm|một trăm sáu mươi tám phẩy một [xen ti mét,phân]}.
+unit	Kho lạnh mới xây có sức chứa {2.500 m³|hai [nghìn,ngàn] năm trăm mét khối}.
+code	Mọi thắc mắc xin gọi tổng đài {1900 9095|một chín không không chín không chín năm}.
+code	Mã xác thực của bạn là {482917|bốn tám hai chín một bảy}, có hiệu lực trong {5|năm} phút.
+code	Phụ huynh có thể liên hệ cô chủ nhiệm qua số {0912.345.678|không chín một hai ba bốn năm sáu bảy tám}.
+code	Truy cập trang cấu hình của bộ định tuyến qua địa chỉ {192.168.1.1|một trăm chín mươi hai chấm một trăm sáu mươi tám chấm một chấm một/một chín hai chấm một sáu tám chấm một chấm một}.
+code	Bản cập nhật {2.4.1|hai chấm bốn chấm một} khắc phục một lỗ hổng bảo mật nghiêm trọng.
+code	Mã số thuế của doanh nghiệp là {0312345678|không ba một hai ba bốn năm sáu bảy tám}.
+code	Mã ngành Công nghệ thông tin trong danh mục đào tạo đại học là {7480201|bảy bốn tám không hai không một}.
+code	Máy chủ web đang lắng nghe trên cổng {8080|tám không tám không/tám [nghìn,ngàn] không trăm tám mươi}.
+latin	Apple vừa ra mắt iPhone {16|mười sáu} với chip A{18|mười tám} được sản xuất trên tiến trình mới.
+latin	Nhiều doanh nghiệp đã nâng cấp lên Windows {11|mười một} trước khi Microsoft ngừng hỗ trợ phiên bản cũ.
+latin	Mạng {5G|năm [gờ,giê,gi,G]} của Viettel đã phủ sóng tại hầu hết các thành phố lớn.
+latin	Đại dịch Covid{-19|mười chín} đã làm thay đổi thói quen mua sắm của người tiêu dùng.
+latin	Trong ngày Black Friday, Shopee ghi nhận hơn {1,2 triệu|một phẩy hai triệu/một triệu hai/một triệu hai trăm [nghìn,ngàn]} đơn hàng.
+latin	Galaxy S{24|hai (mươi) [tư,bốn]} Ultra được Samsung tích hợp nhiều tính năng AI.
+latin	Hội nghị COP{28|hai mươi tám} tại Dubai đã thông qua thỏa thuận chuyển đổi khỏi nhiên liệu hóa thạch.
+mixed	Phiên ngày {15/10|mười lăm tháng mười}, VN-Index tăng {12,4|mười hai phẩy bốn} điểm lên {1.285|một [nghìn,ngàn] hai trăm tám mươi [lăm,nhăm]} điểm.
+mixed	Theo Nghị định số {100/2019|một trăm [trên,năm] hai [nghìn,ngàn] (không trăm) mười chín} của Chính phủ, nồng độ cồn vượt {0,4 mg/l|không phẩy bốn mi li gam [trên,một,mỗi] lít} khí thở bị phạt ở mức cao nhất.
+mixed	Từ ngày {1/7/2024|[mùng một,mồng một,một] tháng bảy năm hai [nghìn,ngàn] (không trăm) hai mươi [tư,bốn]}, mức lương cơ sở tăng lên {2,34 triệu đồng|hai phẩy [ba mươi tư,ba mươi bốn,ba tư] triệu đồng/hai triệu ba trăm bốn mươi [nghìn,ngàn] đồng} mỗi tháng.
+mixed	Lô hàng gồm {2.500|hai [nghìn,ngàn] năm trăm} tấn thanh long rời cảng lúc {6h|sáu giờ} sáng {12/3|mười hai tháng ba}.
+mixed	Nghiên cứu trên {1.200|một [nghìn,ngàn] hai trăm} bệnh nhân cho thấy thuốc mới giảm {35%|ba mươi [lăm,nhăm] phần trăm} nguy cơ nhập viện.
+mixed	Kỳ thi đánh giá năng lực đợt {2|hai} bắt đầu lúc {8h30|tám giờ [ba mươi,rưỡi]} ngày {25/5|hai mươi [lăm,nhăm] tháng năm}.
+mixed	Mẫu laptop này có RAM {16 GB|mười sáu [gi ga bai,ghi ga bai,gi ga,ghi ga,gờ]} và giá bán {22,99 triệu đồng|hai mươi hai phẩy [chín mươi chín,chín chín] triệu đồng/hai mươi hai triệu chín trăm chín mươi [nghìn,ngàn] đồng}.
+mixed	Bệnh nhân {65|sáu mươi [lăm,nhăm]} tuổi nhập viện trong tình trạng sốt cao {39,5°C|ba mươi chín phẩy năm độ (xê)}.
