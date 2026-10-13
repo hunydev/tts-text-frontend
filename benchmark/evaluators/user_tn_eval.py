@@ -9,9 +9,14 @@ Each sentence is sent in a request of its own language (speech output). A span i
 one of its readings appears in the output after the previous span, after folding: NFKC, lower
 case, whitespace and punctuation removed. Per language:
   en-US  a gold single letter (w) also matches the engine's letter name (double you);
-  ja-JP  katakana = hiragana and ー = the vowel before it; a span that fails is also tried on
+  ja-JP  katakana = hiragana and ー = the vowel before it, and ー may be left out on either side (に = にー); a span that fails is also tried on
          the output's kana reading (pyopenjtalk, when installed), since kanji words stay kanji;
-  zh-CN  〇 = 零, 圆 = 元.
+  zh-CN  〇 = 零, 圆 = 元, 两百/两千/两万/两亿 = 二…, 点半 = 点三十(分);
+  vi-VN  gi-ga = ghi-ga, đề-xi-ben = đê-xi-ben (spelling variants);
+  ko-KR  an hour in native numbers (스물세 시 = 이십삼 시), a letter and one digit in English
+         (B7 비세븐 = 비 칠), 에잇 = 에이트, and a hyphen read 다시 = 에 or nothing.
+These are reading policies both sides accept (docs/HANDOFF.md, policy differences kept); per-line
+widenings are in benchmark/datasets/user-tn-eval/amend.tsv.
 Scores are given for dev and test separately. Only dev misses are written out
 (benchmark/generated/user-tn-eval/<tag>/<lang>-dev-misses.json): fixes come from dev, and the
 test misses are not read.
@@ -20,6 +25,7 @@ import argparse
 import collections
 import itertools
 import json
+import re
 import sys
 import unicodedata
 from pathlib import Path
@@ -34,6 +40,35 @@ LETTERS = dict(a="ay", b="bee", c="see", d="dee", e="ee", f="ef", g="gee", h="ai
 VOWEL = {ch: v for row, v in (("あかさたなはまやらわがざだばぱぁゃ", "あ"), ("いきしちにひみりぎじぢびぴぃ", "い"),
                               ("うくすつぬふむゆるぐずづぶぷぅゅ", "う"), ("えけせてねへめれげぜでべぺぇ", "え"),
                               ("おこそとのほもよろをごぞどぼぽぉょ", "お")) for ch in row}
+
+
+KO_NATIVE = {"일": "한", "이": "두", "삼": "세", "사": "네", "오": "다섯", "육": "여섯", "칠": "일곱", "팔": "여덟",
+             "구": "아홉", "십": "열", "십일": "열한", "십이": "열두", "십삼": "열세", "십사": "열네", "십오": "열다섯",
+             "십육": "열여섯", "십칠": "열일곱", "십팔": "열여덟", "십구": "열아홉", "이십": "스무", "이십일": "스물한",
+             "이십이": "스물두", "이십삼": "스물세", "이십사": "스물네"}
+KO_HOUR = re.compile(r"(?<![가-힣])(이십[일이삼사]?|십[일이삼사오육칠팔구]?|[일이삼사오육칠팔구]) 시")
+KO_LETTER = dict(A="에이", B="비", C="씨", D="디", E="이", F="에프", G="지", H="에이치", I="아이", J="제이",
+                 K="케이", L="엘", M="엠", N="엔", O="오", P="피", Q="큐", R="알", S="에스", T="티", U="유",
+                 V="브이", W="더블유", X="엑스", Y="와이", Z="제트")
+KO_SINO = "영일이삼사오육칠팔구"
+KO_ENGLISH = ["제로", "원", "투", "쓰리", "포", "파이브", "식스", "세븐", "에잇", "나인"]
+
+
+def policy_variants(lang, target):
+    """Readings a reading policy accepts besides the gold ones (see the module docstring)."""
+    readings, out = target["readings"], list(target["readings"])
+    if lang == "ko-KR":
+        out += [KO_HOUR.sub(lambda m: KO_NATIVE[m.group(1)] + " 시", r) for r in readings]
+        m = re.match(r"([A-Z])([0-9])(?![0-9])", target["written"])
+        if m:
+            sino = f"{KO_LETTER[m.group(1)]} {KO_SINO[int(m.group(2))]}"
+            english = KO_LETTER[m.group(1)] + KO_ENGLISH[int(m.group(2))]
+            out += [english + r[len(sino):] for r in readings if r.startswith(sino)]
+    elif lang == "ja-JP":
+        out += [r.replace("ー", "") for r in readings]
+    elif lang == "zh-CN":
+        out += [r.replace("点半", "点三十分") for r in readings] + [r.replace("点半", "点三十") for r in readings]
+    return list(dict.fromkeys(out))
 
 
 def letter_variants(reading):
@@ -51,7 +86,13 @@ def fold(s, lang):
         s = "".join(VOWEL.get(s[i - 1], c) if c == "ー" and i else c for i, c in enumerate(s))
     elif lang == "zh-CN":
         s = s.replace("〇", "零").replace("圆", "元")
-    return "".join(c for c in s if c == "ー" or not c.isspace() and unicodedata.category(c)[0] not in "PS")
+        s = re.sub("两(?=[百千万亿])", "二", s)
+    elif lang == "ko-KR":
+        s = s.replace("에이트", "에잇")
+    s = "".join(c for c in s if c == "ー" or not c.isspace() and unicodedata.category(c)[0] not in "PS")
+    if lang == "vi-VN":
+        s = s.replace("ghiga", "giga").replace("đêxiben", "đềxiben")
+    return s
 
 
 def judge(row, output, lang):
@@ -71,6 +112,9 @@ def judge(row, output, lang):
 
 def rows_of(lang):
     rows = [json.loads(line) for line in (DATA / f"user-tn-{lang}.jsonl").open(encoding="utf-8")]
+    for r in rows:
+        for t in r["targets"]:
+            t["readings"] = policy_variants(lang, t)
     if lang == "en-US":
         for r in rows:
             for t in r["targets"]:
@@ -111,8 +155,15 @@ def score(args):
             text = outputs[r["id"]]
             res = judge(r, text, lang)
             if lang == "ja-JP" and pyopenjtalk and not all(res):
-                heard = judge(r, pyopenjtalk.g2p(text, kana=True), lang)
-                res = [a or b for a, b in zip(res, heard)]
+                heard = pyopenjtalk.g2p(text, kana=True)
+                # each view also without its long-vowel marks (ごー = ご)
+                for view in (heard, text.replace("ー", ""), heard.replace("ー", "")):
+                    res = [a or b for a, b in zip(res, judge(r, view, lang))]
+            if lang == "ko-KR" and not all(res):
+                # a hyphen read 다시 (Korean separator policy) = the gold 에 or nothing
+                plain = {**r, "targets": [{**g, "readings": [x.replace(" 에 ", " ") for x in g["readings"]]}
+                                          if "-" in g["written"] else g for g in r["targets"]]}
+                res = [a or b for a, b in zip(res, judge(plain, text.replace("다시", " "), lang))]
             t = tally[r["split"]]
             t["sentences"] += 1
             t["sentence_ok"] += all(res)

@@ -498,6 +498,9 @@ range_contract	ko-KR	native:8	여덟아홉
 policy	ko-KR	quantity_range_suffix	none
 symbol	ko-KR	~	물결
 quantity_prefix	ko-KR	°C	섭씨 
+# A temperature below zero reads 영하 and drops 섭씨 (-2℃ 영하 이 도; owner, 2026-10-14).
+quantity_prefix	ko-KR	below_zero.°C	영하 
+classifier_priority	ko-KR	ko:below-zero	10
 
 # Written currency names use the same semantic units as currency symbols.
 numeric_suffix	*	달러	CURRENCY:USD

@@ -36,6 +36,7 @@ CORPORA = {
     "vi-pack4-v77": ("베트남어 팩 4단계", "vi_pack4_v77.jsonl"),
     "vi-pack5-v78": ("베트남어 팩 5단계", "vi_pack5_v78.jsonl"),
     "vi-pack6-v79": ("베트남어 팩 6단계", "vi_pack6_v79.jsonl"),
+    "user-eval1-v81": ("사용자 평가셋 1단계 (공통 표기, 정책 4건)", "user_eval1_v81.jsonl"),
     "vi-prod-v80": ("베트남어 운영 전환 수정", "vi_prod_v80.jsonl"),
     "ko-phoneme-v51": ("한국어 발음열 출력 1단계 (구어, 한글)", "ko_phoneme_v51.jsonl"),
     "ja-rest-v50": ("Japanese remaining gaps v50", "ja_rest_v50.jsonl"),

@@ -36,6 +36,8 @@ number	zh-CN	seconds	秒
 number	zh-CN	plus	加
 number	zh-CN	subtract	减
 number	zh-CN	times	乘
+# × in an equation (12×15=180 十二乘以十五等于一百八十; owner, 2026-10-14)
+number	zh-CN	multiply	乘以
 number	zh-CN	divide	除以
 number	zh-CN	equals	等于
 number	zh-CN	greater	大于

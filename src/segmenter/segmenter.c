@@ -398,7 +398,8 @@ ttf_status_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, i
     memset(wait, 0, sizeof(*wait));
     if (status != TTF_OK)
         return status;
-    status = ttf_numeric_width_create(s, n, tokens, count, regions, region_count, &width_view);
+    status = ttf_numeric_width_create(s, n, tokens, count, regions, region_count,
+                                      ttf_numeric_width_mode(e->default_language), &width_view);
     if (status != TTF_OK) {
         free(tokens);
         free(regions);

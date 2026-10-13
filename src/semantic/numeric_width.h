@@ -13,7 +13,9 @@ typedef struct {
 ttf_status_t ttf_numeric_width_create(const char *text, size_t length,
                                        const ttf_token_t *tokens, size_t count,
                                        const ttf_protected_region_t *regions, size_t region_count,
-                                       ttf_numeric_width_t *view);
+                                       int mode, ttf_numeric_width_t *view);
+/* 1 for a ja request, 2 for zh (full-width forms fold), else 0. */
+int ttf_numeric_width_mode(const char *language);
 void ttf_numeric_width_free(ttf_numeric_width_t *view);
 /* Verbalizers which consume surface digits rather than only canonical IR. */
 size_t ttf_numeric_width_guard(const ttf_pack_input_t *input, ttf_semantic_t *semantic,

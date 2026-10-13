@@ -2,6 +2,21 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- The owner's TN evaluation sets (benchmark/datasets/user-tn-eval): 1,000 sentences each for
+  ko-KR, en-US, ja-JP, zh-CN and vi-VN, split once into dev 700 / test 300 (fixes come from
+  dev only). Scorer: benchmark/evaluators/user_tn_eval.py.
+- User eval phase 1 (common forms and the owner's four reading policies, 2026-10-14):
+  - U+2212 MINUS SIGN before a number or currency is the minus (no more "minus sign").
+  - In ja-JP and zh-CN requests, full-width digits, Latin letters and . : / , + - % next to a
+    digit read like ASCII (２８．４ｍ, ２３：５９, ５，０００); the Chinese clause comma ， is
+    never a thousands separator.
+  - An en dash between numbers is a range (9–12 nine to twelve, $20–$35).
+  - Policies: Korean temperatures below zero read 영하 and drop 섭씨 (-2℃ 영하 이 도, -3도 영하
+    삼도); Chinese × in an equation reads 乘以 (4×4 and 7.9×10³ keep 乘); Vietnamese 1/4 một
+    phần tư.
+  - Span accuracy, dev / test: ko 90.4→91.0 / 89.0→90.1, en 81.6→84.0 / 82.1→85.0, ja
+    83.3→84.9 / 80.7→83.3, zh 93.1→93.6 / 94.7→95.6, vi 85.7→86.3 / 87.1→87.3. No dev span lost.
+    Contract user_eval1_v81 (19).
 - Vietnamese (vi-VN) is in production (project-owner decision, 2026-10-13).
   - TTS -> STT comparison: OpenAI, all 257 held-out v6 sentences. 63.8% were read right from the
     raw text and 93.8% from our output.

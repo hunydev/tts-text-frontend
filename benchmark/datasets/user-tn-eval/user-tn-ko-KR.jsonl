@@ -134,7 +134,7 @@
 {"id": "ko-KR-0137", "line": 137, "category": "date", "text": "9/13(토) 모임 참석자 명단 올려요", "targets": [{"written": "9/13(토)", "readings": ["구 월 십삼 일 토", "구 월 십삼 일 토요일"]}], "split": "dev"}
 {"id": "ko-KR-0138", "line": 138, "category": "counter", "text": "아이 2명 데리고 가기엔 좀 좁은 듯 테이블 간격이 거의 없음", "targets": [{"written": "2명", "readings": ["두 명"]}], "split": "dev"}
 {"id": "ko-KR-0139", "line": 139, "category": "percent", "text": "습도 80%라 빨래가 안 말라요 제습기 추천 좀", "targets": [{"written": "80%", "readings": ["팔십 퍼센트"]}], "split": "test"}
-{"id": "ko-KR-0140", "line": 140, "category": "unit", "text": "방 10평에 이 에어컨이면 충분할까요?", "targets": [{"written": "10평", "readings": ["십 평"]}], "split": "dev"}
+{"id": "ko-KR-0140", "line": 140, "category": "unit", "text": "방 10평에 이 에어컨이면 충분할까요?", "targets": [{"written": "10평", "readings": ["십 평", "열 평"]}], "split": "dev"}
 {"id": "ko-KR-0141", "line": 141, "category": "phone", "text": "분실물 찾으시는 분 010-9876-5432로 연락 주세요", "targets": [{"written": "010-9876-5432", "readings": ["공일공 에 구팔칠육 에 오사삼이", "공일공 에 구팔칠육 오사삼이", "공일공 구팔칠육 에 오사삼이", "공일공 구팔칠육 오사삼이", "공일영 에 구팔칠육 에 오사삼이", "공일영 에 구팔칠육 오사삼이", "공일영 구팔칠육 에 오사삼이", "공일영 구팔칠육 오사삼이", "영일공 에 구팔칠육 에 오사삼이", "영일공 에 구팔칠육 오사삼이", "영일공 구팔칠육 에 오사삼이", "영일공 구팔칠육 오사삼이", "영일영 에 구팔칠육 에 오사삼이", "영일영 에 구팔칠육 오사삼이", "영일영 구팔칠육 에 오사삼이", "영일영 구팔칠육 오사삼이"]}], "split": "test"}
 {"id": "ko-KR-0142", "line": 142, "category": "cardinal", "text": "1,000 댓글 돌파 ㄷㄷ 다들 할 말 많았구나", "targets": [{"written": "1,000", "readings": ["천"]}], "split": "test"}
 {"id": "ko-KR-0143", "line": 143, "category": "code", "text": "할인코드 WELCOME10 입력하면 되는데 자꾸 유효하지 않다고 뜸", "targets": [{"written": "WELCOME10", "readings": ["웰컴 텐", "웰컴 십", "웰컴 일공"]}], "split": "dev"}
@@ -748,7 +748,7 @@
 {"id": "ko-KR-0757", "line": 757, "category": "time", "text": "오전 9시부터 전화 상담이 가능합니다.", "targets": [{"written": "오전 9시", "readings": ["오전 아홉 시"]}], "split": "dev"}
 {"id": "ko-KR-0758", "line": 758, "category": "time", "text": "저녁 공연은 18:30에 막이 오른다.", "targets": [{"written": "18:30", "readings": ["열여덟 시 삼십 분", "십팔 시 삼십 분", "오후 여섯 시 삼십 분", "오후 여섯 시 반"]}], "split": "dev"}
 {"id": "ko-KR-0759", "line": 759, "category": "time", "text": "3시 반쯤 카페에서 봐요.", "targets": [{"written": "3시", "readings": ["세 시"]}], "split": "dev"}
-{"id": "ko-KR-0760", "line": 760, "category": "range", "text": "영업일 기준 2~3일 소요됩니다.", "targets": [{"written": "2~3일", "readings": ["이에서 삼 일", "이 일에서 삼 일", "이틀에서 사흘"]}], "split": "dev"}
+{"id": "ko-KR-0760", "line": 760, "category": "range", "text": "영업일 기준 2~3일 소요됩니다.", "targets": [{"written": "2~3일", "readings": ["이에서 삼 일", "이 일에서 삼 일", "이틀에서 사흘", "이삼 일"]}], "split": "dev"}
 {"id": "ko-KR-0761", "line": 761, "category": "range", "text": "주문 후 3-5일 이내 출고합니다.", "targets": [{"written": "3-5일", "readings": ["삼에서 오 일", "삼 일에서 오 일", "사흘에서 닷새"]}], "split": "dev"}
 {"id": "ko-KR-0762", "line": 762, "category": "range", "text": "설명회는 10:30~11:30에 진행됩니다.", "targets": [{"written": "10:30~11:30", "readings": ["열 시 삼십 분에서 열한 시 삼십 분", "열 시 반부터 열한 시 반까지", "열 시 반에서 열한 시 반"]}], "split": "test"}
 {"id": "ko-KR-0763", "line": 763, "category": "range", "text": "하루에 사과 1~2개면 충분해요.", "targets": [{"written": "1~2개", "readings": ["일에서 이 개", "한 개에서 두 개", "한두 개"]}], "split": "dev"}
@@ -766,7 +766,7 @@
 {"id": "ko-KR-0775", "line": 775, "category": "range", "text": "18~25세 청년만 신청할 수 있습니다.", "targets": [{"written": "18~25세", "readings": ["십팔에서 이십오 세", "열여덟에서 스물다섯 세"]}], "split": "test"}
 {"id": "ko-KR-0776", "line": 776, "category": "range", "text": "월~금 오전에만 접수합니다.", "targets": [{"written": "월~금", "readings": ["월에서 금", "월요일부터 금요일까지"]}], "split": "dev"}
 {"id": "ko-KR-0777", "line": 777, "category": "range", "text": "1~3번 문항은 객관식입니다.", "targets": [{"written": "1~3번", "readings": ["일에서 삼 번", "일 번에서 삼 번"]}], "split": "dev"}
-{"id": "ko-KR-0778", "line": 778, "category": "range", "text": "반죽을 30~40분 숙성시킵니다.", "targets": [{"written": "30~40분", "readings": ["삼십에서 사십 분", "삼십 분에서 사십 분"]}], "split": "dev"}
+{"id": "ko-KR-0778", "line": 778, "category": "range", "text": "반죽을 30~40분 숙성시킵니다.", "targets": [{"written": "30~40분", "readings": ["삼십에서 사십 분", "삼십 분에서 사십 분", "삼사십 분"]}], "split": "dev"}
 {"id": "ko-KR-0779", "line": 779, "category": "range", "text": "배터리가 전작보다 2~3배 오래 간다.", "targets": [{"written": "2~3배", "readings": ["이에서 삼 배", "두세 배"]}], "split": "dev"}
 {"id": "ko-KR-0780", "line": 780, "category": "range", "text": "5~6월이 모내기 철이다.", "targets": [{"written": "5~6월", "readings": ["오 월에서 유월", "오에서 유월"]}], "split": "test"}
 {"id": "ko-KR-0781", "line": 781, "category": "range", "text": "행사장에 1,500~2,000명이 몰릴 것으로 보인다.", "targets": [{"written": "1,500~2,000명", "readings": ["천오백에서 이천 명", "천오백 명에서 이천 명"]}], "split": "test"}

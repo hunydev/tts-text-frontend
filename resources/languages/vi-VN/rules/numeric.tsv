@@ -26,6 +26,8 @@ number	vi-VN	plus_sign	cộng
 number	vi-VN	percent	phần trăm
 number	vi-VN	to	đến
 number	vi-VN	over	phần
+# 1/4 một phần tư (owner, 2026-10-14)
+number	vi-VN	denominator4	tư
 number	vi-VN	approx	khoảng
 number	vi-VN	day	ngày
 number	vi-VN	month	tháng

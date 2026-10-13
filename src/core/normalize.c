@@ -1653,7 +1653,8 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
         free(regions);
         return TTF_ENOMEM;
     }
-    st = ttf_numeric_width_create(text, length, tokens, count, regions, region_count, &width_view);
+    st = ttf_numeric_width_create(text, length, tokens, count, regions, region_count,
+                                  ttf_numeric_width_mode(e->default_language), &width_view);
     if (st != TTF_OK)
         goto fail;
     while (i < count) {

@@ -1640,8 +1640,11 @@ static ttf_status_t power(const ttf_engine_t *e, ttf_buffer_t *b, const char *x,
 }
 
 static ttf_status_t maths_reading(const ttf_engine_t *e, ttf_buffer_t *b, const char *v) {
-    size_t i = 0, n = strlen(v), w;
+    size_t i = 0, n = strlen(v), w, w2;
     int after_operand = 0;
+    /* 12×15=180 十二乘以十五: × in an equation is 乘以 (owner, 2026-10-14); 4×4,
+       1920×1080 and 7.9×10³ keep 乘. */
+    int equation = strchr(v, '=') != NULL;
     int k;
     while (i < n) {
         char sc;
@@ -1720,6 +1723,9 @@ static ttf_status_t maths_reading(const ttf_engine_t *e, ttf_buffer_t *b, const 
             /* a minus with no operand before it is 负 (x>-2) */
             if (SYMBOLS[k].mark[0] == '-' && !after_operand)
                 key = "minus";
+            if (equation && !strcmp(key, "times") && !(has(v, n, i + w, "10") &&
+                                                       (has(v, n, i + w + 2, "^") || superscript(v, n, i + w + 2, &w2))))
+                key = "multiply";
             if (key[0])
                 TRY(word(e, b, key));
             i += w;

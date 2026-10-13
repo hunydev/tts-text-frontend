@@ -1,1 +1,10 @@
 # lang	line	was	now	why (a reading the owner policy accepts; the source file is never edited)
+ko-KR	140	{10평|십 평}	{10평|십 평/열 평}	평 also takes the native number (열 평)
+ko-KR	760	{2~3일|[이에서 삼 일,이 일에서 삼 일,이틀에서 사흘]}	{2~3일|[이에서 삼 일,이 일에서 삼 일,이틀에서 사흘,이삼 일]}	contracted range 이삼 일 (Korean range_contract policy)
+ko-KR	778	{30~40분|[삼십에서 사십 분,삼십 분에서 사십 분]}	{30~40분|[삼십에서 사십 분,삼십 분에서 사십 분,삼사십 분]}	contracted range 삼사십 분 (Korean range_contract policy)
+zh-CN	269	{3.6g/100mL|每一百毫升三点六克}	{3.6g/100mL|每一百毫升三点六克/三点六克每一百毫升}	X per Y read in written order is also standard
+zh-CN	407	{1450r/min|每分钟一千四百五十转}	{1450r/min|每分钟一千四百五十转/一千四百五十转每分钟}	X per Y read in written order is also standard
+zh-CN	522	{60km/h|每小时六十公里}	{60km/h|每小时六十公里/六十公里每小时}	X per Y read in written order is also standard
+zh-CN	550	{60元/人|每人六十元/六十元一人}	{60元/人|每人六十元/六十元一人/六十元每人}	X per Y read in written order is also standard
+zh-CN	571	{20元/次|二十元一次/每次二十元}	{20元/次|二十元一次/每次二十元/二十元每次}	X per Y read in written order is also standard
+zh-CN	844	{6.8L/100km|百公里六点八升/六点八升每百公里}	{6.8L/100km|百公里六点八升/六点八升每百公里/六点八升每一百[公里,千米]}	X per Y read in written order is also standard

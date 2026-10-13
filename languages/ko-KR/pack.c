@@ -164,6 +164,16 @@ static ttf_status_t sino_group(const ttf_engine_t *e, unsigned value, ttf_buffer
     return TTF_OK;
 }
 
+/* -2℃ 영하 이 도 (owner, 2026-10-14): a temperature below zero reads 영하 and
+   drops 섭씨 (quantity_prefix below_zero.<unit>). NULL when the unit has none. */
+static const char *below_zero(const ttf_engine_t *e, const ttf_semantic_t *s) {
+    char key[sizeof(s->unit) + 16];
+    if (s->value[0] != '-' || !s->unit[0])
+        return NULL;
+    (void)snprintf(key, sizeof(key), "below_zero.%s", s->unit);
+    return ttf_resource_get(e, "quantity_prefix", "ko-KR", key, NULL);
+}
+
 static ttf_status_t cardinal(const ttf_engine_t *e, const char *value, ttf_buffer_t *out) {
     char integer[TTF_IR_VALUE_SIZE];
     const char *p = value, *fraction = NULL;
@@ -1129,6 +1139,11 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         return ttf_ko_speech_spelling(e, surface, length, 1, out);
     case TTF_SEM_NUMBER:
     case TTF_SEM_CARDINAL:
+        if (!strcmp(s->rule, "ko:below-zero")) {
+            if (s->secondary[0])
+                TRY(ttf_buffer_puts(out, resource(e, "quantity_prefix", "below_zero.°C", "영하 ")));
+            return cardinal(e, s->value, out);
+        }
         if (!strcmp(s->rule, "ko:number-list")) {
             /* 1,2 일, 이 */
             const char *p = s->value;
@@ -1375,8 +1390,14 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     case TTF_SEM_PHONE:
         return phone(e, s, out);
     case TTF_SEM_COUNTER: {
-        const char *month = s->value;
-        TRY(ttf_buffer_puts(out, resource(e, "quantity_prefix", s->unit, "")));
+        const char *month = s->value, *below = below_zero(e, s);
+        if (below) {
+            TRY(ttf_buffer_puts(out, below));
+            return quantity(e, s->value + 1, resource(e, "unit", s->unit, s->unit), 0, out);
+        }
+        /* -10~40℃ 영하 십 도에서 사십 도: the end after a range from below zero */
+        if (strcmp(s->rule, "ko:after-below-zero"))
+            TRY(ttf_buffer_puts(out, resource(e, "quantity_prefix", s->unit, "")));
         if (*month == '+')
             ++month;
         while (*month == '0' && month[1])
@@ -1437,6 +1458,10 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             }
             TRY(ttf_buffer_puts(out, " "));
             return ttf_buffer_puts(out, resource(e, "unit", s->unit, s->unit));
+        }
+        if (below_zero(e, s)) {
+            TRY(ttf_buffer_puts(out, below_zero(e, s)));
+            return quantity(e, s->value + 1, resource(e, "unit", s->unit, s->unit), 0, out);
         }
         TRY(ttf_buffer_puts(out, resource(e, "quantity_prefix", s->unit, "")));
         return quantity(e, s->value, resource(e, "unit", s->unit, s->unit), 0, out);
@@ -1504,6 +1529,8 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             out,
             resource(e, "policy", quantity_range ? "quantity_range_separator" : "range_separator",
                      "에서 ")));
+        if (below_zero(e, s))
+            (void)snprintf(endpoint.rule, sizeof(endpoint.rule), "ko:after-below-zero");
         memcpy(endpoint.value, s->secondary, sizeof(endpoint.value));
         TRY(verbalize(e, &endpoint, surface, length, out));
         if (quantity_range && strcmp(suffix, "none"))
@@ -2478,11 +2505,50 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     return n;
 }
 
+/* 아침 -3도라는데 영하 삼도라는데: a negative number before 도 is a temperature
+   (owner, 2026-10-14). After a written 영하 the sign is not read again. */
+static size_t below_zero_degrees(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    const char *t = in->text;
+    size_t n = in->length, begin = in->tokens[in->index].begin, p = begin + 1, i;
+    if (t[begin] != '-' || p >= n || t[p] < '0' || t[p] > '9' ||
+        (begin && ((t[begin - 1] >= '0' && t[begin - 1] <= '9') ||
+                   ((t[begin - 1] | 0x20) >= 'a' && (t[begin - 1] | 0x20) <= 'z'))))
+        return 0;
+    while (p < n && t[p] >= '0' && t[p] <= '9')
+        ++p;
+    if (p + 1 < n && t[p] == '.' && t[p + 1] >= '0' && t[p + 1] <= '9')
+        for (++p; p < n && t[p] >= '0' && t[p] <= '9'; ++p)
+            ;
+    if (p + 3 > n || memcmp(t + p, "도", 3) || p - begin - 1 >= sizeof(s->value))
+        return 0;
+    /* 각도는 -30도: an angle */
+    for (i = begin > 24 ? begin - 24 : 0; i + 6 <= begin; ++i)
+        if (!memcmp(t + i, "각도", 6) || !memcmp(t + i, "기울", 6) || !memcmp(t + i, "회전", 6))
+            return 0;
+    memcpy(s->value, t + begin + 1, p - begin - 1);
+    s->value[p - begin - 1] = '\0';
+    i = begin;
+    while (i && t[i - 1] == ' ')
+        --i;
+    s->secondary[0] = i >= 6 && !memcmp(t + i - 6, "영하", 6) ? '\0' : '1';
+    s->secondary[1] = '\0';
+    s->type = TTF_SEM_CARDINAL;
+    s->input_end = p;
+    s->layer = TTF_LAYER_COMMON;
+    (void)snprintf(s->rule, sizeof(s->rule), "ko:below-zero");
+    for (i = in->index; i < in->token_count && in->tokens[i].begin < p; ++i)
+        ;
+    return i - in->index;
+}
+
 static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     const char *text = in->text;
     size_t n = in->length, begin = in->tokens[in->index].begin, p, q;
     unsigned year, month, day;
-    size_t identifier = ttf_ko_classify_basement(in, s);
+    size_t identifier = below_zero_degrees(in, s);
+    if (identifier)
+        return identifier;
+    identifier = ttf_ko_classify_basement(in, s);
     if (identifier)
         return identifier;
     identifier = ttf_ko_classify_floor(in, s);

@@ -1337,7 +1337,11 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         field(s->secondary, 1, f3, sizeof(f3));
         TRY(number(e, b, f0));
         TRY(word(e, b, *f2 ? "per" : "over"));
-        TRY(number(e, b, f1));
+        /* 1/4 một phần tư, 3/4 ba phần tư (owner, 2026-10-14) */
+        if (!*f2 && !strcmp(f1, "4"))
+            TRY(word(e, b, "denominator4"));
+        else
+            TRY(number(e, b, f1));
         TRY(suffix(e, b, f3));
     } else if (!strcmp(mode, "range")) {
         field(v, 0, f0, sizeof(f0));

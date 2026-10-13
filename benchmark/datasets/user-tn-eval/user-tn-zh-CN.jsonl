@@ -262,7 +262,7 @@
 {"id": "zh-CN-0266", "line": 266, "category": "unit", "text": "洗衣机额定容量10kg，一家五口也够用。", "targets": [{"written": "10kg", "readings": ["十千克", "十公斤"]}], "split": "test"}
 {"id": "zh-CN-0267", "line": 267, "category": "counter", "text": "买2袋送1袋，还剩最后50袋。", "targets": [{"written": "2袋", "readings": ["两袋"]}, {"written": "1袋", "readings": ["一袋"]}, {"written": "50袋", "readings": ["五十袋"]}], "split": "dev"}
 {"id": "zh-CN-0268", "line": 268, "category": "cardinal", "text": "该基金规模已超200亿，持有人超过80万。", "targets": [{"written": "200亿", "readings": ["两百亿", "二百亿"]}, {"written": "80万", "readings": ["八十万"]}], "split": "dev"}
-{"id": "zh-CN-0269", "line": 269, "category": "decimal", "text": "牛奶脂肪含量3.6g/100mL，口感醇厚。", "targets": [{"written": "3.6g/100mL", "readings": ["每一百毫升三点六克"]}], "split": "dev"}
+{"id": "zh-CN-0269", "line": 269, "category": "decimal", "text": "牛奶脂肪含量3.6g/100mL，口感醇厚。", "targets": [{"written": "3.6g/100mL", "readings": ["每一百毫升三点六克", "三点六克每一百毫升"]}], "split": "dev"}
 {"id": "zh-CN-0270", "line": 270, "category": "sign", "text": "【微信支付】零钱变动-1,246.80，交易类型：转账。", "targets": [{"written": "-1,246.80", "readings": ["负一千二百四十六点八零", "负一千二百四十六点八", "负一千两百四十六点八零", "负一千两百四十六点八"]}], "split": "dev"}
 {"id": "zh-CN-0271", "line": 271, "category": "ordinal", "text": "第1名至第3名可获得免单资格，快来参与排名！", "targets": [{"written": "第1名", "readings": ["第一名"]}, {"written": "第3名", "readings": ["第三名"]}], "split": "dev"}
 {"id": "zh-CN-0272", "line": 272, "category": "range", "text": "本品适用于2-5人家庭使用。", "targets": [{"written": "2-5人", "readings": ["两到五人", "二到五人"]}], "split": "dev"}
@@ -398,7 +398,7 @@
 {"id": "zh-CN-0403", "line": 403, "category": "percent", "text": "本次执法检查发现，3成以上商户未按规定明码标价。", "targets": [{"written": "3成", "readings": ["三成"]}], "split": "dev"}
 {"id": "zh-CN-0404", "line": 404, "category": "cardinal", "text": "听证代表名额15名，报名人数超过名额时采取随机抽取方式确定。", "targets": [{"written": "15", "readings": ["十五"]}], "split": "dev"}
 {"id": "zh-CN-0405", "line": 405, "category": "mixed", "text": "违规停车的，处200元罚款，记3分。", "targets": [{"written": "200元", "readings": ["两百元", "二百元"]}, {"written": "3分", "readings": ["三分"]}], "split": "test"}
-{"id": "zh-CN-0407", "line": 407, "category": "unit", "text": "该电机额定功率7.5kW，额定转速1450r/min。", "targets": [{"written": "7.5kW", "readings": ["七点五千瓦"]}, {"written": "1450r/min", "readings": ["每分钟一千四百五十转"]}], "split": "dev"}
+{"id": "zh-CN-0407", "line": 407, "category": "unit", "text": "该电机额定功率7.5kW，额定转速1450r/min。", "targets": [{"written": "7.5kW", "readings": ["七点五千瓦"]}, {"written": "1450r/min", "readings": ["每分钟一千四百五十转", "一千四百五十转每分钟"]}], "split": "dev"}
 {"id": "zh-CN-0408", "line": 408, "category": "unit", "text": "血清肌酐98.6μmol/L，高于参考区间上限。", "targets": [{"written": "98.6μmol/L", "readings": ["九十八点六微摩尔每升"]}], "split": "dev"}
 {"id": "zh-CN-0409", "line": 409, "category": "code", "text": "故障代码E07表示排水泵异常，请检查排水管是否堵塞。", "targets": [{"written": "E07", "readings": ["E零七"]}], "split": "dev"}
 {"id": "zh-CN-0410", "line": 410, "category": "mixed", "text": "服务器于03:17出现响应超时，持续约12分钟。", "targets": [{"written": "03:17", "readings": ["凌晨三点十七分", "三点十七分"]}, {"written": "12分钟", "readings": ["十二分钟"]}], "split": "dev"}
@@ -512,7 +512,7 @@
 {"id": "zh-CN-0519", "line": 519, "category": "date", "text": "10.13下午茶预约已确认，请准时到店。", "targets": [{"written": "10.13", "readings": ["十月十三日"]}], "split": "dev"}
 {"id": "zh-CN-0520", "line": 520, "category": "time", "text": "末班车23:45发车，请提前到站。", "targets": [{"written": "23:45", "readings": ["二十三点四十五分"]}], "split": "dev"}
 {"id": "zh-CN-0521", "line": 521, "category": "range", "text": "打车费用约35—42元。", "targets": [{"written": "35—42元", "readings": ["三十五到四十二元"]}], "split": "dev"}
-{"id": "zh-CN-0522", "line": 522, "category": "mixed", "text": "此路段限速60km/h，前方500米有测速。", "targets": [{"written": "60km/h", "readings": ["每小时六十公里"]}, {"written": "500米", "readings": ["五百米"]}], "split": "dev"}
+{"id": "zh-CN-0522", "line": 522, "category": "mixed", "text": "此路段限速60km/h，前方500米有测速。", "targets": [{"written": "60km/h", "readings": ["每小时六十公里", "六十公里每小时"]}, {"written": "500米", "readings": ["五百米"]}], "split": "dev"}
 {"id": "zh-CN-0523", "line": 523, "category": "mixed", "text": "请在3号口出站，沿指示牌步行约200米。", "targets": [{"written": "3号口", "readings": ["三号口"]}, {"written": "200米", "readings": ["两百米", "二百米"]}], "split": "dev"}
 {"id": "zh-CN-0524", "line": 524, "category": "counter", "text": "本次团购套餐含4人自助晚餐和2张温泉票。", "targets": [{"written": "4人", "readings": ["四人"]}, {"written": "2张", "readings": ["两张"]}], "split": "test"}
 {"id": "zh-CN-0525", "line": 525, "category": "mixed", "text": "景区开放时间8:00—17:30，16:30停止入园。", "targets": [{"written": "8:00—17:30", "readings": ["八点到十七点半"]}, {"written": "16:30", "readings": ["十六点半"]}], "split": "test"}
@@ -540,7 +540,7 @@
 {"id": "zh-CN-0547", "line": 547, "category": "unit", "text": "该车百公里油耗约6.8L，适合长途自驾。", "targets": [{"written": "6.8L", "readings": ["六点八升"]}], "split": "dev"}
 {"id": "zh-CN-0548", "line": 548, "category": "mixed", "text": "从第3个路口左转，再直行800米即到。", "targets": [{"written": "第3个", "readings": ["第三个"]}, {"written": "800米", "readings": ["八百米"]}], "split": "dev"}
 {"id": "zh-CN-0549", "line": 549, "category": "time", "text": "晚会19:30开始，18:00起入场。", "targets": [{"written": "19:30", "readings": ["十九点三十分", "十九点半", "七点半"]}, {"written": "18:00", "readings": ["十八点"]}], "split": "test"}
-{"id": "zh-CN-0550", "line": 550, "category": "mixed", "text": "门票60元/人，1.2米以下儿童免费。", "targets": [{"written": "60元/人", "readings": ["每人六十元", "六十元一人"]}, {"written": "1.2米", "readings": ["一点二米"]}], "split": "dev"}
+{"id": "zh-CN-0550", "line": 550, "category": "mixed", "text": "门票60元/人，1.2米以下儿童免费。", "targets": [{"written": "60元/人", "readings": ["每人六十元", "六十元一人", "六十元每人"]}, {"written": "1.2米", "readings": ["一点二米"]}], "split": "dev"}
 {"id": "zh-CN-0551", "line": 551, "category": "range", "text": "活动日期：2026年6月6日至8日。", "targets": [{"written": "2026年6月6日至8日", "readings": ["二零二六年六月六日至八日"]}], "split": "dev"}
 {"id": "zh-CN-0552", "line": 552, "category": "percent", "text": "节假日期间机票价格普遍上浮约20%。", "targets": [{"written": "20%", "readings": ["百分之二十"]}], "split": "test"}
 {"id": "zh-CN-0553", "line": 553, "category": "mixed", "text": "每位旅客限带2瓶酒类，每瓶不超过500ml。", "targets": [{"written": "2瓶", "readings": ["两瓶"]}, {"written": "500ml", "readings": ["五百毫升"]}], "split": "dev"}
@@ -561,7 +561,7 @@
 {"id": "zh-CN-0568", "line": 568, "category": "unit", "text": "该线路高铁最高运营时速350km。", "targets": [{"written": "350km", "readings": ["三百五十公里"]}], "split": "dev"}
 {"id": "zh-CN-0569", "line": 569, "category": "code", "text": "请扫描二维码或输入车牌号京A·12345缴费。", "targets": [{"written": "京A·12345", "readings": ["京A幺二三四五", "京A一二三四五"]}], "split": "dev"}
 {"id": "zh-CN-0570", "line": 570, "category": "unit", "text": "本次飞行时长3h45m。", "targets": [{"written": "3h45m", "readings": ["三小时四十五分钟"]}], "split": "dev"}
-{"id": "zh-CN-0571", "line": 571, "category": "currency", "text": "景区内观光车20元/次。", "targets": [{"written": "20元/次", "readings": ["二十元一次", "每次二十元"]}], "split": "dev"}
+{"id": "zh-CN-0571", "line": 571, "category": "currency", "text": "景区内观光车20元/次。", "targets": [{"written": "20元/次", "readings": ["二十元一次", "每次二十元", "二十元每次"]}], "split": "dev"}
 {"id": "zh-CN-0572", "line": 572, "category": "mixed", "text": "中秋假期9月25日—27日放假调休，9月28日正常上班。", "targets": [{"written": "9月25日—27日", "readings": ["九月二十五日到二十七日"]}, {"written": "9月28日", "readings": ["九月二十八日"]}], "split": "dev"}
 {"id": "zh-CN-0573", "line": 573, "category": "electronic", "text": "预订确认邮件已发送至lvxing_01@example.com。", "targets": [{"written": "lvxing_01@example.com", "readings": ["lvxing下划线零一艾特example点com", "lvxing下划线零一atexample点com"]}], "split": "dev"}
 {"id": "zh-CN-0574", "line": 574, "category": "counter", "text": "请出示2张证件照和1份复印件。", "targets": [{"written": "2张", "readings": ["两张"]}, {"written": "1份", "readings": ["一份"]}], "split": "test"}
@@ -831,7 +831,7 @@
 {"id": "zh-CN-0841", "line": 841, "category": "unit", "text": "屏幕尺寸6.7英寸，单手握持有点吃力。", "targets": [{"written": "6.7英寸", "readings": ["六点七英寸"]}], "split": "test"}
 {"id": "zh-CN-0842", "line": 842, "category": "unit", "text": "村里承包了15亩地种猕猴桃。", "targets": [{"written": "15亩", "readings": ["十五亩"]}], "split": "test"}
 {"id": "zh-CN-0843", "line": 843, "category": "unit", "text": "这台笔记本标配16GB内存，不能自己加。", "targets": [{"written": "16GB", "readings": ["十六GB", "十六G"]}], "split": "dev"}
-{"id": "zh-CN-0844", "line": 844, "category": "unit", "text": "综合油耗6.8L/100km，市区会高一些。", "targets": [{"written": "6.8L/100km", "readings": ["百公里六点八升", "六点八升每百公里"]}], "split": "dev"}
+{"id": "zh-CN-0844", "line": 844, "category": "unit", "text": "综合油耗6.8L/100km，市区会高一些。", "targets": [{"written": "6.8L/100km", "readings": ["百公里六点八升", "六点八升每百公里", "六点八升每一百公里", "六点八升每一百千米"]}], "split": "dev"}
 {"id": "zh-CN-0845", "line": 845, "category": "unit", "text": "电池容量5000mAh，轻度使用两天一充。", "targets": [{"written": "5000mAh", "readings": ["五千毫安时", "五千毫安"]}], "split": "dev"}
 {"id": "zh-CN-0846", "line": 846, "category": "unit", "text": "体检表上身高1.78米，比去年又高了。", "targets": [{"written": "1.78米", "readings": ["一米七八", "一点七八米"]}], "split": "dev"}
 {"id": "zh-CN-0847", "line": 847, "category": "unit", "text": "减肥三个月，体重从78kg降到了62.4kg。", "targets": [{"written": "78kg", "readings": ["七十八公斤", "七十八千克"]}, {"written": "62.4kg", "readings": ["六十二点四公斤", "六十二点四千克"]}], "split": "test"}

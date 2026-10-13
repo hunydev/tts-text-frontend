@@ -67,7 +67,7 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                 ttf_validation_enum(key, "yao|liang|10|100|1000|wan|yi|wanyi|point|minus|"
                                          "below_zero|percent|permille|fraction|range|ratio|year|"
                                          "month|day|oclock|hours|minutes|seconds|plus|subtract|"
-                                         "times|divide|equals|greater|less|power|power_end|"
+                                         "times|multiply|divide|equals|greater|less|power|power_end|"
                                          "square|root|greater_eq|less_eq|not_equal|"
                                          "approx_equal|cube_root|angle|pi|degree|"
                                          "approx_plus|and_fraction|per|ordinal|double|"
@@ -146,7 +146,7 @@ static ttf_status_t engine(const ttf_engine_t *e, ttf_resource_diagnostic_t *d, 
         "d8",       "d9",      "yao",     "liang",    "10",     "100",    "1000",      "wan",
         "yi",       "wanyi",   "point",   "minus",    "below_zero", "percent", "permille",
         "fraction", "range",   "ratio",   "year",     "month",  "day",    "oclock",    "hours",
-        "minutes",  "seconds", "plus",    "subtract", "times",  "divide", "equals",    "greater",
+        "minutes",  "seconds", "plus",    "subtract", "times",  "multiply", "divide", "equals",    "greater",
         "less",     "power",   "power_end", "square", "root", "greater_eq", "less_eq",
         "not_equal", "approx_equal", "cube_root", "angle", "pi", "degree", "approx_plus",
         "and_fraction", "per", "ordinal", "double", "factorial", "triangle"};
