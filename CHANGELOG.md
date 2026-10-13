@@ -2,6 +2,13 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Vietnamese (vi-VN) phase 3, fixing the failure types of held-out v2:
+  - A code cue stays in its clause.
+  - Notations: 1m05, an en dash minus, 35 tr, nm, 4.0, triệu ha.
+  - Policy: an amount over a word reads một (đồng một tháng); a unit over a unit keeps trên.
+  - Results: held-out v3 (258 sentences, opened after the code freeze) scores 95.6% of spans. The
+    new-set scores by phase are 93.2, 97.1 and 95.6, and the misses are scattered. Contract
+    vi_pack3_v76 (11).
 - Vietnamese (vi-VN) phase 2, fixing the failure types of held-out v1:
   - Dates: date ranges and dash dates.
   - Notations: 1m78, P./Q. (phòng, phường, quận), CN, IP addresses, long codes.
