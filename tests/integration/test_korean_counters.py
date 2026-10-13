@@ -54,9 +54,11 @@ def references():
         word = "첫" if number == 1 else native
         rows.append(reference(f"{number}번째", f"{word} 번째", f"{number}번째",
                               "ORDINAL", str(number), "번째", ""))
-    for number, spoken in ((100, "백"), (101, "백일"), (110, "백십"), (120, "백이십"),
+    # 2026-10-14 project-owner decision: a last digit 1-9 after hundreds is native
+    # (101번째 백한 번째, 1001번째 천한 번째). Was: 백일, 천일 (Sino-Korean throughout).
+    for number, spoken in ((100, "백"), (101, "백한"), (110, "백십"), (120, "백이십"),
                            (121, "백이십일"), (200, "이백"), (999, "구백구십구"),
-                           (1000, "천"), (1001, "천일"), (1020, "천이십"),
+                           (1000, "천"), (1001, "천한"), (1020, "천이십"),
                            (2026, "이천이십육"), (10000, "만")):
         rows.append(reference(f"{number}번째", f"{spoken} 번째", f"{number}번째",
                               "ORDINAL", str(number), "번째", ""))
@@ -71,7 +73,7 @@ def references():
     rows.append(reference("3\t번째", "세 번째", "3\t번째", "ORDINAL", "3", "번째", ""))
     for separator in (",", "\u00a0", "\u202f"):
         for text, expected, unit, secondary in (
-            (f"1{separator}001번째", "천일 번째", "번째", ""),
+            (f"1{separator}001번째", "천한 번째", "번째", ""),  # was 천일 (2026-10-14 owner decision)
             (f"제1{separator}001호", "제천일 호", "호", "prefix"),
         ):
             rows.append(reference(text, expected, text, "ORDINAL", "1001", unit, secondary))
