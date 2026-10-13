@@ -526,7 +526,9 @@ static int cue_before(const ttf_engine_t *e, const char *t, size_t p, const char
         const char *bar = strchr(w, '|');
         size_t m = bar ? (size_t)(bar - w) : strlen(w), k;
         for (k = from; k + m <= p; ++k)
-            if (!memcmp(t + k, w, m) && (!k || t[k - 1] == ' ' || t[k - 1] == '(' || t[k - 1] == '\n'))
+            /* a whole word: khuyến mãi is not mã */
+            if (!memcmp(t + k, w, m) && (!k || t[k - 1] == ' ' || t[k - 1] == '(' || t[k - 1] == '\n') &&
+                !letter_at(t, p, k + m))
                 return 1;
         if (!bar)
             break;
@@ -857,7 +859,7 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             unsigned d = (unsigned)atoi(t + q), m;
             /* ngày is said unless a day word, lễ or và comes before */
             int day_said = previous_cue(e, t, p, "day") || previous_cue(e, t, p, "noday") ||
-                           (sep != '/' && cue_before(e, t, p, "daywide", 40));
+                           (sep == '.' && cue_before(e, t, p, "daywide", 40));
             while (m1 < n && digit(t[m1]))
                 ++m1;
             m = (unsigned)atoi(t + m0);
@@ -880,7 +882,9 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                     ((sep == '/' && (previous_cue(e, t, p, "date") || d > m || coordinated(t, p, 0) ||
                                      cue_before(e, t, p, "deadline", 48))) ||
                      (sep != '/' && (previous_cue(e, t, p, "day") || previous_cue(e, t, p, "holiday") ||
-                                     coordinated(t, p, 0) || cue_before(e, t, p, "daywide", 40))))) {
+                                     coordinated(t, p, 0) ||
+                                     /* Ngày Nhà giáo 20.11; a dash pair after Mỗi ngày stays a range */
+                                     (sep == '.' && cue_before(e, t, p, "daywide", 40)))))) {
                     /* 30/4-1/5: a second day-month after a dash */
                     size_t r = sep == '/' ? dash_after(t, n, m1) : 0, r1 = r, r2;
                     while (r && r1 < n && digit(t[r1]))

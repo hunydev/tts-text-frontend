@@ -2,6 +2,12 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Vietnamese (vi-VN) phase 6:
+  - Fixes: $3,500, tr.đ, lúc 22g, d/m after hạn, month/year ranges.
+  - Bug fixes: a cue must be a whole word (khuyến mãi is not mã), and a dash pair after ngày
+    stays a range.
+  - Results: held-out v6 (257 sentences, opened after the code freeze) scores 96.8% of spans. The
+    new-set scores have held near 97% since phase 2. Contract vi_pack6_v79 (9).
 - Vietnamese (vi-VN) phase 5:
   - Fixes: 1tr5, k ranges, dot dates with ngày earlier in the clause, mã nguồn, identifiers
     after số and cổng, µg and kN.
