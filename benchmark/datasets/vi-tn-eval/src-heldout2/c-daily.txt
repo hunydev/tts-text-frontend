@@ -1,0 +1,130 @@
+# Vietnamese TN held-out set 2, part c: daily life, family, shopping, transport, weather, culture, entertainment, local news
+cardinal	Hôm qua cả nhà ăn hết {12|mười hai} cái bánh chưng mẹ gói.
+cardinal	Chung cư nhà tôi có {25|hai mươi [lăm,nhăm]/hai [lăm,nhăm]} tầng nhưng chỉ có {2|hai} thang máy.
+cardinal	Lễ hội hoa năm nay thu hút hơn {150.000|một trăm năm mươi [nghìn,ngàn]/một trăm rưởi [nghìn,ngàn]} lượt khách tham quan.
+cardinal	Ông nội tôi năm nay đã {91|chín mươi mốt} tuổi mà vẫn đạp xe ra chợ mỗi sáng.
+cardinal	Trường tiểu học của cháu có {1 234|một [nghìn,ngàn] hai trăm ba mươi [tư,bốn]} học sinh.
+cardinal	Phường vừa trồng thêm {305|ba trăm [linh,lẻ] năm} cây xanh dọc bờ kè.
+cardinal	Buổi hòa nhạc ngoài trời có khoảng {8000|tám [nghìn,ngàn]} khán giả tham dự.
+cardinal	Bà ngoại có {7|bảy} người con và {23|hai mươi ba} đứa cháu.
+cardinal	Thư viện quận vừa nhận thêm {2.050|hai [nghìn,ngàn] không trăm năm mươi} đầu sách mới.
+cardinal	Tuyến phố đi bộ có {64|sáu mươi [tư,bốn]} gian hàng ẩm thực mở cửa cuối tuần.
+cardinal	Đợt lũ vừa qua làm hơn {1.500|một [nghìn,ngàn] năm trăm/một [nghìn,ngàn] rưởi} hộ dân bị ảnh hưởng.
+cardinal	Đội tình nguyện đã phát {480|bốn trăm tám mươi} suất cơm miễn phí trong tuần.
+cardinal	Ứng dụng giao thông của thành phố đã có {1.200.000|một triệu hai trăm [nghìn,ngàn]/một triệu hai} lượt tải.
+cardinal	Gia đình tôi đã sống ở con hẻm này được {17|mười bảy} năm.
+decimal	Điểm trung bình học kỳ này của con gái tôi là {8,7|tám phẩy bảy}.
+decimal	Bộ phim mới được khán giả chấm {4,5|bốn phẩy năm} trên thang điểm {5|năm}.
+decimal	Tỉ lệ sinh của thành phố hiện chỉ còn {1,39|một phẩy ba mươi chín/một phẩy ba chín} con trên mỗi phụ nữ.
+decimal	Nhà hàng chay đầu phố được đánh giá {4,8|bốn phẩy tám} sao trên ứng dụng giao đồ ăn.
+decimal	Dân số phường hiện đã tăng gấp {1,5|một phẩy năm/một rưỡi} lần so với mười năm trước.
+decimal	Lương của giáo viên mới ra trường được tính theo hệ số {2,34|hai phẩy ba mươi [tư,bốn]/hai phẩy ba [tư,bốn]}.
+decimal	Bé nhà tôi bị cận {1,75|một phẩy bảy mươi [lăm,nhăm]/một phẩy bảy [lăm,nhăm]} độ nên phải đeo kính.
+decimal	Ca sĩ trẻ nhận được {9,25|chín phẩy hai mươi [lăm,nhăm]/chín phẩy hai [lăm,nhăm]} điểm từ ban giám khảo.
+percent	Siêu thị giảm giá {30%|ba mươi phần trăm} cho tất cả mặt hàng rau củ sau {8|tám} giờ tối.
+percent	Độ ẩm không khí ở Hà Nội sáng nay lên tới {95%|chín mươi [lăm,nhăm] phần trăm/chín [lăm,nhăm] phần trăm}.
+percent	Có tới {62,5%|sáu mươi hai phẩy năm phần trăm} người được hỏi cho biết họ đi làm bằng xe máy.
+percent	Giá vé tàu Tết năm nay tăng khoảng {10 %|mười phần trăm} so với năm ngoái.
+percent	Tỉ lệ lấp đầy phòng khách sạn ở Đà Lạt dịp lễ đạt gần {100%|một trăm phần trăm}.
+percent	Chỉ còn khoảng {4%|bốn phần trăm} hộ gia đình trong xã chưa có nước sạch.
+percent	Hóa đơn tiền điện tháng này của nhà tôi tăng {15%|mười lăm phần trăm} vì nắng nóng kéo dài.
+percent	Khả năng có mưa dông vào chiều nay là {70%|bảy mươi phần trăm}.
+negative	Nhiệt độ trên đỉnh Fansipan đêm qua xuống tới {-3°C|âm ba độ (xê)}.
+negative	Ngăn đá tủ lạnh nên để ở mức {-18|âm mười tám} độ để thực phẩm giữ được lâu.
+negative	Sau trận thua đêm qua, đội bóng của tỉnh đang có hiệu số bàn thắng bại {-7|âm bảy}.
+negative	Ví điện tử của tôi đang hiển thị số dư {-25.000đ|âm hai mươi [lăm,nhăm] [nghìn,ngàn] đồng/âm hai [lăm,nhăm] [nghìn,ngàn] đồng}.
+negative	Chỉ số giá tiêu dùng của tỉnh tháng này ghi nhận mức {-0,4%|âm không phẩy bốn phần trăm}.
+negative	Ở Mẫu Sơn có lúc nhiệt độ chỉ còn {-1,5°C|âm một phẩy năm độ (xê)}, băng giá phủ trắng cây cối.
+ordinal	Đây là lần {thứ 3|thứ ba} trong tháng khu phố tôi bị cắt điện.
+ordinal	Liên hoan phim Việt Nam lần {thứ XXIV|thứ hai mươi [tư,bốn]} sẽ khai mạc vào cuối tháng.
+ordinal	Đội văn nghệ của phường giành hạng {1|nhất/một} tại hội diễn cấp quận.
+ordinal	Thằng út là đứa {thứ 4|thứ tư} trong nhà nên được ông bà cưng nhất.
+ordinal	Phố cổ được xếp {thứ 2|thứ hai/thứ nhì} trong danh sách điểm đến hấp dẫn nhất châu Á.
+ordinal	Đây là trận lụt lớn nhất ở địa phương kể từ đầu thế kỷ {XXI|hai mươi mốt}.
+ordinal	Chương trình truyền hình thực tế đã bước sang mùa {thứ 5|thứ năm} với nhiều gương mặt mới.
+ordinal	Bố tôi về đích {thứ 21|thứ hai mươi mốt} trong giải chạy bộ của phường.
+currency	Một bó rau muống ở chợ bây giờ đã lên {15.000|mười lăm [nghìn,ngàn]} đồng.
+currency	Bát phở bò tái ở quán đầu ngõ giá {45.000đ|bốn mươi [lăm,nhăm] [nghìn,ngàn] đồng/bốn [lăm,nhăm] [nghìn,ngàn] (đồng)}.
+currency	Tiền học thêm tiếng Anh của con mỗi tháng là {1,8 triệu|một phẩy tám triệu/một triệu tám/một triệu tám trăm [nghìn,ngàn]} đồng.
+currency	Vé xem phim cuối tuần ở rạp gần nhà là {90k|chín [mươi,chục] [nghìn,ngàn,ca]}.
+currency	Năm nay bố mẹ lì xì cho mỗi cháu {200.000 VNĐ|hai trăm [nghìn,ngàn] [đồng,việt nam đồng]}.
+currency	Giá căn hộ chung cư ở khu này đã vượt {60 triệu đồng/m²|sáu mươi triệu đồng [một,mỗi,trên] mét vuông}.
+currency	Tiền điện nhà tôi tháng trước hết {1.245.000|một triệu hai trăm bốn mươi [lăm,nhăm] [nghìn,ngàn]} đồng.
+currency	Dì tôi đổi {500 USD|năm trăm đô (la) (mỹ)} trước chuyến du lịch Thái Lan.
+currency	Chiếc xe đạp cũ của con được bán lại với giá {2tr|hai triệu}.
+currency	Một vé xem buổi hòa nhạc ở Singapore có giá tới {$248|hai trăm bốn mươi tám đô (la)}.
+currency	Mỗi hộ nghèo được thành phố hỗ trợ {3.000.000 đ|ba triệu đồng} để sửa lại mái nhà.
+currency	Chi phí đám cưới của hai em tính ra khoảng {350 triệu|ba trăm năm mươi triệu/ba trăm rưởi triệu}.
+currency	Giá vàng nhẫn sáng nay ở mức {148,5 triệu|một trăm bốn mươi tám phẩy năm triệu/một trăm bốn mươi tám triệu rưỡi/một trăm bốn mươi tám triệu năm trăm [nghìn,ngàn]} đồng mỗi lượng.
+currency	Bà cụ bán vé số nhặt được chiếc ví có {12.500.000 VND|mười hai triệu năm trăm [nghìn,ngàn] [đồng,việt nam đồng]/mười hai triệu rưởi [đồng,việt nam đồng]} và đã mang nộp công an phường.
+date	Trường của con khai giảng vào ngày {5/9|[mùng,mồng,] năm tháng chín}.
+date	Gia đình tôi về quê ăn giỗ ông vào {12/3|mười hai tháng ba} âm lịch.
+date	Đám cưới của anh họ tôi được tổ chức vào Chủ nhật, {25.10.2026|(ngày) hai mươi [lăm,nhăm] tháng mười năm hai [nghìn,ngàn] không trăm hai mươi sáu}.
+date	Hạn chót nộp hồ sơ xin học bổng là {31-10-2026|(ngày) ba mươi mốt tháng mười năm hai [nghìn,ngàn] không trăm hai mươi sáu}.
+date	Bé Na chào đời ngày {01/12/2025|[mùng,mồng,] một tháng mười hai năm hai [nghìn,ngàn] không trăm hai mươi [lăm,nhăm]}.
+date	Bác Hồ đọc bản Tuyên ngôn Độc lập vào ngày {2|[mùng,mồng,] hai} tháng {9|chín} năm {1945|một [nghìn,ngàn] chín trăm bốn mươi [lăm,nhăm]}.
+date	Bộ phim sẽ ra rạp từ {14/2|(ngày) mười bốn tháng hai}, đúng dịp lễ tình nhân.
+date	Kỳ nghỉ lễ {30/4|ba mươi tháng tư} năm nay kéo dài năm ngày liền.
+date	Tháng {12/2025|mười hai năm hai [nghìn,ngàn] không trăm hai mươi [lăm,nhăm]}, giá xăng giảm ba lần liên tiếp.
+date	Cô giáo dặn cả lớp nộp bài trước thứ Sáu, {16/10|(ngày) mười sáu tháng mười}.
+date	Năm {2024|hai [nghìn,ngàn] không trăm hai mươi [tư,bốn]}, cơn bão Yagi đã gây thiệt hại nặng nề cho các tỉnh phía Bắc.
+date	Rằm tháng {7|bảy} năm ngoái rơi vào ngày {6/9|[mùng,mồng,] sáu tháng chín} dương lịch.
+time	Chuyến xe buýt đầu tiên xuất bến lúc {5h30|năm giờ ba mươi (phút)/năm giờ rưỡi}.
+time	Mẹ tôi luôn dậy lúc {4:50|bốn giờ năm mươi (phút)/năm giờ kém mười} để đồ xôi.
+time	Chương trình thời sự phát sóng lúc {19h|mười chín giờ} hằng ngày.
+time	Siêu thị gần nhà mở cửa đến {22:00|hai mươi hai giờ} kể cả ngày lễ.
+time	Trận chung kết bóng đá nữ bắt đầu lúc {20 giờ 30|hai mươi giờ ba mươi (phút)/hai mươi giờ rưỡi}.
+time	Bố bảo cả nhà ăn cơm lúc {6|sáu} giờ {15|mười lăm} phút chiều.
+time	Pháo hoa đêm giao thừa sẽ bắt đầu bắn đúng {0h|không giờ}.
+time	Tàu từ ga Hà Nội vào Huế khởi hành lúc {21h15'|hai mươi mốt giờ mười lăm (phút)}.
+time	Mỗi sáng tôi đưa con đi học lúc {6g45|sáu giờ bốn mươi [lăm,nhăm] (phút)/sáu giờ bốn [lăm,nhăm]/bảy giờ kém mười lăm}.
+time	Cuộc họp tổ dân phố sẽ bắt đầu lúc {7|bảy} giờ kém {10|mười} tối nay.
+time	Anh trai tôi hoàn thành cự ly chạy bộ bốn mươi hai cây số trong {3:42:15|ba giờ bốn mươi hai phút mười lăm giây/ba tiếng bốn mươi hai phút mười lăm giây}.
+time	Giờ đón trẻ ở trường mầm non là {16h40|mười sáu giờ bốn mươi (phút)}.
+range	Nhiệt độ Hà Nội hôm nay dao động {24-31°C|(từ) hai mươi [tư,bốn] [đến,tới] ba mươi mốt độ (xê)}.
+range	Đơn hàng sẽ được giao trong {3-5|(từ) ba [đến,tới] năm} ngày làm việc.
+range	Phòng khám mở cửa buổi sáng {7h30-11h30|(từ) bảy giờ [ba mươi,ba mươi phút,rưỡi] [đến,tới] mười một giờ [ba mươi,ba mươi phút,rưỡi]}.
+range	Dự báo lượng mưa phổ biến ở các tỉnh miền Trung là {50–100 mm|(từ) năm mươi [đến,tới] một trăm [mi-li-mét,li,ly]}.
+range	Lớp học bơi hè dành cho trẻ {6-10|(từ) sáu [đến,tới] mười} tuổi.
+range	Giá thuê phòng trọ quanh trường đại học khoảng {2,5-3 triệu|hai phẩy năm [đến,tới] ba triệu/hai triệu rưỡi [đến,tới] ba triệu/hai rưỡi [đến,tới] ba triệu} đồng mỗi tháng.
+range	Lễ hội hoa anh đào diễn ra từ ngày {15-20/3|mười lăm [đến,tới] (ngày) hai mươi tháng ba}.
+range	Mỗi ngày tôi cố gắng đi bộ {5.000-7.000|(từ) năm [nghìn,ngàn] [đến,tới] bảy [nghìn,ngàn]/năm [đến,tới] bảy [nghìn,ngàn]} bước.
+range	Năm học {2026-2027|hai [nghìn,ngàn] không trăm hai mươi sáu [đến,tới,] hai [nghìn,ngàn] không trăm hai mươi bảy}, thành phố tuyển thêm ba trăm giáo viên.
+range	Từ nhà tôi đến chợ Bến Thành chỉ mất khoảng {10-15|mười [đến,tới] mười lăm/mươi mười lăm} phút đi xe máy.
+unit	Mẹ mua {2 kg|hai [ki-lô-gam,cân,ký,kí,ki-lô]} thịt ba chỉ để gói bánh.
+unit	Từ nhà tới công ty tôi khoảng {12km|mười hai [ki-lô-mét,cây số,ki-lô,cây]}.
+unit	Căn hộ của vợ chồng tôi rộng {68m2|sáu mươi tám mét vuông}.
+unit	Trận mưa lớn đêm qua ở nội thành đo được {120 mm|một trăm hai mươi [mi-li-mét,li,ly]}.
+unit	Năm nay bé nhà tôi đã cao {1m05|một mét [linh,lẻ] năm/một mét không năm}.
+unit	Mỗi ngày người lớn nên uống ít nhất {1,5 lít|một phẩy năm lít/một lít rưỡi} nước.
+unit	Hộp sữa tươi loại {180ml|một trăm tám mươi [mi-li-lít,mi-li]/một trăm tám [mi-li-lít,mi-li]} đang được bán rất chạy.
+unit	Gia đình bác tôi có {2,3 ha|hai phẩy ba [héc-ta,hécta]} ruộng lúa ở ngoại thành.
+unit	Chị hàng xóm cho nhà tôi {500g|năm trăm [gam,gờ-ram]} nho vừa hái trong vườn.
+unit	Bé sơ sinh nhà hàng xóm nặng {3,2kg|ba phẩy hai [ki-lô-gam,cân,ký,kí,ki-lô]/ba [cân,ký,kí] hai}.
+unit	Tháng này nhà tôi dùng hết {320 kWh|ba trăm hai mươi [ki-lô-oát giờ,số]} điện.
+code	Mọi thắc mắc về hóa đơn tiền nước xin gọi tổng đài {1900 545 588|một chín không không năm bốn năm năm tám tám}.
+code	Số điện thoại của chị chủ nhà là {0912.345.678|không chín một hai ba bốn năm sáu bảy tám}.
+code	Khi phát hiện cháy, người dân hãy gọi ngay số {114|một một bốn/một trăm mười bốn}.
+code	Mã xác nhận đơn hàng của bạn là {739204|bảy ba chín hai không bốn}.
+code	Tôi đã đặt phòng {305|ba không năm/ba trăm [linh,lẻ] năm} ở khách sạn ven biển.
+code	Xe tải mang biển số {30E-456.78|[ba mươi,ba không] e [bốn năm sáu bảy tám,bốn trăm năm mươi sáu bảy mươi tám]} đã bị phạt nguội vì vượt đèn đỏ.
+code	Đoạn Quốc lộ {1A|một a} qua thị xã đang được sửa chữa nên thường xuyên ùn tắc.
+code	Bạn có thể bắt tuyến xe buýt số {09|không chín/chín} để đến bảo tàng.
+latin	Vé xem phim Avatar ở CGV hôm nay đã bán hết sạch từ {9h|chín giờ} sáng.
+latin	Tôi vừa đổi sang iPhone {17|mười bảy} vì máy cũ hay bị sập nguồn.
+latin	Đợt Black Friday này Shopee giảm tới {50%|năm mươi phần trăm} cho đồ gia dụng.
+latin	Gói Netflix cơ bản hiện có giá {108.000đ/tháng|một trăm [linh,lẻ] tám [nghìn,ngàn] đồng [một,mỗi,trên] tháng}.
+latin	Chuyến Grab từ quận {7|bảy} lên sân bay hết khoảng {180k|một trăm tám mươi [nghìn,ngàn,ca]/một trăm tám [nghìn,ngàn,ca]}.
+latin	Video TikTok của cô bé bán bánh mì đã đạt {2,3 triệu|hai phẩy ba triệu/hai triệu ba/hai triệu ba trăm [nghìn,ngàn]} lượt xem.
+mixed	Thứ {7|bảy} này, ngày {17/10|mười bảy tháng mười}, chợ phiên sẽ mở từ {6h|sáu giờ} sáng.
+mixed	Ngày {20/11|hai mươi tháng mười một}, lớp tôi góp mỗi người {50.000đ|năm mươi [nghìn,ngàn] đồng} mua hoa tặng cô.
+mixed	Cơn bão số {3|ba} đổ bộ với sức gió {118 km/h|một trăm mười tám [ki-lô-mét,cây số] [trên,một,mỗi,] giờ}, khiến {12.000|mười hai [nghìn,ngàn]} cây xanh bị gãy đổ.
+mixed	Đường {3/2|ba tháng hai} sẽ cấm xe từ {22h|hai mươi hai giờ} để chuẩn bị cho lễ diễu hành.
+mixed	Hôm nay trời nắng nóng, nhiệt độ cao nhất {38°C|ba mươi tám độ (xê)}, độ ẩm chỉ còn {45%|bốn mươi [lăm,nhăm] phần trăm/bốn [lăm,nhăm] phần trăm}.
+mixed	Gạo tám thơm ở siêu thị đang bán {32.000đ/kg|ba mươi hai [nghìn,ngàn] đồng [một,mỗi,trên] [ki-lô-gam,cân,ký,kí,ki-lô]}, rẻ hơn {10%|mười phần trăm} so với tuần trước.
+mixed	Chuyến bay của bố từ Đà Nẵng hạ cánh lúc {14h20|mười bốn giờ hai mươi (phút)}, chậm {45|bốn mươi [lăm,nhăm]/bốn [lăm,nhăm]} phút so với dự kiến.
+mixed	Năm {2025|hai [nghìn,ngàn] không trăm hai mươi [lăm,nhăm]}, thành phố đón {8,6 triệu|tám phẩy sáu triệu/tám triệu sáu/tám triệu sáu trăm [nghìn,ngàn]} lượt khách quốc tế.
+mixed	Con gái tôi đứng {thứ 2|thứ hai/thứ nhì} toàn khối với {9,6|chín phẩy sáu} điểm trung bình.
+mixed	Nhà văn hóa phường chiếu phim miễn phí vào tối {thứ 6|thứ sáu} hằng tuần, sức chứa {200|hai trăm} chỗ ngồi.
+mixed	Ngày {1/6|[mùng,mồng,] một tháng sáu}, thiếu nhi được vào cửa miễn phí, còn người lớn mua vé {80.000|tám mươi [nghìn,ngàn]/tám chục [nghìn,ngàn]} đồng.
+mixed	Ở chợ hải sản sáng nay, tôm sú loại {30 con/kg|ba mươi con [một,mỗi,trên] [ki-lô-gam,cân,ký,kí,ki-lô]} có giá {350k|ba trăm năm mươi [nghìn,ngàn,ca]/ba trăm rưởi [nghìn,ngàn,ca,]}.

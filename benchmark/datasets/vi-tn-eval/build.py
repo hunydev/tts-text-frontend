@@ -87,7 +87,8 @@ def parse(line, where):
 
 
 SETS = {"eval": ("src", "vi-tn-eval-v1.jsonl", "vi-tn-v1"),
-        "heldout": ("src-heldout", "vi-tn-heldout-v1.jsonl", "vi-tn-h1")}
+        "heldout": ("src-heldout", "vi-tn-heldout-v1.jsonl", "vi-tn-h1"),
+        "heldout2": ("src-heldout2", "vi-tn-heldout-v2.jsonl", "vi-tn-h2")}
 
 
 def main():

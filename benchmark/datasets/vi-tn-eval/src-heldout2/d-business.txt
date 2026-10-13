@@ -1,0 +1,128 @@
+cardinal	Năm nay công ty tuyển thêm {1.250|một [nghìn,ngàn] hai trăm năm mươi} lao động cho nhà máy mới ở Bắc Ninh.
+cardinal	Hợp tác xã đã thu hoạch được {320|ba trăm hai mươi} tấn vải thiều trong vụ này.
+cardinal	Bệnh viện tiếp nhận {47|bốn mươi bảy} ca cấp cứu chỉ trong đêm giao thừa.
+cardinal	Toàn tỉnh hiện có {12.408|mười hai [nghìn,ngàn] bốn trăm [linh,lẻ] tám} doanh nghiệp đang hoạt động.
+cardinal	Hơn {3500|ba [nghìn,ngàn] năm trăm/ba [nghìn,ngàn] rưỡi} hộ dân đã nhận tiền bồi thường giải phóng mặt bằng.
+cardinal	Phiên hôm qua có {1.105|một [nghìn,ngàn] một trăm [linh,lẻ] năm} mã cổ phiếu giảm giá, chỉ {214|hai trăm mười bốn} mã tăng.
+cardinal	Câu lạc bộ Hà Nội thắng Bình Dương {3-1|ba một} trên sân Hàng Đẫy tối qua.
+cardinal	Dự án khu đô thị gồm {2.046|hai [nghìn,ngàn] không trăm bốn mươi sáu} căn hộ và {85|tám mươi [lăm,nhăm]} căn biệt thự.
+cardinal	Cơ sở dữ liệu quốc gia về dân cư đã cập nhật hơn {100 triệu|một trăm triệu} hồ sơ.
+cardinal	Nhóm nghiên cứu đã giải trình tự gen của {1 024|một [nghìn,ngàn] không trăm hai mươi [tư,bốn]} mẫu vi khuẩn.
+decimal	Năng suất lúa vụ đông xuân bình quân đạt {6,8|sáu phẩy tám} tấn mỗi héc ta.
+decimal	Hệ số giá trên thu nhập của nhóm ngân hàng hiện ở mức {8,75|tám phẩy bảy mươi [lăm,nhăm]/tám phẩy bảy [lăm,nhăm]} lần.
+decimal	Bé trai chào đời nặng {3,2|ba phẩy hai} cân, sức khỏe mẹ và con đều ổn định.
+decimal	Điểm chuẩn ngành Y khoa năm nay là {28,15|hai mươi tám phẩy mười lăm/hai mươi tám phẩy một lăm/hai mươi tám phẩy một năm} điểm.
+decimal	Tỷ lệ nợ trên vốn chủ sở hữu của tập đoàn giảm xuống còn {0,6|không phẩy sáu} lần.
+decimal	Theo quy hoạch, hệ số sử dụng đất của khu phức hợp không vượt quá {13,5|mười ba phẩy năm} lần.
+decimal	Trận động đất có cường độ {4,7|bốn phẩy bảy} độ Richter xảy ra tại Kon Tum sáng nay.
+decimal	Tuyển thủ bắn cung đạt trung bình {9,62|chín phẩy sáu mươi hai/chín phẩy sáu hai} điểm mỗi mũi tên.
+decimal	Sai số của phép đo chỉ khoảng {0,003|không phẩy không không ba} so với giá trị lý thuyết.
+percent	Kim ngạch xuất khẩu nông sản tăng {14,2%|mười bốn phẩy hai phần trăm} so với cùng kỳ năm trước.
+percent	Tỷ lệ giải ngân vốn đầu tư công mới đạt {38%|ba mươi tám phần trăm} kế hoạch được giao.
+percent	Lãi suất tiết kiệm kỳ hạn {12|mười hai} tháng tại nhiều ngân hàng đã nhích lên {5,1%/năm|năm phẩy một phần trăm [một,mỗi,trên] năm}.
+percent	Có tới {92 %|chín mươi hai phần trăm} bệnh nhân đáp ứng tốt với phác đồ điều trị mới.
+percent	Tỷ lệ lấp đầy các khu công nghiệp phía Bắc ước đạt {85%|tám mươi [lăm,nhăm] phần trăm}.
+percent	Cổ phiếu này đã tăng kịch trần {6,9%|sáu phẩy chín phần trăm} ngay khi mở cửa phiên sáng.
+percent	Giá thuê văn phòng hạng A tăng khoảng {4%|bốn phần trăm} nhưng tỷ lệ trống vẫn ở mức {11,5%|mười một phẩy năm phần trăm}.
+percent	Độ ẩm trong nhà kính được duy trì ở mức {70%|bảy mươi phần trăm} để cây dưa lưới phát triển tốt.
+percent	Tỷ lệ hồ sơ được giải quyết trực tuyến đạt {67,25%|sáu mươi bảy phẩy hai mươi [lăm,nhăm] phần trăm/sáu mươi bảy phẩy hai [lăm,nhăm] phần trăm}.
+percent	Đội chủ nhà kiểm soát bóng tới {61%|sáu mươi mốt phần trăm} thời lượng trận đấu.
+negative	Nhiệt độ trên đỉnh Fansipan sáng nay xuống tới {-2°C|âm hai độ (xê)}.
+negative	Lợi nhuận quý của hãng hàng không tăng trưởng ở mức {-15,3%|âm mười lăm phẩy ba phần trăm}.
+negative	Dòng tiền thuần từ hoạt động kinh doanh năm ngoái là {-1.250 tỷ|âm một [nghìn,ngàn] hai trăm năm mươi [tỷ,tỉ]} đồng.
+negative	Kho lạnh bảo quản thủy sản phải duy trì nhiệt độ {–18 °C|âm mười tám độ (xê)} liên tục.
+negative	Hiệu số bàn thắng bại của đội khách hiện là {-7|âm bảy/trừ bảy}.
+negative	Một số loại vắc xin phải được bảo quản ở {−70 độ C|âm bảy mươi độ (xê)}.
+negative	Tăng trưởng tín dụng {tháng 1|tháng một/tháng giêng} ở mức {-0,55%|âm không phẩy năm mươi [lăm,nhăm] phần trăm/âm không phẩy năm [lăm,nhăm] phần trăm}.
+negative	Kẽm có thế điện cực chuẩn bằng {-0,76 V|âm không phẩy bảy mươi sáu vôn/âm không phẩy bảy sáu vôn}.
+negative	Trong vật lý, độ không tuyệt đối tương ứng với {-273,15 °C|âm hai trăm bảy mươi ba phẩy mười lăm độ (xê)/âm hai trăm bảy mươi ba phẩy một lăm độ (xê)}.
+negative	Sau phiên bán tháo, tài khoản của nhà đầu tư ghi nhận khoản lỗ {-12,4 triệu|âm mười hai phẩy bốn triệu/âm mười hai triệu bốn trăm [nghìn,ngàn]} đồng.
+ordinal	Việt Nam hiện là nước xuất khẩu gạo đứng {thứ 3|thứ ba} thế giới.
+ordinal	Đây là năm {thứ 4|thứ tư} liên tiếp doanh nghiệp này dẫn đầu thị phần sữa nội địa.
+ordinal	Tại kỳ họp {thứ 8|thứ tám}, Quốc hội khóa {XV|mười lăm} đã thông qua nhiều luật quan trọng về đất đai và đầu tư.
+ordinal	Đội tuyển bóng chuyền nữ xếp {thứ 1|thứ nhất} bảng A sau vòng đấu bảng.
+ordinal	Báo cáo quý {III|ba} cho thấy doanh thu mảng thép đã phục hồi rõ rệt.
+ordinal	Nông nghiệp thế kỷ {XXI|hai mươi mốt} phải dựa vào dữ liệu và công nghệ sinh học.
+ordinal	Bệnh nhân là ca ghép tim {thứ 100|thứ một trăm} được thực hiện thành công tại bệnh viện.
+ordinal	Ở nội dung {400 m|bốn trăm mét} rào nữ, vận động viên chủ nhà về đích {thứ 2|thứ hai/thứ nhì}.
+ordinal	Chương {II|hai} của dự thảo luật quy định về quyền và nghĩa vụ của người sử dụng đất.
+ordinal	Đại hội đại biểu toàn quốc lần thứ {XIV|mười bốn} của Đảng dự kiến diễn ra vào đầu năm tới.
+currency	Giá căn hộ tại dự án dao động quanh {65 triệu đồng/m²|sáu mươi [lăm,nhăm] triệu đồng [một,mỗi,trên] mét vuông}.
+currency	Lương tối thiểu vùng {I|một} tăng lên {4.960.000 đồng/tháng|bốn triệu chín trăm sáu mươi [nghìn,ngàn] đồng [một,mỗi] tháng}.
+currency	Một ký cà phê nhân hiện được thương lái thu mua với giá {120.000đ|một trăm hai mươi [nghìn,ngàn] (đồng)}.
+currency	Vốn điều lệ của công ty là {1.500 tỷ VNĐ|một [nghìn,ngàn] năm trăm [tỷ,tỉ] (việt nam) đồng/một [nghìn,ngàn] rưỡi [tỷ,tỉ] (việt nam) đồng}.
+currency	Thương vụ sáp nhập trị giá {2,3 tỷ USD|hai phẩy ba [tỷ,tỉ] [đô la mỹ,đô la,đô,u ét đê]/hai [tỷ,tỉ] ba (trăm triệu) [đô la mỹ,đô la,đô,u ét đê]} đã hoàn tất.
+currency	Bộ Tài chính đã phát hành thành công {50.000 tỷ đồng|năm mươi [nghìn,ngàn] [tỷ,tỉ] đồng} trái phiếu chính phủ.
+currency	Vé hạng VIP xem trận chung kết được bán với giá {$250|hai trăm năm mươi [đô la mỹ,đô la,đô]}.
+currency	Mỗi liều thuốc điều trị ung thư nhập khẩu có giá khoảng {35 tr|ba mươi [lăm,nhăm] triệu (đồng)}.
+currency	Doanh nghiệp xuất khẩu tôm thu về {€1,2 triệu|một phẩy hai triệu ơ rô/một triệu hai trăm [nghìn,ngàn] ơ rô} từ thị trường châu Âu.
+currency	Lệ phí cấp bản sao trích lục khai sinh là {8.000 VND/bản|tám [nghìn,ngàn] (việt nam) đồng [một,mỗi] bản}.
+date	Phiên đấu giá quyền sử dụng đất sẽ diễn ra vào ngày {15/11/2025|mười lăm tháng mười một năm hai [nghìn,ngàn] (không trăm) hai mươi [lăm,nhăm]}.
+date	Cổ phiếu của công ty sẽ chính thức giao dịch trên sàn từ {03/12|(ngày) [mồng,mùng,] ba tháng mười hai}.
+date	Nghị định có hiệu lực thi hành kể từ ngày {01-7-2025|[mồng,mùng,] một tháng bảy năm hai [nghìn,ngàn] (không trăm) hai mươi [lăm,nhăm]}.
+date	Giải chạy quốc tế Hà Nội diễn ra vào ngày {20|hai mươi} tháng {10|mười} năm {2025|hai [nghìn,ngàn] (không trăm) hai mươi [lăm,nhăm]}.
+date	Tại thời điểm {30/6/2025|ba mươi tháng sáu năm hai [nghìn,ngàn] (không trăm) hai mươi [lăm,nhăm]}, tổng tài sản của ngân hàng đã vượt kế hoạch cả năm.
+date	Bệnh viện bắt đầu triển khai bệnh án điện tử từ {tháng 4/2024|tháng [tư,bốn] năm hai [nghìn,ngàn] (không trăm) hai mươi [tư,bốn]}.
+date	Hội thảo quốc gia về vật liệu bán dẫn khai mạc ngày {10.11.2025|[mồng,mùng,] mười tháng mười một năm hai [nghìn,ngàn] (không trăm) hai mươi [lăm,nhăm]}.
+date	Hạn chót nộp hồ sơ quyết toán thuế thu nhập cá nhân là {ngày 2/5|ngày [mồng,mùng,] hai tháng năm}.
+date	Nhà máy lọc dầu Dung Quất cho ra sản phẩm đầu tiên vào ngày {22/2/2009|hai mươi hai tháng hai năm hai [nghìn,ngàn] (không trăm) [linh,lẻ] chín}.
+date	Trận lượt về của trận chung kết sẽ diễn ra vào Chủ nhật, {23/11|(ngày) hai mươi ba tháng mười một}.
+time	Phiên giao dịch buổi sáng kết thúc lúc {11h30|mười một giờ ba mươi (phút)/mười một giờ rưỡi}.
+time	Bộ phận một cửa tiếp nhận hồ sơ từ {7h30|bảy giờ ba mươi (phút)/bảy giờ rưỡi} đến {17h|mười bảy giờ} các ngày làm việc.
+time	Ca mổ bắt đầu lúc {06:15|sáu giờ mười lăm (phút)} và kết thúc an toàn trước buổi trưa.
+time	Trận chung kết sẽ bắt đầu lúc {19:30|mười chín giờ ba mươi (phút)/mười chín giờ rưỡi} theo giờ Hà Nội.
+time	Chân chạy của đoàn Quân đội cán đích nội dung marathon nam với thành tích {2:28:15|hai [giờ,tiếng] hai mươi tám phút mười lăm (giây)}.
+time	Vụ phóng vệ tinh dự kiến diễn ra vào {0h05|không giờ (không) năm (phút)} rạng sáng thứ Sáu.
+time	Cổng dịch vụ công sẽ tạm dừng hoạt động để nâng cấp từ {23h|hai mươi ba giờ} đêm nay.
+time	Kho bạc ngừng nhận chứng từ thanh toán sau {15g30|mười lăm giờ ba mươi (phút)/mười lăm giờ rưỡi} ngày làm việc cuối năm.
+time	Sự cố mất điện xảy ra lúc {14:07|mười bốn giờ (không) bảy (phút)} khiến dây chuyền sản xuất ngừng hoạt động.
+time	Lô thanh long đầu tiên được đưa lên máy bay lúc {8:45|tám giờ bốn mươi [lăm,nhăm] (phút)/chín giờ kém mười lăm (phút)} sáng để kịp xuất sang Nhật Bản.
+range	Giá lúa tươi tại ruộng ở Đồng Tháp dao động {7.200-7.500 đồng|bảy [nghìn,ngàn] hai trăm [đến,tới] bảy [nghìn,ngàn] năm trăm đồng} mỗi ký.
+range	Các chuyên gia dự báo lãi suất cho vay sẽ giảm thêm {0,5–1%|không phẩy năm [đến,tới] một phần trăm/không phẩy năm phần trăm [đến,tới] một phần trăm}.
+range	Bệnh nhân cần uống thuốc {2-3|hai [đến,tới] ba/hai ba} lần mỗi ngày sau bữa ăn.
+range	Thời gian cấp giấy phép xây dựng được rút ngắn còn {10–15|mười [đến,tới] mười lăm} ngày làm việc.
+range	Trong giai đoạn {2021-2025|hai [nghìn,ngàn] (không trăm) hai mươi mốt [đến,tới] hai [nghìn,ngàn] (không trăm) hai mươi [lăm,nhăm]}, công nghiệp chế biến là động lực tăng trưởng chính.
+range	Giá đất nền khu vực ven đô đang ở mức {25-30 triệu/m2|hai mươi [lăm,nhăm] [đến,tới] ba mươi triệu (đồng) [một,mỗi,trên] mét vuông}.
+range	Nhiệt độ nước lý tưởng để cá tra sinh trưởng là {26–30°C|hai mươi sáu [đến,tới] ba mươi độ (xê)}.
+range	Trong đợt tập trung, các cầu thủ tập luyện {4-5|bốn [đến,tới] năm/bốn năm} tiếng mỗi ngày.
+range	Thời gian hoàn vốn của hệ thống điện mặt trời áp mái ước tính khoảng {5-7|năm [đến,tới] bảy/năm bảy} năm.
+range	Phiên bản mới giúp thời gian tải trang giảm còn {1,5–2 giây|một phẩy năm [đến,tới] hai giây/một giây rưỡi [đến,tới] hai giây/một rưỡi [đến,tới] hai giây}.
+unit	Diện tích gieo trồng lúa vụ hè thu đạt khoảng {1,9 triệu ha|một phẩy chín triệu héc ta/một triệu chín trăm [nghìn,ngàn] héc ta}.
+unit	Tuyến cao tốc mới dài {128 km|một trăm hai mươi tám [ki lô mét,cây số]} giúp rút ngắn thời gian vận chuyển hàng hóa.
+unit	Nhà máy điện gió ngoài khơi có công suất thiết kế {600 MW|sáu trăm mê ga oát}.
+unit	Mỗi viên nang chứa {500 mg|năm trăm mi li gam} hoạt chất paracetamol.
+unit	Căn hộ mẫu có diện tích {72,5 m²|bảy mươi hai phẩy năm mét vuông/bảy mươi hai mét vuông rưỡi}.
+unit	Huyết áp của bệnh nhân đo được là {140/90 mmHg|một trăm bốn mươi trên chín mươi mi li mét thủy ngân}.
+unit	Đoàn tàu cao tốc được thiết kế với vận tốc tối đa {350 km/h|ba trăm năm mươi [ki lô mét trên giờ,ki lô mét một giờ,ki lô mét mỗi giờ,cây số một giờ,cây số giờ]}.
+unit	Lượng mưa đo được tại trạm Đà Lạt là {85,4 mm|tám mươi [lăm,nhăm] phẩy bốn mi li mét/tám mươi [lăm,nhăm] phẩy bốn li}.
+unit	Con chip mới được sản xuất trên tiến trình {3 nm|ba na nô mét} với xung nhịp tối đa {4,2 GHz|bốn phẩy hai [gi ga,ghi ga] héc}.
+code	Người dân có thể gọi đường dây nóng {1900 9095|một chín không không chín không chín năm} để phản ánh về thủ tục hành chính.
+code	Mọi trường hợp cấp cứu xin gọi ngay số {115|một một năm/một một lăm/một trăm mười lăm}.
+code	Người dùng nên cập nhật hệ điều hành lên phiên bản {17.4.1|mười bảy chấm bốn chấm một} để vá lỗ hổng bảo mật.
+code	Nhà máy đã được cấp chứng nhận hệ thống quản lý chất lượng ISO {9001|chín không không một/chín [nghìn,ngàn] không trăm [linh,lẻ] một}.
+code	Quốc lộ {1A|một a} đoạn qua Quảng Ngãi đang được thảm lại mặt đường.
+code	Lô đất ký hiệu {B12|[bê,B] [mười hai,một hai]} thuộc phân khu nhà ở thấp tầng.
+code	Mẫu bệnh phẩm mang mã số {0347|không ba bốn bảy} đã được chuyển sang phòng xét nghiệm sinh học phân tử.
+code	Phòng {305|ba trăm [linh,lẻ] năm/ba không năm} tầng {3|ba} là nơi diễn ra buổi tiếp công dân định kỳ.
+code	Mã số thuế của doanh nghiệp là {0312 456 789|không ba một hai bốn năm sáu bảy tám chín}.
+code	Cách mạng công nghiệp {4.0|bốn chấm không} đặt ra yêu cầu mới về kỹ năng số cho người lao động.
+latin	Samsung đặt mục tiêu xuất xưởng {120 triệu|một trăm hai mươi triệu} điện thoại từ các nhà máy ở Bắc Ninh và Thái Nguyên.
+latin	Chỉ số VN-Index tăng {12,35|mười hai phẩy ba mươi [lăm,nhăm]/mười hai phẩy ba [lăm,nhăm]} điểm, đóng cửa ở mức {1.284,6|một [nghìn,ngàn] hai trăm tám mươi [tư,bốn] phẩy sáu} điểm.
+latin	Apple vừa ra mắt iPhone {17|mười bảy} với giá khởi điểm {799 USD|bảy trăm chín mươi chín [đô la mỹ,đô la,đô,u ét đê]}.
+latin	Startup AI của Việt Nam vừa gọi vốn thành công {15 triệu USD|mười lăm triệu [đô la mỹ,đô la,đô,u ét đê]} ở vòng Series B.
+latin	Nvidia cho biết GPU thế hệ mới xử lý nhanh hơn {2,5 lần|hai phẩy năm lần/hai lần rưỡi} so với thế hệ trước.
+latin	Tiền đạo của Manchester City lập cú đúp, giúp đội nhà thắng {4-0|bốn không} trước Chelsea.
+latin	Ứng dụng VNeID đã có hơn {50 triệu|năm mươi triệu} tài khoản được kích hoạt.
+latin	CEO của FPT cho biết mảng chuyển đổi số tăng trưởng {28%|hai mươi tám phần trăm} trong {9 tháng|chín tháng} đầu năm.
+latin	Pfizer cung cấp {2,4 triệu|hai phẩy bốn triệu/hai triệu bốn trăm [nghìn,ngàn]} liều vắc xin cho chương trình tiêm chủng mở rộng.
+latin	Google dự kiến mở trung tâm dữ liệu công suất {50 MW|năm mươi mê ga oát} tại Hà Nội vào năm {2027|hai [nghìn,ngàn] (không trăm) hai mươi bảy}.
+mixed	Từ {15h|mười lăm giờ} chiều nay, giá xăng RON {95|chín mươi [lăm,nhăm]/chín lăm} tăng lên {21.150 đồng/lít|hai mươi mốt [nghìn,ngàn] một trăm năm mươi đồng [một,mỗi,trên] lít}.
+mixed	Tính đến hết {quý II/2025|quý hai năm hai [nghìn,ngàn] (không trăm) hai mươi [lăm,nhăm]}, dư nợ tín dụng toàn hệ thống tăng {9,9%|chín phẩy chín phần trăm}.
+mixed	Đội tuyển {U23|u hai mươi ba} Việt Nam thắng {2-0|hai không} để giành ngôi đầu bảng với {7|bảy} điểm.
+mixed	Lúc {9h15|chín giờ mười lăm (phút)} ngày {8/10|tám tháng mười}, bệnh viện đã thực hiện thành công ca ghép thận {thứ 1.000|thứ một [nghìn,ngàn]}.
+mixed	Hộ gia đình dùng {350 kWh|ba trăm năm mươi [ki lô oát giờ,số,số điện]} mỗi tháng phải trả khoảng {1,1 triệu đồng|một phẩy một triệu đồng/một triệu một trăm [nghìn,ngàn] đồng} tiền điện.
+mixed	Trận động đất {5,1|năm phẩy một} độ xảy ra lúc {2h47|hai giờ bốn mươi bảy (phút)} sáng, tâm chấn ở độ sâu khoảng {10 km|mười [ki lô mét,cây số]}.
+mixed	Từ {1/1|[mồng,mùng,] một tháng một}, mức giảm trừ gia cảnh tăng lên {15,5 triệu đồng|mười lăm phẩy năm triệu đồng/mười lăm triệu rưỡi (đồng)} mỗi tháng.
+mixed	Nhà máy thép ở Quảng Ngãi sản xuất khoảng {4,5 triệu tấn|bốn phẩy năm triệu tấn/bốn triệu rưỡi tấn} mỗi năm, chiếm {15%|mười lăm phần trăm} thị phần trong nước.
+mixed	Cơn bão số {3|ba} đã làm hư hại {12.500 ha|mười hai [nghìn,ngàn] năm trăm héc ta} lúa, thiệt hại ước tính {2.000 tỷ|hai [nghìn,ngàn] [tỷ,tỉ]} đồng.
+mixed	Mẫu được giữ ở {-196°C|âm một trăm chín mươi sáu độ (xê)} trong {48 giờ|bốn mươi tám giờ} trước khi lấy {0,5 g|không phẩy năm gam} để phân tích.
