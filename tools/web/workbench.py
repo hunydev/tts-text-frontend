@@ -32,6 +32,7 @@ CORPORA = {
     "mixed-lang2-v73": ("한·영·중·일 혼합 문장 2차 검토", "mixed_lang2_v73.jsonl"),
     "vi-pack1-v74": ("베트남어 팩 1단계", "vi_pack1_v74.jsonl"),
     "vi-pack2-v75": ("베트남어 팩 2단계", "vi_pack2_v75.jsonl"),
+    "vi-pack3-v76": ("베트남어 팩 3단계", "vi_pack3_v76.jsonl"),
     "ko-phoneme-v51": ("한국어 발음열 출력 1단계 (구어, 한글)", "ko_phoneme_v51.jsonl"),
     "ja-rest-v50": ("Japanese remaining gaps v50", "ja_rest_v50.jsonl"),
     "ja-gaps78-v49": ("Japanese gaps 7-8 v49", "ja_gaps78_v49.jsonl"),

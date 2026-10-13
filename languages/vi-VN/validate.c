@@ -46,7 +46,7 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                 ttf_validation_enum(key, "hundred|ten|tens|zero_tens|one_after_tens|"
                                          "five_after_tens|four_after_tens|thousand|million|"
                                          "billion|point|minus|percent|to|over|approx|day|month|"
-                                         "year|month4|hour|minute|second|ordinal1|ordinal4|dot|per|weekday|sunday|addr_room|addr_ward|addr_district")) &&
+                                         "year|month4|hour|minute|second|ordinal1|ordinal4|dot|per|per_amount|weekday|sunday|addr_room|addr_ward|addr_district")) &&
                        label(v)
                    ? TTF_OK
                    : ttf_validation_error(d, "number requires a digit or a named word and a reading");
@@ -99,7 +99,7 @@ static ttf_status_t engine(const ttf_engine_t *e, ttf_resource_diagnostic_t *d, 
         "one_after_tens", "five_after_tens", "four_after_tens", "thousand", "million",
         "billion",   "point",    "minus",   "percent", "to",      "over",   "approx",
         "day",       "month",    "year",    "month4", "hour",     "minute", "second",
-        "ordinal1",  "ordinal4", "dot", "per", "weekday", "sunday", "addr_room", "addr_ward", "addr_district"};
+        "ordinal1",  "ordinal4", "dot", "per", "per_amount", "weekday", "sunday", "addr_room", "addr_ward", "addr_district"};
     size_t i;
     (void)userdata;
     if (!ttf_find_pack(e, VI))

@@ -363,8 +363,9 @@ static size_t suffix_at(const ttf_engine_t *e, const char *t, size_t n, size_t p
         for (k = 0; k < 3; ++k) {
             if (only && !strchr(only, "ucs"[k]))
                 continue;
-            /* the scale k only attaches (50k); a spaced k is a word */
-            if (k == 2 && start != p)
+            /* the scale k only attaches (50k); a spaced k is a word; a spaced tr
+               before no word is triệu (35 tr) */
+            if (k == 2 && start != p && strcmp(probe, "tr"))
                 continue;
             if (res(e, kinds[k], probe) && !letter_at(t, n, start + len) &&
                 !(start + len < n && digit(t[start + len]))) {
@@ -403,7 +404,7 @@ static size_t amount_tail(const ttf_engine_t *e, const char *t, size_t n, size_t
             ++k;
         if (k > m && (k < n || (k == n && k - m < mcap))) {
             snprintf(mid, mcap, "%.*s", (int)(k - m), t + m);
-            if (res(e, "vi_scale_word", mid) && (se = suffix_at(e, t, n, k, key, kcap, "c")))
+            if (res(e, "vi_scale_word", mid) && (se = suffix_at(e, t, n, k, key, kcap, "cu")))
                 end = se;
             /* 85,5 triệu: a scale word belongs to the amount, so a unit cut does
                not fall between them (… triệu | đồng/lượng) */
@@ -510,9 +511,15 @@ static int roman(const char *t, size_t n, size_t p, size_t *end) {
 static int cue_before(const ttf_engine_t *e, const char *t, size_t p, const char *cue,
                       size_t window) {
     const char *list = res(e, "vi_cue", cue), *w;
-    size_t from = p > window ? p - window : 0;
+    size_t from = p > window ? p - window : 0, k0;
     if (!list)
         return 0;
+    /* the clause only: 1.105 mã cổ phiếu giảm, chỉ 214 mã tăng */
+    for (k0 = p; k0 > from; --k0)
+        if (strchr(",;.!?\n", t[k0 - 1]) && (k0 == p || t[k0] == ' ' || t[k0] == '\n')) {
+            from = k0;
+            break;
+        }
     for (w = list; *w;) {
         const char *bar = strchr(w, '|');
         size_t m = bar ? (size_t)(bar - w) : strlen(w), k;
@@ -650,7 +657,7 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             prefix_currency = res(e, "vi_currency", sym);
             q += sw;
         }
-    } else if ((t[q] == '-' || !strncmp(t + q, "−", 3)) &&
+    } else if ((t[q] == '-' || !strncmp(t + q, "−", 3) || !strncmp(t + q, "–", 3)) &&
                (!q || t[q - 1] == ' ' || t[q - 1] == '(' || t[q - 1] == '=' || t[q - 1] == ':')) {
         size_t sw = t[q] == '-' ? 1 : 3;
         if (q + sw < n && digit(t[q + sw]))
@@ -851,7 +858,9 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                     letters += alpha(t[back]);
                     ascii &= (unsigned char)t[back] < 0x80;
                 }
-                if (ip || (parts >= 3 && !three(t, n, de + 1)) ||
+                /* 4.0 (công nghiệp 4.0): a dotted .0 label */
+                if (ip || (parts == 2 && y == de + 2 && t[de + 1] == '0') ||
+                    (parts >= 3 && !three(t, n, de + 1)) ||
                     (parts == 2 && !three(t, n, de + 1) && ((ascii && letters) ||
                                                             previous_cue(e, t, p, "version")))) {
                     snprintf(v, sizeof(v), "%.*s", (int)(y - q), t + q);
@@ -1038,7 +1047,12 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         field(v, 1, f1, sizeof(f1));
         TRY(integer(e, b, f0, strlen(f0)));
         TRY(suffix(e, b, "u:m"));
-        TRY(integer(e, b, f1, strlen(f1)));
+        if (f1[0] == '0') {
+            /* 1m05 một mét linh năm */
+            TRY(word(e, b, "zero_tens"));
+            TRY(digit_word(e, b, f1[1]));
+        } else
+            TRY(integer(e, b, f1, strlen(f1)));
     } else if (!strcmp(mode, "addr")) {
         char k2[24];
         field(v, 0, f0, sizeof(f0));
@@ -1130,7 +1144,7 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             TRY(put(b, f3));
         TRY(suffix(e, b, f2));
         if (*f4) {
-            TRY(word(e, b, "per"));
+            TRY(word(e, b, "per_amount"));
             TRY(suffix(e, b, f4 + 1));
         }
     } else if (!strcmp(mode, "num")) {
@@ -1145,7 +1159,8 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             TRY(put(b, f2));
         TRY(suffix(e, b, f0));
         if (*f3) {
-            TRY(word(e, b, "per"));
+            /* 4.960.000 đồng/tháng: đồng một tháng (a unit over a unit keeps trên) */
+            TRY(word(e, b, "per_amount"));
             TRY(suffix(e, b, f3 + 1));
         }
     } else
