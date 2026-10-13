@@ -912,6 +912,18 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                 ++parts;
             }
             ip &= parts == 4;
+            /* 1.250.000.000: groups of three after the first are thousands, not an IP */
+            if (ip) {
+                size_t g = de, all_three = 1;
+                while (g + 1 < y && t[g] == '.') {
+                    size_t h = g + 1;
+                    while (h < y && digit(t[h]))
+                        ++h;
+                    all_three &= h - g - 1 == 3;
+                    g = h;
+                }
+                ip = !all_three;
+            }
             if (!letter_at(t, n, y) && !(y + 1 < n && t[y] == '.' && digit(t[y + 1]))) {
                 size_t back = p, ascii = 1, letters = 0;
                 while (back && t[back - 1] == ' ')

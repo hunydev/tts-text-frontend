@@ -2,6 +2,13 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Vietnamese (vi-VN) phase 5:
+  - Fixes: 1tr5, k ranges, dot dates with ngày earlier in the clause, mã nguồn, identifiers
+    after số and cổng, µg and kN.
+  - Bug fix: a billion amount with dot groups (1.250.000.000 đồng) is no longer read as an IP
+    address.
+  - Results: held-out v5 (256 sentences, opened after the code freeze) scores 97.7% of spans (en/ko
+    requests 97.1%). Contract vi_pack5_v78 (15).
 - Vietnamese (vi-VN) phase 4, category-level work:
   - Science and IT units.
   - Formats: dimensions (nhân), ÷ ranges, ISO and dot dates, holiday date cues.
