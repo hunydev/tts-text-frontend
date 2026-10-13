@@ -1,0 +1,130 @@
+cardinal	Ngân hàng đã lắp đặt thêm {120|một trăm hai[ mươi,]} máy giao dịch tự động tại các khu công nghiệp phía Bắc.
+cardinal	Công ty bảo hiểm đã tiếp nhận {3.456|ba [nghìn,ngàn] bốn trăm năm [mươi sáu,sáu]} hồ sơ bồi thường sau cơn bão số {3|ba}.
+cardinal	Kho trung chuyển ở Bình Dương xử lý khoảng {85.000|tám [mươi lăm,mươi nhăm,lăm] [nghìn,ngàn]} kiện hàng mỗi ngày.
+cardinal	Dự án điện gió ngoài khơi gồm {48|bốn [mươi tám,tám]} tua-bin được lắp dọc bờ biển Trà Vinh.
+cardinal	Công trường hiện có hơn {1 200|một [nghìn,ngàn] hai[ trăm,]} công nhân làm việc theo ba ca.
+cardinal	Trong năm qua, nhà mạng đã lắp mới {2.017|hai [nghìn,ngàn] [không trăm ,]mười bảy} trạm phát sóng ở vùng sâu, vùng xa.
+cardinal	Bộ luật Dân sự hiện hành gồm {689|sáu trăm tám [mươi chín,chín]} điều, được chia thành {27|hai [mươi bảy,bảy]} chương.
+cardinal	Phòng thí nghiệm đã phân tích {306|ba trăm [linh,lẻ] sáu} mẫu nước lấy từ các giếng khoan trong xã.
+cardinal	Đợt kiểm tra sau lũ phát hiện {14|mười [bốn,tư]} cột điện bị nghiêng, cần gia cố ngay.
+cardinal	Tòa văn phòng mới cao {72|bảy [mươi hai,hai]} tầng, với {3|ba} tầng hầm để xe.
+decimal	Tổng tài sản của toàn hệ thống ngân hàng đã vượt {21,5|hai [mươi mốt,mốt] phẩy năm} triệu tỷ đồng.
+decimal	Hệ số rỗng của mẫu đất sét đo được là {0,85|không phẩy tám [mươi lăm,mươi nhăm,lăm,năm]}.
+decimal	Giá cước vận tải biển tuyến châu Âu đã tăng gấp {1,25|một phẩy hai [mươi lăm,mươi nhăm,lăm,năm]} lần so với đầu năm.
+decimal	Mỗi hộ gia đình ở đây chi trung bình {6,7|sáu phẩy bảy} triệu đồng tiền điện mỗi năm.
+decimal	Hệ số sử dụng đất của lô đất này được phê duyệt là {3,2|ba phẩy hai} lần.
+decimal	Ngân hàng áp dụng hệ số rủi ro {1,5|một phẩy năm/một rưỡi} cho các khoản vay kinh doanh bất động sản.
+decimal	Tốc độ tăng thuê bao băng rộng cố định chỉ nhích thêm {0,8|không phẩy tám} điểm phần trăm.
+decimal	Dung dịch chuẩn được pha loãng {2,75|hai phẩy bảy [mươi lăm,mươi nhăm,lăm,năm]} lần trước khi đưa vào máy đo quang phổ.
+decimal	Hệ số công suất của tổ máy số {2|hai} giảm xuống còn {0,92|không phẩy chín [mươi hai,hai]} trong giờ cao điểm.
+decimal	Điểm hài lòng trung bình về chất lượng dịch vụ viễn thông là {4,15|bốn phẩy [mười lăm,một năm]} trên thang năm điểm.
+percent	Lãi suất tiết kiệm kỳ hạn {12|mười hai} tháng vừa được điều chỉnh lên {5,2%|năm phẩy hai phần trăm}.
+percent	Tỷ lệ nợ xấu nội bảng phải được kiểm soát ở mức dưới {3%|ba phần trăm}.
+percent	Phí bảo hiểm sức khỏe năm nay tăng khoảng {8%|tám phần trăm} so với năm trước.
+percent	Gần {70 %|bảy mươi phần trăm} lượng hàng xuất khẩu của vùng được thông quan qua cụm cảng Cái Mép.
+percent	Điện gió và điện mặt trời hiện chiếm khoảng {27%|hai [mươi bảy,bảy] phần trăm} tổng công suất lắp đặt.
+percent	Giá thép xây dựng đã tăng {15,5%|mười lăm phẩy năm phần trăm/mười lăm rưỡi phần trăm} chỉ trong ba tháng.
+percent	Nhà mạng cam kết vùng phủ sóng đạt {99%|chín [mươi chín,chín] phần trăm} dân số vào cuối năm.
+percent	Tiền chậm nộp thuế được tính bằng {0,03%|không phẩy không ba phần trăm} mỗi ngày trên số tiền chậm nộp.
+percent	Bề mặt tủ an toàn sinh học được lau bằng cồn {70%|bảy mươi phần trăm} sau mỗi lần thao tác.
+percent	Bên mua phải thanh toán trước {30%|ba mươi phần trăm} giá trị hợp đồng ngay sau khi ký kết.
+negative	Kho lạnh bảo quản vắc xin luôn được duy trì ở nhiệt độ {-20°C|âm hai mươi độ[ xê,]}.
+negative	Trong quý {III|ba}, công ty bảo hiểm ghi nhận lợi nhuận {-12,5|âm mười hai phẩy năm} tỷ đồng do chi bồi thường tăng mạnh.
+negative	Tăng trưởng tín dụng tháng đầu năm ở mức {-0,6%|âm không phẩy sáu phần trăm} so với cuối năm trước.
+negative	Mẫu huyết tương được lưu trữ dài hạn trong tủ đông {−80 °C|âm tám mươi độ[ xê,]}.
+negative	Chênh lệch tỷ giá trong phiên được ghi nhận là {-35|âm ba [mươi lăm,mươi nhăm,lăm]} đồng mỗi đô la Mỹ.
+negative	Đáy móng tầng hầm thứ hai được thiết kế ở cốt {-4,5 m|âm bốn phẩy năm mét/âm bốn mét rưỡi}.
+negative	Lãi suất tiền gửi của ngân hàng trung ương châu Âu từng duy trì ở mức {-0,5%|âm không phẩy năm phần trăm} trong nhiều năm.
+negative	Nhiệt độ tại công trường ở Sa Pa xuống tới {-2|âm hai} độ nên việc đổ bê tông phải tạm dừng.
+negative	Biên lợi nhuận gộp của mảng điện thoại cố định đã xuống mức {-4%|âm bốn phần trăm}.
+negative	Thế điện cực chuẩn của cặp sắt đo được xấp xỉ {-0,44 V|âm không phẩy bốn [mươi bốn,mươi tư,bốn,tư] vôn}.
+ordinal	Đây là lần thứ {3|ba} trong năm Ngân hàng Nhà nước điều chỉnh lãi suất điều hành.
+ordinal	Hợp đồng bảo hiểm nhân thọ của ông đã bước sang năm thứ {2|hai} mà không phát sinh yêu cầu bồi thường.
+ordinal	Theo khoản {2|hai} Điều {35|ba [mươi lăm,mươi nhăm,lăm]} của luật, người lao động được bảo lưu thời gian đóng bảo hiểm.
+ordinal	Chương {IV|bốn} của nghị định quy định chi tiết về trách nhiệm bồi thường thiệt hại.
+ordinal	Doanh nghiệp giao nhận này xếp thứ {5|năm} về thị phần vận chuyển hàng không trong nước.
+ordinal	Tổ máy thứ {4|tư} của nhà máy thủy điện đã chính thức hòa lưới điện quốc gia.
+ordinal	Nhà thầu đang thi công sàn tầng {15|mười lăm} của khối tháp phía đông.
+ordinal	Doanh thu dịch vụ dữ liệu trong quý {II|hai} tăng mạnh nhờ các gói cước mới.
+ordinal	Thí nghiệm phải lặp lại tới lần thứ {10|mười} mới cho kết quả ổn định.
+ordinal	Kỳ họp thứ {7|bảy} của Quốc hội khóa {XV|mười lăm} đã thông qua luật sửa đổi.
+currency	Phí chuyển khoản liên ngân hàng là {5.500đ|năm [nghìn,ngàn] [năm trăm,rưởi,rưỡi] đồng} cho mỗi giao dịch.
+currency	Quyền lợi tối đa của gói bảo hiểm tai nạn là {200.000.000 VNĐ|hai trăm triệu [đồng,việt nam đồng]}.
+currency	Cước vận chuyển mỗi công-ten-nơ sang bờ Tây nước Mỹ đã lên tới {4.800 USD|bốn [nghìn,ngàn] tám[ trăm,] [đô la mỹ,đô la,đô,u ét đê]}.
+currency	Giá điện sinh hoạt bậc {1|một} hiện là {1.984 đồng/kWh|một [nghìn,ngàn] chín trăm tám [mươi tư,mươi bốn,tư] đồng [một,mỗi,trên] [ki lô oát giờ,số]}.
+currency	Tổng mức đầu tư của dự án cầu vượt sông là {12.500|mười hai [nghìn,ngàn] [năm trăm,rưởi]} tỷ {VND|đồng/việt nam đồng}.
+currency	Khách hàng mở tài khoản qua ứng dụng sẽ được hoàn ngay {50k|năm [mươi,chục] [nghìn,ngàn,ca]}.
+currency	Doanh nghiệp vi phạm quy định về phòng cháy bị phạt {75.000.000đ|bảy [mươi lăm,mươi nhăm,lăm] triệu đồng}.
+currency	Một quỹ đầu tư nước ngoài vừa rót {$200 triệu|hai trăm triệu [đô la mỹ,đô la,đô]} vào các dự án năng lượng tái tạo.
+currency	Thiết bị sắc ký khí khối phổ được nhập về với giá {85.000 €|tám [mươi lăm,mươi nhăm,lăm] [nghìn,ngàn] [ơ rô,ơ-rô,euro]}.
+currency	Mức lương tối thiểu vùng {I|một} hiện nay là {4,96 triệu đồng/tháng|bốn phẩy chín [mươi sáu,sáu] triệu đồng [một,mỗi,trên] tháng}.
+currency	Mức bồi thường tối đa cho mỗi bưu kiện thất lạc là {2.000.000₫|hai triệu đồng}.
+date	Luật Các tổ chức tín dụng sửa đổi có hiệu lực từ ngày {01/7/2024|[mồng ,mùng ,]một tháng bảy năm hai [nghìn,ngàn] [không trăm ,]hai [mươi tư,mươi bốn,tư]}.
+date	Hạn chót đóng phí bảo hiểm kỳ này là ngày {25/11|hai [mươi lăm,mươi nhăm,lăm] tháng mười một}.
+date	Tàu chở than dự kiến cập cảng Hải Phòng ngày {3-3-2025|[mồng ,mùng ,]ba tháng ba năm hai [nghìn,ngàn] [không trăm ,]hai [mươi lăm,mươi nhăm,lăm]}.
+date	Quy chuẩn kỹ thuật về an toàn điện được ban hành ngày {12.8.2023|mười hai tháng tám năm hai [nghìn,ngàn] [không trăm ,]hai [mươi ba,ba]}.
+date	Dự án khu đô thị chính thức khởi công vào tháng {9/2022|chín năm hai [nghìn,ngàn] [không trăm ,]hai [mươi hai,hai]}.
+date	Ngân hàng này được thành lập năm {1995|một [nghìn,ngàn] chín trăm chín [mươi lăm,mươi nhăm,lăm]/một chín chín [lăm,năm]}.
+date	Phiếu kết quả kiểm nghiệm ghi ngày lấy mẫu là {2024-05-14|(ngày )[mười bốn,mười tư] tháng năm năm hai [nghìn,ngàn] [không trăm ,]hai [mươi tư,mươi bốn,tư]}.
+date	Hợp đồng thuê bao cáp quang của công ty hết hạn vào ngày {31/12|ba [mươi mốt,mốt] tháng mười hai}.
+date	Đợt kiểm định công tơ điện định kỳ sẽ diễn ra trong tháng {4|tư}.
+date	Phiên đấu giá đất diễn ra vào thứ Sáu, ngày {10/10/2025|[mồng ,mùng ,]mười tháng mười năm hai [nghìn,ngàn] [không trăm ,]hai [mươi lăm,mươi nhăm,lăm]}.
+date	Biên bản nghiệm thu được ký ngày {5|[mồng ,mùng ,]năm} tháng {6|sáu} năm {2023|hai [nghìn,ngàn] [không trăm ,]hai [mươi ba,ba]}.
+time	Giao dịch chuyển tiền nhanh vẫn được xử lý sau {17h|mười bảy giờ} các ngày lễ.
+time	Quầy giao dịch mở cửa lúc {7:30|bảy giờ [ba mươi,ba mươi phút,rưỡi]} sáng từ thứ Hai đến thứ Bảy.
+time	Hệ thống ngân hàng điện tử sẽ tạm ngừng để bảo trì lúc {23h45|hai mươi ba giờ bốn [mươi lăm,mươi nhăm,lăm][ phút,]/mười hai giờ kém mười lăm}.
+time	Xe tải trên {5|năm} tấn chỉ được vào nội đô sau {21h|hai mươi mốt giờ}.
+time	Ca đổ bê tông sàn bắt đầu lúc {5g30|năm giờ [ba mươi,ba mươi phút,rưỡi]} sáng để tránh nắng nóng.
+time	Mẫu máu được đưa vào máy ly tâm lúc {14:05|mười [bốn,tư] giờ [năm phút,không năm]}.
+time	Phiên tòa xét xử vụ trục lợi bảo hiểm bắt đầu lúc {8 giờ 30|tám giờ [ba mươi,ba mươi phút,rưỡi]}.
+time	Sự cố mất sóng di động xảy ra vào khoảng {0h20|[không,mười hai] giờ hai mươi[ phút,]}.
+time	Hàng xuất khẩu phải được hạ bãi trước {16:00|mười sáu giờ} ngày tàu chạy.
+time	Tổng đài chăm sóc khách hàng hoạt động liên tục đến {22h00|hai mươi hai giờ}.
+range	Lãi suất cho vay mua nhà hiện dao động từ {7-9%|bảy [đến,tới] chín phần trăm/bảy phần trăm [đến,tới] chín phần trăm}.
+range	Đơn hàng nội thành thường được giao trong {2–3|hai [đến,tới] ba/hai ba} ngày.
+range	Khu vực này sẽ bị cắt điện từ {6h-11h30|sáu giờ [đến,tới] mười một giờ [ba mươi,ba mươi phút,rưỡi]} sáng mai.
+range	Quy hoạch điện {VIII|tám} áp dụng cho giai đoạn {2021–2030|hai [nghìn,ngàn] [không trăm ,]hai [mươi mốt,mốt] [đến,tới] hai [nghìn,ngàn] [không trăm ,]ba mươi}.
+range	Hành vi này bị phạt tiền từ {10-20 triệu đồng|mười [đến,tới] hai mươi triệu đồng}.
+range	Bê tông phải được bảo dưỡng ẩm liên tục trong {7÷14|bảy [đến,tới] mười [bốn,tư]} ngày.
+range	Đĩa thạch được ủ ở {35–37°C|ba [mươi lăm,mươi nhăm,lăm] [đến,tới] ba [mươi bảy,bảy] độ[ xê,]} trong hai ngày.
+range	Tốc độ tải xuống trung bình của gói cước đạt {80-120 Mbps|tám mươi [đến,tới] một trăm hai[ mươi,] mê ga bít[ trên giây,]}.
+range	Người từ {18-65|mười tám [đến,tới] sáu [mươi lăm,mươi nhăm,lăm]} tuổi có thể tham gia gói bảo hiểm này.
+range	Hãng chỉ nhận vận chuyển bằng xe tải {1,5-2,5 tấn|một phẩy năm [đến,tới] hai phẩy năm tấn/một tấn rưỡi [đến,tới] hai tấn rưỡi}.
+unit	Tuyến cáp quang biển mới có chiều dài khoảng {10.000 km|mười [nghìn,ngàn] [ki lô mét,cây số]}.
+unit	Mỗi kiện hàng gửi qua bưu điện không được nặng quá {30 kg|ba mươi [ki lô gam,ki lô,cân,ký]}.
+unit	Nhà máy điện mặt trời này có công suất thiết kế {450 MW|bốn trăm [năm mươi,rưởi] mê ga oát}.
+unit	Tòa nhà có tổng diện tích sàn xây dựng {45.000 m²|bốn [mươi lăm,mươi nhăm,lăm] [nghìn,ngàn] mét vuông}.
+unit	Khối lượng bê tông cần đổ cho bè móng là {1.250 m3|một [nghìn,ngàn] hai trăm [năm mươi,rưởi] mét khối}.
+unit	Nồng độ chì trong mẫu nước ngầm là {0,01 mg/L|không phẩy không một mi li gam [trên,một,mỗi] lít}.
+unit	Cốt thép chịu lực phải đạt giới hạn chảy tối thiểu {400 MPa|bốn trăm mê ga [pát xcan,pa xcan,pa]}.
+unit	Gói cước dữ liệu mới cung cấp {4 GB|bốn [gi ga bai,ghi ga bai,gi ga,ghi ga,giê bê,gờ bê]} tốc độ cao mỗi ngày.
+unit	Đường dây {500 kV|năm trăm [ki lô vôn,ca vê,ka vê]} mạch ba đã được đóng điện toàn tuyến.
+unit	Kỹ thuật viên dùng pipet hút đúng {250 µl|hai trăm [năm mươi,rưởi] [mi crô lít,mai crô lít]} dung dịch đệm.
+unit	Băng tần {3,5 GHz|ba phẩy năm [gi ga héc,ghi ga héc]} được cấp phép cho nhà mạng triển khai mạng thế hệ mới.
+code	Mọi thắc mắc về thẻ tín dụng, quý khách vui lòng gọi tổng đài {1900 545 413|một chín không không năm bốn năm bốn một ba}.
+code	Quý khách nhập mã xác thực {836 271|tám ba sáu hai bảy một} để hoàn tất giao dịch.
+code	Số tài khoản nhận tiền là {0071 0004 56789|không không bảy một không không không bốn năm sáu bảy tám chín}.
+code	Mã vận đơn của lô hàng là {8394 2210 576|tám ba chín bốn hai hai một không năm bảy sáu}.
+code	Khi xảy ra sự cố điện, người dân có thể gọi đường dây nóng {19001006|một chín không không một không không sáu}.
+code	Thông tư {39/2016|ba [mươi chín,chín] [trên,năm] hai [nghìn,ngàn] [không trăm ,]mười sáu} của Ngân hàng Nhà nước quy định về hoạt động cho vay.
+code	Mã số thuế của doanh nghiệp được in trên hóa đơn là {0301234567|không ba không một hai ba bốn năm sáu bảy}.
+code	Khi gửi hàng vào Thành phố Hồ Chí Minh, cần ghi mã bưu chính {70000|bảy không không không không}.
+code	Lô hóa chất bị trả lại có số lô {2405-117|hai bốn không năm [gạch ,gạch ngang ,]một một bảy}.
+latin	Khách hàng có thể mở thẻ Visa trực tuyến qua ứng dụng VCB Digibank chỉ trong {5|năm} phút.
+latin	Hãng tàu Maersk tăng phụ phí nhiên liệu thêm {150 USD|một trăm [năm mươi,rưởi] [đô la mỹ,đô la,đô,u ét đê]} cho mỗi container.
+latin	Viettel đã thử nghiệm thành công mạng {5G|năm [gờ,giê,G]} tại một số quận nội thành Hà Nội.
+latin	Samsung dự kiến rót thêm {3,3 tỷ USD|ba phẩy ba tỷ [đô la mỹ,đô la,đô,u ét đê]} vào nhà máy ở Thái Nguyên.
+latin	Phòng xét nghiệm dùng máy real-time PCR với độ nhạy đạt {95%|chín [mươi lăm,mươi nhăm,lăm] phần trăm}.
+latin	Kho LNG Thị Vải có sức chứa ban đầu {1|một} triệu tấn mỗi năm.
+latin	Nhờ eKYC, thời gian mở tài khoản giảm xuống chỉ còn khoảng {3|ba} phút.
+latin	Cảng Lạch Huyện đã đón tàu mẹ có sức chở hơn {12.000|mười hai [nghìn,ngàn]} TEU.
+latin	Ví MoMo hoàn {10%|mười phần trăm} cho mỗi giao dịch thanh toán hóa đơn điện trong tháng này.
+mixed	Ngày {15/8|mười lăm tháng tám}, ngân hàng giải ngân {2,5 tỷ đồng|hai phẩy năm tỷ đồng/hai tỷ [rưởi,rưỡi] đồng}, lãi suất {6,8%/năm|sáu phẩy tám phần trăm [một,mỗi,trên] năm}.
+mixed	Lúc {9h15|chín giờ mười lăm[ phút,]} ngày {20/4|hai mươi tháng tư}, kho trung chuyển đã nhận {320 kg|ba trăm hai[ mươi,] [ki lô gam,ki lô,cân,ký]} hàng mẫu.
+mixed	Từ {1/1/2025|[mồng ,mùng ,]một tháng một năm hai [nghìn,ngàn] [không trăm ,]hai [mươi lăm,mươi nhăm,lăm]}, phí bảo hiểm xe trên {16|mười sáu} chỗ tăng {12%|mười hai phần trăm}.
+mixed	Trạm biến áp {220 kV|hai trăm hai[ mươi,] [ki lô vôn,ca vê,ka vê]} được đóng điện lúc {22h30|hai mươi hai giờ [ba mươi,ba mươi phút,rưỡi]} sau {18|mười tám} tháng thi công.
+mixed	Theo Điều {9|chín}, mức phạt tối đa là {100.000.000đ|một trăm triệu đồng} kèm đình chỉ hoạt động {3–6 tháng|ba [đến,tới] sáu tháng/ba sáu tháng}.
+mixed	Mẫu được bảo quản ở {4°C|bốn độ[ xê,]} và phải phân tích trong vòng {48 giờ|bốn [mươi tám,tám] giờ} sau khi lấy.
+mixed	Gói cước {120.000đ/tháng|một trăm hai[ mươi,] [nghìn,ngàn] đồng [một,mỗi,trên] tháng} cho {6 GB|sáu [gi ga bai,ghi ga bai,gi ga,ghi ga,giê bê,gờ bê]} dữ liệu tốc độ cao mỗi ngày.
+mixed	Xe đầu kéo chở {25 tấn|hai [mươi lăm,mươi nhăm,lăm] tấn} hàng, đi quãng đường {1.700 km|một [nghìn,ngàn] bảy[ trăm,] [ki lô mét,cây số]} hết {36 giờ|ba [mươi sáu,sáu] giờ}.
+mixed	Công trình đạt {85%|tám [mươi lăm,mươi nhăm,lăm] phần trăm} khối lượng, dự kiến bàn giao quý {IV/2026|[bốn,tư] năm hai [nghìn,ngàn] [không trăm ,]hai [mươi sáu,sáu]}.

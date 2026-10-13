@@ -1,0 +1,129 @@
+# heldout3_e: news, education, tourism, food and restaurants, housing, sport and hobbies
+cardinal	Năm nay trường có {1.250|một [nghìn,ngàn] hai trăm năm mươi} thí sinh đăng ký dự thi vào lớp {10|mười}.
+cardinal	Lễ hội ẩm thực đường phố cuối tuần qua thu hút hơn {35000|ba mươi [lăm,nhăm] [nghìn,ngàn]} lượt khách.
+cardinal	Khu chung cư mới gồm {3|ba} tòa tháp với tổng cộng {1 248|một [nghìn,ngàn] hai trăm bốn mươi tám} căn hộ.
+cardinal	Đội tuyển đã ghi được {27|hai mươi bảy} bàn thắng sau {11|mười một} trận đấu ở vòng loại.
+cardinal	Cuốn sách dạy nấu ăn này có hơn {200|hai trăm} công thức món chay dễ làm tại nhà.
+cardinal	Sau khi sắp xếp lại đơn vị hành chính, cả nước còn {34|ba mươi tư/ba mươi bốn} tỉnh, thành phố.
+cardinal	Bộ sưu tập tem của ông đã lên tới {4.500|bốn [nghìn,ngàn] năm trăm/bốn [nghìn,ngàn] rưỡi} con tem từ khắp thế giới.
+cardinal	Mỗi sáng quán phở đầu ngõ bán ra khoảng {300|ba trăm} bát.
+cardinal	Giải chạy marathon năm nay có {12.000|mười hai [nghìn,ngàn]} vận động viên tham gia.
+cardinal	Thư viện tỉnh vừa nhận thêm {1.105|một [nghìn,ngàn] một trăm [linh,lẻ] năm} đầu sách do các nhà hảo tâm quyên góp.
+cardinal	Khách sạn có {86|tám mươi sáu} phòng, trong đó {12|mười hai} phòng nhìn thẳng ra biển.
+decimal	Điểm trung bình môn Toán của cả lớp đạt {7,8|bảy phẩy tám}.
+decimal	Anh ấy chạy cự ly {100|một trăm} mét với thời gian {10,25|mười phẩy hai [mươi lăm,lăm,mươi nhăm]} giây.
+decimal	Một căn hộ hai phòng ngủ ở khu này hiện được rao bán khoảng {2,85|hai phẩy tám [mươi lăm,lăm,mươi nhăm]} tỷ đồng.
+decimal	Nhà hàng được thực khách chấm {4,7|bốn phẩy bảy} trên {5|năm} sao trên ứng dụng đặt bàn.
+decimal	Tiền đạo này có hiệu suất {0,6|không phẩy sáu} bàn mỗi trận trong mùa giải vừa qua.
+decimal	Mỗi năm bà nội tôi gói bánh chưng hết chừng {1,5|một phẩy năm/một rưỡi} cân gạo nếp.
+decimal	Khu du lịch sinh thái nằm cách trung tâm thành phố {12,5|mười hai phẩy năm/mười hai rưỡi} cây số.
+decimal	Điểm chuẩn ngành Y đa khoa năm nay là {28,75|hai mươi tám phẩy bảy [mươi lăm,lăm,mươi nhăm]} điểm.
+decimal	Mức lương cơ sở hiện hành là {2,34|hai phẩy ba [mươi tư,mươi bốn,tư]} triệu đồng một tháng.
+decimal	Sau {3|ba} tháng học bơi, cháu đã giảm được {2,4|hai phẩy bốn} cân.
+percent	Tỷ lệ tốt nghiệp trung học phổ thông năm nay đạt {99,2%|chín mươi chín phẩy hai phần trăm}.
+percent	Giá thuê nhà tại các quận trung tâm tăng khoảng {15%|mười lăm phần trăm} so với cùng kỳ năm ngoái.
+percent	Quán cà phê giảm giá {30%|ba mươi phần trăm} cho học sinh, sinh viên vào sáng thứ {2|hai}.
+percent	Lượng khách quốc tế đến Đà Nẵng trong quý {I|một} tăng {24 %|hai mươi [tư,bốn] phần trăm}.
+percent	Đội chủ nhà kiểm soát bóng tới {68%|sáu mươi tám phần trăm} nhưng vẫn phải nhận thất bại.
+percent	Lãi suất vay mua nhà ở xã hội chỉ còn {6,5%/năm|sáu phẩy năm phần trăm [một,mỗi,trên] năm}.
+percent	Hơn {80%|tám mươi phần trăm} phụ huynh được hỏi ủng hộ việc giảm bớt bài kiểm tra.
+percent	Chuyên gia dinh dưỡng cho biết món này có tới {45%|bốn mươi [lăm,nhăm] phần trăm} năng lượng đến từ chất béo.
+percent	Công suất phòng của các khách sạn ven biển dịp nghỉ lễ đạt {95%|chín mươi [lăm,nhăm] phần trăm}.
+negative	Sáng nay trên đỉnh Fansipan, nhiệt độ xuống {-3°C|âm ba độ (xê)} và xuất hiện băng giá.
+negative	Sau vòng đấu này, đội bóng xếp cuối bảng với hiệu số {-12|âm mười hai/trừ mười hai}.
+negative	Tủ cấp đông của nhà hàng luôn được giữ ở mức {−18 °C|âm mười tám độ (xê)}.
+negative	Lợi nhuận quý vừa rồi của chuỗi khách sạn là {-4,5 tỷ đồng|âm bốn phẩy năm tỷ đồng/âm bốn tỷ rưỡi đồng/âm bốn tỷ năm trăm triệu đồng}.
+negative	Tay golf trẻ kết thúc vòng đấu thứ hai với thành tích {-5|âm năm/trừ năm} gậy.
+negative	Mùa đông ở Cáp Nhĩ Tân, nhiệt độ có thể xuống tới {-30 độ|âm ba mươi độ}.
+negative	Ứng dụng ngân hàng báo số dư thẻ tín dụng là {-250.000 đ|âm hai trăm năm mươi [nghìn,ngàn] đồng}.
+negative	Bờ Biển Chết nằm ở độ cao khoảng {-430 m|âm bốn trăm ba mươi mét} so với mực nước biển.
+ordinal	Đây là lần thứ {3|ba} liên tiếp đội tuyển nữ giành chức vô địch Đông Nam Á.
+ordinal	Em Lan đứng thứ {1|nhất} toàn khối trong kỳ thi học sinh giỏi cấp trường.
+ordinal	Lễ hội pháo hoa quốc tế lần thứ {14|mười bốn} thu hút đông đảo du khách.
+ordinal	Ngôi đền cổ này được xây dựng từ thế kỷ {XV|mười lăm}.
+ordinal	Hội thảo khoa học về văn hóa ẩm thực năm nay là lần thứ {4|tư}.
+ordinal	Tay đua người Việt về đích ở vị trí thứ {2|hai} chung cuộc.
+ordinal	Đại hội Thể thao toàn quốc lần thứ {IX|chín} có hơn ba mươi môn thi đấu.
+ordinal	Vị khách thứ {1.000.000|một triệu} của bảo tàng được tặng vé tham quan trọn đời.
+ordinal	Ngày thứ {7|bảy} của chuyến đi, cả đoàn chinh phục được đỉnh núi.
+ordinal	Giải đua xe đạp toàn quốc lần thứ {21|hai mươi mốt} sẽ xuất phát từ Huế.
+currency	Một bát phở bò ở phố cổ giờ có giá {50.000đ|năm mươi [nghìn,ngàn] đồng}.
+currency	Vé vào cổng khu du lịch là {120.000 VNĐ|một trăm hai mươi [nghìn,ngàn] đồng/một trăm hai mươi [nghìn,ngàn] việt nam đồng} mỗi người.
+currency	Học phí một năm của trường quốc tế lên tới {25.000 USD|hai mươi [lăm,nhăm] [nghìn,ngàn] [đô la mỹ,đô la,đô,u ét đê]}.
+currency	Thuê phòng trọ gần trường đại học bây giờ cũng mất {8tr|tám triệu} mỗi tháng.
+currency	Ly trà sữa trân châu ở đây chỉ {35k|ba [mươi lăm,lăm,mươi nhăm] [nghìn,ngàn,ca]} thôi.
+currency	Vé xem trận chung kết được bán lại với giá {$150|một trăm [năm mươi,rưởi] [đô la,đô,đô la mỹ]}.
+currency	Tour Nhật Bản mùa hoa anh đào có giá trọn gói {32.990.000 đồng|ba mươi hai triệu chín trăm chín mươi [nghìn,ngàn] đồng}.
+currency	Bữa tối ở nhà hàng Pháp hết {€85|tám mươi [lăm,nhăm] [ơ rô,euro]} cho hai người.
+currency	Giá đất nền khu vực này khoảng {45 triệu đồng/m²|bốn mươi [lăm,nhăm] triệu đồng [một,mỗi,trên] mét vuông}.
+currency	Thẻ tập gym ba tháng có giá {1,5 triệu đồng|một phẩy năm triệu đồng/một triệu rưỡi đồng/một triệu năm trăm [nghìn,ngàn] đồng}.
+currency	Giải thưởng dành cho nhà vô địch là {500.000.000₫|năm trăm triệu đồng}.
+currency	Đổi {100 USD|một trăm [đô la mỹ,đô la,đô,u ét đê]} ở sân bay được khoảng {2.600.000 VNĐ|hai triệu sáu trăm [nghìn,ngàn] đồng/hai triệu sáu trăm [nghìn,ngàn] việt nam đồng}.
+date	Năm học mới chính thức khai giảng vào ngày {5/9|năm tháng chín/mồng năm tháng chín/mùng năm tháng chín}.
+date	Lễ hội hoa ban Điện Biên khai mạc tối {12/03/2026|mười hai tháng ba năm hai [nghìn,ngàn] không trăm hai mươi sáu}.
+date	Hà Nội, ngày {24-10-2026|hai mươi [tư,bốn] tháng mười năm hai [nghìn,ngàn] không trăm hai mươi sáu}.
+date	Dịp Quốc khánh {2/9|hai tháng chín/mồng hai tháng chín/mùng hai tháng chín} năm nay, nhiều khu nghỉ dưỡng đã kín phòng.
+date	Hạn chót nộp hồ sơ xét tuyển là ngày {30.6|ba mươi tháng sáu}.
+date	Chủ đầu tư dự kiến bàn giao nhà vào {tháng 12/2027|tháng mười hai năm hai [nghìn,ngàn] không trăm hai mươi bảy}.
+date	Ngày {01/10|mồng một tháng mười/mùng một tháng mười/một tháng mười}, nhiều trường tổ chức hội khỏe Phù Đổng.
+date	Trận derby thủ đô được dời sang ngày {14/4|mười bốn tháng tư}.
+date	Chiến dịch Hồ Chí Minh toàn thắng ngày {30 tháng 4 năm 1975|ba mươi tháng tư năm một [nghìn,ngàn] chín trăm bảy mươi [lăm,nhăm]}.
+date	Thời hạn đăng ký dự thi: {15/11/2026|ngày mười lăm tháng mười một năm hai [nghìn,ngàn] không trăm hai mươi sáu/mười lăm tháng mười một năm hai [nghìn,ngàn] không trăm hai mươi sáu}.
+date	Năm {2026|hai [nghìn,ngàn] không trăm hai mươi sáu}, ngành du lịch đặt mục tiêu đón {25|hai mươi [lăm,nhăm]} triệu lượt khách quốc tế.
+date	Lễ hội chùa Hương khai hội vào ngày {6 tháng Giêng|mồng sáu tháng giêng/mùng sáu tháng giêng/sáu tháng giêng}.
+time	Bản tin thời sự được phát sóng lúc {19h|mười chín giờ} hằng ngày.
+time	Nhà hàng bắt đầu phục vụ bữa trưa lúc {10:30|mười giờ ba mươi (phút)/mười giờ rưỡi}.
+time	Trận đấu sẽ bắt đầu lúc {20h45|hai mươi giờ bốn [mươi lăm,lăm,mươi nhăm] (phút)} tối nay.
+time	Xe sẽ đón khách tại sảnh khách sạn lúc {5 giờ 15|năm giờ mười lăm (phút)} sáng.
+time	Thư viện trường đóng cửa lúc {21g00|hai mươi mốt giờ}.
+time	Nhà vô địch hoàn thành đường chạy với thời gian {2:08:35|hai [giờ,tiếng] tám phút ba mươi [lăm,nhăm] giây}.
+time	Chuyến bay đi Côn Đảo cất cánh lúc {06:50|sáu giờ năm mươi (phút)/bảy giờ kém mười}.
+time	Thí sinh phải có mặt tại phòng thi trước {7h15'|bảy giờ mười lăm (phút)}.
+time	Phiên chợ đêm cuối tuần kéo dài đến {0h|không giờ/mười hai giờ đêm}.
+time	Giờ nhận phòng tại khu nghỉ dưỡng là {14:00|mười bốn giờ}.
+time	Lớp vẽ màu nước diễn ra vào {9h30|chín giờ ba mươi (phút)/chín giờ rưỡi} sáng Chủ nhật.
+range	Mỗi lớp năng khiếu chỉ nhận {15-20|mười lăm [đến,tới] hai mươi} học viên.
+range	Nhiệt độ ở Sa Pa hôm nay dao động {12–18°C|mười hai [đến,tới] mười tám độ (xê)}.
+range	Quán mở cửa {6h-22h|sáu giờ [đến,tới] hai mươi hai giờ} tất cả các ngày trong tuần.
+range	Kế hoạch năm học {2026-2027|hai [nghìn,ngàn] không trăm hai mươi sáu [đến,tới,] hai [nghìn,ngàn] không trăm hai mươi bảy} đã được công bố.
+range	Cuộc thi vẽ tranh dành cho các em từ {6–12 tuổi|sáu [đến,tới] mười hai tuổi}.
+range	Phố đi bộ tổ chức chợ Giáng sinh từ {20-25/12|hai mươi [đến,tới] hai mươi [lăm,nhăm] tháng mười hai}.
+range	Đi xe khách từ Hà Nội lên Hà Giang mất khoảng {5-6 tiếng|năm [đến,tới] sáu tiếng/năm sáu tiếng}.
+range	Các căn hộ trong dự án có diện tích {45–90m2|bốn mươi [lăm,nhăm] [đến,tới] chín mươi mét vuông}.
+range	Mỗi buổi tập yoga kéo dài {60-90 phút|sáu mươi [đến,tới] chín mươi phút}.
+range	Một suất buffet hải sản có giá {399.000–599.000đ|ba trăm chín mươi chín [nghìn,ngàn] [đến,tới] năm trăm chín mươi chín [nghìn,ngàn] đồng}.
+unit	Quãng đường từ Hà Nội lên Sa Pa dài khoảng {320 km|ba trăm hai mươi [ki lô mét,cây số]}.
+unit	Căn hộ ở tầng cao có diện tích {68m²|sáu mươi tám mét vuông}.
+unit	Công thức làm bánh bông lan cần {250 g|hai trăm năm mươi [gam,gờ ram]} bột mì và {3|ba} quả trứng.
+unit	Mỗi ngày người lớn nên uống khoảng {1,5L|một phẩy năm lít/một lít rưỡi} nước.
+unit	Bão gây gió giật cấp {8|tám}, tốc độ khoảng {75 km/h|bảy mươi [lăm,nhăm] [ki lô mét,cây số] [trên,một,mỗi] giờ}.
+unit	Võ sĩ này thi đấu ở hạng cân {72kg|bảy mươi hai [ki lô gam,ki lô,cân,ký,ký lô]}.
+unit	Khu nghỉ dưỡng ven biển rộng {30 ha|ba mươi héc ta}.
+unit	Lượng mưa đo được tại Huế trong đêm qua là {350 mm|ba trăm năm mươi [mi li mét,li]}.
+unit	Một ly cà phê sữa đá chứa khoảng {200 ml|hai trăm [mi li lít,mi li]}.
+unit	Bể bơi của khu chung cư dài {25m|hai mươi [lăm,nhăm] mét}.
+unit	Một suất bún chả đầy đủ cung cấp khoảng {600 kcal|sáu trăm [ki lô ca lo,ca lo]}.
+unit	Bức tranh sơn dầu khổ {60x90 cm|sáu mươi nhân chín mươi [xen ti mét,xăng ti mét,phân]} được bán đấu giá thành công.
+code	Mọi thắc mắc về tuyển sinh xin gọi đường dây nóng {1900 6868|một chín không không sáu tám sáu tám}.
+code	Quý khách đặt bàn vui lòng liên hệ số {0912.345.678|không chín một hai ba bốn năm sáu bảy tám}.
+code	Đoàn khách men theo {QL1A|quốc lộ một a} để vào miền Trung.
+code	Thí sinh có số báo danh {01025|không một không hai năm} cần bổ sung ảnh thẻ.
+code	Lớp học thêm tiếng Nhật chuyển sang phòng {A305|a [ba không năm,ba trăm linh năm,ba trăm lẻ năm]}.
+code	Mã bưu chính của khu vực này là {11000|một một không không không}.
+code	Để tham gia bình chọn, bạn đọc soạn tin theo cú pháp rồi gửi tới {8085|tám không tám năm}.
+latin	Trận chung kết Champions League sẽ được tường thuật trực tiếp lúc {2h|hai giờ} sáng Chủ nhật.
+latin	Nhà hàng nhỏ ở phố cổ vừa được Michelin Guide trao {1|một} sao.
+latin	Ứng dụng Grab ghi nhận hơn {5.000|năm [nghìn,ngàn]} đơn đặt đồ ăn trong giờ cao điểm.
+latin	Sinh viên cần đạt IELTS {6.5|sáu chấm năm/sáu phẩy năm/sáu rưỡi} để được miễn học tiếng Anh.
+latin	Bộ phim tài liệu mới trên Netflix nhận được {92%|chín mươi hai phần trăm} đánh giá tích cực.
+latin	Căn hộ studio ở Vinhomes Ocean Park có giá thuê khoảng {7 triệu|bảy triệu} đồng mỗi tháng.
+latin	Mẫu iPhone mới được đặt trước hơn {10.000|mười [nghìn,ngàn]} máy chỉ sau {24 giờ|hai mươi [tư,bốn] giờ}.
+latin	Cự ly full marathon là {42,195 km|bốn mươi hai phẩy một trăm chín mươi [lăm,nhăm] [ki lô mét,cây số]/bốn mươi hai phẩy một chín năm [ki lô mét,cây số]}.
+mixed	Hội chợ du lịch mở cửa từ {9h|chín giờ} ngày {10/4|mười tháng tư}, vé vào cửa {20.000đ|hai mươi [nghìn,ngàn] đồng}.
+mixed	Lớp nấu ăn khai giảng ngày {3/11|mồng ba tháng mười một/mùng ba tháng mười một/ba tháng mười một}, học phí {2.400.000 đồng|hai triệu bốn trăm [nghìn,ngàn] đồng} cho {8|tám} buổi.
+mixed	Tối {15/1|mười lăm tháng một}, đội tuyển {U23|u hai mươi ba/u hai ba} Việt Nam thắng {2-0|hai không} trên sân nhà.
+mixed	Căn nhà {3|ba} tầng, diện tích {52 m2|năm mươi hai mét vuông}, được rao bán với giá {6,8 tỷ|sáu phẩy tám tỷ/sáu tỷ tám/sáu tỷ tám trăm triệu}.
+mixed	Trời nắng {38°C|ba mươi tám độ (xê)}, độ ẩm {75%|bảy mươi [lăm,nhăm] phần trăm} nên các trận đấu được lùi sang {17h|mười bảy giờ}.
+mixed	Từ ngày {1/7|mồng một tháng bảy/mùng một tháng bảy/một tháng bảy}, giá vé xe buýt tăng lên {9.000 đồng|chín [nghìn,ngàn] đồng} mỗi lượt.
+mixed	Tour Phú Quốc {4N3Đ|bốn ngày ba đêm} chỉ {3.990.000đ|ba triệu chín trăm chín mươi [nghìn,ngàn] đồng}, khởi hành thứ {6|sáu} hằng tuần.
+mixed	Cô giáo dặn cả lớp đọc trang {45-52|bốn mươi [lăm,nhăm] [đến,tới] năm mươi hai} và làm bài tập số {3|ba} trước thứ {5|năm}.
