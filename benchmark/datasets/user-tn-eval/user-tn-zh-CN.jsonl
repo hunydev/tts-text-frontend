@@ -1,0 +1,1000 @@
+{"id": "zh-CN-0003", "line": 3, "category": "date", "text": "据新华社消息，2026年10月12日，国务院常务会议在北京召开。", "targets": [{"written": "2026年10月12日", "readings": ["二零二六年十月十二日"]}], "split": "dev"}
+{"id": "zh-CN-0004", "line": 4, "category": "percent", "text": "国家统计局今天公布的数据显示，前三季度国内生产总值同比增长5.2%。", "targets": [{"written": "5.2%", "readings": ["百分之五点二"]}], "split": "dev"}
+{"id": "zh-CN-0005", "line": 5, "category": "cardinal", "text": "人力资源社会保障部通报，今年前三季度全国城镇新增就业1,049万人。", "targets": [{"written": "1,049万人", "readings": ["一千零四十九万人"]}], "split": "dev"}
+{"id": "zh-CN-0006", "line": 6, "category": "currency", "text": "本报讯，该市前九个月一般公共预算收入完成843.6亿元。", "targets": [{"written": "843.6亿元", "readings": ["八百四十三点六亿元"]}], "split": "dev"}
+{"id": "zh-CN-0007", "line": 7, "category": "time", "text": "央视新闻：今天18:00，国新办将举行新闻发布会，介绍前三季度经济运行情况。", "targets": [{"written": "18:00", "readings": ["十八点整", "十八点"]}], "split": "test"}
+{"id": "zh-CN-0008", "line": 8, "category": "range", "text": "气象台消息，受冷空气影响，明天北方多地气温将下降6到8℃。", "targets": [{"written": "6到8℃", "readings": ["六到八摄氏度"]}], "split": "dev"}
+{"id": "zh-CN-0009", "line": 9, "category": "sign", "text": "哈尔滨今晨最低气温跌至-12℃，为入冬以来最冷的一天。", "targets": [{"written": "-12℃", "readings": ["零下十二摄氏度", "零下十二度"]}], "split": "test"}
+{"id": "zh-CN-0010", "line": 10, "category": "counter", "text": "本届进博会吸引了3,200多家企业参展，规模创历史新高。", "targets": [{"written": "3,200多家", "readings": ["三千二百多家", "三千两百多家"]}], "split": "dev"}
+{"id": "zh-CN-0011", "line": 11, "category": "ordinal", "text": "第15届全国运动会将于明年在粤港澳三地联合举办。", "targets": [{"written": "第15届", "readings": ["第十五届"]}], "split": "dev"}
+{"id": "zh-CN-0012", "line": 12, "category": "decimal", "text": "上证指数今日收报3412.57点，成交额较昨日略有放大。", "targets": [{"written": "3412.57点", "readings": ["三千四百一十二点五七点"]}], "split": "dev"}
+{"id": "zh-CN-0013", "line": 13, "category": "fraction", "text": "一项针对育龄家庭的调查显示，2/3的受访者支持延长陪产假。", "targets": [{"written": "2/3", "readings": ["三分之二"]}], "split": "test"}
+{"id": "zh-CN-0014", "line": 14, "category": "range", "text": "中央气象台预计，本周末华北平原将有3至5级偏北风。", "targets": [{"written": "3至5级", "readings": ["三至五级"]}], "split": "test"}
+{"id": "zh-CN-0015", "line": 15, "category": "phone", "text": "市民如发现违规排污，可拨打12369环保举报热线。", "targets": [{"written": "12369", "readings": ["幺二三六九", "一二三六九"]}], "split": "dev"}
+{"id": "zh-CN-0016", "line": 16, "category": "code", "text": "记者从铁路部门获悉，G1234次列车因设备故障晚点，目前已恢复正常运行。", "targets": [{"written": "G1234次", "readings": ["G幺二三四次", "G一二三四次"]}], "split": "dev"}
+{"id": "zh-CN-0017", "line": 17, "category": "alnum", "text": "工信部表示，5G基站建设进度超出年初预期。", "targets": [{"written": "5G", "readings": ["五G"]}], "split": "test"}
+{"id": "zh-CN-0018", "line": 18, "category": "math", "text": "主持人现场演示了一道题：12×15=180，答对的小朋友获得了奖品。", "targets": [{"written": "12×15=180", "readings": ["十二乘以十五等于一百八十"]}], "split": "test"}
+{"id": "zh-CN-0019", "line": 19, "category": "electronic", "text": "更多细节可登录12306.cn查询，或关注@中国铁路官方微博。", "targets": [{"written": "12306.cn", "readings": ["幺二三零六点cn", "一二三零六点cn"]}, {"written": "@中国铁路", "readings": ["艾特中国铁路"]}], "split": "dev"}
+{"id": "zh-CN-0020", "line": 20, "category": "mixed", "text": "10月1日至10月7日国庆假期，全国国内出游7.65亿人次。", "targets": [{"written": "10月1日", "readings": ["十月一日"]}, {"written": "10月7日", "readings": ["十月七日"]}, {"written": "7.65亿人次", "readings": ["七点六五亿人次"]}], "split": "test"}
+{"id": "zh-CN-0021", "line": 21, "category": "sign", "text": "昨日决赛，中国女排以3:1击败对手，时隔四年再次夺冠。", "targets": [{"written": "3:1", "readings": ["三比一"]}], "split": "dev"}
+{"id": "zh-CN-0022", "line": 22, "category": "unit", "text": "今年我国粮食总产量有望再次站上1.4万亿斤台阶。", "targets": [{"written": "1.4万亿斤", "readings": ["一点四万亿斤"]}], "split": "dev"}
+{"id": "zh-CN-0023", "line": 23, "category": "percent", "text": "据海关统计，前三季度我国货物贸易进出口总值增长４．５％。", "targets": [{"written": "４．５％", "readings": ["百分之四点五"]}], "split": "dev"}
+{"id": "zh-CN-0024", "line": 24, "category": "date", "text": "财政部10月9日发布通知，提前下达明年部分新增地方政府债务限额。", "targets": [{"written": "10月9日", "readings": ["十月九日"]}], "split": "test"}
+{"id": "zh-CN-0025", "line": 25, "category": "time", "text": "字幕：本台将于今晚20:30播出专题片《山河回响》。", "targets": [{"written": "20:30", "readings": ["二十点三十分", "二十点半", "八点三十分", "八点半"]}], "split": "dev"}
+{"id": "zh-CN-0026", "line": 26, "category": "cardinal", "text": "据统计，今年国庆档电影观影人次达6,500万。", "targets": [{"written": "6,500万", "readings": ["六千五百万"]}], "split": "dev"}
+{"id": "zh-CN-0027", "line": 27, "category": "counter", "text": "这家工厂今年已向海外交付126台盾构机。", "targets": [{"written": "126台", "readings": ["一百二十六台"]}], "split": "test"}
+{"id": "zh-CN-0028", "line": 28, "category": "currency", "text": "央行今日开展2,000亿元逆回购操作，净投放流动性。", "targets": [{"written": "2,000亿元", "readings": ["两千亿元", "二千亿元"]}], "split": "test"}
+{"id": "zh-CN-0029", "line": 29, "category": "decimal", "text": "今日人民币对美元汇率中间价报7.0863，连续第三日走强。", "targets": [{"written": "7.0863", "readings": ["七点零八六三"]}], "split": "dev"}
+{"id": "zh-CN-0030", "line": 30, "category": "ordinal", "text": "第３０届北京国际图书博览会今天在国家会展中心开幕。", "targets": [{"written": "第３０届", "readings": ["第三十届"]}], "split": "dev"}
+{"id": "zh-CN-0031", "line": 31, "category": "unit", "text": "这条新建铁路全长287公里，设计时速350公里。", "targets": [{"written": "287公里", "readings": ["二百八十七公里", "两百八十七公里"]}, {"written": "350公里", "readings": ["三百五十公里"]}], "split": "dev"}
+{"id": "zh-CN-0032", "line": 32, "category": "date", "text": "本台消息，2026-10-13，中欧班列累计开行突破十万列。", "targets": [{"written": "2026-10-13", "readings": ["二零二六年十月十三日"]}], "split": "test"}
+{"id": "zh-CN-0033", "line": 33, "category": "percent", "text": "民调显示，68％的受访者认为当前就业形势\"比较严峻\"。", "targets": [{"written": "68％", "readings": ["百分之六十八"]}], "split": "dev"}
+{"id": "zh-CN-0034", "line": 34, "category": "range", "text": "专家提醒，老年人每天应保证7到8小时睡眠。", "targets": [{"written": "7到8小时", "readings": ["七到八小时"]}], "split": "test"}
+{"id": "zh-CN-0035", "line": 35, "category": "fraction", "text": "报告指出，全球近1/4的土地正面临不同程度的退化。", "targets": [{"written": "1/4", "readings": ["四分之一"]}], "split": "dev"}
+{"id": "zh-CN-0036", "line": 36, "category": "phone", "text": "字幕：观众热线010-6500-1234，欢迎来电参与讨论。", "targets": [{"written": "010-6500-1234", "readings": ["零幺零六五零零幺二三四", "零幺零六五零零一二三四", "零一零六五零零幺二三四", "零一零六五零零一二三四"]}], "split": "dev"}
+{"id": "zh-CN-0037", "line": 37, "category": "code", "text": "国家药监局通报，批号为20250418的该批次药品已全部召回。", "targets": [{"written": "20250418", "readings": ["二零二五零四幺八", "二零二五零四一八"]}], "split": "test"}
+{"id": "zh-CN-0038", "line": 38, "category": "alnum", "text": "国产C919大型客机今日执飞新航线。", "targets": [{"written": "C919", "readings": ["C九幺九", "C九一九"]}], "split": "dev"}
+{"id": "zh-CN-0039", "line": 39, "category": "math", "text": "理财节目提示：按复利计算，1.03^10≈1.34，十年后本金将增值三成多。", "targets": [{"written": "1.03^10≈1.34", "readings": ["一点零三的十次方约等于一点三四"]}], "split": "dev"}
+{"id": "zh-CN-0040", "line": 40, "category": "electronic", "text": "节目组邮箱xinwen2026@cctv.com，欢迎来信。", "targets": [{"written": "xinwen2026@cctv.com", "readings": ["xinwen二零二六艾特cctv点com"]}], "split": "dev"}
+{"id": "zh-CN-0041", "line": 41, "category": "mixed", "text": "受台风影响，10月14日08:00前，琼州海峡全线停航。", "targets": [{"written": "10月14日", "readings": ["十月十四日"]}, {"written": "08:00", "readings": ["八点整", "八点"]}], "split": "dev"}
+{"id": "zh-CN-0042", "line": 42, "category": "cardinal", "text": "本次人口抽样调查覆盖1,100多万人。", "targets": [{"written": "1,100多万", "readings": ["一千一百多万"]}], "split": "test"}
+{"id": "zh-CN-0043", "line": 43, "category": "counter", "text": "全省23个县区被纳入首批试点。", "targets": [{"written": "23个", "readings": ["二十三个"]}], "split": "test"}
+{"id": "zh-CN-0044", "line": 44, "category": "currency", "text": "据外媒报道，这笔收购交易作价$35亿。", "targets": [{"written": "$35亿", "readings": ["三十五亿美元"]}], "split": "dev"}
+{"id": "zh-CN-0045", "line": 45, "category": "decimal", "text": "经初步核定，这次地震震级为6.3级，暂无人员伤亡报告。", "targets": [{"written": "6.3级", "readings": ["六点三级"]}], "split": "test"}
+{"id": "zh-CN-0046", "line": 46, "category": "time", "text": "字幕：14:35，救援队抵达震中。", "targets": [{"written": "14:35", "readings": ["十四点三十五分", "十四点三十五"]}], "split": "dev"}
+{"id": "zh-CN-0047", "line": 47, "category": "unit", "text": "这座跨海大桥主跨达1,666米，刷新同类桥梁世界纪录。", "targets": [{"written": "1,666米", "readings": ["一千六百六十六米"]}], "split": "test"}
+{"id": "zh-CN-0048", "line": 48, "category": "sign", "text": "体育快讯：山东队主场0:0战平上海队，两队均未能取得联赛首胜。", "targets": [{"written": "0:0", "readings": ["零比零"]}], "split": "dev"}
+{"id": "zh-CN-0049", "line": 49, "category": "ordinal", "text": "这是该品牌连续第5年蝉联国内销量冠军。", "targets": [{"written": "第5年", "readings": ["第五年"]}], "split": "test"}
+{"id": "zh-CN-0050", "line": 50, "category": "date", "text": "字幕：10.13，北京，雾霾黄色预警。", "targets": [{"written": "10.13", "readings": ["十月十三日", "十月十三"]}], "split": "dev"}
+{"id": "zh-CN-0051", "line": 51, "category": "percent", "text": "报告显示，今年我国新能源汽车销量占比有望超过50%。", "targets": [{"written": "50%", "readings": ["百分之五十"]}], "split": "dev"}
+{"id": "zh-CN-0052", "line": 52, "category": "range", "text": "据预报，华南沿海未来三天将有100到200毫米的强降雨。", "targets": [{"written": "100到200毫米", "readings": ["一百到二百毫米", "一百到两百毫米"]}], "split": "dev"}
+{"id": "zh-CN-0053", "line": 53, "category": "cardinal", "text": "截至发稿，这条短视频播放量已超过3亿次。", "targets": [{"written": "3亿", "readings": ["三亿"]}], "split": "test"}
+{"id": "zh-CN-0054", "line": 54, "category": "counter", "text": "记者在现场看到，8辆消防车正在全力扑救。", "targets": [{"written": "8辆", "readings": ["八辆"]}], "split": "dev"}
+{"id": "zh-CN-0055", "line": 55, "category": "currency", "text": "本周全国猪肉平均批发价为每公斤22.4元。", "targets": [{"written": "22.4元", "readings": ["二十二点四元"]}], "split": "test"}
+{"id": "zh-CN-0056", "line": 56, "category": "decimal", "text": "今年中秋国庆假期，全国铁路日均发送旅客1,623.5万人次。", "targets": [{"written": "1,623.5万人次", "readings": ["一千六百二十三点五万人次"]}], "split": "dev"}
+{"id": "zh-CN-0057", "line": 57, "category": "mixed", "text": "2025年全国居民人均可支配收入41,314元，比上年增长5.3%。", "targets": [{"written": "2025年", "readings": ["二零二五年"]}, {"written": "41,314元", "readings": ["四万一千三百一十四元"]}, {"written": "5.3%", "readings": ["百分之五点三"]}], "split": "dev"}
+{"id": "zh-CN-0058", "line": 58, "category": "time", "text": "晚间新闻提示：今晚23点起，京藏高速部分路段将封闭施工。", "targets": [{"written": "23点", "readings": ["二十三点", "十一点"]}], "split": "dev"}
+{"id": "zh-CN-0059", "line": 59, "category": "unit", "text": "西气东输三线中段投产后，年输气能力将达250亿立方米。", "targets": [{"written": "250亿立方米", "readings": ["二百五十亿立方米", "两百五十亿立方米"]}], "split": "dev"}
+{"id": "zh-CN-0060", "line": 60, "category": "phone", "text": "交通广播：如遇紧急情况，请拨打122或110。", "targets": [{"written": "122", "readings": ["幺二二", "一二二"]}, {"written": "110", "readings": ["幺幺零", "幺一零", "一幺零", "一一零"]}], "split": "test"}
+{"id": "zh-CN-0061", "line": 61, "category": "code", "text": "字幕：MU5177航班备降武汉，机上旅客平安。", "targets": [{"written": "MU5177", "readings": ["MU五幺七七", "MU五一七七"]}], "split": "test"}
+{"id": "zh-CN-0062", "line": 62, "category": "alnum", "text": "新版4K超高清频道今天正式开播。", "targets": [{"written": "4K", "readings": ["四K"]}], "split": "test"}
+{"id": "zh-CN-0063", "line": 63, "category": "fraction", "text": "目前已有1/3的乡镇卫生院完成了设备更新。", "targets": [{"written": "1/3", "readings": ["三分之一"]}], "split": "dev"}
+{"id": "zh-CN-0064", "line": 64, "category": "ordinal", "text": "今年是该机构成立第25个年头。", "targets": [{"written": "第25个", "readings": ["第二十五个"]}], "split": "test"}
+{"id": "zh-CN-0065", "line": 65, "category": "sign", "text": "字幕：沪指-0.42%，深成指+0.15%。", "targets": [{"written": "-0.42%", "readings": ["负百分之零点四二", "下跌百分之零点四二"]}, {"written": "+0.15%", "readings": ["正百分之零点一五", "上涨百分之零点一五"]}], "split": "dev"}
+{"id": "zh-CN-0066", "line": 66, "category": "percent", "text": "全国秋粮已收获78.5%，进度快于去年同期。", "targets": [{"written": "78.5%", "readings": ["百分之七十八点五"]}], "split": "dev"}
+{"id": "zh-CN-0067", "line": 67, "category": "date", "text": "二十国集团领导人峰会将于11月22日至23日举行。", "targets": [{"written": "11月22日至23日", "readings": ["十一月二十二日至二十三日"]}], "split": "dev"}
+{"id": "zh-CN-0068", "line": 68, "category": "cardinal", "text": "这家企业的研发人员总数达到12,800人。", "targets": [{"written": "12,800人", "readings": ["一万两千八百人", "一万二千八百人"]}], "split": "dev"}
+{"id": "zh-CN-0069", "line": 69, "category": "counter", "text": "今年以来，该市新建改建公共停车场47处。", "targets": [{"written": "47处", "readings": ["四十七处"]}], "split": "dev"}
+{"id": "zh-CN-0070", "line": 70, "category": "currency", "text": "截至九月末，我国外汇储备规模为33,164亿美元。", "targets": [{"written": "33,164亿美元", "readings": ["三万三千一百六十四亿美元"]}], "split": "dev"}
+{"id": "zh-CN-0071", "line": 71, "category": "time", "text": "早间天气：北京今天白天多云，6点前后有轻雾。", "targets": [{"written": "6点", "readings": ["六点"]}], "split": "dev"}
+{"id": "zh-CN-0072", "line": 72, "category": "unit", "text": "报告指出，去年我国人均每日食盐摄入量仍高达9.3克。", "targets": [{"written": "9.3克", "readings": ["九点三克"]}], "split": "dev"}
+{"id": "zh-CN-0073", "line": 73, "category": "range", "text": "这批文物距今已有2,500至3,000年历史。", "targets": [{"written": "2,500至3,000年", "readings": ["两千五百至三千年", "二千五百至三千年"]}], "split": "test"}
+{"id": "zh-CN-0074", "line": 74, "category": "decimal", "text": "据介绍，该望远镜的口径达4.03米。", "targets": [{"written": "4.03米", "readings": ["四点零三米"]}], "split": "dev"}
+{"id": "zh-CN-0075", "line": 75, "category": "phone", "text": "字幕：本台新闻热线0571-85310000，欢迎提供线索。", "targets": [{"written": "0571-85310000", "readings": ["零五七幺八五三幺零零零零", "零五七幺八五三一零零零零", "零五七一八五三幺零零零零", "零五七一八五三一零零零零"]}], "split": "dev"}
+{"id": "zh-CN-0076", "line": 76, "category": "code", "text": "交警部门通报，车牌号为京N·7U903的车辆涉嫌套牌。", "targets": [{"written": "京N·7U903", "readings": ["京N七U九零三"]}], "split": "dev"}
+{"id": "zh-CN-0077", "line": 77, "category": "mixed", "text": "字幕：第3号台风\"海葵\"中心风力12级，预计14日凌晨登陆。", "targets": [{"written": "第3号", "readings": ["第三号"]}, {"written": "12级", "readings": ["十二级"]}, {"written": "14日", "readings": ["十四日"]}], "split": "test"}
+{"id": "zh-CN-0078", "line": 78, "category": "math", "text": "节目中，主持人出了一道算术题：48÷6+5=13。", "targets": [{"written": "48÷6+5=13", "readings": ["四十八除以六加五等于十三"]}], "split": "dev"}
+{"id": "zh-CN-0079", "line": 79, "category": "electronic", "text": "字幕：扫码或访问weibo.com/2026news参与话题讨论。", "targets": [{"written": "weibo.com/2026news", "readings": ["weibo点com斜杠二零二六news"]}], "split": "dev"}
+{"id": "zh-CN-0080", "line": 80, "category": "alnum", "text": "高铁CR450动车组样车今天亮相。", "targets": [{"written": "CR450", "readings": ["CR四五零"]}], "split": "test"}
+{"id": "zh-CN-0081", "line": 81, "category": "percent", "text": "今年前三季度，全国规模以上工业企业利润同比下降2.7%。", "targets": [{"written": "2.7%", "readings": ["百分之二点七"]}], "split": "dev"}
+{"id": "zh-CN-0082", "line": 82, "category": "date", "text": "财经快讯：2026/10/13，离岸人民币盘中升破七点零关口。", "targets": [{"written": "2026/10/13", "readings": ["二零二六年十月十三日"]}], "split": "dev"}
+{"id": "zh-CN-0083", "line": 83, "category": "cardinal", "text": "本次国考报名人数创新高，共3,258,000人通过资格审查。", "targets": [{"written": "3,258,000人", "readings": ["三百二十五万八千人"]}], "split": "test"}
+{"id": "zh-CN-0084", "line": 84, "category": "counter", "text": "字幕：本次文物展共展出189件展品，其中一级文物46件。", "targets": [{"written": "189件", "readings": ["一百八十九件"]}, {"written": "46件", "readings": ["四十六件"]}], "split": "dev"}
+{"id": "zh-CN-0085", "line": 85, "category": "sign", "text": "气象：明晨本市气温-2℃，有霜冻。", "targets": [{"written": "-2℃", "readings": ["零下二摄氏度", "零下二度", "零下两摄氏度", "零下两度"]}], "split": "dev"}
+{"id": "zh-CN-0086", "line": 86, "category": "time", "text": "《新闻周刊》将在19:30与您见面。", "targets": [{"written": "19:30", "readings": ["十九点三十分", "十九点半", "七点三十分", "七点半"]}], "split": "dev"}
+{"id": "zh-CN-0087", "line": 87, "category": "unit", "text": "新能源汽车实测：满电状态下该车续航达612km。", "targets": [{"written": "612km", "readings": ["六百一十二公里"]}], "split": "dev"}
+{"id": "zh-CN-0088", "line": 88, "category": "fraction", "text": "环保部门监测显示，流域内约3/5的断面水质达到优良。", "targets": [{"written": "3/5", "readings": ["五分之三"]}], "split": "dev"}
+{"id": "zh-CN-0089", "line": 89, "category": "ordinal", "text": "今天上午，第22届中国国际高新技术成果交易会在深圳开幕。", "targets": [{"written": "第22届", "readings": ["第二十二届"]}], "split": "dev"}
+{"id": "zh-CN-0090", "line": 90, "category": "range", "text": "市场监管部门抽检发现，3-5款产品存在标签不规范问题。", "targets": [{"written": "3-5款", "readings": ["三到五款"]}], "split": "dev"}
+{"id": "zh-CN-0091", "line": 91, "category": "currency", "text": "球迷注意：本场比赛门票最低80块一张，网上即可购买。", "targets": [{"written": "80块", "readings": ["八十块"]}], "split": "dev"}
+{"id": "zh-CN-0092", "line": 92, "category": "decimal", "text": "今年国庆档总票房21.09亿元，略低于去年同期。", "targets": [{"written": "21.09亿元", "readings": ["二十一点零九亿元"]}], "split": "dev"}
+{"id": "zh-CN-0093", "line": 93, "category": "mixed", "text": "19时更新：全市86条公交线路已恢复运营。", "targets": [{"written": "19时", "readings": ["十九时"]}, {"written": "86条", "readings": ["八十六条"]}], "split": "dev"}
+{"id": "zh-CN-0094", "line": 94, "category": "phone", "text": "消费者如遇纠纷，可拨打12315投诉举报。", "targets": [{"written": "12315", "readings": ["幺二三幺五", "幺二三一五", "一二三幺五", "一二三一五"]}], "split": "dev"}
+{"id": "zh-CN-0095", "line": 95, "category": "code", "text": "字幕：失联渔船编号为苏连渔01577。", "targets": [{"written": "苏连渔01577", "readings": ["苏连渔零幺五七七", "苏连渔零一五七七"]}], "split": "dev"}
+{"id": "zh-CN-0096", "line": 96, "category": "alnum", "text": "我国首架AG600\"鲲龙\"大型水陆两栖飞机交付用户。", "targets": [{"written": "AG600", "readings": ["AG六零零"]}], "split": "test"}
+{"id": "zh-CN-0097", "line": 97, "category": "cardinal", "text": "据介绍，该博物馆年接待观众已超过800万人次。", "targets": [{"written": "800万", "readings": ["八百万"]}], "split": "test"}
+{"id": "zh-CN-0098", "line": 98, "category": "date", "text": "字幕：2026.10.13，长江三峡，秋汛。", "targets": [{"written": "2026.10.13", "readings": ["二零二六年十月十三日"]}], "split": "dev"}
+{"id": "zh-CN-0099", "line": 99, "category": "percent", "text": "天气：明天本市降水概率40%，请出门带伞。", "targets": [{"written": "40%", "readings": ["百分之四十"]}], "split": "dev"}
+{"id": "zh-CN-0100", "line": 100, "category": "time", "text": "交通提示：早高峰7:30至9:00，请错峰出行。", "targets": [{"written": "7:30至9:00", "readings": ["七点半至九点", "七点三十分至九点"]}], "split": "dev"}
+{"id": "zh-CN-0101", "line": 101, "category": "counter", "text": "字幕：本次救援共出动12艘船只、2架直升机。", "targets": [{"written": "12艘", "readings": ["十二艘"]}, {"written": "2架", "readings": ["两架"]}], "split": "dev"}
+{"id": "zh-CN-0102", "line": 102, "category": "mixed", "text": "晚间播报：10月13日16时，全市空气质量指数为152，中度污染。", "targets": [{"written": "10月13日", "readings": ["十月十三日"]}, {"written": "16时", "readings": ["十六时"]}, {"written": "152", "readings": ["一百五十二"]}], "split": "test"}
+{"id": "zh-CN-0104", "line": 104, "category": "time", "text": "今晚8点老地方见，别迟到哈！", "targets": [{"written": "8点", "readings": ["八点"]}], "split": "dev"}
+{"id": "zh-CN-0105", "line": 105, "category": "currency", "text": "这家火锅人均128，味道一般般，不太值。", "targets": [{"written": "128", "readings": ["一百二十八"]}], "split": "dev"}
+{"id": "zh-CN-0106", "line": 106, "category": "date", "text": "我10.1回老家，有想带的特产吗？", "targets": [{"written": "10.1", "readings": ["十月一日", "十月一号", "十月一"]}], "split": "test"}
+{"id": "zh-CN-0107", "line": 107, "category": "cardinal", "text": "这条微博转发都10w+了，太离谱了。", "targets": [{"written": "10w+", "readings": ["十万加"]}], "split": "dev"}
+{"id": "zh-CN-0108", "line": 108, "category": "percent", "text": "手机电量只剩3%了，先不聊了。", "targets": [{"written": "3%", "readings": ["百分之三"]}], "split": "dev"}
+{"id": "zh-CN-0109", "line": 109, "category": "counter", "text": "昨天去宜家买了2个收纳箱，装不下，又回去买了3个。", "targets": [{"written": "2个", "readings": ["两个"]}, {"written": "3个", "readings": ["三个"]}], "split": "dev"}
+{"id": "zh-CN-0110", "line": 110, "category": "ordinal", "text": "这已经是我第3次被这家店放鸽子了，再也不来了！", "targets": [{"written": "第3次", "readings": ["第三次"]}], "split": "dev"}
+{"id": "zh-CN-0111", "line": 111, "category": "decimal", "text": "体重终于掉到58.6了，坚持住！", "targets": [{"written": "58.6", "readings": ["五十八点六"]}], "split": "test"}
+{"id": "zh-CN-0112", "line": 112, "category": "range", "text": "这周末3、4号都有空，你定时间。", "targets": [{"written": "3、4号", "readings": ["三号四号", "三四号"]}], "split": "dev"}
+{"id": "zh-CN-0113", "line": 113, "category": "fraction", "text": "室友说她1/3的工资都拿去买盲盒了，服了。", "targets": [{"written": "1/3", "readings": ["三分之一"]}], "split": "test"}
+{"id": "zh-CN-0114", "line": 114, "category": "unit", "text": "今天跑了5km，配速还是上不去。", "targets": [{"written": "5km", "readings": ["五公里"]}], "split": "test"}
+{"id": "zh-CN-0115", "line": 115, "category": "sign", "text": "北京今天-3℃，我还穿着短袖出门，傻了。", "targets": [{"written": "-3℃", "readings": ["零下三摄氏度", "零下三度"]}], "split": "test"}
+{"id": "zh-CN-0116", "line": 116, "category": "phone", "text": "有事直接打我手机13816243957，微信不常看。", "targets": [{"written": "13816243957", "readings": ["幺三八幺六二四三九五七", "幺三八一六二四三九五七", "一三八幺六二四三九五七", "一三八一六二四三九五七"]}], "split": "dev"}
+{"id": "zh-CN-0117", "line": 117, "category": "code", "text": "群里的验证码是847213，赶紧输。", "targets": [{"written": "847213", "readings": ["八四七二幺三", "八四七二一三"]}], "split": "dev"}
+{"id": "zh-CN-0118", "line": 118, "category": "alnum", "text": "刚换了iPhone 17，感觉和上一代没啥区别。", "targets": [{"written": "iPhone 17", "readings": ["iPhone十七"]}], "split": "test"}
+{"id": "zh-CN-0119", "line": 119, "category": "math", "text": "室友算账：35+48+120=203，AA的话每人六十八。", "targets": [{"written": "35+48+120=203", "readings": ["三十五加四十八加一百二十等于二百零三", "三十五加四十八加一百二十等于两百零三"]}], "split": "dev"}
+{"id": "zh-CN-0120", "line": 120, "category": "electronic", "text": "加我微信wx_2026lucky，备注一下是群里的。", "targets": [{"written": "wx_2026lucky", "readings": ["wx下划线二零二六lucky"]}], "split": "dev"}
+{"id": "zh-CN-0121", "line": 121, "category": "mixed", "text": "双11预售开始了，定金50抵100，冲不冲？", "targets": [{"written": "双11", "readings": ["双十一"]}, {"written": "50", "readings": ["五十"]}, {"written": "100", "readings": ["一百"]}], "split": "test"}
+{"id": "zh-CN-0122", "line": 122, "category": "time", "text": "凌晨2:40还睡不着，有人在吗", "targets": [{"written": "2:40", "readings": ["两点四十分", "两点四十"]}], "split": "dev"}
+{"id": "zh-CN-0123", "line": 123, "category": "currency", "text": "打车花了¥38.5，比地铁贵太多了。", "targets": [{"written": "¥38.5", "readings": ["三十八点五元", "三十八块五"]}], "split": "dev"}
+{"id": "zh-CN-0124", "line": 124, "category": "date", "text": "2024年的今天我们在厦门，时间过得好快啊。", "targets": [{"written": "2024年", "readings": ["二零二四年"]}], "split": "test"}
+{"id": "zh-CN-0125", "line": 125, "category": "cardinal", "text": "刚看了下，我今年居然看了127部电影。", "targets": [{"written": "127", "readings": ["一百二十七"]}], "split": "test"}
+{"id": "zh-CN-0126", "line": 126, "category": "percent", "text": "这家店好评率才82%，有点犹豫要不要去。", "targets": [{"written": "82%", "readings": ["百分之八十二"]}], "split": "dev"}
+{"id": "zh-CN-0127", "line": 127, "category": "counter", "text": "新开的烘焙店排队买了6个可颂，3个被我妈没收了。", "targets": [{"written": "6个", "readings": ["六个"]}, {"written": "3个", "readings": ["三个"]}], "split": "dev"}
+{"id": "zh-CN-0128", "line": 128, "category": "ordinal", "text": "今天是减脂第21天，打卡！", "targets": [{"written": "第21天", "readings": ["第二十一天"]}], "split": "dev"}
+{"id": "zh-CN-0129", "line": 129, "category": "decimal", "text": "评分9.4的剧居然这么无聊，豆瓣不靠谱了？", "targets": [{"written": "9.4", "readings": ["九点四"]}], "split": "dev"}
+{"id": "zh-CN-0130", "line": 130, "category": "range", "text": "老板说年终奖大概2～3个月工资，画饼吧。", "targets": [{"written": "2～3个月", "readings": ["两到三个月", "两至三个月", "二到三个月", "二至三个月"]}], "split": "dev"}
+{"id": "zh-CN-0131", "line": 131, "category": "fraction", "text": "一天过去了3/4，我的报告还没开头。", "targets": [{"written": "3/4", "readings": ["四分之三"]}], "split": "dev"}
+{"id": "zh-CN-0132", "line": 132, "category": "unit", "text": "新买的显示器27寸，放桌上显得巨大。", "targets": [{"written": "27寸", "readings": ["二十七寸"]}], "split": "dev"}
+{"id": "zh-CN-0133", "line": 133, "category": "sign", "text": "今天的股票-7%，直接绿到心里了。", "targets": [{"written": "-7%", "readings": ["负百分之七", "跌百分之七"]}], "split": "test"}
+{"id": "zh-CN-0134", "line": 134, "category": "phone", "text": "刚才95188打电话说我账户有风险，是骗子吧？", "targets": [{"written": "95188", "readings": ["九五幺八八", "九五一八八"]}], "split": "dev"}
+{"id": "zh-CN-0135", "line": 135, "category": "code", "text": "你们的房间号是多少？我们在1208。", "targets": [{"written": "1208", "readings": ["幺二零八", "一二零八"]}], "split": "dev"}
+{"id": "zh-CN-0136", "line": 136, "category": "alnum", "text": "这台M3芯片的本子剪视频真的快。", "targets": [{"written": "M3", "readings": ["M三"]}], "split": "test"}
+{"id": "zh-CN-0137", "line": 137, "category": "math", "text": "刷到一道题：2^10=1024，评论区居然吵起来了。", "targets": [{"written": "2^10=1024", "readings": ["二的十次方等于一千零二十四"]}], "split": "dev"}
+{"id": "zh-CN-0138", "line": 138, "category": "electronic", "text": "游戏服务器地址192.168.3.25，局域网的都能进。", "targets": [{"written": "192.168.3.25", "readings": ["幺九二点幺六八点三点二五", "幺九二点一六八点三点二五", "一九二点幺六八点三点二五", "一九二点一六八点三点二五"]}], "split": "dev"}
+{"id": "zh-CN-0139", "line": 139, "category": "mixed", "text": "3月8号那天打5折，姐妹们约起来！", "targets": [{"written": "3月8号", "readings": ["三月八号"]}, {"written": "5折", "readings": ["五折"]}], "split": "dev"}
+{"id": "zh-CN-0140", "line": 140, "category": "time", "text": "9:00的会，我8:58才冲进公司，差点迟到。", "targets": [{"written": "9:00", "readings": ["九点整", "九点"]}, {"written": "8:58", "readings": ["八点五十八分", "八点五十八"]}], "split": "dev"}
+{"id": "zh-CN-0141", "line": 141, "category": "currency", "text": "房租涨到4500了，我要搬去郊区了。", "targets": [{"written": "4500", "readings": ["四千五百", "四千五"]}], "split": "dev"}
+{"id": "zh-CN-0142", "line": 142, "category": "date", "text": "2026-10-13，记录一下今天拿到offer了！", "targets": [{"written": "2026-10-13", "readings": ["二零二六年十月十三日"]}], "split": "dev"}
+{"id": "zh-CN-0143", "line": 143, "category": "cardinal", "text": "这游戏在线人数都20万了，服务器还不加？", "targets": [{"written": "20万", "readings": ["二十万"]}], "split": "dev"}
+{"id": "zh-CN-0144", "line": 144, "category": "percent", "text": "优惠券满减之后相当于打了6.5折，不错了。", "targets": [{"written": "6.5折", "readings": ["六点五折", "六五折"]}], "split": "dev"}
+{"id": "zh-CN-0145", "line": 145, "category": "counter", "text": "搬家才发现我有47双鞋，这合理吗？", "targets": [{"written": "47双", "readings": ["四十七双"]}], "split": "test"}
+{"id": "zh-CN-0146", "line": 146, "category": "ordinal", "text": "终于抢到第1排的票！！！", "targets": [{"written": "第1排", "readings": ["第一排"]}], "split": "dev"}
+{"id": "zh-CN-0147", "line": 147, "category": "decimal", "text": "昨晚睡了5.5个小时，困死了。", "targets": [{"written": "5.5个小时", "readings": ["五点五个小时", "五个半小时"]}], "split": "dev"}
+{"id": "zh-CN-0148", "line": 148, "category": "range", "text": "通勤单程40-50分钟，每天在地铁上读完一本书不是梦。", "targets": [{"written": "40-50分钟", "readings": ["四十到五十分钟"]}], "split": "dev"}
+{"id": "zh-CN-0149", "line": 149, "category": "unit", "text": "这款面霜50ml要三百多，太贵了吧。", "targets": [{"written": "50ml", "readings": ["五十毫升"]}], "split": "dev"}
+{"id": "zh-CN-0150", "line": 150, "category": "sign", "text": "比分2:2，加时赛好紧张！", "targets": [{"written": "2:2", "readings": ["二比二"]}], "split": "test"}
+{"id": "zh-CN-0151", "line": 151, "category": "phone", "text": "推荐一个靠谱搬家公司，电话400-820-5566。", "targets": [{"written": "400-820-5566", "readings": ["四零零八二零五五六六"]}], "split": "dev"}
+{"id": "zh-CN-0152", "line": 152, "category": "code", "text": "快递柜取件码530927，帮我取一下谢谢！", "targets": [{"written": "530927", "readings": ["五三零九二七"]}], "split": "test"}
+{"id": "zh-CN-0153", "line": 153, "category": "alnum", "text": "Windows 11更新完电脑更卡了。", "targets": [{"written": "Windows 11", "readings": ["Windows十一"]}], "split": "dev"}
+{"id": "zh-CN-0154", "line": 154, "category": "math", "text": "减肥公式其实很简单：摄入<消耗，但做不到啊。", "targets": [{"written": "摄入<消耗", "readings": ["摄入小于消耗"]}], "split": "dev"}
+{"id": "zh-CN-0155", "line": 155, "category": "electronic", "text": "作业发我邮箱liuxiao1998@qq.com，今晚之前。", "targets": [{"written": "liuxiao1998@qq.com", "readings": ["liuxiao幺九九八艾特qq点com", "liuxiao一九九八艾特qq点com"]}], "split": "dev"}
+{"id": "zh-CN-0156", "line": 156, "category": "mixed", "text": "昨天11:30才下班，打车花了86块，心累。", "targets": [{"written": "11:30", "readings": ["十一点半", "十一点三十分"]}, {"written": "86块", "readings": ["八十六块"]}], "split": "dev"}
+{"id": "zh-CN-0157", "line": 157, "category": "time", "text": "下午3点半的高铁，现在才想起来没买票。", "targets": [{"written": "3点半", "readings": ["三点半"]}], "split": "dev"}
+{"id": "zh-CN-0158", "line": 158, "category": "currency", "text": "这件羽绒服原价1299，现在599，入了。", "targets": [{"written": "1299", "readings": ["一千二百九十九", "一千两百九十九"]}, {"written": "599", "readings": ["五百九十九"]}], "split": "test"}
+{"id": "zh-CN-0159", "line": 159, "category": "date", "text": "2月14号餐厅都订满了，只能在家做饭。", "targets": [{"written": "2月14号", "readings": ["二月十四号"]}], "split": "dev"}
+{"id": "zh-CN-0160", "line": 160, "category": "cardinal", "text": "这篇长文1.2万字，看完眼都花了。", "targets": [{"written": "1.2万字", "readings": ["一点二万字", "一万二千字", "一万两千字"]}], "split": "test"}
+{"id": "zh-CN-0161", "line": 161, "category": "percent", "text": "我这学期出勤率100%，求表扬。", "targets": [{"written": "100%", "readings": ["百分之百", "百分之一百"]}], "split": "dev"}
+{"id": "zh-CN-0162", "line": 162, "category": "counter", "text": "晒一下战利品：3件T恤、2条裤子，总共才两百。", "targets": [{"written": "3件", "readings": ["三件"]}, {"written": "2条", "readings": ["两条"]}], "split": "test"}
+{"id": "zh-CN-0163", "line": 163, "category": "ordinal", "text": "这是我第1次一个人旅行，有点紧张又有点期待。", "targets": [{"written": "第1次", "readings": ["第一次"]}], "split": "dev"}
+{"id": "zh-CN-0164", "line": 164, "category": "decimal", "text": "油价又涨了，今天加油7.83一升，心疼。", "targets": [{"written": "7.83", "readings": ["七点八三"]}], "split": "test"}
+{"id": "zh-CN-0165", "line": 165, "category": "range", "text": "客服说3～5个工作日到账，现在都第八天了。", "targets": [{"written": "3～5个工作日", "readings": ["三到五个工作日", "三至五个工作日"]}], "split": "dev"}
+{"id": "zh-CN-0166", "line": 166, "category": "unit", "text": "空调调到26度最舒服，别再争了。", "targets": [{"written": "26度", "readings": ["二十六度"]}], "split": "test"}
+{"id": "zh-CN-0167", "line": 167, "category": "sign", "text": "楼主+1，我也觉得这家店不行。", "targets": [{"written": "+1", "readings": ["加一"]}], "split": "dev"}
+{"id": "zh-CN-0168", "line": 168, "category": "phone", "text": "有谁知道114还能查电话吗？", "targets": [{"written": "114", "readings": ["幺幺四", "幺一四", "一幺四", "一一四"]}], "split": "dev"}
+{"id": "zh-CN-0169", "line": 169, "category": "code", "text": "我的车牌尾号是7，明天限行，谁能捎我一程？", "targets": [{"written": "7", "readings": ["七"]}], "split": "test"}
+{"id": "zh-CN-0170", "line": 170, "category": "alnum", "text": "3D电影看得我头晕，以后还是看2D吧。", "targets": [{"written": "3D", "readings": ["三D"]}, {"written": "2D", "readings": ["二D"]}], "split": "dev"}
+{"id": "zh-CN-0171", "line": 171, "category": "math", "text": "孩子问我1÷3为什么除不尽，我也答不上来。", "targets": [{"written": "1÷3", "readings": ["一除以三"]}], "split": "test"}
+{"id": "zh-CN-0172", "line": 172, "category": "electronic", "text": "直播间的号是@小鱼爱做饭2，今晚八点开播。", "targets": [{"written": "@小鱼爱做饭2", "readings": ["艾特小鱼爱做饭二"]}], "split": "dev"}
+{"id": "zh-CN-0173", "line": 173, "category": "mixed", "text": "第5季终于更新了，12集一口气看完！", "targets": [{"written": "第5季", "readings": ["第五季"]}, {"written": "12集", "readings": ["十二集"]}], "split": "dev"}
+{"id": "zh-CN-0174", "line": 174, "category": "time", "text": "早上6:15的闹钟，谁定的？？", "targets": [{"written": "6:15", "readings": ["六点十五分", "六点十五", "六点一刻"]}], "split": "test"}
+{"id": "zh-CN-0175", "line": 175, "category": "currency", "text": "外卖满30减15，相当于半价啊。", "targets": [{"written": "30减15", "readings": ["三十减十五"]}], "split": "test"}
+{"id": "zh-CN-0176", "line": 176, "category": "date", "text": "从2019年追到现在，终于完结了，泪目。", "targets": [{"written": "2019年", "readings": ["二零一九年"]}], "split": "test"}
+{"id": "zh-CN-0177", "line": 177, "category": "cardinal", "text": "我们小区居然有3000多户，物业费还这么贵。", "targets": [{"written": "3000多户", "readings": ["三千多户"]}], "split": "dev"}
+{"id": "zh-CN-0178", "line": 178, "category": "percent", "text": "这个月花呗额度用了95%，月底怎么过。", "targets": [{"written": "95%", "readings": ["百分之九十五"]}], "split": "dev"}
+{"id": "zh-CN-0179", "line": 179, "category": "counter", "text": "一口气买了10本书，看了1本。", "targets": [{"written": "10本", "readings": ["十本"]}, {"written": "1本", "readings": ["一本"]}], "split": "dev"}
+{"id": "zh-CN-0180", "line": 180, "category": "ordinal", "text": "第100个赞是你的，谢啦！", "targets": [{"written": "第100个", "readings": ["第一百个"]}], "split": "test"}
+{"id": "zh-CN-0181", "line": 181, "category": "decimal", "text": "体温37.8，有点低烧，先请假了。", "targets": [{"written": "37.8", "readings": ["三十七点八"]}], "split": "dev"}
+{"id": "zh-CN-0182", "line": 182, "category": "range", "text": "面试说薪资15-20k，不知道靠不靠谱。", "targets": [{"written": "15-20k", "readings": ["十五到二十k", "一万五到两万", "一万五到二万"]}], "split": "dev"}
+{"id": "zh-CN-0183", "line": 183, "category": "unit", "text": "这个充电宝20000mAh，能带上飞机吗？", "targets": [{"written": "20000mAh", "readings": ["两万毫安时", "两万毫安", "二万毫安时", "二万毫安"]}], "split": "test"}
+{"id": "zh-CN-0184", "line": 184, "category": "sign", "text": "基金今天+256.3，回本有望！", "targets": [{"written": "+256.3", "readings": ["正二百五十六点三", "正两百五十六点三", "加二百五十六点三", "加两百五十六点三", "涨二百五十六点三", "涨两百五十六点三"]}], "split": "dev"}
+{"id": "zh-CN-0185", "line": 185, "category": "phone", "text": "骚扰电话0755开头的，一律不接。", "targets": [{"written": "0755", "readings": ["零七五五"]}], "split": "dev"}
+{"id": "zh-CN-0186", "line": 186, "category": "code", "text": "银行卡尾号0528的那张被冻结了，气死。", "targets": [{"written": "0528", "readings": ["零五二八"]}], "split": "test"}
+{"id": "zh-CN-0187", "line": 187, "category": "alnum", "text": "我的工号是A0317，帮我打个卡谢谢。", "targets": [{"written": "A0317", "readings": ["A零三幺七", "A零三一七"]}], "split": "dev"}
+{"id": "zh-CN-0188", "line": 188, "category": "math", "text": "算了一下，12×3000=36000，一年房租这么多。", "targets": [{"written": "12×3000=36000", "readings": ["十二乘以三千等于三万六千", "十二乘以三千等于三万六"]}], "split": "test"}
+{"id": "zh-CN-0189", "line": 189, "category": "electronic", "text": "我的小红书ID是xiaoyu_0923，关注一下呗。", "targets": [{"written": "xiaoyu_0923", "readings": ["xiaoyu下划线零九二三"]}], "split": "dev"}
+{"id": "zh-CN-0190", "line": 190, "category": "mixed", "text": "10月5号15:00演唱会，谁有多的票，加200收一张。", "targets": [{"written": "10月5号", "readings": ["十月五号"]}, {"written": "15:00", "readings": ["十五点", "下午三点"]}, {"written": "200", "readings": ["二百", "两百"]}], "split": "dev"}
+{"id": "zh-CN-0191", "line": 191, "category": "time", "text": "追剧追到凌晨3点，今天上班全靠咖啡续命。", "targets": [{"written": "凌晨3点", "readings": ["凌晨三点"]}], "split": "dev"}
+{"id": "zh-CN-0192", "line": 192, "category": "currency", "text": "充了$9.99的会员，结果还是有广告。", "targets": [{"written": "$9.99", "readings": ["九点九九美元"]}], "split": "dev"}
+{"id": "zh-CN-0193", "line": 193, "category": "date", "text": "9月30号晚上就堵车了，国庆出行要趁早。", "targets": [{"written": "9月30号", "readings": ["九月三十号"]}], "split": "dev"}
+{"id": "zh-CN-0194", "line": 194, "category": "cardinal", "text": "这家店一天能卖2000多杯奶茶？不信。", "targets": [{"written": "2000多杯", "readings": ["两千多杯", "二千多杯"]}], "split": "dev"}
+{"id": "zh-CN-0195", "line": 195, "category": "percent", "text": "我的游戏胜率48.7%，稳定输。", "targets": [{"written": "48.7%", "readings": ["百分之四十八点七"]}], "split": "dev"}
+{"id": "zh-CN-0196", "line": 196, "category": "counter", "text": "这个月已经吃了14顿外卖，该自己做饭了。", "targets": [{"written": "14顿", "readings": ["十四顿"]}], "split": "dev"}
+{"id": "zh-CN-0197", "line": 197, "category": "ordinal", "text": "终于到第2关了，这游戏是真难。", "targets": [{"written": "第2关", "readings": ["第二关"]}], "split": "dev"}
+{"id": "zh-CN-0198", "line": 198, "category": "decimal", "text": "新手机屏幕6.7寸，单手根本握不住。", "targets": [{"written": "6.7寸", "readings": ["六点七寸"]}], "split": "dev"}
+{"id": "zh-CN-0199", "line": 199, "category": "range", "text": "上班路上地铁8～10站，刚好听完一期播客。", "targets": [{"written": "8～10站", "readings": ["八到十站"]}], "split": "dev"}
+{"id": "zh-CN-0200", "line": 200, "category": "unit", "text": "搬家公司报价每1公里加十块，离谱。", "targets": [{"written": "1公里", "readings": ["一公里"]}], "split": "dev"}
+{"id": "zh-CN-0201", "line": 201, "category": "sign", "text": "这个月体重-2kg，开心！", "targets": [{"written": "-2kg", "readings": ["减两公斤", "减二公斤", "负两公斤", "负二公斤"]}], "split": "test"}
+{"id": "zh-CN-0202", "line": 202, "category": "phone", "text": "中奖短信让我回拨400-999-0000，肯定是骗子。", "targets": [{"written": "400-999-0000", "readings": ["四零零九九九零零零零"]}], "split": "dev"}
+{"id": "zh-CN-0203", "line": 203, "category": "mixed", "text": "3月的8折券，今天11:59过期，快用！", "targets": [{"written": "3月", "readings": ["三月"]}, {"written": "8折", "readings": ["八折"]}, {"written": "11:59", "readings": ["十一点五十九分", "十一点五十九"]}], "split": "dev"}
+{"id": "zh-CN-0205", "line": 205, "category": "mixed", "text": "【工商银行】您尾号3382的卡10月13日收入¥5,200.00。", "targets": [{"written": "3382", "readings": ["三三八二"]}, {"written": "10月13日", "readings": ["十月十三日"]}, {"written": "¥5,200.00", "readings": ["五千二百元整", "五千二百元", "五千两百元整", "五千两百元"]}], "split": "dev"}
+{"id": "zh-CN-0206", "line": 206, "category": "currency", "text": "原价¥299，限时直降，到手仅¥199！", "targets": [{"written": "¥299", "readings": ["二百九十九元", "两百九十九元"]}, {"written": "¥199", "readings": ["一百九十九元"]}], "split": "test"}
+{"id": "zh-CN-0207", "line": 207, "category": "percent", "text": "会员专享85折，叠加优惠券更划算。", "targets": [{"written": "85折", "readings": ["八五折", "八点五折"]}], "split": "test"}
+{"id": "zh-CN-0208", "line": 208, "category": "date", "text": "您的包裹预计10月15日送达，请保持电话畅通。", "targets": [{"written": "10月15日", "readings": ["十月十五日"]}], "split": "test"}
+{"id": "zh-CN-0209", "line": 209, "category": "time", "text": "【顺丰速运】快递员将于今天14:00-18:00派送，请注意查收。", "targets": [{"written": "14:00-18:00", "readings": ["十四点到十八点", "下午两点到六点", "下午二点到六点"]}], "split": "dev"}
+{"id": "zh-CN-0210", "line": 210, "category": "phone", "text": "如有疑问请致电建行客服热线95533。", "targets": [{"written": "95533", "readings": ["九五五三三"]}], "split": "dev"}
+{"id": "zh-CN-0211", "line": 211, "category": "code", "text": "【菜鸟驿站】您的包裹已到站，取件码618245，请凭码取件。", "targets": [{"written": "618245", "readings": ["六幺八二四五", "六一八二四五"]}], "split": "dev"}
+{"id": "zh-CN-0212", "line": 212, "category": "unit", "text": "本品净含量500g，开封后请冷藏并尽快食用。", "targets": [{"written": "500g", "readings": ["五百克"]}], "split": "dev"}
+{"id": "zh-CN-0213", "line": 213, "category": "counter", "text": "限购2件，多拍不发货，敬请谅解。", "targets": [{"written": "2件", "readings": ["两件"]}], "split": "test"}
+{"id": "zh-CN-0214", "line": 214, "category": "cardinal", "text": "已售10万+，回购率超高。", "targets": [{"written": "10万+", "readings": ["十万加"]}], "split": "dev"}
+{"id": "zh-CN-0215", "line": 215, "category": "decimal", "text": "商品评分4.8分，买过的都说好。", "targets": [{"written": "4.8分", "readings": ["四点八分"]}], "split": "test"}
+{"id": "zh-CN-0216", "line": 216, "category": "sign", "text": "实时金价+1.25%，现在入手正当时？", "targets": [{"written": "+1.25%", "readings": ["正百分之一点二五", "上涨百分之一点二五"]}], "split": "dev"}
+{"id": "zh-CN-0217", "line": 217, "category": "ordinal", "text": "第2件半价，第三件免单，活动仅限今日！", "targets": [{"written": "第2件", "readings": ["第二件"]}], "split": "dev"}
+{"id": "zh-CN-0218", "line": 218, "category": "range", "text": "建议身高160-170cm的用户选择M码。", "targets": [{"written": "160-170cm", "readings": ["一百六十到一百七十厘米", "一百六到一百七十厘米"]}], "split": "dev"}
+{"id": "zh-CN-0219", "line": 219, "category": "fraction", "text": "本基金当前约1/5仓位为现金类资产，回撤控制较好。", "targets": [{"written": "1/5", "readings": ["五分之一"]}], "split": "dev"}
+{"id": "zh-CN-0220", "line": 220, "category": "alnum", "text": "A4打印纸加厚款，不卡纸不起毛，办公首选。", "targets": [{"written": "A4", "readings": ["A四"]}], "split": "dev"}
+{"id": "zh-CN-0221", "line": 221, "category": "math", "text": "凑单小算盘：199×2-100=298，两件更划算。", "targets": [{"written": "199×2-100=298", "readings": ["一百九十九乘以二减一百等于二百九十八", "一百九十九乘以二减一百等于两百九十八"]}], "split": "test"}
+{"id": "zh-CN-0222", "line": 222, "category": "electronic", "text": "【中国联通】登录10010.com或手机营业厅即可查询话费。", "targets": [{"written": "10010.com", "readings": ["幺零零幺零点com", "幺零零一零点com", "一零零幺零点com", "一零零一零点com"]}], "split": "dev"}
+{"id": "zh-CN-0223", "line": 223, "category": "currency", "text": "收银小票：合计￥86.40，实付￥80.00，优惠￥6.40。", "targets": [{"written": "￥86.40", "readings": ["八十六点四元", "八十六块四"]}, {"written": "￥80.00", "readings": ["八十元整", "八十元"]}, {"written": "￥6.40", "readings": ["六点四元"]}], "split": "dev"}
+{"id": "zh-CN-0224", "line": 224, "category": "mixed", "text": "【招商银行】您的信用卡本期账单3,845.27元，最后还款日11月5日。", "targets": [{"written": "3,845.27元", "readings": ["三千八百四十五点二七元"]}, {"written": "11月5日", "readings": ["十一月五日"]}], "split": "test"}
+{"id": "zh-CN-0225", "line": 225, "category": "percent", "text": "本理财产品近七日年化收益率2.35%，不代表未来表现。", "targets": [{"written": "2.35%", "readings": ["百分之二点三五"]}], "split": "test"}
+{"id": "zh-CN-0226", "line": 226, "category": "date", "text": "活动时间：2026.10.20-10.31，先到先得。", "targets": [{"written": "2026.10.20-10.31", "readings": ["二零二六年十月二十日到十月三十一日", "二零二六年十月二十日到十月三十一", "二零二六年十月二十到十月三十一日", "二零二六年十月二十到十月三十一"]}], "split": "dev"}
+{"id": "zh-CN-0227", "line": 227, "category": "time", "text": "每天10点、15点、20点三场秒杀，整点开抢。", "targets": [{"written": "10点", "readings": ["十点"]}, {"written": "15点", "readings": ["十五点", "下午三点"]}, {"written": "20点", "readings": ["二十点", "晚上八点"]}], "split": "dev"}
+{"id": "zh-CN-0228", "line": 228, "category": "phone", "text": "订餐热线4008-823-823，全城免费配送。", "targets": [{"written": "4008-823-823", "readings": ["四零零八八二三八二三"]}], "split": "test"}
+{"id": "zh-CN-0229", "line": 229, "category": "code", "text": "【中国移动】您的服务密码重置验证码为520731，请勿泄露。", "targets": [{"written": "520731", "readings": ["五二零七三幺", "五二零七三一"]}], "split": "dev"}
+{"id": "zh-CN-0230", "line": 230, "category": "unit", "text": "这款行李箱20寸可登机，重量仅2.9kg。", "targets": [{"written": "20寸", "readings": ["二十寸"]}, {"written": "2.9kg", "readings": ["二点九千克", "二点九公斤"]}], "split": "test"}
+{"id": "zh-CN-0231", "line": 231, "category": "counter", "text": "一箱24瓶，比超市便宜一半。", "targets": [{"written": "24瓶", "readings": ["二十四瓶"]}], "split": "dev"}
+{"id": "zh-CN-0232", "line": 232, "category": "cardinal", "text": "累计评价32,874条，好评如潮。", "targets": [{"written": "32,874", "readings": ["三万两千八百七十四", "三万二千八百七十四"]}], "split": "dev"}
+{"id": "zh-CN-0233", "line": 233, "category": "decimal", "text": "您的基金份额净值1.2364，较昨日上涨。", "targets": [{"written": "1.2364", "readings": ["一点二三六四"]}], "split": "dev"}
+{"id": "zh-CN-0234", "line": 234, "category": "sign", "text": "【支付宝】账户余额变动-128.00，交易对方：某某超市。", "targets": [{"written": "-128.00", "readings": ["负一百二十八"]}], "split": "test"}
+{"id": "zh-CN-0235", "line": 235, "category": "ordinal", "text": "恭喜您成为本店第10000位顾客，赠送精美礼品一份！", "targets": [{"written": "第10000位", "readings": ["第一万位"]}], "split": "dev"}
+{"id": "zh-CN-0236", "line": 236, "category": "range", "text": "预计3-7个工作日到账，具体以银行处理时间为准。", "targets": [{"written": "3-7个工作日", "readings": ["三到七个工作日", "三至七个工作日"]}], "split": "test"}
+{"id": "zh-CN-0237", "line": 237, "category": "fraction", "text": "本产品脂肪含量仅为普通产品的1/3。", "targets": [{"written": "1/3", "readings": ["三分之一"]}], "split": "dev"}
+{"id": "zh-CN-0238", "line": 238, "category": "alnum", "text": "Wi-Fi 6路由器，千兆双频，穿墙更稳。", "targets": [{"written": "Wi-Fi 6", "readings": ["Wi-Fi六"]}], "split": "dev"}
+{"id": "zh-CN-0239", "line": 239, "category": "math", "text": "利息怎么算？10000×3.5%×2=700，两年利息七百元。", "targets": [{"written": "10000×3.5%×2=700", "readings": ["一万乘以百分之三点五乘以二等于七百"]}], "split": "dev"}
+{"id": "zh-CN-0240", "line": 240, "category": "electronic", "text": "售后问题请发邮件至kefu95588@163.com。", "targets": [{"written": "kefu95588@163.com", "readings": ["kefu九五五八八艾特幺六三点com", "kefu九五五八八艾特一六三点com"]}], "split": "dev"}
+{"id": "zh-CN-0241", "line": 241, "category": "mixed", "text": "秒杀价¥9.9，10:00开抢，限量500份。", "targets": [{"written": "¥9.9", "readings": ["九块九", "九点九元"]}, {"written": "10:00", "readings": ["十点整", "十点"]}, {"written": "500份", "readings": ["五百份"]}], "split": "dev"}
+{"id": "zh-CN-0242", "line": 242, "category": "currency", "text": "账单：外卖32元，配送费3元，打包费1元。", "targets": [{"written": "32元", "readings": ["三十二元"]}, {"written": "3元", "readings": ["三元"]}, {"written": "1元", "readings": ["一元"]}], "split": "dev"}
+{"id": "zh-CN-0243", "line": 243, "category": "percent", "text": "信用卡分期手续费率0.6%/期，分期需谨慎。", "targets": [{"written": "0.6%/期", "readings": ["每期百分之零点六"]}], "split": "test"}
+{"id": "zh-CN-0244", "line": 244, "category": "date", "text": "保质期至2027/03/18，请在此日期前食用。", "targets": [{"written": "2027/03/18", "readings": ["二零二七年三月十八日"]}], "split": "dev"}
+{"id": "zh-CN-0245", "line": 245, "category": "time", "text": "门店营业时间09:30-21:30。", "targets": [{"written": "09:30-21:30", "readings": ["九点半到二十一点半", "九点半到二十一点三十分", "九点三十分到二十一点半", "九点三十分到二十一点三十分"]}], "split": "test"}
+{"id": "zh-CN-0246", "line": 246, "category": "phone", "text": "【圆通速递】您的快递已签收，如有问题请联系派件员15087326491。", "targets": [{"written": "15087326491", "readings": ["幺五零八七三二六四九幺", "幺五零八七三二六四九一", "一五零八七三二六四九幺", "一五零八七三二六四九一"]}], "split": "test"}
+{"id": "zh-CN-0247", "line": 247, "category": "code", "text": "商品编码6901234567892，扫码即可查询真伪。", "targets": [{"written": "6901234567892", "readings": ["六九零幺二三四五六七八九二", "六九零一二三四五六七八九二"]}], "split": "test"}
+{"id": "zh-CN-0248", "line": 248, "category": "unit", "text": "冰箱容积452L，一级能效，省电静音。", "targets": [{"written": "452L", "readings": ["四百五十二升"]}], "split": "dev"}
+{"id": "zh-CN-0249", "line": 249, "category": "counter", "text": "一次购买3盒赠1盒，送完即止。", "targets": [{"written": "3盒", "readings": ["三盒"]}, {"written": "1盒", "readings": ["一盒"]}], "split": "dev"}
+{"id": "zh-CN-0250", "line": 250, "category": "cardinal", "text": "本店累计服务客户超过100万，信誉保证。", "targets": [{"written": "100万", "readings": ["一百万"]}], "split": "dev"}
+{"id": "zh-CN-0251", "line": 251, "category": "decimal", "text": "该股市盈率18.7倍，处于行业中等水平。", "targets": [{"written": "18.7倍", "readings": ["十八点七倍"]}], "split": "dev"}
+{"id": "zh-CN-0252", "line": 252, "category": "sign", "text": "退货运费险最高赔付≤12元，超出部分需自付。", "targets": [{"written": "≤12元", "readings": ["不超过十二元", "小于等于十二元"]}], "split": "dev"}
+{"id": "zh-CN-0253", "line": 253, "category": "ordinal", "text": "第3季度财报显示，公司营收同比增长明显。", "targets": [{"written": "第3季度", "readings": ["第三季度"]}], "split": "dev"}
+{"id": "zh-CN-0254", "line": 254, "category": "range", "text": "适用年龄3-6岁，请在成人陪同下使用。", "targets": [{"written": "3-6岁", "readings": ["三到六岁"]}], "split": "dev"}
+{"id": "zh-CN-0255", "line": 255, "category": "fraction", "text": "这个价格相当于原价的3/4，机会难得。", "targets": [{"written": "3/4", "readings": ["四分之三"]}], "split": "dev"}
+{"id": "zh-CN-0256", "line": 256, "category": "alnum", "text": "4K高清投影仪，卧室秒变影院。", "targets": [{"written": "4K", "readings": ["四K"]}], "split": "dev"}
+{"id": "zh-CN-0257", "line": 257, "category": "math", "text": "5000÷12≈416.67，每月还款金额如上。", "targets": [{"written": "5000÷12≈416.67", "readings": ["五千除以十二约等于四百一十六点六七"]}], "split": "dev"}
+{"id": "zh-CN-0258", "line": 258, "category": "electronic", "text": "下单后请添加客服微信shop8808，领取售后保障卡。", "targets": [{"written": "shop8808", "readings": ["shop八八零八"]}], "split": "dev"}
+{"id": "zh-CN-0259", "line": 259, "category": "mixed", "text": "【建设银行】您尾号9017的账户16:08消费356.00元。", "targets": [{"written": "9017", "readings": ["九零幺七", "九零一七"]}, {"written": "16:08", "readings": ["十六点零八分"]}, {"written": "356.00元", "readings": ["三百五十六元"]}], "split": "test"}
+{"id": "zh-CN-0260", "line": 260, "category": "currency", "text": "月供3,268元起，贷款三年免息。", "targets": [{"written": "3,268元", "readings": ["三千二百六十八元", "三千两百六十八元"]}], "split": "dev"}
+{"id": "zh-CN-0261", "line": 261, "category": "percent", "text": "首付低至30%，详询门店销售顾问。", "targets": [{"written": "30%", "readings": ["百分之三十"]}], "split": "dev"}
+{"id": "zh-CN-0262", "line": 262, "category": "date", "text": "发票开具日期：2026年09月28日。", "targets": [{"written": "2026年09月28日", "readings": ["二零二六年九月二十八日"]}], "split": "test"}
+{"id": "zh-CN-0263", "line": 263, "category": "time", "text": "直播间20:00准时开播，不见不散。", "targets": [{"written": "20:00", "readings": ["二十点", "晚上八点"]}], "split": "dev"}
+{"id": "zh-CN-0264", "line": 264, "category": "phone", "text": "售后服务电话0532-88976655，工作日受理。", "targets": [{"written": "0532-88976655", "readings": ["零五三二八八九七六六五五"]}], "split": "test"}
+{"id": "zh-CN-0265", "line": 265, "category": "code", "text": "发票代码044002300211，发票号码58213467。", "targets": [{"written": "044002300211", "readings": ["零四四零零二三零零二幺幺", "零四四零零二三零零二幺一", "零四四零零二三零零二一幺", "零四四零零二三零零二一一"]}, {"written": "58213467", "readings": ["五八二幺三四六七", "五八二一三四六七"]}], "split": "dev"}
+{"id": "zh-CN-0266", "line": 266, "category": "unit", "text": "洗衣机额定容量10kg，一家五口也够用。", "targets": [{"written": "10kg", "readings": ["十千克", "十公斤"]}], "split": "test"}
+{"id": "zh-CN-0267", "line": 267, "category": "counter", "text": "买2袋送1袋，还剩最后50袋。", "targets": [{"written": "2袋", "readings": ["两袋"]}, {"written": "1袋", "readings": ["一袋"]}, {"written": "50袋", "readings": ["五十袋"]}], "split": "dev"}
+{"id": "zh-CN-0268", "line": 268, "category": "cardinal", "text": "该基金规模已超200亿，持有人超过80万。", "targets": [{"written": "200亿", "readings": ["两百亿", "二百亿"]}, {"written": "80万", "readings": ["八十万"]}], "split": "dev"}
+{"id": "zh-CN-0269", "line": 269, "category": "decimal", "text": "牛奶脂肪含量3.6g/100mL，口感醇厚。", "targets": [{"written": "3.6g/100mL", "readings": ["每一百毫升三点六克"]}], "split": "dev"}
+{"id": "zh-CN-0270", "line": 270, "category": "sign", "text": "【微信支付】零钱变动-1,246.80，交易类型：转账。", "targets": [{"written": "-1,246.80", "readings": ["负一千二百四十六点八零", "负一千二百四十六点八", "负一千两百四十六点八零", "负一千两百四十六点八"]}], "split": "dev"}
+{"id": "zh-CN-0271", "line": 271, "category": "ordinal", "text": "第1名至第3名可获得免单资格，快来参与排名！", "targets": [{"written": "第1名", "readings": ["第一名"]}, {"written": "第3名", "readings": ["第三名"]}], "split": "dev"}
+{"id": "zh-CN-0272", "line": 272, "category": "range", "text": "本品适用于2-5人家庭使用。", "targets": [{"written": "2-5人", "readings": ["两到五人", "二到五人"]}], "split": "dev"}
+{"id": "zh-CN-0273", "line": 273, "category": "fraction", "text": "活动期间订单量已达目标的2/3，再接再厉！", "targets": [{"written": "2/3", "readings": ["三分之二"]}], "split": "dev"}
+{"id": "zh-CN-0274", "line": 274, "category": "alnum", "text": "PS5国行主机现货，当天发货。", "targets": [{"written": "PS5", "readings": ["PS五"]}], "split": "dev"}
+{"id": "zh-CN-0275", "line": 275, "category": "math", "text": "满减计算器：568-100×2=368，到手价一目了然。", "targets": [{"written": "568-100×2=368", "readings": ["五百六十八减一百乘以二等于三百六十八"]}], "split": "dev"}
+{"id": "zh-CN-0276", "line": 276, "category": "electronic", "text": "活动详情见m.jd.com/1013，手机打开即可。", "targets": [{"written": "m.jd.com/1013", "readings": ["m点jd点com斜杠幺零幺三", "m点jd点com斜杠幺零一三", "m点jd点com斜杠一零幺三", "m点jd点com斜杠一零一三"]}], "split": "test"}
+{"id": "zh-CN-0277", "line": 277, "category": "mixed", "text": "10.13当天下单，满199立减30。", "targets": [{"written": "10.13", "readings": ["十月十三日", "十月十三"]}, {"written": "满199", "readings": ["满一百九十九"]}, {"written": "30", "readings": ["三十"]}], "split": "test"}
+{"id": "zh-CN-0278", "line": 278, "category": "currency", "text": "定金¥100抵¥300，尾款支付时自动抵扣。", "targets": [{"written": "¥100", "readings": ["一百元"]}, {"written": "¥300", "readings": ["三百元"]}], "split": "dev"}
+{"id": "zh-CN-0279", "line": 279, "category": "percent", "text": "本店退货率低于1%，放心购买。", "targets": [{"written": "1%", "readings": ["百分之一"]}], "split": "dev"}
+{"id": "zh-CN-0280", "line": 280, "category": "date", "text": "您的会员将于2026-11-30到期，请及时续费。", "targets": [{"written": "2026-11-30", "readings": ["二零二六年十一月三十日"]}], "split": "dev"}
+{"id": "zh-CN-0281", "line": 281, "category": "time", "text": "快递员备注：上午11点前送到，放门口即可。", "targets": [{"written": "上午11点前", "readings": ["上午十一点前"]}], "split": "test"}
+{"id": "zh-CN-0282", "line": 282, "category": "phone", "text": "防诈提醒：96110来电请务必接听。", "targets": [{"written": "96110", "readings": ["九六幺幺零", "九六幺一零", "九六一幺零", "九六一一零"]}], "split": "dev"}
+{"id": "zh-CN-0283", "line": 283, "category": "code", "text": "快递单号SF1480369521457，请登录官网查询。", "targets": [{"written": "SF1480369521457", "readings": ["SF幺四八零三六九五二幺四五七", "SF幺四八零三六九五二一四五七", "SF一四八零三六九五二幺四五七", "SF一四八零三六九五二一四五七"]}], "split": "dev"}
+{"id": "zh-CN-0284", "line": 284, "category": "unit", "text": "空调1.5匹，适合小卧室。", "targets": [{"written": "1.5匹", "readings": ["一点五匹", "一匹半"]}], "split": "dev"}
+{"id": "zh-CN-0285", "line": 285, "category": "counter", "text": "套餐包含4道主菜、2份甜品。", "targets": [{"written": "4道", "readings": ["四道"]}, {"written": "2份", "readings": ["两份"]}], "split": "test"}
+{"id": "zh-CN-0286", "line": 286, "category": "cardinal", "text": "该款商品页面浏览量已突破1,000万。", "targets": [{"written": "1,000万", "readings": ["一千万"]}], "split": "test"}
+{"id": "zh-CN-0287", "line": 287, "category": "decimal", "text": "当前油价7.56元/升，加满一箱约三百元。", "targets": [{"written": "7.56元/升", "readings": ["每升七点五六元", "七点五六元一升"]}], "split": "test"}
+{"id": "zh-CN-0288", "line": 288, "category": "sign", "text": "本店差评率<0.5%，品质有保障。", "targets": [{"written": "<0.5%", "readings": ["小于百分之零点五", "低于百分之零点五"]}], "split": "test"}
+{"id": "zh-CN-0289", "line": 289, "category": "ordinal", "text": "您是本次活动的第258位中奖用户。", "targets": [{"written": "第258位", "readings": ["第二百五十八位", "第两百五十八位"]}], "split": "test"}
+{"id": "zh-CN-0290", "line": 290, "category": "range", "text": "参考价¥2,399-2,899，以门店实际售价为准。", "targets": [{"written": "¥2,399-2,899", "readings": ["两千三百九十九到两千八百九十九元", "两千三百九十九到二千八百九十九元", "二千三百九十九到两千八百九十九元", "二千三百九十九到二千八百九十九元"]}], "split": "dev"}
+{"id": "zh-CN-0291", "line": 291, "category": "fraction", "text": "本次促销让利幅度约为商品毛利的1/2。", "targets": [{"written": "1/2", "readings": ["二分之一"]}], "split": "dev"}
+{"id": "zh-CN-0292", "line": 292, "category": "alnum", "text": "X5型号已停产，建议选购新款。", "targets": [{"written": "X5", "readings": ["X五"]}], "split": "dev"}
+{"id": "zh-CN-0293", "line": 293, "category": "math", "text": "按揭公式演示：1,000,000×0.045÷12=3,750，即首月利息。", "targets": [{"written": "1,000,000×0.045÷12=3,750", "readings": ["一百万乘以零点零四五除以十二等于三千七百五十"]}], "split": "dev"}
+{"id": "zh-CN-0294", "line": 294, "category": "electronic", "text": "投诉建议请发送至tousu@mall2026.com。", "targets": [{"written": "tousu@mall2026.com", "readings": ["tousu艾特mall二零二六点com"]}], "split": "dev"}
+{"id": "zh-CN-0295", "line": 295, "category": "mixed", "text": "【中国银行】10/1321:17，您的账户支出¥1,999.00。", "targets": [{"written": "10/13", "readings": ["十月十三日", "十月十三"]}, {"written": "21:17", "readings": ["二十一点十七分"]}, {"written": "¥1,999.00", "readings": ["一千九百九十九元整", "一千九百九十九元"]}], "split": "dev"}
+{"id": "zh-CN-0296", "line": 296, "category": "currency", "text": "运费到付，预计15块左右，具体以快递公司为准。", "targets": [{"written": "15块", "readings": ["十五块"]}], "split": "test"}
+{"id": "zh-CN-0297", "line": 297, "category": "percent", "text": "新品尝鲜价7.5折，仅限前三天。", "targets": [{"written": "7.5折", "readings": ["七点五折", "七五折"]}], "split": "test"}
+{"id": "zh-CN-0298", "line": 298, "category": "date", "text": "预售定金支付截止10月23日，逾期订单自动取消。", "targets": [{"written": "10月23日", "readings": ["十月二十三日"]}], "split": "dev"}
+{"id": "zh-CN-0299", "line": 299, "category": "time", "text": "客服在线时间：每日08:00至23:00。", "targets": [{"written": "08:00", "readings": ["八点整", "八点"]}, {"written": "23:00", "readings": ["二十三点整", "二十三点", "晚上十一点"]}], "split": "test"}
+{"id": "zh-CN-0300", "line": 300, "category": "phone", "text": "官方唯一咨询电话400-6868-100，其他均为假冒。", "targets": [{"written": "400-6868-100", "readings": ["四零零六八六八幺零零", "四零零六八六八一零零"]}], "split": "test"}
+{"id": "zh-CN-0301", "line": 301, "category": "code", "text": "优惠券码XK2026A，结算时输入即可。", "targets": [{"written": "XK2026A", "readings": ["XK二零二六A"]}], "split": "test"}
+{"id": "zh-CN-0302", "line": 302, "category": "unit", "text": "这款电动车续航80km，充电6小时即可充满。", "targets": [{"written": "80km", "readings": ["八十公里"]}, {"written": "6小时", "readings": ["六小时"]}], "split": "dev"}
+{"id": "zh-CN-0303", "line": 303, "category": "counter", "text": "每人每天限领1张，共2000张。", "targets": [{"written": "1张", "readings": ["一张"]}, {"written": "2000张", "readings": ["两千张", "二千张"]}], "split": "test"}
+{"id": "zh-CN-0304", "line": 304, "category": "mixed", "text": "【POS小票】2026-10-13 12:48，消费¥73.50，卡号尾号2201。", "targets": [{"written": "2026-10-13 12:48", "readings": ["二零二六年十月十三日十二点四十八分"]}, {"written": "¥73.50", "readings": ["七十三点五元", "七十三块五"]}, {"written": "2201", "readings": ["二二零幺", "二二零一"]}], "split": "test"}
+{"id": "zh-CN-0306", "line": 306, "category": "date", "text": "根据《通知》要求，各单位须于2026年3月31日前完成年度报表报送。", "targets": [{"written": "2026年3月31日", "readings": ["二零二六年三月三十一日"]}], "split": "test"}
+{"id": "zh-CN-0307", "line": 307, "category": "ordinal", "text": "依照《民法典》第1079条，夫妻一方要求离婚的，可以由有关组织进行调解。", "targets": [{"written": "第1079条", "readings": ["第一千零七十九条"]}], "split": "test"}
+{"id": "zh-CN-0308", "line": 308, "category": "cardinal", "text": "本次公开招聘共设岗位46个，计划招录118人。", "targets": [{"written": "46", "readings": ["四十六"]}, {"written": "118", "readings": ["一百一十八"]}], "split": "dev"}
+{"id": "zh-CN-0309", "line": 309, "category": "time", "text": "听证会定于上午9:30在区政务服务中心会议室举行。", "targets": [{"written": "上午9:30", "readings": ["上午九点三十分", "上午九点半"]}], "split": "dev"}
+{"id": "zh-CN-0310", "line": 310, "category": "currency", "text": "逾期未缴纳的，按日加收滞纳金，罚款金额为人民币2,000元。", "targets": [{"written": "人民币2,000元", "readings": ["人民币两千元", "人民币二千元"]}], "split": "test"}
+{"id": "zh-CN-0311", "line": 311, "category": "percent", "text": "本学期期末考试成绩占总评的60%，平时成绩占40%。", "targets": [{"written": "60%", "readings": ["百分之六十"]}, {"written": "40%", "readings": ["百分之四十"]}], "split": "dev"}
+{"id": "zh-CN-0312", "line": 312, "category": "range", "text": "报名时间为7月1日至7月15日，逾期不予受理。", "targets": [{"written": "7月1日至7月15日", "readings": ["七月一日至七月十五日"]}], "split": "dev"}
+{"id": "zh-CN-0313", "line": 313, "category": "counter", "text": "新学期每班配备2名班主任助理和3台多媒体设备。", "targets": [{"written": "2名", "readings": ["两名"]}, {"written": "3台", "readings": ["三台"]}], "split": "dev"}
+{"id": "zh-CN-0314", "line": 314, "category": "code", "text": "请持本人身份证到A108窗口办理。", "targets": [{"written": "A108", "readings": ["A一零八", "A幺零八"]}], "split": "dev"}
+{"id": "zh-CN-0315", "line": 315, "category": "phone", "text": "咨询电话：010-66881234。", "targets": [{"written": "010-66881234", "readings": ["零幺零六六八八幺二三四", "零幺零六六八八一二三四", "零一零六六八八幺二三四", "零一零六六八八一二三四"]}], "split": "dev"}
+{"id": "zh-CN-0316", "line": 316, "category": "mixed", "text": "2025学年第二学期学费为6,800元，请于9月5日前缴清。", "targets": [{"written": "2025学年", "readings": ["二零二五学年"]}, {"written": "6,800元", "readings": ["六千八百元"]}, {"written": "9月5日", "readings": ["九月五日"]}], "split": "dev"}
+{"id": "zh-CN-0317", "line": 317, "category": "mixed", "text": "小明本学期平均绩点为3.72，位列年级前10%。", "targets": [{"written": "3.72", "readings": ["三点七二"]}, {"written": "10%", "readings": ["百分之十"]}], "split": "dev"}
+{"id": "zh-CN-0318", "line": 318, "category": "fraction", "text": "会议应有2/3以上成员出席方可表决。", "targets": [{"written": "2/3", "readings": ["三分之二"]}], "split": "dev"}
+{"id": "zh-CN-0319", "line": 319, "category": "unit", "text": "校园内机动车限速20km/h。", "targets": [{"written": "20km/h", "readings": ["每小时二十公里", "二十公里每小时"]}], "split": "test"}
+{"id": "zh-CN-0320", "line": 320, "category": "ordinal", "text": "第3届全国中学生科技创新大赛将于明年春季举办。", "targets": [{"written": "第3届", "readings": ["第三届"]}], "split": "dev"}
+{"id": "zh-CN-0321", "line": 321, "category": "date", "text": "自2026-01-01起，新修订的《城市市容管理条例》正式施行。", "targets": [{"written": "2026-01-01", "readings": ["二零二六年一月一日"]}], "split": "test"}
+{"id": "zh-CN-0322", "line": 322, "category": "time", "text": "门禁系统每日22:30准时关闭，晚归学生请提前报备。", "targets": [{"written": "22:30", "readings": ["二十二点三十分", "二十二点半", "二十二点三十"]}], "split": "dev"}
+{"id": "zh-CN-0323", "line": 323, "category": "cardinal", "text": "截至目前，全市累计发放居住证1,284,560张。", "targets": [{"written": "1,284,560", "readings": ["一百二十八万四千五百六十"]}], "split": "dev"}
+{"id": "zh-CN-0324", "line": 324, "category": "percent", "text": "本科毕业生初次就业率达到92.6%。", "targets": [{"written": "92.6%", "readings": ["百分之九十二点六"]}], "split": "dev"}
+{"id": "zh-CN-0325", "line": 325, "category": "currency", "text": "申领高龄津贴的，每人每月发放￥300。", "targets": [{"written": "￥300", "readings": ["三百元"]}], "split": "dev"}
+{"id": "zh-CN-0326", "line": 326, "category": "code", "text": "报名序号20260413请妥善保存，考试当天凭此号入场。", "targets": [{"written": "20260413", "readings": ["二零二六零四幺三", "二零二六零四一三"]}], "split": "dev"}
+{"id": "zh-CN-0327", "line": 327, "category": "range", "text": "考试时间为9:00-11:30。", "targets": [{"written": "9:00-11:30", "readings": ["九点到十一点三十分", "九点到十一点半", "九点至十一点三十分", "九点至十一点半"]}], "split": "test"}
+{"id": "zh-CN-0328", "line": 328, "category": "mixed", "text": "每位考生只能携带1支黑色签字笔和2支2B铅笔进入考场。", "targets": [{"written": "1支", "readings": ["一支"]}, {"written": "2支", "readings": ["两支"]}, {"written": "2B", "readings": ["二B"]}], "split": "dev"}
+{"id": "zh-CN-0329", "line": 329, "category": "counter", "text": "公示期为7个工作日，期间如有异议请书面反映。", "targets": [{"written": "7个", "readings": ["七个"]}], "split": "dev"}
+{"id": "zh-CN-0330", "line": 330, "category": "date", "text": "本案于2025年11月6日公开开庭审理。", "targets": [{"written": "2025年11月6日", "readings": ["二零二五年十一月六日"]}], "split": "dev"}
+{"id": "zh-CN-0331", "line": 331, "category": "ordinal", "text": "根据《劳动合同法》第47条，经济补偿按劳动者在本单位工作的年限计算。", "targets": [{"written": "第47条", "readings": ["第四十七条"]}], "split": "test"}
+{"id": "zh-CN-0332", "line": 332, "category": "currency", "text": "被告应于判决生效之日起十日内支付原告货款人民币158,000元及利息。", "targets": [{"written": "人民币158,000元", "readings": ["人民币十五万八千元"]}], "split": "test"}
+{"id": "zh-CN-0333", "line": 333, "category": "range", "text": "体育馆开放时间调整为每日6:00至21:00。", "targets": [{"written": "6:00至21:00", "readings": ["六点至二十一点"]}], "split": "test"}
+{"id": "zh-CN-0334", "line": 334, "category": "percent", "text": "据区统计局公示，去年居民人均可支配收入同比增长3.4%。", "targets": [{"written": "3.4%", "readings": ["百分之三点四"]}], "split": "dev"}
+{"id": "zh-CN-0335", "line": 335, "category": "mixed", "text": "高考报名费130元，缴费截止11月20日17:00。", "targets": [{"written": "130元", "readings": ["一百三十元"]}, {"written": "11月20日", "readings": ["十一月二十日"]}, {"written": "17:00", "readings": ["十七点"]}], "split": "test"}
+{"id": "zh-CN-0336", "line": 336, "category": "cardinal", "text": "全区共有义务教育阶段学校83所，在校学生5.6万人。", "targets": [{"written": "83", "readings": ["八十三"]}, {"written": "5.6万", "readings": ["五点六万"]}], "split": "test"}
+{"id": "zh-CN-0337", "line": 337, "category": "unit", "text": "新建教学楼总建筑面积12,500㎡。", "targets": [{"written": "12,500㎡", "readings": ["一万两千五百平方米", "一万二千五百平方米"]}], "split": "dev"}
+{"id": "zh-CN-0338", "line": 338, "category": "decimal", "text": "期末物理成绩87.5分，较上次月考有明显进步。", "targets": [{"written": "87.5分", "readings": ["八十七点五分"]}], "split": "dev"}
+{"id": "zh-CN-0339", "line": 339, "category": "counter", "text": "本次听证会共邀请12位听证代表和3位专家。", "targets": [{"written": "12位", "readings": ["十二位"]}, {"written": "3位", "readings": ["三位"]}], "split": "dev"}
+{"id": "zh-CN-0340", "line": 340, "category": "code", "text": "准考证号为3401 2026 0157，请核对无误后签字。", "targets": [{"written": "3401 2026 0157", "readings": ["三四零幺二零二六零幺五七", "三四零幺二零二六零一五七", "三四零一二零二六零幺五七", "三四零一二零二六零一五七"]}], "split": "dev"}
+{"id": "zh-CN-0341", "line": 341, "category": "phone", "text": "举报电话12345，受理时间为工作日。", "targets": [{"written": "12345", "readings": ["幺二三四五", "一二三四五"]}], "split": "dev"}
+{"id": "zh-CN-0342", "line": 342, "category": "range", "text": "小学一年级新生入学年龄为6至7周岁。", "targets": [{"written": "6至7周岁", "readings": ["六至七周岁"]}], "split": "test"}
+{"id": "zh-CN-0343", "line": 343, "category": "date", "text": "请家长于10月13日（周二）前完成线上确认。", "targets": [{"written": "10月13日", "readings": ["十月十三日"]}], "split": "test"}
+{"id": "zh-CN-0344", "line": 344, "category": "ordinal", "text": "本校第28届运动会定于下周五举行，届时全校停课一天。", "targets": [{"written": "第28届", "readings": ["第二十八届"]}], "split": "dev"}
+{"id": "zh-CN-0345", "line": 345, "category": "fraction", "text": "参会代表1/4以上联名可提出临时动议。", "targets": [{"written": "1/4", "readings": ["四分之一"]}], "split": "test"}
+{"id": "zh-CN-0346", "line": 346, "category": "range", "text": "晚自习时间为19:00—21:30，期间不得随意离开教室。", "targets": [{"written": "19:00—21:30", "readings": ["十九点到二十一点三十分", "十九点到二十一点半", "十九点至二十一点三十分", "十九点至二十一点半"]}], "split": "dev"}
+{"id": "zh-CN-0347", "line": 347, "category": "currency", "text": "一次性创业补贴标准为1万元，申请人须持营业执照办理。", "targets": [{"written": "1万元", "readings": ["一万元"]}], "split": "dev"}
+{"id": "zh-CN-0348", "line": 348, "category": "percent", "text": "受理窗口满意度测评结果：非常满意78.3%，满意19.2%。", "targets": [{"written": "78.3%", "readings": ["百分之七十八点三"]}, {"written": "19.2%", "readings": ["百分之十九点二"]}], "split": "dev"}
+{"id": "zh-CN-0349", "line": 349, "category": "counter", "text": "该法规共6章58条，自公布之日起施行。", "targets": [{"written": "6章", "readings": ["六章"]}, {"written": "58条", "readings": ["五十八条"]}], "split": "dev"}
+{"id": "zh-CN-0350", "line": 350, "category": "currency", "text": "违反前款规定的，处500元以上2,000元以下罚款。", "targets": [{"written": "500元", "readings": ["五百元"]}, {"written": "2,000元", "readings": ["两千元", "二千元"]}], "split": "dev"}
+{"id": "zh-CN-0351", "line": 351, "category": "date", "text": "学籍信息核对截止日期：2026.9.30。", "targets": [{"written": "2026.9.30", "readings": ["二零二六年九月三十日"]}], "split": "dev"}
+{"id": "zh-CN-0352", "line": 352, "category": "ordinal", "text": "社保经办3号、5号窗口今日暂停服务。", "targets": [{"written": "3号", "readings": ["三号"]}, {"written": "5号", "readings": ["五号"]}], "split": "dev"}
+{"id": "zh-CN-0353", "line": 353, "category": "unit", "text": "教室人均使用面积不低于1.36㎡。", "targets": [{"written": "1.36㎡", "readings": ["一点三六平方米"]}], "split": "test"}
+{"id": "zh-CN-0354", "line": 354, "category": "mixed", "text": "本次考试共4门科目，每科满分150分。", "targets": [{"written": "4门", "readings": ["四门"]}, {"written": "150分", "readings": ["一百五十分"]}], "split": "dev"}
+{"id": "zh-CN-0355", "line": 355, "category": "phone", "text": "教育局基础教育科联系电话0571-87654321。", "targets": [{"written": "0571-87654321", "readings": ["零五七幺八七六五四三二幺", "零五七幺八七六五四三二一", "零五七一八七六五四三二幺", "零五七一八七六五四三二一"]}], "split": "dev"}
+{"id": "zh-CN-0356", "line": 356, "category": "unit", "text": "初中阶段学生每天在校时间原则上不超过8小时。", "targets": [{"written": "8小时", "readings": ["八小时"]}], "split": "test"}
+{"id": "zh-CN-0357", "line": 357, "category": "date", "text": "2024年秋季入学的学生适用新版课程方案。", "targets": [{"written": "2024年秋季", "readings": ["二零二四年秋季"]}], "split": "test"}
+{"id": "zh-CN-0358", "line": 358, "category": "time", "text": "请各班于下午2点前将班级安全检查表交至教务处。", "targets": [{"written": "下午2点", "readings": ["下午两点"]}], "split": "test"}
+{"id": "zh-CN-0359", "line": 359, "category": "cardinal", "text": "本次调查共发放问卷3,200份，回收有效问卷3,047份。", "targets": [{"written": "3,200", "readings": ["三千两百", "三千二百"]}, {"written": "3,047", "readings": ["三千零四十七"]}], "split": "test"}
+{"id": "zh-CN-0360", "line": 360, "category": "ordinal", "text": "第2轮面试名单已在人事处公告栏公布。", "targets": [{"written": "第2轮", "readings": ["第二轮"]}], "split": "dev"}
+{"id": "zh-CN-0361", "line": 361, "category": "percent", "text": "体育课开课率需达到100%。", "targets": [{"written": "100%", "readings": ["百分之百", "百分之一百"]}], "split": "dev"}
+{"id": "zh-CN-0362", "line": 362, "category": "currency", "text": "困难学生助学金分为三档，分别为每年4,500元、3,300元和2,100元。", "targets": [{"written": "4,500元", "readings": ["四千五百元"]}, {"written": "3,300元", "readings": ["三千三百元"]}, {"written": "2,100元", "readings": ["两千一百元", "二千一百元"]}], "split": "test"}
+{"id": "zh-CN-0363", "line": 363, "category": "counter", "text": "请在规定时间内登录系统，填写6位验证码完成实名认证。", "targets": [{"written": "6位", "readings": ["六位"]}], "split": "dev"}
+{"id": "zh-CN-0364", "line": 364, "category": "alnum", "text": "体检报告请提交至B2办公室。", "targets": [{"written": "B2", "readings": ["B二"]}], "split": "test"}
+{"id": "zh-CN-0365", "line": 365, "category": "math", "text": "该校生师比为14.8:1。", "targets": [{"written": "14.8:1", "readings": ["十四点八比一"]}], "split": "test"}
+{"id": "zh-CN-0366", "line": 366, "category": "time", "text": "食堂早餐自6:30开始供应，请勿提前排队。", "targets": [{"written": "6:30", "readings": ["六点三十分", "六点半"]}], "split": "dev"}
+{"id": "zh-CN-0367", "line": 367, "category": "counter", "text": "本通知自发布之日起执行，有效期5年。", "targets": [{"written": "5年", "readings": ["五年"]}], "split": "test"}
+{"id": "zh-CN-0368", "line": 368, "category": "range", "text": "每周体育活动时间不少于3—4课时。", "targets": [{"written": "3—4", "readings": ["三到四"]}], "split": "dev"}
+{"id": "zh-CN-0369", "line": 369, "category": "counter", "text": "申请材料一式3份，其中原件1份、复印件2份。", "targets": [{"written": "3", "readings": ["三"]}, {"written": "1", "readings": ["一"]}, {"written": "2", "readings": ["两"]}], "split": "dev"}
+{"id": "zh-CN-0370", "line": 370, "category": "mixed", "text": "请第3考场的考生于开考前15分钟进入考场。", "targets": [{"written": "第3考场", "readings": ["第三考场"]}, {"written": "15分钟", "readings": ["十五分钟"]}], "split": "test"}
+{"id": "zh-CN-0371", "line": 371, "category": "currency", "text": "高中阶段学费标准：省级示范高中每生每学期1,200元。", "targets": [{"written": "1,200元", "readings": ["一千两百元", "一千二百元"]}], "split": "dev"}
+{"id": "zh-CN-0372", "line": 372, "category": "percent", "text": "市民对社区养老服务的知晓率提升至87%。", "targets": [{"written": "87%", "readings": ["百分之八十七"]}], "split": "test"}
+{"id": "zh-CN-0373", "line": 373, "category": "phone", "text": "疫情防控咨询热线0755-12320。", "targets": [{"written": "0755-12320", "readings": ["零七五五幺二三二零", "零七五五一二三二零"]}], "split": "dev"}
+{"id": "zh-CN-0374", "line": 374, "category": "mixed", "text": "请携带准考证、身份证及《考生须知》到5楼508室报到。", "targets": [{"written": "5楼", "readings": ["五楼"]}, {"written": "508室", "readings": ["五零八室"]}], "split": "test"}
+{"id": "zh-CN-0375", "line": 375, "category": "unit", "text": "新建操场跑道全长400m，单条跑道宽1.22m。", "targets": [{"written": "400m", "readings": ["四百米"]}, {"written": "1.22m", "readings": ["一点二二米"]}], "split": "dev"}
+{"id": "zh-CN-0376", "line": 376, "category": "date", "text": "第二次补考安排在2027年3月进行，具体时间另行通知。", "targets": [{"written": "2027年3月", "readings": ["二零二七年三月"]}], "split": "test"}
+{"id": "zh-CN-0377", "line": 377, "category": "cardinal", "text": "本次法治讲座面向全校1,900余名师生。", "targets": [{"written": "1,900余", "readings": ["一千九百余"]}], "split": "test"}
+{"id": "zh-CN-0378", "line": 378, "category": "fraction", "text": "凡请假超过课时总数1/3的，不得参加期末考试。", "targets": [{"written": "1/3", "readings": ["三分之一"]}], "split": "dev"}
+{"id": "zh-CN-0379", "line": 379, "category": "counter", "text": "每位教师每学年须完成不少于72学时的继续教育。", "targets": [{"written": "72学时", "readings": ["七十二学时"]}], "split": "dev"}
+{"id": "zh-CN-0380", "line": 380, "category": "time", "text": "校车发车时间：早7:10，晚17:40。", "targets": [{"written": "7:10", "readings": ["七点十分"]}, {"written": "17:40", "readings": ["十七点四十分"]}], "split": "dev"}
+{"id": "zh-CN-0381", "line": 381, "category": "math", "text": "请计算18×25的值，并写出验算过程。", "targets": [{"written": "18×25", "readings": ["十八乘以二十五"]}], "split": "dev"}
+{"id": "zh-CN-0382", "line": 382, "category": "percent", "text": "申请公租房的家庭人均收入须低于上年度平均水平的80%。", "targets": [{"written": "80%", "readings": ["百分之八十"]}], "split": "dev"}
+{"id": "zh-CN-0383", "line": 383, "category": "currency", "text": "租赁补贴每月最高¥1,000，按季度发放。", "targets": [{"written": "¥1,000", "readings": ["一千元"]}], "split": "dev"}
+{"id": "zh-CN-0384", "line": 384, "category": "ordinal", "text": "本学期第3次家长会定于本周六上午召开。", "targets": [{"written": "第3次", "readings": ["第三次"]}], "split": "dev"}
+{"id": "zh-CN-0385", "line": 385, "category": "date", "text": "办理期限：2026/4/1起至2026/6/30止。", "targets": [{"written": "2026/4/1", "readings": ["二零二六年四月一日"]}, {"written": "2026/6/30", "readings": ["二零二六年六月三十日"]}], "split": "dev"}
+{"id": "zh-CN-0386", "line": 386, "category": "mixed", "text": "请使用A4纸双面打印申请表，并在右上角粘贴1寸近期免冠照片。", "targets": [{"written": "A4", "readings": ["A四"]}, {"written": "1寸", "readings": ["一寸"]}], "split": "test"}
+{"id": "zh-CN-0387", "line": 387, "category": "cardinal", "text": "全市共有2,318名志愿者参与本次人口普查工作。", "targets": [{"written": "2,318", "readings": ["两千三百一十八", "二千三百一十八"]}], "split": "dev"}
+{"id": "zh-CN-0388", "line": 388, "category": "mixed", "text": "义务教育阶段班额不超过45人；高中阶段50—55人。", "targets": [{"written": "45人", "readings": ["四十五人"]}, {"written": "50—55人", "readings": ["五十到五十五人"]}], "split": "test"}
+{"id": "zh-CN-0389", "line": 389, "category": "counter", "text": "查询录取结果请输入考生号后4位及身份证号。", "targets": [{"written": "4位", "readings": ["四位"]}], "split": "test"}
+{"id": "zh-CN-0390", "line": 390, "category": "time", "text": "应急疏散演练将于14:00准时拉响警报，请勿惊慌。", "targets": [{"written": "14:00", "readings": ["十四点"]}], "split": "dev"}
+{"id": "zh-CN-0391", "line": 391, "category": "decimal", "text": "市区道路交通事故率下降0.8个千分点。", "targets": [{"written": "0.8", "readings": ["零点八"]}], "split": "dev"}
+{"id": "zh-CN-0392", "line": 392, "category": "unit", "text": "校园网单用户带宽提升至100Mbps。", "targets": [{"written": "100Mbps", "readings": ["一百兆", "一百Mbps"]}], "split": "dev"}
+{"id": "zh-CN-0393", "line": 393, "category": "percent", "text": "学位论文查重率超过15%的不得参加答辩。", "targets": [{"written": "15%", "readings": ["百分之十五"]}], "split": "dev"}
+{"id": "zh-CN-0394", "line": 394, "category": "currency", "text": "国家奖学金每人8000元，省政府奖学金每人6000元。", "targets": [{"written": "8000元", "readings": ["八千元"]}, {"written": "6000元", "readings": ["六千元"]}], "split": "dev"}
+{"id": "zh-CN-0395", "line": 395, "category": "ordinal", "text": "本案系该法院今年审结的第1,200起民事案件。", "targets": [{"written": "第1,200起", "readings": ["第一千二百起"]}], "split": "dev"}
+{"id": "zh-CN-0396", "line": 396, "category": "decimal", "text": "我省今年共有47.3万名考生参加高考。", "targets": [{"written": "47.3万", "readings": ["四十七点三万"]}], "split": "dev"}
+{"id": "zh-CN-0397", "line": 397, "category": "mixed", "text": "人社局服务热线12333，工作日8:30—12:00受理。", "targets": [{"written": "12333", "readings": ["幺二三三三", "一二三三三"]}, {"written": "8:30—12:00", "readings": ["八点半到十二点"]}], "split": "dev"}
+{"id": "zh-CN-0398", "line": 398, "category": "counter", "text": "本次抽查共涉及18家培训机构，发现问题27处。", "targets": [{"written": "18家", "readings": ["十八家"]}, {"written": "27处", "readings": ["二十七处"]}], "split": "dev"}
+{"id": "zh-CN-0399", "line": 399, "category": "mixed", "text": "学校定于9月28日至10月8日放假，共11天。", "targets": [{"written": "9月28日", "readings": ["九月二十八日"]}, {"written": "10月8日", "readings": ["十月八日"]}, {"written": "11天", "readings": ["十一天"]}], "split": "dev"}
+{"id": "zh-CN-0400", "line": 400, "category": "mixed", "text": "居民身份证有效期届满前90日内可申请换领，窗口编号A3。", "targets": [{"written": "90日", "readings": ["九十日"]}, {"written": "A3", "readings": ["A三"]}], "split": "dev"}
+{"id": "zh-CN-0401", "line": 401, "category": "range", "text": "城乡居民基本养老保险缴费档次为每年200元至3,000元。", "targets": [{"written": "200元至3,000元", "readings": ["两百元至三千元", "二百元至三千元"]}], "split": "test"}
+{"id": "zh-CN-0402", "line": 402, "category": "unit", "text": "高一新生军训期间每日训练时间不超过6小时，气温超过35℃时停训。", "targets": [{"written": "6小时", "readings": ["六小时"]}, {"written": "35℃", "readings": ["三十五摄氏度", "三十五度"]}], "split": "test"}
+{"id": "zh-CN-0403", "line": 403, "category": "percent", "text": "本次执法检查发现，3成以上商户未按规定明码标价。", "targets": [{"written": "3成", "readings": ["三成"]}], "split": "dev"}
+{"id": "zh-CN-0404", "line": 404, "category": "cardinal", "text": "听证代表名额15名，报名人数超过名额时采取随机抽取方式确定。", "targets": [{"written": "15", "readings": ["十五"]}], "split": "dev"}
+{"id": "zh-CN-0405", "line": 405, "category": "mixed", "text": "违规停车的，处200元罚款，记3分。", "targets": [{"written": "200元", "readings": ["两百元", "二百元"]}, {"written": "3分", "readings": ["三分"]}], "split": "test"}
+{"id": "zh-CN-0407", "line": 407, "category": "unit", "text": "该电机额定功率7.5kW，额定转速1450r/min。", "targets": [{"written": "7.5kW", "readings": ["七点五千瓦"]}, {"written": "1450r/min", "readings": ["每分钟一千四百五十转"]}], "split": "dev"}
+{"id": "zh-CN-0408", "line": 408, "category": "unit", "text": "血清肌酐98.6μmol/L，高于参考区间上限。", "targets": [{"written": "98.6μmol/L", "readings": ["九十八点六微摩尔每升"]}], "split": "dev"}
+{"id": "zh-CN-0409", "line": 409, "category": "code", "text": "故障代码E07表示排水泵异常，请检查排水管是否堵塞。", "targets": [{"written": "E07", "readings": ["E零七"]}], "split": "dev"}
+{"id": "zh-CN-0410", "line": 410, "category": "mixed", "text": "服务器于03:17出现响应超时，持续约12分钟。", "targets": [{"written": "03:17", "readings": ["凌晨三点十七分", "三点十七分"]}, {"written": "12分钟", "readings": ["十二分钟"]}], "split": "dev"}
+{"id": "zh-CN-0411", "line": 411, "category": "percent", "text": "系统CPU使用率峰值达到98%，触发告警。", "targets": [{"written": "98%", "readings": ["百分之九十八"]}], "split": "test"}
+{"id": "zh-CN-0412", "line": 412, "category": "range", "text": "建议工作温度范围为-20℃至60℃。", "targets": [{"written": "-20℃至60℃", "readings": ["零下二十摄氏度至六十摄氏度"]}], "split": "dev"}
+{"id": "zh-CN-0413", "line": 413, "category": "counter", "text": "每日3次，每次2片，饭后温水送服。", "targets": [{"written": "3次", "readings": ["三次"]}, {"written": "2片", "readings": ["两片"]}], "split": "dev"}
+{"id": "zh-CN-0414", "line": 414, "category": "alnum", "text": "请将固件升级至v2.3.1后再尝试配对。", "targets": [{"written": "v2.3.1", "readings": ["V二点三点一"]}], "split": "dev"}
+{"id": "zh-CN-0415", "line": 415, "category": "mixed", "text": "该传感器单价¥38.5，起订量500个。", "targets": [{"written": "¥38.5", "readings": ["三十八点五元"]}, {"written": "500个", "readings": ["五百个"]}], "split": "dev"}
+{"id": "zh-CN-0416", "line": 416, "category": "cardinal", "text": "本次压力测试模拟20,000并发用户，平均响应时间保持稳定。", "targets": [{"written": "20,000", "readings": ["两万", "二万"]}], "split": "dev"}
+{"id": "zh-CN-0417", "line": 417, "category": "electronic", "text": "请将完整日志发送至support@example.com。", "targets": [{"written": "support@example.com", "readings": ["support艾特example点com", "supportatexample点com"]}], "split": "test"}
+{"id": "zh-CN-0418", "line": 418, "category": "electronic", "text": "网关默认地址为192.168.1.1。", "targets": [{"written": "192.168.1.1", "readings": ["一九二点一六八点一点一"]}], "split": "dev"}
+{"id": "zh-CN-0419", "line": 419, "category": "unit", "text": "患者体温38.7℃，心率102次/分。", "targets": [{"written": "38.7℃", "readings": ["三十八点七摄氏度", "三十八点七度"]}, {"written": "102次/分", "readings": ["每分钟一百零二次"]}], "split": "test"}
+{"id": "zh-CN-0420", "line": 420, "category": "unit", "text": "空腹血糖6.1mmol/L，属于正常高值。", "targets": [{"written": "6.1mmol/L", "readings": ["六点一毫摩尔每升"]}], "split": "dev"}
+{"id": "zh-CN-0421", "line": 421, "category": "mixed", "text": "在第3步中，请按住电源键5秒直至指示灯闪烁。", "targets": [{"written": "第3步", "readings": ["第三步"]}, {"written": "5秒", "readings": ["五秒"]}], "split": "dev"}
+{"id": "zh-CN-0422", "line": 422, "category": "date", "text": "试剂批号效期至2027-05，过期请勿使用。", "targets": [{"written": "2027-05", "readings": ["二零二七年五月"]}], "split": "dev"}
+{"id": "zh-CN-0423", "line": 423, "category": "math", "text": "按功率公式计算，12V×2A=24W。", "targets": [{"written": "12V×2A=24W", "readings": ["十二伏乘以二安等于二十四瓦"]}], "split": "dev"}
+{"id": "zh-CN-0424", "line": 424, "category": "percent", "text": "实验组有效率86.4%，对照组71.2%。", "targets": [{"written": "86.4%", "readings": ["百分之八十六点四"]}, {"written": "71.2%", "readings": ["百分之七十一点二"]}], "split": "dev"}
+{"id": "zh-CN-0425", "line": 425, "category": "fraction", "text": "取样量为总体积的1/10，混匀后送检。", "targets": [{"written": "1/10", "readings": ["十分之一"]}], "split": "test"}
+{"id": "zh-CN-0426", "line": 426, "category": "mixed", "text": "门诊挂号后请到2楼203诊室候诊。", "targets": [{"written": "2楼", "readings": ["二楼"]}, {"written": "203诊室", "readings": ["二零三诊室"]}], "split": "dev"}
+{"id": "zh-CN-0427", "line": 427, "category": "phone", "text": "设备维修热线400-800-9966。", "targets": [{"written": "400-800-9966", "readings": ["四零零八零零九九六六"]}], "split": "test"}
+{"id": "zh-CN-0428", "line": 428, "category": "sign", "text": "昨夜最低气温-7℃，室外管道存在冻裂风险。", "targets": [{"written": "-7℃", "readings": ["零下七摄氏度", "零下七度"]}], "split": "dev"}
+{"id": "zh-CN-0429", "line": 429, "category": "decimal", "text": "该数据库表当前约有1.8亿条记录，建议分区存储。", "targets": [{"written": "1.8亿", "readings": ["一点八亿"]}], "split": "test"}
+{"id": "zh-CN-0430", "line": 430, "category": "unit", "text": "标准大气压约为101.325kPa。", "targets": [{"written": "101.325kPa", "readings": ["一百零一点三二五千帕"]}], "split": "test"}
+{"id": "zh-CN-0431", "line": 431, "category": "mixed", "text": "手术预计上午10:30开始，请术前8小时禁食。", "targets": [{"written": "上午10:30", "readings": ["上午十点三十分", "上午十点半"]}, {"written": "8小时", "readings": ["八小时"]}], "split": "dev"}
+{"id": "zh-CN-0432", "line": 432, "category": "unit", "text": "成人每日钠摄入量建议不超过2,000mg。", "targets": [{"written": "2,000mg", "readings": ["两千毫克", "二千毫克"]}], "split": "dev"}
+{"id": "zh-CN-0433", "line": 433, "category": "mixed", "text": "安装底座时使用4颗M8螺栓，拧紧扭矩25N·m。", "targets": [{"written": "4颗", "readings": ["四颗"]}, {"written": "M8", "readings": ["M八"]}, {"written": "25N·m", "readings": ["二十五牛米"]}], "split": "dev"}
+{"id": "zh-CN-0434", "line": 434, "category": "code", "text": "当前软件版本号为3.14.2，请确认是否为最新版。", "targets": [{"written": "3.14.2", "readings": ["三点一四点二", "三点十四点二"]}], "split": "test"}
+{"id": "zh-CN-0435", "line": 435, "category": "counter", "text": "本次共采集36份血样，其中2份因溶血作废。", "targets": [{"written": "36份", "readings": ["三十六份"]}, {"written": "2份", "readings": ["两份"]}], "split": "test"}
+{"id": "zh-CN-0436", "line": 436, "category": "electronic", "text": "详细参数见www.example.com/spec。", "targets": [{"written": "www.example.com/spec", "readings": ["三W点example点com斜杠spec", "WWW点example点com斜杠spec"]}], "split": "test"}
+{"id": "zh-CN-0437", "line": 437, "category": "mixed", "text": "充电至80%约需45分钟。", "targets": [{"written": "80%", "readings": ["百分之八十"]}, {"written": "45分钟", "readings": ["四十五分钟"]}], "split": "test"}
+{"id": "zh-CN-0438", "line": 438, "category": "unit", "text": "该药每片含阿司匹林100mg，肠溶片不可掰开。", "targets": [{"written": "100mg", "readings": ["一百毫克"]}], "split": "dev"}
+{"id": "zh-CN-0439", "line": 439, "category": "counter", "text": "该处理器拥有8核16线程，基础频率较上代提升。", "targets": [{"written": "8核", "readings": ["八核"]}, {"written": "16线程", "readings": ["十六线程"]}], "split": "test"}
+{"id": "zh-CN-0440", "line": 440, "category": "range", "text": "机房湿度应控制在40%—60%之间。", "targets": [{"written": "40%—60%", "readings": ["百分之四十到百分之六十"]}], "split": "dev"}
+{"id": "zh-CN-0441", "line": 441, "category": "date", "text": "下次复查时间：2026年4月下旬，请携带本次报告。", "targets": [{"written": "2026年4月下旬", "readings": ["二零二六年四月下旬"]}], "split": "dev"}
+{"id": "zh-CN-0442", "line": 442, "category": "code", "text": "检验报告编号LAB-2026-00831，可在自助机上打印。", "targets": [{"written": "LAB-2026-00831", "readings": ["LAB杠二零二六杠零零八三一", "LAB杠二零二六零零八三一", "LAB二零二六杠零零八三一", "LAB二零二六零零八三一"]}], "split": "dev"}
+{"id": "zh-CN-0443", "line": 443, "category": "time", "text": "实验室开放至晚上10点，10:30后门禁自动上锁。", "targets": [{"written": "晚上10点", "readings": ["晚上十点"]}, {"written": "10:30", "readings": ["十点半"]}], "split": "dev"}
+{"id": "zh-CN-0444", "line": 444, "category": "sign", "text": "示波器显示信号存在+0.25V的直流偏移。", "targets": [{"written": "+0.25V", "readings": ["正零点二五伏"]}], "split": "dev"}
+{"id": "zh-CN-0445", "line": 445, "category": "math", "text": "带宽利用率等于实际吞吐量除以链路带宽，即750÷1000=0.75。", "targets": [{"written": "750÷1000=0.75", "readings": ["七百五十除以一千等于零点七五"]}], "split": "dev"}
+{"id": "zh-CN-0446", "line": 446, "category": "unit", "text": "该样品密度为2.65g/cm³。", "targets": [{"written": "2.65g/cm³", "readings": ["二点六五克每立方厘米"]}], "split": "dev"}
+{"id": "zh-CN-0447", "line": 447, "category": "percent", "text": "本次迭代单元测试覆盖率从63%提升到79%。", "targets": [{"written": "63%", "readings": ["百分之六十三"]}, {"written": "79%", "readings": ["百分之七十九"]}], "split": "test"}
+{"id": "zh-CN-0448", "line": 448, "category": "mixed", "text": "处方：阿莫西林胶囊0.5g，每次2粒，一日3次。", "targets": [{"written": "0.5g", "readings": ["零点五克"]}, {"written": "每次2粒", "readings": ["每次两粒"]}, {"written": "一日3次", "readings": ["一日三次"]}], "split": "dev"}
+{"id": "zh-CN-0449", "line": 449, "category": "code", "text": "内部文档服务器端口为8080，仅限内网访问。", "targets": [{"written": "8080", "readings": ["八零八零", "八千零八十"]}], "split": "dev"}
+{"id": "zh-CN-0450", "line": 450, "category": "date", "text": "该型号已于2023年停产，备件供应至2028年底。", "targets": [{"written": "2023年", "readings": ["二零二三年"]}, {"written": "2028年底", "readings": ["二零二八年底"]}], "split": "dev"}
+{"id": "zh-CN-0451", "line": 451, "category": "cardinal", "text": "真空中光速约为每秒299,792公里。", "targets": [{"written": "299,792", "readings": ["二十九万九千七百九十二"]}], "split": "dev"}
+{"id": "zh-CN-0452", "line": 452, "category": "decimal", "text": "动脉血气pH值为7.35，处于参考范围下限。", "targets": [{"written": "7.35", "readings": ["七点三五"]}], "split": "test"}
+{"id": "zh-CN-0453", "line": 453, "category": "range", "text": "儿童剂量按体重10—15mg/kg计算。", "targets": [{"written": "10—15mg/kg", "readings": ["十到十五毫克每千克"]}], "split": "dev"}
+{"id": "zh-CN-0454", "line": 454, "category": "ordinal", "text": "该补丁修复了第2代产品中的内存泄漏问题。", "targets": [{"written": "第2代", "readings": ["第二代"]}], "split": "test"}
+{"id": "zh-CN-0455", "line": 455, "category": "phone", "text": "急诊科电话020-38765432，夜间照常接听。", "targets": [{"written": "020-38765432", "readings": ["零二零三八七六五四三二"]}], "split": "dev"}
+{"id": "zh-CN-0456", "line": 456, "category": "unit", "text": "X光片显示左侧股骨骨折，断端移位约3mm。", "targets": [{"written": "3mm", "readings": ["三毫米"]}], "split": "dev"}
+{"id": "zh-CN-0457", "line": 457, "category": "percent", "text": "该疫苗在三期临床试验中的保护效力为94.5%。", "targets": [{"written": "94.5%", "readings": ["百分之九十四点五"]}], "split": "test"}
+{"id": "zh-CN-0458", "line": 458, "category": "alnum", "text": "请使用USB3.0接口连接，否则传输速率会明显下降。", "targets": [{"written": "USB3.0", "readings": ["USB三点零"]}], "split": "test"}
+{"id": "zh-CN-0459", "line": 459, "category": "mixed", "text": "本批次共生产12,000件，抽检200件，不合格3件。", "targets": [{"written": "12,000", "readings": ["一万两千", "一万二千"]}, {"written": "200件", "readings": ["两百件", "二百件"]}, {"written": "3件", "readings": ["三件"]}], "split": "test"}
+{"id": "zh-CN-0460", "line": 460, "category": "code", "text": "接口返回404错误，请检查请求路径是否正确。", "targets": [{"written": "404", "readings": ["四零四"]}], "split": "dev"}
+{"id": "zh-CN-0461", "line": 461, "category": "time", "text": "夜班交接时间为20:00，交接内容须双签。", "targets": [{"written": "20:00", "readings": ["二十点", "晚上八点"]}], "split": "dev"}
+{"id": "zh-CN-0462", "line": 462, "category": "cardinal", "text": "本机最多支持255个客户端同时连接。", "targets": [{"written": "255", "readings": ["二百五十五", "两百五十五"]}], "split": "dev"}
+{"id": "zh-CN-0463", "line": 463, "category": "sign", "text": "冷冻库温度应保持在-18℃以下。", "targets": [{"written": "-18℃", "readings": ["零下十八摄氏度", "零下十八度"]}], "split": "dev"}
+{"id": "zh-CN-0464", "line": 464, "category": "math", "text": "一千字节即2^10=1024字节。", "targets": [{"written": "2^10=1024", "readings": ["二的十次方等于一千零二十四"]}], "split": "test"}
+{"id": "zh-CN-0465", "line": 465, "category": "decimal", "text": "该患者BMI为27.8，属超重范围，建议控制饮食。", "targets": [{"written": "27.8", "readings": ["二十七点八"]}], "split": "dev"}
+{"id": "zh-CN-0466", "line": 466, "category": "mixed", "text": "该电缆外径12.6mm，最小弯曲半径为外径的10倍。", "targets": [{"written": "12.6mm", "readings": ["十二点六毫米"]}, {"written": "10倍", "readings": ["十倍"]}], "split": "dev"}
+{"id": "zh-CN-0467", "line": 467, "category": "range", "text": "成人静息心率正常范围为每分钟60—100次。", "targets": [{"written": "60—100", "readings": ["六十到一百"]}], "split": "dev"}
+{"id": "zh-CN-0468", "line": 468, "category": "electronic", "text": "请访问portal.example.cn下载最新驱动程序。", "targets": [{"written": "portal.example.cn", "readings": ["portal点example点cn"]}], "split": "dev"}
+{"id": "zh-CN-0469", "line": 469, "category": "counter", "text": "该试剂盒每盒48人份，开封后请于一个月内用完。", "targets": [{"written": "48人份", "readings": ["四十八人份"]}], "split": "dev"}
+{"id": "zh-CN-0470", "line": 470, "category": "mixed", "text": "系统将于10月18日（周六）02:00—05:00进行停机维护。", "targets": [{"written": "10月18日", "readings": ["十月十八日"]}, {"written": "02:00—05:00", "readings": ["两点到五点", "凌晨两点到五点"]}], "split": "dev"}
+{"id": "zh-CN-0471", "line": 471, "category": "percent", "text": "本次抽样合格率99.2%，不合格品已隔离。", "targets": [{"written": "99.2%", "readings": ["百分之九十九点二"]}], "split": "dev"}
+{"id": "zh-CN-0472", "line": 472, "category": "ordinal", "text": "按照操作手册第4.2节的步骤完成校准。", "targets": [{"written": "第4.2节", "readings": ["第四点二节"]}], "split": "dev"}
+{"id": "zh-CN-0473", "line": 473, "category": "phone", "text": "药品不良反应报告请致电021-62580000。", "targets": [{"written": "021-62580000", "readings": ["零二幺六二五八零零零零", "零二一六二五八零零零零"]}], "split": "test"}
+{"id": "zh-CN-0474", "line": 474, "category": "unit", "text": "每升培养基加入15g琼脂，高压灭菌后倒板。", "targets": [{"written": "15g", "readings": ["十五克"]}], "split": "dev"}
+{"id": "zh-CN-0475", "line": 475, "category": "cardinal", "text": "本次升级共修改247个文件，新增3,112行代码。", "targets": [{"written": "247", "readings": ["二百四十七"]}, {"written": "3,112", "readings": ["三千一百一十二"]}], "split": "dev"}
+{"id": "zh-CN-0476", "line": 476, "category": "mixed", "text": "病床号12床，住院号0098217。", "targets": [{"written": "12床", "readings": ["十二床"]}, {"written": "0098217", "readings": ["零零九八二幺七", "零零九八二一七"]}], "split": "dev"}
+{"id": "zh-CN-0477", "line": 477, "category": "mixed", "text": "路由器支持Wi-Fi 6，无线最高速率2.4Gbps。", "targets": [{"written": "Wi-Fi 6", "readings": ["Wi-Fi六"]}, {"written": "2.4Gbps", "readings": ["二点四Gbps", "二点四G"]}], "split": "dev"}
+{"id": "zh-CN-0478", "line": 478, "category": "mixed", "text": "用药间隔不少于6小时，首次服药时间定在晚上9点。", "targets": [{"written": "6小时", "readings": ["六小时"]}, {"written": "晚上9点", "readings": ["晚上九点"]}], "split": "dev"}
+{"id": "zh-CN-0479", "line": 479, "category": "decimal", "text": "样机实测能量转换效率为0.925，略高于设计值。", "targets": [{"written": "0.925", "readings": ["零点九二五"]}], "split": "dev"}
+{"id": "zh-CN-0480", "line": 480, "category": "range", "text": "激光器工作波长1,530—1,565nm。", "targets": [{"written": "1,530—1,565nm", "readings": ["一千五百三十到一千五百六十五纳米"]}], "split": "dev"}
+{"id": "zh-CN-0481", "line": 481, "category": "math", "text": "剂量计算：70kg×0.1mg/kg=7mg。", "targets": [{"written": "70kg×0.1mg/kg=7mg", "readings": ["七十千克乘以零点一毫克每千克等于七毫克"]}], "split": "dev"}
+{"id": "zh-CN-0482", "line": 482, "category": "counter", "text": "该实验重复5次，取平均值作为最终结果。", "targets": [{"written": "5次", "readings": ["五次"]}], "split": "dev"}
+{"id": "zh-CN-0483", "line": 483, "category": "sign", "text": "该盆地最低点海拔-154m，为该国陆地最低处。", "targets": [{"written": "-154m", "readings": ["负一百五十四米"]}], "split": "dev"}
+{"id": "zh-CN-0484", "line": 484, "category": "unit", "text": "术前测得收缩压135mmHg。", "targets": [{"written": "135mmHg", "readings": ["一百三十五毫米汞柱"]}], "split": "dev"}
+{"id": "zh-CN-0485", "line": 485, "category": "electronic", "text": "网络告警请同步抄送noc@example.net。", "targets": [{"written": "noc@example.net", "readings": ["noc艾特example点net", "nocatexample点net"]}], "split": "test"}
+{"id": "zh-CN-0486", "line": 486, "category": "cardinal", "text": "目前全球在轨卫星数量已超过10,000颗。", "targets": [{"written": "10,000", "readings": ["一万"]}], "split": "dev"}
+{"id": "zh-CN-0487", "line": 487, "category": "mixed", "text": "疫苗第二剂应在首剂接种后28天接种，即12月4日。", "targets": [{"written": "28天", "readings": ["二十八天"]}, {"written": "12月4日", "readings": ["十二月四日"]}], "split": "dev"}
+{"id": "zh-CN-0488", "line": 488, "category": "ordinal", "text": "请按第1至第3项检查内容逐项核对。", "targets": [{"written": "第1至第3项", "readings": ["第一至第三项"]}], "split": "test"}
+{"id": "zh-CN-0489", "line": 489, "category": "percent", "text": "材料含水率降至12%以下方可入库。", "targets": [{"written": "12%", "readings": ["百分之十二"]}], "split": "test"}
+{"id": "zh-CN-0490", "line": 490, "category": "code", "text": "设备序列号SN2026A0917，保修时查验此号。", "targets": [{"written": "SN2026A0917", "readings": ["SN二零二六A零九幺七", "SN二零二六A零九一七"]}], "split": "test"}
+{"id": "zh-CN-0491", "line": 491, "category": "time", "text": "数据备份任务每天凌晨1:00自动执行。", "targets": [{"written": "凌晨1:00", "readings": ["凌晨一点"]}], "split": "test"}
+{"id": "zh-CN-0492", "line": 492, "category": "unit", "text": "该冰箱日耗电量约0.68kWh。", "targets": [{"written": "0.68kWh", "readings": ["零点六八千瓦时", "零点六八度"]}], "split": "test"}
+{"id": "zh-CN-0493", "line": 493, "category": "mixed", "text": "标准差为1.07，变异系数4.3%。", "targets": [{"written": "1.07", "readings": ["一点零七"]}, {"written": "4.3%", "readings": ["百分之四点三"]}], "split": "dev"}
+{"id": "zh-CN-0494", "line": 494, "category": "unit", "text": "每100g样品中检出亚硝酸盐2.1mg。", "targets": [{"written": "100g", "readings": ["一百克"]}, {"written": "2.1mg", "readings": ["二点一毫克"]}], "split": "test"}
+{"id": "zh-CN-0495", "line": 495, "category": "range", "text": "推荐成人每日饮水1.5—2L。", "targets": [{"written": "1.5—2L", "readings": ["一点五到两升", "一点五到二升"]}], "split": "test"}
+{"id": "zh-CN-0496", "line": 496, "category": "math", "text": "溶液按1:3的比例稀释后使用。", "targets": [{"written": "1:3", "readings": ["一比三"]}], "split": "dev"}
+{"id": "zh-CN-0497", "line": 497, "category": "phone", "text": "医院总机0531-85690000。", "targets": [{"written": "0531-85690000", "readings": ["零五三幺八五六九零零零零", "零五三一八五六九零零零零"]}], "split": "dev"}
+{"id": "zh-CN-0498", "line": 498, "category": "cardinal", "text": "测试数据集包含50,000张标注图像。", "targets": [{"written": "50,000", "readings": ["五万"]}], "split": "dev"}
+{"id": "zh-CN-0499", "line": 499, "category": "electronic", "text": "管理后台地址为10.20.30.40:8443。", "targets": [{"written": "10.20.30.40:8443", "readings": ["一零点二零点三零点四零冒号八四四三", "十点二十点三十点四十冒号八四四三"]}], "split": "test"}
+{"id": "zh-CN-0500", "line": 500, "category": "alnum", "text": "操作系统要求：Windows 10或更高版本。", "targets": [{"written": "Windows 10", "readings": ["Windows十"]}], "split": "dev"}
+{"id": "zh-CN-0501", "line": 501, "category": "mixed", "text": "该芯片采用3nm制程，晶体管数量约190亿。", "targets": [{"written": "3nm", "readings": ["三纳米"]}, {"written": "190亿", "readings": ["一百九十亿"]}], "split": "dev"}
+{"id": "zh-CN-0502", "line": 502, "category": "sign", "text": "实测误差±0.5%，满足精度要求。", "targets": [{"written": "±0.5%", "readings": ["正负百分之零点五"]}], "split": "dev"}
+{"id": "zh-CN-0503", "line": 503, "category": "time", "text": "患者于14时20分送入手术室。", "targets": [{"written": "14时20分", "readings": ["十四时二十分", "十四点二十分", "下午两点二十分"]}], "split": "dev"}
+{"id": "zh-CN-0504", "line": 504, "category": "ordinal", "text": "这是该产品上市以来的第5次召回。", "targets": [{"written": "第5次", "readings": ["第五次"]}], "split": "test"}
+{"id": "zh-CN-0505", "line": 505, "category": "percent", "text": "大气二氧化碳浓度较工业革命前上升约50%。", "targets": [{"written": "50%", "readings": ["百分之五十"]}], "split": "dev"}
+{"id": "zh-CN-0506", "line": 506, "category": "math", "text": "每小时产能60÷2.5=24件。", "targets": [{"written": "60÷2.5=24", "readings": ["六十除以二点五等于二十四"]}], "split": "test"}
+{"id": "zh-CN-0508", "line": 508, "category": "mixed", "text": "G1234次列车10:05从北京南站发车。", "targets": [{"written": "G1234次", "readings": ["G幺二三四次", "G一二三四次"]}, {"written": "10:05", "readings": ["十点零五分"]}], "split": "test"}
+{"id": "zh-CN-0509", "line": 509, "category": "mixed", "text": "酒店入住日期2026年5月1日，退房日期5月3日，共2晚。", "targets": [{"written": "2026年5月1日", "readings": ["二零二六年五月一日"]}, {"written": "5月3日", "readings": ["五月三日"]}, {"written": "2晚", "readings": ["两晚"]}], "split": "dev"}
+{"id": "zh-CN-0510", "line": 510, "category": "currency", "text": "成人票¥120，儿童票半价。", "targets": [{"written": "¥120", "readings": ["一百二十元"]}], "split": "dev"}
+{"id": "zh-CN-0511", "line": 511, "category": "mixed", "text": "地铁2号线运营时间为5:30—23:00。", "targets": [{"written": "2号线", "readings": ["二号线"]}, {"written": "5:30—23:00", "readings": ["五点半到二十三点"]}], "split": "test"}
+{"id": "zh-CN-0512", "line": 512, "category": "unit", "text": "距离目的地还有3.6公里，预计十二分钟到达。", "targets": [{"written": "3.6公里", "readings": ["三点六公里"]}], "split": "dev"}
+{"id": "zh-CN-0513", "line": 513, "category": "mixed", "text": "本航班可免费托运1件行李，重量不超过23kg。", "targets": [{"written": "1件", "readings": ["一件"]}, {"written": "23kg", "readings": ["二十三公斤", "二十三千克"]}], "split": "test"}
+{"id": "zh-CN-0514", "line": 514, "category": "code", "text": "您的订单号HT20261013887，请妥善保存。", "targets": [{"written": "HT20261013887", "readings": ["HT二零二六幺零幺三八八七", "HT二零二六幺零一三八八七", "HT二零二六一零幺三八八七", "HT二零二六一零一三八八七"]}], "split": "dev"}
+{"id": "zh-CN-0515", "line": 515, "category": "phone", "text": "民宿房东电话139 0012 3456。", "targets": [{"written": "139 0012 3456", "readings": ["幺三九零零幺二三四五六", "幺三九零零一二三四五六", "一三九零零幺二三四五六", "一三九零零一二三四五六"]}], "split": "dev"}
+{"id": "zh-CN-0516", "line": 516, "category": "cardinal", "text": "该航线全程1,286公里，飞行时间约两小时二十分。", "targets": [{"written": "1,286", "readings": ["一千二百八十六", "一千两百八十六"]}], "split": "dev"}
+{"id": "zh-CN-0517", "line": 517, "category": "alnum", "text": "请前往T2航站楼D16登机口。", "targets": [{"written": "T2", "readings": ["T二"]}, {"written": "D16", "readings": ["D十六", "D幺六"]}], "split": "dev"}
+{"id": "zh-CN-0518", "line": 518, "category": "mixed", "text": "提前30天预订可享85折优惠。", "targets": [{"written": "30天", "readings": ["三十天"]}, {"written": "85折", "readings": ["八五折", "八点五折"]}], "split": "dev"}
+{"id": "zh-CN-0519", "line": 519, "category": "date", "text": "10.13下午茶预约已确认，请准时到店。", "targets": [{"written": "10.13", "readings": ["十月十三日"]}], "split": "dev"}
+{"id": "zh-CN-0520", "line": 520, "category": "time", "text": "末班车23:45发车，请提前到站。", "targets": [{"written": "23:45", "readings": ["二十三点四十五分"]}], "split": "dev"}
+{"id": "zh-CN-0521", "line": 521, "category": "range", "text": "打车费用约35—42元。", "targets": [{"written": "35—42元", "readings": ["三十五到四十二元"]}], "split": "dev"}
+{"id": "zh-CN-0522", "line": 522, "category": "mixed", "text": "此路段限速60km/h，前方500米有测速。", "targets": [{"written": "60km/h", "readings": ["每小时六十公里"]}, {"written": "500米", "readings": ["五百米"]}], "split": "dev"}
+{"id": "zh-CN-0523", "line": 523, "category": "mixed", "text": "请在3号口出站，沿指示牌步行约200米。", "targets": [{"written": "3号口", "readings": ["三号口"]}, {"written": "200米", "readings": ["两百米", "二百米"]}], "split": "dev"}
+{"id": "zh-CN-0524", "line": 524, "category": "counter", "text": "本次团购套餐含4人自助晚餐和2张温泉票。", "targets": [{"written": "4人", "readings": ["四人"]}, {"written": "2张", "readings": ["两张"]}], "split": "test"}
+{"id": "zh-CN-0525", "line": 525, "category": "mixed", "text": "景区开放时间8:00—17:30，16:30停止入园。", "targets": [{"written": "8:00—17:30", "readings": ["八点到十七点半"]}, {"written": "16:30", "readings": ["十六点半"]}], "split": "test"}
+{"id": "zh-CN-0526", "line": 526, "category": "phone", "text": "旅游投诉电话12301。", "targets": [{"written": "12301", "readings": ["幺二三零幺", "幺二三零一", "一二三零幺", "一二三零一"]}], "split": "dev"}
+{"id": "zh-CN-0527", "line": 527, "category": "date", "text": "签证有效期至2027/02/28。", "targets": [{"written": "2027/02/28", "readings": ["二零二七年二月二十八日"]}], "split": "dev"}
+{"id": "zh-CN-0528", "line": 528, "category": "decimal", "text": "今日入园游客已达3.2万人次，接近最大承载量。", "targets": [{"written": "3.2万", "readings": ["三点二万"]}], "split": "test"}
+{"id": "zh-CN-0529", "line": 529, "category": "mixed", "text": "第12届国际马拉松将于下月开跑，沿途18条公交线路临时改道。", "targets": [{"written": "第12届", "readings": ["第十二届"]}, {"written": "18条", "readings": ["十八条"]}], "split": "dev"}
+{"id": "zh-CN-0530", "line": 530, "category": "range", "text": "早餐供应时间6:30—10:00，设于一楼餐厅。", "targets": [{"written": "6:30—10:00", "readings": ["六点半到十点"]}], "split": "dev"}
+{"id": "zh-CN-0531", "line": 531, "category": "currency", "text": "房费含税共计¥1,288。", "targets": [{"written": "¥1,288", "readings": ["一千二百八十八元"]}], "split": "dev"}
+{"id": "zh-CN-0532", "line": 532, "category": "unit", "text": "登山步道全长7.8km，海拔落差420m。", "targets": [{"written": "7.8km", "readings": ["七点八公里"]}, {"written": "420m", "readings": ["四百二十米"]}], "split": "dev"}
+{"id": "zh-CN-0533", "line": 533, "category": "code", "text": "您的座位为05车12F号，请对号入座。", "targets": [{"written": "05车", "readings": ["零五车"]}, {"written": "12F号", "readings": ["十二F号"]}], "split": "dev"}
+{"id": "zh-CN-0534", "line": 534, "category": "fraction", "text": "住宿费用占本次旅行总预算的1/3。", "targets": [{"written": "1/3", "readings": ["三分之一"]}], "split": "dev"}
+{"id": "zh-CN-0535", "line": 535, "category": "electronic", "text": "电子行程单请登录www.12306.cn自行打印。", "targets": [{"written": "www.12306.cn", "readings": ["三W点幺二三零六点cn", "三W点一二三零六点cn", "WWW点幺二三零六点cn", "WWW点一二三零六点cn"]}], "split": "dev"}
+{"id": "zh-CN-0536", "line": 536, "category": "counter", "text": "旅行团共36人，分乘2辆大巴。", "targets": [{"written": "36人", "readings": ["三十六人"]}, {"written": "2辆", "readings": ["两辆"]}], "split": "dev"}
+{"id": "zh-CN-0537", "line": 537, "category": "percent", "text": "该酒店本周入住率达95%。", "targets": [{"written": "95%", "readings": ["百分之九十五"]}], "split": "dev"}
+{"id": "zh-CN-0538", "line": 538, "category": "mixed", "text": "请于起飞前45分钟完成登机手续，登机口于19:20关闭。", "targets": [{"written": "45分钟", "readings": ["四十五分钟"]}, {"written": "19:20", "readings": ["十九点二十分"]}], "split": "dev"}
+{"id": "zh-CN-0539", "line": 539, "category": "mixed", "text": "本周六（10月17日）临时增开2班往返机场的大巴。", "targets": [{"written": "10月17日", "readings": ["十月十七日"]}, {"written": "2班", "readings": ["两班"]}], "split": "dev"}
+{"id": "zh-CN-0540", "line": 540, "category": "currency", "text": "本段高速公路通行费48.5元。", "targets": [{"written": "48.5元", "readings": ["四十八点五元"]}], "split": "dev"}
+{"id": "zh-CN-0541", "line": 541, "category": "range", "text": "轮渡每30—40分钟一班，天气恶劣时停航。", "targets": [{"written": "30—40分钟", "readings": ["三十到四十分钟"]}], "split": "dev"}
+{"id": "zh-CN-0542", "line": 542, "category": "sign", "text": "今晚山区最低气温-3℃，请携带保暖衣物。", "targets": [{"written": "-3℃", "readings": ["零下三摄氏度", "零下三度"]}], "split": "dev"}
+{"id": "zh-CN-0543", "line": 543, "category": "unit", "text": "房间面积32㎡，配1.8米大床。", "targets": [{"written": "32㎡", "readings": ["三十二平方米"]}, {"written": "1.8米", "readings": ["一点八米"]}], "split": "dev"}
+{"id": "zh-CN-0544", "line": 544, "category": "code", "text": "停车场车位号B2-137，取车请走东侧电梯。", "targets": [{"written": "B2-137", "readings": ["B二杠一三七", "B二杠幺三七", "B二一三七", "B二幺三七"]}], "split": "dev"}
+{"id": "zh-CN-0545", "line": 545, "category": "phone", "text": "酒店前台0898-88123456，全天有人值守。", "targets": [{"written": "0898-88123456", "readings": ["零八九八八八幺二三四五六", "零八九八八八一二三四五六"]}], "split": "dev"}
+{"id": "zh-CN-0546", "line": 546, "category": "cardinal", "text": "国庆假期首日，全国铁路发送旅客2,100万人次。", "targets": [{"written": "2,100万", "readings": ["两千一百万", "二千一百万"]}], "split": "test"}
+{"id": "zh-CN-0547", "line": 547, "category": "unit", "text": "该车百公里油耗约6.8L，适合长途自驾。", "targets": [{"written": "6.8L", "readings": ["六点八升"]}], "split": "dev"}
+{"id": "zh-CN-0548", "line": 548, "category": "mixed", "text": "从第3个路口左转，再直行800米即到。", "targets": [{"written": "第3个", "readings": ["第三个"]}, {"written": "800米", "readings": ["八百米"]}], "split": "dev"}
+{"id": "zh-CN-0549", "line": 549, "category": "time", "text": "晚会19:30开始，18:00起入场。", "targets": [{"written": "19:30", "readings": ["十九点三十分", "十九点半", "七点半"]}, {"written": "18:00", "readings": ["十八点"]}], "split": "test"}
+{"id": "zh-CN-0550", "line": 550, "category": "mixed", "text": "门票60元/人，1.2米以下儿童免费。", "targets": [{"written": "60元/人", "readings": ["每人六十元", "六十元一人"]}, {"written": "1.2米", "readings": ["一点二米"]}], "split": "dev"}
+{"id": "zh-CN-0551", "line": 551, "category": "range", "text": "活动日期：2026年6月6日至8日。", "targets": [{"written": "2026年6月6日至8日", "readings": ["二零二六年六月六日至八日"]}], "split": "dev"}
+{"id": "zh-CN-0552", "line": 552, "category": "percent", "text": "节假日期间机票价格普遍上浮约20%。", "targets": [{"written": "20%", "readings": ["百分之二十"]}], "split": "test"}
+{"id": "zh-CN-0553", "line": 553, "category": "mixed", "text": "每位旅客限带2瓶酒类，每瓶不超过500ml。", "targets": [{"written": "2瓶", "readings": ["两瓶"]}, {"written": "500ml", "readings": ["五百毫升"]}], "split": "dev"}
+{"id": "zh-CN-0554", "line": 554, "category": "alnum", "text": "乘坐K5路公交车在博物馆站下车。", "targets": [{"written": "K5", "readings": ["K五"]}], "split": "dev"}
+{"id": "zh-CN-0555", "line": 555, "category": "range", "text": "租车押金3,000—5,000元，视车型而定。", "targets": [{"written": "3,000—5,000元", "readings": ["三千到五千元"]}], "split": "test"}
+{"id": "zh-CN-0556", "line": 556, "category": "code", "text": "快递取件码8-3-2051，请到驿站自取。", "targets": [{"written": "8-3-2051", "readings": ["八杠三杠二零五一", "八杠三杠二零五幺", "八杠三二零五一", "八杠三二零五幺", "八三杠二零五一", "八三杠二零五幺", "八三二零五一", "八三二零五幺"]}], "split": "dev"}
+{"id": "zh-CN-0557", "line": 557, "category": "alnum", "text": "客房Wi-Fi密码为hotel2026。", "targets": [{"written": "hotel2026", "readings": ["hotel二零二六"]}], "split": "dev"}
+{"id": "zh-CN-0558", "line": 558, "category": "mixed", "text": "出租车起步价10元（3公里内），之后每公里2.4元。", "targets": [{"written": "10元", "readings": ["十元"]}, {"written": "3公里", "readings": ["三公里"]}, {"written": "2.4元", "readings": ["二点四元"]}], "split": "dev"}
+{"id": "zh-CN-0559", "line": 559, "category": "time", "text": "办理退房时间不晚于中午12:00。", "targets": [{"written": "中午12:00", "readings": ["中午十二点"]}], "split": "dev"}
+{"id": "zh-CN-0560", "line": 560, "category": "mixed", "text": "本列车共16节车厢，餐车位于9号车厢。", "targets": [{"written": "16节", "readings": ["十六节"]}, {"written": "9号", "readings": ["九号"]}], "split": "dev"}
+{"id": "zh-CN-0561", "line": 561, "category": "date", "text": "优惠券有效期至2026-12-31。", "targets": [{"written": "2026-12-31", "readings": ["二零二六年十二月三十一日"]}], "split": "dev"}
+{"id": "zh-CN-0562", "line": 562, "category": "currency", "text": "今日汇率：1美元约合7.18元人民币。", "targets": [{"written": "1美元", "readings": ["一美元"]}, {"written": "7.18元", "readings": ["七点一八元"]}], "split": "test"}
+{"id": "zh-CN-0563", "line": 563, "category": "phone", "text": "急救电话120，火警119。", "targets": [{"written": "120", "readings": ["幺二零", "一二零"]}, {"written": "119", "readings": ["幺幺九", "幺一九", "一幺九", "一一九"]}], "split": "dev"}
+{"id": "zh-CN-0564", "line": 564, "category": "ordinal", "text": "本次航班为今日该航线的第3班。", "targets": [{"written": "第3班", "readings": ["第三班"]}], "split": "test"}
+{"id": "zh-CN-0565", "line": 565, "category": "percent", "text": "导航显示前方拥堵，路段平均车速仅为正常的40%。", "targets": [{"written": "40%", "readings": ["百分之四十"]}], "split": "dev"}
+{"id": "zh-CN-0566", "line": 566, "category": "mixed", "text": "剧院1楼剩余23个座位。", "targets": [{"written": "1楼", "readings": ["一楼"]}, {"written": "23个", "readings": ["二十三个"]}], "split": "dev"}
+{"id": "zh-CN-0567", "line": 567, "category": "range", "text": "公园樱花最佳观赏期为3月下旬至4月上旬。", "targets": [{"written": "3月下旬至4月上旬", "readings": ["三月下旬至四月上旬"]}], "split": "dev"}
+{"id": "zh-CN-0568", "line": 568, "category": "unit", "text": "该线路高铁最高运营时速350km。", "targets": [{"written": "350km", "readings": ["三百五十公里"]}], "split": "dev"}
+{"id": "zh-CN-0569", "line": 569, "category": "code", "text": "请扫描二维码或输入车牌号京A·12345缴费。", "targets": [{"written": "京A·12345", "readings": ["京A幺二三四五", "京A一二三四五"]}], "split": "dev"}
+{"id": "zh-CN-0570", "line": 570, "category": "unit", "text": "本次飞行时长3h45m。", "targets": [{"written": "3h45m", "readings": ["三小时四十五分钟"]}], "split": "dev"}
+{"id": "zh-CN-0571", "line": 571, "category": "currency", "text": "景区内观光车20元/次。", "targets": [{"written": "20元/次", "readings": ["二十元一次", "每次二十元"]}], "split": "dev"}
+{"id": "zh-CN-0572", "line": 572, "category": "mixed", "text": "中秋假期9月25日—27日放假调休，9月28日正常上班。", "targets": [{"written": "9月25日—27日", "readings": ["九月二十五日到二十七日"]}, {"written": "9月28日", "readings": ["九月二十八日"]}], "split": "dev"}
+{"id": "zh-CN-0573", "line": 573, "category": "electronic", "text": "预订确认邮件已发送至lvxing_01@example.com。", "targets": [{"written": "lvxing_01@example.com", "readings": ["lvxing下划线零一艾特example点com", "lvxing下划线零一atexample点com"]}], "split": "dev"}
+{"id": "zh-CN-0574", "line": 574, "category": "counter", "text": "请出示2张证件照和1份复印件。", "targets": [{"written": "2张", "readings": ["两张"]}, {"written": "1份", "readings": ["一份"]}], "split": "test"}
+{"id": "zh-CN-0575", "line": 575, "category": "mixed", "text": "本站日均客流约6.5万人次，早高峰约占1/3。", "targets": [{"written": "6.5万", "readings": ["六点五万"]}, {"written": "1/3", "readings": ["三分之一"]}], "split": "dev"}
+{"id": "zh-CN-0576", "line": 576, "category": "alnum", "text": "B12路公交直达古镇景区。", "targets": [{"written": "B12", "readings": ["B十二", "B幺二"]}], "split": "dev"}
+{"id": "zh-CN-0577", "line": 577, "category": "mixed", "text": "本月油价下调，92号汽油每升降低0.15元。", "targets": [{"written": "92号", "readings": ["九十二号"]}, {"written": "0.15元", "readings": ["零点一五元"]}], "split": "dev"}
+{"id": "zh-CN-0578", "line": 578, "category": "mixed", "text": "航班餐食提供1份热食，饮料330ml。", "targets": [{"written": "1份", "readings": ["一份"]}, {"written": "330ml", "readings": ["三百三十毫升"]}], "split": "dev"}
+{"id": "zh-CN-0579", "line": 579, "category": "time", "text": "宵夜档营业至次日2:00。", "targets": [{"written": "次日2:00", "readings": ["次日两点", "次日凌晨两点"]}], "split": "test"}
+{"id": "zh-CN-0580", "line": 580, "category": "mixed", "text": "机场巴士每15分钟一班，票价25—30元。", "targets": [{"written": "15分钟", "readings": ["十五分钟"]}, {"written": "25—30元", "readings": ["二十五到三十元"]}], "split": "dev"}
+{"id": "zh-CN-0581", "line": 581, "category": "mixed", "text": "退改签手续费为票面价格的10%，最低20元。", "targets": [{"written": "10%", "readings": ["百分之十"]}, {"written": "20元", "readings": ["二十元"]}], "split": "test"}
+{"id": "zh-CN-0582", "line": 582, "category": "ordinal", "text": "电梯直达第18层观景台。", "targets": [{"written": "第18层", "readings": ["第十八层"]}], "split": "test"}
+{"id": "zh-CN-0583", "line": 583, "category": "phone", "text": "景区救援电话0373-5201234。", "targets": [{"written": "0373-5201234", "readings": ["零三七三五二零幺二三四", "零三七三五二零一二三四"]}], "split": "dev"}
+{"id": "zh-CN-0584", "line": 584, "category": "code", "text": "登机牌上的序号为SEQ 027，表示您是第二十七位值机的旅客。", "targets": [{"written": "SEQ 027", "readings": ["SEQ零二七"]}], "split": "dev"}
+{"id": "zh-CN-0585", "line": 585, "category": "date", "text": "博物馆每月1日免费开放，12月31日闭馆一天。", "targets": [{"written": "每月1日", "readings": ["每月一日"]}, {"written": "12月31日", "readings": ["十二月三十一日"]}], "split": "dev"}
+{"id": "zh-CN-0586", "line": 586, "category": "mixed", "text": "自驾路线全程1,042公里，途经3个服务区。", "targets": [{"written": "1,042", "readings": ["一千零四十二"]}, {"written": "3个", "readings": ["三个"]}], "split": "dev"}
+{"id": "zh-CN-0587", "line": 587, "category": "percent", "text": "该民宿好评率98.7%。", "targets": [{"written": "98.7%", "readings": ["百分之九十八点七"]}], "split": "dev"}
+{"id": "zh-CN-0588", "line": 588, "category": "unit", "text": "导航提示：前方1.5公里靠右行驶。", "targets": [{"written": "1.5公里", "readings": ["一点五公里"]}], "split": "dev"}
+{"id": "zh-CN-0589", "line": 589, "category": "counter", "text": "每间房最多入住2名成人和1名儿童。", "targets": [{"written": "2名", "readings": ["两名"]}, {"written": "1名", "readings": ["一名"]}], "split": "test"}
+{"id": "zh-CN-0590", "line": 590, "category": "range", "text": "露营地每晚价格150—260元。", "targets": [{"written": "150—260元", "readings": ["一百五十到二百六十元", "一百五十到两百六十元"]}], "split": "dev"}
+{"id": "zh-CN-0591", "line": 591, "category": "mixed", "text": "航班号CA1829今日延误约40分钟。", "targets": [{"written": "CA1829", "readings": ["CA幺八二九", "CA一八二九"]}, {"written": "40分钟", "readings": ["四十分钟"]}], "split": "test"}
+{"id": "zh-CN-0592", "line": 592, "category": "electronic", "text": "实时路况请访问jtgl.example.gov.cn。", "targets": [{"written": "jtgl.example.gov.cn", "readings": ["jtgl点example点gov点cn"]}], "split": "dev"}
+{"id": "zh-CN-0593", "line": 593, "category": "range", "text": "地铁早高峰7:30—9:00时段限流。", "targets": [{"written": "7:30—9:00", "readings": ["七点半到九点"]}], "split": "dev"}
+{"id": "zh-CN-0594", "line": 594, "category": "mixed", "text": "全程快递费¥18，3kg内不加价。", "targets": [{"written": "¥18", "readings": ["十八元"]}, {"written": "3kg", "readings": ["三公斤"]}], "split": "dev"}
+{"id": "zh-CN-0595", "line": 595, "category": "mixed", "text": "年卡有效期365天，自2026.10.13起算。", "targets": [{"written": "365天", "readings": ["三百六十五天"]}, {"written": "2026.10.13", "readings": ["二零二六年十月十三日"]}], "split": "test"}
+{"id": "zh-CN-0596", "line": 596, "category": "unit", "text": "该停车场限高2.2米，大型车辆请勿进入。", "targets": [{"written": "2.2米", "readings": ["二点二米"]}], "split": "dev"}
+{"id": "zh-CN-0597", "line": 597, "category": "counter", "text": "儿童乐园每场限50人，每天6场。", "targets": [{"written": "50人", "readings": ["五十人"]}, {"written": "6场", "readings": ["六场"]}], "split": "dev"}
+{"id": "zh-CN-0598", "line": 598, "category": "ordinal", "text": "本次列车停靠第4站后将停止售票。", "targets": [{"written": "第4站", "readings": ["第四站"]}], "split": "test"}
+{"id": "zh-CN-0599", "line": 599, "category": "sign", "text": "今夜高速路面温度低至-5℃，部分路段结冰。", "targets": [{"written": "-5℃", "readings": ["零下五摄氏度", "零下五度"]}], "split": "dev"}
+{"id": "zh-CN-0600", "line": 600, "category": "phone", "text": "网约车司机电话尾号6677，车辆已到达上车点。", "targets": [{"written": "6677", "readings": ["六六七七"]}], "split": "test"}
+{"id": "zh-CN-0601", "line": 601, "category": "decimal", "text": "今年黄金周预计出行8.5亿人次。", "targets": [{"written": "8.5亿", "readings": ["八点五亿"]}], "split": "dev"}
+{"id": "zh-CN-0602", "line": 602, "category": "time", "text": "请在上午11点前退房，逾期按半天收费。", "targets": [{"written": "上午11点", "readings": ["上午十一点"]}], "split": "dev"}
+{"id": "zh-CN-0603", "line": 603, "category": "currency", "text": "一日通票¥35，三日通票¥90。", "targets": [{"written": "¥35", "readings": ["三十五元"]}, {"written": "¥90", "readings": ["九十元"]}], "split": "dev"}
+{"id": "zh-CN-0604", "line": 604, "category": "alnum", "text": "美食广场位于F3层，可凭房卡享受折扣。", "targets": [{"written": "F3", "readings": ["F三"]}], "split": "dev"}
+{"id": "zh-CN-0605", "line": 605, "category": "unit", "text": "沙漠昼夜温差大，白天28℃，夜间仅5℃。", "targets": [{"written": "28℃", "readings": ["二十八度", "二十八摄氏度"]}, {"written": "5℃", "readings": ["五度", "五摄氏度"]}], "split": "dev"}
+{"id": "zh-CN-0606", "line": 606, "category": "code", "text": "火车票取票码E12345678。", "targets": [{"written": "E12345678", "readings": ["E幺二三四五六七八", "E一二三四五六七八"]}], "split": "dev"}
+{"id": "zh-CN-0607", "line": 607, "category": "mixed", "text": "11月11日起，3号线延长线开通，票价最高7元。", "targets": [{"written": "11月11日", "readings": ["十一月十一日"]}, {"written": "3号线", "readings": ["三号线"]}, {"written": "7元", "readings": ["七元"]}], "split": "dev"}
+{"id": "zh-CN-0609", "line": 609, "category": "cardinal", "text": "截至昨日，全市累计接种1,283,450剂次。", "targets": [{"written": "1,283,450", "readings": ["一百二十八万三千四百五十"]}], "split": "dev"}
+{"id": "zh-CN-0610", "line": 610, "category": "cardinal", "text": "这款耳机上市首周就卖出了2万副。", "targets": [{"written": "2万", "readings": ["两万", "二万"]}], "split": "dev"}
+{"id": "zh-CN-0611", "line": 611, "category": "cardinal", "text": "公司去年营收首次突破300亿。", "targets": [{"written": "300亿", "readings": ["三百亿"]}], "split": "test"}
+{"id": "zh-CN-0612", "line": 612, "category": "cardinal", "text": "群里一下子涌进来200多人，消息根本看不过来。", "targets": [{"written": "200", "readings": ["两百", "二百"]}], "split": "test"}
+{"id": "zh-CN-0613", "line": 613, "category": "cardinal", "text": "该水库总库容1,050万立方米。", "targets": [{"written": "1,050万", "readings": ["一千零五十万"]}], "split": "dev"}
+{"id": "zh-CN-0614", "line": 614, "category": "cardinal", "text": "我国现有1,005个国家级非遗项目。", "targets": [{"written": "1,005", "readings": ["一千零五"]}], "split": "test"}
+{"id": "zh-CN-0615", "line": 615, "category": "cardinal", "text": "地球到月球的平均距离约为384,400公里。", "targets": [{"written": "384,400公里", "readings": ["三十八万四千四百公里"]}], "split": "dev"}
+{"id": "zh-CN-0616", "line": 616, "category": "cardinal", "text": "全国高考报名人数达到1342万。", "targets": [{"written": "1342万", "readings": ["一千三百四十二万"]}], "split": "dev"}
+{"id": "zh-CN-0617", "line": 617, "category": "cardinal", "text": "昨晚直播间在线人数峰值30,006。", "targets": [{"written": "30,006", "readings": ["三万零六"]}], "split": "dev"}
+{"id": "zh-CN-0618", "line": 618, "category": "cardinal", "text": "这篇论文被引用了2,017次。", "targets": [{"written": "2,017", "readings": ["两千零一十七", "二千零一十七"]}], "split": "dev"}
+{"id": "zh-CN-0619", "line": 619, "category": "cardinal", "text": "视频播放量已经破1亿了！", "targets": [{"written": "1亿", "readings": ["一亿"]}], "split": "test"}
+{"id": "zh-CN-0620", "line": 620, "category": "cardinal", "text": "仓库里还剩10000件库存，今天必须清完。", "targets": [{"written": "10000", "readings": ["一万"]}], "split": "dev"}
+{"id": "zh-CN-0621", "line": 621, "category": "cardinal", "text": "全球人口已突破80亿。", "targets": [{"written": "80亿", "readings": ["八十亿"]}], "split": "dev"}
+{"id": "zh-CN-0622", "line": 622, "category": "cardinal", "text": "他微博粉丝数停在99,999，就差一个。", "targets": [{"written": "99,999", "readings": ["九万九千九百九十九"]}], "split": "dev"}
+{"id": "zh-CN-0623", "line": 623, "category": "cardinal", "text": "本次招聘计划录用120人。", "targets": [{"written": "120", "readings": ["一百二十"]}], "split": "test"}
+{"id": "zh-CN-0624", "line": 624, "category": "cardinal", "text": "截至收盘，成交量5,063,200手。", "targets": [{"written": "5,063,200", "readings": ["五百零六万三千二百"]}], "split": "dev"}
+{"id": "zh-CN-0625", "line": 625, "category": "cardinal", "text": "全书共602页，比上一版厚了不少。", "targets": [{"written": "602", "readings": ["六百零二"]}], "split": "dev"}
+{"id": "zh-CN-0626", "line": 626, "category": "cardinal", "text": "这条隧道全长20,200米。", "targets": [{"written": "20,200米", "readings": ["两万零二百米", "二万零二百米"]}], "split": "dev"}
+{"id": "zh-CN-0627", "line": 627, "category": "cardinal", "text": "光速约为每秒299,792,458米。", "targets": [{"written": "299,792,458米", "readings": ["两亿九千九百七十九万两千四百五十八米", "两亿九千九百七十九万二千四百五十八米", "二亿九千九百七十九万两千四百五十八米", "二亿九千九百七十九万二千四百五十八米"]}], "split": "dev"}
+{"id": "zh-CN-0628", "line": 628, "category": "cardinal", "text": "该基金份额总数达1,000,000,000份。", "targets": [{"written": "1,000,000,000", "readings": ["十亿"]}], "split": "test"}
+{"id": "zh-CN-0629", "line": 629, "category": "cardinal", "text": "一年有365天，闰年则是366天。", "targets": [{"written": "365", "readings": ["三百六十五"]}, {"written": "366", "readings": ["三百六十六"]}], "split": "dev"}
+{"id": "zh-CN-0630", "line": 630, "category": "cardinal", "text": "全国共有2,844个县级行政区。", "targets": [{"written": "2,844", "readings": ["两千八百四十四", "二千八百四十四"]}], "split": "test"}
+{"id": "zh-CN-0631", "line": 631, "category": "cardinal", "text": "本次活动共有１２０８人报名，比预期多出不少。", "targets": [{"written": "１２０８", "readings": ["一千二百零八", "一千两百零八"]}], "split": "dev"}
+{"id": "zh-CN-0632", "line": 632, "category": "cardinal", "text": "这个月全区新增病例0例，连续三周清零。", "targets": [{"written": "0", "readings": ["零"]}], "split": "dev"}
+{"id": "zh-CN-0633", "line": 633, "category": "cardinal", "text": "他一个月跑了3万6千公里的货运里程。", "targets": [{"written": "3万6千公里", "readings": ["三万六千公里"]}], "split": "dev"}
+{"id": "zh-CN-0634", "line": 634, "category": "counter", "text": "冰箱里还有2个鸡蛋，晚上炒个饭吧。", "targets": [{"written": "2个", "readings": ["两个"]}], "split": "dev"}
+{"id": "zh-CN-0635", "line": 635, "category": "counter", "text": "这次团建一共订了12间房。", "targets": [{"written": "12间", "readings": ["十二间"]}], "split": "dev"}
+{"id": "zh-CN-0636", "line": 636, "category": "counter", "text": "他家养了3条狗、2只猫。", "targets": [{"written": "3条", "readings": ["三条"]}, {"written": "2只", "readings": ["两只"]}], "split": "test"}
+{"id": "zh-CN-0637", "line": 637, "category": "counter", "text": "请提交2份复印件和1份原件。", "targets": [{"written": "2份", "readings": ["两份"]}, {"written": "1份", "readings": ["一份"]}], "split": "dev"}
+{"id": "zh-CN-0638", "line": 638, "category": "counter", "text": "每天服用2片，饭后温水送服。", "targets": [{"written": "2片", "readings": ["两片"]}], "split": "test"}
+{"id": "zh-CN-0639", "line": 639, "category": "counter", "text": "这栋楼一共22层，电梯只到21层。", "targets": [{"written": "22层", "readings": ["二十二层"]}, {"written": "21层", "readings": ["二十一层"]}], "split": "dev"}
+{"id": "zh-CN-0640", "line": 640, "category": "counter", "text": "快递小哥一天要跑200多个点。", "targets": [{"written": "200多个", "readings": ["两百多个", "二百多个"]}], "split": "dev"}
+{"id": "zh-CN-0641", "line": 641, "category": "counter", "text": "我们班有42名学生，其中20名男生。", "targets": [{"written": "42名", "readings": ["四十二名"]}, {"written": "20名", "readings": ["二十名"]}], "split": "dev"}
+{"id": "zh-CN-0642", "line": 642, "category": "counter", "text": "这个月才上了2节课，就要期中考了？", "targets": [{"written": "2节", "readings": ["两节"]}], "split": "dev"}
+{"id": "zh-CN-0643", "line": 643, "category": "counter", "text": "本店今日限量100份，售完即止。", "targets": [{"written": "100份", "readings": ["一百份"]}], "split": "dev"}
+{"id": "zh-CN-0644", "line": 644, "category": "counter", "text": "签合同的时候他带了2位律师。", "targets": [{"written": "2位", "readings": ["两位"]}], "split": "dev"}
+{"id": "zh-CN-0645", "line": 645, "category": "counter", "text": "路上堵了2辆大货车，后面排了30多辆车。", "targets": [{"written": "2辆", "readings": ["两辆"]}, {"written": "30多辆", "readings": ["三十多辆"]}], "split": "dev"}
+{"id": "zh-CN-0646", "line": 646, "category": "counter", "text": "一次只能上传1张图片，最多9张。", "targets": [{"written": "1张", "readings": ["一张"]}, {"written": "9张", "readings": ["九张"]}], "split": "test"}
+{"id": "zh-CN-0647", "line": 647, "category": "counter", "text": "新来的实习生一天写了1,200行代码。", "targets": [{"written": "1,200行", "readings": ["一千两百行", "一千二百行"]}], "split": "dev"}
+{"id": "zh-CN-0648", "line": 648, "category": "counter", "text": "这批货共2,000箱，分4车运。", "targets": [{"written": "2,000箱", "readings": ["两千箱", "二千箱"]}, {"written": "4车", "readings": ["四车"]}], "split": "dev"}
+{"id": "zh-CN-0649", "line": 649, "category": "counter", "text": "会议室只有8把椅子，不够坐。", "targets": [{"written": "8把", "readings": ["八把"]}], "split": "dev"}
+{"id": "zh-CN-0650", "line": 650, "category": "counter", "text": "这个病人今天已经做了2次检查了。", "targets": [{"written": "2次", "readings": ["两次"]}], "split": "test"}
+{"id": "zh-CN-0651", "line": 651, "category": "counter", "text": "门口停了2排共享单车，走都走不过去。", "targets": [{"written": "2排", "readings": ["两排"]}], "split": "dev"}
+{"id": "zh-CN-0652", "line": 652, "category": "counter", "text": "她买了2双鞋和1条裙子。", "targets": [{"written": "2双", "readings": ["两双"]}, {"written": "1条", "readings": ["一条"]}], "split": "dev"}
+{"id": "zh-CN-0653", "line": 653, "category": "counter", "text": "这篇文章我改了10遍才敢发出去。", "targets": [{"written": "10遍", "readings": ["十遍"]}], "split": "dev"}
+{"id": "zh-CN-0654", "line": 654, "category": "counter", "text": "这个项目前后换了3任负责人。", "targets": [{"written": "3任", "readings": ["三任"]}], "split": "dev"}
+{"id": "zh-CN-0655", "line": 655, "category": "counter", "text": "超市鸡蛋10个一盒，今天打折。", "targets": [{"written": "10个", "readings": ["十个"]}], "split": "test"}
+{"id": "zh-CN-0656", "line": 656, "category": "counter", "text": "一盒12支装，够用半年。", "targets": [{"written": "12支", "readings": ["十二支"]}], "split": "dev"}
+{"id": "zh-CN-0657", "line": 657, "category": "counter", "text": "宿舍6人一间，上床下桌。", "targets": [{"written": "6人", "readings": ["六人"]}], "split": "dev"}
+{"id": "zh-CN-0658", "line": 658, "category": "counter", "text": "昨天地铁上我站了2站就有座了。", "targets": [{"written": "2站", "readings": ["两站"]}], "split": "dev"}
+{"id": "zh-CN-0659", "line": 659, "category": "ordinal", "text": "这是他第3次冲击冠军。", "targets": [{"written": "第3次", "readings": ["第三次"]}], "split": "dev"}
+{"id": "zh-CN-0660", "line": 660, "category": "ordinal", "text": "本次比赛小王获得第2名。", "targets": [{"written": "第2名", "readings": ["第二名"]}], "split": "dev"}
+{"id": "zh-CN-0661", "line": 661, "category": "ordinal", "text": "请翻到教材第128页。", "targets": [{"written": "第128页", "readings": ["第一百二十八页"]}], "split": "dev"}
+{"id": "zh-CN-0662", "line": 662, "category": "ordinal", "text": "第12届全国运动会将在明年举行。", "targets": [{"written": "第12届", "readings": ["第十二届"]}], "split": "test"}
+{"id": "zh-CN-0663", "line": 663, "category": "ordinal", "text": "根据《劳动合同法》第39条，用人单位可以解除合同。", "targets": [{"written": "第39条", "readings": ["第三十九条"]}], "split": "dev"}
+{"id": "zh-CN-0664", "line": 664, "category": "ordinal", "text": "我是第1次来北京，啥都不认识。", "targets": [{"written": "第1次", "readings": ["第一次"]}], "split": "dev"}
+{"id": "zh-CN-0665", "line": 665, "category": "ordinal", "text": "第2季度财报下周公布。", "targets": [{"written": "第2季度", "readings": ["第二季度"]}], "split": "dev"}
+{"id": "zh-CN-0666", "line": 666, "category": "ordinal", "text": "他在这次马拉松中跑了第102名。", "targets": [{"written": "第102名", "readings": ["第一百零二名"]}], "split": "dev"}
+{"id": "zh-CN-0667", "line": 667, "category": "ordinal", "text": "我们已经走进21世纪的第三个十年。", "targets": [{"written": "21世纪", "readings": ["二十一世纪"]}], "split": "dev"}
+{"id": "zh-CN-0668", "line": 668, "category": "ordinal", "text": "第1章先讲背景，第2章才进正题。", "targets": [{"written": "第1章", "readings": ["第一章"]}, {"written": "第2章", "readings": ["第二章"]}], "split": "dev"}
+{"id": "zh-CN-0669", "line": 669, "category": "ordinal", "text": "今天是我入职的第100天。", "targets": [{"written": "第100天", "readings": ["第一百天"]}], "split": "dev"}
+{"id": "zh-CN-0670", "line": 670, "category": "ordinal", "text": "第3批集采药品名单已公示。", "targets": [{"written": "第3批", "readings": ["第三批"]}], "split": "dev"}
+{"id": "zh-CN-0671", "line": 671, "category": "ordinal", "text": "本周已发生第2起高空抛物事件。", "targets": [{"written": "第2起", "readings": ["第二起"]}], "split": "dev"}
+{"id": "zh-CN-0672", "line": 672, "category": "ordinal", "text": "第1轮面试过了，第2轮是群面。", "targets": [{"written": "第1轮", "readings": ["第一轮"]}, {"written": "第2轮", "readings": ["第二轮"]}], "split": "dev"}
+{"id": "zh-CN-0673", "line": 673, "category": "ordinal", "text": "他排在候补名单的第7位。", "targets": [{"written": "第7位", "readings": ["第七位"]}], "split": "test"}
+{"id": "zh-CN-0674", "line": 674, "category": "ordinal", "text": "他是第2000名注册用户，获得了纪念奖。", "targets": [{"written": "第2000名", "readings": ["第二千名"]}], "split": "dev"}
+{"id": "zh-CN-0675", "line": 675, "category": "ordinal", "text": "小区第3期工程预计年底交付。", "targets": [{"written": "第3期", "readings": ["第三期"]}], "split": "test"}
+{"id": "zh-CN-0676", "line": 676, "category": "ordinal", "text": "第10版教材新增了两章内容。", "targets": [{"written": "第10版", "readings": ["第十版"]}], "split": "dev"}
+{"id": "zh-CN-0677", "line": 677, "category": "ordinal", "text": "民法典第1079条规定了离婚诉讼的条件。", "targets": [{"written": "第1079条", "readings": ["第一千零七十九条"]}], "split": "dev"}
+{"id": "zh-CN-0678", "line": 678, "category": "ordinal", "text": "本学期第16周开始复习。", "targets": [{"written": "第16周", "readings": ["第十六周"]}], "split": "dev"}
+{"id": "zh-CN-0679", "line": 679, "category": "ordinal", "text": "本届大会的第2项议程是审议报告。", "targets": [{"written": "第2项", "readings": ["第二项"]}], "split": "dev"}
+{"id": "zh-CN-0680", "line": 680, "category": "ordinal", "text": "第11名之后的选手没有奖金。", "targets": [{"written": "第11名", "readings": ["第十一名"]}], "split": "dev"}
+{"id": "zh-CN-0681", "line": 681, "category": "ordinal", "text": "排队的时候我是第200号，等到了下午。", "targets": [{"written": "第200号", "readings": ["第二百号"]}], "split": "test"}
+{"id": "zh-CN-0682", "line": 682, "category": "ordinal", "text": "她第2次入选国家队时才十九岁。", "targets": [{"written": "第2次", "readings": ["第二次"]}], "split": "dev"}
+{"id": "zh-CN-0683", "line": 683, "category": "ordinal", "text": "请到市第3人民医院发热门诊就诊。", "targets": [{"written": "第3人民医院", "readings": ["第三人民医院"]}], "split": "test"}
+{"id": "zh-CN-0684", "line": 684, "category": "decimal", "text": "这批样品的平均厚度为0.25毫米。", "targets": [{"written": "0.25毫米", "readings": ["零点二五毫米"]}], "split": "dev"}
+{"id": "zh-CN-0685", "line": 685, "category": "decimal", "text": "他的百米成绩是10.03秒。", "targets": [{"written": "10.03秒", "readings": ["十点零三秒"]}], "split": "dev"}
+{"id": "zh-CN-0686", "line": 686, "category": "decimal", "text": "该公司市值约1.2万亿。", "targets": [{"written": "1.2万亿", "readings": ["一点二万亿"]}], "split": "test"}
+{"id": "zh-CN-0687", "line": 687, "category": "decimal", "text": "本季度营收32.07亿，略高于预期。", "targets": [{"written": "32.07亿", "readings": ["三十二点零七亿"]}], "split": "dev"}
+{"id": "zh-CN-0688", "line": 688, "category": "decimal", "text": "圆周率取3.14就够了。", "targets": [{"written": "3.14", "readings": ["三点一四"]}], "split": "test"}
+{"id": "zh-CN-0689", "line": 689, "category": "decimal", "text": "这款手机厚度只有7.95mm。", "targets": [{"written": "7.95mm", "readings": ["七点九五毫米"]}], "split": "dev"}
+{"id": "zh-CN-0690", "line": 690, "category": "decimal", "text": "抖音日活跃用户已超7.5亿。", "targets": [{"written": "7.5亿", "readings": ["七点五亿"]}], "split": "dev"}
+{"id": "zh-CN-0691", "line": 691, "category": "decimal", "text": "空腹血糖6.1，有点偏高。", "targets": [{"written": "6.1", "readings": ["六点一"]}], "split": "test"}
+{"id": "zh-CN-0692", "line": 692, "category": "decimal", "text": "听不清就调成0.5倍速。", "targets": [{"written": "0.5倍速", "readings": ["零点五倍速"]}], "split": "dev"}
+{"id": "zh-CN-0693", "line": 693, "category": "decimal", "text": "身高1.82米，体重72.4公斤。", "targets": [{"written": "1.82米", "readings": ["一点八二米"]}, {"written": "72.4公斤", "readings": ["七十二点四公斤"]}], "split": "dev"}
+{"id": "zh-CN-0694", "line": 694, "category": "decimal", "text": "这台显示器是27.2英寸的。", "targets": [{"written": "27.2英寸", "readings": ["二十七点二英寸"]}], "split": "test"}
+{"id": "zh-CN-0695", "line": 695, "category": "decimal", "text": "今日人民币对美元中间价7.2043。", "targets": [{"written": "7.2043", "readings": ["七点二零四三"]}], "split": "test"}
+{"id": "zh-CN-0696", "line": 696, "category": "decimal", "text": "这是系统2.0版本，界面变化很大。", "targets": [{"written": "2.0", "readings": ["二点零"]}], "split": "dev"}
+{"id": "zh-CN-0697", "line": 697, "category": "decimal", "text": "全县平均每户2.62人。", "targets": [{"written": "2.62", "readings": ["二点六二"]}], "split": "test"}
+{"id": "zh-CN-0698", "line": 698, "category": "decimal", "text": "水位已达28.03米，超过警戒线。", "targets": [{"written": "28.03米", "readings": ["二十八点零三米"]}], "split": "dev"}
+{"id": "zh-CN-0699", "line": 699, "category": "decimal", "text": "两人成绩只差0.001秒。", "targets": [{"written": "0.001秒", "readings": ["零点零零一秒"]}], "split": "dev"}
+{"id": "zh-CN-0700", "line": 700, "category": "decimal", "text": "报名人数12.5万。", "targets": [{"written": "12.5万", "readings": ["十二点五万"]}], "split": "test"}
+{"id": "zh-CN-0701", "line": 701, "category": "decimal", "text": "他的平均绩点只有３.２，拿不到奖学金。", "targets": [{"written": "３.２", "readings": ["三点二"]}], "split": "dev"}
+{"id": "zh-CN-0702", "line": 702, "category": "decimal", "text": "这个电台是调频100.5兆赫。", "targets": [{"written": "100.5兆赫", "readings": ["一百点五兆赫"]}], "split": "dev"}
+{"id": "zh-CN-0703", "line": 703, "category": "decimal", "text": "加班工资按1.5倍计算。", "targets": [{"written": "1.5倍", "readings": ["一点五倍"]}], "split": "dev"}
+{"id": "zh-CN-0704", "line": 704, "category": "decimal", "text": "大促期间新增会员2.5万。", "targets": [{"written": "2.5万", "readings": ["二点五万"]}], "split": "dev"}
+{"id": "zh-CN-0705", "line": 705, "category": "decimal", "text": "车程约2.5小时。", "targets": [{"written": "2.5小时", "readings": ["二点五小时", "两个半小时"]}], "split": "dev"}
+{"id": "zh-CN-0706", "line": 706, "category": "decimal", "text": "该股收报20.08元，跌了一点。", "targets": [{"written": "20.08元", "readings": ["二十点零八元"]}], "split": "dev"}
+{"id": "zh-CN-0707", "line": 707, "category": "decimal", "text": "该影片首日票房1.05亿。", "targets": [{"written": "1.05亿", "readings": ["一点零五亿"]}], "split": "dev"}
+{"id": "zh-CN-0708", "line": 708, "category": "decimal", "text": "这家店在平台上的评分是5.0。", "targets": [{"written": "5.0", "readings": ["五点零"]}], "split": "dev"}
+{"id": "zh-CN-0710", "line": 710, "category": "date", "text": "会议改到10月15日，地点不变。", "targets": [{"written": "10月15日", "readings": ["十月十五日"]}], "split": "test"}
+{"id": "zh-CN-0711", "line": 711, "category": "date", "text": "2026-10-13凌晨系统将停机维护。", "targets": [{"written": "2026-10-13", "readings": ["二零二六年十月十三日", "二零二六年十月十三号"]}], "split": "dev"}
+{"id": "zh-CN-0712", "line": 712, "category": "date", "text": "请于2025年12月31日前完成续费。", "targets": [{"written": "2025年12月31日", "readings": ["二零二五年十二月三十一日"]}], "split": "test"}
+{"id": "zh-CN-0713", "line": 713, "category": "date", "text": "她是1998.06.07出生的。", "targets": [{"written": "1998.06.07", "readings": ["一九九八年六月七日", "一九九八年六月七号"]}], "split": "dev"}
+{"id": "zh-CN-0714", "line": 714, "category": "date", "text": "国庆10.1起放假七天。", "targets": [{"written": "10.1", "readings": ["十月一日", "十月一号"]}], "split": "dev"}
+{"id": "zh-CN-0715", "line": 715, "category": "date", "text": "项目要在3月底前上线。", "targets": [{"written": "3月", "readings": ["三月"]}], "split": "test"}
+{"id": "zh-CN-0716", "line": 716, "category": "date", "text": "11月11日凌晨零点开抢。", "targets": [{"written": "11月11日", "readings": ["十一月十一日"]}], "split": "dev"}
+{"id": "zh-CN-0717", "line": 717, "category": "date", "text": "2024年是闰年，二月有二十九天。", "targets": [{"written": "2024年", "readings": ["二零二四年"]}], "split": "dev"}
+{"id": "zh-CN-0718", "line": 718, "category": "date", "text": "孩子9/1开学，书包还没买。", "targets": [{"written": "9/1", "readings": ["九月一日", "九月一号"]}], "split": "test"}
+{"id": "zh-CN-0719", "line": 719, "category": "date", "text": "1月8号那天下了场大雪。", "targets": [{"written": "1月8号", "readings": ["一月八号"]}], "split": "dev"}
+{"id": "zh-CN-0720", "line": 720, "category": "date", "text": "截止日期：2026/03/15。", "targets": [{"written": "2026/03/15", "readings": ["二零二六年三月十五日", "二零二六年三月十五号"]}], "split": "test"}
+{"id": "zh-CN-0721", "line": 721, "category": "date", "text": "12月的工资要到1月10号才发。", "targets": [{"written": "12月", "readings": ["十二月"]}, {"written": "1月10号", "readings": ["一月十号"]}], "split": "test"}
+{"id": "zh-CN-0722", "line": 722, "category": "date", "text": "4月1日愚人节，网上的消息别全信。", "targets": [{"written": "4月1日", "readings": ["四月一日"]}], "split": "dev"}
+{"id": "zh-CN-0723", "line": 723, "category": "date", "text": "这栋楼建于上世纪80年代。", "targets": [{"written": "上世纪80年代", "readings": ["上世纪八十年代"]}], "split": "dev"}
+{"id": "zh-CN-0724", "line": 724, "category": "date", "text": "本次统计周期为2025年1月至2025年12月。", "targets": [{"written": "2025年1月", "readings": ["二零二五年一月"]}, {"written": "2025年12月", "readings": ["二零二五年十二月"]}], "split": "dev"}
+{"id": "zh-CN-0725", "line": 725, "category": "date", "text": "5月20日是网络情人节。", "targets": [{"written": "5月20日", "readings": ["五月二十日"]}], "split": "dev"}
+{"id": "zh-CN-0726", "line": 726, "category": "date", "text": "6月1日儿童节小学放假半天。", "targets": [{"written": "6月1日", "readings": ["六月一日"]}], "split": "dev"}
+{"id": "zh-CN-0727", "line": 727, "category": "date", "text": "2020.1.23，武汉宣布封城。", "targets": [{"written": "2020.1.23", "readings": ["二零二零年一月二十三日", "二零二零年一月二十三号"]}], "split": "dev"}
+{"id": "zh-CN-0728", "line": 728, "category": "date", "text": "该数据截至2023年底。", "targets": [{"written": "2023年", "readings": ["二零二三年"]}], "split": "dev"}
+{"id": "zh-CN-0729", "line": 729, "category": "date", "text": "预计10月中旬到货。", "targets": [{"written": "10月", "readings": ["十月"]}], "split": "dev"}
+{"id": "zh-CN-0730", "line": 730, "category": "date", "text": "2月29日四年才有一次。", "targets": [{"written": "2月29日", "readings": ["二月二十九日"]}], "split": "dev"}
+{"id": "zh-CN-0731", "line": 731, "category": "date", "text": "每月20号发工资，15号前报销。", "targets": [{"written": "20号", "readings": ["二十号"]}, {"written": "15号", "readings": ["十五号"]}], "split": "dev"}
+{"id": "zh-CN-0732", "line": 732, "category": "date", "text": "1949年10月1日，中华人民共和国成立。", "targets": [{"written": "1949年10月1日", "readings": ["一九四九年十月一日"]}], "split": "dev"}
+{"id": "zh-CN-0733", "line": 733, "category": "date", "text": "２０２６年１月１日起执行新标准。", "targets": [{"written": "２０２６年１月１日", "readings": ["二零二六年一月一日"]}], "split": "dev"}
+{"id": "zh-CN-0734", "line": 734, "category": "date", "text": "下次复诊10/13上午。", "targets": [{"written": "10/13", "readings": ["十月十三日", "十月十三号"]}], "split": "dev"}
+{"id": "zh-CN-0735", "line": 735, "category": "time", "text": "会议下午3点开始，别迟到。", "targets": [{"written": "下午3点", "readings": ["下午三点"]}], "split": "dev"}
+{"id": "zh-CN-0736", "line": 736, "category": "time", "text": "快递预计15:00前送达。", "targets": [{"written": "15:00", "readings": ["十五点", "下午三点"]}], "split": "test"}
+{"id": "zh-CN-0737", "line": 737, "category": "time", "text": "火车9:05发车，提前半小时到站。", "targets": [{"written": "9:05", "readings": ["九点零五分", "九点零五"]}], "split": "dev"}
+{"id": "zh-CN-0738", "line": 738, "category": "time", "text": "14:30有一场宣讲会。", "targets": [{"written": "14:30", "readings": ["十四点三十分", "十四点三十", "十四点半", "下午两点半"]}], "split": "dev"}
+{"id": "zh-CN-0739", "line": 739, "category": "time", "text": "每天8点准时打卡，迟到扣钱。", "targets": [{"written": "8点", "readings": ["八点"]}], "split": "test"}
+{"id": "zh-CN-0740", "line": 740, "category": "time", "text": "中午12:00截止，过时不候。", "targets": [{"written": "12:00", "readings": ["十二点"]}], "split": "dev"}
+{"id": "zh-CN-0741", "line": 741, "category": "time", "text": "新规自00:00起生效。", "targets": [{"written": "00:00", "readings": ["零点"]}], "split": "test"}
+{"id": "zh-CN-0742", "line": 742, "category": "time", "text": "活动23:59结束。", "targets": [{"written": "23:59", "readings": ["二十三点五十九分", "二十三点五十九"]}], "split": "dev"}
+{"id": "zh-CN-0743", "line": 743, "category": "time", "text": "早上7:30起床，一天都精神。", "targets": [{"written": "7:30", "readings": ["七点半", "七点三十分", "七点三十"]}], "split": "dev"}
+{"id": "zh-CN-0744", "line": 744, "category": "time", "text": "下午3点半小会议室碰一下。", "targets": [{"written": "3点半", "readings": ["三点半"]}], "split": "test"}
+{"id": "zh-CN-0745", "line": 745, "category": "time", "text": "10:15的会推迟到11:00。", "targets": [{"written": "10:15", "readings": ["十点十五分", "十点十五", "十点一刻"]}, {"written": "11:00", "readings": ["十一点"]}], "split": "dev"}
+{"id": "zh-CN-0746", "line": 746, "category": "time", "text": "航班18:45起飞，现在还没登机。", "targets": [{"written": "18:45", "readings": ["十八点四十五分", "十八点四十五"]}], "split": "dev"}
+{"id": "zh-CN-0747", "line": 747, "category": "time", "text": "排队等了20分钟，终于轮到我了。", "targets": [{"written": "20分钟", "readings": ["二十分钟"]}], "split": "dev"}
+{"id": "zh-CN-0748", "line": 748, "category": "time", "text": "闹钟定在6:00，结果睡到八点。", "targets": [{"written": "6:00", "readings": ["六点"]}], "split": "dev"}
+{"id": "zh-CN-0749", "line": 749, "category": "time", "text": "凌晨2点还在改方案。", "targets": [{"written": "凌晨2点", "readings": ["凌晨两点"]}], "split": "dev"}
+{"id": "zh-CN-0750", "line": 750, "category": "time", "text": "下午2:10的车，赶得上。", "targets": [{"written": "2:10", "readings": ["两点十分"]}], "split": "dev"}
+{"id": "zh-CN-0751", "line": 751, "category": "time", "text": "晚上12点之前必须回宿舍。", "targets": [{"written": "12点", "readings": ["十二点"]}], "split": "test"}
+{"id": "zh-CN-0752", "line": 752, "category": "time", "text": "还有5分钟就开考了，手机快交上去。", "targets": [{"written": "5分钟", "readings": ["五分钟"]}], "split": "test"}
+{"id": "zh-CN-0753", "line": 753, "category": "time", "text": "面试大概1小时。", "targets": [{"written": "1小时", "readings": ["一小时", "一个小时"]}], "split": "dev"}
+{"id": "zh-CN-0754", "line": 754, "category": "time", "text": "今天16:20的航班延误了。", "targets": [{"written": "16:20", "readings": ["十六点二十分", "十六点二十"]}], "split": "dev"}
+{"id": "zh-CN-0755", "line": 755, "category": "time", "text": "直播19:30准时开始。", "targets": [{"written": "19:30", "readings": ["十九点三十分", "十九点半", "晚上七点半"]}], "split": "test"}
+{"id": "zh-CN-0756", "line": 756, "category": "time", "text": "早上8:50的地铁挤得上不去。", "targets": [{"written": "8:50", "readings": ["八点五十分", "八点五十"]}], "split": "test"}
+{"id": "zh-CN-0757", "line": 757, "category": "time", "text": "下午5点半下班，今天不加班。", "targets": [{"written": "下午5点半", "readings": ["下午五点半"]}], "split": "test"}
+{"id": "zh-CN-0758", "line": 758, "category": "time", "text": "门票１０：３０开售。", "targets": [{"written": "１０：３０", "readings": ["十点三十分", "十点半"]}], "split": "dev"}
+{"id": "zh-CN-0759", "line": 759, "category": "time", "text": "客服24小时在线。", "targets": [{"written": "24小时", "readings": ["二十四小时"]}], "split": "dev"}
+{"id": "zh-CN-0760", "line": 760, "category": "range", "text": "适合3-5岁儿童。", "targets": [{"written": "3-5岁", "readings": ["三到五岁", "三至五岁"]}], "split": "dev"}
+{"id": "zh-CN-0761", "line": 761, "category": "range", "text": "门诊时间8:00-17:00。", "targets": [{"written": "8:00-17:00", "readings": ["八点到十七点", "八点至十七点", "八点到下午五点"]}], "split": "dev"}
+{"id": "zh-CN-0762", "line": 762, "category": "range", "text": "公交车大概10~15分钟一班。", "targets": [{"written": "10~15分钟", "readings": ["十到十五分钟", "十至十五分钟"]}], "split": "test"}
+{"id": "zh-CN-0763", "line": 763, "category": "range", "text": "本规划实施期为2024-2026年。", "targets": [{"written": "2024-2026年", "readings": ["二零二四年到二零二六年", "二零二四到二零二六年", "二零二四年至二零二六年", "二零二四至二零二六年"]}], "split": "test"}
+{"id": "zh-CN-0764", "line": 764, "category": "range", "text": "这款充电宝售价在100-200之间。", "targets": [{"written": "100-200", "readings": ["一百到两百", "一百到二百", "一百至两百", "一百至二百"]}], "split": "dev"}
+{"id": "zh-CN-0765", "line": 765, "category": "range", "text": "招聘要求18-35岁，学历不限。", "targets": [{"written": "18-35岁", "readings": ["十八到三十五岁", "十八至三十五岁"]}], "split": "dev"}
+{"id": "zh-CN-0766", "line": 766, "category": "range", "text": "退款将在3～5个工作日内到账。", "targets": [{"written": "3～5个工作日", "readings": ["三到五个工作日", "三至五个工作日"]}], "split": "dev"}
+{"id": "zh-CN-0767", "line": 767, "category": "range", "text": "该套餐适合1-3人食用。", "targets": [{"written": "1-3人", "readings": ["一到三人", "一至三人"]}], "split": "test"}
+{"id": "zh-CN-0768", "line": 768, "category": "range", "text": "本条例第3-5条作了修改。", "targets": [{"written": "第3-5条", "readings": ["第三到第五条", "第三至第五条", "第三到五条", "第三至五条"]}], "split": "dev"}
+{"id": "zh-CN-0769", "line": 769, "category": "range", "text": "装修预算5-10万，你们看合适吗？", "targets": [{"written": "5-10万", "readings": ["五到十万", "五至十万"]}], "split": "test"}
+{"id": "zh-CN-0770", "line": 770, "category": "range", "text": "新款比旧款贵20-30%。", "targets": [{"written": "20-30%", "readings": ["百分之二十到百分之三十", "百分之二十至百分之三十"]}], "split": "dev"}
+{"id": "zh-CN-0771", "line": 771, "category": "range", "text": "国庆假期10月1日-7日，高速免费。", "targets": [{"written": "10月1日-7日", "readings": ["十月一日到七日", "十月一日至七日", "十月一日到十月七日"]}], "split": "dev"}
+{"id": "zh-CN-0772", "line": 772, "category": "range", "text": "每周运动2-3次，每次半小时。", "targets": [{"written": "2-3次", "readings": ["两到三次", "两至三次"]}], "split": "dev"}
+{"id": "zh-CN-0773", "line": 773, "category": "range", "text": "实习补贴每月1,000-2,000元。", "targets": [{"written": "1,000-2,000元", "readings": ["一千到两千元", "一千到二千元", "一千至两千元", "一千至二千元"]}], "split": "dev"}
+{"id": "zh-CN-0774", "line": 774, "category": "range", "text": "成年人建议每天睡7—8小时。", "targets": [{"written": "7—8小时", "readings": ["七到八小时", "七至八小时"]}], "split": "test"}
+{"id": "zh-CN-0775", "line": 775, "category": "range", "text": "明天最高气温25-30℃。", "targets": [{"written": "25-30℃", "readings": ["二十五到三十摄氏度", "二十五至三十摄氏度", "二十五到三十度"]}], "split": "test"}
+{"id": "zh-CN-0776", "line": 776, "category": "range", "text": "这类项目一般3-5年才能回本。", "targets": [{"written": "3-5年", "readings": ["三到五年", "三至五年"]}], "split": "test"}
+{"id": "zh-CN-0777", "line": 777, "category": "range", "text": "团建人数控制在10-20人。", "targets": [{"written": "10-20人", "readings": ["十到二十人", "十至二十人"]}], "split": "dev"}
+{"id": "zh-CN-0778", "line": 778, "category": "range", "text": "这事儿我也就有2～3成把握。", "targets": [{"written": "2～3成", "readings": ["两到三成", "二到三成", "两至三成", "二至三成"]}], "split": "dev"}
+{"id": "zh-CN-0779", "line": 779, "category": "range", "text": "每天摄入坚果50-100g即可。", "targets": [{"written": "50-100g", "readings": ["五十到一百克", "五十至一百克"]}], "split": "dev"}
+{"id": "zh-CN-0780", "line": 780, "category": "range", "text": "6-8月是这里的雨季，记得带伞。", "targets": [{"written": "6-8月", "readings": ["六到八月", "六至八月"]}], "split": "test"}
+{"id": "zh-CN-0781", "line": 781, "category": "range", "text": "1-2年级不布置书面作业。", "targets": [{"written": "1-2年级", "readings": ["一到二年级", "一至二年级"]}], "split": "dev"}
+{"id": "zh-CN-0782", "line": 782, "category": "range", "text": "第1-3名可获得奖杯。", "targets": [{"written": "第1-3名", "readings": ["第一到第三名", "第一至第三名", "第一到三名", "第一至三名"]}], "split": "dev"}
+{"id": "zh-CN-0783", "line": 783, "category": "range", "text": "每组3至5人，自由组合。", "targets": [{"written": "3至5人", "readings": ["三至五人"]}], "split": "test"}
+{"id": "zh-CN-0784", "line": 784, "category": "range", "text": "这款电车续航200-300km。", "targets": [{"written": "200-300km", "readings": ["两百到三百公里", "二百到三百公里", "两百至三百公里", "二百至三百公里"]}], "split": "dev"}
+{"id": "zh-CN-0785", "line": 785, "category": "fraction", "text": "约1/3的受访者表示不满意。", "targets": [{"written": "1/3", "readings": ["三分之一"]}], "split": "dev"}
+{"id": "zh-CN-0786", "line": 786, "category": "fraction", "text": "国足2:1险胜对手。", "targets": [{"written": "2:1", "readings": ["二比一"]}], "split": "test"}
+{"id": "zh-CN-0787", "line": 787, "category": "fraction", "text": "这道题的答案是5/3，不要约错。", "targets": [{"written": "5/3", "readings": ["三分之五"]}], "split": "dev"}
+{"id": "zh-CN-0788", "line": 788, "category": "fraction", "text": "男女比例大概3:2。", "targets": [{"written": "3:2", "readings": ["三比二"]}], "split": "test"}
+{"id": "zh-CN-0789", "line": 789, "category": "fraction", "text": "全班有3/4的人选了理科。", "targets": [{"written": "3/4", "readings": ["四分之三"]}], "split": "dev"}
+{"id": "zh-CN-0790", "line": 790, "category": "fraction", "text": "调查显示2/5的家庭有两辆车。", "targets": [{"written": "2/5", "readings": ["五分之二"]}], "split": "dev"}
+{"id": "zh-CN-0791", "line": 791, "category": "fraction", "text": "游戏币按1:1兑换。", "targets": [{"written": "1:1", "readings": ["一比一"]}], "split": "test"}
+{"id": "zh-CN-0792", "line": 792, "category": "fraction", "text": "这块屏幕是16:9的比例。", "targets": [{"written": "16:9", "readings": ["十六比九"]}], "split": "dev"}
+{"id": "zh-CN-0793", "line": 793, "category": "fraction", "text": "杯子装到1/4处就够了。", "targets": [{"written": "1/4", "readings": ["四分之一"]}], "split": "test"}
+{"id": "zh-CN-0794", "line": 794, "category": "fraction", "text": "修改公司章程需要2/3以上股东同意。", "targets": [{"written": "2/3", "readings": ["三分之二"]}], "split": "dev"}
+{"id": "zh-CN-0795", "line": 795, "category": "fraction", "text": "新方案能节省1/5的时间。", "targets": [{"written": "1/5", "readings": ["五分之一"]}], "split": "dev"}
+{"id": "zh-CN-0796", "line": 796, "category": "fraction", "text": "中奖概率只有1/100。", "targets": [{"written": "1/100", "readings": ["一百分之一", "百分之一"]}], "split": "dev"}
+{"id": "zh-CN-0797", "line": 797, "category": "fraction", "text": "主队3:0零封客队。", "targets": [{"written": "3:0", "readings": ["三比零"]}], "split": "test"}
+{"id": "zh-CN-0798", "line": 798, "category": "fraction", "text": "加时赛结束仍是4:4平。", "targets": [{"written": "4:4", "readings": ["四比四"]}], "split": "dev"}
+{"id": "zh-CN-0799", "line": 799, "category": "fraction", "text": "第一局比分21:19。", "targets": [{"written": "21:19", "readings": ["二十一比十九"]}], "split": "dev"}
+{"id": "zh-CN-0800", "line": 800, "category": "fraction", "text": "消毒液按1:2的比例稀释。", "targets": [{"written": "1:2", "readings": ["一比二"]}], "split": "dev"}
+{"id": "zh-CN-0801", "line": 801, "category": "fraction", "text": "样本中7/8是女性用户。", "targets": [{"written": "7/8", "readings": ["八分之七"]}], "split": "test"}
+{"id": "zh-CN-0802", "line": 802, "category": "fraction", "text": "这种药的严重副作用发生率不到1/1000。", "targets": [{"written": "1/1000", "readings": ["一千分之一"]}], "split": "dev"}
+{"id": "zh-CN-0803", "line": 803, "category": "fraction", "text": "房租占了我收入的1/2。", "targets": [{"written": "1/2", "readings": ["二分之一", "一半"]}], "split": "dev"}
+{"id": "zh-CN-0804", "line": 804, "category": "fraction", "text": "每次服1/2片，一日两次。", "targets": [{"written": "1/2片", "readings": ["二分之一片", "半片"]}], "split": "dev"}
+{"id": "zh-CN-0805", "line": 805, "category": "fraction", "text": "投票结果5:4通过。", "targets": [{"written": "5:4", "readings": ["五比四"]}], "split": "dev"}
+{"id": "zh-CN-0806", "line": 806, "category": "fraction", "text": "模型比例1:200。", "targets": [{"written": "1:200", "readings": ["一比两百", "一比二百"]}], "split": "test"}
+{"id": "zh-CN-0807", "line": 807, "category": "fraction", "text": "终场比分110:98。", "targets": [{"written": "110:98", "readings": ["一百一十比九十八"]}], "split": "dev"}
+{"id": "zh-CN-0808", "line": 808, "category": "fraction", "text": "螺栓规格3/8英寸。", "targets": [{"written": "3/8英寸", "readings": ["八分之三英寸"]}], "split": "test"}
+{"id": "zh-CN-0809", "line": 809, "category": "fraction", "text": "已经完成了9/10的工作。", "targets": [{"written": "9/10", "readings": ["十分之九"]}], "split": "dev"}
+{"id": "zh-CN-0811", "line": 811, "category": "currency", "text": "这款降噪耳机官网标价¥1,299，比首发时便宜了两百。", "targets": [{"written": "¥1,299", "readings": ["一千二百九十九元", "一千两百九十九元"]}], "split": "test"}
+{"id": "zh-CN-0812", "line": 812, "category": "currency", "text": "房租每月3,800块，水电燃气另算。", "targets": [{"written": "3,800块", "readings": ["三千八百块"]}], "split": "dev"}
+{"id": "zh-CN-0813", "line": 813, "category": "currency", "text": "您尾号6677的信用卡消费$49.99，如非本人操作请致电客服。", "targets": [{"written": "6677", "readings": ["六六七七"]}, {"written": "$49.99", "readings": ["四十九点九九美元"]}], "split": "test"}
+{"id": "zh-CN-0814", "line": 814, "category": "currency", "text": "公司去年实现净利润12.6亿元，创历史新高。", "targets": [{"written": "12.6亿元", "readings": ["十二点六亿元"]}], "split": "dev"}
+{"id": "zh-CN-0815", "line": 815, "category": "currency", "text": "午饭一共花了35.5元，比昨天还贵。", "targets": [{"written": "35.5元", "readings": ["三十五点五元"]}], "split": "dev"}
+{"id": "zh-CN-0816", "line": 816, "category": "currency", "text": "一等奖奖金10万元，另赠笔记本电脑一台。", "targets": [{"written": "10万元", "readings": ["十万元"]}], "split": "test"}
+{"id": "zh-CN-0817", "line": 817, "category": "currency", "text": "欧洲站定价€89，含税不含运费。", "targets": [{"written": "€89", "readings": ["八十九欧元"]}], "split": "dev"}
+{"id": "zh-CN-0818", "line": 818, "category": "currency", "text": "这套房挂牌520万，业主说诚心卖可以再谈。", "targets": [{"written": "520万", "readings": ["五百二十万"]}], "split": "test"}
+{"id": "zh-CN-0819", "line": 819, "category": "currency", "text": "在东京买同款要5,000日元，差价不小。", "targets": [{"written": "5,000日元", "readings": ["五千日元"]}], "split": "dev"}
+{"id": "zh-CN-0820", "line": 820, "category": "currency", "text": "港股收盘报HK$68.4，全天成交活跃。", "targets": [{"written": "HK$68.4", "readings": ["六十八点四港元", "六十八点四港币"]}], "split": "dev"}
+{"id": "zh-CN-0821", "line": 821, "category": "currency", "text": "会员月卡29.9元/月，年付更划算。", "targets": [{"written": "29.9元/月", "readings": ["二十九点九元每月", "每月二十九点九元"]}], "split": "test"}
+{"id": "zh-CN-0822", "line": 822, "category": "currency", "text": "英镑结算，发票总额£1,250.00。", "targets": [{"written": "£1,250.00", "readings": ["一千二百五十英镑", "一千两百五十英镑"]}], "split": "dev"}
+{"id": "zh-CN-0823", "line": 823, "category": "currency", "text": "账户余额仅剩￥0.37，请及时充值以免影响使用。", "targets": [{"written": "￥0.37", "readings": ["零点三七元"]}], "split": "dev"}
+{"id": "zh-CN-0824", "line": 824, "category": "currency", "text": "楼下那家奶茶一杯18块，周末还要排半小时队。", "targets": [{"written": "18块", "readings": ["十八块"]}], "split": "dev"}
+{"id": "zh-CN-0825", "line": 825, "category": "currency", "text": "该项目总投资约3.2亿美元，预计明年投产。", "targets": [{"written": "3.2亿美元", "readings": ["三点二亿美元"]}], "split": "test"}
+{"id": "zh-CN-0826", "line": 826, "category": "currency", "text": "红包8.88元已存入零钱，可直接消费。", "targets": [{"written": "8.88元", "readings": ["八点八八元"]}], "split": "dev"}
+{"id": "zh-CN-0827", "line": 827, "category": "currency", "text": "景区门票成人120元，学生凭证件半价。", "targets": [{"written": "120元", "readings": ["一百二十元"]}], "split": "dev"}
+{"id": "zh-CN-0828", "line": 828, "category": "currency", "text": "首尔机场一碗面标价15,000韩元，吓了我一跳。", "targets": [{"written": "15,000韩元", "readings": ["一万五千韩元"]}], "split": "dev"}
+{"id": "zh-CN-0829", "line": 829, "category": "currency", "text": "每笔提现收取0.5元手续费。", "targets": [{"written": "0.5元", "readings": ["零点五元", "五毛", "五角"]}], "split": "dev"}
+{"id": "zh-CN-0830", "line": 830, "category": "currency", "text": "停车费每小时6元，不足一小时按一小时计。", "targets": [{"written": "6元", "readings": ["六元"]}], "split": "dev"}
+{"id": "zh-CN-0831", "line": 831, "category": "currency", "text": "补贴标准为每人每月1,000元，按季度发放。", "targets": [{"written": "1,000元", "readings": ["一千元"]}], "split": "dev"}
+{"id": "zh-CN-0832", "line": 832, "category": "currency", "text": "本次订单合计¥2,048.50，已包含运费。", "targets": [{"written": "¥2,048.50", "readings": ["两千零四十八元五角", "二千零四十八元五角", "两千零四十八点五元", "二千零四十八点五元"]}], "split": "dev"}
+{"id": "zh-CN-0833", "line": 833, "category": "currency", "text": "折合人民币约6.5万元，汇率按当日中间价。", "targets": [{"written": "6.5万元", "readings": ["六点五万元"]}], "split": "dev"}
+{"id": "zh-CN-0834", "line": 834, "category": "currency", "text": "定金2000元，尾款发货前付清。", "targets": [{"written": "2000元", "readings": ["两千元", "二千元"]}], "split": "dev"}
+{"id": "zh-CN-0835", "line": 835, "category": "currency", "text": "新加坡站售价S$120，支持直邮。", "targets": [{"written": "S$120", "readings": ["一百二十新币", "一百二十新加坡元"]}], "split": "test"}
+{"id": "zh-CN-0836", "line": 836, "category": "unit", "text": "全程42.195km，他第一次跑进了四小时。", "targets": [{"written": "42.195km", "readings": ["四十二点一九五公里"]}], "split": "dev"}
+{"id": "zh-CN-0837", "line": 837, "category": "unit", "text": "建筑面积128㎡，三室两厅南北通透。", "targets": [{"written": "128㎡", "readings": ["一百二十八平方米"]}], "split": "dev"}
+{"id": "zh-CN-0838", "line": 838, "category": "unit", "text": "包裹实重2.5kg，按首重加续重计费。", "targets": [{"written": "2.5kg", "readings": ["二点五千克", "二点五公斤"]}], "split": "test"}
+{"id": "zh-CN-0839", "line": 839, "category": "unit", "text": "该路段限速80km/h，前方有测速。", "targets": [{"written": "80km/h", "readings": ["八十公里每小时", "每小时八十公里"]}], "split": "dev"}
+{"id": "zh-CN-0840", "line": 840, "category": "unit", "text": "随身水杯容量500ml，正好一次冲一包蛋白粉。", "targets": [{"written": "500ml", "readings": ["五百毫升"]}], "split": "test"}
+{"id": "zh-CN-0841", "line": 841, "category": "unit", "text": "屏幕尺寸6.7英寸，单手握持有点吃力。", "targets": [{"written": "6.7英寸", "readings": ["六点七英寸"]}], "split": "test"}
+{"id": "zh-CN-0842", "line": 842, "category": "unit", "text": "村里承包了15亩地种猕猴桃。", "targets": [{"written": "15亩", "readings": ["十五亩"]}], "split": "test"}
+{"id": "zh-CN-0843", "line": 843, "category": "unit", "text": "这台笔记本标配16GB内存，不能自己加。", "targets": [{"written": "16GB", "readings": ["十六GB", "十六G"]}], "split": "dev"}
+{"id": "zh-CN-0844", "line": 844, "category": "unit", "text": "综合油耗6.8L/100km，市区会高一些。", "targets": [{"written": "6.8L/100km", "readings": ["百公里六点八升", "六点八升每百公里"]}], "split": "dev"}
+{"id": "zh-CN-0845", "line": 845, "category": "unit", "text": "电池容量5000mAh，轻度使用两天一充。", "targets": [{"written": "5000mAh", "readings": ["五千毫安时", "五千毫安"]}], "split": "dev"}
+{"id": "zh-CN-0846", "line": 846, "category": "unit", "text": "体检表上身高1.78米，比去年又高了。", "targets": [{"written": "1.78米", "readings": ["一米七八", "一点七八米"]}], "split": "dev"}
+{"id": "zh-CN-0847", "line": 847, "category": "unit", "text": "减肥三个月，体重从78kg降到了62.4kg。", "targets": [{"written": "78kg", "readings": ["七十八公斤", "七十八千克"]}, {"written": "62.4kg", "readings": ["六十二点四公斤", "六十二点四千克"]}], "split": "test"}
+{"id": "zh-CN-0848", "line": 848, "category": "unit", "text": "酒店距市中心3.6公里，打车起步价就能到。", "targets": [{"written": "3.6公里", "readings": ["三点六公里"]}], "split": "dev"}
+{"id": "zh-CN-0849", "line": 849, "category": "unit", "text": "电饭煲额定功率1500W，别和空调插同一个插座。", "targets": [{"written": "1500W", "readings": ["一千五百瓦"]}], "split": "dev"}
+{"id": "zh-CN-0850", "line": 850, "category": "unit", "text": "国内民用电压220V，带海外电器要配变压器。", "targets": [{"written": "220V", "readings": ["二百二十伏", "两百二十伏"]}], "split": "dev"}
+{"id": "zh-CN-0851", "line": 851, "category": "unit", "text": "保护区面积3.5万平方公里，相当于两个北京。", "targets": [{"written": "3.5万平方公里", "readings": ["三点五万平方公里"]}], "split": "dev"}
+{"id": "zh-CN-0852", "line": 852, "category": "unit", "text": "医生建议每天喝2L水，少喝含糖饮料。", "targets": [{"written": "2L", "readings": ["两升"]}], "split": "test"}
+{"id": "zh-CN-0853", "line": 853, "category": "unit", "text": "昨日全市平均降雨量86.5mm，局部大暴雨。", "targets": [{"written": "86.5mm", "readings": ["八十六点五毫米"]}], "split": "dev"}
+{"id": "zh-CN-0854", "line": 854, "category": "unit", "text": "阵风可达12m/s，高空作业暂停。", "targets": [{"written": "12m/s", "readings": ["十二米每秒", "每秒十二米"]}], "split": "test"}
+{"id": "zh-CN-0855", "line": 855, "category": "unit", "text": "垭口海拔4,718米，建议备好氧气瓶。", "targets": [{"written": "4,718米", "readings": ["四千七百一十八米"]}], "split": "test"}
+{"id": "zh-CN-0856", "line": 856, "category": "unit", "text": "路由器工作在2.4GHz频段，穿墙更稳。", "targets": [{"written": "2.4GHz", "readings": ["二点四GHz", "二点四吉赫兹"]}], "split": "dev"}
+{"id": "zh-CN-0857", "line": 857, "category": "unit", "text": "成人每次口服0.25g，一日三次。", "targets": [{"written": "0.25g", "readings": ["零点二五克"]}], "split": "dev"}
+{"id": "zh-CN-0858", "line": 858, "category": "unit", "text": "钢板厚度0.8mm，按图纸折弯。", "targets": [{"written": "0.8mm", "readings": ["零点八毫米"]}], "split": "dev"}
+{"id": "zh-CN-0859", "line": 859, "category": "unit", "text": "夜间室内噪音控制在45分贝以下。", "targets": [{"written": "45分贝", "readings": ["四十五分贝"]}], "split": "dev"}
+{"id": "zh-CN-0860", "line": 860, "category": "unit", "text": "电机额定转速3200rpm。", "targets": [{"written": "3200rpm", "readings": ["三千二百转每分钟", "三千两百转每分钟", "每分钟三千二百转", "每分钟三千两百转"]}], "split": "dev"}
+{"id": "zh-CN-0861", "line": 861, "category": "percent", "text": "第三季度营收同比增长18.7%，超出市场预期。", "targets": [{"written": "18.7%", "readings": ["百分之十八点七"]}], "split": "dev"}
+{"id": "zh-CN-0862", "line": 862, "category": "percent", "text": "本学期出勤率须达到90%以上方可参加期末考试。", "targets": [{"written": "90%", "readings": ["百分之九十"]}], "split": "dev"}
+{"id": "zh-CN-0863", "line": 863, "category": "percent", "text": "明天降水概率60%，出门记得带伞。", "targets": [{"written": "60%", "readings": ["百分之六十"]}], "split": "test"}
+{"id": "zh-CN-0864", "line": 864, "category": "percent", "text": "手机电量只剩3%了，导航还没结束。", "targets": [{"written": "3%", "readings": ["百分之三"]}], "split": "test"}
+{"id": "zh-CN-0865", "line": 865, "category": "percent", "text": "首套房贷利率下调至3.85%。", "targets": [{"written": "3.85%", "readings": ["百分之三点八五"]}], "split": "dev"}
+{"id": "zh-CN-0866", "line": 866, "category": "percent", "text": "本批次产品合格率99.2%。", "targets": [{"written": "99.2%", "readings": ["百分之九十九点二"]}], "split": "test"}
+{"id": "zh-CN-0867", "line": 867, "category": "percent", "text": "该股今日收跌2.34%，成交量放大。", "targets": [{"written": "2.34%", "readings": ["百分之二点三四"]}], "split": "dev"}
+{"id": "zh-CN-0868", "line": 868, "category": "percent", "text": "市场份额从12%提升到15.5%。", "targets": [{"written": "12%", "readings": ["百分之十二"]}, {"written": "15.5%", "readings": ["百分之十五点五"]}], "split": "dev"}
+{"id": "zh-CN-0869", "line": 869, "category": "percent", "text": "医用酒精浓度75%，消毒效果最好。", "targets": [{"written": "75%", "readings": ["百分之七十五"]}], "split": "test"}
+{"id": "zh-CN-0870", "line": 870, "category": "percent", "text": "一般纳税人适用13%增值税率。", "targets": [{"written": "13%", "readings": ["百分之十三"]}], "split": "test"}
+{"id": "zh-CN-0871", "line": 871, "category": "percent", "text": "候选人以52.6%的得票率当选。", "targets": [{"written": "52.6%", "readings": ["百分之五十二点六"]}], "split": "test"}
+{"id": "zh-CN-0872", "line": 872, "category": "percent", "text": "平台对每笔交易收取0.5%的服务费。", "targets": [{"written": "0.5%", "readings": ["百分之零点五"]}], "split": "test"}
+{"id": "zh-CN-0873", "line": 873, "category": "percent", "text": "新能源汽车销量同比增长超100%。", "targets": [{"written": "100%", "readings": ["百分之一百", "百分之百"]}], "split": "dev"}
+{"id": "zh-CN-0874", "line": 874, "category": "percent", "text": "任务进度已完成85％，预计今晚收尾。", "targets": [{"written": "85％", "readings": ["百分之八十五"]}], "split": "test"}
+{"id": "zh-CN-0875", "line": 875, "category": "percent", "text": "配料表显示含糖量≤5%。", "targets": [{"written": "≤5%", "readings": ["小于等于百分之五", "不超过百分之五"]}], "split": "dev"}
+{"id": "zh-CN-0876", "line": 876, "category": "percent", "text": "室内相对湿度保持在70%左右较为舒适。", "targets": [{"written": "70%", "readings": ["百分之七十"]}], "split": "dev"}
+{"id": "zh-CN-0877", "line": 877, "category": "percent", "text": "全省行政村光纤覆盖率达百分之95。", "targets": [{"written": "百分之95", "readings": ["百分之九十五"]}], "split": "dev"}
+{"id": "zh-CN-0878", "line": 878, "category": "percent", "text": "城镇调查失业率为5.1%。", "targets": [{"written": "5.1%", "readings": ["百分之五点一"]}], "split": "dev"}
+{"id": "zh-CN-0879", "line": 879, "category": "percent", "text": "该校自主招生录取率不到1%。", "targets": [{"written": "1%", "readings": ["百分之一"]}], "split": "test"}
+{"id": "zh-CN-0880", "line": 880, "category": "percent", "text": "中介按合同金额的3‰收取佣金。", "targets": [{"written": "3‰", "readings": ["千分之三"]}], "split": "dev"}
+{"id": "zh-CN-0881", "line": 881, "category": "percent", "text": "直播带货销售额同比增长200%。", "targets": [{"written": "200%", "readings": ["百分之二百", "百分之两百"]}], "split": "dev"}
+{"id": "zh-CN-0882", "line": 882, "category": "percent", "text": "服务器CPU使用率飙到98%，触发告警。", "targets": [{"written": "98%", "readings": ["百分之九十八"]}], "split": "dev"}
+{"id": "zh-CN-0883", "line": 883, "category": "percent", "text": "交房前需支付20%的首付款。", "targets": [{"written": "20%", "readings": ["百分之二十"]}], "split": "dev"}
+{"id": "zh-CN-0884", "line": 884, "category": "percent", "text": "用了一年，电池健康度还有87%。", "targets": [{"written": "87%", "readings": ["百分之八十七"]}], "split": "dev"}
+{"id": "zh-CN-0885", "line": 885, "category": "percent", "text": "实验要求试剂纯度不低于99.99%。", "targets": [{"written": "99.99%", "readings": ["百分之九十九点九九"]}], "split": "dev"}
+{"id": "zh-CN-0886", "line": 886, "category": "sign", "text": "今夜最低气温-5℃，道路可能结冰。", "targets": [{"written": "-5℃", "readings": ["零下五摄氏度", "零下五度"]}], "split": "dev"}
+{"id": "zh-CN-0887", "line": 887, "category": "sign", "text": "零件加工误差要求控制在±0.5mm以内。", "targets": [{"written": "±0.5mm", "readings": ["正负零点五毫米"]}], "split": "dev"}
+{"id": "zh-CN-0888", "line": 888, "category": "sign", "text": "沪指今日收涨+1.2%，两市成交额放大。", "targets": [{"written": "+1.2%", "readings": ["正百分之一点二", "加百分之一点二", "百分之一点二"]}], "split": "test"}
+{"id": "zh-CN-0889", "line": 889, "category": "sign", "text": "公司上半年净亏损-3.6亿元，同比扩大。", "targets": [{"written": "-3.6亿元", "readings": ["负三点六亿元"]}], "split": "test"}
+{"id": "zh-CN-0890", "line": 890, "category": "sign", "text": "孩子体温38.5℃，先物理降温再观察。", "targets": [{"written": "38.5℃", "readings": ["三十八点五摄氏度", "三十八点五度"]}], "split": "dev"}
+{"id": "zh-CN-0891", "line": 891, "category": "sign", "text": "冷冻室温度建议设在-18℃。", "targets": [{"written": "-18℃", "readings": ["零下十八摄氏度", "零下十八度"]}], "split": "test"}
+{"id": "zh-CN-0892", "line": 892, "category": "sign", "text": "创业板指收盘报跌-0.87%。", "targets": [{"written": "-0.87%", "readings": ["负百分之零点八七", "百分之零点八七"]}], "split": "dev"}
+{"id": "zh-CN-0893", "line": 893, "category": "sign", "text": "轴径公差±0.02mm，超差一律退回。", "targets": [{"written": "±0.02mm", "readings": ["正负零点零二毫米"]}], "split": "dev"}
+{"id": "zh-CN-0894", "line": 894, "category": "sign", "text": "制造业PMI环比-2.5个百分点。", "targets": [{"written": "-2.5个百分点", "readings": ["负二点五个百分点", "下降二点五个百分点"]}], "split": "dev"}
+{"id": "zh-CN-0895", "line": 895, "category": "sign", "text": "设备工作温度-20℃~60℃。", "targets": [{"written": "-20℃~60℃", "readings": ["零下二十摄氏度到六十摄氏度", "零下二十度到六十度"]}], "split": "dev"}
+{"id": "zh-CN-0896", "line": 896, "category": "sign", "text": "运放供电±12V，接反会烧。", "targets": [{"written": "±12V", "readings": ["正负十二伏"]}], "split": "dev"}
+{"id": "zh-CN-0897", "line": 897, "category": "sign", "text": "吐鲁番艾丁湖湖面海拔-154米。", "targets": [{"written": "-154米", "readings": ["负一百五十四米"]}], "split": "dev"}
+{"id": "zh-CN-0898", "line": 898, "category": "sign", "text": "本轮得分-3分，排名垫底。", "targets": [{"written": "-3分", "readings": ["负三分"]}], "split": "test"}
+{"id": "zh-CN-0899", "line": 899, "category": "sign", "text": "明早气温−8°C，车窗记得盖防冻布。", "targets": [{"written": "−8°C", "readings": ["零下八摄氏度", "零下八度"]}], "split": "dev"}
+{"id": "zh-CN-0900", "line": 900, "category": "sign", "text": "北向资金全天净流入+12.8亿。", "targets": [{"written": "+12.8亿", "readings": ["正十二点八亿", "加十二点八亿", "十二点八亿"]}], "split": "dev"}
+{"id": "zh-CN-0901", "line": 901, "category": "sign", "text": "仓库湿度要求50%±5%。", "targets": [{"written": "50%±5%", "readings": ["百分之五十正负百分之五"]}], "split": "dev"}
+{"id": "zh-CN-0902", "line": 902, "category": "sign", "text": "本周累计跌幅-1.05%，连续三周下跌。", "targets": [{"written": "-1.05%", "readings": ["负百分之一点零五"]}], "split": "test"}
+{"id": "zh-CN-0903", "line": 903, "category": "sign", "text": "北京时间为UTC+8，预约时请注意换算。", "targets": [{"written": "UTC+8", "readings": ["UTC加八"]}], "split": "dev"}
+{"id": "zh-CN-0904", "line": 904, "category": "sign", "text": "您的账户余额变动-199.00，当前余额请查询APP。", "targets": [{"written": "-199.00", "readings": ["负一百九十九", "负一百九十九点零零"]}], "split": "dev"}
+{"id": "zh-CN-0905", "line": 905, "category": "sign", "text": "北方多地最低温零下3度，供暖提前开启。", "targets": [{"written": "零下3度", "readings": ["零下三度"]}], "split": "dev"}
+{"id": "zh-CN-0906", "line": 906, "category": "sign", "text": "人体血液正常pH值约为7.4±0.05。", "targets": [{"written": "7.4±0.05", "readings": ["七点四正负零点零五"]}], "split": "dev"}
+{"id": "zh-CN-0907", "line": 907, "category": "sign", "text": "冲泡水温36°C最接近母乳。", "targets": [{"written": "36°C", "readings": ["三十六摄氏度", "三十六度"]}], "split": "test"}
+{"id": "zh-CN-0908", "line": 908, "category": "sign", "text": "沙漠地区昼夜温差可达15℃以上。", "targets": [{"written": "15℃", "readings": ["十五摄氏度", "十五度"]}], "split": "test"}
+{"id": "zh-CN-0909", "line": 909, "category": "sign", "text": "钙离子为+2价离子。", "targets": [{"written": "+2价", "readings": ["正二价"]}], "split": "dev"}
+{"id": "zh-CN-0910", "line": 910, "category": "sign", "text": "逆光拍摄时把曝光补偿调到+0.7EV。", "targets": [{"written": "+0.7EV", "readings": ["加零点七EV", "正零点七EV"]}], "split": "dev"}
+{"id": "zh-CN-0912", "line": 912, "category": "phone", "text": "客服热线400-800-1234，工作日九点到十八点。", "targets": [{"written": "400-800-1234", "readings": ["四零零八零零幺二三四", "四零零八零零一二三四"]}], "split": "dev"}
+{"id": "zh-CN-0913", "line": 913, "category": "phone", "text": "有急事直接打我手机138 0013 5678。", "targets": [{"written": "138 0013 5678", "readings": ["幺三八零零幺三五六七八", "幺三八零零一三五六七八", "一三八零零幺三五六七八", "一三八零零一三五六七八"]}], "split": "dev"}
+{"id": "zh-CN-0914", "line": 914, "category": "phone", "text": "遇到危险请立即拨打110。", "targets": [{"written": "110", "readings": ["幺幺零", "幺一零", "一幺零", "一一零"]}], "split": "dev"}
+{"id": "zh-CN-0915", "line": 915, "category": "phone", "text": "老人突然晕倒，赶紧打了120。", "targets": [{"written": "120", "readings": ["幺二零", "一二零"]}], "split": "dev"}
+{"id": "zh-CN-0916", "line": 916, "category": "phone", "text": "市民可拨打12345反映供暖问题。", "targets": [{"written": "12345", "readings": ["幺二三四五", "一二三四五"]}], "split": "test"}
+{"id": "zh-CN-0917", "line": 917, "category": "phone", "text": "办公室座机010-65123456，转接请按零。", "targets": [{"written": "010-65123456", "readings": ["零幺零六五幺二三四五六", "零幺零六五一二三四五六", "零一零六五幺二三四五六", "零一零六五一二三四五六"]}], "split": "test"}
+{"id": "zh-CN-0918", "line": 918, "category": "phone", "text": "国际漫游期间请拨+86 139 2871 0046联系我。", "targets": [{"written": "+86 139 2871 0046", "readings": ["加八六幺三九二八七幺零零四六", "加八六幺三九二八七一零零四六", "加八六一三九二八七幺零零四六", "加八六一三九二八七一零零四六"]}], "split": "test"}
+{"id": "zh-CN-0919", "line": 919, "category": "phone", "text": "传真请发至021-5588 7766。", "targets": [{"written": "021-5588 7766", "readings": ["零二幺五五八八七七六六", "零二一五五八八七七六六"]}], "split": "dev"}
+{"id": "zh-CN-0920", "line": 920, "category": "phone", "text": "拨通总机后请转8021找王工。", "targets": [{"written": "转8021", "readings": ["转八零二幺", "转八零二一"]}], "split": "dev"}
+{"id": "zh-CN-0921", "line": 921, "category": "phone", "text": "工行客服95588全天候受理挂失。", "targets": [{"written": "95588", "readings": ["九五五八八"]}], "split": "test"}
+{"id": "zh-CN-0922", "line": 922, "category": "phone", "text": "话费查询直接打10086就行。", "targets": [{"written": "10086", "readings": ["幺零零八六", "一零零八六"]}], "split": "test"}
+{"id": "zh-CN-0923", "line": 923, "category": "phone", "text": "小区物业电话0755-23456789，有事随时联系。", "targets": [{"written": "0755-23456789", "readings": ["零七五五二三四五六七八九"]}], "split": "dev"}
+{"id": "zh-CN-0924", "line": 924, "category": "phone", "text": "商家不退款的话可以打12315投诉。", "targets": [{"written": "12315", "readings": ["幺二三幺五", "幺二三一五", "一二三幺五", "一二三一五"]}], "split": "test"}
+{"id": "zh-CN-0925", "line": 925, "category": "phone", "text": "香港办事处联系电话+852 2123 4567。", "targets": [{"written": "+852 2123 4567", "readings": ["加八五二二幺二三四五六七", "加八五二二一二三四五六七"]}], "split": "dev"}
+{"id": "zh-CN-0926", "line": 926, "category": "phone", "text": "骚扰电话13911112222已经拉黑。", "targets": [{"written": "13911112222", "readings": ["幺三九幺幺幺幺二二二二", "幺三九幺幺幺一二二二二", "幺三九幺幺一幺二二二二", "幺三九幺幺一一二二二二", "幺三九幺一幺幺二二二二", "幺三九幺一幺一二二二二", "幺三九幺一一幺二二二二", "幺三九幺一一一二二二二", "幺三九一幺幺幺二二二二", "幺三九一幺幺一二二二二", "幺三九一幺一幺二二二二", "幺三九一幺一一二二二二", "幺三九一一幺幺二二二二", "幺三九一一幺一二二二二", "幺三九一一一幺二二二二", "幺三九一一一一二二二二", "一三九幺幺幺幺二二二二", "一三九幺幺幺一二二二二", "一三九幺幺一幺二二二二", "一三九幺幺一一二二二二", "一三九幺一幺幺二二二二", "一三九幺一幺一二二二二", "一三九幺一一幺二二二二", "一三九幺一一一二二二二", "一三九一幺幺幺二二二二", "一三九一幺幺一二二二二", "一三九一幺一幺二二二二", "一三九一幺一一二二二二", "一三九一一幺幺二二二二", "一三九一一幺一二二二二", "一三九一一一幺二二二二", "一三九一一一一二二二二"]}], "split": "dev"}
+{"id": "zh-CN-0927", "line": 927, "category": "phone", "text": "发现火情请拨打119并说清地址。", "targets": [{"written": "119", "readings": ["幺幺九", "幺一九", "一幺九", "一一九"]}], "split": "dev"}
+{"id": "zh-CN-0928", "line": 928, "category": "phone", "text": "杭州门店订餐电话0571-88888888。", "targets": [{"written": "0571-88888888", "readings": ["零五七幺八八八八八八八八", "零五七一八八八八八八八八"]}], "split": "test"}
+{"id": "zh-CN-0929", "line": 929, "category": "phone", "text": "快递员说他的号码是186-1234-5678。", "targets": [{"written": "186-1234-5678", "readings": ["幺八六幺二三四五六七八", "幺八六一二三四五六七八", "一八六幺二三四五六七八", "一八六一二三四五六七八"]}], "split": "dev"}
+{"id": "zh-CN-0930", "line": 930, "category": "phone", "text": "预订专线400 666 9999，节假日照常。", "targets": [{"written": "400 666 9999", "readings": ["四零零六六六九九九九"]}], "split": "dev"}
+{"id": "zh-CN-0931", "line": 931, "category": "phone", "text": "成都分公司电话（028）87654321。", "targets": [{"written": "（028）87654321", "readings": ["零二八八七六五四三二幺", "零二八八七六五四三二一"]}], "split": "test"}
+{"id": "zh-CN-0932", "line": 932, "category": "phone", "text": "尾号6677的手机号今天来过三个未接来电。", "targets": [{"written": "6677", "readings": ["六六七七"]}], "split": "dev"}
+{"id": "zh-CN-0933", "line": 933, "category": "phone", "text": "大连校区招生办0411-3920 1157。", "targets": [{"written": "0411-3920 1157", "readings": ["零四幺幺三九二零幺幺五七", "零四幺幺三九二零幺一五七", "零四幺幺三九二零一幺五七", "零四幺幺三九二零一一五七", "零四幺一三九二零幺幺五七", "零四幺一三九二零幺一五七", "零四幺一三九二零一幺五七", "零四幺一三九二零一一五七", "零四一幺三九二零幺幺五七", "零四一幺三九二零幺一五七", "零四一幺三九二零一幺五七", "零四一幺三九二零一一五七", "零四一一三九二零幺幺五七", "零四一一三九二零幺一五七", "零四一一三九二零一幺五七", "零四一一三九二零一一五七"]}], "split": "dev"}
+{"id": "zh-CN-0934", "line": 934, "category": "phone", "text": "接到96110的来电一定要接，是反诈中心。", "targets": [{"written": "96110", "readings": ["九六幺幺零", "九六幺一零", "九六一幺零", "九六一一零"]}], "split": "dev"}
+{"id": "zh-CN-0935", "line": 935, "category": "phone", "text": "台北客户的号码+886 2 2345 6789已存通讯录。", "targets": [{"written": "+886 2 2345 6789", "readings": ["加八八六二二三四五六七八九"]}], "split": "dev"}
+{"id": "zh-CN-0936", "line": 936, "category": "phone", "text": "中奖短信说回拨１７７００００１３５７，一看就是诈骗。", "targets": [{"written": "１７７００００１３５７", "readings": ["幺七七零零零零幺三五七", "幺七七零零零零一三五七", "一七七零零零零幺三五七", "一七七零零零零一三五七"]}], "split": "dev"}
+{"id": "zh-CN-0937", "line": 937, "category": "code", "text": "您的房间号是1208，电梯在大堂右侧。", "targets": [{"written": "1208", "readings": ["幺二零八", "一二零八"]}], "split": "dev"}
+{"id": "zh-CN-0938", "line": 938, "category": "code", "text": "车牌京A·88K66的车主请挪车。", "targets": [{"written": "京A·88K66", "readings": ["京A八八K六六"]}], "split": "dev"}
+{"id": "zh-CN-0939", "line": 939, "category": "code", "text": "收件地址邮编100081。", "targets": [{"written": "100081", "readings": ["一零零零八一"]}], "split": "test"}
+{"id": "zh-CN-0940", "line": 940, "category": "code", "text": "航班MU5137预计晚点四十分钟。", "targets": [{"written": "MU5137", "readings": ["MU五幺三七", "MU五一三七"]}], "split": "dev"}
+{"id": "zh-CN-0941", "line": 941, "category": "code", "text": "请乘坐G1024次列车前往南京南站。", "targets": [{"written": "G1024", "readings": ["G幺零二四", "G一零二四"]}], "split": "test"}
+{"id": "zh-CN-0942", "line": 942, "category": "code", "text": "实名认证请输入身份证尾号0423。", "targets": [{"written": "0423", "readings": ["零四二三"]}], "split": "dev"}
+{"id": "zh-CN-0943", "line": 943, "category": "code", "text": "快递单号SF1234567890123，可在官网查询。", "targets": [{"written": "SF1234567890123", "readings": ["SF一二三四五六七八九零一二三"]}], "split": "dev"}
+{"id": "zh-CN-0944", "line": 944, "category": "code", "text": "登机牌显示座位32C，靠过道。", "targets": [{"written": "32C", "readings": ["三十二C"]}], "split": "dev"}
+{"id": "zh-CN-0945", "line": 945, "category": "code", "text": "门禁卡绑定的工号为20230917。", "targets": [{"written": "20230917", "readings": ["二零二三零九一七"]}], "split": "dev"}
+{"id": "zh-CN-0946", "line": 946, "category": "code", "text": "查成绩需要学号2021301045和密码。", "targets": [{"written": "2021301045", "readings": ["二零二一三零一零四五"]}], "split": "test"}
+{"id": "zh-CN-0947", "line": 947, "category": "code", "text": "这本书的ISBN是978-7-115-54321-0。", "targets": [{"written": "978-7-115-54321-0", "readings": ["九七八七一一五五四三二一零"]}], "split": "dev"}
+{"id": "zh-CN-0948", "line": 948, "category": "code", "text": "请核对银行卡尾号3306后确认付款。", "targets": [{"written": "3306", "readings": ["三三零六"]}], "split": "test"}
+{"id": "zh-CN-0949", "line": 949, "category": "code", "text": "收货地址是15栋2单元601。", "targets": [{"written": "15栋2单元601", "readings": ["十五栋二单元六零一"]}], "split": "dev"}
+{"id": "zh-CN-0950", "line": 950, "category": "code", "text": "发票代码3100231130，请与纸质票核对。", "targets": [{"written": "3100231130", "readings": ["三一零零二三一一三零"]}], "split": "dev"}
+{"id": "zh-CN-0951", "line": 951, "category": "code", "text": "您的车停在B2-117号车位。", "targets": [{"written": "B2-117", "readings": ["B二一一七", "B二杠一一七"]}], "split": "test"}
+{"id": "zh-CN-0952", "line": 952, "category": "code", "text": "考生请到第07考场候考。", "targets": [{"written": "第07考场", "readings": ["第零七考场", "第七考场"]}], "split": "dev"}
+{"id": "zh-CN-0953", "line": 953, "category": "code", "text": "沿G15沈海高速往南约两小时。", "targets": [{"written": "G15", "readings": ["G十五"]}], "split": "dev"}
+{"id": "zh-CN-0954", "line": 954, "category": "code", "text": "坐818路公交到终点站下。", "targets": [{"written": "818路", "readings": ["八一八路"]}], "split": "dev"}
+{"id": "zh-CN-0955", "line": 955, "category": "code", "text": "取报告时报病历号P000342即可。", "targets": [{"written": "P000342", "readings": ["P零零零三四二"]}], "split": "dev"}
+{"id": "zh-CN-0956", "line": 956, "category": "code", "text": "保单号PICC2026A0981已生效。", "targets": [{"written": "PICC2026A0981", "readings": ["PICC二零二六A零九八一"]}], "split": "test"}
+{"id": "zh-CN-0957", "line": 957, "category": "code", "text": "案件编号2026-0417，请妥善保存回执。", "targets": [{"written": "2026-0417", "readings": ["二零二六杠零四一七", "二零二六零四一七"]}], "split": "test"}
+{"id": "zh-CN-0958", "line": 958, "category": "code", "text": "泳池更衣室储物柜A-23的钥匙丢了。", "targets": [{"written": "A-23", "readings": ["A二十三", "A二三"]}], "split": "dev"}
+{"id": "zh-CN-0959", "line": 959, "category": "code", "text": "开户行行号102100099996。", "targets": [{"written": "102100099996", "readings": ["一零二一零零零九九九九六"]}], "split": "dev"}
+{"id": "zh-CN-0960", "line": 960, "category": "code", "text": "扫码枪读不出条码6901234567892。", "targets": [{"written": "6901234567892", "readings": ["六九零一二三四五六七八九二"]}], "split": "test"}
+{"id": "zh-CN-0961", "line": 961, "category": "code", "text": "统一社会信用代码91110000600037341L。", "targets": [{"written": "91110000600037341L", "readings": ["九一一一零零零零六零零零三七三四一L"]}], "split": "dev"}
+{"id": "zh-CN-0962", "line": 962, "category": "alnum", "text": "打印合同请用A4纸，双面打印。", "targets": [{"written": "A4", "readings": ["A四"]}], "split": "test"}
+{"id": "zh-CN-0963", "line": 963, "category": "alnum", "text": "这款手机支持5G双卡，信号比上一代好。", "targets": [{"written": "5G", "readings": ["五G"]}], "split": "test"}
+{"id": "zh-CN-0964", "line": 964, "category": "alnum", "text": "电影院新上了3D版本，票价贵了一半。", "targets": [{"written": "3D", "readings": ["三D"]}], "split": "dev"}
+{"id": "zh-CN-0965", "line": 965, "category": "alnum", "text": "电视是4K的，片源却大多是1080P。", "targets": [{"written": "4K", "readings": ["四K"]}, {"written": "1080P", "readings": ["一零八零P"]}], "split": "dev"}
+{"id": "zh-CN-0966", "line": 966, "category": "alnum", "text": "停车请往B2层，B1层已满。", "targets": [{"written": "B2", "readings": ["B二"]}, {"written": "B1", "readings": ["B一"]}], "split": "dev"}
+{"id": "zh-CN-0967", "line": 967, "category": "alnum", "text": "观赏F1上海站的门票早就售罄了。", "targets": [{"written": "F1", "readings": ["F一"]}], "split": "dev"}
+{"id": "zh-CN-0968", "line": 968, "category": "alnum", "text": "实验室检出H5N1亚型流感病毒。", "targets": [{"written": "H5N1", "readings": ["H五N一"]}], "split": "dev"}
+{"id": "zh-CN-0969", "line": 969, "category": "alnum", "text": "这家机构主打K12课外辅导。", "targets": [{"written": "K12", "readings": ["K十二"]}], "split": "test"}
+{"id": "zh-CN-0970", "line": 970, "category": "alnum", "text": "车子保养得去4S店，外面修理厂没有原厂件。", "targets": [{"written": "4S店", "readings": ["四S店"]}], "split": "dev"}
+{"id": "zh-CN-0971", "line": 971, "category": "alnum", "text": "P2P平台暴雷后，他的积蓄全没了。", "targets": [{"written": "P2P", "readings": ["P二P"]}], "split": "dev"}
+{"id": "zh-CN-0972", "line": 972, "category": "alnum", "text": "公司业务从B2C转向B2B。", "targets": [{"written": "B2C", "readings": ["B二C"]}, {"written": "B2B", "readings": ["B二B"]}], "split": "dev"}
+{"id": "zh-CN-0973", "line": 973, "category": "alnum", "text": "新房Wi-Fi 6路由器全屋覆盖没问题。", "targets": [{"written": "Wi-Fi 6", "readings": ["Wi-Fi六"]}], "split": "test"}
+{"id": "zh-CN-0974", "line": 974, "category": "alnum", "text": "接口是USB 3.0，传输速度快很多。", "targets": [{"written": "USB 3.0", "readings": ["USB三点零"]}], "split": "dev"}
+{"id": "zh-CN-0975", "line": 975, "category": "alnum", "text": "今天PM2.5爆表，出门戴口罩。", "targets": [{"written": "PM2.5", "readings": ["PM二点五"]}], "split": "dev"}
+{"id": "zh-CN-0976", "line": 976, "category": "alnum", "text": "航班在T3航站楼起飞，别走错了。", "targets": [{"written": "T3航站楼", "readings": ["T三航站楼"]}], "split": "dev"}
+{"id": "zh-CN-0977", "line": 977, "category": "alnum", "text": "搭载M2芯片的机型续航明显更长。", "targets": [{"written": "M2芯片", "readings": ["M二芯片"]}], "split": "dev"}
+{"id": "zh-CN-0978", "line": 978, "category": "alnum", "text": "国产大飞机C919完成首次商业飞行。", "targets": [{"written": "C919", "readings": ["C九一九"]}], "split": "dev"}
+{"id": "zh-CN-0979", "line": 979, "category": "alnum", "text": "儿童玩具必须通过3C认证才能上架。", "targets": [{"written": "3C认证", "readings": ["三C认证"]}], "split": "test"}
+{"id": "zh-CN-0980", "line": 980, "category": "alnum", "text": "考试涂卡请使用2B铅笔。", "targets": [{"written": "2B铅笔", "readings": ["二B铅笔"]}], "split": "test"}
+{"id": "zh-CN-0981", "line": 981, "category": "alnum", "text": "老式MP3播放器现在反而成了潮品。", "targets": [{"written": "MP3", "readings": ["MP三"]}], "split": "dev"}
+{"id": "zh-CN-0982", "line": 982, "category": "alnum", "text": "Q2财报将于下周发布。", "targets": [{"written": "Q2", "readings": ["Q二", "第二季度"]}], "split": "dev"}
+{"id": "zh-CN-0983", "line": 983, "category": "alnum", "text": "这台车的V8发动机油耗惊人。", "targets": [{"written": "V8发动机", "readings": ["V八发动机"]}], "split": "dev"}
+{"id": "zh-CN-0984", "line": 984, "category": "alnum", "text": "G20峰会期间部分路段临时管制。", "targets": [{"written": "G20", "readings": ["G二十"]}], "split": "dev"}
+{"id": "zh-CN-0985", "line": 985, "category": "alnum", "text": "这款3A游戏需要至少一百G硬盘空间。", "targets": [{"written": "3A游戏", "readings": ["三A游戏"]}], "split": "dev"}
+{"id": "zh-CN-0986", "line": 986, "category": "alnum", "text": "小米14和iPhone 15到底选哪个？", "targets": [{"written": "14", "readings": ["十四"]}, {"written": "15", "readings": ["十五"]}], "split": "test"}
+{"id": "zh-CN-0987", "line": 987, "category": "electronic", "text": "您的验证码为847216，5分钟内有效，请勿泄露。", "targets": [{"written": "847216", "readings": ["八四七二一六"]}, {"written": "5分钟", "readings": ["五分钟"]}], "split": "dev"}
+{"id": "zh-CN-0988", "line": 988, "category": "electronic", "text": "订单号202610130012345已发货。", "targets": [{"written": "202610130012345", "readings": ["二零二六一零一三零零一二三四五"]}], "split": "dev"}
+{"id": "zh-CN-0989", "line": 989, "category": "electronic", "text": "售后问题请发邮件至service@example.com。", "targets": [{"written": "service@example.com", "readings": ["service艾特example点com"]}], "split": "dev"}
+{"id": "zh-CN-0990", "line": 990, "category": "electronic", "text": "活动详情见www.example.cn。", "targets": [{"written": "www.example.cn", "readings": ["三W点example点cn", "www点example点cn"]}], "split": "dev"}
+{"id": "zh-CN-0991", "line": 991, "category": "electronic", "text": "请升级至v2.3.1以修复闪退问题。", "targets": [{"written": "v2.3.1", "readings": ["v二点三点一"]}], "split": "test"}
+{"id": "zh-CN-0992", "line": 992, "category": "electronic", "text": "打印机型号MX-350，驱动在官网下载。", "targets": [{"written": "MX-350", "readings": ["MX三五零", "MX三百五十"]}], "split": "dev"}
+{"id": "zh-CN-0993", "line": 993, "category": "electronic", "text": "路由器默认网关是192.168.1.1。", "targets": [{"written": "192.168.1.1", "readings": ["一九二点一六八点一点一"]}], "split": "dev"}
+{"id": "zh-CN-0994", "line": 994, "category": "electronic", "text": "服务跑在8080端口，防火墙记得放行。", "targets": [{"written": "8080", "readings": ["八零八零"]}], "split": "test"}
+{"id": "zh-CN-0995", "line": 995, "category": "electronic", "text": "固件已更新到1.0.4，重启后生效。", "targets": [{"written": "1.0.4", "readings": ["一点零点四"]}], "split": "dev"}
+{"id": "zh-CN-0996", "line": 996, "category": "electronic", "text": "【某某银行】动态密码5921，用于登录手机银行。", "targets": [{"written": "5921", "readings": ["五九二一"]}], "split": "test"}
+{"id": "zh-CN-0997", "line": 997, "category": "electronic", "text": "快递已到驿站，取件码A7-21-33。", "targets": [{"written": "A7-21-33", "readings": ["A七二一三三", "A七杠二一杠三三"]}], "split": "dev"}
+{"id": "zh-CN-0998", "line": 998, "category": "electronic", "text": "该功能需要iOS 17.4.1以上系统。", "targets": [{"written": "iOS 17.4.1", "readings": ["iOS十七点四点一"]}], "split": "dev"}
+{"id": "zh-CN-0999", "line": 999, "category": "electronic", "text": "项目要求Python 3.12环境。", "targets": [{"written": "Python 3.12", "readings": ["Python三点一二", "Python三点十二"]}], "split": "dev"}
+{"id": "zh-CN-1000", "line": 1000, "category": "electronic", "text": "简历请投递至zhang.wei88@mail.example.com。", "targets": [{"written": "zhang.wei88@mail.example.com", "readings": ["zhang点wei八八艾特mail点example点com"]}], "split": "test"}
+{"id": "zh-CN-1001", "line": 1001, "category": "electronic", "text": "会员专享页面example.com/vip。", "targets": [{"written": "example.com/vip", "readings": ["example点com斜杠vip"]}], "split": "dev"}
+{"id": "zh-CN-1002", "line": 1002, "category": "electronic", "text": "店里Wi-Fi密码是hz2026go。", "targets": [{"written": "hz2026go", "readings": ["hz二零二六go"]}], "split": "test"}
+{"id": "zh-CN-1003", "line": 1003, "category": "electronic", "text": "安装失败，错误代码0x80070005。", "targets": [{"written": "0x80070005", "readings": ["零x八零零七零零零五"]}], "split": "test"}
+{"id": "zh-CN-1004", "line": 1004, "category": "electronic", "text": "页面返回404，链接可能已失效。", "targets": [{"written": "404", "readings": ["四零四"]}], "split": "test"}
+{"id": "zh-CN-1005", "line": 1005, "category": "electronic", "text": "显卡是RTX 4070，跑大模型够用。", "targets": [{"written": "RTX 4070", "readings": ["RTX四零七零"]}], "split": "dev"}
+{"id": "zh-CN-1006", "line": 1006, "category": "electronic", "text": "处理器为i7-13700K。", "targets": [{"written": "i7-13700K", "readings": ["i七一三七零零K", "i七杠一三七零零K"]}], "split": "dev"}
+{"id": "zh-CN-1007", "line": 1007, "category": "electronic", "text": "登录验证码339 027，有效期十分钟。", "targets": [{"written": "339 027", "readings": ["三三九零二七"]}], "split": "dev"}
+{"id": "zh-CN-1008", "line": 1008, "category": "electronic", "text": "退款申请单号DD20261013778已受理。", "targets": [{"written": "DD20261013778", "readings": ["DD二零二六一零一三七七八"]}], "split": "dev"}
+{"id": "zh-CN-1009", "line": 1009, "category": "electronic", "text": "APP已更新到3.8.0版本，新增夜间模式。", "targets": [{"written": "3.8.0", "readings": ["三点八点零"]}], "split": "test"}
+{"id": "zh-CN-1010", "line": 1010, "category": "electronic", "text": "路由器型号AX3000，支持双频。", "targets": [{"written": "AX3000", "readings": ["AX三千", "AX三零零零"]}], "split": "test"}
+{"id": "zh-CN-1011", "line": 1011, "category": "electronic", "text": "招聘邮箱hr@company-example.cn。", "targets": [{"written": "hr@company-example.cn", "readings": ["hr艾特company杠example点cn", "hr艾特company横杠example点cn"]}], "split": "dev"}

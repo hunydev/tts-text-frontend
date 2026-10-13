@@ -1,0 +1,1011 @@
+# TN eval set vi-VN: 1000 lines, 10 parts x 100; fields category<TAB>markup<TAB>note; draft until native review
+# part 1
+cardinal	Theo Tổng cục Thống kê, cả nước có thêm {14.230|mười bốn [nghìn,ngàn] hai trăm ba mươi} doanh nghiệp đăng ký mới trong tháng qua.	
+percent	Chỉ số giá tiêu dùng tháng này tăng {0,29%|không phẩy [hai mươi chín,hai chín] phần trăm} so với tháng trước.	
+decimal	Điểm trung bình của vận động viên Việt Nam ở bài thi xà lệch là {13,85|mười ba phẩy [tám mươi lăm,tám lăm]}.	
+date	Lễ khai mạc Đại hội Thể thao toàn quốc dự kiến diễn ra vào ngày {9/11|chín tháng mười một} tại Hà Nội.	
+time	Chương trình Thời sự sẽ phát sóng lúc {19h|mười chín giờ} như thường lệ.	
+currency	Doanh thu toàn ngành du lịch chín tháng đầu năm ước đạt {612.000 tỷ đồng|sáu trăm mười hai [nghìn,ngàn] tỷ đồng}.	
+unit	Bão số bảy đang di chuyển theo hướng tây tây bắc với tốc độ {15 km/h|mười lăm [ki-lô-mét,cây số] trên giờ}.	
+range	Nhiệt độ khu vực Bắc Bộ đêm nay phổ biến {18-21℃|[từ ,]mười tám đến hai mươi mốt độ (C)}.	
+ordinal	Đây là lần thứ {3|ba} liên tiếp đội tuyển futsal Việt Nam góp mặt ở vòng chung kết châu Á.	
+sign	Nhiệt độ tại Sa Pa đã xuống {-1℃|âm một độ (C)} vào rạng sáng nay, băng giá xuất hiện trên đỉnh Fansipan.	
+fraction	Khoảng {2/3|hai phần ba} số hộ dân trong vùng ngập đã được di dời đến nơi an toàn.	
+phone	Người dân có thể phản ánh tình trạng ngập úng qua đường dây nóng {0243 822 1234|không hai bốn ba tám hai hai một hai ba bốn} của thành phố.	
+code	Tuyến {QL1A|QL một A} đoạn qua Thanh Hóa bị sạt lở, các phương tiện được hướng dẫn đi đường tránh.	
+alnum	Đội tuyển {U23|U [hai mươi ba,hai ba]} Việt Nam sẽ tập trung trở lại vào đầu tháng tới.	
+math	Đội tiếp sức {4x100m|bốn nhân một trăm mét} nữ Việt Nam vừa lập kỷ lục quốc gia mới tại giải vô địch châu Á.	
+electronic	Khán giả có thể xem lại toàn bộ chương trình tại địa chỉ {vtv.vn|vtv chấm vn}.	
+mixed	Tính đến {17h|mười bảy giờ} ngày {12/10|mười hai tháng mười}, bão đã làm {1.256|một [nghìn,ngàn] hai trăm năm mươi sáu} ngôi nhà tốc mái.	
+cardinal	Hơn {3.500|ba [nghìn,ngàn] năm trăm} cán bộ, chiến sĩ được huy động tham gia cứu hộ tại các điểm sạt lở.	
+percent	Tỷ lệ thất nghiệp của thanh niên thành thị ở mức {10,2%|mười phẩy hai phần trăm}, cao gấp ba lần mức chung.	
+date	Ngày {2-9|hai tháng chín} năm nay, các cơ quan được nghỉ bốn ngày liên tục.	
+time	Trận chung kết lượt về diễn ra vào {20h00|hai mươi giờ} tối mai trên sân Mỹ Đình.	
+currency	Giá vàng SJC sáng nay niêm yết ở mức {84,5 triệu đồng/lượng|tám mươi [tư,bốn] phẩy năm triệu đồng [một,mỗi] lượng}.	
+unit	Tổng lượng mưa ở Huế trong ba ngày qua lên tới {612 mm|sáu trăm mười hai mi-li-mét}.	
+range	Theo dự báo, từ ngày {14 đến 16/10|mười bốn đến mười sáu tháng mười} mưa lớn tiếp tục diễn ra ở Trung Bộ.	
+ordinal	Việt Nam xếp thứ {46|bốn mươi sáu} trên bảng xếp hạng năng lực cạnh tranh toàn cầu.	
+code	Chuyến bay {VN215|VN hai một năm} từ Hà Nội đi Đà Nẵng phải chuyển hướng hạ cánh xuống Cam Ranh do thời tiết xấu.	
+decimal	Mực nước sông Hồng tại Hà Nội lúc này đạt {9,67|chín phẩy [sáu mươi bảy,sáu bảy]} mét, trên báo động một.	
+cardinal	Sân bay Nội Bài phục vụ khoảng {98.000|chín mươi tám [nghìn,ngàn]} lượt hành khách mỗi ngày trong dịp cao điểm.	
+percent	Giá xăng trong nước giảm {2,1%|hai phẩy một phần trăm} ở kỳ điều hành chiều nay.	
+mixed	Giá xăng {RON95|RON [chín mươi lăm,chín lăm]} giảm {320 đồng/lít|ba trăm hai mươi đồng [một,mỗi] lít} từ {15h|mười lăm giờ} chiều nay.	
+date	Theo kế hoạch, kỳ họp Quốc hội sẽ khai mạc vào {20/10/2026|[ngày ,]hai mươi tháng mười năm hai [nghìn,ngàn] không trăm hai mươi sáu}.	
+time	Bản tin dự báo thời tiết biển sẽ được cập nhật vào {5h30|năm giờ [ba mươi,ba mươi phút,rưỡi]} sáng mai.	
+currency	Mỗi hộ dân bị thiệt hại nặng được hỗ trợ khẩn cấp {5 triệu đồng|năm triệu đồng}.	
+unit	Cây cầu mới dài {1.420 m|một [nghìn,ngàn] bốn trăm hai mươi mét}, rộng bốn làn xe, dự kiến thông xe cuối năm.	
+sign	Chứng khoán phiên sáng: VN-Index {-12,4 điểm|[giảm,âm] mười hai phẩy bốn điểm}, thanh khoản sụt mạnh.	
+fraction	Gần {1/4|một phần tư} diện tích lúa mùa ở huyện bị ngập sâu không thể cứu vãn.	
+alnum	Mạng {5G|năm [G,gờ,giê]} đã phủ sóng tại hầu hết các quận trung tâm sau ba tháng triển khai.	
+decimal	Dân số Thủ đô hiện xấp xỉ {8,6|tám phẩy sáu} triệu người, chưa kể lao động nhập cư.	
+ordinal	Đại hội Đảng bộ thành phố lần thứ {XVIII|mười tám} sẽ diễn ra trong tuần tới.	
+range	Sân bay Tân Sơn Nhất đón {1.800-2.000|[từ ,]một [nghìn,ngàn] tám trăm đến hai [nghìn,ngàn]} chuyến bay mỗi ngày dịp Tết.	
+phone	Tổng đài tiếp nhận thông tin cứu nạn trên biển là {1900 1263|một chín không không một hai sáu ba}.	
+electronic	Thông tin chi tiết về chính sách mới được đăng tại {baochinhphu.vn|baochinhphu chấm vn}.	
+mixed	Từ {1/1/2027|[ngày ,]một tháng một năm hai [nghìn,ngàn] không trăm hai mươi bảy}, lương cơ sở tăng lên {2,34 triệu đồng/tháng|hai phẩy [ba mươi tư,ba mươi bốn,ba tư,ba bốn] triệu đồng [một,mỗi] tháng}.	
+cardinal	Khoảng {120|một trăm hai mươi} tàu cá đã vào bờ tránh bão an toàn tính đến trưa nay.	
+percent	Kết quả khảo sát cho thấy {68%|sáu mươi tám phần trăm} người được hỏi ủng hộ việc hạn chế xe máy xăng trong nội đô.	
+date	Vụ án được đưa ra xét xử sơ thẩm vào sáng {5/3|[mùng ,mồng ,]năm tháng ba}.	
+time	Cầu truyền hình trực tiếp từ {20h10|hai mươi giờ mười (phút)} với sự tham gia của ba điểm cầu.	
+currency	Khoản viện trợ trị giá {2,5 triệu USD|[hai phẩy năm triệu,hai triệu rưỡi] đô la (Mỹ)} sẽ được giải ngân trong quý tới.	
+cardinal	Tốc độ gió mạnh nhất gần tâm bão đạt cấp {12|mười hai}, giật cấp {14|mười bốn}.	
+unit	Đường cao tốc mới cho phép xe chạy tối đa {120 km/h|một trăm hai mươi [ki-lô-mét,cây số] trên giờ}.	
+range	Ban tổ chức bán vé với giá từ {200.000-500.000 đồng|hai trăm [nghìn,ngàn] đến năm trăm [nghìn,ngàn] đồng}.	
+ordinal	Hà Nội đứng thứ {2|hai} cả nước về thu hút vốn FDI trong chín tháng.	
+code	Xe khách mang biển kiểm soát {29B-123.45|[hai chín,hai mươi chín] B một hai ba (chấm) bốn năm} gây tai nạn trên cao tốc rồi bỏ chạy.	
+decimal	Lãi suất huy động kỳ hạn sáu tháng tại nhiều ngân hàng đã lùi về {4,65|bốn phẩy [sáu mươi lăm,sáu lăm]} phần trăm.	
+cardinal	Sau {3|ba} ngày tìm kiếm, lực lượng chức năng đã tìm thấy {2|hai} nạn nhân mất tích còn lại.	
+percent	Lãi suất điều hành được giữ nguyên ở mức {4,5%/năm|bốn phẩy năm phần trăm [một,mỗi] năm}.	
+mixed	Cầu thủ số {10|mười} ghi bàn ở phút {90+3|chín mươi cộng ba}, giúp đội nhà giành vé đi tiếp.	
+range	Thủ tướng dự kiến thăm chính thức Nhật Bản từ ngày {24-27/11|hai mươi [tư,bốn] đến hai mươi bảy tháng mười một}.	
+time	Tàu Thống Nhất chuyến {22:00|hai mươi hai giờ} xuất phát từ ga Hà Nội đã được khôi phục sau sự cố.	
+currency	Giá cà phê nhân xô tại Tây Nguyên hôm nay dao động quanh {113.500đ/kg|một trăm mười ba [nghìn,ngàn] năm trăm đồng [một,mỗi] [ki-lô-gam,ký,cân]}.	
+unit	Trữ lượng mỏ được đánh giá lên tới {1,2 tỷ tấn|một phẩy hai tỷ tấn}, lớn nhất Đông Nam Á.	
+sign	Đội tuyển kết thúc vòng bảng với hiệu số bàn thắng bại {+7|cộng bảy}, tốt nhất trong các đội nhì bảng.	
+fraction	Lũ tràn làm hư hỏng hơn {1/2|[một nửa,một phần hai]} chiều dài tuyến đê bao của xã.	
+alnum	Chip {A17|A [mười bảy,một bảy]} mới được giới thiệu là tâm điểm của sự kiện công nghệ tối qua.	
+cardinal	Hơn {25.000|hai mươi lăm [nghìn,ngàn]} vận động viên đã đăng ký tham dự giải marathon quốc tế Thành phố Hồ Chí Minh.	
+mixed	Kỷ niệm {80|tám mươi} năm Quốc khánh {2/9|[mùng ,mồng ,]hai tháng chín}, Hà Nội tổ chức bắn pháo hoa tại sáu điểm.	
+time	Lúc {13h45|mười ba giờ bốn mươi lăm (phút)}, cơn dông bất ngờ đổ xuống trung tâm thành phố.	
+currency	Ngân hàng Nhà nước bơm ròng {12.300 tỷ đồng|mười hai [nghìn,ngàn] ba trăm tỷ đồng} qua kênh thị trường mở trong tuần.	
+unit	Đợt rét đậm khiến nhiệt độ ở Mẫu Sơn chỉ còn {3℃|ba độ (C)}, kèm sương muối.	
+range	Nhiệt độ cao nhất ở Nam Bộ {32-35 độ|ba mươi hai đến ba mươi lăm độ}, có nơi trên {35 độ|ba mươi lăm độ}.	
+ordinal	Đây là kỳ thi tốt nghiệp trung học phổ thông đầu tiên theo chương trình mới, đồng thời là năm thứ {2|hai} áp dụng chấm thi trên máy.	
+code	Lô vắc xin số {VX-2026-031|VX hai không hai sáu không ba một} đã được kiểm định đạt yêu cầu trước khi xuất kho.	
+electronic	Người dân có thể gửi phản ánh đến hộp thư {bandoc@hanoimoi.vn|bandoc a còng hanoimoi chấm vn}.	
+math	Sân mới có mặt cỏ rộng {105x68 m|một trăm [linh,lẻ] năm nhân sáu mươi tám mét}, đạt chuẩn thi đấu quốc tế.	
+cardinal	Hơn {400|bốn trăm} doanh nghiệp từ {15|mười lăm} quốc gia tham gia triển lãm quốc phòng năm nay.	
+percent	Thị phần xe điện tại Việt Nam đã vượt mốc {17,8%|mười bảy phẩy tám phần trăm} tính đến hết quý vừa rồi.	
+decimal	Chỉ số VN-Index đóng cửa tại {1.287,36|một [nghìn,ngàn] hai trăm tám mươi bảy phẩy [ba mươi sáu,ba sáu]} điểm, tăng nhẹ phiên thứ ba liên tiếp.	
+date	Chiều {13.10|mười ba tháng mười}, giá vàng nhẫn bất ngờ bật tăng mạnh.	
+time	Giao thông trục Nguyễn Trãi ùn tắc kéo dài từ {7h|bảy giờ} đến gần {9h|chín giờ} sáng nay do mưa lớn.	
+mixed	Thu ngân sách của tỉnh chín tháng đạt {18.765 tỷ đồng|mười tám [nghìn,ngàn] bảy trăm sáu mươi lăm tỷ đồng}, bằng {92%|chín mươi hai phần trăm} dự toán.	
+unit	Tuyến metro số một dài {19,7 km|mười chín phẩy bảy [ki-lô-mét,cây số]} chính thức chạy thương mại từ cuối tuần này.	
+sign	Hiệu số bàn thắng của đội xếp cuối bảng hiện là {-9|âm chín}.	
+fraction	Chỉ {1/5|một phần năm} số trạm quan trắc không khí tự động ở các tỉnh đang hoạt động ổn định.	
+range	Giới chuyên gia dự báo tăng trưởng cả năm đạt {6,5-7%|sáu phẩy năm đến bảy phần trăm}.	
+ordinal	Giải đã bước sang mùa thứ {12|mười hai} với số đội tham dự kỷ lục.	
+phone	Mọi thông tin về hành khách trên chuyến bay gặp sự cố được cung cấp qua số {1900 1100|một chín không không một một không không}.	
+code	Tàu {SE3|SE ba} xuất phát từ ga Hà Nội bị chậm hơn một giờ do sự cố đường ray tại Ninh Bình.	
+alnum	Phi công lái mẫu {Su-30MK2|Su [ba mươi,ba không] MK hai} thực hiện màn trình diễn mãn nhãn trong lễ kỷ niệm.	
+electronic	Danh sách thí sinh trúng tuyển được đăng trên trang {thanhnien.vn|thanhnien chấm vn} ngay trong chiều nay.	
+math	Hình ảnh bảng điểm ghi {7+8=16|bảy cộng tám bằng mười sáu} của một trường tiểu học khiến dư luận xôn xao.	
+mixed	Đến {6h|sáu giờ} sáng nay, mực nước sông Thao tại Yên Bái đã vượt báo động {3|ba} khoảng {0,8 m|không phẩy tám mét}.	
+cardinal	Thành phố đã trồng mới gần {1.000.000|một triệu} cây xanh trong năm năm qua.	
+percent	Lượng khách quốc tế đến Việt Nam tăng {21,4%|hai mươi mốt phẩy bốn phần trăm} so với cùng kỳ.	
+date	Chương trình Tết sum vầy {2027|hai [nghìn,ngàn] không trăm hai mươi bảy} sẽ khởi động từ giữa tháng Chạp.	
+currency	Mức phạt dành cho hành vi vượt đèn đỏ với ô tô lên tới {20 triệu đồng|hai mươi triệu đồng}, gấp bốn lần trước đây.	
+unit	Diện tích rừng bị cháy ước tính hơn {35 ha|ba mươi lăm héc-ta}, chủ yếu là rừng thông trồng.	
+time	Trực tiếp bóng đá: {21g30|hai mươi mốt giờ [ba mươi,ba mươi phút,rưỡi]} tối nay, Việt Nam gặp Thái Lan trên kênh thể thao.	
+decimal	Tốc độ tăng dân số cơ học của thành phố giữ ở mức {1,13|một phẩy [mười ba,một ba]} phần trăm mỗi năm.	
+mixed	Công ty công bố lãi ròng {1.250 tỷ đồng|một [nghìn,ngàn] hai trăm năm mươi tỷ đồng}, tăng {18%|mười tám phần trăm} so với năm {2025|hai [nghìn,ngàn] không trăm hai mươi [lăm,nhăm]}.	
+mixed	Hội chợ mở cửa từ {8h|tám giờ} đến {22h|hai mươi hai giờ} hằng ngày, vé vào cổng {30.000đ|ba mươi [nghìn,ngàn] đồng}.	
+# part 2
+currency	Quán này bán bún bò {45k|bốn mươi lăm [nghìn,ngàn] (đồng)} mà tô đầy ụ, ăn no căng luôn mn ơi.	
+time	Tối nay {8h|tám giờ} đá bóng sân cũ nhé, ai đi thì thả tim.	
+date	Sinh nhật mình {22/11|hai mươi hai tháng mười một} nha, nhớ mua quà :))	
+cardinal	Mới đổi điện thoại, chụp thử {200|hai trăm} tấm mà tấm nào cũng ảo.	
+phone	Ai cần sửa máy lạnh ib hoặc gọi anh thợ quen của mình {0978 456 123|không chín bảy tám bốn năm sáu một hai ba}, làm cẩn thận lắm.	
+range	Shop mở cửa {T2-T6|thứ hai đến thứ sáu}, cuối tuần nghỉ nên đừng ai ghé nha.	
+percent	Review nhanh: pin tụt từ {100%|một trăm phần trăm} xuống {37%|ba mươi bảy phần trăm} sau một ngày lướt tiktok, cũng tạm.	
+alnum	Mình {2k5|[hai k năm,hai nghìn lẻ năm,hai ngàn lẻ năm]} mà toàn bị tưởng là sinh viên năm cuối =))	
+decimal	Cân sáng nay lên {58,3|năm mươi tám phẩy ba} ký rồi, ăn uống kiểu gì mà lên nhanh thế không biết.	
+ordinal	Lần thứ {2|hai} trong tuần bị trễ xe buýt, bực hết cả người.	
+unit	Đi bộ {5km|năm [ki-lô-mét,cây số]} quanh hồ mà mồ hôi như tắm, nhưng vui.	
+code	Ai đi chuyến {VJ123|VJ một hai ba} sáng nay không, delay ba tiếng rồi mn ơi.	
+electronic	Link đăng ký mình để ở đây nhé: {bit.ly/hoitraihe|bit chấm ly [xuyệt,xẹt,gạch chéo] hoitraihe}.	
+mixed	Trà sữa {35k|ba mươi lăm [nghìn,ngàn] (đồng)} giảm {50%|năm mươi phần trăm} từ {14h|mười bốn giờ} hôm nay, mọi người tranh thủ nha.	
+fraction	Ăn được {1/3|một phần ba} cái pizza đã no, còn lại để mai hâm lại.	
+sign	Hôm nay ở Hàn {-7 độ|âm bảy độ}, lần đầu thấy tuyết ngoài đời luôn.	
+math	Con gái lớp một hỏi bố {7+8|bảy cộng tám} bằng mấy, mà bố ngập ngừng mất mấy giây =))	
+cardinal	Hôm qua đi hội sách vác về {12|mười hai} cuốn, giờ chẳng biết để đâu.	
+time	Dậy từ {5h30|năm giờ [ba mươi,ba mươi phút,rưỡi]} sáng để xếp hàng mua bánh mà vẫn hết, cay quá.	
+date	Nhớ ngày {30/4|ba mươi tháng tư} năm nào cả xóm kéo nhau đi xem diễu binh, giờ ai cũng bận.	
+currency	Tiền điện tháng này hết {1tr2|[một triệu hai,một triệu hai trăm nghìn,một triệu hai trăm ngàn]} mà nhà có mỗi hai người, bật điều hòa cả ngày chịu rồi.	
+percent	Đã sạc được {80%|tám mươi phần trăm} rồi, đợi tí nữa là đi.	
+range	Bác sĩ dặn ngủ đủ {7-8 tiếng|bảy đến tám tiếng}, mà đêm nào cũng cày phim đến khuya.	
+phone	Số mới của tớ {0356 789 012|không ba năm sáu bảy tám chín không một hai}, số cũ bỏ rồi nhé.	
+alnum	Phòng {P.308|phòng [ba không tám,ba lẻ tám,ba trăm lẻ tám,ba trăm linh tám]} họp lớp nhé, lầu ba quẹo trái.	
+electronic	Mail mình là {minhanh.dev@gmail.com|minhanh chấm dev a còng gmail chấm com}, gửi file qua đó nhé.	
+unit	Cái tủ lạnh này {250 lít|hai trăm năm mươi lít} mà điện ăn ít hơn cái cũ, ưng.	
+decimal	Lãi gửi tiết kiệm có {4,2|bốn phẩy hai} phần trăm, gửi hay mua vàng đây các bác?	
+cardinal	Xem phim có {2|hai} tiếng mà khóc hết {3|ba} gói khăn giấy.	
+ordinal	Giải chạy cuối tuần rồi mình về thứ {15|mười lăm} lứa tuổi, không tệ ha.	
+date	Hạn chót nộp bài {15/10|mười lăm tháng mười} mà giờ mới mở file, haha toang.	
+time	Tối qua thức tới {1h|một giờ} sáng xem bóng, giờ mắt mở không nổi.	
+currency	Săn được vé máy bay đi Đà Lạt có {390.000đ|ba trăm chín mươi [nghìn,ngàn] đồng} khứ hồi, quá hời.	
+mixed	Chủ nhà đòi tăng tiền phòng từ {3tr|ba triệu} lên {3tr5|[ba triệu rưỡi,ba triệu năm,ba triệu năm trăm nghìn,ba triệu năm trăm ngàn]} từ {1/11|[mùng ,mồng ,]một tháng mười một}, chắc phải dọn đi.	
+fraction	Tủ quần áo {3/4|ba phần tư} là đồ của vợ, còn mình có mỗi một ngăn.	
+range	Xem giá cái máy ảnh này dao động {12-15 triệu|mười hai đến mười lăm triệu} tùy nơi, mn biết chỗ nào rẻ không?	
+code	Mã giảm giá {FREESHIP50|FREESHIP [năm mươi,năm không]} hết hạn rồi hả mn, nhập mãi không được.	
+cardinal	Đi hội chợ mà mua {3|ba} cái áo giống nhau, về nhà mới nhận ra.	
+mixed	Pin xe máy điện còn {12%|mười hai phần trăm} mà còn cách nhà {8km|tám [ki-lô-mét,cây số]}, hồi hộp ghê.	
+time	Mn ơi {9:15|chín giờ mười lăm (phút)} mới có người mở cửa hàng, ghi là {9h|chín giờ} mà.	
+sign	Tài khoản chứng khoán hôm nay {-3,2%|[âm,giảm] ba phẩy hai phần trăm}, thôi coi như học phí.	
+math	Bài toán tiểu học hỏi {12:4|mười hai chia bốn} bằng mấy mà cả nhà cãi nhau nửa tiếng.	
+mixed	Nhà mình có {60m²|sáu mươi mét vuông} mà chứa {4|bốn} người và {2|hai} con mèo.	
+electronic	Fanpage mới của tiệm là {facebook.com/tiembanhnhanho|facebook chấm com [xuyệt,xẹt,gạch chéo] tiembanhnhanho}, mn vào thả like ủng hộ nha.	
+date	Lớp mình họp vào {CN|chủ nhật} tuần sau, ai bận thì báo sớm.	
+currency	Bữa ăn hai người hết {560.000₫|năm trăm sáu mươi [nghìn,ngàn] đồng}, đắt hơn mình tưởng.	
+ordinal	Thi lại lần thứ {3|ba} môn Triết, chắc thầy nhớ mặt luôn rồi.	
+cardinal	Group có {1.200|một [nghìn,ngàn] hai trăm} thành viên mà đăng bài hỏi chẳng ai trả lời.	
+decimal	Điểm trung bình học kỳ này {3,65|ba phẩy [sáu mươi lăm,sáu lăm]}, lên được {0,1|không phẩy một} so với kỳ trước.	
+range	Giao hàng {3-5 ngày|ba đến năm ngày} mà đợi cả tuần chưa thấy, shop ơi.	
+phone	Có ai bị số {024 3999 8888|không hai bốn ba chín chín chín tám tám tám tám} gọi hoài không, mình chặn rồi vẫn gọi.	
+alnum	Màn hình {4K|bốn K} coi phim phê thật, không uổng tiền.	
+time	Hẹn {7g|bảy giờ} sáng ở cổng trường, đừng ai ngủ quên.	
+currency	Vé xem phim giờ tận {120k|một trăm hai mươi [nghìn,ngàn] (đồng)} một vé, thôi ở nhà coi Netflix.	
+mixed	Chạy bộ {10km|mười [ki-lô-mét,cây số]} hết {1h02|một giờ [không hai,lẻ hai,hai] (phút)}, pace cải thiện rồi.	
+percent	Được giảm {15%|mười lăm phần trăm} cho đơn đầu, cũng được đó chứ.	
+fraction	Chia phòng {1/2|[một nửa,một phần hai]} tiền điện, ok không?	
+code	Đặt hàng qua mã {SP-20481|SP hai không bốn tám một} nhé, mình gửi ảnh sau.	
+cardinal	Hôm nay chạy được {15.000|mười lăm [nghìn,ngàn]} bước, vượt mục tiêu rồi.	
+date	Concert tối {25/12|hai mươi lăm tháng mười hai} mở bán vé rồi mn ơi, săn gấp!	
+time	Lịch chiếu suất {22h15|hai mươi hai giờ mười lăm (phút)} còn ghế, ai đi với tui không?	
+unit	Cái loa này nặng có {800g|tám trăm [gam,gờ-ram]} mà bass đập ghê.	
+range	Tiền ship khu này {15-25k|mười lăm đến hai mươi lăm [nghìn,ngàn]} tùy app, so trước khi đặt nhé.	
+ordinal	Đứng thứ {21|hai mươi mốt} trong lớp, mẹ bảo thế là được rồi.	
+sign	Sổ ghi chi tiêu: {-500k|[âm,trừ] năm trăm [nghìn,ngàn]} ngay ngày đầu tháng, hết nói.	
+math	Tính sao mà {3x4|ba nhân bốn} ra mười ba, bạn tui bảo tại cái máy tính.	
+electronic	Web {tiki.vn|tiki chấm vn} hôm nay lag quá, săn sale mà không vào được.	
+alnum	Lớp {12A3|mười hai A ba} họp lớp sau mười năm, nhìn ai cũng khác.	
+cardinal	Bé nhà mình được {13|mười ba} tháng, đã chập chững đi rồi.	
+currency	Combo gà rán {99.000 VNĐ|chín mươi chín [nghìn,ngàn] đồng} mà hai đứa ăn không hết.	
+decimal	Review nhiệt kế: đo được {37,8|ba mươi bảy phẩy tám} độ, so với cái cũ lệch nửa độ.	
+mixed	Thuê xe máy {150k/ngày|một trăm năm mươi [nghìn,ngàn] [một,mỗi] ngày}, đổ đầy bình chạy được {200km|hai trăm [ki-lô-mét,cây số]}, ok lắm.	
+date	Từ {1/7|[mùng ,mồng ,]một tháng bảy} xe máy phải có bảo hiểm mới qua trạm được hả mn?	
+percent	Độ ẩm phòng tối qua {92%|chín mươi hai phần trăm}, tường mốc hết rồi.	
+time	{6h|sáu giờ} sáng cái gì cũng đóng cửa, đói xỉu.	
+range	Tuyển người phụ quán, ca {17h-22h|mười bảy giờ đến hai mươi hai giờ}, lương thỏa thuận.	
+phone	Gọi cho shop theo số {1900 6035|một chín không không sáu không ba năm} mà chờ máy hai mươi phút, chịu.	
+code	Biển số xe tui {59-X1 234.56|năm chín X một hai ba bốn năm sáu}, ai thấy ở đâu báo giùm, mất rồi.	
+fraction	Chia nhau tiền phòng {2/5|hai phần năm} mình, {3/5|ba phần năm} nó vì phòng nó to hơn.	
+unit	Quả mít nặng {9,5kg|chín phẩy năm [ki-lô-gam,ký,cân]}, bổ ra ăn cả xóm.	
+mixed	Chợ đêm tuần này mở {18h-23h|mười tám giờ đến hai mươi ba giờ}, gửi xe {5k|năm [nghìn,ngàn] (đồng)} thôi, rẻ.	
+cardinal	Group chat {57|năm mươi bảy} tin nhắn chưa đọc, chắc lại tranh cãi chuyện ăn trưa.	
+ordinal	Mừng sinh nhật lần thứ {30|ba mươi} của mình, cảm ơn mn đã chúc.	
+time	Chốt {19h30|mười chín giờ [ba mươi,ba mươi phút,rưỡi]} ở quán cũ nhé, ai tới trễ bao nước.	
+electronic	Up ảnh lên {instagram.com|instagram chấm com} bị giảm chất lượng kinh khủng, có cách nào không?	
+alnum	Cổng {USB 3.0|USB ba chấm không} trên máy này sạc nhanh hơn hẳn cổng cũ.	
+currency	Tổng kết tháng xài hết {8,75 triệu|tám phẩy [bảy mươi lăm,bảy lăm] triệu}, trong đó ăn uống gần một nửa.	
+date	Tết {2027|hai [nghìn,ngàn] không trăm hai mươi bảy} rơi vào giữa tháng hai dương, còn lâu lắm mới được nghỉ.	
+percent	Đồng hồ thông minh báo mỡ cơ thể {23,4%|hai mươi ba phẩy bốn phần trăm}, chắc phải bớt trà sữa.	
+decimal	Tỷ giá hôm nay nhảy lên {25,9|hai mươi lăm phẩy chín} nghìn một đô, ai sắp đi du học thì ôm hận.	
+range	Có ai học khóa tiếng Nhật trung cấp không, khoảng {3-4 tháng|ba đến bốn tháng} là thi được chưa?	
+mixed	Mua cái nồi chiên {5,5L|năm phẩy năm lít} giá {1tr290|một triệu hai trăm chín mươi [nghìn,ngàn]}, dùng hai tuần thấy ổn.	
+phone	Số {0909 123 456|không chín không chín một hai ba bốn năm sáu} là của tui, ai nhận được tin nhắn vay tiền từ số khác thì đừng tin nhé.	
+sign	Hôm nay gym nâng được {+5kg|[cộng,thêm] năm [ki-lô-gam,ký,cân]} so với tuần trước, tiến bộ.	
+math	Bạn kia hỏi chia đôi tiền đi ăn {480:2|bốn trăm tám mươi chia hai} là bao nhiêu mà tính mãi =))	
+mixed	Vé tàu của mình số ghế {A12|A [mười hai,một hai]} toa {3|ba}, ai ngồi cạnh không?	
+unit	Nhà mới cách công ty {12km|mười hai [ki-lô-mét,cây số]}, mỗi ngày đi về tốn cả tiếng.	
+time	Lịch bay {23:40|hai mươi ba giờ bốn mươi (phút)} mà tới sân bay sớm ba tiếng, ngồi chơi.	
+fraction	Hôm nay chỉ hoàn thành {2/7|hai phần bảy} việc trong list, mai cố.	
+currency	Phí gửi xe ở đó {10k/lượt|mười [nghìn,ngàn] [một,mỗi] lượt}, chát quá.	
+# part 3
+currency	Giá niêm yết {12.990.000đ|mười hai triệu chín trăm chín mươi [nghìn,ngàn] đồng}, trả góp không lãi suất qua thẻ tín dụng.	
+code	Đơn hàng {DH4517A|DH bốn năm một bảy A} đang được giao, vui lòng giữ máy.	
+date	Hóa đơn phát hành ngày {05/10/2026|[mùng ,mồng ,]năm tháng mười năm hai [nghìn,ngàn] không trăm hai mươi sáu}, thanh toán trong vòng bảy ngày.	
+percent	Giảm {30%|ba mươi phần trăm} toàn bộ giày thể thao, áp dụng đến hết tuần.	
+phone	Hotline chăm sóc khách hàng {1800 1091|một tám không không một không chín một} miễn phí cuộc gọi.	
+time	Đơn đặt trước {12h|mười hai giờ} trưa sẽ được giao trong ngày.	
+unit	Dung tích {1,8 lít|một phẩy tám lít}, công suất lớn, nấu cơm cho gia đình bốn người.	
+cardinal	Đã bán {2.348|hai [nghìn,ngàn] ba trăm bốn mươi tám} sản phẩm, đánh giá năm sao từ hơn một nghìn khách hàng.	
+sign	Biến động số dư: {-1.250.000 VND|[trừ,âm] một triệu hai trăm năm mươi [nghìn,ngàn] đồng}, nội dung thanh toán tiền nước.	
+range	Giao hàng toàn quốc, thời gian dự kiến {2-4 ngày|hai đến bốn ngày} làm việc.	
+decimal	Lãi suất tiết kiệm online kỳ hạn mười hai tháng {5,35|năm phẩy [ba mươi lăm,ba lăm]} phần trăm một năm.	
+ordinal	Khách hàng mua lần thứ {2|hai} được tặng thêm voucher freeship cho đơn tiếp theo.	
+electronic	Tra cứu vận đơn tại {ghn.vn|ghn chấm vn} hoặc trên ứng dụng của chúng tôi.	
+mixed	Mã OTP của bạn là {482913|bốn tám hai chín một ba}, có hiệu lực trong {5 phút|năm phút}.	
+alnum	Laptop chip {i5|i năm} thế hệ mới, pin cả ngày, bảo hành hai năm chính hãng.	
+currency	Tổng tiền: {1.287.500₫|một triệu hai trăm tám mươi bảy [nghìn,ngàn] năm trăm đồng}. Đã bao gồm VAT.	
+fraction	Trả trước {1/3|một phần ba} giá trị xe, phần còn lại góp trong ba năm.	
+math	Tích lũy điểm {x2|[nhân hai,gấp đôi]} cho mọi đơn hàng đặt vào cuối tuần.	
+phone	Liên hệ đại lý gần nhất: {028 3822 4567|không hai tám ba tám hai hai bốn năm sáu bảy}.	
+mixed	Hoàn tiền {5%|năm phần trăm} tối đa {100.000đ|một trăm [nghìn,ngàn] đồng} khi thanh toán bằng ví điện tử.	
+date	Bảo hành đến {31/12/2027|[ngày ,]ba mươi mốt tháng mười hai năm hai [nghìn,ngàn] không trăm hai mươi bảy}.	
+time	Cửa hàng mở cửa từ {8h30|tám giờ [ba mươi,ba mươi phút,rưỡi]} kể cả ngày lễ.	
+code	Vui lòng nhập mã {SALE10|SALE [mười,một không]} tại bước thanh toán.	
+cardinal	Còn {7|bảy} suất giá sốc cuối cùng, nhanh tay kẻo lỡ.	
+unit	Bao gạo {25kg|hai mươi lăm [ki-lô-gam,ký,cân]} giao tận nhà, miễn phí trong bán kính nội thành.	
+currency	Phí thường niên thẻ {299.000 VNĐ/năm|hai trăm chín mươi chín [nghìn,ngàn] đồng [một,mỗi] năm}, miễn phí năm đầu.	
+sign	Thông báo số dư: {+5.000.000VND|cộng năm triệu đồng}, nội dung: lương tháng mười.	
+range	Giày chạy bộ size {38-42|ba mươi tám đến bốn mươi hai} còn đủ, các size khác đang về thêm.	
+decimal	Điểm đánh giá trung bình {4,8|bốn phẩy tám} trên năm sao từ người mua đã xác nhận.	
+electronic	Mọi thắc mắc gửi về {hotro@shopnhanh.vn|hotro a còng shopnhanh chấm vn}, phản hồi trong ngày.	
+percent	Lãi suất ưu đãi {6,9%/năm|sáu phẩy chín phần trăm [một,mỗi] năm} cố định hai năm đầu cho khoản vay mua nhà.	
+mixed	Đơn hàng của bạn gồm {3|ba} sản phẩm, tổng {450.000đ|bốn trăm năm mươi [nghìn,ngàn] đồng}, dự kiến giao {14/10|mười bốn tháng mười}.	
+phone	Giao hàng thất bại, shipper {0987 654 321|không chín tám bảy sáu năm bốn ba hai một} sẽ gọi lại vào ngày mai.	
+code	Số tài khoản {1903 4567 8901|một chín không ba bốn năm sáu bảy tám chín không một} tại Techcombank, chủ tài khoản là cửa hàng.	
+cardinal	Lô hàng gồm {1.080|một [nghìn,ngàn] không trăm tám mươi} thùng sữa đã được nhập kho sáng nay.	
+unit	Tủ lạnh dung tích {315L|ba trăm mười lăm lít}, tiết kiệm điện, công nghệ inverter.	
+date	Khuyến mãi áp dụng từ {10/10|mười tháng mười} đến hết {20/10|hai mươi tháng mười}.	
+time	Phiên livestream giảm giá bắt đầu lúc {20:00|hai mươi giờ} tối nay trên app.	
+currency	Giá chỉ từ {1,99 triệu|một phẩy [chín mươi chín,chín chín] triệu} cho gói lắp đặt trọn bộ.	
+ordinal	Khách hàng thứ {1.000|một [nghìn,ngàn]} trong ngày sẽ nhận phần quà bí mật.	
+fraction	Thanh toán {1/2|[một nửa,một phần hai]} khi đặt cọc, {1/2|[một nửa,nửa,một phần hai]} còn lại khi nhận hàng.	
+math	Tính nhanh: {2 x 149.000|hai nhân một trăm bốn mươi chín [nghìn,ngàn]} là biết ngay tiền hai vé.	
+alnum	Sim {4G|bốn [G,gờ,giê]} data không giới hạn, giá cố định hằng tháng.	
+percent	Bảo hiểm chi trả {80%|tám mươi phần trăm} chi phí điều trị nội trú.	
+currency	Nạp {50k|năm mươi [nghìn,ngàn] (đồng)} tặng {10k|mười [nghìn,ngàn] (đồng)}, chỉ trong hôm nay.	
+phone	Zalo shop: {0912.345.678|không chín một hai ba bốn năm sáu bảy tám}, nhắn trước khi gọi.	
+date	Hàng về {T7|thứ bảy} tuần này, ai đặt trước thì chuẩn bị nhận nhé.	
+code	Số seri máy {SN-7A42K9|SN bảy A bốn hai K chín} đã kích hoạt bảo hành thành công.	
+decimal	Tỷ lệ hoàn vốn ước tính {12,75|mười hai phẩy [bảy mươi lăm,bảy lăm]} phần trăm mỗi năm, chưa tính thuế.	
+range	Thu nhập {8-12 triệu/tháng|tám đến mười hai triệu [một,mỗi] tháng}, tuyển gấp nhân viên bán hàng.	
+electronic	Đăng nhập tại {ebank.nganhangso.vn|ebank chấm nganhangso chấm vn} để xác nhận giao dịch.	
+time	Chuyến giao hàng cuối ngày xuất kho lúc {16:45|mười sáu giờ bốn mươi lăm (phút)}.	
+cardinal	Hơn {500|năm trăm} mẫu váy mới cập bến, mỗi mẫu chỉ vài chiếc.	
+sign	Chứng chỉ quỹ hôm nay {-0,85%|[âm,giảm] không phẩy [tám mươi lăm,tám lăm] phần trăm}, nhà đầu tư nên bình tĩnh.	
+unit	Dây cáp dài {1,5m|[một phẩy năm mét,một mét rưỡi]}, bọc dù chống đứt.	
+mixed	Tiền điện kỳ {10/2026|tháng mười năm hai [nghìn,ngàn] không trăm hai mươi sáu}: {312 kWh|ba trăm mười hai ki-lô-oát giờ}, thành tiền {786.400đ|bảy trăm tám mươi sáu [nghìn,ngàn] bốn trăm đồng}.	
+percent	Thuế VAT {8%|tám phần trăm} đã được tính vào giá hiển thị.	
+currency	Phí ship {25.000đ|hai mươi lăm [nghìn,ngàn] đồng}, miễn phí cho đơn từ {299k|hai trăm chín mươi chín [nghìn,ngàn] (đồng)}.	
+code	Vận đơn {VNP09824571|VNP không chín tám hai bốn năm bảy một} đã rời kho Hà Nội.	
+date	Ngày giao dịch {12-10-2026|mười hai tháng mười năm hai [nghìn,ngàn] không trăm hai mươi sáu}, số dư khả dụng cập nhật ngay.	
+alnum	Màn hình {2K|hai K}, tấm nền IPS, cổng HDMI đầy đủ.	
+fraction	Sản phẩm đã bán được {3/4|ba phần tư} số lượng nhập về chỉ sau hai ngày.	
+math	Giá sỉ: {10 x 45.000 = 450.000|mười nhân bốn mươi lăm [nghìn,ngàn] bằng bốn trăm năm mươi [nghìn,ngàn]} đồng cho một thùng.	
+time	Giao dịch chuyển tiền thành công lúc {09:07|chín giờ [không bảy,lẻ bảy,bảy] (phút)}.	
+range	Sản phẩm phù hợp cho bé {6-12 tháng|sáu đến mười hai tháng} tuổi.	
+currency	Thu nhập cố định {15.000.000 VNĐ|mười lăm triệu đồng} chưa kể thưởng, phúc lợi đầy đủ.	
+phone	Hỗ trợ kỹ thuật ngoài giờ: {0243.123.4567|không hai bốn ba một hai ba bốn năm sáu bảy}.	
+percent	Tỷ lệ hoàn hàng của shop chỉ {0,6%|không phẩy sáu phần trăm}, thấp nhất ngành hàng.	
+cardinal	Đã có {36.400|ba mươi sáu [nghìn,ngàn] bốn trăm} lượt đặt trước chỉ sau một đêm mở bán.	
+decimal	Chỉ số ROA của công ty đạt {2,37|hai phẩy [ba mươi bảy,ba bảy]} phần trăm, tăng so với năm ngoái.	
+electronic	Theo dõi đơn hàng qua Zalo OA hoặc trang {theodoidonhang.vn|theodoidonhang chấm vn}.	
+code	Mã khuyến mãi {TET2027|TET [hai không hai bảy,hai nghìn không trăm hai mươi bảy,hai ngàn không trăm hai mươi bảy]} tặng kèm quà Tết cho mọi đơn.	
+mixed	Vay {50 triệu|năm mươi triệu} trong {12 tháng|mười hai tháng}, lãi {1,2%/tháng|một phẩy hai phần trăm [một,mỗi] tháng}.	
+sign	Giá vàng chiều nay {+300.000đ/lượng|[tăng,cộng] ba trăm [nghìn,ngàn] đồng [một,mỗi] lượng} so với buổi sáng.	
+unit	Công suất máy {1.800W|một [nghìn,ngàn] tám trăm oát}, có chế độ hẹn giờ.	
+date	Hạn sử dụng: {20.03.2027|hai mươi tháng ba năm hai [nghìn,ngàn] không trăm hai mươi bảy}.	
+time	Ngân hàng tạm dừng dịch vụ để bảo trì từ {0h|không giờ} đến {3h|ba giờ} sáng chủ nhật.	
+currency	Giá bán {2tr|hai triệu}, fix nhẹ cho ai thiện chí, giao tận nơi nội thành.	
+ordinal	Đợt mở bán thứ {3|ba} của dự án sẽ công bố giá vào tháng tới.	
+percent	Cổ tức tiền mặt {12%|mười hai phần trăm} mệnh giá, ngày chốt quyền cuối tháng này.	
+cardinal	Thùng gồm {24|hai mươi [tư,bốn]} lon, giá tốt hơn mua lẻ.	
+range	Thời gian làm việc {8h-17h|tám giờ đến mười bảy giờ}, nghỉ trưa một tiếng, {T2-T7|thứ hai đến thứ bảy}.	
+code	Số hợp đồng {HD-2026-00417|HD hai không hai sáu không không bốn một bảy} đã được duyệt giải ngân.	
+alnum	Lốp {R17|R mười bảy} thay mới, bảo hành một năm.	
+fraction	Hoàn trả {2/3|hai phần ba} học phí nếu hủy trước ngày khai giảng.	
+math	Diện tích căn hộ {8 x 12 m|tám nhân mười hai mét}, hai phòng ngủ, ban công hướng đông.	
+electronic	Khiếu nại gửi tới {cskh@banlenhanh.com|cskh a còng banlenhanh chấm com}, phản hồi trong hai ngày làm việc.	
+phone	Đặt bàn: {0236 356 7890|không hai ba sáu ba năm sáu bảy tám chín không}.	
+time	Đóng cửa lúc {21h45|hai mươi mốt giờ bốn mươi lăm (phút)}, khách vui lòng thanh toán trước giờ đóng cửa.	
+currency	Mua ngay chỉ {499.000đ|bốn trăm chín mươi chín [nghìn,ngàn] đồng} thay vì {650.000đ|sáu trăm năm mươi [nghìn,ngàn] đồng}.	
+unit	Vải cotton định lượng {180 g/m²|một trăm tám mươi [gam,gờ-ram] trên mét vuông}, thoáng mát.	
+decimal	Tỷ giá bán ra {25.430,5|hai mươi lăm [nghìn,ngàn] bốn trăm ba mươi phẩy năm} đồng một đô la Mỹ.	
+mixed	Thanh toán {2.150.000đ|hai triệu một trăm năm mươi [nghìn,ngàn] đồng} tại POS lúc {18:22|mười tám giờ hai mươi hai (phút)} ngày {11/10|mười một tháng mười}.	
+range	Giảm {10-50%|mười đến năm mươi phần trăm} cho toàn bộ đồ gia dụng dịp cuối năm.	
+cardinal	Kho còn {48|bốn mươi tám} sản phẩm, đặt ngay để giữ hàng.	
+date	Đặt hàng trước {24/12|hai mươi [tư,bốn] tháng mười hai} để nhận kịp Giáng sinh.	
+percent	Lợi nhuận gộp quý này {41,3%|bốn mươi mốt phẩy ba phần trăm}, cải thiện nhờ giá nguyên liệu giảm.	
+sign	Biên lợi nhuận ròng {-2,4%|âm hai phẩy bốn phần trăm} do chi phí tài chính tăng vọt.	
+mixed	Vé xem phim {2D|hai D} giá {75k|bảy mươi lăm [nghìn,ngàn] (đồng)} cho suất trước {17h|mười bảy giờ}.	
+currency	Giá thuê mặt bằng {18 triệu/tháng|mười tám triệu [một,mỗi] tháng}, cọc hai tháng.	
+# part 4
+date	Nghị định có hiệu lực kể từ ngày {01/7/2026|[mùng ,mồng ,]một tháng bảy năm hai [nghìn,ngàn] không trăm hai mươi sáu}.	
+code	Căn cứ Nghị định số {168/2024/NĐ-CP|một trăm sáu mươi tám [trên,] hai [nghìn,ngàn] không trăm hai mươi [tư,bốn] [trên,] NĐ CP} của Chính phủ quy định xử phạt vi phạm hành chính về trật tự, an toàn giao thông đường bộ.	
+time	Bộ phận một cửa tiếp nhận hồ sơ từ {7h30|bảy giờ ba mươi (phút)} sáng các ngày làm việc.	
+range	Thời gian làm việc: {T2-T6|thứ hai đến thứ sáu}, nghỉ thứ bảy và chủ nhật.	
+percent	Tỷ lệ tốt nghiệp THPT của tỉnh năm nay đạt {99,21%|chín mươi chín phẩy [hai mươi mốt,hai một] phần trăm}.	
+cardinal	Kỳ thi tốt nghiệp có {1.067.391|một triệu không trăm sáu mươi bảy [nghìn,ngàn] ba trăm chín mươi mốt} thí sinh đăng ký dự thi.	
+decimal	Điểm trung bình môn Toán của cả lớp là {7,85|bảy phẩy [tám mươi lăm,tám lăm]}.	
+currency	Lệ phí cấp lại thẻ căn cước là {70.000đ|bảy mươi [nghìn,ngàn] đồng}.	
+ordinal	Văn kiện Đại hội đại biểu toàn quốc lần thứ {XIV|mười bốn} đã được công bố toàn văn.	
+unit	Diện tích thửa đất được cấp giấy chứng nhận là {120,5 m²|một trăm hai mươi phẩy năm mét vuông}.	
+phone	Mọi thắc mắc về thủ tục xin liên hệ số {024 3825 6789|không hai bốn ba tám hai năm sáu bảy tám chín}.	
+alnum	Học sinh lớp {10A3|mười A ba} tập trung tại sân trường để nghe phổ biến nội quy.	
+fraction	Nghị quyết được thông qua khi có ít nhất {2/3|hai phần ba} số đại biểu có mặt tán thành.	
+sign	Chênh lệch điểm chuẩn so với năm ngoái là {-0,25|âm không phẩy [hai mươi lăm,hai lăm,hai mươi nhăm]} điểm.	
+math	Đề kiểm tra yêu cầu giải phương trình {2x + 5 = 11|hai x cộng năm bằng mười một}.	
+electronic	Công dân có thể nộp hồ sơ trực tuyến tại {dichvucong.gov.vn|dịch vụ công chấm gov chấm vn}.	
+mixed	Lớp {12A1|mười hai A một} nộp học phí {1.350.000đ|một triệu ba trăm năm mươi [nghìn,ngàn] đồng} trước ngày {15/9|mười lăm tháng chín}.	
+date	Hạn cuối đăng ký xét tuyển đại học đợt một là ngày {30/7|ba mươi tháng bảy}.	
+time	Lễ khai giảng năm học mới bắt đầu lúc {7h|bảy giờ} sáng thứ sáu.	
+percent	Học sinh có hoàn cảnh khó khăn được miễn {50%|năm mươi phần trăm} học phí theo quy định.	
+cardinal	Toàn huyện có {38|ba mươi tám} trường tiểu học và {1.204|một [nghìn,ngàn] hai trăm [linh,lẻ] bốn} giáo viên.	
+range	Mức phạt cho hành vi không đội mũ bảo hiểm là từ {400.000 đến 600.000 đồng|bốn trăm [nghìn,ngàn] đến sáu trăm [nghìn,ngàn] đồng}.	
+currency	Thù lao cho người làm chứng được chi trả {200.000 VNĐ/ngày|hai trăm [nghìn,ngàn] đồng [một,mỗi] ngày}.	
+ordinal	Phiên tòa sơ thẩm lần thứ {2|hai} được mở lại sau khi bổ sung chứng cứ.	
+date	Bản án có hiệu lực pháp luật kể từ ngày {12-3-2025|mười hai tháng ba năm hai [nghìn,ngàn] không trăm hai mươi [lăm,nhăm]}.	
+code	Hồ sơ của ông A được tiếp nhận với mã số {HS2026-00417|HS hai không hai sáu [gạch ,]không không bốn một bảy}.	
+time	Buổi họp phụ huynh đầu năm diễn ra từ {8:00|tám giờ} đến {10:30|mười giờ ba mươi (phút)} sáng chủ nhật.	
+unit	Phòng học phải bảo đảm diện tích tối thiểu {1,5 m²/học sinh|một phẩy năm mét vuông [một,mỗi] học sinh}.	
+mixed	Thí sinh mang số báo danh {01023567|không một không hai ba năm sáu bảy} vào phòng thi số {12|mười hai}.	
+percent	Chỉ tiêu tuyển sinh dành cho phương thức xét học bạ chiếm {30%|ba mươi phần trăm} tổng chỉ tiêu.	
+fraction	Đã có {3/4|ba phần tư} số xã trên địa bàn đạt chuẩn nông thôn mới nâng cao.	
+cardinal	Dự thảo luật gồm {9|chín} chương, {97|chín mươi bảy} điều.	
+decimal	Điểm chuẩn ngành Sư phạm Toán là {28,17|hai mươi tám phẩy [mười bảy,một bảy]} điểm.	
+electronic	Phản ánh, kiến nghị gửi về địa chỉ email {phongdaotao@sgd.edu.vn|[phongdaotao,phòng đào tạo] a còng sgd chấm edu chấm vn}.	
+phone	Đường dây nóng tiếp nhận tin báo tội phạm: {113|một một ba}.	
+date	Thông báo này thay thế thông báo đã ban hành ngày {5/6|[mùng ,mồng ,]năm tháng sáu}.	
+mixed	Phòng {P.204|[phòng,P] hai [không,linh,lẻ] [bốn,tư]} nhận hồ sơ từ {13h30|mười ba giờ ba mươi (phút)} chiều.	
+ordinal	Đây là lần thứ {3|ba} nhà trường được công nhận đạt chuẩn quốc gia.	
+range	Trẻ em từ {6-14 tuổi|sáu đến mười bốn tuổi} bắt buộc phải hoàn thành chương trình phổ cập giáo dục tiểu học và THCS.	
+currency	Mức lương cơ sở được điều chỉnh lên {2,34 triệu đồng/tháng|hai phẩy [ba mươi tư,ba mươi bốn,ba bốn] triệu đồng [một,mỗi] tháng}.	
+ordinal	Hội đồng nhân dân tỉnh khóa {XX|hai mươi} họp kỳ thứ {18|mười tám} để xem xét các tờ trình.	
+sign	Điểm cộng ưu tiên khu vực là {+0,75|cộng không phẩy [bảy mươi lăm,bảy lăm,bảy mươi nhăm]} điểm.	
+date	Lịch nghỉ Tết Nguyên đán kéo dài từ {26/1|hai mươi sáu tháng một} đến hết {2/2|[mùng ,mồng ,]hai tháng hai}.	
+unit	Khoảng cách tối thiểu giữa hai phòng thi là {50 m|năm mươi mét}.	
+alnum	Giấy phép lái xe hạng {B2|B hai} vẫn được sử dụng đến khi hết hạn.	
+math	Diện tích hình chữ nhật được tính bằng công thức {S = a × b|S bằng a nhân b}.	
+mixed	Có {12,8%|mười hai phẩy tám phần trăm} bài thi môn Văn đạt điểm từ {8|tám} trở lên.	
+time	Thời gian làm bài môn Ngữ văn bắt đầu tính giờ từ {7h35|bảy giờ ba mươi lăm (phút)} và kết thúc lúc {9h35|chín giờ ba mươi lăm (phút)}.	
+cardinal	Theo thống kê, cả nước có {22.300|hai mươi hai [nghìn,ngàn] ba trăm} hồ sơ đề nghị cấp phiếu lý lịch tư pháp trong tháng.	
+currency	Chủ phương tiện bị tạm giữ xe phải nộp phí trông giữ {8.000đ/ngày|tám [nghìn,ngàn] đồng [một,mỗi] ngày}.	
+decimal	Học bổng khuyến khích học tập dành cho sinh viên có điểm trung bình tích lũy từ {3,2|ba phẩy hai} trở lên.	
+phone	Tổng đài hỗ trợ thủ tục hành chính của tỉnh: {1022|một không hai hai}.	
+fraction	Bị cáo phải bồi thường {1/2|một phần hai} giá trị thiệt hại cho nguyên đơn.	
+ordinal	Đoàn học sinh của tỉnh xếp thứ {5|năm} toàn đoàn tại kỳ thi học sinh giỏi quốc gia.	
+electronic	Thông tin tuyển sinh được đăng tải trên website {www.moet.gov.vn|[w w w,vê kép vê kép vê kép] chấm moet chấm gov chấm vn}.	
+date	Quyết định này được ký ngày {28.02.2026|hai mươi tám tháng hai năm hai [nghìn,ngàn] không trăm hai mươi sáu}.	
+range	Thời hạn giải quyết thủ tục là {3-5 ngày làm việc|ba đến năm ngày làm việc} kể từ khi nhận đủ hồ sơ hợp lệ.	
+alnum	Mẫu đơn {TK1-TS|TK một [gạch ,]TS} dùng để đăng ký tham gia bảo hiểm xã hội lần đầu.	
+mixed	Kỳ họp đã biểu quyết thông qua {11|mười một} nghị quyết với {463/468|bốn trăm sáu mươi ba trên bốn trăm sáu mươi tám} đại biểu tán thành.	
+unit	Xe tải trên {3,5 tấn|ba phẩy năm tấn} không được vào nội đô trong giờ cao điểm.	
+percent	Sinh viên tốt nghiệp loại giỏi chiếm {18,6%|mười tám phẩy sáu phần trăm}, tăng so với khóa trước.	
+time	Cổng trường mở từ {6h45|sáu giờ bốn mươi lăm (phút)} và đóng lúc {17h15|mười bảy giờ mười lăm (phút)}.	
+currency	Khoản vay sinh viên tối đa là {4 triệu đồng/tháng|bốn triệu đồng [một,mỗi] tháng}.	
+code	Số hiệu văn bản: {527/QĐ-UBND|năm trăm hai mươi bảy [trên,] QĐ UBND}.	
+sign	Trong bảng chấm điểm, cột ghi {-2|âm hai} nghĩa là học sinh nộp bài trễ hai ngày.	
+mixed	Sổ hộ khẩu giấy hết giá trị sử dụng từ {1/1/2023|[mùng ,mồng ,]một tháng một năm hai [nghìn,ngàn] không trăm hai mươi ba}, thay bằng mã định danh {12|mười hai} số.	
+date	Tuần lễ hưởng ứng học tập suốt đời diễn ra từ ngày {1/10|[mùng ,mồng ,]một tháng mười}.	
+cardinal	Thư viện trường hiện có hơn {15.600|mười lăm [nghìn,ngàn] sáu trăm} đầu sách và {4|bốn} phòng đọc.	
+decimal	Chỉ số cải cách hành chính của tỉnh đạt {88,72|tám mươi tám phẩy [bảy mươi hai,bảy hai]} điểm, cao hơn mức trung bình cả nước.	
+ordinal	Phiên họp thứ {36|ba mươi sáu} của Ủy ban Thường vụ Quốc hội khai mạc sáng nay.	
+percent	Chi ngân sách cho giáo dục chiếm khoảng {20%|hai mươi phần trăm} tổng chi ngân sách nhà nước.	
+phone	Để đặt lịch hẹn làm căn cước, gọi {0269 3871 234|không hai sáu chín ba tám bảy một hai ba bốn} trong giờ hành chính.	
+unit	Nhà ở xã hội có diện tích từ {25 m²|hai mươi lăm mét vuông} đến {70 m²|bảy mươi mét vuông}.	
+range	Giờ tiếp công dân của Chủ tịch UBND xã: {14h-17h|mười bốn giờ đến mười bảy giờ} thứ năm hằng tuần.	
+electronic	Kết quả giải quyết hồ sơ được gửi về email {tiepdan@ubnd-tinh.gov.vn|tiepdan a còng ubnd gạch tinh chấm gov chấm vn}.	
+math	Trong đề thi, học sinh cần tính giá trị của biểu thức {3² + 4²|ba bình phương cộng bốn bình phương}.	
+time	Giờ thi buổi chiều: phát đề lúc {14h20|mười bốn giờ hai mươi (phút)}, tính giờ làm bài từ {14h30|mười bốn giờ ba mươi (phút)}.	
+currency	Thu nhập chịu thuế từ {11 triệu đồng/tháng|mười một triệu đồng [một,mỗi] tháng} trở lên mới phải nộp thuế thu nhập cá nhân.	
+cardinal	Trong đợt {1|một}, địa phương đã cấp {2.750|hai [nghìn,ngàn] bảy trăm năm mươi} thẻ căn cước cho học sinh dưới {14|mười bốn} tuổi.	
+range	Năm học {2026-2027|hai [nghìn,ngàn] không trăm hai mươi sáu [gạch ,đến ,]hai [nghìn,ngàn] không trăm hai mươi bảy} bắt đầu sớm hơn một tuần.	
+alnum	Lớp {9B|chín B} đạt danh hiệu lớp tiên tiến xuất sắc năm học vừa qua.	
+fraction	Số tiết thực hành chiếm {1/3|một phần ba} tổng thời lượng môn học.	
+code	Mã số thuế của đơn vị là {0102030405|không một không hai không ba không bốn không năm}.	
+percent	Mức đóng bảo hiểm y tế học sinh bằng {4,5%|bốn phẩy năm phần trăm} mức lương cơ sở.	
+sign	So với dự toán, số thu phí, lệ phí đạt {+6,3%|cộng sáu phẩy ba phần trăm}.	
+ordinal	Đây là năm thứ {3|ba} liên tiếp tỉnh dẫn đầu chỉ số năng lực cạnh tranh cấp tỉnh.	
+range	Độ tuổi gọi nhập ngũ là từ đủ {18 đến 25 tuổi|mười tám đến hai mươi [lăm,nhăm] tuổi}.	
+unit	Trọng lượng cặp sách của học sinh tiểu học không nên vượt quá {2,5 kg|hai phẩy năm [ki-lô-gam,cân,ký]}.	
+time	Học sinh bán trú ăn trưa lúc {11h|mười một giờ} và ngủ trưa đến {13h45|mười ba giờ bốn mươi lăm (phút)}.	
+mixed	Phòng Giáo dục yêu cầu các trường gửi báo cáo trước {16h30|mười sáu giờ ba mươi (phút)} ngày {20/10|hai mươi tháng mười} theo mẫu số {03|[không ba,ba]}.	
+currency	Hỗ trợ chi phí học tập {150.000 đồng/tháng|một trăm năm mươi [nghìn,ngàn] đồng [một,mỗi] tháng} cho học sinh dân tộc thiểu số.	
+mixed	Dự án xây mới {12|mười hai} phòng học với tổng mức đầu tư gần {9,8 tỷ đồng|chín phẩy tám tỷ đồng}.	
+decimal	Hệ số lương khởi điểm được nâng từ {2,34|hai phẩy [ba mươi tư,ba mươi bốn,ba bốn]} lên {2,67|hai phẩy [sáu mươi bảy,sáu bảy]}.	
+date	Thẻ bảo hiểm y tế có giá trị sử dụng đến hết ngày {31/12/2026|ba mươi mốt tháng mười hai năm hai [nghìn,ngàn] không trăm hai mươi sáu}.	
+phone	Số điện thoại trực ban của trường trong kỳ nghỉ hè: {0238 3845 912|không hai ba tám ba tám bốn năm chín một hai}.	
+electronic	Giáo viên đăng nhập hệ thống tại {https://csdl.moet.gov.vn|csdl chấm moet chấm gov chấm vn} để cập nhật điểm.	
+alnum	Chương trình bồi dưỡng mô-đun {GVPT 05|GVPT [không năm,năm]} dành cho giáo viên phổ thông cốt cán.	
+math	Bài toán yêu cầu tìm x biết {x/4 = 12|x [chia,trên] bốn bằng mười hai}.	
+range	Lớp học thêm chỉ được tổ chức tối đa {2-3 buổi/tuần|hai đến ba buổi [một,mỗi] tuần}.	
+mixed	Căn cước cấp cho công dân từ đủ {14|mười bốn} tuổi có thời hạn đến khi đủ {25|hai mươi [lăm,nhăm]} tuổi, lệ phí {30.000đ|ba mươi [nghìn,ngàn] đồng}.	
+# part 5
+unit	Máy có màn hình {6,7 inch|sáu phẩy bảy [inch,in-sơ]} với độ sáng tối đa {2.000 nit|hai [nghìn,ngàn] nit}.	
+code	Hệ thống trả về lỗi {HTTP 503|HTTP năm không ba} khi tải trang thanh toán.	
+currency	Chi phí thay pin chính hãng là {1,2 triệu|một phẩy hai triệu}, chưa gồm công tháo lắp.	
+mixed	Liều dùng: uống {500 mg|năm trăm mi-li-gam}, ngày {3|ba} lần sau ăn.	
+unit	Chỉ số đường huyết lúc đói của bệnh nhân là {6,8 mmol/L|sáu phẩy tám mi-li-mol trên lít}.	
+percent	Dung lượng pin còn {18%|mười tám phần trăm}, vui lòng cắm sạc.	
+time	Sự cố bắt đầu lúc {02:17|hai giờ mười bảy (phút)} và được khắc phục hoàn toàn lúc {04:05|bốn giờ [không năm,lẻ năm,năm] (phút)}.	
+cardinal	Máy chủ xử lý trung bình {12.400|mười hai [nghìn,ngàn] bốn trăm} yêu cầu mỗi giây trong giờ cao điểm.	
+electronic	Địa chỉ IP của máy in là {192.168.10.25|một chín hai chấm một sáu tám chấm [mười,một không] chấm [hai mươi lăm,hai lăm,hai năm]}.	
+mixed	Vi xử lý {i5-1335U|[i,ai] năm [gạch ,]một ba ba năm U} chạy ở xung nhịp cơ bản {1,3 GHz|một phẩy ba ghi-ga-héc}.	
+sign	Vắc xin phải bảo quản ở nhiệt độ từ {+2℃|[dương,cộng] hai độ C} đến {+8℃|[dương,cộng] tám độ C}.	
+range	Tủ lạnh dược phẩm giữ nhiệt độ ổn định trong khoảng {2-8℃|hai đến tám độ C}.	
+math	Công suất tiêu thụ được tính theo công thức {P = U × I|P bằng U nhân I}.	
+fraction	Trộn dung dịch theo tỷ lệ {1/10|một phần mười} với nước cất trước khi sử dụng.	
+phone	Khi gặp sự cố, gọi tổng đài kỹ thuật {1800 1091|một tám không không một không chín một} (miễn phí).	
+ordinal	Bệnh nhân được chẩn đoán ung thư phổi giai đoạn {III|ba} và bắt đầu điều trị ngay.	
+date	Lô thuốc có hạn sử dụng đến {12/2027|[tháng ,]mười hai năm hai [nghìn,ngàn] không trăm hai mươi bảy}.	
+mixed	Bản vá {v2.4.1|[v,vê] hai chấm bốn chấm một} được phát hành ngày {3/9|[mùng ,mồng ,]ba tháng chín} để sửa lỗi rò rỉ bộ nhớ.	
+unit	Dây cáp chịu được dòng điện tối đa {16 A|mười sáu am-pe} ở điện áp {220 V|hai trăm hai mươi vôn}.	
+cardinal	Ổ đĩa chứa {1.048.576|một triệu không trăm bốn mươi tám [nghìn,ngàn] năm trăm bảy mươi sáu} tệp cần được quét lại.	
+decimal	Giá trị pH của mẫu nước đo được là {6,95|sáu phẩy [chín mươi lăm,chín lăm,chín mươi nhăm]}.	
+percent	Độ ẩm tương đối trong phòng máy chủ phải duy trì dưới {60%|sáu mươi phần trăm}.	
+electronic	Tài liệu hướng dẫn cài đặt có tại {docs.example.vn/setup|docs chấm example chấm vn [gạch chéo,xuyệt,trên] setup}.	
+code	Lỗi được ghi nhận với mã {ERR-4021|ERR [gạch ,]bốn không hai một} trong nhật ký hệ thống.	
+time	Lịch bảo trì định kỳ: {23h00|hai mươi ba giờ} thứ bảy đến {01h00|một giờ} sáng chủ nhật.	
+mixed	Thuốc nhỏ mắt dung tích {5 ml|năm mi-li-lít}, dùng trong vòng {30|ba mươi} ngày sau khi mở nắp.	
+mixed	Cổng {USB 3.2|USB ba chấm hai} hỗ trợ tốc độ truyền {10 Gbps|mười ghi-ga-bít trên giây}.	
+range	Nhịp tim bình thường của người trưởng thành khi nghỉ ngơi là {60-100 lần/phút|sáu mươi đến một trăm lần [một,mỗi] phút}.	
+cardinal	Lô vắc xin gồm {24.000|hai mươi [tư,bốn] [nghìn,ngàn]} liều được chuyển về kho lạnh trung tâm.	
+unit	Khoảng cách an toàn từ nguồn phát sóng là {1,5 m|một phẩy năm mét}.	
+sign	Nhiệt độ bảo quản mẫu huyết thanh là {-20℃|âm hai mươi độ C} hoặc thấp hơn.	
+math	Thể tích hình trụ được tính bằng {V = πr²h|V bằng pi r bình phương h}.	
+electronic	Gửi log lỗi về {support@techvn.io|support a còng techvn chấm io} kèm mã phiên.	
+percent	Độ chính xác của mô hình trên tập kiểm thử đạt {94,3%|chín mươi [tư,bốn] phẩy ba phần trăm}.	
+decimal	Chỉ số BMI của bệnh nhân là {27,4|hai mươi bảy phẩy [tư,bốn]}, thuộc nhóm thừa cân.	
+ordinal	Đây là lần thứ {4|tư} trong tháng máy chủ cơ sở dữ liệu bị quá tải.	
+mixed	Bệnh nhân nhập viện ngày {09/8|[mùng ,mồng ,]chín tháng tám} và xuất viện sau {5|năm} ngày điều trị.	
+code	Mẫu bệnh phẩm được dán nhãn {BP-2026-0831|BP [gạch ,]hai không hai sáu [gạch ,]không tám ba một}.	
+phone	Đường dây tư vấn tiêm chủng: {024 7306 6565|không hai bốn bảy ba không sáu sáu năm sáu năm}.	
+unit	Mỗi viên chứa {325 mg|ba trăm hai mươi lăm mi-li-gam} paracetamol.	
+fraction	Giảm liều còn {1/2 viên|[một phần hai,nửa] viên} cho trẻ nhỏ theo chỉ định của bác sĩ.	
+time	Uống thuốc lúc {7h|bảy giờ} và {19h|mười chín giờ} hằng ngày, cách nhau đúng mười hai tiếng.	
+cardinal	Bo mạch chủ có {4|bốn} khe cắm RAM và {6|sáu} cổng SATA.	
+unit	Hỗ trợ tối đa {128 GB|một trăm hai mươi tám [ghi-ga-bai,gi-ga-bai]} bộ nhớ RAM.	
+range	Thời gian sạc đầy pin dao động từ {45-60 phút|bốn mươi lăm đến sáu mươi phút} tùy loại sạc.	
+mixed	Tỷ lệ CPU sử dụng vượt ngưỡng {90%|chín mươi phần trăm} trong hơn {15|mười lăm} phút liên tục.	
+alnum	Dữ liệu được mã hóa bằng thuật toán {AES-256|AES [gạch ,][hai trăm năm mươi sáu,hai năm sáu]} trước khi lưu trữ.	
+sign	Độ lệch cho phép của phép đo là {±0,02 mm|cộng trừ không phẩy không hai mi-li-mét}.	
+decimal	Hệ số công suất đo được là {0,92|không phẩy [chín mươi hai,chín hai]}.	
+date	Phiên bản hệ điều hành này sẽ ngừng được hỗ trợ sau ngày {14/10/2025|mười bốn tháng mười năm hai [nghìn,ngàn] không trăm hai mươi [lăm,nhăm]}.	
+electronic	Mở trình duyệt và truy cập {http://192.168.1.1|một chín hai chấm một sáu tám chấm một chấm một} để vào trang cấu hình router.	
+unit	Cân nặng bệnh nhi {14,2 kg|mười bốn phẩy hai [ki-lô-gam,cân,ký]}, chiều cao {96 cm|chín mươi sáu [xen-ti-mét,phân]}.	
+cardinal	Hệ thống ghi nhận {3.517|ba [nghìn,ngàn] năm trăm mười bảy} lượt đăng nhập thất bại từ cùng một địa chỉ.	
+time	Máy sẽ tự động khởi động lại vào {3h|ba giờ} sáng mỗi ngày để áp dụng bản cập nhật.	
+code	Số sê-ri thiết bị: {SN 0084-7731-22|SN không không tám bốn [gạch ,]bảy bảy ba một [gạch ,]hai hai}.	
+math	Kết quả tính được là {12 × 8 = 96|mười hai nhân tám bằng chín mươi sáu}.	
+ordinal	Bệnh nhân đang trong chu kỳ hóa trị thứ {6|sáu} theo phác đồ.	
+percent	Hiệu suất chuyển đổi của bộ nguồn đạt {91,5%|chín mươi mốt phẩy năm phần trăm} ở tải {50%|năm mươi phần trăm}.	
+mixed	Chỉ số {SpO2|SpO hai} bình thường nằm trong khoảng {95-100%|chín mươi lăm đến một trăm phần trăm}.	
+unit	Màn hình có tần số quét {144 Hz|một trăm bốn mươi [tư,bốn] héc} và thời gian phản hồi {1 ms|một mi-li-giây}.	
+phone	Nhà thuốc nhận đơn qua Zalo số {0905 123 456|không chín không năm một hai ba bốn năm sáu}.	
+fraction	Liều cho trẻ em bằng {1/4|một phần tư} liều người lớn.	
+cardinal	Thử nghiệm lâm sàng giai đoạn này có {1.200|một [nghìn,ngàn] hai trăm} người tham gia tại {15|mười lăm} bệnh viện.	
+decimal	Hệ số ma sát tĩnh đo được là {0,38|không phẩy [ba mươi tám,ba tám]}.	
+electronic	Tên miền phụ {api.v2.dulieu.vn|api chấm [v,vê] hai chấm dulieu chấm vn} trỏ về máy chủ mới.	
+alnum	Mẫu bệnh phẩm cho kết quả dương tính với cúm {H5N1|H năm N một}.	
+sign	Kết quả xét nghiệm viêm gan B: {(-)|âm tính}.	
+unit	Tốc độ quay của quạt tản nhiệt tối đa {2.400 rpm|hai [nghìn,ngàn] bốn trăm [vòng trên phút,vòng mỗi phút,vòng một phút]}.	
+date	Lịch tái khám của bệnh nhân là ngày {21/10|hai mươi mốt tháng mười}, nhịn ăn sáng trước khi lấy máu.	
+time	Lấy máu xét nghiệm từ {6h30|sáu giờ ba mươi (phút)} đến {8h|tám giờ} sáng, trước khi ăn.	
+code	Kiểm tra bảng mã lỗi {E04|E không bốn} trên màn hình điều khiển của máy điều hòa.	
+mixed	Máy giặt {9 kg|chín [ki-lô-gam,cân,ký]} có {14|mười bốn} chương trình giặt và bảo hành {24 tháng|hai mươi [tư,bốn] tháng}.	
+range	Nhiệt độ hoạt động của thiết bị: {0-40℃|không đến bốn mươi độ C}.	
+mixed	Tỷ lệ bệnh nhân đáp ứng điều trị sau {12|mười hai} tuần là {73%|bảy mươi ba phần trăm}.	
+cardinal	Tổng số dòng lệnh thay đổi trong bản phát hành này là {8.312|tám [nghìn,ngàn] ba trăm mười hai}.	
+unit	Dung lượng bộ nhớ trong {256 GB|hai trăm năm mươi sáu [ghi-ga-bai,gi-ga-bai]}, không hỗ trợ thẻ nhớ.	
+math	Nếu {a > b|a lớn hơn b} thì chương trình chuyển sang nhánh xử lý thứ hai.	
+decimal	Hệ số tương quan giữa hai biến là {0,87|không phẩy [tám mươi bảy,tám bảy]}.	
+mixed	Thiết bị đã qua {3|ba} lần hiệu chuẩn, lần gần nhất vào quý {II|hai} năm nay.	
+code	Nhập mã OTP {482913|bốn tám hai chín một ba} vào ứng dụng để hoàn tất xác thực.	
+phone	Hotline cấp cứu {115|một một năm} hoạt động suốt ngày đêm.	
+unit	Mô-tơ công suất {1,5 kW|một phẩy năm ki-lô-oát} tiêu thụ khoảng {3,2 kWh|ba phẩy hai ki-lô-oát giờ} mỗi ngày.	
+sign	Độ cao so với mực nước biển của trạm đo là {-2 m|âm hai mét}.	
+mixed	Bản sao lưu gần nhất được tạo lúc {23:58|hai mươi ba giờ năm mươi tám (phút)} ngày {11/10|mười một tháng mười}.	
+cardinal	Vắc xin được tiêm {2|hai} mũi, cách nhau {28|hai mươi tám} ngày.	
+range	Thời gian sống của pin dự phòng {5-7 năm|năm đến bảy năm} tùy điều kiện sử dụng.	
+time	Theo dõi huyết áp vào lúc {6h|sáu giờ}, {12h|mười hai giờ} và {18h|mười tám giờ}.	
+alnum	Đồng hồ dùng pin cúc áo loại {CR2032|CR hai không ba hai}.	
+unit	Độ ồn khi vận hành không vượt quá {45 dB|bốn mươi lăm đê-xi-ben}.	
+percent	Dung tích ổ cứng đã dùng {97%|chín mươi bảy phần trăm}; cần giải phóng dung lượng ngay.	
+code	Máy chủ dự phòng chỉ mở cổng {22|[hai mươi hai,hai hai]} cho địa chỉ nội bộ.	
+fraction	Khoảng {1/5|một phần năm} số máy trạm vẫn chạy phiên bản cũ.	
+decimal	Hệ số khuếch đại của mạch là {2,75|hai phẩy [bảy mươi lăm,bảy lăm,bảy mươi nhăm]}.	
+ordinal	Vi xử lý thế hệ thứ {13|mười ba} tiêu thụ ít điện hơn thế hệ trước.	
+electronic	Cấu hình DNS về {8.8.8.8|tám chấm tám chấm tám chấm tám} nếu không phân giải được tên miền.	
+mixed	Bệnh nhân nữ {52|năm mươi hai} tuổi, huyết áp {140/90 mmHg|một trăm bốn mươi trên chín mươi mi-li-mét thủy ngân}.	
+mixed	Camera độ phân giải {4K|bốn K} quay được {60 khung hình/giây|sáu mươi khung hình [một,mỗi,trên] giây}.	
+cardinal	Vui lòng nhập mã gồm {6|sáu} chữ số đã gửi tới email của bạn.	
+time	Dịch vụ sẽ gián đoạn từ {0h|[không giờ,mười hai giờ đêm]} đến {2h|hai giờ} sáng ngày mai.	
+range	Điều kiện bảo quản thuốc: {15-30℃|mười lăm đến ba mươi độ C}, tránh ánh sáng trực tiếp.	
+# part 6
+time	Tàu khách tuyến Bắc – Nam xuất phát lúc {19h10|mười chín giờ mười (phút)} và đến ga Vinh lúc {0h55|không giờ năm mươi lăm (phút)}.	
+alnum	Chuyến bay {VJ189|VJ một tám chín} bị chậm do thời tiết xấu tại sân bay đến.	
+code	Mã đặt chỗ của quý khách là {7XK2QD|bảy X K hai Q D}.	
+currency	Giá phòng đôi tiêu chuẩn là {1.250.000đ/đêm|một triệu hai trăm năm mươi [nghìn,ngàn] đồng [một,mỗi] đêm}, đã gồm bữa sáng.	
+mixed	Nhận phòng từ ngày {18/12|mười tám tháng mười hai}, trả phòng trước {12h|mười hai giờ} trưa ngày {20/12|hai mươi tháng mười hai}.	
+unit	Từ sân bay Nội Bài về trung tâm khoảng {30 km|ba mươi [ki-lô-mét,cây số]} theo đường cao tốc.	
+range	Xe buýt tuyến sân bay hoạt động từ {5h30-22h30|năm giờ ba mươi (phút) đến hai mươi hai giờ ba mươi (phút)}, giãn cách {25-30 phút/chuyến|hai mươi lăm đến ba mươi phút [một,mỗi] chuyến}.	
+phone	Đặt xe ghép đi Hải Phòng, gọi {0888 123 456|không tám tám tám một hai ba bốn năm sáu}.	
+cardinal	Lễ hội pháo hoa dự kiến thu hút hơn {200.000|hai trăm [nghìn,ngàn]} lượt khách trong {3|ba} ngày.	
+ordinal	Rẽ phải ở ngã tư thứ {2|hai}, rồi đi thẳng khoảng năm trăm mét là tới.	
+percent	Giảm {15%|mười lăm phần trăm} cho khách đặt phòng sớm qua ứng dụng.	
+decimal	Chỉ số UV hôm nay ở mức {8,5|tám phẩy năm}, nên hạn chế ra ngoài buổi trưa.	
+sign	Nhiệt độ tại Sa Pa đêm qua xuống {-1℃|âm một độ C}, xuất hiện băng giá.	
+fraction	Vé tàu cho trẻ em bằng {1/2|[một phần hai,nửa]} giá vé người lớn.	
+math	Tiền phòng: {3 đêm × 850.000đ = 2.550.000đ|ba đêm nhân tám trăm năm mươi [nghìn,ngàn] đồng bằng hai triệu năm trăm năm mươi [nghìn,ngàn] đồng}.	
+electronic	Đặt vé xe trực tuyến tại {www.xekhach-mientay.vn|[w w w,vê kép vê kép vê kép] chấm xekhach gạch mientay chấm vn}.	
+mixed	Phòng {P.1205|[phòng,P] [một hai không năm,mười hai không năm]} nhận phòng lúc {14h|mười bốn giờ}.	
+range	Giờ mở cửa bảo tàng: {8:00–17:00|tám giờ đến mười bảy giờ}, đóng cửa thứ hai.	
+date	Chương trình Countdown chào năm mới diễn ra tối {31/12|ba mươi mốt tháng mười hai} tại quảng trường trung tâm.	
+cardinal	Sân vận động có sức chứa {40.192|bốn mươi [nghìn,ngàn] một trăm chín mươi hai} chỗ ngồi.	
+unit	Hành lý ký gửi tối đa {23 kg|hai mươi ba [ki-lô-gam,cân,ký]}, hành lý xách tay {7 kg|bảy [ki-lô-gam,cân,ký]}.	
+currency	Phí gửi xe máy tại bãi là {5.000đ/lượt|năm [nghìn,ngàn] đồng [một,mỗi] lượt}, ô tô {30k/lượt|ba mươi [nghìn,ngàn] (đồng) [một,mỗi] lượt}.	
+mixed	Số ghế của bạn: {12A|mười hai A}, cửa ra máy bay số {24|hai mươi [tư,bốn]}.	
+alnum	Quý khách đi tàu {SE3|SE ba} vui lòng có mặt tại ga trước giờ khởi hành ba mươi phút.	
+percent	Tỷ lệ lấp đầy phòng khách sạn dịp lễ đạt gần {95%|chín mươi lăm phần trăm}.	
+range	Nhà hàng phục vụ bữa sáng từ {6h-9h30|sáu giờ đến chín giờ ba mươi (phút)}.	
+phone	Tổng đài đặt vé xe khách: {1900 6067|một chín không không sáu không sáu bảy}, phục vụ cả ngày lễ.	
+sign	Khu trượt băng trong nhà duy trì nhiệt độ {-4℃|âm bốn độ C}, nhớ mang áo ấm.	
+ordinal	Đây là lần thứ {12|mười hai} giải chạy đêm được tổ chức tại thành phố.	
+time	Xe xuất bến lúc {21g30|hai mươi mốt giờ ba mươi (phút)}, có mặt trước mười lăm phút để làm thủ tục.	
+date	Vé máy bay giá rẻ áp dụng cho các chuyến bay từ {01/03|[mùng ,mồng ,]một tháng ba} đến {31/05|ba mươi mốt tháng năm}.	
+unit	Tốc độ tối đa cho phép trên cao tốc là {120 km/h|một trăm hai mươi ki-lô-mét trên giờ}.	
+cardinal	Khu nghỉ dưỡng có {312|ba trăm mười hai} phòng và {2|hai} hồ bơi ngoài trời.	
+fraction	Khoảng {2/3|hai phần ba} du khách đến đảo bằng tàu cao tốc.	
+mixed	Tour {3N2Đ|ba ngày hai đêm} khởi hành thứ {6|sáu} hằng tuần, giá từ {2tr990|hai triệu chín trăm chín mươi [nghìn,ngàn,]}.	
+electronic	Mã QR lên tàu sẽ được gửi đến email {dat.ve@example.com|dat chấm ve a còng example chấm com}.	
+currency	Vé vào cổng {80.000 VNĐ|tám mươi [nghìn,ngàn] đồng} với người lớn, trẻ em {40.000 VNĐ|bốn mươi [nghìn,ngàn] đồng}.	
+time	Tàu điện Cát Linh – Hà Đông chạy chuyến đầu lúc {5h30|năm giờ ba mươi (phút)}, chuyến cuối {22h|hai mươi hai giờ}.	
+decimal	Khách sạn được chấm {8,7|tám phẩy bảy} điểm trên ứng dụng đặt phòng.	
+range	Chuyến đi mất khoảng {4-5 tiếng|bốn đến năm tiếng} tùy tình hình giao thông.	
+code	Mã vé: {VXR-20261013-0088|VXR [gạch ,]hai không hai sáu một không một ba [gạch ,]không không tám tám}.	
+phone	Số điện thoại lễ tân khách sạn: {0236 3999 888|không hai ba sáu ba chín chín chín tám tám tám}.	
+alnum	Đi theo biển chỉ dẫn ra cửa {A12|A [mười hai,một hai]} để đón xe buýt.	
+percent	Lượng khách quốc tế đến Đà Nẵng tăng {28%|hai mươi tám phần trăm} so với cùng kỳ.	
+ordinal	Khách sạn này lần thứ {4|tư} liên tiếp lọt vào danh sách bình chọn của du khách.	
+math	Tổng tiền tour: {2 người × 3.490.000đ = 6.980.000đ|hai người nhân ba triệu bốn trăm chín mươi [nghìn,ngàn] đồng bằng sáu triệu chín trăm tám mươi [nghìn,ngàn] đồng}.	
+cardinal	Đoàn tàu gồm {10|mười} toa, mỗi toa {64|sáu mươi [tư,bốn]} ghế ngồi mềm.	
+range	Hội chợ du lịch quốc tế mở cửa từ {10 đến 13/4|mười đến mười ba tháng tư} tại Cung Văn hóa Hữu nghị.	
+unit	Phòng Deluxe rộng {32 m²|ba mươi hai mét vuông}, có ban công hướng biển.	
+mixed	Xe giường nằm {40|bốn mươi} chỗ, giá vé {350k|ba trăm năm mươi [nghìn,ngàn]}, xuất bến {20h|hai mươi giờ}.	
+time	Check-in khách sạn từ {14:00|mười bốn giờ}, check-out trước {12:00|mười hai giờ}.	
+electronic	Theo dõi tình trạng chuyến bay tại {flightinfo.vn|flightinfo chấm vn} hoặc qua tổng đài.	
+currency	Phụ thu {20 USD/đêm|hai mươi [đô la Mỹ,đô la,đô] [một,mỗi] đêm} cho khách thứ ba ở cùng phòng.	
+sign	Khu để xe nằm ở tầng {-1|[âm,trừ] một} của tòa nhà, đi thang máy xuống.	
+range	Tuyến xe buýt chạy tần suất {10-15 phút/chuyến|mười đến mười lăm phút [một,mỗi] chuyến} trong giờ cao điểm.	
+cardinal	Hơn {1.500|một [nghìn,ngàn] năm trăm} vận động viên đã đăng ký tham gia giải bơi vượt biển.	
+fraction	Chỉ còn {1/4|một phần tư} số vé hạng A cho đêm nhạc cuối tuần.	
+phone	Hỗ trợ hành khách tại sân bay: {024 3886 5047|không hai bốn ba tám tám sáu năm không bốn bảy}.	
+alnum	Đón xe tại cột {B4|B bốn} khu vực nhà ga đi quốc nội.	
+mixed	Lượng mưa đo được tại trạm Láng trong {24|hai mươi [tư,bốn]} giờ qua là {56,4 mm|năm mươi sáu phẩy bốn mi-li-mét}.	
+date	Triển lãm ảnh kéo dài đến hết chủ nhật {19/10|mười chín tháng mười}.	
+unit	Cáp treo dài {6.292 m|sáu [nghìn,ngàn] hai trăm chín mươi hai mét}, đi mất khoảng hai mươi phút.	
+time	Giờ cuối nhận khách lên tàu là {23h45|hai mươi ba giờ bốn mươi lăm (phút)}, không chờ khách đến muộn.	
+ordinal	Khách đặt vé sớm sẽ được ưu tiên xếp hàng ghế thứ {1|nhất} và thứ {2|hai}.	
+mixed	Chuyến bay {QH1234|QH một hai ba bốn} cất cánh lúc {6h15|sáu giờ mười lăm (phút)}, cửa ra số {17|mười bảy}.	
+currency	Giá vé xe buýt nội đô vẫn giữ mức {7.000đ|bảy [nghìn,ngàn] đồng}, vé tháng {100k|một trăm [nghìn,ngàn]}.	
+code	Nhập mã {SUMMER25|SUMMER [hai mươi lăm,hai lăm,hai năm,hai mươi nhăm]} tại bước thanh toán để được giảm giá.	
+percent	Phí hủy phòng là {50%|năm mươi phần trăm} giá trị đặt phòng nếu hủy trong vòng một ngày trước giờ nhận phòng.	
+range	Giá tour dao động từ {5-7 triệu đồng|năm đến bảy triệu đồng} tùy thời điểm.	
+cardinal	Tuyến metro số {1|một} có {14|mười bốn} nhà ga, trong đó {3|ba} ga ngầm.	
+math	Thời gian di chuyển: {120 km ÷ 60 km/h = 2 giờ|một trăm hai mươi ki-lô-mét chia sáu mươi ki-lô-mét trên giờ bằng hai giờ}.	
+electronic	Mọi cập nhật được đăng trên kênh Telegram {t.me/xekhach_tanlong|t chấm me [gạch chéo,xuyệt] xekhach gạch dưới tanlong}.	
+unit	Lượng nhiên liệu tiêu thụ trung bình của xe là {6,8 l/100km|sáu phẩy tám lít trên một trăm ki-lô-mét}.	
+date	Vé đã mua có giá trị đến hết ngày {06/11/2026|[mùng ,mồng ,]sáu tháng mười một năm hai [nghìn,ngàn] không trăm hai mươi sáu}.	
+mixed	Thời gian biểu diễn kéo dài {90|chín mươi} phút, bắt đầu lúc {20h|hai mươi giờ}.	
+phone	Liên hệ hướng dẫn viên qua số {0917 452 368|không chín một bảy bốn năm hai ba sáu tám}.	
+sign	Chênh lệch múi giờ giữa Hà Nội và Tokyo là {+2|[cộng,dương] hai} giờ.	
+currency	Thuê xe máy {150.000đ/ngày|một trăm năm mươi [nghìn,ngàn] đồng [một,mỗi] ngày}, đặt cọc {500k|năm trăm [nghìn,ngàn]}.	
+alnum	Nhà ga {T2|T hai} sân bay Nội Bài phục vụ các chuyến bay quốc tế.	
+decimal	Mức tiêu thụ điện của phòng khách sạn trung bình {12,5|mười hai phẩy năm} số điện mỗi đêm.	
+range	Khoảng cách từ bến xe đến khách sạn {1,5-2 km|một phẩy năm đến hai [ki-lô-mét,cây số]}.	
+cardinal	Tuyến đường sắt đô thị vận chuyển trung bình {35.000|ba mươi lăm [nghìn,ngàn]} lượt khách mỗi ngày.	
+fraction	Khoảng {1/3|một phần ba} chuyến bay nội địa bị chậm trong ngày cao điểm.	
+mixed	Lịch chiếu phim: {18h30|mười tám giờ ba mươi (phút)}, {20h45|hai mươi giờ bốn mươi lăm (phút)}; vé {85k|tám mươi lăm [nghìn,ngàn]}.	
+code	Phòng của quý khách là {P.308|[phòng,P] ba [không,linh,lẻ] tám}, thang máy bên tay phải.	
+time	Trận chung kết diễn ra lúc {19h30|mười chín giờ ba mươi (phút)} giờ Việt Nam.	
+ordinal	Hà Nội đứng thứ {7|bảy} trong danh sách các điểm đến được tìm kiếm nhiều nhất.	
+unit	Nhiệt độ nước biển tại Nha Trang hôm nay khoảng {27℃|hai mươi bảy độ C}, sóng cao {0,5 m|không phẩy năm mét}.	
+percent	Phụ phí dịch vụ {5%|năm phần trăm} và thuế VAT {8%|tám phần trăm} chưa bao gồm trong giá niêm yết.	
+date	Lịch nghỉ lễ {2/9|[mùng ,mồng ,]hai tháng chín} năm nay kéo dài bốn ngày.	
+electronic	Vé điện tử được gửi qua Zalo và email {ticket@festival.vn|ticket a còng festival chấm vn}.	
+alnum	Chỗ ngồi của bạn là ghế {C7|C bảy}, vui lòng vào theo cửa gần nhất.	
+currency	Combo vé tham quan và cáp treo giá {1tr5/người|một triệu [rưỡi,năm trăm nghìn,năm trăm ngàn] [một,mỗi] người}.	
+time	Đêm nhạc bắt đầu đúng {20:00|hai mươi giờ}, mở cửa từ {18:30|mười tám giờ ba mươi (phút)}.	
+cardinal	Thành phố bổ sung thêm {120|một trăm hai mươi} xe buýt điện cho {8|tám} tuyến mới.	
+range	Vé dịch vụ áp dụng cho trẻ em {6-12 tuổi|sáu đến mười hai tuổi}.	
+sign	Nhiệt độ cảm nhận ngoài trời có lúc chỉ {-3 độ|âm ba độ} do gió mạnh.	
+mixed	Khởi hành {5h|năm giờ} sáng, quãng đường {180 km|một trăm tám mươi [ki-lô-mét,cây số]}, nghỉ giữa chặng ở {Km 92|ki-lô-mét chín mươi hai}.	
+phone	Báo mất đồ trên taxi qua tổng đài {1900 1234|một chín không không một hai ba bốn} kèm biển số xe.	
+ordinal	Tuần lễ ẩm thực đường phố lần thứ {5|năm} quy tụ nhiều đầu bếp nổi tiếng.	
+# part 7
+cardinal	Tính đến sáng nay, toàn tỉnh ghi nhận {1.005|một [nghìn,ngàn] không trăm [linh,lẻ] năm} hộ bị ngập, tăng {105|một trăm [linh,lẻ] năm} hộ so với hôm qua.	
+cardinal	Lô hàng gồm {2.500|hai [nghìn,ngàn] năm trăm/hai [nghìn,ngàn] rưỡi} thùng mì, đã về kho lúc chiều.	
+cardinal	Sân vận động chật kín với {20.020|hai mươi [nghìn,ngàn] không trăm hai mươi} khán giả.	
+cardinal	Năm nay trường tuyển {1.100|một [nghìn,ngàn] một trăm} chỉ tiêu, trong đó có {24|hai mươi [tư,bốn]} suất học bổng.	
+cardinal	Mình đếm lại thì còn đúng {21|hai mươi mốt} cái, thiếu {4|bốn} cái so với phiếu xuất.	
+cardinal	Hệ thống đã xử lý {1.234.567|một triệu hai trăm ba mươi [tư,bốn] [nghìn,ngàn] năm trăm sáu mươi bảy} giao dịch trong tháng.	
+cardinal	Chuyến bay có {115|một trăm mười lăm} hành khách và {5|năm} thành viên tổ bay.	
+cardinal	Cả xã có {1.021|một [nghìn,ngàn] không trăm hai mươi mốt} hộ dân, {55|năm mươi [lăm,nhăm]} hộ thuộc diện cận nghèo.	
+cardinal	Đến cuối ngày có {300.007|ba trăm [nghìn,ngàn] không trăm [linh,lẻ] bảy} lượt xem, con số khó tin với một clip quay bằng điện thoại.	
+cardinal	Nhà máy mới tạo việc làm cho khoảng {10.500|mười [nghìn,ngàn] năm trăm/mười [nghìn,ngàn] rưỡi} lao động địa phương.	
+cardinal	Thư viện hiện lưu giữ {1.000.000|một triệu} đầu sách, trong đó {60.005|sáu mươi [nghìn,ngàn] không trăm [linh,lẻ] năm} cuốn là sách cổ.	
+cardinal	Bệnh viện tiếp nhận {104|một trăm [linh,lẻ] [bốn,tư]} ca cấp cứu chỉ trong đêm giao thừa.	
+cardinal	Khảo sát thực hiện trên {2026|hai [nghìn,ngàn] không trăm hai mươi sáu} người từ {18|mười tám} tuổi trở lên tại ba thành phố.	
+cardinal	Đợt này mình nhập {1500|một [nghìn,ngàn] năm trăm} cái áo, bán hết trong {3|ba} ngày luôn.	
+cardinal	Tuyến đường có {1.010|một [nghìn,ngàn] không trăm mười} cột điện cần di dời trước khi mở rộng.	
+cardinal	Có {0|không} ca mắc mới được ghi nhận trong {24 giờ|hai mươi [tư,bốn] giờ} qua.	
+cardinal	Đại lý báo đã giao {405|bốn trăm [linh,lẻ] năm} xe trong quý, vượt kế hoạch {45|bốn mươi [lăm,nhăm]} chiếc.	
+cardinal	Dân số huyện đảo chỉ khoảng {12.345|mười hai [nghìn,ngàn] ba trăm bốn mươi [lăm,nhăm]} người theo thống kê gần nhất.	
+cardinal	Ứng dụng cán mốc {1.000.000.000|một [tỷ,tỉ]} lượt tải trên toàn cầu.	
+cardinal	Lớp có {44|bốn mươi [tư,bốn]} học sinh thì {25|hai mươi [lăm,nhăm]} em đạt loại giỏi.	
+cardinal	Mỗi thùng chứa {1000|một [nghìn,ngàn]} viên, giao đủ {100|một trăm} thùng theo hợp đồng.	
+cardinal	Có tới {5.000.000|năm triệu} tài khoản bị ảnh hưởng, gấp {15|mười lăm} lần ước tính ban đầu.	
+cardinal	Tổng cộng {1.001|một [nghìn,ngàn] không trăm [linh,lẻ] một} suất quà đã trao tận tay bà con.	
+cardinal	Sau {1.995|một [nghìn,ngàn] chín trăm chín mươi [lăm,nhăm]} ngày kể từ khi khởi công, cây cầu chính thức hợp long.	
+cardinal	Em đã gửi {101|một trăm [linh,lẻ] một} hồ sơ mà mới có {7|bảy} nơi phản hồi.	
+decimal	Bé cân nặng {3,2 kg|ba phẩy hai ki-lô-gam/ba cân hai/ba ký hai} khi chào đời.	
+decimal	Chỉ số PMI đạt {50,2|năm mươi phẩy hai} điểm, lần đầu vượt ngưỡng {50|năm mươi} sau nửa năm.	
+decimal	Nhiệt độ cơ thể bé là {37,8℃|ba mươi bảy phẩy tám độ [C,xê,]}, chưa cần hạ sốt.	
+decimal	Điểm trung bình học kỳ của em là {8.5|tám [chấm,phẩy] năm}, cao nhất lớp.	
+decimal	Pi lấy tròn là {3,14|ba phẩy mười bốn/ba phẩy một bốn}, nhớ thế là đủ làm bài.	
+decimal	Giá vàng giảm {0,5 triệu|không phẩy năm triệu/nửa triệu} mỗi lượng so với hôm qua.	
+decimal	Lượng mưa đo được tại trạm là {125,4 mm|một trăm hai mươi [lăm,nhăm] phẩy bốn mi-li-mét}.	
+decimal	Hệ số lương bậc này là {2,34|hai phẩy ba mươi [tư,bốn]/hai phẩy ba [tư,bốn]}.	
+decimal	Doanh thu đạt {2,5 tỷ|hai phẩy năm [tỷ,tỉ]/hai [tỷ,tỉ] rưỡi}, lợi nhuận {0,3 tỷ|không phẩy ba [tỷ,tỉ]}.	
+decimal	Sai số cho phép chỉ {0,05 mm|không phẩy không năm mi-li-mét}, vượt là loại.	
+decimal	Quãng đường đi được là {12,345 km|mười hai phẩy ba trăm bốn mươi [lăm,nhăm] ki-lô-mét/mười hai phẩy ba bốn năm ki-lô-mét}.	
+decimal	Điểm đánh giá trung bình {4,9/5|bốn phẩy chín trên năm} sao từ hơn hai nghìn lượt mua.	
+decimal	Chiều cao trung bình nam thanh niên tăng lên {1,68 m|một phẩy sáu mươi tám mét/một mét sáu mươi tám/một mét sáu tám}.	
+decimal	Hóa đơn điện tháng này hết {1.234,56 kWh|một [nghìn,ngàn] hai trăm ba mươi [tư,bốn] phẩy năm mươi sáu ki-lô-oát giờ}.	
+decimal	Lãi suất tiết kiệm kỳ hạn mười hai tháng chỉ còn {4,75|bốn phẩy bảy mươi [lăm,nhăm]/bốn phẩy bảy [lăm,nhăm]}, thấp nhất nhiều năm.	
+decimal	Cổ phiếu ngân hàng tăng {1,5|một phẩy năm} điểm trong phiên sáng.	
+decimal	Xác suất trúng chỉ {0,001|không phẩy không không một}, gần như bằng không.	
+decimal	Bản cập nhật rút thời gian phản hồi từ {2,0|hai phẩy không} giây xuống {1,2|một phẩy hai} giây.	
+decimal	Bạn đã chạy được {5.2 km|năm [chấm,phẩy] hai [ki-lô-mét,cây số]} hôm nay, tiếp tục phát huy nhé!	
+decimal	Mật độ dân số đạt {2.398,7|hai [nghìn,ngàn] ba trăm chín mươi tám phẩy bảy} người trên mỗi ki-lô-mét vuông.	
+decimal	Học phí tăng {1,5 lần|một phẩy năm lần/một lần rưỡi} so với khóa trước.	
+decimal	Vòng eo {62,5 cm|sáu mươi hai phẩy năm xen-ti-mét/sáu mươi hai phẩy năm phân} là size S của hãng.	
+decimal	Độ pH của mẫu nước là {6,8|sáu phẩy tám}, nằm trong giới hạn cho phép.	
+decimal	Điểm chuẩn ngành này là {27,25|hai mươi bảy phẩy hai mươi [lăm,nhăm]/hai mươi bảy phẩy hai [lăm,nhăm]}, cao hơn năm ngoái {0,75|không phẩy bảy mươi [lăm,nhăm]/không phẩy bảy [lăm,nhăm]} điểm.	
+decimal	Tốc độ gió cấp sáu, giật {17,2 m/s|mười bảy phẩy hai mét trên giây}.	
+sign	Sa Pa đêm qua xuống {-2℃|âm hai độ [C,xê,]}, đỉnh Fansipan có băng mỏng.	
+sign	Bãi đỗ xe ở tầng {-1|âm một} và {-2|âm hai}, lối vào phía đường Lê Lợi.	
+sign	Kho lạnh phải duy trì {-18℃|âm mười tám độ [C,xê,]} trong suốt quá trình bảo quản.	
+sign	Lợi nhuận sau thuế quý ba ghi nhận {-1,2 tỷ đồng|âm một phẩy hai [tỷ,tỉ] đồng}, lần đầu lỗ sau năm năm.	
+sign	Mắt trái cận {-2,75|âm hai phẩy bảy mươi [lăm,nhăm]/âm hai phẩy bảy [lăm,nhăm]}, mắt phải {-3,00|âm ba phẩy không không/âm ba}.	
+sign	Giờ Việt Nam là {GMT+7|GMT cộng bảy}, nên {9h|chín giờ} sáng bên đối tác châu Âu là {4h|bốn giờ} chiều ở mình.	
+sign	Dung sai gia công là {±0,02 mm|cộng trừ không phẩy không hai mi-li-mét}.	
+sign	Tài khoản của bạn hiện có số dư {-200.000đ|âm hai trăm [nghìn,ngàn] đồng}, vui lòng nạp thêm để tiếp tục sử dụng.	
+sign	Chênh lệch bàn thắng của đội là {+15|cộng mười lăm/dương mười lăm}, tốt nhất giải.	
+sign	Cổ phiếu mua hôm nay sẽ về tài khoản ngày {T+2|T cộng hai}, thay vì {T+3|T cộng ba} như trước.	
+sign	Điện áp ra của bộ nguồn là {±12V|cộng trừ mười hai vôn} và {+5V|cộng năm vôn/dương năm vôn}.	
+sign	Độ cao điểm đo là {-0,3 m|âm không phẩy ba mét} so với mực nước biển.	
+sign	Chỉ số giá tiêu dùng tháng này {-0,15|âm không phẩy mười lăm/âm không phẩy một lăm/âm không phẩy một năm} điểm phần trăm.	
+sign	Thiết bị hoạt động ổn định từ {-20℃|âm hai mươi độ [C,xê,]} đến {+60℃|cộng sáu mươi độ [C,xê,]/dương sáu mươi độ [C,xê,]}.	
+sign	Đề thi có điểm trừ, trả lời sai bị {-0,25 điểm|trừ không phẩy hai mươi [lăm,nhăm] điểm/âm không phẩy hai mươi [lăm,nhăm] điểm}.	
+sign	Mình để bù sáng {-0,7|âm không phẩy bảy} nên ảnh hơi tối, bạn chỉnh lại nhé.	
+sign	Biên độ dao động trên sàn HOSE là {±7%|cộng trừ bảy phần trăm} mỗi phiên.	
+sign	Nhiệt kế trong tủ đông báo {-22|âm hai mươi hai} độ, hình như hỏng cảm biến.	
+sign	Múi giờ của New York là {UTC-5|UTC trừ năm/UTC âm năm}, chênh với Hà Nội mười hai tiếng.	
+sign	Sổ sách cuối kỳ dư {-5.430.000đ|âm năm triệu bốn trăm ba mươi [nghìn,ngàn] đồng}, kế toán đang rà lại.	
+sign	Nhập giá trị offset {+3|cộng ba/dương ba} vào ô hiệu chỉnh rồi lưu lại.	
+sign	Lãi suất thực đã về mức {-1,8|âm một phẩy tám}, người gửi tiền đang chịu thiệt.	
+sign	Sau điều chỉnh, giá xăng {+320 đồng|cộng ba trăm hai mươi đồng/tăng ba trăm hai mươi đồng}, dầu diesel {-150 đồng|trừ một trăm năm mươi đồng/giảm một trăm năm mươi đồng}.	
+sign	Độ sâu điểm lặn là {-30 m|âm ba mươi mét}, chỉ dành cho thợ lặn có chứng chỉ.	
+sign	Nhiệt độ sôi của ni-tơ lỏng là {-196℃|âm một trăm chín mươi sáu độ [C,xê,]}.	
+ordinal	Việt Nam xếp {thứ 4|thứ tư} thế giới về xuất khẩu gạo trong năm vừa rồi.	
+ordinal	Đây là lần {thứ 21|thứ hai mươi mốt} đội bóng này vô địch quốc gia.	
+ordinal	Cuộc họp dời sang {thứ 2|thứ hai} tuần sau, vẫn phòng cũ.	
+ordinal	Em về {thứ 1|thứ nhất} vòng loại, sang chung kết lại chỉ {thứ 4|thứ tư}.	
+ordinal	Đại hội Đảng toàn quốc lần {thứ XIV|thứ mười bốn} dự kiến diễn ra đầu năm sau.	
+ordinal	Kế hoạch thu ngân sách {quý IV|quý [bốn,tư]} đã hoàn thành sớm hai tuần.	
+ordinal	{Thế kỷ XXI|thế kỷ hai mươi mốt} chứng kiến tốc độ đô thị hóa chưa từng có.	
+ordinal	Quốc hội {khóa XV|khóa mười lăm} họp kỳ cuối vào tháng mười.	
+ordinal	Theo {Điều 4|điều bốn} của quy chế, sinh viên vi phạm {khoản 1|khoản một} sẽ bị đình chỉ thi.	
+ordinal	Vận động viên về {hạng 2|hạng [hai,nhì]} ở nội dung chạy đường dài.	
+ordinal	Đây là năm {thứ 5|thứ năm} liên tiếp công ty có tên trong danh sách.	
+ordinal	Khách hàng {thứ 1.000|thứ một [nghìn,ngàn]} của cửa hàng nhận quà tặng đặc biệt.	
+ordinal	Bạn là người {thứ 24|thứ hai mươi [tư,bốn]} đăng ký, danh sách chỉ còn hai suất.	
+ordinal	Kỷ niệm lần {thứ 80|thứ tám mươi} ngày truyền thống ngành.	
+ordinal	{Chương II|chương hai} quy định về quyền và nghĩa vụ của người lao động.	
+ordinal	Mình đi {thứ 7|thứ bảy} này, {CN|chủ nhật} về.	
+ordinal	Hàng {thứ 15|thứ mười lăm} trong bảng bị lệch cột, bạn sửa giúp.	
+ordinal	Ngày {thứ 100|thứ một trăm} kể từ khi nhậm chức, ông công bố kế hoạch mới.	
+ordinal	Hội nghị Trung ương {12|mười hai} đã bế mạc sau ba ngày làm việc.	
+ordinal	Vua Louis {XIV|mười bốn} trị vì hơn bảy mươi năm.	
+ordinal	Em đạt {giải 1|giải nhất} cấp trường và {giải 3|giải ba} cấp tỉnh.	
+ordinal	Đội tuyển dừng bước ở {vòng 2|vòng hai}, kém hơn kỳ vọng.	
+ordinal	Thứ hạng của trường tụt từ {thứ 25|thứ hai mươi [lăm,nhăm]} xuống {thứ 31|thứ ba mươi mốt} toàn quốc.	
+ordinal	{Phần IV|phần [bốn,tư]} của bài thi là phần nghe, gồm bốn đoạn hội thoại.	
+ordinal	Lịch trực {T4|thứ tư} tuần này đổi cho {T6|thứ sáu}, ai có ý kiến thì báo.	
+# part 8
+date	Nghỉ lễ {30/4|ba mươi tháng tư} và {1/5|[mùng ,mồng ,]một tháng năm} kéo dài bốn ngày.	
+date	Hạn nộp hồ sơ là ngày {13/10/2026|mười ba tháng mười năm hai [nghìn,ngàn] không trăm hai mươi sáu}.	
+date	Hợp đồng ký ngày {13-10-2026|mười ba tháng mười năm hai [nghìn,ngàn] không trăm hai mươi sáu} có hiệu lực ngay.	
+date	Ngày {5/3|[mùng ,mồng ,]năm tháng ba} mình thi, nhớ nhắn động viên nhé.	
+date	Ngày {3-5|[mùng ,mồng ,]ba tháng năm} là hạn cuối đổi vé, sau đó mất phí.	
+date	Sáng {2-1|[mùng ,mồng ,]hai tháng [một,giêng]} công ty đi làm lại sau Tết dương lịch.	
+date	Giỗ Tổ Hùng Vương {10/3|mười tháng ba} âm lịch năm nay rơi vào thứ năm.	
+date	Hóa đơn ngày {13.10|mười ba tháng mười} vẫn chưa được thanh toán.	
+date	Chương trình phát sóng từ {05/01/2025|[mùng ,mồng ,]năm tháng [một,giêng] năm hai [nghìn,ngàn] không trăm hai mươi [lăm,nhăm]}.	
+date	Ngày Nhà giáo Việt Nam {20-11|hai mươi tháng mười một} năm nay trùng ngày thi giữa kỳ.	
+date	Tháng {4/2026|tư năm hai [nghìn,ngàn] không trăm hai mươi sáu} khởi công, dự kiến tháng {12/2027|mười hai năm hai [nghìn,ngàn] không trăm hai mươi bảy} bàn giao.	
+date	Em sinh ngày {29/2/2024|hai mươi chín tháng hai năm hai [nghìn,ngàn] không trăm hai mươi [tư,bốn]}, bốn năm mới có sinh nhật một lần.	
+date	Bản Tuyên ngôn Độc lập được đọc ngày {2/9/1945|[mùng ,mồng ,]hai tháng chín năm một [nghìn,ngàn] chín trăm bốn mươi [lăm,nhăm]}.	
+date	Quán nghỉ Tết từ {28 tháng Chạp|hai mươi tám tháng chạp} đến {mùng 6|mùng sáu}, mở lại {mùng 7|mùng bảy}.	
+date	Khuyến mãi áp dụng từ {01/11|[mùng ,mồng ,]một tháng mười một} đến {30/11|ba mươi tháng mười một}.	
+date	Kết quả đợt một công bố ngày {21/6|hai mươi mốt tháng sáu}, đợt hai ngày {24/6|hai mươi [tư,bốn] tháng sáu}.	
+date	Tiệc tất niên tổ chức tối {25/12|hai mươi [lăm,nhăm] tháng mười hai} tại hội trường lớn.	
+date	Sự kiện diễn ra vào Chủ nhật {1/6|[mùng ,mồng ,]một tháng sáu}, dành cho các bé dưới mười tuổi.	
+date	Bạn có ca trực đêm {31/12|ba mươi mốt tháng mười hai} nên không đi countdown được.	
+date	Ảnh chụp {4/4/2021|[mùng ,mồng ,]bốn tháng tư năm hai [nghìn,ngàn] không trăm hai mươi mốt}, giờ nhìn lại thấy khác hẳn.	
+date	Cơn bão số tám đổ bộ rạng sáng {8/10|[mùng ,mồng ,]tám tháng mười}, gió giật cấp mười hai.	
+date	Ông vào Sài Gòn từ năm {1975|một [nghìn,ngàn] chín trăm bảy mươi [lăm,nhăm]} và ở lại đến giờ.	
+date	Thập niên {90|chín mươi} nhạc Hoa lời Việt rất thịnh, nhà nào cũng có băng cát-xét.	
+date	Lịch thi: ngày {15.3.2026|mười lăm tháng ba năm hai [nghìn,ngàn] không trăm hai mươi sáu} môn Toán, ngày {16.3|mười sáu tháng ba} môn Văn.	
+date	Tết Nguyên đán {2027|hai [nghìn,ngàn] không trăm hai mươi bảy} rơi vào ngày {6/2|[mùng ,mồng ,]sáu tháng hai} dương lịch.	
+time	Cuộc gọi lúc {9h30|chín giờ [ba mươi,ba mươi phút,rưỡi]} sáng nay bị nhỡ, anh gọi lại giúp.	
+time	Ca sáng vào làm {7:45|bảy giờ bốn mươi [lăm,nhăm] (phút)}, ca chiều {13:30|mười ba giờ [ba mươi,ba mươi phút,rưỡi]}.	
+time	Xe xuất bến {21g30|hai mươi mốt giờ [ba mươi,ba mươi phút,rưỡi]}, có mặt trước mười lăm phút.	
+time	Tàu đến ga lúc {14h|mười bốn giờ}, trễ hơn dự kiến.	
+time	Sếp hẹn {9h kém 15|chín giờ kém mười lăm} ở sảnh, đừng đến muộn.	
+time	Mình chạy bộ {3h đồng hồ|ba [giờ,tiếng] đồng hồ} mà chỉ được hai mươi cây.	
+time	Giao hàng trong {24h|hai mươi [tư,bốn] [giờ,tiếng]} nội thành, ngoại thành {48h|bốn mươi tám [giờ,tiếng]}.	
+time	Đêm nay {0h|không giờ} hệ thống bảo trì, dự kiến xong trước {5h|năm giờ} sáng.	
+time	Trận đấu diễn ra lúc {20h05|hai mươi giờ [năm phút,lẻ năm,không năm]} theo giờ Việt Nam.	
+time	Ca tiêm của bé là {8:00|tám giờ} ngày mai, mang theo sổ tiêm chủng.	
+time	Em đón bé lúc {4h|bốn giờ} chiều, hôm nay tan sớm.	
+time	Webinar bắt đầu lúc {10:00 AM|mười giờ sáng} giờ Việt Nam.	
+time	Nhà hàng mở cửa đến {23h59|hai mươi ba giờ năm mươi chín (phút)}, gọi món cuối trước {23h|hai mươi ba giờ}.	
+time	Mình mất {2h30'|hai giờ ba mươi phút/hai tiếng rưỡi} mới qua được đoạn đường đó.	
+time	Chuyến {6h sáng|sáu giờ sáng} hết vé, còn chuyến {11h30 trưa|mười một giờ [ba mươi,ba mươi phút,rưỡi] trưa}.	
+time	Đặt báo thức {5:30|năm giờ [ba mươi,ba mươi phút,rưỡi]} mà {7h|bảy giờ} mới dậy, lại trễ.	
+time	Lớp yoga tối {19g|mười chín giờ} thứ ba và thứ năm hàng tuần.	
+time	Thời gian làm bài {90'|chín mươi phút}, không kể thời gian phát đề.	
+time	Đồng hồ điểm {12h|mười hai giờ} trưa, còi nhà máy hú một hồi dài.	
+time	Hẹn khám lúc {9h15|chín giờ mười lăm (phút)}, đến sớm để lấy số.	
+time	Camera ghi lại cảnh xe rời bãi lúc {17:42|mười bảy giờ bốn mươi hai (phút)}.	
+time	Ca trực của tôi kết thúc lúc {1h đêm|một giờ đêm}, sáng mai nghỉ bù.	
+time	Nhắc: {16h40'|mười sáu giờ bốn mươi (phút)} có xe đưa đón ở cổng B.	
+time	Tối qua thức tới {2h|hai giờ} sáng làm báo cáo, giờ mắt díp lại.	
+time	Chuyến bay cất cánh {22:15|hai mươi hai giờ mười lăm (phút)}, làm thủ tục trước {20h45|hai mươi giờ bốn mươi [lăm,nhăm] (phút)}.	
+range	Đơn hàng sẽ giao trong {3-5|ba [đến,tới] năm} ngày làm việc.	
+range	Làm việc {T2-T6|thứ hai [đến,tới] thứ sáu}, {8h-17h|tám giờ [đến,tới] mười bảy giờ}, nghỉ trưa một tiếng.	
+range	Nhóm tuổi {18-25|mười tám [đến,tới] hai mươi [lăm,nhăm]} chiếm đa số người dùng.	
+range	Trận derby khép lại với tỷ số {2-1|hai một}, bàn quyết định ở phút bù giờ.	
+range	Mức lương {15-20 triệu|mười lăm [đến,tới] hai mươi triệu} tùy kinh nghiệm.	
+range	Nhiệt độ hôm nay {24-32℃|hai mươi [tư,bốn] [đến,tới] ba mươi hai độ [C,xê,]}, trời nắng gián đoạn.	
+range	Đọc trước trang {12-15|mười hai [đến,tới] mười lăm} trong giáo trình để mai thảo luận.	
+range	Thuốc uống {2-3 lần|hai [đến,tới] ba lần} mỗi ngày sau ăn.	
+range	Hòa {1-1|một một/một đều} ở lượt đi, đội phải thắng lượt về.	
+range	Quán mở cửa {T2-CN|thứ hai [đến,tới] chủ nhật}, kể cả ngày lễ.	
+range	Nhiệm kỳ {2021-2026|hai [nghìn,ngàn] không trăm hai mươi mốt [đến,tới] hai [nghìn,ngàn] không trăm hai mươi sáu} sắp kết thúc.	
+range	Giá dao động {100-200k|một trăm [đến,tới] hai trăm [nghìn,ngàn]} tùy size.	
+range	Set hai, đội chủ nhà thắng sát nút {25-23|hai mươi [lăm,nhăm] hai mươi ba}.	
+range	Dự báo mưa {30-50mm|ba mươi [đến,tới] năm mươi mi-li-mét}, có nơi trên {70mm|bảy mươi mi-li-mét}.	
+range	Chờ khoảng {10–15 phút|mười [đến,tới] mười lăm phút} là có kết quả.	
+range	Đội nhà thua đậm {0-3|không ba}, huấn luyện viên xin lỗi khán giả.	
+range	Khóa học dành cho trẻ {6–12 tuổi|sáu [đến,tới] mười hai tuổi}.	
+range	Khung giờ vàng {9h30-11h|chín giờ [ba mươi,ba mươi phút,rưỡi] [đến,tới] mười một giờ} được giảm thêm.	
+range	Xe chạy {60-80 km/h|sáu mươi [đến,tới] tám mươi ki-lô-mét trên giờ} trên đoạn cao tốc này.	
+range	Nên ngủ {7-8 tiếng|bảy [đến,tới] tám tiếng} mỗi đêm.	
+range	Cách {1–2 ngày|một [đến,tới] hai ngày} tưới một lần là đủ.	
+range	Dự án cần {5-10 năm|năm [đến,tới] mười năm} mới hoàn vốn.	
+range	Quy mô lớp {20-25|hai mươi [đến,tới] hai mươi [lăm,nhăm]} học viên để đảm bảo chất lượng.	
+range	Mục tiêu tăng trưởng {6,5-7%|sáu phẩy năm [đến,tới] bảy phần trăm} cho năm tới.	
+range	Phí gửi xe {5.000-10.000đ|năm [nghìn,ngàn] [đến,tới] mười [nghìn,ngàn] đồng} tùy loại xe.	
+fraction	Đã có {2/3|hai phần ba} đại biểu biểu quyết tán thành.	
+fraction	Phân số {5/3|năm phần ba} là phân số tối giản, không rút gọn được nữa.	
+fraction	Chỉ cần {1/2 thìa|một phần hai thìa/nửa thìa} cà phê muối là vừa.	
+fraction	Bài kiểm tra em được {7/10|bảy trên mười/bảy phần mười} điểm thôi.	
+fraction	Bản đồ tỷ lệ {1/500|một trên năm trăm/một phần năm trăm} dùng cho thiết kế chi tiết.	
+fraction	Khoảng {3/4|ba phần tư/ba phần bốn} diện tích đảo là rừng nguyên sinh.	
+fraction	Có {3/5|ba phần năm} số phiếu ủng hộ phương án hai.	
+fraction	Trận đấu ở {vòng 1/8|vòng một phần tám} diễn ra tối mai.	
+fraction	Thuốc này pha loãng theo tỷ lệ {1/1.000|một phần [nghìn,ngàn]/một trên một [nghìn,ngàn]}.	
+fraction	Phải mất {1/3|một phần ba} chặng đường mới thấy trạm dừng đầu tiên.	
+fraction	Bệnh viện đã giải quyết {30/60|ba mươi trên sáu mươi} hồ sơ tồn đọng trong tuần.	
+fraction	Cứ {1/4|một phần tư/một phần bốn} số tiền để dành, phần còn lại chi tiêu.	
+fraction	Nhà bếp chiếm {1/5|một phần năm} tổng diện tích căn hộ.	
+fraction	Con số này chỉ bằng {1/10|một phần mười} so với năm ngoái.	
+fraction	Mỗi suất ăn gồm {1/2 con gà|nửa con gà/một phần hai con gà} và hai chén cơm.	
+fraction	Hơn {2/5|hai phần năm} ngân sách năm nay dành cho hạ tầng.	
+fraction	Xác suất trúng là {1/20|một phần hai mươi/một trên hai mươi}, cao hơn mình tưởng.	
+fraction	Anh ấy đạt {8/10|tám trên mười} tiêu chí nhưng vẫn bị loại.	
+fraction	Nhà máy mới chạy {1/2 công suất|một nửa công suất/nửa công suất/một phần hai công suất}.	
+fraction	Chỉ {1/100|một phần trăm/một trên một trăm} giây chậm hơn, cô đã mất huy chương vàng.	
+fraction	Mới đi được {5/8|năm phần tám} chặng, cả nhóm đã muốn bỏ cuộc.	
+fraction	Cho {¾|ba phần tư} chén đường vào nồi, đun nhỏ lửa.	
+fraction	Quỹ chỉ còn {1/6|một phần sáu} so với đầu năm.	
+fraction	Mẫu kiểm tra đạt {45/50|bốn mươi [lăm,nhăm] trên năm mươi} tiêu chí về an toàn.	
+fraction	Gần {1/2|một nửa/một phần hai} số người được hỏi cho biết sẽ đổi điện thoại trong năm nay.	
+# part 9
+currency	Combo gà rán hai miếng kèm nước giá {89.000đ|tám mươi chín [nghìn,ngàn] đồng}, áp dụng đến hết tuần.	
+currency	Phí thường niên thẻ tín dụng hạng vàng là {1.200.000 VNĐ|một triệu hai trăm [nghìn,ngàn] đồng}, miễn năm đầu.	
+currency	Ship nội thành {25k|hai mươi lăm [nghìn,ngàn]}, ngoại thành {35k|ba mươi lăm [nghìn,ngàn]} nha mọi người.	
+currency	Căn hộ hai phòng ngủ view hồ đang rao {3,2 tỷ|ba phẩy hai tỷ/ba tỷ hai/ba tỷ hai trăm triệu}, thương lượng nhẹ.	
+currency	Lương khởi điểm cho vị trí này từ {12tr|mười hai triệu} đến {15tr|mười lăm triệu}, chưa tính thưởng.	
+currency	Tiền điện tháng này nhà mình hết {1.847.500đ|một triệu tám trăm bốn mươi bảy [nghìn,ngàn] năm trăm đồng}, cao gấp đôi tháng trước.	
+currency	Học phí trọn khóa IELTS là {18.500.000 đ|mười tám triệu năm trăm [nghìn,ngàn] đồng/mười tám triệu rưỡi}, đóng làm hai đợt.	
+currency	Vé máy bay khứ hồi Hà Nội – Tokyo rẻ nhất tìm được là {480 USD|bốn trăm tám mươi đô la Mỹ/bốn trăm tám mươi đô la/bốn trăm tám mươi đô}.	
+currency	Gói cước data không giới hạn chỉ {120.000đ/tháng|một trăm hai mươi [nghìn,ngàn] đồng [một,mỗi] tháng}.	
+currency	Thanh toán thành công {₫1.590.000|một triệu năm trăm chín mươi [nghìn,ngàn] đồng} tại TIKI. Số dư khả dụng {4.236.118 VND|bốn triệu hai trăm ba mươi sáu [nghìn,ngàn] một trăm mười tám đồng}.	
+currency	Giá xăng tăng thêm {730 đồng/lít|bảy trăm ba mươi đồng [một,mỗi] lít} kể từ chiều nay.	
+currency	Dự án đường vành đai có tổng mức đầu tư {85.813 tỷ đồng|tám mươi lăm [nghìn,ngàn] tám trăm mười ba tỷ đồng}.	
+currency	Nồi chiên không dầu giảm sốc còn {1tr890|một triệu tám trăm chín mươi [nghìn,ngàn,]}, freeship toàn quốc.	
+currency	Khách hàng nạp tối thiểu {50k|năm mươi [nghìn,ngàn]} để nhận ưu đãi hoàn tiền.	
+currency	Tỷ giá hôm nay: {1 USD|một đô la Mỹ/một đô la/một đô} đổi được {25.430 VNĐ|hai mươi lăm [nghìn,ngàn] bốn trăm ba mươi đồng}.	
+currency	Chi phí xin visa Schengen khoảng {90 EUR|chín mươi ơ-rô/chín mươi euro} cho người lớn.	
+currency	Mức phạt không đội mũ bảo hiểm là {400.000 đồng|bốn trăm [nghìn,ngàn] đồng} theo quy định mới.	
+currency	Bé Bo được lì xì {500k|năm trăm [nghìn,ngàn]} mà đòi mua lego hết luôn.	
+currency	Tổng cộng: {236.000₫|hai trăm ba mươi sáu [nghìn,ngàn] đồng}. Tiền mặt: {300.000₫|ba trăm [nghìn,ngàn] đồng}. Tiền thừa: {64.000₫|sáu mươi [tư,bốn] [nghìn,ngàn] đồng}.	
+currency	Giá vàng miếng niêm yết {92,5 triệu đồng/lượng|chín mươi hai phẩy năm triệu đồng [một,mỗi] lượng/chín mươi hai triệu rưỡi [một,mỗi] lượng}.	
+currency	Tiền thuê nhà {4,5tr/tháng|bốn triệu rưỡi [một,mỗi] tháng/bốn phẩy năm triệu [một,mỗi] tháng}, điện nước tính riêng.	
+currency	Doanh nghiệp bị truy thu thuế hơn {2,3 tỉ đồng|hai phẩy ba tỉ đồng/hai tỉ ba trăm triệu đồng}.	
+currency	Phụ phí hành lý quá cước là {15 USD/kg|mười lăm đô la Mỹ [một,mỗi] ki-lô-gam/mười lăm đô la [một,mỗi] ki-lô-gam/mười lăm đô [một,mỗi] ký}.	
+currency	Mình bán lại máy ảnh giá {7tr5|bảy triệu rưỡi/bảy triệu năm trăm [nghìn,ngàn]}, fix nhẹ cho bạn nào thiện chí.	
+currency	Trị giá lô hàng theo tờ khai là {12.500 USD|mười hai [nghìn,ngàn] năm trăm đô la Mỹ/mười hai [nghìn,ngàn] năm trăm đô la}.	
+unit	Đoạn đường từ trạm thu phí vào trung tâm dài khoảng {18 km|mười tám ki-lô-mét/mười tám cây số}.	
+unit	Xe tải vẫn chạy {80 km/h|tám mươi ki-lô-mét trên giờ/tám mươi cây số trên giờ} trên đoạn cấm vượt.	
+unit	Căn hộ diện tích {68,5 m²|sáu mươi tám phẩy năm mét vuông}, hai ban công hướng đông.	
+unit	Bé sốt {38,7℃|ba mươi tám phẩy bảy độ [C,xê,]}, cho uống hạ sốt rồi theo dõi thêm.	
+unit	Cho {500 ml|năm trăm mi-li-lít} nước vào nồi, đun sôi rồi hạ lửa nhỏ.	
+unit	Pin {5.000 mAh|năm [nghìn,ngàn] mi-li-am-pe giờ} dùng thoải mái hai ngày.	
+unit	Bộ nhớ trong {256 GB|hai trăm năm mươi sáu gi-ga-bai/hai trăm năm mươi sáu ghi/hai trăm năm mươi sáu gi-ga}, không hỗ trợ thẻ nhớ.	
+unit	Nguồn điện yêu cầu {220V|hai trăm hai mươi vôn}, dùng ổ cắm ba chấu.	
+unit	Gạo thơm đóng túi {5 kg|năm ki-lô-gam/năm cân/năm ký}, giao tận nhà.	
+unit	Tốc độ mạng đo được {94,3 Mbps|chín mươi [tư,bốn] phẩy ba mê-ga-bít trên giây}, thấp hơn gói đã đăng ký.	
+unit	Thí sinh cao {1m68|một mét sáu mươi tám/một mét sáu tám}, nặng {55 kg|năm mươi lăm ki-lô-gam/năm mươi lăm cân/năm mươi lăm ký}.	
+unit	Khu công nghiệp mới có quy mô {320 ha|ba trăm hai mươi héc-ta}.	
+unit	Uống {10 mg|mười mi-li-gam} mỗi tối trước khi đi ngủ.	
+unit	Máy giặt cửa ngang {9 kg|chín ki-lô-gam/chín cân/chín ký}, động cơ inverter tiết kiệm điện.	
+unit	Lượng mưa tại Huế đạt {312 mm|ba trăm mười hai mi-li-mét} trong một ngày đêm.	
+unit	Loa có công suất {60 W|sáu mươi oát}, kết nối không dây.	
+unit	Giữ khoảng cách tối thiểu {2 m|hai mét} với người phía trước.	
+unit	Mức tiêu thụ nhiên liệu trung bình {6,8 l/100 km|sáu phẩy tám lít trên một trăm ki-lô-mét/sáu phẩy tám lít trên một trăm cây số}.	
+unit	Ống nước đường kính {27 mm|hai mươi bảy mi-li-mét/hai mươi bảy ly}, loại chịu nhiệt.	
+unit	Động cơ quay tối đa {6.500 vòng/phút|sáu [nghìn,ngàn] năm trăm vòng [một,mỗi,trên] phút}.	
+unit	Độ ồn khi hoạt động dưới {45 dB|bốn mươi lăm đề-xi-ben}, rất êm.	
+unit	Hóa đơn điện tháng rồi nhà tôi hết {286 kWh|hai trăm tám mươi sáu ki-lô-oát giờ}.	
+unit	Mua {200 g|hai trăm gam} thịt bò thăn, thái mỏng rồi ướp.	
+unit	Hồ chứa còn khoảng {1,2 tỷ m³|một phẩy hai tỷ mét khối} nước, đủ cấp cho mùa khô.	
+unit	Màn hình tần số quét {144 Hz|một trăm bốn mươi [tư,bốn] héc}, chơi game rất mượt.	
+percent	Lãi suất tiết kiệm kỳ hạn mười hai tháng tăng lên {5,6%/năm|năm phẩy sáu phần trăm [một,mỗi] năm}.	
+percent	Sale cuối năm giảm tới {70%|bảy mươi phần trăm} toàn bộ giày dép.	
+percent	GDP quý ba tăng {7,4%|bảy phẩy bốn phần trăm} so với cùng kỳ.	
+percent	Cổ phiếu VNM kết phiên {-2,15%|âm hai phẩy mười lăm phần trăm/giảm hai phẩy mười lăm phần trăm}.	
+percent	Độ ẩm không khí {85 %|tám mươi lăm phần trăm}, trời oi bức.	
+percent	Pin còn {12%|mười hai phần trăm}, nhớ sạc nhé.	
+percent	Tỷ lệ đỗ tốt nghiệp của trường đạt {99,2%|chín mươi chín phẩy hai phần trăm}.	
+percent	Thuế VAT {8%|tám phần trăm} đã bao gồm trong giá niêm yết.	
+percent	VN-Index đóng cửa {+1,08%|cộng một phẩy không tám phần trăm/tăng một phẩy không tám phần trăm}.	
+percent	Nồng độ cồn trong máu vượt {0,25‰|không phẩy hai mươi lăm phần [nghìn,ngàn]/không phẩy hai lăm phần [nghìn,ngàn]} sẽ bị xử phạt.	
+percent	Giảm {50%|năm mươi phần trăm} cho đơn đầu tiên trên app.	
+percent	Hoa hồng {0,5%|không phẩy năm phần trăm} trên mỗi giao dịch thành công.	
+percent	Tỷ lệ thất nghiệp khu vực thành thị ở mức {2,38%|hai phẩy ba mươi tám phần trăm/hai phẩy ba tám phần trăm}.	
+percent	Dự án đã hoàn thành {65%|sáu mươi lăm phần trăm} khối lượng công việc.	
+percent	Rượu có độ cồn {40%|bốn mươi phần trăm}, uống có trách nhiệm.	
+percent	Chiết khấu dành cho đại lý cấp một là {12,5%|mười hai phẩy năm phần trăm/mười hai rưỡi phần trăm}.	
+percent	Phí trả chậm {1,99%/tháng|một phẩy chín mươi chín phần trăm [một,mỗi] tháng}, tính trên dư nợ.	
+percent	Áo thun {100%|một trăm phần trăm} cotton, mặc mát không nhăn.	
+percent	Tỉ lệ cử tri đi bầu đạt {98,7%|chín mươi tám phẩy bảy phần trăm}.	
+percent	Tăng trưởng tín dụng đến cuối quý mới đạt {4,03%|bốn phẩy không ba phần trăm}.	
+percent	Nhập mã giảm {15%|mười lăm phần trăm}, tối đa {50k|năm mươi [nghìn,ngàn]} cho mỗi đơn.	
+percent	Lạm phát cả năm được kiểm soát ở mức {3,66%|ba phẩy sáu mươi sáu phần trăm}.	
+percent	Cơ hội trúng thưởng chỉ {0,01%|không phẩy không một phần trăm}, gần như bằng không.	
+percent	Thị phần của hãng giảm còn {21%|hai mươi mốt phần trăm} sau hai năm.	
+percent	Hệ thống nhận diện có độ chính xác {99,99%|chín mươi chín phẩy chín mươi chín phần trăm/chín mươi chín phẩy chín chín phần trăm}.	
+math	Bài một: {25 + 17|hai mươi lăm cộng mười bảy} bằng bao nhiêu?	
+math	Con tính nhanh {7 × 8 = 56|bảy nhân tám bằng năm mươi sáu} mà không cần nhìn bảng cửu chương.	
+math	Phép chia {81 : 9 = 9|tám mươi mốt chia chín bằng chín} là ví dụ đầu tiên trong sách.	
+math	Giải phương trình {x² - 5x + 6 = 0|[ích,x] bình phương trừ năm [ích,x] cộng sáu bằng không}.	
+math	Vì {2³ = 8|hai mũ ba bằng tám/hai lũy thừa ba bằng tám} nên đáp án đúng là B.	
+math	Ta có {√144 = 12|căn bậc hai của một trăm bốn mươi [tư,bốn] bằng mười hai/căn một trăm bốn mươi [tư,bốn] bằng mười hai}.	
+math	Điều kiện {x ≥ 0|[ích,x] lớn hơn hoặc bằng không} để căn thức có nghĩa.	
+math	Theo định lý Pythagore, {3² + 4² = 5²|ba bình phương cộng bốn bình phương bằng năm bình phương}.	
+math	Trong tính toán kỹ thuật, {π ≈ 3,14159|pi xấp xỉ ba phẩy một bốn một năm chín}.	
+math	Tổng {1/2 + 1/3 = 5/6|một phần hai cộng một phần ba bằng năm phần sáu}.	
+math	Hàm số {y = 2x + 1|y bằng hai [ích,x] cộng một} có hệ số góc dương.	
+math	Diện tích hình chữ nhật là {12 × 8 = 96|mười hai nhân tám bằng chín mươi sáu}.	
+math	Thực hiện trong ngoặc trước: {(15 + 25) : 4 = 10|mở ngoặc mười lăm cộng hai mươi lăm đóng ngoặc chia bốn bằng mười}.	
+math	Số âm xuất hiện khi {5 - 8 = -3|năm trừ tám bằng âm ba/năm trừ tám bằng trừ ba}.	
+math	Máy tính dùng lũy thừa của hai, chẳng hạn {2^10 = 1024|hai mũ mười bằng một [nghìn,ngàn] không trăm hai mươi [tư,bốn]}.	
+math	So sánh hai phân số: {3/4 > 2/3|ba phần tư lớn hơn hai phần ba}.	
+math	Nhắc lại {5! = 120|năm giai thừa bằng một trăm hai mươi}.	
+math	Học sinh cần nhớ {sin 30° = 1/2|sin ba mươi độ bằng một phần hai/sin ba mươi độ bằng một nửa}.	
+math	Bất đẳng thức Cô-si: {a + b ≥ 2√ab|a cộng b lớn hơn hoặc bằng hai căn a b}.	
+math	Theo định nghĩa, {log₂ 8 = 3|lô-ga-rít cơ số hai của tám bằng ba/lốc cơ số hai của tám bằng ba}.	
+math	Nhân hai số thập phân: {0,5 × 0,5 = 0,25|không phẩy năm nhân không phẩy năm bằng không phẩy hai mươi lăm/không phẩy năm nhân không phẩy năm bằng không phẩy hai lăm}.	
+math	Điểm trung bình được tính bằng {(8 + 9 + 10) : 3 = 9|mở ngoặc tám cộng chín cộng mười đóng ngoặc chia ba bằng chín}.	
+math	Điều kiện xác định của biểu thức là {x ≠ 2|[ích,x] khác hai}.	
+math	Biệt thức {Δ = b² - 4ac|đen-ta bằng b bình phương trừ bốn a c} quyết định số nghiệm.	
+math	Thử lại bằng phép tính {1.000 – 350 = 650|một [nghìn,ngàn] trừ ba trăm năm mươi bằng sáu trăm năm mươi}.	
+# part 10
+phone	Gọi tổng đài {1900 6868|một chín không không sáu tám sáu tám} để được hỗ trợ.	
+phone	Liên hệ anh Tuấn {0987.654.321|không chín tám bảy sáu năm bốn ba hai một} để xem phòng.	
+phone	Hotline đặt bàn: {024 3936 2451|không hai bốn ba chín ba sáu hai bốn năm một}.	
+phone	Số liên lạc từ nước ngoài: {+84 905 123 456|cộng tám [tư,bốn] chín không năm một hai ba bốn năm sáu}.	
+phone	Khi phát hiện cháy, hãy gọi ngay {114|một một bốn}.	
+phone	Shop giao hàng tận nơi, ib hoặc alo {0335 221 889|không ba ba năm hai hai một tám tám chín}.	
+phone	Gọi {(028) 3822 1234|không hai tám ba tám hai hai một hai ba bốn}, nhấn số máy lẻ {203|hai không ba} để gặp phòng kế toán.	
+phone	Tổng đài chăm sóc khách hàng miễn cước {1800 1091|một tám không không một không chín một}.	
+phone	Zalo mình {0912345678|không chín một hai ba bốn năm sáu bảy tám}, nhắn trước rồi hãy gọi nha.	
+phone	Số cấp cứu {115|một một năm} trực suốt ngày đêm.	
+phone	Phòng khám nhận lịch hẹn qua số {0292 3838 999|không hai chín hai ba tám ba tám chín chín chín}.	
+phone	Đường dây nóng của Sở Y tế: {0966 123 999|không chín sáu sáu một hai ba chín chín chín}.	
+phone	Hồ sơ có thể gửi qua fax {024 3826 7890|không hai bốn ba tám hai sáu bảy tám chín không}.	
+phone	SĐT người nhận {0343-567-890|không ba bốn ba năm sáu bảy tám chín không} không liên lạc được, shipper đã hoàn hàng.	
+phone	Soạn tin theo cú pháp rồi gửi tới đầu số {8085|tám không tám năm}.	
+phone	Đặt taxi nhanh qua số {024 38 56 56 56|không hai bốn ba tám năm sáu năm sáu năm sáu}.	
+phone	Số của chị ấy đổi thành {0778 001 002|không bảy bảy tám không không một không không hai} rồi nhé.	
+phone	Vui lòng gọi {+84 24 3734 2000|cộng tám [tư,bốn] hai bốn ba bảy ba bốn hai không không không} trong giờ hành chính.	
+phone	Gọi {113|một một ba} nếu thấy có dấu hiệu bất thường quanh khu nhà.	
+phone	Giao hàng vui lòng gọi {0567 89 89 89|không năm sáu bảy tám chín tám chín tám chín}, đừng bấm chuông.	
+phone	Đăng ký khóa học qua hotline {0888 500 600|không tám tám tám năm không không sáu không không}.	
+phone	Tổng đài {19001234|một chín không không một hai ba bốn} thu phí {1.000đ/phút|một [nghìn,ngàn] đồng [một,mỗi] phút}.	
+phone	Tel: {+84-28-3910-1234|cộng tám [tư,bốn] hai tám ba chín một không một hai ba bốn}.	
+phone	Bạn có thể nhắn WhatsApp qua số {+1 (415) 555-0123|cộng một bốn một năm năm năm năm không một hai ba}.	
+phone	Chúng tôi đã gọi số {0908 123 456|không chín không tám một hai ba bốn năm sáu} ba lần nhưng không ai bắt máy.	
+code	Xe khách chạy theo {QL1A|quốc lộ một A/QL một A} nên hay kẹt ở đoạn qua thị trấn.	
+code	Văn phòng khoa ở {P.308|phòng ba không tám/P ba không tám}, tầng ba nhà điều hành.	
+code	Chuyến bay {VN215|VN hai một năm} dự kiến cất cánh muộn bốn mươi phút.	
+code	Biển số xe gây tai nạn là {30A-123.45|[ba mươi,ba không] A một hai ba [chấm ,]bốn [lăm,năm]}.	
+code	Mã số thuế của công ty: {0301234567|không ba không một hai ba bốn năm sáu bảy}.	
+code	Chuyển khoản vào số tài khoản {19035678901234|một chín không ba năm sáu bảy tám chín không một hai ba bốn} tại ngân hàng.	
+code	Căn cước công dân số {079203012345|không bảy chín hai không ba không một hai ba bốn năm} được cấp lại do bị mất.	
+code	Tàu {SE1|SE một} xuất phát từ ga Hà Nội, đến Sài Gòn sáng ngày kia.	
+code	Tuyến buýt {08|[không ,]tám} đi qua cổng trường rồi vòng ra bến xe.	
+code	Lớp {10A3|mười A ba} đạt giải nhất hội thi văn nghệ.	
+code	Ghế {12A|mười hai A} gần cửa sổ, hành khách yêu cầu đổi sang lối đi.	
+code	Hành khách khởi hành từ cổng {B7|B bảy}, vui lòng có mặt trước giờ bay.	
+code	Căn hộ {A12.05|A mười hai chấm không năm/A mười hai không năm} đã có người đặt cọc.	
+code	Mã bưu chính của quận là {700000|bảy không không không không không}.	
+code	Nghị định {15/2020/NĐ-CP|mười lăm [trên ,năm ,]hai [nghìn,ngàn] không trăm hai mươi NĐ CP} quy định về quản lý nhà chung cư.	
+code	Mã sinh viên {20215134|hai không hai một năm một ba bốn} dùng để đăng nhập cổng thông tin.	
+code	Rẽ phải vào {ĐT 743|đường tỉnh bảy bốn ba/đường tỉnh bảy trăm bốn mươi ba/ĐT bảy bốn ba} rồi đi thẳng.	
+code	Đồ gửi ở tủ số {B-14|B mười bốn}, chìa khóa nhận tại quầy.	
+code	Mã vạch trên bao bì là {8934673012345|tám chín ba bốn sáu bảy ba không một hai ba bốn năm}.	
+code	Số hộ chiếu {C1234567|C một hai ba bốn năm sáu bảy} sắp hết hạn, cần đổi sớm.	
+code	Mã hồ sơ {HS-2026-00417|HS hai không hai sáu không không bốn một bảy} đang chờ bổ sung giấy tờ.	
+code	Phòng thi số {0042|không không bốn hai}, số báo danh {01012345|không một không một hai ba bốn năm}.	
+code	Mã vùng điện thoại cố định của Hà Nội là {024|không hai bốn}.	
+code	Nhà ở hẻm {351/12|[ba trăm năm mươi mốt,ba năm một] [xuyệt,xẹt,trên] mười hai} đường Lê Văn Sỹ.	
+code	Sinh viên khóa {K45|K bốn mươi lăm/K bốn lăm} sẽ tốt nghiệp vào tháng sau.	
+alnum	Mạng {5G|năm [G,gờ,giê]} đã phủ sóng toàn thành phố.	
+alnum	Tivi {4K|bốn [K,ca]} đang giảm giá mạnh dịp cuối năm.	
+alnum	Dịch cúm {H5N1|H năm N một} tái bùng phát trên đàn gia cầm.	
+alnum	In hai mặt trên giấy {A4|A bốn} để tiết kiệm.	
+alnum	Phim {3D|ba [D,đê]} suất tối nay đã cháy vé.	
+alnum	Xăng {RON95|RON chín mươi lăm/RON chín lăm} và {E5|E năm} đồng loạt tăng giá.	
+alnum	Cổng {USB 3.0|USB ba chấm không} cho tốc độ chép dữ liệu nhanh hơn.	
+alnum	Máy bay {A321|A ba hai một} được bố trí ba hàng ghế mỗi bên.	
+alnum	Người ăn chay dễ thiếu vitamin {B12|B mười hai}.	
+alnum	Nhà máy đạt chứng nhận {ISO 9001|ISO chín [nghìn,ngàn] không trăm [linh,lẻ] một/ISO chín không không một}.	
+alnum	Chip {M3|M ba} mới mạnh hơn hẳn đời trước.	
+alnum	Sau đại dịch {Covid-19|cô-vít mười chín/covid mười chín}, thói quen mua sắm thay đổi nhiều.	
+alnum	Cửa hàng mở cửa cả {T7|thứ bảy} và {CN|chủ nhật}.	
+alnum	Vé xem chặng đua {F1|[F,ép] một} đã bán hết từ tháng trước.	
+alnum	Xe bán tải dẫn động {4x4|bốn nhân bốn} leo dốc rất khỏe.	
+alnum	Chuyển file sang {MP3|MP ba} để nghe trên máy cũ.	
+alnum	Bản in khổ {A0|A không} phải đặt ở tiệm ngoài.	
+alnum	Hội nghị {G7|G bảy} năm nay bàn về an ninh năng lượng.	
+alnum	Bộ vi xử lý {i7|i bảy} thế hệ {13|mười ba} vẫn đủ dùng cho đồ họa.	
+alnum	Nhấn {F5|F năm} để tải lại trang nếu không thấy kết quả.	
+alnum	Mẫu tiêm kích {Su-30|Su ba mươi/Su ba không} bay biểu diễn tại triển lãm.	
+alnum	Chương trình phát trên kênh {VTV3|VTV ba} lúc tối.	
+alnum	Đội tuyển {U23|U hai [mươi ,]ba} tập trung chuẩn bị cho giải châu Á.	
+alnum	Kem chống nắng {SPF 50+|SPF năm mươi cộng} phù hợp đi biển.	
+alnum	Đeo khẩu trang {N95|N chín mươi lăm/N chín lăm} khi vào khu cách ly.	
+electronic	Đơn hàng {#DH2310887|[thăng ,]DH hai ba một không tám tám bảy} đã được giao cho đơn vị vận chuyển.	
+electronic	Mã OTP của bạn là {482913|bốn tám hai chín một ba}, hiệu lực trong hai phút.	
+electronic	Mọi thắc mắc gửi về {info@abc.vn|info [a còng,a móc] abc chấm vn}.	
+electronic	Chi tiết xem tại {abc.vn/sale|abc chấm vn [gạch chéo,xuyệt,xẹt] sale}.	
+electronic	Cập nhật lên {iOS 17.4|iOS mười bảy chấm bốn} để sửa lỗi hao pin.	
+electronic	Ứng dụng phiên bản {v2.3.1|[vê ,]hai chấm ba chấm một} đã khắc phục lỗi đăng nhập.	
+electronic	Máy giặt model {WW90T|WW [chín mươi,chín không] T} còn bảo hành đến năm sau.	
+electronic	Galaxy {S24|S hai mươi [tư,bốn]/S hai [tư,bốn]} Ultra bản dung lượng lớn đang về hàng.	
+electronic	Mã vận đơn {VNP0123456789|VNP không một hai ba bốn năm sáu bảy tám chín} đang ở kho trung chuyển.	
+electronic	Nhập mã giảm giá {FREESHIP50|FREESHIP năm mươi/FREESHIP năm không} ở bước thanh toán.	
+electronic	Mã đặt chỗ của quý khách là {X7G4LM|X bảy G bốn L M}.	
+electronic	Máy chạy {Windows 11|Windows mười một}, bản dựng {22631|hai hai sáu ba một}.	
+electronic	Firmware {1.0.8|một chấm không chấm tám} thêm tính năng tiết kiệm pin.	
+electronic	Truy cập địa chỉ {192.168.1.1|một chín hai chấm một sáu tám chấm một chấm một} để vào trang quản trị router.	
+electronic	Số serial của máy là {SN-20A4567|SN hai không A bốn năm sáu bảy}.	
+electronic	Mã đơn {ORD-20261013-0042|ORD hai không hai sáu một không một ba không không bốn hai} đã hủy theo yêu cầu.	
+electronic	Laptop ThinkPad {X1|X một} Carbon Gen {11|mười một} nhẹ chưa tới một ký.	
+electronic	Số hóa đơn {HD0001234|HD không không không một hai ba bốn} đã được xuất điện tử.	
+electronic	Router {AX1800|AX một [nghìn,ngàn] tám trăm/AX một tám không không} phủ sóng tốt cho nhà ba tầng.	
+electronic	Màn hình máy giặt báo mã lỗi {E04|E không bốn}, kiểm tra ống xả.	
+electronic	Trang báo lỗi {404|bốn không bốn}, liên kết có thể đã bị xóa.	
+electronic	Mã kích hoạt {XK9P-4H2M|X K chín P bốn H hai M} chỉ dùng được một lần.	
+electronic	Đường dẫn đăng ký: {https://abc.vn/2026|[hát tê tê pê ét hai chấm gạch chéo gạch chéo ,]abc chấm vn [gạch chéo,xuyệt,xẹt] hai không hai sáu}.	
+electronic	Email công ty có dạng {ten.ho@congty.com.vn|ten chấm ho [a còng,a móc] congty chấm com chấm vn}.	
+electronic	Mã bảo hành {BH-2025-7788|BH hai không hai năm bảy bảy tám tám} tra cứu được trên app.	
