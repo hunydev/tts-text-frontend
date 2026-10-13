@@ -2,6 +2,14 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Vietnamese (vi-VN) phase 2, fixing the failure types of held-out v1:
+  - Dates: date ranges and dash dates.
+  - Notations: 1m78, P./Q. (phòng, phường, quận), CN, IP addresses, long codes.
+  - Amounts: scale words, trên with a unit, unit/unit, mmHg and decree numbers.
+  - Segmenter: a cut decision classifies a number from its start (85,5 triệu stays whole).
+  - Results: held-out v2 (257 sentences, opened after the code freeze) scores 97.1% of spans,
+    against 93.2% for v1 at the phase 1 freeze. Contract vi_pack2_v75 (26). Other languages are
+    unchanged.
 - Vietnamese (vi-VN) phase 1, in development (docs/vietnamese-pack.ko.md). Readings are northern
   standard.
   - Coverage: numbers (nghìn, linh, mốt, lăm; the dot groups thousands, the comma is the

@@ -412,17 +412,17 @@
         },
         {
           "area": "번호·코드",
-          "level": "partial",
-          "note": "전화·1900·mã 뒤 한 자리씩; 단서 없는 긴 코드, IP 주소는 아직"
+          "level": "full",
+          "note": "전화·1900·mã 뒤·7자리 이상 코드 한 자리씩, IP 주소(chấm)"
         },
         {
           "area": "날짜 범위·단위 축약",
-          "level": "partial",
-          "note": "20-25/11, 1m78, P.308, CN은 아직"
+          "level": "full",
+          "note": "20-25/11, 30/4-1/5, lễ 30-4, 1m78, P.308 phòng, Q.10 quận, CN chủ nhật"
         }
       ],
       "gaps": [
-        "held-out v1(240문장, 코드 고정 뒤): 93.2%. 남은 유형: 날짜 범위, 단서 없는 하이픈 날짜, 1m78, P.308, CN, 긴 코드, IP, mmHg (docs/vietnamese-pack.ko.md)",
+        "held-out v2(257문장, 2단계 코드 고정 뒤): 97.1% (1단계 held-out v1 93.2%). 남은 유형: mã(종목) 오인, 1m05, en dash 음수, 35 tr, nm, 4.0, đồng/tháng의 một·mỗi (docs/vietnamese-pack.ko.md)",
         "평가셋은 Claude 하위 에이전트 작성·Claude 검수·OpenAI 교차 확인; 사람 원어민 검수와 VoxCPM2 청취 비교 전"
       ],
       "docs": [
