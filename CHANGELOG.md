@@ -35,6 +35,21 @@
     vi 90.5 / 90.1. No dev span lost. Contract user_eval2_v82 (27).
   - English benchmark: one sentence each in speech and text now differs from its reference
     (ZIP code 26278 and PIN 503165 read digit by digit, the owner's reading).
+- User eval phase 3 (dates, sound changes, signs, Vietnamese forms, 2026-10-14):
+  - Korean: '25.11.3 and 26.12.24 dates, 1/4분기 일 사분기, 큰술/작은술 in native numbers, and
+    101번째 백한 번째 (a last digit 1-9 native; 176번째 stays 백칠십육 번째).
+  - English: 6'2" six foot two, a 65" TV sixty five inch, 1:10 one to ten after a ratio word,
+    4 x 8 ft four by eight feet, Flight UA 2314 u a twenty three fourteen, Room 1408 fourteen oh
+    eight (speech).
+  - Japanese: はってん, じゅってん before a decimal point, じゅっ before キロ units, 銭.
+  - Chinese: an amount with a plus sign reads 正 (+0.15% 正百分之零点一五), 2站 两站.
+  - Vietnamese: ℃ độ xê, CN chủ nhật after vào, T4 thứ tư, 7g sáng giờ, 48h giờ, a display's 4K
+    bốn K, 4x100m and VX-2026-031 in longer sentences.
+  - The ja scorer now reads a long-vowel mark as hiragana writes it (ジョー = じょう); all phases
+    were rescored.
+  - Span accuracy, dev / test: ko 92.3 / 90.4, en 91.5 / 87.9, ja 92.3 / 89.1, zh 95.4 / 95.8,
+    vi 92.9 / 90.6. No dev span lost. Contract user_eval3_v83 (19). Other gates unchanged, Korean
+    quick +7 reference matches.
 - Vietnamese (vi-VN) is in production (project-owner decision, 2026-10-13).
   - TTS -> STT comparison: OpenAI, all 257 held-out v6 sentences. 63.8% were read right from the
     raw text and 93.8% from our output.

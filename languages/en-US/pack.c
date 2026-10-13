@@ -1376,6 +1376,166 @@ static size_t fraction_idiom(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     return tokens_until(in, end);
 }
 
+/* ---- owner evaluation sets, phase 3 (2026-10-14) ---- */
+static size_t owner_finish(const ttf_pack_input_t *in, ttf_semantic_t *out, size_t end,
+                           ttf_semantic_type_t type, const char *unit, const char *value, const char *rule) {
+    size_t i;
+    if (strlen(value) >= sizeof(out->value))
+        return 0;
+    out->type = type;
+    out->input_end = end;
+    out->layer = TTF_LAYER_COMMON;
+    (void)snprintf(out->value, sizeof(out->value), "%s", value);
+    (void)snprintf(out->unit, sizeof(out->unit), "%s", unit);
+    (void)snprintf(out->rule, sizeof(out->rule), "%s", rule);
+    for (i = in->index; i < in->token_count && in->tokens[i].begin < end; ++i)
+        ;
+    return i - in->index;
+}
+static int ascii_digit_char(char c) {
+    return c >= '0' && c <= '9';
+}
+static int ascii_letter_char(char c) {
+    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+}
+/* The lowercase word that ends at p (spaces skipped) is one of the |-separated words. */
+static int word_before(const char *t, size_t p, const char *words) {
+    size_t q = p, w;
+    char key[24];
+    const char *s;
+    while (q && t[q - 1] == ' ')
+        --q;
+    for (w = q; w && ascii_letter_char(t[w - 1]); --w)
+        ;
+    if (w == q || q - w >= sizeof(key))
+        return 0;
+    for (size_t k = 0; k < q - w; ++k)
+        key[k] = (char)(t[w + k] >= 'A' && t[w + k] <= 'Z' ? t[w + k] - 'A' + 'a' : t[w + k]);
+    key[q - w] = 0;
+    for (s = words; *s;) {
+        size_t len = strcspn(s, "|");
+        if (len == q - w && !strncmp(s, key, len))
+            return 1;
+        s += len + (s[len] == '|');
+    }
+    return 0;
+}
+static int strstr_before(const char *t, size_t p, const char *phrase) {
+    size_t q = p, k = strlen(phrase);
+    while (q && t[q - 1] == ' ')
+        --q;
+    return q >= k && !strncmp(t + q - k, phrase, k);
+}
+static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
+    const char *t = in->text;
+    size_t n = in->length, p = in->tokens[in->index].begin, q, r;
+    char v[48];
+    if (p >= n || (p && (ascii_digit_char(t[p - 1]) || t[p - 1] == '.' || t[p - 1] == '$')))
+        return 0;
+    /* English lines only: no Hangul, kana, hanzi or Vietnamese letters on the line */
+    for (q = p; q && t[q - 1] != '\n'; --q)
+        if ((unsigned char)t[q - 1] >= 0xe0)
+            return 0;
+    for (q = p; q < n && t[q] != '\n'; ++q)
+        if ((unsigned char)t[q] >= 0xe0)
+            return 0;
+    if (ascii_digit_char(t[p])) {
+        for (q = p; q < n && ascii_digit_char(t[q]); ++q)
+            ;
+        /* 6'2" six foot two, 5'11" */
+        if (q - p == 1 && q + 2 < n && t[q] == '\'' && ascii_digit_char(t[q + 1])) {
+            for (r = q + 1; r < n && ascii_digit_char(t[r]) && r - q <= 2; ++r)
+                ;
+            if (r < n && t[r] == '"' && r - q - 1 <= 2) {
+                (void)snprintf(v, sizeof(v), "%.*s|%.*s", (int)(q - p), t + p, (int)(r - q - 1), t + q + 1);
+                return owner_finish(in, out, r + 1, TTF_SEM_SYMBOL, "@feet-inches", v, "en.feet-inches");
+            }
+        }
+        /* a 65" TV sixty five inch: inches before a word */
+        if (q - p <= 3 && q + 2 < n && t[q] == '"' && t[q + 1] == ' ' && ascii_letter_char(t[q + 2])) {
+            size_t k, quotes = 0;
+            /* "I have 5" and left: a closing quote, not inches */
+            for (k = p; k && t[k - 1] != '\n'; --k)
+                quotes += t[k - 1] == '"';
+            if (quotes % 2)
+                return 0;
+            (void)snprintf(v, sizeof(v), "%.*s", (int)(q - p), t + p);
+            return owner_finish(in, out, q + 1, TTF_SEM_SYMBOL, "@inch", v, "en.inch");
+        }
+        /* dilute 1:10 one to ten, a ratio of 3:1 */
+        if (q + 1 < n && t[q] == ':' && ascii_digit_char(t[q + 1]) &&
+            (word_before(t, p, "dilute|diluted|dilution|ratio|mix|mixed|scale|odds|concentrate|stock") ||
+             (word_before(t, p, "of") && strstr_before(t, p, "ratio of")))) {
+            for (r = q + 1; r < n && (ascii_digit_char(t[r]) || (t[r] == ',' && r + 1 < n && ascii_digit_char(t[r + 1])));
+                 ++r)
+                ;
+            if (!(r < n && (ascii_digit_char(t[r]) || t[r] == ':')) && r - p < sizeof(v)) {
+                size_t k, used = 0;
+                for (k = p; k < r; ++k)
+                    if (t[k] != ',')
+                        v[used++] = t[k] == ':' ? '|' : t[k];
+                v[used] = 0;
+                return owner_finish(in, out, r, TTF_SEM_SYMBOL, "@ratio", v, "en.ratio");
+            }
+        }
+        /* Room 1408 fourteen oh eight, Gate 214 two fourteen */
+        if (q - p >= 3 && q - p <= 4 && t[p] != '0' &&
+            in->engine->frontend_options.output_mode == TTF_OUTPUT_SPEECH &&
+            word_before(t, p, "room|suite|gate|flight|train|bus|platform|apartment|apt") &&
+            !(q < n && (ascii_letter_char(t[q]) || ascii_digit_char(t[q]) || t[q] == '.' || t[q] == ',' ||
+                        t[q] == '-' || t[q] == '/'))) {
+            (void)snprintf(v, sizeof(v), "%.*s", (int)(q - p), t + p);
+            return owner_finish(in, out, q, TTF_SEM_ALNUM_TERM, "", v, "en.pair-label");
+        }
+        return 0;
+    }
+    /* Flight UA 2314: an airline code, one space and a three- or four-digit number */
+    if (t[p] >= 'A' && t[p] <= 'Z' && in->engine->frontend_options.output_mode == TTF_OUTPUT_SPEECH &&
+        word_before(t, p, "flight|flights")) {
+        static const char *const stop[] = {"AM", "PM", "AD", "BC", "CE", "BCE", "US", "UK", "TV", "OK",
+                                           "ID", "IT", "NO", "ON", "IN", "AT", "OF", "TO", "BY", "IS",
+                                           "AS", "OR", "AN", "IF", "SO", "UP", "WE", "MY", "HE", "BE",
+                                           "DO", "GO", "ME", "FY", "CO", "PH", "CD", "DVD", "THE", "AND",
+                                           "FOR", "ALL", "GDP", "CEO"};
+        size_t k;
+        for (q = p; q < n && t[q] >= 'A' && t[q] <= 'Z'; ++q)
+            ;
+        if (q - p < 2 || q - p > 3 || q + 4 > n || t[q] != ' ' || !ascii_digit_char(t[q + 1]) || t[q + 1] == '0' ||
+            (p && ascii_letter_char(t[p - 1])))
+            return 0;
+        for (k = 0; k < sizeof(stop) / sizeof(*stop); ++k)
+            if (strlen(stop[k]) == q - p && !strncmp(stop[k], t + p, q - p))
+                return 0;
+        for (r = q + 1; r < n && ascii_digit_char(t[r]); ++r)
+            ;
+        if (r - q - 1 < 3 || r - q - 1 > 4 ||
+            (r < n && (ascii_letter_char(t[r]) || ascii_digit_char(t[r]) || t[r] == '.' || t[r] == ',' ||
+                       t[r] == '-' || t[r] == '/' || t[r] == ':' || t[r] == '%')))
+            return 0;
+        if (r < n && t[r] == ',' && !(r + 1 < n && t[r + 1] == ' '))
+            return 0;
+        (void)snprintf(v, sizeof(v), "%.*s", (int)(r - p), t + p);
+        return owner_finish(in, out, r, TTF_SEM_ALNUM_TERM, "", v, "en.spaced-code");
+    }
+    /* 4 x 8 ft four by eight, 2x4s two by fours: x or × between numbers outside an equation */
+    if ((t[p] == 'x' || t[p] == 'X' || !strncmp(t + p, "\xc3\x97", 2)) && p) {
+        size_t w = t[p] == 'x' || t[p] == 'X' ? 1 : 2, a = p, b = p + w, k;
+        while (a && t[a - 1] == ' ')
+            --a;
+        if (!(a && ascii_digit_char(t[a - 1])) || (p - a > 1))
+            return 0;
+        if (b < n && t[b] == ' ')
+            ++b;
+        if (!(b < n && ascii_digit_char(t[b])) || (p - a) != (b - p - w))
+            return 0;
+        for (k = b; k < n && k < b + 24 && t[k] != '\n'; ++k)
+            if (t[k] == '=' || (t[k] == ' ' && k + 1 < n && (t[k + 1] == '+' || t[k + 1] == '-')))
+                return 0;
+        return owner_finish(in, out, p + w, TTF_SEM_SYMBOL, "@by", "by", "en.by");
+    }
+    return 0;
+}
+
 static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     const ttf_token_t *t = &in->tokens[in->index];
     char key[96];
@@ -1383,6 +1543,8 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     size_t date_tokens = ttf_en_classify_identifier(in, out);
     const char *kind;
     if (date_tokens)
+        return date_tokens;
+    if ((date_tokens = owner_forms(in, out)) != 0)
         return date_tokens;
     date_tokens = ttf_en_classify_date(in, out);
     if (date_tokens)
@@ -1697,7 +1859,7 @@ static ttf_status_t spoken_alnum(const ttf_engine_t *e, const char *text, size_t
         unsigned char c = (unsigned char)text[i];
         if (c >= '0' && c <= '9')
             has_digit = 1;
-        else if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '-'))
+        else if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '-' || c == ' '))
             return ttf_buffer_append(out, text, length);
     }
     if (!has_digit)
@@ -1705,7 +1867,7 @@ static ttf_status_t spoken_alnum(const ttf_engine_t *e, const char *text, size_t
     while (pos < length) {
         size_t end = pos;
         ttf_status_t status;
-        if (text[pos] == '-') {
+        if (text[pos] == '-' || text[pos] == ' ') {
             ++pos;
             continue;
         }
@@ -1946,6 +2108,33 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             return spoken_alnum(e, surface, length, b);
         return ttf_buffer_append(b, surface, length);
     case TTF_SEM_SYMBOL:
+        if (!strcmp(s->unit, "@feet-inches") || !strcmp(s->unit, "@ratio")) {
+            /* 6'2" six foot two; 1:10 one to ten */
+            const char *bar = strchr(s->value, '|');
+            uint64_t a, c;
+            char left[24];
+            if (!bar || (size_t)(bar - s->value) >= sizeof(left))
+                return TTF_EINVAL;
+            (void)snprintf(left, sizeof(left), "%.*s", (int)(bar - s->value), s->value);
+            if (!uint64_value(left, &a) || !uint64_value(bar + 1, &c))
+                return TTF_EINVAL;
+            if ((st = card(e, a, b)) != TTF_OK || (st = space(b)) != TTF_OK)
+                return st;
+            if ((st = ttf_buffer_puts(b, !strcmp(s->unit, "@ratio") ? "to" : "foot")) != TTF_OK ||
+                (st = space(b)) != TTF_OK)
+                return st;
+            return card(e, c, b);
+        }
+        if (!strcmp(s->unit, "@inch")) {
+            uint64_t a;
+            if (!uint64_value(s->value, &a))
+                return TTF_EINVAL;
+            if ((st = card(e, a, b)) != TTF_OK || (st = space(b)) != TTF_OK)
+                return st;
+            return ttf_buffer_puts(b, "inch");
+        }
+        if (!strcmp(s->unit, "@by"))
+            return ttf_buffer_puts(b, "by");
         if (!strcmp(s->unit, "@number-sign")) {
             const char *template = ttf_resource_get(e, "number_sign", EN, "#", NULL), *p;
             ttf_status_t status;

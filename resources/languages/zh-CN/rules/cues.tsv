@@ -647,3 +647,5 @@ service_after	zh-CN	咨询	1
 service_after	zh-CN	举报	1
 service_after	zh-CN	投诉	1
 service_after	zh-CN	求助	1
+# 2站 两站 (owner sets, 2026-10-14); 排 and 班 also name a row or class (2排15座, 2班)
+liang_counter	zh-CN	站	1

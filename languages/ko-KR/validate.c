@@ -517,9 +517,9 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     }
     if (SAME(k, "ordinal_policy")) {
         *handled = 1;
-        return SAME(key, "large") && SAME(v, "sino")
+        return SAME(key, "large") && (SAME(v, "sino") || SAME(v, "mixed"))
                    ? TTF_OK
-                   : ttf_validation_error(d, "ordinal_policy supports only large=sino");
+                   : ttf_validation_error(d, "ordinal_policy supports only large=sino or mixed");
     }
     if (SAME(k, "counter_role_before") || SAME(k, "counter_role_after") ||
         SAME(k, "counter_role_tail")) {

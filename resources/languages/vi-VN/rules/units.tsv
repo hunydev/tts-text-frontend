@@ -82,3 +82,6 @@ vi_unit	vi-VN	vòng/phút	vòng một phút
 vi_unit	vi-VN	µg	mi-crô-gam
 vi_unit	vi-VN	μg	mi-crô-gam
 vi_unit	vi-VN	kN	ki-lô-niu-tơn
+# ℃ and h after a number (owner sets, 2026-10-14)
+vi_unit	vi-VN	℃	độ xê
+vi_unit	vi-VN	h	giờ

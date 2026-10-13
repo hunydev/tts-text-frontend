@@ -2,7 +2,8 @@
 ordinal_marker	ko-KR	prefix	제
 native_ordinal_suffix	ko-KR	번째	native
 ordinal_first	ko-KR	1	첫
-ordinal_policy	ko-KR	large	sino
+# 101번째 백한 번째: hundreds Sino-Korean, a last digit 1-9 native (owner sets, 2026-10-14)
+ordinal_policy	ko-KR	large	mixed
 counter_role_unit	ko-KR	번	1
 ordinal_prefix_unit	ko-KR	장	1
 ordinal_prefix_unit	ko-KR	회	1
@@ -252,3 +253,8 @@ counter	ko-KR	컵	native
 numeric_suffix	*	컵	COUNTER:컵
 classifier_priority	ko-KR	ko:route-zero	100
 classifier_priority	ko-KR	ko:clothing-size	100
+# Native counters from the owner sets (2026-10-14): 두 큰술, 한 작은술 (매 stays: 1인 1매 일매)
+counter	ko-KR	큰술	native
+counter	ko-KR	작은술	native
+numeric_suffix	*	큰술	COUNTER:큰술
+numeric_suffix	*	작은술	COUNTER:작은술

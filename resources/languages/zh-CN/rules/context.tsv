@@ -16,6 +16,7 @@ classifier_priority	zh-CN	zh.pctrange	100
 classifier_priority	zh-CN	zh.permille	100
 classifier_priority	zh-CN	zh.vulgar	100
 classifier_priority	zh-CN	zh.neg	100
+classifier_priority	zh-CN	zh.pos	100
 classifier_priority	zh-CN	zh.money	100
 classifier_priority	zh-CN	zh.math	100
 classifier_priority	zh-CN	zh.latin	100

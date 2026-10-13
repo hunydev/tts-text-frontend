@@ -144,3 +144,7 @@ vi_cue	vi-VN	clock	lúc|Lúc|từ|Từ|đến|tới|trước|sau
 vi_cue	vi-VN	deadline	hạn|Hạn
 classifier_priority	vi-VN	vi.monthyear2	100
 vi_cue	vi-VN	expiry	hiệu lực|hết hạn|HSD|hạn sử dụng|Hạn sử dụng|EXP|Exp
+# Owner evaluation sets, phase 3 (2026-10-14)
+vi_cue	vi-VN	sunday	vào|Vào|đến|tới|hết|hoặc|ngày|Ngày
+vi_cue	vi-VN	sunday_after	về|tuần|này|tới
+vi_cue	vi-VN	resolution	màn hình|Màn hình|tivi|Tivi|TV|camera|Camera|phân giải|video|Video|quay|màn

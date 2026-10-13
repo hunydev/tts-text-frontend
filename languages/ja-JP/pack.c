@@ -295,6 +295,7 @@ static size_t parse_number(const ttf_engine_t *e, const char *s, size_t n, ja_nu
     return p;
 }
 
+static unsigned ending(uint64_t v);
 /* Bare number reading: いってんご, マイナスご, にせんにじゅうよん. */
 static ttf_status_t number_reading(const ttf_engine_t *e, const ja_number_t *x, ttf_buffer_t *b) {
     ttf_status_t st;
@@ -309,8 +310,10 @@ static ttf_status_t number_reading(const ttf_engine_t *e, const ja_number_t *x, 
         st = integer_reading(e, x->value, b);
     if (st != TTF_OK)
         return st;
-    /* 1.5 いってんご, 10.5 じゅってんご */
-    if (x->value && (x->value % 10 == 1 || x->value % 100 == 10) && (st = geminate(b)) != TTF_OK)
+    /* 1.5 いってんご, 8.5 はってんご, 10.5 じゅってんご, 150.8 ひゃくごじゅってんはち
+       (8 and every ten added 2026-10-14, owner sets) */
+    if (x->value && (ending(x->value) == 1 || ending(x->value) == 8 || ending(x->value) == 10) &&
+        (st = geminate(b)) != TTF_OK)
         return st;
     if ((st = word(e, b, "number", "point")) != TTF_OK)
         return st;
@@ -443,8 +446,9 @@ sound_change:
                 return put_voiced(b, reading, 0);
             return ttf_buffer_puts(b, reading);
         }
-        if (!strcmp(cls, "p10")) {
-            if (end == 10 && (st = geminate(b)) != TTF_OK)
+        /* p10: 10 じゅっパーセント; k10 also 100 (ごひゃっキロ); 1 and 8 keep いち, はち */
+        if (!strcmp(cls, "p10") || !strcmp(cls, "k10")) {
+            if ((end == 10 || (end == 100 && cls[0] == 'k')) && (st = geminate(b)) != TTF_OK)
                 return st;
             return ttf_buffer_puts(b, reading);
         }

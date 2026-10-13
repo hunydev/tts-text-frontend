@@ -531,3 +531,10 @@ per_word	en-US	week	per week
 per_word	en-US	month	per month
 per_word	en-US	quarter	per quarter
 per_word	en-US	year	per year
+# Owner evaluation sets, phase 3 (2026-10-14): 6'2", 65", 1:10 after a cue, 4 x 8, UA 2314, Room 1408
+classifier_priority	en-US	en.feet-inches	10
+classifier_priority	en-US	en.inch	10
+classifier_priority	en-US	en.ratio	10
+classifier_priority	en-US	en.by	10
+classifier_priority	en-US	en.spaced-code	10
+classifier_priority	en-US	en.pair-label	10

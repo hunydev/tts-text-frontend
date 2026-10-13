@@ -643,7 +643,7 @@ static size_t maths(const ttf_engine_t *e, const char *t, size_t n, size_t p) {
 static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     const ttf_engine_t *e = in->engine;
     const char *t = in->text;
-    size_t n = in->length, p, q, len, w, m;
+    size_t n = in->length, p, q, len, w, m, plus_end;
     char key[24], c[5];
     if (in->index >= in->token_count)
         return 0;
@@ -866,8 +866,11 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         return digits_seen ? finish(in, s, q, "latin", t + p, q - p, "") : 0;
     }
 
-    /* +86 加八六; +3价 正三价 */
-    if (t[p] == '+' && p + 1 < n && digit(t[p + 1])) {
+    /* +86 加八六; +3价 正三价 (an amount, +0.15% or +256.3, goes on to 正 below) */
+    if (t[p] == '+' && p + 1 < n && digit(t[p + 1]) &&
+        !((q = digits_end(t, n, p + 1)) < n &&
+          (t[q] == '.' || t[q] == '%' || has(t, n, q, "‰") || has(t, n, q, "亿") || has(t, n, q, "万") ||
+           unit_after(e, t, n, q, key, sizeof(key))))) {
         q = digits_end(t, n, p + 1);
         if (has(t, n, q, "价"))
             return finish(in, s, q, "valence", t + p + 1, q - p - 1, "");
@@ -887,9 +890,16 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             return finish(in, s, p + w, "to", t + p, w, "");
     }
 
-    /* -5 负五, -5℃ 零下五摄氏度, -2.3% 负百分之二点三, -5~3℃ 零下五到三摄氏度. */
-    if (t[p] == '-' || has(t, n, p, "−")) {
-        size_t a = p + (t[p] == '-' ? 1 : 3), l2, b2, uw;
+    /* -5 负五, -5℃ 零下五摄氏度, -2.3% 负百分之二点三, -5~3℃ 零下五到三摄氏度.
+       +0.15% 正百分之零点一五, +256.3 正二百五十六点三, +0.25V: an amount with a plus
+       sign reads 正 (owner sets, 2026-10-14); +86 stays a code. */
+    plus_end = t[p] == '+' && p + 1 < n && digit(t[p + 1]) ? digits_end(t, n, p + 1) : 0;
+    if (t[p] == '-' || has(t, n, p, "−") ||
+        (plus_end && plus_end < n &&
+         (t[plus_end] == '.' || t[plus_end] == '%' || has(t, n, plus_end, "‰") || has(t, n, plus_end, "亿") ||
+          has(t, n, plus_end, "万") || unit_after(e, t, n, plus_end, key, sizeof(key))))) {
+        size_t a = p + (t[p] == '-' || t[p] == '+' ? 1 : 3), l2, b2, uw;
+        const char *sign = t[p] == '+' ? "pos" : "neg";
         if (a >= n || !digit(t[a]))
             return 0;
         if (t[p] == '-' && p >= 3 && ((unsigned char)t[p - 3] & 0xf0) == 0xe0 && t[a] == '0' && a + 1 < n &&
@@ -905,32 +915,32 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             b2 = q + w;
             l2 = scan_number(t, n, b2);
             if ((uw = unit_after(e, t, n, b2 + l2, key, sizeof(key))) != 0)
-                return finish2(in, s, b2 + l2 + uw, "range", t, a, len, b2, l2, key, "neg");
+                return finish2(in, s, b2 + l2 + uw, "range", t, a, len, b2, l2, key, sign);
         }
         if (q < n && t[q] == '%')
-            return finish(in, s, q + 1, "percent", t + a, len, "neg");
+            return finish(in, s, q + 1, "percent", t + a, len, sign);
         if (has(t, n, q, "‰"))
-            return finish(in, s, q + 3, "permille", t + a, len, "neg");
+            return finish(in, s, q + 3, "permille", t + a, len, sign);
         if ((uw = unit_after(e, t, n, q, key, sizeof(key))) != 0) {
             /* -10℃~45℃ 零下十摄氏度到四十五摄氏度 */
             char u1[24];
             snprintf(u1, sizeof(u1), "-%s", key);
-            if (range_mark(t, n, q + uw, &w) && q + uw + w < n && digit(t[q + uw + w])) {
+            if (*sign == 'n' && range_mark(t, n, q + uw, &w) && q + uw + w < n && digit(t[q + uw + w])) {
                 b2 = q + uw + w;
                 l2 = scan_number(t, n, b2);
                 if ((uw = unit_after(e, t, n, b2 + l2, key, sizeof(key))) != 0)
                     return finish2(in, s, b2 + l2 + uw, "range2", t, a, len, b2, l2, key, u1);
                 uw = unit_after(e, t, n, q, key, sizeof(key));
             }
-            return finish2(in, s, q + uw, "unit", t, a, len, a, 0, key, "neg");
+            return finish2(in, s, q + uw, "unit", t, a, len, a, 0, key, sign);
         }
         {
             char spec[48];
             size_t sw = spaced_unit(e, t, n, q, spec, sizeof(spec));
             if (sw)
-                return finish2(in, s, q + sw, "unit", t, a, len, a, 0, spec, "neg");
+                return finish2(in, s, q + sw, "unit", t, a, len, a, 0, spec, sign);
         }
-        return finish(in, s, q, "neg", t + a, len, "");
+        return finish(in, s, q, sign, t + a, len, "");
     }
 
     if (!digit(t[p]))
@@ -1961,12 +1971,16 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     if (!strcmp(mode, "percent")) {
         if (!strcmp(s->secondary, "neg"))
             TRY(word(e, b, "minus"));
+        if (!strcmp(s->secondary, "pos"))
+            TRY(word(e, b, "positive"));
         TRY(word(e, b, "percent"));
         return number(e, b, v, vn, 0);
     }
     if (!strcmp(mode, "permille")) {
         if (!strcmp(s->secondary, "neg"))
             TRY(word(e, b, "minus"));
+        if (!strcmp(s->secondary, "pos"))
+            TRY(word(e, b, "positive"));
         TRY(word(e, b, "permille"));
         return number(e, b, v, vn, 0);
     }
@@ -1974,8 +1988,8 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         const char *r = res(e, "zh_vulgar", v);
         return r ? ttf_buffer_puts(b, r) : TTF_ERESOURCE;
     }
-    if (!strcmp(mode, "neg")) {
-        TRY(word(e, b, "minus"));
+    if (!strcmp(mode, "neg") || !strcmp(mode, "pos")) {
+        TRY(word(e, b, !strcmp(mode, "pos") ? "positive" : "minus"));
         return number(e, b, v, vn, 0);
     }
     if (!strcmp(mode, "money")) {
@@ -2116,6 +2130,8 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         const char *reading = res(e, "zh_unit", u);
         if (!strcmp(s->secondary, "neg"))
             TRY(minus(e, b, u));
+        if (!strcmp(s->secondary, "pos"))
+            TRY(word(e, b, "positive"));
         /* a measurement keeps 二 (二百二十伏), but 2 before a measure word is 两
            (2h 两小时) */
         if (an == 1 && a[0] == '2' && reading && res(e, "liang_counter", reading))
@@ -2409,6 +2425,8 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     if (!strcmp(mode, "range")) {
         if (!strcmp(s->secondary, "neg"))
             TRY(minus(e, b, u));
+        if (!strcmp(s->secondary, "pos"))
+            TRY(word(e, b, "positive"));
         TRY(number(e, b, a, an, 0));
         TRY(word(e, b, "range"));
         TRY(count(e, b, bp, bn, !strcmp(s->secondary, "liang")));

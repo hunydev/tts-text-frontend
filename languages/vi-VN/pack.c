@@ -255,6 +255,20 @@ static int previous_word(const char *t, size_t p, const char *words) {
     }
     return 0;
 }
+static int next_word(const char *t, size_t n, size_t p, const char *words) {
+    const char *s = words;
+    if (p >= n || t[p] != ' ')
+        return 0;
+    ++p;
+    while (*s) {
+        size_t len = strcspn(s, "|");
+        if (p + len <= n && !strncmp(t + p, s, len) &&
+            (p + len == n || t[p + len] == ' ' || t[p + len] == ',' || t[p + len] == '.'))
+            return 1;
+        s += len + (s[len] == '|');
+    }
+    return 0;
+}
 static int previous_cue(const ttf_engine_t *e, const char *t, size_t p, const char *cue) {
     const char *words = res(e, "vi_cue", cue);
     return words && previous_word(t, p, words);
@@ -636,7 +650,7 @@ static size_t math_element(const ttf_engine_t *e, const char *t, size_t n, size_
         size_t d = p + 1;
         while (d < n && digit(t[d]))
             ++d;
-        if (!latin_letter_at(t, n, d)) {
+        if ((p && digit(t[p - 1])) || !latin_letter_at(t, n, d)) {
             *kind = M_TIMES_X;
             return 1;
         }
@@ -849,7 +863,8 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         }
         if (t[p] == 'C' && p + 1 < n && t[p + 1] == 'N' && !letter_at(t, n, p + 2) &&
             !(p + 2 < n && digit(t[p + 2])) &&
-            (previous_cue(e, t, p, "daypart") || coordinated(t, p, 1)))
+            (previous_cue(e, t, p, "daypart") || coordinated(t, p, 1) || previous_cue(e, t, p, "sunday") ||
+             next_word(t, n, p + 2, res(e, "vi_cue", "sunday_after") ? res(e, "vi_cue", "sunday_after") : "")))
             return finish(in, s, p + 2, "weekday", "C|", "");
         /* P.308 phòng, P.3 phường, Q.10 quận */
         if ((t[p] == 'P' || t[p] == 'Q') && p + 2 < n && t[p + 1] == '.') {
@@ -864,7 +879,7 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             }
         }
         /* Thế kỷ XXI, quý II/2026, lần thứ XIV, vùng I */
-        if ((r = roman(t, n, p, &re)) != 0 &&
+        if ((r = roman(t, n, p, &re)) != 0 && !(re + 1 < n && t[re] == '-' && digit(t[re + 1])) &&
             (previous_cue(e, t, p, "roman") ||
              /* Quy hoạch điện VIII: I/V/X only, two letters or more, after a
                 lowercase word (CD, MC stay letters) */
@@ -960,9 +975,17 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     {
         int plain = !negative && !prefix_currency && !approx && !plus;
 
+        /* Màn hình 4K bốn K, tivi 2K: a resolution after a display word keeps its letter */
+        if (plain && p == q && de - q == 1 && de < n && t[de] == 'K' && !letter_at(t, n, de + 1) &&
+            !(de + 1 < n && digit(t[de + 1])) && cue_before(e, t, p, "resolution", 40)) {
+            snprintf(v, sizeof(v), "%.*s|K", (int)(de - q), t + q);
+            return finish(in, s, de + 1, "numalpha", v, "");
+        }
         /* lúc 22g: g without minutes is giờ after a clock cue (500g stays gam) */
         if (plain && p == q && de - q <= 2 && atoi(t + q) <= 24 && de < n && t[de] == 'g' &&
-            !letter_at(t, n, de + 1) && !(de + 1 < n && digit(t[de + 1])) && previous_cue(e, t, p, "clock")) {
+            !letter_at(t, n, de + 1) && !(de + 1 < n && digit(t[de + 1])) &&
+            (previous_cue(e, t, p, "clock") || previous_cue(e, t, p, "daypart") || previous_cue(e, t, p, "deadline") ||
+             next_word(t, n, de + 1, res(e, "vi_cue", "daypart") ? res(e, "vi_cue", "daypart") : ""))) {
             snprintf(v, sizeof(v), "%.*s::", (int)(de - q), t + q);
             return finish(in, s, de + 1, "time", v, "");
         }
@@ -1598,8 +1621,9 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         if (f0[0] == 'C')
             TRY(word(e, b, "sunday"));
         else {
+            /* T4 thứ tư (owner sets, 2026-10-14) */
             TRY(word(e, b, "weekday"));
-            TRY(digit_word(e, b, f0[0]));
+            TRY(f0[0] == '4' ? word(e, b, "ordinal4") : digit_word(e, b, f0[0]));
         }
         if (*f1) {
             TRY(word(e, b, "to"));
@@ -1607,7 +1631,7 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
                 TRY(word(e, b, "sunday"));
             else {
                 TRY(word(e, b, "weekday"));
-                TRY(digit_word(e, b, f1[0]));
+                TRY(f1[0] == '4' ? word(e, b, "ordinal4") : digit_word(e, b, f1[0]));
             }
         }
     } else if (!strcmp(mode, "version")) {

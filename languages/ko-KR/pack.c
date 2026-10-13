@@ -1139,6 +1139,12 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         return ttf_ko_speech_spelling(e, surface, length, 1, out);
     case TTF_SEM_NUMBER:
     case TTF_SEM_CARDINAL:
+        if (!strcmp(s->rule, "ko:quarter")) {
+            /* 일 사분기 */
+            TRY(cardinal(e, s->value, out));
+            TRY(ttf_buffer_puts(out, " "));
+            return cardinal(e, "4", out);
+        }
         if (!strcmp(s->rule, "ko:below-zero")) {
             if (s->secondary[0])
                 TRY(ttf_buffer_puts(out, resource(e, "quantity_prefix", "below_zero.°C", "영하 ")));
@@ -1186,8 +1192,24 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             const char *value = s->value, *first;
             const char *policy = resource(e, "ordinal_policy", "large", "sino");
             const char *reading = resource(e, "native_ordinal_suffix", s->unit, "native");
-            if (strcmp(policy, "sino") || (strcmp(reading, "native") && strcmp(reading, "sino")))
+            unsigned long large;
+            if ((strcmp(policy, "sino") && strcmp(policy, "mixed")) ||
+                (strcmp(reading, "native") && strcmp(reading, "sino")))
                 return TTF_ERESOURCE;
+            /* mixed (owner sets, 2026-10-14): 101번째 백한 번째, 203번째 이백세 번째; 176번째
+               stays 백칠십육 번째 */
+            large = strtoul(s->value, NULL, 10);
+            if (!strcmp(policy, "mixed") && !strcmp(reading, "native") && large > 100 && large % 100 &&
+                large % 100 < 10 &&
+                strlen(s->value) < 16) {
+                char hundreds[24], rest[8];
+                (void)snprintf(hundreds, sizeof(hundreds), "%lu", large - large % 100);
+                (void)snprintf(rest, sizeof(rest), "%lu", large % 100);
+                TRY(cardinal(e, hundreds, out));
+                TRY(native_number(e, rest, out));
+                TRY(ttf_buffer_puts(out, " "));
+                return ttf_buffer_puts(out, resource(e, "unit", s->unit, s->unit));
+            }
             while (*value == '0' && value[1])
                 ++value;
             first = ttf_resource_get(e, "ordinal_first", "ko-KR", value, NULL);
@@ -2541,12 +2563,73 @@ static size_t below_zero_degrees(const ttf_pack_input_t *in, ttf_semantic_t *s) 
     return i - in->index;
 }
 
+static int two_digits_at(const char *t, size_t n, size_t p, unsigned *v, size_t *end) {
+    size_t q = p;
+    *v = 0;
+    while (q < n && q - p < 3 && t[q] >= '0' && t[q] <= '9')
+        *v = *v * 10 + (unsigned)(t[q++] - '0');
+    *end = q;
+    return q > p && q - p <= 2;
+}
+
+/* '25.11.3, 26.12.24: a two-digit year, month and day joined by dots is a date
+   (owner sets, 2026-10-14); the apostrophe of a shortened year is part of it. */
+static size_t short_dotted_date(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    const char *t = in->text;
+    size_t n = in->length, begin = in->tokens[in->index].begin, p = begin, q, i;
+    unsigned year, month, day;
+    static const unsigned days[] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    if (p < n && t[p] == '\'')
+        ++p;
+    if (p >= n || t[p] < '0' || t[p] > '9' ||
+        (begin && ((t[begin - 1] >= '0' && t[begin - 1] <= '9') || t[begin - 1] == '.')))
+        return 0;
+    if (!two_digits_at(t, n, p, &year, &q) || q - p != 2 || q >= n || t[q] != '.' ||
+        !two_digits_at(t, n, q + 1, &month, &q) || q >= n || t[q] != '.' ||
+        !two_digits_at(t, n, q + 1, &day, &q))
+        return 0;
+    if (q < n && t[q] == '.' && !(q + 1 < n && t[q + 1] >= '0' && t[q + 1] <= '9'))
+        ++q;
+    if ((q < n && ((t[q] >= '0' && t[q] <= '9') || t[q] == '.' || t[q] == '%')) || !year || !month ||
+        month > 12 || !day || day > days[month - 1])
+        return 0;
+    (void)snprintf(s->value, sizeof(s->value), "%u-%u-%u", year, month, day);
+    s->unit[0] = '\0';
+    s->type = TTF_SEM_DATE;
+    s->input_end = q;
+    s->layer = TTF_LAYER_COMMON;
+    (void)snprintf(s->rule, sizeof(s->rule), "ko:short-dotted-date");
+    for (i = in->index; i < in->token_count && in->tokens[i].begin < q; ++i)
+        ;
+    return i - in->index;
+}
+
+/* 1/4분기 일 사분기: a quarter written as a fraction (owner sets, 2026-10-14). */
+static size_t quarter(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    const char *t = in->text;
+    size_t n = in->length, begin = in->tokens[in->index].begin, i;
+    if (begin + 3 + 6 > n || t[begin] < '1' || t[begin] > '4' || t[begin + 1] != '/' || t[begin + 2] != '4' ||
+        memcmp(t + begin + 3, "분기", 6) || (begin && t[begin - 1] >= '0' && t[begin - 1] <= '9'))
+        return 0;
+    s->value[0] = t[begin];
+    s->value[1] = '\0';
+    s->type = TTF_SEM_CARDINAL;
+    s->input_end = begin + 3;
+    s->layer = TTF_LAYER_COMMON;
+    (void)snprintf(s->rule, sizeof(s->rule), "ko:quarter");
+    for (i = in->index; i < in->token_count && in->tokens[i].begin < begin + 3; ++i)
+        ;
+    return i - in->index;
+}
+
 static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     const char *text = in->text;
     size_t n = in->length, begin = in->tokens[in->index].begin, p, q;
     unsigned year, month, day;
     size_t identifier = below_zero_degrees(in, s);
     if (identifier)
+        return identifier;
+    if ((identifier = short_dotted_date(in, s)) != 0 || (identifier = quarter(in, s)) != 0)
         return identifier;
     identifier = ttf_ko_classify_basement(in, s);
     if (identifier)

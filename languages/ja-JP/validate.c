@@ -54,7 +54,7 @@ static int counter_spec(const char *v) {
     cls[n] = 0;
     if (colon2 && !label(colon2 + 1))
         return 0;
-    return label(reading) && ttf_validation_enum(cls, "-|h|f|k|k3|s|s3|t|p10|w");
+    return label(reading) && ttf_validation_enum(cls, "-|h|f|k|k3|s|s3|t|p10|k10|w");
 }
 
 /* counter:value or counter:*d */

@@ -2478,6 +2478,18 @@
       },
       "category_overrides": {},
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/user_eval3_v83.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Synthetic cases authored with the fixes; new sentences, not copied from the owner's evaluation sets",
+        "reason": "Project-owner request 2026-10-14: the owner TN evaluation sets, phase 3"
+      },
+      "category_overrides": {},
+      "case_overrides": {}
     }
   ],
   "excluded": [

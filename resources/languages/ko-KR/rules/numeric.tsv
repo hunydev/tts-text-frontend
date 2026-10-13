@@ -1126,3 +1126,5 @@ score_cue	ko-KR	마쳤	1
 score_cue	ko-KR	이닝	1
 score_cue	ko-KR	전반	1
 score_cue	ko-KR	후반	1
+classifier_priority	ko-KR	ko:short-dotted-date	10
+classifier_priority	ko-KR	ko:quarter	10
