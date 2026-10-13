@@ -83,7 +83,7 @@ range	Thời gian giao hàng dự kiến từ {3-5|ba [đến,tới] năm} ngày
 range	Lớp học vẽ cuối tuần dành cho trẻ từ {6–10|sáu [đến,tới] mười} tuổi.
 range	Mỗi buổi tập nên kéo dài {30 - 45|ba mươi [đến,tới] bốn mươi [lăm,nhăm]} phút, xen kẽ nghỉ ngắn.
 range	Giá thuê nhà nghỉ ở khu phố cổ dao động {500k-800k|năm trăm [nghìn,ngàn,ca] [đến,tới] tám trăm [nghìn,ngàn,ca]/năm trăm [đến,tới] tám trăm [nghìn,ngàn,ca]} một đêm.
-range	Bộ phận một cửa tạm ngừng nhận hồ sơ từ {25/12 - 2/1|hai mươi [lăm,nhăm] tháng mười hai [đến,tới] [mùng,mồng,] hai tháng một} để tổng kết cuối năm.
+range	Bộ phận một cửa tạm ngừng nhận hồ sơ từ {25/12 - 2/1|hai mươi [lăm,nhăm] tháng mười hai [đến,tới] [ngày,] [mùng,mồng,] hai tháng một} để tổng kết cuối năm.
 range	Giờ thăm bệnh nhân buổi chiều là {14h-16h|mười bốn giờ [đến,tới] mười sáu giờ}.
 range	Nhiệt độ ngày mai ở Đà Lạt dao động trong khoảng {16-22°C|mười sáu [đến,tới] hai mươi hai độ (xê)}.
 range	Học sinh từ lớp {1-5|một [đến,tới] năm} được miễn toàn bộ học phí theo chính sách mới.

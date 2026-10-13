@@ -135,3 +135,8 @@ classifier_priority	vi-VN	vi.dims	100
 # Road and route codes before a number (QL1A quốc lộ một A).
 vi_prefix	vi-VN	QL	quốc lộ
 vi_prefix	vi-VN	TL	tỉnh lộ
+vi_cue	vi-VN	code_not	mã nguồn|Mã nguồn|mã độc|Mã độc|mã hóa|Mã hóa
+vi_cue	vi-VN	id5	số|Số
+vi_cue	vi-VN	id4	cổng|Cổng|port|Port
+vi_cue	vi-VN	daywide	Ngày|ngày|Dịp|dịp|lễ|Lễ
+classifier_priority	vi-VN	vi.trd	100

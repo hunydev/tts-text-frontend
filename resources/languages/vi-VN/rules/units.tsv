@@ -79,3 +79,6 @@ vi_unit	vi-VN	ppm	phần triệu
 vi_unit	vi-VN	lux	lux
 vi_unit	vi-VN	km/s	ki-lô-mét trên giây
 vi_unit	vi-VN	vòng/phút	vòng một phút
+vi_unit	vi-VN	µg	mi-crô-gam
+vi_unit	vi-VN	μg	mi-crô-gam
+vi_unit	vi-VN	kN	ki-lô-niu-tơn

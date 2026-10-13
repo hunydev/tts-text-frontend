@@ -688,6 +688,17 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     {
         int plain = !negative && !prefix_currency && !approx;
 
+        /* 1tr5 một triệu năm trăm nghìn, 2tr25 */
+        if (plain && p == q && de - q <= 3 && de + 2 < n && t[de] == 't' && t[de + 1] == 'r' &&
+            digit(t[de + 2])) {
+            size_t z2 = de + 2;
+            while (z2 < n && digit(t[z2]))
+                ++z2;
+            if (z2 - de - 2 <= 3 && !letter_at(t, n, z2) && !(z2 < n && digit(t[z2]))) {
+                snprintf(v, sizeof(v), "%.*s|%.*s", (int)(de - q), t + q, (int)(z2 - de - 2), t + de + 2);
+                return finish(in, s, z2, "trd", v, "");
+            }
+        }
         /* 4N3Đ bốn ngày ba đêm */
         if (plain && p == q && de - q <= 2 && de + 1 < n && t[de] == 'N' && digit(t[de + 1])) {
             size_t z2 = de + 1;
@@ -733,10 +744,15 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
            a code after mã, OTP, tổng đài; a service number after gọi (114) */
         {
             int hotline = de - q == 4 && (!strncmp(t + q, "1900", 4) || !strncmp(t + q, "1800", 4));
-            int code = cue_before(e, t, p, "code", 80);
-            /* seven or more ungrouped digits not ending in 000 are a code (7480201) */
-            int long_code = de - q >= 7 && strncmp(t + de - 3, "000", 3) &&
-                            !(de + 1 < n && strchr(".,", t[de]) && digit(t[de + 1]));
+            /* mã nguồn (source code) is no code cue */
+            int code = cue_before(e, t, p, "code", 80) && !cue_before(e, t, p, "code_not", 80);
+            /* seven or more ungrouped digits not ending in 000 are a code (7480201);
+               so are five after số (mang số 240715) and four after cổng (8080) */
+            int ungrouped = !(de + 1 < n && strchr(".,", t[de]) && digit(t[de + 1])) &&
+                            strncmp(t + de - 3, "000", 3);
+            int long_code = ungrouped && (de - q >= 7 ||
+                                          (de - q >= 5 && previous_cue(e, t, p, "id5")) ||
+                                          (de - q >= 4 && previous_cue(e, t, p, "id4")));
             if (plain && (t[q] == '0' || hotline || code || long_code)) {
                 size_t digits = 0, groups = 0;
                 z = q;
@@ -834,7 +850,8 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             size_t m0 = de + 1, m1 = m0;
             unsigned d = (unsigned)atoi(t + q), m;
             /* ngày is said unless a day word, lễ or và comes before */
-            int day_said = previous_cue(e, t, p, "day") || previous_cue(e, t, p, "noday");
+            int day_said = previous_cue(e, t, p, "day") || previous_cue(e, t, p, "noday") ||
+                           (sep != '/' && cue_before(e, t, p, "daywide", 40));
             while (m1 < n && digit(t[m1]))
                 ++m1;
             m = (unsigned)atoi(t + m0);
@@ -856,7 +873,7 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                     !(m1 + 1 < n && strchr("/.,", t[m1]) && digit(t[m1 + 1])) &&
                     ((sep == '/' && (previous_cue(e, t, p, "date") || d > m || coordinated(t, p, 0))) ||
                      (sep != '/' && (previous_cue(e, t, p, "day") || previous_cue(e, t, p, "holiday") ||
-                                     coordinated(t, p, 0))))) {
+                                     coordinated(t, p, 0) || cue_before(e, t, p, "daywide", 40))))) {
                     /* 30/4-1/5: a second day-month after a dash */
                     size_t r = sep == '/' ? dash_after(t, n, m1) : 0, r1 = r, r2;
                     while (r && r1 < n && digit(t[r1]))
@@ -948,14 +965,23 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     }
 
     /* ranges: 3-5, 2020–2025, 10-20%; a higher first number is a score (2-1) */
-    if (!negative && !approx && (z = dash_after(t, n, q)) != 0 && digit(t[z]) &&
+    {
+        /* 500k-800k: the first end may carry its own scale */
+        size_t qa = suffix_at(e, t, n, q, w, sizeof(w), "s");
+        if (!qa || (qa < n && t[qa] != '-' && t[qa] != ' ' && (unsigned char)t[qa] < 0x80))
+            qa = q, w[0] = 0;
+        z = dash_after(t, n, qa);
+        if (!z)
+            w[0] = 0;
+    }
+    if (!negative && !approx && z != 0 && digit(t[z]) &&
         parse_number(t, n, z, &b) && !b.leading_zero && !a.leading_zero &&
         !(b.end < n && (t[b.end] == '-' || t[b.end] == '/' || t[b.end] == ':'))) {
         char mid[24], per[24];
         double x = atof(a.value), y = atof(b.value);
         size_t end = amount_tail(e, t, n, b.end, key, sizeof(key), mid, sizeof(mid), per, sizeof(per));
         flags(t, n, p, end, fl, sizeof(fl));
-        snprintf(sec, sizeof(sec), "%s|%s|%s|%s|%s", key, x <= y ? "to" : "pair", fl, mid, per);
+        snprintf(sec, sizeof(sec), "%s|%s|%s|%s|%s|%s", key, x <= y ? "to" : "pair", fl, mid, per, w);
         snprintf(v, sizeof(v), "%s|%s", a.value, b.value);
         return finish(in, s, end, "range", v, sec);
     }
@@ -1095,6 +1121,15 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             if (*f2)
                 TRY(put(b, f2));
         }
+    } else if (!strcmp(mode, "trd")) {
+        char rest[4] = "000";
+        field(v, 0, f0, sizeof(f0));
+        field(v, 1, f1, sizeof(f1));
+        memcpy(rest, f1, strlen(f1) < 3 ? strlen(f1) : 3);
+        TRY(integer(e, b, f0, strlen(f0)));
+        TRY(word(e, b, "million"));
+        TRY(integer(e, b, rest, 3));
+        TRY(word(e, b, "thousand"));
     } else if (!strcmp(mode, "tour")) {
         field(v, 0, f0, sizeof(f0));
         field(v, 1, f1, sizeof(f1));
@@ -1231,6 +1266,9 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         field(s->secondary, 0, f2, sizeof(f2));
         field(s->secondary, 1, f3, sizeof(f3));
         TRY(number(e, b, f0));
+        field(s->secondary, 5, f4, sizeof(f4));
+        if (*f4)
+            TRY(suffix(e, b, f4));
         if (!strcmp(f3, "to"))
             TRY(word(e, b, "to"));
         TRY(number(e, b, f1));
