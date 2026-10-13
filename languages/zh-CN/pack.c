@@ -1450,7 +1450,10 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         if (!uw)
             key[0] = 0;
         return finish2(in, s, b2 + l2 + uw, "range", t, p, len, b2, l2, key,
-                       word_after(e, "liang_counter", t, n, b2 + l2 + uw) ? "liang" : "");
+                       word_after(e, "liang_counter", t, n, b2 + l2 + uw) &&
+                               !word_after(e, "liang_not", t, n, b2 + l2 + uw)
+                           ? "liang"
+                           : "");
     }
 
     /* A unit symbol: 5kg 2L 220V 25℃ 60km/h 100m²; 20℃~30℃ with a unit on
@@ -1996,6 +1999,13 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         const char *cur = res(e, "zh_currency", s->secondary);
         if (!cur)
             return TTF_ERESOURCE;
+        /* ￥86.40 八十六点四元, ￥80.00 八十元 (owner sets, 2026-10-14) */
+        if (memchr(v, '.', vn)) {
+            while (vn && v[vn - 1] == '0')
+                --vn;
+            if (vn && v[vn - 1] == '.')
+                --vn;
+        }
         TRY(count(e, b, v, vn, 1));
         return ttf_buffer_puts(b, cur);
     }
@@ -2342,6 +2352,13 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         if (!cur || plen > length)
             return cur ? TTF_EINVAL : TTF_ERESOURCE;
         TRY(hanzi_text(e, b, surface, plen));
+        /* 合计￥86.40 八十六点四元 (owner sets, 2026-10-14) */
+        if (memchr(a, '.', an)) {
+            while (an && a[an - 1] == '0')
+                --an;
+            if (an && a[an - 1] == '.')
+                --an;
+        }
         TRY(count(e, b, a, an, 1));
         if (bn)
             TRY(ttf_buffer_append(b, bp, bn));
@@ -2367,7 +2384,9 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         return ttf_buffer_puts(b, cur);
     }
     if (!strcmp(mode, "pctrange2")) {
-        /* 0-100% 零到百分之一百 */
+        /* 0-100% 零到百分之一百; 20-30% 百分之二十到百分之三十 (owner sets, 2026-10-14) */
+        if (!(an == 1 && a[0] == '0'))
+            TRY(word(e, b, "percent"));
         TRY(number(e, b, a, an, 0));
         TRY(word(e, b, "range"));
         TRY(word(e, b, "percent"));
@@ -2427,7 +2446,7 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             TRY(minus(e, b, u));
         if (!strcmp(s->secondary, "pos"))
             TRY(word(e, b, "positive"));
-        TRY(number(e, b, a, an, 0));
+        TRY(count(e, b, a, an, !strcmp(s->secondary, "liang")));
         TRY(word(e, b, "range"));
         TRY(count(e, b, bp, bn, !strcmp(s->secondary, "liang")));
         return unit_word(e, b, u);

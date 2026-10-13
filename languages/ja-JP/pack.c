@@ -130,7 +130,7 @@ static ttf_status_t integer_reading(const ttf_engine_t *e, uint64_t v, ttf_buffe
 }
 
 typedef struct {
-    int negative, decimal;
+    int negative, decimal, positive; /* positive: a written plus sign (+1.2kg) */
     uint64_t value;         /* whole value, or the integer part of a decimal */
     char fraction[32];      /* decimal digits after the point */
     const char *scale_word; /* 1.5万: a decimal before a written scale */
@@ -188,6 +188,10 @@ static size_t parse_number(const ttf_engine_t *e, const char *s, size_t n, ja_nu
     memset(out, 0, sizeof(*out));
     if (p < n && s[p] == '-' && p + 1 < n && digit(s[p + 1])) {
         out->negative = 1;
+        ++p;
+    } else if (p < n && s[p] == '+' && p + 1 < n && digit(s[p + 1])) {
+        /* +1.2kg プラスいってんにキログラム (owner sets, 2026-10-14) */
+        out->positive = 1;
         ++p;
     }
     for (;;) {
@@ -270,7 +274,7 @@ static size_t parse_number(const ttf_engine_t *e, const char *s, size_t n, ja_nu
             total += chunk;
         break;
     }
-    if (p == (size_t)out->negative)
+    if (p == (size_t)(out->negative || out->positive))
         return 0;
     if (!out->decimal)
         out->value = total;
@@ -301,6 +305,8 @@ static ttf_status_t number_reading(const ttf_engine_t *e, const ja_number_t *x, 
     ttf_status_t st;
     size_t k;
     if (x->negative && (st = word(e, b, "number", "minus")) != TTF_OK)
+        return st;
+    if (x->positive && (st = word(e, b, "number", "plus")) != TTF_OK)
         return st;
     if (!x->decimal)
         return integer_reading(e, x->value, b);
@@ -380,7 +386,7 @@ static ttf_status_t counted(const ttf_engine_t *e, const ja_number_t *x, const c
             return st;
         return ttf_buffer_puts(b, reading);
     }
-    if (x->decimal || x->negative) {
+    if (x->decimal || x->negative || x->positive) {
         if ((st = number_reading(e, x, b)) != TTF_OK)
             return st;
         return ttf_buffer_puts(b, reading);
@@ -1211,7 +1217,8 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             return finish(in, s, q, TTF_SEM_ALNUM_TERM, "ja.alnum", "");
         }
     }
-    if (!digit(text[begin]) && !(text[begin] == '-' && begin + 1 < n && digit(text[begin + 1])))
+    if (!digit(text[begin]) &&
+        !((text[begin] == '-' || text[begin] == '+') && begin + 1 < n && digit(text[begin + 1])))
         return 0;
     /* 1Gbps, 100Mbps: a Latin unit that only the Japanese table lists (latin_unit; bit rates,
        2026-10-11). Units every language reads (GB, km) come from numeric_suffix. */
@@ -1344,7 +1351,12 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                 (r >= n || !(digit(text[r]) || alpha(text[r]) || text[r] == ':' || text[r] == '-' ||
                              text[r] == '.' || text[r] == '/')) &&
                 !counter_at(e, text + r, n - r, key, sizeof(key)) && r - begin < sizeof(s->value)) {
-                int score = cue_near(e, "score_cue", text, n, begin, r, 40);
+                int clock = text[q] == ':' && r - q - 1 == 2 &&
+                            (!strncmp(text + r, "に", 3) || !strncmp(text + r, "から", 6) ||
+                             !strncmp(text + r, "まで", 6) || !strncmp(text + r, "頃", 3) ||
+                             !strncmp(text + r, "ごろ", 6) || !strncmp(text + r, "開始", 6) ||
+                             !strncmp(text + r, "終了", 6) || !strncmp(text + r, "キックオフ", 15));
+                int score = !clock && cue_near(e, "score_cue", text, n, begin, r, 40);
                 int ratio = text[q] == ':' &&
                             (r - q - 1 == 1 || cue_near(e, "ratio_cue", text, n, begin, r, 15));
                 if (score || ratio) {

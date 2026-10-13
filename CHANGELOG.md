@@ -51,6 +51,24 @@
   - Span accuracy, dev / test: ko 92.3 / 90.4, en 91.5 / 87.9, ja 92.3 / 89.1, zh 95.4 / 95.8,
     vi 92.9 / 90.6. No dev span lost. Contract user_eval3_v83 (19). Other gates unchanged, Korean
     quick +7 reference matches.
+- User eval phase 4 (units, durations, signs and Vietnamese numbers, 2026-10-14):
+  - Bug fix: shared unit suffixes added for English (MB/s, mg/dL, tbsp ...) and six older ones
+    (degrees C, /km², kl ...) had no Korean reading, so a Korean request spelled the resource key
+    (엠비 언더스코어 피이알 ...). tests/integration/test_unit_readings.py keeps them covered.
+  - Korean: +9시간 플러스 아홉 시간, 24:00 스물네 시, durations (3:05짜리 삼 분 오 초, 기록
+    2:58:30 두 시간 오십팔 분 삼십 초), 6/6 현충일 유월 육 일, 1:25,000 일 대 이만 오천, 5Mbps.
+    Currency decimals keep their written zeros (the Korean references read 1,182.60원 천백팔십이
+    점 육영 원).
+  - English: 67¢ cents, 4.5/5 out of five, +/- plus or minus, Wed, Oct 15 Wednesday,
+    Monday–Friday Monday to Friday, Expiration: 08/2027, 4.6 in. inches.
+  - Japanese: +1.2kg プラスいってんにキログラム, 21:15に終了 a time (not a score), 1:10に希釈.
+  - Chinese: zero cents are not read (￥86.40 八十六点四元), 20-30% 百分之二十到百分之三十,
+    2-3次 两到三次, 1-2年级 一到二年级.
+  - Vietnamese: per-word after k/tr and units (150k/ngày một ngày), ±, GMT+7, SPF 50+, 8/10
+    trên mười, 4,9/5, 1/1.000, E04, scores after hòa, giải nhất, v2.3.1, AM/PM, Km 92, ĐT 743,
+    rpm, IP octets, extension/emergency/build numbers, five-group and +84 phones, Phòng P.1205.
+  - Span accuracy, dev / test: ko 93.7 / 90.7, en 92.6 / 88.2, ja 93.2 / 89.3, zh 96.2 / 96.1,
+    vi 97.4 / 94.2. No dev span lost. Contract user_eval4_v84 (23). Other gates unchanged.
 - Vietnamese (vi-VN) is in production (project-owner decision, 2026-10-13).
   - TTS -> STT comparison: OpenAI, all 257 held-out v6 sentences. 63.8% were read right from the
     raw text and 93.8% from our output.

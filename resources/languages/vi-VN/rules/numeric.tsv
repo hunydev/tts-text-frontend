@@ -130,3 +130,9 @@ vi_service	vi-VN	117	1
 vi_idiom	vi-VN	24/7	hai mươi bốn trên bảy
 classifier_priority	vi-VN	vi.math	10
 classifier_priority	vi-VN	vi.hcode	10
+# Owner evaluation sets, phase 4 (2026-10-14)
+number	vi-VN	plus_minus	cộng trừ
+number	vi-VN	morning	sáng
+number	vi-VN	afternoon	chiều
+number	vi-VN	prize1	nhất
+number	vi-VN	prize2	nhì

@@ -125,3 +125,5 @@ latin_abbreviation	ja-JP	Del	デリート
 score_cue	ja-JP	テニス	1
 score_cue	ja-JP	デュース	1
 score_cue	ja-JP	サーブ	1
+# 1:10に希釈 いちたいじゅう (owner sets, 2026-10-14)
+ratio_cue	ja-JP	希釈	1

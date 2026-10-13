@@ -106,7 +106,7 @@ vi_cue	vi-VN	daypart	sáng|Sáng|trưa|Trưa|chiều|Chiều|tối|Tối|đêm|�
 vi_cue	vi-VN	month	tháng|Tháng
 vi_cue	vi-VN	ordinal	thứ|Thứ
 vi_cue	vi-VN	roman	kỷ|Kỷ|quý|Quý|thứ|Thứ|vùng|Vùng|khóa|Khóa|khoá|Khoá|phần|Phần|chương|Chương|mục|Mục|cấp|Cấp|hạng|Hạng|khu|Khu|đợt|Đợt|kỳ|Kỳ|tập|Tập|đoạn|Đoạn|loại|Loại|nhóm|Nhóm|hội|Hội|quân|Quân|lớp|Lớp|độ|Độ
-vi_cue	vi-VN	code	mã|Mã|OTP|tổng đài|Tổng đài|hotline|Hotline|đường dây nóng|Đường dây nóng|số tài khoản|Số tài khoản|số hiệu|Số hiệu|số điện thoại|Số điện thoại|SĐT|sđt|mật khẩu|Mật khẩu|số hợp đồng|số hóa đơn|số CMND|số CCCD|PIN|số lô|Số lô|lô số|mã vận đơn|tài khoản|Tài khoản
+vi_cue	vi-VN	code	mã|Mã|OTP|tổng đài|Tổng đài|hotline|Hotline|đường dây nóng|Đường dây nóng|số tài khoản|Số tài khoản|số hiệu|Số hiệu|số điện thoại|Số điện thoại|SĐT|sđt|mật khẩu|Mật khẩu|số hợp đồng|số hóa đơn|số CMND|số CCCD|PIN|số lô|Số lô|lô số|mã vận đơn|tài khoản|Tài khoản|máy lẻ|cấp cứu|bản dựng|build
 vi_cue	vi-VN	sms	gửi tới|gửi đến|nhắn tới|nhắn đến|đầu số|Đầu số
 vi_cue	vi-VN	call	gọi|Gọi|quay số|bấm số
 vi_cue	vi-VN	version	bản|Bản
@@ -148,3 +148,15 @@ vi_cue	vi-VN	expiry	hiệu lực|hết hạn|HSD|hạn sử dụng|Hạn sử d�
 vi_cue	vi-VN	sunday	vào|Vào|đến|tới|hết|hoặc|ngày|Ngày
 vi_cue	vi-VN	sunday_after	về|tuần|này|tới
 vi_cue	vi-VN	resolution	màn hình|Màn hình|tivi|Tivi|TV|camera|Camera|phân giải|video|Video|quay|màn
+vi_cue	vi-VN	score	hòa|Hòa|thắng|Thắng|thua|Thua|số|tỷ
+vi_road	vi-VN	Km	ki-lô-mét
+vi_road	vi-VN	ĐT	đường tỉnh
+vi_road	vi-VN	QL	quốc lộ
+vi_road	vi-VN	TL	tỉnh lộ
+classifier_priority	vi-VN	vi.intl	100
+classifier_priority	vi-VN	vi.prize	100
+classifier_priority	vi-VN	vi.road	100
+classifier_priority	vi-VN	vi.offset	100
+classifier_priority	vi-VN	vi.plusminus	100
+classifier_priority	vi-VN	vi.timeam	100
+classifier_priority	vi-VN	vi.timepm	100

@@ -1426,18 +1426,25 @@ static int strstr_before(const char *t, size_t p, const char *phrase) {
         --q;
     return q >= k && !strncmp(t + q - k, phrase, k);
 }
+/* A Hangul, kana or hanzi lead byte (U+3000..U+DFFF), or a Vietnamese letter
+   (ă đ ơ ư, U+1EA0..U+1EF9) at q. */
+static int foreign_letter(const char *t, size_t n, size_t q) {
+    unsigned char c = (unsigned char)t[q], d = q + 1 < n ? (unsigned char)t[q + 1] : 0;
+    return (c >= 0xe3 && c <= 0xed) || (c == 0xe1 && (d == 0xba || d == 0xbb)) || c == 0xc4 || c == 0xc6;
+}
 static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     const char *t = in->text;
     size_t n = in->length, p = in->tokens[in->index].begin, q, r;
     char v[48];
     if (p >= n || (p && (ascii_digit_char(t[p - 1]) || t[p - 1] == '.' || t[p - 1] == '$')))
         return 0;
-    /* English lines only: no Hangul, kana, hanzi or Vietnamese letters on the line */
+    /* English lines only: no Hangul, kana, hanzi or Vietnamese letters on the line
+       (an en dash or a curly quote is fine) */
     for (q = p; q && t[q - 1] != '\n'; --q)
-        if ((unsigned char)t[q - 1] >= 0xe0)
+        if (foreign_letter(t, n, q - 1))
             return 0;
     for (q = p; q < n && t[q] != '\n'; ++q)
-        if ((unsigned char)t[q] >= 0xe0)
+        if (foreign_letter(t, n, q))
             return 0;
     if (ascii_digit_char(t[p])) {
         for (q = p; q < n && ascii_digit_char(t[q]); ++q)
@@ -1461,6 +1468,33 @@ static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
                 return 0;
             (void)snprintf(v, sizeof(v), "%.*s", (int)(q - p), t + p);
             return owner_finish(in, out, q + 1, TTF_SEM_SYMBOL, "@inch", v, "en.inch");
+        }
+        /* 4.5/5 stars four point five out of five: a decimal score over ten or less */
+        if (q + 2 < n && t[q] == '.' && ascii_digit_char(t[q + 1])) {
+            size_t d = q + 1, e2;
+            while (d < n && ascii_digit_char(t[d]))
+                ++d;
+            if (d + 1 < n && t[d] == '/' && ascii_digit_char(t[d + 1])) {
+                for (e2 = d + 1; e2 < n && ascii_digit_char(t[e2]); ++e2)
+                    ;
+                if (e2 - d - 1 <= 2 && atoi(t + d + 1) <= 10 && atoi(t + d + 1) > 0 &&
+                    !(e2 < n && (ascii_digit_char(t[e2]) || t[e2] == '/' || (t[e2] == '.' && e2 + 1 < n && ascii_digit_char(t[e2 + 1]))))) {
+                    (void)snprintf(v, sizeof(v), "%.*s|%.*s", (int)(d - p), t + p, (int)(e2 - d - 1), t + d + 1);
+                    return owner_finish(in, out, e2, TTF_SEM_SYMBOL, "@out-of", v, "en.out-of");
+                }
+            }
+        }
+        /* Expiration: 08/2027 August twenty twenty seven */
+        if (q - p <= 2 && q + 5 <= n && t[q] == '/' && ascii_digit_char(t[q + 1]) && ascii_digit_char(t[q + 2]) &&
+            ascii_digit_char(t[q + 3]) && ascii_digit_char(t[q + 4]) && !(q + 5 < n && ascii_digit_char(t[q + 5])) &&
+            atoi(t + p) >= 1 && atoi(t + p) <= 12 &&
+            (word_before(t, p, "expiration|expires|exp|expiry|valid|thru|through|until|since") ||
+             strstr_before(t, p, "Expiration:") || strstr_before(t, p, "Exp:"))) {
+            size_t used;
+            (void)snprintf(v, sizeof(v), "%.4s-%02d", t + q + 1, atoi(t + p));
+            used = owner_finish(in, out, q + 5, TTF_SEM_DATE, "year-month", v, "en.month-year");
+            (void)snprintf(out->secondary, sizeof(out->secondary), "mdy");
+            return used;
         }
         /* dilute 1:10 one to ten, a ratio of 3:1 */
         if (q + 1 < n && t[q] == ':' && ascii_digit_char(t[q + 1]) &&
@@ -1488,6 +1522,52 @@ static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
             return owner_finish(in, out, q, TTF_SEM_ALNUM_TERM, "", v, "en.pair-label");
         }
         return 0;
+    }
+    /* +/- 3 plus or minus three */
+    if (p + 3 < n && !strncmp(t + p, "+/-", 3))
+        return owner_finish(in, out, p + 3, TTF_SEM_SYMBOL, "@plus-minus", "+/-", "en.plus-minus");
+    /* Monday–Friday Monday to Friday: an en dash between weekday names */
+    if (t[p] >= 'A' && t[p] <= 'Z') {
+        static const char *const days[] = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+        size_t k, j, a2;
+        for (k = 0; k < 7; ++k) {
+            size_t l = strlen(days[k]);
+            if (p + l + 3 < n && !strncmp(t + p, days[k], l) && !strncmp(t + p + l, "\xe2\x80\x93", 3))
+                for (j = 0; j < 7; ++j) {
+                    a2 = strlen(days[j]);
+                    if (p + l + 3 + a2 <= n && !strncmp(t + p + l + 3, days[j], a2) &&
+                        !(p + l + 3 + a2 < n && ascii_letter_char(t[p + l + 3 + a2]))) {
+                        (void)snprintf(v, sizeof(v), "%s to %s", days[k], days[j]);
+                        return owner_finish(in, out, p + l + 3 + a2, TTF_SEM_SYMBOL, "@word", v, "en.weekday-range");
+                    }
+                }
+        }
+    }
+    /* Wed, Oct 15 Wednesday: a weekday abbreviation before a date */
+    if (t[p] >= 'A' && t[p] <= 'Z' && p + 4 < n) {
+        static const char *const abbr[][2] = {{"Mon", "Monday"}, {"Tue", "Tuesday"}, {"Wed", "Wednesday"},
+                                              {"Thu", "Thursday"}, {"Fri", "Friday"}, {"Sat", "Saturday"},
+                                              {"Sun", "Sunday"}};
+        static const char *const months[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul",
+                                             "Aug", "Sep", "Oct", "Nov", "Dec"};
+        size_t k, m, after;
+        for (k = 0; k < 7; ++k)
+            if (!strncmp(t + p, abbr[k][0], 3) && !ascii_letter_char(t[p + 3])) {
+                after = p + 3 + (t[p + 3] == '.');
+                if (after < n && t[after] == ',')
+                    ++after;
+                if (after >= n || t[after] != ' ')
+                    return 0;
+                ++after;
+                if (after < n && ascii_digit_char(t[after]))
+                    return owner_finish(in, out, p + 3 + (t[p + 3] == '.'), TTF_SEM_SYMBOL, "@word", abbr[k][1],
+                                        "en.weekday-abbr");
+                for (m = 0; m < 12; ++m)
+                    if (after + 3 <= n && !strncmp(t + after, months[m], 3))
+                        return owner_finish(in, out, p + 3 + (t[p + 3] == '.'), TTF_SEM_SYMBOL, "@word",
+                                            abbr[k][1], "en.weekday-abbr");
+                return 0;
+            }
     }
     /* Flight UA 2314: an airline code, one space and a three- or four-digit number */
     if (t[p] >= 'A' && t[p] <= 'Z' && in->engine->frontend_options.output_mode == TTF_OUTPUT_SPEECH &&
@@ -2135,6 +2215,23 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         }
         if (!strcmp(s->unit, "@by"))
             return ttf_buffer_puts(b, "by");
+        if (!strcmp(s->unit, "@to"))
+            return ttf_buffer_puts(b, "to");
+        if (!strcmp(s->unit, "@word"))
+            return ttf_buffer_puts(b, s->value);
+        if (!strcmp(s->unit, "@plus-minus"))
+            return ttf_buffer_puts(b, "plus or minus");
+        if (!strcmp(s->unit, "@out-of")) {
+            /* 4.5/5 four point five out of five */
+            char left[24];
+            const char *bar = strchr(s->value, '|');
+            if (!bar || (size_t)(bar - s->value) >= sizeof(left))
+                return TTF_EINVAL;
+            (void)snprintf(left, sizeof(left), "%.*s", (int)(bar - s->value), s->value);
+            if ((st = numeric(e, left, b)) != TTF_OK || (st = ttf_buffer_puts(b, " out of ")) != TTF_OK)
+                return st;
+            return numeric(e, bar + 1, b);
+        }
         if (!strcmp(s->unit, "@number-sign")) {
             const char *template = ttf_resource_get(e, "number_sign", EN, "#", NULL), *p;
             ttf_status_t status;

@@ -12,9 +12,9 @@ case, whitespace and punctuation removed. Per language:
   ja-JP  katakana = hiragana, トゥ = ツ, いっ = いち (also はっ, ろっ, じゅっ, ひゃっ) before てん/パーセント/キロ/ポイント/ページ, ー = the vowel before it (う after o, い after e, as hiragana writes them), and ー may be left out on either side (に = にー); a span that fails is also tried on
          the output's kana reading (pyopenjtalk, when installed), since kanji words stay kanji;
   zh-CN  〇 = 零, 圆 = 元, 两百/两千/两万/两亿 = 二…, 点半 = 点三十(分);
-  vi-VN  gi-ga = ghi-ga, đề-xi-ben = đê-xi-ben (spelling variants);
+  vi-VN  gi-ga = ghi-ga, đề-xi-ben = đê-xi-ben, độ C = độ xê, gạch ngang = gạch (variants);
   ko-KR  an hour in native numbers (스물세 시 = 이십삼 시), a letter and one digit in English
-         (B7 비세븐 = 비 칠), 에잇 = 에이트, and a hyphen read 다시 = 에 or nothing.
+         (B7 비세븐 = 비 칠), 에잇 = 에이트, 골뱅이 = 앳, 점 = 닷, and a hyphen read 다시 = 에 or nothing.
 These are reading policies both sides accept (docs/HANDOFF.md, policy differences kept); per-line
 widenings are in benchmark/datasets/user-tn-eval/amend.tsv.
 Scores are given for dev and test separately. Only dev misses are written out
@@ -95,10 +95,12 @@ def fold(s, lang):
         s = s.replace("〇", "零").replace("圆", "元")
         s = re.sub("两(?=[百千万亿])", "二", s)
     elif lang == "ko-KR":
-        s = s.replace("에이트", "에잇")
+        # @ 골뱅이 = 앳, . 점 = 닷 in addresses (both in use)
+        s = s.replace("에이트", "에잇").replace("골뱅이", "앳").replace("점", "닷")
     s = "".join(c for c in s if c == "ー" or not c.isspace() and unicodedata.category(c)[0] not in "PS")
     if lang == "vi-VN":
-        s = s.replace("ghiga", "giga").replace("đêxiben", "đềxiben")
+        # gi-ga = ghi-ga, đề-xi-ben = đê-xi-ben, độ C = độ xê, gạch ngang = gạch (address hyphen)
+        s = s.replace("ghiga", "giga").replace("đêxiben", "đềxiben").replace("độxê", "độc").replace("gạchngang", "gạch")
     return s
 
 

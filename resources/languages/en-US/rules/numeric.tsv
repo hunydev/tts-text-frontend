@@ -538,3 +538,8 @@ classifier_priority	en-US	en.ratio	10
 classifier_priority	en-US	en.by	10
 classifier_priority	en-US	en.spaced-code	10
 classifier_priority	en-US	en.pair-label	10
+classifier_priority	en-US	en.plus-minus	10
+classifier_priority	en-US	en.weekday-range	10
+classifier_priority	en-US	en.weekday-abbr	10
+classifier_priority	en-US	en.out-of	10
+classifier_priority	en-US	en.month-year	10

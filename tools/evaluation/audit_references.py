@@ -14,6 +14,7 @@ import re
 import sys
 
 ACTIVE_JSONL = (
+    "user_eval4_v84",
     "user_eval3_v83",
     "user_eval2_v82",
     "user_eval1_v81",

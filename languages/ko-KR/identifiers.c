@@ -1656,7 +1656,8 @@ size_t ttf_ko_classify_digit_identifier(const ttf_pack_input_t *in, ttf_semantic
             u = p + 1;
             while (u < n && t[u] >= 'a' && t[u] <= 'z')
                 ++u;
-            if (u - p >= 3 && !(u < n && alnum(t[u])) && u - b < sizeof(s->value)) {
+            /* 5Mbps 오 메가비피에스: a unit is no English numeral word */
+            if (u - p >= 3 && !(u < n && alnum(t[u])) && u - b < sizeof(s->value) && !unit_letters(in, p, u)) {
                 memcpy(s->value, t + b, u - b);
                 s->value[u - b] = '\0';
                 s->unit[0] = s->secondary[0] = '\0';

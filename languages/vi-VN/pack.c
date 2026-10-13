@@ -433,8 +433,8 @@ static size_t amount_tail(const ttf_engine_t *e, const char *t, size_t n, size_t
                 mid[0] = 0;
         }
     }
-    if ((key[0] == '%' || key[0] == 'c' || mid[0]) && end + 1 < n && t[end] == '/' &&
-        letter_at(t, n, end + 1)) {
+    if ((key[0] == '%' || key[0] == 'c' || key[0] == 's' || key[0] == 'u' || mid[0]) && end + 1 < n &&
+        t[end] == '/' && letter_at(t, n, end + 1)) {
         char unit[24];
         size_t ue = suffix_at(e, t, n, end + 1, unit, sizeof(unit), "uc");
         ++end;
@@ -832,6 +832,58 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     if (p >= n)
         return 0;
 
+    /* ±0,02 mm cộng trừ, ±7% */
+    if (!strncmp(t + p, "±", 2) && p + 2 < n && digit(t[p + 2])) {
+        parsed_t pm;
+        char tail[24], mid2[24], per2[24];
+        size_t end;
+        if (parse_number(t, n, p + 2, &pm)) {
+            end = amount_tail(e, t, n, pm.end, key, sizeof(key), mid2, sizeof(mid2), per2, sizeof(per2));
+            snprintf(tail, sizeof(tail), "%s", key);
+            snprintf(v, sizeof(v), "%s", pm.value);
+            return finish(in, s, end, "plusminus", v, tail);
+        }
+    }
+    /* GMT+7 GMT cộng bảy, UTC-5 */
+    if ((!strncmp(t + p, "GMT", 3) || !strncmp(t + p, "UTC", 3)) && p + 4 < n && (t[p + 3] == '+' || t[p + 3] == '-') &&
+        digit(t[p + 4])) {
+        size_t z2 = p + 4;
+        while (z2 < n && digit(t[z2]) && z2 - p < 7)
+            ++z2;
+        if (!letter_at(t, n, z2) && !(z2 < n && digit(t[z2]))) {
+            snprintf(v, sizeof(v), "%.3s|%c|%.*s", t + p, t[p + 3], (int)(z2 - p - 4), t + p + 4);
+            return finish(in, s, z2, "offset", v, "");
+        }
+    }
+    /* v2.3.1: a version after v (vê hai chấm ba chấm một) */
+    if (t[p] == 'v' && p + 3 < n && digit(t[p + 1]) && (!p || !letter_at(t, n, p - 1))) {
+        size_t z2 = p + 1, dots = 0;
+        while (z2 < n && (digit(t[z2]) || (t[z2] == '.' && z2 + 1 < n && digit(t[z2 + 1]))))
+            dots += t[z2++] == '.';
+        if (dots && !letter_at(t, n, z2)) {
+            snprintf(v, sizeof(v), "%.*s", (int)(z2 - p - 1), t + p + 1);
+            return finish(in, s, z2, "version", v, "");
+        }
+    }
+    /* Km 92 ki-lô-mét chín mươi hai; ĐT 743 đường tỉnh, QL 1A quốc lộ */
+    if (alpha(t[p]) || !strncmp(t + p, "Đ", 2)) {
+        size_t l2 = p;
+        char pre[8];
+        while (l2 < n && l2 - p < 6 && (alpha(t[l2]) || !strncmp(t + l2, "Đ", 2)))
+            l2 += !strncmp(t + l2, "Đ", 2) ? 2 : 1;
+        if (l2 - p < sizeof(pre) && l2 + 1 < n && t[l2] == ' ' && digit(t[l2 + 1]) && (!p || !letter_at(t, n, p - 1))) {
+            size_t d2 = l2 + 1;
+            snprintf(pre, sizeof(pre), "%.*s", (int)(l2 - p), t + p);
+            while (d2 < n && digit(t[d2]))
+                ++d2;
+            if (res(e, "vi_road", pre) && d2 - l2 - 1 <= 4 && !letter_at(t, n, d2) &&
+                !(d2 + 1 < n && (t[d2] == '.' || t[d2] == ',') && digit(t[d2 + 1]))) {
+                snprintf(v, sizeof(v), "%s|%.*s", pre, (int)(d2 - l2 - 1), t + l2 + 1);
+                return finish(in, s, d2, "road", v, "");
+            }
+        }
+    }
+
     /* 7 × 8 = 56, S = a × b, (15 + 25) : 4 = 10, 4x100m, x2 */
     if ((digit(t[p]) || alpha(t[p]) || t[p] == '(' || !strncmp(t + p, "√", 3) || !strncmp(t + p, "π", 2) ||
          !strncmp(t + p, "Δ", 2)) &&
@@ -875,7 +927,8 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                 !(d + 1 < n && strchr(".,", t[d]) && digit(t[d + 1]))) {
                 snprintf(v, sizeof(v), "%s|%.*s",
                          t[p] == 'Q' ? "district" : d - d0 >= 3 ? "room" : "ward", (int)(d - d0), t + d0);
-                return finish(in, s, d, "addr", v, "");
+                return finish(in, s, d, "addr", v,
+                              d - d0 >= 3 && t[p] == 'P' && previous_word(t, p, "Phòng|phòng") ? "named" : "");
             }
         }
         /* Thế kỷ XXI, quý II/2026, lần thứ XIV, vùng I */
@@ -940,6 +993,27 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             }
         }
         return 0;
+    }
+
+    /* +84 905 123 456 cộng tám bốn chín không năm ...: an international number */
+    if (t[p] == '+' && p + 3 < n && digit(t[p + 1]) && (!p || t[p - 1] == ' ' || t[p - 1] == ':' || t[p - 1] == '(')) {
+        size_t z2 = p + 1, digits = 0, groups = 0;
+        while (z2 < n) {
+            size_t g = z2;
+            while (z2 < n && digit(t[z2]))
+                ++z2;
+            if (z2 == g)
+                break;
+            digits += z2 - g, ++groups;
+            if (z2 + 1 < n && (t[z2] == ' ' || t[z2] == '.' || t[z2] == '-') && digit(t[z2 + 1]))
+                ++z2;
+            else
+                break;
+        }
+        if (groups >= 3 && digits >= 9 && digits <= 13 && !letter_at(t, n, z2) && z2 - p - 1 < sizeof(v)) {
+            snprintf(v, sizeof(v), "%.*s", (int)(z2 - p - 1), t + p + 1);
+            return finish(in, s, z2, "intl", v, "");
+        }
     }
 
     /* $20, €5, ~100, -5 */
@@ -1070,7 +1144,7 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                         break;
                 }
                 if (!letter_at(t, n, z) && !suffix_at(e, t, n, z, key, sizeof(key), NULL) &&
-                    ((t[q] == '0' && digits >= 9 && digits <= 11 && groups <= 4) ||
+                    ((t[q] == '0' && digits >= 9 && digits <= 11 && groups <= 5) ||
                      (hotline && groups >= 2 && digits >= 8) ||
                      (code && digits >= 3) || (long_code && groups == 1))) {
                     size_t k, used = 0;
@@ -1114,6 +1188,14 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                 snprintf(sec, sizeof(sec), "%.95s|%.95s", v, w);
                 flags(t, n, p, y, fl, sizeof(fl));
                 return finish(in, s, y, "timerange", sec, fl);
+            }
+            /* 10:00 AM mười giờ sáng, 7:30 PM bảy giờ ba mươi phút chiều */
+            if (z + 2 < n && t[z] == ' ' && (t[z + 1] == 'A' || t[z + 1] == 'P' || t[z + 1] == 'a' || t[z + 1] == 'p') &&
+                (t[z + 2] == 'M' || t[z + 2] == 'm') && !letter_at(t, n, z + 3)) {
+                char vv[TTF_IR_VALUE_SIZE];
+                snprintf(vv, sizeof(vv), "%.80s", v);
+                flags(t, n, p, z + 3, fl, sizeof(fl));
+                return finish(in, s, z + 3, (t[z + 1] | 0x20) == 'a' ? "timeam" : "timepm", vv, fl);
             }
             flags(t, n, p, z, fl, sizeof(fl));
             return finish(in, s, z, "time", v, fl);
@@ -1328,21 +1410,33 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         double x = atof(a.value), y = atof(b.value);
         size_t end = amount_tail(e, t, n, b.end, key, sizeof(key), mid, sizeof(mid), per, sizeof(per));
         flags(t, n, p, end, fl, sizeof(fl));
-        snprintf(sec, sizeof(sec), "%s|%s|%s|%s|%s|%s", key, x <= y ? "to" : "pair", fl, mid, per, w);
+        /* Hòa 1-1 một một: a score after hòa, thắng, thua, tỷ số (owner sets) */
+        snprintf(sec, sizeof(sec), "%s|%s|%s|%s|%s|%s", key,
+                 x <= y && !previous_cue(e, t, p, "score") ? "to" : "pair", fl, mid, per, w);
         snprintf(v, sizeof(v), "%s|%s", a.value, b.value);
         return finish(in, s, end, "range", v, sec);
     }
 
-    /* fractions: 1/2 một phần hai; 120/80 mmHg and Nghị định 100/2019 read trên */
+    /* 4,9/5 sao bốn phẩy chín trên năm: a decimal over a small number is a score */
+    if (a.decimal && !a.grouped && q + 1 < n && t[q] == '/' && digit(t[q + 1]) && parse_number(t, n, q + 1, &b) &&
+        !b.grouped && !b.decimal && strlen(b.value) <= 2 && !letter_at(t, n, b.end) &&
+        !(b.end < n && t[b.end] == '/')) {
+        snprintf(v, sizeof(v), "%s%s|%s", negative ? "-" : "", a.value, b.value);
+        return finish(in, s, b.end, "frac", v, "tren|");
+    }
+    /* fractions: 1/2 một phần hai; 120/80 mmHg and Nghị định 100/2019 read trên;
+       8/10, 30/60 tiêu chí read trên (a count out of ten or more); 1/1.000 một phần
+       nghìn (owner sets, 2026-10-14) */
     if (!a.grouped && !a.decimal && q + 1 < n && t[q] == '/' && digit(t[q + 1]) &&
-        parse_number(t, n, q + 1, &b) && !b.grouped && !b.decimal) {
+        parse_number(t, n, q + 1, &b) && !b.decimal) {
         int year = strlen(b.value) == 4 && (!strncmp(b.value, "19", 2) || !strncmp(b.value, "20", 2)) &&
                    strlen(a.value) <= 4;
         if (!(b.end < n && ((t[b.end] == '/' && !(year && letter_at(t, n, b.end + 1))) ||
                             letter_at(t, n, b.end)))) {
             size_t ue = suffix_at(e, t, n, b.end, key, sizeof(key), "u");
+            int out_of = atoi(a.value) >= 2 && atoi(b.value) >= 10 && !b.grouped;
             snprintf(v, sizeof(v), "%s%s|%s", negative ? "-" : "", a.value, b.value);
-            snprintf(sec, sizeof(sec), "%s|%s", ue || year ? "tren" : "", ue ? key : "");
+            snprintf(sec, sizeof(sec), "%s|%s", ue || year || out_of ? "tren" : "", ue ? key : "");
             return finish(in, s, ue ? ue : b.end, "frac", v, sec);
         }
     }
@@ -1353,6 +1447,12 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         return finish(in, s, q, "digits", a.value, fl);
     }
 
+    /* giải 1 giải nhất, giải 2 giải nhì (owner sets) */
+    if (!negative && !a.grouped && !a.decimal && (!strcmp(a.value, "1") || !strcmp(a.value, "2")) &&
+        !letter_at(t, n, q) && previous_word(t, p, "giải|Giải")) {
+        snprintf(v, sizeof(v), "%s", a.value);
+        return finish(in, s, q, "prize", v, "");
+    }
     /* thứ 4 thứ tư, tháng 4 tháng tư */
     if (!negative && !a.grouped && !a.decimal && strlen(a.value) <= 2 && !letter_at(t, n, q) &&
         !(q + 1 < n && strchr("/-.,", t[q]) && digit(t[q + 1]))) {
@@ -1373,6 +1473,10 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         }
         flags(t, n, p, end, fl, sizeof(fl));
         snprintf(v, sizeof(v), "%s%s", negative ? "-" : plus ? "+" : "", a.value);
+        /* SPF 50+ năm mươi cộng: a plus right after the number, then a space or the end */
+        if (!*key && !mid[0] && end < n && t[end] == '+' &&
+            (end + 1 == n || t[end + 1] == ' ' || t[end + 1] == ',' || t[end + 1] == '.'))
+            snprintf(mid, sizeof(mid), "%s", res(e, "number", "math_plus") ? res(e, "number", "math_plus") : "+"), ++end;
         snprintf(sec, sizeof(sec), "%s|%s%s|%s|%s", key, fl, approx ? "~" : "", mid, per);
         return finish(in, s, end, "num", v, sec);
     }
@@ -1453,6 +1557,27 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         TRY(ttf_buffer_puts(b, " "));
     if (!strcmp(mode, "math")) {
         TRY(maths_reading(e, b, v));
+    } else if (!strcmp(mode, "intl")) {
+        TRY(word(e, b, "math_plus"));
+        TRY(digits_each(e, b, v, strlen(v)));
+    } else if (!strcmp(mode, "prize")) {
+        TRY(word(e, b, v[0] == '1' ? "prize1" : "prize2"));
+    } else if (!strcmp(mode, "plusminus")) {
+        TRY(word(e, b, "plus_minus"));
+        TRY(number(e, b, v));
+        TRY(suffix(e, b, s->secondary));
+    } else if (!strcmp(mode, "offset")) {
+        field(v, 0, f0, sizeof(f0));
+        field(v, 1, f1, sizeof(f1));
+        field(v, 2, f2, sizeof(f2));
+        TRY(put(b, f0));
+        TRY(word(e, b, f1[0] == '+' ? "math_plus" : "math_minus"));
+        TRY(integer(e, b, f2, strlen(f2)));
+    } else if (!strcmp(mode, "road")) {
+        field(v, 0, f0, sizeof(f0));
+        field(v, 1, f1, sizeof(f1));
+        TRY(put(b, res(e, "vi_road", f0)));
+        TRY(integer(e, b, f1, strlen(f1)));
     } else if (!strcmp(mode, "hcode")) {
         /* SP-20481: SP hai không bốn tám một */
         const char *c = v;
@@ -1492,8 +1617,8 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         dn = strlen(letters_first ? f1 : f0);
         if (letters_first)
             TRY(put(b, f0));
-        TRY(dn <= 2 ? integer(e, b, letters_first ? f1 : f0, dn)
-                    : digits_each(e, b, letters_first ? f1 : f0, dn));
+        TRY(dn <= 2 && (letters_first ? f1 : f0)[0] != '0' ? integer(e, b, letters_first ? f1 : f0, dn)
+                                                            : digits_each(e, b, letters_first ? f1 : f0, dn));
         if (!letters_first)
             TRY(put(b, f1));
         else {
@@ -1532,6 +1657,10 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         TRY(digits_each(e, b, v, strlen(v)));
     else if (!strcmp(mode, "time"))
         TRY(clock_words(e, b, v, strlen(v)));
+    else if (!strcmp(mode, "timeam") || !strcmp(mode, "timepm")) {
+        TRY(clock_words(e, b, v, strlen(v)));
+        TRY(word(e, b, mode[4] == 'a' ? "morning" : "afternoon"));
+    }
     else if (!strcmp(mode, "timerange")) {
         const char *bar = strchr(v, '|');
         if (!bar)
@@ -1569,8 +1698,10 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         field(v, 0, f0, sizeof(f0));
         field(v, 1, f1, sizeof(f1));
         snprintf(k2, sizeof(k2), "addr_%s", f0);
-        TRY(word(e, b, k2));
-        TRY(integer(e, b, f1, strlen(f1)));
+        /* Phòng P.1205: the written word already says phòng (owner sets) */
+        if (strcmp(s->secondary, "named"))
+            TRY(word(e, b, k2));
+        TRY(!strcmp(f0, "room") ? digits_each(e, b, f1, strlen(f1)) : integer(e, b, f1, strlen(f1)));
     }
     else if (!strcmp(mode, "monthyear")) {
         const char *sl = strchr(v, '/');
@@ -1635,12 +1766,16 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             }
         }
     } else if (!strcmp(mode, "version")) {
-        const char *p = v;
+        const char *p = v, *d;
+        int parts = 1;
+        for (d = v; *d; ++d)
+            parts += *d == '.';
         while (*p) {
             size_t k = strspn(p, "0123456789");
             if (!k)
                 return TTF_EINVAL;
-            TRY(integer(e, b, p, k));
+            /* 192.168.10.25 một chín hai chấm một sáu tám chấm mười (owner sets) */
+            TRY(parts == 4 && k == 3 ? digits_each(e, b, p, k) : integer(e, b, p, k));
             p += k;
             if (*p == '.') {
                 TRY(word(e, b, "dot"));

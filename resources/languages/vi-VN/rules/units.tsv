@@ -85,3 +85,4 @@ vi_unit	vi-VN	kN	ki-lô-niu-tơn
 # ℃ and h after a number (owner sets, 2026-10-14)
 vi_unit	vi-VN	℃	độ xê
 vi_unit	vi-VN	h	giờ
+vi_unit	vi-VN	rpm	vòng trên phút

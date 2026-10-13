@@ -477,3 +477,14 @@ unit	en-US	mg_per_kg.many	milligrams per kilogram
 numeric_suffix	*	pct	MEASURE:pct
 unit	en-US	pct.one	percent
 unit	en-US	pct.many	percent
+numeric_suffix	*	Mbps	MEASURE:Mbps
+unit	en-US	Mbps.one	megabit per second
+unit	en-US	Mbps.many	megabits per second
+numeric_suffix	*	Gbps	MEASURE:Gbps
+unit	en-US	Gbps.one	gigabit per second
+unit	en-US	Gbps.many	gigabits per second
+# Owner evaluation sets, phase 4 (2026-10-14): 67¢ sixty seven cents, 4.6 in. inches
+numeric_suffix	*	¢	MEASURE:cent
+unit	en-US	cent.one	cent
+unit	en-US	cent.many	cents
+numeric_suffix	*	in.	MEASURE:inch

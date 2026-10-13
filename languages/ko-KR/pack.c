@@ -250,9 +250,16 @@ static ttf_status_t native_number(const ttf_engine_t *e, const char *value, ttf_
     static const char *const tens[] = {"",   "열",   "스물", "서른", "마흔",
                                        "쉰", "예순", "일흔", "여든", "아흔"};
     char *end;
-    unsigned long n = strtoul(value, &end, 10);
+    unsigned long n;
     char key[16];
     const char *override;
+    /* +9시간 플러스 아홉 시간 (owner sets, 2026-10-14; the sign was dropped) */
+    if (*value == '+' || *value == '-') {
+        TRY(ttf_buffer_puts(out, *value == '+' ? resource(e, "number", "positive", "플러스 ")
+                                                : resource(e, "number", "negative", "마이너스 ")));
+        ++value;
+    }
+    n = strtoul(value, &end, 10);
     if (*end || n == 0 || n > 99)
         return cardinal(e, value, out);
     (void)snprintf(key, sizeof(key), "%lu", n);
@@ -1139,6 +1146,19 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         return ttf_ko_speech_spelling(e, surface, length, 1, out);
     case TTF_SEM_NUMBER:
     case TTF_SEM_CARDINAL:
+        if (!strcmp(s->rule, "ko:ratio")) {
+            /* 일 대 이만 오천 */
+            const char *colon = strchr(s->value, ':');
+            char left[24];
+            if (!colon || (size_t)(colon - s->value) >= sizeof(left))
+                return TTF_EINVAL;
+            (void)snprintf(left, sizeof(left), "%.*s", (int)(colon - s->value), s->value);
+            TRY(cardinal(e, left, out));
+            TRY(ttf_buffer_puts(out, " "));
+            TRY(ttf_buffer_puts(out, resource(e, "policy", "score_separator", "대")));
+            TRY(ttf_buffer_puts(out, " "));
+            return cardinal(e, colon + 1, out);
+        }
         if (!strcmp(s->rule, "ko:quarter")) {
             /* 일 사분기 */
             TRY(cardinal(e, s->value, out));
@@ -1451,6 +1471,8 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         }
     }
     case TTF_SEM_CURRENCY:
+        /* 1,182.60원 천백팔십이 점 육영 원: the Korean references read every written decimal
+           digit, so €3.50 stays 삼 점 오영 유로 (owner sets want 삼 점 오; kept, 2026-10-14) */
         return quantity(e, s->value, resource(e, "currency", s->unit, s->unit), 0, out);
     case TTF_SEM_PERCENT:
         return quantity(e, s->value, resource(e, "unit", "%", "퍼센트"), 0, out);
@@ -1634,6 +1656,22 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         fields = sscanf(s->value, "%u:%u:%u", &hour, &minute, &second);
         if (fields < 2)
             return TTF_EINVAL;
+        if (!strcmp(s->rule, "ko:duration")) {
+            /* 3:05짜리 삼 분 오 초; 2:58:30 두 시간 오십팔 분 삼십 초 */
+            unsigned part[3] = {hour, minute, second};
+            static const char *const units[][2] = {{"hours", "시간"}, {"minutes", "분"}, {"seconds", "초"}};
+            int k, first = fields == 3 ? 0 : 1, emitted = 0;
+            for (k = first; k < 3 && k - first < fields; ++k) {
+                if (!part[k - first] && emitted)
+                    continue;
+                if (emitted)
+                    TRY(ttf_buffer_puts(out, " "));
+                (void)snprintf(value, sizeof(value), "%u", part[k - first]);
+                TRY(quantity(e, value, resource(e, "unit", units[k][0], units[k][1]), k == 0, out));
+                emitted = 1;
+            }
+            return TTF_OK;
+        }
         if (s->secondary[0]) {
             TRY(ttf_buffer_puts(out, resource(e, "meridiem", s->secondary, s->secondary)));
             TRY(ttf_buffer_puts(out, " "));
@@ -2604,6 +2642,111 @@ static size_t short_dotted_date(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     return i - in->index;
 }
 
+static size_t ko_finish(const ttf_pack_input_t *in, ttf_semantic_t *s, size_t end, ttf_semantic_type_t type,
+                        const char *value, const char *unit, const char *rule) {
+    size_t i;
+    (void)snprintf(s->value, sizeof(s->value), "%s", value);
+    (void)snprintf(s->unit, sizeof(s->unit), "%s", unit);
+    (void)snprintf(s->rule, sizeof(s->rule), "%s", rule);
+    s->type = type;
+    s->input_end = end;
+    s->layer = TTF_LAYER_COMMON;
+    for (i = in->index; i < in->token_count && in->tokens[i].begin < end; ++i)
+        ;
+    return i - in->index;
+}
+static int ko_digit(char c) {
+    return c >= '0' && c <= '9';
+}
+/* The text at p starts with one of the |-separated words. */
+static int starts_with_word(const char *t, size_t n, size_t p, const char *words) {
+    const char *w = words;
+    while (*w) {
+        size_t m = strcspn(w, "|");
+        if (p + m <= n && !memcmp(t + p, w, m))
+            return 1;
+        w += m + (w[m] == '|');
+    }
+    return 0;
+}
+/* One of the |-separated words ends within the window before p. */
+static int word_within(const char *t, size_t p, size_t window, const char *words) {
+    const char *w = words;
+    size_t from = p > window ? p - window : 0;
+    while (*w) {
+        size_t m = strcspn(w, "|"), k;
+        for (k = from; k + m <= p; ++k)
+            if (!memcmp(t + k, w, m))
+                return 1;
+        w += m + (w[m] == '|');
+    }
+    return 0;
+}
+/* Owner evaluation sets, phase 4 (2026-10-14):
+   24:00 스물네 시; 1:30 남았습니다 일 분 삼십 초, 3:05짜리 삼 분 오 초, 기록 2:58:30 두 시간
+   오십팔 분 삼십 초; 6/6 현충일 유월 육 일; 1:25,000 일 대 이만 오천. */
+static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    const char *t = in->text;
+    size_t n = in->length, p = in->tokens[in->index].begin, q, r, z;
+    char v[64];
+    if (p >= n || !ko_digit(t[p]) || (p && (ko_digit(t[p - 1]) || t[p - 1] == '.' || t[p - 1] == ':')))
+        return 0;
+    for (q = p; q < n && ko_digit(t[q]); ++q)
+        ;
+    if (q - p > 2 || q + 2 >= n)
+        return 0;
+    /* M:SS and H:MM:SS durations */
+    if (t[q] == ':' && ko_digit(t[q + 1]) && q + 2 < n && ko_digit(t[q + 2]) && !(q + 3 < n && ko_digit(t[q + 3]))) {
+        r = q + 3;
+        if (r + 2 < n && t[r] == ':' && ko_digit(t[r + 1]) && ko_digit(t[r + 2]) && !(r + 3 < n && ko_digit(t[r + 3]))) {
+            if (word_within(t, p, 30, "기록|완주|소요|걸렸")) {
+                (void)snprintf(v, sizeof(v), "%.*s", (int)(r + 3 - p), t + p);
+                return ko_finish(in, s, r + 3, TTF_SEM_TIME, v, "duration", "ko:duration");
+            }
+        } else if (starts_with_word(t, n, r, "짜리| 남았| 남은| 남겨| 동안")) {
+            (void)snprintf(v, sizeof(v), "%.*s", (int)(r - p), t + p);
+            return ko_finish(in, s, r, TTF_SEM_TIME, v, "minutes", "ko:duration");
+        }
+        /* 24:00 스물네 시 */
+        if (q - p == 2 && !memcmp(t + p, "24:00", 5) && !(r < n && t[r] == ':'))
+            return ko_finish(in, s, r, TTF_SEM_TIME, "24:00", "", "ko:midnight");
+    }
+    /* 6/6 현충일, 3/1은 삼일절, 12.25 크리스마스: a month and day before a holiday */
+    if ((t[q] == '/' || t[q] == '.') && ko_digit(t[q + 1])) {
+        unsigned month = (unsigned)atoi(t + p), day;
+        for (r = q + 1; r < n && ko_digit(t[r]); ++r)
+            ;
+        day = (unsigned)atoi(t + q + 1);
+        z = r;
+        while (z < n && (t[z] != ' ' && (unsigned char)t[z] >= 0x80))
+            ++z; /* 3/1은: a particle */
+        while (z < n && t[z] == ' ')
+            ++z;
+        if (r - q - 1 <= 2 && month >= 1 && month <= 12 && day >= 1 && day <= 31 && !(r < n && (ko_digit(t[r]) || t[r] == '.' || t[r] == '/')) &&
+            starts_with_word(t, n, z, "현충일|삼일절|크리스마스|성탄절|광복절|개천절|한글날|어린이날|어버이날|제헌절|추석|설날|발렌타인|화이트데이|빼빼로") &&
+            /* 8.15 광복절 팔일오: a dotted national day keeps its event name */
+            !(t[q] == '.' && starts_with_word(t, n, z, "현충일|삼일절|광복절|개천절|제헌절"))) {
+            (void)snprintf(v, sizeof(v), "--%02u-%02u", month, day);
+            return ko_finish(in, s, r, TTF_SEM_DATE, v, "month-day", "ko:holiday-date");
+        }
+    }
+    /* 1:25,000 일 대 이만 오천, 1:1,000으로 희석: a ratio with a grouped second number */
+    if (t[q] == ':' && ko_digit(t[q + 1])) {
+        size_t used = 0;
+        int grouped = 0;
+        for (r = q + 1; r < n && (ko_digit(t[r]) || (t[r] == ',' && r + 3 < n && ko_digit(t[r + 1]) && ko_digit(t[r + 2]) && ko_digit(t[r + 3]))); ++r)
+            grouped |= t[r] == ',';
+        if (grouped && !(r < n && ko_digit(t[r])) && r - p < sizeof(v)) {
+            for (z = p; z < r; ++z)
+                if (t[z] != ',')
+                    v[used++] = t[z];
+            v[used] = '\0';
+            return ko_finish(in, s, r, TTF_SEM_CARDINAL, v, "", "ko:ratio");
+        }
+    }
+    return 0;
+}
+
 /* 1/4분기 일 사분기: a quarter written as a fraction (owner sets, 2026-10-14). */
 static size_t quarter(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     const char *t = in->text;
@@ -2629,7 +2772,8 @@ static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     size_t identifier = below_zero_degrees(in, s);
     if (identifier)
         return identifier;
-    if ((identifier = short_dotted_date(in, s)) != 0 || (identifier = quarter(in, s)) != 0)
+    if ((identifier = short_dotted_date(in, s)) != 0 || (identifier = quarter(in, s)) != 0 ||
+        (identifier = owner_forms(in, s)) != 0)
         return identifier;
     identifier = ttf_ko_classify_basement(in, s);
     if (identifier)
