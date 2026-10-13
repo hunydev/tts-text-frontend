@@ -86,7 +86,7 @@ range	Nhiệt độ trung bình vào mùa hè dao động trong khoảng {28–3
 range	Giai đoạn {2021-2025|hai [nghìn,ngàn] không trăm hai mươi [mốt,một] [đến,tới] hai [nghìn,ngàn] không trăm hai mươi [lăm,nhăm]}, tỉnh ưu tiên đầu tư hạ tầng.
 range	Lớp năng khiếu dành cho trẻ từ {3–5|ba [đến,tới] năm} tuổi.
 range	Liều dùng cho người lớn là {500-1000 mg|năm trăm [đến,tới] một [nghìn,ngàn] mi li gam}, ngày hai lần.
-range	Thư viện mở cửa phục vụ bạn đọc từ {7h30-17h00|bảy giờ [ba mươi,rưỡi] [đến,tới] mười bảy giờ/bảy giờ [ba mươi,rưỡi] [đến,tới] năm giờ chiều}.
+range	Thư viện mở cửa phục vụ bạn đọc từ {7h30-17h00|bảy giờ [ba mươi,ba mươi phút,rưỡi] [đến,tới] mười bảy giờ/bảy giờ [ba mươi,ba mươi phút,rưỡi] [đến,tới] năm giờ chiều}.
 range	Đề tài được thực hiện từ tháng {3/2023-12/2024|ba năm hai [nghìn,ngàn] không trăm hai mươi ba [đến,tới] tháng mười hai năm hai [nghìn,ngàn] không trăm hai mươi [tư,bốn]}.
 range	Chiều cao cây trưởng thành đạt {1,5-2 m|một phẩy năm [đến,tới] hai mét/một mét rưỡi [đến,tới] hai mét}.
 range	Học sinh làm các bài tập {12-15|mười hai [đến,tới] mười [lăm,nhăm]} trang {84|tám mươi [tư,bốn]} sách giáo khoa.

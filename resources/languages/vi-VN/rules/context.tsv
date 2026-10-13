@@ -140,3 +140,6 @@ vi_cue	vi-VN	id5	số|Số
 vi_cue	vi-VN	id4	cổng|Cổng|port|Port
 vi_cue	vi-VN	daywide	Ngày|ngày|Dịp|dịp|lễ|Lễ
 classifier_priority	vi-VN	vi.trd	100
+vi_cue	vi-VN	clock	lúc|Lúc|từ|Từ|đến|tới|trước|sau
+vi_cue	vi-VN	deadline	hạn|Hạn
+classifier_priority	vi-VN	vi.monthyear2	100

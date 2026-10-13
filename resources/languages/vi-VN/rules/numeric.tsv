@@ -52,6 +52,8 @@ vi_scale	vi-VN	tr	triệu
 # Currencies after (15.000đ, 20 USD) or before ($20, €5) a number.
 vi_currency	vi-VN	đ	đồng
 vi_currency	vi-VN	đồng	đồng
+vi_currency	vi-VN	tr.đ	triệu đồng
+vi_currency	vi-VN	trđ	triệu đồng
 vi_currency	vi-VN	Đ	đồng
 vi_currency	vi-VN	₫	đồng
 vi_currency	vi-VN	VND	đồng

@@ -688,6 +688,12 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     {
         int plain = !negative && !prefix_currency && !approx;
 
+        /* lúc 22g: g without minutes is giờ after a clock cue (500g stays gam) */
+        if (plain && p == q && de - q <= 2 && atoi(t + q) <= 24 && de < n && t[de] == 'g' &&
+            !letter_at(t, n, de + 1) && !(de + 1 < n && digit(t[de + 1])) && previous_cue(e, t, p, "clock")) {
+            snprintf(v, sizeof(v), "%.*s::", (int)(de - q), t + q);
+            return finish(in, s, de + 1, "time", v, "");
+        }
         /* 1tr5 một triệu năm trăm nghìn, 2tr25 */
         if (plain && p == q && de - q <= 3 && de + 2 < n && t[de] == 't' && t[de + 1] == 'r' &&
             digit(t[de + 2])) {
@@ -871,7 +877,8 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                                  (t[m1] == sep && !(sep == '.' && (m1 + 1 == n || t[m1 + 1] == ' ' ||
                                                                    t[m1 + 1] == '\n'))))) &&
                     !(m1 + 1 < n && strchr("/.,", t[m1]) && digit(t[m1 + 1])) &&
-                    ((sep == '/' && (previous_cue(e, t, p, "date") || d > m || coordinated(t, p, 0))) ||
+                    ((sep == '/' && (previous_cue(e, t, p, "date") || d > m || coordinated(t, p, 0) ||
+                                     cue_before(e, t, p, "deadline", 48))) ||
                      (sep != '/' && (previous_cue(e, t, p, "day") || previous_cue(e, t, p, "holiday") ||
                                      coordinated(t, p, 0) || cue_before(e, t, p, "daywide", 40))))) {
                     /* 30/4-1/5: a second day-month after a dash */
@@ -894,7 +901,22 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             }
             if ((sep == '/' || sep == '-') && d >= 1 && d <= 12 && m1 - m0 == 4 &&
                 !(m1 < n && (digit(t[m1]) || letter_at(t, n, m1)))) {
+                size_t r = dash_after(t, n, m1), r1 = r, r2;
                 snprintf(v, sizeof(v), "%u/%.*s", d, 4, t + m0);
+                /* 3/2023-12/2024: a second month and year after a dash */
+                while (r && r1 < n && digit(t[r1]))
+                    ++r1;
+                if (r && r1 > r && r1 - r <= 2 && r1 + 1 < n && t[r1] == '/') {
+                    for (r2 = r1 + 1; r2 < n && digit(t[r2]);)
+                        ++r2;
+                    if (r2 - r1 - 1 == 4 && atoi(t + r) >= 1 && atoi(t + r) <= 12 &&
+                        !letter_at(t, n, r2) && !(r2 < n && digit(t[r2]))) {
+                        size_t used = strlen(v);
+                        snprintf(v + used, sizeof(v) - used, "|%u/%.4s", (unsigned)atoi(t + r), t + r1 + 1);
+                        return finish(in, s, r2, "monthyear2", v,
+                                      previous_cue(e, t, p, "month") ? "" : "thang");
+                    }
+                }
                 return finish(in, s, m1, "monthyear", v,
                               previous_cue(e, t, p, "month") ? "" : "thang");
             }
@@ -948,6 +970,14 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     if (!parse_number(t, n, q, &a))
         return 0;
     q = a.end;
+    if (prefix_currency && a.decimal) {
+        const char *comma = strchr(a.value, ',');
+        if (comma && comma - a.value <= 3 && strlen(comma + 1) == 3 && strspn(comma + 1, "0123456789") == 3) {
+            memmove((char *)comma, comma + 1, strlen(comma + 1) + 1);
+            a.decimal = 0;
+            a.grouped = 1;
+        }
+    }
 
     /* dimensions: 60x90 cm, 40 × 30 × 20 cm, 1920x1080 */
     if (!negative && !approx) {
@@ -1211,6 +1241,24 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         if (!strcmp(s->secondary, "thang"))
             TRY(word(e, b, "month"));
         TRY(month(e, b, v, (size_t)(sl - v)));
+        TRY(word(e, b, "year"));
+        TRY(integer(e, b, sl + 1, strlen(sl + 1)));
+    } else if (!strcmp(mode, "monthyear2")) {
+        const char *sl;
+        field(v, 0, f0, sizeof(f0));
+        field(v, 1, f1, sizeof(f1));
+        if (!(sl = strchr(f0, '/')))
+            return TTF_EINVAL;
+        if (!strcmp(s->secondary, "thang"))
+            TRY(word(e, b, "month"));
+        TRY(month(e, b, f0, (size_t)(sl - f0)));
+        TRY(word(e, b, "year"));
+        TRY(integer(e, b, sl + 1, strlen(sl + 1)));
+        TRY(word(e, b, "to"));
+        if (!(sl = strchr(f1, '/')))
+            return TTF_EINVAL;
+        TRY(word(e, b, "month"));
+        TRY(month(e, b, f1, (size_t)(sl - f1)));
         TRY(word(e, b, "year"));
         TRY(integer(e, b, sl + 1, strlen(sl + 1)));
     } else if (!strcmp(mode, "month"))
