@@ -243,6 +243,13 @@ static int quantity_before_space(const ttf_engine_t *e, const char *s, const ttf
             break;
         if (tokens[j].script != TTF_SCRIPT_DIGIT)
             continue;
+        /* 85,5 triệu, 1.500 USD: classify from the start of the number, not
+           from its last digit group (2026-10-13). */
+        while (j >= 2 && tokens[j - 1].end == tokens[j].begin &&
+               tokens[j - 1].end == tokens[j - 1].begin + 1 &&
+               (s[tokens[j - 1].begin] == ',' || s[tokens[j - 1].begin] == '.') &&
+               tokens[j - 2].script == TTF_SCRIPT_DIGIT && tokens[j - 2].end == tokens[j - 1].begin)
+            j -= 2;
         memset(&in, 0, sizeof(in));
         in.text = s;
         in.length = end;

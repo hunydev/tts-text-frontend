@@ -180,8 +180,20 @@ static ttf_status_t suffix(const ttf_engine_t *e, ttf_buffer_t *b, const char *k
     if (!strcmp(key, "%"))
         return word(e, b, "percent");
     if (key[0] && key[1] == ':') {
-        v = res(e, key[0] == 'u' ? "vi_unit" : key[0] == 'c' ? "vi_currency" : "vi_scale", key + 2);
-        return v ? put(b, v) : TTF_ERESOURCE;
+        const char *plus = strchr(key + 2, '+');
+        char first[24];
+        snprintf(first, sizeof(first), "%.*s", (int)(plus ? (size_t)(plus - key - 2) : strlen(key + 2)),
+                 key + 2);
+        v = res(e, key[0] == 'u' ? "vi_unit" : key[0] == 'c' ? "vi_currency" : "vi_scale", first);
+        if (!v)
+            return TTF_ERESOURCE;
+        TRY(put(b, v));
+        if (plus) {
+            TRY(word(e, b, "per"));
+            v = res(e, "vi_unit", plus + 1);
+            return v ? put(b, v) : TTF_ERESOURCE;
+        }
+        return TTF_OK;
     }
     return TTF_EINVAL;
 }
@@ -361,7 +373,60 @@ static size_t suffix_at(const ttf_engine_t *e, const char *t, size_t n, size_t p
             }
         }
     }
+    /* mg/l: a unit over a unit (u:mg+l) */
+    if (best && key[0] == 'u' && start + best + 1 < n && t[start + best] == '/' &&
+        t[start + best + 1] != ' ') {
+        char second[24];
+        size_t se = suffix_at(e, t, n, start + best + 1, second, sizeof(second), "u");
+        if (se && strlen(key) + strlen(second) < cap) {
+            strcat(key, "+");
+            strcat(key, second + 2);
+            return se;
+        }
+    }
     return best ? start + best : 0;
+}
+
+/* After an amount: a unit, currency or scale (15.000đ, 5 kg); a scale word and a
+   currency (2,5 triệu USD); a word and its slash (320 đồng/lít). A slash after
+   the amount's unit reads trên, and a unit after it is read (triệu đồng/m²).
+   Returns the end; mid gets the scale word, per "/" or "/u:KEY". */
+static size_t amount_tail(const ttf_engine_t *e, const char *t, size_t n, size_t q, char *key,
+                          size_t kcap, char *mid, size_t mcap, char *per, size_t pcap) {
+    size_t end = q, se = suffix_at(e, t, n, q, key, kcap, NULL);
+    mid[0] = per[0] = 0;
+    if (se)
+        end = se;
+    else {
+        size_t m = q < n && t[q] == ' ' ? q + 1 : q, k = m;
+        while (k < n && t[k] != ' ' && t[k] != '/' && k - m < mcap - 1)
+            ++k;
+        if (k > m && (k < n || (k == n && k - m < mcap))) {
+            snprintf(mid, mcap, "%.*s", (int)(k - m), t + m);
+            if (res(e, "vi_scale_word", mid) && (se = suffix_at(e, t, n, k, key, kcap, "c")))
+                end = se;
+            /* 85,5 triệu: a scale word belongs to the amount, so a unit cut does
+               not fall between them (… triệu | đồng/lượng) */
+            else if (res(e, "vi_scale_word", mid) && (k == n || t[k] == ' '))
+                end = k;
+            else if (t[k] == '/' && letter_at(t, n, k + 1) && letter_at(t, n, m))
+                end = k;
+            else
+                mid[0] = 0;
+        }
+    }
+    if ((key[0] == '%' || key[0] == 'c' || mid[0]) && end + 1 < n && t[end] == '/' &&
+        letter_at(t, n, end + 1)) {
+        char unit[24];
+        size_t ue = suffix_at(e, t, n, end + 1, unit, sizeof(unit), "u");
+        ++end;
+        if (ue && t[end] != ' ') {
+            snprintf(per, pcap, "/%.22s", unit);
+            end = ue;
+        } else
+            snprintf(per, pcap, "/");
+    }
+    return end;
 }
 
 /* Lead and trail flags: a reading next to a letter gets a space there (5G năm G). */
@@ -461,6 +526,38 @@ static int cue_before(const ttf_engine_t *e, const char *t, size_t p, const char
     return 0;
 }
 
+/* 1-5 in "30-4 và 1-5": the word before và/hoặc is a day-month (or T7 for CN). */
+static int coordinated(const char *t, size_t p, int weekday) {
+    size_t end = p, begin;
+    while (end && t[end - 1] == ' ')
+        --end;
+    begin = end;
+    while (begin && t[begin - 1] != ' ')
+        --begin;
+    if (!((end - begin == strlen("và") && !memcmp(t + begin, "và", end - begin)) ||
+          (end - begin == strlen("hoặc") && !memcmp(t + begin, "hoặc", end - begin))))
+        return 0;
+    end = begin;
+    while (end && t[end - 1] == ' ')
+        --end;
+    begin = end;
+    while (begin && t[begin - 1] != ' ')
+        --begin;
+    if (weekday)
+        return (end - begin == 2 && t[begin] == 'T' && t[begin + 1] >= '2' && t[begin + 1] <= '7') ||
+               (end - begin == 2 && t[begin] == 'C' && t[begin + 1] == 'N');
+    {
+        size_t k = begin, d1 = 0, d2 = 0;
+        while (k < end && digit(t[k]))
+            ++k, ++d1;
+        if (!d1 || d1 > 2 || k >= end || !strchr("-/.", t[k]))
+            return 0;
+        for (++k; k < end && digit(t[k]); ++k)
+            ++d2;
+        return d2 >= 1 && d2 <= 2;
+    }
+}
+
 static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     const ttf_engine_t *e = in->engine;
     const char *t = in->text;
@@ -480,17 +577,35 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     if (alpha(t[p]) && (!p || !letter_at(t, n, p - 1))) {
         size_t re;
         int r;
-        /* T2-T6 thứ hai đến thứ sáu, CN chủ nhật */
+        /* T2-T6 thứ hai đến thứ sáu, T2-CN, CN chủ nhật (after sáng, chiều or T7 và) */
         if (t[p] == 'T' && p + 1 < n && t[p + 1] >= '2' && t[p + 1] <= '7' &&
             !letter_at(t, n, p + 2) && !(p + 2 < n && digit(t[p + 2]))) {
             z = p + 2;
-            if ((de = dash_after(t, n, z)) && de + 1 < n && t[de] == 'T' && t[de + 1] >= '2' &&
-                t[de + 1] <= '7' && !letter_at(t, n, de + 2) && !(de + 2 < n && digit(t[de + 2]))) {
-                snprintf(v, sizeof(v), "%c|%c", t[p + 1], t[de + 1]);
+            if ((de = dash_after(t, n, z)) && de + 1 < n &&
+                ((t[de] == 'T' && t[de + 1] >= '2' && t[de + 1] <= '7') ||
+                 (t[de] == 'C' && t[de + 1] == 'N')) &&
+                !letter_at(t, n, de + 2) && !(de + 2 < n && digit(t[de + 2]))) {
+                snprintf(v, sizeof(v), "%c|%c", t[p + 1], t[de + 1] == 'N' ? 'C' : t[de + 1]);
                 return finish(in, s, de + 2, "weekday", v, "");
             }
             snprintf(v, sizeof(v), "%c|", t[p + 1]);
             return finish(in, s, z, "weekday", v, "");
+        }
+        if (t[p] == 'C' && p + 1 < n && t[p + 1] == 'N' && !letter_at(t, n, p + 2) &&
+            !(p + 2 < n && digit(t[p + 2])) &&
+            (previous_cue(e, t, p, "daypart") || coordinated(t, p, 1)))
+            return finish(in, s, p + 2, "weekday", "C|", "");
+        /* P.308 phòng, P.3 phường, Q.10 quận */
+        if ((t[p] == 'P' || t[p] == 'Q') && p + 2 < n && t[p + 1] == '.') {
+            size_t d0 = p + 2 + (t[p + 2] == ' '), d = d0;
+            while (d < n && digit(t[d]))
+                ++d;
+            if (d > d0 && d - d0 <= 4 && !letter_at(t, n, d) &&
+                !(d + 1 < n && strchr(".,", t[d]) && digit(t[d + 1]))) {
+                snprintf(v, sizeof(v), "%s|%.*s",
+                         t[p] == 'Q' ? "district" : d - d0 >= 3 ? "room" : "ward", (int)(d - d0), t + d0);
+                return finish(in, s, d, "addr", v, "");
+            }
         }
         /* Thế kỷ XXI, quý II/2026, lần thứ XIV, vùng I */
         if ((r = roman(t, n, p, &re)) != 0 && previous_cue(e, t, p, "roman")) {
@@ -551,6 +666,13 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     {
         int plain = !negative && !prefix_currency && !approx;
 
+        /* 1m78 một mét bảy mươi tám */
+        if (plain && p == q && de - q <= 1 && de + 2 < n && t[de] == 'm' && digit(t[de + 1]) &&
+            digit(t[de + 2]) && !(de + 3 < n && digit(t[de + 3])) && !letter_at(t, n, de + 3)) {
+            snprintf(v, sizeof(v), "%.*s|%c%c", (int)(de - q), t + q, t[de + 1], t[de + 2]);
+            return finish(in, s, de + 3, "height", v, "");
+        }
+
         /* 5G, 4K: digits then letters that are no unit */
         if (plain && p == q && (!p || !letter_at(t, n, p - 1)) && de - q <= 4) {
             size_t l = de;
@@ -567,8 +689,11 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
            a code after mã, OTP, tổng đài; a service number after gọi (114) */
         {
             int hotline = de - q == 4 && (!strncmp(t + q, "1900", 4) || !strncmp(t + q, "1800", 4));
-            int code = cue_before(e, t, p, "code", 48);
-            if (plain && (t[q] == '0' || hotline || code)) {
+            int code = cue_before(e, t, p, "code", 80);
+            /* seven or more ungrouped digits not ending in 000 are a code (7480201) */
+            int long_code = de - q >= 7 && strncmp(t + de - 3, "000", 3) &&
+                            !(de + 1 < n && strchr(".,", t[de]) && digit(t[de + 1]));
+            if (plain && (t[q] == '0' || hotline || code || long_code)) {
                 size_t digits = 0, groups = 0;
                 z = q;
                 while (z < n) {
@@ -586,7 +711,7 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                 if (!letter_at(t, n, z) && !suffix_at(e, t, n, z, key, sizeof(key), NULL) &&
                     ((t[q] == '0' && digits >= 9 && digits <= 11 && groups <= 4) ||
                      (hotline && groups >= 2 && digits >= 8) ||
-                     (code && digits >= 3))) {
+                     (code && digits >= 3) || (long_code && groups == 1))) {
                     size_t k, used = 0;
                     for (k = q; k < z && used + 1 < sizeof(v); ++k)
                         if (digit(t[k]))
@@ -627,13 +752,39 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             return finish(in, s, z, "time", v, fl);
         }
 
-        /* dates: 13/10/2026, 13-10-2026, 13.10.2026; 30/4, ngày 26-6, ngày 2.9;
-           tháng 10/2026 */
+        /* days of one month: 20-25/11, 12-14/10/2026 */
+        if (plain && de - q <= 2) {
+            size_t r = dash_after(t, n, de), r2 = r, m0, m1, y0, y;
+            while (r && r2 < n && digit(t[r2]))
+                ++r2;
+            if (r && r2 > r && r2 - r <= 2 && r2 + 1 < n && t[r2] == '/' && digit(t[r2 + 1])) {
+                unsigned d1 = (unsigned)atoi(t + q), d2 = (unsigned)atoi(t + r), m;
+                m0 = m1 = r2 + 1;
+                while (m1 < n && digit(t[m1]))
+                    ++m1;
+                m = (unsigned)atoi(t + m0);
+                y0 = y = m1;
+                if (m1 + 2 < n && t[m1] == '/' && digit(t[m1 + 1]))
+                    for (y0 = y = m1 + 1; y < n && digit(t[y]);)
+                        ++y;
+                if (m1 - m0 <= 2 && m >= 1 && m <= 12 && d1 >= 1 && d1 < d2 && d2 <= 31 &&
+                    (y == y0 || y - y0 == 4 || y - y0 == 2) && !letter_at(t, n, y) &&
+                    !(y < n && digit(t[y]))) {
+                    snprintf(v, sizeof(v), "%u|%u/%u/%.*s", d1, d2, m, (int)(y - y0), t + y0);
+                    return finish(in, s, y == y0 ? m1 : y, "daterange", v, "");
+                }
+            }
+        }
+
+        /* dates: 13/10/2026, 13-10-2026, 13.10.2026; 30/4, ngày 26-6, ngày 2.9, lễ 30-4,
+           30-4 và 1-5; 30/4-1/5; tháng 10/2026 */
         if (plain && de - q <= 2 && de + 1 < n && (t[de] == '/' || t[de] == '-' || t[de] == '.') &&
             digit(t[de + 1])) {
             char sep = t[de];
             size_t m0 = de + 1, m1 = m0;
             unsigned d = (unsigned)atoi(t + q), m;
+            /* ngày is said unless a day word, lễ or và comes before */
+            int day_said = previous_cue(e, t, p, "day") || previous_cue(e, t, p, "noday");
             while (m1 < n && digit(t[m1]))
                 ++m1;
             m = (unsigned)atoi(t + m0);
@@ -645,16 +796,30 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                     if ((y - y0 == 4 || y - y0 == 2) && !letter_at(t, n, y) &&
                         !(y < n && (digit(t[y]) || (t[y] == sep && y + 1 < n && digit(t[y + 1]))))) {
                         snprintf(v, sizeof(v), "%u/%u/%.*s", d, m, (int)(y - y0), t + y0);
-                        return finish(in, s, y, "date", v,
-                                      previous_cue(e, t, p, "day") ? "" : "ngay");
+                        return finish(in, s, y, "date", v, day_said ? "" : "ngay");
                     }
                 }
                 if (!(m1 < n && (digit(t[m1]) || t[m1] == sep || letter_at(t, n, m1))) &&
                     !(m1 + 1 < n && strchr("/.,", t[m1]) && digit(t[m1 + 1])) &&
-                    ((sep == '/' && (previous_cue(e, t, p, "date") || d > m)) ||
-                     (sep != '/' && previous_cue(e, t, p, "day")))) {
+                    ((sep == '/' && (previous_cue(e, t, p, "date") || d > m || coordinated(t, p, 0))) ||
+                     (sep != '/' && (previous_cue(e, t, p, "day") || previous_cue(e, t, p, "holiday") ||
+                                     coordinated(t, p, 0))))) {
+                    /* 30/4-1/5: a second day-month after a dash */
+                    size_t r = sep == '/' ? dash_after(t, n, m1) : 0, r1 = r, r2;
+                    while (r && r1 < n && digit(t[r1]))
+                        ++r1;
+                    if (r && r1 > r && r1 - r <= 2 && r1 + 1 < n && t[r1] == '/' && digit(t[r1 + 1])) {
+                        unsigned d2 = (unsigned)atoi(t + r), m2 = (unsigned)atoi(t + r1 + 1);
+                        for (r2 = r1 + 1; r2 < n && digit(t[r2]);)
+                            ++r2;
+                        if (r2 - r1 - 1 <= 2 && d2 >= 1 && d2 <= 31 && m2 >= 1 && m2 <= 12 &&
+                            !letter_at(t, n, r2) && !(r2 < n && (digit(t[r2]) || t[r2] == '/'))) {
+                            snprintf(v, sizeof(v), "%u/%u/|%u/%u/", d, m, d2, m2);
+                            return finish(in, s, r2, "date2", v, day_said ? "" : "ngay");
+                        }
+                    }
                     snprintf(v, sizeof(v), "%u/%u/", d, m);
-                    return finish(in, s, m1, "date", v, previous_cue(e, t, p, "day") ? "" : "ngay");
+                    return finish(in, s, m1, "date", v, day_said ? "" : "ngay");
                 }
             }
             if ((sep == '/' || sep == '-') && d >= 1 && d <= 12 && m1 - m0 == 4 &&
@@ -668,12 +833,15 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         /* versions: 2.1.3, iOS 18.2, phiên bản 2.0 */
         if (plain && de + 1 < n && t[de] == '.' && digit(t[de + 1])) {
             size_t y = de, parts = 1;
+            int ip = de - q <= 3 && atoi(t + q) <= 255;
             while (y + 1 < n && t[y] == '.' && digit(t[y + 1])) {
-                ++y;
+                size_t g = ++y;
                 while (y < n && digit(t[y]))
                     ++y;
+                ip &= y - g <= 3 && atoi(t + g) <= 255;
                 ++parts;
             }
+            ip &= parts == 4;
             if (!letter_at(t, n, y) && !(y + 1 < n && t[y] == '.' && digit(t[y + 1]))) {
                 size_t back = p, ascii = 1, letters = 0;
                 while (back && t[back - 1] == ' ')
@@ -683,7 +851,7 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                     letters += alpha(t[back]);
                     ascii &= (unsigned char)t[back] < 0x80;
                 }
-                if ((parts >= 3 && !three(t, n, de + 1)) ||
+                if (ip || (parts >= 3 && !three(t, n, de + 1)) ||
                     (parts == 2 && !three(t, n, de + 1) && ((ascii && letters) ||
                                                             previous_cue(e, t, p, "version")))) {
                     snprintf(v, sizeof(v), "%.*s", (int)(y - q), t + q);
@@ -701,24 +869,27 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     if (!negative && !approx && (z = dash_after(t, n, q)) != 0 && digit(t[z]) &&
         parse_number(t, n, z, &b) && !b.leading_zero && !a.leading_zero &&
         !(b.end < n && (t[b.end] == '-' || t[b.end] == '/' || t[b.end] == ':'))) {
-        size_t end = b.end, se;
+        char mid[24], per[24];
         double x = atof(a.value), y = atof(b.value);
-        if ((se = suffix_at(e, t, n, end, key, sizeof(key), NULL)) != 0)
-            end = se;
-        else
-            key[0] = 0;
+        size_t end = amount_tail(e, t, n, b.end, key, sizeof(key), mid, sizeof(mid), per, sizeof(per));
         flags(t, n, p, end, fl, sizeof(fl));
-        snprintf(sec, sizeof(sec), "%s|%s|%s", key, x <= y ? "to" : "pair", fl);
+        snprintf(sec, sizeof(sec), "%s|%s|%s|%s|%s", key, x <= y ? "to" : "pair", fl, mid, per);
         snprintf(v, sizeof(v), "%s|%s", a.value, b.value);
         return finish(in, s, end, "range", v, sec);
     }
 
-    /* fractions: 1/2 một phần hai */
+    /* fractions: 1/2 một phần hai; 120/80 mmHg and Nghị định 100/2019 read trên */
     if (!a.grouped && !a.decimal && q + 1 < n && t[q] == '/' && digit(t[q + 1]) &&
-        parse_number(t, n, q + 1, &b) && !b.grouped && !b.decimal &&
-        !(b.end < n && (t[b.end] == '/' || letter_at(t, n, b.end)))) {
-        snprintf(v, sizeof(v), "%s%s|%s", negative ? "-" : "", a.value, b.value);
-        return finish(in, s, b.end, "frac", v, "");
+        parse_number(t, n, q + 1, &b) && !b.grouped && !b.decimal) {
+        int year = strlen(b.value) == 4 && (!strncmp(b.value, "19", 2) || !strncmp(b.value, "20", 2)) &&
+                   strlen(a.value) <= 4;
+        if (!(b.end < n && ((t[b.end] == '/' && !(year && letter_at(t, n, b.end + 1))) ||
+                            letter_at(t, n, b.end)))) {
+            size_t ue = suffix_at(e, t, n, b.end, key, sizeof(key), "u");
+            snprintf(v, sizeof(v), "%s%s|%s", negative ? "-" : "", a.value, b.value);
+            snprintf(sec, sizeof(sec), "%s|%s", ue || year ? "tren" : "", ue ? key : "");
+            return finish(in, s, ue ? ue : b.end, "frac", v, sec);
+        }
     }
 
     /* codes with a leading zero: 05, 007 */
@@ -738,42 +909,16 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
 
     /* a number and its suffix: 15.000đ, 2,5 triệu USD, 4,8%/năm, 320 đồng/lít */
     {
-        size_t end = q, se = suffix_at(e, t, n, q, key, sizeof(key), NULL);
-        char mid[24] = "";
-        int per = 0;
-        if (se)
-            end = se;
-        else {
-            /* a scale word between the amount and a currency (2,5 triệu USD) */
-            size_t m = q < n && t[q] == ' ' ? q + 1 : q, k = m;
-            while (k < n && t[k] != ' ' && t[k] != '/' && k - m < sizeof(mid) - 1)
-                ++k;
-            if (k > m && k < n) {
-                snprintf(mid, sizeof(mid), "%.*s", (int)(k - m), t + m);
-                if (res(e, "vi_scale_word", mid) && (se = suffix_at(e, t, n, k, key, sizeof(key), "c")))
-                    end = se;
-                /* 320 đồng/lít: a word after the amount, then its slash (trên) */
-                else if (t[k] == '/' && letter_at(t, n, k + 1) && letter_at(t, n, m) &&
-                         !strchr(mid, '/'))
-                    end = k;
-                else
-                    mid[0] = 0;
-            }
-        }
+        char mid[24], per[24];
+        size_t end = amount_tail(e, t, n, q, key, sizeof(key), mid, sizeof(mid), per, sizeof(per));
         if (prefix_currency) {
             char sym[4] = {0};
             memcpy(sym, t + p, t[p] == '$' ? 1 : t[p] == '\xe2' ? 3 : 2);
             snprintf(key, sizeof(key), "c:%s", sym);
         }
-        /* a word after the amount's slash: trên (per) */
-        if ((key[0] == '%' || key[0] == 'c' || mid[0]) && end + 1 < n && t[end] == '/' &&
-            letter_at(t, n, end + 1)) {
-            per = 1;
-            ++end;
-        }
         flags(t, n, p, end, fl, sizeof(fl));
         snprintf(v, sizeof(v), "%s%s", negative ? "-" : "", a.value);
-        snprintf(sec, sizeof(sec), "%s|%s%s|%s|%s", key, fl, approx ? "~" : "", mid, per ? "/" : "");
+        snprintf(sec, sizeof(sec), "%s|%s%s|%s|%s", key, fl, approx ? "~" : "", mid, per);
         return finish(in, s, end, "num", v, sec);
     }
 }
@@ -834,7 +979,7 @@ static void field(const char *s, int k, char *out, size_t cap) {
 static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, const char *surface,
                               size_t length, ttf_buffer_t *b) {
     const char *mode = s->unit, *v = s->value;
-    char f0[TTF_IR_VALUE_SIZE], f1[TTF_IR_VALUE_SIZE], f2[TTF_IR_VALUE_SIZE], f3[8];
+    char f0[TTF_IR_VALUE_SIZE], f1[TTF_IR_VALUE_SIZE], f2[TTF_IR_VALUE_SIZE], f3[32], f4[32];
     if (strncmp(mode, "@vi-", 4)) {
         /* Shared objects in a Vietnamese sentence. */
         if (s->type == TTF_SEM_PHONE || s->type == TTF_SEM_DIGIT_SEQUENCE)
@@ -876,6 +1021,32 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         TRY(clock_words(e, b, bar + 1, strlen(bar + 1)));
     } else if (!strcmp(mode, "date"))
         TRY(date(e, b, v, !strcmp(s->secondary, "ngay")));
+    else if (!strcmp(mode, "date2")) {
+        field(v, 0, f0, sizeof(f0));
+        field(v, 1, f1, sizeof(f1));
+        TRY(date(e, b, f0, !strcmp(s->secondary, "ngay")));
+        TRY(word(e, b, "to"));
+        TRY(date(e, b, f1, 1));
+    } else if (!strcmp(mode, "daterange")) {
+        field(v, 0, f0, sizeof(f0));
+        field(v, 1, f1, sizeof(f1));
+        TRY(integer(e, b, f0, strlen(f0)));
+        TRY(word(e, b, "to"));
+        TRY(date(e, b, f1, 0));
+    } else if (!strcmp(mode, "height")) {
+        field(v, 0, f0, sizeof(f0));
+        field(v, 1, f1, sizeof(f1));
+        TRY(integer(e, b, f0, strlen(f0)));
+        TRY(suffix(e, b, "u:m"));
+        TRY(integer(e, b, f1, strlen(f1)));
+    } else if (!strcmp(mode, "addr")) {
+        char k2[24];
+        field(v, 0, f0, sizeof(f0));
+        field(v, 1, f1, sizeof(f1));
+        snprintf(k2, sizeof(k2), "addr_%s", f0);
+        TRY(word(e, b, k2));
+        TRY(integer(e, b, f1, strlen(f1)));
+    }
     else if (!strcmp(mode, "monthyear")) {
         const char *sl = strchr(v, '/');
         if (!sl)
@@ -904,12 +1075,20 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     } else if (!strcmp(mode, "weekday")) {
         field(v, 0, f0, sizeof(f0));
         field(v, 1, f1, sizeof(f1));
-        TRY(word(e, b, "weekday"));
-        TRY(digit_word(e, b, f0[0]));
+        if (f0[0] == 'C')
+            TRY(word(e, b, "sunday"));
+        else {
+            TRY(word(e, b, "weekday"));
+            TRY(digit_word(e, b, f0[0]));
+        }
         if (*f1) {
             TRY(word(e, b, "to"));
-            TRY(word(e, b, "weekday"));
-            TRY(digit_word(e, b, f1[0]));
+            if (f1[0] == 'C')
+                TRY(word(e, b, "sunday"));
+            else {
+                TRY(word(e, b, "weekday"));
+                TRY(digit_word(e, b, f1[0]));
+            }
         }
     } else if (!strcmp(mode, "version")) {
         const char *p = v;
@@ -930,9 +1109,12 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     } else if (!strcmp(mode, "frac")) {
         field(v, 0, f0, sizeof(f0));
         field(v, 1, f1, sizeof(f1));
+        field(s->secondary, 0, f2, sizeof(f2));
+        field(s->secondary, 1, f3, sizeof(f3));
         TRY(number(e, b, f0));
-        TRY(word(e, b, "over"));
+        TRY(word(e, b, *f2 ? "per" : "over"));
         TRY(number(e, b, f1));
+        TRY(suffix(e, b, f3));
     } else if (!strcmp(mode, "range")) {
         field(v, 0, f0, sizeof(f0));
         field(v, 1, f1, sizeof(f1));
@@ -942,7 +1124,15 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         if (!strcmp(f3, "to"))
             TRY(word(e, b, "to"));
         TRY(number(e, b, f1));
+        field(s->secondary, 3, f3, sizeof(f3));
+        field(s->secondary, 4, f4, sizeof(f4));
+        if (*f3)
+            TRY(put(b, f3));
         TRY(suffix(e, b, f2));
+        if (*f4) {
+            TRY(word(e, b, "per"));
+            TRY(suffix(e, b, f4 + 1));
+        }
     } else if (!strcmp(mode, "num")) {
         field(s->secondary, 0, f0, sizeof(f0));
         field(s->secondary, 1, f1, sizeof(f1));
@@ -954,8 +1144,10 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         if (*f2)
             TRY(put(b, f2));
         TRY(suffix(e, b, f0));
-        if (*f3)
+        if (*f3) {
             TRY(word(e, b, "per"));
+            TRY(suffix(e, b, f3 + 1));
+        }
     } else
         return TTF_EINVAL;
     if (strchr(s->secondary, '>'))

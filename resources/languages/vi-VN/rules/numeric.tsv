@@ -38,12 +38,17 @@ number	vi-VN	ordinal4	tư
 number	vi-VN	dot	chấm
 number	vi-VN	per	trên
 number	vi-VN	weekday	thứ
+number	vi-VN	sunday	chủ nhật
+number	vi-VN	addr_room	phòng
+number	vi-VN	addr_ward	phường
+number	vi-VN	addr_district	quận
 # Scales written after a number: 50k năm mươi nghìn, 2tr hai triệu.
 vi_scale	vi-VN	k	nghìn
 vi_scale	vi-VN	K	nghìn
 vi_scale	vi-VN	tr	triệu
 # Currencies after (15.000đ, 20 USD) or before ($20, €5) a number.
 vi_currency	vi-VN	đ	đồng
+vi_currency	vi-VN	đồng	đồng
 vi_currency	vi-VN	Đ	đồng
 vi_currency	vi-VN	₫	đồng
 vi_currency	vi-VN	VND	đồng

@@ -80,7 +80,7 @@ range	Nhiệt độ ở Hà Nội hôm nay dao động từ {28–35°C|hai mư�
 range	Hội nghị khoa học quốc tế về trí tuệ nhân tạo diễn ra từ ngày {12-14/10|mười hai [đến,tới] mười bốn tháng mười}.
 range	Trẻ em từ {6-11|sáu [đến,tới] mười một} tuổi được giảm {50%|năm mươi phần trăm} giá vé tham quan bảo tàng.
 range	Giá căn hộ chung cư ở khu vực này khoảng {60–80 triệu đồng/m²|sáu mươi [đến,tới] tám mươi triệu đồng [một,mỗi,trên] mét vuông}.
-range	Bộ phận một cửa tiếp công dân trong khung giờ {7h30-11h30|bảy giờ [ba mươi,rưỡi] [đến,tới] mười một giờ [ba mươi,rưỡi]}.
+range	Bộ phận một cửa tiếp công dân trong khung giờ {7h30-11h30|bảy giờ [ba mươi,ba mươi phút,rưỡi] [đến,tới] mười một giờ [ba mươi,ba mươi phút,rưỡi]}.
 range	Học sinh làm các bài tập {3-5|ba [đến,tới] năm} ở trang {45|bốn mươi [lăm,nhăm]} sách giáo khoa.
 range	Kế hoạch phát triển kinh tế - xã hội giai đoạn {2021-2025|hai [nghìn,ngàn] (không trăm) hai mươi mốt [đến,tới] hai [nghìn,ngàn] (không trăm) hai mươi [lăm,nhăm]} đã được thông qua.
 unit	Tuyến metro số {1|một} của Thành phố Hồ Chí Minh dài gần {20 km|hai mươi [ki lô mét,cây số]}.
