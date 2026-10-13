@@ -2,6 +2,12 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Vietnamese (vi-VN) phase 4, category-level work:
+  - Science and IT units.
+  - Formats: dimensions (nhân), ÷ ranges, ISO and dot dates, holiday date cues.
+  - Codes: road codes (QL1A), tour lengths (4N3Đ), short numbers, bare I/V/X Roman numerals.
+  - Results: held-out v4 (260 sentences, opened after the code freeze) scores 97.1% of spans. The
+    new-set scores by phase are 93.2, 97.1, 95.6 and 97.1. Contract vi_pack4_v77 (22).
 - Vietnamese (vi-VN) phase 3, fixing the failure types of held-out v2:
   - A code cue stays in its clause.
   - Notations: 1m05, an en dash minus, 35 tr, nm, 4.0, triệu ha.
