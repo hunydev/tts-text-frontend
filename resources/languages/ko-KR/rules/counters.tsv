@@ -2,8 +2,8 @@
 ordinal_marker	ko-KR	prefix	제
 native_ordinal_suffix	ko-KR	번째	native
 ordinal_first	ko-KR	1	첫
-# 101번째 백한 번째: hundreds Sino-Korean, a last digit 1-9 native (owner sets, 2026-10-14)
-ordinal_policy	ko-KR	large	mixed
+# 101번째 백일 번째 (test_korean_counters). mixed reads 백한 번째 (owner sets 2026-10-14; not adopted, owner to decide)
+ordinal_policy	ko-KR	large	sino
 counter_role_unit	ko-KR	번	1
 ordinal_prefix_unit	ko-KR	장	1
 ordinal_prefix_unit	ko-KR	회	1
