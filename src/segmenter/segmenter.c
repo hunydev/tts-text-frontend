@@ -501,7 +501,8 @@ ttf_status_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, i
                         size_t z = at + w;
                         while (z < n && s[z] == ' ')
                             ++z;
-                        if (z < n && strchr("=+-*/<>", s[z]))
+                        /* streaming: wait for the next mark before cutting after 5! */
+                        if (z < n ? strchr("=+-*/<>", s[z]) != NULL : !final)
                             sentence = 0;
                     }
                     if (cp == '.' && sentence &&
