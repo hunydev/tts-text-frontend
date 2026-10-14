@@ -61,6 +61,9 @@ electronic_word	th-TH	account	แอคเคานต์
 electronic_word	th-TH	login	ล็อกอิน
 # English words as Thai writes them (phase 2, 2026-10-14): read in an address, in a file name,
 # and before a number (iPhone 13 ไอโฟนสิบสาม, SAVE50 เซฟห้าสิบ); elsewhere an English word stays as written.
+electronic_word	th-TH	ios	ไอโอเอส
+electronic_word	th-TH	macos	แมคโอเอส
+electronic_word	th-TH	watchos	วอตช์โอเอส
 electronic_word	th-TH	iphone	ไอโฟน
 electronic_word	th-TH	ipad	ไอแพด
 electronic_word	th-TH	imac	ไอแมค

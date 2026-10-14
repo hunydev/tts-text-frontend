@@ -286,6 +286,12 @@ static int protected_period(const ttf_engine_t *e, const char *s, size_t at) {
     char key[96];
     if (at && s[at - 1] >= '0' && s[at - 1] <= '9')
         return 1;
+    /* ม.ค. น. บ.: Thai writes no sentence period, so a period after a Thai
+       letter (U+0E01-U+0E4E) closes an abbreviation (2026-10-14). */
+    if (at >= 3 && (unsigned char)s[at - 3] == 0xe0 &&
+        (((unsigned char)s[at - 2] == 0xb8 && (unsigned char)s[at - 1] >= 0x81) ||
+         ((unsigned char)s[at - 2] == 0xb9 && (unsigned char)s[at - 1] <= 0x8e)))
+        return 1;
     while (begin && ((s[begin - 1] >= 'a' && s[begin - 1] <= 'z') ||
                      (s[begin - 1] >= 'A' && s[begin - 1] <= 'Z') || s[begin - 1] == '.'))
         begin--;

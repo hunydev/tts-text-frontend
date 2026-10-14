@@ -326,6 +326,23 @@ static int cue_within(const ttf_engine_t *e, const char *t, size_t p, size_t win
     }
     return 0;
 }
+/* A range dash at p before a digit: -, – or the same with a space on each side
+   (100 - 200 บาท); its length with the spaces, or 0. */
+static size_t dash_len(const char *t, size_t n, size_t p) {
+    size_t a = p < n && t[p] == ' ' ? p + 1 : p, b;
+    if (has(t, n, a, "-"))
+        b = a + 1;
+    else if (has(t, n, a, "–"))
+        b = a + 3;
+    else
+        return 0;
+    if (a > p) {
+        if (!(b < n && t[b] == ' '))
+            return 0;
+        ++b;
+    }
+    return b < n && digit(t[b]) ? b - p : 0;
+}
 /* The longest of the |-separated cue words of th_cue key that starts at p; its length, or 0. */
 static size_t cue_at(const ttf_engine_t *e, const char *t, size_t n, size_t p, const char *key) {
     const char *words = res(e, "th_cue", key), *w;
@@ -876,11 +893,12 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     if (!*sign && z - q <= 2 && atoi(t + q) >= 1 && atoi(t + q) <= 31) {
         size_t me = month_after(e, t, n, z, &month), d2e = 0;
         int d2 = 0;
-        if (!me && z + 1 < n && t[z] == '-' && digit(t[z + 1])) {
-            for (d2e = z + 1; d2e < n && digit(t[d2e]); ++d2e)
+        if (!me && dash_len(t, n, z)) {
+            size_t d2b = z + dash_len(t, n, z);
+            for (d2e = d2b; d2e < n && digit(t[d2e]); ++d2e)
                 ;
-            d2 = atoi(t + z + 1);
-            if (d2e - z - 1 <= 2 && d2 > atoi(t + q) && d2 <= 31)
+            d2 = atoi(t + d2b);
+            if (d2e - d2b <= 2 && d2 > atoi(t + q) && d2 <= 31)
                 me = month_after(e, t, n, d2e, &month);
         }
         if (me) {
@@ -899,8 +917,8 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         int nat = has(t, n, after, "น."), colon = t[z] == ':';
         size_t r = 0, re = 0;
         /* a time range: 10.00-22.00 น. */
-        if ((t[te] == '-' || has(t, n, te, "–")) && te + 1 < n) {
-            r = te + (t[te] == '-' ? 1 : 3);
+        if (dash_len(t, n, te)) {
+            r = te + dash_len(t, n, te);
             if (r + 3 < n && digit(t[r])) {
                 size_t r2 = r;
                 while (r2 < n && digit(t[r2]))
@@ -1013,9 +1031,8 @@ not_time:
         }
     }
     /* ranges and scores: 3-5 วัน สามถึงห้าวัน, 4,500-6,000 บาท, 2-1 สองต่อหนึ่ง */
-    if (!*sign && u + 1 < n && (t[u] == '-' || has(t, n, u, "–")) &&
-        digit(t[u + (t[u] == '-' ? 1 : 3)])) {
-        size_t b0 = u + (t[u] == '-' ? 1 : 3);
+    if (!*sign && dash_len(t, n, u)) {
+        size_t b0 = u + dash_len(t, n, u);
         int g2, d2;
         size_t b1 = scan_number(t, n, b0, &g2, &d2);
         if (!(b1 < n && (digit(t[b1]) || t[b1] == '-' || alpha(t[b1]))) && t[b0] != '0') {
