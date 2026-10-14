@@ -483,8 +483,8 @@ static size_t classify_phone(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     service = service_number(in, &parsed, begin, &layer);
     /* Keep valid and invalid year-first dates under the established date grammar. */
     if (!parsed.international && !parsed.negative && !parsed.parenthesis && parsed.groups == 3 &&
-        parsed.hyphens == 2 && parsed.lengths[0] == 4)
-        return 0;
+        parsed.hyphens == 2 && parsed.lengths[0] == 4 && s[begin] != '0')
+        return 0; /* 0120-456-789 is a phone number: no year starts with 0 (owner sets, 2026-10-14) */
     /* Two hyphen endpoints are a numeric range unless explicit phone context
        disambiguates them; a leading '+' alone is not a telephone label. */
     if (!labeled && !parsed.parenthesis && parsed.groups == 2 && parsed.hyphens == 1 && !service)
@@ -523,7 +523,11 @@ static size_t classify_phone(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     }
     /* Additional bare hyphen groups can be bibliographic or account identifiers.
        Broader group layouts require an explicit phone cue. */
-    if (!labeled && !parsed.international && !parsed.parenthesis && parsed.groups > 3)
+    if (!labeled && !parsed.international && !parsed.parenthesis && parsed.groups > 3 &&
+        !(parsed.groups == 4 && parsed.hyphens == 3 && !parsed.spaced && s[begin] == '1' &&
+          parsed.lengths[0] == 1 && parsed.lengths[1] == 3 && parsed.lengths[2] == 3 && parsed.lengths[3] == 4))
+        /* 1-800-555-0132: the North American 1-3-3-4 layout is a phone number without a cue
+           (owner sets, 2026-10-14) */
         parsed.malformed = 1;
     minimum = policy(in->engine,
                      parsed.international ? "international_min_digits" : "national_min_digits", 7,

@@ -238,3 +238,8 @@ latin_phrase	ja-JP	NMB48	エヌエムビーフォーティーエイト
 latin_phrase	ja-JP	HKT48	エイチケーティーフォーティーエイト
 latin_phrase	ja-JP	TikTok	ティックトック
 latin_phrase	ja-JP	5W1H	ごダブリューいちエイチ
+# Owner evaluation sets, phase 5 (2026-10-14): 下4桁「4471」, クーポンコード「739102」, ホットライン「188」
+digit_cue	ja-JP	下4桁	1
+digit_cue	ja-JP	下四桁	1
+digit_cue	ja-JP	コード	1
+digit_cue	ja-JP	ホットライン	1

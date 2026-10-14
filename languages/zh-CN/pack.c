@@ -828,10 +828,27 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             ++q;
         return finish(in, s, q, "triangle", t + p + 3, q - p - 3, "");
     }
-    /* T+0 T加零 */
-    if (alpha(t[p]) && p + 2 < n && t[p + 1] == '+' && digit(t[p + 2])) {
-        q = digits_end(t, n, p + 2);
-        return finish(in, s, q, "tplus", t + p, q - p, "");
+    /* T+0 T加零, UTC+8 UTC加八 */
+    if (alpha(t[p])) {
+        size_t l = p;
+        while (l < n && l - p < 4 && t[l] >= 'A' && t[l] <= 'Z')
+            ++l;
+        if (l == p)
+            l = p + 1;
+        if (l + 1 < n && t[l] == '+' && digit(t[l + 1]) && (l - p == 1 || (t[p] >= 'A' && t[p] <= 'Z'))) {
+            q = digits_end(t, n, l + 1);
+            if (!(q < n && alnum(t[q])))
+                return finish(in, s, q, "tplus", t + p, q - p, "");
+        }
+    }
+    /* A7-21-33 A七二一三三: a letter code with hyphenated digit groups; 91110000600037341L */
+    if (t[p] >= 'A' && t[p] <= 'Z' && p + 2 < n && digit(t[p + 1]) && !(p && alnum(t[p - 1]))) {
+        size_t z = p + 1;
+        int hyphens = 0;
+        while (z < n && (digit(t[z]) || (t[z] == '-' && z + 1 < n && digit(t[z + 1]))))
+            hyphens += t[z++] == '-';
+        if (hyphens >= 2 && !(z < n && alnum(t[z])))
+            return finish(in, s, z, "latcode", t + p, z - p, "");
     }
     /* No.1 第一 */
     if ((has(t, n, p, "No.") || has(t, n, p, "NO.")) && p + 3 < n && digit(t[p + 3])) {
@@ -969,7 +986,7 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         return finish(in, s, z, "standard", t + p, z - p, "");
     }
     /* 10.1假期 十一, 5.1小长假 五一: a holiday named by its date. */
-    if (memchr(t + p, '.', len) && word_after(e, "holiday_after", t, n, q)) {
+    if (memchr(t + p, '.', len) && word_after(e, "holiday_after", t, n, q) && !prev_is(t, p, "第")) {
         const char *dot = memchr(t + p, '.', len);
         long mo = value_of(t, p, (size_t)(dot - t)), dd = value_of(t, (size_t)(dot - t) + 1, q);
         /* 6.18购物节 六一八: a shopping festival is named by its digits */
@@ -1108,6 +1125,18 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         if (!(z < n && alnum(t[z])))
             return finish(in, s, z, "digits", t + p, z - p, "");
     }
+    /* 0755-12320 零七五五幺二三二零: an area code and a number (owner sets) */
+    if (t[p] == '0' && (len == 3 || len == 4) && q + 6 < n && t[q] == '-' && digit(t[q + 1])) {
+        size_t z = digits_end(t, n, q + 1);
+        if (z - q - 1 >= 5 && z - q - 1 <= 8 && !(z < n && (alnum(t[z]) || t[z] == '-'))) {
+            char v[24];
+            snprintf(v, sizeof(v), "%.*s%.*s", (int)len, t + p, (int)(z - q - 1), t + q + 1);
+            return finish(in, s, z, "digits", v, strlen(v), "yao");
+        }
+    }
+    /* 91110000600037341L: a long code ending in a letter */
+    if (len >= 15 && q < n && t[q] >= 'A' && t[q] <= 'Z' && !(q + 1 < n && alnum(t[q + 1])))
+        return finish(in, s, q + 1, "latcode", t + p, len + 1, "");
     /* 2#机组 二号机组 */
     if (q + 3 < n && t[q] == '#' && !memchr(t + p, '.', len) && ((unsigned char)t[q + 1] & 0xf0) == 0xe0)
         return finish(in, s, q + 1, "hashno", t + p, len, "");
@@ -1484,13 +1513,17 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                     return finish2(in, s, b2 + l2 + uw2, "dims", t, p, len, b2, l2, key, u1);
                 snprintf(key, sizeof(key), "%s", u1);
             }
-            /* 2h15min 两小时十五分钟, 1m80 is not a compound (no second unit) */
+            /* 2h15min 两小时十五分钟, 1m80 is not a compound (no second unit);
+               3h45m 三小时四十五分钟: m after hours is minutes (owner sets) */
             if (q + uw < n && digit(t[q + uw])) {
                 size_t b2 = q + uw, l2 = scan_number(t, n, b2), uw2;
                 char u1[24];
                 snprintf(u1, sizeof(u1), "%s", key);
-                if ((uw2 = unit_after(e, t, n, b2 + l2, key, sizeof(key))) != 0)
+                if ((uw2 = unit_after(e, t, n, b2 + l2, key, sizeof(key))) != 0) {
+                    if (!strcmp(u1, "h") && !strcmp(key, "m"))
+                        snprintf(key, sizeof(key), "min");
                     return finish2(in, s, b2 + l2 + uw2, "compound", t, p, len, b2, l2, key, u1);
+                }
                 snprintf(key, sizeof(key), "%s", u1);
             }
             return finish2(in, s, q + uw, "unit", t, p, len, p, 0, key, "");
@@ -1565,6 +1598,43 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     if (len >= 3 && (cue_before(e, "phone_cue", t, p, 5) || word_after(e, "phone_after", t, n, q)) &&
         !word_after(e, "money_after", t, n, q) && !word_after(e, "liang_counter", t, n, q))
         return finish(in, s, q, "digits", t + p, len, "yao");
+    /* 转8021 转八零二幺: an extension after 转 */
+    if (len >= 3 && len <= 5 && prev_is(t, p, "转") && !word_after(e, "money_after", t, n, q) &&
+        !unit_after(e, t, n, q, key, sizeof(key)))
+        return finish(in, s, q, "digits", t + p, len, "yao");
+    /* RTX 4070 RTX四零七零: a model number after capitals and a space; AQI 165 一百六十五
+       and other index values keep the number (zh held-out 7) */
+    if ((len == 3 || len == 4) && p >= 3 && t[p - 1] == ' ' && t[p - 2] >= 'A' && t[p - 2] <= 'Z' &&
+        t[p - 3] >= 'A' && t[p - 3] <= 'Z' && !memchr(t + p, '.', len) && !(q < n && alnum(t[q]))) {
+        static const char *const index_words[] = {"AQI", "PMI", "CPI", "PPI", "BMI", "GDP", "KPI", "ROI", "ESG"};
+        size_t k, w = p - 1;
+        int value = 0;
+        while (w && t[w - 1] >= 'A' && t[w - 1] <= 'Z')
+            --w;
+        for (k = 0; k < sizeof(index_words) / sizeof(*index_words); ++k)
+            value |= p - 1 - w == strlen(index_words[k]) && !memcmp(t + w, index_words[k], p - 1 - w);
+        if (!value)
+            return finish(in, s, q, "digits", t + p, len, "");
+    }
+    /* 准考证号为3401 2026 0157: digit groups after a code label */
+    if (len >= 3 && len <= 4 && q + 4 < n && t[q] == ' ' && digit(t[q + 1]) && cue_before(e, "code_cue", t, p, 6)) {
+        size_t z = q, groups = 1;
+        char v[40];
+        size_t used = 0;
+        memcpy(v, t + p, len);
+        used = len;
+        while (z + 1 < n && t[z] == ' ' && digit(t[z + 1])) {
+            size_t g = digits_end(t, n, z + 1);
+            if (g - z - 1 < 3 || g - z - 1 > 4 || used + (g - z - 1) >= sizeof(v))
+                break;
+            memcpy(v + used, t + z + 1, g - z - 1);
+            used += g - z - 1;
+            z = g;
+            ++groups;
+        }
+        if (groups >= 2)
+            return finish(in, s, z, "digits", v, used, "yao");
+    }
     /* 818路公交: a route of three digits or more reads digit by digit */
     if (len >= 3 && has(t, n, q, "路") && !memchr(t + p, '.', len))
         return finish(in, s, q, "digits", t + p, len, "");
@@ -2061,9 +2131,22 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         return ttf_buffer_append(b, v, vn);
     }
     if (!strcmp(mode, "tplus")) {
-        TRY(ttf_buffer_append(b, v, 1));
+        const char *plus = memchr(v, '+', vn);
+        if (!plus)
+            return TTF_EINVAL;
+        TRY(ttf_buffer_append(b, v, (size_t)(plus - v)));
         TRY(word(e, b, "plus"));
-        return number(e, b, v + 2, vn - 2, 0);
+        return number(e, b, plus + 1, vn - (size_t)(plus - v) - 1, 0);
+    }
+    if (!strcmp(mode, "latcode")) {
+        /* A7-21-33 A七二一三三; 91110000600037341L: letters as written, digits one by one */
+        size_t i;
+        for (i = 0; i < vn; ++i)
+            if (digit(v[i]))
+                TRY(digits_each(e, b, v + i, 1, 0));
+            else if (v[i] != '-')
+                TRY(ttf_buffer_append(b, v + i, 1));
+        return TTF_OK;
     }
     if (!strcmp(mode, "ordno")) {
         TRY(word(e, b, "ordinal"));

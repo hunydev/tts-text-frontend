@@ -162,9 +162,9 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     }
     if (SAME(k, "digit_cue")) {
         *handled = 1;
-        return label(key) && strlen(key) < 16 && ttf_validation_enum(v, "0|1")
+        return label(key) && strlen(key) < 22 && ttf_validation_enum(v, "0|1")
                    ? TTF_OK
-                   : ttf_validation_error(d, "digit_cue requires a label under 16 bytes and 0|1");
+                   : ttf_validation_error(d, "digit_cue requires a label under 22 bytes and 0|1");
     }
     if (SAME(k, "digit")) {
         *handled = 1;

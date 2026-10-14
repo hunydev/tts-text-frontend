@@ -1277,6 +1277,11 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             }
             return TTF_OK;
         }
+        if (!strcmp(s->unit, "zero_number")) {
+            /* 0427번 공사이칠번 (owner sets, 2026-10-14; attached like 공삼번 in ko_bench_fixes_v32) */
+            TRY(ttf_ko_render_identifier(e, s->value, out));
+            return ttf_buffer_puts(out, "번");
+        }
         if (!strcmp(s->unit, "clothing_size")) {
             /* 66 육육, 55반 오오반, 55~77 오오에서 칠칠. */
             const char *v = s->value;
@@ -1719,6 +1724,12 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         }
         if (!strcmp(s->unit, "@expression"))
             return expression(e, s->value, out);
+        if (!strcmp(s->unit, "@word"))
+            return ttf_buffer_puts(out, s->value);
+        if (!strcmp(s->unit, "@resolution")) {
+            TRY(cardinal(e, s->value, out));
+            return ttf_buffer_puts(out, " 피");
+        }
         if (!strcmp(s->unit, "@math")) {
             const char *label = ttf_resource_get(e, "math_operator", "ko-KR", s->value, NULL);
             if (!label)
@@ -2745,6 +2756,52 @@ static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     return 0;
 }
 
+/* Owner evaluation sets, phase 5 (2026-10-14): 10/13(월) 시월 십삼 일 월요일,
+   0427번 공사이칠번, 1080p 천팔십 피. */
+static size_t owner_forms5(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    const char *t = in->text;
+    size_t n = in->length, p = in->tokens[in->index].begin, q;
+    char v[32];
+    /* (월) after a date: a weekday mark */
+    if (p >= 1 && p + 5 <= n && t[p] == '(' && t[p + 4] == ')' &&
+        (ko_digit(t[p - 1]) || (p >= 3 && !memcmp(t + p - 3, "일", 3)))) {
+        static const char *const days[] = {"월", "화", "수", "목", "금", "토", "일"};
+        size_t k;
+        for (k = 0; k < 7; ++k)
+            if (!memcmp(t + p + 1, days[k], 3)) {
+                size_t z = p - (ko_digit(t[p - 1]) ? 1 : 3);
+                /* a date before it: 10/13, 5/3, 21일 */
+                while (z && (ko_digit(t[z - 1]) || t[z - 1] == '/' || t[z - 1] == '.'))
+                    --z;
+                if (!memchr(t + z, '/', p - z) && !memchr(t + z, '.', p - z) && memcmp(t + p - 3, "일", 3))
+                    break;
+                (void)snprintf(v, sizeof(v), " %s요일", days[k]);
+                return ko_finish(in, s, p + 5, TTF_SEM_SYMBOL, v, "@word", "ko:weekday-mark");
+            }
+    }
+    if (p >= n || !ko_digit(t[p]) || (p && (ko_digit(t[p - 1]) || t[p - 1] == '.' || t[p - 1] == ',')))
+        return 0;
+    for (q = p; q < n && ko_digit(t[q]); ++q)
+        ;
+    /* 0427번: a number with a leading zero before 번 reads digit by digit */
+    if (t[p] == '0' && q - p >= 2 && q - p <= 8 && q + 3 <= n && !memcmp(t + q, "번", 3)) {
+        (void)snprintf(v, sizeof(v), "%.*s", (int)(q - p), t + p);
+        return ko_finish(in, s, q + 3, TTF_SEM_DIGIT_SEQUENCE, v, "zero_number", "ko:zero-number");
+    }
+    /* 1080p 천팔십 피: a video resolution */
+    if (q < n && (t[q] == 'p' || t[q] == 'P') && !(q + 1 < n && ((t[q + 1] >= 'a' && t[q + 1] <= 'z') ||
+                                                              (t[q + 1] >= 'A' && t[q + 1] <= 'Z') || ko_digit(t[q + 1])))) {
+        static const char *const sizes[] = {"360", "480", "720", "1080", "1440", "2160", "4320"};
+        size_t k;
+        for (k = 0; k < sizeof(sizes) / sizeof(*sizes); ++k)
+            if (strlen(sizes[k]) == q - p && !memcmp(t + p, sizes[k], q - p)) {
+                (void)snprintf(v, sizeof(v), "%.*s", (int)(q - p), t + p);
+                return ko_finish(in, s, q + 1, TTF_SEM_SYMBOL, v, "@resolution", "ko:resolution");
+            }
+    }
+    return 0;
+}
+
 /* 1/4분기 일 사분기: a quarter written as a fraction (owner sets, 2026-10-14). */
 static size_t quarter(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     const char *t = in->text;
@@ -2771,7 +2828,7 @@ static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     if (identifier)
         return identifier;
     if ((identifier = short_dotted_date(in, s)) != 0 || (identifier = quarter(in, s)) != 0 ||
-        (identifier = owner_forms(in, s)) != 0)
+        (identifier = owner_forms(in, s)) != 0 || (identifier = owner_forms5(in, s)) != 0)
         return identifier;
     identifier = ttf_ko_classify_basement(in, s);
     if (identifier)

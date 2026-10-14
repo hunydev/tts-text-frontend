@@ -544,3 +544,11 @@ classifier_priority	en-US	en.weekday-abbr	10
 classifier_priority	en-US	en.out-of	10
 classifier_priority	en-US	en.month-year	10
 classifier_priority	en-US	en.cents	10
+classifier_priority	en-US	en.scaled	10
+classifier_priority	en-US	en.seconds	10
+classifier_priority	en-US	en.model-number	10
+classifier_priority	en-US	en.time-range	10
+classifier_priority	en-US	en.minus-sign	10
+classifier_priority	en-US	en.power	10
+classifier_priority	en-US	en.product	10
+classifier_priority	en-US	en.currency-code	10

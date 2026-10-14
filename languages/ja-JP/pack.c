@@ -822,6 +822,109 @@ static size_t latin(const ttf_pack_input_t *in, ttf_semantic_t *s, const ttf_tok
     return 0;
 }
 
+/* Owner evaluation sets, phase 5 (2026-10-14). */
+static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *s, size_t begin) {
+    const char *text = in->text;
+    size_t n = in->length, q, z;
+    /* 前年同期比＋2.8％ ぷらすにてんはちパーセント: the plus sign ends the word token before
+       the number (a separate ＋2.8％ is already a signed percentage) */
+    {
+        size_t end = in->tokens[in->index].end;
+        /* the core hands the pack ASCII digits and signs: 前年比+2.8% */
+        if (end > begin + 3 && end < n && text[end - 1] == '+' && digit(text[end]) &&
+            ((unsigned char)text[end - 2] & 0x80) && end - begin + 9 < sizeof(s->value)) {
+            snprintf(s->value, sizeof(s->value), "%.*sプラス", (int)(end - 1 - begin), text + begin);
+            return finish(in, s, end, TTF_SEM_ABBREVIATION, "ja.plus", "");
+        }
+    }
+    /* R7.6.30 れいわななねんろくがつさんじゅうにち: an abbreviated era date */
+    if ((text[begin] == 'R' || text[begin] == 'H') && begin + 6 <= n && digit(text[begin + 1]) &&
+        !(begin && (alpha(text[begin - 1]) || digit(text[begin - 1])))) {
+        unsigned f[3] = {0, 0, 0};
+        int k, ok = 1;
+        q = begin + 1;
+        for (k = 0; k < 3 && ok; ++k) {
+            z = q;
+            while (z < n && digit(text[z]) && z - q < 3)
+                f[k] = f[k] * 10 + (unsigned)(text[z++] - '0');
+            ok = z > q && z - q <= 2 && (k == 2 || (z < n && text[z] == '.'));
+            q = k == 2 ? z : z + 1;
+        }
+        if (ok && f[0] >= 1 && f[1] >= 1 && f[1] <= 12 && f[2] >= 1 && f[2] <= 31 &&
+            !(q < n && (digit(text[q]) || alpha(text[q]) || (text[q] == '.' && q + 1 < n && digit(text[q + 1]))))) {
+            snprintf(s->value, sizeof(s->value), "%s|%u年%u月%u日", text[begin] == 'R' ? "れいわ" : "へいせい",
+                     f[0], f[1], f[2]);
+            return finish(in, s, q, TTF_SEM_COUNTER, "ja.era-date", "@era");
+        }
+    }
+    if (!digit(text[begin]) || (begin && (digit(text[begin - 1]) || alpha(text[begin - 1]))))
+        return 0;
+    for (q = begin; q < n && digit(text[q]); ++q)
+        ;
+    /* 24:00 にじゅうよじ: the end of the day */
+    if (q - begin == 2 && !memcmp(text + begin, "24:00", 5) && !(begin + 5 < n && (digit(text[begin + 5]) ||
+                                                                                   text[begin + 5] == ':'))) {
+        snprintf(s->value, sizeof(s->value), "24時");
+        return finish(in, s, begin + 5, TTF_SEM_COUNTER, "ja.end-of-day", "@ja");
+    }
+    /* 座席は23A にじゅうさんエー: a seat number */
+    if (q - begin <= 2 && q < n && text[q] >= 'A' && text[q] <= 'K' &&
+        !(q + 1 < n && (alpha(text[q + 1]) || digit(text[q + 1])))) {
+        size_t from = begin > 15 ? begin - 15 : 0, k;
+        int seat = q + 4 <= n && !memcmp(text + q + 1, "席", 3);
+        for (k = from; k + 6 <= begin && !seat; ++k)
+            seat = !memcmp(text + k, "座席", 6);
+        if (seat) {
+            snprintf(s->value, sizeof(s->value), "%.*s|%c", (int)(q - begin), text + begin, text[q]);
+            return finish(in, s, q + 1, TTF_SEM_SYMBOL, "ja.seat", "@seat");
+        }
+    }
+    /* 2^10 にのじゅうじょう */
+    if (q - begin <= 6 && q + 1 < n && text[q] == '^' && digit(text[q + 1])) {
+        for (z = q + 1; z < n && digit(text[z]); ++z)
+            ;
+        if (z - q - 1 <= 3 && !(z < n && (alpha(text[z]) || text[z] == '.'))) {
+            snprintf(s->value, sizeof(s->value), "%.*s|%.*s", (int)(q - begin), text + begin, (int)(z - q - 1),
+                     text + q + 1);
+            return finish(in, s, z, TTF_SEM_SYMBOL, "ja.power", "@power");
+        }
+    }
+    /* 090 8812 4403, ID: 823 4471 0956: spaced digit groups of a phone number or an ID read with の */
+    {
+        char v[48];
+        size_t used = 0, groups = 0, total = 0, last = begin, g;
+        z = begin;
+        for (;;) {
+            for (g = z; g < n && digit(text[g]); ++g)
+                ;
+            if (g - z < (groups ? 3u : 2u) || g - z > 4 || used + (g - z) + 2 >= sizeof(v))
+                break;
+            if (groups)
+                v[used++] = '-';
+            memcpy(v + used, text + z, g - z);
+            used += g - z;
+            total += g - z;
+            ++groups;
+            last = g;
+            if (!(g + 1 < n && text[g] == ' ' && digit(text[g + 1])))
+                break;
+            z = g + 1;
+        }
+        v[used] = 0;
+        if (groups >= 3 && total >= 10 && !(last < n && (digit(text[last]) || alpha(text[last])))) {
+            size_t from = begin > 24 ? begin - 24 : 0, k;
+            int cue = text[begin] == '0';
+            for (k = from; k + 2 <= begin && !cue; ++k)
+                cue = !memcmp(text + k, "ID", 2) || (k + 15 <= begin && !memcmp(text + k, "アイディー", 15));
+            if (cue && used < sizeof(s->value)) {
+                snprintf(s->value, sizeof(s->value), "%s", v);
+                return finish(in, s, last, TTF_SEM_PHONE, "ja.spaced-phone", "");
+            }
+        }
+    }
+    return 0;
+}
+
 /* 3本, 2024年10月8日, 4時15分, 1万円, 3〜5個, -5度: digits with written counters
  * become one counted span; the value keeps the normalized source. */
 static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
@@ -836,6 +939,11 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         return 0;
     t = &in->tokens[in->index];
     begin = t->begin;
+    {
+        size_t owned = owner_forms(in, s, begin);
+        if (owned)
+            return owned;
+    }
     /* B'z ビーズ, Wi-Fi ワイファイ, 7-Eleven セブンイレブン (latin_phrase). */
     if ((t->script == TTF_SCRIPT_LATIN || digit(text[begin])) && !(begin && (alpha(text[begin - 1]) ||
                                                                                digit(text[begin - 1])))) {
@@ -1396,10 +1504,13 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         if (cb >= 3 && (!memcmp(text + cb - 3, "は", 3) || !memcmp(text + cb - 3, "が", 3) ||
                         !memcmp(text + cb - 3, "を", 3) || !memcmp(text + cb - 3, "：", 3)))
             cb -= 3, gap = 1;
+        else if (cb >= 3 && !memcmp(text + cb - 3, "「", 3) && groups == 1 && q + 3 <= n &&
+                 !memcmp(text + q, "」", 3))
+            cb -= 3; /* 下4桁「4471」, ホットライン「188」 (owner sets, 2026-10-14) */
         else if (cb >= 1 && (text[cb - 1] == ' ' || text[cb - 1] == ':'))
             cb -= 1, gap = 1;
-        for (k = 2; k <= 15 && k <= cb; ++k) {
-            char cue[16];
+        for (k = 2; k <= 21 && k <= cb; ++k) {
+            char cue[24];
             if (((unsigned char)text[cb - k] & 0xc0) == 0x80)
                 continue;
             memcpy(cue, text + cb - k, k);
@@ -2317,6 +2428,15 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     const char *key;
     switch (s->type) {
     case TTF_SEM_COUNTER:
+        if (!strcmp(s->unit, "@era")) {
+            /* R7.6.30 れいわ + 7年6月30日 */
+            const char *bar = strchr(s->value, '|');
+            if (!bar)
+                return TTF_EINVAL;
+            if ((st = ttf_buffer_append(b, s->value, (size_t)(bar - s->value))) != TTF_OK)
+                return st;
+            return render_chain(e, bar + 1, b);
+        }
         if (!strcmp(s->unit, "@ja"))
             return render_chain(e, s->value, b);
         return measure(e, s, surface, length, b);
@@ -2546,6 +2666,29 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             if ((st = word(e, b, "grade_prefix", g)) != TTF_OK)
                 return st;
             return plain_number(e, d, b);
+        }
+        if (!strcmp(s->unit, "@power") && strchr(s->value, '|')) {
+            /* 2^10 にのじゅうじょう */
+            const char *bar = strchr(s->value, '|');
+            char base[24];
+            if ((size_t)(bar - s->value) >= sizeof(base))
+                return TTF_EINVAL;
+            snprintf(base, sizeof(base), "%.*s", (int)(bar - s->value), s->value);
+            if ((st = plain_number(e, base, b)) != TTF_OK || (st = ttf_buffer_puts(b, "の")) != TTF_OK ||
+                (st = plain_number(e, bar + 1, b)) != TTF_OK)
+                return st;
+            return word(e, b, "number", "power");
+        }
+        if (!strcmp(s->unit, "@seat")) {
+            /* 23A にじゅうさんエー */
+            const char *bar = strchr(s->value, '|');
+            char base[8];
+            if (!bar || (size_t)(bar - s->value) >= sizeof(base))
+                return TTF_EINVAL;
+            snprintf(base, sizeof(base), "%.*s", (int)(bar - s->value), s->value);
+            if ((st = plain_number(e, base, b)) != TTF_OK)
+                return st;
+            return word(e, b, "letter_name", bar + 1);
         }
         if (!strcmp(s->unit, "@power")) {
             size_t k = strlen(s->value);

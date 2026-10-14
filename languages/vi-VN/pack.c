@@ -884,6 +884,18 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         }
     }
 
+    /* Q = I × t Q bằng I nhân t: a spaced equals sign between a name and an expression */
+    if (t[p] == '=' && p >= 2 && p + 2 < n && t[p - 1] == ' ' && t[p + 1] == ' ' &&
+        (alpha(t[p - 2]) || digit(t[p - 2])) && (alpha(t[p + 2]) || digit(t[p + 2])))
+        return finish(in, s, p + 1, "math", "=", "");
+
+    /* ¾ ba phần tư, ¼ một phần tư, ½ một phần hai (owner sets, 2026-10-14) */
+    if (p + 2 <= n && (unsigned char)t[p] == 0xc2 &&
+        ((unsigned char)t[p + 1] == 0xbc || (unsigned char)t[p + 1] == 0xbd || (unsigned char)t[p + 1] == 0xbe) &&
+        !(p && digit(t[p - 1])))
+        return finish(in, s, p + 2, "frac",
+                      (unsigned char)t[p + 1] == 0xbc ? "1|4" : (unsigned char)t[p + 1] == 0xbd ? "1|2" : "3|4", "|");
+
     /* 7 × 8 = 56, S = a × b, (15 + 25) : 4 = 10, 4x100m, x2 */
     if ((digit(t[p]) || alpha(t[p]) || t[p] == '(' || !strncmp(t + p, "√", 3) || !strncmp(t + p, "π", 2) ||
          !strncmp(t + p, "Δ", 2)) &&
@@ -1550,6 +1562,10 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         if (s->type == TTF_SEM_CUSTOM && !strcmp(mode, "@alphabet"))
             return !strcmp(s->secondary, "control-surface") ? digits_each(e, b, surface, length)
                                                            : digits_each(e, b, v, strlen(v));
+        /* P = U × I P bằng U nhân I: a shared expression reads with the Vietnamese operators
+           (owner sets, 2026-10-14) */
+        if (s->type == TTF_SEM_SYMBOL && !strcmp(mode, "@expression") && *v)
+            return maths_reading(e, b, v);
         return ttf_buffer_append(b, surface, length);
     }
     mode += 4;

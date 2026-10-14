@@ -1132,3 +1132,6 @@ classifier_priority	ko-KR	ko:quarter	10
 classifier_priority	ko-KR	ko:duration	10
 classifier_priority	ko-KR	ko:holiday-date	10
 classifier_priority	ko-KR	ko:ratio	10
+classifier_priority	ko-KR	ko:weekday-mark	10
+classifier_priority	ko-KR	ko:zero-number	10
+classifier_priority	ko-KR	ko:resolution	10

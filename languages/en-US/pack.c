@@ -1518,6 +1518,46 @@ static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
                 return owner_finish(in, out, r, TTF_SEM_SYMBOL, "@ratio", v, "en.ratio");
             }
         }
+        /* 1.2M one point two million: a decimal before M or B (owner sets, 2026-10-14) */
+        if (q + 2 < n && t[q] == '.' && ascii_digit_char(t[q + 1])) {
+            size_t d = q + 1;
+            while (d < n && ascii_digit_char(t[d]))
+                ++d;
+            if (d < n && (t[d] == 'M' || t[d] == 'B') &&
+                !(d + 1 < n && (ascii_letter_char(t[d + 1]) || ascii_digit_char(t[d + 1])))) {
+                (void)snprintf(v, sizeof(v), "%.*s|%s", (int)(d - p), t + p, t[d] == 'M' ? "million" : "billion");
+                return owner_finish(in, out, d + 1, TTF_SEM_SYMBOL, "@scaled", v, "en.scaled");
+            }
+        }
+        /* a 90 s target ninety second, 4 min 12 s four minutes twelve seconds */
+        if (q - p <= 4 && q + 2 <= n && t[q] == ' ' && t[q + 1] == 's' &&
+            !(q + 2 < n && (ascii_letter_char(t[q + 2]) || ascii_digit_char(t[q + 2]) || t[q + 2] == '\'' ||
+                            t[q + 2] == '-')) &&
+            (word_before(t, p, "min|mins|minute|minutes|wait|waited|took|takes|take|lasted|lasts|after|every|within|"
+                               "timeout|latency|delay|interval|about|around|under|over|only|than") ||
+             (q + 3 < n && t[q + 2] == ' ' &&
+              (!strncmp(t + q + 3, "target", 6) || !strncmp(t + q + 3, "window", 6) || !strncmp(t + q + 3, "timeout", 7) ||
+               !strncmp(t + q + 3, "delay", 5) || !strncmp(t + q + 3, "limit", 5) || !strncmp(t + q + 3, "interval", 8) ||
+               !strncmp(t + q + 3, "cooldown", 8) || !strncmp(t + q + 3, "countdown", 9))))) {
+            static const char *const nouns[] = {"target", "window", "timeout", "delay", "limit", "interval",
+                                                "clip", "cooldown", "countdown", "video", "rest", "break"};
+            size_t k, w = q + 3;
+            int adjective = 0;
+            if (q + 2 < n && t[q + 2] == ' ')
+                for (k = 0; k < sizeof(nouns) / sizeof(*nouns); ++k) {
+                    size_t l = strlen(nouns[k]);
+                    if (w + l <= n && !strncmp(t + w, nouns[k], l) && !(w + l < n && ascii_letter_char(t[w + l])))
+                        adjective = 1;
+                }
+            (void)snprintf(v, sizeof(v), "%.*s|%s", (int)(q - p), t + p, adjective ? "second" : "s");
+            return owner_finish(in, out, q + 2, TTF_SEM_SYMBOL, "@seconds", v, "en.seconds");
+        }
+        /* 737 MAX seven thirty seven (Boeing 737 alone stays seven hundred thirty seven, nemo-engconf) */
+        if (q - p == 3 && in->engine->frontend_options.output_mode == TTF_OUTPUT_SPEECH &&
+            q + 4 <= n && !strncmp(t + q, " MAX", 4) && !(q + 4 < n && ascii_letter_char(t[q + 4]))) {
+            (void)snprintf(v, sizeof(v), "%.*s", (int)(q - p), t + p);
+            return owner_finish(in, out, q, TTF_SEM_ALNUM_TERM, "", v, "en.model-number");
+        }
         /* Room 1408 fourteen oh eight, Gate 214 two fourteen */
         if (q - p >= 3 && q - p <= 4 && t[p] != '0' &&
             in->engine->frontend_options.output_mode == TTF_OUTPUT_SPEECH &&
@@ -1528,6 +1568,53 @@ static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
             return owner_finish(in, out, q, TTF_SEM_ALNUM_TERM, "", v, "en.pair-label");
         }
         return 0;
+    }
+    /* 8am–1pm eight a m to one p m: an en dash between clock times (owner sets, 2026-10-14) */
+    if (p >= 3 && p + 3 < n && !strncmp(t + p, "\xe2\x80\x93", 3) && ascii_digit_char(t[p + 3]) &&
+        (t[p - 1] == 'm' || t[p - 1] == 'M' || (t[p - 1] == '.' && (t[p - 2] == 'm' || t[p - 2] == 'M')))) {
+        size_t m = t[p - 1] == '.' ? p - 2 : p - 1;
+        char c = m ? t[m - 1] : 0;
+        if ((c == 'a' || c == 'p' || c == 'A' || c == 'P' || c == '.') && m >= 2 &&
+            (ascii_digit_char(t[m - 2]) || t[m - 2] == ' ' || t[m - 2] == 'a' || t[m - 2] == 'p'))
+            return owner_finish(in, out, p + 3, TTF_SEM_SYMBOL, "@word", " to ", "en.time-range");
+    }
+    /* x − 3 x minus three: a spaced minus sign (U+2212) between terms */
+    if (p && p + 4 < n && !strncmp(t + p, "\xe2\x88\x92", 3) && t[p - 1] == ' ' && t[p + 3] == ' ')
+        return owner_finish(in, out, p + 3, TTF_SEM_SYMBOL, "@word", "minus", "en.minus-sign");
+    /* x² x squared, πr² pi r squared: a superscript after a letter */
+    if (p && (!strncmp(t + p, "\xc2\xb2", 2) || !strncmp(t + p, "\xc2\xb3", 2)) &&
+        (ascii_letter_char(t[p - 1]) || t[p - 1] == ')') &&
+        /* 53.5 /km², 50 m²: a unit keeps its own reading */
+        !word_before(t, p, "m|cm|mm|km|dm|ft|in|mi|yd|nm|um"))
+    {
+        /* I²R eye squared R: a space only before a following letter */
+        int tight = p + 2 < n && (ascii_letter_char(t[p + 2]) || ascii_digit_char(t[p + 2]));
+        return owner_finish(in, out, p + 2, TTF_SEM_SYMBOL, "@word",
+                            t[p + 1] == '\xb2' ? (tight ? " squared " : " squared") : (tight ? " cubed " : " cubed"),
+                            "en.power");
+    }
+    /* (x + 2)(x − 3) x plus two times x minus three */
+    if (p && t[p] == '(' && t[p - 1] == ')')
+        return owner_finish(in, out, p + 1, TTF_SEM_SYMBOL, "@word", " times (", "en.product");
+    /* CAD 64.30 sixty four Canadian dollars and thirty cents: a currency code before an amount */
+    if (t[p] >= 'A' && t[p] <= 'Z' && p + 5 < n && t[p + 3] == ' ' && ascii_digit_char(t[p + 4]) &&
+        !(p && ascii_letter_char(t[p - 1]))) {
+        static const char *const codes[] = {"GBP", "CAD", "AUD", "CHF", "JPY", "CNY",
+                                            "NZD", "SGD", "HKD", "INR", "MXN"};
+        size_t k, used = 0;
+        for (k = 0; k < sizeof(codes) / sizeof(*codes); ++k)
+            if (!strncmp(t + p, codes[k], 3)) {
+                for (r = p + 4; r < n && used + 1 < sizeof(v) &&
+                                (ascii_digit_char(t[r]) ||
+                                 ((t[r] == ',' || t[r] == '.') && r + 1 < n && ascii_digit_char(t[r + 1])));
+                     ++r)
+                    if (t[r] != ',')
+                        v[used++] = t[r];
+                v[used] = 0;
+                if (r < n && (ascii_letter_char(t[r]) || ascii_digit_char(t[r])))
+                    return 0;
+                return owner_finish(in, out, r, TTF_SEM_CURRENCY, codes[k], v, "en.currency-code");
+            }
     }
     /* +/- 3 plus or minus three */
     if (p + 3 < n && !strncmp(t + p, "+/-", 3))
@@ -2210,6 +2297,19 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
                 (st = space(b)) != TTF_OK)
                 return st;
             return card(e, c, b);
+        }
+        if (!strcmp(s->unit, "@scaled") || !strcmp(s->unit, "@seconds")) {
+            /* 1.2|million one point two million; 90|s ninety seconds, 1|s one second, 90|second */
+            char left[24];
+            const char *bar = strchr(s->value, '|');
+            if (!bar || (size_t)(bar - s->value) >= sizeof(left))
+                return TTF_EINVAL;
+            (void)snprintf(left, sizeof(left), "%.*s", (int)(bar - s->value), s->value);
+            if ((st = numeric(e, left, b)) != TTF_OK || (st = space(b)) != TTF_OK)
+                return st;
+            if (!strcmp(bar + 1, "s"))
+                return ttf_buffer_puts(b, !strcmp(left, "1") ? "second" : "seconds");
+            return ttf_buffer_puts(b, bar + 1);
         }
         if (!strcmp(s->unit, "@cents")) {
             uint64_t a;

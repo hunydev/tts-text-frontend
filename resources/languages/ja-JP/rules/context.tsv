@@ -41,3 +41,9 @@ classifier_priority	ja-JP	ja.letter-suffix	50
 classifier_priority	ja-JP	ja.extension	50
 classifier_priority	ja-JP	ja.roman-english	50
 classifier_priority	ja-JP	ja.space-grouped	50
+classifier_priority	ja-JP	ja.plus	50
+classifier_priority	ja-JP	ja.era-date	50
+classifier_priority	ja-JP	ja.end-of-day	50
+classifier_priority	ja-JP	ja.seat	50
+classifier_priority	ja-JP	ja.power	50
+classifier_priority	ja-JP	ja.spaced-phone	50

@@ -71,6 +71,25 @@
     vi 97.4 / 94.2. No dev span lost. Contract user_eval4_v84 (22). Other gates unchanged.
   - Contracts updated with Was notes (owner-set evidence): vi_prod_v80 12/28 phiếu trên,
     vi_pack2_v75 P.308 phòng ba không tám and IP 192.168.1.1 digit by digit.
+- User eval phase 5 (codes, time ranges, era dates, weekday marks and expressions, 2026-10-14):
+  - Shared: an unlabelled 1-800-555-0132 (the 1-3-3-4 layout) is a phone number, and a 4-3-3
+    number starting with 0 (0120-456-789) is a phone number rather than a malformed date.
+  - Chinese: 第4.2节 第四点二节, 3h45m 三小时四十五分钟, UTC+8 UTC加八, A7-21-33 A七二一三三,
+    0755-12320 digit by digit, 转8021, RTX 4070 (index values such as AQI 165 keep the number),
+    spaced digit groups after a code label.
+  - English: 8am–1pm to, (x + 2)(x − 3) times and minus, x² squared (units such as km² keep their
+    reading), 1.2M million, 4 min 12 s and a 90 s target (only with a time cue), 737 MAX seven
+    thirty seven, CAD 64.30 and CHF 40.
+  - Japanese: 前年比＋2.8％ プラス, R7.6.30 れいわななねん…, 座席は23A, 24:00 にじゅうよじ,
+    2^10 にのじゅうじょう, spaced phone and ID groups with の, digits in 「」 after 下4桁,
+    クーポンコード and ホットライン.
+  - Korean: 10/13(월) 시월 십삼 일 월요일, 0427번 공사이칠번, 1080p 천팔십 피.
+  - Vietnamese: ¾ ba phần tư, × nhân in a shared expression, x = 5 bằng.
+  - Span accuracy, dev / test: ko 94.2 / 90.7, en 94.7 / 88.5, ja 94.5 / 90.9, zh 97.3 / 96.1,
+    vi 97.5 / 94.5. No dev span lost (51 gained). Contract user_eval5_v85 (28). Korean quick
+    +6 / -1 against the references (leading-zero 번 numbers), zh held-out 5 +2, other gates unchanged.
+  - Contract updated with Was notes (owner-set evidence): slash_date_v21 reads a weekday mark
+    after a date as the weekday (구 월 이십오 일 목요일).
 - Vietnamese (vi-VN) is in production (project-owner decision, 2026-10-13).
   - TTS -> STT comparison: OpenAI, all 257 held-out v6 sentences. 63.8% were read right from the
     raw text and 93.8% from our output.
