@@ -404,6 +404,105 @@ static size_t unit_after(const ttf_engine_t *e, const char *t, size_t n, size_t 
     }
     return best;
 }
+/* ---- maths (held-out v1, 2026-10-14): 12 + 8 = 20, x² + 2x - 3 = 0, √81 = 9, 45 ÷ 9 ----
+   rel marks a relation, strong an operator that alone makes an expression, post a mark after
+   its operand (²). - alone is no expression (3-5 is a range, 2-1 a score). */
+static const struct {
+    const char *mark, *key;
+    int rel, strong, post;
+} TH_MATH[] = {{"≥", "greaterequal", 1, 0, 0}, {"≤", "lessequal", 1, 0, 0}, {"≠", "notequal", 1, 0, 0},
+               {"=", "equals", 1, 0, 0},       {">", "greater", 1, 0, 0},   {"<", "less", 1, 0, 0},
+               {"×", "times", 0, 1, 0},        {"÷", "divide", 0, 1, 0},    {"√", "root", 0, 1, 0},
+               {"²", "square", 0, 1, 1},       {"³", "cube", 0, 1, 1},      {"+", "plus", 0, 0, 0},
+               {"−", "minus", 0, 0, 0},        {"-", "minus", 0, 0, 0}};
+enum { TM_NONE, TM_NUMBER, TM_LETTER, TM_MARK };
+/* One element at p: a number (12, 1.75, 1,000), one ASCII letter (x, a) or a mark; its length. */
+static size_t math_element(const char *t, size_t n, size_t p, int *kind, int *mark) {
+    size_t k;
+    *kind = TM_NONE, *mark = -1;
+    if (p >= n)
+        return 0;
+    if (digit(t[p])) {
+        int g, d;
+        *kind = TM_NUMBER;
+        return scan_number(t, n, p, &g, &d) - p;
+    }
+    if (alpha(t[p]) && !(p + 1 < n && alpha(t[p + 1]))) {
+        *kind = TM_LETTER;
+        return 1;
+    }
+    for (k = 0; k < sizeof(TH_MATH) / sizeof(*TH_MATH); ++k)
+        if (has(t, n, p, TH_MATH[k].mark)) {
+            *kind = TM_MARK, *mark = (int)k;
+            return strlen(TH_MATH[k].mark);
+        }
+    return 0;
+}
+/* The end of an expression at p, or 0: two operands with a relation, a strong operator or +
+   between them, or one operand with √ or ². Letters alone need a relation (a > b). */
+static size_t math_end(const char *t, size_t n, size_t p) {
+    size_t z = p, last = 0, len;
+    int rel = 0, strong = 0, plus = 0, numbers = 0, operands = 0, single = 0, after = 0, kind, mark;
+    while (z < n) {
+        size_t s0 = z > p && t[z] == ' ' ? z + 1 : z;
+        if (!(len = math_element(t, n, s0, &kind, &mark)))
+            break;
+        if (kind == TM_NUMBER || kind == TM_LETTER) {
+            /* 12 8, a b: two operands without an operator are prose; 2x is a product */
+            if (after && (kind == TM_NUMBER || s0 > z))
+                break;
+            numbers += kind == TM_NUMBER;
+            ++operands;
+            after = 1;
+            last = s0 + len;
+        } else if (TH_MATH[mark].post) {
+            if (!after)
+                break;
+            single = strong = 1;
+            last = s0 + len;
+        } else if (!strcmp(TH_MATH[mark].mark, "√")) {
+            if (after)
+                break;
+            single = strong = 1;
+        } else {
+            if (!after)
+                break;
+            rel |= TH_MATH[mark].rel;
+            strong |= TH_MATH[mark].strong;
+            plus |= *TH_MATH[mark].mark == '+';
+            after = 0;
+        }
+        z = s0 + len;
+    }
+    if (!last || (!numbers && !rel) || !(rel || strong || plus) || (operands < 2 && !single))
+        return 0;
+    return last;
+}
+static ttf_status_t math_reading(const ttf_engine_t *e, ttf_buffer_t *b, const char *v) {
+    size_t n = strlen(v), z = 0, len, i, k;
+    int kind, mark;
+    char num[64];
+    while (z < n) {
+        if (v[z] == ' ') {
+            ++z;
+            continue;
+        }
+        if (!(len = math_element(v, n, z, &kind, &mark)))
+            return TTF_EINVAL;
+        if (kind == TM_NUMBER) {
+            for (i = z, k = 0; i < z + len && k + 1 < sizeof(num); ++i)
+                if (v[i] != ',')
+                    num[k++] = v[i];
+            num[k] = 0;
+            TRY(number(e, b, num));
+        } else if (kind == TM_LETTER)
+            TRY(letter(e, b, v[z]));
+        else
+            TRY(word(e, b, TH_MATH[mark].key));
+        z += len;
+    }
+    return TTF_OK;
+}
 /* A Thai abbreviation of th_abbr that may stand anywhere (เดือน ต.ค., พ.ศ.) at p; the end. */
 static size_t abbr_at(const ttf_engine_t *e, const char *t, size_t n, size_t p, char *key, size_t cap) {
     size_t l, best = 0;
@@ -473,6 +572,23 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     /* ½ ครึ่ง */
     if (has(t, n, p, "½"))
         return finish(in, s, p + 2, "lit", res(e, "number", "half") ? res(e, "number", "half") : "½", "");
+    /* 12 + 8 = 20, √81 = 9, x > 5: an expression */
+    if ((digit(t[p]) || has(t, n, p, "√") || (alpha(t[p]) && !(p && alpha(t[p - 1])))) &&
+        !(p && (digit(t[p - 1]) || t[p - 1] == '.' || t[p - 1] == ','))) {
+        size_t me = math_end(t, n, p);
+        /* 3×4 ม. stays a product with its unit; an equation takes its unit as written */
+        if (me && me - p < sizeof(v) && !(unit_after(e, t, n, me, key, sizeof(key)) && !memchr(t + p, '=', me - p))) {
+            snprintf(v, sizeof(v), "%.*s", (int)(me - p), t + p);
+            return finish(in, s, me, "math", v, "");
+        }
+    }
+    /* ~500 บาท ประมาณห้าร้อยบาท */
+    if (t[p] == '~' && spaces(t, n, p + 1) < n && digit(t[spaces(t, n, p + 1)]))
+        return finish(in, s, p + 1, "lit", res(e, "number", "approx"), "");
+    /* จันทร์-ศุกร์ จันทร์ถึงศุกร์: a dash between weekdays */
+    if ((t[p] == '-' || has(t, n, p, "–")) && cue_before(e, t, p, "weekday") &&
+        cue_at(e, t, n, spaces(t, n, p + (t[p] == '-' ? 1 : 3)), "weekday"))
+        return finish(in, s, p + (t[p] == '-' ? 1 : 3), "lit", res(e, "number", "to"), "");
     /* 1 ม.ค. - 31 มี.ค., ต.ค.-ธ.ค.: a dash between dates or months reads ถึง */
     if ((t[p] == '-' || has(t, n, p, "–")) && month_before(e, t, p)) {
         size_t w = t[p] == '-' ? 1 : 3, a = spaces(t, n, p + w);
@@ -507,6 +623,10 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                 size_t d = c + 1, d1;
                 while (d < n && digit(t[d]))
                     ++d;
+                /* มท 0808.2/ว 1234 */
+                if (d + 1 < n && t[d] == '.' && digit(t[d + 1]))
+                    for (++d; d < n && digit(t[d]); ++d)
+                        ;
                 d1 = d;
                 /* /ว 212 */
                 if (d + 1 < n && t[d] == '/') {
@@ -629,6 +749,19 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             }
             if (l - p >= 2 && l - p <= 4 && l + 1 < n && t[l] == ' ' && digit(t[l + 1]) &&
                 !(has(t, n, p, "THB") || has(t, n, p, "USD") || has(t, n, p, "EUR") || has(t, n, p, "JPY"))) {
+                size_t d1 = l + 1, nd;
+                while (d1 < n && digit(t[d1]))
+                    ++d1;
+                nd = d1 - l - 1;
+                /* TG 628 ทีจีหกสองแปด, HN 650123: a flight or record code reads digit by digit
+                   (not a year: APEC 2022; not a quantity: RAM 512 GB) */
+                if (nd >= 3 && nd <= 6 &&
+                    !(nd == 4 && (has(t, n, l + 1, "19") || has(t, n, l + 1, "20") || has(t, n, l + 1, "25"))) &&
+                    !(d1 < n && (alpha(t[d1]) || digit(t[d1]) || strchr(".,%/:-", t[d1]))) &&
+                    !unit_after(e, t, n, d1, key, sizeof(key))) {
+                    snprintf(v, sizeof(v), "%.*s", (int)(d1 - p), t + p);
+                    return finish(in, s, d1, "code", v, "");
+                }
                 snprintf(v, sizeof(v), "%.*s", (int)(l - p), t + p);
                 return finish(in, s, l, "code", v, "");
             }
@@ -708,6 +841,9 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
 
     /* ---- a sign or a currency before the number ---- */
     q = p;
+    /* โควิด-19 โควิดสิบเก้า: a hyphen joining a Thai word to a number is silent */
+    if (t[q] == '-' && q + 1 < n && digit(t[q + 1]) && thai_before(t, q))
+        return finish(in, s, q + 1, "lit", "", "");
     if ((t[q] == '-' || t[q] == '+') && q + 1 < n && digit(t[q + 1]) &&
         !(q && (digit(t[q - 1]) || alpha(t[q - 1])))) {
         sign[0] = t[q];
@@ -830,6 +966,24 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         snprintf(v, sizeof(v), "%.*s", (int)(r - q), t + q);
         return finish(in, s, r, "phone", v, "");
     }
+    /* 123-4-56789-0: three or more hyphen-joined digit groups (an account) read digit by digit;
+       13-10-2569 and 2569-10-13 stay dates */
+    if (!*sign && z + 1 < n && t[z] == '-' && digit(t[z + 1])) {
+        size_t r = z, groups = 1, len[3] = {z - q, 0, 0};
+        while (r + 1 < n && t[r] == '-' && digit(t[r + 1])) {
+            size_t r0 = ++r;
+            while (r < n && digit(t[r]))
+                ++r;
+            if (groups < 3)
+                len[groups] = r - r0;
+            ++groups;
+        }
+        if (groups >= 3 && !(r < n && (alpha(t[r]) || t[r] == '.' || t[r] == ',' || t[r] == '/')) &&
+            !(groups == 3 && ((len[0] <= 2 && len[1] <= 2 && len[2] == 4) || (len[0] == 4 && len[1] <= 2 && len[2] <= 2)))) {
+            snprintf(v, sizeof(v), "%.*s", (int)(r - q), t + q);
+            return finish(in, s, r, "phone", v, "");
+        }
+    }
     /* 1.0.7 หนึ่งจุดศูนย์จุดเจ็ด, iOS 17.4.1: three dotted numbers */
     if (!*sign && z - q <= 3 && z + 1 < n && t[z] == '.' && digit(t[z + 1])) {
         size_t r = z, parts = 1;
@@ -910,6 +1064,13 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             return finish(in, s, ye, d2 ? "daterange" : "date", v, "");
         }
     }
+    /* 2:05:37 สองชั่วโมงห้านาทีสามสิบเจ็ดวินาที: a duration (a clock with seconds takes น.) */
+    if (!*sign && z - q <= 2 && z + 5 < n && t[z] == ':' && digit(t[z + 1]) && digit(t[z + 2]) && t[z + 3] == ':' &&
+        digit(t[z + 4]) && digit(t[z + 5]) && !(z + 6 < n && digit(t[z + 6])) &&
+        !has(t, n, spaces(t, n, z + 6), "น.")) {
+        snprintf(v, sizeof(v), "%d|%d|%d", atoi(t + q), atoi(t + z + 1), atoi(t + z + 4));
+        return finish(in, s, z + 6, "duration", v, "");
+    }
     /* times: 14.00 น., 06:00, 20:00 น., 10.00-22.00 น. */
     if (!*sign && z - q <= 2 && z + 2 < n && (t[z] == '.' || t[z] == ':') && digit(t[z + 1]) && digit(t[z + 2]) &&
         !(z + 3 < n && digit(t[z + 3])) && atoi(t + q) <= 24 && atoi(t + z + 1) <= 59) {
@@ -969,6 +1130,10 @@ not_time:
     if (!*sign && ((t[q] == '0' && z - q >= 2 && !(z < n && t[z] == '.')) ||
                    (z - q >= 8 && !(z < n && t[z] == ',')) ||
                    (z - q >= 4 && cue_within(e, t, q, 40, "code") && !(z < n && (t[z] == ',' || t[z] == '.'))) ||
+                   /* รหัสไปรษณีย์เขตปทุมวันคือ 10330 */
+                   (z - q == 5 && cue_within(e, t, q, 120, "postal") && !(z < n && (t[z] == ',' || t[z] == '.'))) ||
+                   /* 67-0412: a group after a hyphen starting with 0 is a code, never a range */
+                   (z + 2 < n && t[z] == '-' && t[z + 1] == '0' && digit(t[z + 2])) ||
                    /* LOT 2409B, 7H2: digits with letters after them */
                    (z - q >= 3 && z < n && t[z] >= 'A' && t[z] <= 'Z' && !unit_after(e, t, n, z, key, sizeof(key))) ||
                    (z < n && t[z] >= 'A' && t[z] <= 'Z' && z + 1 < n && digit(t[z + 1])))) {
@@ -1051,6 +1216,14 @@ not_time:
         while (b1 < n && digit(t[b1]))
             ++b1;
         if (!(b1 < n && (digit(t[b1]) || t[b1] == '/' || t[b1] == '.' || t[b1] == ':'))) {
+            char ua[40] = "";
+            size_t ue = t[u] == '/' ? unit_after(e, t, n, b1, ua, sizeof(ua)) : 0;
+            int bp = ue && (!strcmp(ua, "มม.ปรอท") || !strcmp(ua, "mmHg"));
+            /* บ้านเลขที่ 47/12 สี่สิบเจ็ดทับสิบสอง, 150/90 มม.ปรอท a blood pressure */
+            if (t[u] == '/' && (bp || cue_before(e, t, q, "address"))) {
+                snprintf(v, sizeof(v), "%.*s|%.*s|%s", (int)(u - q), t + q, (int)(b1 - u - 1), t + u + 1, bp ? ua : "");
+                return finish(in, s, bp ? ue : b1, "slashnum", v, "");
+            }
             snprintf(v, sizeof(v), "%.*s|%.*s", (int)(u - q), t + q, (int)(b1 - u - 1), t + u + 1);
             return finish(in, s, b1, t[u] == ':' ? "versus" : "over", v, "");
         }
@@ -1114,7 +1287,12 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             /* +66 2 123 4567 บวกหกหก สอง หนึ่งสองสาม สี่ห้าหกเจ็ด; 0032-77A a code */
             size_t i;
             for (i = 0; i < length; ++i)
-                if (digit(surface[i]))
+                if (i + 3 <= length && (unsigned char)surface[i] == 0xe0 && (unsigned char)surface[i + 1] == 0xb9 &&
+                    (unsigned char)surface[i + 2] >= 0x90 && (unsigned char)surface[i + 2] <= 0x99) {
+                    /* ๐-๓๘๔๕-๖๗๘๙: the surface keeps its Thai digits */
+                    TRY(digit_word(e, b, (char)('0' + (unsigned char)surface[i + 2] - 0x90)));
+                    i += 2;
+                } else if (digit(surface[i]))
                     TRY(digit_word(e, b, surface[i]));
                 else if (alpha(surface[i]))
                     TRY(letter(e, b, surface[i]));
@@ -1127,6 +1305,9 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         if ((s->type == TTF_SEM_CARDINAL || s->type == TTF_SEM_NUMBER) && *v &&
             strspn(v, "0123456789,.-") == strlen(v))
             return number(e, b, v);
+        /* 12 + 8 = 20 found by the shared expression rule */
+        if (s->type == TTF_SEM_SYMBOL && !strcmp(mode, "@expression") && *v)
+            return math_reading(e, b, v);
         if (s->type == TTF_SEM_IP_ADDRESS) {
             snprintf(f0, sizeof(f0), "%.*s", (int)(length < sizeof(f0) - 1 ? length : sizeof(f0) - 1), surface);
             mode = "@th-ip";
@@ -1163,7 +1344,8 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
                     }
                     if (th)
                         TRY(ttf_buffer_puts(b, th));
-                    else if (small && z - i >= 3 && vowel_in(x + i, z - i))
+                    else if (small && z - i >= (!strcmp(s->rule, "electronic.label") ? 5u : 3u) &&
+                             vowel_in(x + i, z - i))
                         TRY(ttf_buffer_append(b, x + i, z - i)); /* xlsx, pdf have no vowel: spelled */
                     else
                         for (k = i; k < z; ++k)
@@ -1247,6 +1429,9 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             } else if (digit(v[i])) {
                 TRY(digit_word(e, b, v[i]));
                 ++i;
+            } else if (v[i] == '.' && i + 1 < n2 && digit(v[i + 1])) {
+                TRY(word(e, b, "point"));
+                ++i;
             } else {
                 if (v[i] == '/') {
                     TRY(ttf_buffer_puts(b, " "));
@@ -1257,6 +1442,21 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
                 ++i;
             }
         }
+        return TTF_OK;
+    }
+    if (!strcmp(mode, "math"))
+        return math_reading(e, b, v);
+    if (!strcmp(mode, "duration")) {
+        /* 2|5|37 สองชั่วโมงห้านาทีสามสิบเจ็ดวินาที */
+        int part[3] = {0, 0, 0}, k;
+        static const char *const unit[] = {"hour", "minute", "second"};
+        sscanf(v, "%d|%d|%d", &part[0], &part[1], &part[2]);
+        for (k = 0; k < 3; ++k)
+            if (part[k] || (k == 2 && !part[0] && !part[1])) {
+                snprintf(f0, sizeof(f0), "%d", part[k]);
+                TRY(number(e, b, f0));
+                TRY(word(e, b, unit[k]));
+            }
         return TTF_OK;
     }
     if (!strcmp(mode, "halfafter")) {
@@ -1368,12 +1568,15 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             return word(e, b, "percent");
         return unit_reading(e, b, f1);
     }
-    if (!strcmp(mode, "range") || !strcmp(mode, "versus") || !strcmp(mode, "over")) {
+    if (!strcmp(mode, "range") || !strcmp(mode, "versus") || !strcmp(mode, "over") || !strcmp(mode, "slashnum")) {
         field(v, 0, f0, sizeof(f0));
         field(v, 1, f1, sizeof(f1));
         field(v, 2, f2, sizeof(f2));
         TRY(number(e, b, f0));
-        TRY(word(e, b, !strcmp(mode, "range") ? "to" : !strcmp(mode, "versus") ? "versus" : "over"));
+        TRY(word(e, b, !strcmp(mode, "range")     ? "to"
+                       : !strcmp(mode, "versus") ? "versus"
+                       : !strcmp(mode, "over")   ? "over"
+                                                 : "slash"));
         TRY(number(e, b, f1));
         return unit_reading(e, b, f2);
     }

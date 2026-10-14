@@ -71,6 +71,18 @@
     vi 97.4 / 94.2. No dev span lost. Contract user_eval4_v84 (22). Other gates unchanged.
   - Contracts updated with Was notes (owner-set evidence): vi_prod_v80 12/28 phiếu trên,
     vi_pack2_v75 P.308 phòng ba không tám and IP 192.168.1.1 digit by digit.
+- Thai pack phase 3 (th-TH, project-owner request, 2026-10-15):
+  - Held-out set th-tn-eval v1 (250 sentences, 297 spans, two authors without the pack): 81.5
+    at first (a Korean request 71.4), 94.6 after this phase (both requests).
+  - Maths (12 + 8 = 20, x², √, ÷, > <), durations 2:05:37, weekday and spaced-dash ranges,
+    accounts 123-4-56789-0, postal codes, flight codes TG 628, บ้านเลขที่ 47/12 and 150/90 มม.ปรอท
+    with ทับ, ~ ประมาณ, ฯพณฯ, ลบ., short unknown address labels spelled, 67-0412 a code.
+  - Core: Thai digits read as digits in every request; a period after a Thai letter ends no
+    sentence (routing and segmenter); a unit cut from a long Thai sentence counts the previous
+    unit's Thai letters; the Thai pack classifies alone in its sentences (thai_sentence, like
+    han_sentence and latin_sentence); electronic labels carry the rule electronic.label.
+  - Owner set: dev 98.9 to 99.2, test 92.5 to 93.9. Contract th_pack3_v91 (20);
+    th_pack1_v89 date-abbr joins the year to the date span (Was: a space before it). The other five languages on the owner sets (outputs identical), Korean quick, English, JSUT, ja-tn-eval, Chinese and Vietnamese gates are unchanged; all contracts pass except the three known failures.
 - Thai pack phase 2 (th-TH, project-owner request, 2026-10-14):
   - Thai spellings of 139 English words (electronic_word: iphone ไอโฟน, save เซฟ, report รีพอร์ต) in
     email, URL, handle and file name spans and in a known word with a number (SAVE50, COVID-19,

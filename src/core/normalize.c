@@ -213,6 +213,12 @@ static int sentence_end(const ttf_pack_input_t *in, size_t k) {
         return memchr(in->text + t->begin, '\n', t->end - t->begin) != NULL;
     if (t->script == TTF_SCRIPT_PUNCTUATION) {
         uint32_t cp = token_cp(in, k);
+        /* พ.ศ. ม.ค.: Thai writes no sentence period, so a period after a Thai letter
+           (U+0E01-U+0E4E) closes an abbreviation (2026-10-14) */
+        if (cp == '.' && t->begin >= 3 && (unsigned char)in->text[t->begin - 3] == 0xe0 &&
+            (((unsigned char)in->text[t->begin - 2] == 0xb8 && (unsigned char)in->text[t->begin - 1] >= 0x81) ||
+             ((unsigned char)in->text[t->begin - 2] == 0xb9 && (unsigned char)in->text[t->begin - 1] <= 0x8e)))
+            return 0;
         if (cp == '.' || cp == '!' || cp == '?' || cp == 0x3002 || cp == 0xff01 || cp == 0xff1f)
             return k + 1 == in->token_count || in->tokens[k + 1].script == TTF_SCRIPT_WHITESPACE;
     }
@@ -477,6 +483,21 @@ static const ttf_language_pack_t *thai_sentence(const ttf_engine_t *e, const ttf
             pack = e->packs[j];
     if (!pack)
         return NULL;
+    /* A long Thai sentence is cut into units at a space (…และหนักเพียง | 1.2 kg): the first
+       sentence of a unit counts the Thai letters of the previous unit's tail since its last
+       newline, ! ? or a period after an ASCII character (Thai writes no sentence period). */
+    if (!begin && e->unit_prefix && e->unit_prefix_length) {
+        const char *p = e->unit_prefix;
+        size_t n = e->unit_prefix_length, from = n;
+        while (from && p[from - 1] != '\n' && !(from >= 2 && strchr("!?", p[from - 2]) && p[from - 1] == ' ') &&
+               !(from >= 3 && p[from - 2] == '.' && p[from - 1] == ' ' && (unsigned char)p[from - 3] < 0x80))
+            --from;
+        for (at = from; !thai && at + 3 <= n; ++at) {
+            unsigned char b1 = (unsigned char)p[at + 1], b2 = (unsigned char)p[at + 2];
+            thai = (unsigned char)p[at] == 0xe0 &&
+                   ((b1 == 0xb8 && b2 >= 0x81 && b2 <= 0xba) || (b1 == 0xb9 && b2 >= 0x80 && b2 <= 0x8e));
+        }
+    }
     for (k = begin; k < end; ++k) {
         const ttf_token_t *t = &in->tokens[k];
         if (t->script == TTF_SCRIPT_HANGUL || t->script == TTF_SCRIPT_KANA)
@@ -1951,7 +1972,8 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
             /* Looked up once per token, not once per pack. */
             han_context = context && context->classify &&
                           (pack_flag(e, context, "han_sentence", 0) ||
-                           pack_flag(e, context, "latin_sentence", 0));
+                           pack_flag(e, context, "latin_sentence", 0) ||
+                           pack_flag(e, context, "thai_sentence", 0));
             for (j = 0; j < e->pack_count; j++)
                 /* A declared-only pack classifies only where it is the context
                    (its declared request or a kana sentence). A hanzi-sentence
@@ -1969,7 +1991,8 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
                     !(context != e->packs[j] &&
                       (e->frozen ? e->han_only[j]
                                  : pack_flag(e, e->packs[j], "han_sentence", 0) ||
-                                       pack_flag(e, e->packs[j], "latin_sentence", 0)))) {
+                                       pack_flag(e, e->packs[j], "latin_sentence", 0) ||
+                                       pack_flag(e, e->packs[j], "thai_sentence", 0)))) {
                     ttf_semantic_t candidate;
                     size_t n;
                     long candidate_priority = 0;

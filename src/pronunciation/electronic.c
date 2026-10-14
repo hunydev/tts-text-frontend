@@ -79,6 +79,8 @@ static ttf_status_t spell(const ttf_engine_t *e, const ttf_language_pack_t *targ
     sem.struct_size = sizeof(sem);
     sem.type = TTF_SEM_CUSTOM;
     snprintf(sem.unit, sizeof(sem.unit), "@alphabet");
+    /* a pack may read an unknown address label differently from a word in prose */
+    snprintf(sem.rule, sizeof(sem.rule), "electronic.label");
     if (n < sizeof(sem.value)) {
         memcpy(sem.value, text, n);
         return target->verbalize(e, &sem, sem.value, n, out);

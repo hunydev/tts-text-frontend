@@ -110,5 +110,5 @@
   - ko: 010.3304.6671 점 전화번호, 번호 뒤 띄어 쓴 숫자 묶음, WELCOME10 웰컴 텐(기존 코드 낱말 목록에 welcome 추가)
 - 기존 계약 갱신(7단계, 평가셋 근거): ja_pack_v36·ja_rest_v50·ja_rules_v43의 조수사 뒤 目를 め로 읽는다(Was 기록 남김).
 - 남긴 것(7단계): en 두 자리 연도 5/20/16(영어 참조가 June seventeenth thirteen), ja mmHg ミリエイチジー(ja-tn-eval), ko 24:00·2매·€3.50·#1024·p<0.05(한국어 참조·기존 정책), 날짜·소수 모호(10.13, 3/5)와 이름·로마자 주소는 범위 밖.
-- **태국어(th-TH, 2026-10-14 추가):** 같은 방식으로 dev 700 / test 300(seed 20261014)으로 나눴다. 시작 dev 0.4% → 태국어 팩 1단계 dev 95.6%, test 91.6% → 2단계 dev 98.9%, test 92.5%. 상세: docs/thai-pack.ko.md.
+- **태국어(th-TH, 2026-10-14 추가):** 같은 방식으로 dev 700 / test 300(seed 20261014)으로 나눴다. 시작 dev 0.4% → 태국어 팩 1단계 dev 95.6%, test 91.6% → 2단계 dev 98.9%, test 92.5% → 3단계 dev 99.2%, test 93.9%. held-out: benchmark/datasets/th-tn-eval. 상세: docs/thai-pack.ko.md.
 - 기존 셋과 맞추느라 남긴 것: ひゃくキロ·ひゃくパーセント(ja-tn-eval), 2班·2排(zh held-out의 반·줄 번호), 1인 1매 일매(한국어 참조), GMT 400·Route 906(영어 참조).

@@ -2,6 +2,19 @@
 
 갱신: 2026-10-11. Release **0.20.0**, public ABI **v1**.
 
+## 최근 인계: 태국어 팩 3단계 (2026-10-15)
+
+- **held-out v1:** `benchmark/datasets/th-tn-eval`. 첫 측정 81.5%(한국어 요청 71.4%) → 94.6%(두 요청 같음). 이제 개발용이다.
+- **팩:** 수식, 시간 길이, 요일·띄운 범위, 계좌·우편·항공편 번호, ทับ(บ้านเลขที่, 혈압), ~ ประมาณ.
+- **코어:**
+  - 태국 숫자는 모든 요청에서 숫자로 읽는다.
+  - 태국 글자 뒤 마침표는 문장 끝이 아니다.
+  - 잘린 긴 문장은 앞 단위의 태국 글자로 판정한다.
+  - 태국 문장에서는 태국 팩만 분류한다.
+- **점수:** 소유자 셋 dev 99.2%, test 93.9%. 계약 `th_pack3_v91`.
+- **게이트:** The other five languages on the owner sets (outputs identical), Korean quick, English, JSUT, ja-tn-eval, Chinese and Vietnamese gates are unchanged; all contracts pass except the three known failures.
+- **다음:** 일반화를 다시 재려면 새 held-out v2가 필요하다. 남은 오답은 정책(홀로 쓰인 영어 약어)과 사전(태국 고유어 로마자) 쪽이다. 상세: [thai-pack.ko.md](thai-pack.ko.md).
+
 ## 최근 인계: 태국어 팩 2단계 (2026-10-14)
 
 - **영어 낱말 태국어 표기:** `electronic_word` 139개. 이메일·URL·@핸들·파일 이름과 수에 붙은 낱말(SAVE50, COVID-19)에 쓴다. 홀로 쓰인 영어 낱말은 그대로.

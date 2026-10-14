@@ -2574,6 +2574,18 @@
       },
       "category_overrides": {},
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/th_pack3_v91.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Synthetic cases authored with the Thai pack; new sentences, not copied from the owner's set or the held-out set",
+        "reason": "Project-owner request 2026-10-15: Thai phase 3"
+      },
+      "category_overrides": {},
+      "case_overrides": {}
     }
   ],
   "excluded": [

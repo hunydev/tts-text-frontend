@@ -79,3 +79,22 @@ classifier_priority	th-TH	th.wordnum	100
 classifier_priority	th-TH	th.address	100
 classifier_priority	th-TH	th.doc	100
 classifier_priority	th-TH	th.halfafter	100
+# held-out v1 (2026-10-14): maths, durations, approximately
+number	th-TH	greater	มากกว่า
+number	th-TH	less	น้อยกว่า
+number	th-TH	greaterequal	มากกว่าหรือเท่ากับ
+number	th-TH	lessequal	น้อยกว่าหรือเท่ากับ
+number	th-TH	notequal	ไม่เท่ากับ
+number	th-TH	divide	หารด้วย
+number	th-TH	root	รากที่สองของ
+number	th-TH	square	กำลังสอง
+number	th-TH	cube	กำลังสาม
+number	th-TH	approx	ประมาณ
+number	th-TH	hour	ชั่วโมง
+number	th-TH	second	วินาที
+th_cue	th-TH	weekday	จันทร์|อังคาร|พุธ|พฤหัสบดี|พฤหัส|ศุกร์|เสาร์|อาทิตย์
+th_cue	th-TH	postal	ไปรษณีย์|zip|ZIP|Zip
+th_cue	th-TH	address	บ้านเลขที่|เลขที่|ที่อยู่|ตั้งอยู่ที่
+classifier_priority	th-TH	th.math	100
+classifier_priority	th-TH	th.duration	100
+classifier_priority	th-TH	th.slashnum	100
