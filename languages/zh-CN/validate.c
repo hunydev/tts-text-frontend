@@ -87,7 +87,7 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    : ttf_validation_error(d, "zh_unit/zh_currency/zh_vulgar require a short "
                                              "symbol and a reading");
     }
-    if (SAME(k, "liang_counter") || SAME(k, "code_cue") || SAME(k, "phone_cue") ||
+    if (SAME(k, "liang_counter") || SAME(k, "code_cue") || SAME(k, "compute_cue") || SAME(k, "phone_cue") ||
         SAME(k, "phone_after") || SAME(k, "room_after") || SAME(k, "year_after") ||
         SAME(k, "year_not") || SAME(k, "ratio_cue") || SAME(k, "duration_cue") ||
         SAME(k, "range_unit") || SAME(k, "length_cue") || SAME(k, "ratio_after") ||
