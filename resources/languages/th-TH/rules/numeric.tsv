@@ -48,6 +48,7 @@ th_cue	th-TH	phone	โทร|โทร.|สายด่วน|เบอร์|�
 th_cue	th-TH	code	ลงท้าย|เลขท้าย|โอทีพี|ห้อง|รหัส|เลขที่|หมายเลข|OTP|otp|เลขพัสดุ|ID|เลขบัญชี|บัญชี|เลขประจำตัว|เลขอ้างอิง|รหัสสินค้า|ออเดอร์|คำสั่งซื้อ|Tracking|tracking|เลขติดตาม
 th_cue	th-TH	date	วันที่|ตั้งแต่|ถึง|ภายใน|เมื่อ|ก่อน|หลัง|วัน
 th_cue	th-TH	time	ตอน|รอบ|นัด|เริ่ม|ออก|เข้า|จนถึง|เวลา|ตั้งแต่|ถึง|ภายใน|ราว|ประมาณ|เปิด|ปิด
+th_cue	th-TH	classifier	เม็ด|แคปซูล|ช้อนชา|ช้อนโต๊ะ|ช้อน|ถ้วย|แก้ว|ขวด|ซอง|ชิ้น|จาน|ชาม|ลูก|ฟอง|ชั่วโมง|นาที|วัน|เดือน|ปี|กิโล|กิโลกรัม|กิโลเมตร|ลิตร|เมตร|นิ้ว|ฟุต|ไร่|เท่า|รอบ|คน|ห่อ|กล่อง|หลอด
 th_cue	th-TH	score	ชนะ|แพ้|เสมอ|สกอร์|ประตู|ตามหลัง|เอาชนะ|ผลการแข่งขัน
 th_cue	th-TH	ratio	อัตราส่วน|สัดส่วน|อัตรา|ผสม|เจือจาง
 # The pack's readings replace the shared numeric grammar.
@@ -74,3 +75,7 @@ classifier_priority	th-TH	th.dotted	100
 classifier_priority	th-TH	th.slashed	100
 classifier_priority	th-TH	th.product	100
 classifier_priority	th-TH	th.numper	100
+classifier_priority	th-TH	th.wordnum	100
+classifier_priority	th-TH	th.address	100
+classifier_priority	th-TH	th.doc	100
+classifier_priority	th-TH	th.halfafter	100

@@ -14,6 +14,7 @@ import re
 import sys
 
 ACTIVE_JSONL = (
+    "th_pack2_v90",
     "th_pack1_v89",
     "user_eval7_v88",
     "vi_parity_v87",

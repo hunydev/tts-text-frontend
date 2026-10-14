@@ -71,6 +71,16 @@
     vi 97.4 / 94.2. No dev span lost. Contract user_eval4_v84 (22). Other gates unchanged.
   - Contracts updated with Was notes (owner-set evidence): vi_prod_v80 12/28 phiếu trên,
     vi_pack2_v75 P.308 phòng ba không tám and IP 192.168.1.1 digit by digit.
+- Thai pack phase 2 (th-TH, project-owner request, 2026-10-14):
+  - Thai spellings of 139 English words (electronic_word: iphone ไอโฟน, save เซฟ, report รีพอร์ต) in
+    email, URL, handle and file name spans and in a known word with a number (SAVE50, COVID-19,
+    Boeing 787); unknown capitals spell with Thai letter names.
+  - Thai document numbers and licence plates (นร 0505/ว 212, กข 1234), 1 1/2 + classifier
+    (หนึ่งเม็ดครึ่ง), month/year 08/2027 and equal pairs 11/11 with ทับ.
+  - th_pack1_v89 latin-word now expects ไอโฟนสิบสาม (Was: iPhone สิบสาม), as the owner's set reads
+    iPhone 13.
+  - Span accuracy on the owner's set: dev 95.6 to 98.9, test 91.6 to 92.5. Contract th_pack2_v90
+    (13). The other five languages on the owner sets (outputs identical), Korean quick, English, JSUT, ja-tn-eval, Chinese and Vietnamese gates are unchanged; all contracts pass except the three known failures.
 - Thai pack phase 1 (th-TH, project-owner request, 2026-10-14; the owner's set user-tn-eval th-TH):
   - Numbers (เอ็ด, ยี่สิบ, ล้าน groups), decimals, dates with month abbreviations and the year as
     written (พ.ศ. พอสอ), times (นาฬิกา), money (บาท, ฿, THB, 65.-), units, ranges, scores and

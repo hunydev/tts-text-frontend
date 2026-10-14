@@ -2,6 +2,14 @@
 
 갱신: 2026-10-11. Release **0.20.0**, public ABI **v1**.
 
+## 최근 인계: 태국어 팩 2단계 (2026-10-14)
+
+- **영어 낱말 태국어 표기:** `electronic_word` 139개. 이메일·URL·@핸들·파일 이름과 수에 붙은 낱말(SAVE50, COVID-19)에 쓴다. 홀로 쓰인 영어 낱말은 그대로.
+- **그 밖:** 문서·차량 번호(นร 0505/ว 212, กข 1234), 1 1/2 + 분류사, 08/2027·11/11.
+- **점수:** dev 95.6% → 98.9%, test 91.6% → 92.5%. 계약 `th_pack2_v90`.
+- **게이트:** The other five languages on the owner sets (outputs identical), Korean quick, English, JSUT, ja-tn-eval, Chinese and Vietnamese gates are unchanged; all contracts pass except the three known failures.
+- **다음:** 남은 dev 오답은 태국 고유어 로마자(somchai), 날짜 범위의 ถึง(코어 목록 표시), microSD·USB-C. 상세: [thai-pack.ko.md](thai-pack.ko.md).
+
 ## 최근 인계: 태국어 팩 1단계 (2026-10-14)
 
 - **시작:** 프로젝트 소유자 요청. 소유자 평가셋 th-TH(1,000문장)를 `benchmark/datasets/user-tn-eval`에 넣었다(dev 700 / test 300).

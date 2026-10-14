@@ -46,9 +46,9 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     if (SAME(k, "th_cue")) {
         /* the words before a number that decide its reading, |-separated */
         *handled = 1;
-        return ttf_validation_enum(key, "phone|code|date|time|score|ratio") && *v && strlen(v) < 512
+        return ttf_validation_enum(key, "phone|code|date|time|score|ratio|classifier") && *v && strlen(v) < 512
                    ? TTF_OK
-                   : ttf_validation_error(d, "th_cue requires phone|code|date|time|score|ratio and words");
+                   : ttf_validation_error(d, "th_cue requires phone|code|date|time|score|ratio|classifier and words");
     }
     if (SAME(k, "th_month_key")) {
         *handled = 1;

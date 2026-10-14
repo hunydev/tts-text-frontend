@@ -36,6 +36,7 @@ CORPORA = {
     "vi-pack4-v77": ("베트남어 팩 4단계", "vi_pack4_v77.jsonl"),
     "vi-pack5-v78": ("베트남어 팩 5단계", "vi_pack5_v78.jsonl"),
     "vi-pack6-v79": ("베트남어 팩 6단계", "vi_pack6_v79.jsonl"),
+    "th-pack2-v90": ("태국어 팩 2단계 (영어 낱말 태국어 표기, 이메일·URL·파일, 문서·차량 번호, 대분수)", "th_pack2_v90.jsonl"),
     "th-pack1-v89": ("태국어 팩 1단계 (숫자·날짜·시각·돈·단위·번호, 섞인 문장)", "th_pack1_v89.jsonl"),
     "user-eval7-v88": ("사용자 평가셋 7단계 (IP·코드·연도 범위, 의료 단위, 날짜·기호, 수식·도메인, 전화 형식)", "user_eval7_v88.jsonl"),
     "vi-parity-v87": ("베트남어 영어 수준 맞추기 (섞인 문자, 기호, 약어, 원문자, 시각·비율)", "vi_parity_v87.jsonl"),
