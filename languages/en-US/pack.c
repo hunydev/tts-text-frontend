@@ -1518,6 +1518,29 @@ static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
                 return owner_finish(in, out, r, TTF_SEM_SYMBOL, "@ratio", v, "en.ratio");
             }
         }
+        /* 1½ hours an hour and a half, 2½ two and a half, 7¾ in seven and three quarters inches
+           (owner sets, 2026-10-14) */
+        if (q - p <= 3 && q + 2 <= n && (unsigned char)t[q] == 0xc2 &&
+            ((unsigned char)t[q + 1] == 0xbd || (unsigned char)t[q + 1] == 0xbc || (unsigned char)t[q + 1] == 0xbe)) {
+            const char *frac = (unsigned char)t[q + 1] == 0xbd   ? "a half"
+                               : (unsigned char)t[q + 1] == 0xbc ? "a quarter"
+                                                                 : "three quarters";
+            size_t z = q + 2, w = q + 3, we = q + 3;
+            int inches;
+            if (q - p == 1 && t[p] == '1' && (unsigned char)t[q + 1] == 0xbd && z < n && t[z] == ' ') {
+                while (we < n && t[we] >= 'a' && t[we] <= 'z')
+                    ++we;
+                if (we - w >= 4 && t[we - 1] == 's' && !(we < n && ascii_letter_char(t[we]))) {
+                    (void)snprintf(v, sizeof(v), "%s %.*s and a half",
+                                   strchr("aeiou", t[w]) || !strncmp(t + w, "hour", 4) ? "an" : "a", (int)(we - w - 1),
+                                   t + w);
+                    return owner_finish(in, out, we, TTF_SEM_SYMBOL, "@word", v, "en.mixed-fraction");
+                }
+            }
+            inches = z + 3 <= n && !strncmp(t + z, " in", 3) && !(z + 3 < n && ascii_letter_char(t[z + 3]));
+            (void)snprintf(v, sizeof(v), "%.*s|%s%s", (int)(q - p), t + p, frac, inches ? " inches" : "");
+            return owner_finish(in, out, inches ? z + 3 : z, TTF_SEM_SYMBOL, "@mixed", v, "en.mixed-fraction");
+        }
         /* 1.2M one point two million: a decimal before M or B (owner sets, 2026-10-14) */
         if (q + 2 < n && t[q] == '.' && ascii_digit_char(t[q + 1])) {
             size_t d = q + 1;
@@ -1615,6 +1638,57 @@ static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
                     return 0;
                 return owner_finish(in, out, r, TTF_SEM_CURRENCY, codes[k], v, "en.currency-code");
             }
+    }
+    /* *67 star six seven: a star code */
+    if (t[p] == '*' && p + 3 <= n && ascii_digit_char(t[p + 1]) && ascii_digit_char(t[p + 2]) &&
+        !(p && !(t[p - 1] == ' ' || t[p - 1] == '('))) {
+        for (q = p + 1; q < n && ascii_digit_char(t[q]); ++q)
+            ;
+        if (q - p - 1 <= 3 && !(q < n && (ascii_letter_char(t[q]) || t[q] == '*'))) {
+            (void)snprintf(v, sizeof(v), "%.*s", (int)(q - p - 1), t + p + 1);
+            return owner_finish(in, out, q, TTF_SEM_SYMBOL, "@star", v, "en.star-code");
+        }
+    }
+    /* localhost:8080 localhost colon eight zero eight zero */
+    if (p + 11 <= n && !strncmp(t + p, "localhost:", 10) && ascii_digit_char(t[p + 10])) {
+        for (q = p + 10; q < n && ascii_digit_char(t[q]); ++q)
+            ;
+        if (q - p - 10 <= 5 && !(q < n && ascii_letter_char(t[q]))) {
+            (void)snprintf(v, sizeof(v), "%.*s", (int)(q - p - 10), t + p + 10);
+            return owner_finish(in, out, q, TTF_SEM_SYMBOL, "@hostport", v, "en.host-port");
+        }
+    }
+    /* Oct 24-26 October twenty fourth to twenty sixth: a day range after a month */
+    if (t[p] >= 'A' && t[p] <= 'Z') {
+        static const char *const names[] = {"January", "February", "March", "April", "May", "June", "July",
+                                            "August", "September", "October", "November", "December"};
+        size_t k;
+        for (k = 0; k < 12; ++k) {
+            size_t l = strlen(names[k]), m = 0, d1 = 0, d2 = 0, r2;
+            if (p + 3 <= n && !strncmp(t + p, names[k], 3)) {
+                m = !strncmp(t + p, names[k], l) && !(p + l < n && ascii_letter_char(t[p + l])) ? l
+                    : !(p + 3 < n && ascii_letter_char(t[p + 3]))                                ? 3
+                                                                                                  : 0;
+                if (m == 3 && p + 3 < n && t[p + 3] == '.')
+                    ++m;
+            }
+            if (!m || p + m + 4 > n || t[p + m] != ' ' || !ascii_digit_char(t[p + m + 1]))
+                continue;
+            for (q = p + m + 1; q < n && ascii_digit_char(t[q]) && q - p - m <= 2; ++q)
+                d1 = d1 * 10 + (size_t)(t[q] - '0');
+            if (q - p - m - 1 > 2 || q >= n)
+                break;
+            r2 = q + (t[q] == '-' ? 1 : !strncmp(t + q, "â", 3) ? 3 : 0);
+            if (r2 == q || r2 >= n || !ascii_digit_char(t[r2]))
+                break;
+            for (q = r2; q < n && ascii_digit_char(t[q]) && q - r2 < 3; ++q)
+                d2 = d2 * 10 + (size_t)(t[q] - '0');
+            if (q - r2 > 2 || (q < n && (ascii_digit_char(t[q]) || ascii_letter_char(t[q]) || t[q] == '-')) ||
+                !d1 || d1 >= d2 || d2 > 31)
+                break;
+            (void)snprintf(v, sizeof(v), "%s|%u|%u", names[k], (unsigned)d1, (unsigned)d2);
+            return owner_finish(in, out, q, TTF_SEM_SYMBOL, "@day-range", v, "en.day-range");
+        }
     }
     /* +/- 3 plus or minus three */
     if (p + 3 < n && !strncmp(t + p, "+/-", 3))
@@ -2310,6 +2384,36 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             if (!strcmp(bar + 1, "s"))
                 return ttf_buffer_puts(b, !strcmp(left, "1") ? "second" : "seconds");
             return ttf_buffer_puts(b, bar + 1);
+        }
+        if (!strcmp(s->unit, "@star") || !strcmp(s->unit, "@hostport")) {
+            if ((st = ttf_buffer_puts(b, !strcmp(s->unit, "@star") ? "star " : "localhost colon ")) != TTF_OK)
+                return st;
+            return digits(e, s->value, b);
+        }
+        if (!strcmp(s->unit, "@mixed")) {
+            /* 2|a half two and a half */
+            const char *bar = strchr(s->value, '|');
+            uint64_t a;
+            char left[8];
+            if (!bar || (size_t)(bar - s->value) >= sizeof(left))
+                return TTF_EINVAL;
+            (void)snprintf(left, sizeof(left), "%.*s", (int)(bar - s->value), s->value);
+            if (!uint64_value(left, &a))
+                return TTF_EINVAL;
+            if ((st = card(e, a, b)) != TTF_OK || (st = ttf_buffer_puts(b, " and ")) != TTF_OK)
+                return st;
+            return ttf_buffer_puts(b, bar + 1);
+        }
+        if (!strcmp(s->unit, "@day-range")) {
+            /* October|24|26 October twenty fourth to twenty sixth */
+            const char *bar = strchr(s->value, '|'), *bar2 = bar ? strchr(bar + 1, '|') : NULL;
+            if (!bar2)
+                return TTF_EINVAL;
+            if ((st = ttf_buffer_append(b, s->value, (size_t)(bar - s->value))) != TTF_OK ||
+                (st = space(b)) != TTF_OK || (st = ordinal(e, strtoull(bar + 1, NULL, 10), b)) != TTF_OK ||
+                (st = ttf_buffer_puts(b, " to ")) != TTF_OK)
+                return st;
+            return ordinal(e, strtoull(bar2 + 1, NULL, 10), b);
         }
         if (!strcmp(s->unit, "@cents")) {
             uint64_t a;

@@ -452,6 +452,19 @@ static size_t finish2(const ttf_pack_input_t *in, ttf_semantic_t *s, size_t end,
     return w > 0 && (size_t)w < sizeof(v) ? finish(in, s, end, mode, v, (size_t)w, secondary) : 0;
 }
 
+/* 10万+了, 10w+， 十万加: a plus not followed by a measure word ends the amount (owner sets,
+   2026-10-14); 500+条, 2k+条 五百多条 keep 多. */
+static int plus_ends(const char *t, size_t n, size_t z) {
+    static const char *const particles[] = {"了", "的", "啊", "吧", "呢", "啦", "哦", "呀"};
+    size_t k;
+    if (z >= n || (unsigned char)t[z] < 0xe4 || (unsigned char)t[z] > 0xe9)
+        return 1;
+    for (k = 0; k < sizeof(particles) / sizeof(*particles); ++k)
+        if (z + 3 <= n && !memcmp(t + z, particles[k], 3))
+            return 1;
+    return 0;
+}
+
 /* Maths symbols and the words they read (2026-10-11, phase 2). REL marks a
    relation (an expression with one is an equation or inequality), STRONG an
    operator that alone makes an expression (3×4, 2^10, 10², √4). */
@@ -650,6 +663,15 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     p = in->tokens[in->index].begin;
     if (p >= n)
         return 0;
+    /* Owner evaluation sets, phase 6 (2026-10-14): @小鱼爱做饭 艾特小鱼爱做饭, 摄入<消耗 摄入小于消耗,
+       12V×2A=24W 等于 */
+    if (t[p] == '@' && p + 3 < n && (unsigned char)t[p + 1] >= 0xe3 && !(p && (alnum(t[p - 1]) || t[p - 1] == '.')))
+        return finish(in, s, p + 1, "atsign", "", 0, "");
+    if ((t[p] == '<' || t[p] == '>') && p >= 3 && p + 3 < n && (unsigned char)t[p - 3] >= 0xe3 &&
+        (unsigned char)t[p + 1] >= 0xe3)
+        return finish(in, s, p + 1, "relword", "", 0, t[p] == '<' ? "less" : "greater");
+    if (t[p] == '=' && p && p + 1 < n && digit(t[p + 1]) && (alpha(t[p - 1]) || digit(t[p - 1])))
+        return finish(in, s, p + 1, "relword", "", 0, "equals");
     /* 加½杯: a vulgar fraction inside a hanzi run reads with the run. */
     if (in->tokens[in->index].script == TTF_SCRIPT_HAN ||
         in->tokens[in->index].script == TTF_SCRIPT_OTHER) {
@@ -1106,9 +1128,9 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     /* 10w+ 十万多, 3.5w 三点五万, 2k+ 两千多 (k alone stays: 4K) */
     if (q < n && t[q] == 'w' && !(q + 1 < n && alnum(t[q + 1])))
         return finish2(in, s, q + 1 + (q + 1 < n && t[q + 1] == '+'), "scaled", t, p, len, q, 1, "",
-                       q + 1 < n && t[q + 1] == '+' ? "plus" : "");
+                       q + 1 < n && t[q + 1] == '+' ? (plus_ends(t, n, q + 2) ? "plusend" : "plus") : "");
     if (q + 1 < n && (t[q] == 'k' || t[q] == 'K') && t[q + 1] == '+')
-        return finish2(in, s, q + 2, "scaled", t, p, len, q, 1, "", "plus");
+        return finish2(in, s, q + 2, "scaled", t, p, len, q, 1, "", plus_ends(t, n, q + 2) ? "plusend" : "plus");
     /* 1e-3 一e负三 */
     if (q + 1 < n && (t[q] == 'e' || t[q] == 'E') &&
         (digit(t[q + 1]) || (q + 2 < n && (t[q + 1] == '-' || t[q + 1] == '+') && digit(t[q + 2])))) {
@@ -1510,7 +1532,9 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                 char u1[24];
                 snprintf(u1, sizeof(u1), "%s", key);
                 if ((uw2 = unit_after(e, t, n, b2 + l2, key, sizeof(key))) != 0)
-                    return finish2(in, s, b2 + l2 + uw2, "dims", t, p, len, b2, l2, key, u1);
+                    /* 12V×2A=24W 十二伏乘以两安: × in an equation is 乘以 */
+                    return finish2(in, s, b2 + l2 + uw2, b2 + l2 + uw2 < n && t[b2 + l2 + uw2] == '=' ? "dimseq" : "dims",
+                                   t, p, len, b2, l2, key, u1);
                 snprintf(key, sizeof(key), "%s", u1);
             }
             /* 2h15min 两小时十五分钟, 1m80 is not a compound (no second unit);
@@ -1556,7 +1580,7 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     if (q < n && t[q] == '+' && !(q + 1 < n && digit(t[q + 1])))
         return finish(in, s, q + 1, "int", t + p, len, "plus");
     if ((has(t, n, q, "万+") || has(t, n, q, "亿+")) && !(q + 4 < n && digit(t[q + 4])))
-        return finish2(in, s, q + 4, "plusscale", t, p, len, q, 3, "", "");
+        return finish2(in, s, q + 4, "plusscale", t, p, len, q, 3, "", plus_ends(t, n, q + 4) ? "plusend" : "");
     /* 132,500万 十三亿二千五百万: a grouped number with its scale is one number */
     if (memchr(t + p, ',', len) && !memchr(t + p, '.', len) && (has(t, n, q, "万") || has(t, n, q, "亿"))) {
         char v[40];
@@ -2207,6 +2231,12 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     }
     if (!strcmp(mode, "hanzi"))
         return hanzi_text(e, b, surface, length);
+    if (!strcmp(mode, "atsign")) {
+        const char *r = res(e, "address_symbol", "@");
+        return ttf_buffer_puts(b, r ? r : "@");
+    }
+    if (!strcmp(mode, "relword"))
+        return word(e, b, s->secondary);
     if (!strcmp(mode, "hanmath")) {
         /* secondary: the length of the run before the expression */
         size_t plen = (size_t)strtoul(s->secondary, NULL, 10);
@@ -2361,10 +2391,10 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         TRY(number(e, b, bp, bn, 0));
         return unit_word(e, b, u);
     }
-    if (!strcmp(mode, "dims")) {
+    if (!strcmp(mode, "dims") || !strcmp(mode, "dimseq")) {
         TRY(number(e, b, a, an, 0));
         TRY(unit_word(e, b, s->secondary));
-        TRY(word(e, b, "times"));
+        TRY(word(e, b, !strcmp(mode, "dimseq") ? "multiply" : "times"));
         TRY(count(e, b, bp, bn, 1));
         return unit_word(e, b, u);
     }
@@ -2389,7 +2419,9 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         /* 10w+ 十万多, 2k+ 两千多 */
         TRY(count(e, b, a, an, 1));
         TRY(word(e, b, bp[0] == 'w' ? "wan" : "1000"));
-        return !strcmp(s->secondary, "plus") ? word(e, b, "approx_plus") : TTF_OK;
+        return !strcmp(s->secondary, "plus")      ? word(e, b, "approx_plus")
+               : !strcmp(s->secondary, "plusend") ? word(e, b, "scale_plus")
+                                                  : TTF_OK;
     }
     if (!strcmp(mode, "times")) {
         TRY(number(e, b, a, an, 0));
@@ -2423,10 +2455,10 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         return unit_word(e, b, u);
     }
     if (!strcmp(mode, "plusscale")) {
-        /* 10万+ 十万多 */
+        /* 10万+ 十万加 (owner sets, 2026-10-14), 10万+人 十万多人 */
         TRY(number(e, b, a, an, 1));
         TRY(ttf_buffer_append(b, bp, bn));
-        return word(e, b, "approx_plus");
+        return word(e, b, !strcmp(s->secondary, "plusend") ? "scale_plus" : "approx_plus");
     }
     if (!strcmp(mode, "hanmoney")) {
         /* a = the amount, u = the currency, secondary = the length of the run */

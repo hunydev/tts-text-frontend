@@ -75,3 +75,5 @@ classifier_priority	zh-CN	zh.degmin	100
 classifier_priority	zh-CN	zh.enot	100
 classifier_priority	zh-CN	zh.intchain	100
 classifier_priority	zh-CN	zh.latcode	100
+classifier_priority	zh-CN	zh.atsign	100
+classifier_priority	zh-CN	zh.relword	100

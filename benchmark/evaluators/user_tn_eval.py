@@ -11,10 +11,14 @@ case, whitespace and punctuation removed. Per language:
   en-US  a gold single letter (w) also matches the engine's letter name (double you);
   ja-JP  katakana = hiragana, トゥ = ツ, いっ = いち (also はっ, ろっ, じゅっ, ひゃっ) before てん/パーセント/キロ/ポイント/ページ, ー = the vowel before it (う after o, い after e, as hiragana writes them), and ー may be left out on either side (に = にー); a span that fails is also tried on
          the output's kana reading (pyopenjtalk, when installed), since kanji words stay kanji;
+         in a range the first number may leave out the counter (1~2週間 いちからにしゅうかん =
+         いっしゅうかんからにしゅうかん; owner decision 2026-10-14, the sets use both); example
+         イグザンプル = エグザンプル and @ アットマーク = アット (the sets write both);
   zh-CN  〇 = 零, 圆 = 元, 两百/两千/两万/两亿 = 二…, 点半 = 点三十(分);
   vi-VN  gi-ga = ghi-ga, đề-xi-ben = đê-xi-ben, độ C = độ xê, gạch ngang = gạch (variants);
   ko-KR  an hour in native numbers (스물세 시 = 이십삼 시), a letter and one digit in English
-         (B7 비세븐 = 비 칠), 에잇 = 에이트, 골뱅이 = 앳, 점 = 닷, and a hyphen read 다시 = 에 or nothing.
+         (B7 비세븐 = 비 칠), 에잇 = 에이트, 골뱅이 = 앳, 점 = 닷, a hyphen read 다시 = 에 or nothing, and a
+         range A부터 B까지 = A에서 B (the sets write both, 10.20~10.24).
 These are reading policies both sides accept (docs/HANDOFF.md, policy differences kept); per-line
 widenings are in benchmark/datasets/user-tn-eval/amend.tsv.
 Scores are given for dev and test separately. Only dev misses are written out
@@ -54,6 +58,26 @@ KO_SINO = "영일이삼사오육칠팔구"
 KO_ENGLISH = ["제로", "원", "투", "쓰리", "포", "파이브", "식스", "세븐", "에잇", "나인"]
 
 
+JA_DIGIT = ["", "いち", "に", "さん", "よん", "ご", "ろく", "なな", "はち", "きゅう"]
+JA_HUNDRED = ["", "ひゃく", "にひゃく", "さんびゃく", "よんひゃく", "ごひゃく", "ろっぴゃく", "ななひゃく", "はっぴゃく",
+              "きゅうひゃく"]
+JA_THOUSAND = ["", "せん", "にせん", "さんぜん", "よんせん", "ごせん", "ろくせん", "ななせん", "はっせん", "きゅうせん"]
+JA_RANGE = re.compile(r"(\d[\d,]*)\s*[〜~～\-–]\s*\d")
+
+
+def ja_plain(n):
+    """The plain kana reading of 0..99999999 (いち, じゅう, ひゃく ...), for a range's first number."""
+    if n == 0:
+        return "ぜろ"
+    if n >= 10000:
+        return ja_plain(n // 10000) + "まん" + (ja_plain(n % 10000) if n % 10000 else "")
+    out = JA_THOUSAND[n // 1000] + JA_HUNDRED[n // 100 % 10]
+    tens, ones = n // 10 % 10, n % 10
+    if tens:
+        out += ("" if tens == 1 else JA_DIGIT[tens]) + "じゅう"
+    return out + JA_DIGIT[ones]
+
+
 def policy_variants(lang, target):
     """Readings a reading policy accepts besides the gold ones (see the module docstring)."""
     readings, out = target["readings"], list(target["readings"])
@@ -64,8 +88,15 @@ def policy_variants(lang, target):
             sino = f"{KO_LETTER[m.group(1)]} {KO_SINO[int(m.group(2))]}"
             english = KO_LETTER[m.group(1)] + KO_ENGLISH[int(m.group(2))]
             out += [english + r[len(sino):] for r in readings if r.startswith(sino)]
+        # A부터 B까지 = A에서 B (the sets write both)
+        out += [r.replace("부터 ", "에서 ", 1)[:-2] for r in readings if "부터 " in r and r.endswith("까지")]
     elif lang == "ja-JP":
         out += [r.replace("ー", "") for r in readings]
+        # 1~2週間: the first number of a range with or without the counter (owner decision)
+        m = JA_RANGE.match(unicodedata.normalize("NFKC", target["written"]))
+        if m and len(m.group(1).replace(",", "")) <= 8:
+            first = ja_plain(int(m.group(1).replace(",", "")))
+            out += [first + "から" + r.split("から", 1)[1] for r in readings if r.count("から") == 1]
     elif lang == "zh-CN":
         out += [r.replace("点半", "点三十分") for r in readings] + [r.replace("点半", "点三十") for r in readings]
     return list(dict.fromkeys(out))
@@ -87,6 +118,8 @@ def fold(s, lang):
         s = "".join({"お": "う", "え": "い"}.get(VOWEL.get(s[i - 1], ""), VOWEL.get(s[i - 1], c))
                     if c == "ー" and i else c for i, c in enumerate(s))
         s = s.replace("とぅ", "つ")  # トゥー = ツー (two)
+        # example イグザンプル = エグザンプル, @ アットマーク = アット (the sets write both)
+        s = s.replace("いぐざんぷる", "えぐざんぷる").replace("あっとまあく", "あっと")
         # 1%, 8kg, 8.5, 100%: both readings before てん, パーセント, キロ, ポイント, ページ are in use
         s = re.sub("(いっ|はっ|ろっ|じゅっ|ひゃっ)(?=てん|ぱあせんと|きろ|ぽいんと|ぺいじ)",
                    lambda m: {"いっ": "いち", "はっ": "はち", "ろっ": "ろく", "じゅっ": "じゅう",

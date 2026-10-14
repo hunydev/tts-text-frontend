@@ -552,3 +552,7 @@ classifier_priority	en-US	en.minus-sign	10
 classifier_priority	en-US	en.power	10
 classifier_priority	en-US	en.product	10
 classifier_priority	en-US	en.currency-code	10
+classifier_priority	en-US	en.mixed-fraction	10
+classifier_priority	en-US	en.star-code	10
+classifier_priority	en-US	en.host-port	10
+classifier_priority	en-US	en.day-range	10

@@ -33,7 +33,12 @@
   - 고정 계약 갱신: `slash_date_v21` 날짜 뒤 요일 괄호 2건(Was: 구 월 이십오 일(목)까지).
   - 게이트: 한국어 quick 참조 일치 +6/−1(0으로 시작하는 번 번호), 중국어 held-out5 +2, 나머지는 4단계와 같다.
   - 소유자 결정 필요: ja 범위의 첫 조수사(평가셋 정답이 섞여 있고 기존 계약은 첫 수를 조수사 없이 읽는다).
-- **다음 후보:** ko 메일·주소 영어 낱말, ja 범위의 첫 조수사(결정 후), en 분수 기호(½·¾)와 날짜 범위(Oct 24-26), vi 단위 뒤 /. 남은 dev 오답은 언어당 20~48건이다.
+- **6단계(같은 날):** 주소 낱말, 날짜 범위, 혈압, 수식 기호. 계약 `user_eval6_v86`(18).
+  - 소유자 결정: ja 범위의 첫 조수사는 현행 유지. 채점에서 첫 조수사 유무를 둘 다 받는다.
+  - 점수(구간, dev/test): ko 95.4 / 91.5, en 95.6 / 88.5, ja 96.1 / 92.2, zh 98.0 / 96.1, vi 97.6 / 94.5. 5단계를 같은 채점 규칙으로 다시 잰 것과 비교해 dev 손실 0.
+  - 고정 계약 갱신: `electronic_v21`(help·support), `handle_v21`(user·team), `zh_pack3_v66`(10w+了 十万加).
+  - 게이트: English bench speech +2, text +1 against the references; Korean quick, Japanese, Chinese and Vietnamese gates unchanged.
+- **다음 후보:** 이름·로마자 주소 라벨(minsu, hana), ko 0으로 시작하는 주소 숫자(myhome2026), en IP 옥텟과 Boeing 계열, vi 단위 뒤 /. 남은 dev 오답은 언어당 10~38건이다.
 
 
 - **결정:** 프로젝트 소유자 결정으로 vi-VN을 **운영**으로 바꿨다.

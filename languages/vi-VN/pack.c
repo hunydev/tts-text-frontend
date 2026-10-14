@@ -884,6 +884,11 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         }
     }
 
+    /* Kết quả xét nghiệm: (-) âm tính, (+) dương tính (owner sets, 2026-10-14) */
+    if (t[p] == '(' && p + 3 <= n && (t[p + 1] == '-' || t[p + 1] == '+') && t[p + 2] == ')' &&
+        !(p + 3 < n && (alpha(t[p + 3]) || digit(t[p + 3]))) && p >= 2 && (t[p - 2] == ':' || t[p - 1] == ':'))
+        return finish(in, s, p + 3, "lit", t[p + 1] == '-' ? "âm tính" : "dương tính", "");
+
     /* Q = I × t Q bằng I nhân t: a spaced equals sign between a name and an expression */
     if (t[p] == '=' && p >= 2 && p + 2 < n && t[p - 1] == ' ' && t[p + 1] == ' ' &&
         (alpha(t[p - 2]) || digit(t[p - 2])) && (alpha(t[p + 2]) || digit(t[p + 2])))
@@ -1576,6 +1581,8 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     } else if (!strcmp(mode, "intl")) {
         TRY(word(e, b, "math_plus"));
         TRY(digits_each(e, b, v, strlen(v)));
+    } else if (!strcmp(mode, "lit")) {
+        TRY(put(b, v));
     } else if (!strcmp(mode, "prize")) {
         TRY(word(e, b, v[0] == '1' ? "prize1" : "prize2"));
     } else if (!strcmp(mode, "plusminus")) {

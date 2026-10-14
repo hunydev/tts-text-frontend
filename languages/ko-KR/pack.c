@@ -1726,6 +1726,20 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             return expression(e, s->value, out);
         if (!strcmp(s->unit, "@word"))
             return ttf_buffer_puts(out, s->value);
+        if (!strcmp(s->unit, "@pressure")) {
+            /* 150|95 백오십에 구십오; 140|90|mmHg 백사십에 구십 수은주밀리미터 */
+            char part[8];
+            const char *bar = strchr(s->value, '|'), *bar2;
+            if (!bar || (size_t)(bar - s->value) >= sizeof(part))
+                return TTF_EINVAL;
+            bar2 = strchr(bar + 1, '|');
+            (void)snprintf(part, sizeof(part), "%.*s", (int)(bar - s->value), s->value);
+            TRY(cardinal(e, part, out));
+            TRY(ttf_buffer_puts(out, "에 "));
+            (void)snprintf(part, sizeof(part), "%.*s", (int)(bar2 ? (size_t)(bar2 - bar - 1) : strlen(bar + 1)), bar + 1);
+            TRY(cardinal(e, part, out));
+            return bar2 ? ttf_buffer_puts(out, " 수은주밀리미터") : TTF_OK;
+        }
         if (!strcmp(s->unit, "@resolution")) {
             TRY(cardinal(e, s->value, out));
             return ttf_buffer_puts(out, " 피");
@@ -2783,6 +2797,54 @@ static size_t owner_forms5(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         return 0;
     for (q = p; q < n && ko_digit(t[q]); ++q)
         ;
+    /* 9/28~10/1 구 월 이십팔 일에서 시월 일 일: both ends of a slash date range are dates */
+    if (q - p <= 2 && q + 2 < n && t[q] == '/' && ko_digit(t[q + 1])) {
+        size_t r, z;
+        unsigned month = (unsigned)atoi(t + p), day = (unsigned)atoi(t + q + 1);
+        for (r = q + 1; r < n && ko_digit(t[r]); ++r)
+            ;
+        if (r - q - 1 <= 2 && month >= 1 && month <= 12 && day >= 1 && day <= 31 &&
+            !(r < n && (ko_digit(t[r]) || t[r] == '/' || t[r] == '.'))) {
+            int range = 0;
+            /* the first end: ~M/D follows */
+            if (r + 3 < n && t[r] == '~' && ko_digit(t[r + 1])) {
+                unsigned m2 = (unsigned)atoi(t + r + 1);
+                for (z = r + 1; z < n && ko_digit(t[z]); ++z)
+                    ;
+                range = z - r - 1 <= 2 && z + 1 < n && t[z] == '/' && ko_digit(t[z + 1]) && m2 >= 1 && m2 <= 12;
+            }
+            /* the second end: M/D~ comes before */
+            if (!range && p >= 4 && t[p - 1] == '~' && ko_digit(t[p - 2])) {
+                for (z = p - 2; z && ko_digit(t[z - 1]); --z)
+                    ;
+                range = z >= 2 && t[z - 1] == '/' && ko_digit(t[z - 2]);
+            }
+            /* 1/3~1/2, 1/5~1/6: fractions with 1 on top at both ends stay fractions (Korean references) */
+            if (range && month == 1) {
+                size_t a = t[r] == '~' ? r + 1 : 0;
+                if (!a)
+                    for (a = p - 2; a && (ko_digit(t[a - 1]) || t[a - 1] == '/'); --a)
+                        ;
+                if (t[a] == '1' && a + 1 < n && t[a + 1] == '/')
+                    range = 0;
+            }
+            if (range) {
+                (void)snprintf(v, sizeof(v), "--%02u-%02u", month, day);
+                return ko_finish(in, s, r, TTF_SEM_DATE, v, "month-day", "ko:date-range");
+            }
+        }
+    }
+    /* 혈압 150/95 백오십에 구십오, 140/90mmHg: a blood pressure reading */
+    if (q - p >= 2 && q - p <= 3 && q + 3 < n && t[q] == '/' && ko_digit(t[q + 1]) && word_within(t, p, 15, "혈압")) {
+        size_t r;
+        for (r = q + 1; r < n && ko_digit(t[r]); ++r)
+            ;
+        if (r - q - 1 >= 2 && r - q - 1 <= 3 && !(r < n && (ko_digit(t[r]) || t[r] == '/' || t[r] == '.'))) {
+            int mmhg = r + 4 <= n && !memcmp(t + r, "mmHg", 4);
+            (void)snprintf(v, sizeof(v), "%.*s|%.*s%s", (int)(q - p), t + p, (int)(r - q - 1), t + q + 1, mmhg ? "|mmHg" : "");
+            return ko_finish(in, s, mmhg ? r + 4 : r, TTF_SEM_SYMBOL, v, "@pressure", "ko:blood-pressure");
+        }
+    }
     /* 0427번: a number with a leading zero before 번 reads digit by digit (01번째 stays an ordinal,
        0번지 an address) */
     if (t[p] == '0' && q - p >= 2 && q - p <= 8 && q + 3 <= n && !memcmp(t + q, "번", 3) &&

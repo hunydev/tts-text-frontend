@@ -60,6 +60,8 @@ number	zh-CN	angle	角
 number	zh-CN	pi	派
 number	zh-CN	degree	度
 number	zh-CN	approx_plus	多
+# 10万+了 十万加: a plus that ends the amount (owner sets, 2026-10-14); 500+条 keeps 多
+number	zh-CN	scale_plus	加
 number	zh-CN	and_fraction	又
 number	zh-CN	per	每
 number	zh-CN	ordinal	第

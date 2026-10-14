@@ -649,3 +649,8 @@ service_after	zh-CN	投诉	1
 service_after	zh-CN	求助	1
 # 2站 两站 (owner sets, 2026-10-14); 排 and 班 also name a row or class (2排15座, 2班)
 liang_counter	zh-CN	站	1
+# Owner evaluation sets, phase 6 (2026-10-14): 203诊室 二零三诊室
+room_after	zh-CN	诊室	1
+room_after	zh-CN	教室	1
+room_after	zh-CN	会议室	1
+room_after	zh-CN	病房	1

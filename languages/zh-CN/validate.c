@@ -70,7 +70,7 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                                          "times|multiply|divide|equals|greater|less|power|power_end|"
                                          "square|root|greater_eq|less_eq|not_equal|"
                                          "approx_equal|cube_root|angle|pi|degree|"
-                                         "approx_plus|and_fraction|per|ordinal|double|"
+                                         "approx_plus|scale_plus|and_fraction|per|ordinal|double|"
                                          "factorial|triangle|colon|chi_square|coord_N|"
                                          "coord_S|coord_E|coord_W|positive|square_bare|approx|tends_to|"
                                          "infinity|hao")) &&

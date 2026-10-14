@@ -136,3 +136,4 @@ number	vi-VN	morning	sáng
 number	vi-VN	afternoon	chiều
 number	vi-VN	prize1	nhất
 number	vi-VN	prize2	nhì
+classifier_priority	vi-VN	vi.lit	100

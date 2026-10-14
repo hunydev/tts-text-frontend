@@ -28,6 +28,51 @@ static int english_onset(const char *key, size_t n) {
     return 0;
 }
 
+/* A lowercase run reads like an English word: a vowel, at most three consonants in a row
+   and, when it starts a second word, an English onset (scope, schools, wind). */
+static int pronounceable(const char *key, size_t n, int onset) {
+    static const char *const three[] = {"sch", "scr", "spl", "spr", "str", "thr", "shr", "squ", "chr", "phr"};
+    size_t i, run = 0, longest = 0, vowels = 0, lead;
+    if (n < 3)
+        return 0;
+    for (i = 0; i < n; ++i) {
+        int vowel = strchr("aeiouy", key[i]) != NULL;
+        vowels += vowel;
+        run = vowel ? 0 : run + 1;
+        if (run > longest)
+            longest = run;
+    }
+    if (!vowels || longest > 3)
+        return 0;
+    if (!onset)
+        return 1;
+    for (lead = 0; lead < n && !strchr("aeiouy", key[lead]); ++lead)
+        ;
+    if (lead == 3) {
+        for (i = 0; i < sizeof(three) / sizeof(*three); ++i)
+            if (!strncmp(key, three[i], 3))
+                return 1;
+        return 0;
+    }
+    return lead <= 1 || english_onset(key, n);
+}
+
+/* The reading of one lowercase address word: an `electronic_word`, then the source
+   language's pronunciation lexicon (given names stay spelled). */
+static ttf_status_t address_word(const ttf_engine_t *e, const ttf_language_pack_t *source,
+                                 const ttf_language_pack_t *target, const char *key, size_t n,
+                                 const char **hit) {
+    ttf_resource_layer_t layer = TTF_LAYER_COMMON;
+    ttf_status_t st;
+    *hit = ttf_resource_get(e, "electronic_word", target->language_tag, key, NULL);
+    if (*hit || !source || source == target)
+        return TTF_OK;
+    st = ttf_foreign_lookup(e, source->language_tag, target->language_tag, key, n, hit, &layer);
+    if (st == TTF_OK && *hit && ttf_resource_get(e, "address_spelled", target->language_tag, key, NULL))
+        *hit = NULL;
+    return st;
+}
+
 static ttf_status_t spell(const ttf_engine_t *e, const ttf_language_pack_t *target,
                           const char *text, size_t n, ttf_buffer_t *out) {
     ttf_semantic_t sem = {0};
@@ -86,6 +131,43 @@ static ttf_status_t chunk(const ttf_engine_t *e, const ttf_language_pack_t *sour
                 return st == TTF_OK ? ttf_buffer_puts(out, hit) : st;
             }
         }
+    }
+    /* fastpay.kr 패스트페이, oncall 온콜, myhome 마이홈: a label of two known address words
+       reads as both words (owner sets, 2026-10-14); the longer first word wins. */
+    if (word && n >= 5 && strcmp(target->language_tag, "en-US")) {
+        size_t k;
+        for (k = n - 2; k >= 2; --k) {
+            char left[64], right[64];
+            const char *a = NULL, *b = NULL;
+            memcpy(left, key, k);
+            left[k] = 0;
+            memcpy(right, key + k, n - k + 1);
+            if ((st = address_word(e, source, target, left, k, &a)) != TTF_OK)
+                return st;
+            if (!a)
+                continue;
+            if ((st = address_word(e, source, target, right, n - k, &b)) != TTF_OK)
+                return st;
+            if (b) {
+                ttf_trace_stage(e, TTF_TRACE_LEXICON, part, part + n);
+                if ((st = ttf_buffer_puts(out, a)) != TTF_OK)
+                    return st;
+                return ttf_buffer_puts(out, b);
+            }
+        }
+    }
+    /* fieldscope, lincolnschools, northwind: in English a lowercase label of seven letters
+       or more that splits into two English-looking words reads as a word (owner sets,
+       2026-10-14). */
+    if (word && !strcmp(target->language_tag, "en-US") && n >= 7 && n < 40) {
+        size_t k, upper = 0;
+        for (i = 1; i < n; ++i)
+            upper += text[i] >= 'A' && text[i] <= 'Z';
+        for (k = 3; !upper && k + 3 <= n; ++k)
+            if (pronounceable(key, k, 0) && pronounceable(key + k, n - k, 1)) {
+                ttf_trace_stage(e, TTF_TRACE_POLICY, part, part + n);
+                return ttf_buffer_append(out, text, n);
+            }
     }
     /* Scrum.com, reasonradionetwork.com: in English a host label that is a
        capitalized word or a long lowercase run, with a vowel and no four

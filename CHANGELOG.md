@@ -71,6 +71,24 @@
     vi 97.4 / 94.2. No dev span lost. Contract user_eval4_v84 (22). Other gates unchanged.
   - Contracts updated with Was notes (owner-set evidence): vi_prod_v80 12/28 phiếu trên,
     vi_pack2_v75 P.308 phòng ba không tám and IP 192.168.1.1 digit by digit.
+- User eval phase 6 (address words, date ranges, blood pressure, expression marks, 2026-10-14):
+  - Owner decision: a Japanese range keeps the plain first number (10〜15分 じゅうからじゅうごふん); the
+    scorer accepts the first number with or without its counter. Also scorer variants the sets
+    write both ways: ja example イグザンプル = エグザンプル, アットマーク = アット; ko A부터 B까지 = A에서 B.
+  - Addresses: common address words read as words (Korean help 헬프, news 뉴스, support 서포트 ...;
+    Japanese status ステータス ...), a label of two address words reads both (fastpay 패스트페이,
+    oncall 온콜), and an English label of seven letters or more that splits into two English-looking
+    words reads as a word (fieldscope, lincolnschools). Given names (john) stay spelled.
+  - Korean: 9/28~10/1 a date at both ends, 혈압 150/95 백오십에 구십오 (and 140/90mmHg).
+  - English: 1½ hours an hour and a half, 2½ two and a half, 7¾ in seven and three quarters
+    inches, *67 star six seven, localhost:8080, Oct 24-26 October twenty fourth to twenty sixth.
+  - Chinese: 10万+ and 10w+ at the end of an amount 十万加 (500+条 keeps 五百多条), 摄入<消耗 小于,
+    12V×2A=24W 乘以 and 等于, 203诊室 二零三, @小鱼爱做饭 艾特.
+  - Vietnamese: a test result (-) âm tính, (+) dương tính.
+  - Span accuracy, dev / test: ko 95.4 / 91.5, en 95.6 / 88.5, ja 96.1 / 92.2, zh 98.0 / 96.1, vi 97.6 / 94.5. No dev span lost
+    against phase 5 rescored with the same scorer. Contract user_eval6_v86 (18). English bench speech +2, text +1 against the references; Korean quick, Japanese, Chinese and Vietnamese gates unchanged.
+  - Contracts updated with Was notes (owner-set evidence): electronic_v21 (help, support),
+    handle_v21 (user, team), zh_pack3_v66 (10w+了 十万加).
 - User eval phase 5 (codes, time ranges, era dates, weekday marks and expressions, 2026-10-14):
   - Shared: an unlabelled 1-800-555-0132 (the 1-3-3-4 layout) is a phone number, and a 4-3-3
     number starting with 0 (0120-456-789) is a phone number rather than a malformed date.
