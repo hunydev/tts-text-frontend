@@ -565,7 +565,9 @@ static size_t maths(const ttf_engine_t *e, const char *t, size_t n, size_t p) {
     while (r < n) {
         int operand = 0;
         if (digit(t[r])) {
-            while (r < n && digit(t[r]))
+            /* 1,000,000×0.045: a grouped number is one operand (2026-10-14) */
+            while (r < n && (digit(t[r]) || (t[r] == ',' && r > p && digit(t[r - 1]) && r + 3 < n && digit(t[r + 1]) &&
+                                             digit(t[r + 2]) && digit(t[r + 3]) && !(r + 4 < n && digit(t[r + 4])))))
                 ++r;
             if (r + 1 < n && t[r] == '.' && digit(t[r + 1]))
                 for (++r; r < n && digit(t[r]); ++r)
@@ -793,7 +795,9 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             ++uw;
         if (!uw)
             spec[0] = 0;
-        return finish(in, s, p + m + uw, "math", t + p, m, spec);
+        /* 请计算18×25: after a computing word the expression is a computation */
+        return finish(in, s, p + m + uw,
+                      cue_before(e, "compute_cue", t, p, 9) ? "mathc" : "math", t + p, m, spec);
     }
 
     /* Currency before the amount: ¥128 $9.99 HK$100 €20 £50 ₩10,000; a range
@@ -1147,6 +1151,15 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         if (!(z < n && alnum(t[z])))
             return finish(in, s, z, "digits", t + p, z - p, "");
     }
+    /* 12306.cn 幺二三零六点cn, 10010.com: a domain whose name is digits */
+    if (q + 3 < n && t[q] == '.' && alpha(t[q + 1]) && !memchr(t + p, ',', len)) {
+        size_t z = q + 1;
+        while (z < n && (alpha(t[z]) || (t[z] == '.' && z + 1 < n && alpha(t[z + 1]))))
+            ++z;
+        if (z - q - 1 >= 2 && !(z < n && (alnum(t[z]))) &&
+            (has(t, n, q + 1, "cn") || has(t, n, q + 1, "com") || has(t, n, q + 1, "net") || has(t, n, q + 1, "org")))
+            return finish(in, s, z, "domain", t + p, z - p, "");
+    }
     /* 0755-12320 零七五五幺二三二零: an area code and a number (owner sets) */
     if (t[p] == '0' && (len == 3 || len == 4) && q + 6 < n && t[q] == '-' && digit(t[q + 1])) {
         size_t z = digits_end(t, n, q + 1);
@@ -1295,6 +1308,19 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                         if (m2 < n && t[m2] == sep && (d2 = digits_end(t, n, m2 + 1)) > m2 + 1 &&
                             d2 - m2 - 1 <= 2)
                             return finish2(in, s, d2, "daterange", t, p, de - p, de + rw, d2 - de - rw, "", "");
+                    }
+                    /* 2026.10.20-10.31 二零二六年十月二十日到十月三十一日: the second end without a year */
+                    if (sep == '.' && range_mark(t, n, de, &rw) && digit(t[de + rw])) {
+                        size_t m2 = digits_end(t, n, de + rw), d2;
+                        long mo2 = value_of(t, de + rw, m2), dd2;
+                        if (m2 - de - rw <= 2 && mo2 >= 1 && mo2 <= 12 && m2 + 1 < n && t[m2] == '.' &&
+                            (d2 = digits_end(t, n, m2 + 1)) > m2 + 1 && d2 - m2 - 1 <= 2 &&
+                            (dd2 = value_of(t, m2 + 1, d2)) >= 1 && dd2 <= 31 &&
+                            !(d2 < n && (digit(t[d2]) || (t[d2] == '.' && d2 + 1 < n && digit(t[d2 + 1]))))) {
+                            char rv[48];
+                            snprintf(rv, sizeof(rv), "%.4s|%ld|%ld|%ld|%ld", t + p, mo, dd, mo2, dd2);
+                            return finish(in, s, d2, "daterangemd", rv, strlen(rv), "");
+                        }
                     }
                     return finish2(in, s, de, "date", t, p, 4, y + 1, de - y - 1, "", "");
                 }
@@ -1751,18 +1777,23 @@ static ttf_status_t power(const ttf_engine_t *e, ttf_buffer_t *b, const char *x,
     return word(e, b, "power_end");
 }
 
+static ttf_status_t maths_reading_as(const ttf_engine_t *e, ttf_buffer_t *b, const char *v, int computed);
 static ttf_status_t maths_reading(const ttf_engine_t *e, ttf_buffer_t *b, const char *v) {
+    return maths_reading_as(e, b, v, 0);
+}
+static ttf_status_t maths_reading_as(const ttf_engine_t *e, ttf_buffer_t *b, const char *v, int computed) {
     size_t i = 0, n = strlen(v), w, w2;
     int after_operand = 0;
     /* 12×15=180 十二乘以十五: × in an equation is 乘以 (owner, 2026-10-14); 4×4,
-       1920×1080 and 7.9×10³ keep 乘. */
-    int equation = strchr(v, '=') != NULL;
+       1920×1080 and 7.9×10³ keep 乘; 请计算18×25 is a computation too. */
+    int equation = computed || strchr(v, '=') != NULL;
     int k;
     while (i < n) {
         char sc;
         if (digit(v[i])) {
             size_t z = i, slash;
-            while (z < n && (digit(v[z]) || (v[z] == '.' && z + 1 < n && digit(v[z + 1]))))
+            while (z < n && (digit(v[z]) || (v[z] == '.' && z + 1 < n && digit(v[z + 1])) ||
+                             (v[z] == ',' && z + 3 < n && digit(v[z + 1]) && digit(v[z + 2]) && digit(v[z + 3]))))
                 ++z;
             if (z < n && v[z] == '%') {
                 /* 3% 百分之三 */
@@ -2103,9 +2134,30 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         TRY(count(e, b, v, vn, 1));
         return ttf_buffer_puts(b, cur);
     }
-    if (!strcmp(mode, "math")) {
-        TRY(maths_reading(e, b, v));
+    if (!strcmp(mode, "math") || !strcmp(mode, "mathc")) {
+        TRY(maths_reading_as(e, b, v, !strcmp(mode, "mathc")));
         return s->secondary[0] ? unit_word(e, b, s->secondary) : TTF_OK;
+    }
+    if (!strcmp(mode, "domain") || (!strcmp(mode, "latin") && !strncmp(v, "www.", 4))) {
+        /* www.12306.cn 三W点幺二三零六点cn (owner sets, 2026-10-14) */
+        size_t i = 0;
+        while (i < vn) {
+            size_t z = i;
+            while (z < vn && v[z] != '.')
+                ++z;
+            if (z - i == 3 && !strncmp(v + i, "www", 3))
+                TRY(ttf_buffer_puts(b, "三W"));
+            else if (strspn(v + i, "0123456789") >= z - i)
+                TRY(digits_each(e, b, v + i, z - i, 1));
+            else
+                TRY(ttf_buffer_append(b, v + i, z - i));
+            if (z < vn) {
+                const char *dot = res(e, "address_symbol", ".");
+                TRY(ttf_buffer_puts(b, dot ? dot : "点"));
+            }
+            i = z + 1;
+        }
+        return TTF_OK;
     }
     if (!strcmp(mode, "latin"))
         return latin(e, b, v);
@@ -2231,6 +2283,35 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     }
     if (!strcmp(mode, "hanzi"))
         return hanzi_text(e, b, surface, length);
+    if (!strcmp(mode, "daterangemd")) {
+        /* 2026|10|20|10|31 */
+        long f[5] = {0};
+        char num[8];
+        int k2 = 0;
+        const char *c = v;
+        while (k2 < 5 && *c) {
+            f[k2++] = strtol(c, NULL, 10);
+            c = strchr(c, '|');
+            if (!c)
+                break;
+            ++c;
+        }
+        if (k2 != 5)
+            return TTF_EINVAL;
+        TRY(digits_each(e, b, v, 4, 0));
+        TRY(word(e, b, "year"));
+        for (k2 = 1; k2 < 5; k2 += 2) {
+            if (k2 == 3)
+                TRY(word(e, b, "range"));
+            snprintf(num, sizeof(num), "%ld", f[k2]);
+            TRY(integer(e, b, num, strlen(num), 0));
+            TRY(word(e, b, "month"));
+            snprintf(num, sizeof(num), "%ld", f[k2 + 1]);
+            TRY(integer(e, b, num, strlen(num), 0));
+            TRY(word(e, b, "day"));
+        }
+        return TTF_OK;
+    }
     if (!strcmp(mode, "atsign")) {
         const char *r = res(e, "address_symbol", "@");
         return ttf_buffer_puts(b, r ? r : "@");

@@ -837,6 +837,16 @@ static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *s, size_t 
             return finish(in, s, end, TTF_SEM_ABBREVIATION, "ja.plus", "");
         }
     }
+    /* AC100V エーシーひゃくボルト, DC12V: a current type and its voltage */
+    if ((!memcmp(text + begin, "AC", 2) || !memcmp(text + begin, "DC", 2)) && begin + 4 <= n && digit(text[begin + 2]) &&
+        !(begin && (alpha(text[begin - 1]) || digit(text[begin - 1])))) {
+        for (q = begin + 2; q < n && digit(text[q]); ++q)
+            ;
+        if (q - begin - 2 <= 4 && q < n && text[q] == 'V' && !(q + 1 < n && (alpha(text[q + 1]) || digit(text[q + 1])))) {
+            snprintf(s->value, sizeof(s->value), "%.2s|%.*s", text + begin, (int)(q - begin - 2), text + begin + 2);
+            return finish(in, s, q + 1, TTF_SEM_SYMBOL, "ja.current", "@current");
+        }
+    }
     /* R7.6.30 れいわななねんろくがつさんじゅうにち: an abbreviated era date */
     if ((text[begin] == 'R' || text[begin] == 'H') && begin + 6 <= n && digit(text[begin + 1]) &&
         !(begin && (alpha(text[begin - 1]) || digit(text[begin - 1])))) {
@@ -861,6 +871,16 @@ static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *s, size_t 
         return 0;
     for (q = begin; q < n && digit(text[q]); ++q)
         ;
+    /* 128/82mmHg ひゃくにじゅうはちのはちじゅうにミリエイチジー: a blood pressure */
+    if (q - begin >= 2 && q - begin <= 3 && q + 7 <= n && text[q] == '/' && digit(text[q + 1])) {
+        for (z = q + 1; z < n && digit(text[z]); ++z)
+            ;
+        if (z - q - 1 >= 2 && z - q - 1 <= 3 && z + 4 <= n && !memcmp(text + z, "mmHg", 4)) {
+            snprintf(s->value, sizeof(s->value), "%.*s|%.*s", (int)(q - begin), text + begin, (int)(z - q - 1),
+                     text + q + 1);
+            return finish(in, s, z + 4, TTF_SEM_SYMBOL, "ja.pressure", "@pressure");
+        }
+    }
     /* 24:00 にじゅうよじ: the end of the day */
     if (q - begin == 2 && !memcmp(text + begin, "24:00", 5) && !(begin + 5 < n && (digit(text[begin + 5]) ||
                                                                                    text[begin + 5] == ':'))) {
@@ -1336,9 +1356,13 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         while (q < n && (digit(text[q]) || (text[q] == '.' && q + 1 < n && digit(text[q + 1]))))
             ++q;
         r = q;
-        while (r < n && alpha(text[r]))
-            ++r;
-        if (r > q && r - q < sizeof(unit) && q - begin < sizeof(s->value) && !(r < n && digit(text[r]))) {
+        /* 142mg/dL, 1.2N·m: a compound unit with / or a middle dot (2026-10-14) */
+        while (r < n && (alpha(text[r]) || (r > q && text[r] == '/' && r + 1 < n && alpha(text[r + 1])) ||
+                         (r > q && r + 2 < n && (unsigned char)text[r] == 0xc2 && (unsigned char)text[r + 1] == 0xb7 &&
+                          alpha(text[r + 2]))))
+            r += (unsigned char)text[r] == 0xc2 ? 2 : 1;
+        if (r > q && r - q < sizeof(unit) && q - begin < sizeof(s->value) && !(r < n && digit(text[r])) &&
+            (!memchr(text + q, '/', r - q) && !memchr(text + q, 0xc2, r - q) ? 1 : (memcpy(unit, text + q, r - q), unit[r - q] = 0, res(e, "latin_unit", unit) != NULL))) {
             memcpy(unit, text + q, r - q);
             unit[r - q] = 0;
             if (res(e, "latin_unit", unit) && res(e, "unit", unit)) {
@@ -1600,7 +1624,8 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         if (!cw)
             break;
         if (p + 3 <= n && nl + 4 < sizeof(norm) &&
-            ((!memcmp(text + p, "\xe4\xb8\xad", 3) && res(e, "long_suffix", key)) ||
+            ((!memcmp(text + p, "\xe7\x9b\xae", 3) && strcmp(key, "分") && strcmp(key, "丁目") && strcmp(key, "代目")) ||
+             (!memcmp(text + p, "\xe4\xb8\xad", 3) && res(e, "long_suffix", key)) ||
              (!memcmp(text + p, "\xe5\x8d\x8a", 3) && res(e, "half_suffix", key)) ||
              (!memcmp(text + p, "\xe5\xbe\x8c", 3) && res(e, "after_suffix", key) && !half_word(text + p, n - p)) ||
              (!memcmp(text + p, "\xe5\x89\x8d", 3) && res(e, "before_suffix", key) && !half_word(text + p, n - p)) ||
@@ -1760,7 +1785,12 @@ static ttf_status_t render_chain(const ttf_engine_t *e, const char *v, ttf_buffe
         snprintf(previous, sizeof(previous), "%s", key);
         p += cw;
         /* 一日中 いちにちじゅう, 12時半 じゅうにじはん */
-        if (p + 3 <= n && !memcmp(v + p, "\xe4\xb8\xad", 3)) {
+        if (p + 3 <= n && !memcmp(v + p, "\xe7\x9b\xae", 3)) {
+            /* ２杯目 にはいめ, 3回目 さんかいめ (owner sets, 2026-10-14) */
+            if ((st = ttf_buffer_puts(b, "め")) != TTF_OK)
+                return st;
+            p += 3;
+        } else if (p + 3 <= n && !memcmp(v + p, "\xe4\xb8\xad", 3)) {
             /* 一日中 いちにちじゅう; 10人中9人 じゅうにんちゅうきゅうにん (2026-10-11) */
             if ((st = ttf_buffer_puts(b, res(e, "long_suffix", key) ? "じゅう" : "ちゅう")) != TTF_OK)
                 return st;
@@ -2056,7 +2086,8 @@ static ttf_status_t kanji_numerals(const ttf_engine_t *e, const char *s, size_t 
                     break;
                 }
                 if (p + 3 <= n && nl + 4 < sizeof(norm) &&
-                    ((!memcmp(s + p, "\xe4\xb8\xad", 3) && res(e, "long_suffix", key)) ||
+                    ((!memcmp(s + p, "\xe7\x9b\xae", 3) && strcmp(key, "分") && strcmp(key, "丁目") && strcmp(key, "代目")) ||
+             (!memcmp(s + p, "\xe4\xb8\xad", 3) && res(e, "long_suffix", key)) ||
                      (!memcmp(s + p, "\xe5\x8d\x8a", 3) && res(e, "half_suffix", key)) ||
                      (!memcmp(s + p, "\xe5\xbe\x8c", 3) && res(e, "after_suffix", key) && !half_word(s + p, n - p)) ||
                      (!memcmp(s + p, "\xe5\x89\x8d", 3) && res(e, "before_suffix", key) && !half_word(s + p, n - p)) ||
@@ -2678,6 +2709,28 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
                 (st = plain_number(e, bar + 1, b)) != TTF_OK)
                 return st;
             return word(e, b, "number", "power");
+        }
+        if (!strcmp(s->unit, "@pressure") || !strcmp(s->unit, "@current")) {
+            const char *bar = strchr(s->value, '|');
+            char left[8];
+            if (!bar || (size_t)(bar - s->value) >= sizeof(left))
+                return TTF_EINVAL;
+            snprintf(left, sizeof(left), "%.*s", (int)(bar - s->value), s->value);
+            if (!strcmp(s->unit, "@current")) {
+                /* AC|100 エーシーひゃくボルト */
+                if ((st = letters(e, left, strlen(left), b)) != TTF_OK || (st = plain_number(e, bar + 1, b)) != TTF_OK)
+                    return st;
+                return ttf_buffer_puts(b, res(e, "unit", "V") ? "ボルト" : "ブイ");
+            }
+            /* 128|82 ひゃくにじゅうはちのはちじゅうに + mmHg */
+            if ((st = plain_number(e, left, b)) != TTF_OK || (st = ttf_buffer_puts(b, "の")) != TTF_OK ||
+                (st = plain_number(e, bar + 1, b)) != TTF_OK)
+                return st;
+            {
+                const char *u = res(e, "unit", "mmHg");
+                size_t ul = u ? strcspn(u, ":") : 0;
+                return u ? ttf_buffer_append(b, u, ul) : TTF_OK;
+            }
         }
         if (!strcmp(s->unit, "@seat")) {
             /* 23A にじゅうさんエー */

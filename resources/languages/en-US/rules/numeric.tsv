@@ -556,3 +556,4 @@ classifier_priority	en-US	en.mixed-fraction	10
 classifier_priority	en-US	en.star-code	10
 classifier_priority	en-US	en.host-port	10
 classifier_priority	en-US	en.day-range	10
+classifier_priority	en-US	en.mixed-code	10

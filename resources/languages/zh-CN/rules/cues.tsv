@@ -654,3 +654,8 @@ room_after	zh-CN	诊室	1
 room_after	zh-CN	教室	1
 room_after	zh-CN	会议室	1
 room_after	zh-CN	病房	1
+# 请计算18×25 十八乘以二十五: a computing word before an expression (2026-10-14)
+compute_cue	zh-CN	计算	1
+compute_cue	zh-CN	算出	1
+compute_cue	zh-CN	求	1
+compute_cue	zh-CN	算	1

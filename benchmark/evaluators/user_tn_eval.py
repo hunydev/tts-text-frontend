@@ -18,7 +18,7 @@ case, whitespace and punctuation removed. Per language:
   vi-VN  gi-ga = ghi-ga, đề-xi-ben = đê-xi-ben, độ C = độ xê, gạch ngang = gạch (variants);
   ko-KR  an hour in native numbers (스물세 시 = 이십삼 시), a letter and one digit in English
          (B7 비세븐 = 비 칠), 에잇 = 에이트, 골뱅이 = 앳, 점 = 닷, a hyphen read 다시 = 에 or nothing, and a
-         range A부터 B까지 = A에서 B (the sets write both, 10.20~10.24).
+         range A부터 B까지 = A에서 B (the sets write both, 10.20~10.24), and Z 제트 = 지 (OZ214 오지).
 These are reading policies both sides accept (docs/HANDOFF.md, policy differences kept); per-line
 widenings are in benchmark/datasets/user-tn-eval/amend.tsv.
 Scores are given for dev and test separately. Only dev misses are written out
@@ -129,7 +129,7 @@ def fold(s, lang):
         s = re.sub("两(?=[百千万亿])", "二", s)
     elif lang == "ko-KR":
         # @ 골뱅이 = 앳, . 점 = 닷 in addresses (both in use)
-        s = s.replace("에이트", "에잇").replace("골뱅이", "앳").replace("점", "닷")
+        s = s.replace("에이트", "에잇").replace("골뱅이", "앳").replace("점", "닷").replace("제트", "지")
     s = "".join(c for c in s if c == "ー" or not c.isspace() and unicodedata.category(c)[0] not in "PS")
     if lang == "vi-VN":
         # gi-ga = ghi-ga, đề-xi-ben = đê-xi-ben, độ C = độ xê, gạch ngang = gạch (address hyphen)

@@ -71,6 +71,23 @@
     vi 97.4 / 94.2. No dev span lost. Contract user_eval4_v84 (22). Other gates unchanged.
   - Contracts updated with Was notes (owner-set evidence): vi_prod_v80 12/28 phiếu trên,
     vi_pack2_v75 P.308 phòng ba không tám and IP 192.168.1.1 digit by digit.
+- User eval phase 7 (generalizable forms from the remaining dev misses, 2026-10-14):
+  - English: an IP octet of one or two digits reads as a number (10.0.4.17 ten dot zero dot four
+    dot seventeen; 192 stays one nine two), codes whose letters and digits change more than once
+    (WDT750SAKZ, 7KXJ442) read one by one, two years in order read as years without a cue
+    (built 1998-2004).
+  - Japanese: mAh ミリアンペアアワー, mg/dL, mg/L, N·m, 128/82mmHg with の, AC100V ボルト, ２杯目 め.
+  - Chinese: × after 计算 reads 乘以, grouped numbers inside an expression, digit domains
+    (12306.cn 幺二三零六点cn, www 三W), 2026.10.20-10.31.
+  - Vietnamese: 5! = 120 giai thừa (a factorial before an operator no longer ends the sentence),
+    ₫1.590.000, Sáng 2-1 and Ngày Nhà giáo … 20-11 dates, Mỗi ngày 2-3 lần stays a range (it read
+    as a date on main), khung hình/giây một, l/100km trên.
+  - Korean: 010.3304.6671, spaced digit groups after a number label, WELCOME10 (welcome added to
+    the code words); scorer Z 제트 = 지.
+  - Span accuracy, dev / test: ko 96.0 / 91.8, en 95.9 / 88.5, ja 96.7 / 92.2, zh 98.7 / 96.1, vi 98.4 / 94.8. No dev span lost.
+    Contract user_eval7_v88 (20). English bench speech +11 and text +11 against the references, ja-tn-eval direct +22 (ours unchanged), zh held-out 3 +2 and 5 +1, Korean quick +2, Vietnamese unchanged.
+  - Contracts updated with Was notes (owner-set evidence): ja_pack_v36, ja_rest_v50, ja_rules_v43
+    read 目 after a counter as め.
 - Vietnamese parity with the English pack (project-owner question, 2026-10-14):
   - Bug (also on main): a Vietnamese sentence with a Hangul, kana or hanzi word (Khách hàng 김민수
     đã đặt phòng) lost its sentence language, and its words were spelled as English letters

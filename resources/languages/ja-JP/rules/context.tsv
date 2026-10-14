@@ -47,3 +47,5 @@ classifier_priority	ja-JP	ja.end-of-day	50
 classifier_priority	ja-JP	ja.seat	50
 classifier_priority	ja-JP	ja.power	50
 classifier_priority	ja-JP	ja.spaced-phone	50
+classifier_priority	ja-JP	ja.pressure	50
+classifier_priority	ja-JP	ja.current	50

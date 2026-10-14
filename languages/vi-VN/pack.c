@@ -996,6 +996,33 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         }
     }
 
+    /* 60 khung hình/giây một giây, 6,8 l/100km trên một trăm: a slash after the word that follows
+       a number (owner sets, 2026-10-14) */
+    if (t[p] == '/' && p >= 2 && p + 1 < n && letter_at(t, n, p + 1) == 0 && digit(t[p + 1]) &&
+        alpha(t[p - 1])) {
+        size_t z = p;
+        while (z && alpha(t[z - 1]))
+            --z;
+        if (z && (t[z - 1] == ' ' ? z >= 2 && digit(t[z - 2]) : digit(t[z - 1])))
+            return finish(in, s, p + 1, "lit", " trên ", "");
+    } else if (t[p] == '/' && p >= 2 && p + 1 < n && letter_at(t, n, p + 1) && letter_at(t, n, p - 1)) {
+        /* the number is at most two words back: 60 khung hình/giây, 1tr5/người */
+        size_t z = p, words = 0;
+        int found = 0;
+        while (z && words < 3 && !found) {
+            while (z && t[z - 1] != ' ' && !digit(t[z - 1]))
+                --z;
+            if (!z)
+                break;
+            if (digit(t[z - 1]) || (z >= 2 && t[z - 1] == ' ' && digit(t[z - 2])))
+                found = 1;
+            --z;
+            ++words;
+        }
+        if (found)
+            return finish(in, s, p + 1, "lit", " một ", "");
+    }
+
     /* Kết quả xét nghiệm: (-) âm tính, (+) dương tính (owner sets, 2026-10-14) */
     if (t[p] == '(' && p + 3 <= n && (t[p + 1] == '-' || t[p + 1] == '+') && t[p + 2] == ')' &&
         !(p + 3 < n && (alpha(t[p + 3]) || digit(t[p + 3]))) && p >= 2 && (t[p - 2] == ':' || t[p - 1] == ':'))
@@ -1150,8 +1177,9 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     if (t[q] == '~' && q + 1 < n && digit(t[q + 1]))
         approx = 1, ++q;
     else if (t[q] == '$' || !strncmp(t + q, "€", 3) || !strncmp(t + q, "£", 2) ||
-             !strncmp(t + q, "¥", 2)) {
-        size_t sw = t[q] == '$' ? 1 : !strncmp(t + q, "€", 3) ? 3 : 2;
+             !strncmp(t + q, "¥", 2) || !strncmp(t + q, "₫", 3)) {
+        /* ₫1.590.000 (2026-10-14) */
+        size_t sw = t[q] == '$' ? 1 : !strncmp(t + q, "€", 3) || !strncmp(t + q, "₫", 3) ? 3 : 2;
         char sym[4] = {0};
         memcpy(sym, t + q, sw);
         if (q + sw < n && digit(t[q + sw]) && res(e, "vi_currency", sym)) {
@@ -1371,6 +1399,20 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             while (m1 < n && digit(t[m1]))
                 ++m1;
             m = (unsigned)atoi(t + m0);
+            /* Ngày Nhà giáo Việt Nam 20-11: the holiday name already says ngày */
+            if (sep == '-' && d > m && !previous_cue(e, t, p, "daypart") && cue_before(e, t, p, "daywide", 40))
+                day_said = 1;
+            /* Mỗi ngày 2-3 lần, sáng 8-10 giờ: a dash pair before a count word is a range */
+            if (sep == '-' && m1 + 1 < n && t[m1] == ' ') {
+                static const char *const counts[] = {"lần", "lượt", "giờ", "phút", "tiếng", "tuần", "tháng",
+                                                     "người", "viên", "cái", "ly", "cốc", "bữa"};
+                size_t c;
+                for (c = 0; c < sizeof(counts) / sizeof(*counts); ++c) {
+                    size_t l = strlen(counts[c]);
+                    if (m1 + 1 + l <= n && !memcmp(t + m1 + 1, counts[c], l) && !letter_at(t, n, m1 + 1 + l))
+                        m = 0;
+                }
+            }
             if (m1 - m0 <= 2 && m >= 1 && m <= 12 && d >= 1 && d <= 31) {
                 if (m1 + 2 < n && t[m1] == sep && digit(t[m1 + 1])) {
                     size_t y0 = m1 + 1, y = y0;
@@ -1393,7 +1435,12 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                      (sep != '/' && (previous_cue(e, t, p, "day") || previous_cue(e, t, p, "holiday") ||
                                      coordinated(t, p, 0) ||
                                      /* Ngày Nhà giáo 20.11; a dash pair after Mỗi ngày stays a range */
-                                     (sep == '.' && cue_before(e, t, p, "daywide", 40)))))) {
+                                     (sep == '.' && cue_before(e, t, p, "daywide", 40)) ||
+                                     /* Sáng 2-1, Ngày Nhà giáo Việt Nam 20-11: a dash pair with the
+                                        day above the month is a date (2-3 lần stays a range;
+                                        owner sets, 2026-10-14) */
+                                     (sep == '-' && d > m &&
+                                      (previous_cue(e, t, p, "daypart") || cue_before(e, t, p, "daywide", 40))))))) {
                     /* 30/4-1/5: a second day-month after a dash */
                     size_t r = sep == '/' ? dash_after(t, n, m1) : 0, r1 = r, r2;
                     while (r && r1 < n && digit(t[r1]))
@@ -1601,7 +1648,7 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         size_t end = amount_tail(e, t, n, q, key, sizeof(key), mid, sizeof(mid), per, sizeof(per));
         if (prefix_currency) {
             char sym[4] = {0};
-            memcpy(sym, t + p, t[p] == '$' ? 1 : t[p] == '\xe2' ? 3 : 2);
+            memcpy(sym, t + p, t[p] == '$' ? 1 : t[p] == '\xe2' ? 3 : 2); /* € ₫ are three bytes */
             snprintf(key, sizeof(key), "c:%s", sym);
         }
         flags(t, n, p, end, fl, sizeof(fl));

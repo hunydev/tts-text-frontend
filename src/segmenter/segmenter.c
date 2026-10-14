@@ -496,6 +496,14 @@ ttf_status_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, i
                         sentence = 1;
                     if (cp == '.' && protected_period(e, s, at))
                         sentence = 0;
+                    /* 5! = 120, 3! + 1: a factorial before an operator (2026-10-14) */
+                    if (cp == '!' && sentence && at && s[at - 1] >= '0' && s[at - 1] <= '9') {
+                        size_t z = at + w;
+                        while (z < n && s[z] == ' ')
+                            ++z;
+                        if (z < n && strchr("=+-*/<>", s[z]))
+                            sentence = 0;
+                    }
                     if (cp == '.' && sentence &&
                         ttf_phone_boundary_pending(e, s, at + w, tokens, i + 1))
                         sentence = 0;

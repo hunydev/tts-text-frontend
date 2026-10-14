@@ -1277,6 +1277,25 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             }
             return TTF_OK;
         }
+        if (!strcmp(s->unit, "spaced_groups")) {
+            /* 6845 2201 3379 육팔사오 이이공일 삼삼칠구 */
+            const char *g = s->value;
+            char part[8];
+            while (*g) {
+                size_t l = strcspn(g, " ");
+                if (l >= sizeof(part))
+                    return TTF_EINVAL;
+                memcpy(part, g, l);
+                part[l] = 0;
+                TRY(ttf_ko_render_identifier(e, part, out));
+                g += l;
+                if (*g == ' ') {
+                    TRY(ttf_buffer_puts(out, " "));
+                    ++g;
+                }
+            }
+            return TTF_OK;
+        }
         if (!strcmp(s->unit, "zero_number")) {
             /* 0427번 공사이칠번 (owner sets, 2026-10-14; attached like 공삼번 in ko_bench_fixes_v32) */
             TRY(ttf_ko_render_identifier(e, s->value, out));
@@ -2797,6 +2816,42 @@ static size_t owner_forms5(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         return 0;
     for (q = p; q < n && ko_digit(t[q]); ++q)
         ;
+    /* 010.3304.6671 공일공 삼삼공사 육육칠일: a mobile number written with dots */
+    if (t[p] == '0' && q - p == 3 && q + 10 <= n && t[q] == '.') {
+        size_t a = q + 1, b2;
+        for (b2 = a; b2 < n && ko_digit(t[b2]); ++b2)
+            ;
+        if ((b2 - a == 3 || b2 - a == 4) && b2 + 5 <= n && t[b2] == '.' && ko_digit(t[b2 + 1])) {
+            size_t c = b2 + 1, d;
+            for (d = c; d < n && ko_digit(t[d]); ++d)
+                ;
+            if (d - c == 4 && !(d < n && (ko_digit(t[d]) || (t[d] == '.' && d + 1 < n && ko_digit(t[d + 1]))))) {
+                (void)snprintf(v, sizeof(v), "%.3s-%.*s-%.4s", t + p, (int)(b2 - a), t + a, t + c);
+                return ko_finish(in, s, d, TTF_SEM_PHONE, v, "", "ko:dotted-phone");
+            }
+        }
+    }
+    /* 운송장번호 6845 2201 3379: spaced digit groups after a number label read digit by digit */
+    if (q - p >= 3 && q - p <= 4 && q + 4 < n && t[q] == ' ' && ko_digit(t[q + 1]) && word_within(t, p, 18, "번호") &&
+        in->engine->frontend_options.output_mode == TTF_OUTPUT_SPEECH) {
+        size_t z = q, groups = 1, used = (size_t)(q - p);
+        memcpy(v, t + p, q - p);
+        while (z + 1 < n && t[z] == ' ' && ko_digit(t[z + 1])) {
+            size_t g = z + 1;
+            while (g < n && ko_digit(t[g]))
+                ++g;
+            if (g - z - 1 < 3 || g - z - 1 > 4 || used + (g - z) + 1 >= sizeof(v))
+                break;
+            v[used++] = ' ';
+            memcpy(v + used, t + z + 1, g - z - 1);
+            used += g - z - 1;
+            z = g;
+            ++groups;
+        }
+        v[used] = 0;
+        if (groups >= 3 && !(z < n && ko_digit(t[z])))
+            return ko_finish(in, s, z, TTF_SEM_DIGIT_SEQUENCE, v, "spaced_groups", "ko:spaced-groups");
+    }
     /* 9/28~10/1 구 월 이십팔 일에서 시월 일 일: both ends of a slash date range are dates */
     if (q - p <= 2 && q + 2 < n && t[q] == '/' && ko_digit(t[q + 1])) {
         size_t r, z;

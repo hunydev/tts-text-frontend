@@ -1137,3 +1137,5 @@ classifier_priority	ko-KR	ko:zero-number	10
 classifier_priority	ko-KR	ko:resolution	10
 classifier_priority	ko-KR	ko:date-range	10
 classifier_priority	ko-KR	ko:blood-pressure	10
+classifier_priority	ko-KR	ko:dotted-phone	10
+classifier_priority	ko-KR	ko:spaced-groups	10

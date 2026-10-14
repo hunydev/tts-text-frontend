@@ -77,3 +77,6 @@ classifier_priority	zh-CN	zh.intchain	100
 classifier_priority	zh-CN	zh.latcode	100
 classifier_priority	zh-CN	zh.atsign	100
 classifier_priority	zh-CN	zh.relword	100
+classifier_priority	zh-CN	zh.mathc	100
+classifier_priority	zh-CN	zh.domain	100
+classifier_priority	zh-CN	zh.daterangemd	100

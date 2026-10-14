@@ -762,8 +762,22 @@ static size_t year_range(const ttf_pack_input_t *in, ttf_semantic_t *out, size_t
         ++first.digits;
         ++first.end;
     }
-    if (first.digits != 4 || !preceding_cue(in, start, first.end, &layer))
+    if (first.digits != 4)
         return 0;
+    /* built 1998-2004: two years of 1900-2099 in order read as years without a cue (owner
+       sets, 2026-10-14); other pairs still need one (a page range keeps its cardinals). */
+    if (!preceding_cue(in, start, first.end, &layer)) {
+        size_t r = skip_horizontal(in->text, in->length, first.end), k;
+        unsigned second_year = 0;
+        if (first.value < 1900 || first.value > 2099 || r >= in->length || in->text[r] != '-')
+            return 0;
+        r = skip_horizontal(in->text, in->length, r + 1);
+        for (k = 0; k < 4 && r + k < in->length && ascii_digit(in->text[r + k]); ++k)
+            second_year = second_year * 10 + (unsigned)(in->text[r + k] - '0');
+        if (k != 4 || (r + 4 < in->length && ascii_digit(in->text[r + 4])) || second_year <= first.value ||
+            second_year > 2099)
+            return 0;
+    }
     p = skip_horizontal(in->text, in->length, first.end);
     if (p >= in->length || in->text[p] != '-')
         return 0;

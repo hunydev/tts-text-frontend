@@ -2,6 +2,15 @@
 
 갱신: 2026-10-11. Release **0.20.0**, public ABI **v1**.
 
+## 최근 인계: 소유자 평가셋 7단계 (2026-10-14)
+
+- **범위:** 남은 dev 오답 가운데 일반화되는 형식만(소유자 승인). 기존 참조와 충돌하거나 문맥 없이는 판단할 수 없는 것은 남겼다.
+- **점수(구간, dev/test):** ko 96.0 / 91.8, en 95.9 / 88.5, ja 96.7 / 92.2, zh 98.7 / 96.1, vi 98.4 / 94.8. dev 손실 0. 계약 `user_eval7_v88`.
+- **게이트:** English bench speech +11 and text +11 against the references, ja-tn-eval direct +22 (ours unchanged), zh held-out 3 +2 and 5 +1, Korean quick +2, Vietnamese unchanged.
+- **고정 계약 갱신:** `ja_pack_v36`·`ja_rest_v50`·`ja_rules_v43`의 조수사 뒤 目(Was: いっかい目).
+- **main 버그 수정:** 베트남어 `Mỗi ngày 2-3 lần`이 날짜(ngày hai tháng ba)로 읽히던 문제.
+- **다음:** test가 거의 움직이지 않는다. 코드를 고정하고 새 held-out 셋으로 일반화를 확인하는 단계가 맞다. 상세: [benchmark/datasets/user-tn-eval/README.md](../benchmark/datasets/user-tn-eval/README.md).
+
 ## 최근 인계: 베트남어 영어 수준 맞추기 (2026-10-14)
 
 - **계기:** 지원 표에서 베트남어가 영어보다 범주가 적다는 소유자 질문. 영어 범주로 직접 돌려 보니 실제 빈 곳과 버그가 있었다.

@@ -1446,6 +1446,24 @@ static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     for (q = p; q < n && t[q] != '\n'; ++q)
         if (foreign_letter(t, n, q))
             return 0;
+    /* WDT750SAKZ, 7KXJ442, LB26X: capitals and digits that change more than once are a code,
+       read letter by letter and digit by digit (owner sets, 2026-10-14) */
+    if ((ascii_digit_char(t[p]) || (t[p] >= 'A' && t[p] <= 'Z')) && !(p && ascii_letter_char(t[p - 1]))) {
+        size_t letters = 0, digits_n = 0, runs = 0;
+        int last = -1;
+        for (q = p; q < n && (ascii_digit_char(t[q]) || (t[q] >= 'A' && t[q] <= 'Z')); ++q) {
+            int kind = ascii_digit_char(t[q]);
+            letters += !kind;
+            digits_n += kind;
+            runs += kind != last;
+            last = kind;
+        }
+        if (runs >= 3 && letters >= 2 && digits_n >= 2 && q - p >= 5 && q - p < sizeof(v) &&
+            !(q < n && (ascii_letter_char(t[q]) || t[q] == '-' || (t[q] == '.' && q + 1 < n && ascii_digit_char(t[q + 1]))))) {
+            (void)snprintf(v, sizeof(v), "%.*s", (int)(q - p), t + p);
+            return owner_finish(in, out, q, TTF_SEM_SYMBOL, "@code", v, "en.mixed-code");
+        }
+    }
     if (ascii_digit_char(t[p])) {
         for (q = p; q < n && ascii_digit_char(t[q]); ++q)
             ;
@@ -2329,7 +2347,10 @@ static ttf_status_t dotted_numbers(const ttf_engine_t *e, const ttf_semantic_t *
         if (end == at || end - at >= sizeof(part.value))
             return TTF_EINVAL;
         part.struct_size = sizeof(part);
-        part.type = !strcmp(policy, "digits") || (end - at > 1 && surface[at] == '0')
+        /* an IP octet of one or two digits reads as a number (10.0.4.17 ten dot zero dot
+           four dot seventeen; owner sets, 2026-10-14); 192 stays one nine two */
+        part.type = (!strcmp(policy, "digits") && !(s->type == TTF_SEM_IP_ADDRESS && end - at <= 2)) ||
+                            (end - at > 1 && surface[at] == '0')
                         ? TTF_SEM_DIGIT_SEQUENCE
                         : TTF_SEM_CARDINAL;
         memcpy(part.value, surface + at, end - at);
@@ -2395,6 +2416,22 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             if ((st = ttf_buffer_puts(b, !strcmp(s->unit, "@star") ? "star " : "localhost colon ")) != TTF_OK)
                 return st;
             return digits(e, s->value, b);
+        }
+        if (!strcmp(s->unit, "@code")) {
+            /* WDT750SAKZ w d t seven five zero s a k z */
+            const char *c;
+            for (c = s->value; *c; ++c) {
+                if (c != s->value && (st = space(b)) != TTF_OK)
+                    return st;
+                if (*c >= '0' && *c <= '9') {
+                    char d[2] = {*c, 0};
+                    st = digits(e, d, b);
+                } else
+                    st = ttf_en_speech_spelling(e, c, 1, 0, b);
+                if (st != TTF_OK)
+                    return st;
+            }
+            return TTF_OK;
         }
         if (!strcmp(s->unit, "@mixed")) {
             /* 2|a half two and a half */

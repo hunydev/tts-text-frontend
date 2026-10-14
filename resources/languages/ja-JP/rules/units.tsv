@@ -52,7 +52,7 @@ unit	ja-JP	kV	キロボルト:p10
 unit	ja-JP	mV	ミリボルト:-
 unit	ja-JP	A	アンペア:-
 unit	ja-JP	mA	ミリアンペア:-
-unit	ja-JP	mAh	ミリアンペアじ:-
+unit	ja-JP	mAh	ミリアンペアアワー:-
 unit	ja-JP	Pa	パスカル:-
 unit	ja-JP	hPa	ヘクトパスカル:-
 unit	ja-JP	kPa	キロパスカル:p10
@@ -124,3 +124,10 @@ latin_unit	ja-JP	kbps	1
 latin_unit	ja-JP	Mbps	1
 latin_unit	ja-JP	Gbps	1
 latin_unit	ja-JP	Tbps	1
+# Owner evaluation sets, phase 7 (2026-10-14): 142mg/dL, 1.2N·m
+unit	ja-JP	mg/dL	ミリグラムパーデシリットル:-
+unit	ja-JP	mg/L	ミリグラムパーリットル:-
+unit	ja-JP	N·m	ニュートンメートル:-
+latin_unit	ja-JP	mg/dL	1
+latin_unit	ja-JP	mg/L	1
+latin_unit	ja-JP	N·m	1
