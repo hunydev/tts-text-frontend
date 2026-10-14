@@ -269,6 +269,22 @@ static int next_word(const char *t, size_t n, size_t p, const char *words) {
     }
     return 0;
 }
+/* AM, PM, a.m., p.m. or SA (sáng), CH (chiều) after a time at z, one space allowed:
+   the end of the marker, *am set for the morning; 0 when none. */
+static size_t meridiem_at(const char *t, size_t n, size_t z, int *am) {
+    size_t q = z < n && t[z] == ' ' ? z + 1 : z, w = 0;
+    if (q + 4 <= n && (t[q] == 'a' || t[q] == 'p') && t[q + 1] == '.' && t[q + 2] == 'm' && t[q + 3] == '.')
+        w = 4;
+    else if (q + 2 <= n && ((t[q] | 0x20) == 'a' || (t[q] | 0x20) == 'p') && (t[q + 1] | 0x20) == 'm')
+        w = 2;
+    else if (q + 2 <= n && ((t[q] == 'S' && t[q + 1] == 'A') || (t[q] == 'C' && t[q + 1] == 'H')))
+        w = 2;
+    if (!w || (q + w < n && (alpha(t[q + w]) || (unsigned char)t[q + w] >= 0x80)))
+        return 0;
+    *am = (t[q] | 0x20) == 'a' || t[q] == 'S';
+    return q + w;
+}
+
 static int previous_cue(const ttf_engine_t *e, const char *t, size_t p, const char *cue) {
     const char *words = res(e, "vi_cue", cue);
     return words && previous_word(t, p, words);
@@ -421,11 +437,16 @@ static size_t amount_tail(const ttf_engine_t *e, const char *t, size_t n, size_t
             ++k;
         if (k > m && (k < n || (k == n && k - m < mcap))) {
             snprintf(mid, mcap, "%.*s", (int)(k - m), t + m);
+            /* $15 triệu. mười lăm triệu đô la: punctuation after the scale word is not part of it */
+            while (k > m + 1 && strchr(".,;:!?)", t[k - 1]) && !res(e, "vi_scale_word", mid)) {
+                --k;
+                mid[k - m] = 0;
+            }
             if (res(e, "vi_scale_word", mid) && (se = suffix_at(e, t, n, k, key, kcap, "cu")))
                 end = se;
             /* 85,5 triệu: a scale word belongs to the amount, so a unit cut does
                not fall between them (… triệu | đồng/lượng) */
-            else if (res(e, "vi_scale_word", mid) && (k == n || t[k] == ' '))
+            else if (res(e, "vi_scale_word", mid) && (k == n || t[k] == ' ' || strchr(".,;:!?)", t[k])))
                 end = k;
             else if (t[k] == '/' && letter_at(t, n, k + 1) && letter_at(t, n, m))
                 end = k;
@@ -832,6 +853,45 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     if (p >= n)
         return 0;
 
+    /* 10 a.m. mười giờ sáng, 7 PM, 7am: an hour with a meridiem marker */
+    if (digit(t[p]) && !(p && (digit(t[p - 1]) || t[p - 1] == ':' || t[p - 1] == '.' || t[p - 1] == ','))) {
+        size_t z2 = p;
+        int am = 0;
+        while (z2 < n && digit(t[z2]) && z2 - p < 3)
+            ++z2;
+        if (z2 - p <= 2 && atoi(t + p) >= 1 && atoi(t + p) <= 12 && !(z2 < n && (digit(t[z2]) || t[z2] == ':'))) {
+            size_t me = meridiem_at(t, n, z2, &am);
+            if (me) {
+                char fl2[32];
+                snprintf(v, sizeof(v), "%d:00:", atoi(t + p)); /* the clock_at form h:mm:ss */
+                flags(t, n, p, me, fl2, sizeof(fl2));
+                return finish(in, s, me, am ? "timeam" : "timepm", v, fl2);
+            }
+        }
+    }
+    /* tỷ lệ 3:2 ba trên hai, tỉ số 2:1 hai một: a ratio or a score with a colon */
+    if (digit(t[p]) && !(p && (digit(t[p - 1]) || t[p - 1] == ':' || t[p - 1] == '.' || t[p - 1] == ','))) {
+        size_t z2 = p, z3, k2, from = p > 24 ? p - 24 : 0;
+        int ratio = 0, score = 0;
+        while (z2 < n && digit(t[z2]) && z2 - p < 4)
+            ++z2;
+        if (z2 < n && t[z2] == ':' && z2 + 1 < n && digit(t[z2 + 1])) {
+            for (z3 = z2 + 1; z3 < n && digit(t[z3]) && z3 - z2 <= 4; ++z3)
+                ;
+            for (k2 = from; k2 + 4 <= p; ++k2) {
+                ratio |= !memcmp(t + k2, "lệ", 4) && k2 + 4 < p && (t[k2 + 4] == ' ' || t[k2 + 4] == ':');
+                /* tỷ số, tỉ số: "tỷ" is four bytes, then a space */
+                score |= k2 >= 5 && !memcmp(t + k2, "số", 4) && t[k2 - 1] == ' ' &&
+                         (!memcmp(t + k2 - 5, "tỷ", 4) || !memcmp(t + k2 - 5, "tỉ", 4) ||
+                          !memcmp(t + k2 - 5, "Tỷ", 4) || !memcmp(t + k2 - 5, "Tỉ", 4));
+            }
+            if ((ratio || score) && !(z3 < n && (digit(t[z3]) || t[z3] == ':' || (t[z3] == '.' && z3 + 1 < n && digit(t[z3 + 1]))))) {
+                snprintf(v, sizeof(v), "%.*s|%.*s", (int)(z2 - p), t + p, (int)(z3 - z2 - 1), t + z2 + 1);
+                return finish(in, s, z3, "ratio", v, score ? "pair" : "per");
+            }
+        }
+    }
+
     /* ±0,02 mm cộng trừ, ±7% */
     if (!strncmp(t + p, "±", 2) && p + 2 < n && digit(t[p + 2])) {
         parsed_t pm;
@@ -880,6 +940,58 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                 !(d2 + 1 < n && (t[d2] == '.' || t[d2] == ',') && digit(t[d2 + 1]))) {
                 snprintf(v, sizeof(v), "%s|%.*s", pre, (int)(d2 - l2 - 1), t + l2 + 1);
                 return finish(in, s, d2, "road", v, "");
+            }
+        }
+    }
+
+    /* ① một … ⑳ hai mươi, ⑴, ⒈, ❶, ➀, ⓪; Ⓐ ⓐ A: an enclosed number or letter */
+    if (p + 3 <= n && (unsigned char)t[p] == 0xe2) {
+        unsigned cp = (((unsigned char)t[p] & 0x0fu) << 12) | (((unsigned char)t[p + 1] & 0x3fu) << 6) |
+                      ((unsigned char)t[p + 2] & 0x3fu);
+        int num = cp >= 0x2460 && cp <= 0x2473   ? (int)(cp - 0x2460 + 1)
+                  : cp >= 0x2474 && cp <= 0x2487 ? (int)(cp - 0x2474 + 1)
+                  : cp >= 0x2488 && cp <= 0x249b ? (int)(cp - 0x2488 + 1)
+                  : cp >= 0x2776 && cp <= 0x277f ? (int)(cp - 0x2776 + 1)
+                  : cp >= 0x2780 && cp <= 0x2789 ? (int)(cp - 0x2780 + 1)
+                  : cp >= 0x278a && cp <= 0x2793 ? (int)(cp - 0x278a + 1)
+                  : cp == 0x24ea                 ? 0
+                                                 : -1;
+        if (num >= 0) {
+            snprintf(v, sizeof(v), "%d", num);
+            return finish(in, s, p + 3, "circled", v, "");
+        }
+        if ((cp >= 0x24b6 && cp <= 0x24cf) || (cp >= 0x24d0 && cp <= 0x24e9)) {
+            snprintf(v, sizeof(v), "%c", (int)(cp >= 0x24d0 ? 'a' + (cp - 0x24d0) : 'A' + (cp - 0x24b6)));
+            return finish(in, s, p + 3, "lit", v, "");
+        }
+    }
+    /* TP.HCM thành phố Hồ Chí Minh, THPT trung học phổ thông, TS. tiến sĩ, v.v. vân vân: an
+       abbreviation as a word of its own (vi_abbr); 527/QĐ-UBND and VN-Index keep the code. */
+    if (!(p && (alpha(t[p - 1]) || digit(t[p - 1]) || t[p - 1] == '-' || t[p - 1] == '/' || t[p - 1] == '.' ||
+                (unsigned char)t[p - 1] >= 0x80))) {
+        size_t z = p, ends[24], m = 0;
+        while (z < n && z - p < 20 && m < 24) {
+            unsigned char c = (unsigned char)t[z];
+            size_t w = alpha(t[z]) || t[z] == '.' ? 1 : c >= 0xc3 && c <= 0xdf ? 2 : c == 0xe1 ? 3 : 0;
+            if (!w || z + w > n)
+                break;
+            z += w;
+            ends[m++] = z;
+        }
+        while (m--) {
+            size_t end = ends[m];
+            char abk[24];
+            const char *reading;
+            if (end < n && (alpha(t[end]) || digit(t[end]) || t[end] == '-' || t[end] == '/' ||
+                            ((unsigned char)t[end] >= 0xc3 && (unsigned char)t[end] <= 0xe1)))
+                continue;
+            snprintf(abk, sizeof(abk), "%.*s", (int)(end - p), t + p);
+            if ((reading = res(e, "vi_abbr", abk)) != NULL) {
+                char full[96];
+                /* compa v.v. vân vân.: a final period also ends the sentence */
+                snprintf(full, sizeof(full), "%s%s", reading,
+                         t[end - 1] == '.' && (end == n || t[end] == '\n' || t[end] == '\r') ? "." : "");
+                return finish(in, s, end, "lit", full, "");
             }
         }
     }
@@ -1206,13 +1318,17 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                 flags(t, n, p, y, fl, sizeof(fl));
                 return finish(in, s, y, "timerange", sec, fl);
             }
-            /* 10:00 AM mười giờ sáng, 7:30 PM bảy giờ ba mươi phút chiều */
-            if (z + 2 < n && t[z] == ' ' && (t[z + 1] == 'A' || t[z + 1] == 'P' || t[z + 1] == 'a' || t[z + 1] == 'p') &&
-                (t[z + 2] == 'M' || t[z + 2] == 'm') && !letter_at(t, n, z + 3)) {
-                char vv[TTF_IR_VALUE_SIZE];
-                snprintf(vv, sizeof(vv), "%.80s", v);
-                flags(t, n, p, z + 3, fl, sizeof(fl));
-                return finish(in, s, z + 3, (t[z + 1] | 0x20) == 'a' ? "timeam" : "timepm", vv, fl);
+            /* 10:00 AM mười giờ sáng, 7:30 PM bảy giờ ba mươi phút chiều, 9:00 SA, 5:00 CH,
+               10:00 a.m. (2026-10-14) */
+            {
+                int am = 0;
+                size_t me = meridiem_at(t, n, z, &am);
+                if (me) {
+                    char vv[TTF_IR_VALUE_SIZE];
+                    snprintf(vv, sizeof(vv), "%.80s", v);
+                    flags(t, n, p, me, fl, sizeof(fl));
+                    return finish(in, s, me, am ? "timeam" : "timepm", vv, fl);
+                }
             }
             flags(t, n, p, z, fl, sizeof(fl));
             return finish(in, s, z, "time", v, fl);
@@ -1583,6 +1699,15 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         TRY(digits_each(e, b, v, strlen(v)));
     } else if (!strcmp(mode, "lit")) {
         TRY(put(b, v));
+    } else if (!strcmp(mode, "circled")) {
+        TRY(number(e, b, v));
+    } else if (!strcmp(mode, "ratio")) {
+        field(v, 0, f0, sizeof(f0));
+        field(v, 1, f1, sizeof(f1));
+        TRY(number(e, b, f0));
+        if (!strcmp(s->secondary, "per"))
+            TRY(word(e, b, "per"));
+        TRY(number(e, b, f1));
     } else if (!strcmp(mode, "prize")) {
         TRY(word(e, b, v[0] == '1' ? "prize1" : "prize2"));
     } else if (!strcmp(mode, "plusminus")) {

@@ -534,8 +534,11 @@ static const ttf_language_pack_t *han_sentence(const ttf_engine_t *e, const ttf_
    Văn An); other Latin words of two letters or more weigh one. In another request
    the counted weight must reach two and the other words'; in the pack's own request
    a sentence is the pack's unless it has an English word of english_cue and no
-   counted weight at least the other words'. Hangul, kana or hanzi leave the
-   sentence alone. */
+   counted weight at least the other words'. A Hangul, kana or hanzi word (Khách hàng
+   김민수 đã đặt phòng) leaves the sentence to the pack only when the counted weight is
+   at least two and twice the number of such words, so a Korean sentence with a
+   Vietnamese name stays Korean (2026-10-14; before, any such word left the sentence
+   to the word vote and its Vietnamese words were spelled as English letters). */
 static int letter_in(const char *set, const char *s, size_t w) {
     char one[5];
     if (!set || w > 4)
@@ -579,7 +582,7 @@ static int capital_first(const char *s, size_t n) {
            cp == 0x1a0 || cp == 0x1af;
 }
 typedef struct {
-    unsigned counted, weak_weight, weak_words, plain, cue, foreign;
+    unsigned counted, weak_weight, weak_words, plain, cue, foreign, other;
     int strong_seen;
 } latin_tally_t;
 /* One Latin word into the tally; -1 for a veto letter. */
@@ -649,7 +652,7 @@ static const ttf_language_pack_t *latin_sentence(const ttf_engine_t *e, const tt
                 if (ttf_utf8_decode(p + at, w - at, &cp, &width) == 1 &&
                     (ttf_script_of(cp) == TTF_SCRIPT_HANGUL || ttf_script_of(cp) == TTF_SCRIPT_KANA ||
                      ttf_script_of(cp) == TTF_SCRIPT_HAN))
-                    return NULL;
+                    ++tally.other;
             }
             at = w + 1;
         }
@@ -658,8 +661,14 @@ static const ttf_language_pack_t *latin_sentence(const ttf_engine_t *e, const tt
         const ttf_token_t *t = &in->tokens[k];
         const ttf_token_t *prev = k > begin ? &in->tokens[k - 1] : NULL;
         if (t->script == TTF_SCRIPT_HANGUL || t->script == TTF_SCRIPT_KANA ||
-            t->script == TTF_SCRIPT_HAN)
-            return NULL;
+            t->script == TTF_SCRIPT_HAN) {
+            /* one word of another script, however many tokens it spans */
+            if (!(prev && prev->end == t->begin && (prev->script == TTF_SCRIPT_HANGUL ||
+                                                    prev->script == TTF_SCRIPT_KANA ||
+                                                    prev->script == TTF_SCRIPT_HAN)))
+                ++tally.other;
+            continue;
+        }
         if (t->script != TTF_SCRIPT_LATIN ||
             /* 60km, 15.000đ: letters attached to a number are a unit */
             (prev && prev->end == t->begin && prev->script == TTF_SCRIPT_DIGIT))
@@ -670,6 +679,8 @@ static const ttf_language_pack_t *latin_sentence(const ttf_engine_t *e, const tt
     }
     if (tally.strong_seen || tally.weak_words >= 2)
         tally.counted += tally.weak_weight;
+    if (tally.other && !(tally.counted >= 2 && tally.counted >= 2 * tally.other))
+        return NULL;
     if (declared == pack)
         return !tally.cue || (tally.counted && tally.counted >= tally.plain) ? pack : NULL;
     return tally.counted >= 2 && tally.counted >= tally.plain && (tally.strong_seen || !tally.foreign)

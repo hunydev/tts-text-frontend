@@ -612,9 +612,67 @@ static ttf_status_t render_at(const ttf_engine_t *e, const ttf_language_pack_t *
     free(trace_text);
     return st == TTF_OK ? TTF_EINVAL : st;
 }
+/* The ASCII base letter of an accented Latin letter (é e, ở o, Đ D), '-' for a
+   combining mark to drop, 0 for anything else. */
+static char latin_base(uint32_t cp) {
+    static const char latin1[] = "AAAAAAACEEEEIIIIDNOOOOO*OUUUUY*saaaaaaaceeeeiiiidnooooo*ouuuuy*y";
+    static const char extended_a[] = "AaAaAaCcCcCcCcDdDdEeEeEeEeEeGgGgGgGgHhHhIiIiIiIiIiIiJjKkkLlLlLlLlLl"
+                                     "NnNnNnnNnOoOoOoOoRrRrRrSsSsSsSsTtTtTtUuUuUuUuUuUuWwYyYZzZzZzs";
+    if (cp >= 0xc0 && cp <= 0xff)
+        return latin1[cp - 0xc0] == '*' ? 0 : latin1[cp - 0xc0];
+    if (cp >= 0x100 && cp <= 0x17f)
+        return extended_a[cp - 0x100];
+    if (cp == 0x1a0 || cp == 0x1af)
+        return cp == 0x1a0 ? 'O' : 'U';
+    if (cp == 0x1a1 || cp == 0x1b0)
+        return cp == 0x1a1 ? 'o' : 'u';
+    if (cp >= 0x1ea0 && cp <= 0x1ef9) {
+        /* Vietnamese: A 24, E 16, I 4, O 24, U 14, Y 8, capital first in each pair */
+        static const struct { uint32_t last; char base; } rows[] = {
+            {0x1eb7, 'a'}, {0x1ec7, 'e'}, {0x1ecb, 'i'}, {0x1ee3, 'o'}, {0x1ef1, 'u'}, {0x1ef9, 'y'}};
+        size_t k;
+        for (k = 0; k < sizeof(rows) / sizeof(*rows); ++k)
+            if (cp <= rows[k].last)
+                return cp % 2 ? rows[k].base : (char)(rows[k].base - 'a' + 'A');
+    }
+    if (cp >= 0x300 && cp <= 0x36f)
+        return '-';
+    return 0;
+}
+
 ttf_status_t ttf_foreign_render(const ttf_engine_t *e, const ttf_language_pack_t *source,
                                 const ttf_language_pack_t *target, const char *text, size_t n,
                                 ttf_lexical_class_t lexical, ttf_buffer_t *out, char trace[64],
                                 ttf_resource_layer_t *layer) {
+    /* Café, Pokémon, phở in a Korean sentence: the accents go, the letters stay (cafe,
+       pokemon, pho), so the reading keeps every letter; before, the grapheme guess dropped
+       é and ở (크아프으; 2026-10-14). Only when every non-ASCII character is a Latin letter
+       or a combining mark, and never for a pack that writes these letters itself
+       (vi-VN, `latin_sentence`). */
+    char folded[128];
+    size_t at = 0, used = 0;
+    int changed = 0;
+    const char *own = ttf_resource_get(e, "context", target->language_tag, "latin_sentence", NULL);
+    if (own && strcmp(own, "0"))
+        at = n + 1;
+    while (at < n && used + 1 < sizeof(folded)) {
+        uint32_t cp;
+        size_t w;
+        unsigned char c = (unsigned char)text[at];
+        char base;
+        if (c < 0x80) {
+            folded[used++] = (char)c;
+            ++at;
+            continue;
+        }
+        if (ttf_utf8_decode(text + at, n - at, &cp, &w) != 1 || !(base = latin_base(cp)))
+            break;
+        if (base != '-')
+            folded[used++] = base;
+        changed = 1;
+        at += w;
+    }
+    if (changed && at == n && used)
+        return render_at(e, source, target, folded, used, lexical, out, trace, layer, 0);
     return render_at(e, source, target, text, n, lexical, out, trace, layer, 0);
 }

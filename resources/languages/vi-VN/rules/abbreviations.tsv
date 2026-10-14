@@ -1,0 +1,48 @@
+# Vietnamese abbreviations read in full (2026-10-14, parity with the English pack's Dr. St.):
+# only as a word of their own; in a code (527/QĐ-UBND, VN-Index) they stay as written.
+vi_abbr	vi-VN	TP.HCM	thành phố Hồ Chí Minh
+vi_abbr	vi-VN	TP.	thành phố
+vi_abbr	vi-VN	Tp.	thành phố
+vi_abbr	vi-VN	TP	thành phố
+vi_abbr	vi-VN	HCM	Hồ Chí Minh
+vi_abbr	vi-VN	TS.	tiến sĩ
+vi_abbr	vi-VN	TS	tiến sĩ
+vi_abbr	vi-VN	ThS.	thạc sĩ
+vi_abbr	vi-VN	ThS	thạc sĩ
+vi_abbr	vi-VN	PGS.TS.	phó giáo sư tiến sĩ
+vi_abbr	vi-VN	PGS.TS	phó giáo sư tiến sĩ
+vi_abbr	vi-VN	PGS.	phó giáo sư
+vi_abbr	vi-VN	PGS	phó giáo sư
+vi_abbr	vi-VN	GS.TSKH	giáo sư tiến sĩ khoa học
+vi_abbr	vi-VN	GS.TS.	giáo sư tiến sĩ
+vi_abbr	vi-VN	GS.TS	giáo sư tiến sĩ
+vi_abbr	vi-VN	GS.	giáo sư
+vi_abbr	vi-VN	GS	giáo sư
+vi_abbr	vi-VN	BS.	bác sĩ
+vi_abbr	vi-VN	NSND	nghệ sĩ nhân dân
+vi_abbr	vi-VN	NSƯT	nghệ sĩ ưu tú
+vi_abbr	vi-VN	v.v.	vân vân
+vi_abbr	vi-VN	v.v	vân vân
+vi_abbr	vi-VN	ĐH	đại học
+vi_abbr	vi-VN	ĐHQG	đại học quốc gia
+vi_abbr	vi-VN	CĐ	cao đẳng
+vi_abbr	vi-VN	THPT	trung học phổ thông
+vi_abbr	vi-VN	THCS	trung học cơ sở
+vi_abbr	vi-VN	UBND	ủy ban nhân dân
+vi_abbr	vi-VN	HĐND	hội đồng nhân dân
+vi_abbr	vi-VN	MTTQ	mặt trận tổ quốc
+vi_abbr	vi-VN	CLB	câu lạc bộ
+vi_abbr	vi-VN	HLV	huấn luyện viên
+vi_abbr	vi-VN	BTC	ban tổ chức
+vi_abbr	vi-VN	BCH	ban chấp hành
+vi_abbr	vi-VN	BHXH	bảo hiểm xã hội
+vi_abbr	vi-VN	BHYT	bảo hiểm y tế
+vi_abbr	vi-VN	CSGT	cảnh sát giao thông
+vi_abbr	vi-VN	GTVT	giao thông vận tải
+vi_abbr	vi-VN	NXB	nhà xuất bản
+vi_abbr	vi-VN	TNHH	trách nhiệm hữu hạn
+vi_abbr	vi-VN	SĐT	số điện thoại
+vi_abbr	vi-VN	ĐBSCL	đồng bằng sông Cửu Long
+vi_abbr	vi-VN	CMND	chứng minh nhân dân
+vi_abbr	vi-VN	CCCD	căn cước công dân
+vi_abbr	vi-VN	KCN	khu công nghiệp

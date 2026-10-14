@@ -52,7 +52,8 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    : ttf_validation_error(d, "number requires a digit or a named word and a reading");
     }
     if (SAME(k, "vi_unit") || SAME(k, "vi_currency") || SAME(k, "vi_scale") || SAME(k, "vi_road") ||
-        SAME(k, "address_symbol") || SAME(k, "vi_idiom") || SAME(k, "vi_prefix")) {
+        SAME(k, "address_symbol") || SAME(k, "vi_idiom") || SAME(k, "vi_prefix") || SAME(k, "vi_abbr") ||
+        SAME(k, "speech_symbol")) {
         *handled = 1;
         return short_key(key, 15) && label(v)
                    ? TTF_OK

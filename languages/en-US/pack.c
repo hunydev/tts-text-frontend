@@ -1908,8 +1908,14 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
            letters, not a word (트브, 스느스 before; 2026-10-03). y counts as a vowel
            except first (sky, gym stay words; ytn is letters); declared
            abbreviations (Mr, Dr) keep their reading. */
-        /* ...but never a contraction fragment after an apostrophe (I'll) */
-        if (!all_upper && consumed == 1 && n >= 2 && n <= 6 && !res(in->engine, "abbreviation", key) &&
+        /* ...but never a contraction fragment after an apostrophe (I'll), and never a word
+           with a letter beyond ASCII: Văn, phở in a Korean sentence are words whose vowels
+           the key leaves out, not letters v n, p h (2026-10-14). */
+        int beyond_ascii = 0;
+        for (j = 0; j < n; ++j)
+            beyond_ascii |= (unsigned char)in->text[t->begin + j] >= 0x80;
+        if (!all_upper && !beyond_ascii && consumed == 1 && n >= 2 && n <= 6 &&
+            !res(in->engine, "abbreviation", key) &&
             !(t->begin >= 2 && in->text[t->begin - 1] == '\'' &&
               ((in->text[t->begin - 2] | 0x20) >= 'a' && (in->text[t->begin - 2] | 0x20) <= 'z'))) {
             int vowel = 0;

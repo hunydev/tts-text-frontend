@@ -393,37 +393,58 @@
         {
           "area": "숫자",
           "level": "full",
-          "note": "nghìn·linh·mốt·lăm, 점 천 단위(15.000), 쉼표 소수(2,5), tỷ"
+          "note": "nghìn·linh·mốt·lăm, 점 천 단위(15.000), 쉼표 소수(2,5), tỷ, 분수(phần, ¾ ba phần tư), 서수 thứ nhất·thứ tư, 로마 숫자(thế kỷ XXI)"
         },
         {
-          "area": "날짜·시각",
+          "area": "날짜·시간",
           "level": "full",
-          "note": "ngày … tháng … năm, tháng tư, 9h30, 8h-17h"
+          "note": "ngày … tháng … năm, tháng tư, 9h30, 8h-17h, 20-25/11, 30/4-1/5, 요일 T2-T6·CN, AM/PM·a.m.·SA/CH(sáng·chiều)"
         },
         {
-          "area": "금액·백분율·단위",
+          "area": "통화",
           "level": "full",
-          "note": "đồng·VND·USD·50k·35 tr, phần trăm, 과학·IT 단위(kcal·MPa·Mbps·dB …), 치수 nhân, đồng/tháng một tháng"
+          "note": "đồng·VND·USD·€·£·¥, 50k·35 tr·1tr5, $15 triệu (mười lăm triệu đô la)"
         },
         {
-          "area": "서수·로마 숫자·요일",
+          "area": "단위",
           "level": "full",
-          "note": "thứ nhất·thứ tư, thế kỷ XXI, T2-T6"
+          "note": "과학·IT 단위(kcal·MPa·Mbps·dB …), 1m78, 치수 nhân, phần trăm, đồng/tháng một tháng"
         },
         {
-          "area": "번호·코드",
+          "area": "전화·식별번호",
           "level": "full",
-          "note": "전화·1900·mã 뒤·7자리 이상 코드 한 자리씩, IP 주소(chấm)"
+          "note": "전화·1900·mã 뒤·7자리 이상 코드 한 자리씩, IP 주소(chấm), ISBN, P.308 phòng, Q.10 quận"
         },
         {
-          "area": "날짜 범위·단위 축약",
+          "area": "약어",
+          "level": "partial",
+          "note": "TP.HCM·TS.·PGS.TS·THPT·UBND·v.v. 등 풀어 읽기; 코드 속(527/QĐ-UBND, VN-Index)과 대문자 이니셜(WHO, GDP)은 그대로 둠"
+        },
+        {
+          "area": "이메일·URL",
           "level": "full",
-          "note": "20-25/11, 30/4-1/5, lễ 30-4, 1m78, P.308 phòng, Q.10 quận, CN chủ nhật"
+          "note": "speech에서 기호를 베트남어로(a còng, chấm, gạch chéo), 라벨은 쓰인 그대로"
+        },
+        {
+          "area": "수식·비율",
+          "level": "full",
+          "note": "7 × 8 = 56 nhân·bằng, tỷ lệ 3:2 ba trên hai, tỉ số 2:1 hai một"
+        },
+        {
+          "area": "다른 문자 단어",
+          "level": "none",
+          "note": "한글·한자·가나 단어는 그대로 둠 (흡수하지 않음); 섞여 있어도 문장은 베트남어로 읽음"
+        },
+        {
+          "area": "원문자·기호",
+          "level": "full",
+          "note": "① ⑴ ❶ Ⓐ, 기호·이모지 이름(CLDR 베트남어; ★ ✓ 등 빠진 것은 보충)"
         }
       ],
       "gaps": [
         "held-out 새 셋(코드 고정 뒤): v1 93.2 → v2 97.1 → v3 95.6 → v4 97.1 → v5 97.7 → v6 96.8%. 운영 전환(2026-10-13) 전 TTS→STT 비교에서 드러난 6건을 고침; 남은 유형: ℃ 기호, 90+3 (docs/vietnamese-pack.ko.md)",
         "운영 전환(2026-10-13, 프로젝트 소유자 결정) 뒤 남은 확인: 평가셋 사람 원어민 검수와 대상 TTS(VoxCPM2) 청취 비교. OpenAI TTS→STT 비교(held-out v6 257문장)에서는 원문 63.8%, TN 출력 93.8%가 정답대로 읽혔음",
+        "대문자 이니셜(WHO, GDP, CEO)은 읽는 방식(베트남어 글자 이름·영어식)을 정하지 않아 그대로 둠",
         "짧은 제목형 문장(Ngày sinh: 12/09/1998)은 다른 언어 요청에서 영어로 판정될 수 있음"
       ],
       "docs": [

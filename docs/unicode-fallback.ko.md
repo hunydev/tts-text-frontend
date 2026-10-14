@@ -23,7 +23,7 @@
 - 파일이 있는데 손상됐거나 짝이 맞지 않으면 엔진 준비(freeze)가 `TTF_ERESOURCE`로 실패한다. 손상된 파일을 추측해서 읽지 않는다.
 - `ko-KR` 팩은 `ko-KR.*` 파일이 없으면 `ko.*`를 쓴다.
 
-저장소에는 엔진이 쓰는 `ko`, `en`만 넣는다. 전체 언어(CLDR annotations가 있는 170개)는
+저장소에는 엔진이 쓰는 `en`, `ja`, `ko`, `zh`, `vi`만 넣는다(`vi`는 2026-10-14에 넣었다. 베트남어 팩을 추가할 때 빠뜨려 기호가 영어 이름으로 읽혔다). 전체 언어(CLDR annotations가 있는 170개)는
 `benchmark/generated/unicode-fallback/cldr-48-2/`에 빌드해 둔다(git 무시, 189MB). 언어 팩을 추가할 때
 그 언어의 세 파일을 옮기면 된다.
 

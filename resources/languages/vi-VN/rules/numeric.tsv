@@ -137,3 +137,13 @@ number	vi-VN	afternoon	chiều
 number	vi-VN	prize1	nhất
 number	vi-VN	prize2	nhì
 classifier_priority	vi-VN	vi.lit	100
+classifier_priority	vi-VN	vi.circled	100
+classifier_priority	vi-VN	vi.ratio	100
+# Symbols the CLDR Vietnamese names leave out (2026-10-14; before, they fell back to English)
+speech_symbol	vi-VN	★	ngôi sao
+speech_symbol	vi-VN	☆	ngôi sao
+speech_symbol	vi-VN	♡	trái tim
+speech_symbol	vi-VN	✓	dấu chọn
+speech_symbol	vi-VN	✗	dấu gạch chéo
+speech_symbol	vi-VN	✘	dấu gạch chéo
+speech_symbol	vi-VN	♫	nốt nhạc

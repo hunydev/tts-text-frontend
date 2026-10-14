@@ -2,6 +2,15 @@
 
 갱신: 2026-10-11. Release **0.20.0**, public ABI **v1**.
 
+## 최근 인계: 베트남어 영어 수준 맞추기 (2026-10-14)
+
+- **계기:** 지원 표에서 베트남어가 영어보다 범주가 적다는 소유자 질문. 영어 범주로 직접 돌려 보니 실제 빈 곳과 버그가 있었다.
+- **버그(main에도 있음):** 한글·한자·가나가 섞인 베트남어 문장이 영어 약어처럼 철자로 읽히고 성조 글자가 사라졌다. 고쳤다.
+- **메운 것:** 베트남어 기호·이모지 이름(fallback 파일 누락), 약어 46개, 원문자, a.m./SA/CH, 비율, 문장 끝 `$15 triệu.`
+- **함께 고친 것:** 한국어·일본어 문장 속 악센트 낱말(Café, Pokémon, phở)이 글자를 잃던 문제.
+- **그대로:** 대문자 이니셜(WHO, GDP)은 그대로 둔다.
+- 계약 `vi_parity_v87`. 게이트: user eval, Korean quick, English, Japanese, Chinese and Vietnamese gates unchanged. 상세: [vietnamese-pack.ko.md](vietnamese-pack.ko.md) "영어 팩 수준 맞추기".
+
 ## 최근 인계: 소유자 평가셋 1단계 (2026-10-14)
 
 - **평가셋:** 소유자가 만든 언어별 1,000문장(ko·en·ja·zh·vi)을 `benchmark/datasets/user-tn-eval`에 넣었다.

@@ -71,6 +71,19 @@
     vi 97.4 / 94.2. No dev span lost. Contract user_eval4_v84 (22). Other gates unchanged.
   - Contracts updated with Was notes (owner-set evidence): vi_prod_v80 12/28 phiếu trên,
     vi_pack2_v75 P.308 phòng ba không tám and IP 192.168.1.1 digit by digit.
+- Vietnamese parity with the English pack (project-owner question, 2026-10-14):
+  - Bug (also on main): a Vietnamese sentence with a Hangul, kana or hanzi word (Khách hàng 김민수
+    đã đặt phòng) lost its sentence language, and its words were spelled as English letters
+    with the Vietnamese letters dropped. Such a sentence stays Vietnamese when the Vietnamese
+    weight is at least two and twice the number of other-script words.
+  - The English pack no longer infers letters from a word with non-ASCII letters (Văn, phở),
+    and Korean and Japanese read accented Latin words without their accents (Pokémon 포케먼,
+    phở 포) instead of dropping the letters.
+  - The CLDR Vietnamese symbol names (resources/unicode-fallback/vi.*) were never copied when the
+    pack was added, so ® read "registered"; they are in now, with ★ ✓ and five others added.
+  - Vietnamese abbreviations (TP.HCM, TS., PGS.TS, THPT, UBND, v.v. … 46), enclosed numbers and
+    letters (① ⑴ ❶ Ⓐ), 10 a.m. / 9:00 SA / 5:00 CH, tỷ lệ 3:2 ba trên hai, $15 triệu. at a
+    sentence end. Contract vi_parity_v87. user eval, Korean quick, English, Japanese, Chinese and Vietnamese gates unchanged.
 - User eval phase 6 (address words, date ranges, blood pressure, expression marks, 2026-10-14):
   - Owner decision: a Japanese range keeps the plain first number (10〜15分 じゅうからじゅうごふん); the
     scorer accepts the first number with or without its counter. Also scorer variants the sets
