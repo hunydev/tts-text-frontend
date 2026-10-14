@@ -2783,8 +2783,10 @@ static size_t owner_forms5(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         return 0;
     for (q = p; q < n && ko_digit(t[q]); ++q)
         ;
-    /* 0427번: a number with a leading zero before 번 reads digit by digit */
-    if (t[p] == '0' && q - p >= 2 && q - p <= 8 && q + 3 <= n && !memcmp(t + q, "번", 3)) {
+    /* 0427번: a number with a leading zero before 번 reads digit by digit (01번째 stays an ordinal,
+       0번지 an address) */
+    if (t[p] == '0' && q - p >= 2 && q - p <= 8 && q + 3 <= n && !memcmp(t + q, "번", 3) &&
+        !(q + 6 <= n && (!memcmp(t + q + 3, "째", 3) || !memcmp(t + q + 3, "지", 3)))) {
         (void)snprintf(v, sizeof(v), "%.*s", (int)(q - p), t + p);
         return ko_finish(in, s, q + 3, TTF_SEM_DIGIT_SEQUENCE, v, "zero_number", "ko:zero-number");
     }
