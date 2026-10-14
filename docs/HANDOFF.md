@@ -2,6 +2,15 @@
 
 갱신: 2026-10-11. Release **0.20.0**, public ABI **v1**.
 
+## 최근 인계: 태국어 팩 1단계 (2026-10-14)
+
+- **시작:** 프로젝트 소유자 요청. 소유자 평가셋 th-TH(1,000문장)를 `benchmark/datasets/user-tn-eval`에 넣었다(dev 700 / test 300).
+- **팩:** `languages/th-TH`. 숫자·날짜·시각·돈·단위·범위·번호·코드·약어. 영어 낱말은 그대로 둔다.
+- **코어:** 태국 문자 문장은 어느 요청에서든 th-TH로 간다. 태국 숫자 ๐-๙를 숫자로 본다.
+- **점수:** dev 0.4% → 95.6%, test 91.6%. 계약 `th_pack1_v89`.
+- **게이트:** the other five languages unchanged on the owner sets, Korean quick, English, Japanese, Chinese and Vietnamese gates unchanged.
+- **다음:** 영어 낱말의 태국어 표기(이메일·URL 라벨, 제품명)가 남은 오답의 대부분이다. 상세: [thai-pack.ko.md](thai-pack.ko.md).
+
 ## 최근 인계: 소유자 평가셋 7단계 (2026-10-14)
 
 - **범위:** 남은 dev 오답 가운데 일반화되는 형식만(소유자 승인). 기존 참조와 충돌하거나 문맥 없이는 판단할 수 없는 것은 남겼다.

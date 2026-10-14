@@ -5,6 +5,11 @@ static int wide(const char *s, size_t n, size_t at) {
            (unsigned char)s[at + 1] == 0xbc &&
            (unsigned char)s[at + 2] >= 0x90 && (unsigned char)s[at + 2] <= 0x99;
 }
+/* A Thai digit ๐-๙ (U+0E50-U+0E59) at `at`. */
+static int thai_digit(const char *s, size_t n, size_t at) {
+    return n - at >= 3 && (unsigned char)s[at] == 0xe0 && (unsigned char)s[at + 1] == 0xb9 &&
+           (unsigned char)s[at + 2] >= 0x90 && (unsigned char)s[at + 2] <= 0x99;
+}
 static int ascii_digit_at(const char *s, size_t n, size_t at) {
     return at < n && ((s[at] >= '0' && s[at] <= '9') || wide(s, n, at));
 }
@@ -87,12 +92,13 @@ static size_t cjk_form(const char *s, size_t n, size_t at, char previous, int mo
 static int canonical(const char *s, size_t n, size_t at, int mode) {
     char ascii, previous = (at && s[at - 1] >= '0' && s[at - 1] <= '9') || (at >= 3 && wide(s, n, at - 3)) ? '0' : 0;
     return wide(s, n, at) || wide_tilde(s, n, at) || minus_sign(s, n, at) || en_dash(s, n, at) ||
-           cjk_form(s, n, at, previous, mode, &ascii);
+           (mode == 3 && thai_digit(s, n, at)) || cjk_form(s, n, at, previous, mode == 3 ? 0 : mode, &ascii);
 }
 int ttf_numeric_width_mode(const char *language) {
     if (!language)
         return 0;
-    return !strncmp(language, "ja", 2) ? 1 : !strncmp(language, "zh", 2) ? 2 : 0;
+    /* th: Thai digits ๐-๙ read like ASCII digits (2026-10-14) */
+    return !strncmp(language, "ja", 2) ? 1 : !strncmp(language, "zh", 2) ? 2 : !strncmp(language, "th", 2) ? 3 : 0;
 }
 void ttf_numeric_width_free(ttf_numeric_width_t *v) {
     free(v->text);
@@ -111,7 +117,7 @@ ttf_status_t ttf_numeric_width_create(const char *s, size_t n, const ttf_token_t
        The scan is once per unit, never once per classifier/token. */
     while (at < n) {
         unsigned char c = (unsigned char)s[at];
-        if (c != 0xef && c != 0xe2 && c != 0xe3) {
+        if (c != 0xef && c != 0xe2 && c != 0xe3 && !(mode == 3 && c == 0xe0)) {
             ++at;
             continue;
         }
@@ -149,7 +155,11 @@ ttf_status_t ttf_numeric_width_create(const char *s, size_t n, const ttf_token_t
         char ascii = 0;
         v->raw[k] = at;
         v->scan[at] = k;
-        if (!protected && cjk_form(s, n, at, k ? v->text[k - 1] : 0, mode, &ascii)) {
+        if (!protected && mode == 3 && thai_digit(s, n, at)) {
+            v->scan[at + 1] = v->scan[at + 2] = k;
+            v->text[k++] = (char)('0' + (unsigned char)s[at + 2] - 0x90);
+            at += 3;
+        } else if (!protected && mode != 3 && cjk_form(s, n, at, k ? v->text[k - 1] : 0, mode, &ascii)) {
             v->scan[at + 1] = v->scan[at + 2] = k;
             v->text[k++] = ascii;
             at += 3;

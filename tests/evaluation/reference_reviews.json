@@ -2550,6 +2550,18 @@
       },
       "category_overrides": {},
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/th_pack1_v89.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Synthetic cases authored with the Thai pack; new sentences, not copied from the owner's evaluation set",
+        "reason": "Project-owner request 2026-10-14: Thai next (phase 1)"
+      },
+      "category_overrides": {},
+      "case_overrides": {}
     }
   ],
   "excluded": [

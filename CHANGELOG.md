@@ -71,6 +71,15 @@
     vi 97.4 / 94.2. No dev span lost. Contract user_eval4_v84 (22). Other gates unchanged.
   - Contracts updated with Was notes (owner-set evidence): vi_prod_v80 12/28 phiếu trên,
     vi_pack2_v75 P.308 phòng ba không tám and IP 192.168.1.1 digit by digit.
+- Thai pack phase 1 (th-TH, project-owner request, 2026-10-14; the owner's set user-tn-eval th-TH):
+  - Numbers (เอ็ด, ยี่สิบ, ล้าน groups), decimals, dates with month abbreviations and the year as
+    written (พ.ศ. พอสอ), times (นาฬิกา), money (บาท, ฿, THB, 65.-), units, ranges, scores and
+    ratios (ต่อ), fractions, phone numbers, IDs and codes digit by digit, IP, versions, Thai
+    letter abbreviations (ภ.ง.ด.91, ม.3/5). English words stay as written.
+  - Core: a sentence with Thai letters routes to th-TH in any request (thai_sentence); Thai digits
+    are digits and fold to ASCII in a th-TH request; the CLDR Thai symbol names.
+  - Span accuracy on the owner's set: dev 95.6, test 91.6 (from 0.4). Contract th_pack1_v89
+    (24). the other five languages unchanged on the owner sets, Korean quick, English, Japanese, Chinese and Vietnamese gates unchanged.
 - User eval phase 7 (generalizable forms from the remaining dev misses, 2026-10-14):
   - English: an IP octet of one or two digits reads as a number (10.0.4.17 ten dot zero dot four
     dot seventeen; 192 stays one nine two), codes whose letters and digits change more than once

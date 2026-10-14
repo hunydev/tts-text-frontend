@@ -52,7 +52,8 @@ ttf_script_t ttf_script_of(uint32_t c) {
         /* Vietnamese ệ ở ữ (Latin Extended Additional) and decomposed tone marks */
         (c >= 0x1e00 && c <= 0x1eff) || (c >= 0x300 && c <= 0x36f))
         return TTF_SCRIPT_LATIN;
-    if ((c >= '0' && c <= '9') || (c >= 0xff10 && c <= 0xff19))
+    /* Thai digits ๐-๙ are digits too (2026-10-14): ๒๕๖๙ is a number, not a Thai word */
+    if ((c >= '0' && c <= '9') || (c >= 0xff10 && c <= 0xff19) || (c >= 0xe50 && c <= 0xe59))
         return TTF_SCRIPT_DIGIT;
     if (c == ' ' || (c >= 9 && c <= 13) || c == 0xa0 || c == 0x202f || c == 0x3000 ||
         (c >= 0x2000 && c <= 0x200a))

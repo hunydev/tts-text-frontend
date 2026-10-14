@@ -463,6 +463,34 @@ static const ttf_language_pack_t *kana_sentence(const ttf_engine_t *e, const ttf
     }
     return grammar || (hiragana && !latin) ? pack : NULL;
 }
+/* A Thai sentence (2026-10-14): a sentence with a Thai letter (U+0E00-U+0E7F) and no Hangul
+   or kana belongs to the pack declaring `context <tag> thai_sentence 1` (th-TH), every token
+   included. Thai writes no spaces between words, so its words never outvote the English
+   words of a mixed sentence (iPhone, Call center) in the word vote. */
+static const ttf_language_pack_t *thai_sentence(const ttf_engine_t *e, const ttf_pack_input_t *in,
+                                                size_t begin, size_t end) {
+    const ttf_language_pack_t *pack = NULL;
+    size_t j, k, at;
+    int thai = 0;
+    for (j = 0; j < e->pack_count && !pack; ++j)
+        if (pack_flag(e, e->packs[j], "thai_sentence", 0))
+            pack = e->packs[j];
+    if (!pack)
+        return NULL;
+    for (k = begin; k < end; ++k) {
+        const ttf_token_t *t = &in->tokens[k];
+        if (t->script == TTF_SCRIPT_HANGUL || t->script == TTF_SCRIPT_KANA)
+            return NULL;
+        /* a Thai letter, vowel or tone mark (U+0E01-U+0E3A, U+0E40-U+0E4E); the baht sign ฿ and
+           Thai digits alone make no Thai sentence (฿5 in a Korean request stays 오 바트) */
+        for (at = t->begin; !thai && at + 3 <= t->end; ++at) {
+            unsigned char b1 = (unsigned char)in->text[at + 1], b2 = (unsigned char)in->text[at + 2];
+            thai = (unsigned char)in->text[at] == 0xe0 &&
+                   ((b1 == 0xb8 && b2 >= 0x81 && b2 <= 0xba) || (b1 == 0xb9 && b2 >= 0x80 && b2 <= 0x8e));
+        }
+    }
+    return thai ? pack : NULL;
+}
 /* A hanzi sentence (2026-10-11, project owner: a kanji-only sentence prefers
    Chinese): no Hangul, no kana, at least two hanzi, at least twice as many hanzi
    as Latin words, and no character the pack lists as han_foreign (Japanese-only
@@ -700,7 +728,10 @@ static void matrix_route(const ttf_engine_t *e, const ttf_pack_input_t *in, size
     if (e->matrix_policy == TTF_MATRIX_DECLARED)
         snprintf(why, sizeof(why), "matrix=%s(declared)", matrix ? matrix->language_tag : "und");
     if (!kana && e->matrix_policy != TTF_MATRIX_DECLARED &&
-        (kana = han_sentence(e, in, begin, end)) != NULL)
+        (kana = thai_sentence(e, in, begin, end)) != NULL)
+        snprintf(why, sizeof(why), "matrix=%s(thai)", kana->language_tag);
+    else if (!kana && e->matrix_policy != TTF_MATRIX_DECLARED &&
+             (kana = han_sentence(e, in, begin, end)) != NULL)
         snprintf(why, sizeof(why), "matrix=%s(han)", kana->language_tag);
     else if (!kana && e->matrix_policy != TTF_MATRIX_DECLARED &&
              (kana = latin_sentence(e, in, begin, end)) != NULL)

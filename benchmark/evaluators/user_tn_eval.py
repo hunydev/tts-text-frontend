@@ -37,7 +37,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 DATA = ROOT / "benchmark/datasets/user-tn-eval"
 OUT = ROOT / "benchmark/generated/user-tn-eval"
-LANGS = ["ko-KR", "en-US", "ja-JP", "zh-CN", "vi-VN"]
+LANGS = ["ko-KR", "en-US", "ja-JP", "zh-CN", "vi-VN", "th-TH"]
 LETTERS = dict(a="ay", b="bee", c="see", d="dee", e="ee", f="ef", g="gee", h="aitch", i="eye", j="jay",
                k="kay", l="el", m="em", n="en", o="oh", p="pee", q="cue", r="ar", s="ess", t="tee",
                u="you", v="vee", w="double you", x="ex", y="why", z="zee")
