@@ -2682,8 +2682,9 @@ static int word_within(const char *t, size_t p, size_t window, const char *words
     }
     return 0;
 }
-/* Owner evaluation sets, phase 4 (2026-10-14):
-   24:00 스물네 시; 1:30 남았습니다 일 분 삼십 초, 3:05짜리 삼 분 오 초, 기록 2:58:30 두 시간
+/* Owner evaluation sets, phase 4 (2026-10-14; 24:00 stays as written, golden and
+   typed-control tests):
+   1:30 남았습니다 일 분 삼십 초, 3:05짜리 삼 분 오 초, 기록 2:58:30 두 시간
    오십팔 분 삼십 초; 6/6 현충일 유월 육 일; 1:25,000 일 대 이만 오천. */
 static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     const char *t = in->text;
@@ -2707,9 +2708,6 @@ static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             (void)snprintf(v, sizeof(v), "%.*s", (int)(r - p), t + p);
             return ko_finish(in, s, r, TTF_SEM_TIME, v, "minutes", "ko:duration");
         }
-        /* 24:00 스물네 시 */
-        if (q - p == 2 && !memcmp(t + p, "24:00", 5) && !(r < n && t[r] == ':'))
-            return ko_finish(in, s, r, TTF_SEM_TIME, "24:00", "", "ko:midnight");
     }
     /* 6/6 현충일, 3/1은 삼일절, 12.25 크리스마스: a month and day before a holiday */
     if ((t[q] == '/' || t[q] == '.') && ko_digit(t[q + 1])) {

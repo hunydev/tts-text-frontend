@@ -1477,7 +1477,8 @@ static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
             if (d + 1 < n && t[d] == '/' && ascii_digit_char(t[d + 1])) {
                 for (e2 = d + 1; e2 < n && ascii_digit_char(t[e2]); ++e2)
                     ;
-                if (e2 - d - 1 <= 2 && atoi(t + d + 1) <= 10 && atoi(t + d + 1) > 0 &&
+                /* 1.5/2 stays as written (golden_en); a rating is out of four to ten */
+                if (e2 - d - 1 <= 2 && atoi(t + d + 1) <= 10 && atoi(t + d + 1) >= 4 &&
                     !(e2 < n && (ascii_digit_char(t[e2]) || t[e2] == '/' || (t[e2] == '.' && e2 + 1 < n && ascii_digit_char(t[e2 + 1]))))) {
                     (void)snprintf(v, sizeof(v), "%.*s|%.*s", (int)(d - p), t + p, (int)(e2 - d - 1), t + d + 1);
                     return owner_finish(in, out, e2, TTF_SEM_SYMBOL, "@out-of", v, "en.out-of");

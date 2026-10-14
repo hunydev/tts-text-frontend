@@ -1130,6 +1130,5 @@ classifier_priority	ko-KR	ko:short-dotted-date	10
 classifier_priority	ko-KR	ko:quarter	10
 # Owner evaluation sets, phase 4 (2026-10-14)
 classifier_priority	ko-KR	ko:duration	10
-classifier_priority	ko-KR	ko:midnight	10
 classifier_priority	ko-KR	ko:holiday-date	10
 classifier_priority	ko-KR	ko:ratio	10
