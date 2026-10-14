@@ -59,7 +59,7 @@
     2:58:30 두 시간 오십팔 분 삼십 초), 6/6 현충일 유월 육 일, 1:25,000 일 대 이만 오천, 5Mbps.
     Currency decimals keep their written zeros (the Korean references read 1,182.60원 천백팔십이
     점 육영 원).
-  - English: 67¢ cents, 4.5/5 out of five, +/- plus or minus, Wed, Oct 15 Wednesday,
+  - English: 67¢ cents (English lines only), 4.5/5 out of five, +/- plus or minus, Wed, Oct 15 Wednesday,
     Monday–Friday Monday to Friday, Expiration: 08/2027, 4.6 in. inches.
   - Japanese: +1.2kg プラスいってんにキログラム, 21:15に終了 a time (not a score), 1:10に希釈.
   - Chinese: zero cents are not read (￥86.40 八十六点四元), 20-30% 百分之二十到百分之三十,
@@ -69,6 +69,8 @@
     rpm, IP octets, extension/emergency/build numbers, five-group and +84 phones, Phòng P.1205.
   - Span accuracy, dev / test: ko 93.6 / 90.7, en 92.6 / 88.2, ja 93.2 / 89.3, zh 96.2 / 96.1,
     vi 97.4 / 94.2. No dev span lost. Contract user_eval4_v84 (22). Other gates unchanged.
+  - Contracts updated with Was notes (owner-set evidence): vi_prod_v80 12/28 phiếu trên,
+    vi_pack2_v75 P.308 phòng ba không tám and IP 192.168.1.1 digit by digit.
 - Vietnamese (vi-VN) is in production (project-owner decision, 2026-10-13).
   - TTS -> STT comparison: OpenAI, all 257 held-out v6 sentences. 63.8% were read right from the
     raw text and 93.8% from our output.

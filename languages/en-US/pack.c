@@ -1458,6 +1458,11 @@ static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
                 return owner_finish(in, out, r + 1, TTF_SEM_SYMBOL, "@feet-inches", v, "en.feet-inches");
             }
         }
+        /* 67¢ sixty seven cents (owner sets, 2026-10-14; English lines only) */
+        if (q + 2 <= n && !strncmp(t + q, "\xc2\xa2", 2) && q - p <= 4) {
+            (void)snprintf(v, sizeof(v), "%.*s", (int)(q - p), t + p);
+            return owner_finish(in, out, q + 2, TTF_SEM_SYMBOL, "@cents", v, "en.cents");
+        }
         /* a 65" TV sixty five inch: inches before a word */
         if (q - p <= 3 && q + 2 < n && t[q] == '"' && t[q + 1] == ' ' && ascii_letter_char(t[q + 2])) {
             size_t k, quotes = 0;
@@ -2205,6 +2210,14 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
                 (st = space(b)) != TTF_OK)
                 return st;
             return card(e, c, b);
+        }
+        if (!strcmp(s->unit, "@cents")) {
+            uint64_t a;
+            if (!uint64_value(s->value, &a))
+                return TTF_EINVAL;
+            if ((st = card(e, a, b)) != TTF_OK || (st = space(b)) != TTF_OK)
+                return st;
+            return ttf_buffer_puts(b, a == 1 ? "cent" : "cents");
         }
         if (!strcmp(s->unit, "@inch")) {
             uint64_t a;

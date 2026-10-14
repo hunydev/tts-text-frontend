@@ -483,8 +483,5 @@ unit	en-US	Mbps.many	megabits per second
 numeric_suffix	*	Gbps	MEASURE:Gbps
 unit	en-US	Gbps.one	gigabit per second
 unit	en-US	Gbps.many	gigabits per second
-# Owner evaluation sets, phase 4 (2026-10-14): 67¢ sixty seven cents, 4.6 in. inches
-numeric_suffix	*	¢	MEASURE:cent
-unit	en-US	cent.one	cent
-unit	en-US	cent.many	cents
+# Owner evaluation sets, phase 4 (2026-10-14): 4.6 in. inches (67¢ is in languages/en-US/pack.c)
 numeric_suffix	*	in.	MEASURE:inch

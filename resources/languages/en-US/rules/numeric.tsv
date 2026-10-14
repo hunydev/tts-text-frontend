@@ -543,3 +543,4 @@ classifier_priority	en-US	en.weekday-range	10
 classifier_priority	en-US	en.weekday-abbr	10
 classifier_priority	en-US	en.out-of	10
 classifier_priority	en-US	en.month-year	10
+classifier_priority	en-US	en.cents	10
