@@ -72,7 +72,9 @@ static int alnum_script(ttf_script_t script) {
 static size_t atom_end(const char *text, size_t length, size_t begin) {
     size_t p = begin, width;
     ttf_script_t first;
-    int numeric = digit(text[p]);
+    /* v1.2.3{@version}: a version letter starts a numeric atom (2026-10-15) */
+    int numeric = digit(text[p]) ||
+                  ((text[p] == 'v' || text[p] == 'V') && p + 1 < length && digit(text[p + 1]));
     if ((text[p] == '+' || text[p] == '-') && p + 1 < length && digit(text[p + 1])) {
         numeric = 1;
         ++p;
@@ -104,6 +106,9 @@ static size_t atom_end(const char *text, size_t length, size_t begin) {
         }
         break;
     }
+    /* 15%{@percent}: a percent sign closes a numeric atom (2026-10-15) */
+    if (numeric && p < length && text[p] == '%' && p > begin && digit(text[p - 1]))
+        ++p;
     return p;
 }
 /* A script-boundary subtoken inside one Latin/digit atom cannot acquire its own

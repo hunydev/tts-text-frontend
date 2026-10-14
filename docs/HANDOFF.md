@@ -2,6 +2,14 @@
 
 갱신: 2026-10-11. Release **0.20.0**, public ABI **v1**.
 
+## 최근 인계: 베트남어·태국어·중국어 제어 구문 (2026-10-15)
+
+- **문제:** 세 팩은 제어를 받지 못해 원문을 그대로 냈다(`1234{@digits}` → `1234`).
+- **수정:** 공용 제어 문법이 만든 객체(`layer=USER`)를 팩이 자기 표기로 다시 써서 자기 분류기로 읽는다(`ttf_control_reread`). `@email`·`@url`은 전자 주소 렌더러를 쓴다. 한국어 전용 예약어는 무시하고 평소대로 읽는다.
+- **모든 언어:** `v1.2.3{@version}`·`15%{@percent}`가 묶지 않아도 붙는다.
+- **계약:** `control_packs_v92`. 게이트: The owner-set outputs of all six languages are identical; Korean quick, English, JSUT, ja-tn-eval, Chinese and Vietnamese gates are unchanged; all contracts pass except the three known failures.
+- **상세:** [explicit-pattern-controls.ko.md](explicit-pattern-controls.ko.md) 끝 절.
+
 ## 최근 인계: 태국어 팩 3단계 (2026-10-15)
 
 - **held-out v1:** `benchmark/datasets/th-tn-eval`. 첫 측정 81.5%(한국어 요청 71.4%) → 94.6%(두 요청 같음). 이제 개발용이다.

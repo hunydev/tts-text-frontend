@@ -2586,6 +2586,18 @@
       },
       "category_overrides": {},
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/control_packs_v92.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Synthetic annotated cases authored with the Vietnamese, Thai and Chinese packs",
+        "reason": "Project-owner request 2026-10-15: explicit controls in the vi-VN, th-TH and zh-CN packs"
+      },
+      "category_overrides": {},
+      "case_overrides": {}
     }
   ],
   "excluded": [

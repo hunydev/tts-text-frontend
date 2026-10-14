@@ -36,6 +36,7 @@ CORPORA = {
     "vi-pack4-v77": ("베트남어 팩 4단계", "vi_pack4_v77.jsonl"),
     "vi-pack5-v78": ("베트남어 팩 5단계", "vi_pack5_v78.jsonl"),
     "vi-pack6-v79": ("베트남어 팩 6단계", "vi_pack6_v79.jsonl"),
+    "control-packs-v92": ("제어 구문: 베트남어·태국어·중국어 팩 연결, v1.2.3·15% 단위", "control_packs_v92.jsonl"),
     "th-pack3-v91": ("태국어 팩 3단계 (수식, 시간 길이, 요일·띄운 범위, 계좌·우편·항공편 번호, 한국어 요청)", "th_pack3_v91.jsonl"),
     "th-pack2-v90": ("태국어 팩 2단계 (영어 낱말 태국어 표기, 이메일·URL·파일, 문서·차량 번호, 대분수)", "th_pack2_v90.jsonl"),
     "th-pack1-v89": ("태국어 팩 1단계 (숫자·날짜·시각·돈·단위·번호, 섞인 문장)", "th_pack1_v89.jsonl"),

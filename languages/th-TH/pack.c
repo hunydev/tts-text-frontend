@@ -1277,9 +1277,104 @@ not_time:
 /* ---- verbalization ---- */
 
 static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, const char *surface,
+                              size_t length, ttf_buffer_t *b);
+/* The object a control asked for (12{@ordinal}, 2025-10-15{@date}), read as the Thai pack
+   reads its written form; *handled 0 leaves it to the shared-object path. */
+static ttf_status_t control_object(const ttf_engine_t *e, const ttf_semantic_t *s, ttf_buffer_t *b,
+                                   int *handled) {
+    const ttf_language_pack_t *self = ttf_find_pack(e, TH);
+    const char *v = s->value;
+    char text[2 * TTF_IR_VALUE_SIZE + 48];
+    ttf_semantic_t t = *s;
+    switch (s->type) {
+    case TTF_SEM_CARDINAL:
+    case TTF_SEM_NUMBER:
+        return number(e, b, v);
+    case TTF_SEM_ORDINAL:
+        snprintf(text, sizeof(text), "ที่ %s", v);
+        break;
+    case TTF_SEM_DATE:
+        if (!strcmp(s->unit, "year"))
+            return number(e, b, v);
+        if (strlen(v) != 10)
+            return TTF_EINVAL;
+        snprintf(text, sizeof(text), "%d/%d/%.4s", atoi(v + 8), atoi(v + 5), v);
+        break;
+    case TTF_SEM_FRACTION:
+        snprintf(text, sizeof(text), "%s/%s", v, s->secondary);
+        break;
+    case TTF_SEM_PHONE:
+    case TTF_SEM_IP_ADDRESS:
+    case TTF_SEM_RANGE:
+        /* the pack's own phone, IP, score and range readings */
+        if (s->type == TTF_SEM_RANGE && strlen(v) + strlen(s->secondary) + 3 > sizeof(t.value))
+            return TTF_ELIMIT;
+        if (s->type == TTF_SEM_RANGE) {
+            size_t a = strlen(v), c = strlen(s->secondary);
+            memcpy(t.value, v, a);
+            t.value[a] = '|';
+            memcpy(t.value + a + 1, s->secondary, c);
+            t.value[a + 1 + c] = '|';
+            t.value[a + 2 + c] = 0;
+        }
+        snprintf(t.unit, sizeof(t.unit), "%s", s->type == TTF_SEM_PHONE ? "@th-phone"
+                                               : s->type == TTF_SEM_IP_ADDRESS ? "@th-ip"
+                                               : !strcmp(s->rule, "syntax.score") ? "@th-versus"
+                                                                                  : "@th-range");
+        t.layer = TTF_LAYER_SYSTEM;
+        return verbalize(e, &t, t.value, strlen(t.value), b);
+    case TTF_SEM_MEASURE:
+        snprintf(text, sizeof(text), "%s %s", v, s->unit);
+        break;
+    case TTF_SEM_VERSION:
+        snprintf(text, sizeof(text), "%s", v);
+        break;
+    case TTF_SEM_TIME: {
+        /* 21:05:10 ยี่สิบเอ็ดนาฬิกาห้านาที สิบวินาที */
+        ttf_status_t st;
+        snprintf(text, sizeof(text), "%.2s.%.2s น.", v, v + 3);
+        if ((st = ttf_control_reread(e, self, text, b)) != TTF_OK || strlen(v) < 8 || !atoi(v + 6))
+            return st;
+        snprintf(text, sizeof(text), "%d", atoi(v + 6));
+        TRY(number(e, b, text));
+        return word(e, b, "second");
+    }
+    case TTF_SEM_CURRENCY: {
+    const char *sign = !strcmp(s->unit, "USD") ? "$" : !strcmp(s->unit, "EUR") ? "€"
+                       : !strcmp(s->unit, "GBP") ? "£" : !strcmp(s->unit, "THB") ? "฿" : NULL;
+        if (sign)
+            snprintf(text, sizeof(text), "%s%s", sign, v);
+        else
+            snprintf(text, sizeof(text), "%s %s", s->unit, v);
+        break;
+    }
+    case TTF_SEM_PERCENT:
+        snprintf(text, sizeof(text), "%s%%", v);
+        break;
+    default:
+        *handled = 0;
+        return TTF_OK;
+    }
+    return ttf_control_reread(e, self, text, b);
+}
+static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, const char *surface,
                               size_t length, ttf_buffer_t *b) {
     const char *mode = s->unit, *v = s->value;
     char f0[TTF_IR_VALUE_SIZE], f1[TTF_IR_VALUE_SIZE], f2[TTF_IR_VALUE_SIZE], f3[32], f4[32];
+    /* explicit controls in annotated input (2026-10-15) */
+    if (s->type == TTF_SEM_CUSTOM && !strcmp(s->rule, "control.pattern") && strcmp(s->unit, "@alphabet")) {
+        if (!strcmp(s->unit, "@email") || !strcmp(s->unit, "@url"))
+            return ttf_electronic_control(e, s, surface, length, b);
+        if (!strcmp(s->unit, "@native") || !strcmp(s->unit, "@sino") || !strcmp(s->unit, "@counter"))
+            return TTF_EINVAL; /* the Korean number systems */
+        return ttf_semantic_control(e, s, surface, length, b);
+    }
+    if (s->layer == TTF_LAYER_USER && strncmp(s->unit, "@th-", 4)) {
+        int handled = 1;
+        ttf_status_t st = control_object(e, s, b, &handled);
+        if (handled)
+            return st;
+    }
     if (strncmp(mode, "@th-", 4)) {
         /* shared objects in a Thai sentence */
         if (s->type == TTF_SEM_PHONE || s->type == TTF_SEM_DIGIT_SEQUENCE ||

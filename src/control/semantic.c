@@ -392,6 +392,9 @@ ttf_status_t ttf_semantic_control(const ttf_engine_t *e, const ttf_semantic_t *r
     ir.struct_size = sizeof(ir);
     ir.input_begin = 0;
     ir.input_end = n;
+    /* the object a control asked for: a pack that keeps its own written forms (vi-VN, zh-CN,
+       th-TH) reads it through ttf_control_reread instead of its shared-object fallbacks */
+    ir.layer = TTF_LAYER_USER;
     memcpy(ir.context_lang, request->context_lang, sizeof(ir.context_lang));
     memcpy(ir.render_lang, request->render_lang, sizeof(ir.render_lang));
     if (!ir.source_lang[0])
@@ -455,4 +458,38 @@ ttf_status_t ttf_semantic_control(const ttf_engine_t *e, const ttf_semantic_t *r
         return TTF_OK;
     }
     return pack->verbalize(e, &ir, text, n, out);
+}
+
+/* A control object in a pack that reads its own written forms (2026-10-15): the pack writes
+   the object back as text it already reads (15/10/2025, 2025年10月15日, $5.20, thứ 3) and
+   classifies that text token by token with its own grammar. A token it does not classify
+   (年, thứ, a space) is kept as written; at least one token must become the pack's own object
+   (a unit @<language>-...), or the control is invalid and the text reads as usual. */
+ttf_status_t ttf_control_reread(const ttf_engine_t *e, const ttf_language_pack_t *pack,
+                                const char *text, ttf_buffer_t *out) {
+    ttf_token_t *tokens = NULL;
+    size_t n = strlen(text), count = 0, i = 0;
+    int read = 0;
+    ttf_status_t status;
+    if (!pack || !pack->classify || !n)
+        return TTF_EINVAL;
+    status = ttf_tokenize(text, n, &tokens, &count);
+    while (status == TTF_OK && i < count) {
+        ttf_pack_input_t input = {text, n, tokens, count, i, e};
+        ttf_semantic_t c = {0};
+        size_t used;
+        c.struct_size = sizeof(c);
+        used = pack->classify(&input, &c);
+        if (used && i + used <= count && c.input_end > tokens[i].begin && c.input_end <= n &&
+            c.unit[0] == '@' && !strncmp(c.unit + 1, pack->language_tag, 2) && c.unit[3] == '-') {
+            status = pack->verbalize(e, &c, text + tokens[i].begin, c.input_end - tokens[i].begin, out);
+            read = 1;
+            i += used;
+        } else {
+            status = ttf_buffer_append(out, text + tokens[i].begin, tokens[i].end - tokens[i].begin);
+            ++i;
+        }
+    }
+    ttf_tokens_free(tokens);
+    return status == TTF_OK && !read ? TTF_EINVAL : status;
 }

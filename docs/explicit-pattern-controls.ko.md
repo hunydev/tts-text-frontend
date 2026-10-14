@@ -150,7 +150,7 @@ Core는 이름 문법과 구간만 처리한다. 새 패턴의 원문 유효성�
 | `@preserve` | `[[Apple 123 🙂]]{@preserve}` | `Apple 123 🙂` 그대로, 최종 문자 제거도 적용 안 함 |
 | `@skip` | `가[[녹음 지시]]{@skip}나` | `가나` (공백을 삽입하거나 제거하지 않음) |
 
-`@counter`를 제외한 새 예약어는 KO/EN에서 지원한다. 영어 날짜에서 `date-mdy/dmy`는
+`@counter`를 제외한 새 예약어는 KO/EN/JA에서 지원하고, 2026-10-15부터 VI/TH/ZH도 지원한다(아래 절). 영어 날짜에서 `date-mdy/dmy`는
 **입력의 순서**만 정한다. 출력은 기존 영어 날짜 정책을 따른다. 영어 `@version`의 구분자는
 `point`, `@ip`는 `dot`이다. `@ordinal`은 한국어 `제일` 계열이며, `첫번째`는
 `1{첫}번째`, 영어 first의 한국어 발음은 기존 코드믹스드 경로/직접 별칭을 사용한다.
@@ -232,3 +232,22 @@ IR trace와 임의 chunk 계약, 웹 예제/코퍼스를 함께 갱신한다.
 정정본SHA `37c928066f5d65fd9916d9a3331fd3d90b0bcfef487289c5b9da2f91cdf5586f`.
 원본·근거는 `artifacts/tn/typed-controls/references-original.jsonl`, `reference-correction.json`;
 추적 가능한 review 사유는 `tests/evaluation/reference_reviews.json`에 있다. 사람 승인0 유지.
+
+## 베트남어·태국어·중국어 팩 (2026-10-15)
+
+세 팩은 자기 표기 꼴(`@vi-…`, `@th-…`, `@zh-…`)로 읽는 팩이라, 처음에는 제어를 받지 못하고 원문을 그대로 내보냈다(`1234{@digits}` → `1234`). 이제 다른 팩과 같은 경로로 읽는다.
+
+- **경로:** `control.pattern` 제어는 공용 문법(`ttf_semantic_control`)으로, `@email`·`@url`은 전자 주소 렌더러로 간다. 공용 문법이 만든 객체에는 `layer=USER` 표시가 붙는다.
+- **다시 읽기 (`ttf_control_reread`):**
+  - 팩은 객체를 자기가 이미 읽는 표기로 다시 쓰고, 그 글을 자기 분류기로 토큰마다 읽는다.
+  - 예: 날짜 `15/10/2025`·`2025年10月15日`, 금액 `$12.50`, 서수 `thứ 4`·`ที่ 4`·`第4`.
+  - 분류되지 않는 토큰(年, thứ, 공백)은 그대로 둔다. 팩 객체가 하나도 없으면 잘못된 제어로 보고 원문을 평소대로 읽는다.
+- **팩별 정책:**
+  - 베트남어: 소수점을 쉼표로 바꾼다(3.25 → 3,25). `@date`는 ngày 없이 읽는다(앞에 ngày가 있어도 겹치지 않음).
+  - 중국어: `@year`는 한 자리씩(一九九八), `@score`는 比, `@math`는 공백 없이 읽는다.
+  - 태국어: `@score`는 앞 수가 작아도 ต่อ다. `@phone`은 묶음 사이를 띄운다.
+  - 공통: `@cardinal`은 앞자리 0을 떼고 수로 읽는다(0042 → 42).
+- **한국어 전용 예약어:** `@native`·`@sino`·`@counter`·`@address`는 세 팩에서 잘못된 제어다. 무시되고 원문을 평소대로 읽는다.
+- **@alphabet:** 베트남어·중국어는 라틴 글자를 그대로 둔다(두 팩의 라틴 정책). 태국어는 글자 이름으로 읽는다(เอบีซี).
+- **atom 확장 (모든 언어):** 묶지 않은 `v1.2.3{@version}`과 `15%{@percent}`도 제어가 붙는다. 전에는 atom이 `v1`·`15`에서 끝나 `{@version}`이 평문으로 남았다.
+- 계약 `control_packs_v92`(35). 게이트: The owner-set outputs of all six languages are identical; Korean quick, English, JSUT, ja-tn-eval, Chinese and Vietnamese gates are unchanged; all contracts pass except the three known failures.

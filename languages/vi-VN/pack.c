@@ -1716,9 +1716,105 @@ static void field(const char *s, int k, char *out, size_t cap) {
 }
 
 static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, const char *surface,
+                              size_t length, ttf_buffer_t *b);
+/* The object a control asked for (3{@ordinal}, 2025-10-15{@date}), read as the Vietnamese
+   pack reads its written form (a decimal comma: 3,25); *handled 0 leaves it to the
+   shared-object path. */
+static ttf_status_t control_object(const ttf_engine_t *e, const ttf_semantic_t *s, ttf_buffer_t *b,
+                                   int *handled) {
+    const ttf_language_pack_t *self = ttf_find_pack(e, "vi-VN");
+    char v[TTF_IR_VALUE_SIZE], text[2 * TTF_IR_VALUE_SIZE + 48];
+    size_t i;
+    snprintf(v, sizeof(v), "%s", s->value);
+    if (s->type != TTF_SEM_VERSION && s->type != TTF_SEM_IP_ADDRESS && s->type != TTF_SEM_DATE &&
+        s->type != TTF_SEM_TIME)
+        for (i = 0; v[i]; ++i)
+            if (v[i] == '.')
+                v[i] = ',';
+    switch (s->type) {
+    case TTF_SEM_CARDINAL:
+    case TTF_SEM_NUMBER:
+        {
+            /* 0042{@cardinal} forty-two: leading zeros would make the written form a code */
+            size_t at = (*v == '-' || *v == '+'), z = at;
+            while (v[z] == '0' && v[z + 1] >= '0' && v[z + 1] <= '9')
+                ++z;
+            snprintf(text, sizeof(text), "%.*s%s", (int)at, v, v + z);
+        }
+        break;
+    case TTF_SEM_ORDINAL:
+        snprintf(text, sizeof(text), "thứ %s", v);
+        break;
+    case TTF_SEM_DATE:
+        if (!strcmp(s->unit, "year"))
+            return integer(e, b, v, strlen(v));
+        if (strlen(v) != 10)
+            return TTF_EINVAL;
+        {
+            /* mười lăm tháng mười năm …: the control does not see a ngày before it, so the
+               date reads without one (ngày 2025-10-15{@date} is not ngày ngày …) */
+            ttf_semantic_t t = *s;
+            snprintf(t.value, sizeof(t.value), "%d/%d/%.4s", atoi(v + 8), atoi(v + 5), v);
+            snprintf(t.unit, sizeof(t.unit), "@vi-date");
+            t.secondary[0] = 0;
+            t.layer = TTF_LAYER_SYSTEM;
+            return verbalize(e, &t, t.value, strlen(t.value), b);
+        }
+    case TTF_SEM_FRACTION:
+        snprintf(text, sizeof(text), "%s/%s", v, s->secondary);
+        break;
+    case TTF_SEM_PHONE:
+        /* +66-2-123-4567 cộng sáu sáu hai ... */
+        if (*v == '+')
+            TRY(word(e, b, "math_plus"));
+        return digits_each(e, b, v, strlen(v));
+    case TTF_SEM_RANGE:
+        snprintf(text, sizeof(text), "%s-%s", v, s->secondary);
+        break;
+    case TTF_SEM_MEASURE:
+        snprintf(text, sizeof(text), "%s %s", v, s->unit);
+        break;
+    case TTF_SEM_VERSION:
+    case TTF_SEM_IP_ADDRESS:
+    case TTF_SEM_TIME:
+        snprintf(text, sizeof(text), "%s", v);
+        break;
+    case TTF_SEM_CURRENCY: {
+    const char *sign = !strcmp(s->unit, "USD") ? "$" : !strcmp(s->unit, "EUR") ? "€"
+                       : !strcmp(s->unit, "GBP") ? "£" : NULL;
+        if (sign)
+            snprintf(text, sizeof(text), "%s%s", sign, v);
+        else
+            snprintf(text, sizeof(text), "%s %s", v, !strcmp(s->unit, "VND") ? "đồng" : s->unit);
+        break;
+    }
+    case TTF_SEM_PERCENT:
+        snprintf(text, sizeof(text), "%s%%", v);
+        break;
+    default:
+        *handled = 0;
+        return TTF_OK;
+    }
+    return ttf_control_reread(e, self, text, b);
+}
+static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, const char *surface,
                               size_t length, ttf_buffer_t *b) {
     const char *mode = s->unit, *v = s->value;
     char f0[TTF_IR_VALUE_SIZE], f1[TTF_IR_VALUE_SIZE], f2[TTF_IR_VALUE_SIZE], f3[32], f4[32];
+    /* explicit controls in annotated input (2026-10-15) */
+    if (s->type == TTF_SEM_CUSTOM && !strcmp(s->rule, "control.pattern") && strcmp(s->unit, "@alphabet")) {
+        if (!strcmp(s->unit, "@email") || !strcmp(s->unit, "@url"))
+            return ttf_electronic_control(e, s, surface, length, b);
+        if (!strcmp(s->unit, "@native") || !strcmp(s->unit, "@sino") || !strcmp(s->unit, "@counter"))
+            return TTF_EINVAL; /* the Korean number systems */
+        return ttf_semantic_control(e, s, surface, length, b);
+    }
+    if (s->layer == TTF_LAYER_USER && strncmp(s->unit, "@vi-", 4)) {
+        int handled = 1;
+        ttf_status_t st = control_object(e, s, b, &handled);
+        if (handled)
+            return st;
+    }
     if (strncmp(mode, "@vi-", 4)) {
         /* Shared objects in a Vietnamese sentence. */
         if (s->type == TTF_SEM_PHONE || s->type == TTF_SEM_DIGIT_SEQUENCE)

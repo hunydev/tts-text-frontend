@@ -368,6 +368,11 @@
           "area": "점 날짜·하이픈 점수·지수",
           "level": "partial",
           "note": "定于9.28开业 九月二十八日, 6.18购物节 六一八, 战成2-2 二比二, 建施-05 建施零五, 15-15-15 十五十五十五, 1e-3 一e负三, 东经120°15′, 08年那场 零八年"
+        },
+        {
+          "area": "제어 구문",
+          "level": "full",
+          "note": "annotated 입력의 예약어(@cardinal @digits @ordinal 第 @year 한 자리씩 @date 年月日 @score 比 @math @email @url @break @join @skip 등)를 중국어로 읽음(2026-10-15). @alphabet은 라틴 글자 그대로(정책), @native·@sino·@counter·@address는 한국어 전용이라 무시"
         }
       ],
       "gaps": [
@@ -439,6 +444,11 @@
           "area": "원문자·기호",
           "level": "full",
           "note": "① ⑴ ❶ Ⓐ, 기호·이모지 이름(CLDR 베트남어; ★ ✓ 등 빠진 것은 보충)"
+        },
+        {
+          "area": "제어 구문",
+          "level": "full",
+          "note": "annotated 입력의 예약어(@cardinal @digits @ordinal @date @time @currency @score @email @url @break @join @skip 등)를 베트남어로 읽음(2026-10-15). @date는 ngày 없이, @alphabet은 라틴 글자 그대로(정책), @native·@sino·@counter·@address는 한국어 전용이라 무시"
         }
       ],
       "gaps": [
@@ -513,6 +523,11 @@
           "area": "수식",
           "level": "full",
           "note": "12 + 8 = 20 บวก·เท่ากับ, x² กำลังสอง, √81 รากที่สองของ, ÷ หารด้วย, > มากกว่า"
+        },
+        {
+          "area": "제어 구문",
+          "level": "full",
+          "note": "annotated 입력의 예약어(@cardinal @digits @ordinal @date @time @currency @score @phone @email @url @break @join @skip 등)를 태국어로 읽음(2026-10-15). @native·@sino·@counter·@address는 한국어 전용이라 무시"
         }
       ],
       "gaps": [

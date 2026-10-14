@@ -2034,10 +2034,94 @@ static ttf_status_t minus(const ttf_engine_t *e, ttf_buffer_t *b, const char *un
     return word(e, b, u && strstr(u, "摄氏度") ? "below_zero" : "minus");
 }
 
+/* The object a control asked for (3{@ordinal} 第三, 2025-10-15{@date} 二零二五年十月十五日),
+   read as the Chinese pack reads its written form; *handled 0 leaves it to the
+   shared-object path. */
+static ttf_status_t control_object(const ttf_engine_t *e, const ttf_semantic_t *s, ttf_buffer_t *b,
+                                   int *handled) {
+    const ttf_language_pack_t *self = ttf_find_pack(e, "zh-CN");
+    const char *v = s->value;
+    char text[2 * TTF_IR_VALUE_SIZE + 48];
+    size_t i, k;
+    switch (s->type) {
+    case TTF_SEM_ORDINAL:
+        snprintf(text, sizeof(text), "第%s", v);
+        break;
+    case TTF_SEM_DATE:
+        if (!strcmp(s->unit, "year"))
+            return digits_each(e, b, v, strlen(v), 0);
+        if (strlen(v) != 10)
+            return TTF_EINVAL;
+        snprintf(text, sizeof(text), "%.4s年%d月%d日", v, atoi(v + 5), atoi(v + 8));
+        break;
+    case TTF_SEM_FRACTION:
+        snprintf(text, sizeof(text), "%s/%s", v, s->secondary);
+        break;
+    case TTF_SEM_RANGE:
+        /* 2-1{@score} 二比一 */
+        snprintf(text, sizeof(text), "%s%s%s", v, !strcmp(s->rule, "syntax.score") ? ":" : "-", s->secondary);
+        break;
+    case TTF_SEM_MEASURE:
+        snprintf(text, sizeof(text), "%s %s", v, s->unit);
+        break;
+    case TTF_SEM_CARDINAL:
+    case TTF_SEM_NUMBER:
+        {
+            /* 0042{@cardinal} forty-two: leading zeros would make the written form a code */
+            size_t at = (*v == '-' || *v == '+'), z = at;
+            while (v[z] == '0' && v[z + 1] >= '0' && v[z + 1] <= '9')
+                ++z;
+            snprintf(text, sizeof(text), "%.*s%s", (int)at, v, v + z);
+        }
+        break;
+    case TTF_SEM_VERSION:
+    case TTF_SEM_IP_ADDRESS:
+    case TTF_SEM_TIME:
+        snprintf(text, sizeof(text), "%s", v);
+        break;
+    case TTF_SEM_SYMBOL:
+        /* 1 + 2 = 3 一加二等于三: the pack reads an expression written without spaces */
+        for (i = k = 0; v[i] && k + 1 < sizeof(text); ++i)
+            if (v[i] != ' ')
+                text[k++] = v[i];
+        text[k] = 0;
+        break;
+    case TTF_SEM_CURRENCY: {
+    const char *sign = !strcmp(s->unit, "USD") ? "$" : !strcmp(s->unit, "EUR") ? "€"
+                       : !strcmp(s->unit, "GBP") ? "£" : !strcmp(s->unit, "CNY") ? "¥" : NULL;
+        if (sign)
+            snprintf(text, sizeof(text), "%s%s", sign, v);
+        else
+            snprintf(text, sizeof(text), "%s %s", v, s->unit);
+        break;
+    }
+    case TTF_SEM_PERCENT:
+        snprintf(text, sizeof(text), "%s%%", v);
+        break;
+    default:
+        *handled = 0;
+        return TTF_OK;
+    }
+    return ttf_control_reread(e, self, text, b);
+}
 static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, const char *surface,
                               size_t length, ttf_buffer_t *b) {
     const char *mode = s->unit, *v = s->value, *a, *bp, *u;
     size_t vn = strlen(v), an, bn;
+    /* explicit controls in annotated input (2026-10-15) */
+    if (s->type == TTF_SEM_CUSTOM && !strcmp(s->rule, "control.pattern") && strcmp(s->unit, "@alphabet")) {
+        if (!strcmp(s->unit, "@email") || !strcmp(s->unit, "@url"))
+            return ttf_electronic_control(e, s, surface, length, b);
+        if (!strcmp(s->unit, "@native") || !strcmp(s->unit, "@sino") || !strcmp(s->unit, "@counter"))
+            return TTF_EINVAL; /* the Korean number systems */
+        return ttf_semantic_control(e, s, surface, length, b);
+    }
+    if (s->layer == TTF_LAYER_USER && strncmp(s->unit, "@zh-", 4)) {
+        int handled = 1;
+        ttf_status_t st = control_object(e, s, b, &handled);
+        if (handled)
+            return st;
+    }
     if (strncmp(mode, "@zh-", 4)) {
         /* Shared objects in a Chinese sentence. */
         if (s->type == TTF_SEM_PHONE || s->type == TTF_SEM_DIGIT_SEQUENCE)

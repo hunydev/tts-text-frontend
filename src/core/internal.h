@@ -117,6 +117,8 @@ ttf_status_t ttf_electronic_render(const ttf_engine_t *engine, const ttf_languag
 ttf_status_t ttf_electronic_control(const ttf_engine_t *engine, const ttf_semantic_t *semantic,
                                     const char *text, size_t length, ttf_buffer_t *out);
 /* Shared explicit Semantic IR controls, called by opting-in language packs. */
+ttf_status_t ttf_control_reread(const ttf_engine_t *engine, const ttf_language_pack_t *pack,
+                                const char *text, ttf_buffer_t *out);
 ttf_status_t ttf_semantic_control(const ttf_engine_t *engine, const ttf_semantic_t *request,
                                   const char *text, size_t length, ttf_buffer_t *out);
 ttf_status_t ttf_foreign_loanword(const ttf_engine_t *engine, const char *source, const char *target,

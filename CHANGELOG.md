@@ -71,6 +71,15 @@
     vi 97.4 / 94.2. No dev span lost. Contract user_eval4_v84 (22). Other gates unchanged.
   - Contracts updated with Was notes (owner-set evidence): vi_prod_v80 12/28 phiếu trên,
     vi_pack2_v75 P.308 phòng ba không tám and IP 192.168.1.1 digit by digit.
+- Explicit controls in the Vietnamese, Thai and Chinese packs (project-owner request, 2026-10-15):
+  - The packs passed every control through as written (1234{@digits} stayed 1234). Controls now
+    reach the shared control grammar and @email/@url the electronic renderer; a control object is
+    marked layer USER and the pack writes it back as text it reads (15/10/2025, 2025年10月15日,
+    $12.50, thứ 4) and classifies that text with its own grammar (ttf_control_reread).
+  - The Korean-only @native, @sino, @counter and @address are invalid there and the text reads
+    as usual; @alphabet keeps Latin letters in vi-VN and zh-CN.
+  - Every language: v1.2.3{@version} and 15%{@percent} bind without a group.
+  - Contract control_packs_v92 (35). The owner-set outputs of all six languages are identical; Korean quick, English, JSUT, ja-tn-eval, Chinese and Vietnamese gates are unchanged; all contracts pass except the three known failures.
 - Thai pack phase 3 (th-TH, project-owner request, 2026-10-15):
   - Held-out set th-tn-eval v1 (250 sentences, 297 spans, two authors without the pack): 81.5
     at first (a Korean request 71.4), 94.6 after this phase (both requests).
