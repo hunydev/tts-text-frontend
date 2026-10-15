@@ -71,6 +71,10 @@
     vi 97.4 / 94.2. No dev span lost. Contract user_eval4_v84 (22). Other gates unchanged.
   - Contracts updated with Was notes (owner-set evidence): vi_prod_v80 12/28 phiếu trên,
     vi_pack2_v75 P.308 phòng ba không tám and IP 192.168.1.1 digit by digit.
+- Thai is in production (th-TH, project-owner decision, 2026-10-15): owner real-sentence v2 96.1,
+  held-out v1 96.0, owner set test 94.7, no engine errors in 14,927 real sentences; TTS-to-STT on
+  the 371 v2 sentences: raw text 45.3% to TN 73.3% of sentences (spans 62.9% to 83.0%), no new TN
+  problem. Human native review and VoxCPM2 listening remain, as for the other languages.
 - English on real sentences (en-US, project-owner request, 2026-10-15):
   - The owner's v2 of 398 real sentences (scb-mt-en-th-2020, CC BY-SA 4.0, kept local;
     owner_v2_eval.py): 88.2 on the frozen code b39e1f0, 95.8 now. 13,105 real sentences: no
