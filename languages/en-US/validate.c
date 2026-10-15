@@ -481,7 +481,8 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "currency_minor_digits must be 0 or 2");
     }
-    if (SAME(k, "context") && (SAME(key, "absorb_foreign") || SAME(key, "attached_grammar"))) {
+    if (SAME(k, "context") && (SAME(key, "absorb_foreign") || SAME(key, "attached_grammar") ||
+                               SAME(key, "code_hyphen"))) {
         *handled = 1;
         return ttf_validation_enum(v, "0|1")
                    ? TTF_OK

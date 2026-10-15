@@ -260,3 +260,5 @@ lexical	en-US	reuters	PROPER_NOUN
 lexical	en-US	paypal	PROPER_NOUN
 lexical	en-US	visa	PROPER_NOUN
 lexical	en-US	mastercard	PROPER_NOUN
+# EP-001-1, LC6-40mm: a hyphen after a code with a letter is no minus sign (owner v2, 2026-10-15)
+context	en-US	code_hyphen	1

@@ -149,32 +149,32 @@
         {
           "area": "날짜·시간",
           "level": "full",
-          "note": "월 이름·숫자 날짜, 시각, a.m./p.m."
+          "note": "월 이름·숫자 날짜, 시각, a.m./p.m.; 15 to 30 June 2013 the fifteenth to the thirtieth, March 4 to 15 the fifteenth, July-September July to September, Q4/2010"
         },
         {
           "area": "통화",
           "level": "full",
-          "note": "기호·코드, cents, million/billion"
+          "note": "기호·코드, cents, million/billion; $53.7-million, $US6 million u s dollars, $A australian dollars"
         },
         {
           "area": "단위",
           "level": "full",
-          "note": "단수/복수 단위 이름"
+          "note": "단수/복수 단위 이름; 인치 표기(8-3/8\"Dia. eight and three eighths inch diameter, 36\"L inch long, 8\"x 7\"), 97.6x 57.1x 규격, 10/Pack ten per pack, Km·sqm"
         },
         {
           "area": "전화·식별번호",
           "level": "full",
-          "note": "전화, ISBN 등"
+          "note": "전화, ISBN 등; 단서 없는 888 555 3232, 모델번호 하이픈(EP-001-1, LC6-40mm)은 마이너스가 아님"
         },
         {
           "area": "약어",
           "level": "full",
-          "note": "Dr. St. No. 주 이름, 이니셜 철자 읽기, 관사 단서(an LED)"
+          "note": "Dr. St. No. 주 이름, 이니셜 철자 읽기, 관사 단서(an LED); Pkg package, Qty quantity, Hwy highway, .SPX dot S P X"
         },
         {
           "area": "이메일·URL",
           "level": "full",
-          "note": "speech에서 글자·단어 읽기"
+          "note": "speech에서 글자·단어 읽기; 대소문자가 바뀌는 라벨은 나눠 읽음(BeautyExpert.com Beauty Expert, TBDress.com T B Dress)"
         },
         {
           "area": "다른 문자 단어",
@@ -188,7 +188,10 @@
         }
       ],
       "gaps": [
-        "남은 숫자는 마지막에 숫자로 읽음 (written fallback)"
+        "남은 숫자는 마지막에 숫자로 읽음 (written fallback)",
+        "소유자 평가셋(user-tn-eval en-US): dev 95.9%, test 88.8%; 소유자 실제 문장 v2 95.8%",
+        "실제 원문 1만 3,105문장: 엔진 오류 0, 숫자가 남은 문장 0.2% (오타 시각 7:5pm, \"24:00\", UTC−01:00, 성경 구절 일부)",
+        "대문자만 이어 쓴 도메인(MICHAELKORS.com, KLOOK.com)과 문자 은어(2da, 4U)는 미지원"
       ],
       "docs": [
         "docs/en-coverage.md",

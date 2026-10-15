@@ -158,6 +158,38 @@ static ttf_status_t chunk(const ttf_engine_t *e, const ttf_language_pack_t *sour
             }
         }
     }
+    /* BeautyExpert.com beauty expert, TBDress.com T B dress, JollyChic.com: in English a label
+       with a capital inside splits where the case changes, and each part reads on its own
+       (owner v2, 2026-10-15) */
+    if (word && !strcmp(target->language_tag, "en-US") && n >= 4 && n < 40) {
+        size_t lower = 0, inner = 0;
+        for (i = 0; i < n; ++i) {
+            lower += text[i] >= 'a' && text[i] <= 'z';
+            inner += i && text[i] >= 'A' && text[i] <= 'Z' && text[i - 1] >= 'a' && text[i - 1] <= 'z';
+        }
+        for (i = 1; !inner && i + 1 < n; ++i)
+            inner = text[i] >= 'A' && text[i] <= 'Z' && text[i - 1] >= 'A' && text[i - 1] <= 'Z' &&
+                    text[i + 1] >= 'a' && text[i + 1] <= 'z';
+        if (lower && inner) {
+            size_t a = 0;
+            while (a < n) {
+                size_t z = a + 1;
+                if (text[a] >= 'A' && text[a] <= 'Z' && z < n && text[z] >= 'A' && text[z] <= 'Z') {
+                    /* TBDress: a capital run stops before the capital that starts a word */
+                    while (z < n && text[z] >= 'A' && text[z] <= 'Z' && !(z + 1 < n && text[z + 1] >= 'a' && text[z + 1] <= 'z'))
+                        ++z;
+                } else
+                    while (z < n && text[z] >= 'a' && text[z] <= 'z')
+                        ++z;
+                if (a && (st = ttf_buffer_puts(out, " ")) != TTF_OK)
+                    return st;
+                if ((st = chunk(e, source, target, text + a, z - a, part + a, out)) != TTF_OK)
+                    return st;
+                a = z;
+            }
+            return TTF_OK;
+        }
+    }
     /* fieldscope, lincolnschools, northwind: in English a lowercase label of seven letters
        or more that splits into two English-looking words reads as a word (owner sets,
        2026-10-14). */

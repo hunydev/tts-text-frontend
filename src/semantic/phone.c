@@ -492,7 +492,12 @@ static size_t classify_phone(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     legacy = !parsed.international && !parsed.negative && !parsed.parenthesis && !parsed.spaced &&
              parsed.groups == 3 && parsed.hyphens == 2;
     candidate = labeled || parsed.international || s[begin] == '(' || legacy || service ||
-                (parsed.hyphens >= 2 && !parsed.spaced && !parsed.parenthesis);
+                (parsed.hyphens >= 2 && !parsed.spaced && !parsed.parenthesis) ||
+                /* 888 555 3232: the North American 3-3-4 layout with spaces is a phone number
+                   without a cue (owner v2, 2026-10-15) */
+                (parsed.spaced && !parsed.hyphens && !parsed.parenthesis && parsed.groups == 3 &&
+                 parsed.lengths[0] == 3 && parsed.lengths[1] == 3 && parsed.lengths[2] == 4 &&
+                 s[begin] >= '2' && s[begin] <= '9');
     if (!candidate)
         return 0;
     if (parsed.truncated) {

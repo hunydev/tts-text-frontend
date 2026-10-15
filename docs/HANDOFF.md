@@ -2,6 +2,15 @@
 
 갱신: 2026-10-11. Release **0.20.0**, public ABI **v1**.
 
+## 최근 인계: 영어 실제 문장 (2026-10-15)
+
+- **자료:** 소유자 v2(실제 문장 398개)와 실제 원문 1만 3,105문장. `benchmark/generated/en-owner`(로컬)에 있고 `owner_v2_eval.py`로 잰다.
+- **점수:** v2 88.2% → 95.8%. 소유자 셋 test 88.8%. 실제 원문 오류 0, 숫자가 남은 문장 0.2%.
+- **고친 것:**
+  - 영어 팩: 인치, 규격 x, 날짜 범위 서수, 빗금 per, 금액 단위, 모델번호.
+  - 코어: 코드 뒤 하이픈은 마이너스가 아님, 북미 띄어 쓴 전화번호, camelCase 도메인.
+- **상세:** [english-real-sentences.ko.md](english-real-sentences.ko.md).
+
 ## 최근 인계: 태국어 팩 4단계 (2026-10-15)
 
 - **소유자 데이터:** `benchmark/generated/th-owner`에 둔다(로컬 전용).

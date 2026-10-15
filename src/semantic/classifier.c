@@ -90,11 +90,31 @@ static int expand_exponent(char *value, int exponent) {
     memcpy(value, result, out + 1);
     return 1;
 }
+/* EP-001-1, LC6-40mm: a hyphen right after a code that has a letter joins the code; it is no
+   minus sign (owner v2, 2026-10-15). A request language opts in (context <tag> code_hyphen 1,
+   en-US): the Vietnamese pack reads 29B-123.45 and XK9P-4H2M from the signed form. */
+static int code_hyphen(const ttf_engine_t *e, const char *s, size_t p) {
+    size_t b = p;
+    int letter = 0;
+    const char *flag = e && e->default_language
+                           ? ttf_resource_get(e, "context", e->default_language, "code_hyphen", NULL)
+                           : NULL;
+    if (!flag || strcmp(flag, "1") || !p || s[p - 1] == '-')
+        return 0;
+    while (b && ((s[b - 1] >= '0' && s[b - 1] <= '9') || (s[b - 1] >= 'A' && s[b - 1] <= 'Z') ||
+                 (s[b - 1] >= 'a' && s[b - 1] <= 'z') || s[b - 1] == '-')) {
+        letter |= (s[b - 1] >= 'A' && s[b - 1] <= 'Z') || (s[b - 1] >= 'a' && s[b - 1] <= 'z');
+        --b;
+    }
+    return letter && b < p;
+}
 size_t ttf_numeric_value(const ttf_pack_input_t *in, size_t p, char value[TTF_IR_VALUE_SIZE],
                          ttf_resource_layer_t *matched_layer) {
     const char *s = in->text;
     size_t n = in->length, start = p, k = 0, first, separator_width = 0;
     char separator[5] = {0};
+    if (p < n && s[p] == '-' && code_hyphen(in->engine, s, p))
+        return start;
     if (p < n && (s[p] == '-' || s[p] == '+')) {
         value[k++] = s[p++];
     }
@@ -1716,6 +1736,9 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
                           (parts == 4 && ip) ? "syntax.ip" : "syntax.version");
         }
     }
+    /* LC6-40mm: the hyphen stays as written and 40mm classifies on its own */
+    if (s[b] == '-' && code_hyphen(in->engine, s, b))
+        return 0;
     p = ttf_numeric_value(in, b, out->value, &out->layer);
     if (p == b)
         return preserve(in, out, ttf_numeric_atom_end(in, b), "syntax.invalid-number");

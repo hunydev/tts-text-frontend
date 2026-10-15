@@ -557,3 +557,25 @@ classifier_priority	en-US	en.star-code	10
 classifier_priority	en-US	en.host-port	10
 classifier_priority	en-US	en.day-range	10
 classifier_priority	en-US	en.mixed-code	10
+# owner v2 (2026-10-15): a count per container, a capitalized kilometer, square meters
+per_word	en-US	pack	per pack
+per_word	en-US	box	per box
+per_word	en-US	set	per set
+per_word	en-US	bag	per bag
+per_word	en-US	roll	per roll
+per_word	en-US	case	per case
+per_word	en-US	carton	per carton
+per_word	en-US	piece	per piece
+per_word	en-US	pc	per piece
+per_word	en-US	pcs	per piece
+per_word	en-US	pair	per pair
+per_word	en-US	dozen	per dozen
+per_word	en-US	sheet	per sheet
+per_word	en-US	bottle	per bottle
+per_word	en-US	person	per person
+per_word	en-US	each	each
+numeric_suffix	*	Km	MEASURE:km
+numeric_suffix	*	sqm	MEASURE:square_m
+classifier_priority	en-US	en.day-range-first	100
+classifier_priority	en-US	en.day-range-second	100
+classifier_priority	en-US	en.count-per	100

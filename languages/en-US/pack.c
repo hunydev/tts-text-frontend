@@ -1312,10 +1312,15 @@ static size_t per_slash(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     const char *s = in->text;
     size_t at = in->tokens[in->index].begin, n = in->length, w, k = 0;
     char key[16];
-    if (s[at] != '/' || in->tokens[in->index].end != at + 1 || !at ||
-        !isalpha((unsigned char)s[at - 1]))
+    size_t from = at + 1;
+    if (s[at] != '/' || in->tokens[in->index].end != at + 1 || !at)
         return 0;
-    for (w = at + 1; w < n && isalpha((unsigned char)s[w]) && k + 1 < sizeof(key); ++w)
+    /* 10/Pack, cm./each, 30 pins / pack (owner v2, 2026-10-15) */
+    if (s[at - 1] == ' ' && at >= 2 && isalpha((unsigned char)s[at - 2]) && at + 1 < n && s[at + 1] == ' ')
+        from = at + 2;
+    else if (!isalpha((unsigned char)s[at - 1]) && !isdigit((unsigned char)s[at - 1]) && s[at - 1] != '.')
+        return 0;
+    for (w = from; w < n && isalpha((unsigned char)s[w]) && k + 1 < sizeof(key); ++w)
         key[k++] = (char)tolower((unsigned char)s[w]);
     key[k] = '\0';
     if (!k || (w < n && (isalnum((unsigned char)s[w]) || s[w] == '/' || s[w] == '-')) ||
@@ -1446,6 +1451,256 @@ static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     for (q = p; q < n && t[q] != '\n'; ++q)
         if (foreign_letter(t, n, q))
             return 0;
+    /* ---- owner v2 forms (real sentences, 2026-10-15) ---- */
+    {
+        static const char *const month[] = {"January", "February", "March", "April", "May", "June", "July",
+                                            "August", "September", "October", "November", "December"};
+        char w[96];
+        size_t a, k;
+        /* 8-3/8"Dia. eight and three eighths inch diameter, 36"L thirty six inch long, 3/8" three
+           eighths inch, 8"x 7" eight inch by seven inch */
+        if (ascii_digit_char(t[p])) {
+            size_t num_end;
+            for (a = p; a < n && ascii_digit_char(t[a]); ++a)
+                ;
+            num_end = a;
+            if (a + 3 < n && (t[a] == '-' || t[a] == ' ') && ascii_digit_char(t[a + 1])) {
+                size_t b2 = a + 1;
+                while (b2 < n && ascii_digit_char(t[b2]))
+                    ++b2;
+                if (b2 + 1 < n && t[b2] == '/' && ascii_digit_char(t[b2 + 1])) {
+                    for (++b2; b2 < n && ascii_digit_char(t[b2]); ++b2)
+                        ;
+                    num_end = b2;
+                }
+            } else if (a + 1 < n && (t[a] == '/' || t[a] == '.') && ascii_digit_char(t[a + 1])) {
+                for (++a; a < n && ascii_digit_char(t[a]); ++a)
+                    ;
+                num_end = a;
+            }
+            if (num_end < n && t[num_end] == '"' && num_end - p < 16) {
+                size_t z = num_end + 1, quotes = 0, end;
+                const char *suffix = "";
+                int attached = z < n && ascii_letter_char(t[z]), by = 0, inch_mark = 1;
+                if (!attached && !memchr(t + p, '/', num_end - p)) {
+                    /* "I have 5" and left: an odd quote before it (not an inch mark) closes here */
+                    for (k = p; k && t[k - 1] != '\n'; --k)
+                        quotes += t[k - 1] == '"' && !(k >= 2 && ascii_digit_char(t[k - 2]));
+                    inch_mark = !(quotes % 2) && (z >= n || t[z] == ' ' || t[z] == ',' || t[z] == ')' ||
+                                                   t[z] == '.' || t[z] == ';');
+                }
+                if (inch_mark) {
+                    if (!strncmp(t + z, "Dia.", 4) || !strncmp(t + z, "dia.", 4))
+                        suffix = "diameter", z += 4;
+                    else if (!strncmp(t + z, "D.", 2))
+                        suffix = "diameter", z += 2;
+                    else if (!strncmp(t + z, " diam.", 6) || !strncmp(t + z, " dia.", 5))
+                        suffix = "diameter", z += t[z + 4] == '.' ? 5 : 6;
+                    else if (attached && (t[z] == 'L' || t[z] == 'W' || t[z] == 'H') &&
+                             !(z + 1 < n && ascii_letter_char(t[z + 1])))
+                        suffix = t[z] == 'L' ? "long" : t[z] == 'W' ? "wide" : "high", ++z;
+                    end = z;
+                    a = z < n && t[z] == ' ' ? z + 1 : z;
+                    if (a < n && (t[a] == 'x' || t[a] == 'X') && a + 1 < n &&
+                        (ascii_digit_char(t[a + 1]) || (t[a + 1] == ' ' && a + 2 < n && ascii_digit_char(t[a + 2])))) {
+                        by = 1;
+                        end = a + 1;
+                    }
+                    if (!(attached && !*suffix && !by)) {
+                        (void)snprintf(w, sizeof(w), "%.*s|%s|%d", (int)(num_end - p), t + p, suffix, by);
+                        return owner_finish(in, out, end, TTF_SEM_SYMBOL, "@inch-mark", w, "en.inch-mark");
+                    }
+                }
+            }
+            /* 97.6x 57.1x 112.8 cm: an x with a space on one side between numbers (the last term
+               keeps its unit reading) */
+            {
+                size_t r = p, last = 0, used = 0;
+                int odd = 0, terms = 0;
+                for (;;) {
+                    size_t b0 = r, xa, xb;
+                    while (r < n && ascii_digit_char(t[r]))
+                        ++r;
+                    if (r + 1 < n && t[r] == '.' && ascii_digit_char(t[r + 1]))
+                        for (++r; r < n && ascii_digit_char(t[r]); ++r)
+                            ;
+                    if (r == b0 || used + (r - b0) + 2 >= sizeof(w))
+                        break;
+                    xa = r < n && t[r] == ' ' ? r + 1 : r;
+                    if (!(xa < n && (t[xa] == 'x' || t[xa] == 'X')))
+                        break;
+                    xb = xa + 1 < n && t[xa + 1] == ' ' ? xa + 2 : xa + 1;
+                    if (!(xb < n && ascii_digit_char(t[xb])))
+                        break;
+                    odd |= (xa > r) != (xb > xa + 1);
+                    used += (size_t)snprintf(w + used, sizeof(w) - used, "%.*s*", (int)(r - b0), t + b0);
+                    last = xb;
+                    ++terms;
+                    r = xb;
+                }
+                if (odd && terms)
+                    return owner_finish(in, out, last, TTF_SEM_SYMBOL, "@dims", w, "en.dims");
+            }
+            /* 10/Pack ten per pack, 12/Box: a count, a slash and a container word */
+            {
+                size_t r = p, wl = 0;
+                char key[16];
+                const char *per;
+                while (r < n && ascii_digit_char(t[r]))
+                    ++r;
+                if (r + 1 < n && t[r] == '/' && ascii_letter_char(t[r + 1])) {
+                    size_t z = r + 1;
+                    while (z < n && ascii_letter_char(t[z]) && wl + 1 < sizeof(key))
+                        key[wl++] = (char)(t[z] >= 'A' && t[z] <= 'Z' ? t[z] + 32 : t[z]), ++z;
+                    key[wl] = 0;
+                    if (!(z < n && (ascii_letter_char(t[z]) || ascii_digit_char(t[z]) || t[z] == '/')) &&
+                        (per = res(in->engine, "per_word", key)) != NULL &&
+                        strcmp(key, "second") && strcmp(key, "minute") && strcmp(key, "hour") &&
+                        strcmp(key, "day") && strcmp(key, "week") && strcmp(key, "month") && strcmp(key, "year")) {
+                        (void)snprintf(w, sizeof(w), "%.*s|%s", (int)(r - p), t + p, per);
+                        return owner_finish(in, out, z, TTF_SEM_SYMBOL, "@count-per", w, "en.count-per");
+                    }
+                }
+            }
+            /* 15 to 30 June 2013 the fifteenth to the thirtieth of June: a day before a range to a
+               named date */
+            if (t[p] != '0' && (a = p + 1 + (p + 1 < n && ascii_digit_char(t[p + 1]))) <= n && atoi(t + p) >= 1 &&
+                atoi(t + p) <= 31 && !(a < n && ascii_digit_char(t[a]))) {
+                size_t r = a;
+                while (r < n && t[r] == ' ')
+                    ++r;
+                if (!strncmp(t + r, "to ", 3))
+                    r += 3;
+                else if (!strncmp(t + r, "through ", 8))
+                    r += 8;
+                else if (r < n && t[r] == '-')
+                    ++r;
+                else if (!strncmp(t + r, "\xe2\x80\x93", 3))
+                    r += 3;
+                else
+                    r = 0;
+                if (r) {
+                    while (r < n && t[r] == ' ')
+                        ++r;
+                    if (r < n && ascii_digit_char(t[r])) {
+                        size_t d = r;
+                        while (d < n && ascii_digit_char(t[d]))
+                            ++d;
+                        if (d - r <= 2 && d + 1 < n && t[d] == ' ')
+                            for (k = 0; k < 12; ++k)
+                                if (!strncmp(t + d + 1, month[k], 3)) {
+                                    (void)snprintf(w, sizeof(w), "%.*s", (int)(a - p), t + p);
+                                    return owner_finish(in, out, a, TTF_SEM_SYMBOL, "@ord-the", w, "en.day-range-first");
+                                }
+                    }
+                }
+                /* February 19 to 26 February nineteenth to the twenty sixth: the second day */
+                {
+                    size_t b = p, d;
+                    while (b && t[b - 1] == ' ')
+                        --b;
+                    if (b >= 3 && !strncmp(t + b - 3, " to", 3))
+                        b -= 3;
+                    else if (b >= 3 && !strncmp(t + b - 3, "\xe2\x80\x93", 3))
+                        b -= 3;
+                    else
+                        b = 0;
+                    if (b) {
+                        while (b && t[b - 1] == ' ')
+                            --b;
+                        d = b;
+                        while (d && ascii_digit_char(t[d - 1]))
+                            --d;
+                        if (d < b && b - d <= 2 && d >= 2 && t[d - 1] == ' ' &&
+                            !(a < n && (t[a] == ' ' && a + 1 < n && ascii_letter_char(t[a + 1]) && t[a + 1] >= 'A' && t[a + 1] <= 'Z')))
+                            for (k = 0; k < 12; ++k) {
+                                size_t l = strlen(month[k]);
+                                if (d >= l + 1 && !strncmp(t + d - 1 - l, month[k], l)) {
+                                    (void)snprintf(w, sizeof(w), "%.*s", (int)(a - p), t + p);
+                                    return owner_finish(in, out, a, TTF_SEM_SYMBOL, "@ord-the", w, "en.day-range-second");
+                                }
+                            }
+                    }
+                }
+            }
+        }
+        /* July-September July to September */
+        for (k = 0; k < 12; ++k) {
+            size_t l = strlen(month[k]), j;
+            if (strncmp(t + p, month[k], l) || p + l >= n || t[p + l] != '-')
+                continue;
+            for (j = 0; j < 12; ++j) {
+                size_t m = strlen(month[j]);
+                if (!strncmp(t + p + l + 1, month[j], m) && !(p + l + 1 + m < n && ascii_letter_char(t[p + l + 1 + m]))) {
+                    (void)snprintf(w, sizeof(w), "%s to %s", month[k], month[j]);
+                    return owner_finish(in, out, p + l + 1 + m, TTF_SEM_SYMBOL, "@word", w, "en.month-range");
+                }
+            }
+        }
+        /* Index .SPX dot S P X: a ticker */
+        if (t[p] == '.' && (!p || t[p - 1] == ' ' || t[p - 1] == '(')) {
+            for (a = p + 1; a < n && t[a] >= 'A' && t[a] <= 'Z'; ++a)
+                ;
+            if (a - p - 1 >= 2 && a - p - 1 <= 5 && !(a < n && (ascii_letter_char(t[a]) || ascii_digit_char(t[a])))) {
+                size_t used = (size_t)snprintf(w, sizeof(w), "dot");
+                for (k = p + 1; k < a; ++k)
+                    used += (size_t)snprintf(w + used, sizeof(w) - used, " %c", t[k]);
+                return owner_finish(in, out, a, TTF_SEM_SYMBOL, "@word", w, "en.ticker");
+            }
+        }
+        /* $53.7-million fifty three point seven million dollars, $US6 million six million US dollars */
+        if (t[p] == '$' && p + 2 < n) {
+            static const char *const prefix[][2] = {{"US", "u s dollars"}, {"NZ", "new zealand dollars"},
+                                                    {"HK", "hong kong dollars"}, {"A", "australian dollars"},
+                                                    {"C", "canadian dollars"}, {"S", "singapore dollars"}};
+            const char *money = "dollars";
+            size_t q0 = p + 1, r, s0;
+            for (k = 0; k < 6; ++k)
+                if (!strncmp(t + q0, prefix[k][0], strlen(prefix[k][0])) &&
+                    ascii_digit_char(t[q0 + strlen(prefix[k][0])])) {
+                    money = prefix[k][1];
+                    q0 += strlen(prefix[k][0]);
+                    break;
+                }
+            for (r = q0; r < n && (ascii_digit_char(t[r]) || (t[r] == '.' && r + 1 < n && ascii_digit_char(t[r + 1])) ||
+                                   (t[r] == ',' && r + 1 < n && ascii_digit_char(t[r + 1])));
+                 ++r)
+                ;
+            if (r > q0 && r < n && (t[r] == '-' || (t[r] == ' ' && k < 6))) {
+                static const char *const scale[] = {"million", "billion", "trillion", "thousand"};
+                for (s0 = 0; s0 < 4; ++s0) {
+                    size_t l = strlen(scale[s0]);
+                    if (!strncmp(t + r + 1, scale[s0], l) && !(r + 1 + l < n && ascii_letter_char(t[r + 1 + l]))) {
+                        int attributive = t[r] == '-' && p >= 2 && t[p - 1] == ' ' &&
+                                          (word_before(t, p, "a|an"));
+                        size_t used = 0, i2;
+                        for (i2 = q0; i2 < r && used + 1 < sizeof(w); ++i2)
+                            if (t[i2] != ',')
+                                w[used++] = t[i2];
+                        (void)snprintf(w + used, sizeof(w) - used, "|%s|%.*s", scale[s0],
+                                       (int)(attributive && !strcmp(money, "dollars") ? 6 : strlen(money)), money);
+                        return owner_finish(in, out, r + 1 + l, TTF_SEM_SYMBOL, "@money-scale", w, "en.money-scale");
+                    }
+                }
+            }
+        }
+        /* Q4/2010 Q four twenty ten: a quarter of a year */
+        if (t[p] == 'Q' && p + 7 < n + 1 && t[p + 1] >= '1' && t[p + 1] <= '4' && t[p + 2] == '/' &&
+            (!strncmp(t + p + 3, "19", 2) || !strncmp(t + p + 3, "20", 2)) && p + 7 <= n &&
+            ascii_digit_char(t[p + 5]) && ascii_digit_char(t[p + 6]) && !(p + 7 < n && ascii_digit_char(t[p + 7]))) {
+            (void)snprintf(w, sizeof(w), "%c|%.4s", t[p + 1], t + p + 3);
+            return owner_finish(in, out, p + 7, TTF_SEM_SYMBOL, "@quarter", w, "en.quarter");
+        }
+        /* (W x H) W by H: x between single capitals */
+        if ((t[p] == 'x' || t[p] == 'X') && p >= 2 && p + 2 < n && t[p - 1] == ' ' && t[p + 1] == ' ' &&
+            t[p - 2] >= 'A' && t[p - 2] <= 'Z' && !(p >= 3 && ascii_letter_char(t[p - 3])) &&
+            t[p + 2] >= 'A' && t[p + 2] <= 'Z' && !(p + 3 < n && ascii_letter_char(t[p + 3])))
+            return owner_finish(in, out, p + 1, TTF_SEM_SYMBOL, "@by", "by", "en.by");
+        /* 3.0 – 4.0 percent three to four: a spaced en dash between numbers */
+        if (!strncmp(t + p, "\xe2\x80\x93", 3) && p >= 2 && t[p - 1] == ' ' && ascii_digit_char(t[p - 2]) &&
+            p + 4 < n && t[p + 3] == ' ' && ascii_digit_char(t[p + 4]))
+            return owner_finish(in, out, p + 3, TTF_SEM_SYMBOL, "@to", "to", "en.spaced-dash");
+    }
     /* WDT750SAKZ, 7KXJ442, LB26X: capitals and digits that change more than once are a code,
        read letter by letter and digit by digit (owner sets, 2026-10-14) */
     if ((ascii_digit_char(t[p]) || (t[p] >= 'A' && t[p] <= 'Z')) && !(p && ascii_letter_char(t[p - 1]))) {
@@ -2474,6 +2729,79 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
                 return st;
             return ttf_buffer_puts(b, "inch");
         }
+        if (!strcmp(s->unit, "@inch-mark")) {
+            /* 8-3/8|diameter|1 eight and three eighths inch diameter by */
+            char num[24], sfx[24], by[4];
+            const char *slash;
+            if (sscanf(s->value, "%23[^|]|%23[^|]|%3s", num, sfx, by) < 2) {
+                if (sscanf(s->value, "%23[^|]||%3s", num, by) != 2)
+                    return TTF_EINVAL;
+                sfx[0] = 0;
+            }
+            if ((slash = strchr(num, '/')) != NULL) {
+                ttf_semantic_t f = *s;
+                const char *join = strpbrk(num, "- ");
+                f.type = TTF_SEM_FRACTION;
+                (void)snprintf(f.value, sizeof(f.value), "%.*s", (int)(slash - (join ? join + 1 : num)), join ? join + 1 : num);
+                (void)snprintf(f.secondary, sizeof(f.secondary), "%s", slash + 1);
+                if (join)
+                    (void)snprintf(f.unit, sizeof(f.unit), "mixed:%.*s", (int)(join - num), num);
+                else
+                    f.unit[0] = 0;
+                st = verbalize(e, &f, num, strlen(num), b);
+            } else
+                st = numeric(e, num, b);
+            if (st != TTF_OK || (st = ttf_buffer_puts(b, " inch")) != TTF_OK)
+                return st;
+            if (sfx[0] && ((st = space(b)) != TTF_OK || (st = ttf_buffer_puts(b, sfx)) != TTF_OK))
+                return st;
+            return by[0] == '1' ? ttf_buffer_puts(b, " by") : TTF_OK;
+        }
+        if (!strcmp(s->unit, "@dims")) {
+            /* 97.6*57.1* ninety seven point six by fifty seven point one by */
+            const char *at = s->value, *star;
+            char num[24];
+            while ((star = strchr(at, '*')) != NULL) {
+                (void)snprintf(num, sizeof(num), "%.*s", (int)(star - at), at);
+                if ((st = numeric(e, num, b)) != TTF_OK || (st = ttf_buffer_puts(b, " by ")) != TTF_OK)
+                    return st;
+                at = star + 1;
+            }
+            return TTF_OK;
+        }
+        if (!strcmp(s->unit, "@count-per")) {
+            /* 10|per pack ten per pack */
+            const char *bar = strchr(s->value, '|');
+            char num[24];
+            if (!bar || (size_t)(bar - s->value) >= sizeof(num))
+                return TTF_EINVAL;
+            (void)snprintf(num, sizeof(num), "%.*s", (int)(bar - s->value), s->value);
+            if ((st = numeric(e, num, b)) != TTF_OK || (st = space(b)) != TTF_OK)
+                return st;
+            return ttf_buffer_puts(b, bar + 1);
+        }
+        if (!strcmp(s->unit, "@ord-the")) {
+            if ((st = ttf_buffer_puts(b, "the ")) != TTF_OK)
+                return st;
+            return ordinal(e, strtoull(s->value, NULL, 10), b);
+        }
+        if (!strcmp(s->unit, "@money-scale")) {
+            /* 53.7|million|dollars */
+            char num[32], scale[16], money[32];
+            if (sscanf(s->value, "%31[^|]|%15[^|]|%31[^\n]", num, scale, money) != 3)
+                return TTF_EINVAL;
+            if ((st = numeric(e, num, b)) != TTF_OK || (st = space(b)) != TTF_OK ||
+                (st = ttf_buffer_puts(b, scale)) != TTF_OK || (st = space(b)) != TTF_OK)
+                return st;
+            return ttf_buffer_puts(b, money);
+        }
+        if (!strcmp(s->unit, "@quarter")) {
+            /* 4|2010 Q four twenty ten */
+            if ((st = ttf_buffer_puts(b, "Q ")) != TTF_OK || (st = card(e, (uint64_t)(s->value[0] - '0'), b)) != TTF_OK ||
+                (st = space(b)) != TTF_OK)
+                return st;
+            return date_year(e, (unsigned)atoi(s->value + 2), "year_style", b);
+        }
         if (!strcmp(s->unit, "@by"))
             return ttf_buffer_puts(b, "by");
         if (!strcmp(s->unit, "@to"))
@@ -2673,6 +3001,9 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             if ((st = numeric(e, s->unit + 6, b)) != TTF_OK || (st = space(b)) != TTF_OK ||
                 (st = word(e, b, "number", "and")) != TTF_OK || (st = space(b)) != TTF_OK)
                 return st;
+            /* 2 1/2 two and a half (owner v2, 2026-10-15) */
+            if (num == 1 && (den == 2 || den == 4) && !*end_num && !*end_den)
+                return ttf_buffer_puts(b, den == 2 ? "a half" : "a quarter");
         }
         if (s->value[0] && s->secondary[0] && !*end_num && !*end_den && num >= 1 && num < den &&
             den >= 2 && den <= 16) {

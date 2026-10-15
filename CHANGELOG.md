@@ -71,6 +71,20 @@
     vi 97.4 / 94.2. No dev span lost. Contract user_eval4_v84 (22). Other gates unchanged.
   - Contracts updated with Was notes (owner-set evidence): vi_prod_v80 12/28 phiếu trên,
     vi_pack2_v75 P.308 phòng ba không tám and IP 192.168.1.1 digit by digit.
+- English on real sentences (en-US, project-owner request, 2026-10-15):
+  - The owner's v2 of 398 real sentences (scb-mt-en-th-2020, CC BY-SA 4.0, kept local;
+    owner_v2_eval.py): 88.2 on the frozen code b39e1f0, 95.8 now. 13,105 real sentences: no
+    errors before or after, sentences with digits left 0.3% to 0.2%. Owner set dev 95.9, test 88.8.
+  - Inch marks (8-3/8"Dia. inch diameter, 36"L inch long, 8"x 7"), an x spaced on one side
+    (97.6x 57.1x), W x H, day ranges as ordinals (15 to 30 June, March 4 to 15), July-September,
+    a spaced en dash between numbers, two and a half, 25 sheets/pack and 10/Pack per, $53.7-million,
+    $US6 million, Q4/2010, .SPX, Pkg, Qty, Hwy, sqm, Km.
+  - Core: a hyphen after a code with a letter is no minus sign (EP-001-1, LC6-40mm); a spaced
+    North American 3-3-4 number is a phone number without a cue; an English address label splits
+    where its case changes (BeautyExpert.com, TBDress.com).
+  - Frozen contracts changed on the owner v2 evidence: en_digits_left_v25 mixed numbers read
+    "and a half" (Was: and one half); phone_cases_v18 en-unlabeled-spaces is a phone number.
+  - Contract en_real_v94 (23). The other five languages on the owner sets (outputs identical), Korean quick, JSUT, ja-tn-eval, Chinese and Vietnamese gates are unchanged; the English benchmark gains 12 sentences; all contracts pass except the three known failures.
 - Thai pack phase 4 (th-TH, project-owner request and decisions, 2026-10-15):
   - The owner's v2 of real sentences (scb-mt-en-th-2020, CC BY-SA 4.0, kept local): 87.5 on the frozen
     code (a Korean request 86.5, one engine error), 96.1 after this phase (95.9 in a Korean request).
