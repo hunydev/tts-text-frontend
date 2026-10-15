@@ -98,6 +98,9 @@
   - Owner sets: dev ko 96.0 → 96.2, ja 96.7 → 97.0, zh 98.7 → 98.7, vi 98.4 → 98.6, en and th
     unchanged; no dev span lost. Korean quick, JSUT, ja-tn-eval, Chinese (eval 346/346, held-outs
     equal or better) and Vietnamese gates unchanged; en and th v2 outputs identical.
+  - Frozen contracts changed on the owner v2 evidence (its sign category reads every written plus):
+    golden ko +1억2천만원 플러스 일억 이천만 원 (Was: 일억 이천만 원); test_scaled_currency +A$2만
+    플러스 이만 호주 달러, value +20000 (Was: 이만 호주 달러, 20000).
   - Contract v2_four_v95 (42). Owner questions left: account names in addresses read as words in the
     v2 gold (recruit, jiho.park, soudan, tracuu) against the spelled policy; Korean English-digit
     labels (WELCOME2026, IP68) against the v2 gold; 14팀 stays Sino (개발 1팀 is a name).

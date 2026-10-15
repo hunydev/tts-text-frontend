@@ -529,7 +529,9 @@ def main():
         ("-$2만", "마이너스 이만 달러", "-20000", "USD"),
         ("-US$2.5만", "마이너스 이만 오천 달러", "-25000", "USD"),
         ("-₩2만원", "마이너스 이만 원", "-20000", "KRW"),
-        ("+A$2만", "이만 호주 달러", "20000", "AUD"),
+        # The written plus is read (owner v2 sign category, 2026-10-15; en +$2M reads plus too).
+        # Was: ("+A$2만", "이만 호주 달러", "20000", "AUD").
+        ("+A$2만", "플러스 이만 호주 달러", "+20000", "AUD"),
     ):
         for profile in PROFILES:
             for chunk in (1, 7, 64):
