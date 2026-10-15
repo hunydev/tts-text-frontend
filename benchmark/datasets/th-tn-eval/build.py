@@ -8,6 +8,12 @@ scored. Alternatives: `a/b` (either), `[x,y]` (choose one, an empty choice
 allowed) and `(x)` (optional). {written|=reading} keeps `written`.
 
   python3 -I benchmark/datasets/th-tn-eval/build.py heldout    # src-heldout/ -> th-tn-heldout-v1.jsonl
+  python3 -I benchmark/datasets/th-tn-eval/build.py owner2     # the owner's v2 (local only, below)
+
+owner2 (2026-10-15) is the project owner's held-out v2: real sentences of scb-mt-en-th-2020
+(CC BY-SA 4.0) with readings, in benchmark/generated/th-owner/th-TH-v2/tn_eval_th-TH_v2.tsv
+(id<TAB>category<TAB>markup<TAB>note; category skip is unusable). It stays local and builds into
+benchmark/generated/th-tn-eval/th-tn-owner-v2.jsonl.
 
 The held-out sets (2026-10-14) are written by authors who had not seen the pack
 or the owner's set; their readings are reviewed and frozen before any system runs.
@@ -65,7 +71,8 @@ def parse(line, where):
             reading = reading[1:]
         spellings = expand(reading)
         for s in spellings:
-            if not s or not READING.match(s):
+            # an empty choice ({/|[ทับ,สแลช,]}) lets the mark go unread
+            if (not s and len(spellings) == 1) or not READING.match(s):
                 raise ValueError(f"{where}: reading {s!r} must be words without digits")
         text.append(written)
         expected.append(written if keep else spellings[0])
@@ -83,9 +90,41 @@ def parse(line, where):
 
 
 SETS = {"heldout": ("src-heldout", "th-tn-heldout-v1.jsonl", "th-tn-h1")}
+ROOT = HERE.parents[2]
+OWNER2 = ROOT / "benchmark/generated/th-owner/th-TH-v2/tn_eval_th-TH_v2.tsv"
+
+
+def owner2():
+    """The owner's v2: an id column first, skip lines dropped; ids kept (th-tn-o2-001)."""
+    rows, errors = [], []
+    for number, line in enumerate(OWNER2.read_text(encoding="utf-8").splitlines(), 1):
+        if not line.strip() or line.startswith("#"):
+            continue
+        rid, rest = line.split("\t", 1)
+        if rest.split("\t", 1)[0].strip() == "skip":
+            continue
+        try:
+            row = parse(unicodedata.normalize("NFC", rest), f"{OWNER2.name}:{number}")
+        except ValueError as error:
+            errors.append(str(error))
+            continue
+        row["id"] = "th-tn-o2-" + rid
+        row["source"] = f"{OWNER2.name}:{number}"
+        rows.append(row)
+    if errors:
+        print("\n".join(errors), file=sys.stderr)
+        sys.exit(1)
+    out = ROOT / "benchmark/generated/th-tn-eval/th-tn-owner-v2.jsonl"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    keys = ("id", "category", "text", "expected", "targets", "note", "source")
+    out.write_text("".join(json.dumps({k: r[k] for k in keys}, ensure_ascii=False) + "\n" for r in rows),
+                   encoding="utf-8")
+    print(json.dumps(dict(rows=len(rows), targets=sum(len(r["targets"]) for r in rows)), ensure_ascii=False))
 
 
 def main():
+    if len(sys.argv) > 1 and sys.argv[1] == "owner2":
+        return owner2()
     source, output, prefix = SETS[sys.argv[1] if len(sys.argv) > 1 else "heldout"]
     rows, seen, errors = [], set(), []
     for path in sorted((HERE / source).glob("*.txt")):

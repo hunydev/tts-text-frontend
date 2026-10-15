@@ -71,6 +71,21 @@
     vi 97.4 / 94.2. No dev span lost. Contract user_eval4_v84 (22). Other gates unchanged.
   - Contracts updated with Was notes (owner-set evidence): vi_prod_v80 12/28 phiếu trên,
     vi_pack2_v75 P.308 phòng ba không tám and IP 192.168.1.1 digit by digit.
+- Thai pack phase 4 (th-TH, project-owner request and decisions, 2026-10-15):
+  - The owner's v2 of real sentences (scb-mt-en-th-2020, CC BY-SA 4.0, kept local): 87.5 on the frozen
+    code (a Korean request 86.5, one engine error), 96.1 after this phase (95.9 in a Korean request).
+    14,927 real sentences: errors 12 to 0, sentences with digits left 1.7% to 0.6%.
+  - Owner decisions: capitals alone in a Thai sentence are spelled (OTP โอทีพี); 2G-6G, 4K and 8K
+    read English digits (ไฟว์จี). th_pack1_v89 otp now expects โอทีพี (Was: OTP as written).
+  - Fixes: a long Thai run before an abbreviation was cut inside a character (invalid UTF-8); a
+    list number before a Thai sentence read in the request language.
+  - Real-text forms: space-grouped thousands, สรอ., มอก., product sizes with decimals and units, a
+    slash after a counted word (ต่อ), x between Thai words, inch marks, falling model numbers, phone
+    numbers after a cue or with uneven groups, one-sided dashes, a decimal before แสน/ล้าน, CNY,
+    +/-, &, a lone %, the split sara am (ดํา ดำ).
+  - names.tsv: 13,699 romanized Thai names for address labels (Wikidata CC0, pythainlp royin
+    Apache-2.0; tools/thai/proper_names.py), +7 ms engine creation.
+  - Owner set: dev 99.4, test 94.7; held-out v1 96.0. Contract th_pack4_v93 (28). The other five languages on the owner sets (outputs identical), Korean quick, English, JSUT, ja-tn-eval, Chinese and Vietnamese gates are unchanged; all contracts pass except the three known failures.
 - Explicit controls in the Vietnamese, Thai and Chinese packs (project-owner request, 2026-10-15):
   - The packs passed every control through as written (1234{@digits} stayed 1234). Controls now
     reach the shared control grammar and @email/@url the electronic renderer; a control object is

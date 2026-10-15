@@ -94,7 +94,13 @@ number	th-TH	hour	ชั่วโมง
 number	th-TH	second	วินาที
 th_cue	th-TH	weekday	จันทร์|อังคาร|พุธ|พฤหัสบดี|พฤหัส|ศุกร์|เสาร์|อาทิตย์
 th_cue	th-TH	postal	ไปรษณีย์|zip|ZIP|Zip
-th_cue	th-TH	address	บ้านเลขที่|เลขที่|ที่อยู่|ตั้งอยู่ที่
+th_cue	th-TH	address	บ้านเลขที่|เลขที่|ที่อยู่|ตั้งอยู่ที่|มาตรา
 classifier_priority	th-TH	th.math	100
 classifier_priority	th-TH	th.duration	100
 classifier_priority	th-TH	th.slashnum	100
+# held-out v2 (2026-10-15)
+number	th-TH	and	แอนด์
+th_cue	th-TH	scale	แสน|ล้าน|หมื่น|พัน|ร้อย
+classifier_priority	th-TH	th.caps	100
+classifier_priority	th-TH	th.abbrtail	100
+classifier_priority	th-TH	th.saraam	100

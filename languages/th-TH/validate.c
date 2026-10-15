@@ -39,17 +39,25 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                 ttf_validation_enum(key, "ed|twenty|ten|hundred|thousand|tenthousand|hundredthousand|million|"
                                          "point|minus|plus|plusminus|percent|to|versus|over|oclock|minute|"
                                          "slash|dash|version|be|ce|class|half|times|equals|sharp|greater|less|"
-                                         "greaterequal|lessequal|notequal|divide|root|square|cube|approx|hour|second")) &&
+                                         "greaterequal|lessequal|notequal|divide|root|square|cube|approx|hour|second|and")) &&
                        label(v)
                    ? TTF_OK
                    : ttf_validation_error(d, "number requires a digit or a named word and a reading");
     }
+    if (SAME(k, "th_name")) {
+        /* a romanized Thai name in lowercase and its Thai spelling (somchai สมชาย) */
+        *handled = 1;
+        return *key && strlen(key) < 40 && strspn(key, "abcdefghijklmnopqrstuvwxyz") == strlen(key) && *v &&
+                       strlen(v) < 120
+                   ? TTF_OK
+                   : ttf_validation_error(d, "th_name requires a lowercase Latin key and a Thai spelling");
+    }
     if (SAME(k, "th_cue")) {
         /* the words before a number that decide its reading, |-separated */
         *handled = 1;
-        return ttf_validation_enum(key, "phone|code|date|time|score|ratio|classifier|weekday|postal|address") && *v && strlen(v) < 512
+        return ttf_validation_enum(key, "phone|code|date|time|score|ratio|classifier|weekday|postal|address|scale") && *v && strlen(v) < 512
                    ? TTF_OK
-                   : ttf_validation_error(d, "th_cue requires phone|code|date|time|score|ratio|classifier|weekday|postal|address and words");
+                   : ttf_validation_error(d, "th_cue requires phone|code|date|time|score|ratio|classifier|weekday|postal|address|scale and words");
     }
     if (SAME(k, "th_month_key")) {
         *handled = 1;

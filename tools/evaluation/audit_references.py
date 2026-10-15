@@ -14,6 +14,7 @@ import re
 import sys
 
 ACTIVE_JSONL = (
+    "th_pack4_v93",
     "control_packs_v92",
     "th_pack3_v91",
     "th_pack2_v90",

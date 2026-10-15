@@ -19,7 +19,9 @@ import unicodedata
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-SETS = {"heldout": ROOT / "benchmark/datasets/th-tn-eval/th-tn-heldout-v1.jsonl"}
+SETS = {"heldout": ROOT / "benchmark/datasets/th-tn-eval/th-tn-heldout-v1.jsonl",
+        # the owner's held-out v2 (real sentences, CC BY-SA 4.0): local only
+        "owner2": ROOT / "benchmark/generated/th-tn-eval/th-tn-owner-v2.jsonl"}
 OUT = ROOT / "benchmark/generated/th-tn-eval"
 LANG = {"ours": "th-TH", "ours-en": "en-US", "ours-ko": "ko-KR"}
 

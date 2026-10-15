@@ -477,7 +477,7 @@ static const ttf_language_pack_t *thai_sentence(const ttf_engine_t *e, const ttf
                                                 size_t begin, size_t end) {
     const ttf_language_pack_t *pack = NULL;
     size_t j, k, at;
-    int thai = 0;
+    int thai = 0, letters = 0;
     for (j = 0; j < e->pack_count && !pack; ++j)
         if (pack_flag(e, e->packs[j], "thai_sentence", 0))
             pack = e->packs[j];
@@ -502,6 +502,8 @@ static const ttf_language_pack_t *thai_sentence(const ttf_engine_t *e, const ttf
         const ttf_token_t *t = &in->tokens[k];
         if (t->script == TTF_SCRIPT_HANGUL || t->script == TTF_SCRIPT_KANA)
             return NULL;
+        letters |= t->script != TTF_SCRIPT_DIGIT && t->script != TTF_SCRIPT_PUNCTUATION &&
+                   t->script != TTF_SCRIPT_WHITESPACE && t->script != TTF_SCRIPT_SYMBOL;
         /* a Thai letter, vowel or tone mark (U+0E01-U+0E3A, U+0E40-U+0E4E); the baht sign ฿ and
            Thai digits alone make no Thai sentence (฿5 in a Korean request stays 오 바트) */
         for (at = t->begin; !thai && at + 3 <= t->end; ++at) {
@@ -509,6 +511,20 @@ static const ttf_language_pack_t *thai_sentence(const ttf_engine_t *e, const ttf
             thai = (unsigned char)in->text[at] == 0xe0 &&
                    ((b1 == 0xb8 && b2 >= 0x81 && b2 <= 0xba) || (b1 == 0xb9 && b2 >= 0x80 && b2 <= 0x8e));
         }
+    }
+    /* 2. จัดพิมพ์…, 4.1 !!! ฉัน…: a sentence of numbers and marks alone (a list number) reads with
+       the sentence after it */
+    for (k = end; !thai && !letters && k < in->token_count; ++k) {
+        const ttf_token_t *t = &in->tokens[k];
+        if (t->script == TTF_SCRIPT_HANGUL || t->script == TTF_SCRIPT_KANA)
+            return NULL;
+        for (at = t->begin; !thai && at + 3 <= t->end; ++at) {
+            unsigned char b1 = (unsigned char)in->text[at + 1], b2 = (unsigned char)in->text[at + 2];
+            thai = (unsigned char)in->text[at] == 0xe0 &&
+                   ((b1 == 0xb8 && b2 >= 0x81 && b2 <= 0xba) || (b1 == 0xb9 && b2 >= 0x80 && b2 <= 0x8e));
+        }
+        if (sentence_end(in, k))
+            break;
     }
     return thai ? pack : NULL;
 }
