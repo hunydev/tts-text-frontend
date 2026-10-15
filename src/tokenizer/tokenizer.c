@@ -68,6 +68,9 @@ ttf_script_t ttf_script_of(uint32_t c) {
         c == '*' || c == '<' || c == '>' || c == '~' || c == '^' || c == '|' || c == '`' ||
         c == 0x301c || c == 0xff5e ||
         (c >= 0x20a0 && c <= 0x20cf) || c == 0xa3 || c == 0xa5 || c == 0xb0 ||
+        /* ￥980, ￡, ￦: the fullwidth signs are symbols, not part of the kana before them
+           (owner v2, 2026-10-15) */
+        (c >= 0xffe0 && c <= 0xffe6) ||
         (c >= 0x2190 && c <= 0x2bff) || (c >= 0x1f000 && c <= 0x1faff))
         return TTF_SCRIPT_SYMBOL;
     if ((c >= 0x3400 && c <= 0x4dbf) || (c >= 0x4e00 && c <= 0x9fff) ||

@@ -98,7 +98,7 @@ english_cue	vi-VN	if	1
 english_cue	vi-VN	all	1
 english_cue	vi-VN	us	1
 # Words before a number that decide its reading (|-separated, both cases).
-vi_cue	vi-VN	day	ngày|Ngày|mùng|Mùng|mồng|Mồng
+vi_cue	vi-VN	day	ngày|Ngày|mùng|Mùng|mồng|Mồng|đêm|Đêm
 vi_cue	vi-VN	date	khánh|Khánh|niệm|Niệm|ngày|Ngày|hôm|Hôm|từ|Từ|đến|Đến|tới|Tới|trước|Trước|sau|Sau|vào|Vào|mùng|Mùng|mồng|Mồng|đêm|Đêm|sáng|Sáng|trưa|Trưa|chiều|Chiều|tối|Tối|hạn|đợt
 vi_cue	vi-VN	holiday	khánh|Khánh|lễ|Lễ|dịp|Dịp|Tết|tết
 vi_cue	vi-VN	noday	khánh|Khánh|lễ|Lễ|dịp|Dịp|và|hoặc|Tết|tết

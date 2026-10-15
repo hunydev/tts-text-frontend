@@ -1139,3 +1139,18 @@ classifier_priority	ko-KR	ko:date-range	10
 classifier_priority	ko-KR	ko:blood-pressure	10
 classifier_priority	ko-KR	ko:dotted-phone	10
 classifier_priority	ko-KR	ko:spaced-groups	10
+# compatibility unit symbols, nit, g/dL (owner v2, 2026-10-15)
+numeric_suffix	*	㎞	MEASURE:km
+numeric_suffix	*	㎏	MEASURE:kg
+numeric_suffix	*	㎝	MEASURE:cm
+numeric_suffix	*	㎜	MEASURE:mm
+numeric_suffix	*	㎖	MEASURE:mL
+numeric_suffix	*	㎎	MEASURE:mg
+numeric_suffix	*	㎡	MEASURE:square_m
+numeric_suffix	*	㎥	MEASURE:cubic_m
+numeric_suffix	*	㎾	MEASURE:kW
+numeric_suffix	*	㎞/h	MEASURE:km_per_hour
+numeric_suffix	*	g/dL	MEASURE:g_per_dL
+numeric_suffix	*	nit	MEASURE:nit
+numeric_suffix	*	nits	MEASURE:nit
+classifier_priority	ko-KR	ko:dot-date-weekday	100

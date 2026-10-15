@@ -389,3 +389,6 @@ counter	ja-JP	肩	かた:-
 # 40肩 しじゅうかた, 50肩 ごじゅうかた (the idiom)
 counter_reading	ja-JP	肩:40	しじゅうかた
 counter	ja-JP	銭	せん:s
+# 16号車 じゅうろくごうしゃ, 1〜2滴 にてき (owner v2, 2026-10-15)
+counter	ja-JP	号車	ごうしゃ:-
+counter	ja-JP	滴	てき:t

@@ -221,6 +221,23 @@ static size_t word_after(const ttf_engine_t *e, const char *kind, const char *t,
 /* A listed word within the `chars` characters before p, inside the clause
    (您的验证码是123456, 急救电话是120). */
 static int cue_before(const ttf_engine_t *e, const char *kind, const char *t, size_t p,
+                      size_t chars);
+/* 昨天+800今天 正八百: a plus with two to six digits after hanzi and no digit group after them,
+   not after a phone or code word (区号是+86) (owner v2, 2026-10-15) */
+static int plus_amount(const ttf_engine_t *e, const char *t, size_t n, size_t p) {
+    size_t q, k;
+    if (t[p] != '+' || p + 1 >= n || !digit(t[p + 1]) || p < 3 || (unsigned char)t[p - 3] < 0xe4 ||
+        ((unsigned char)t[p - 3] & 0xf0) != 0xe0)
+        return 0;
+    for (q = p + 1; q < n && digit(t[q]); ++q)
+        ;
+    k = q - p - 1;
+    if (k < 2 || k > 6 || (q + 1 < n && (t[q] == ' ' || t[q] == '-') && digit(t[q + 1])))
+        return 0;
+    return !cue_before(e, "phone_cue", t, p, 6) && !cue_before(e, "code_cue", t, p, 6) &&
+           !(p >= 9 && !memcmp(t + p - 9, "区号是", 9)) && !(p >= 6 && !memcmp(t + p - 6, "区号", 6));
+}
+static int cue_before(const ttf_engine_t *e, const char *kind, const char *t, size_t p,
                       size_t chars) {
     size_t at[12], count = 0, i, j, q = p;
     char key[20];
@@ -674,6 +691,10 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         return finish(in, s, p + 1, "relword", "", 0, t[p] == '<' ? "less" : "greater");
     if (t[p] == '=' && p && p + 1 < n && digit(t[p + 1]) && (alpha(t[p - 1]) || digit(t[p - 1])))
         return finish(in, s, p + 1, "relword", "", 0, "equals");
+    /* ¥428×3 四百二十八元乘以三: a times sign before a number (owner v2, 2026-10-15) */
+    if (has(t, n, p, "\xc3\x97") && p && (digit(t[p - 1]) || t[p - 1] == ' ' || ((unsigned char)t[p - 1] & 0xc0) == 0x80) &&
+        p + 2 < n && (digit(t[p + 2]) || (t[p + 2] == ' ' && p + 3 < n && digit(t[p + 3]))))
+        return finish(in, s, p + 2, "multiply", t + p, 2, "");
     /* 加½杯: a vulgar fraction inside a hanzi run reads with the run. */
     if (in->tokens[in->index].script == TTF_SCRIPT_HAN ||
         in->tokens[in->index].script == TTF_SCRIPT_OTHER) {
@@ -844,6 +865,9 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                     len = (size_t)(dot - t) - p - w;
             }
         }
+        /* ￥980元 九百八十元: the 元 after a yuan sign is the same word (owner v2, 2026-10-15) */
+        if ((!strcmp(key, "¥") || !strcmp(key, "￥")) && has(t, n, q, "元"))
+            return finish(in, s, q + 3, "money", t + p + w, len, key);
         return finish(in, s, q, "money", t + p + w, len, key);
     }
 
@@ -913,11 +937,21 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     if (t[p] == '+' && p + 1 < n && digit(t[p + 1]) &&
         !((q = digits_end(t, n, p + 1)) < n &&
           (t[q] == '.' || t[q] == '%' || has(t, n, q, "‰") || has(t, n, q, "亿") || has(t, n, q, "万") ||
-           unit_after(e, t, n, q, key, sizeof(key))))) {
+           unit_after(e, t, n, q, key, sizeof(key)))) &&
+        /* 昨天+800今天 正八百: up to six digits with no group after them are an amount (owner v2,
+           2026-10-15); +86 138 0013 8000, +8613800138000, 区号是+86 and 楼主+1 stay as they were */
+        !plus_amount(e, t, n, p)) {
         q = digits_end(t, n, p + 1);
         if (has(t, n, q, "价"))
             return finish(in, s, q, "valence", t + p + 1, q - p - 1, "");
         return finish(in, s, q, "digits", t + p, q - p, "");
+    }
+    /* 昨天+800今天 正八百: a plus before a short amount after hanzi (owner v2, 2026-10-15) */
+    if (plus_amount(e, t, n, p) && !(digits_end(t, n, p + 1) < n && (t[digits_end(t, n, p + 1)] == '.' ||
+                                                                     t[digits_end(t, n, p + 1)] == '%' ||
+                                                                     alnum(t[digits_end(t, n, p + 1)])))) {
+        q = digits_end(t, n, p + 1);
+        return finish(in, s, q, "valence", t + p + 1, q - p - 1, "");
     }
 
     /* ½ 二分之一 */
@@ -929,7 +963,8 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         char prev[4];
         memcpy(prev, t + p - 3, 3);
         prev[3] = 0;
-        if (((unsigned char)prev[0] & 0xf0) == 0xe0 && res(e, "range_unit", prev))
+        if (((unsigned char)prev[0] & 0xf0) == 0xe0 && res(e, "range_unit", prev) && p >= 4 &&
+            digit(t[p - 4]))
             return finish(in, s, p + w, "to", t + p, w, "");
     }
 
@@ -1381,8 +1416,10 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             if (b2 + g > z && !memchr(t + b2, '.', g))
                 return finish2(in, s, b2 + g, "frac", t, p, len, b2, g, "", "");
         }
-        if (a >= 1 && a <= 12 && d >= 1 && d <= 31 && (a > d || d > 12) &&
-            (cue_before(e, "date_cue", t, p, 4) || word_after(e, "date_after", t, n, z)))
+        if (a >= 1 && a <= 12 && d >= 1 && d <= 31 &&
+            (((a > d || d > 12) && (cue_before(e, "date_cue", t, p, 4) || word_after(e, "date_after", t, n, z))) ||
+             /* 10/20 18:30: a clock time after it (owner v2, 2026-10-15) */
+             (z + 5 < n && t[z] == ' ' && digit(t[z + 1]) && (t[z + 2] == ':' || (digit(t[z + 2]) && t[z + 3] == ':')))))
             return finish2(in, s, z, "monthday", t, p, len, b2, z - b2, "", "");
         if (has(t, n, z, "mmHg") || has(t, n, z, " mmHg"))
             return finish2(in, s, z + 4 + (t[z] == ' '), "pressure", t, p, len, b2, z - b2, "mmHg", "");
@@ -1894,7 +1931,10 @@ static ttf_status_t maths_reading_as(const ttf_engine_t *e, ttf_buffer_t *b, con
 
 /* CA1234 CA一二三四, G20 G二十, COVID-19 COVID十九, PM2.5 PM二点五, 123X 一二三X. */
 static ttf_status_t latin(const ttf_engine_t *e, ttf_buffer_t *b, const char *v) {
-    size_t i = 0, n = strlen(v);
+    size_t i = 0, n = strlen(v), k, turns = 0;
+    /* A7Q3B91KD A七Q三B九一KD: a code (owner v2, 2026-10-15) */
+    for (k = 1; k < n; ++k)
+        turns += (alpha(v[k]) && digit(v[k - 1])) || (digit(v[k]) && alpha(v[k - 1]));
     while (i < n) {
         if (alpha(v[i])) {
             TRY(ttf_buffer_append(b, v + i, 1));
@@ -1926,7 +1966,7 @@ static ttf_status_t latin(const ttf_engine_t *e, ttf_buffer_t *b, const char *v)
                 while (z < n && digit(v[z]))
                     ++z;
                 TRY(number(e, b, v + i, z - i, 0));
-            } else if (z - i >= 3 || (v[i] == '0' && z - i > 1))
+            } else if (z - i >= 3 || (v[i] == '0' && z - i > 1) || turns >= 3)
                 TRY(digits_each(e, b, v + i, z - i, 0));
             else
                 TRY(integer(e, b, v + i, z - i, 0));
@@ -2222,7 +2262,10 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         TRY(maths_reading_as(e, b, v, !strcmp(mode, "mathc")));
         return s->secondary[0] ? unit_word(e, b, s->secondary) : TTF_OK;
     }
-    if (!strcmp(mode, "domain") || (!strcmp(mode, "latin") && !strncmp(v, "www.", 4))) {
+    if (!strcmp(mode, "domain") || (!strcmp(mode, "latin") && !strncmp(v, "www.", 4)) ||
+        /* bj.12306.cn bj点幺二三零六点cn (owner v2, 2026-10-15) */
+        (!strcmp(mode, "latin") && strchr(v, '.') && vn >= 4 && alpha(v[vn - 1]) && alpha(v[vn - 2]) &&
+         strrchr(v, '.') > v && alpha(*(strrchr(v, '.') + 1)))) {
         /* www.12306.cn 三W点幺二三零六点cn (owner sets, 2026-10-14) */
         size_t i = 0;
         while (i < vn) {
@@ -2312,6 +2355,8 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         TRY(word(e, b, "ordinal"));
         return number(e, b, v, vn, 0);
     }
+    if (!strcmp(mode, "multiply"))
+        return word(e, b, "multiply");
     if (!strcmp(mode, "to"))
         return word(e, b, "range");
     if (!strcmp(mode, "intchain")) {

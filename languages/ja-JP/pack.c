@@ -386,6 +386,15 @@ static ttf_status_t counted(const ttf_engine_t *e, const ja_number_t *x, const c
             return st;
         return ttf_buffer_puts(b, reading);
     }
+    /* +2,350歩 プラスにせんさんびゃくごじゅっぽ: a plus sign keeps the sound change (owner v2,
+       2026-10-15) */
+    if (x->positive && !x->decimal && !x->negative) {
+        ja_number_t y = *x;
+        y.positive = 0;
+        if ((st = word(e, b, "number", "plus")) != TTF_OK)
+            return st;
+        return counted(e, &y, key, spec, date_day, b);
+    }
     if (x->decimal || x->negative || x->positive) {
         if ((st = number_reading(e, x, b)) != TTF_OK)
             return st;
@@ -1221,7 +1230,11 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                 a += w;
             else
                 a = 0;
-            if (!a && day_one_after(e, text + q + 3, n - q - 3) &&
+            if (!a && (day_one_after(e, text + q + 3, n - q - 3) ||
+                       /* 毎月1日, 今月1日: the first of a month (owner v2, 2026-10-15) */
+                       (begin >= 6 && (!memcmp(text + begin - 6, "毎月", 6) || !memcmp(text + begin - 6, "今月", 6) ||
+                                       !memcmp(text + begin - 6, "来月", 6) || !memcmp(text + begin - 6, "先月", 6) ||
+                                       !memcmp(text + begin - 6, "翌月", 6)))) &&
                 (reading = res(e, "counter_reading", "date_day:1"))) {
                 snprintf(s->value, sizeof(s->value), "%s", reading);
                 return finish(in, s, q + 3, TTF_SEM_ABBREVIATION, "ja.day-one", "");
@@ -1371,6 +1384,21 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             }
         }
     }
+    /* 7G3K2 ななじーさんけーに: digits and capitals that alternate three times or more are a
+       code (owner v2, 2026-10-15) */
+    if (digit(text[begin]) && !(begin && (alpha(text[begin - 1]) || digit(text[begin - 1])))) {
+        size_t q = begin, turns = 0;
+        while (q < n && (digit(text[q]) || (text[q] >= 'A' && text[q] <= 'Z')) && q - begin < 16) {
+            if (q > begin && !digit(text[q]) != !digit(text[q - 1]))
+                ++turns;
+            ++q;
+        }
+        if (turns >= 3 && !(q < n && (alpha(text[q]) || digit(text[q]) || text[q] == '.')) &&
+            q - begin < sizeof(s->value)) {
+            snprintf(s->value, sizeof(s->value), "%.*s", (int)(q - begin), text + begin);
+            return finish(in, s, q, TTF_SEM_ALNUM_TERM, "ja.code", "code");
+        }
+    }
     /* 3LDK, 4K, 5G: a short number with capital letters (2026-10-08). */
     if (digit(text[begin])) {
         size_t q = begin, r;
@@ -1402,6 +1430,29 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         char key[32];
         while (q < n && digit(text[q]))
             ++q;
+        /* 2026/12 にせんにじゅうろくねんじゅうにがつ: a year and a month (owner v2, 2026-10-15) */
+        if (q - begin == 4 && (!memcmp(text + begin, "19", 2) || !memcmp(text + begin, "20", 2)) && q + 1 < n &&
+            text[q] == '/' && digit(text[q + 1])) {
+            size_t r2 = q + 1;
+            unsigned long m2;
+            while (r2 < n && digit(text[r2]))
+                ++r2;
+            m2 = strtoul(text + q + 1, NULL, 10);
+            if (r2 - q - 1 <= 2 && m2 >= 1 && m2 <= 12 &&
+                !(r2 < n && (digit(text[r2]) || text[r2] == '/' || text[r2] == '.' || alpha(text[r2])))) {
+                snprintf(s->value, sizeof(s->value), "%.4s\xe5\xb9\xb4%lu\xe6\x9c\x88", text + begin, m2);
+                return finish(in, s, r2, TTF_SEM_COUNTER, "ja.year-month", "@ja");
+            }
+        }
+        /* 〒100-0005 いちぜろぜろのぜろぜろぜろご: a postal code after the postal mark */
+        if (q - begin == 3 && begin >= 3 && q + 5 <= n && text[q] == '-' &&
+            (!memcmp(text + begin - 3, "\xe3\x80\x92", 3) ||
+             (begin >= 4 && text[begin - 1] == ' ' && !memcmp(text + begin - 4, "\xe3\x80\x92", 3))) &&
+            digit(text[q + 1]) && digit(text[q + 2]) && digit(text[q + 3]) && digit(text[q + 4]) &&
+            !(q + 5 < n && digit(text[q + 5]))) {
+            snprintf(s->value, sizeof(s->value), "%.8s", text + begin);
+            return finish(in, s, q + 5, TTF_SEM_ALNUM_TERM, "ja.code", "code");
+        }
         if (q - begin <= 2 && q + 1 < n && text[q] == '/' && digit(text[q + 1])) {
             unsigned long m = strtoul(text + begin, NULL, 10), d;
             r = q + 1;
@@ -1417,8 +1468,12 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                 size_t close = 0, w;
                 char day[4] = "";
                 int weekday = 0, range = 0;
+                int holiday = 0;
                 if (open && r + open + 3 < n) {
                     size_t z = r + open + 3;
+                    /* 11/3(月・祝): a holiday mark after the weekday (owner v2, 2026-10-15) */
+                    if (z + 6 <= n && !memcmp(text + z, "\xe3\x83\xbb\xe7\xa5\x9d", 6))
+                        holiday = 6, z += 6;
                     close = z < n && text[z] == ')' ? 1
                             : (z + 3 <= n && !memcmp(text + z, "\xef\xbc\x89", 3)) ? 3 : 0;
                     memcpy(day, text + r + open, 3);
@@ -1454,9 +1509,10 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                     snprintf(s->secondary, sizeof(s->secondary), "%lu", d);
                     return finish(in, s, r, TTF_SEM_FRACTION, "ja.slash-fraction", "");
                 }
-                if (date && (weekday || range || cue_near(e, "date_cue", text, n, begin, r, 18))) {
+                /* 4/1入社 しがつついたち: nothing is a fraction over one (owner v2, 2026-10-15) */
+                if (date && (weekday || range || d == 1 || cue_near(e, "date_cue", text, n, begin, r, 18))) {
                     snprintf(s->value, sizeof(s->value), "%lu\xe6\x9c\x88%lu\xe6\x97\xa5", m, d);
-                    if (weekday) {
+                    if (weekday && !holiday) {
                         size_t vl = strlen(s->value);
                         snprintf(s->value + vl, sizeof(s->value) - vl, "(%s)", day);
                         r += open + 3 + close;
@@ -2285,8 +2341,18 @@ static ttf_status_t measure(const ttf_engine_t *e, const ttf_semantic_t *s, cons
 /* A4 エーよん, MP3 エムピーさん; a longer word keeps its letters. */
 static ttf_status_t alnum(const ttf_engine_t *e, const char *s, size_t n, int japanese,
                           int code, ttf_buffer_t *b) {
-    size_t i = 0;
+    size_t i = 0, k, turns = 0;
     ttf_status_t st;
+    /* R7K2M9 あーるななけーにーえむきゅう, H0729 えいちぜろななにきゅう: letters and digits that
+       alternate three times or more, or a digit group with a leading zero after a letter, read as
+       a code (owner v2, 2026-10-15) */
+    for (k = 1; k < n; ++k) {
+        turns += digit(s[k]) != digit(s[k - 1]) && (digit(s[k]) || alpha(s[k])) && (digit(s[k - 1]) || alpha(s[k - 1]));
+        if (!code && digit(s[k]) && s[k] == '0' && alpha(s[k - 1]) && k + 1 < n && digit(s[k + 1]))
+            code = 1;
+    }
+    if (turns >= 3)
+        code = 1;
     if (code)
         japanese = 1;
     if (n >= 3 && n <= 4 && s[0] == 'R' && digit(s[1]) && digit(s[2]) && (n == 3 || digit(s[3]))) {
@@ -2337,7 +2403,9 @@ static ttf_status_t alnum(const ttf_engine_t *e, const char *s, size_t n, int ja
                     ++j;
                 snprintf(value, sizeof(value), "%.*s", (int)(j - i), s + i);
                 st = plain_number(e, value, b);
-            } else if (code && j - i > 1 && s[i] == '0') {
+            } else if (code && j - i > 1) {
+                /* KS-2026-0418, SN-10A: a code reads its digit groups digit by digit (owner v2,
+                   2026-10-15) */
                 st = digits_each(e, s + i, j - i, 1, b);
             } else if (j - i <= 4) {
                 snprintf(value, sizeof(value), "%.*s", (int)(j - i), s + i);

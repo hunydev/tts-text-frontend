@@ -75,6 +75,32 @@
   held-out v1 96.0, owner set test 94.7, no engine errors in 14,927 real sentences; TTS-to-STT on
   the 371 v2 sentences: raw text 45.3% to TN 73.3% of sentences (spans 62.9% to 83.0%), no new TN
   problem. Human native review and VoxCPM2 listening remain, as for the other languages.
+- The owner's synthetic v2 sets for ko, ja, zh and vi (project-owner request, 2026-10-15; 400
+  sentences each, kept local under benchmark/generated/owner-v2-src; owner_v2_eval.py):
+  - Spans on the frozen code 41f1190 → now: ko 92.0 → 94.0, ja 90.7 → 94.7, zh 96.7 → 98.6,
+    vi 94.5 → 96.9 (sentences 90.2 → 92.7, 87.8 → 93.0, 95.8 → 98.2, 93.0 → 96.2). No engine errors.
+  - Korean: an explicit + before an amount (+320억 원 플러스), 2×23,000원 (a grouped operand),
+    ㎞ ㎏ ㎝ ㎜ ㎖ ㎎ ㎡ ㎥ ㎾ ㎞/h, g/dL, nit(s), 12.14(월) a dotted date with a weekday, 1:1.2 일 대
+    일 점 이, a slash date range with a spaced mark or at the end of the text (11/7 ~ 11/9).
+  - Japanese: codes read every digit group digit by digit (KS-2026-0418), letters and digits that
+    alternate three times are a code (R7K2M9, 7G3K2), 毎月1日 ついたち, 2026/12 年月, 〒100-0005,
+    (月・祝) keeps its marks, ￥ after kana, Japanese volt cues, X/1 is a date (4/1入社), +2,350歩 keeps
+    the sound change, 号車 ごうしゃ, 滴 てき, g/dL, nit.
+  - Chinese: +800 after hanzi 正八百 (not after 区号 or a phone word, not +1), 今天-1200 负,
+    ¥428×3 乘以, ￥980元 reads 元 once, 10/20 18:30, bj.12306.cn, A7Q3B91KD, 按/稀释 ratios, 10.1当天,
+    10.18的演唱会, 10/20前, nit.
+  - Vietnamese: 31.10, before a comma a day after the twelfth is a date (phiên bản 14.2 stays), a
+    spaced x after a quantity or a counted word (8 x 2 + 7, 1 viên x 2 lần), an X inside a code
+    (K7X2QL), > 10.000 lớn hơn, + between counted words, đêm 13.10, dL, µmol.
+  - Core: U+FFE0-FFE6 are symbols (￥980 after kana); a math operand keeps three-digit comma groups;
+    the segmenter keeps the space after = + x < > × that follows a spaced number (a long expression
+    early in a text was cut before =).
+  - Owner sets: dev ko 96.0 → 96.2, ja 96.7 → 97.0, zh 98.7 → 98.7, vi 98.4 → 98.6, en and th
+    unchanged; no dev span lost. Korean quick, JSUT, ja-tn-eval, Chinese (eval 346/346, held-outs
+    equal or better) and Vietnamese gates unchanged; en and th v2 outputs identical.
+  - Contract v2_four_v95 (42). Owner questions left: account names in addresses read as words in the
+    v2 gold (recruit, jiho.park, soudan, tracuu) against the spelled policy; Korean English-digit
+    labels (WELCOME2026, IP68) against the v2 gold; 14팀 stays Sino (개발 1팀 is a name).
 - English on real sentences (en-US, project-owner request, 2026-10-15):
   - The owner's v2 of 398 real sentences (scb-mt-en-th-2020, CC BY-SA 4.0, kept local;
     owner_v2_eval.py): 88.2 on the frozen code b39e1f0, 95.8 now. 13,105 real sentences: no

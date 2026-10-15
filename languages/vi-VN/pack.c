@@ -666,6 +666,16 @@ static size_t math_element(const ttf_engine_t *e, const char *t, size_t n, size_
         return a.end - p;
     }
     /* 4x100, 1920X1080; x2 (lowercase, its digits ending the word; X7G4LM is a code) */
+    /* 8 x 2 + 7, 4m x 5,5m: a lowercase x with a space on each side after a quantity (owner v2,
+       2026-10-15) */
+    if (t[p] == 'x' && p >= 2 && t[p - 1] == ' ' && p + 2 < n && t[p + 1] == ' ' && digit(t[p + 2]) &&
+        (digit(t[p - 2]) || alpha(t[p - 2]))) {
+        *kind = M_TIMES_X;
+        return 1;
+    }
+    /* K7X2QL: an X between digits inside a code with letters is a letter */
+    if ((t[p] == 'x' || t[p] == 'X') && p >= 2 && digit(t[p - 1]) && alpha(t[p - 2]))
+        return 0;
     if ((t[p] == 'x' || t[p] == 'X') && p + 1 < n && digit(t[p + 1]) &&
         ((p && digit(t[p - 1])) || (t[p] == 'x' && (!p || t[p - 1] == ' ')))) {
         size_t d = p + 1;
@@ -1040,6 +1050,56 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         return finish(in, s, p + 2, "frac",
                       (unsigned char)t[p + 1] == 0xbc ? "1|4" : (unsigned char)t[p + 1] == 0xbd ? "1|2" : "3|4", "|");
 
+    /* Hạn đăng ký là 31.10 ba mươi mốt tháng mười: a day after the twelfth, a dot and a month. A
+       Vietnamese decimal takes a comma, so 26.3 is no number (owner v2, 2026-10-15). */
+    if (digit(t[p]) && !(p && (digit(t[p - 1]) || t[p - 1] == '.' || t[p - 1] == ',' || alpha(t[p - 1])))) {
+        size_t a = p, m0, m1;
+        while (a < n && digit(t[a]) && a - p < 3)
+            ++a;
+        if (a - p <= 2 && a + 1 < n && t[a] == '.' && digit(t[a + 1])) {
+            unsigned dd = (unsigned)atoi(t + p), mm;
+            m0 = a + 1;
+            for (m1 = m0; m1 < n && digit(t[m1]); ++m1)
+                ;
+            mm = (unsigned)atoi(t + m0);
+            /* only before a clause break (31.10, ban tổ chức); 15.5 điểm, 26.3 triệu and phiên bản
+               14.2 stay numbers */
+            if (dd >= 13 && dd <= 31 && mm >= 1 && mm <= 12 && m1 - m0 <= 2 && m1 < n &&
+                (t[m1] == ',' || t[m1] == ';') &&
+                !(p >= 6 && !memcmp(t + p - 6, "bản ", 6))) {
+                /* not a decimal before a scale or a unit word: 26.3 triệu */
+                size_t w0 = m1, w1;
+                char next[16];
+                if (w0 < n && t[w0] == ' ')
+                    ++w0;
+                for (w1 = w0; w1 < n && t[w1] != ' ' && t[w1] != ',' && t[w1] != '.' && w1 - w0 < sizeof(next) - 1; ++w1)
+                    ;
+                snprintf(next, sizeof(next), "%.*s", (int)(w1 - w0), t + w0);
+                if (!(w1 > w0 && (res(e, "vi_scale", next) || res(e, "vi_unit", next)))) {
+                    snprintf(v, sizeof(v), "%u/%u/", dd, mm);
+                    return finish(in, s, m1, "date", v,
+                                  previous_cue(e, t, p, "day") || previous_cue(e, t, p, "noday") ? "" : "ngay");
+                }
+            }
+        }
+    }
+    /* > 10.000 lớn hơn mười nghìn: a comparison sign before a number */
+    if ((t[p] == '>' || t[p] == '<') && (!p || t[p - 1] == ' ' || t[p - 1] == '(') && p + 2 < n &&
+        t[p + 1] == ' ' && digit(t[p + 2]) && !(p >= 2 && digit(t[p - 2])))
+        return finish(in, s, p + 1, "lit", res(e, "number", t[p] == '>' ? "math_gt" : "math_lt"), "");
+    /* 1 viên x 2 lần/ngày một viên nhân hai lần: a spaced x after a counted word (owner v2,
+       2026-10-15) */
+    if (t[p] == 'x' && p >= 4 && t[p - 1] == ' ' && p + 2 < n && t[p + 1] == ' ' && digit(t[p + 2])) {
+        size_t w0 = p - 1;
+        while (w0 && t[w0 - 1] != ' ')
+            --w0;
+        if (w0 >= 2 && w0 < p - 1 && t[w0 - 1] == ' ' && digit(t[w0 - 2]) && !digit(t[w0]))
+            return finish(in, s, p + 1, "lit", res(e, "number", "math_times"), "");
+    }
+    /* 2 người lớn + 1 trẻ em cộng: a plus between counted words */
+    if (t[p] == '+' && p >= 2 && t[p - 1] == ' ' && (alpha(t[p - 2]) || ((unsigned char)t[p - 2] & 0x80)) &&
+        p + 2 < n && t[p + 1] == ' ' && digit(t[p + 2]))
+        return finish(in, s, p + 1, "lit", res(e, "number", "math_plus"), "");
     /* 7 × 8 = 56, S = a × b, (15 + 25) : 4 = 10, 4x100m, x2 */
     if ((digit(t[p]) || alpha(t[p]) || t[p] == '(' || !strncmp(t + p, "√", 3) || !strncmp(t + p, "π", 2) ||
          !strncmp(t + p, "Δ", 2)) &&

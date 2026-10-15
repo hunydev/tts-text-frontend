@@ -2622,6 +2622,18 @@
       },
       "category_overrides": {},
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/v2_four_v95.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Synthetic cases authored with the Korean, Japanese, Chinese and Vietnamese packs; new sentences, not copied from the owner's v2 sets",
+        "reason": "Project-owner request 2026-10-15: the owner's synthetic v2 sets for ko, ja, zh and vi"
+      },
+      "category_overrides": {},
+      "case_overrides": {}
     }
   ],
   "excluded": [

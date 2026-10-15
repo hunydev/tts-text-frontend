@@ -5,9 +5,10 @@
       --library build/libtts_text_frontend.so --resources resources [--request ko-KR]
   python3 -I benchmark/evaluators/owner_v2_eval.py score --lang en-US --tag NAME [--show N]
 
-A v2 set is real sentences (scb-mt-en-th-2020, CC BY-SA 4.0) with readings, given by the owner
-as tn-eval/<lang>-v2.zip and kept local under benchmark/generated/<xx>-owner/ (the license
-keeps it out of the repository). Lines are id<TAB>category<TAB>markup<TAB>note in the markup
+A v2 set is given by the owner as tn-eval/<lang>-v2.zip. en-US and th-TH are real sentences
+(scb-mt-en-th-2020, CC BY-SA 4.0) kept local under benchmark/generated/<xx>-owner/ (the license
+keeps them out of the repository); ko-KR, ja-JP, zh-CN and vi-VN are synthetic held-out sets
+under benchmark/generated/owner-v2-src/. Lines are [id<TAB>]category<TAB>markup<TAB>note in the markup
 of zh-tn-eval ({written|reading}, a/b, [x,y], (x)); category skip lines are dropped. Spans are
 judged with the folding, policy variants and letter variants of user_tn_eval.py. Results go to
 benchmark/generated/owner-v2/ (local only).
@@ -22,7 +23,12 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 SOURCES = {"en-US": ROOT / "benchmark/generated/en-owner/en-US-v2/tn_eval_en-US_v2.tsv",
-           "th-TH": ROOT / "benchmark/generated/th-owner/th-TH-v2/tn_eval_th-TH_v2.tsv"}
+           "th-TH": ROOT / "benchmark/generated/th-owner/th-TH-v2/tn_eval_th-TH_v2.tsv",
+           # synthetic held-out v2 of the other four languages (owner, 2026-10-15): no id column
+           "ko-KR": ROOT / "benchmark/generated/owner-v2-src/ko-KR-v2/tn_eval_ko-KR_v2.tsv",
+           "ja-JP": ROOT / "benchmark/generated/owner-v2-src/ja-JP-v2/tn_eval_ja-JP_v2.tsv",
+           "zh-CN": ROOT / "benchmark/generated/owner-v2-src/zh-CN-v2/tn_eval_zh-CN_v2.tsv",
+           "vi-VN": ROOT / "benchmark/generated/owner-v2-src/vi-VN-v2/tn_eval_vi-VN_v2.tsv"}
 OUT = ROOT / "benchmark/generated/owner-v2"
 sys.path.insert(0, str(ROOT / "benchmark/evaluators"))
 import user_tn_eval as u  # noqa: E402
@@ -40,7 +46,11 @@ def rows_of(lang):
     for number, line in enumerate(SOURCES[lang].read_text(encoding="utf-8").splitlines(), 1):
         if not line.strip() or line.startswith("#"):
             continue
-        rid, rest = line.split("\t", 1)
+        first = line.split("\t", 1)[0]
+        if first.isdigit():
+            rid, rest = line.split("\t", 1)
+        else:
+            rid, rest = f"{number:04d}", line
         if rest.split("\t", 1)[0].strip() == "skip":
             continue
         row = parse(unicodedata.normalize("NFC", rest), f"{SOURCES[lang].name}:{number}")
@@ -72,6 +82,10 @@ def run(args):
 
 def score(args):
     outputs = json.loads((OUT / f"{args.lang}-{args.tag}.json").read_text(encoding="utf-8"))
+    try:
+        import pyopenjtalk
+    except ImportError:
+        pyopenjtalk = None
     spans = span_ok = sentences = sentence_ok = errors = 0
     per = collections.defaultdict(lambda: [0, 0])
     misses = []
@@ -79,6 +93,15 @@ def score(args):
         text = outputs[r["id"]]
         errors += text.startswith("ERROR ")
         res = u.judge(r, text, args.lang)
+        # the same extra views as user_tn_eval.score
+        if args.lang == "ja-JP" and pyopenjtalk and not all(res):
+            heard = pyopenjtalk.g2p(text, kana=True)
+            for view in (heard, text.replace("ー", ""), heard.replace("ー", "")):
+                res = [a or b for a, b in zip(res, u.judge(r, view, args.lang))]
+        if args.lang == "ko-KR" and not all(res):
+            plain = {**r, "targets": [{**g, "readings": [x.replace(" 에 ", " ") for x in g["readings"]]}
+                                      if "-" in g["written"] else g for g in r["targets"]]}
+            res = [a or b for a, b in zip(res, u.judge(plain, text.replace("다시", " "), args.lang))]
         spans += len(res)
         span_ok += sum(res)
         sentences += 1

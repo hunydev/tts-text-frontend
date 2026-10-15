@@ -1671,7 +1671,10 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             return TTF_OK;
         TRY(ttf_buffer_puts(out, " "));
         (void)snprintf(value, sizeof(value), "%u", day);
-        return quantity(e, value, resource(e, "unit", "day", "일"), 0, out);
+        TRY(quantity(e, value, resource(e, "unit", "day", "일"), 0, out));
+        if (!strcmp(s->secondary, "range-from"))
+            TRY(ttf_buffer_puts(out, resource(e, "policy", "range_separator", "에서 ")));
+        return TTF_OK;
     }
     case TTF_SEM_TIME: {
         unsigned hour, minute, second;
@@ -2051,7 +2054,7 @@ static size_t compound_amount(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     unsigned power, last_minor = 4, last_major = 41;
     size_t scales = 0, coefficients = 1;
     int negative = 0, valid = 1, have_pending = 1, have_group = 0;
-    int sign_before_prefix = 0;
+    int sign_before_prefix = 0, plus = 0;
     ttf_semantic_type_t type = TTF_SEM_CARDINAL;
     decimal_zero(&total);
     decimal_zero(&group);
@@ -2061,6 +2064,7 @@ static size_t compound_amount(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         prefix = quantity_resource_at(in, "currency_prefix", p + 1, &width);
         if (prefix) {
             sign_before_prefix = 1;
+            plus = text[p] == '+';
             negative = text[p++] == '-';
         }
     }
@@ -2072,7 +2076,7 @@ static size_t compound_amount(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         if (sign_before_prefix)
             valid = 0;
         else
-            negative = text[p] == '-';
+            negative = text[p] == '-', plus = text[p] == '+';
         ++p;
         /* Consume an invalid sign run so it cannot expose a valid-looking
            unsigned tail to another classifier. */
@@ -2208,6 +2212,11 @@ static size_t compound_amount(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                   !decimal_add(&total, &group) ||
                   !decimal_string(&total, negative, s->value, sizeof(s->value))))
         valid = 0;
+    /* +320억 원: the plus the writer put there is read (owner v2, 2026-10-15) */
+    if (valid && plus && strlen(s->value) + 1 < sizeof(s->value)) {
+        memmove(s->value + 1, s->value, strlen(s->value) + 1);
+        s->value[0] = '+';
+    }
     if (!valid) {
         /* Extend through an attached nonnumeric Hangul remainder as well; do
          * not leave an invalid compound open to a second partial conversion. */
@@ -2785,6 +2794,16 @@ static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             v[used] = '\0';
             return ko_finish(in, s, r, TTF_SEM_CARDINAL, v, "", "ko:ratio");
         }
+        /* 물 1:1.2로 일 대 일 점 이: a one-digit second number with a decimal part (owner v2,
+           2026-10-15); 1:30.5 stays a time */
+        if (!grouped && q - p <= 3 && r == q + 2 && r + 1 < n && t[r] == '.' && ko_digit(t[r + 1])) {
+            for (z = r + 1; z < n && ko_digit(t[z]); ++z)
+                ;
+            if (z - r - 1 <= 2 && !(z < n && (ko_digit(t[z]) || t[z] == '.' || t[z] == ':')) && z - p < sizeof(v)) {
+                (void)snprintf(v, sizeof(v), "%.*s", (int)(z - p), t + p);
+                return ko_finish(in, s, z, TTF_SEM_CARDINAL, v, "", "ko:ratio");
+            }
+        }
     }
     return 0;
 }
@@ -2811,6 +2830,26 @@ static size_t owner_forms5(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                 (void)snprintf(v, sizeof(v), " %s요일", days[k]);
                 return ko_finish(in, s, p + 5, TTF_SEM_SYMBOL, v, "@word", "ko:weekday-mark");
             }
+    }
+    /* 12.14(월) 십이 월 십사 일 월요일: a dotted month and day before a weekday mark (owner v2,
+       2026-10-15); 12/14(월) is already a date */
+    if (p + 8 <= n && ko_digit(t[p]) && !(p && (ko_digit(t[p - 1]) || t[p - 1] == '.' || t[p - 1] == ','))) {
+        size_t a = p, b;
+        while (a < n && ko_digit(t[a]) && a - p < 2)
+            ++a;
+        if (a < n && t[a] == '.' && a + 1 < n && ko_digit(t[a + 1])) {
+            for (b = a + 1; b < n && ko_digit(t[b]) && b - a - 1 < 2; ++b)
+                ;
+            if (!(b < n && ko_digit(t[b])) && b + 5 <= n && t[b] == '(' && t[b + 4] == ')') {
+                static const char *const wd[] = {"월", "화", "수", "목", "금", "토", "일"};
+                int month = atoi(t + p), day = atoi(t + a + 1), k;
+                for (k = 0; k < 7; ++k)
+                    if (!memcmp(t + b + 1, wd[k], 3) && month >= 1 && month <= 12 && day >= 1 && day <= 31) {
+                        (void)snprintf(v, sizeof(v), "--%02d-%02d", month, day);
+                        return ko_finish(in, s, b, TTF_SEM_DATE, v, "month-day", "ko:dot-date-weekday");
+                    }
+            }
+        }
     }
     if (p >= n || !ko_digit(t[p]) || (p && (ko_digit(t[p - 1]) || t[p - 1] == '.' || t[p - 1] == ',')))
         return 0;
@@ -2853,7 +2892,7 @@ static size_t owner_forms5(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             return ko_finish(in, s, z, TTF_SEM_DIGIT_SEQUENCE, v, "spaced_groups", "ko:spaced-groups");
     }
     /* 9/28~10/1 구 월 이십팔 일에서 시월 일 일: both ends of a slash date range are dates */
-    if (q - p <= 2 && q + 2 < n && t[q] == '/' && ko_digit(t[q + 1])) {
+    if (q - p <= 2 && q + 1 < n && t[q] == '/' && ko_digit(t[q + 1])) {
         size_t r, z;
         unsigned month = (unsigned)atoi(t + p), day = (unsigned)atoi(t + q + 1);
         for (r = q + 1; r < n && ko_digit(t[r]); ++r)
@@ -2861,30 +2900,46 @@ static size_t owner_forms5(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         if (r - q - 1 <= 2 && month >= 1 && month <= 12 && day >= 1 && day <= 31 &&
             !(r < n && (ko_digit(t[r]) || t[r] == '/' || t[r] == '.'))) {
             int range = 0;
-            /* the first end: ~M/D follows */
-            if (r + 3 < n && t[r] == '~' && ko_digit(t[r + 1])) {
-                unsigned m2 = (unsigned)atoi(t + r + 1);
-                for (z = r + 1; z < n && ko_digit(t[z]); ++z)
-                    ;
-                range = z - r - 1 <= 2 && z + 1 < n && t[z] == '/' && ko_digit(t[z + 1]) && m2 >= 1 && m2 <= 12;
+            size_t other = 0, tl = r < n && t[r] == ' ' ? r + 1 : r;
+            /* the first end: ~M/D follows (11/7 ~ 11/9 with spaces too, owner v2 2026-10-15) */
+            if (tl + 3 < n && t[tl] == '~') {
+                size_t a2 = t[tl + 1] == ' ' ? tl + 2 : tl + 1;
+                if (a2 < n && ko_digit(t[a2])) {
+                    unsigned m2 = (unsigned)atoi(t + a2);
+                    for (z = a2; z < n && ko_digit(t[z]); ++z)
+                        ;
+                    range = z - a2 <= 2 && z + 1 < n && t[z] == '/' && ko_digit(t[z + 1]) && m2 >= 1 && m2 <= 12;
+                    other = a2;
+                }
             }
             /* the second end: M/D~ comes before */
-            if (!range && p >= 4 && t[p - 1] == '~' && ko_digit(t[p - 2])) {
-                for (z = p - 2; z && ko_digit(t[z - 1]); --z)
-                    ;
-                range = z >= 2 && t[z - 1] == '/' && ko_digit(t[z - 2]);
+            if (!range) {
+                size_t pe = p >= 1 && t[p - 1] == ' ' ? p - 1 : p, pt;
+                if (pe >= 4 && t[pe - 1] == '~') {
+                    pt = t[pe - 2] == ' ' ? pe - 2 : pe - 1;
+                    if (pt >= 3 && ko_digit(t[pt - 1])) {
+                        for (z = pt - 1; z && ko_digit(t[z - 1]); --z)
+                            ;
+                        range = z >= 2 && t[z - 1] == '/' && ko_digit(t[z - 2]);
+                        for (other = z - 2; other && ko_digit(t[other - 1]); --other)
+                            ;
+                    }
+                }
             }
             /* 1/3~1/2, 1/5~1/6: fractions with 1 on top at both ends stay fractions (Korean references) */
-            if (range && month == 1) {
-                size_t a = t[r] == '~' ? r + 1 : 0;
-                if (!a)
-                    for (a = p - 2; a && (ko_digit(t[a - 1]) || t[a - 1] == '/'); --a)
-                        ;
-                if (t[a] == '1' && a + 1 < n && t[a + 1] == '/')
-                    range = 0;
-            }
+            if (range && month == 1 && t[other] == '1' && other + 1 < n && t[other + 1] == '/')
+                range = 0;
             if (range) {
+                size_t c;
                 (void)snprintf(v, sizeof(v), "--%02u-%02u", month, day);
+                /* 11/7 ~ 11/9 십일 월 칠 일에서 십일 월 구 일: the spaced mark is read with the
+                   first end (owner v2, 2026-10-15) */
+                if (other && other > r && tl > r) {
+                    c = ko_finish(in, s, other, TTF_SEM_DATE, v, "month-day", "ko:date-range");
+                    if (c)
+                        (void)snprintf(s->secondary, sizeof(s->secondary), "range-from");
+                    return c;
+                }
                 return ko_finish(in, s, r, TTF_SEM_DATE, v, "month-day", "ko:date-range");
             }
         }

@@ -243,3 +243,4 @@ digit_cue	ja-JP	下4桁	1
 digit_cue	ja-JP	下四桁	1
 digit_cue	ja-JP	コード	1
 digit_cue	ja-JP	ホットライン	1
+classifier_priority	ja-JP	ja.year-month	100

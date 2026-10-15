@@ -306,7 +306,7 @@ numeric_suffix	*	㎍/m³	MEASURE:ug_per_cubic_m
 numeric_suffix	*	μg/㎥	MEASURE:ug_per_cubic_m
 numeric_suffix	*	µg/㎥	MEASURE:ug_per_cubic_m
 numeric_suffix	*	mg/L	MEASURE:mg_per_L
-numeric_suffix_cue	*	V	전압|전원|볼트|배터리|충전|콘센트|어댑터|직류|교류|전기|전력|플러그|AC|DC|volt|battery|outlet|power|charger
+numeric_suffix_cue	*	V	전압|전원|볼트|배터리|건전지|電圧|定格|電源|電池|充電|バッテリー|ボルト|충전|콘센트|어댑터|직류|교류|전기|전력|플러그|AC|DC|volt|battery|outlet|power|charger
 numeric_suffix_cue	*	A	전류|암페어|충전|퓨즈|차단기|어댑터|amp|current|fuse|charger
 numeric_suffix_cue	*	J	에너지|열량|칼로리|kcal|cal|joule|energy
 numeric_suffix_cue	*	MJ	에너지|열량|칼로리|kcal|cal|joule|energy
@@ -485,3 +485,7 @@ unit	en-US	Gbps.one	gigabit per second
 unit	en-US	Gbps.many	gigabits per second
 # Owner evaluation sets, phase 4 (2026-10-14): 4.6 in. inches (67¢ is in languages/en-US/pack.c)
 numeric_suffix	*	in.	MEASURE:inch
+unit	en-US	g_per_dL.one	gram per deciliter
+unit	en-US	g_per_dL.many	grams per deciliter
+unit	en-US	nit.one	nit
+unit	en-US	nit.many	nits

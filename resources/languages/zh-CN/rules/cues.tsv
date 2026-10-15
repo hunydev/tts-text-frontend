@@ -140,6 +140,8 @@ year_not	zh-CN	年间	1
 year_not	zh-CN	年的历史	1
 ratio_cue	zh-CN	比分	1
 ratio_cue	zh-CN	比例	1
+ratio_cue	zh-CN	按	1
+ratio_cue	zh-CN	稀释	1
 ratio_cue	zh-CN	以	1
 ratio_cue	zh-CN	战平	1
 ratio_cue	zh-CN	战胜	1
@@ -659,3 +661,9 @@ compute_cue	zh-CN	计算	1
 compute_cue	zh-CN	算出	1
 compute_cue	zh-CN	求	1
 compute_cue	zh-CN	算	1
+# 10.1当天, 10.18的演唱会 十月十八日, 10/20前 (owner v2, 2026-10-15)
+md_after	zh-CN	当天	1
+md_after	zh-CN	当日	1
+md_after	zh-CN	的演唱会	1
+md_after	zh-CN	的票	1
+date_after	zh-CN	前	1

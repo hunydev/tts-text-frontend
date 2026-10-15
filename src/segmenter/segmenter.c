@@ -98,6 +98,15 @@ static int pending_word(const ttf_engine_t *e, const char *s, const ttf_token_t 
 static int numeric_space_prefix(const ttf_engine_t *e, const char *s, size_t length,
                                 const ttf_token_t *tokens, size_t index) {
     size_t at = tokens[index].begin;
+    /* 6,5 = 29,5, 8 x 2 + 7: the space after an operator that follows a spaced number stays with
+       the expression (owner v2, 2026-10-15). Only bytes before the cut are read. */
+    if (at >= 3 && s[at - 2] == ' ' &&
+        (s[at - 1] == '=' || s[at - 1] == '+' || s[at - 1] == 'x' || s[at - 1] == '<' || s[at - 1] == '>') &&
+        ((s[at - 3] >= '0' && s[at - 3] <= '9') || s[at - 3] == ')'))
+        return 1;
+    if (at >= 4 && s[at - 3] == ' ' && (unsigned char)s[at - 2] == 0xc3 && (unsigned char)s[at - 1] == 0x97 &&
+        ((s[at - 4] >= '0' && s[at - 4] <= '9') || s[at - 4] == ')'))
+        return 1;
     while (at) {
         size_t previous = at - 1;
         while (previous && ((unsigned char)s[previous] & 0xc0u) == 0x80u)

@@ -427,13 +427,18 @@ static size_t math_expression_scan(const ttf_pack_input_t *in, size_t b, ttf_sem
             p += width;
         }
         if (p < n && digit(s[p])) {
-            size_t q = integer(s, n, p);
+            size_t q = integer(s, n, p), k;
+            /* 2×23,000원: comma groups of three digits stay in the operand (owner v2, 2026-10-15) */
+            while (q + 3 < n + 0 && s[q] == ',' && digit(s[q + 1]) && digit(s[q + 2]) && digit(s[q + 3]) &&
+                   !(q + 4 < n && digit(s[q + 4])) && q - p <= 15)
+                q += 4;
             if (q < n && s[q] == '.' && q + 1 < n && digit(s[q + 1]))
                 q = integer(s, n, q + 1);
             if (q - p + length >= sizeof(operand))
                 return 0;
-            memcpy(operand + length, s + p, q - p);
-            length += q - p;
+            for (k = p; k < q; ++k)
+                if (s[k] != ',')
+                    operand[length++] = s[k];
             p = q;
         } else if (length == 0 && p < n && ascii_letter(s[p]) &&
                    !(p + 1 < n && (ascii_letter(s[p + 1]) || digit(s[p + 1])))) {
