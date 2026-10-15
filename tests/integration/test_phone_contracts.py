@@ -119,11 +119,12 @@ GUARDS = [
     dict(id="en-unlabeled-compact", category="phone/negative", default_language="en-US",
          text="1000001", expected="one million one", expected_spans=[
              dict(surface="1000001", semantic_type="CARDINAL", value="1000001")]),
-    dict(id="en-unlabeled-spaces", category="phone/negative", default_language="en-US",
-         text="212 555 0100", expected="two hundred twelve five hundred fifty five zero one zero zero",
-         expected_spans=[dict(surface="212", semantic_type="CARDINAL", value="212"),
-                         dict(surface="555", semantic_type="CARDINAL", value="555"),
-                         dict(surface="0100", semantic_type="DIGIT_SEQUENCE", value="0100", unit="leading_zero")]),
+    # Was: two hundred twelve five hundred fifty five zero one zero zero (three numbers). Changed
+    # 2026-10-15: the owner's English v2 of real sentences reads the spaced North American 3-3-4
+    # layout as a phone number without a cue (888 555 3232, 313 313 3131, 315 223 4789).
+    dict(id="en-unlabeled-spaces", category="phone/positive", default_language="en-US",
+         text="212 555 0100", expected="two one two five five five zero one zero zero",
+         expected_spans=[dict(surface="212 555 0100", semantic_type="PHONE", value="212-555-0100")]),
     dict(id="en-code-preserved", category="phone/negative", default_language="en-US",
          text="`+12125550100 ext. 0042`", expected="`+12125550100 ext. 0042`", expected_spans=[]),
     dict(id="en-short-signed-number", category="phone/negative", default_language="en-US",
