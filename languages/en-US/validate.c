@@ -296,10 +296,10 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     }
     if (SAME(k, "alnum_number")) {
         *handled = 1;
-        return SAME(key, "initialism") && ttf_validation_enum(v, "source-digits|target-cardinal")
+        return SAME(key, "initialism") && ttf_validation_enum(v, "source-digits|target-digits|target-cardinal")
                    ? TTF_OK
                    : ttf_validation_error(
-                         d, "alnum_number supports initialism=source-digits|target-cardinal");
+                         d, "alnum_number supports initialism=source-digits|target-digits|target-cardinal");
     }
     if (SAME(k, "speech_join")) {
         *handled = 1;

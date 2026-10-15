@@ -46,7 +46,8 @@ unit	ja-JP	kW	キロワット:p10
 unit	ja-JP	MW	メガワット:-
 unit	ja-JP	GW	ギガワット:-
 unit	ja-JP	Wh	ワットじ:-
-unit	ja-JP	kWh	キロワットじ:p10
+# キロワットアワー, the reading in everyday use (project-owner decision 2026-10-16). Was: キロワットじ.
+unit	ja-JP	kWh	キロワットアワー:p10
 unit	ja-JP	V	ボルト:-
 unit	ja-JP	kV	キロボルト:p10
 unit	ja-JP	mV	ミリボルト:-

@@ -147,3 +147,19 @@ speech_symbol	vi-VN	✓	dấu chọn
 speech_symbol	vi-VN	✗	dấu gạch chéo
 speech_symbol	vi-VN	✘	dấu gạch chéo
 speech_symbol	vi-VN	♫	nốt nhạc
+# Common mailbox and site words (project-owner decision 2026-10-16: address words from the
+# dictionary only; account names that are given names stay spelled)
+electronic_word	vi-VN	tracuu	tra cứu
+electronic_word	vi-VN	hotro	hỗ trợ
+electronic_word	vi-VN	lienhe	liên hệ
+electronic_word	vi-VN	tuyensinh	tuyển sinh
+electronic_word	vi-VN	thongbao	thông báo
+electronic_word	vi-VN	hocsinh	học sinh
+electronic_word	vi-VN	sinhvien	sinh viên
+electronic_word	vi-VN	dichvucong	dịch vụ công
+electronic_word	vi-VN	dangky	đăng ký
+electronic_word	vi-VN	tintuc	tin tức
+electronic_word	vi-VN	khachhang	khách hàng
+electronic_word	vi-VN	hanoi	Hà Nội
+electronic_word	vi-VN	danang	Đà Nẵng
+electronic_word	vi-VN	saigon	Sài Gòn

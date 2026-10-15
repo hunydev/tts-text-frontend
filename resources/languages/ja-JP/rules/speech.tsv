@@ -333,3 +333,32 @@ electronic_word	ja-JP	book	ブック
 electronic_word	ja-JP	books	ブックス
 electronic_word	ja-JP	recruit	リクルート
 electronic_word	ja-JP	career	キャリア
+# Common mailbox and site words (project-owner decision 2026-10-16: address words from the
+# dictionary only; account names that are given names stay spelled)
+electronic_word	ja-JP	soudan	そうだん
+electronic_word	ja-JP	sodan	そうだん
+electronic_word	ja-JP	renraku	れんらく
+electronic_word	ja-JP	toiawase	といあわせ
+electronic_word	ja-JP	otoiawase	おといあわせ
+electronic_word	ja-JP	uketsuke	うけつけ
+electronic_word	ja-JP	yoyaku	よやく
+electronic_word	ja-JP	saiyo	さいよう
+electronic_word	ja-JP	saiyou	さいよう
+electronic_word	ja-JP	kyujin	きゅうじん
+electronic_word	ja-JP	nyushi	にゅうし
+electronic_word	ja-JP	jimukyoku	じむきょく
+electronic_word	ja-JP	city	シティ
+electronic_word	ja-JP	report	レポート
+electronic_word	ja-JP	sale	セール
+electronic_word	ja-JP	cafe	カフェ
+electronic_word	ja-JP	morning	モーニング
+electronic_word	ja-JP	plan	プラン
+electronic_word	ja-JP	feedback	フィードバック
+electronic_word	ja-JP	receipt	レシート
+electronic_word	ja-JP	reset	リセット
+electronic_word	ja-JP	link	リンク
+electronic_word	ja-JP	mobile	モバイル
+electronic_word	ja-JP	global	グローバル
+electronic_word	ja-JP	japan	ジャパン
+electronic_word	ja-JP	tokyo	とうきょう
+electronic_word	ja-JP	osaka	おおさか

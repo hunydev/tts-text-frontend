@@ -350,13 +350,20 @@ static ttf_status_t render_at(const ttf_engine_t *e, const ttf_language_pack_t *
         size_t prefix = 0;
         const char *initialism_policy =
             ttf_resource_get(e, "alnum_number", target->language_tag, "initialism", NULL);
+        /* alnum_number <lang> word_label single-digit: only a single digit after a word keeps
+           the source numeral (best5 베스트 파이브); WELCOME2026 웰컴 이천이십육, IP68 아이피
+           육십팔 (project-owner decision 2026-10-16) */
+        const char *word_policy =
+            ttf_resource_get(e, "alnum_number", target->language_tag, "word_label", NULL);
+        int word_single = word_policy && !strcmp(word_policy, "single-digit");
         while (prefix < n && text[prefix] >= 'A' && text[prefix] <= 'Z')
             ++prefix;
         int code_word = prefix >= 2 && prefix < n && declared_word(e, source, target, text, prefix);
         int spell_digits = 0;
         if (prefix >= 2 && prefix < n && !code_word &&
             (text[prefix] == '-' || (text[prefix] >= '0' && text[prefix] <= '9')) &&
-            initialism_policy && !strcmp(initialism_policy, "source-digits")) {
+            initialism_policy &&
+            (!strcmp(initialism_policy, "source-digits") || !strcmp(initialism_policy, "target-digits"))) {
             /* GV70, PS5: a model number of one or two digits ends the label and
                is read like G80 (지브이칠십, 피에스파이브). Longer codes (ABC123)
                keep their digits one by one, with the source numeral words. */
@@ -364,6 +371,15 @@ static ttf_status_t render_at(const ttf_engine_t *e, const ttf_language_pack_t *
             while (run < n && text[run] >= '0' && text[run] <= '9')
                 ++run;
             if (!(run == n && run - prefix <= 2))
+                spell_digits = 1;
+        }
+        /* R-20261015 알 이공이육일공일오: one letter and five digits or more are a code
+           (target-digits, project-owner decision 2026-10-16) */
+        if (!spell_digits && prefix == 1 && initialism_policy && !strcmp(initialism_policy, "target-digits")) {
+            size_t r0 = prefix + (prefix < n && text[prefix] == '-'), r1 = r0;
+            while (r1 < n && text[r1] >= '0' && text[r1] <= '9')
+                ++r1;
+            if (r1 - r0 >= 5)
                 spell_digits = 1;
         }
         for (size_t k = 0; k < n; ++k) {
@@ -398,7 +414,24 @@ static ttf_status_t render_at(const ttf_engine_t *e, const ttf_language_pack_t *
                        and so does a single digit after letters (k7 → 케이세븐).
                        Longer runs stay in the target language (G80 → 지팔십,
                        N10번 버스 엔십번); a long code is read digit by digit. */
-                    if (spell_digits) {
+                    if (spell_digits && end - pos > 1 && !strcmp(initialism_policy, "target-digits")) {
+                        /* target-digits: a group of two digits or more is a Korean digit sequence
+                           (KE081 케이이 공팔일, RTX4090 알티엑스사공구공); GPT-4 keeps 포
+                           (project-owner decision 2026-10-16) */
+                        /* the identifier reading of the digit groups (0 is 공), four digits
+                           at a time */
+                        size_t c;
+                        st = TTF_OK;
+                        for (c = pos; c < end && st == TTF_OK; c += 4) {
+                            ttf_semantic_t part = sem;
+                            size_t w = end - c < 4 ? end - c : 4;
+                            part.type = TTF_SEM_DIGIT_SEQUENCE;
+                            snprintf(part.unit, sizeof(part.unit), "spaced_groups");
+                            memcpy(part.value, text + c, w);
+                            part.value[w] = 0;
+                            st = target->verbalize(e, &part, text + c, w, out);
+                        }
+                    } else if (spell_digits) {
                         st = TTF_OK;
                         for (size_t d = pos; d < end && st == TTF_OK; ++d) {
                             ttf_semantic_t one = sem;
@@ -408,7 +441,8 @@ static ttf_status_t render_at(const ttf_engine_t *e, const ttf_language_pack_t *
                             st = source_numeral(e, source, target, &one, text + d, 1, out, layer,
                                                 part_begin + d);
                         }
-                    } else if (word_label || (sem.type == TTF_SEM_CARDINAL && end - pos == 1))
+                    } else if ((word_label && !(word_single && end - pos > 1)) ||
+                               (sem.type == TTF_SEM_CARDINAL && end - pos == 1))
                         st = source_numeral(e, source, target, &sem, text + pos, end - pos, out,
                                             layer, part_begin + pos);
                     else
@@ -435,6 +469,16 @@ static ttf_status_t render_at(const ttf_engine_t *e, const ttf_language_pack_t *
                     if (declared_word(e, source, target, text + pos, end - pos)) {
                         word_label = 1;
                         separate = end < n;
+                    }
+                    {
+                        /* rm1207 알엠: a lowercase run without a vowel is letters (owner v2,
+                           2026-10-16) */
+                        size_t v;
+                        int vowel = 0;
+                        for (v = pos; v < end; ++v)
+                            vowel |= strchr("aeiouyAEIOUY", text[v]) != NULL;
+                        if (!vowel)
+                            upper = 1;
                     }
                     st = render_at(e, source, target, text + pos, end - pos,
                                    (upper || end - pos == 1) ? TTF_LEX_INITIALISM : TTF_LEX_WORD,

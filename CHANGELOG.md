@@ -75,6 +75,25 @@
   held-out v1 96.0, owner set test 94.7, no engine errors in 14,927 real sentences; TTS-to-STT on
   the 371 v2 sentences: raw text 45.3% to TN 73.3% of sentences (spans 62.9% to 83.0%), no new TN
   problem. Human native review and VoxCPM2 listening remain, as for the other languages.
+- Owner decisions on the v2 questions (2026-10-16):
+  - Korean letters and digits: a number of two digits or more reads in Korean (WELCOME2026 웰컴
+    이천이십육, IP68 아이피 육십팔, SAVE20 세이브 이십, iPhone15 아이폰 십오); long codes read digit by
+    digit in Korean with 공 (KE081 케이이 공팔일, ABC123 에이비씨일이삼, RTX4090 알티엑스사공구공,
+    R-20261015 알이공이육일공일오); one digit keeps the English numeral (K7 케이세븐, best5, GPT-4
+    지피티포); top10 탑 텐 and covid19 코비드 나인틴 stay set phrases; a hyphen inside a code is no
+    minus sign (context ko-KR code_hyphen 1: KS-2026-0418); a lowercase run without a vowel is
+    letters (rm1207 알엠). Resource: alnum_number ko-KR initialism target-digits (Was:
+    source-digits) and word_label single-digit.
+  - Japanese kWh キロワットアワー (Was: キロワットじ); the scorer accepts both.
+  - Address words from the dictionary only: common mailbox and site words in ko and ja (recruit,
+    receipt, feedback, soudan そうだん, renraku, yoyaku ...) and Vietnamese words written without marks
+    (tracuu tra cứu, hotro hỗ trợ, lienhe liên hệ, hanoi Hà Nội); given names stay spelled.
+  - v2 spans: ko 94.0 → 95.2, ja 94.7 → 96.0, zh 98.6, vi 96.9 → 96.5 (the v2 gold keeps hotro and
+    hanoi as written but reads tracuu). Owner sets dev: ja 97.1, vi 98.7, others unchanged; Korean
+    quick, JSUT, ja-tn-eval, Chinese and Vietnamese gates unchanged.
+  - Frozen contracts changed with Was notes on these decisions: code_word_v21 (4), letter_label_v21,
+    ko_alnum_identifier_v23, ko_alnum_models_v24 (2), handle_v21, control_packs_v92. Contract
+    owner_dec_v96 (15).
 - The owner's synthetic v2 sets for ko, ja, zh and vi (project-owner request, 2026-10-15; 400
   sentences each, kept local under benchmark/generated/owner-v2-src; owner_v2_eval.py):
   - Spans on the frozen code 41f1190 → now: ko 92.0 → 94.0, ja 90.7 → 94.7, zh 96.7 → 98.6,

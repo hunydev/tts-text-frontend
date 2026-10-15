@@ -67,7 +67,12 @@ native_standalone	ko-KR	60	예순
 native_standalone	ko-KR	70	일흔
 native_standalone	ko-KR	80	여든
 native_standalone	ko-KR	90	아흔
-alnum_number	ko-KR	initialism	source-digits
+# Letters and digits: a number of two digits or more reads in Korean (KE081 케이이 공팔일, ABC123
+# 에이비씨일이삼, IP68 아이피 육십팔, WELCOME2026 웰컴 이천이십육); one digit keeps the English
+# numeral (K7 케이세븐, best5 베스트 파이브). Project-owner decision 2026-10-16. Was: initialism
+# source-digits (ABC123 에이비씨원투쓰리).
+alnum_number	ko-KR	initialism	target-digits
+alnum_number	ko-KR	word_label	single-digit
 
 # Symbol and number-form names read as their own word in speech output.
 # Provisional project policy, pending independent review. Decorative marks
@@ -502,3 +507,43 @@ electronic_word	ko-KR	icloud	아이클라우드
 electronic_word	ko-KR	status	스테이터스
 electronic_word	ko-KR	school	스쿨
 electronic_word	ko-KR	example	이그잼플
+# Common mailbox and site words (project-owner decision 2026-10-16: address words from the
+# dictionary only; account names that are given names stay spelled)
+electronic_word	ko-KR	recruit	리크루트
+electronic_word	ko-KR	receipt	리시트
+electronic_word	ko-KR	career	커리어
+electronic_word	ko-KR	careers	커리어스
+electronic_word	ko-KR	job	잡
+electronic_word	ko-KR	jobs	잡스
+electronic_word	ko-KR	feedback	피드백
+electronic_word	ko-KR	billing	빌링
+electronic_word	ko-KR	payment	페이먼트
+electronic_word	ko-KR	booking	부킹
+electronic_word	ko-KR	reservation	레저베이션
+electronic_word	ko-KR	care	케어
+electronic_word	ko-KR	partner	파트너
+electronic_word	ko-KR	partners	파트너스
+electronic_word	ko-KR	marketing	마케팅
+electronic_word	ko-KR	webmaster	웹마스터
+electronic_word	ko-KR	master	마스터
+electronic_word	ko-KR	security	시큐리티
+electronic_word	ko-KR	privacy	프라이버시
+electronic_word	ko-KR	report	리포트
+electronic_word	ko-KR	mobile	모바일
+electronic_word	ko-KR	login	로그인
+electronic_word	ko-KR	signup	사인업
+electronic_word	ko-KR	reset	리셋
+electronic_word	ko-KR	link	링크
+electronic_word	ko-KR	global	글로벌
+electronic_word	ko-KR	korea	코리아
+electronic_word	ko-KR	seoul	서울
+electronic_word	ko-KR	city	시티
+electronic_word	ko-KR	hall	홀
+electronic_word	ko-KR	daily	데일리
+electronic_word	ko-KR	trip	트립
+electronic_word	ko-KR	bravo	브라보
+electronic_word	ko-KR	guest	게스트
+electronic_word	ko-KR	family	패밀리
+electronic_word	ko-KR	health	헬스
+electronic_word	ko-KR	media	미디어
+electronic_word	ko-KR	studio	스튜디오

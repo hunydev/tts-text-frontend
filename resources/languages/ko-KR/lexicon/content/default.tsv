@@ -78,6 +78,9 @@ lexicon	ko-KR	en-US:timeline	타임라인
 lexicon	ko-KR	en-US:timestamp	타임스탬프
 lexicon	ko-KR	en-US:top	탑
 lexicon	ko-KR	en-US:top100	탑백
+# 탑텐 is the set phrase (top10 keeps the English ten, project-owner decision 2026-10-16)
+lexicon	ko-KR	en-US:top10	탑 텐
+lexicon	ko-KR	en-US:covid19	코비드 나인틴
 lexicon	ko-KR	en-US:track	트랙
 lexicon	ko-KR	en-US:trailer	트레일러
 lexicon	ko-KR	en-US:typography	타이포그래피

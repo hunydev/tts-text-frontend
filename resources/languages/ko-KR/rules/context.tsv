@@ -112,3 +112,6 @@ particle_reading	ko-KR	오	다섯|digits
 particle_reading	ko-KR	엘	라지|L
 particle_reading	ko-KR	에스	스몰|S
 particle_reading	ko-KR	티	톤|t
+# KS-2026-0418: a hyphen after a code with a letter joins the code, no minus sign (project-owner
+# decision 2026-10-16, letters and digits)
+context	ko-KR	code_hyphen	1

@@ -344,10 +344,11 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     }
     if (SAME(k, "alnum_number")) {
         *handled = 1;
-        return SAME(key, "initialism") && ttf_validation_enum(v, "source-digits|target-cardinal")
+        return (SAME(key, "initialism") && ttf_validation_enum(v, "source-digits|target-digits|target-cardinal")) ||
+                       (SAME(key, "word_label") && ttf_validation_enum(v, "single-digit"))
                    ? TTF_OK
-                   : ttf_validation_error(
-                         d, "alnum_number supports initialism=source-digits|target-cardinal");
+                   : ttf_validation_error(d, "alnum_number supports initialism=source-digits|target-digits|target-cardinal "
+                                             "and word_label=single-digit");
     }
     if (SAME(k, "speech_join")) {
         *handled = 1;
@@ -474,7 +475,8 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    : ttf_validation_error(
                          d, "native standalone label must contain 1..95 printable bytes");
     }
-    if (SAME(k, "context") && (SAME(key, "absorb_foreign") || SAME(key, "attached_grammar"))) {
+    if (SAME(k, "context") &&
+        (SAME(key, "absorb_foreign") || SAME(key, "attached_grammar") || SAME(key, "code_hyphen"))) {
         *handled = 1;
         return ttf_validation_enum(v, "0|1")
                    ? TTF_OK

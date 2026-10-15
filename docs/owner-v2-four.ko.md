@@ -47,7 +47,23 @@ golden ko `+1억2천만원`은 플러스 일억 이천만 원(Was: 일억 이천
 `+A$2만`은 플러스 이만 호주 달러, 값 +20000(Was: 이만 호주 달러, 20000)으로 바꿨다. 영어 +$2M은
 이미 plus로 읽었다.
 
-## 정책으로 둔 것 (소유자 결정 필요)
+## 소유자 결정 (2026-10-16)
+
+- **한국어 영문+숫자 라벨:** 두 자리 이상 숫자는 한국어로 읽는다(WELCOME2026 웰컴 이천이십육, IP68 아이피
+  육십팔, SAVE20 세이브 이십, iPhone15 아이폰 십오). 긴 코드는 한국어로 한 자리씩 읽고 0은 공이다(KE081
+  케이이 공팔일, ABC123 에이비씨일이삼, R-20261015 알이공이육일공일오). 한 자리는 영어 수사(K7 케이세븐,
+  best5 베스트 파이브, GPT-4 지피티포). top10 탑 텐, covid19 코비드 나인틴은 굳은 표현으로 둔다. 코드 안
+  하이픈은 마이너스가 아니다(`context ko-KR code_hyphen 1`). 모음 없는 소문자 묶음은 글자다(rm 알엠).
+  자원: `alnum_number ko-KR initialism target-digits`(Was: source-digits), `word_label single-digit`.
+- **일본어 kWh:** キロワットアワー(Was: キロワットじ). 채점은 둘 다 받는다.
+- **주소 단어:** 사전 확장만 했다. 한국어·일본어 메일함·사이트 단어(recruit, receipt, feedback, soudan,
+  renraku, yoyaku 등), 베트남어 성조 없이 쓴 단어(tracuu, hotro, lienhe, hanoi). 사람 이름은 철자로 둔다.
+- **결과:** v2 구간 ko 94.0→95.2, ja 94.7→96.0, zh 98.6, vi 96.9→96.5. 베트남어는 v2 정답이 hotro와
+  hanoi를 그대로 두고 tracuu만 단어로 읽어서 서로 맞지 않는다. 소유자 셋 dev는 ja 97.1, vi 98.7, 나머지 그대로.
+- **바꾼 고정 계약(Was 메모):** code_word_v21 4건, letter_label_v21, ko_alnum_identifier_v23,
+  ko_alnum_models_v24 2건, handle_v21, control_packs_v92. 계약 owner_dec_v96(15).
+
+## 정책으로 둔 것 (소유자 결정 전 기록)
 
 - **주소의 계정명:** v2 정답은 단어로 읽는다(recruit 리크루트, jiho.park 지호 박, soudan そうだん,
   tracuu tra cứu). 2026-10-12 결정은 철자 읽기다. 바꿀지 결정이 필요하다.

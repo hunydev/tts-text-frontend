@@ -92,6 +92,10 @@ def policy_variants(lang, target):
         out += [r.replace("부터 ", "에서 ", 1)[:-2] for r in readings if "부터 " in r and r.endswith("까지")]
     elif lang == "ja-JP":
         out += [r.replace("ー", "") for r in readings]
+        # kWh: キロワットアワー and キロワットじ are both accepted (project-owner decision 2026-10-16)
+        for a, b in (("きろわっとじ", "きろわっとあわー"), ("キロワットじ", "キロワットアワー"),
+                     ("キロワット時", "キロワットアワー")):
+            out += [r.replace(a, b) for r in readings if a in r] + [r.replace(b, a) for r in readings if b in r]
         # 1~2週間: the first number of a range with or without the counter (owner decision)
         m = JA_RANGE.match(unicodedata.normalize("NFKC", target["written"]))
         if m and len(m.group(1).replace(",", "")) <= 8:

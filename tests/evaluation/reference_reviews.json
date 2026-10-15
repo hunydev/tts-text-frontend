@@ -2634,6 +2634,18 @@
       },
       "category_overrides": {},
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/owner_dec_v96.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Synthetic cases authored with the Korean, Japanese and Vietnamese packs after the owner's decisions",
+        "reason": "Project-owner decisions 2026-10-16: letter labels, kWh, address words"
+      },
+      "category_overrides": {},
+      "case_overrides": {}
     }
   ],
   "excluded": [
