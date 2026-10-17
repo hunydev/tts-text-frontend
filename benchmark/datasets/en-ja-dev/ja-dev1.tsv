@@ -1,0 +1,981 @@
+ja-dA-001	ja-JP	news	cardinal	basic	昨夜の地震で、県内の{3,842世帯|三千八百四十二世帯/さんぜんはっぴゃくよんじゅうにせたい}が一時停電した。	800は はっぴゃく
+ja-dA-002	ja-JP	notice	cardinal	basic	本日の説明会は定員の{40名|四十名/よんじゅうめい}に達したため、受付を終了しました。	
+ja-dA-003	ja-JP	chat	cardinal	context	ごめん、電車が遅れてて{10分|十分/じゅっぷん/じっぷん}くらい遅れそう。	時間の10分。じゅうぶん(充分)ではない。十の促音は両形
+ja-dA-004	ja-JP	shopping	cardinal	basic	このTシャツ、{3枚|三枚/さんまい}まとめて買うと{2,980円|二千九百八十円/にせんきゅうひゃくはちじゅうえん}になるよ。	
+ja-dA-005	ja-JP	medical	cardinal	context	この薬は{1日|一日/いちにち}{2回|二回/にかい}、朝と夜の食後に{1錠|一錠/いちじょう}ずつ服用してください。	1日は期間で いちにち(ついたちではない)
+ja-dA-006	ja-JP	it	cardinal	basic	新しいサーバーには{64GB|六十四ギガバイト/六十四ギガ/ろくじゅうよんぎがばいと/ろくじゅうよんぎが}のメモリを積んでいる。	GBはギガバイト/ギガ両方自然
+ja-dA-007	ja-JP	finance	cardinal	basic	同社の今期の純利益は{1,280億円|千二百八十億円/せんにひゃくはちじゅうおくえん}と過去最高を更新した。	
+ja-dA-008	ja-JP	sports	cardinal	context	彼はこの試合で{3本|三本/さんぼん}のホームランを打ち、{7打点|七打点/ななだてん}を挙げた。	3本 さんぼん(連濁)
+ja-dA-009	ja-JP	weather	cardinal	context	台風の影響で、山沿いでは{24時間|二十四時間/にじゅうよじかん}に{300ミリ|三百ミリ/さんびゃくみり}の雨が予想されます。	4時間 よじかん、300 さんびゃく
+ja-dA-010	ja-JP	travel	cardinal	basic	京都までは新幹線で約{2時間15分|二時間十五分/にじかんじゅうごふん}かかります。	
+ja-dA-011	ja-JP	education	cardinal	context	英単語を毎日{30個|三十個/さんじゅっこ/さんじっこ}覚えるのが目標だ。	十+個の促音は両形
+ja-dA-012	ja-JP	government	cardinal	basic	来年度の市の一般会計予算案は、総額{5,163億円|五千百六十三億円/ごせんひゃくろくじゅうさんおくえん}となった。	
+ja-dA-013	ja-JP	food	cardinal	context	卵を{8個|八個/はっこ/はちこ}割りほぐし、牛乳を{200cc|二百シーシー/にひゃくしーしー}加える。	8個は促音形と非促音形の両方が自然
+ja-dA-014	ja-JP	transport	cardinal	context	この路線は朝のラッシュ時に{4分|四分/よんぷん}間隔で運行している。	4分 よんぷん
+ja-dA-015	ja-JP	entertainment	cardinal	basic	映画は公開初週末で、観客動員数が{52万人|五十二万人/ごじゅうにまんにん}に上った。	
+ja-dA-016	ja-JP	news	cardinal	basic	昨日未明の火災で、木造住宅{6棟|六棟/ろくとう}が全焼した。	
+ja-dA-017	ja-JP	notice	cardinal	basic	駐車場は{160台|百六十台/ひゃくろくじゅうだい}分ございますが、週末は混雑が予想されます。	
+ja-dA-018	ja-JP	chat	cardinal	basic	昨日{8時間|八時間/はちじかん}も寝たのに、まだ眠い。	
+ja-dA-019	ja-JP	shopping	cardinal	basic	お買い上げ{5,000円|五千円/ごせんえん}以上で送料が無料になります。	
+ja-dA-020	ja-JP	medical	cardinal	context	健康のため、毎日{8,000歩|八千歩/はっせんぽ}を目安に歩きましょう。	8000 はっせん、歩は半濁音 ぽ
+ja-dA-021	ja-JP	it	cardinal	basic	そのアプリのダウンロード数は、公開から{3か月|三か月/さんかげつ}で{100万|百万/ひゃくまん}を超えた。	
+ja-dA-022	ja-JP	finance	cardinal	basic	退職金のうち{250万円|二百五十万円/にひゃくごじゅうまんえん}を、{5年|五年/ごねん}の定期預金に預けた。	
+ja-dA-023	ja-JP	sports	cardinal	hard	マラソン大会には全国から{1万2千人|一万二千人/いちまんにせんにん}のランナーが参加した。	算用数字と漢数字の混在表記
+ja-dA-024	ja-JP	weather	cardinal	basic	今朝は放射冷却が強まり、{9地点|九地点/きゅうちてん}で今季の最低気温を観測した。	
+ja-dA-025	ja-JP	travel	cardinal	context	このホテルは全{38室|三十八室/さんじゅうはっしつ/さんじゅうはちしつ}で、すべての部屋から海が見える。	8室は促音形と非促音形の両方が自然
+ja-dA-026	ja-JP	education	cardinal	context	入学試験の受験者数は、昨年より{214人|二百十四人/にひゃくじゅうよにん}多かった。	4人 よにん
+ja-dA-027	ja-JP	government	cardinal	context	新しい制度では、子ども{1人|一人/ひとり}あたり月{1万5千円|一万五千円/いちまんごせんえん}が支給される。	1人 ひとり
+ja-dA-028	ja-JP	food	cardinal	basic	このラーメン店には、開店前から{20人|二十人/にじゅうにん}以上の行列ができていた。	
+ja-dA-029	ja-JP	transport	cardinal	context	事故の影響で、上下線合わせて{46本|四十六本/よんじゅうろっぽん}が運休した。	6本 ろっぽん
+ja-dA-030	ja-JP	entertainment	cardinal	context	人気バンドの全国ツアーは、{18都市|十八都市/じゅうはちとし}で計{36公演|三十六公演/さんじゅうろっこうえん/さんじゅうろくこうえん}が行われる。	6公演は促音形と非促音形の両方が聞かれる
+ja-dA-031	ja-JP	news	cardinal	basic	今回の市長選では、有権者{98万人|九十八万人/きゅうじゅうはちまんにん}のうち半数近くが投票に行かなかった。	
+ja-dA-033	ja-JP	chat	cardinal	basic	今月のスマホ代、{9,800円|九千八百円/きゅうせんはっぴゃくえん}もかかってた。	
+ja-dA-034	ja-JP	shopping	cardinal	basic	冷蔵庫のセールでは、{15万円|十五万円/じゅうごまんえん}台の機種が特に人気だ。	
+ja-dA-035	ja-JP	medical	cardinal	context	献血は{1回|一回/いっかい}につき{400mL|四百ミリリットル/よんひゃくみりりっとる}が一般的です。	1回 いっかい
+ja-dA-036	ja-JP	it	cardinal	basic	このデータセンターでは、約{2万台|二万台/にまんだい}のサーバーが稼働している。	
+ja-dA-037	ja-JP	finance	cardinal	basic	日経平均株価は、前日比{612円|六百十二円/ろっぴゃくじゅうにえん}高で取引を終えた。	600 ろっぴゃく
+ja-dA-038	ja-JP	sports	cardinal	hard	そのピッチャーは、プロ通算{150勝|百五十勝/ひゃくごじゅっしょう/ひゃくごじっしょう}を達成した。	十+勝の促音は両形
+ja-dA-039	ja-JP	weather	cardinal	context	今年の梅雨入りは、平年より{11日|十一日/じゅういちにち}遅かった。	日数(期間)の読み
+ja-dA-040	ja-JP	travel	cardinal	basic	空港から市内までは、バスで片道{1,500円|千五百円/せんごひゃくえん}です。	
+ja-dA-041	ja-JP	education	cardinal	basic	卒業論文は、{3万字|三万字/さんまんじ}以上で書くことが求められている。	
+ja-dA-042	ja-JP	government	cardinal	basic	今年度、市内に新たに{4か所|四か所/よんかしょ}の保育所が開設される。	
+ja-dA-043	ja-JP	food	cardinal	basic	強力粉{280g|二百八十グラム/にひゃくはちじゅうぐらむ}に、ドライイースト{3g|三グラム/さんぐらむ}を加えて混ぜる。	
+ja-dA-044	ja-JP	transport	cardinal	basic	新しい高速道路の開通で、所要時間が{25分|二十五分/にじゅうごふん}短縮される。	
+ja-dA-045	ja-JP	entertainment	cardinal	context	その動画は、投稿から{2日|二日/ふつか}で再生回数{500万回|五百万回/ごひゃくまんかい}を記録した。	期間の2日 ふつか
+ja-dA-046	ja-JP	news	cardinal	context	土砂崩れで道路が寸断され、{14世帯|十四世帯/じゅうよんせたい}{31人|三十一人/さんじゅういちにん}が孤立している。	
+ja-dA-047	ja-JP	notice	cardinal	context	点検工事のため、{3日間|三日間/みっかかん}エレベーターが使用できません。	3日間 みっかかん
+ja-dA-048	ja-JP	chat	cardinal	context	今日のランチ、{4人|四人/よにん}で行くから席取っといて!	4人 よにん
+ja-dA-049	ja-JP	shopping	cardinal	context	スニーカーを{2足|二足/にそく}買ったら、{1足|一足/いっそく}分が半額になった。	1足 いっそく
+ja-dA-050	ja-JP	medical	cardinal	basic	赤ちゃんは、体重{3,200g|三千二百グラム/さんぜんにひゃくぐらむ}で無事に生まれました。	
+ja-dA-052	ja-JP	finance	cardinal	basic	住宅ローンの借入額は{3,500万円|三千五百万円/さんぜんごひゃくまんえん}で、返済期間は{35年|三十五年/さんじゅうごねん}だ。	
+ja-dA-053	ja-JP	sports	cardinal	basic	決勝戦は、{6万人|六万人/ろくまんにん}を収容するスタジアムで行われる。	
+ja-dA-054	ja-JP	weather	cardinal	context	北海道の山沿いでは、積雪が{183cm|百八十三センチ/百八十三センチメートル/ひゃくはちじゅうさんせんち/ひゃくはちじゅうさんせんちめーとる}に達した。	cmはセンチ/センチメートル両方自然
+ja-dA-055	ja-JP	travel	cardinal	basic	この島には、年間およそ{40万人|四十万人/よんじゅうまんにん}の観光客が訪れる。	
+ja-dA-056	ja-JP	education	cardinal	hard	学校の図書室には、約{1万3000冊|一万三千冊/いちまんさんぜんさつ}の本がある。	万と算用数字の混在表記
+ja-dA-057	ja-JP	government	cardinal	hard	国民年金の保険料は、{20歳|二十歳/はたち/にじゅっさい/にじっさい}から{60歳|六十歳/ろくじゅっさい/ろくじっさい}になるまで納める必要がある。	20歳は はたち と にじゅっさい/にじっさい が自然
+ja-dA-058	ja-JP	food	cardinal	context	この店のギョーザは{1皿|一皿/ひとさら}{6個|六個/ろっこ}入りで、{380円|三百八十円/さんびゃくはちじゅうえん}だ。	1皿 ひとさら、6個 ろっこ
+ja-dA-059	ja-JP	transport	cardinal	context	新型車両は{10両|十両/じゅうりょう}編成で、定員は約{1,600人|千六百人/せんろっぴゃくにん}だ。	10両は促音化しない
+ja-dA-060	ja-JP	entertainment	cardinal	context	年末の音楽番組には、総勢{44組|四十四組/よんじゅうよんくみ/よんじゅうよくみ}のアーティストが出演する。	4組 よんくみ/よくみ 両方自然
+ja-dA-061	ja-JP	news	cardinal	context	政府は、物価高対策として総額{21兆円|二十一兆円/にじゅういっちょうえん}規模の経済対策をまとめた。	1兆 いっちょう
+ja-dA-062	ja-JP	notice	cardinal	context	年末年始の休業期間は{6日間|六日間/むいかかん}となります。	6日間 むいかかん
+ja-dA-063	ja-JP	chat	cardinal	basic	あと{3ページ|三ページ/さんぺーじ}で宿題終わるから、ちょっと待ってて。	
+ja-dA-064	ja-JP	shopping	cardinal	basic	{1,000ポイント|千ポイント/せんぽいんと}たまると、{100円|百円/ひゃくえん}分の割引券と交換できます。	
+ja-dA-065	ja-JP	medical	cardinal	hard	市立病院の病床数は{620床|六百二十床/ろっぴゃくにじゅっしょう/ろっぴゃくにじっしょう}で、地域で最も多い。	十+床の促音は両形
+ja-dA-066	ja-JP	it	cardinal	basic	不正アクセスにより、約{7万件|七万件/ななまんけん}の個人情報が流出した可能性がある。	
+ja-dA-067	ja-JP	finance	cardinal	hard	金の小売価格は、{1g|一グラム/いちぐらむ}あたり{1万6千円|一万六千円/いちまんろくせんえん}台で推移している。	
+ja-dA-068	ja-JP	sports	cardinal	hard	夏の高校野球の地方大会には、{3,441校|三千四百四十一校/さんぜんよんひゃくよんじゅういっこう}が参加した。	1校 いっこう
+ja-dA-069	ja-JP	weather	cardinal	context	猛暑日が{8日|八日/ようか}連続となり、熱中症への警戒が必要です。	日数の8日 ようか
+ja-dA-070	ja-JP	travel	cardinal	context	パリ行きの直行便は、成田から約{14時間|十四時間/じゅうよじかん}のフライトだ。	4時間 よじかん
+ja-dA-071	ja-JP	education	cardinal	basic	高校卒業までに学ぶ英単語は、約{4,000語|四千語/よんせんご}とされている。	
+ja-dA-072	ja-JP	government	cardinal	context	市は、空き家の改修費用として{1件|一件/いっけん}あたり最大{50万円|五十万円/ごじゅうまんえん}を補助する。	1件 いっけん
+ja-dA-073	ja-JP	food	cardinal	basic	このワイナリーでは、年間{12万本|十二万本/じゅうにまんぼん}のワインを生産している。	
+ja-dA-074	ja-JP	transport	cardinal	basic	年末の高速道路の渋滞は、最長で{45km|四十五キロ/四十五キロメートル/よんじゅうごきろ/よんじゅうごきろめーとる}に達する見込みだ。	kmはキロ/キロメートル両方自然
+ja-dA-075	ja-JP	entertainment	cardinal	basic	その小説は、シリーズ累計{800万部|八百万部/はっぴゃくまんぶ}を突破した。	
+ja-dA-076	ja-JP	news	cardinal	hard	警察は、容疑者の自宅から現金約{２億３千万円|二億三千万円/におくさんぜんまんえん}を押収した。	全角数字と漢数字の混在
+ja-dA-077	ja-JP	notice	cardinal	context	説明会の参加費は、{１人|一人/ひとり}{５００円|五百円/ごひゃくえん}です。	全角数字、1人 ひとり
+ja-dA-078	ja-JP	chat	cardinal	basic	昨日のカラオケ、{5時間|五時間/ごじかん}も歌ってて喉がガラガラ。	
+ja-dA-079	ja-JP	shopping	cardinal	context	すみません、牛乳を{2本|二本/にほん}と、食パンを{1斤|一斤/いっきん}ください。	1斤 いっきん
+ja-dA-080	ja-JP	medical	cardinal	context	インフルエンザの患者数は、{1医療機関|一医療機関/いちいりょうきかん}あたり{32人|三十二人/さんじゅうににん}となった。	
+ja-dA-081	ja-JP	it	cardinal	context	写真{1枚|一枚/いちまい}あたりのファイルサイズは、およそ{5MB|五メガバイト/五メガ/ごめがばいと/ごめが}だ。	MBはメガバイト/メガ両方自然
+ja-dA-082	ja-JP	finance	cardinal	basic	新NISAの年間投資枠は、合計{360万円|三百六十万円/さんびゃくろくじゅうまんえん}だ。	
+ja-dA-083	ja-JP	sports	cardinal	hard	彼は日本人選手として初めて、シーズン{200安打|二百安打/にひゃくあんだ}と{40本塁打|四十本塁打/よんじゅっぽんるいだ/よんじっぽんるいだ}を記録した。	本塁打は ほんるいだ、十+ほ の促音・半濁音化は両形
+ja-dA-084	ja-JP	weather	cardinal	hard	関東地方の平野部に、{7年|七年/ななねん/しちねん}ぶりに大雪警報が出された。	7年は ななねん/しちねん 両方使われる
+ja-dA-085	ja-JP	travel	cardinal	context	一部のテーマパークでは、大人の{1日券|一日券/いちにちけん}が{1万円|一万円/いちまんえん}を超えるようになった。	1日券 いちにちけん
+ja-dA-086	ja-JP	education	cardinal	context	この塾は、生徒{3人|三人/さんにん}に講師が{2人|二人/ふたり}つく手厚い指導が売りだ。	2人 ふたり
+ja-dA-087	ja-JP	government	cardinal	context	住民税の非課税世帯には、{1世帯|一世帯/いっせたい}あたり{3万円|三万円/さんまんえん}が給付される。	1世帯 いっせたい
+ja-dA-088	ja-JP	food	cardinal	hard	この弁当は{680kcal|六百八十キロカロリー/ろっぴゃくはちじゅっきろかろりー/ろっぴゃくはちじっきろかろりー}で、野菜もたっぷり入っている。	十+キロの促音は両形
+ja-dA-089	ja-JP	transport	cardinal	context	首都圏の鉄道では、終電を{30分|三十分/さんじゅっぷん/さんじっぷん}ほど繰り上げる動きが広がっている。	十+分の促音は両形
+ja-dA-090	ja-JP	entertainment	cardinal	basic	人気アイドルのライブチケットに、{120万件|百二十万件/ひゃくにじゅうまんけん}の応募が殺到した。	
+ja-dA-091	ja-JP	news	cardinal	basic	国の借金は、{1,300兆円|千三百兆円/せんさんびゃくちょうえん}を超えている。	
+ja-dA-092	ja-JP	notice	cardinal	basic	大雨に備え、市内{12か所|十二か所/じゅうにかしょ}に避難所を開設しました。	
+ja-dA-093	ja-JP	chat	cardinal	basic	推しのアクスタ、{３個|三個/さんこ}買ったのに全部同じ柄だった…	全角数字
+ja-dA-094	ja-JP	shopping	cardinal	basic	このお米は{5kg|五キロ/五キログラム/ごきろ/ごきろぐらむ}入りで、{2,480円|二千四百八十円/にせんよんひゃくはちじゅうえん}です。	kgはキロ/キログラム両方自然
+ja-dA-095	ja-JP	medical	cardinal	context	{1回|一回/いっかい}{2錠|二錠/にじょう}を、{4時間|四時間/よじかん}以上あけて服用してください。	4時間 よじかん
+ja-dA-096	ja-JP	it	cardinal	basic	このSSDの読み込み速度は、毎秒最大{7,000MB|七千メガバイト/七千メガ/ななせんめがばいと/ななせんめが}だ。	
+ja-dA-097	ja-JP	finance	cardinal	basic	この投資信託の積み立ては、月{3,000円|三千円/さんぜんえん}から始められる。	3000 さんぜん
+ja-dA-098	ja-JP	sports	cardinal	basic	今大会には、世界{206|二百六/にひゃくろく}の国と地域から選手が集まった。	
+ja-dA-099	ja-JP	weather	cardinal	basic	昨日は台風の接近で、最大瞬間風速が秒速{41m|四十一メートル/よんじゅういちめーとる}に達した。	
+ja-dA-100	ja-JP	travel	cardinal	context	このツアーは最少催行人員が{2名|二名/にめい}で、定員は{24名|二十四名/にじゅうよめい/にじゅうよんめい}です。	4名 よめい/よんめい 両方自然
+ja-dA-101	ja-JP	education	ordinal	basic	期末テストで、彼女は学年{2位|二位/にい}の成績を収めた。	
+ja-dA-102	ja-JP	government	ordinal	basic	{第219回|第二百十九回/だいにひゃくじゅうきゅうかい}臨時国会が召集され、首相が所信表明演説を行った。	
+ja-dA-103	ja-JP	food	ordinal	basic	この店は、グルメサイトのラーメン部門で県内{1位|一位/いちい}に選ばれた。	
+ja-dA-104	ja-JP	transport	ordinal	context	東京方面の快速電車は、{4番線|四番線/よんばんせん/よばんせん}から発車します。	番線の4は よん/よ 両方使われる
+ja-dA-105	ja-JP	entertainment	ordinal	context	人気バンドの{3rd|サード/さーど}アルバムが、来月発売される。	英語序数表記
+ja-dA-106	ja-JP	news	ordinal	context	この市で女性が市長に就任するのは、今回が{2人目|二人目/ふたりめ}となる。	2人目 ふたりめ
+ja-dA-107	ja-JP	notice	ordinal	basic	説明会の{第2部|第二部/だいにぶ}は、午後から別会場で行います。	
+ja-dA-108	ja-JP	chat	ordinal	basic	駅の{3番出口|三番出口/さんばんでぐち}を出たところで待ってるね。	
+ja-dA-109	ja-JP	shopping	ordinal	context	このスニーカーは、通販サイトの売れ筋ランキングで{7位|七位/なない/しちい}だった。	7位 ななi/しちい 両方使われる
+ja-dA-110	ja-JP	medical	ordinal	basic	お名前を呼ばれたら、{2番|二番/にばん}の診察室にお入りください。	
+ja-dA-111	ja-JP	it	ordinal	basic	新型スマートフォンはシリーズの{5代目|五代目/ごだいめ}にあたり、カメラ性能が向上した。	
+ja-dA-112	ja-JP	finance	ordinal	basic	同社は、時価総額で国内{3位|三位/さんい}に浮上した。	
+ja-dA-113	ja-JP	sports	ordinal	hard	打順は{4番|四番/よばん/よんばん}に主砲を据え、{1番|一番/いちばん}には俊足の選手を置いた。	野球の打順の4番は よばん
+ja-dA-114	ja-JP	weather	ordinal	basic	今年の夏は、観測史上{3番目|三番目/さんばんめ}に暑い夏となった。	
+ja-dA-115	ja-JP	travel	ordinal	context	目的地は、ここから{2つ目|二つ目/ふたつめ}の駅で降りてすぐです。	2つ目 ふたつめ
+ja-dA-116	ja-JP	education	ordinal	basic	次の授業までに、教科書の{第4章|第四章/だいよんしょう}を読んでおくこと。	
+ja-dA-117	ja-JP	government	ordinal	basic	選挙で初当選した新人が、{第20代|第二十代/だいにじゅうだい}市長に就任した。	
+ja-dA-118	ja-JP	food	ordinal	basic	行列のできるパン屋で、開店前に{8番目|八番目/はちばんめ}に並ぶことができた。	
+ja-dA-119	ja-JP	transport	ordinal	basic	次の交差点を過ぎたら、{2本目|二本目/にほんめ}の道を右に曲がってください。	
+ja-dA-120	ja-JP	entertainment	ordinal	basic	その映画は、公開{2週目|二週目/にしゅうめ}で興行収入ランキング{1位|一位/いちい}に返り咲いた。	
+ja-dA-121	ja-JP	news	ordinal	context	今年で{第100回|第百回/だいひゃっかい}を迎える記念式典が、市内のホールで開かれた。	100回 ひゃっかい
+ja-dA-122	ja-JP	notice	ordinal	basic	受付番号{15番|十五番/じゅうごばん}までの方は、こちらでお待ちください。	
+ja-dA-123	ja-JP	chat	ordinal	context	今日でダイエット{10日目|十日目/とおかめ}!まだ続いてるよ。	10日目 とおかめ
+ja-dA-124	ja-JP	shopping	ordinal	basic	期間中、同じ商品の{2点目|二点目/にてんめ}は半額になります。	
+ja-dA-125	ja-JP	medical	ordinal	basic	ワクチンの{3回目|三回目/さんかいめ}の接種は、{2回目|二回目/にかいめ}から半年以上あけてください。	
+ja-dA-126	ja-JP	it	ordinal	context	検索結果の{1ページ目|一ページ目/いちぺーじめ/いっぺーじめ}に表示されないと、ほとんど見てもらえない。	口語では促音形も自然
+ja-dA-127	ja-JP	finance	ordinal	context	この宝くじ売り場には、過去に{1等|一等/いっとう}が出たことを示す看板が掲げられている。	1等 いっとう
+ja-dA-128	ja-JP	sports	ordinal	basic	彼女はフィギュアスケートの全日本選手権で{4位|四位/よんい}に入った。	
+ja-dA-129	ja-JP	weather	ordinal	basic	今年{6番目|六番目/ろくばんめ}に発生した台風は、週末に沖縄へ接近する見込みです。	
+ja-dA-130	ja-JP	travel	ordinal	basic	機内では、前から{7列目|七列目/ななれつめ}の通路側の席だった。	
+ja-dA-131	ja-JP	education	ordinal	basic	出席番号{12番|十二番/じゅうにばん}の人から、順番に発表してください。	
+ja-dA-132	ja-JP	government	ordinal	basic	条例の{第5条|第五条/だいごじょう}に基づき、申請者は必要書類を提出しなければならない。	
+ja-dA-133	ja-JP	food	ordinal	basic	当店の人気メニュー{第1位|第一位/だいいちい}は、特製のオムライスです。	
+ja-dA-135	ja-JP	entertainment	ordinal	basic	人気シリーズの{第4作|第四作/だいよんさく}が、この冬に公開される。	
+ja-dA-136	ja-JP	news	ordinal	context	同国では今年に入って{6回目|六回目/ろっかいめ}となる利上げが決まった。	6回 ろっかい
+ja-dA-137	ja-JP	notice	ordinal	basic	次回の定例会は、{第3回|第三回/だいさんかい}として来月開催します。	
+ja-dA-138	ja-JP	chat	ordinal	basic	映画のチケット、{6列目|六列目/ろくれつめ}の真ん中取れたよ!	
+ja-dA-139	ja-JP	shopping	ordinal	basic	セール初日、開店前の列で私は{11番目|十一番目/じゅういちばんめ}だった。	
+ja-dA-140	ja-JP	medical	ordinal	basic	心疾患は、日本人の死因の{第2位|第二位/だいにい}とされている。	
+ja-dA-141	ja-JP	it	ordinal	basic	OSのアップデートの{第2弾|第二弾/だいにだん}が、来週配信される予定だ。	
+ja-dA-142	ja-JP	finance	ordinal	basic	同社株は、今日の東証プライム市場で値上がり率{9位|九位/きゅうい}だった。	
+ja-dA-143	ja-JP	sports	ordinal	context	先発投手は{6回|六回/ろっかい}途中で降板し、リリーフ陣が逃げ切った。	イニングの6回 ろっかい
+ja-dA-144	ja-JP	weather	ordinal	basic	今月に入って{3度目|三度目/さんどめ}となる大雪警報が発表された。	
+ja-dA-145	ja-JP	travel	ordinal	basic	乗り継ぎ便は、{5番|五番/ごばん}ゲートから出発します。	
+ja-dA-146	ja-JP	education	ordinal	context	彼は、この学校の{1期生|一期生/いっきせい}として入学した。	1期 いっき
+ja-dA-147	ja-JP	government	ordinal	context	衆院選の東京{7区|七区/ななく}では、新人候補が初当選を果たした。	選挙区の7区 ななく
+ja-dA-148	ja-JP	food	ordinal	basic	このそば屋は、創業から{4代目|四代目/よんだいめ/よだいめ}の店主が切り盛りしている。	
+ja-dA-149	ja-JP	transport	ordinal	basic	特急列車は、新宿駅の{14番線|十四番線/じゅうよんばんせん/じゅうよばんせん}に到着します。	
+ja-dA-150	ja-JP	entertainment	ordinal	context	その歌手の{1st|ファースト/ふぁーすと}シングルは、デビュー当時に大ヒットした。	英語序数表記
+ja-dA-151	ja-JP	news	decimal	basic	昨年の合計特殊出生率は{1.15|一点一五/いってんいちご}で、過去最低を更新した。	小数点以下は1桁ずつ
+ja-dA-152	ja-JP	notice	decimal	basic	来月から、駐車料金を現行の{1.3倍|一点三倍/いってんさんばい}に改定いたします。	
+ja-dA-153	ja-JP	chat	decimal	basic	やった、先月より体重が{1.5キロ|一点五キロ/いってんごきろ}減った!	
+ja-dA-154	ja-JP	shopping	decimal	basic	このノートパソコンは、重さ{0.9kg|零点九キロ/零点九キログラム/れいてんきゅうきろ/ぜろてんきゅうきろ/れいてんきゅうきろぐらむ/ぜろてんきゅうきろぐらむ}と軽い。	0は れい/ぜろ 両方自然
+ja-dA-155	ja-JP	medical	decimal	context	体温が{38.5℃|三十八点五度/さんじゅうはってんごど/さんじゅうはちてんごど}以上ある場合は、解熱剤を使ってください。	8点は促音形と非促音形の両方
+ja-dA-156	ja-JP	it	decimal	hard	開発環境のPythonを、バージョン{3.12|三点一二/三点十二/さんてんいちに/さんてんじゅうに}に更新した。	バージョン番号は さんてんじゅうに とも読む
+ja-dA-158	ja-JP	sports	decimal	context	その選手は、走り幅跳びで{8.15m|八点一五メートル/はってんいちごめーとる/はちてんいちごめーとる}を跳んで優勝した。	
+ja-dA-159	ja-JP	weather	decimal	hard	今朝の最低気温は{-1.8℃|マイナス一点八度/氷点下一点八度/まいなすいってんはちど/ひょうてんかいってんはちど}で、今季一番の冷え込みとなった。	気象では 氷点下 とも読む
+ja-dA-160	ja-JP	travel	decimal	basic	ホテルから美術館までは、約{4.5km|四点五キロ/四点五キロメートル/よんてんごきろ/よんてんごきろめーとる}の距離だ。	
+ja-dA-161	ja-JP	education	decimal	context	今回の数学のテストの平均点は、{68.4点|六十八点四点/ろくじゅうはってんよんてん/ろくじゅうはちてんよんてん}だった。	
+ja-dA-162	ja-JP	government	decimal	basic	今月の完全失業率は{2.5%|二点五パーセント/にてんごぱーせんと}で、前月と同じ水準だった。	
+ja-dA-163	ja-JP	food	decimal	basic	この日本酒のアルコール度数は、{15.5度|十五点五度/じゅうごてんごど}だ。	
+ja-dA-164	ja-JP	transport	decimal	basic	来春開業する新線の全長は、{11.7km|十一点七キロ/十一点七キロメートル/じゅういってんななきろ/じゅういってんななきろめーとる}だ。	
+ja-dA-165	ja-JP	entertainment	decimal	basic	新作ドラマの初回の世帯視聴率は、{12.8%|十二点八パーセント/じゅうにてんはちぱーせんと}だった。	
+ja-dA-166	ja-JP	news	decimal	basic	気象庁によると、地震の規模を示すマグニチュードは{6.8|六点八/ろくてんはち}と推定される。	
+ja-dA-167	ja-JP	notice	decimal	basic	この先のガード下は、高さ{3.8m|三点八メートル/さんてんはちめーとる}を超える車両は通行できません。	
+ja-dA-168	ja-JP	chat	decimal	basic	ゲームのアプデ、容量が{2.4GB|二点四ギガバイト/二点四ギガ/にてんよんぎがばいと/にてんよんぎが}もあって驚いた。	
+ja-dA-169	ja-JP	shopping	decimal	hard	このドラム式洗濯機は、洗濯容量が{10.5kg|十点五キロ/十点五キログラム/じゅってんごきろ/じってんごきろ/じゅってんごきろぐらむ/じってんごきろぐらむ}だ。	十点の促音は両形
+ja-dA-170	ja-JP	medical	decimal	context	視力検査の結果は、右が{0.7|零点七/れいてんなな/ぜろてんなな}、左が{1.2|一点二/いってんに}でした。	
+ja-dA-171	ja-JP	it	decimal	hard	自宅の回線の通信速度は、下りで{85.6Mbps|八十五点六メガビーピーエス/はちじゅうごてんろくめがびーぴーえす}だった。	
+ja-dA-172	ja-JP	finance	decimal	basic	消費者物価指数は、前年同月比で{3.2%|三点二パーセント/さんてんにぱーせんと}上昇した。	
+ja-dA-173	ja-JP	sports	decimal	hard	首位打者の今季の打率は{.315|三割一分五厘/さんわりいちぶごりん}だった。	野球の打率は割分厘で読む
+ja-dA-174	ja-JP	weather	decimal	basic	今日の最高気温は、平年より{2.3度|二点三度/にてんさんど}高くなる見込みです。	
+ja-dA-175	ja-JP	travel	decimal	context	スーツケースの重さが、制限より{0.4キロ|零点四キロ/れいてんよんきろ/ぜろてんよんきろ}オーバーしていた。	
+ja-dA-176	ja-JP	education	decimal	basic	その大学への留学には、IELTSで{6.5|六点五/ろくてんご}以上のスコアが必要だ。	
+ja-dA-177	ja-JP	government	decimal	hard	今回の参院選の投票率は、{52.05%|五十二点〇五パーセント/ごじゅうにてんれいごぱーせんと/ごじゅうにてんぜろごぱーせんと}だった。	小数点以下の0は れい/ぜろ
+ja-dA-178	ja-JP	food	decimal	basic	一般的な濃口しょうゆの塩分濃度は、約{14.5%|十四点五パーセント/じゅうよんてんごぱーせんと}だ。	
+ja-dA-179	ja-JP	transport	decimal	basic	この車の燃費は、リッターあたり{24.3km|二十四点三キロ/二十四点三キロメートル/にじゅうよんてんさんきろ/にじゅうよんてんさんきろめーとる}だ。	
+ja-dA-180	ja-JP	entertainment	decimal	basic	その映画は、レビューサイトで{4.6|四点六/よんてんろく}という高い評価を得ている。	
+ja-dA-181	ja-JP	news	decimal	basic	今日の東京株式市場で、日経平均株価は{1.25%|一点二五パーセント/いってんにごぱーせんと}上昇した。	
+ja-dA-182	ja-JP	notice	decimal	basic	本製品は、満充電で最大{9.5時間|九点五時間/きゅうてんごじかん}連続して使用できます。	
+ja-dA-183	ja-JP	chat	decimal	context	昨日の配信、同時接続が{2.7万人|二点七万人/にてんななまんにん}もいってた!	小数と万の組み合わせ
+ja-dA-184	ja-JP	shopping	decimal	basic	新しいスマホは{6.1インチ|六点一インチ/ろくてんいちいんち}の画面で、片手でも操作しやすい。	
+ja-dA-185	ja-JP	medical	decimal	context	処方された目薬は、濃度{0.1%|零点一パーセント/れいてんいちぱーせんと/ぜろてんいちぱーせんと}のものです。	
+ja-dA-186	ja-JP	it	decimal	basic	このCPUのクロック周波数は、最大{5.2GHz|五点二ギガヘルツ/ごてんにぎがへるつ}だ。	
+ja-dA-187	ja-JP	finance	decimal	hard	長期金利の指標となる国債の利回りが、{1.065%|一点〇六五パーセント/いってんれいろくごぱーせんと/いってんぜろろくごぱーせんと}に上昇した。	小数点以下の0は れい/ぜろ
+ja-dA-188	ja-JP	sports	decimal	basic	彼のスキージャンプの飛距離は{132.5m|百三十二点五メートル/ひゃくさんじゅうにてんごめーとる}だった。	
+ja-dA-189	ja-JP	weather	decimal	basic	今月の降水量は{3.5ミリ|三点五ミリ/さんてんごみり}にとどまり、記録的な少雨となった。	
+ja-dA-190	ja-JP	travel	decimal	basic	ハワイまでのフライトは、約{7.5時間|七点五時間/ななてんごじかん}かかる。	
+ja-dA-191	ja-JP	education	decimal	basic	GPAが{3.6|三点六/さんてんろく}以上の学生には、奨学金が支給される。	
+ja-dA-192	ja-JP	government	decimal	context	市の人口は、前年比{0.3%|零点三パーセント/れいてんさんぱーせんと/ぜろてんさんぱーせんと}の減少となった。	
+ja-dA-193	ja-JP	food	decimal	hard	このチョコレートのカカオ分は{70.5%|七十点五パーセント/ななじゅってんごぱーせんと/ななじってんごぱーせんと}だ。	十点の促音は両形
+ja-dA-194	ja-JP	transport	decimal	context	東京駅から新駅までの営業キロは、{23.4km|二十三点四キロ/にじゅうさんてんよんきろ}だ。	営業キロの文脈では キロ と読む
+ja-dA-195	ja-JP	entertainment	decimal	basic	動画配信サービスの月額料金が、{9.99ドル|九点九九ドル/きゅうてんきゅうきゅうどる}に値上がりした。	
+ja-dA-196	ja-JP	news	decimal	hard	今回の地震の震源の深さは、約{10.4km|十点四キロ/十点四キロメートル/じゅってんよんきろ/じってんよんきろ/じゅってんよんきろめーとる/じってんよんきろめーとる}と推定されている。	十点の促音は両形
+ja-dA-197	ja-JP	notice	decimal	basic	大雨の影響で、川の水位が{3.24m|三点二四メートル/さんてんによんめーとる}に達しました。	
+ja-dA-198	ja-JP	chat	decimal	basic	今の気温{29.9度|二十九点九度/にじゅうきゅうてんきゅうど}だって。もうほぼ真夏じゃん。	
+ja-dA-199	ja-JP	shopping	decimal	basic	今月はカード払いのポイント還元率が{1.75%|一点七五パーセント/いってんななごぱーせんと}にアップします。	
+ja-dA-200	ja-JP	medical	decimal	basic	新生児の身長は、平均で{49.6cm|四十九点六センチ/四十九点六センチメートル/よんじゅうきゅうてんろくせんち/よんじゅうきゅうてんろくせんちめーとる}ほどだ。	
+ja-dA-201	ja-JP	it	fraction	context	ストレージの{1/4|四分の一/よんぶんのいち}が、写真データで占められていた。	日付ではなく割合
+ja-dA-202	ja-JP	finance	fraction	context	同社の株式の{1/6|六分の一/ろくぶんのいち}は、創業家が保有している。	日付ではなく割合
+ja-dA-203	ja-JP	sports	fraction	context	リーグ戦は、全日程の{7/10|十分の七/じゅうぶんのなな}を消化した。	日付ではなく割合
+ja-dA-204	ja-JP	weather	fraction	context	今月の降水量は、平年の{1/5|五分の一/ごぶんのいち}ほどしかない。	日付ではなく割合
+ja-dA-205	ja-JP	travel	fraction	context	旅行代金の{1/3|三分の一/さんぶんのいち}を、予約時に前払いする必要がある。	
+ja-dA-206	ja-JP	education	fraction	context	授業の{2/5|五分の二/ごぶんのに}以上を欠席すると、単位が認められない。	
+ja-dA-207	ja-JP	government	fraction	context	憲法改正の発議には、各議院の総議員の{2/3|三分の二/さんぶんのに}以上の賛成が必要だ。	
+ja-dA-208	ja-JP	food	fraction	hard	小麦粉を{1と1/2|一と二分の一/いちとにぶんのいち}カップ量り、ボウルに入れる。	帯分数
+ja-dA-209	ja-JP	transport	fraction	context	市内のバス路線の{3/5|五分の三/ごぶんのさん}が、赤字で運行している。	
+ja-dA-210	ja-JP	entertainment	fraction	context	ドラマの撮影は、全体の{4/5|五分の四/ごぶんのよん}がすでに終わった。	
+ja-dA-211	ja-JP	news	fraction	basic	調査では、回答者の約{⅛|八分の一/はちぶんのいち}が「収入が減った」と答えた。	分数文字
+ja-dA-212	ja-JP	notice	fraction	context	申込者が定員の{1/10|十分の一/じゅうぶんのいち}に満たない場合、講座は中止となります。	十分の は じゅうぶんの
+ja-dA-213	ja-JP	chat	fraction	context	ピザの{3/8|八分の三/はちぶんのさん}は私が食べたんだから、残りは全部あげる。	
+ja-dA-214	ja-JP	shopping	fraction	context	本日に限り、定価の{3/10|十分の三/じゅうぶんのさん}を値引きいたします。	
+ja-dA-216	ja-JP	it	fraction	context	データ量を{1/100|百分の一/ひゃくぶんのいち}に圧縮できる新技術が開発された。	
+ja-dA-217	ja-JP	finance	fraction	context	毎月の積立額を、手取りの{1/20|二十分の一/にじゅうぶんのいち}に設定した。	
+ja-dA-218	ja-JP	sports	fraction	hard	写真判定の結果、勝ち馬との差はわずか{¾|四分の三/よんぶんのさん}馬身だった。	分数文字、競馬の着差
+ja-dA-219	ja-JP	weather	fraction	context	空の{9/10|十分の九/じゅうぶんのきゅう}以上が雲に覆われていると、天気は「曇り」になる。	
+ja-dA-220	ja-JP	travel	fraction	context	この島は、面積の{5/6|六分の五/ろくぶんのご}が国立公園に指定されている。	
+ja-dA-221	ja-JP	education	fraction	hard	{2と3/4|二と四分の三/にとよんぶんのさん}から{1と1/3|一と三分の一/いちとさんぶんのいち}を引くと、いくつになりますか。	帯分数
+ja-dA-222	ja-JP	government	fraction	context	国は、耐震改修にかかる費用の{1/2|二分の一/にぶんのいち}を補助する。	
+ja-dA-223	ja-JP	food	fraction	basic	パスタのゆで汁を、{¼|四分の一/よんぶんのいち}カップほど取っておく。	分数文字
+ja-dA-224	ja-JP	transport	fraction	context	高速道路の延伸工事は、全体の{7/8|八分の七/はちぶんのなな}まで進んでいる。	
+ja-dA-225	ja-JP	entertainment	fraction	basic	新しいアルバムは、収録曲の{⅔|三分の二/さんぶんのに}が書き下ろしの新曲だ。	分数文字
+ja-dA-226	ja-JP	news	fraction	hard	世界の人口のおよそ{1/7|七分の一/ななぶんのいち/しちぶんのいち}が、この地域に暮らしている。	七分の は なな/しち 両方使われる
+ja-dA-227	ja-JP	notice	fraction	context	抽選では、応募者の約{1/50|五十分の一/ごじゅうぶんのいち}が当選する見込みです。	
+ja-dA-228	ja-JP	chat	fraction	hard	ケーキ、まだ{2と1/4|二と四分の一/にとよんぶんのいち}ホール分も残ってるんだけど。	帯分数
+ja-dA-229	ja-JP	shopping	fraction	context	このワインは、通常のボトルの{3/4|四分の三/よんぶんのさん}サイズで飲みきりやすい。	
+ja-dA-230	ja-JP	medical	fraction	context	この副作用が起きる頻度は、約{1/1000|千分の一/せんぶんのいち}とされている。	
+ja-dA-231	ja-JP	it	address	basic	データセンターの所在地は、緑が丘{3丁目12番5号|三丁目十二番五号/さんちょうめじゅうにばんごごう}です。	
+ja-dA-232	ja-JP	finance	address	hard	書類の送付先は、郵便番号{530-0012|五三〇の〇〇一二/五三〇〇〇一二/ごさんぜろのぜろぜろいちに/ごさんぜろぜろぜろいちに}です。	郵便番号は1桁ずつ、区切りは の または無し
+ja-dA-233	ja-JP	sports	address	basic	市民体育館は、若葉台{4丁目8番地|四丁目八番地/よんちょうめはちばんち}にあります。	
+ja-dA-234	ja-JP	weather	address	context	気象観測所は、山の手町{1-6-9|一の六の九/いちのろくのきゅう}に設置されている。	住所のハイフンは の
+ja-dA-235	ja-JP	travel	address	basic	今夜泊まる宿の住所は、湯本{228番地|二百二十八番地/にひゃくにじゅうはちばんち}です。	
+ja-dA-236	ja-JP	education	address	basic	説明会の会場は、本町{5丁目3番1号|五丁目三番一号/ごちょうめさんばんいちごう}の本校体育館です。	
+ja-dA-237	ja-JP	government	address	hard	申請書は{〒100-8926|郵便番号一〇〇の八九二六/一〇〇の八九二六/ゆうびんばんごういちぜろぜろのはちきゅうにろく/いちぜろぜろのはちきゅうにろく/ゆうびんばんごういちぜろぜろはちきゅうにろく/いちぜろぜろはちきゅうにろく}の担当課あてに郵送してください。	〒は読む/読まない両方、区切りは の または無し
+ja-dA-238	ja-JP	food	address	context	新店舗は、駅前通り{2丁目14-3|二丁目十四の三/二丁目十四番三号/にちょうめじゅうよんのさん/にちょうめじゅうよんばんさんごう}にオープンします。	丁目の後のハイフンは の、または番・号
+ja-dA-239	ja-JP	transport	address	basic	営業所は、港町{1丁目1番1号|一丁目一番一号/いっちょうめいちばんいちごう}にあります。	1丁目 いっちょうめ
+ja-dA-240	ja-JP	entertainment	address	hard	ファンレターの宛先は、郵便番号{150-0043|一五〇の〇〇四三/一五〇〇〇四三/いちごぜろのぜろぜろよんさん/いちごぜろぜろぜろよんさん}です。	郵便番号は1桁ずつ
+ja-dA-241	ja-JP	news	address	context	現場は、桜町{6丁目|六丁目/ろくちょうめ}にあるアパートの{203号室|二百三号室/にひゃくさんごうしつ/にまるさんごうしつ}だった。	部屋番号は桁読み(0は まる)も自然
+ja-dA-242	ja-JP	notice	address	context	不在票のお問い合わせは、花園町{7-21-4|七の二十一の四/ななのにじゅういちのよん}の営業所までお越しください。	住所のハイフンは の
+ja-dA-243	ja-JP	chat	address	context	新居の住所は、青葉町{2-8-15|二の八の十五/にのはちのじゅうご}だよ。ナビに入れといて!	住所のハイフンは の
+ja-dA-244	ja-JP	shopping	address	basic	お届け先のお部屋番号は、{812号室|八百十二号室/はっぴゃくじゅうにごうしつ}でお間違いないですか。	
+ja-dA-245	ja-JP	medical	address	hard	当院は、旭町{10丁目3番地|十丁目三番地/じゅっちょうめさんばんち/じっちょうめさんばんち}のビルの中にあります。	十丁目の促音は両形
+ja-dA-246	ja-JP	it	address	hard	修理を依頼するパソコンは、郵便番号{064-0809|〇六四の〇八〇九/〇六四〇八〇九/ぜろろくよんのぜろはちぜろきゅう/ぜろろくよんぜろはちぜろきゅう}の修理センターへ送ってください。	郵便番号は1桁ずつ
+ja-dA-247	ja-JP	finance	address	basic	新しい支店の所在地は、栄町{9丁目17番2号|九丁目十七番二号/きゅうちょうめじゅうななばんにごう}です。	
+ja-dA-248	ja-JP	sports	address	basic	陸上競技場の住所は、松原{1088番地|千八十八番地/せんはちじゅうはちばんち}です。	
+ja-dA-249	ja-JP	weather	address	basic	雨量計は、大字上野{2341番地|二千三百四十一番地/にせんさんびゃくよんじゅういちばんち}の敷地内に設置されている。	
+ja-dA-250	ja-JP	travel	address	basic	予約したホテルの部屋は、{1126号室|千百二十六号室/せんひゃくにじゅうろくごうしつ}だった。	
+ja-dB-001	ja-JP	news	percent	basic	今年の新米の収穫量は前年より{3%|三パーセント/さんパーセント}増えた。	
+ja-dB-002	ja-JP	finance	percent	hard	定期預金の金利が年{0.25%|〇・二五パーセント/れいてんにごパーセント/ゼロてんにごパーセント}に引き上げられた。	小数点以下は一桁ずつ読む。〇はれい/ゼロ両方可
+ja-dB-003	ja-JP	shop	percent	context	週末限定で全品{20%|二十パーセント/にじゅっパーセント/にじっパーセント}オフになります。	十の促音化 じゅっ/じっ
+ja-dB-004	ja-JP	weather	percent	context	明日の降水確率は午後から{60%|六十パーセント/ろくじゅっパーセント/ろくじっパーセント}に上がる見込みです。	十の促音化 じゅっ/じっ
+ja-dB-005	ja-JP	medical	percent	context	成人の約{8%|八パーセント/はちパーセント/はっパーセント}が糖尿病を強く疑われるという調査結果が出た。	八+パはちパ/はっパ両方
+ja-dB-007	ja-JP	sports	percent	hard	彼の今季のフリースロー成功率は{82.5%|八十二・五パーセント/はちじゅうにてんごパーセント}だった。	
+ja-dB-008	ja-JP	education	percent	hard	今年の大学進学率は{53.9%|五十三・九パーセント/ごじゅうさんてんきゅうパーセント}で過去最高となった。	
+ja-dB-009	ja-JP	government	percent	hard	市長選の投票率は{45.62%|四十五・六二パーセント/よんじゅうごてんろくにパーセント}にとどまった。	小数点以下は一桁ずつ
+ja-dB-010	ja-JP	food	percent	context	このチョコレートはカカオ{86%|八十六パーセント/はちじゅうろくパーセント/はちじゅうろっパーセント}の濃厚な味わいだ。	六+パ ろく/ろっ両方
+ja-dB-011	ja-JP	transport	percent	hard	新幹線の定時運行率は{99.2%|九十九・二パーセント/きゅうじゅうきゅうてんにパーセント}に達した。	
+ja-dB-012	ja-JP	entertainment	percent	hard	昨夜のドラマ最終回は視聴率{18.3%|十八・三パーセント/じゅうはちてんさんパーセント/じゅうはってんさんパーセント}を記録した。	八点 はちてん/はってん両方
+ja-dB-013	ja-JP	chat	percent	basic	スマホの充電がまだ{5%|五パーセント/ごパーセント}しかないから、後でかけ直すね。	
+ja-dB-015	ja-JP	travel	percent	basic	早めに予約すると宿泊料金が最大{35%|三十五パーセント/さんじゅうごパーセント}割引になります。	
+ja-dB-016	ja-JP	shop	percent	context	ポイント還元率は通常{1%|一パーセント/いちパーセント/いっパーセント}ですが、本日は{5%|五パーセント/ごパーセント}です。	一+パ いち/いっ両方
+ja-dB-017	ja-JP	news	percent	hard	県の人口はこの十年間で{4.3%|四・三パーセント/よんてんさんパーセント}減少した。	
+ja-dB-018	ja-JP	medical	percent	basic	このワクチンの発症予防効果は約{95%|九十五パーセント/きゅうじゅうごパーセント}と報告されている。	
+ja-dB-019	ja-JP	it	percent	basic	サーバーのCPU使用率が{100%|百パーセント/ひゃくパーセント}に張り付いたままだ。	
+ja-dB-020	ja-JP	education	percent	context	出席率が{80%|八十パーセント/はちじゅっパーセント/はちじっパーセント}未満の学生は単位を取得できません。	十の促音化 じゅっ/じっ
+ja-dB-021	ja-JP	weather	percent	basic	現在の湿度は{92%|九十二パーセント/きゅうじゅうにパーセント}で、蒸し暑い一日になりそうです。	
+ja-dB-022	ja-JP	sports	percent	basic	試合のボール支配率はホームチームが{64%|六十四パーセント/ろくじゅうよんパーセント}だった。	
+ja-dB-023	ja-JP	government	percent	context	消費税率は{10%|十パーセント/じゅっパーセント/じっパーセント}だが、食料品には軽減税率の{8%|八パーセント/はちパーセント/はっパーセント}が適用される。	じゅっ/じっ、はち/はっ
+ja-dB-024	ja-JP	food	percent	hard	この牛乳の乳脂肪分は{3.6%|三・六パーセント/さんてんろくパーセント/さんてんろっパーセント}以上と表示されている。	六+パ ろく/ろっ
+ja-dB-025	ja-JP	finance	percent	hard	住宅ローンの変動金利は年{０．３７５％|〇・三七五パーセント/れいてんさんななごパーセント/ゼロてんさんななごパーセント}からご利用いただけます。	全角表記。小数点以下は一桁ずつ
+ja-dB-026	ja-JP	it	percent	context	新しい圧縮方式でファイルサイズを{40%|四十パーセント/よんじゅっパーセント/よんじっパーセント}削減できた。	十の促音化
+ja-dB-027	ja-JP	transport	percent	basic	年末年始の高速道路の交通量は前年比{112%|百十二パーセント/ひゃくじゅうにパーセント}だった。	
+ja-dB-028	ja-JP	entertainment	percent	hard	新作映画の観客満足度は{96.4%|九十六・四パーセント/きゅうじゅうろくてんよんパーセント}と高い評価を得た。	
+ja-dB-029	ja-JP	chat	percent	context	今日の英語の小テスト、正答率{30%|三十パーセント/さんじゅっパーセント/さんじっパーセント}くらいだったかも。	十の促音化
+ja-dB-030	ja-JP	news	percent	hard	全国の空き家率は{13.8%|十三・八パーセント/じゅうさんてんはちパーセント/じゅうさんてんはっパーセント}と過去最高を更新した。	八+パ はち/はっ
+ja-dB-031	ja-JP	medical	percent	basic	血中酸素飽和度が{89%|八十九パーセント/はちじゅうきゅうパーセント}まで下がったため、酸素投与を始めた。	
+ja-dB-032	ja-JP	shop	percent	basic	会員様はレジにて表示価格から{7%|七パーセント/ななパーセント}引きいたします。	
+ja-dB-033	ja-JP	finance	percent	hard	輸入物価指数は前年同月比{+11.4%|プラス十一・四パーセント/プラスじゅういってんよんパーセント}となった。	プラス記号を読む
+ja-dB-034	ja-JP	sports	percent	context	市民マラソン大会の完走率は{91%|九十一パーセント/きゅうじゅういちパーセント/きゅうじゅういっパーセント}だった。	一+パ いち/いっ
+ja-dB-035	ja-JP	education	percent	hard	本校の卒業生の就職内定率は{97.3%|九十七・三パーセント/きゅうじゅうななてんさんパーセント}に上った。	
+ja-dB-036	ja-JP	travel	percent	basic	この夏の国際線の搭乗率は平均{84%|八十四パーセント/はちじゅうよんパーセント}だった。	
+ja-dB-037	ja-JP	weather	percent	context	今年の日照時間は平年比{126%|百二十六パーセント/ひゃくにじゅうろくパーセント/ひゃくにじゅうろっパーセント}となった。	六+パ ろく/ろっ
+ja-dB-038	ja-JP	government	percent	hard	来年度予算では社会保障費が全体の{33.5%|三十三・五パーセント/さんじゅうさんてんごパーセント}を占める。	
+ja-dB-039	ja-JP	food	percent	context	果汁{50%|五十パーセント/ごじゅっパーセント/ごじっパーセント}の甘さ控えめなジュースです。	十の促音化
+ja-dB-040	ja-JP	it	percent	hard	迷惑メールの検出率は{99.97%|九十九・九七パーセント/きゅうじゅうきゅうてんきゅうななパーセント}まで向上した。	
+ja-dB-041	ja-JP	chat	percent	basic	部屋の片付け、まだ{25%|二十五パーセント/にじゅうごパーセント}くらいしか終わってない。	
+ja-dB-042	ja-JP	news	percent	context	最新の世論調査で内閣支持率は{41%|四十一パーセント/よんじゅういちパーセント/よんじゅういっパーセント}、不支持率は{46%|四十六パーセント/よんじゅうろくパーセント/よんじゅうろっパーセント}だった。	いち/いっ、ろく/ろっ
+ja-dB-043	ja-JP	finance	percent	hard	このインデックスファンドの信託報酬は年率{0.0935%|〇・〇九三五パーセント/れいてんれいきゅうさんごパーセント/ゼロてんゼロきゅうさんごパーセント/れいてんゼロきゅうさんごパーセント}です。	小数点直後の〇もれい/ゼロ
+ja-dB-044	ja-JP	medical	percent	hard	この治療法の奏効率は{62.5%|六十二・五パーセント/ろくじゅうにてんごパーセント}と報告された。	
+ja-dB-045	ja-JP	transport	percent	basic	新型車両は消費電力を従来比で{17%|十七パーセント/じゅうななパーセント}削減した。	
+ja-dB-046	ja-JP	entertainment	percent	hard	ライブ配信の視聴者のうち{２２％|二十二パーセント/にじゅうにパーセント}が海外からのアクセスだった。	全角表記
+ja-dB-047	ja-JP	sports	percent	basic	開幕からのチームの勝率は{55%|五十五パーセント/ごじゅうごパーセント}前後で推移している。	
+ja-dB-048	ja-JP	shop	percent	basic	在庫一掃セールで冬物コートが最大{65%|六十五パーセント/ろくじゅうごパーセント}OFFになっています。	
+ja-dB-049	ja-JP	government	percent	context	政府は再生可能エネルギーの比率を{38%|三十八パーセント/さんじゅうはちパーセント/さんじゅうはっパーセント}まで高める目標を掲げた。	八+パ はち/はっ
+ja-dB-050	ja-JP	education	percent	hard	今回の模試の数学は、平均点が満点の{43.2%|四十三・二パーセント/よんじゅうさんてんにパーセント}にとどまった。	
+ja-dB-051	ja-JP	shop	money	basic	特製のり弁当は税込{540円|五百四十円/ごひゃくよんじゅうえん}です。	
+ja-dB-052	ja-JP	food	money	basic	ランチセットはドリンク付きで{1,280円|千二百八十円/せんにひゃくはちじゅうえん}になります。	
+ja-dB-053	ja-JP	travel	money	basic	空港から市内までのタクシー代は約{$45|四十五ドル/よんじゅうごドル}だった。	$は数の後にドルと読む
+ja-dB-054	ja-JP	finance	money	hard	昨年度の営業利益は{3,420億円|三千四百二十億円/さんぜんよんひゃくにじゅうおくえん}で過去最高となった。	
+ja-dB-055	ja-JP	news	money	basic	宝くじの一等{5億円|五億円/ごおくえん}が出た売り場に長い行列ができた。	
+ja-dB-056	ja-JP	chat	money	basic	昨日のカフェ、ケーキとコーヒーで{1,050円|千五十円/せんごじゅうえん}だったよ。	
+ja-dB-057	ja-JP	shop	money	basic	{2,000円|二千円/にせんえん}以上お買い上げのお客様は駐車場が無料になります。	
+ja-dB-058	ja-JP	travel	money	context	ソウルの屋台でトッポッキを{₩4,000|四千ウォン/よんせんウォン}で買った。	
+ja-dB-059	ja-JP	travel	money	basic	パリのこの美術館の入館料は{€22|二十二ユーロ/にじゅうにユーロ}です。	
+ja-dB-060	ja-JP	travel	money	context	上海の地下鉄は初乗り{3元|三元/さんげん}で乗れる。	中国の運賃なので通貨の元(げん)
+ja-dB-061	ja-JP	shop	money	context	アメリカのスーパーでりんごが一個{99¢|九十九セント/きゅうじゅうきゅうセント}で売られていた。	
+ja-dB-062	ja-JP	finance	money	hard	円相場は一時{1ドル＝152円|一ドル百五十二円/いちドルひゃくごじゅうにえん}台まで下落した。	為替表記の＝は読まない
+ja-dB-063	ja-JP	government	money	basic	児童手当は第三子以降、月額{30,000円|三万円/さんまんえん}が支給される。	
+ja-dB-064	ja-JP	medical	money	basic	初診時の窓口負担は{1,860円|千八百六十円/せんはっぴゃくろくじゅうえん}でした。	
+ja-dB-065	ja-JP	it	money	basic	クラウドストレージの年額プランは{¥13,200|一万三千二百円/いちまんさんぜんにひゃくえん}です。	
+ja-dB-066	ja-JP	sports	money	hard	その選手の移籍金は推定{8,500万ユーロ|八千五百万ユーロ/はっせんごひゃくまんユーロ}とされる。	
+ja-dB-068	ja-JP	education	money	hard	私立大学の初年度納付金は{1,345,000円|百三十四万五千円/ひゃくさんじゅうよんまんごせんえん}です。	
+ja-dB-069	ja-JP	food	money	basic	駅前のラーメン屋は一杯{980円|九百八十円/きゅうひゃくはちじゅうえん}と少し高めだ。	
+ja-dB-070	ja-JP	transport	money	basic	東京から新大阪までの新幹線指定席は{14,720円|一万四千七百二十円/いちまんよんせんななひゃくにじゅうえん}です。	
+ja-dB-071	ja-JP	shop	money	context	駄菓子屋で{14円|十四円/じゅうよえん}のガムを三つ買った。	四円はよえん
+ja-dB-072	ja-JP	finance	money	hard	一株当たりの年間配当金は{45円50銭|四十五円五十銭/よんじゅうごえんごじっせん/よんじゅうごえんごじゅっせん}とした。	十+銭 じっ/じゅっ
+ja-dB-073	ja-JP	chat	money	basic	割り勘だと一人{3,250円|三千二百五十円/さんぜんにひゃくごじゅうえん}ね、あとで送って。	
+ja-dB-075	ja-JP	travel	money	basic	ニューヨークのホテル代は一泊{$289|二百八十九ドル/にひゃくはちじゅうきゅうドル}だった。	
+ja-dB-076	ja-JP	it	money	hard	このアプリの有料版は月額{$9.99|九・九九ドル/きゅうてんきゅうきゅうドル/きゅうドルきゅうじゅうきゅうセント}です。	小数読みとドル・セント読みの両方
+ja-dB-077	ja-JP	shop	money	basic	自販機の缶コーヒーが{130円|百三十円/ひゃくさんじゅうえん}から{140円|百四十円/ひゃくよんじゅうえん}に値上がりした。	
+ja-dB-078	ja-JP	government	money	basic	申請すると最大{20,000円|二万円/にまんえん}分のポイントがもらえる。	
+ja-dB-079	ja-JP	medical	money	hard	高額療養費制度では、自己負担の上限が月{80,100円|八万百円/はちまんひゃくえん}程度となる。	
+ja-dB-080	ja-JP	finance	money	context	中国の年間小売売上高は{47兆元|四十七兆元/よんじゅうななちょうげん}を超えた。	中国の統計なので通貨の元
+ja-dB-081	ja-JP	entertainment	money	basic	ライブのチケットはS席{12,800円|一万二千八百円/いちまんにせんはっぴゃくえん}、A席{9,800円|九千八百円/きゅうせんはっぴゃくえん}です。	
+ja-dB-082	ja-JP	sports	money	basic	ゴルフツアーの優勝賞金は{360万ドル|三百六十万ドル/さんびゃくろくじゅうまんドル}だった。	
+ja-dB-083	ja-JP	food	money	basic	農家の直売所でトマトが一袋{200円|二百円/にひゃくえん}で売られていた。	
+ja-dB-084	ja-JP	transport	money	basic	高速バスの片道料金は{4,400円|四千四百円/よんせんよんひゃくえん}で、学割も使える。	
+ja-dB-085	ja-JP	education	money	basic	教材費として一人{6,600円|六千六百円/ろくせんろっぴゃくえん}を集めます。	
+ja-dB-086	ja-JP	news	money	hard	詐欺の被害額はおよそ{1億2,000万円|一億二千万円/いちおくにせんまんえん}に上る。	
+ja-dB-087	ja-JP	travel	money	context	バンコクの屋台でパッタイを{60バーツ|六十バーツ/ろくじゅうバーツ}で食べた。	
+ja-dB-088	ja-JP	shop	money	hard	韓国コスメのクッションファンデが現地価格で{₩28,000|二万八千ウォン/にまんはっせんウォン}だった。	
+ja-dB-089	ja-JP	finance	money	hard	ビットコインが一時{1,500万円|千五百万円/せんごひゃくまんえん/いっせんごひゃくまんえん}を超えた。	千万の位はせん/いっせん両方
+ja-dB-090	ja-JP	it	money	basic	大手企業が生成AIの開発に{100億ドル|百億ドル/ひゃくおくドル}を投じると発表した。	
+ja-dB-091	ja-JP	chat	money	basic	昨日の夜、推しのガチャで{5万円|五万円/ごまんえん}溶かした……。	
+ja-dB-092	ja-JP	government	money	hard	来年度予算の総額は{115兆5,000億円|百十五兆五千億円/ひゃくじゅうごちょうごせんおくえん}程度となる見通しだ。	
+ja-dB-093	ja-JP	food	money	basic	このワインはボトル一本{€35|三十五ユーロ/さんじゅうごユーロ}と手頃だ。	
+ja-dB-094	ja-JP	medical	money	basic	インフルエンザの予防接種は一回{3,800円|三千八百円/さんぜんはっぴゃくえん}です。	
+ja-dB-095	ja-JP	sports	money	basic	観戦チケットは外野自由席が{2,600円|二千六百円/にせんろっぴゃくえん}からです。	
+ja-dB-096	ja-JP	entertainment	money	basic	限定版ブルーレイボックスは{¥24,800|二万四千八百円/にまんよんせんはっぴゃくえん}で予約受付中です。	
+ja-dB-097	ja-JP	transport	money	basic	毎朝のバス代{210円|二百十円/にひゃくじゅうえん}はICカードで払っている。	
+ja-dB-098	ja-JP	shop	money	context	お釣りの{4円|四円/よえん}はレシートと一緒にお渡しします。	四円はよえん
+ja-dB-099	ja-JP	finance	money	context	外貨預金の為替手数料は一ドルあたり{25銭|二十五銭/にじゅうごせん}です。	
+ja-dB-100	ja-JP	news	money	context	中国人観光客は一人当たり平均{8,000元|八千元/はっせんげん}を消費した。	中国人の消費なので通貨の元
+ja-dB-101	ja-JP	travel	money	hard	ロンドンの地下鉄は現金だと片道{£5.60|五ポンド六十ペンス/ごポンドろくじゅっペンス/ごポンドろくじっペンス/ごてんろくポンド}もする。	十+ペ じゅっ/じっ。末尾の〇は読まない
+ja-dB-102	ja-JP	it	money	basic	スマホの格安プランは月額{1,078円|千七十八円/せんななじゅうはちえん}から利用できる。	
+ja-dB-103	ja-JP	chat	money	basic	誕生日プレゼント、予算{1万円|一万円/いちまんえん}くらいで何かいいのある？	
+ja-dB-104	ja-JP	shop	money	basic	詰め替え用の洗剤が本日限り{198円|百九十八円/ひゃくきゅうじゅうはちえん}です。	
+ja-dB-105	ja-JP	government	money	hard	厚生年金の受給額は月平均{14万5,000円|十四万五千円/じゅうよんまんごせんえん}だった。	
+ja-dB-106	ja-JP	food	money	basic	回転寿司の皿は{120円|百二十円/ひゃくにじゅうえん}から{360円|三百六十円/さんびゃくろくじゅうえん}まである。	
+ja-dB-107	ja-JP	education	money	hard	給付型奨学金は月額最大{66,700円|六万六千七百円/ろくまんろくせんななひゃくえん}が支給される。	
+ja-dB-108	ja-JP	sports	money	hard	エース投手の年俸が{3億5,000万円|三億五千万円/さんおくごせんまんえん}で更改された。	
+ja-dB-109	ja-JP	entertainment	money	basic	クラウドファンディングで目標の{500万円|五百万円/ごひゃくまんえん}を達成した。	
+ja-dB-110	ja-JP	transport	money	context	レギュラーガソリンの価格は一リットル{174円|百七十四円/ひゃくななじゅうよえん}だった。	四円はよえん
+ja-dB-111	ja-JP	medical	money	basic	歯のホワイトニングは一回{¥16,500|一万六千五百円/いちまんろくせんごひゃくえん}かかった。	
+ja-dB-112	ja-JP	news	money	hard	台湾の最低賃金は月{28,590台湾ドル|二万八千五百九十台湾ドル/にまんはっせんごひゃくきゅうじゅうたいわんドル}に引き上げられた。	
+ja-dB-113	ja-JP	travel	money	context	北京の故宮博物院の入場料は{60元|六十元/ろくじゅうげん}だった。	中国の料金なので通貨の元
+ja-dB-114	ja-JP	it	money	hard	アプリストアでパズルゲームが{$0.99|〇・九九ドル/れいてんきゅうきゅうドル/ゼロてんきゅうきゅうドル/きゅうじゅうきゅうセント}に値下げされていた。	小数読みとセント読み
+ja-dB-115	ja-JP	finance	money	hard	東証プライム市場の売買代金は{4兆1,200億円|四兆千二百億円/よんちょうせんにひゃくおくえん}に膨らんだ。	
+ja-dB-116	ja-JP	chat	money	basic	終電を逃してタクシーで{6,800円|六千八百円/ろくせんはっぴゃくえん}もかかった、最悪。	
+ja-dB-117	ja-JP	government	money	basic	マイナンバーカードの再交付手数料は{800円|八百円/はっぴゃくえん}です。	
+ja-dB-118	ja-JP	food	money	basic	屋台のたこ焼きは八個入りで{600円|六百円/ろっぴゃくえん}だった。	
+ja-dB-119	ja-JP	it	money	hard	ドメインの更新料が年{$12.50|十二・五ドル/じゅうにてんごドル/じゅうにドルごじゅっセント/じゅうにドルごじっセント}に上がった。	十+セ じゅっ/じっ
+ja-dB-120	ja-JP	entertainment	money	basic	美術展の当日券は一般{¥2,300|二千三百円/にせんさんびゃくえん}、高校生{¥1,300|千三百円/せんさんびゃくえん}です。	
+ja-dB-121	ja-JP	sports	money	basic	世紀の一戦のファイトマネーは{1億ドル|一億ドル/いちおくドル}を超えると報じられた。	
+ja-dB-122	ja-JP	news	money	hard	韓国政府は半導体産業に{26兆ウォン|二十六兆ウォン/にじゅうろくちょうウォン}規模の支援を行う。	
+ja-dB-123	ja-JP	travel	money	context	空港の両替所で{10,000円|一万円/いちまんえん}を{467元|四百六十七元/よんひゃくろくじゅうななげん}に両替した。	円から換えるので中国の元
+ja-dB-124	ja-JP	shop	money	basic	古本屋で文庫本を一冊{110円|百十円/ひゃくじゅうえん}で手に入れた。	
+ja-dB-125	ja-JP	finance	money	basic	気になっていた会社の株を一株{2,345円|二千三百四十五円/にせんさんびゃくよんじゅうごえん}で百株買った。	
+ja-dB-126	ja-JP	medical	money	basic	個室の差額ベッド代は一日{5,500円|五千五百円/ごせんごひゃくえん}です。	
+ja-dB-127	ja-JP	food	money	basic	高級メロンが初競りで二玉{300万円|三百万円/さんびゃくまんえん}の値を付けた。	
+ja-dB-128	ja-JP	transport	money	basic	首都高速の普通車の料金は上限{1,950円|千九百五十円/せんきゅうひゃくごじゅうえん}です。	
+ja-dB-129	ja-JP	education	money	basic	修学旅行の積立金は月額{8,000円|八千円/はっせんえん}です。	
+ja-dB-130	ja-JP	it	money	basic	有料会員は年払いだと{¥5,900|五千九百円/ごせんきゅうひゃくえん}になります。	
+ja-dB-131	ja-JP	chat	money	basic	今月のスマホ代、{7,000円|七千円/ななせんえん}超えててびっくりした。	
+ja-dB-132	ja-JP	government	money	basic	住民票の写しの交付手数料は一通{300円|三百円/さんびゃくえん}です。	
+ja-dB-133	ja-JP	news	money	hard	欧州連合は復興基金として{7,500億ユーロ|七千五百億ユーロ/ななせんごひゃくおくユーロ}を用意した。	
+ja-dB-134	ja-JP	entertainment	money	hard	オークションで印象派の絵画が{1億1,000万ドル|一億一千万ドル/いちおくいっせんまんドル/いちおくせんまんドル}で落札された。	千万の位はいっせん/せん両方
+ja-dB-135	ja-JP	sports	money	hard	競馬の三連単で{1,000円|千円/せんえん}が{48万2,350円|四十八万二千三百五十円/よんじゅうはちまんにせんさんびゃくごじゅうえん}になった。	
+ja-dB-136	ja-JP	shop	money	basic	ネットで注文すると別途送料{550円|五百五十円/ごひゃくごじゅうえん}がかかります。	
+ja-dB-137	ja-JP	travel	money	context	ハノイの食堂でフォーを{50,000ドン|五万ドン/ごまんドン}で食べた。	
+ja-dB-138	ja-JP	finance	money	hard	年金積立金の四半期の運用益は{10兆円|十兆円/じゅっちょうえん/じっちょうえん}を超えた。	十+兆 じゅっ/じっ
+ja-dB-139	ja-JP	medical	money	basic	薬局で市販の風邪薬を{1,628円|千六百二十八円/せんろっぴゃくにじゅうはちえん}で購入した。	
+ja-dB-140	ja-JP	chat	money	basic	先輩におごってもらった焼肉、たぶん一人{9,000円|九千円/きゅうせんえん}はしたと思う。	
+ja-dB-141	ja-JP	weather	measure	basic	明日の最高気温は{34℃|三十四度/さんじゅうよんど}で、猛暑日に迫る暑さとなるでしょう。	
+ja-dB-142	ja-JP	weather	measure	hard	今朝は内陸で{-5.2℃|マイナス五・二度/氷点下五・二度/マイナスごてんにど/ひょうてんかごてんにど}の冷え込みとなった。	
+ja-dB-143	ja-JP	weather	measure	basic	台風の中心気圧は{935hPa|九百三十五ヘクトパスカル/きゅうひゃくさんじゅうごヘクトパスカル}で、さらに発達する見込みです。	
+ja-dB-144	ja-JP	weather	measure	context	一時間に{80mm|八十ミリ/はちじゅうミリ/はちじゅうミリメートル}以上の猛烈な雨が降った。	雨量はミリと略す読みも自然
+ja-dB-145	ja-JP	weather	measure	context	最大瞬間風速{45m/s|四十五メートル/よんじゅうごメートル/よんじゅうごメートルまいびょう}の暴風が吹いた。	風速の文脈では毎秒を省く読みが一般的
+ja-dB-146	ja-JP	weather	measure	context	山沿いでは明朝までに{60cm|六十センチ/ろくじゅっセンチ/ろくじっセンチ/ろくじゅっセンチメートル/ろくじっセンチメートル}の降雪が予想される。	十+セ じゅっ/じっ
+ja-dB-147	ja-JP	travel	measure	hard	富士山の標高は{3,776m|三千七百七十六メートル/さんぜんななひゃくななじゅうろくメートル}です。	
+ja-dB-149	ja-JP	transport	measure	context	新型車両は営業運転で時速{320km|三百二十キロ/さんびゃくにじゅっキロ/さんびゃくにじっキロ/さんびゃくにじゅっキロメートル/さんびゃくにじっキロメートル}を出す。	十+キ じゅっ/じっ
+ja-dB-150	ja-JP	sports	measure	hard	彼はフルマラソンの{42.195km|四十二・一九五キロメートル/よんじゅうにてんいちきゅうごキロメートル/よんじゅうにてんいちきゅうごキロ}を初めて完走した。	
+ja-dB-151	ja-JP	sports	measure	hard	砲丸投げで{18.45m|十八・四五メートル/じゅうはちてんよんごメートル/じゅうはってんよんごメートル}の大会新記録が出た。	八点 はち/はっ
+ja-dB-152	ja-JP	sports	measure	hard	挑戦者は体重{68.5kg|六十八・五キロ/ろくじゅうはちてんごキロ/ろくじゅうはってんごキロ/ろくじゅうはちてんごキログラム/ろくじゅうはってんごキログラム}で計量をパスした。	八点 はち/はっ
+ja-dB-153	ja-JP	medical	measure	hard	空腹時血糖値が{126mg/dL|百二十六ミリグラム毎デシリットル/ひゃくにじゅうろくミリグラムパーデシリットル/ひゃくにじゅうろくミリグラムまいデシリットル}以上だと糖尿病型とされる。	
+ja-dB-154	ja-JP	medical	measure	basic	一日の塩分摂取量は{6g|六グラム/ろくグラム}未満が推奨されている。	
+ja-dB-155	ja-JP	medical	measure	basic	この錠剤は一錠あたり{500mg|五百ミリグラム/ごひゃくミリグラム}のアセトアミノフェンを含む。	
+ja-dB-157	ja-JP	medical	measure	context	点滴で生理食塩水{500mL|五百ミリリットル/ごひゃくミリリットル/ごひゃくミリ}をゆっくり投与する。	
+ja-dB-158	ja-JP	food	measure	basic	ボウルに小麦粉{200g|二百グラム/にひゃくグラム}と砂糖{30g|三十グラム/さんじゅうグラム}を入れて混ぜる。	グは有声なので促音化しない
+ja-dB-159	ja-JP	food	measure	hard	鍋に水{1.2L|一・二リットル/いってんにリットル}を入れて沸騰させる。	
+ja-dB-160	ja-JP	food	measure	context	牛乳{150mL|百五十ミリリットル/ひゃくごじゅうミリリットル/ひゃくごじゅうミリ}を少しずつ加えてよく混ぜる。	
+ja-dB-161	ja-JP	food	measure	context	このハンバーガーは一個で{820kcal|八百二十キロカロリー/はっぴゃくにじゅっキロカロリー/はっぴゃくにじっキロカロリー}もある。	十+キ じゅっ/じっ
+ja-dB-162	ja-JP	it	measure	context	このスマートフォンは{256GB|二百五十六ギガバイト/にひゃくごじゅうろくギガバイト/にひゃくごじゅうろくギガ}のストレージを搭載している。	
+ja-dB-163	ja-JP	it	measure	context	メールの添付ファイルは{10MB|十メガバイト/じゅうメガバイト/じゅうメガ}以下にしてください。	メは有声なので促音化しない
+ja-dB-164	ja-JP	it	measure	hard	光回線の実測値は下り{850Mbps|八百五十メガビーピーエス/はっぴゃくごじゅうメガビーピーエス/はっぴゃくごじゅうメガビットまいびょう}だった。	
+ja-dB-165	ja-JP	it	measure	hard	新しいプロセッサーは最大{5.2GHz|五・二ギガヘルツ/ごてんにギガヘルツ}で動作する。	
+ja-dB-166	ja-JP	it	measure	context	バックアップ用に{2TB|二テラバイト/にテラバイト/にテラ}の外付けディスクを買った。	
+ja-dB-167	ja-JP	it	measure	basic	サーバーの応答時間を{120ms|百二十ミリ秒/ひゃくにじゅうミリびょう}以内に抑えた。	
+ja-dB-168	ja-JP	chat	measure	context	今月のギガ、もう{18GB|十八ギガバイト/じゅうはちギガバイト/じゅうはちギガ}も使っちゃった。	
+ja-dB-169	ja-JP	realestate	measure	hard	この部屋の専有面積は{65.3m²|六十五・三平方メートル/ろくじゅうごてんさんへいほうメートル/ろくじゅうごてんさんへいべい}です。	不動産では平米も自然
+ja-dB-170	ja-JP	realestate	measure	context	敷地面積{198㎡|百九十八平方メートル/ひゃくきゅうじゅうはちへいほうメートル/ひゃくきゅうじゅうはちへいべい}の土地付き一戸建てが売りに出た。	不動産では平米も自然
+ja-dB-171	ja-JP	energy	measure	hard	一般家庭の月間電力使用量は約{260kWh|二百六十キロワットアワー/にひゃくろくじゅっキロワットアワー/にひゃくろくじっキロワットアワー/にひゃくろくじゅっキロワットじ/にひゃくろくじっキロワットじ}とされる。	アワー/時の両方。十+キ じゅっ/じっ
+ja-dB-172	ja-JP	transport	measure	context	この電気自動車のバッテリー容量は{75kWh|七十五キロワットアワー/ななじゅうごキロワットアワー/ななじゅうごキロワットじ}だ。	
+ja-dB-173	ja-JP	transport	measure	context	東京から新大阪までは線路で約{515km|五百十五キロメートル/ごひゃくじゅうごキロメートル/ごひゃくじゅうごキロ}ある。	
+ja-dB-174	ja-JP	transport	measure	hard	新しいトンネルの全長は{11.9km|十一・九キロメートル/じゅういってんきゅうキロメートル/じゅういってんきゅうキロ}に及ぶ。	
+ja-dB-175	ja-JP	transport	measure	context	このトラックの最大積載量は{10t|十トン/じゅっトン/じっトン}です。	十+ト じゅっ/じっ
+ja-dB-176	ja-JP	transport	measure	hard	この車の燃費はカタログ値で{25.4km/L|二十五・四キロメートル毎リットル/にじゅうごてんよんキロメートルまいリットル/にじゅうごてんよんキロメートルパーリットル/リッターにじゅうごてんよんキロ}だ。	燃費はリッター〜キロとも読む
+ja-dB-178	ja-JP	travel	measure	context	預け入れ荷物は一個につき{23kg|二十三キログラム/にじゅうさんキログラム/にじゅうさんキロ}までとなっております。	
+ja-dB-179	ja-JP	travel	measure	basic	展望台は地上{350m|三百五十メートル/さんびゃくごじゅうメートル}の高さにある。	
+ja-dB-180	ja-JP	travel	measure	basic	ホテルから駅までは歩いて約{800m|八百メートル/はっぴゃくメートル}です。	
+ja-dB-181	ja-JP	food	measure	basic	豚肩ロース{400g|四百グラム/よんひゃくグラム}を一口大に切る。	
+ja-dB-182	ja-JP	food	measure	basic	オーブンを{180℃|百八十度/ひゃくはちじゅうど}に予熱しておく。	
+ja-dB-183	ja-JP	food	measure	context	生クリーム{200ml|二百ミリリットル/にひゃくミリリットル/にひゃくミリ}を八分立てにする。	
+ja-dB-184	ja-JP	shop	measure	context	洗濯洗剤の大容量ボトルは{1.9kg|一・九キログラム/いってんきゅうキログラム/いってんきゅうキロ}入りです。	
+ja-dB-185	ja-JP	shop	measure	hard	天然水の{２Ｌ|二リットル/にリットル}ペットボトル六本セットがお買い得です。	全角表記
+ja-dB-186	ja-JP	shop	measure	context	スーパーの特売で新米{5kg|五キログラム/ごキログラム/ごキロ}を一袋買った。	
+ja-dB-187	ja-JP	shop	measure	context	幅{120cm|百二十センチメートル/ひゃくにじゅっセンチメートル/ひゃくにじっセンチメートル/ひゃくにじゅっセンチ/ひゃくにじっセンチ}の本棚を通販で注文した。	十+セ じゅっ/じっ
+ja-dB-188	ja-JP	education	measure	basic	理科の実験で{100mL|百ミリリットル/ひゃくミリリットル/ひゃくミリ}のメスシリンダーを使う。	
+ja-dB-189	ja-JP	education	measure	context	直角三角形の一つの角は必ず{90°|九十度/きゅうじゅうど}である。	角度の度
+ja-dB-190	ja-JP	education	measure	basic	水は一気圧のもとで{100℃|百度/ひゃくど}で沸騰する。	
+ja-dB-191	ja-JP	education	measure	basic	校庭のトラックは一周{200m|二百メートル/にひゃくメートル}だ。	
+ja-dB-192	ja-JP	sports	measure	basic	競泳男子{100m|百メートル/ひゃくメートル}自由形で日本新記録が出た。	
+ja-dB-194	ja-JP	sports	measure	hard	スキージャンプで{142.5m|百四十二・五メートル/ひゃくよんじゅうにてんごメートル}の大ジャンプを見せた。	
+ja-dB-195	ja-JP	sports	measure	hard	ロードレースは一周{4.3km|四・三キロメートル/よんてんさんキロメートル/よんてんさんキロ}のコースを十周する。	
+ja-dB-196	ja-JP	weather	measure	hard	長野県の山間部では氷点下{12.4℃|十二・四度/じゅうにてんよんど}を記録した。	氷点下が負を表すのでマイナスは読まない
+ja-dB-197	ja-JP	weather	measure	hard	波の高さは{3m|三メートル/さんメートル}のち{４ｍ|四メートル/よんメートル}の見込みです。	全角表記を含む
+ja-dB-198	ja-JP	weather	measure	basic	豪雪地帯では積雪が{1m|一メートル/いちメートル}を超えた地域もある。	
+ja-dB-199	ja-JP	government	measure	hard	観測地点の放射線量は毎時{0.05μSv|〇・〇五マイクロシーベルト/れいてんれいごマイクロシーベルト/ゼロてんゼロごマイクロシーベルト/れいてんゼロごマイクロシーベルト}で平常値だった。	小数点直後の〇もれい/ゼロ
+ja-dB-200	ja-JP	government	measure	basic	住宅地の騒音の規制基準は昼間{55dB|五十五デシベル/ごじゅうごデシベル}以下と定められている。	
+ja-dB-201	ja-JP	government	measure	hard	合併後の市の面積は{412.3km²|四百十二・三平方キロメートル/よんひゃくじゅうにてんさんへいほうキロメートル}となった。	
+ja-dB-202	ja-JP	news	measure	context	震源の深さは約{10km|十キロメートル/じゅっキロメートル/じっキロメートル/じゅっキロ/じっキロ}と推定される。	十+キ じゅっ/じっ
+ja-dB-203	ja-JP	news	measure	basic	東京の電波塔は高さ{634m|六百三十四メートル/ろっぴゃくさんじゅうよんメートル}を誇る。	
+ja-dB-204	ja-JP	news	measure	basic	全長{333m|三百三十三メートル/さんびゃくさんじゅうさんメートル}の大型クルーズ船が初めて寄港した。	
+ja-dB-205	ja-JP	news	measure	hard	河川の水位が{4.85m|四・八五メートル/よんてんはちごメートル}に達し、氾濫危険水位を超えた。	
+ja-dB-206	ja-JP	entertainment	measure	hard	ドームの巨大スクリーンは幅{25.8m|二十五・八メートル/にじゅうごてんはちメートル}もある。	
+ja-dB-207	ja-JP	entertainment	measure	basic	ロックフェスの会場では音量が最大{110dB|百十デシベル/ひゃくじゅうデシベル}に達した。	
+ja-dB-208	ja-JP	entertainment	measure	hard	新作ゲームのダウンロード容量は{97.4GB|九十七・四ギガバイト/きゅうじゅうななてんよんギガバイト/きゅうじゅうななてんよんギガ}だ。	
+ja-dB-209	ja-JP	chat	measure	context	昨日ジムで{5km|五キロ/ごキロ/ごキロメートル}走ったら、今日はひどい筋肉痛だ。	
+ja-dB-210	ja-JP	chat	measure	context	お正月に食べ過ぎて{3kg|三キロ/さんキロ/さんキログラム}も太っちゃった、どうしよう。	
+ja-dB-211	ja-JP	medical	measure	hard	赤ちゃんの出生時の体重は{3,120g|三千百二十グラム/さんぜんひゃくにじゅうグラム}でした。	
+ja-dB-212	ja-JP	medical	measure	hard	健診で総コレステロール値が{220mg/dL|二百二十ミリグラム毎デシリットル/にひゃくにじゅうミリグラムパーデシリットル/にひゃくにじゅうミリグラムまいデシリットル}と指摘された。	
+ja-dB-213	ja-JP	medical	measure	hard	夏場は一日{1.5L|一・五リットル/いってんごリットル}を目安に水分を補給してください。	
+ja-dB-214	ja-JP	medical	measure	hard	検査で見つかった腫瘍の大きさは{2.3cm|二・三センチ/にてんさんセンチ/にてんさんセンチメートル}だった。	
+ja-dB-215	ja-JP	medical	measure	hard	ビタミンDは一日{8.5μg|八・五マイクログラム/はちてんごマイクログラム/はってんごマイクログラム}の摂取が目安とされる。	八点 はち/はっ
+ja-dB-216	ja-JP	it	measure	hard	クラウドに保存した写真は合計{1.3TB|一・三テラバイト/いってんさんテラバイト/いってんさんテラ}になった。	
+ja-dB-217	ja-JP	it	measure	basic	サーバールームの室温は{22℃|二十二度/にじゅうにど}前後に保たれている。	
+ja-dB-218	ja-JP	it	measure	context	このアプリのインストールには{350MB|三百五十メガバイト/さんびゃくごじゅうメガバイト/さんびゃくごじゅうメガ}の空き容量が必要だ。	
+ja-dB-219	ja-JP	energy	measure	hard	屋根に載せた太陽光パネルの出力は{4.5kW|四・五キロワット/よんてんごキロワット}だ。	
+ja-dB-220	ja-JP	food	measure	basic	パスタの乾麺は一人前{100g|百グラム/ひゃくグラム}が目安です。	
+ja-dB-221	ja-JP	food	measure	basic	鍋に揚げ油を{2cm|二センチ/にセンチ/にセンチメートル}ほどの深さまで注ぐ。	
+ja-dB-222	ja-JP	food	measure	context	この店の中ジョッキには生ビールが{380mL|三百八十ミリリットル/さんびゃくはちじゅうミリリットル/さんびゃくはちじゅうミリ}入る。	
+ja-dB-223	ja-JP	transport	measure	context	お盆の渋滞は上り線で最大{35km|三十五キロ/さんじゅうごキロ/さんじゅうごキロメートル}に達する見込みです。	
+ja-dB-224	ja-JP	transport	measure	hard	この高架下の高さ制限は{3.8m|三・八メートル/さんてんはちメートル}です。	
+ja-dB-225	ja-JP	transport	measure	hard	当機は現在、高度{10,000m|一万メートル/いちまんメートル}を巡航中です。	
+ja-dB-226	ja-JP	transport	measure	hard	この車の車両重量は{1,560kg|千五百六十キログラム/せんごひゃくろくじゅうキログラム/せんごひゃくろくじゅっキロ/せんごひゃくろくじっキロ}だ。	グは有声で促音化せず、キは促音化
+ja-dB-227	ja-JP	travel	measure	context	島の周囲は約{19km|十九キロメートル/じゅうきゅうキロメートル/じゅうきゅうキロ}で、自転車で一周できる。	
+ja-dB-228	ja-JP	travel	measure	hard	ハワイの今日の最高気温は{86°F|華氏八十六度/かしはちじゅうろくど}の予報だ。	°Fは華氏を補って読む
+ja-dB-229	ja-JP	travel	measure	basic	世界一の落差を誇る滝の高さは{979m|九百七十九メートル/きゅうひゃくななじゅうきゅうメートル}だ。	
+ja-dB-230	ja-JP	travel	measure	basic	ゴンドラで標高{2,156m|二千百五十六メートル/にせんひゃくごじゅうろくメートル}の山頂駅まで上がれる。	
+ja-dB-231	ja-JP	sports	measure	context	新人投手が球速{163km/h|百六十三キロ/ひゃくろくじゅうさんキロ/じそくひゃくろくじゅうさんキロ/ひゃくろくじゅうさんキロメートルまいじ}をマークした。	球速は〜キロと略すのが一般的
+ja-dB-232	ja-JP	sports	measure	context	競歩{20km|二十キロメートル/にじゅっキロメートル/にじっキロメートル/にじゅっキロ/にじっキロ}で日本勢が銅メダルを獲得した。	十+キ じゅっ/じっ
+ja-dB-233	ja-JP	sports	measure	context	重量挙げで彼女はトータル{305kg|三百五キログラム/さんびゃくごキログラム/さんびゃくごキロ}を挙げた。	
+ja-dB-234	ja-JP	sports	measure	basic	特大ホームランの飛距離は{145m|百四十五メートル/ひゃくよんじゅうごメートル}と計測された。	
+ja-dB-235	ja-JP	education	measure	context	最近のランドセルの重さは平均{1.4kg|一・四キログラム/いってんよんキログラム/いってんよんキロ}ほどだ。	
+ja-dB-236	ja-JP	education	measure	context	地球から月までの距離は約{38万km|三十八万キロメートル/さんじゅうはちまんキロメートル/さんじゅうはちまんキロ}だ。	
+ja-dB-237	ja-JP	education	measure	basic	空気中を伝わる音の速さは秒速約{340m|三百四十メートル/さんびゃくよんじゅうメートル}だ。	
+ja-dB-238	ja-JP	education	measure	hard	理科室の電子天秤は{0.01g|〇・〇一グラム/れいてんれいいちグラム/ゼロてんゼロいちグラム/れいてんゼロいちグラム}単位で量れる。	小数点直後の〇もれい/ゼロ
+ja-dB-239	ja-JP	government	measure	basic	燃えるごみは指定の{45L|四十五リットル/よんじゅうごリットル}袋に入れて出してください。	
+ja-dB-240	ja-JP	government	measure	basic	今回の検針では二か月の水道使用量が{38m³|三十八立方メートル/さんじゅうはちりっぽうメートル}でした。	
+ja-dB-241	ja-JP	government	measure	basic	この地区の建物は高さ{10m|十メートル/じゅうメートル}以下に制限されている。	メは有声なので促音化しない
+ja-dB-242	ja-JP	news	measure	hard	大気中の二酸化炭素濃度が{420ppm|四百二十ピーピーエム/よんひゃくにじゅっピーピーエム/よんひゃくにじっピーピーエム}を超えた。	十+ピ じゅっ/じっ
+ja-dB-243	ja-JP	news	measure	hard	推定重量{1.7t|一・七トン/いってんななトン}のクジラが海岸に打ち上げられた。	
+ja-dB-244	ja-JP	chat	measure	context	駅まで{1.5km|一・五キロ/いってんごキロ/いってんごキロメートル}くらいだから歩けるよ。	
+ja-dB-245	ja-JP	chat	measure	basic	加湿器のタンク、{4L|四リットル/よんリットル}もあるのに一晩で空になった。	
+ja-dB-246	ja-JP	entertainment	measure	basic	パレードに登場した巨大バルーンは高さ{18m|十八メートル/じゅうはちメートル}もあった。	
+ja-dB-247	ja-JP	entertainment	measure	basic	野外ステージのスピーカー出力は合計{12,000W|一万二千ワット/いちまんにせんワット}だ。	
+ja-dB-248	ja-JP	realestate	measure	context	この物件は天井高{2,600mm|二千六百ミリ/にせんろっぴゃくミリ/にせんろっぴゃくミリメートル}を確保している。	
+ja-dB-249	ja-JP	food	measure	hard	業務用冷凍庫は{-18℃|マイナス十八度/マイナスじゅうはちど}以下に保つ必要がある。	
+ja-dB-250	ja-JP	shop	measure	basic	この冷蔵庫の容量は{501L|五百一リットル/ごひゃくいちリットル}で、大家族向けです。	
+ja-dC-001	ja-JP	notice	date	hard	町内会の総会を{11月7日|十一月七日/じゅういちがつなのか}の午後に公民館で開きます。	7日はなのか
+ja-dC-002	ja-JP	news	date	basic	新しい大橋の開通式が{2026年10月16日|二千二十六年十月十六日/にせんにじゅうろくねんじゅうがつじゅうろくにち}に行われた。	
+ja-dC-003	ja-JP	chat	date	context	次の飲み会だけど、{10/23(金)|十月二十三日金曜日/じゅうがつにじゅうさんにちきんようび}の夜でどうかな?	括弧内の曜日はきんようびと読む
+ja-dC-004	ja-JP	shopping	date	context	年末の大売り出しは{12/26|十二月二十六日/じゅうにがつにじゅうろくにち}の朝から始まります。	スラッシュは月日
+ja-dC-005	ja-JP	medical	date	hard	次回の診察は{11月4日(水)|十一月四日水曜日/じゅういちがつよっかすいようび}の午前中に予約しました。	4日はよっか
+ja-dC-006	ja-JP	it	date	context	最新版のアップデートは{2026/11/02|二千二十六年十一月二日/にせんにじゅうろくねんじゅういちがつふつか}に配信される予定です。	ゼロ埋めの年月日、2日はふつか
+ja-dC-007	ja-JP	finance	date	hard	配当金は{12月1日|十二月一日/じゅうにがつついたち}に指定の口座へ振り込まれます。	日付の1日はついたち
+ja-dC-008	ja-JP	sports	date	hard	高校ラグビーの県大会決勝は{11月14日|十一月十四日/じゅういちがつじゅうよっか}に行われる。	14日はじゅうよっか
+ja-dC-009	ja-JP	weather	date	hard	気象庁によると、{10月20日|十月二十日/じゅうがつはつか}ごろから冬型の気圧配置が強まる見込みです。	20日ははつか
+ja-dC-010	ja-JP	travel	date	context	航空券は{1/5|一月五日/いちがついつか}出発の便で予約を済ませました。	出発の便から日付と決まる
+ja-dC-011	ja-JP	education	date	hard	二学期の期末試験は{12月7日|十二月七日/じゅうにがつなのか}から行われる予定です。	
+ja-dC-012	ja-JP	government	date	hard	固定資産税第三期の納期限は{令和8年12月28日|令和八年十二月二十八日/れいわはちねんじゅうにがつにじゅうはちにち}です。	和暦
+ja-dC-013	ja-JP	food	date	hard	今年の新米は{9月9日|九月九日/くがつここのか}から店頭で販売いたします。	9月はくがつ、9日はここのか
+ja-dC-014	ja-JP	transport	date	basic	新しい地下鉄の路線は{2027年3月13日|二千二十七年三月十三日/にせんにじゅうしちねんさんがつじゅうさんにち/にせんにじゅうななねんさんがつじゅうさんにち}に開業する。	七年はしち・なな両方
+ja-dC-015	ja-JP	entertainment	date	hard	話題の時代劇映画の公開日が{2月6日|二月六日/にがつむいか}に決まった。	6日はむいか
+ja-dC-016	ja-JP	notice	date	hard	{4月1日(水)|四月一日水曜日/しがつついたちすいようび}より、市民課窓口の受付時間が変わります。	4月はしがつ
+ja-dC-017	ja-JP	news	date	hard	{1995年1月17日|千九百九十五年一月十七日/せんきゅうひゃくきゅうじゅうごねんいちがつじゅうしちにち/せんきゅうひゃくきゅうじゅうごねんいちがつじゅうななにち}の大震災から三十年余りが過ぎた。	17日はしち・なな両方
+ja-dC-018	ja-JP	chat	date	context	実は誕生日が{8/8|八月八日/はちがつようか}なんだけど、その日って空いてる?	8日はようか
+ja-dC-019	ja-JP	shopping	date	hard	ご注文の商品は{10月24日|十月二十四日/じゅうがつにじゅうよっか}にお届けする予定です。	24日はにじゅうよっか
+ja-dC-020	ja-JP	medical	date	context	インフルエンザの予防接種は{11/20|十一月二十日/じゅういちがつはつか}までにお済ませください。	
+ja-dC-021	ja-JP	it	date	hard	旧バージョンのサポートは{2025年10月14日|二千二十五年十月十四日/にせんにじゅうごねんじゅうがつじゅうよっか}で終了しました。	
+ja-dC-022	ja-JP	finance	date	hard	中間決算の発表は{2026.11.06|二千二十六年十一月六日/にせんにじゅうろくねんじゅういちがつむいか}を予定しています。	ドット区切りの日付
+ja-dC-023	ja-JP	sports	date	hard	来季の開幕戦は{3/27(土)|三月二十七日土曜日/さんがつにじゅうしちにちどようび/さんがつにじゅうななにちどようび}、本拠地で迎えます。	27日はしち・なな両方
+ja-dC-024	ja-JP	weather	date	basic	昨年の初雪は平年より遅く、{11月29日|十一月二十九日/じゅういちがつにじゅうくにち}に観測されました。	29日はにじゅうく
+ja-dC-025	ja-JP	travel	date	basic	温泉ツアーは建国記念の日の{2月11日|二月十一日/にがつじゅういちにち}に出発します。	
+ja-dC-026	ja-JP	education	date	context	入学願書は{1/9|一月九日/いちがつここのか}必着で郵送してください。	必着から日付
+ja-dC-027	ja-JP	government	date	basic	市議会議員選挙の投票日は{10月25日|十月二十五日/じゅうがつにじゅうごにち}です。	
+ja-dC-028	ja-JP	food	date	basic	当店は{12月31日|十二月三十一日/じゅうにがつさんじゅういちにち}から年末年始のお休みをいただきます。	
+ja-dC-029	ja-JP	transport	date	context	高速道路の拡幅工事は{6/30|六月三十日/ろくがつさんじゅうにち}に完了する見通しだ。	
+ja-dC-030	ja-JP	entertainment	date	basic	人気バンドのツアー最終公演は{2027年2月13日|二千二十七年二月十三日/にせんにじゅうしちねんにがつじゅうさんにち/にせんにじゅうななねんにがつじゅうさんにち}に東京ドームで行われる。	七年はしち・なな両方
+ja-dC-031	ja-JP	notice	date	context	今月{20日|二十日/はつか}は設備点検のため、全館休館とさせていただきます。	今月から日付、はつか
+ja-dC-032	ja-JP	news	date	context	首相は{19日|十九日/じゅうくにち}、官邸で記者団の取材に応じた。	報道の日付表記、19日はじゅうくにち
+ja-dC-033	ja-JP	chat	date	context	え、レポートの締め切りって{2日|二日/ふつか}だっけ?来週だと思ってた。	
+ja-dC-035	ja-JP	medical	date	context	検査の結果は{4日|四日/よっか}以降に外来でお伝えします。	日付でも日数でもよっか
+ja-dC-036	ja-JP	it	date	basic	大規模な通信障害は{10月9日|十月九日/じゅうがつここのか}の深夜に発生した。	
+ja-dC-037	ja-JP	finance	date	hard	日銀は{2024年3月19日|二千二十四年三月十九日/にせんにじゅうよねんさんがつじゅうくにち}、マイナス金利政策の解除を決めた。	4年はよねん
+ja-dC-038	ja-JP	sports	date	basic	大会三日目の{8月9日|八月九日/はちがつここのか}は雨のため順延となった。	
+ja-dC-039	ja-JP	weather	date	hard	台風は{9月1日|九月一日/くがつついたち}の朝に九州南部へ上陸する恐れがあります。	
+ja-dC-040	ja-JP	travel	date	hard	パスポートの有効期限が{2027/04/04|二千二十七年四月四日/にせんにじゅうしちねんしがつよっか/にせんにじゅうななねんしがつよっか}なので、早めに更新したい。	
+ja-dC-041	ja-JP	education	date	basic	卒業証書授与式は{3月18日|三月十八日/さんがつじゅうはちにち}に体育館で挙行します。	
+ja-dC-042	ja-JP	government	date	hard	戸籍に氏名の振り仮名を記載する制度は{令和7年5月26日|令和七年五月二十六日/れいわしちねんごがつにじゅうろくにち/れいわななねんごがつにじゅうろくにち}に始まった。	和暦、七年はしち・なな両方
+ja-dC-043	ja-JP	food	date	hard	ボジョレー・ヌーボーの解禁日は毎年{11月第3木曜日|十一月第三木曜日/じゅういちがつだいさんもくようび}です。	
+ja-dC-044	ja-JP	transport	date	hard	JRのダイヤ改正は{3/14(土)|三月十四日土曜日/さんがつじゅうよっかどようび}に実施されます。	
+ja-dC-045	ja-JP	entertainment	date	hard	写真集の発売日は{12月2日(水)|十二月二日水曜日/じゅうにがつふつかすいようび}に決定しました。	
+ja-dC-046	ja-JP	notice	date	hard	年明けのごみ収集は{1月4日|一月四日/いちがつよっか}から通常どおり行います。	
+ja-dC-047	ja-JP	news	date	basic	東日本大震災は{2011年3月11日|二千十一年三月十一日/にせんじゅういちねんさんがつじゅういちにち}の午後に発生した。	
+ja-dC-048	ja-JP	chat	date	hard	クリスマスイブの{24日|二十四日/にじゅうよっか}は早めに帰るから、ケーキ予約しておいて。	
+ja-dC-049	ja-JP	shopping	date	hard	おせちと福袋の予約受付は{11/1|十一月一日/じゅういちがつついたち}からスタートします。	
+ja-dC-050	ja-JP	medical	date	basic	出産予定日は{2027年1月8日|二千二十七年一月八日/にせんにじゅうしちねんいちがつようか/にせんにじゅうななねんいちがつようか}だと医師から告げられた。	
+ja-dC-051	ja-JP	it	date	hard	サーバーのログには{2026-10-15|二千二十六年十月十五日/にせんにじゅうろくねんじゅうがつじゅうごにち}の日付で記録が残っていた。	ISO形式
+ja-dC-052	ja-JP	finance	date	basic	新しいNISAは{2024年1月|二千二十四年一月/にせんにじゅうよねんいちがつ}に始まった非課税制度です。	
+ja-dC-053	ja-JP	sports	date	basic	彼は{1998年|千九百九十八年/せんきゅうひゃくきゅうじゅうはちねん}の長野五輪で金メダルを獲得した。	
+ja-dC-054	ja-JP	weather	date	basic	今年の関東甲信の梅雨明けは{7月22日|七月二十二日/しちがつにじゅうににち}ごろだった。	7月はしちがつ
+ja-dC-055	ja-JP	travel	date	context	祇園祭の前祭の山鉾巡行は毎年{7/17|七月十七日/しちがつじゅうしちにち/しちがつじゅうななにち}に行われます。	
+ja-dC-056	ja-JP	education	date	basic	市内の小中学校の夏休みは{7月18日|七月十八日/しちがつじゅうはちにち}から始まります。	
+ja-dC-058	ja-JP	food	date	basic	恵方巻のご予約は節分当日の{2月3日|二月三日/にがつみっか}まで受け付けております。	
+ja-dC-059	ja-JP	transport	date	hard	運転免許証の更新期限は{6月6日|六月六日/ろくがつむいか}までと通知が届いた。	
+ja-dC-060	ja-JP	entertainment	date	hard	年末恒例の歌番組は{12/31(木)|十二月三十一日木曜日/じゅうにがつさんじゅういちにちもくようび}の夜に生放送される。	
+ja-dC-061	ja-JP	notice	date	hard	新年は{1月5日(火)|一月五日火曜日/いちがついつかかようび}から通常営業いたします。	
+ja-dC-062	ja-JP	news	date	basic	憲法記念日の{5月3日|五月三日/ごがつみっか}、全国各地で集会が開かれた。	
+ja-dC-063	ja-JP	chat	date	context	引っ越しが{29日|二十九日/にじゅうくにち}に決まったんだけど、手伝ってもらえる?	
+ja-dC-064	ja-JP	shopping	date	context	こちらの割引クーポンは{10/31|十月三十一日/じゅうがつさんじゅういちにち}まで有効です。	
+ja-dC-065	ja-JP	medical	date	hard	健康診断の日程が{2月10日|二月十日/にがつとおか}に変更になりました。	10日はとおか
+ja-dC-066	ja-JP	it	date	hard	SSL証明書の有効期限は{2027-02-28|二千二十七年二月二十八日/にせんにじゅうしちねんにがつにじゅうはちにち/にせんにじゅうななねんにがつにじゅうはちにち}となっています。	ISO形式
+ja-dC-067	ja-JP	finance	date	basic	約束手形の支払期日は{9月30日|九月三十日/くがつさんじゅうにち}となっております。	
+ja-dC-068	ja-JP	sports	date	hard	箱根駅伝は毎年{1月2日|一月二日/いちがつふつか}と{3日|三日/みっか}に行われる。	月を省いた日付
+ja-dC-069	ja-JP	weather	date	basic	昨年の春一番は{2月27日|二月二十七日/にがつにじゅうしちにち/にがつにじゅうななにち}に関東地方で観測された。	
+ja-dC-070	ja-JP	travel	date	basic	旅館の予約は{8月13日|八月十三日/はちがつじゅうさんにち}から二泊でお願いします。	
+ja-dC-071	ja-JP	education	date	hard	大学入学共通テストは{1月16日|一月十六日/いちがつじゅうろくにち}と{17日|十七日/じゅうしちにち/じゅうななにち}の二日間実施される。	
+ja-dC-072	ja-JP	government	date	hard	平成は{平成31年4月30日|平成三十一年四月三十日/へいせいさんじゅういちねんしがつさんじゅうにち}をもって幕を閉じた。	和暦
+ja-dC-073	ja-JP	food	date	hard	賞味期限はパッケージ裏面に{2026.12.08|二千二十六年十二月八日/にせんにじゅうろくねんじゅうにがつようか}と記載されています。	ドット区切り
+ja-dC-074	ja-JP	transport	date	context	新幹線の指定席は{12/29|十二月二十九日/じゅうにがつにじゅうくにち}分がすでに満席となっています。	
+ja-dC-075	ja-JP	entertainment	date	hard	ミュージカルの千秋楽は{5月31日(日)|五月三十一日日曜日/ごがつさんじゅういちにちにちようび}です。	
+ja-dC-076	ja-JP	notice	date	basic	誠に勝手ながら、{10月27日|十月二十七日/じゅうがつにじゅうしちにち/じゅうがつにじゅうななにち}は臨時休業とさせていただきます。	
+ja-dC-077	ja-JP	news	date	basic	終戦の日の{8月15日|八月十五日/はちがつじゅうごにち}、全国戦没者追悼式が開かれた。	
+ja-dC-078	ja-JP	chat	date	context	来月の{3日|三日/みっか}って文化の日で祝日だよね?	
+ja-dC-079	ja-JP	shopping	date	hard	ブラックフライデーセールは{11/27(金)|十一月二十七日金曜日/じゅういちがつにじゅうしちにちきんようび/じゅういちがつにじゅうななにちきんようび}から開催します。	
+ja-dC-080	ja-JP	medical	date	hard	患者さんの生年月日は{昭和22年6月18日|昭和二十二年六月十八日/しょうわにじゅうにねんろくがつじゅうはちにち}でお間違いないですか。	和暦
+ja-dC-081	ja-JP	it	date	hard	新サービスのベータ版を{11/16(月)|十一月十六日月曜日/じゅういちがつじゅうろくにちげつようび}に公開します。	
+ja-dC-082	ja-JP	finance	date	basic	定時株主総会は{2027年6月25日|二千二十七年六月二十五日/にせんにじゅうしちねんろくがつにじゅうごにち/にせんにじゅうななねんろくがつにじゅうごにち}に開催の予定です。	
+ja-dC-083	ja-JP	sports	date	hard	東京マラソンは{3月1日|三月一日/さんがつついたち}の朝に号砲が鳴る。	
+ja-dC-084	ja-JP	weather	date	hard	今年は{10月1日|十月一日/じゅうがつついたち}になっても各地で真夏日が続いた。	
+ja-dC-085	ja-JP	travel	date	context	年末年始は{12/30|十二月三十日/じゅうにがつさんじゅうにち}から{1/3|一月三日/いちがつみっか}まで空港の混雑が予想されます。	
+ja-dC-086	ja-JP	education	date	hard	雨天のため、秋の遠足は{10月30日(金)|十月三十日金曜日/じゅうがつさんじゅうにちきんようび}に延期します。	
+ja-dC-087	ja-JP	government	date	hard	自転車の交通反則通告制度は{2026年4月1日|二千二十六年四月一日/にせんにじゅうろくねんしがつついたち}に始まった。	
+ja-dC-088	ja-JP	food	date	hard	開店記念日の{6月10日|六月十日/ろくがつとおか}は全品半額でご提供します。	
+ja-dC-089	ja-JP	transport	date	basic	最終電車の発車時刻が{3月16日|三月十六日/さんがつじゅうろくにち}から繰り上がります。	
+ja-dC-090	ja-JP	entertainment	date	hard	待望の新作ゲームの発売日が{2027/3/4|二千二十七年三月四日/にせんにじゅうしちねんさんがつよっか/にせんにじゅうななねんさんがつよっか}に延期された。	
+ja-dC-091	ja-JP	notice	date	context	申込書は{11/12|十一月十二日/じゅういちがつじゅうににち}までに事務局へご提出ください。	
+ja-dC-092	ja-JP	news	date	hard	昭和天皇が崩御したのは{1989年1月7日|千九百八十九年一月七日/せんきゅうひゃくはちじゅうくねんいちがつなのか/せんきゅうひゃくはちじゅうきゅうねんいちがつなのか}のことだった。	九年はく・きゅう両方
+ja-dC-093	ja-JP	chat	date	hard	うちの子の運動会、{9/26(土)|九月二十六日土曜日/くがつにじゅうろくにちどようび}に決まったって。	
+ja-dC-094	ja-JP	shopping	date	basic	母の日のギフトは{5月10日|五月十日/ごがつとおか}までに確実にお届けします。	
+ja-dC-095	ja-JP	medical	date	basic	入院日は{1月22日|一月二十二日/いちがつにじゅうににち}に決まりましたので、準備をお願いします。	
+ja-dC-096	ja-JP	it	date	hard	クラウドの利用料金は毎月{1日|一日/ついたち}に締め、{5日|五日/いつか}に確定します。	毎月の日付なのでついたち
+ja-dC-097	ja-JP	finance	date	context	給料日は毎月{25日|二十五日/にじゅうごにち}ですが、土日の場合は前倒しで支給されます。	
+ja-dC-098	ja-JP	sports	date	hard	大相撲九州場所は{11月8日|十一月八日/じゅういちがつようか}に初日を迎える。	
+ja-dC-099	ja-JP	weather	date	basic	国内の最高気温の記録は{2025年8月5日|二千二十五年八月五日/にせんにじゅうごねんはちがついつか}に群馬県で観測された。	
+ja-dC-100	ja-JP	travel	date	context	旅行最終日の{4/29|四月二十九日/しがつにじゅうくにち}は昭和の日で、どの観光地も混んでいた。	
+ja-dC-101	ja-JP	notice	time	hard	本日の受付は{午前9時|午前九時/ごぜんくじ}から開始いたします。	9時はくじ
+ja-dC-102	ja-JP	news	time	hard	地震は{午後4時12分|午後四時十二分/ごごよじじゅうにふん}ごろ発生し、津波の心配はないということです。	4時はよじ
+ja-dC-103	ja-JP	chat	time	hard	明日は駅前に{7時|七時/しちじ/ななじ}集合でいいかな?遅れないでね。	7時はしち・なな両方
+ja-dC-104	ja-JP	shopping	time	basic	本日のタイムセールは{20:00|二十時/にじゅうじ}にスタートします。	
+ja-dC-105	ja-JP	medical	time	basic	この抗生物質は{8時間|八時間/はちじかん}おきに服用してください。	
+ja-dC-106	ja-JP	it	time	context	システムメンテナンスのため、深夜{2:00|二時/にじ}にサーバーを停止します。	
+ja-dC-107	ja-JP	finance	time	basic	東京証券取引所の取引終了時刻は{15時30分|十五時三十分/じゅうごじさんじゅっぷん/じゅうごじさんじっぷん}に延長された。	じゅっぷん・じっぷん両形
+ja-dC-108	ja-JP	sports	time	hard	今夜の試合は{19時|十九時/じゅうくじ}にキックオフの予定です。	
+ja-dC-109	ja-JP	weather	time	hard	台風の最接近は{午前4時|午前四時/ごぜんよじ}ごろの見込みです。	
+ja-dC-110	ja-JP	travel	time	basic	成田行きの便は{10:45|十時四十五分/じゅうじよんじゅうごふん}に出発します。	
+ja-dC-111	ja-JP	education	time	basic	一時間目の授業は{8時40分|八時四十分/はちじよんじゅっぷん/はちじよんじっぷん}に始まります。	
+ja-dC-112	ja-JP	government	time	hard	開票作業は{午後9時|午後九時/ごごくじ}から市民体育館で始まる予定だ。	
+ja-dC-113	ja-JP	food	time	basic	当店のランチタイムは{11時半|十一時半/じゅういちじはん}からとなっております。	
+ja-dC-114	ja-JP	transport	time	context	次の快速電車は{6:05|六時五分/ろくじごふん}に二番線から発車します。	
+ja-dC-115	ja-JP	entertainment	time	basic	コンサートの開場は{18:15|十八時十五分/じゅうはちじじゅうごふん}を予定しています。	
+ja-dC-116	ja-JP	notice	time	hard	中央図書館は本日{午後7時|午後七時/ごごしちじ/ごごななじ}で閉館いたします。	
+ja-dC-117	ja-JP	news	time	basic	事故の第一報は{21時|二十一時/にじゅういちじ}すぎに消防へ入った。	
+ja-dC-118	ja-JP	chat	time	context	ごめん、電車が止まってて{10分|十分/じゅっぷん/じっぷん}くらい遅れる!	じゅうぶんではない
+ja-dC-119	ja-JP	shopping	time	basic	{13時|十三時/じゅうさんじ}までのご注文は当日中に発送いたします。	
+ja-dC-120	ja-JP	medical	time	basic	今回の手術は{3時間|三時間/さんじかん}ほどかかる見込みです。	
+ja-dC-122	ja-JP	finance	time	basic	表示している為替レートは{午前10時|午前十時/ごぜんじゅうじ}時点のものです。	
+ja-dC-123	ja-JP	sports	time	basic	優勝したランナーのタイムは{2時間5分30秒|二時間五分三十秒/にじかんごふんさんじゅうびょう}だった。	
+ja-dC-124	ja-JP	weather	time	basic	明日の東京の日の出は{5時48分|五時四十八分/ごじよんじゅうはっぷん/ごじよんじゅうはちふん}です。	8分ははっぷん・はちふん両方
+ja-dC-125	ja-JP	travel	time	basic	乗り継ぎまでは{1時間30分|一時間三十分/いちじかんさんじゅっぷん/いちじかんさんじっぷん}ほど余裕があります。	
+ja-dC-126	ja-JP	education	time	basic	数学のテストの制限時間は{45分|四十五分/よんじゅうごふん}です。	
+ja-dC-127	ja-JP	government	time	context	区役所の窓口は平日{8:30|八時三十分/はちじさんじゅっぷん/はちじさんじっぷん/八時半/はちじはん}から開いています。	コロン表記の30分は半とも読む
+ja-dC-128	ja-JP	food	time	basic	スパゲッティはたっぷりのお湯で{9分|九分/きゅうふん}ゆでてください。	9分はきゅうふん
+ja-dC-129	ja-JP	transport	time	basic	事故渋滞の影響で、バスの到着が{40分|四十分/よんじゅっぷん/よんじっぷん}ほど遅れた。	
+ja-dC-130	ja-JP	entertainment	time	basic	今回の映画の上映時間は{2時間22分|二時間二十二分/にじかんにじゅうにふん}です。	
+ja-dC-131	ja-JP	notice	time	basic	停電は{午後1時|午後一時/ごごいちじ}から約{2時間|二時間/にじかん}を予定しています。	
+ja-dC-132	ja-JP	news	time	context	現地時間の{午前0時|午前零時/ごぜんれいじ/午前ゼロ時/ごぜんぜろじ}、新年を祝う花火が一斉に打ち上げられた。	0時はれい・ぜろ両方
+ja-dC-133	ja-JP	chat	time	hard	もう{4時|四時/よじ}だけど、まだ会社にいるの?	
+ja-dC-134	ja-JP	shopping	time	hard	新店舗の開店時刻は{AM10:00|午前十時/ごぜんじゅうじ}です。	AMは午前
+ja-dC-135	ja-JP	medical	time	basic	食後{30分|三十分/さんじゅっぷん/さんじっぷん}以内にお飲みください。	
+ja-dC-136	ja-JP	it	time	basic	APIのタイムアウトは{60秒|六十秒/ろくじゅうびょう}に設定されています。	
+ja-dC-137	ja-JP	finance	time	hard	先物の夜間取引は{17時|十七時/じゅうしちじ/じゅうななじ}から始まる。	
+ja-dC-138	ja-JP	sports	time	basic	前半{38分|三十八分/さんじゅうはっぷん/さんじゅうはちふん}、ついに先制ゴールが決まった。	
+ja-dC-139	ja-JP	weather	time	basic	降り続いた雨は夕方{6時|六時/ろくじ}ごろには上がるでしょう。	
+ja-dC-140	ja-JP	travel	time	hard	羽田からパリまでの飛行時間は約{14時間|十四時間/じゅうよじかん}です。	
+ja-dC-141	ja-JP	education	time	basic	図書館の自習室は{22時|二十二時/にじゅうにじ}まで利用できます。	
+ja-dC-142	ja-JP	government	time	basic	投票は{午後8時|午後八時/ごごはちじ}に締め切られ、即日開票された。	
+ja-dC-143	ja-JP	food	time	basic	弱火で{1時間|一時間/いちじかん}ほどじっくり煮込むのがコツです。	
+ja-dC-144	ja-JP	transport	time	hard	平日の始発電車は{4:52|四時五十二分/よじごじゅうにふん}に発車します。	
+ja-dC-145	ja-JP	entertainment	time	hard	このラジオ番組は毎週日曜の{25時|二十五時/にじゅうごじ}から放送中です。	24時超えの深夜表記
+ja-dC-146	ja-JP	notice	time	hard	本日の点検作業は{9時|九時/くじ}にすべて終了しました。	
+ja-dC-147	ja-JP	news	time	hard	列車は{7時15分|七時十五分/しちじじゅうごふん/ななじじゅうごふん}ごろ、踏切付近で緊急停止した。	
+ja-dC-148	ja-JP	chat	time	basic	{3時|三時/さんじ}のおやつ、プリンとケーキどっちがいい?	
+ja-dC-149	ja-JP	shopping	time	hard	荷物の受け取りは{19:00|十九時/じゅうくじ}以降でお願いします。	
+ja-dC-150	ja-JP	medical	time	hard	健康のために、睡眠は毎晩{7時間|七時間/しちじかん/ななじかん}以上とりましょう。	
+ja-dC-151	ja-JP	it	time	hard	改修前はページの表示に{1.2秒|一・二秒/いってんにびょう}かかっていた。	
+ja-dC-152	ja-JP	finance	time	basic	銀行の窓口の営業は{15時|十五時/じゅうごじ}までです。	
+ja-dC-153	ja-JP	sports	time	hard	男子百メートル決勝で{9秒95|九秒九五/きゅうびょうきゅうじゅうご/きゅうびょうきゅうご}の好記録が出た。	秒以下は九十五・九五の両読み
+ja-dC-154	ja-JP	weather	time	basic	{午前11時|午前十一時/ごぜんじゅういちじ}現在、県内全域に大雨警報が出ています。	
+ja-dC-155	ja-JP	travel	time	basic	チェックインは{15:00|十五時/じゅうごじ}、チェックアウトは{10:00|十時/じゅうじ}です。	
+ja-dC-156	ja-JP	education	time	basic	午後の部は{1時15分|一時十五分/いちじじゅうごふん}から再開します。	
+ja-dC-157	ja-JP	government	time	hard	住民説明会は{14時|十四時/じゅうよじ}から市役所の大会議室で開催します。	
+ja-dC-158	ja-JP	food	time	basic	土鍋でご飯を炊くと{50分|五十分/ごじゅっぷん/ごじっぷん}ほどかかります。	
+ja-dC-159	ja-JP	transport	time	basic	東京から新大阪までは新幹線でおよそ{2時間半|二時間半/にじかんはん}です。	
+ja-dC-160	ja-JP	entertainment	time	basic	新曲のライブ配信は{20時30分|二十時三十分/にじゅうじさんじゅっぷん/にじゅうじさんじっぷん}開始予定です。	
+ja-dC-161	ja-JP	notice	time	basic	防災無線のチャイムは毎日{午後5時|午後五時/ごごごじ}に流れます。	
+ja-dC-162	ja-JP	news	time	basic	記者会見は{午後2時半|午後二時半/ごごにじはん}から本社で開かれた。	
+ja-dC-163	ja-JP	chat	time	basic	待ち合わせの時間、{6時半|六時半/ろくじはん}に変えてもいい?	
+ja-dC-164	ja-JP	shopping	time	basic	年に一度の大セールは残り{6時間|六時間/ろくじかん}です、お見逃しなく!	
+ja-dC-165	ja-JP	medical	time	hard	点滴のバッグは{4時間|四時間/よじかん}ごとに交換します。	
+ja-dC-166	ja-JP	it	time	hard	サーバーの平均応答時間は{250ms|二百五十ミリ秒/にひゃくごじゅうみりびょう}でした。	msはミリ秒
+ja-dC-167	ja-JP	finance	time	hard	平日の{0時|零時/れいじ/ゼロ時/ぜろじ}から{7時|七時/しちじ/ななじ}までは一部のATMが使えません。	
+ja-dC-168	ja-JP	sports	time	basic	延長十二回までもつれ、試合時間は{3時間14分|三時間十四分/さんじかんじゅうよんぷん}に及んだ。	
+ja-dC-169	ja-JP	weather	time	basic	今日の日の入りは{16:28|十六時二十八分/じゅうろくじにじゅうはっぷん/じゅうろくじにじゅうはちふん}です。	
+ja-dC-170	ja-JP	travel	time	basic	島へ渡るフェリーは日中{20分|二十分/にじゅっぷん/にじっぷん}おきに出ています。	
+ja-dC-171	ja-JP	notice	range	context	窓口の受付時間は{9:00〜17:00|九時から十七時/くじからじゅうしちじ/くじからじゅうななじ}です。	
+ja-dC-172	ja-JP	news	range	basic	今回の豪雨による被害額は{30〜50億円|三十から五十億円/さんじゅうからごじゅうおくえん/三十億円から五十億円/さんじゅうおくえんからごじゅうおくえん}と推計されている。	単位を前にも付ける読みも可
+ja-dC-173	ja-JP	chat	range	context	明日の飲み会、あと{2〜3人|二、三人/にさんにん/二人から三人/ふたりからさんにん}増えるかも。	
+ja-dC-174	ja-JP	shopping	range	hard	ご注文からお届けまで{3〜5日|三日から五日/みっかからいつか}ほどかかります。	
+ja-dC-175	ja-JP	medical	range	basic	一回{1〜2錠|一から二錠/いちからにじょう/一、二錠/いちにじょう/一錠から二錠/いちじょうからにじょう}を水かぬるま湯で服用してください。	
+ja-dC-176	ja-JP	it	range	context	このソフトの推奨メモリは{8〜16GB|八から十六ギガバイト/はちからじゅうろくぎがばいと/八から十六ギガ/はちからじゅうろくぎが/八ギガバイトから十六ギガバイト/はちぎがばいとからじゅうろくぎがばいと}です。	
+ja-dC-177	ja-JP	finance	range	hard	住宅ローンの変動金利は{0.5〜1.0%|〇・五から一・〇パーセント/れいてんごからいってんれいぱーせんと/ぜろてんごからいってんぜろぱーせんと/〇・五パーセントから一・〇パーセント/れいてんごぱーせんとからいってんれいぱーせんと/ぜろてんごぱーせんとからいってんぜろぱーせんと}が中心だ。	0はれい・ぜろ両方
+ja-dC-178	ja-JP	sports	range	basic	決勝戦の観客は{4万〜5万人|四万から五万人/よんまんからごまんにん/四万人から五万人/よんまんにんからごまんにん}と見込まれている。	
+ja-dC-180	ja-JP	travel	range	hard	このプランでは現地に{4〜6日|四日から六日/よっかからむいか}滞在するのが人気です。	
+ja-dC-181	ja-JP	education	range	context	夏のプログラミング教室の対象は{10〜12歳|十から十二歳/じゅうからじゅうにさい/十歳から十二歳/じゅっさいからじゅうにさい/じっさいからじゅうにさい}の児童です。	
+ja-dC-182	ja-JP	government	range	hard	給付金の申請受付期間は{10/1〜10/31|十月一日から十月三十一日/じゅうがつついたちからじゅうがつさんじゅういちにち/十月一日から三十一日/じゅうがつついたちからさんじゅういちにち}です。	
+ja-dC-183	ja-JP	food	range	basic	予熱したオーブンで{15〜20分|十五から二十分/じゅうごからにじゅっぷん/じゅうごからにじっぷん/十五分から二十分/じゅうごふんからにじゅっぷん/じゅうごふんからにじっぷん}焼いてください。	
+ja-dC-184	ja-JP	transport	range	hard	台風の影響で、{6:00〜9:00|六時から九時/ろくじからくじ}は全線で運転を見合わせます。	
+ja-dC-185	ja-JP	entertainment	range	basic	公演チケットは{5,000〜8,000円|五千から八千円/ごせんからはっせんえん/五千円から八千円/ごせんえんからはっせんえん}で販売中です。	
+ja-dC-186	ja-JP	notice	range	basic	駅前広場の改修工事は{2026年11月〜2027年3月|二千二十六年十一月から二千二十七年三月/にせんにじゅうろくねんじゅういちがつからにせんにじゅうしちねんさんがつ/にせんにじゅうろくねんじゅういちがつからにせんにじゅうななねんさんがつ}の予定です。	
+ja-dC-187	ja-JP	news	range	hard	その調査は{1990〜1995年|千九百九十から千九百九十五年/せんきゅうひゃくきゅうじゅうからせんきゅうひゃくきゅうじゅうごねん/千九百九十年から千九百九十五年/せんきゅうひゃくきゅうじゅうねんからせんきゅうひゃくきゅうじゅうごねん}にかけて実施された。	
+ja-dC-188	ja-JP	chat	range	context	来週の{月〜水|月曜から水曜/げつようからすいよう/月曜日から水曜日/げつようびからすいようび/月から水/げつからすい}は出張だから会えないや。	曜日の略記
+ja-dC-189	ja-JP	shopping	range	basic	冬物の対象商品は{10〜30%|十から三十パーセント/じゅうからさんじゅっぱーせんと/じゅうからさんじっぱーせんと/十パーセントから三十パーセント/じゅっぱーせんとからさんじゅっぱーせんと/じっぱーせんとからさんじっぱーせんと}オフになります。	
+ja-dC-190	ja-JP	medical	range	basic	安静時の心拍数は一分間に{60〜100回|六十から百回/ろくじゅうからひゃっかい/六十回から百回/ろくじゅっかいからひゃっかい/ろくじっかいからひゃっかい}が目安です。	
+ja-dC-191	ja-JP	it	range	context	ファイルの変換処理には{2〜3秒|二から三秒/にからさんびょう/二、三秒/にさんびょう/二秒から三秒/にびょうからさんびょう}ほどかかります。	
+ja-dC-192	ja-JP	finance	range	basic	円相場は一ドル{148〜152円|百四十八から百五十二円/ひゃくよんじゅうはちからひゃくごじゅうにえん/百四十八円から百五十二円/ひゃくよんじゅうはちえんからひゃくごじゅうにえん}の範囲で推移した。	
+ja-dC-193	ja-JP	sports	range	basic	先発投手が降板し、{7〜9回|七から九回/ななからきゅうかい/七回から九回/ななかいからきゅうかい}は継投で逃げ切った。	
+ja-dC-194	ja-JP	weather	range	basic	午後の降水確率は{60〜70%|六十から七十パーセント/ろくじゅうからななじゅっぱーせんと/ろくじゅうからななじっぱーせんと/六十パーセントから七十パーセント/ろくじゅっぱーせんとからななじゅっぱーせんと/ろくじっぱーせんとからななじっぱーせんと}の見込みです。	
+ja-dC-195	ja-JP	travel	range	hard	年末年始の繁忙期は{12/28〜1/4|十二月二十八日から一月四日/じゅうにがつにじゅうはちにちからいちがつよっか}です。	
+ja-dC-196	ja-JP	education	range	hard	次回までに教科書の{p.24〜31|二十四から三十一ページ/にじゅうよんからさんじゅういちぺーじ/二十四ページから三十一ページ/にじゅうよんぺーじからさんじゅういちぺーじ}を予習してください。	p.はページ
+ja-dC-197	ja-JP	government	range	basic	一世帯あたりの給付額は{3万〜5万円|三万から五万円/さんまんからごまんえん/三万円から五万円/さんまんえんからごまんえん}となる見通しです。	
+ja-dC-198	ja-JP	food	range	basic	このあたりのランチは{800〜1,200円|八百から千二百円/はっぴゃくからせんにひゃくえん/八百円から千二百円/はっぴゃくえんからせんにひゃくえん}が相場です。	
+ja-dC-199	ja-JP	transport	range	basic	信号故障のため、到着が{10〜15分|十から十五分/じゅうからじゅうごふん/十分から十五分/じゅっぷんからじゅうごふん/じっぷんからじゅうごふん}遅れる見込みです。	
+ja-dC-200	ja-JP	entertainment	range	hard	劇団の夏公演は{7/10〜7/12|七月十日から七月十二日/しちがつとおかからしちがつじゅうににち/七月十日から十二日/しちがつとおかからじゅうににち}の三日間です。	
+ja-dC-201	ja-JP	notice	range	context	相談窓口は{月〜金|月曜から金曜/げつようからきんよう/月曜日から金曜日/げつようびからきんようび/月から金/げつからきん}の営業となります。	曜日の略記
+ja-dC-202	ja-JP	news	range	basic	この事故で{20〜30人|二十から三十人/にじゅうからさんじゅうにん/二十人から三十人/にじゅうにんからさんじゅうにん}が軽いけがをしたとみられる。	
+ja-dC-203	ja-JP	chat	range	basic	今週のバイトは{18時〜22時|十八時から二十二時/じゅうはちじからにじゅうにじ}だから、そのあと合流するね。	
+ja-dC-204	ja-JP	shopping	range	basic	この知育玩具の対象年齢は{3〜6歳|三から六歳/さんからろくさい/三歳から六歳/さんさいからろくさい}です。	
+ja-dC-205	ja-JP	medical	range	hard	熱は{38〜39℃|三十八から三十九度/さんじゅうはちからさんじゅうくど/さんじゅうはちからさんじゅうきゅうど/三十八度から三十九度/さんじゅうはちどからさんじゅうくど/さんじゅうはちどからさんじゅうきゅうど}の間を上下しています。	39度はく・きゅう両方
+ja-dC-206	ja-JP	it	range	basic	有料プランの利用者はユーザー全体の{1〜2割|一から二割/いちからにわり/一、二割/いちにわり/一割から二割/いちわりからにわり}程度です。	
+ja-dC-207	ja-JP	finance	range	basic	年収{400〜600万円|四百から六百万円/よんひゃくからろっぴゃくまんえん/四百万円から六百万円/よんひゃくまんえんからろっぴゃくまんえん}の世帯が支援の対象です。	
+ja-dC-208	ja-JP	sports	range	context	代表チームは毎日{2〜3時間|二から三時間/にからさんじかん/二、三時間/にさんじかん/二時間から三時間/にじかんからさんじかん}の練習を続けている。	
+ja-dC-209	ja-JP	weather	range	basic	山沿いでは雪が{10〜20cm|十から二十センチ/じゅうからにじゅっせんち/じゅうからにじっせんち/十センチから二十センチ/じゅっせんちからにじゅっせんち/じっせんちからにじっせんち}積もる見込みです。	
+ja-dC-210	ja-JP	travel	range	basic	空港から市内まではバスで{40〜50分|四十から五十分/よんじゅうからごじゅっぷん/よんじゅうからごじっぷん/四十分から五十分/よんじゅっぷんからごじゅっぷん/よんじっぷんからごじっぷん}です。	
+ja-dC-211	ja-JP	education	range	basic	一クラスの定員は{25〜30名|二十五から三十名/にじゅうごからさんじゅうめい/二十五名から三十名/にじゅうごめいからさんじゅうめい}としています。	
+ja-dC-212	ja-JP	government	range	basic	今回の検診の対象は{65〜74歳|六十五から七十四歳/ろくじゅうごからななじゅうよんさい/六十五歳から七十四歳/ろくじゅうごさいからななじゅうよんさい}の方です。	
+ja-dC-213	ja-JP	food	range	basic	この味噌の熟成期間は{1〜2年|一から二年/いちからにねん/一、二年/いちにねん/一年から二年/いちねんからにねん}です。	
+ja-dC-214	ja-JP	transport	range	basic	市営バスの運賃は区間により{210〜450円|二百十から四百五十円/にひゃくじゅうからよんひゃくごじゅうえん/二百十円から四百五十円/にひゃくじゅうえんからよんひゃくごじゅうえん}です。	
+ja-dC-215	ja-JP	entertainment	range	basic	ドラマの視聴率は{12〜15%|十二から十五パーセント/じゅうにからじゅうごぱーせんと/十二パーセントから十五パーセント/じゅうにぱーせんとからじゅうごぱーせんと}台で推移した。	
+ja-dC-216	ja-JP	notice	range	basic	水道管工事のため、{13:00〜16:00|十三時から十六時/じゅうさんじからじゅうろくじ}は断水します。	
+ja-dC-217	ja-JP	news	range	hard	この地域では{震度5弱〜6強|震度五弱から六強/しんどごじゃくからろっきょう/震度五弱から震度六強/しんどごじゃくからしんどろっきょう}の揺れが想定される。	六強はろっきょう
+ja-dC-218	ja-JP	it	range	hard	今回の不具合はバージョン{3.0〜3.4|三・〇から三・四/さんてんれいからさんてんよん/さんてんぜろからさんてんよん}が対象です。	
+ja-dC-219	ja-JP	sports	range	basic	このリーグでは{10〜12月|十から十二月/じゅうからじゅうにがつ/十月から十二月/じゅうがつからじゅうにがつ}がオフシーズンです。	
+ja-dC-220	ja-JP	medical	range	basic	手術後の入院期間は{1〜2週間|一から二週間/いちからにしゅうかん/一、二週間/いちにしゅうかん/一週間から二週間/いっしゅうかんからにしゅうかん}の見込みです。	
+ja-dC-221	ja-JP	education	math	basic	小学一年生で習う{6+8=14|六足す八は十四/ろくたすはちはじゅうよん/六足す八イコール十四/ろくたすはちいこーるじゅうよん}は、繰り上がりのある足し算です。	等号ははとイコール両方
+ja-dC-222	ja-JP	education	math	basic	{5×6|五掛ける六/ごかけるろく}の答えを九九で確かめてみましょう。	
+ja-dC-223	ja-JP	education	math	hard	{x²|エックスの二乗/えっくすのにじょう/エックス二乗/えっくすにじょう}を微分すると{2x|二エックス/にえっくす}になる。	
+ja-dC-224	ja-JP	food	math	basic	材料費は{1,200÷4|千二百割る四/せんにひゃくわるよん}で、一人あたり三百円です。	
+ja-dC-225	ja-JP	education	math	basic	{√9|ルート九/るーときゅう}は三、{√16|ルート十六/るーとじゅうろく}は四になります。	
+ja-dC-226	ja-JP	shopping	math	basic	合計金額は{980円×3|九百八十円掛ける三/きゅうひゃくはちじゅうえんかけるさん}で計算してください。	
+ja-dC-227	ja-JP	it	math	hard	このモニターの解像度は{1920×1080|千九百二十掛ける千八十/せんきゅうひゃくにじゅうかけるせんはちじゅう}です。	
+ja-dC-228	ja-JP	chat	math	basic	二人で割り勘なら{4,800÷2|四千八百割る二/よんせんはっぴゃくわるに}で二千四百円ずつだね。	
+ja-dC-229	ja-JP	education	math	basic	累乗の例として{2³=8|二の三乗は八/にのさんじょうははち/二の三乗イコール八/にのさんじょういこーるはち}を覚えておこう。	
+ja-dC-230	ja-JP	sports	math	basic	勝率は{12÷20|十二割る二十/じゅうにわるにじゅう}で六割ちょうどになる。	
+ja-dC-231	ja-JP	medical	math	basic	薬の残りは{15−8|十五引く八/じゅうごひくはち}で七錠になります。	
+ja-dC-232	ja-JP	education	math	basic	一次方程式{2x+3=11|二エックス足す三は十一/にえっくすたすさんはじゅういち/二エックス足す三イコール十一/にえっくすたすさんいこーるじゅういち}を解きなさい。	
+ja-dC-233	ja-JP	food	math	context	合わせ酢の酢と砂糖の比率は{3:1|三対一/さんたいいち}が基本です。	コロンは比で時刻ではない
+ja-dC-234	ja-JP	it	math	hard	一キビバイトは{2¹⁰|二の十乗/にのじゅうじょう}バイト、つまり千二十四バイトです。	
+ja-dC-235	ja-JP	finance	math	basic	税込価格は{1,000×1.1|千掛ける一・一/せんかけるいってんいち}で求められます。	
+ja-dC-236	ja-JP	education	math	hard	円の面積は{πr²|パイアール二乗/ぱいあーるにじょう/パイアールの二乗/ぱいあーるのにじょう}で求めます。	
+ja-dC-237	ja-JP	education	math	context	分数の計算{1/2+1/3=5/6|二分の一足す三分の一は六分の五/にぶんのいちたすさんぶんのいちはろくぶんのご/二分の一足す三分の一イコール六分の五/にぶんのいちたすさんぶんのいちいこーるろくぶんのご}を図で説明します。	スラッシュは分数
+ja-dC-238	ja-JP	weather	math	hard	最高気温と最低気温の平均は{(12+18)÷2|十二足す十八割る二/じゅうにたすじゅうはちわるに/括弧十二足す十八括弧閉じ割る二/かっこじゅうにたすじゅうはちかっことじわるに}で十五度です。	括弧を読む形も可
+ja-dC-239	ja-JP	chat	math	basic	娘がノートに{10÷2=5|十割る二は五/じゅうわるにはご/十割る二イコール五/じゅうわるにいこーるご}と書いて得意げに見せてきた。	
+ja-dC-240	ja-JP	it	math	hard	ループの継続条件は{x≠0|エックスノットイコールゼロ/えっくすのっといこーるぜろ}です。	
+ja-dC-241	ja-JP	education	math	hard	不等式{x≧5|エックス大なりイコール五/えっくすだいなりいこーるご/エックスは五以上/えっくすはごいじょう}を数直線に表しましょう。	
+ja-dC-242	ja-JP	government	math	basic	手数料は{3,000×0.03|三千掛ける〇・〇三/さんぜんかけるれいてんれいさん/さんぜんかけるぜろてんぜろさん}で九十円になります。	0はれい・ぜろ両方
+ja-dC-243	ja-JP	news	math	basic	前回選挙との議席差は{24−18|二十四引く十八/にじゅうよんひくじゅうはち}で六議席だった。	
+ja-dC-244	ja-JP	education	math	hard	九九の{7×8=56|七掛ける八は五十六/ななかけるはちはごじゅうろく/しちかけるはちはごじゅうろく/七掛ける八イコール五十六/ななかけるはちいこーるごじゅうろく/しちかけるはちいこーるごじゅうろく/七八五十六/しちはごじゅうろく}でつまずく子が多い。	九九の唱え方も可
+ja-dC-245	ja-JP	entertainment	math	context	この作品は{16:9|十六対九/じゅうろくたいきゅう}の画面比率で制作されている。	比
+ja-dC-246	ja-JP	food	math	context	来客が多いので、レシピの分量を{×2|二倍/にばい/掛ける二/かけるに}にして作りました。	
+ja-dC-247	ja-JP	education	math	basic	負の数を含む{−3+5=2|マイナス三足す五は二/まいなすさんたすごはに/マイナス三足す五イコール二/まいなすさんたすごいこーるに}を確認しよう。	
+ja-dC-248	ja-JP	transport	math	basic	平均時速は{120÷1.5|百二十割る一・五/ひゃくにじゅうわるいってんご}で八十キロになる。	
+ja-dC-249	ja-JP	medical	math	basic	BMIは{体重÷身長²|体重割る身長の二乗/たいじゅうわるしんちょうのにじょう/体重割る身長二乗/たいじゅうわるしんちょうにじょう}で計算します。	
+ja-dC-250	ja-JP	entertainment	math	basic	ライブの抽選倍率は{5,000÷250|五千割る二百五十/ごせんわるにひゃくごじゅう}で二十倍だった。	
+ja-dD-001	ja-JP	notice	phone	basic	臨時休業中のお問い合わせは{03-5210-4876|ゼロさんのごにいちゼロのよんはちななろく/ゼロさんごにいちゼロよんはちななろく/れいさんのごにいちれいのよんはちななろく/れいさんごにいちれいよんはちななろく}までお願いします。	電話番号は1桁ずつ。ゼロ/れい、区切りの「の」の有無を併記。に・ごの長音化は同一読み扱い
+ja-dD-002	ja-JP	shopping	phone	basic	ご注文はフリーダイヤル{0120-374-915|ゼロいちにゼロのさんななよんのきゅういちご/ゼロいちにゼロさんななよんきゅういちご/れいいちにれいのさんななよんのきゅういちご/れいいちにれいさんななよんきゅういちご}にて年中無休で承ります。	0120も1桁ずつ読む
+ja-dD-003	ja-JP	medical	phone	context	お子さんの急な発熱で受診を迷ったら、{#8000|シャープはっせん/シャープはちゼロゼロゼロ/シャープはちまるまるまる}に電話してください。	子ども医療電話相談の短縮番号。案内上は「はっせん」、1桁読みも通用
+ja-dD-004	ja-JP	government	phone	basic	契約トラブルは消費者ホットライン{188|いちはちはち}へご相談ください。	語呂合わせ「いやや」は愛称で番号の読み上げには用いない
+ja-dD-005	ja-JP	news	phone	context	不審な人物を見かけたら、ためらわずに{110番|ひゃくとおばん/いちいちゼロばん}通報してください。	警察の緊急通報。「ひゃくとおばん」が定着、1桁読みも通用
+ja-dD-006	ja-JP	medical	phone	basic	呼びかけに反応がない場合は、すぐに{119番|ひゃくじゅうきゅうばん/いちいちきゅうばん}へ連絡してください。	緊急通報番号。位取り読みと1桁読みの両方が自然
+ja-dD-007	ja-JP	travel	phone	context	海での事故や密漁を見つけたら、海上保安庁の{118番|いちいちはちばん/ひゃくじゅうはちばん}へ。	海上保安庁は「いちいちはち番」と案内、位取り読みも通用
+ja-dD-008	ja-JP	weather	phone	context	大規模災害の際は災害用伝言ダイヤル{171|いちなないち}で家族の安否を確認しましょう。	サービス番号は1桁ずつ
+ja-dD-009	ja-JP	it	phone	basic	サポートデスクの直通番号は{050-3786-2291|ゼロごゼロのさんななはちろくのににきゅういち/ゼロごゼロさんななはちろくににきゅういち/れいごれいのさんななはちろくのににきゅういち/れいごれいさんななはちろくににきゅういち}です。	IP電話番号
+ja-dD-010	ja-JP	chat	phone	basic	新しい携帯の番号、{090-4417-8352|ゼロきゅうゼロのよんよんいちななのはちさんごに/ゼロきゅうゼロよんよんいちななはちさんごに/れいきゅうれいのよんよんいちななのはちさんごに/れいきゅうれいよんよんいちななはちさんごに}に変わったからよろしくね。	携帯番号。4・7はよん・なな
+ja-dD-011	ja-JP	finance	phone	basic	カードの紛失や盗難は{0120-918-406|ゼロいちにゼロのきゅういちはちのよんゼロろく/ゼロいちにゼロきゅういちはちよんゼロろく/れいいちにれいのきゅういちはちのよんれいろく/れいいちにれいきゅういちはちよんれいろく}へ、すぐにご連絡ください。	
+ja-dD-012	ja-JP	travel	phone	hard	海外からお問い合わせの際は{+81 3 6824 1907|プラスはちいちさんろくはちによんいちきゅうゼロなな/プラスはちいちのさんのろくはちによんのいちきゅうゼロなな/プラスはちいちさんのろくはちによんのいちきゅうゼロなな/プラスはちいちさんろくはちによんいちきゅうれいなな/プラスはちいちのさんのろくはちによんのいちきゅうれいなな/プラスはちいちさんのろくはちによんのいちきゅうれいなな/プラスはちじゅういちさんろくはちによんいちきゅうゼロなな/プラスはちじゅういちのさんのろくはちによんのいちきゅうゼロなな}にお電話ください。	国番号は「はちいち」が主、「はちじゅういち」も通用。空白区切りの「の」は有無両方
+ja-dD-013	ja-JP	education	phone	basic	欠席の連絡は始業前に学校の代表番号{045-671-3398|ゼロよんごのろくなないちのさんさんきゅうはち/ゼロよんごろくなないちさんさんきゅうはち/れいよんごのろくなないちのさんさんきゅうはち/れいよんごろくなないちさんさんきゅうはち}へお願いします。	
+ja-dD-014	ja-JP	food	phone	basic	席のご予約は店舗直通の{06-6345-2187|ゼロろくのろくさんよんごのにいちはちなな/ゼロろくろくさんよんごにいちはちなな/れいろくのろくさんよんごのにいちはちなな/れいろくろくさんよんごにいちはちなな}が確実です。	
+ja-dD-015	ja-JP	notice	phone	context	平日の日中は{内線214|ないせんにいちよん/ないせんにひゃくじゅうよん}、夜間は守衛室にご連絡ください。	内線は1桁ずつが一般的だが3桁は位取り読みも自然
+ja-dD-016	ja-JP	sports	phone	basic	チケットの払い戻しは専用ダイヤル{0570-064-382|ゼロごななゼロのゼロろくよんのさんはちに/ゼロごななゼロゼロろくよんさんはちに/れいごななれいのれいろくよんのさんはちに/れいごななれいれいろくよんさんはちに}まで。	ナビダイヤル
+ja-dD-017	ja-JP	transport	phone	basic	運行状況は自動音声案内{052-819-0063|ゼロごにのはちいちきゅうのゼロゼロろくさん/ゼロごにはちいちきゅうゼロゼロろくさん/れいごにのはちいちきゅうのれいれいろくさん/れいごにはちいちきゅうれいれいろくさん}でも確認できます。	
+ja-dD-018	ja-JP	entertainment	phone	basic	番組へのご意見は視聴者センター{0570-00-3141|ゼロごななゼロのゼロゼロのさんいちよんいち/ゼロごななゼロゼロゼロさんいちよんいち/れいごななれいのれいれいのさんいちよんいち/れいごななれいれいれいさんいちよんいち}にお寄せください。	
+ja-dD-019	ja-JP	education	phone	context	体調が悪くなったら{内線3052|ないせんさんゼロごに/ないせんさんれいごに}で保健室を呼び出してください。	4桁の内線は1桁ずつ
+ja-dD-020	ja-JP	finance	phone	basic	ネットバンキングのヘルプデスクは{0120-55-8174|ゼロいちにゼロのごごのはちいちななよん/ゼロいちにゼロごごはちいちななよん/れいいちにれいのごごのはちいちななよん/れいいちにれいごごはちいちななよん}です。	
+ja-dD-021	ja-JP	government	phone	basic	粗大ごみは受付センター{092-711-4520|ゼロきゅうにのなないちいちのよんごにゼロ/ゼロきゅうになないちいちよんごにゼロ/れいきゅうにのなないちいちのよんごにれい/れいきゅうになないちいちよんごにれい}に前日までお申し込みください。	
+ja-dD-022	ja-JP	chat	phone	basic	会社用は{080-2963-7710|ゼロはちゼロのにきゅうろくさんのななないちゼロ/ゼロはちゼロにきゅうろくさんななないちゼロ/れいはちれいのにきゅうろくさんのななないちれい/れいはちれいにきゅうろくさんななないちれい}だから、仕事の件はそっちにかけて。	
+ja-dD-023	ja-JP	shopping	phone	basic	配送についてのご質問は{011-206-5893|ゼロいちいちのにゼロろくのごはちきゅうさん/ゼロいちいちにゼロろくごはちきゅうさん/れいいちいちのにれいろくのごはちきゅうさん/れいいちいちにれいろくごはちきゅうさん}へどうぞ。	
+ja-dD-024	ja-JP	it	phone	basic	障害発生時の緊急連絡先は{070-8842-1356|ゼロななゼロのはちはちよんにのいちさんごろく/ゼロななゼロはちはちよんにいちさんごろく/れいななれいのはちはちよんにのいちさんごろく/れいななれいはちはちよんにいちさんごろく}、担当は情報システム課です。	
+ja-dD-025	ja-JP	travel	phone	basic	送迎バスのご依頼は旅館フロント{0555-72-4019|ゼロごごごのななにのよんゼロいちきゅう/ゼロごごごななによんゼロいちきゅう/れいごごごのななにのよんれいいちきゅう/れいごごごななによんれいいちきゅう}へお申し付けください。	
+ja-dD-026	ja-JP	weather	phone	basic	大雨で避難の手助けが必要な方は市の防災課{0985-21-3367|ゼロきゅうはちごのにいちのさんさんろくなな/ゼロきゅうはちごにいちさんさんろくなな/れいきゅうはちごのにいちのさんさんろくなな/れいきゅうはちごにいちさんさんろくなな}へ。	
+ja-dD-027	ja-JP	sports	phone	basic	ファンクラブ事務局の{03-6908-2245|ゼロさんのろくきゅうゼロはちのにによんご/ゼロさんろくきゅうゼロはちにによんご/れいさんのろくきゅうれいはちのにによんご/れいさんろくきゅうれいはちにによんご}は土日が休みです。	
+ja-dD-028	ja-JP	food	phone	basic	食中毒が疑われるときは保健所{048-830-3612|ゼロよんはちのはちさんゼロのさんろくいちに/ゼロよんはちはちさんゼロさんろくいちに/れいよんはちのはちさんれいのさんろくいちに/れいよんはちはちさんれいさんろくいちに}に相談してください。	
+ja-dD-029	ja-JP	government	phone	context	固定資産税については税務課の{内線5127|ないせんごいちになな}までお問い合わせください。	4桁の内線は1桁ずつ
+ja-dD-030	ja-JP	entertainment	phone	basic	当日券の有無は劇場ボックスオフィス{075-212-0839|ゼロななごのにいちにのゼロはちさんきゅう/ゼロななごにいちにゼロはちさんきゅう/れいななごのにいちにのれいはちさんきゅう/れいななごにいちにれいはちさんきゅう}でご確認ください。	
+ja-dD-031	ja-JP	news	phone	context	詐欺の被害に遭った方は警察相談専用電話{#9110|シャープきゅういちいちゼロ/シャープきゅういちいちれい}を利用できます。	短縮番号は1桁ずつ。#はシャープ
+ja-dD-033	ja-JP	government	phone	basic	虐待が疑われる場合は児童相談所虐待対応ダイヤル{189|いちはちきゅう}に連絡を。	語呂合わせ「いちはやく」は愛称で読み上げには用いない
+ja-dD-034	ja-JP	transport	phone	hard	訪日客向けの交通案内ダイヤル{+81-50-3816-2704|プラスはちいちごゼロさんはちいちろくにななゼロよん/プラスはちいちのごゼロのさんはちいちろくのにななゼロよん/プラスはちいちごゼロのさんはちいちろくのにななゼロよん/プラスはちいちごれいさんはちいちろくにななれいよん/プラスはちいちのごれいのさんはちいちろくのにななれいよん/プラスはちいちごれいのさんはちいちろくのにななれいよん/プラスはちじゅういちごゼロさんはちいちろくにななゼロよん/プラスはちじゅういちのごゼロのさんはちいちろくのにななゼロよん}では英語でも対応しています。	国際表記で先頭の0が落ちた050番号
+ja-dD-035	ja-JP	shopping	phone	basic	返品受付の時間外は{0800-919-2734|ゼロはちゼロゼロのきゅういちきゅうのにななさんよん/ゼロはちゼロゼロきゅういちきゅうにななさんよん/れいはちれいれいのきゅういちきゅうのにななさんよん/れいはちれいれいきゅういちきゅうにななさんよん}の留守番電話にメッセージを残してください。	
+ja-dD-036	ja-JP	finance	phone	context	不正利用が疑われる取引は、カード裏面の{0570-783-110|ゼロごななゼロのななはちさんのいちいちゼロ/ゼロごななゼロななはちさんいちいちゼロ/れいごななれいのななはちさんのいちいちれい/れいごななれいななはちさんいちいちれい}へご連絡ください。	末尾の110は番号の一部なので「ひゃくとお」と読まない
+ja-dD-037	ja-JP	notice	phone	basic	マンション管理会社の夜間窓口は{0422-51-7036|ゼロよんににのごいちのななゼロさんろく/ゼロよんににごいちななゼロさんろく/れいよんににのごいちのななれいさんろく/れいよんににごいちななれいさんろく}です。	
+ja-dD-038	ja-JP	notice	phone	hard	リモート接続でトラブルが起きたら、情報システム部の{内線0815|ないせんゼロはちいちご/ないせんれいはちいちご}へ連絡してください。	先頭が0の内線は位取り読みができず1桁ずつ
+ja-dD-039	ja-JP	sports	phone	basic	スタジアム運営事務局{03-3811-2104|ゼロさんのさんはちいちいちのにいちゼロよん/ゼロさんさんはちいちいちにいちゼロよん/れいさんのさんはちいちいちのにいちれいよん/れいさんさんはちいちいちにいちれいよん}では迷子の問い合わせにも対応しています。	
+ja-dD-040	ja-JP	chat	phone	basic	実家の固定電話{0267-45-1982|ゼロにろくななのよんごのいちきゅうはちに/ゼロにろくななよんごいちきゅうはちに/れいにろくななのよんごのいちきゅうはちに/れいにろくななよんごいちきゅうはちに}にも一応連絡しといた。	
+ja-dD-041	ja-JP	food	electronic	basic	営業時間の変更は公式サイト{www.minato-bakery.jp|ダブリューダブリューダブリュードットミナトハイフンベーカリードットジェーピー/ダブリューダブリューダブリュードットミナトハイフンベーカリードットジェイピー/トリプルダブリュードットミナトハイフンベーカリードットジェーピー/トリプルダブリュードットミナトハイフンベーカリードットジェイピー}でお知らせします。	wwwはダブリュー3回/トリプルダブリュー。jpはジェーピー/ジェイピー
+ja-dD-042	ja-JP	shopping	electronic	basic	お届け商品の不具合は{support@hanaya-mail.com|サポートアットハナヤハイフンメールドットコム/サポートアットマークハナヤハイフンメールドットコム}までご連絡ください。	英単語は単語読み、ローマ字の日本語は語として読む
+ja-dD-043	ja-JP	it	electronic	context	サンプルコードは{github.com/sora-lab/weather-api|ギットハブドットコムスラッシュソラハイフンラボスラッシュウェザーハイフンエーピーアイ}で公開しています。	apiは略語なのでアルファベット読み
+ja-dD-044	ja-JP	entertainment	electronic	basic	感想は{#夏フェス2026|ハッシュタグ夏フェス二千二十六/ハッシュタグなつフェスにせんにじゅうろく}をつけて投稿してね。	年号は位取り読み
+ja-dD-045	ja-JP	government	electronic	basic	ごみの分別表は{city.sakuragawa.lg.jp|シティドットサクラガワドットエルジードットジェーピー/シティードットサクラガワドットエルジードットジェーピー/シティドットサクラガワドットエルジードットジェイピー/シティードットサクラガワドットエルジードットジェイピー}からダウンロードできます。	lgは略語でアルファベット読み
+ja-dD-046	ja-JP	chat	electronic	basic	インスタは{@mika_cafe_days|アットミカアンダーバーカフェアンダーバーデイズ/アットミカアンダースコアカフェアンダースコアデイズ/アットマークミカアンダーバーカフェアンダーバーデイズ/アットマークミカアンダースコアカフェアンダースコアデイズ}だよ、フォローしてね。	_はアンダーバー/アンダースコア
+ja-dD-047	ja-JP	weather	electronic	basic	台風接近時の避難情報は町の防災アカウント{@minami_bousai|アットミナミアンダーバーボウサイ/アットミナミアンダースコアボウサイ/アットマークミナミアンダーバーボウサイ/アットマークミナミアンダースコアボウサイ}でも発信しています。	
+ja-dD-048	ja-JP	it	electronic	basic	社内ポータルは{intra.nexwave.co.jp|イントラドットネクスウェーブドットシーオードットジェーピー/イントラドットネクスウェーブドットシーオードットジェイピー}からログインしてください。	coはシーオー
+ja-dD-049	ja-JP	education	electronic	context	期末レポートは{kadai@keizai.hokuyo-u.ac.jp|カダイアットケイザイドットホクヨウハイフンユードットエーシードットジェーピー/カダイアットマークケイザイドットホクヨウハイフンユードットエーシードットジェーピー/カダイアットケイザイドットホクヨウハイフンユードットエーシードットジェイピー/カダイアットマークケイザイドットホクヨウハイフンユードットエーシードットジェイピー}宛てに提出すること。	単独のuとacはアルファベット読み
+ja-dD-050	ja-JP	travel	electronic	basic	予約確認メールが届かない場合は{booking@tabiji-net.com|ブッキングアットタビジハイフンネットドットコム/ブッキングアットマークタビジハイフンネットドットコム}へお知らせください。	
+ja-dD-051	ja-JP	sports	electronic	basic	試合のハイライト動画は{#Jリーグ|ハッシュタグジェーリーグ/ハッシュタグジェイリーグ}で検索してみて。	
+ja-dD-052	ja-JP	finance	electronic	context	銀行を名乗る{alert@secure-kakei.net|アラートアットセキュアハイフンカケイドットネット/アラートアットマークセキュアハイフンカケイドットネット}からのメールは開かずに削除してください。	
+ja-dD-053	ja-JP	food	electronic	hard	レシピの全文は{gohan-note.jp/recipe/4821|ゴハンハイフンノートドットジェーピースラッシュレシピスラッシュよんはちにいち/ゴハンハイフンノートドットジェイピースラッシュレシピスラッシュよんはちにいち/ゴハンハイフンノートドットジェーピースラッシュレシピスラッシュよんせんはっぴゃくにじゅういち/ゴハンハイフンノートドットジェイピースラッシュレシピスラッシュよんせんはっぴゃくにじゅういち}に載っています。	URL中の数字は1桁ずつ・位取りの両方が自然
+ja-dD-054	ja-JP	entertainment	electronic	basic	ファンクラブ会員ページは{fc.hoshizora-band.com|エフシードットホシゾラハイフンバンドドットコム}です。	fcは略語でアルファベット読み
+ja-dD-055	ja-JP	medical	electronic	basic	オンライン診療の予約は{yoyaku.aoba-clinic.jp|ヨヤクドットアオバハイフンクリニックドットジェーピー/ヨヤクドットアオバハイフンクリニックドットジェイピー}からお取りいただけます。	
+ja-dD-056	ja-JP	transport	electronic	basic	遅延情報はバス会社のアカウント{@minato_bus|アットミナトアンダーバーバス/アットミナトアンダースコアバス/アットマークミナトアンダーバーバス/アットマークミナトアンダースコアバス}で随時お知らせします。	
+ja-dD-057	ja-JP	it	electronic	hard	開発環境では{localhost:8080/admin|ローカルホストコロンはちまるはちまるスラッシュアドミン/ローカルホストコロンはちゼロはちゼロスラッシュアドミン/ローカルホストコロンはっせんはちじゅうスラッシュアドミン}で管理画面を開きます。	ポート番号は技術者の間で「はちまるはちまる」が一般的
+ja-dD-058	ja-JP	news	electronic	basic	読者からの情報提供は{news@kita-shimbun.jp|ニュースアットキタハイフンシンブンドットジェーピー/ニュースアットマークキタハイフンシンブンドットジェーピー/ニュースアットキタハイフンシンブンドットジェイピー/ニュースアットマークキタハイフンシンブンドットジェイピー}へ送ってください。	
+ja-dD-059	ja-JP	education	electronic	basic	学習アプリのログイン画面は{manabi-plus.jp/login|マナビハイフンプラスドットジェーピースラッシュログイン/マナビハイフンプラスドットジェイピースラッシュログイン}です。	
+ja-dD-060	ja-JP	shopping	electronic	basic	お得な情報は{#週末限定セール|ハッシュタグ週末限定セール/ハッシュタグしゅうまつげんていセール}で毎週配信中!	#はハッシュタグ
+ja-dD-061	ja-JP	government	electronic	basic	住民票の郵送請求については{juminhyo@minamikawa.lg.jp|ジュウミンヒョウアットミナミカワドットエルジードットジェーピー/ジュウミンヒョウアットマークミナミカワドットエルジードットジェーピー/ジュウミンヒョウアットミナミカワドットエルジードットジェイピー/ジュウミンヒョウアットマークミナミカワドットエルジードットジェイピー}へお問い合わせください。	
+ja-dD-062	ja-JP	weather	electronic	basic	雨雲の動きは{tenki-now.jp/radar|テンキハイフンナウドットジェーピースラッシュレーダー/テンキハイフンナウドットジェイピースラッシュレーダー}で確認できます。	
+ja-dD-063	ja-JP	chat	electronic	basic	写真を共有するときは{#ゆいの結婚式|ハッシュタグゆいの結婚式/ハッシュタグゆいのけっこんしき}をつけてね!	
+ja-dD-064	ja-JP	finance	electronic	basic	運用報告書は{www.aozora-am.co.jp|ダブリューダブリューダブリュードットアオゾラハイフンエーエムドットシーオードットジェーピー/トリプルダブリュードットアオゾラハイフンエーエムドットシーオードットジェーピー/ダブリューダブリューダブリュードットアオゾラハイフンエーエムドットシーオードットジェイピー/トリプルダブリュードットアオゾラハイフンエーエムドットシーオードットジェイピー}に掲載しています。	amは略語でアルファベット読み
+ja-dD-065	ja-JP	sports	electronic	basic	駅伝の速報は{@ekiden_live|アットエキデンアンダーバーライブ/アットエキデンアンダースコアライブ/アットマークエキデンアンダーバーライブ/アットマークエキデンアンダースコアライブ}をフォローしてください。	
+ja-dD-066	ja-JP	travel	electronic	hard	客室のネット接続が不安定なときは{192.168.0.1|いちきゅうにドットいちろくはちドットゼロドットいち/いちきゅうにてんいちろくはちてんゼロてんいち/いちきゅうにてんいちろくはちてんまるてんいち/ひゃくきゅうじゅうにてんひゃくろくじゅうはちてんゼロてんいち}にアクセスして再起動してください。	IPアドレスは区切りをドット/てんで読む。オクテットは1桁ずつが主
+ja-dD-067	ja-JP	notice	electronic	basic	商店街イベントの出店申し込みは{event@shotengai-net.jp|イベントアットショウテンガイハイフンネットドットジェーピー/イベントアットマークショウテンガイハイフンネットドットジェーピー/イベントアットショウテンガイハイフンネットドットジェイピー/イベントアットマークショウテンガイハイフンネットドットジェイピー}で受け付けます。	
+ja-dD-068	ja-JP	medical	electronic	basic	検査結果の照会は{kensa@sakura-clinic.or.jp|ケンサアットサクラハイフンクリニックドットオーアールドットジェーピー/ケンサアットマークサクラハイフンクリニックドットオーアールドットジェーピー/ケンサアットサクラハイフンクリニックドットオーアールドットジェイピー/ケンサアットマークサクラハイフンクリニックドットオーアールドットジェイピー}にご連絡ください。	orはオーアール
+ja-dD-069	ja-JP	news	electronic	basic	訂正記事は{minami-times.jp/teisei|ミナミハイフンタイムズドットジェーピースラッシュテイセイ/ミナミハイフンタイムズドットジェイピースラッシュテイセイ}に掲載しました。	
+ja-dD-070	ja-JP	transport	electronic	basic	駅の混雑状況は{eki-konzatsu.info|エキハイフンコンザツドットインフォ}でリアルタイムに見られます。	infoは単語読み
+ja-dD-071	ja-JP	shopping	alnum	basic	新型の発表に合わせて{iPhone 15|アイフォーン十五/アイフォーンじゅうご/アイフォン十五/アイフォンじゅうご}が値下げされた。	製品名の数字は位取り読み
+ja-dD-072	ja-JP	entertainment	alnum	basic	年末商戦に向けて{PS5|ピーエスファイブ}の在庫が補充された。	製品名として英語読みが定着
+ja-dD-073	ja-JP	transport	alnum	context	山手線では{E235系|イー二百三十五系/イーにひゃくさんじゅうごけい/イー二三五系/イーにさんごけい}の車両が主力として走っている。	形式番号は1桁ずつ読む人も多い
+ja-dD-074	ja-JP	travel	alnum	basic	{NH847便|エヌエイチ八百四十七便/エヌエイチはっぴゃくよんじゅうななびん/エヌエイチはちよんななびん/エヌエッチはっぴゃくよんじゅうななびん/エヌエッチはちよんななびん}は定刻どおりに出発しました。	便名は位取り読みが主、1桁読みも通用
+ja-dD-075	ja-JP	it	alnum	basic	不具合を修正した{v2.3.1|バージョンにてんさんてんいち/ブイにてんさんてんいち/バージョンにドットさんドットいち}を配信しました。	バージョン番号は漢数字表記が一般的でないため仮名のみ
+ja-dD-076	ja-JP	news	alnum	basic	規制により、スマートフォンの充電端子は{USB-C|ユーエスビーシー}に統一された。	ハイフンは読まない
+ja-dD-077	ja-JP	news	alnum	context	地方の山間部でも{5G|ファイブジー}の通信エリアが広がっている。	
+ja-dD-078	ja-JP	entertainment	alnum	basic	{4K|四ケー/よんケー/よんケイ}放送に対応したテレビが値下がりしている。	
+ja-dD-079	ja-JP	education	alnum	basic	レポートは{A4|エー四/エーよん}の用紙にまとめて提出すること。	
+ja-dD-080	ja-JP	shopping	alnum	context	紳士服売り場は{B1階|地下一階/ちかいっかい/ビー一階/ビーいっかい}にございます。	「ちかいっかい」が主、「ビーいっかい」も通用
+ja-dD-081	ja-JP	it	alnum	context	サポート終了に備えて、社内のパソコンを{Windows 11|ウィンドウズ十一/ウィンドウズじゅういち/ウインドウズ十一/ウインドウズじゅういち}へ移行した。	
+ja-dD-082	ja-JP	transport	alnum	basic	東京行きの{のぞみ215号|のぞみ二百十五号/のぞみにひゃくじゅうごごう}は少し遅れて到着します。	列車番号は位取り読み
+ja-dD-083	ja-JP	news	alnum	basic	国産大型の{H3|エイチスリー}ロケットの打ち上げが成功した。	機体名は英語読み
+ja-dD-084	ja-JP	sports	alnum	basic	{F1|エフワン}日本グランプリが今週末に鈴鹿で開幕する。	
+ja-dD-085	ja-JP	medical	alnum	basic	{COVID-19|コビッドナインティーン}の秋の定期接種の予約が始まった。	
+ja-dD-086	ja-JP	medical	alnum	context	健康診断で{HbA1c|ヘモグロビンエーワンシー/エイチビーエーワンシー}の値が高めだと言われた。	医療現場では「ヘモグロビンエーワンシー」が一般的
+ja-dD-087	ja-JP	finance	alnum	context	転職に伴い、企業型{401k|四〇一ケー/よんまるいちケー/よんゼロいちケー}の資産を移した。	確定拠出年金の通称。1桁読み
+ja-dD-088	ja-JP	notice	alnum	hard	製品番号{FD-2041|エフディー二〇四一/エフディーにゼロよんいち/エフディーにまるよんいち/エフディー二千四十一/エフディーにせんよんじゅういち}のホットプレートは自主回収の対象です。	型番の数字は1桁読み・位取り読みの両方
+ja-dD-089	ja-JP	travel	alnum	basic	帰りは{JL516便|ジェーエル五百十六便/ジェーエルごひゃくじゅうろくびん/ジェーエルごいちろくびん/ジェイエルごひゃくじゅうろくびん/ジェイエルごいちろくびん}で羽田に戻ります。	
+ja-dD-090	ja-JP	transport	alnum	hard	渋滞を避けたいなら{R246|アールにーよんろく/アールによんろく/ルートにーよんろく/アール二百四十六/アールにひゃくよんじゅうろく}は通らないほうがいい。	国道246号は「にーよんろく」の通称が定着
+ja-dD-091	ja-JP	transport	alnum	basic	東北新幹線の{E5系|イー五系/イーごけい}は緑の車体が目印です。	
+ja-dD-092	ja-JP	travel	alnum	context	予約した座席は{12A|十二エー/じゅうにエー/十二のエー/じゅうにのエー}で、窓側の席です。	座席番号
+ja-dD-093	ja-JP	weather	alnum	basic	今日は{PM2.5|ピーエム二点五/ピーエムにてんご}の濃度が高くなる見込みです。	
+ja-dD-094	ja-JP	entertainment	alnum	basic	その映画は{3D|スリーディー}版と通常版の両方で上映される。	
+ja-dD-095	ja-JP	notice	alnum	basic	館内のネットワークが{Wi-Fi 6|ワイファイシックス}に対応しました。	規格名は英語読み
+ja-dD-096	ja-JP	education	alnum	basic	新学期の持ち物として{B5|ビー五/ビーご}のノートを用意してください。	
+ja-dD-097	ja-JP	weather	alnum	basic	台風に備えて、懐中電灯用の{単3|単三/たんさん}電池を買っておこう。	
+ja-dD-098	ja-JP	sports	alnum	context	野球の{U-18|ユー十八/ユーじゅうはち/アンダー十八/アンダーじゅうはち/アンダーエイティーン}日本代表メンバーが発表された。	報道では「ユーじゅうはち」が多いが他も通用
+ja-dD-099	ja-JP	news	alnum	basic	{G7|ジーセブン}首脳会議の共同声明が発表された。	
+ja-dD-100	ja-JP	news	alnum	context	{COP31|コップ三十一/コップさんじゅういち}では温室効果ガスの削減目標が主な議題となる。	COPは「コップ」
+ja-dD-101	ja-JP	finance	alnum	basic	米国株の{S&P500|エスアンドピー五百/エスアンドピーごひゃく}が最高値を更新した。	&はアンド
+ja-dD-102	ja-JP	finance	alnum	basic	東京市場では{日経225|日経二百二十五/にっけいにひゃくにじゅうご/日経二二五/にっけいにーにーご}先物が大きく下落した。	
+ja-dD-103	ja-JP	finance	alnum	context	決算説明会では、{Q1|キューワン}の売上高が予想を上回ったと報告された。	四半期の略記
+ja-dD-104	ja-JP	food	alnum	basic	記念日なので{A5|エー五/エーご}ランクの黒毛和牛を奮発した。	
+ja-dD-105	ja-JP	weather	alnum	context	大気中の{CO2|シーオーツー}濃度が観測史上最高を記録した。	化学式は英語読みが定着
+ja-dD-106	ja-JP	education	alnum	basic	理科の授業で{H2O|エイチツーオー/エッチツーオー}の分子模型を作った。	
+ja-dD-107	ja-JP	government	alnum	context	市の公式サイトは{IPv6|アイピーブイ六/アイピーブイろく/アイピーブイシックス}での接続にも対応しています。	
+ja-dD-108	ja-JP	it	alnum	context	開発には{Python 3.12|パイソン三点十二/パイソンさんてんじゅうに/パイソン三点一二/パイソンさんてんいちに}を使用しています。	小数点以下を位取りで読む慣習もある
+ja-dD-109	ja-JP	shopping	alnum	basic	落として割れた{Galaxy S24|ギャラクシーエス二十四/ギャラクシーエスにじゅうよん}の画面修理を頼んだ。	
+ja-dD-110	ja-JP	entertainment	alnum	basic	{Switch 2|スイッチツー}の抽選販売にようやく当選した。	製品名として英語読み
+ja-dD-111	ja-JP	sports	alnum	basic	都内で{3x3|スリーエックススリー}バスケットボールの国際大会が開かれた。	競技名の公式読み
+ja-dD-112	ja-JP	medical	alnum	context	感染症法上の{5類|五類/ごるい}に移行した後も、手洗いの習慣を続けましょう。	
+ja-dD-113	ja-JP	entertainment	alnum	basic	漫才日本一を決める{M-1|エムワン}グランプリの決勝進出者が発表された。	
+ja-dD-114	ja-JP	entertainment	alnum	basic	{AKB48|エーケービーフォーティーエイト}の新曲が週間ランキングで首位を獲得した。	グループ名の固定読み
+ja-dD-115	ja-JP	chat	alnum	basic	上司との{1on1|ワンオンワン}、今週は木曜にずれたって。	
+ja-dD-116	ja-JP	medical	alnum	context	体温計の電池は{CR2032|シーアール二〇三二/シーアールにゼロさんに/シーアールにまるさんに/シーアール二千三十二/シーアールにせんさんじゅうに}なので、薬局でも買えます。	電池型番は1桁読みが主
+ja-dD-117	ja-JP	transport	alnum	hard	首都高{C1|シーワン}の内回りで事故渋滞が発生しています。	都心環状線の路線番号
+ja-dD-118	ja-JP	travel	alnum	context	今回の機材はエアバス{A320|エー三百二十/エーさんびゃくにじゅう/エーさんにゼロ/エーさんにまる}で、座席は通路を挟んで左右に並びます。	
+ja-dD-119	ja-JP	travel	alnum	context	ボーイング{787|七八七/ななはちなな/七百八十七/ななひゃくはちじゅうなな}型機は窓が大きく、景色がよく見える。	機種名は1桁読みが主
+ja-dD-120	ja-JP	notice	alnum	basic	会議室は{3F|三階/さんがい/さんかい}の奥にあります。	3階は「さんがい」「さんかい」両方
+ja-dD-121	ja-JP	entertainment	alnum	basic	開発中の{8K|八ケー/はちケー/はちケイ}映像を体験できる展示が人気だ。	
+ja-dD-122	ja-JP	chat	alnum	context	旅行の動画、{1080p|千八十ピー/せんはちじゅうピー/いちゼロはちゼロピー/いちまるはちまるピー}で書き出して送るね。	
+ja-dD-123	ja-JP	transport	alnum	context	雪道に備えて{4WD|四ダブリューディー/よんダブリューディー/フォーダブリューディー}のレンタカーを予約した。	
+ja-dD-124	ja-JP	government	alnum	basic	市は全ての小中学校に{2in1|ツーインワン}タイプの端末を配備した。	
+ja-dD-125	ja-JP	government	alnum	basic	市営住宅の{2LDK|二エルディーケー/にエルディーケー}の空き部屋に応募した。	
+ja-dD-126	ja-JP	government	alnum	basic	今年の確定申告は自宅から{e-Tax|イータックス}で済ませた。	
+ja-dD-127	ja-JP	food	alnum	context	レバーにはビタミン{B12|ビー十二/ビーじゅうに}が豊富に含まれている。	
+ja-dD-128	ja-JP	food	alnum	basic	テイクアウトの{No.1|ナンバーワン}メニューは唐揚げ弁当です。	
+ja-dD-129	ja-JP	education	alnum	context	情報の授業で{Scratch 3.0|スクラッチ三点〇/スクラッチさんてんゼロ/スクラッチさんてんれい}を使ったプログラミングを学んだ。	
+ja-dD-130	ja-JP	sports	alnum	context	{J1|ジェーワン/ジェイワン}の優勝争いは最終節までもつれ込んだ。	
+ja-dD-131	ja-JP	notice	mixed	basic	{10月18日|十月十八日/じゅうがつじゅうはちにち}の{午前9時|午前九時/ごぜんくじ}から約{2時間|二時間/にじかん}、館内の電気設備点検を行います。	日付・時刻・時間量
+ja-dD-132	ja-JP	shopping	mixed	basic	本日限り、{1,980円|千九百八十円/せんきゅうひゃくはちじゅうえん}のTシャツが{30%|三十パーセント/さんじゅっパーセント/さんじっパーセント/さんじゅうパーセント}引き、先着{40名|四十名/よんじゅうめい}様までです。	金額・割合・人数
+ja-dD-133	ja-JP	weather	mixed	basic	明日の最高気温は{34℃|三十四度/さんじゅうよんど}、降水確率は{20%|二十パーセント/にじゅっパーセント/にじっパーセント/にじゅうパーセント}、風速は{5m|五メートル/ごメートル}の予想です。	気温・割合・長さ
+ja-dD-134	ja-JP	transport	mixed	context	上り線は{12月3日|十二月三日/じゅうにがつみっか}の{23時|二十三時/にじゅうさんじ}から翌朝まで、約{4km|四キロ/よんキロ/四キロメートル/よんキロメートル}にわたり通行止めとなります。	3日は「みっか」
+ja-dD-135	ja-JP	medical	mixed	context	{11月5日|十一月五日/じゅういちがついつか}以降、{37.5℃|三十七点五度/さんじゅうななてんごど/さんじゅうしちてんごど/三十七度五分/さんじゅうななどごぶ/さんじゅうしちどごぶ}以上の発熱がある方は{2階|二階/にかい}の発熱外来へお越しください。	体温は「度五分」の読みも一般的
+ja-dD-136	ja-JP	finance	mixed	context	日銀は{1月24日|一月二十四日/いちがつにじゅうよっか}の会合で政策金利を{0.5%|零点五パーセント/れいてんごパーセント/ゼロてんごパーセント}程度へ引き上げ、{17年ぶり|十七年ぶり/じゅうななねんぶり/じゅうしちねんぶり}の水準となった。	
+ja-dD-137	ja-JP	sports	mixed	basic	{9月28日|九月二十八日/くがつにじゅうはちにち}の決勝は{3対2|三対二/さんたいに}の逆転勝ちで、観客は{4万2,000人|四万二千人/よんまんにせんにん}に上った。	
+ja-dD-138	ja-JP	travel	mixed	context	成田発の便は{14時50分|十四時五十分/じゅうよじごじゅっぷん/じゅうよじごじっぷん}に出発し、{約11時間|約十一時間/やくじゅういちじかん}で到着、運賃は{8万6,400円|八万六千四百円/はちまんろくせんよんひゃくえん}です。	
+ja-dD-139	ja-JP	food	mixed	basic	卵{2個|二個/にこ}と牛乳{200ml|二百ミリリットル/にひゃくミリリットル/二百ミリ/にひゃくミリ}を混ぜ、{180℃|百八十度/ひゃくはちじゅうど}のオーブンで焼きます。	料理ではmlを「ミリ」と略す読みも自然
+ja-dD-140	ja-JP	education	mixed	context	{令和8年度|令和八年度/れいわはちねんど}の入学試験は{2月1日|二月一日/にがつついたち}に行い、受験料は{1万7,000円|一万七千円/いちまんななせんえん}です。	1日は「ついたち」
+ja-dD-141	ja-JP	government	mixed	basic	住民税{第3期|第三期/だいさんき}分の納期限は{10月31日|十月三十一日/じゅうがつさんじゅういちにち}で、{5,000円|五千円/ごせんえん}未満の少額でも延滞金がかかります。	
+ja-dD-142	ja-JP	news	mixed	basic	{2025年|二〇二五年/二千二十五年/にせんにじゅうごねん}の出生数は前年より{3.2%|三点二パーセント/さんてんにパーセント}少ない約{67万人|六十七万人/ろくじゅうななまんにん}と推計された。	
+ja-dD-143	ja-JP	notice	mixed	context	{11月2日|十一月二日/じゅういちがつふつか}の{午前1時〜5時|午前一時から五時/ごぜんいちじからごじ}にサーバーを増強し、保存容量を{2TB|二テラバイト/にテラバイト/二テラ/にテラ}に拡張します。	「〜」は「から」
+ja-dD-144	ja-JP	chat	mixed	basic	明日は{18時半|十八時半/じゅうはちじはん}に駅前集合ね、会費は{3,500円|三千五百円/さんぜんごひゃくえん}で{6人|六人/ろくにん}予約してある!	
+ja-dD-145	ja-JP	finance	mixed	hard	円相場は{午後3時|午後三時/ごごさんじ}時点で{1ドル=152円30銭|一ドル百五十二円三十銭/いちドルひゃくごじゅうにえんさんじゅっせん/いちドルひゃくごじゅうにえんさんじっせん}と、前日比{0.8%|零点八パーセント/れいてんはちパーセント/ゼロてんはちパーセント}の円安となった。	為替表記の「=」は読まない
+ja-dD-146	ja-JP	weather	mixed	context	台風{14号|十四号/じゅうよんごう}は中心気圧{975hPa|九百七十五ヘクトパスカル/きゅうひゃくななじゅうごヘクトパスカル}、最大風速{35m|三十五メートル/さんじゅうごメートル}で北上を続けています。	
+ja-dD-147	ja-JP	travel	mixed	basic	入館料は大人{1,200円|千二百円/せんにひゃくえん}、{65歳|六十五歳/ろくじゅうごさい}以上は半額で、{17時|十七時/じゅうななじ/じゅうしちじ}に閉館します。	
+ja-dD-148	ja-JP	sports	mixed	hard	男子{100m|百メートル/ひゃくメートル}決勝は{9秒98|九秒九八/きゅうびょうきゅうはち/九秒九十八/きゅうびょうきゅうじゅうはち}、追い風{0.9m|零点九メートル/れいてんきゅうメートル/ゼロてんきゅうメートル}の条件だった。	秒以下は1桁ずつ・位取りの両方
+ja-dD-149	ja-JP	food	mixed	basic	この弁当は{1食|一食/いっしょく}あたり{650kcal|六百五十キロカロリー/ろっぴゃくごじゅうキロカロリー}、塩分は{2.8g|二点八グラム/にてんはちグラム}です。	
+ja-dD-150	ja-JP	shopping	mixed	context	{2点|二点/にてん}以上のご購入で全品{15%|十五パーセント/じゅうごパーセント}オフ、期間は{11月30日|十一月三十日/じゅういちがつさんじゅうにち}までです。	「点」は品数の助数詞
+ja-dD-151	ja-JP	medical	mixed	context	お薬は{1日3回|一日三回/いちにちさんかい}、食後に{2錠|二錠/にじょう}ずつ、{5日分|五日分/いつかぶん}をお出ししています。	頻度の「1日」は「いちにち」
+ja-dD-152	ja-JP	government	mixed	context	{令和7年12月1日|令和七年十二月一日/れいわななねんじゅうにがつついたち/れいわしちねんじゅうにがつついたち}から、証明書の交付手数料は{1通|一通/いっつう}あたり{300円|三百円/さんびゃくえん}になりました。	令和7年は「なな」「しち」両方
+ja-dD-153	ja-JP	transport	mixed	basic	快速は{7時42分|七時四十二分/しちじよんじゅうにふん/ななじよんじゅうにふん}に{3番線|三番線/さんばんせん}から発車し、{10両|十両/じゅうりょう}編成で運転します。	
+ja-dD-154	ja-JP	entertainment	mixed	basic	上映時間は{2時間18分|二時間十八分/にじかんじゅうはっぷん/にじかんじゅうはちふん}、前売り券は{1,500円|千五百円/せんごひゃくえん}で、{12月19日|十二月十九日/じゅうにがつじゅうくにち/じゅうにがつじゅうきゅうにち}に公開されます。	
+ja-dD-155	ja-JP	news	mixed	basic	{6月21日|六月二十一日/ろくがつにじゅういちにち}{午前10時12分|午前十時十二分/ごぜんじゅうじじゅうにふん}ごろ、最大震度{5弱|五弱/ごじゃく}の地震がありました。	
+ja-dD-156	ja-JP	it	mixed	basic	新プランは月額{980円|九百八十円/きゅうひゃくはちじゅうえん}でデータ容量{20GB|二十ギガバイト/にじゅうギガバイト/二十ギガ/にじゅうギガ}、{5分|五分/ごふん}以内の通話は無料です。	GBは「ギガ」の略読みも自然
+ja-dD-157	ja-JP	education	mixed	basic	期末試験は{3教科|三教科/さんきょうか}で各{45分|四十五分/よんじゅうごふん}、{6割|六割/ろくわり}以上の得点で合格となります。	
+ja-dD-158	ja-JP	finance	mixed	basic	定期預金の金利は年{0.3%|零点三パーセント/れいてんさんパーセント/ゼロてんさんパーセント}、預け入れは{10万円|十万円/じゅうまんえん}から、期間は{1年|一年/いちねん}です。	
+ja-dD-159	ja-JP	weather	mixed	context	{1月9日|一月九日/いちがつここのか}朝の最低気温は{-4.2℃|マイナス四点二度/マイナスよんてんにど/氷点下四点二度/ひょうてんかよんてんにど}で、積雪は{12cm|十二センチ/じゅうにセンチ/十二センチメートル/じゅうにセンチメートル}に達した。	
+ja-dD-160	ja-JP	chat	mixed	context	誕生日会は{3/15|三月十五日/さんがつじゅうごにち}の{19時|十九時/じゅうくじ/じゅうきゅうじ}からで、プレゼント代は一人{2,000円|二千円/にせんえん}ずつね。	スラッシュ表記は文脈から日付
+ja-dD-161	ja-JP	travel	mixed	context	{2名1室|二名一室/にめいいっしつ}利用で{1泊1万2,800円|一泊一万二千八百円/いっぱくいちまんにせんはっぴゃくえん}、チェックインは{15時|十五時/じゅうごじ}からです。	
+ja-dD-162	ja-JP	sports	mixed	context	フルマラソン{42.195km|四十二点一九五キロ/よんじゅうにてんいちきゅうごキロ/四十二点一九五キロメートル/よんじゅうにてんいちきゅうごキロメートル}を{3時間45分|三時間四十五分/さんじかんよんじゅうごふん}で走り、自己ベストを{8分|八分/はっぷん/はちふん}縮めた。	
+ja-dD-163	ja-JP	food	mixed	basic	お米{5kg|五キロ/ごキロ/五キログラム/ごキログラム}が{3,980円|三千九百八十円/さんぜんきゅうひゃくはちじゅうえん}と、去年より{2割|二割/にわり}ほど高くなっている。	
+ja-dD-164	ja-JP	government	mixed	basic	{11月9日|十一月九日/じゅういちがつここのか}の投票は{午前7時〜午後8時|午前七時から午後八時/ごぜんしちじからごごはちじ/ごぜんななじからごごはちじ}、市内{52か所|五十二か所/ごじゅうにかしょ}の投票所で行われます。	
+ja-dD-165	ja-JP	medical	mixed	hard	身長{158cm|百五十八センチ/ひゃくごじゅうはっセンチ/ひゃくごじゅうはちセンチ/百五十八センチメートル/ひゃくごじゅうはっセンチメートル/ひゃくごじゅうはちセンチメートル}、体重{52.4kg|五十二点四キロ/ごじゅうにてんよんキロ/五十二点四キログラム/ごじゅうにてんよんキログラム}で、体格指数は{21.0|二十一点〇/にじゅういってんゼロ/にじゅういってんれい}と標準の範囲です。	
+ja-dD-166	ja-JP	news	mixed	basic	火事は{午前4時|午前四時/ごぜんよじ}ごろ発生し、木造{2階建て|二階建て/にかいだて}の住宅{約120㎡|約百二十平方メートル/やくひゃくにじゅうへいほうメートル}が全焼しました。	
+ja-dD-167	ja-JP	shopping	mixed	basic	送料は全国一律{550円|五百五十円/ごひゃくごじゅうえん}で、ご注文から{3営業日|三営業日/さんえいぎょうび}以内に発送し、{2kg|二キロ/にキロ/二キログラム/にキログラム}を超える荷物は別料金です。	
+ja-dD-168	ja-JP	transport	mixed	basic	高速バスは{22時15分|二十二時十五分/にじゅうにじじゅうごふん}に出発し、{約7時間|約七時間/やくななじかん/やくしちじかん}で到着、運賃は{4,900円|四千九百円/よんせんきゅうひゃくえん}です。	
+ja-dD-169	ja-JP	entertainment	mixed	context	公演は{全6回|全六回/ぜんろっかい}で、{S席9,800円|エス席九千八百円/エスせききゅうせんはっぴゃくえん}、{4歳|四歳/よんさい}未満のお子様は入場できません。	
+ja-dD-170	ja-JP	it	mixed	basic	新型ノートパソコンは重さ{1.2kg|一点二キロ/いってんにキロ/一点二キログラム/いってんにキログラム}、最大{18時間|十八時間/じゅうはちじかん}駆動で、価格は{14万9,800円|十四万九千八百円/じゅうよんまんきゅうせんはっぴゃくえん}です。	
+ja-dD-171	ja-JP	notice	mixed	basic	エレベーター点検のため、{1月15日|一月十五日/いちがつじゅうごにち}の{10時〜12時|十時から十二時/じゅうじからじゅうにじ}は{3号機|三号機/さんごうき}をご利用いただけません。	
+ja-dD-172	ja-JP	finance	mixed	hard	{1株|一株/ひとかぶ}あたりの年間配当は{86円|八十六円/はちじゅうろくえん}で、現在の株価なら利回りは{3.75%|三点七五パーセント/さんてんななごパーセント}になる。	「1株」は「ひとかぶ」
+ja-dD-173	ja-JP	weather	mixed	context	今夜は{1時間|一時間/いちじかん}に{50mm|五十ミリ/ごじゅうミリ/五十ミリメートル/ごじゅうミリメートル}以上の非常に激しい雨のおそれがあり、{明朝6時|明朝六時/みょうちょうろくじ}まで警戒が必要です。	
+ja-dD-174	ja-JP	education	mixed	context	修学旅行は{2泊3日|二泊三日/にはくみっか}で、積立金は月{8,000円|八千円/はっせんえん}、参加者は{147人|百四十七人/ひゃくよんじゅうななにん}の予定です。	
+ja-dD-175	ja-JP	shopping	mixed	basic	この冷蔵庫は幅{60cm|六十センチ/ろくじゅっセンチ/ろくじゅうセンチ/六十センチメートル/ろくじゅっセンチメートル/ろくじゅうセンチメートル}、容量{450L|四百五十リットル/よんひゃくごじゅうリットル}で、{10年|十年/じゅうねん}の長期保証が付きます。	
+ja-dD-176	ja-JP	sports	mixed	context	先発投手は{7回|七回/ななかい}を投げて{被安打3|被安打三/ひあんださん}、最速は{157km|百五十七キロ/ひゃくごじゅうななキロ}を記録した。	球速は「キロ」と略して読むのが一般的
+ja-dD-177	ja-JP	travel	mixed	hard	京都駅から{100番|百番/ひゃくばん}の市バスで{約25分|約二十五分/やくにじゅうごふん}、運賃は{230円|二百三十円/にひゃくさんじゅうえん}です。	100番はバス系統番号
+ja-dD-178	ja-JP	chat	mixed	basic	昨日のカラオケ、{4時間|四時間/よじかん}で{1人1,400円|一人千四百円/ひとりせんよんひゃくえん}だったよ、しかも{92点|九十二点/きゅうじゅうにてん}出た!	
+ja-dD-179	ja-JP	medical	mixed	context	血圧は上が{128|百二十八/ひゃくにじゅうはち}、下が{82|八十二/はちじゅうに}で、脈拍は{1分間に72回|一分間に七十二回/いっぷんかんにななじゅうにかい}でした。	
+ja-dD-180	ja-JP	food	mixed	context	ランチは{11時半〜14時|十一時半から十四時/じゅういちじはんからじゅうよじ}、日替わり定食は{780円|七百八十円/ななひゃくはちじゅうえん}、大盛りは{+50円|プラス五十円/プラスごじゅうえん}です。	
+ja-dD-181	ja-JP	government	mixed	context	調査票の回答期限は{10月8日|十月八日/じゅうがつようか}で、現在の回答率は{62.3%|六十二点三パーセント/ろくじゅうにてんさんパーセント}、未回答は{約1,800世帯|約千八百世帯/やくせんはっぴゃくせたい}です。	
+ja-dD-182	ja-JP	news	mixed	context	{第3四半期|第三四半期/だいさんしはんき}の純利益は前年同期比{12.6%|十二点六パーセント/じゅうにてんろくパーセント}増の{845億円|八百四十五億円/はっぴゃくよんじゅうごおくえん}だった。	
+ja-dD-183	ja-JP	it	mixed	context	更新ファイルは{約1.8GB|約一点八ギガバイト/やくいってんはちギガバイト/約一点八ギガ/やくいってんはちギガ}で、充電が{60%|六十パーセント/ろくじゅっパーセント/ろくじっパーセント/ろくじゅうパーセント}以上ある状態で実行すると、{10分|十分/じゅっぷん/じっぷん}ほどで終わります。	
+ja-dD-184	ja-JP	transport	mixed	context	{18時40分|十八時四十分/じゅうはちじよんじゅっぷん/じゅうはちじよんじっぷん}ごろの信号故障で{最大90分|最大九十分/さいだいきゅうじゅっぷん/さいだいきゅうじっぷん}の遅れが出て、{約3万8,000人|約三万八千人/やくさんまんはっせんにん}に影響した。	
+ja-dD-185	ja-JP	entertainment	mixed	basic	シリーズ{第4弾|第四弾/だいよんだん}は興行収入{52億円|五十二億円/ごじゅうにおくえん}を突破し、観客動員は{380万人|三百八十万人/さんびゃくはちじゅうまんにん}を超えた。	
+ja-dD-186	ja-JP	sports	mixed	hard	試合は{延長12回|延長十二回/えんちょうじゅうにかい}の末に{4-3|四対三/よんたいさん}でサヨナラ勝ちし、監督は通算{1,000勝|千勝/せんしょう}を達成した。	スコアのハイフンは「たい」
+ja-dD-187	ja-JP	education	mixed	context	奨学金は月額{5万4,000円|五万四千円/ごまんよんせんえん}、貸与期間は{4年間|四年間/よねんかん}で、申込締切は{5月20日|五月二十日/ごがつはつか}です。	4年は「よねん」、20日は「はつか」
+ja-dD-188	ja-JP	notice	mixed	context	断水は{8月4日|八月四日/はちがつよっか}の{9時〜15時|九時から十五時/くじからじゅうごじ}を予定しており、対象は{約1,300戸|約千三百戸/やくせんさんびゃっこ}です。	
+ja-dD-189	ja-JP	travel	mixed	hard	現地の予想最高気温は{86°F|華氏八十六度/かしはちじゅうろくど}、摂氏でおよそ{30℃|三十度/さんじゅうど}で、日本との時差は{-14時間|マイナス十四時間/マイナスじゅうよじかん}です。	°Fは「華氏」
+ja-dD-190	ja-JP	food	mixed	context	パスタ{100g|百グラム/ひゃくグラム}を{1.5L|一点五リットル/いってんごリットル}のお湯でゆで、塩は{小さじ2|小さじ二/こさじに}を目安に入れます。	
+ja-dD-191	ja-JP	shopping	mixed	context	ポイントは{200円|二百円/にひゃくえん}につき{1pt|一ポイント/いちポイント}、毎月五日と十日は{3倍|三倍/さんばい}になります。	ptはポイント
+ja-dD-192	ja-JP	weather	mixed	hard	今年の真夏日は{112日|百十二日/ひゃくじゅうににち}で平年より{+18日|プラス十八日/プラスじゅうはちにち}、最高気温は{39.1℃|三十九点一度/さんじゅうきゅうてんいちど}に達した。	日数なので日付読みにしない
+ja-dD-193	ja-JP	medical	mixed	basic	骨密度は若年成人平均の{78%|七十八パーセント/ななじゅうはちパーセント}で、{70歳|七十歳/ななじゅっさい/ななじっさい}以上の方には{年1回|年一回/ねんいっかい}の検査をおすすめしています。	
+ja-dD-194	ja-JP	government	mixed	context	申請期限は{令和9年3月31日|令和九年三月三十一日/れいわきゅうねんさんがつさんじゅういちにち/れいわくねんさんがつさんじゅういちにち}、補助率は対象経費の{2/3|三分の二/さんぶんのに}で、上限は{20万円|二十万円/にじゅうまんえん}です。	補助率の文脈なので分数
+ja-dD-195	ja-JP	chat	mixed	context	{3連休|三連休/さんれんきゅう}は{2泊|二泊/にはく}で温泉行こ、予算は{1人3万|一人三万/ひとりさんまん}くらいでどう?	
+ja-dD-196	ja-JP	entertainment	mixed	context	初回の世帯視聴率は{12.4%|十二点四パーセント/じゅうにてんよんパーセント}、配信の再生数は{1週間|一週間/いっしゅうかん}で{830万回|八百三十万回/はっぴゃくさんじゅうまんかい}を記録した。	
+ja-dD-197	ja-JP	transport	mixed	context	新路線は全長{11.2km|十一点二キロ/じゅういってんにキロ/十一点二キロメートル/じゅういってんにキロメートル}に{9つ|九つ/ここのつ}の駅を設け、総事業費は{約2,300億円|約二千三百億円/やくにせんさんびゃくおくえん}を見込む。	「9つ」は和語読み
+ja-dD-198	ja-JP	it	mixed	basic	パスワードは{8文字|八文字/はちもじ}以上とし、{90日|九十日/きゅうじゅうにち}ごとに変更し、{5回|五回/ごかい}続けて誤るとロックされます。	
+ja-dD-200	ja-JP	news	mixed	basic	{10月16日|十月十六日/じゅうがつじゅうろくにち}の県議選は投票率{41.7%|四十一点七パーセント/よんじゅういってんななパーセント}と過去最低で、{68人|六十八人/ろくじゅうはちにん}が立候補した。	
+ja-dD-201	ja-JP	it	negative	basic	修正版は{見積書_v3_final.xlsx|=}という名前で共有フォルダに置きました。	ファイル名はそのまま
+ja-dD-202	ja-JP	chat	negative	basic	さっき送った{IMG_4827.JPG|=}、ピンぼけしてたからもう一回撮るね。	ファイル名はそのまま
+ja-dD-203	ja-JP	finance	negative	context	勘定系の夜間処理で{backup_20261015.tar.gz|=}が作成されました。	日付を含むファイル名だが展開しない
+ja-dD-204	ja-JP	transport	negative	basic	運行管理システムの設定値は{config.yaml|=}で変更します。	ファイル名
+ja-dD-205	ja-JP	education	negative	basic	課題の手順は{README.md|=}にまとめてあります。	ファイル名
+ja-dD-206	ja-JP	notice	negative	context	会議の記録は{議事録_1017.docx|=}として回覧します。	数字部分も日付として展開しない
+ja-dD-207	ja-JP	shopping	negative	basic	ダウンロードした{setup_x64.exe|=}を実行するとインストールが始まります。	ファイル名
+ja-dD-208	ja-JP	medical	negative	context	紹介状は{scan0042.pdf|=}として電子カルテに取り込みました。	ファイル名
+ja-dD-209	ja-JP	it	negative	basic	秘密情報は{.env.local|=}に書き、リポジトリには含めないでください。	ファイル名
+ja-dD-210	ja-JP	it	negative	context	不具合はコミット{3f9a2c7|=}で混入したようです。	コミットハッシュ
+ja-dD-211	ja-JP	shopping	negative	hard	購入したソフトのハッシュ値が{e3b9c4f21a07d8b6|=}で始まるか確認してください。	ハッシュ値
+ja-dD-212	ja-JP	government	negative	context	電子申請の受付番号{4b1f9d2e-83a6-4c57-9e0b-21d7f5a3c8e4|=}は必ず控えておいてください。	UUID形式の識別子
+ja-dD-213	ja-JP	medical	negative	hard	転送した画像データのチェックサム{9a0364b9e99bb480dd25e1f0284c8555|=}が一致しません。	ハッシュ値
+ja-dD-214	ja-JP	weather	negative	context	雨雲レーダーの修正はブランチ{fix/rain-radar|=}にまとめました。	ブランチ名はコード字句
+ja-dD-215	ja-JP	it	negative	context	コンテナは{nginx:1.27-alpine|=}のイメージから起動しています。	イメージ名とタグはコード字句
+ja-dD-216	ja-JP	news	negative	hard	流出したトークンは{eyJhbGciOiJIUzI1NiJ9|=}で始まる形式だった。	トークン
+ja-dD-217	ja-JP	shopping	negative	basic	ライセンスキー{XK7Q2-M9PLD-4RT8W-ZC3NB-V6HJY|=}を入力して認証してください。	ライセンスキー
+ja-dD-218	ja-JP	finance	negative	context	決済のテスト環境では公開キー{pk_test_51Hx9Q2Lm8vR3|=}を使います。	APIキー
+ja-dD-219	ja-JP	travel	negative	basic	客室の無線ネットワークのパスワードは{Aq7kP2zW|=}です。	パスワード文字列
+ja-dD-220	ja-JP	finance	negative	context	ネット銀行のバックアップコード{8f3k-2m9q|=}は一度しか使えません。	認証コード
+ja-dD-221	ja-JP	it	negative	hard	アクセストークン{ghp_R7xQ2mN9vL4kT8wZ|=}は絶対に外部へ公開しないでください。	トークン
+ja-dD-222	ja-JP	entertainment	negative	basic	シリアルコード{FS26-7QKD-M3XP|=}をアプリに入力すると特典動画が見られます。	シリアルコード
+ja-dD-223	ja-JP	education	negative	basic	ループの最後で{i++|=}を書き忘れると無限ループになります。	コードの字句
+ja-dD-224	ja-JP	chat	negative	context	そこは{x != null|=}で判定しとけば落ちないと思うよ。	コードの字句
+ja-dD-225	ja-JP	education	negative	basic	配列の先頭の要素は{arr[0]|=}で取り出せます。	コードの字句
+ja-dD-226	ja-JP	education	negative	context	C言語のプログラムはたいてい{#include <stdio.h>|=}から書き始めます。	コードの字句
+ja-dD-227	ja-JP	chat	negative	context	初期化の処理は{__init__|=}メソッドに書けばいいよ。	コードの字句
+ja-dD-228	ja-JP	notice	negative	context	開発チームの皆さんへ、依存パッケージは{npm install --save-dev|=}で追加してください。	コマンド
+ja-dD-229	ja-JP	shopping	negative	hard	注文データは{SELECT * FROM orders|=}で一覧できます。	SQL文はコードの字句
+ja-dD-230	ja-JP	notice	negative	basic	社内報の原稿で改行したい箇所には{<br>|=}を入れてください。	タグ
+ja-dD-231	ja-JP	chat	negative	basic	設定ファイルは{$HOME/.bashrc|=}にあるから見てみて。	パス
+ja-dD-232	ja-JP	education	negative	context	シェル演習では、二つのコマンドを{&&|=}でつなぐと順番に実行されます。	演算子
+ja-dD-233	ja-JP	sports	negative	basic	清流で知られる{四万十川|=}でカヌーの大会が開かれた。	地名「しまんとがわ」、数詞として展開しない
+ja-dD-234	ja-JP	travel	negative	basic	夏休みに{九十九里浜|=}で海水浴を楽しんだ。	地名の固定読み
+ja-dD-235	ja-JP	transport	negative	basic	中央線なら{八王子|=}まで乗り換えなしで行けます。	地名
+ja-dD-236	ja-JP	weather	negative	basic	{一宮|=}では午後から雷雨のおそれがあります。	地名
+ja-dD-237	ja-JP	entertainment	negative	basic	{六本木|=}の美術館で新しい企画展が始まった。	地名
+ja-dD-238	ja-JP	food	negative	basic	{五反田|=}の駅前にラーメンの新店がオープンした。	地名
+ja-dD-239	ja-JP	news	negative	basic	{三鷹|=}市内で倒木による停電が起きた。	地名
+ja-dD-240	ja-JP	travel	negative	basic	紅葉シーズンの{十和田湖|=}は観光客でにぎわう。	地名
+ja-dD-241	ja-JP	shopping	negative	basic	{二子玉川|=}の商業施設で冬のセールが始まった。	地名
+ja-dD-242	ja-JP	food	negative	basic	{八戸|=}の朝市で新鮮なイカを買ってきた。	地名「はちのへ」
+ja-dD-243	ja-JP	sports	negative	basic	{五稜郭|=}の周りを走るハーフマラソンに参加した。	史跡名
+ja-dD-244	ja-JP	weather	negative	basic	{十勝|=}地方では今朝、この秋一番の冷え込みとなった。	地名「とかち」
+ja-dD-245	ja-JP	government	negative	basic	{四日市|=}市役所は年末年始、窓口業務を休みます。	地名「よっかいち」、日付として展開しない
+ja-dD-246	ja-JP	food	negative	basic	京都土産に{八ツ橋|=}を買って帰った。	菓子名「やつはし」
+ja-dD-247	ja-JP	food	negative	context	料理はすべて{九谷焼|=}の器で提供されます。	工芸品名「くたにやき」
+ja-dD-248	ja-JP	chat	negative	context	担任の{五十嵐|=}先生、来月から産休に入るんだって。	姓「いがらし」、数詞と無関係
+ja-dD-249	ja-JP	entertainment	negative	context	{SixTONES|=}の新曲がドラマの主題歌に決まった。	グループ名「ストーンズ」、Sixは発音しない固定読み
+ja-dD-250	ja-JP	chat	negative	context	{NiziU|=}のライブ、映画館でも生中継されるらしいよ。	グループ名「ニジュー」の固定読み

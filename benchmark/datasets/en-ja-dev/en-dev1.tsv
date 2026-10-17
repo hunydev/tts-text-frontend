@@ -1,0 +1,964 @@
+en-dA-001	en-US	news	cardinal	basic	Officials said {3,412|three thousand four hundred twelve/three thousand four hundred and twelve} homes were still without power Monday morning.	optional "and"
+en-dA-002	en-US	chat	cardinal	basic	lol we have {14|fourteen} people coming and only {6|six} chairs	
+en-dA-003	en-US	shopping	cardinal	context	This TV is marked down to {$1,199|eleven hundred ninety-nine dollars/one thousand one hundred ninety-nine dollars/eleven ninety-nine/eleven hundred and ninety-nine dollars/one thousand one hundred and ninety-nine dollars} for the weekend.	price; hundreds form and casual "eleven ninety-nine"
+en-dA-004	en-US	medical	cardinal	context	Most adults should limit sodium to {2,300|two thousand three hundred/twenty-three hundred} milligrams a day.	round hundreds allow "twenty-three hundred"
+en-dA-005	en-US	tech	cardinal	basic	You'll need to upgrade to Windows {11|eleven} before support for the old version ends.	product version
+en-dA-006	en-US	finance	cardinal	basic	The automaker plans to cut {12,500|twelve thousand five hundred} jobs over the next two years.	
+en-dA-007	en-US	sports	cardinal	hard	The Knicks beat Boston {112-104|one twelve to one oh four/one hundred twelve to one hundred four/a hundred twelve to a hundred four/one hundred and twelve to one hundred and four} on Friday night.	score; hyphen read "to"; broadcaster style allowed
+en-dA-008	en-US	weather	cardinal	basic	Wind gusts reached {65 mph|sixty-five miles per hour/sixty-five miles an hour} along the coast overnight.	unit expansion
+en-dA-009	en-US	travel	cardinal	context	The nonstop flight from Chicago to Tokyo covers about {6,300|six thousand three hundred/sixty-three hundred} miles.	round hundreds
+en-dA-010	en-US	education	cardinal	basic	Our school library now holds more than {48,000|forty-eight thousand} books.	
+en-dA-011	en-US	government	cardinal	hard	The bill passed the House {218-214|two eighteen to two fourteen/two hundred eighteen to two hundred fourteen/two hundred and eighteen to two hundred and fourteen} after hours of debate.	vote tally; hyphen read "to"
+en-dA-012	en-US	food	cardinal	basic	Each slice of this cheesecake has about {450|four hundred fifty/four hundred and fifty} calories.	
+en-dA-013	en-US	transport	cardinal	basic	Take Route {66|sixty-six} west until you reach the old diner.	route name
+en-dA-014	en-US	entertainment	cardinal	basic	The sequel earned {$87 million|eighty-seven million dollars} in its opening weekend.	currency moves after magnitude
+en-dA-015	en-US	notices	cardinal	basic	Maximum occupancy: {120|one hundred twenty/a hundred twenty/one hundred and twenty/a hundred and twenty} persons.	"a hundred" natural
+en-dA-016	en-US	news	cardinal	basic	The wildfire has burned more than {15,000|fifteen thousand} acres north of the city.	
+en-dA-018	en-US	tech	cardinal	hard	The server handled {1,048,576|one million forty-eight thousand five hundred seventy-six/one million forty-eight thousand five hundred and seventy-six} requests during the load test.	seven-digit cardinal
+en-dA-019	en-US	finance	cardinal	basic	Shares of the regional bank slipped {37|thirty-seven} cents in early trading.	
+en-dA-020	en-US	shopping	cardinal	basic	Buy {2|two}, get {1|one} free on all summer T-shirts.	
+en-dA-021	en-US	sports	cardinal	basic	He became just the second player to pass {40,000|forty thousand} career points.	
+en-dA-022	en-US	medical	cardinal	context	Her platelet count was {150,000|one hundred fifty thousand/a hundred fifty thousand/one hundred and fifty thousand/a hundred and fifty thousand}, which is in the normal range.	
+en-dA-023	en-US	weather	cardinal	context	The heat index could hit {108|one hundred eight/a hundred eight/one hundred and eight/a hundred and eight/one oh eight} degrees by Thursday afternoon.	temperature; "one oh eight" used by forecasters
+en-dA-024	en-US	travel	cardinal	context	The ferry carries up to {1,400|fourteen hundred/one thousand four hundred} passengers and {350|three hundred fifty/three hundred and fifty} cars.	
+en-dA-025	en-US	education	cardinal	basic	Your essay should be between {500|five hundred} and {750|seven hundred fifty/seven hundred and fifty} words.	
+en-dA-026	en-US	government	cardinal	basic	Applicants must pay a filing fee of {$535|five hundred thirty-five dollars/five hundred and thirty-five dollars}.	formal fee; no casual price form
+en-dA-027	en-US	food	cardinal	basic	The recipe makes about {36|thirty-six} cookies, so plan on baking two trays.	
+en-dA-028	en-US	transport	cardinal	context	The {M15|M fifteen} bus is running on a detour this weekend.	bus route code
+en-dA-029	en-US	entertainment	cardinal	basic	Over {9,000|nine thousand} fans lined up overnight for the premiere.	
+en-dA-030	en-US	chat	cardinal	basic	just ran {8|eight} miles and i think my legs are gone	
+en-dA-031	en-US	news	cardinal	basic	A {13|thirteen}-car pileup closed both lanes of the interstate.	number in hyphenated compound
+en-dA-032	en-US	notices	cardinal	basic	Parking is limited to {90|ninety} minutes on weekdays.	
+en-dA-033	en-US	shopping	cardinal	basic	Free shipping on all orders over {$50|fifty dollars}.	
+en-dA-034	en-US	tech	cardinal	hard	Error {404|four oh four/four zero four}: the page you requested could not be found.	HTTP code read digit by digit
+en-dA-035	en-US	tech	cardinal	hard	Set the proxy port to {8080|eighty eighty/eight oh eight oh/eight zero eight zero} before starting the server.	port number conventions
+en-dA-036	en-US	finance	cardinal	basic	The Dow closed up {312|three hundred twelve/three hundred and twelve} points on Friday.	
+en-dA-037	en-US	sports	cardinal	basic	The rookie quarterback threw for {4,183|four thousand one hundred eighty-three/four thousand one hundred and eighty-three} yards last season.	
+en-dA-039	en-US	weather	cardinal	basic	More than {3,000|three thousand} lightning strikes were recorded across the county last night.	
+en-dA-040	en-US	travel	cardinal	basic	Terminal {5|five} is a short train ride from the main check-in hall.	
+en-dA-041	en-US	education	cardinal	basic	The district serves roughly {27,600|twenty-seven thousand six hundred} students in {41|forty-one} schools.	
+en-dA-043	en-US	food	cardinal	context	The bakery sold {1,800|eighteen hundred/one thousand eight hundred} doughnuts on National Donut Day.	
+en-dA-045	en-US	entertainment	cardinal	basic	The series finale drew {18 million|eighteen million} viewers.	
+en-dA-046	en-US	chat	cardinal	basic	omg my phone is at {3%|three percent} and i forgot my charger	
+en-dA-047	en-US	news	cardinal	basic	Police arrested {19|nineteen} people during the protest downtown.	
+en-dA-048	en-US	shopping	cardinal	basic	This pack of {24|twenty-four} batteries is cheaper online than in the store.	
+en-dA-049	en-US	tech	cardinal	context	The laptop has a {4K|four K} display and {16GB|sixteen gigabytes/sixteen gigs} of RAM.	4K read as "four K"
+en-dA-050	en-US	finance	cardinal	basic	Our startup raised {$750,000|seven hundred fifty thousand dollars/seven hundred and fifty thousand dollars} in seed funding.	
+en-dA-051	en-US	sports	cardinal	basic	The renovated stadium holds {68,500|sixty-eight thousand five hundred} fans.	
+en-dA-052	en-US	medical	cardinal	hard	Your blood pressure today is {128/82|one twenty-eight over eighty-two/one hundred twenty-eight over eighty-two/a hundred twenty-eight over eighty-two/one hundred and twenty-eight over eighty-two}, a little high.	blood pressure slash read "over", not a fraction
+en-dA-053	en-US	weather	cardinal	context	The storm dumped {14 in.|fourteen inches} of snow on Buffalo.	"in." abbreviation = inches
+en-dA-054	en-US	travel	cardinal	context	Your flight has moved from Gate {B12|B twelve} to Gate {C7|C seven}.	gate codes
+en-dA-056	en-US	government	cardinal	hard	Form {1040|ten forty} must be filed with the IRS by the deadline.	tax form name, always "ten forty"
+en-dA-057	en-US	food	cardinal	context	Preheat the oven to {375°F|three hundred seventy-five degrees Fahrenheit/three hundred and seventy-five degrees Fahrenheit/three seventy-five degrees Fahrenheit/three hundred seventy-five degrees/three hundred and seventy-five degrees/three seventy-five degrees/three seventy-five}.	oven temperature; "three seventy-five" common
+en-dA-058	en-US	transport	cardinal	context	The {7|seven} train is suspended between Queens and Manhattan tonight.	subway line
+en-dA-059	en-US	entertainment	cardinal	basic	The video game sold {25 million|twenty-five million} copies in its first year.	
+en-dA-060	en-US	chat	cardinal	basic	can u send me the pics from last night, all {11|eleven} of them lol	
+en-dA-061	en-US	news	cardinal	basic	The earthquake was felt more than {200|two hundred} miles away.	
+en-dA-062	en-US	transport	cardinal	context	The {Model 3|Model three} is still the brand's best-selling car.	product name
+en-dA-063	en-US	tech	cardinal	context	The {Pixel 9|Pixel nine} handles low-light photos surprisingly well.	product name
+en-dA-064	en-US	finance	cardinal	basic	The lake house sold for {$1,350,000|one million three hundred fifty thousand dollars/one million three hundred and fifty thousand dollars}.	
+en-dA-065	en-US	sports	cardinal	basic	She finished the marathon in a field of over {50,000|fifty thousand} runners.	
+en-dA-066	en-US	medical	cardinal	context	The clinic vaccinated {1,126|one thousand one hundred twenty-six/eleven hundred twenty-six/one thousand one hundred and twenty-six/eleven hundred and twenty-six} children last month.	
+en-dA-067	en-US	weather	cardinal	hard	Overnight lows hit {-12°|minus twelve degrees/negative twelve degrees/twelve degrees below zero/twelve below zero/twelve below} in parts of North Dakota.	negative temperature
+en-dA-068	en-US	travel	cardinal	context	The cruise ship has {2,700|two thousand seven hundred/twenty-seven hundred} cabins across sixteen decks.	
+en-dA-069	en-US	education	cardinal	context	The SAT is scored on a scale that tops out at {1600|sixteen hundred/one thousand six hundred}.	year-like number but a score
+en-dA-070	en-US	government	cardinal	basic	Voters approved Proposition {50|fifty} by a wide margin.	
+en-dA-071	en-US	food	cardinal	basic	The hottest pepper on the menu measures {2,200,000|two million two hundred thousand} Scoville units.	
+en-dA-072	en-US	transport	cardinal	hard	The airline grounded every Boeing {737|seven thirty-seven} in its fleet for inspection.	aircraft model
+en-dA-073	en-US	entertainment	cardinal	basic	The album spent {12|twelve} weeks at the top of the chart.	
+en-dA-074	en-US	chat	cardinal	basic	gonna grab like {20|twenty} bucks from the ATM, want anything?	
+en-dA-075	en-US	news	cardinal	basic	The museum reopened after a {$90,000,000|ninety million dollars} renovation.	fully written zeros
+en-dA-076	en-US	notices	cardinal	context	This elevator holds a maximum of {2,500|two thousand five hundred/twenty-five hundred} pounds.	
+en-dA-077	en-US	shopping	cardinal	basic	Add {4|four} more items to your cart to unlock the bulk discount.	
+en-dA-078	en-US	tech	cardinal	basic	The new chip packs {20 billion|twenty billion} transistors onto a tiny die.	
+en-dA-079	en-US	finance	cardinal	hard	Your card ending in {4417|four four one seven/forty-four seventeen} was charged today.	card digits, not a quantity
+en-dA-080	en-US	sports	cardinal	context	He wore number {23|twenty-three} for most of his career.	
+en-dA-081	en-US	medical	cardinal	hard	Call {911|nine one one} right away if you have chest pain.	emergency number
+en-dA-082	en-US	weather	cardinal	basic	Hurricane winds topped {160 mph|one hundred sixty miles per hour/a hundred sixty miles per hour/one hundred and sixty miles per hour/a hundred and sixty miles per hour} near landfall.	
+en-dA-083	en-US	travel	cardinal	basic	Only {9|nine} seats are left at this price, so book soon.	
+en-dA-084	en-US	education	cardinal	hard	I'm taking {Biology 101|Biology one oh one} this semester.	intro course number
+en-dA-085	en-US	government	cardinal	context	The Senate has {100|one hundred/a hundred} members, two from each state.	
+en-dA-086	en-US	food	cardinal	basic	The pizza shop filled {1,035|one thousand thirty-five/one thousand and thirty-five} orders on Super Bowl Sunday.	no hundreds form for 10xx
+en-dA-087	en-US	transport	cardinal	hard	Traffic on the {101|one oh one} is crawling past the airport again.	California freeway name
+en-dA-088	en-US	entertainment	cardinal	basic	The musical runs about {150|one hundred fifty/a hundred fifty/one hundred and fifty/a hundred and fifty} minutes with one intermission.	
+en-dA-089	en-US	chat	cardinal	basic	dude i have {37|thirty-seven} unread emails and it's only monday	
+en-dA-090	en-US	news	cardinal	context	Exactly {1,984|one thousand nine hundred eighty-four/nineteen hundred eighty-four/one thousand nine hundred and eighty-four/nineteen hundred and eighty-four} residents signed the petition.	year-like count stays cardinal
+en-dA-091	en-US	notices	cardinal	hard	The meeting has moved to Room {214|two fourteen/two one four}.	room number
+en-dA-092	en-US	shopping	cardinal	context	The {iPhone 16|iPhone sixteen} is finally back in stock at our store.	product name
+en-dA-093	en-US	tech	cardinal	basic	Your password must contain at least {15|fifteen} characters.	
+en-dA-094	en-US	finance	cardinal	basic	The national debt has passed {$36 trillion|thirty-six trillion dollars}.	
+en-dA-095	en-US	sports	cardinal	basic	The franchise has won {17|seventeen} championships in its history.	
+en-dA-096	en-US	medical	cardinal	basic	Patients waited an average of {47|forty-seven} minutes in the ER.	
+en-dA-097	en-US	weather	cardinal	basic	The city recorded {0|zero} inches of rain in July.	quantity zero, not "oh"
+en-dA-098	en-US	travel	cardinal	basic	The national park welcomed {4,700,000|four million seven hundred thousand} visitors last year.	
+en-dA-099	en-US	entertainment	cardinal	hard	Agent {007|double oh seven} returns in a brand-new film next summer.	fixed name reading with leading zeros
+en-dA-100	en-US	education	cardinal	basic	Students in grades {6|six} through {8|eight} will attend the assembly.	
+en-dA-101	en-US	education	ordinal	basic	My son just started {4th grade|fourth grade} at Lincoln Elementary.	
+en-dA-102	en-US	sports	ordinal	basic	The Cubs are sitting in {2nd place|second place} in the division.	
+en-dA-103	en-US	news	ordinal	basic	That's the {22nd|twenty-second} water main break in the city this year.	
+en-dA-104	en-US	travel	ordinal	basic	Our room is on the {14th|fourteenth} floor with a view of the lake.	
+en-dA-106	en-US	shopping	ordinal	basic	Every {10th|tenth} customer today gets a free tote bag.	
+en-dA-107	en-US	government	ordinal	basic	She represents Ohio's {11th|eleventh} Congressional District.	
+en-dA-108	en-US	tech	ordinal	basic	This is the {24th|twenty-fourth} security update pushed out this year.	
+en-dA-109	en-US	finance	ordinal	basic	The retailer posted its {6th|sixth} straight quarterly loss.	
+en-dA-110	en-US	medical	ordinal	basic	She's in her {3rd|third} trimester and feeling great.	
+en-dA-111	en-US	food	ordinal	basic	Grandma's chili took {1st prize|first prize} at the county fair.	
+en-dA-112	en-US	transport	ordinal	basic	Get off at the {5th|fifth} stop after the bridge.	
+en-dA-113	en-US	chat	ordinal	basic	this is my {100th|hundredth/one hundredth} time asking u to text me back	
+en-dA-114	en-US	weather	ordinal	basic	It's the {18th|eighteenth} named storm of the Atlantic season.	
+en-dA-115	en-US	notices	ordinal	context	Please use the {8th Street|Eighth Street} entrance during construction.	ordinal street name
+en-dA-116	en-US	sports	ordinal	basic	He finished {21st|twenty-first} overall in the downhill.	
+en-dA-117	en-US	news	ordinal	context	The {118th|one hundred eighteenth/one hundred and eighteenth/hundred and eighteenth} Congress passed fewer laws than any in decades.	
+en-dA-118	en-US	education	ordinal	basic	Our high school ranked {33rd|thirty-third} in the state for math scores.	
+en-dA-119	en-US	entertainment	ordinal	basic	The sitcom was renewed for a {20th|twentieth} season.	
+en-dA-120	en-US	transport	ordinal	basic	We were the {17th|seventeenth} plane in line for takeoff.	
+en-dA-121	en-US	shopping	ordinal	basic	Celebrate our {75th|seventy-fifth} birthday with storewide deals.	
+en-dA-122	en-US	finance	ordinal	basic	The company climbed to {87th|eighty-seventh} on this year's list of the largest American firms.	
+en-dA-123	en-US	food	ordinal	context	Our {1,000th|one thousandth/thousandth} customer of the day won a free pie.	
+en-dA-124	en-US	chat	ordinal	basic	happy {16th|sixteenth} birthday to my baby sister!!	
+en-dA-125	en-US	weather	ordinal	basic	Tuesday was the {7th|seventh} straight day above ninety degrees.	
+en-dA-126	en-US	tech	ordinal	context	My laptop runs a {13th Gen|thirteenth gen/thirteenth generation} Intel processor.	product line label
+en-dA-127	en-US	medical	ordinal	basic	Bring your vaccination card to your {2nd|second} dose appointment.	
+en-dA-128	en-US	government	ordinal	basic	The {19th Amendment|Nineteenth Amendment} guaranteed women the right to vote.	
+en-dA-129	en-US	sports	ordinal	basic	The Yankees scored twice in the bottom of the {9th|ninth}.	
+en-dA-130	en-US	travel	ordinal	basic	Portugal was our {31st|thirty-first} country visited together!	
+en-dA-131	en-US	entertainment	ordinal	basic	Who hosted the {96th|ninety-sixth} Academy Awards?	
+en-dA-132	en-US	education	ordinal	hard	We're studying the six wives of Henry {VIII|the eighth} in history class.	regnal Roman numeral
+en-dA-133	en-US	news	ordinal	hard	Pope Leo {XIV|the fourteenth} addressed the crowd in Saint Peter's Square.	regnal Roman numeral
+en-dA-134	en-US	shopping	ordinal	context	The {101st|one hundred first/one hundred and first/hundred and first} shopper in line gets a gift card.	
+en-dA-135	en-US	finance	ordinal	basic	The Fed cut rates for the {3rd|third} consecutive meeting.	
+en-dA-136	en-US	food	ordinal	basic	The bakery is run by the {5th|fifth} generation of the same family.	
+en-dA-137	en-US	transport	ordinal	basic	The airline just took delivery of its {200th|two hundredth} Dreamliner.	
+en-dA-139	en-US	medical	ordinal	basic	The {1st|first} symptom is usually a mild fever.	
+en-dA-140	en-US	notices	ordinal	basic	The {12th|twelfth} hole is closed for repairs until further notice.	
+en-dA-141	en-US	news	ordinal	basic	The city marathon celebrated its {50th|fiftieth} running this weekend.	
+en-dA-142	en-US	tech	ordinal	context	Our app just hit its {1,000,000th|one millionth/millionth} download!	
+en-dA-143	en-US	travel	ordinal	basic	Book now and get your {3rd|third} night free at participating hotels.	
+en-dA-144	en-US	entertainment	ordinal	basic	She picked up her {15th|fifteenth} Grammy last night.	
+en-dA-146	en-US	food	ordinal	basic	The restaurant earned its {2nd|second} Michelin star this year.	
+en-dA-148	en-US	sports	ordinal	basic	He hit his {54th|fifty-fourth} home run of the year in the {8th|eighth} inning.	
+en-dA-149	en-US	chat	ordinal	basic	on my {4th|fourth} coffee and it's not even noon	
+en-dA-150	en-US	government	ordinal	basic	The mayor signed her {63rd|sixty-third} executive order of the term.	
+en-dA-151	en-US	weather	decimal	basic	Rainfall totals reached {2.75|two point seven five} inches in some neighborhoods.	
+en-dA-152	en-US	medical	decimal	context	A normal body temperature is around {98.6°F|ninety-eight point six degrees Fahrenheit/ninety-eight point six degrees}.	unit often shortened in speech
+en-dA-153	en-US	sports	decimal	context	The sprinter clocked {9.58|nine point five eight/nine point fifty-eight} seconds in the final.	race time
+en-dA-154	en-US	finance	decimal	basic	Consumer prices rose {3.2%|three point two percent} over the past year.	
+en-dA-155	en-US	tech	decimal	basic	Download speeds averaged {487.3 Mbps|four hundred eighty-seven point three megabits per second/four hundred and eighty-seven point three megabits per second}.	
+en-dA-156	en-US	shopping	decimal	context	These jeans are {$39.99|thirty-nine ninety-nine/thirty-nine dollars and ninety-nine cents/thirty-nine dollars ninety-nine} with free returns.	price; casual form natural
+en-dA-157	en-US	food	decimal	context	Add {1.5|one point five/one and a half} cups of flour and stir until smooth.	.5 in recipes often "and a half"
+en-dA-158	en-US	news	decimal	basic	The earthquake measured magnitude {6.4|six point four} near the coast.	
+en-dA-159	en-US	transport	decimal	basic	The new bridge is {1.7 miles|one point seven miles} long.	
+en-dA-160	en-US	entertainment	decimal	basic	The film holds a {7.8|seven point eight} rating on IMDb.	
+en-dA-161	en-US	education	decimal	context	You need at least a {3.25|three point two five/three point twenty-five} GPA to apply.	GPA convention
+en-dA-162	en-US	government	decimal	basic	The state unemployment rate fell to {4.1%|four point one percent} in September.	
+en-dA-163	en-US	chat	decimal	hard	update {2.0|two point oh/two point zero} finally dropped lets gooo	version number; "oh" natural
+en-dA-164	en-US	tech	decimal	hard	The script requires Python {3.12|three point twelve/three twelve} or later.	version components read as whole numbers
+en-dA-165	en-US	weather	decimal	basic	The barometer dropped to {29.42|twenty-nine point four two/twenty-nine point forty-two} inches as the front moved in.	pressure readings often "point forty-two"
+en-dA-166	en-US	medical	decimal	basic	Her A1C came back at {6.8%|six point eight percent}.	
+en-dA-167	en-US	sports	decimal	hard	She's hitting {.312|three twelve} over the last month.	batting average convention
+en-dA-168	en-US	finance	decimal	hard	The stock closed at {$142.07|one forty-two oh seven/one hundred forty-two dollars and seven cents/a hundred forty-two dollars and seven cents/one hundred and forty-two dollars and seven cents/a hundred and forty-two dollars and seven cents}.	share price; trader style allowed
+en-dA-169	en-US	travel	decimal	context	Today the euro is trading at {1.08|one point zero eight/one point oh eight} dollars.	zero as "zero" or "oh"
+en-dA-170	en-US	food	decimal	basic	The big bottle of olive oil holds {1.75 liters|one point seven five liters}.	
+en-dA-171	en-US	shopping	decimal	context	Gas is {$3.49|three forty-nine/three dollars and forty-nine cents/three dollars forty-nine} a gallon at the station on Main.	
+en-dA-172	en-US	tech	decimal	context	The update is {2.3 GB|two point three gigabytes/two point three gigs}, so connect to Wi-Fi first.	
+en-dA-173	en-US	news	decimal	basic	The plan would cost an estimated {$1.2 trillion|one point two trillion dollars}.	
+en-dA-174	en-US	education	decimal	basic	Pi is roughly {3.14159|three point one four one five nine}.	digits after point read singly
+en-dA-175	en-US	government	decimal	context	The sales tax will rise to {7.25%|seven point two five percent/seven and a quarter percent} next year.	
+en-dA-176	en-US	transport	decimal	context	The hybrid is rated at {32.5 mpg|thirty-two point five miles per gallon/thirty-two and a half miles per gallon}.	
+en-dA-177	en-US	medical	decimal	context	Give {2.5 mL|two point five milliliters/two and a half milliliters} by mouth twice daily.	
+en-dA-178	en-US	sports	decimal	basic	The judges gave her vault a {9.5|nine point five}.	judging score convention
+en-dA-179	en-US	weather	decimal	context	Only {0.8 inches|zero point eight inches/point eight inches/eight tenths of an inch} of rain fell all month.	leading zero optional; tenths common in forecasts
+en-dA-180	en-US	entertainment	decimal	basic	The soundbar supports Dolby Atmos and {7.1|seven point one} surround sound.	
+en-dA-181	en-US	finance	decimal	basic	Thirty-year mortgage rates averaged {6.85%|six point eight five percent} last week.	
+en-dA-182	en-US	food	decimal	context	This red blend is {13.5%|thirteen point five percent/thirteen and a half percent} alcohol.	
+en-dA-183	en-US	travel	decimal	basic	The loop trail is {4.6 km|four point six kilometers} with a steep first climb.	
+en-dA-184	en-US	tech	decimal	basic	The earbuds use Bluetooth {5.3|five point three} for a stable connection.	
+en-dA-185	en-US	government	decimal	hard	The legal limit for drivers is a blood alcohol level of {0.08|point oh eight/point zero eight/zero point zero eight/zero point oh eight}.	BAC; "point oh eight" most common
+en-dA-186	en-US	chat	decimal	context	lost {4.5 lbs|four point five pounds/four and a half pounds} this week!!	
+en-dA-187	en-US	education	decimal	basic	The class average on the final exam was {82.6|eighty-two point six}.	
+en-dA-188	en-US	transport	decimal	basic	The test train reached {186.4 mph|one hundred eighty-six point four miles per hour/a hundred eighty-six point four miles per hour/one hundred and eighty-six point four miles per hour/a hundred and eighty-six point four miles per hour}.	
+en-dA-189	en-US	medical	decimal	basic	His potassium level was {3.3|three point three}, slightly below normal.	
+en-dA-190	en-US	shopping	decimal	basic	The coffee maker weighs just {6.2 lb|six point two pounds}.	
+en-dA-191	en-US	entertainment	decimal	basic	The trailer racked up {14.7 million|fourteen point seven million} views in one day.	
+en-dA-192	en-US	government	decimal	basic	The state will receive {$2.65 billion|two point six five billion dollars} in federal aid.	
+en-dA-193	en-US	sports	decimal	context	She won the race by {0.04 seconds|zero point zero four seconds/point zero four seconds/zero point oh four seconds/point oh four seconds/four hundredths of a second}.	
+en-dA-194	en-US	weather	decimal	basic	Sea levels here are rising about {3.4 mm|three point four millimeters} a year.	
+en-dA-195	en-US	finance	decimal	hard	Bitcoin dipped to {$61,250.50|sixty-one thousand two hundred fifty dollars and fifty cents/sixty-one thousand two hundred and fifty dollars and fifty cents} overnight.	
+en-dA-196	en-US	food	decimal	basic	Lemon juice has a pH of about {2.3|two point three}.	
+en-dA-197	en-US	tech	decimal	basic	The processor boosts up to {5.8 GHz|five point eight gigahertz}.	
+en-dA-198	en-US	travel	decimal	context	Our layover in Denver is {1.5 hours|one point five hours/one and a half hours/an hour and a half}.	
+en-dA-199	en-US	news	decimal	basic	Nearly {1.6 million|one point six million} people evacuated ahead of the storm.	
+en-dA-200	en-US	education	decimal	basic	Round {7.456|seven point four five six} to the nearest tenth.	
+en-dA-201	en-US	food	fraction	basic	Whisk in {1/2 cup|half a cup/a half cup/one half cup} of sugar until dissolved.	
+en-dA-202	en-US	food	fraction	basic	Stir in {3/4 teaspoon|three quarters of a teaspoon/three quarter teaspoon/three fourths of a teaspoon/three fourths teaspoon} of salt.	
+en-dA-203	en-US	shopping	fraction	basic	All winter coats are {1/3|one third/a third} off this week.	
+en-dA-204	en-US	news	fraction	basic	About {2/3|two thirds} of voters backed the school bond measure.	
+en-dA-205	en-US	transport	fraction	context	Your exit is {1/4 mile|a quarter mile/one quarter mile/a quarter of a mile} ahead on the right.	
+en-dA-206	en-US	sports	fraction	context	The favorite won by {1 1/4|one and a quarter/one and one quarter} lengths at the track.	mixed number
+en-dA-207	en-US	weather	fraction	basic	Expect {½ inch|half an inch/a half inch/one half inch} of ice on untreated roads.	Unicode fraction
+en-dA-208	en-US	tech	fraction	context	The drive bay fits {2½-inch|two and a half inch/two and one half inch} SSDs.	compound adjective
+en-dA-209	en-US	medical	fraction	basic	Take {1/2 tablet|half a tablet/one half tablet/one half of a tablet} at bedtime for the first week.	
+en-dA-210	en-US	education	fraction	basic	Simplify {6/8|six eighths} to {3/4|three fourths/three quarters}.	
+en-dA-211	en-US	finance	fraction	context	Analysts expect the Fed to cut rates by {1/4 point|a quarter point/one quarter point/a quarter of a point}.	
+en-dA-212	en-US	chat	fraction	basic	ate {3/4|three quarters/three fourths} of the pizza by myself no regrets	
+en-dA-213	en-US	travel	fraction	basic	The flight to Honolulu takes about {5 1/2 hours|five and a half hours/five and one half hours}.	
+en-dA-214	en-US	entertainment	fraction	basic	The theater was only {2/5|two fifths} full for the matinee.	
+en-dA-215	en-US	government	fraction	basic	Ending debate requires a {3/5|three fifths} vote of the Senate.	
+en-dA-216	en-US	food	fraction	context	Cut the potatoes into slices about {1/8 inch|an eighth of an inch/one eighth of an inch/an eighth inch/one eighth inch} thick.	
+en-dA-217	en-US	news	fraction	basic	Nearly {⅓|one third/a third} of the city's buses now run on electricity.	Unicode fraction
+en-dA-218	en-US	shopping	fraction	context	The hallway rug is {5 1/4 feet|five and a quarter feet/five and one quarter feet/five and one fourth feet} long.	
+en-dA-219	en-US	weather	fraction	context	Hail up to {1 3/4 inches|one and three quarter inches/one and three quarters inches/one and three fourths inches} across was reported.	
+en-dA-220	en-US	medical	fraction	basic	The tumor shrank by about {1/5|one fifth/a fifth} after treatment.	
+en-dA-221	en-US	tech	fraction	basic	Only {1/10|one tenth/a tenth} of users turned on the new feature.	
+en-dA-222	en-US	sports	fraction	basic	The Mets are {3 1/2|three and a half/three and one half} games back in the wild card race.	
+en-dA-223	en-US	weather	fraction	basic	After the spring rains the reservoir is {⅞|seven eighths} full.	Unicode fraction
+en-dA-224	en-US	education	fraction	basic	Show that {7/16|seven sixteenths} is less than {1/2|one half/a half}.	
+en-dA-225	en-US	entertainment	fraction	basic	The concert lasted {2 1/4 hours|two and a quarter hours/two and one quarter hours/two and one fourth hours}.	
+en-dA-226	en-US	finance	fraction	basic	Over {4/5|four fifths} of the fund is invested in bonds.	
+en-dA-227	en-US	chat	fraction	context	{½|half} the group bailed on the trip again smh	"½ the" reads as "half the"
+en-dA-228	en-US	shopping	fraction	context	You'll need a {3/8-inch|three eighths inch} drill bit for this anchor.	compound adjective
+en-dA-229	en-US	travel	fraction	context	The ferry ride takes about {3/4 of an hour|three quarters of an hour}.	
+en-dA-230	en-US	government	fraction	basic	The new rules cover about {1/6|one sixth/a sixth} of the state's farmland.	
+en-dA-231	en-US	government	address	context	Mail your payment to {PO Box 3120|P O box thirty-one twenty/post office box thirty-one twenty/P O box three one two oh/P O box three one two zero}.	PO box number paired or digit by digit
+en-dA-232	en-US	notices	address	basic	Our new office ZIP code is {60614|six oh six one four/six zero six one four}.	ZIP digit by digit
+en-dA-233	en-US	food	address	context	The bakery is at {1427|fourteen twenty-seven} Elm Street, next to the bank.	street number in pairs
+en-dA-234	en-US	chat	address	basic	im in {Apt. 5C|apartment five C}, just buzz me when u get here	
+en-dA-235	en-US	finance	address	context	Our office has moved to {Suite 210|suite two ten/suite two hundred ten}.	
+en-dA-236	en-US	travel	address	context	The observation deck entrance is at {350|three fifty/three hundred fifty} Fifth Avenue.	
+en-dA-237	en-US	shopping	address	context	Ship it to {89|eighty-nine} Maple Drive, {Unit 12|unit twelve}.	
+en-dA-238	en-US	government	address	context	The White House is at {1600|sixteen hundred} Pennsylvania Avenue.	street number, not a year
+en-dA-239	en-US	shopping	address	hard	Use the full ZIP code {94105-1804|nine four one oh five one eight oh four/nine four one zero five one eight zero four/nine four one oh five dash one eight oh four/nine four one zero five dash one eight zero four} for faster delivery.	ZIP+4; dash optional
+en-dA-240	en-US	notices	address	context	Deliver all packages to {Apt #12B|apartment twelve B/apartment number twelve B}.	
+en-dA-241	en-US	shopping	address	hard	Visit our flagship store at {2005|twenty oh five/two thousand five} Main Street.	street number, not a year
+en-dA-242	en-US	news	address	basic	Renters in ZIP code {10001|one zero zero zero one/one oh oh oh one} saw prices rise again.	
+en-dA-243	en-US	government	address	context	Send forms to {PO Box 88|P O box eighty-eight/post office box eighty-eight}, Helena, Montana {59601|five nine six oh one/five nine six zero one}.	
+en-dA-244	en-US	medical	address	basic	The urgent care clinic is at {100|one hundred} West Main Street.	
+en-dA-245	en-US	tech	address	context	Our engineering team works out of {Suite 1100|suite eleven hundred}.	
+en-dA-246	en-US	entertainment	address	context	The comedy club is at {3015|thirty fifteen} Broadway, near the subway.	street number in pairs
+en-dA-247	en-US	transport	address	hard	Pick me up at {14502|fourteen five oh two/one four five oh two/fourteen thousand five hundred two} Ventura Boulevard.	five-digit street number
+en-dA-248	en-US	travel	address	context	Our vacation rental is {Unit 1508|unit fifteen oh eight/unit one five oh eight} in the north tower.	
+en-dA-249	en-US	education	address	basic	Enter ZIP code {02134|zero two one three four/oh two one three four} on the enrollment form.	leading zero
+en-dA-250	en-US	government	address	hard	Send it to {RR 2 Box 17|rural route two box seventeen}, and it will get there.	rural route address
+en-dB-001	en-US	finance	percent	basic	Mortgage rates climbed to {6.85%|six point eight five percent} on Thursday, the highest since spring.	two-decimal rate read digit by digit
+en-dB-002	en-US	news	percent	basic	Voter turnout reached {67%|sixty-seven percent} in the county, officials said.	
+en-dB-003	en-US	shop	percent	basic	Use code FALL at checkout to take {30%|thirty percent} off all outerwear.	
+en-dB-004	en-US	medical	percent	basic	The new vaccine was {94.1%|ninety-four point one percent} effective in preventing severe illness.	
+en-dB-005	en-US	tech	percent	basic	The service promises {99.99%|ninety-nine point nine nine percent} uptime for enterprise customers.	
+en-dB-006	en-US	sports	percent	basic	She is shooting {48.2%|forty-eight point two percent} from the field this season.	
+en-dB-007	en-US	weather	percent	basic	Humidity will stay near {85%|eighty-five percent} through the afternoon.	
+en-dB-008	en-US	education	percent	basic	Only {12%|twelve percent} of applicants were admitted to the nursing program this year.	
+en-dB-009	en-US	government	percent	context	The sales tax rises to {7.25%|seven point two five percent/seven and a quarter percent} on January first.	.25 rate often said as a quarter
+en-dB-010	en-US	food	percent	basic	The chocolate bar is {70%|seventy percent} cacao and slightly bitter.	
+en-dB-011	en-US	transport	percent	basic	On-time arrivals fell to {78.4%|seventy-eight point four percent} in August.	
+en-dB-012	en-US	entertainment	percent	basic	The film holds a {96%|ninety-six percent} rating on Rotten Tomatoes.	
+en-dB-013	en-US	travel	percent	basic	Hotel occupancy in Miami hit {91%|ninety-one percent} over the holiday weekend.	
+en-dB-014	en-US	chat	percent	basic	lol my phone is at {3%|three percent}, call you back in a bit	
+en-dB-015	en-US	notice	percent	basic	A late fee of {1.5%|one point five percent/one and a half percent} per month applies to unpaid balances.	.5 may be said as a half
+en-dB-016	en-US	news	percent	hard	Year-over-year change in exports: {-4.6%|minus four point six percent/negative four point six percent}.	negative sign: minus or negative
+en-dB-017	en-US	medical	percent	basic	Your A1C came back at {5.7%|five point seven percent}, which is the edge of prediabetes.	
+en-dB-018	en-US	tech	percent	basic	The update cut battery drain by {22%|twenty-two percent} on older phones.	
+en-dB-019	en-US	sports	percent	basic	The kicker has made {100%|one hundred percent/a hundred percent} of his extra points this year.	one/a hundred
+en-dB-020	en-US	weather	percent	basic	There's a {40%|forty percent} chance of thunderstorms after six tonight.	
+en-dB-021	en-US	shop	percent	basic	Members save an extra {5%|five percent} on every order over fifty dollars.	
+en-dB-022	en-US	education	percent	basic	The final exam counts for {35%|thirty-five percent} of your overall grade.	
+en-dB-023	en-US	government	percent	basic	Unemployment held steady at {4.1%|four point one percent} in September.	
+en-dB-024	en-US	food	percent	context	Switch to {2%|two percent} milk if whole milk feels too heavy.	milk fat label, still read as percent
+en-dB-025	en-US	transport	percent	basic	Gas prices are up {0.8%|zero point eight percent/point eight percent} from last month.	leading zero optional
+en-dB-026	en-US	entertainment	percent	basic	Ticket sales for the tour jumped {150%|one hundred fifty percent/one hundred and fifty percent/a hundred fifty percent/a hundred and fifty percent} after the announcement.	optional and; one/a hundred
+en-dB-027	en-US	travel	percent	basic	Book by Friday and get {15%|fifteen percent} off your second night.	
+en-dB-028	en-US	chat	percent	basic	honestly I'm like {90%|ninety percent} sure the meeting got moved to Tuesday	
+en-dB-029	en-US	notice	percent	basic	Elevator B is operating at {50%|fifty percent} capacity during repairs.	
+en-dB-030	en-US	finance	percent	basic	The savings account now pays {4.35%|four point three five percent} APY.	
+en-dB-031	en-US	news	percent	basic	Approval of the mayor dropped to {38%|thirty-eight percent}, down from {45%|forty-five percent} in June.	
+en-dB-032	en-US	medical	percent	basic	Oxygen saturation was {92%|ninety-two percent} on room air.	
+en-dB-033	en-US	tech	percent	basic	Download is {67.3%|sixty-seven point three percent} complete, please keep the app open.	
+en-dB-034	en-US	sports	percent	basic	The team converted just {28.6%|twenty-eight point six percent} of its third-down attempts.	
+en-dB-035	en-US	weather	percent	basic	Snowpack is at {112%|one hundred twelve percent/one hundred and twelve percent/a hundred twelve percent/a hundred and twelve percent} of the seasonal average.	optional and; one/a hundred
+en-dB-036	en-US	shop	percent	basic	The blanket is {100%|one hundred percent/a hundred percent} cotton and machine washable.	
+en-dB-037	en-US	education	percent	basic	Graduation rates rose by {3.2%|three point two percent} across the district.	
+en-dB-038	en-US	government	percent	context	The proposal would raise the property tax rate by {0.25%|zero point two five percent/point two five percent/a quarter of a percent/a quarter percent}.	small rate change often said as a quarter percent
+en-dB-039	en-US	food	percent	basic	Beer under {0.5%|zero point five percent/point five percent/half a percent} ABV can be sold as non-alcoholic.	leading zero optional; half a percent
+en-dB-040	en-US	transport	percent	basic	Ridership on the subway is back to {87%|eighty-seven percent} of pre-pandemic levels.	
+en-dB-041	en-US	entertainment	percent	basic	The finale drew {23%|twenty-three percent} more viewers than the premiere.	
+en-dB-042	en-US	travel	percent	basic	Flights to Denver were {9.5%|nine point five percent/nine and a half percent} cheaper this October.	
+en-dB-043	en-US	chat	percent	basic	{25%|twenty-five percent} tip seems like a lot for takeout, no?	
+en-dB-044	en-US	notice	percent	basic	Library fines will be reduced by {75%|seventy-five percent} during amnesty week.	
+en-dB-045	en-US	finance	percent	basic	Inflation cooled to {2.9%|two point nine percent}, while core prices rose {3.1%|three point one percent}.	
+en-dB-046	en-US	medical	percent	basic	Apply the {1%|one percent} hydrocortisone cream twice a day for one week.	
+en-dB-047	en-US	tech	percent	basic	The GPU sat at {99%|ninety-nine percent} usage during the benchmark.	
+en-dB-048	en-US	sports	percent	basic	Their penalty kill is operating at {81.7%|eighty-one point seven percent} on the road.	
+en-dB-049	en-US	government	percent	basic	Roughly {0.3%|zero point three percent/point three percent} of ballots were rejected for missing signatures.	leading zero optional
+en-dB-050	en-US	news	percent	hard	Home prices in the region slipped {1.04%|one point zero four percent/one point oh four percent} in the third quarter.	inner zero: zero or oh
+en-dB-051	en-US	shop	money	basic	Grab the wireless earbuds for just {$49.95|forty-nine dollars and ninety-five cents/forty-nine ninety-five/forty-nine dollars ninety-five} today.	retail price short forms
+en-dB-052	en-US	food	money	basic	A large latte is {$5.40|five dollars and forty cents/five forty/five dollars forty} at the campus cafe.	
+en-dB-053	en-US	finance	money	basic	The startup raised {$12 million|twelve million dollars} in its latest funding round.	
+en-dB-054	en-US	news	money	hard	The city council approved a {$3.2B|three point two billion dollar} transit budget.	adjectival: singular dollar
+en-dB-055	en-US	travel	money	basic	Our room in Paris cost {€145|one hundred forty-five euros/one hundred and forty-five euros/a hundred forty-five euros/a hundred and forty-five euros} a night.	
+en-dB-056	en-US	entertainment	money	basic	Tickets for the West End matinee start at {£38|thirty-eight pounds}.	
+en-dB-057	en-US	chat	money	basic	can you venmo me {$18|eighteen dollars} for the pizza?	
+en-dB-058	en-US	transport	money	basic	A single subway ride now costs {$2.90|two dollars and ninety cents/two ninety/two dollars ninety}.	
+en-dB-059	en-US	government	money	basic	The fine for parking in a bus lane is {$115|one hundred fifteen dollars/one hundred and fifteen dollars/a hundred fifteen dollars/a hundred and fifteen dollars}.	
+en-dB-060	en-US	tech	money	basic	The new laptop starts at {$1,299|one thousand two hundred ninety-nine dollars/twelve hundred ninety-nine dollars/twelve ninety-nine/one thousand two hundred and ninety-nine dollars/twelve hundred and ninety-nine dollars}.	price shorthand twelve ninety-nine
+en-dB-062	en-US	education	money	basic	In-state tuition is {$11,560|eleven thousand five hundred sixty dollars/eleven thousand five hundred and sixty dollars} per year.	
+en-dB-063	en-US	sports	money	hard	The quarterback signed a {$45 million|forty-five million dollar} extension.	adjectival: singular dollar
+en-dB-064	en-US	weather	money	basic	Storm damage in the county is estimated at {$8.7 million|eight point seven million dollars}.	
+en-dB-065	en-US	notice	money	hard	A {$25|twenty-five dollar} deposit is required for each locker key.	adjectival: singular dollar
+en-dB-066	en-US	shop	money	basic	That candle is {$0.99|ninety-nine cents} with any purchase.	sub-dollar read as cents
+en-dB-067	en-US	food	money	basic	Gum at the register costs {75¢|seventy-five cents}.	
+en-dB-068	en-US	travel	money	context	Taxi from Narita to central Tokyo ran about {¥25,000|twenty-five thousand yen}.	Japan context: yen
+en-dB-070	en-US	entertainment	money	basic	The painting sold at auction for {$91.5 million|ninety-one point five million dollars/ninety-one and a half million dollars}.	
+en-dB-071	en-US	chat	money	basic	ugh parking downtown was {$32|thirty-two dollars} for two hours	
+en-dB-072	en-US	transport	money	basic	Monthly passes are going up to {$132|one hundred thirty-two dollars/one hundred and thirty-two dollars/a hundred thirty-two dollars/a hundred and thirty-two dollars}.	
+en-dB-073	en-US	government	money	hard	Each eligible household will receive a {$600|six hundred dollar} rebate check.	adjectival: singular dollar
+en-dB-074	en-US	tech	money	hard	Cloud storage is {$2.99/mo|two ninety-nine a month/two ninety-nine per month/two dollars and ninety-nine cents a month/two dollars and ninety-nine cents per month} for the basic plan.	/mo read a month or per month
+en-dB-075	en-US	medical	money	basic	Without insurance, the inhaler costs {$310|three hundred ten dollars/three hundred and ten dollars}.	
+en-dB-076	en-US	education	money	basic	Students can print for {10¢|ten cents} a page in the library.	
+en-dB-077	en-US	sports	money	basic	Courtside seats were going for {$4,800|four thousand eight hundred dollars/forty-eight hundred dollars} each.	hundreds form common
+en-dB-078	en-US	weather	money	basic	Snow removal has already cost the city {$1.6 million|one point six million dollars}.	
+en-dB-079	en-US	news	money	basic	Police recovered {$250,000|two hundred fifty thousand dollars/two hundred and fifty thousand dollars} in stolen jewelry.	
+en-dB-080	en-US	shop	money	basic	Shipping is a flat {$6.50|six dollars and fifty cents/six fifty/six dollars fifty} on orders under fifty dollars.	
+en-dB-081	en-US	finance	money	hard	Wire transfers carry a {$30|thirty dollar} fee.	adjectival: singular dollar
+en-dB-082	en-US	food	money	basic	The tasting menu is {€95|ninety-five euros} per person, wine not included.	
+en-dB-083	en-US	travel	money	basic	The airport express to Paddington is {£22.50|twenty-two pounds fifty/twenty-two pounds and fifty pence/twenty-two pounds fifty pence/twenty-two fifty}.	
+en-dB-084	en-US	entertainment	money	basic	Streaming the movie at home will cost {$19.99|nineteen dollars and ninety-nine cents/nineteen ninety-nine/nineteen dollars ninety-nine}.	
+en-dB-085	en-US	chat	money	basic	found a jacket at the thrift store for {$7|seven dollars}!!	
+en-dB-086	en-US	notice	money	hard	Replacement ID cards are {$15.00|fifteen dollars}.	.00 not read
+en-dB-087	en-US	government	money	basic	The state budget deficit is projected at {$2.1 billion|two point one billion dollars}.	
+en-dB-088	en-US	tech	money	basic	GPU instances are billed at {$0.48|forty-eight cents} per hour.	sub-dollar read as cents
+en-dB-089	en-US	medical	money	basic	The generic version of the pill is only {$4|four dollars} at most pharmacies.	
+en-dB-090	en-US	education	money	basic	The field trip fee is {$12.75|twelve dollars and seventy-five cents/twelve seventy-five/twelve dollars seventy-five} per student.	
+en-dB-091	en-US	sports	money	basic	The winner of the tournament takes home {$2.25 million|two point two five million dollars/two and a quarter million dollars}.	
+en-dB-092	en-US	weather	money	basic	Homeowners can claim up to {$5,000|five thousand dollars} for flood repairs.	
+en-dB-093	en-US	transport	money	basic	The toll on the bridge rose to {$8.25|eight dollars and twenty-five cents/eight twenty-five/eight dollars twenty-five}.	
+en-dB-094	en-US	shop	money	context	Prices start at {¥1,980|one thousand nine hundred eighty yen/nineteen hundred eighty yen/one thousand nine hundred and eighty yen/nineteen hundred and eighty yen} at the Tokyo store.	Tokyo context: yen
+en-dB-095	en-US	news	money	basic	The company agreed to pay {€430 million|four hundred thirty million euros/four hundred and thirty million euros} to settle the case.	
+en-dB-096	en-US	food	money	basic	Our burger special is {$11|eleven dollars} with fries and a drink.	
+en-dB-097	en-US	travel	money	basic	The visa fee for U.S. citizens is {$185|one hundred eighty-five dollars/one hundred and eighty-five dollars/a hundred eighty-five dollars/a hundred and eighty-five dollars}.	
+en-dB-098	en-US	finance	money	hard	My credit card has a {$10,000|ten thousand dollar} limit.	adjectival: singular dollar
+en-dB-099	en-US	entertainment	money	basic	The concert raised more than {$750,000|seven hundred fifty thousand dollars/seven hundred and fifty thousand dollars} for charity.	
+en-dB-100	en-US	chat	money	basic	lunch was {$14.37|fourteen dollars and thirty-seven cents/fourteen thirty-seven/fourteen dollars thirty-seven} each after tax	
+en-dB-101	en-US	notice	money	basic	Unclaimed bikes will be auctioned with bids starting at {$1|one dollar/a dollar}.	singular dollar
+en-dB-102	en-US	government	money	basic	The minimum wage will rise to {$16.50|sixteen dollars and fifty cents/sixteen fifty/sixteen dollars fifty} an hour.	
+en-dB-103	en-US	tech	money	basic	The smartwatch dropped to {$229|two hundred twenty-nine dollars/two hundred and twenty-nine dollars/two twenty-nine} on Black Friday.	price shorthand
+en-dB-104	en-US	medical	money	basic	The ER visit was billed at {$2,640|two thousand six hundred forty dollars/twenty-six hundred forty dollars/two thousand six hundred and forty dollars/twenty-six hundred and forty dollars}.	
+en-dB-105	en-US	education	money	basic	Textbooks for the semester came to {$486|four hundred eighty-six dollars/four hundred and eighty-six dollars}.	
+en-dB-106	en-US	sports	money	context	The club was fined {£1.5m|one point five million pounds/one and a half million pounds} for breaching spending rules.	m = million after currency
+en-dB-107	en-US	weather	money	basic	A new backup generator runs about {$900|nine hundred dollars} before installation.	
+en-dB-108	en-US	transport	money	basic	Charging the car overnight costs roughly {$6|six dollars}.	
+en-dB-109	en-US	shop	money	basic	The bundle saves you {$37|thirty-seven dollars} compared to buying each item separately.	
+en-dB-110	en-US	food	money	basic	A dozen eggs jumped to {$4.89|four dollars and eighty-nine cents/four eighty-nine/four dollars eighty-nine} at our local store.	
+en-dB-111	en-US	news	money	basic	The lottery jackpot has climbed to {$1.2 billion|one point two billion dollars}.	
+en-dB-112	en-US	finance	money	basic	Bitcoin briefly topped {$70,000|seventy thousand dollars} overnight.	
+en-dB-113	en-US	travel	money	basic	Bus fare from Rome to Florence was just {€9.90|nine euros ninety/nine euros and ninety cents/nine ninety}.	
+en-dB-114	en-US	entertainment	money	basic	The vinyl reissue retails for {$34.98|thirty-four dollars and ninety-eight cents/thirty-four ninety-eight/thirty-four dollars ninety-eight}.	
+en-dB-115	en-US	chat	money	basic	omg the concert merch was {£40|forty pounds} for a t-shirt	
+en-dB-116	en-US	notice	money	hard	Returned checks incur a {$39|thirty-nine dollar} processing fee.	adjectival: singular dollar
+en-dB-117	en-US	government	money	basic	Property owners owe an average of {$3,870|three thousand eight hundred seventy dollars/thirty-eight hundred seventy dollars/three thousand eight hundred and seventy dollars/thirty-eight hundred and seventy dollars} in annual taxes.	
+en-dB-118	en-US	tech	money	basic	The domain renewal is {$12.98|twelve dollars and ninety-eight cents/twelve ninety-eight/twelve dollars ninety-eight} a year.	
+en-dB-119	en-US	medical	money	basic	Insulin costs are now capped at {$35|thirty-five dollars} a month for Medicare patients.	
+en-dB-120	en-US	education	money	hard	Each student gets a {$500|five hundred dollar} stipend for books.	adjectival: singular dollar
+en-dB-121	en-US	sports	money	basic	Bleacher seats at Wrigley Field are {$22|twenty-two dollars} tonight.	
+en-dB-122	en-US	weather	money	basic	Utility bills averaged {$214|two hundred fourteen dollars/two hundred and fourteen dollars} during the heat wave.	
+en-dB-123	en-US	transport	money	basic	Airport parking is {$27|twenty-seven dollars} per day in the economy lot.	
+en-dB-124	en-US	shop	money	basic	The rug was {$320|three hundred twenty dollars/three hundred and twenty dollars/three twenty}, now {$199|one hundred ninety-nine dollars/one hundred and ninety-nine dollars/a hundred ninety-nine dollars/a hundred and ninety-nine dollars/one ninety-nine}.	price shorthand
+en-dB-125	en-US	food	money	basic	Street tacos are {$3.25|three dollars and twenty-five cents/three twenty-five/three dollars twenty-five} each on Tuesdays.	
+en-dB-126	en-US	news	money	hard	The museum received a {$20 million|twenty million dollar} gift from a local family.	adjectival: singular dollar
+en-dB-127	en-US	finance	money	hard	Your current account balance is {-$84.17|minus eighty-four dollars and seventeen cents/negative eighty-four dollars and seventeen cents}.	negative amount
+en-dB-128	en-US	travel	money	basic	The weekend museum pass in Amsterdam is {€62.50|sixty-two euros fifty/sixty-two euros and fifty cents/sixty-two fifty}.	
+en-dB-129	en-US	entertainment	money	basic	The streaming service raised its ad-free plan to {$17.99|seventeen dollars and ninety-nine cents/seventeen ninety-nine/seventeen dollars ninety-nine}.	
+en-dB-130	en-US	chat	money	basic	dude gas was {$3.79|three seventy-nine/three dollars and seventy-nine cents/three dollars seventy-nine} a gallon in town	
+en-dB-131	en-US	notice	money	basic	Lost keycards will be replaced for a fee of {$10|ten dollars}.	
+en-dB-132	en-US	government	money	basic	Federal student aid tops out at {$7,395|seven thousand three hundred ninety-five dollars/seven thousand three hundred and ninety-five dollars/seventy-three hundred ninety-five dollars/seventy-three hundred and ninety-five dollars}.	
+en-dB-133	en-US	tech	money	basic	The company spent {$48.6 billion|forty-eight point six billion dollars} on data centers last year.	
+en-dB-134	en-US	medical	money	basic	A flu shot is free with insurance or {$45|forty-five dollars} without.	
+en-dB-135	en-US	education	money	basic	The SAT registration fee is {$68|sixty-eight dollars}.	
+en-dB-136	en-US	sports	money	basic	Season tickets jumped by {$150|one hundred fifty dollars/one hundred and fifty dollars/a hundred fifty dollars/a hundred and fifty dollars} per seat.	
+en-dB-137	en-US	shop	money	basic	Gift cards are available in amounts up to {$1,000|one thousand dollars/a thousand dollars}.	
+en-dB-138	en-US	travel	money	context	Tokyo hostels typically charge around {¥4,500|four thousand five hundred yen/forty-five hundred yen} a night.	Japan context: yen
+en-dB-139	en-US	food	money	basic	Add avocado to any bowl for {$1.50|one dollar and fifty cents/a dollar fifty/one fifty/one dollar fifty/a dollar and fifty cents}.	singular dollar
+en-dB-140	en-US	transport	money	basic	The penalty for riding a London bus without a ticket is {£80|eighty pounds}.	
+en-dB-141	en-US	weather	measure	basic	Highs will reach {92°F|ninety-two degrees Fahrenheit/ninety-two degrees} by Saturday afternoon.	forecast may drop Fahrenheit
+en-dB-142	en-US	weather	measure	hard	Overnight lows could dip to {-8°C|minus eight degrees Celsius/negative eight degrees Celsius} in the valleys.	negative temperature
+en-dB-144	en-US	travel	measure	basic	High-speed trains between the two cities hit {300 km/h|three hundred kilometers per hour/three hundred kilometers an hour}.	
+en-dB-145	en-US	medical	measure	basic	Fasting glucose was {126 mg/dL|one hundred twenty-six milligrams per deciliter/one hundred and twenty-six milligrams per deciliter/a hundred twenty-six milligrams per deciliter/a hundred and twenty-six milligrams per deciliter}.	
+en-dB-146	en-US	medical	measure	basic	Take {500 mg|five hundred milligrams} of amoxicillin every eight hours.	
+en-dB-148	en-US	food	measure	basic	Whisk in {2 tbsp|two tablespoons} of honey and {1 tsp|one teaspoon} of salt.	singular teaspoon
+en-dB-149	en-US	shop	measure	basic	The bag of dog food weighs {30 lbs|thirty pounds}.	
+en-dB-150	en-US	notice	measure	basic	For rent: cozy studio, {450 sq ft|four hundred fifty square feet/four hundred and fifty square feet}, utilities included.	
+en-dB-152	en-US	tech	measure	basic	Transfer speeds peak at {540 MB/s|five hundred forty megabytes per second/five hundred and forty megabytes per second}.	
+en-dB-153	en-US	sports	measure	hard	He finished the {26.2-mile|twenty-six point two mile} course in under three hours.	adjectival: singular mile
+en-dB-155	en-US	travel	measure	basic	Carry-on bags must not exceed {7 kg|seven kilograms/seven kilos}.	
+en-dB-156	en-US	transport	measure	hard	Clearance under the railroad bridge is {12 ft 6 in|twelve feet six inches/twelve foot six/twelve feet six}.	compound feet and inches
+en-dB-157	en-US	government	measure	basic	The new zoning rule caps backyard fences at {7 ft|seven feet}.	
+en-dB-159	en-US	education	measure	hard	Each poster must be printed on {11 x 17 in|eleven by seventeen inch} paper.	x read as by
+en-dB-160	en-US	chat	measure	context	just ran {5 km|five kilometers/five K} without stopping for the first time!!	running distance often said as K
+en-dB-161	en-US	news	measure	basic	The earthquake struck at a depth of {10 km|ten kilometers}.	
+en-dB-162	en-US	weather	measure	context	Up to {14 in|fourteen inches} of snow is expected in the mountains.	in = inches, not the preposition
+en-dB-163	en-US	weather	measure	basic	The hurricane has sustained winds of {85 kt|eighty-five knots}.	
+en-dB-164	en-US	medical	measure	hard	Blood pressure was {128/82 mmHg|one twenty-eight over eighty-two millimeters of mercury/one hundred twenty-eight over eighty-two millimeters of mercury/one twenty-eight over eighty-two/one hundred twenty-eight over eighty-two}.	slash read as over; unit often dropped
+en-dB-166	en-US	food	measure	basic	Add {250 ml|two hundred fifty milliliters/two hundred and fifty milliliters} of warm milk to the dough.	
+en-dB-167	en-US	food	measure	hard	You'll need {1/2 cup|half a cup/a half cup/one half cup} of packed brown sugar.	fraction in recipe
+en-dB-168	en-US	shop	measure	hard	The living room set includes a {65-inch|sixty-five inch} smart TV.	adjectival: singular inch
+en-dB-169	en-US	shop	measure	basic	This insulated water bottle holds {32 oz|thirty-two ounces}.	
+en-dB-170	en-US	tech	measure	basic	The battery is rated at {5,000 mAh|five thousand milliamp hours/five thousand milliampere hours}.	
+en-dB-171	en-US	tech	measure	basic	The travel charger delivers up to {65 W|sixty-five watts}.	
+en-dB-172	en-US	government	measure	basic	The average household in the state used {912 kWh|nine hundred twelve kilowatt hours/nine hundred and twelve kilowatt hours} last month.	
+en-dB-173	en-US	transport	measure	basic	The hybrid gets {38 mpg|thirty-eight miles per gallon} on the highway.	
+en-dB-174	en-US	transport	measure	basic	The next exit is {1 mi|one mile} ahead.	singular mile
+en-dB-175	en-US	travel	measure	basic	The hotel is {0.4 mi|zero point four miles/point four miles/four tenths of a mile} from the beach.	decimal below one takes plural
+en-dB-176	en-US	sports	measure	hard	The swimmer set a world record in the {200 m|two hundred meter} butterfly.	event name: adjectival singular
+en-dB-178	en-US	education	measure	basic	Each lab group needs {0.5 L|zero point five liters/point five liters/half a liter} of distilled water.	
+en-dB-179	en-US	news	measure	basic	The drought has lowered the lake by {18 ft|eighteen feet}.	
+en-dB-180	en-US	notice	measure	basic	Maximum load for this elevator is {2,500 lbs|two thousand five hundred pounds/twenty-five hundred pounds}.	
+en-dB-181	en-US	chat	measure	basic	ugh I gained like {4 lbs|four pounds} over the holidays	
+en-dB-182	en-US	finance	measure	basic	The investment trust bought a warehouse spanning {120,000 sq ft|one hundred twenty thousand square feet/one hundred and twenty thousand square feet/a hundred twenty thousand square feet/a hundred and twenty thousand square feet}.	
+en-dB-183	en-US	medical	measure	basic	Drink at least {2 L|two liters} of water a day while on this medication.	
+en-dB-184	en-US	medical	measure	context	His temperature spiked to {103.2°F|one hundred three point two degrees Fahrenheit/one hundred and three point two degrees Fahrenheit/one hundred three point two degrees/one hundred and three point two degrees/a hundred and three point two degrees/a hundred three point two degrees/one oh three point two}.	fever often read one oh three
+en-dB-185	en-US	weather	measure	basic	Rainfall totals reached {3.4 in|three point four inches} at the airport.	
+en-dB-186	en-US	weather	measure	hard	Dense fog cut visibility to {1/4 mile|a quarter mile/a quarter of a mile/one quarter mile} on the interstate.	fraction with singular mile
+en-dB-187	en-US	sports	measure	basic	The rookie's fastball was clocked at {101 mph|one hundred one miles per hour/one hundred and one miles per hour/a hundred one miles per hour/a hundred and one miles per hour}.	
+en-dB-189	en-US	tech	measure	basic	The attachment is {3.7 MB|three point seven megabytes}, so it should send fine.	
+en-dB-190	en-US	tech	measure	basic	Your plan includes {15 GB|fifteen gigabytes} of high-speed data.	
+en-dB-191	en-US	food	measure	basic	The chili recipe calls for {1.5 lbs|one point five pounds/one and a half pounds/a pound and a half} of ground beef.	
+en-dB-192	en-US	food	measure	basic	Bake the bread at {220°C|two hundred twenty degrees Celsius/two hundred and twenty degrees Celsius} for thirty minutes.	
+en-dB-193	en-US	transport	measure	hard	The city ordered ten new {40-ft|forty-foot} electric buses.	adjectival: singular foot
+en-dB-194	en-US	government	measure	basic	Trucks over {80,000 lbs|eighty thousand pounds} need a special state permit.	
+en-dB-195	en-US	entertainment	measure	basic	The biggest balloon in the parade stands {62 ft|sixty-two feet} tall.	
+en-dB-196	en-US	education	measure	basic	The students measured the maple leaf at {4.6 cm|four point six centimeters}.	
+en-dB-198	en-US	notice	measure	basic	Please keep dogs on a leash no longer than {6 ft|six feet}.	
+en-dB-199	en-US	travel	measure	basic	Checked bags over {50 lb|fifty pounds} incur an extra fee.	lb read plural
+en-dB-200	en-US	travel	measure	basic	The summit of Mount Fuji sits at {3,776 m|three thousand seven hundred seventy-six meters/three thousand seven hundred and seventy-six meters/thirty-seven hundred seventy-six meters/thirty-seven hundred and seventy-six meters}.	
+en-dB-201	en-US	chat	measure	context	it's literally {104°F|one hundred four degrees Fahrenheit/one hundred four degrees/one hundred and four degrees/a hundred four degrees/a hundred and four degrees} outside, I'm not going anywhere	casual speech drops Fahrenheit
+en-dB-202	en-US	medical	measure	basic	Inject {0.3 mL|zero point three milliliters/point three milliliters} into the outer thigh.	
+en-dB-203	en-US	medical	measure	basic	Your vitamin D level is {18 ng/mL|eighteen nanograms per milliliter}, which is low.	
+en-dB-204	en-US	tech	measure	basic	The gaming monitor refreshes at {144 Hz|one hundred forty-four hertz/one hundred and forty-four hertz/a hundred forty-four hertz/a hundred and forty-four hertz/one forty-four hertz}.	gamers say one forty-four
+en-dB-205	en-US	tech	measure	basic	Fiber internet in our area now reaches {1 Gbps|one gigabit per second}.	singular gigabit
+en-dB-206	en-US	sports	measure	basic	The home run traveled {452 ft|four hundred fifty-two feet/four hundred and fifty-two feet} to straightaway center.	
+en-dB-207	en-US	sports	measure	basic	The cyclist averaged {42.5 km/h|forty-two point five kilometers per hour/forty-two point five kilometers an hour} in the time trial.	
+en-dB-208	en-US	weather	measure	hard	The barometer fell to {29.62 inHg|twenty-nine point six two inches of mercury/twenty-nine point six two inches} as the storm approached.	inHg = inches of mercury
+en-dB-209	en-US	weather	measure	hard	Expect a wind chill of {-15°F|minus fifteen degrees Fahrenheit/negative fifteen degrees Fahrenheit/minus fifteen degrees/negative fifteen degrees/fifteen below zero/fifteen below} tonight.	negative; below zero common in forecasts
+en-dB-210	en-US	food	measure	basic	The steak should rest until it reaches {135°F|one hundred thirty-five degrees Fahrenheit/one hundred and thirty-five degrees Fahrenheit/one hundred thirty-five degrees/a hundred thirty-five degrees/a hundred and thirty-five degrees}.	
+en-dB-211	en-US	food	measure	basic	Each serving has {12 g|twelve grams} of protein and {480 mg|four hundred eighty milligrams/four hundred and eighty milligrams} of sodium.	
+en-dB-212	en-US	shop	measure	basic	The rice cooker holds {5.5 cups|five point five cups/five and a half cups} of uncooked rice.	
+en-dB-213	en-US	shop	measure	hard	Our large moving boxes are {18 x 18 x 24 in|eighteen by eighteen by twenty-four inches}.	x read as by
+en-dB-214	en-US	transport	measure	basic	The ferry crossing to the island covers {22 nmi|twenty-two nautical miles}.	
+en-dB-215	en-US	transport	measure	basic	The new tunnel under the harbor is {2.7 km|two point seven kilometers} long.	
+en-dB-216	en-US	government	measure	basic	The ministry will add {1,200 ha|one thousand two hundred hectares/twelve hundred hectares} to the national park.	
+en-dB-217	en-US	entertainment	measure	basic	The roller coaster drops riders {205 ft|two hundred five feet/two hundred and five feet} at nearly {80 mph|eighty miles per hour/eighty miles an hour}.	
+en-dB-219	en-US	education	measure	basic	The chemistry textbook weighs nearly {3 kg|three kilograms/three kilos}.	
+en-dB-220	en-US	news	measure	basic	The asteroid is about {1,600 ft|one thousand six hundred feet/sixteen hundred feet} across, NASA said.	
+en-dB-221	en-US	notice	measure	basic	Speed limit in the parking garage is {5 mph|five miles per hour/five miles an hour}.	
+en-dB-222	en-US	chat	measure	context	my commute is like {45 min|forty-five minutes} each way now	min = minutes
+en-dB-223	en-US	finance	measure	basic	The tanker can carry roughly {2 million bbl|two million barrels} of crude oil.	bbl = barrels
+en-dB-224	en-US	finance	measure	context	Central bank gold reserves rose by {12.4 t|twelve point four tonnes/twelve point four metric tons} last quarter.	t = metric tonnes
+en-dB-226	en-US	medical	measure	basic	Give {5 mL|five milliliters} of the syrup every six hours as needed.	
+en-dB-227	en-US	tech	measure	basic	The new drone has a control range of {7.5 mi|seven point five miles/seven and a half miles}.	
+en-dB-228	en-US	tech	measure	basic	The CPU idles at {38°C|thirty-eight degrees Celsius/thirty-eight degrees} with the stock cooler.	
+en-dB-229	en-US	sports	measure	basic	The quarterback threw for {312 yds|three hundred twelve yards/three hundred and twelve yards} on Sunday.	
+en-dB-230	en-US	sports	measure	basic	Her final shot put throw landed at {21.8 m|twenty-one point eight meters}.	
+en-dB-231	en-US	weather	measure	basic	Waves up to {12 ft|twelve feet} are expected along the coast this weekend.	
+en-dB-232	en-US	travel	measure	basic	The trail climbs {2,300 ft|two thousand three hundred feet/twenty-three hundred feet} in the first {3 mi|three miles}.	
+en-dB-233	en-US	travel	measure	basic	Our flight will cruise at {35,000 ft|thirty-five thousand feet} today.	
+en-dB-234	en-US	food	measure	basic	Pour in {8 fl oz|eight fluid ounces} of cold brew concentrate.	
+en-dB-235	en-US	news	measure	basic	The winning pumpkin at the county fair weighed {1,247 lbs|one thousand two hundred forty-seven pounds/twelve hundred forty-seven pounds/one thousand two hundred and forty-seven pounds/twelve hundred and forty-seven pounds}.	
+en-dB-236	en-US	shop	measure	basic	One gallon of this paint covers about {400 sq ft|four hundred square feet}.	
+en-dB-237	en-US	shop	measure	hard	Grab a {2 L|two liter} bottle of soda for game night.	adjectival: singular liter
+en-dB-238	en-US	transport	measure	basic	The electric SUV can travel {310 mi|three hundred ten miles/three hundred and ten miles} on a single charge.	
+en-dB-239	en-US	government	measure	basic	The ozone standard is set at {0.07 ppm|zero point zero seven parts per million/point zero seven parts per million}.	
+en-dB-240	en-US	entertainment	measure	basic	Sound levels near the stage hit {110 dB|one hundred ten decibels/one hundred and ten decibels/a hundred ten decibels/a hundred and ten decibels}.	
+en-dB-241	en-US	education	measure	basic	Children should sleep at least {9 hrs|nine hours} a night, the school guide says.	
+en-dB-242	en-US	chat	measure	basic	can you grab {2 lbs|two pounds} of chicken thighs on your way home?	
+en-dB-243	en-US	notice	measure	basic	Water will be shut off for {4 hrs|four hours} on Monday morning.	
+en-dB-244	en-US	news	measure	basic	The storm dumped {1.1 m|one point one meters} of snow on the ski resort.	decimal takes plural
+en-dB-245	en-US	finance	measure	basic	The new headquarters will span {1.2 million sq ft|one point two million square feet}.	
+en-dB-246	en-US	weather	measure	basic	The temperature dropped {20°F|twenty degrees Fahrenheit/twenty degrees} in just three hours.	
+en-dB-247	en-US	medical	measure	basic	Patients should walk {1.5 km|one point five kilometers/one and a half kilometers} daily after surgery.	
+en-dB-249	en-US	sports	measure	hard	The Kentucky Derby is run over {1 1/4 miles|one and a quarter miles/a mile and a quarter/one and one quarter miles}.	mixed fraction
+en-dB-250	en-US	travel	measure	basic	The rental car's fuel tank holds {13.2 gal|thirteen point two gallons}.	
+en-dC-001	en-US	news	date	basic	The city council approved the new transit budget on {March 3, 2026|March third twenty twenty-six/March third two thousand twenty-six}.	ordinal day; two year styles
+en-dC-002	en-US	notice	date	basic	Library hours will change starting {Mon., Nov. 9|Monday November ninth}.	weekday and month abbreviations expanded
+en-dC-003	en-US	chat	date	basic	Are you still free on {the 22nd|the twenty-second}? I already booked the table.	ordinal suffix
+en-dC-004	en-US	shopping	date	context	Orders placed by {12/18|December eighteenth} will arrive before Christmas.	US month/day order
+en-dC-005	en-US	medical	date	context	Your follow-up visit is scheduled for {4/7/2027|April seventh twenty twenty-seven/April seventh two thousand twenty-seven}.	US M/D/Y, not July 4
+en-dC-006	en-US	tech	date	basic	The old API reached end of support on {2025-06-30|June thirtieth twenty twenty-five/June thirtieth two thousand twenty-five}.	ISO date
+en-dC-007	en-US	finance	date	basic	The company will report {Q3 2026|Q three twenty twenty-six/Q three two thousand twenty-six/third quarter twenty twenty-six/third quarter two thousand twenty-six} earnings after the bell.	quarter label
+en-dC-008	en-US	finance	date	basic	Revenue for {FY2025|F Y twenty twenty-five/F Y two thousand twenty-five/fiscal year twenty twenty-five/fiscal year two thousand twenty-five} rose eight percent.	FY spelled or expanded
+en-dC-009	en-US	sports	date	basic	The Bulls won six championships in {the 1990s|the nineteen nineties}.	decade
+en-dC-010	en-US	weather	date	basic	The last storm this strong hit Denver on {Feb. 2, 2003|February second two thousand three/February second twenty oh three}.	2003 two styles
+en-dC-011	en-US	travel	date	basic	My return flight lands on {Sat., Aug. 14|Saturday August fourteenth}, so plan the pickup.	abbreviations expanded
+en-dC-012	en-US	education	date	basic	Spring semester classes begin {Jan. 20|January twentieth}.	
+en-dC-013	en-US	government	date	basic	The deadline to file federal income taxes is {April 15|April fifteenth}.	
+en-dC-014	en-US	food	date	basic	The farmers market reopens for the season on {May 2|May second}.	
+en-dC-015	en-US	transport	date	basic	The new subway line opens to riders on {Sunday, Dec. 6|Sunday December sixth}.	
+en-dC-016	en-US	entertainment	date	basic	The sequel hits theaters nationwide on {July 17, 2026|July seventeenth twenty twenty-six/July seventeenth two thousand twenty-six}.	
+en-dC-017	en-US	news	date	basic	The bridge first opened to traffic on {May 27, 1937|May twenty-seventh nineteen thirty-seven}.	
+en-dC-018	en-US	government	date	basic	The Declaration of Independence was adopted on {July 4, 1776|July fourth seventeen seventy-six}.	historical year
+en-dC-019	en-US	chat	date	context	Mom's birthday is {9/12|September twelfth}, so don't forget to order the cake.	US month/day order
+en-dC-020	en-US	medical	date	context	The patient was admitted on {1/29/2026|January twenty-ninth twenty twenty-six/January twenty-ninth two thousand twenty-six} with chest pain.	US M/D/Y
+en-dC-021	en-US	tech	date	basic	Server logs from {2026-10-12|October twelfth twenty twenty-six/October twelfth two thousand twenty-six} show two unexpected reboots.	ISO date
+en-dC-022	en-US	education	date	basic	Your essay on {the 1960s|the nineteen sixties} civil rights movement is due Friday.	decade
+en-dC-023	en-US	sports	date	hard	He set the world record in Berlin on {16 August 2009|the sixteenth of August two thousand nine/the sixteenth of August twenty oh nine/sixteen August two thousand nine/sixteen August twenty oh nine}.	day-first order; read in written order
+en-dC-024	en-US	weather	date	basic	Atlantic hurricane season officially ends {Nov. 30|November thirtieth}.	
+en-dC-025	en-US	travel	date	context	Your passport expires on {03/22/2028|March twenty-second twenty twenty-eight/March twenty-second two thousand twenty-eight}.	leading zero month, US order
+en-dC-026	en-US	food	date	basic	Our fall menu returns to all locations {Aug. 25|August twenty-fifth}.	
+en-dC-027	en-US	transport	date	basic	Bus fares go up on {the 1st|the first} of next month.	
+en-dC-028	en-US	entertainment	date	basic	The band's farewell tour kicks off {Friday, Oct. 23|Friday October twenty-third} in Austin.	
+en-dC-029	en-US	news	date	basic	Voters head to the polls on {Tuesday, Nov. 3, 2026|Tuesday November third twenty twenty-six/Tuesday November third two thousand twenty-six}.	
+en-dC-030	en-US	finance	date	basic	Stocks crashed on {Oct. 19, 1987|October nineteenth nineteen eighty-seven}, a day now called Black Monday.	
+en-dC-031	en-US	government	date	basic	Applications postmarked after {June 26|June twenty-sixth} will not be accepted.	
+en-dC-032	en-US	medical	date	basic	Her last tetanus booster was given in {2019|twenty nineteen/two thousand nineteen}.	year alone
+en-dC-033	en-US	tech	date	basic	Security updates for this laptop ended in {October 2025|October twenty twenty-five/October two thousand twenty-five}.	month and year
+en-dC-034	en-US	education	date	basic	Children who turn five by {Sept. 15|September fifteenth} can enroll in kindergarten.	Sept. abbreviation
+en-dC-035	en-US	shopping	date	basic	The holiday return window closes {Jan. 31, 2027|January thirty-first twenty twenty-seven/January thirty-first two thousand twenty-seven}.	
+en-dC-036	en-US	chat	date	context	lol I still have the jacket I bought back in {'08|oh eight}.	clipped year read as written
+en-dC-037	en-US	sports	date	basic	The Cubs finally won the World Series in {2016|twenty sixteen/two thousand sixteen}.	
+en-dC-038	en-US	weather	date	basic	Temperature records at this station go back to {1895|eighteen ninety-five}.	
+en-dC-039	en-US	travel	date	basic	Check-in for the cruise opens {Wed., March 10|Wednesday March tenth}.	
+en-dC-040	en-US	food	date	basic	The sommelier recommended a {2015|twenty fifteen/two thousand fifteen} cabernet from Napa.	vintage year
+en-dC-041	en-US	government	date	basic	The Nineteenth Amendment was ratified on {August 18, 1920|August eighteenth nineteen twenty}.	
+en-dC-042	en-US	entertainment	date	basic	The show's first season aired in the fall of {2011|twenty eleven/two thousand eleven}.	
+en-dC-043	en-US	news	date	basic	The governor signed the bill into law on {Sept. 24|September twenty-fourth}.	
+en-dC-044	en-US	transport	date	context	Toll rates were last adjusted on {7/1/2024|July first twenty twenty-four/July first two thousand twenty-four}.	US M/D/Y
+en-dC-045	en-US	medical	date	basic	Please complete fasting bloodwork before {Thursday the 5th|Thursday the fifth}.	
+en-dC-046	en-US	shopping	date	context	Online deals end at midnight on {12/2|December second}.	US month/day order
+en-dC-047	en-US	tech	date	context	The SSL certificate was issued {2026-01-07|January seventh twenty twenty-six/January seventh two thousand twenty-six} and is valid for a year.	ISO date, month first
+en-dC-048	en-US	finance	date	basic	The bond matures in {2041|twenty forty-one/two thousand forty-one}.	future year
+en-dC-049	en-US	education	date	basic	The university was founded in {1868|eighteen sixty-eight}.	
+en-dC-050	en-US	chat	date	basic	Wait, wasn't the reunion on {June 28th|June twenty-eighth}?	
+en-dC-051	en-US	sports	date	basic	The city marathon was held on {April 12, 2026|April twelfth twenty twenty-six/April twelfth two thousand twenty-six}.	
+en-dC-052	en-US	weather	date	basic	The wildfire smoke was at its worst in the summer of {2020|twenty twenty/two thousand twenty}.	
+en-dC-053	en-US	travel	date	hard	Rail passes bought before {31 December|the thirty-first of December/thirty-one December} remain valid next year.	day-first order
+en-dC-054	en-US	government	date	basic	The longest federal shutdown began on {Dec. 22, 2018|December twenty-second twenty eighteen/December twenty-second two thousand eighteen}.	
+en-dC-055	en-US	food	date	basic	Grandma's handwritten recipe card is dated {December 1954|December nineteen fifty-four}.	
+en-dC-056	en-US	entertainment	date	basic	The Beatles first played on American television in {February 1964|February nineteen sixty-four}.	
+en-dC-057	en-US	news	date	basic	The Northridge earthquake struck before dawn on {Jan. 17, 1994|January seventeenth nineteen ninety-four}.	
+en-dC-058	en-US	finance	date	basic	Home prices climbed steadily through {the 2010s|the twenty tens/the two thousand tens}.	decade, two styles
+en-dC-059	en-US	notice	date	basic	Water service will be interrupted on {Thurs., Feb. 11|Thursday February eleventh}.	
+en-dC-060	en-US	notice	date	context	The annual fire drill is scheduled for {10/27|October twenty-seventh}.	US month/day order
+en-dC-061	en-US	medical	date	basic	Vaccination records must be updated by {Aug. 6, 2027|August sixth twenty twenty-seven/August sixth two thousand twenty-seven}.	
+en-dC-062	en-US	tech	date	basic	The first iPhone went on sale in {June 2007|June two thousand seven/June twenty oh seven}.	2007 two styles
+en-dC-063	en-US	shopping	date	basic	Prices in this flyer are valid through {Sunday the 25th|Sunday the twenty-fifth}.	
+en-dC-064	en-US	education	date	basic	The library's rare book archive covers {the 1800s|the eighteen hundreds}.	century plural
+en-dC-065	en-US	chat	date	basic	Moving day is {the 30th|the thirtieth}, can you help me with boxes?	
+en-dC-066	en-US	sports	date	basic	The Olympic Games come to Los Angeles in {summer 2028|summer twenty twenty-eight/summer two thousand twenty-eight}.	
+en-dC-067	en-US	weather	date	context	Forecast issued {2026-10-17|October seventeenth twenty twenty-six/October seventeenth two thousand twenty-six} by the National Weather Service.	ISO date
+en-dC-068	en-US	travel	date	basic	Our next big trip to Japan is planned for early {2027|twenty twenty-seven/two thousand twenty-seven}.	
+en-dC-069	en-US	government	date	basic	Benefit payments are deposited on {the 3rd|the third} of each month.	
+en-dC-070	en-US	food	date	basic	Restaurant Week returns {Jan. 18|January eighteenth} with prix fixe menus.	
+en-dC-071	en-US	transport	date	basic	The final stretch of the interstate was completed in {1992|nineteen ninety-two}.	
+en-dC-072	en-US	entertainment	date	basic	The museum's new exhibit covers fashion from {the '70s|the seventies}.	clipped decade
+en-dC-073	en-US	news	date	hard	Officials said the {9/11|nine eleven/September eleventh} memorial will hold its annual ceremony at dawn.	event name, not read as a date
+en-dC-074	en-US	finance	date	context	Statements dated {11/16/2026|November sixteenth twenty twenty-six/November sixteenth two thousand twenty-six} will be mailed next week.	US M/D/Y
+en-dC-075	en-US	medical	date	basic	Date of birth: {March 9, 1958|March ninth nineteen fifty-eight}.	
+en-dC-076	en-US	tech	date	basic	The open-source project began as a weekend hobby in {2004|two thousand four/twenty oh four}.	
+en-dC-077	en-US	education	date	basic	Commencement is {Saturday, May 15, 2027|Saturday May fifteenth twenty twenty-seven/Saturday May fifteenth two thousand twenty-seven}.	
+en-dC-078	en-US	shopping	date	basic	Pre-orders begin shipping {Nov 20|November twentieth}.	abbreviation without period
+en-dC-079	en-US	chat	date	context	Got my lab results back from {10/2|October second}, everything looks normal!	US month/day order
+en-dC-080	en-US	sports	date	basic	Opening Day is set for {March 29, 2027|March twenty-ninth twenty twenty-seven/March twenty-ninth two thousand twenty-seven}.	
+en-dC-081	en-US	weather	date	basic	The coldest winter on record here was in {1936|nineteen thirty-six}.	
+en-dC-082	en-US	travel	date	context	All award travel must be completed by {01/15/2027|January fifteenth twenty twenty-seven/January fifteenth two thousand twenty-seven}.	US M/D/Y with leading zero
+en-dC-083	en-US	government	date	basic	The new minimum wage law takes effect {Jan. 1, 2027|January first twenty twenty-seven/January first two thousand twenty-seven}.	
+en-dC-084	en-US	food	date	context	The local dairy sells eggnog only until {12/31|December thirty-first}.	US month/day order
+en-dC-085	en-US	notice	date	basic	Daylight saving time ends {Nov. 1|November first}, so set your clocks back an hour.	
+en-dC-086	en-US	entertainment	date	basic	The best-selling album of all time was released on {Nov. 30, 1982|November thirtieth nineteen eighty-two}.	
+en-dC-087	en-US	news	date	hard	The armistice was signed on {11 November 1918|the eleventh of November nineteen eighteen/eleven November nineteen eighteen}.	day-first order
+en-dC-088	en-US	finance	date	basic	Mortgage rates peaked in {the early 1980s|the early nineteen eighties}.	
+en-dC-089	en-US	medical	date	basic	Your next injection is due on {the 14th|the fourteenth}.	
+en-dC-090	en-US	tech	date	basic	Our cloud migration wrapped up in {Q1 2025|Q one twenty twenty-five/Q one two thousand twenty-five}.	quarter label
+en-dC-091	en-US	education	date	basic	Fall registration opens {Monday, Aug. 3|Monday August third}.	
+en-dC-092	en-US	shopping	date	context	Arrives {Thu, 10/22|Thursday October twenty-second} if you order today.	US month/day order
+en-dC-093	en-US	chat	date	context	We still talk about the summer of {'99|ninety-nine}.	clipped year
+en-dC-094	en-US	sports	date	basic	The Patriots' dynasty began in {2001|two thousand one/twenty oh one}.	
+en-dC-095	en-US	weather	date	context	Snowpack measured on {4/1|April first} sets the summer water supply forecast.	US month/day order
+en-dC-096	en-US	government	date	basic	Jurors must report on {Monday the 9th|Monday the ninth} at the county courthouse.	
+en-dC-097	en-US	food	date	basic	The diner has been family-owned since {1949|nineteen forty-nine}.	
+en-dC-098	en-US	transport	date	basic	The airport's new terminal will open in {spring 2029|spring twenty twenty-nine/spring two thousand twenty-nine}.	
+en-dC-099	en-US	entertainment	date	basic	Season two drops on {Oct. 30|October thirtieth}, just in time for Halloween.	
+en-dC-100	en-US	news	date	basic	The first moon landing took place on {July 20, 1969|July twentieth nineteen sixty-nine}.	
+en-dC-101	en-US	medical	time	basic	The pharmacy opens at {8 a.m.|eight a m/eight AM} on weekdays.	
+en-dC-102	en-US	transport	time	basic	The last train to Boston leaves at {11:47 PM|eleven forty-seven p m/eleven forty-seven PM}.	
+en-dC-103	en-US	travel	time	hard	Boarding for the overnight flight begins at {19:30|nineteen thirty/seven thirty p m/seven thirty PM}.	24-hour; literal or 12-hour reading
+en-dC-104	en-US	chat	time	context	Running late, I'll be there by {6:15|six fifteen}!	no am/pm marker
+en-dC-105	en-US	news	time	basic	Polls in most of the state close at {8 p.m.|eight p m/eight PM}.	
+en-dC-106	en-US	sports	time	hard	He finished the marathon in {2:31:08|two hours thirty-one minutes and eight seconds/two hours thirty-one minutes eight seconds/two thirty-one oh eight}.	h:mm:ss duration
+en-dC-107	en-US	medical	time	basic	Take one tablet every morning at {7:30 a.m.|seven thirty a m/seven thirty AM}.	
+en-dC-109	en-US	finance	time	basic	The New York Stock Exchange closes at {4 p.m.|four p m/four PM} on regular trading days.	
+en-dC-110	en-US	weather	time	basic	The hurricane is expected to make landfall around {3 a.m.|three a m/three AM} Saturday.	
+en-dC-111	en-US	education	time	basic	Professor Lee holds office hours Tuesdays at {1:45 PM|one forty-five p m/one forty-five PM}.	
+en-dC-112	en-US	government	time	basic	Polling places open at {6:00 a.m.|six a m/six AM} sharp.	:00 not read
+en-dC-113	en-US	food	time	context	Happy hour starts at {4:30|four thirty} every weekday.	no am/pm marker
+en-dC-114	en-US	entertainment	time	context	Doors open at {6:30 PM|six thirty p m/six thirty PM}, and the show starts at {8|eight}.	bare hour is a time by context
+en-dC-115	en-US	shopping	time	basic	Black Friday doors open at {5 a.m.|five a m/five AM} at most locations.	
+en-dC-116	en-US	travel	time	hard	Your flight departs at {06:45|oh six forty-five/six forty-five/six forty-five a m/six forty-five AM} from the main terminal.	24-hour with leading zero
+en-dC-117	en-US	chat	time	basic	Let's meet at {12 noon|twelve noon} by the fountain.	
+en-dC-118	en-US	news	time	basic	The press conference is set for {10:30 a.m. ET|ten thirty a m Eastern/ten thirty AM Eastern/ten thirty a m Eastern Time/ten thirty AM Eastern Time/ten thirty a m E T/ten thirty AM E T}.	ET read as Eastern or spelled
+en-dC-119	en-US	sports	time	basic	Kickoff is at {1:05 p.m.|one oh five p m/one oh five PM} on Sunday.	zero minute read oh
+en-dC-120	en-US	medical	time	basic	Visiting hours end at {8:30 PM|eight thirty p m/eight thirty PM}.	
+en-dC-121	en-US	tech	time	hard	The nightly backup job finished at {23:59:59|twenty-three fifty-nine and fifty-nine seconds/twenty-three fifty-nine fifty-nine}.	24-hour with seconds
+en-dC-122	en-US	finance	time	context	Wires received after {1:00 p.m.|one p m/one PM} post the next business day.	
+en-dC-123	en-US	weather	time	basic	Sunrise tomorrow is at {6:52 a.m.|six fifty-two a m/six fifty-two AM}.	
+en-dC-124	en-US	travel	time	basic	Checkout time at the inn is {11 a.m.|eleven a m/eleven AM}.	
+en-dC-125	en-US	education	time	context	First period begins at {7:55|seven fifty-five} and second period at {8:50|eight fifty}.	school schedule, no marker
+en-dC-126	en-US	government	time	basic	City Hall is open until {5:15 p.m.|five fifteen p m/five fifteen PM} on Fridays.	
+en-dC-127	en-US	food	time	context	Brunch is served until {2:30|two thirty} on Sundays.	no am/pm marker
+en-dC-129	en-US	shopping	time	basic	Curbside pickup is available until {9 p.m.|nine p m/nine PM} daily.	
+en-dC-130	en-US	transport	time	basic	The ferry's first crossing leaves at {5:40 AM|five forty a m/five forty AM}.	
+en-dC-131	en-US	chat	time	context	Call me after {9|nine}, I'm in class until then.	bare hour is a time by context
+en-dC-132	en-US	news	time	basic	Officials confirmed the explosion occurred at {4:17 a.m.|four seventeen a m/four seventeen AM} local time.	
+en-dC-133	en-US	sports	time	hard	She ran the mile in {4:12|four twelve/four minutes twelve seconds/four minutes and twelve seconds}.	m:ss race time, not clock
+en-dC-134	en-US	medical	time	hard	Medication administered at {1400|fourteen hundred/fourteen hundred hours}.	military time in chart
+en-dC-135	en-US	tech	time	basic	Your session will expire at {12:00 a.m.|twelve a m/twelve AM}.	
+en-dC-136	en-US	finance	time	basic	Futures trading resumes at {6 p.m.|six p m/six PM} Sunday evening.	
+en-dC-138	en-US	travel	time	context	The walking tour meets in the hotel lobby at {10:20|ten twenty}.	no am/pm marker
+en-dC-139	en-US	education	time	basic	The live lecture starts at {3pm|three p m/three PM} today.	no space before pm
+en-dC-140	en-US	government	time	basic	Mail ballots must be received by {7:00 p.m.|seven p m/seven PM} on Election Day.	
+en-dC-141	en-US	food	time	basic	Delivery usually takes about {45 min|forty-five minutes}.	duration abbreviation
+en-dC-142	en-US	entertainment	time	basic	The fireworks show starts at {9:15 p.m.|nine fifteen p m/nine fifteen PM}.	
+en-dC-143	en-US	shopping	time	hard	Flash sale ends in {02:14:37|two hours fourteen minutes and thirty-seven seconds/two hours fourteen minutes thirty-seven seconds}.	countdown duration
+en-dC-144	en-US	transport	time	hard	The Amtrak train is due to arrive at {13:52|thirteen fifty-two/one fifty-two p m/one fifty-two PM}.	24-hour; literal or 12-hour reading
+en-dC-145	en-US	chat	time	context	omw, eta {5:50|five fifty}	chat abbreviation context
+en-dC-146	en-US	news	time	basic	The memorial service will begin at {10 o'clock|ten o'clock} Saturday morning.	
+en-dC-147	en-US	sports	time	basic	The game was delayed until {7:10 p.m.|seven ten p m/seven ten PM} because of rain.	
+en-dC-148	en-US	medical	time	basic	Please arrive for surgery at {5:30 a.m.|five thirty a m/five thirty AM}.	
+en-dC-149	en-US	tech	time	hard	The database migration runs at {03:00 UTC|oh three hundred U T C/zero three hundred U T C/three a m U T C/three AM U T C}.	24-hour UTC
+en-dC-150	en-US	finance	time	basic	The Fed's rate decision comes out at {2 PM|two p m/two PM} today.	
+en-dC-151	en-US	weather	time	basic	Rain should clear out by {10 a.m.|ten a m/ten AM}.	
+en-dC-152	en-US	travel	time	basic	The hotel shuttle runs every half hour starting at {6:10 a.m.|six ten a m/six ten AM}.	
+en-dC-153	en-US	education	time	basic	After-school detention lasts until {3:50 PM|three fifty p m/three fifty PM}.	
+en-dC-154	en-US	government	time	basic	The council meeting was called to order at {6:03 p.m.|six oh three p m/six oh three PM}.	zero minute read oh
+en-dC-155	en-US	food	time	basic	Bake the cornbread for {35 min.|thirty-five minutes}.	duration abbreviation
+en-dC-156	en-US	entertainment	time	basic	The livestream goes live at {12:30 p.m.|twelve thirty p m/twelve thirty PM}.	
+en-dC-157	en-US	shopping	time	basic	Order before {11:30 a.m.|eleven thirty a m/eleven thirty AM} for same-day delivery.	
+en-dC-158	en-US	transport	time	hard	The bridge will close nightly at {22:00|twenty-two hundred/ten p m/ten PM} for repairs.	24-hour; literal or 12-hour reading
+en-dC-159	en-US	chat	time	basic	It's {1:23 am|one twenty-three a m/one twenty-three AM} and I still can't sleep.	lowercase am
+en-dC-160	en-US	news	time	basic	The jury's verdict was read at {11:52 a.m.|eleven fifty-two a m/eleven fifty-two AM}.	
+en-dC-161	en-US	sports	time	hard	The new lap record is {1:18.442|one minute eighteen point four four two seconds/one minute and eighteen point four four two seconds/one eighteen point four four two}.	lap time with decimals
+en-dC-162	en-US	medical	time	context	Your test results should be ready after {4:00|four/four o'clock} this afternoon.	
+en-dC-163	en-US	tech	time	hard	The tutorial video is {12:05|twelve minutes and five seconds/twelve minutes five seconds/twelve oh five} long.	mm:ss duration by context
+en-dC-164	en-US	finance	time	basic	The earnings call starts at {8:30 a.m. ET|eight thirty a m Eastern/eight thirty AM Eastern/eight thirty a m Eastern Time/eight thirty AM Eastern Time/eight thirty a m E T/eight thirty AM E T}.	ET read as Eastern or spelled
+en-dC-165	en-US	weather	time	basic	Sunset tonight is at {7:08 PM|seven oh eight p m/seven oh eight PM}.	
+en-dC-166	en-US	travel	time	hard	The layover in Denver is {2h 40m|two hours forty minutes/two hours and forty minutes}.	compact duration
+en-dC-167	en-US	education	time	context	The final exam starts at {9:00 sharp|nine sharp/nine o'clock sharp}.	
+en-dC-168	en-US	government	time	context	The DMV line was already long when the doors opened at {7:45|seven forty-five}.	no am/pm marker
+en-dC-169	en-US	food	time	basic	The kitchen stops taking orders at {10:45 p.m.|ten forty-five p m/ten forty-five PM}.	
+en-dC-170	en-US	entertainment	time	basic	The concert finally ended at {11:15 p.m.|eleven fifteen p m/eleven fifteen PM}.	
+en-dC-171	en-US	notice	range	basic	The front desk is staffed {9-5|nine to five}, Monday through Friday.	hour range
+en-dC-172	en-US	shopping	range	basic	Save {10-20%|ten to twenty percent} on select patio furniture this week.	
+en-dC-173	en-US	shopping	range	basic	Most used paperbacks cost {$5-$10|five to ten dollars/five dollars to ten dollars}.	
+en-dC-174	en-US	shopping	range	basic	Standard shipping takes {3–5 business days|three to five business days}.	en dash
+en-dC-175	en-US	news	range	basic	He served as the city's mayor from {1990–1995|nineteen ninety to nineteen ninety-five}.	year range
+en-dC-177	en-US	medical	range	basic	Most adults need {7–9 hours|seven to nine hours} of sleep a night.	
+en-dC-179	en-US	weather	range	basic	Expect {2-4 inches|two to four inches} of snow overnight.	
+en-dC-180	en-US	weather	range	basic	Northwest winds {15–25 mph|fifteen to twenty-five miles per hour/fifteen to twenty-five m p h}.	
+en-dC-181	en-US	sports	range	basic	The youth soccer league is open to kids ages {6–12|six to twelve}.	
+en-dC-182	en-US	travel	range	basic	Downtown hotel rates run {$180–$240|one hundred eighty to two hundred forty dollars/a hundred eighty to two hundred forty dollars/one hundred and eighty to two hundred and forty dollars/a hundred and eighty to two hundred and forty dollars} a night.	hundred with or without and
+en-dC-183	en-US	finance	range	basic	Economists expect growth of {2.5–3%|two point five to three percent} next year.	
+en-dC-184	en-US	finance	range	hard	The stock has traded in a {$41–$44|forty-one to forty-four dollar} range since May.	adjectival, singular dollar
+en-dC-185	en-US	government	range	basic	County offices are closed {Dec. 24–Jan. 1|December twenty-fourth to January first/December twenty-fourth through January first}.	date range
+en-dC-186	en-US	food	range	basic	Simmer uncovered for {20–25 minutes|twenty to twenty-five minutes}.	
+en-dC-187	en-US	food	range	context	This lasagna recipe serves {4-6|four to six}.	
+en-dC-188	en-US	tech	range	basic	The app needs {8–16 GB|eight to sixteen gigabytes/eight to sixteen G B/eight to sixteen gigs} of RAM.	
+en-dC-189	en-US	tech	range	basic	The update usually takes {10-15 min|ten to fifteen minutes}.	
+en-dC-190	en-US	entertainment	range	basic	Tickets are {$35–$90|thirty-five to ninety dollars/thirty-five dollars to ninety dollars} depending on the seat.	
+en-dC-191	en-US	news	range	basic	Crews said the wildfire burned for {10–12 days|ten to twelve days} before containment.	
+en-dC-192	en-US	education	range	basic	{Chapters 4–7|Chapters four to seven/Chapters four through seven} will be on the midterm.	
+en-dC-193	en-US	sports	range	basic	He played for the Yankees from {2004–2013|two thousand four to twenty thirteen/two thousand four to two thousand thirteen/twenty oh four to twenty thirteen/twenty oh four to two thousand thirteen}.	year styles combine
+en-dC-194	en-US	transport	range	basic	Expect delays of {30–45 minutes|thirty to forty-five minutes} on the interstate tonight.	
+en-dC-195	en-US	chat	range	basic	I'll be there in {5-10 min|five to ten minutes}, save me a seat.	
+en-dC-198	en-US	government	range	basic	The program is open to residents aged {18–64|eighteen to sixty-four}.	
+en-dC-199	en-US	finance	range	basic	Advisory fees typically run {0.5-1%|zero point five to one percent/point five to one percent}.	
+en-dC-200	en-US	shopping	range	basic	Kids' sneakers are available in sizes {10-13|ten to thirteen}.	
+en-dC-201	en-US	travel	range	basic	The summit hike takes {4–6 hrs|four to six hours} round trip.	
+en-dC-202	en-US	food	range	basic	Bake at {350–375°F|three hundred fifty to three hundred seventy-five degrees Fahrenheit/three hundred fifty to three hundred seventy-five degrees/three hundred and fifty to three hundred and seventy-five degrees Fahrenheit/three hundred and fifty to three hundred and seventy-five degrees/three fifty to three seventy-five degrees Fahrenheit/three fifty to three seventy-five degrees} until golden.	oven temps often read three fifty
+en-dC-203	en-US	entertainment	range	basic	The jazz festival runs {June 12–15|June twelfth to fifteenth/June twelfth through fifteenth/June twelfth to the fifteenth/June twelfth through the fifteenth} downtown.	day range in one month
+en-dC-204	en-US	sports	range	basic	Training camp runs {July 27–Aug. 9|July twenty-seventh to August ninth/July twenty-seventh through August ninth}.	
+en-dC-205	en-US	education	range	context	The elementary school serves grades {K–5|K through five/K to five/kindergarten through fifth}.	grade range
+en-dC-206	en-US	news	range	basic	The latest poll shows the race within {2-3 points|two to three points/two or three points}.	
+en-dC-207	en-US	medical	range	basic	Symptoms usually appear {2–14 days|two to fourteen days} after exposure.	
+en-dC-208	en-US	tech	range	basic	The app runs on iOS {16–18|sixteen to eighteen/sixteen through eighteen}.	version range
+en-dC-209	en-US	transport	range	basic	Evening rush hour is roughly {4–7 p.m.|four to seven p m/four to seven PM}.	
+en-dC-210	en-US	chat	range	context	Party's from {8-11|eight to eleven} at my place, bring snacks!	hour range by context
+en-dC-211	en-US	finance	range	basic	Mortgage rates hovered at {6–7%|six to seven percent} for most of the year.	
+en-dC-212	en-US	government	range	basic	Walk-in hours are {Mon–Fri|Monday through Friday/Monday to Friday} at the clerk's office.	weekday range
+en-dC-213	en-US	food	range	basic	Each serving has {150–200 calories|one hundred fifty to two hundred calories/a hundred fifty to two hundred calories/one hundred and fifty to two hundred calories/a hundred and fifty to two hundred calories}.	
+en-dC-214	en-US	shopping	range	basic	Most orders ship within {24–48 hours|twenty-four to forty-eight hours}.	
+en-dC-215	en-US	weather	range	basic	Rain chances are {60-70%|sixty to seventy percent} for tomorrow afternoon.	
+en-dC-216	en-US	sports	range	hard	She was the league MVP in the {2019–20|twenty nineteen twenty/twenty nineteen to twenty/twenty nineteen to twenty twenty/two thousand nineteen to twenty twenty} season.	sports season span
+en-dC-217	en-US	travel	range	context	Gates {A1–A12|A one to A twelve/A one through A twelve} are in the north concourse.	
+en-dC-218	en-US	entertainment	range	basic	Most episodes of the podcast run {40–60 minutes|forty to sixty minutes}.	
+en-dC-219	en-US	tech	range	basic	Response times dropped to {200-300 ms|two hundred to three hundred milliseconds}.	
+en-dC-220	en-US	education	range	basic	Class sizes average {18–22 students|eighteen to twenty-two students}.	
+en-dC-221	en-US	chat	math	basic	My little sister proudly told everyone that {7 + 8 = 15|seven plus eight equals fifteen/seven plus eight is fifteen}.	equals or is
+en-dC-222	en-US	education	math	basic	Quick check: {6 × 9|six times nine} is the fact students miss most often.	
+en-dC-223	en-US	education	math	hard	Expand {(a + b)²|a plus b squared/a plus b all squared/the quantity a plus b squared} using the FOIL method.	parenthesized power
+en-dC-224	en-US	food	math	basic	If you halve the batch, {12 ÷ 2 = 6|twelve divided by two equals six/twelve divided by two is six}, so use six eggs.	
+en-dC-225	en-US	finance	math	basic	Simple interest is found with {I = P × r × t|I equals P times r times t}.	variables read as letters
+en-dC-227	en-US	tech	math	hard	A kilobyte is often treated as {2¹⁰|two to the tenth/two to the tenth power/two to the power of ten} bytes.	superscript exponent
+en-dC-228	en-US	shopping	math	basic	Three shirts at twelve dollars each: {3 × $12 = $36|three times twelve dollars equals thirty-six dollars/three times twelve dollars is thirty-six dollars}.	
+en-dC-229	en-US	sports	math	basic	His batting average comes from {45 ÷ 150|forty-five divided by one hundred fifty/forty-five divided by a hundred fifty/forty-five divided by one hundred and fifty/forty-five divided by a hundred and fifty}.	hundred with or without and
+en-dC-230	en-US	medical	math	basic	BMI is calculated as {weight ÷ height²|weight divided by height squared}.	
+en-dC-231	en-US	weather	math	hard	To convert Celsius, use {F = C × 9/5 + 32|F equals C times nine fifths plus thirty-two/F equals C times nine over five plus thirty-two}.	fraction in formula
+en-dC-232	en-US	education	math	basic	Solve for x: {3x + 4 = 19|three x plus four equals nineteen}.	
+en-dC-233	en-US	education	math	basic	{√64|The square root of sixty-four/Square root of sixty-four} is eight.	
+en-dC-234	en-US	chat	math	basic	lol {1 + 1 = 3|one plus one equals three/one plus one is three}, that's my brain today.	
+en-dC-235	en-US	food	math	hard	In cups, {1/2 + 1/4 = 3/4|one half plus one fourth equals three fourths/one half plus one quarter equals three quarters/one half plus one fourth is three fourths/one half plus one quarter is three quarters/a half plus a quarter equals three quarters/a half plus a quarter is three quarters}, so measure carefully.	fractions, fourth or quarter
+en-dC-236	en-US	tech	math	hard	A full HD screen has {1920 × 1080|nineteen twenty times ten eighty/nineteen twenty by ten eighty} pixels.	resolution digits read in pairs
+en-dC-237	en-US	food	math	basic	For the tip, {$80 × 0.2 = $16|eighty dollars times zero point two equals sixteen dollars/eighty dollars times point two equals sixteen dollars/eighty dollars times zero point two is sixteen dollars/eighty dollars times point two is sixteen dollars}.	
+en-dC-238	en-US	government	math	basic	The estimated tax owed is {$40,000 × 12%|forty thousand dollars times twelve percent}.	
+en-dC-239	en-US	news	math	hard	The puzzle that went viral online was {8 ÷ 2(2 + 2)|eight divided by two times the quantity two plus two/eight divided by two times two plus two}.	implicit multiplication
+en-dC-240	en-US	education	math	basic	The Pythagorean theorem states that {a² + b² = c²|a squared plus b squared equals c squared}.	
+en-dC-241	en-US	transport	math	basic	At forty-five miles per hour for two hours, {45 × 2 = 90|forty-five times two equals ninety/forty-five times two is ninety} miles.	
+en-dC-242	en-US	tech	math	hard	Even numbers pass the check {n % 2 == 0|n mod two equals equals zero/n mod two equals zero/n modulo two equals zero}.	code operators
+en-dC-243	en-US	shopping	math	basic	Each pack works out to {$9 ÷ 3 = $3|nine dollars divided by three equals three dollars/nine dollars divided by three is three dollars}.	
+en-dC-244	en-US	medical	math	basic	The total daily dose is {250 mg × 2|two hundred fifty milligrams times two/two hundred and fifty milligrams times two/two fifty milligrams times two}.	
+en-dC-245	en-US	entertainment	math	basic	The final question on the quiz show was {13 × 13|thirteen times thirteen}.	
+en-dC-246	en-US	sports	math	basic	Their points came from {3 × 4 + 2|three times four plus two}: four field goals and a safety.	
+en-dC-247	en-US	education	math	hard	Simplify {(x − 2)(x + 5)|x minus two times x plus five/the quantity x minus two times the quantity x plus five}.	product of binomials
+en-dC-248	en-US	travel	math	basic	Our layover math: {14 − 9 = 5|fourteen minus nine equals five/fourteen minus nine is five} hours to explore the city.	
+en-dC-249	en-US	weather	math	hard	With the wind chill, {−5 − 10 = −15|minus five minus ten equals minus fifteen/negative five minus ten equals negative fifteen/minus five minus ten is minus fifteen/negative five minus ten is negative fifteen} degrees.	negative sign vs subtraction
+en-dC-250	en-US	government	math	basic	Eligibility for the program requires {age ≥ 65|age greater than or equal to sixty-five/age is greater than or equal to sixty-five}.	
+en-dD-001	en-US	notice	phone	basic	For billing questions, please call {(312) 555-0148|three one two five five five zero one four eight/three one two five five five oh one four eight}.	parenthesized area code
+en-dD-002	en-US	medical	phone	basic	To reschedule your appointment, call the clinic at {617-555-0123|six one seven five five five zero one two three/six one seven five five five oh one two three}.	dashed format
+en-dD-003	en-US	travel	phone	basic	Guests calling from overseas can reach the front desk at {+1 415 555 0199|plus one four one five five five five zero one nine nine/plus one four one five five five five oh one nine nine}.	country code with plus
+en-dD-004	en-US	shopping	phone	context	Questions about your order? Call us toll-free at {1-800-555-0136|one eight hundred five five five zero one three six/one eight hundred five five five oh one three six/one eight zero zero five five five zero one three six/one eight oh oh five five five oh one three six}.	800 as eight hundred or digits
+en-dD-005	en-US	government	phone	basic	If someone is not breathing, hang up and dial {911|nine one one} right away.	emergency number
+en-dD-006	en-US	medical	phone	basic	The national crisis line is {988|nine eight eight}, and you can call or text any time.	three-digit service number
+en-dD-007	en-US	government	phone	basic	To report a pothole or a broken streetlight, just call {311|three one one}.	city services number
+en-dD-008	en-US	finance	phone	context	Ask for Dana Ruiz at {(646) 555-0172|six four six five five five zero one seven two/six four six five five five oh one seven two}, {ext. 238|extension two three eight/extension two thirty eight}.	ext. expands to extension
+en-dD-009	en-US	tech	phone	basic	Our support line, {877-555-0164|eight seven seven five five five zero one six four/eight seven seven five five five oh one six four}, is staffed around the clock.	toll-free without leading 1
+en-dD-010	en-US	food	phone	context	Call {(503) 555-0187|five zero three five five five zero one eight seven/five oh three five five five oh one eight seven} to book a table for Friday night.	zero in area code
+en-dD-011	en-US	transport	phone	basic	Lost something on the bus? Call lost and found at {213.555.0115|two one three five five five zero one one five/two one three five five five oh one one five}.	dotted format
+en-dD-012	en-US	sports	phone	context	Season ticket holders can call {1 (888) 555-0129|one eight eight eight five five five zero one two nine/one eight eight eight five five five oh one two nine} about parking passes.	leading 1 before parentheses
+en-dD-013	en-US	weather	phone	context	For recorded forecast updates, dial {(406) 555-0193|four zero six five five five zero one nine three/four oh six five five five oh one nine three} at any hour.	zero in area code
+en-dD-014	en-US	education	phone	basic	The admissions office number is {919-555-0158|nine one nine five five five zero one five eight/nine one nine five five five oh one five eight}, not the main switchboard.	
+en-dD-015	en-US	entertainment	phone	basic	Box office hours are posted online, or you can call {702 555 0141|seven zero two five five five zero one four one/seven oh two five five five oh one four one}.	space-separated format
+en-dD-016	en-US	news	phone	basic	Anyone with information is asked to call the tip line at {1-866-555-0177|one eight six six five five five zero one seven seven/one eight six six five five five oh one seven seven}.	866 toll-free
+en-dD-017	en-US	chat	phone	basic	new phone who dis lol, my number is {347-555-0162|three four seven five five five zero one six two/three four seven five five five oh one six two} now so save it	chat style
+en-dD-018	en-US	notice	phone	context	Text {555-0109|five five five zero one zero nine/five five five oh one oh nine} if the gate code doesn't work.	seven-digit local number
+en-dD-019	en-US	medical	phone	hard	For a possible poisoning, call {1-800-222-1222|one eight hundred two two two one two two two/one eight hundred two two two twelve twenty two/one eight zero zero two two two one two two two/one eight oh oh two two two one two two two}.	last group also read in pairs
+en-dD-020	en-US	finance	phone	context	To freeze your card from abroad, call {+1 (720) 555-0184|plus one seven two zero five five five zero one eight four/plus one seven two oh five five five oh one eight four}.	plus with parentheses
+en-dD-021	en-US	transport	phone	context	For roadside assistance, dial {1 800 555 0191|one eight hundred five five five zero one nine one/one eight hundred five five five oh one nine one/one eight zero zero five five five zero one nine one/one eight oh oh five five five oh one nine one} and have your plate number ready.	spaced 800 number
+en-dD-022	en-US	shopping	phone	context	Need to return a gift? Call {(414) 555-0126|four one four five five five zero one two six/four one four five five five oh one two six} and ask for {extension 51|extension five one/extension fifty one}.	two-digit extension
+en-dD-023	en-US	tech	phone	hard	The help desk moved to {x4417|extension four four one seven/extension forty four seventeen}, so update your speed dial.	x means extension
+en-dD-024	en-US	government	phone	basic	The county clerk's direct line is {(865) 555-0133|eight six five five five five zero one three three/eight six five five five five oh one three three}.	
+en-dD-025	en-US	sports	phone	basic	Volunteer coaches should contact the league office at {608-555-0152|six zero eight five five five zero one five two/six oh eight five five five oh one five two}.	
+en-dD-026	en-US	weather	phone	context	During the storm, call {1-877-555-0105|one eight seven seven five five five zero one zero five/one eight seven seven five five five oh one oh five} to report downed power lines.	two zeros read alike
+en-dD-027	en-US	food	phone	basic	Catering orders by phone go through {(704) 555-0168|seven zero four five five five zero one six eight/seven oh four five five five oh one six eight}.	
+en-dD-028	en-US	transport	phone	basic	Paratransit riders must book trips by calling {231-555-0119|two three one five five five zero one one nine/two three one five five five oh one one nine} a day ahead.	
+en-dD-029	en-US	entertainment	phone	basic	To win concert tickets, be the ninth caller at {(215) 555-0181|two one five five five five zero one eight one/two one five five five five oh one eight one}.	
+en-dD-030	en-US	education	phone	basic	Parents can report absences on the attendance line, {555-0156|five five five zero one five six/five five five oh one five six}.	seven-digit local number
+en-dD-031	en-US	news	phone	basic	Officials opened a hotline, {1-833-555-0114|one eight three three five five five zero one one four/one eight three three five five five oh one one four}, for displaced residents.	833 toll-free
+en-dD-032	en-US	chat	phone	basic	you dialed the wrong one, it's {(929) 555-0137|nine two nine five five five zero one three seven/nine two nine five five five oh one three seven}	
+en-dD-033	en-US	medical	phone	context	Press {ext. 112|extension one one two/extension one twelve} for the pharmacy refill line.	extension only
+en-dD-034	en-US	finance	phone	basic	Wire transfer questions go to our treasury desk at {+1 212 555 0174|plus one two one two five five five zero one seven four/plus one two one two five five five oh one seven four}.	
+en-dD-035	en-US	notice	phone	hard	The elevator is out; call building management at {(516) 555-0145|five one six five five five zero one four five/five one six five five five oh one four five} {x309|extension three zero nine/extension three oh nine}.	number plus x extension
+en-dD-036	en-US	travel	phone	context	Travelers stuck abroad can call the overseas citizens line at {+1-202-555-0131|plus one two zero two five five five zero one three one/plus one two oh two five five five oh one three one}.	dashed plus format
+en-dD-037	en-US	shopping	phone	hard	Order by phone at {1-888-PET-FOOD|one eight eight eight pet food} any day of the week.	vanity letters read as words
+en-dD-038	en-US	government	phone	basic	Families who need help with rent can dial {211|two one one} to find local programs.	community services number
+en-dD-039	en-US	tech	phone	basic	Enterprise customers have a dedicated line: {1-844-555-0127|one eight four four five five five zero one two seven/one eight four four five five five oh one two seven}.	
+en-dD-040	en-US	sports	phone	hard	Call the ticket office at {(816) 555-0189|eight one six five five five zero one eight nine/eight one six five five five oh one eight nine} or {(816) 555-0190|eight one six five five five zero one nine zero/eight one six five five five oh one nine oh}.	two numbers in one sentence
+en-dD-041	en-US	government	electronic	basic	Renew your vehicle registration online at {dmv.ca.gov|d m v dot c a dot gov}.	acronym labels spelled
+en-dD-042	en-US	shopping	electronic	basic	Send return requests to {returns@maplecrate.com|returns at maple crate dot com}.	
+en-dD-043	en-US	entertainment	electronic	basic	Follow {@NightOwlRadio|at night owl radio} for set times and surprise guests.	handle
+en-dD-044	en-US	sports	electronic	basic	Fans are sharing game-day photos with {#GoHornets|hashtag go hornets}.	hashtag
+en-dD-045	en-US	education	electronic	context	Course slides are posted at {lakeview.edu/biology|lake view dot e d u slash biology}.	edu spelled
+en-dD-046	en-US	medical	electronic	basic	Upload a photo of your insurance card at {portal.mercyhealth.org|portal dot mercy health dot org}.	
+en-dD-047	en-US	tech	electronic	hard	Edit {~/projects/app/config.yaml|tilde slash projects slash app slash config dot yaml/tilde slash projects slash app slash config dot y a m l} and restart the server.	yaml as word or letters
+en-dD-048	en-US	news	electronic	context	Read the full investigation at {npr.org|n p r dot org}.	
+en-dD-049	en-US	finance	electronic	context	Report suspected fraud to {fraud@summitcu.org|fraud at summit c u dot org}.	cu spelled
+en-dD-050	en-US	travel	electronic	context	Check your gate assignment at {flyrdu.com|fly r d u dot com}.	airport code spelled
+en-dD-051	en-US	food	electronic	basic	Share your best pie photo using {#BakeOffWeekend|hashtag bake off weekend}.	
+en-dD-052	en-US	weather	electronic	context	Live radar for the region is at {weather.gov/okx|weather dot gov slash o k x}.	office code spelled
+en-dD-053	en-US	transport	electronic	basic	Service alerts are posted in real time by {@MetroRailAlerts|at metro rail alerts}.	
+en-dD-054	en-US	chat	electronic	context	just email me at {jen.okafor@gmail.com|jen dot okafor at g mail dot com}, my work inbox is a mess	
+en-dD-055	en-US	notice	electronic	hard	Submit maintenance requests at {https://tenants.oakridgehomes.com|h t t p s colon slash slash tenants dot oak ridge homes dot com}.	full protocol
+en-dD-056	en-US	government	electronic	basic	You can apply for retirement benefits at {ssa.gov|s s a dot gov}.	
+en-dD-057	en-US	entertainment	electronic	basic	Tickets go on sale Friday at {tickets.harborlights.net|tickets dot harbor lights dot net}.	
+en-dD-058	en-US	sports	electronic	basic	Email lineup changes to {coach.rivera@eastsidesoccer.org|coach dot rivera at east side soccer dot org}.	
+en-dD-059	en-US	education	electronic	hard	Save your essay in {D:\Class\Essays|d colon backslash class backslash essays/d drive backslash class backslash essays} before you log off.	Windows path
+en-dD-060	en-US	tech	electronic	context	Clone the repo from {github.com/openbrew/brewkit|git hub dot com slash open brew slash brew kit}.	
+en-dD-061	en-US	shopping	electronic	basic	The sale page is {shop.fernandpine.com/sale|shop dot fern and pine dot com slash sale}.	
+en-dD-062	en-US	medical	electronic	basic	Results are emailed from {noreply@labcorepath.com|no reply at lab core path dot com}, so check your spam folder.	
+en-dD-063	en-US	news	electronic	basic	The governor replied from her official account, {@NMGovernor|at n m governor}.	state abbreviation spelled
+en-dD-064	en-US	finance	electronic	basic	Download monthly statements from {trustline.com/docs|trust line dot com slash docs}.	
+en-dD-065	en-US	travel	electronic	basic	Hotel confirmations are sent from {stays@roamwell.travel|stays at roam well dot travel}.	word TLD
+en-dD-066	en-US	food	electronic	context	Tag {@SaltAndSmokeBBQ|at salt and smoke b b q/at salt and smoke barbecue} in your photos for a free drink.	BBQ spelled or said as word
+en-dD-067	en-US	weather	electronic	basic	Storm spotters are posting updates under {#HurricaneMilo|hashtag hurricane milo}.	
+en-dD-068	en-US	transport	electronic	hard	Download the timetable at {ridetheline.org/schedules.pdf|ride the line dot org slash schedules dot p d f}.	
+en-dD-069	en-US	government	electronic	basic	Written comments may be emailed to {publiccomment@cityofelmira.gov|public comment at city of elmira dot gov}.	
+en-dD-070	en-US	tech	electronic	hard	To change the Wi-Fi password, open {192.168.1.1|one nine two dot one six eight dot one dot one/one ninety two dot one sixty eight dot one dot one} in a browser.	IP address
+en-dD-071	en-US	tech	alnum	basic	My {iPhone 16|i phone sixteen} won't charge past eighty percent anymore.	
+en-dD-072	en-US	entertainment	alnum	basic	We finally found a {PS5|p s five} in stock at the mall.	
+en-dD-073	en-US	travel	alnum	context	The {A321|a three twenty one} on this route has a lie-flat business cabin.	aircraft model
+en-dD-074	en-US	travel	alnum	context	Flight {DL 482|d l four eighty two/d l four eight two/delta four eighty two} to Atlanta is now boarding.	flight number
+en-dD-075	en-US	tech	alnum	hard	Please update the app to {v4.2.1|version four point two point one/version four dot two dot one/v four point two point one}.	version string
+en-dD-076	en-US	medical	alnum	basic	Pharmacies are offering updated {COVID-19|covid nineteen} shots this fall.	
+en-dD-077	en-US	education	alnum	basic	Dry ice is frozen {CO2|c o two}, so handle it with gloves.	chemical formula
+en-dD-078	en-US	shopping	alnum	basic	The {4K|four k} TV was marked down for the holiday sale.	
+en-dD-079	en-US	tech	alnum	basic	Our town finally has {5G|five g} coverage downtown.	
+en-dD-080	en-US	finance	alnum	basic	The startup pivoted from consumer apps to {B2B|b to b} software.	2 read as to
+en-dD-082	en-US	travel	alnum	basic	They drove all of {Route 66|route sixty six} last summer.	
+en-dD-083	en-US	transport	alnum	basic	The {F-150|f one fifty} is still the best-selling pickup in the country.	truck model
+en-dD-084	en-US	shopping	alnum	basic	Spray a little {WD-40|w d forty} on the hinge to stop the squeak.	
+en-dD-085	en-US	food	alnum	basic	Nutritional yeast is a good source of {B12|b twelve}.	vitamin
+en-dD-086	en-US	medical	alnum	basic	Your {A1C|a one c} has dropped since your last visit.	lab test
+en-dD-087	en-US	sports	alnum	context	She anchored the {4x100|four by one hundred} relay at the state meet.	x read as by
+en-dD-088	en-US	tech	alnum	basic	The laptop ships with {Windows 11|windows eleven} preinstalled.	
+en-dD-089	en-US	weather	alnum	basic	The survey team rated the tornado an {EF3|e f three}.	tornado scale
+en-dD-090	en-US	weather	alnum	context	Officials warned that a {Cat 5|cat five/category five} storm would flatten the pier.	hurricane category
+en-dD-091	en-US	finance	alnum	basic	Freelancers should receive a {1099-NEC|ten ninety nine n e c} by the end of January.	tax form
+en-dD-092	en-US	government	alnum	basic	New hires must complete Form {I-9|i nine} on their first day.	
+en-dD-093	en-US	finance	alnum	context	She rolled her old {401(k)|four oh one k} into her new employer's plan.	zero read as oh
+en-dD-094	en-US	finance	alnum	context	Grandparents can contribute to a {529 plan|five twenty nine plan/five two nine plan} for college.	
+en-dD-095	en-US	education	alnum	context	The district serves {K-12|k through twelve/k twelve} students across three towns.	hyphen read as through
+en-dD-096	en-US	entertainment	alnum	context	We watched {Rocky IV|rocky four} just for the training montage.	Roman numeral title
+en-dD-097	en-US	sports	alnum	context	The halftime show at {Super Bowl LIX|super bowl fifty nine} drew huge ratings.	Roman numeral
+en-dD-098	en-US	education	alnum	context	Her grandfather served in the Navy during {World War II|world war two}.	Roman numeral
+en-dD-099	en-US	government	alnum	context	The lawsuit claims the school violated {Title IX|title nine}.	Roman numeral
+en-dD-100	en-US	news	alnum	context	{King Charles III|king charles the third} visited the flooded villages on Monday.	regnal number
+en-dD-101	en-US	transport	alnum	basic	Take the {Q44|q forty four} bus to the botanical garden.	bus route
+en-dD-102	en-US	tech	alnum	basic	You'll need a {USB-C|u s b c} cable to charge the tablet.	
+en-dD-103	en-US	tech	alnum	context	The new router supports {Wi-Fi 6E|wi fi six e}.	
+en-dD-104	en-US	shopping	alnum	basic	The remote takes two {AAA|triple a} batteries.	battery size
+en-dD-105	en-US	medical	alnum	basic	Reapply {SPF 50|s p f fifty} sunscreen every two hours at the beach.	
+en-dD-106	en-US	food	alnum	basic	Mix the punch with {7UP|seven up} and orange sherbet.	brand
+en-dD-107	en-US	food	alnum	basic	He drinks a can of {V8|v eight} every morning.	brand
+en-dD-108	en-US	entertainment	alnum	basic	My brother preordered {NBA 2K26|n b a two k twenty six} for the weekend.	video game
+en-dD-109	en-US	sports	alnum	context	Tickets for the {F1|f one/formula one} race in Las Vegas sold out fast.	
+en-dD-110	en-US	news	alnum	basic	Leaders met for the {G7|g seven} summit in the Alps.	
+en-dD-111	en-US	tech	alnum	basic	The new tablet runs on the {M4|m four} chip.	
+en-dD-112	en-US	tech	alnum	hard	Our scripts now require {Python 3.12|python three point twelve/python three twelve}.	minor version twelve
+en-dD-113	en-US	transport	alnum	context	Regulators grounded the {737 MAX 9|seven three seven max nine/seven thirty seven max nine} after a panel blew out.	aircraft model
+en-dD-114	en-US	travel	alnum	basic	Your gate has changed to {C17|c seventeen}.	gate
+en-dD-115	en-US	travel	alnum	basic	I always book seat {14A|fourteen a} because it's a window.	seat
+en-dD-116	en-US	shopping	alnum	context	These boots also come in {10W|ten wide}.	W means wide width
+en-dD-117	en-US	food	alnum	hard	Fresh pasta turns out best with {00 flour|double zero flour/double oh flour}.	flour grade
+en-dD-118	en-US	medical	alnum	basic	Walking daily helps manage {type 2 diabetes|type two diabetes}.	
+en-dD-119	en-US	medical	alnum	basic	Her {CD4|c d four} count has been stable for a year.	
+en-dD-120	en-US	government	alnum	basic	The waiting list for {Section 8|section eight} vouchers is closed.	
+en-dD-121	en-US	news	alnum	context	Families gathered at the {9/11|nine eleven/september eleventh} memorial at dawn.	event name, not a fraction
+en-dD-122	en-US	sports	alnum	basic	The main event at {UFC 310|u f c three ten/u f c three hundred ten/u f c three hundred and ten} ended in the first round.	
+en-dD-123	en-US	entertainment	alnum	basic	The {Fantastic 4|fantastic four} reboot opens next month.	
+en-dD-124	en-US	entertainment	alnum	basic	We rewatched {Ocean's 11|oceans eleven} on movie night.	
+en-dD-125	en-US	chat	alnum	basic	anyone still have an old {3DS|three d s} they want to sell?	
+en-dD-126	en-US	notice	alnum	basic	Residents of {Building 2B|building two b} should use the side entrance.	
+en-dD-127	en-US	education	alnum	context	Orientation has moved to Room {B214|b two fourteen/b two one four}.	room number
+en-dD-128	en-US	weather	alnum	context	Wildfire smoke pushed {PM2.5|p m two point five} levels well above the safe limit.	
+en-dD-130	en-US	chat	alnum	basic	just got my {AirPods Pro 2|air pods pro two} and the noise canceling is wild	
+en-dD-131	en-US	shopping	mixed	basic	The jacket drops to {$89.99|eighty nine ninety nine/eighty nine dollars and ninety nine cents/eighty nine dollars ninety nine} on {Nov. 27|november twenty seventh} at {6 a.m.|six a m}.	money, date, time
+en-dD-132	en-US	travel	mixed	basic	Your flight leaves {Dec. 14|december fourteenth} at {11:45 PM|eleven forty five p m}, and checked bags cost {$35|thirty five dollars}.	date, time, money
+en-dD-133	en-US	weather	mixed	basic	Expect a high of {91°F|ninety one degrees fahrenheit/ninety one degrees} with gusts to {35 mph|thirty five miles per hour/thirty five miles an hour} and a {40%|forty percent} chance of storms.	temperature, speed, percent
+en-dD-134	en-US	finance	mixed	context	Revenue rose {12.5%|twelve point five percent} to {$4.2 billion|four point two billion dollars} in {Q3|q three}.	percent, money, quarter
+en-dD-135	en-US	sports	mixed	context	The Wolves won {4-2|four to two/four two} on {Jan. 9|january ninth} for their {6th|sixth} straight victory.	score, date, ordinal
+en-dD-136	en-US	medical	mixed	basic	Take {500 mg|five hundred milligrams} twice daily starting {Oct. 20|october twentieth}; your copay is {$15|fifteen dollars}.	dose, date, money
+en-dD-137	en-US	food	mixed	hard	Bake at {375°F|three hundred seventy five degrees fahrenheit/three hundred seventy five degrees/three hundred and seventy five degrees fahrenheit/three hundred and seventy five degrees/three seventy five degrees fahrenheit/three seventy five degrees/three seventy five} for {25-30 min|twenty five to thirty minutes} with {1/2 cup|half a cup/a half cup/one half cup} of sugar.	oven temp, range, fraction
+en-dD-138	en-US	transport	mixed	basic	Starting {Jan. 4|january fourth}, a ride on the {7:15|seven fifteen} express costs {$2.90|two ninety/two dollars and ninety cents/two dollars ninety}.	date, time, fare
+en-dD-139	en-US	education	mixed	basic	Applications for fall {2027|twenty twenty seven/two thousand twenty seven} close {Feb. 1|february first}, and the fee is {$75|seventy five dollars}.	year, date, money
+en-dD-140	en-US	government	mixed	basic	Polls open at {7 a.m.|seven a m} on {Nov. 3|november third}; turnout last cycle was {48%|forty eight percent}.	time, date, percent
+en-dD-141	en-US	entertainment	mixed	hard	The {4th|fourth} season premieres {Sept. 12|september twelfth} at {9/8c|nine eight central}.	9/8c is nine eastern, eight central
+en-dD-142	en-US	news	mixed	basic	The quake struck at {3:42 a.m.|three forty two a m}, measured {5.8|five point eight}, and was centered {20 mi|twenty miles} offshore.	time, decimal, distance
+en-dD-143	en-US	tech	mixed	context	The {1.2 GB|one point two gigabytes/one point two gigs/one point two g b} update rolls out {Oct. 22|october twenty second} and needs {80%|eighty percent} battery.	size, date, percent
+en-dD-144	en-US	chat	mixed	basic	running {15 min|fifteen minutes} late, meet at {5:45|five forty five}? i still owe you {$20|twenty dollars}	duration, time, money
+en-dD-145	en-US	notice	mixed	context	Water will be off {10/21|october twenty first} from {9 a.m. to 1 p.m.|nine a m to one p m} on floors {2-5|two through five/two to five}.	numeric date, time range, number range
+en-dD-146	en-US	finance	mixed	context	Rates fell to {6.25%|six point two five percent/six and a quarter percent} on a {$400,000|four hundred thousand dollars} loan over {30 yrs|thirty years}.	percent, money, duration
+en-dD-147	en-US	sports	mixed	context	She ran the {10K|ten k} in {38:12|thirty eight twelve/thirty eight minutes twelve seconds/thirty eight minutes and twelve seconds} to finish {2nd|second}.	race, finish time, ordinal
+en-dD-148	en-US	travel	mixed	context	The hotel is {1.5 mi|one point five miles/a mile and a half/one and a half miles} from the beach, check-in is {4 p.m.|four p m}, and rooms start at {$149|one hundred forty nine dollars/a hundred forty nine dollars/one hundred and forty nine dollars/a hundred and forty nine dollars/one forty nine}.	distance, time, money
+en-dD-149	en-US	medical	mixed	hard	Patient is {6'1"|six foot one/six one/six feet one inch}, weighs {185 lb|one hundred eighty five pounds/a hundred eighty five pounds/one hundred and eighty five pounds/a hundred and eighty five pounds/one eighty five}, temp {101.4°F|one hundred one point four degrees/one hundred and one point four degrees/one oh one point four/one oh one point four degrees/a hundred one point four degrees/a hundred and one point four degrees/one hundred one point four degrees fahrenheit/one hundred and one point four degrees fahrenheit}.	height, weight, body temp
+en-dD-150	en-US	food	mixed	basic	Large pizzas are {$14|fourteen dollars} every {Tues.|tuesday} after {9 PM|nine p m}.	money, weekday abbreviation, time
+en-dD-151	en-US	weather	mixed	context	Expect {6-10 in.|six to ten inches} of snow by {Sat.|saturday} morning, with lows near {-4°|minus four degrees/negative four degrees/four below zero/four below}.	range, weekday, negative temp
+en-dD-152	en-US	government	mixed	context	The ordinance passed {7-2|seven to two} on {May 6|may sixth} and takes effect in {2028|twenty twenty eight/two thousand twenty eight}.	vote tally, date, year
+en-dD-153	en-US	entertainment	mixed	basic	The tour stops here {Aug. 2|august second}, doors open at {6:30 PM|six thirty p m}, and tickets start at {$45|forty five dollars}.	date, time, money
+en-dD-154	en-US	education	mixed	context	The class averaged {78.5%|seventy eight point five percent}, the top score was {98/100|ninety eight out of a hundred/ninety eight out of one hundred}, and retakes are {Mar. 10|march tenth}.	percent, score, date
+en-dD-155	en-US	shopping	mixed	basic	Get {25% off|twenty five percent off} orders over {$50|fifty dollars} until {11:59 p.m.|eleven fifty nine p m} Sunday.	percent, money, time
+en-dD-156	en-US	transport	mixed	context	Northbound lanes close at {10 p.m.|ten p m} {Fri.|friday}, and the detour adds about {4 mi|four miles}.	time, weekday, distance
+en-dD-157	en-US	tech	mixed	context	The site handled {1.2M|one point two million} requests on {Nov. 28|november twenty eighth} with {99.98%|ninety nine point nine eight percent} uptime.	abbreviated count, date, percent
+en-dD-158	en-US	news	mixed	context	The {$2.3 billion|two point three billion dollars} bridge, opened in {1964|nineteen sixty four}, carries {110,000|one hundred ten thousand/a hundred ten thousand/one hundred and ten thousand/a hundred and ten thousand} cars a day.	money, year, cardinal
+en-dD-159	en-US	sports	mixed	hard	Kickoff is {1 p.m. ET|one p m eastern/one p m eastern time/one p m e t} on {Dec. 7|december seventh}, and Detroit is favored by {3.5|three and a half/three point five}.	time zone, date, point spread
+en-dD-160	en-US	finance	mixed	context	Shares closed at {$187.42|one eighty seven forty two/one hundred eighty seven dollars and forty two cents/a hundred eighty seven dollars and forty two cents/one hundred and eighty seven dollars and forty two cents/a hundred and eighty seven dollars and forty two cents}, up {3.1%|three point one percent} on {2.4M|two point four million} shares traded.	price, percent, volume
+en-dD-161	en-US	medical	mixed	context	Your blood pressure was {128/82|one twenty eight over eighty two/one hundred twenty eight over eighty two/one hundred and twenty eight over eighty two}, pulse {72 bpm|seventy two beats per minute/seventy two b p m}; recheck in {2 wks|two weeks}.	slash read as over
+en-dD-162	en-US	food	mixed	hard	Preheat to {425°F|four hundred twenty five degrees fahrenheit/four hundred twenty five degrees/four hundred and twenty five degrees fahrenheit/four hundred and twenty five degrees/four twenty five degrees fahrenheit/four twenty five degrees/four twenty five}, add {3/4 cup|three quarters of a cup/three quarter cup/three fourths of a cup/three fourths cup} broth, and roast {40-45 min|forty to forty five minutes}.	oven temp, fraction, range
+en-dD-163	en-US	travel	mixed	basic	Gate {B22|b twenty two}, boarding at {9:40|nine forty}, flight {2187|twenty one eighty seven/two one eight seven} to Denver.	gate, time, flight number
+en-dD-164	en-US	notice	mixed	basic	The office closes at {2 p.m.|two p m} on {Dec. 24|december twenty fourth} and reopens on the {27th|twenty seventh}.	time, date, ordinal
+en-dD-165	en-US	government	mixed	hard	Property tax bills of {$3,480|three thousand four hundred eighty dollars/three thousand four hundred and eighty dollars/thirty four hundred eighty dollars/thirty four hundred and eighty dollars/thirty four eighty} are due {4/15|april fifteenth}, with a {1.5%|one point five percent/one and a half percent} monthly late fee.	money, numeric date, percent
+en-dD-166	en-US	chat	mixed	basic	party is saturday at {3pm|three p m}, my place on {4th St|fourth street}, bring like {$10|ten dollars} for the gift	time, address, money
+en-dD-167	en-US	entertainment	mixed	context	The film runs {2 hr 48 min|two hours forty eight minutes/two hours and forty eight minutes}, earned {$61M|sixty one million dollars} opening weekend, and is rated {PG-13|p g thirteen}.	duration, money, rating
+en-dD-168	en-US	weather	mixed	basic	The UV index hits {9|nine} by {12:30 p.m.|twelve thirty p m}, with humidity near {85%|eighty five percent}.	cardinal, time, percent
+en-dD-169	en-US	sports	mixed	hard	She sits at {-7|seven under} after a {66|sixty six} and tees off at {8:52 a.m.|eight fifty two a m} Sunday.	golf score, round, time
+en-dD-170	en-US	education	mixed	context	The {2026-27|twenty twenty six twenty seven/twenty twenty six to twenty seven} school year starts {Aug. 19|august nineteenth}, and the supply fee is {$25|twenty five dollars}.	year span, date, money
+en-dD-171	en-US	shopping	mixed	basic	Your {3.2 lb|three point two pound} package ships {10/30|october thirtieth} with {2-day|two day} delivery.	weight, date, compound
+en-dD-172	en-US	tech	mixed	basic	The {65W|sixty five watt} charger fills the battery to {50%|fifty percent} in {30 min|thirty minutes}.	power, percent, duration
+en-dD-173	en-US	finance	mixed	basic	Inflation eased to {2.9%|two point nine percent} in {Sept.|september}, the lowest since {2021|twenty twenty one/two thousand twenty one}.	percent, month, year
+en-dD-174	en-US	transport	mixed	basic	The {6:05|six oh five} to Trenton leaves from {Track 11|track eleven}, and a one-way ticket is {$17.50|seventeen fifty/seventeen dollars and fifty cents/seventeen dollars fifty}.	time, track, fare
+en-dD-175	en-US	news	mixed	basic	Turnout reached {62%|sixty two percent} in the {9th|ninth} District, up sharply from {2022|twenty twenty two/two thousand twenty two}.	percent, ordinal, year
+en-dD-176	en-US	medical	mixed	context	Drink {8 oz|eight ounces} of water with each dose and take no more than {4|four} tablets in {24 hrs|twenty four hours}.	volume, cardinal, duration
+en-dD-177	en-US	food	mixed	context	Brunch runs {10:30-2|ten thirty to two} on weekends, mimosas are {$6|six dollars}, and kids under {12|twelve} eat free.	time range, money, age
+en-dD-178	en-US	government	mixed	basic	Passport fees rose to {$165|one hundred sixty five dollars/a hundred sixty five dollars/one hundred and sixty five dollars/a hundred and sixty five dollars} on {Mar. 15, 2027|march fifteenth twenty twenty seven/march fifteenth two thousand twenty seven}, and processing takes {6-8 wks|six to eight weeks}.	money, full date, range
+en-dD-179	en-US	weather	mixed	basic	Rainfall in {Oct.|october} totaled {4.7 in.|four point seven inches}, or {150%|one hundred fifty percent/a hundred fifty percent/one hundred and fifty percent/a hundred and fifty percent} of normal.	month, measure, percent
+en-dD-180	en-US	entertainment	mixed	basic	The {1985|nineteen eighty five} classic returns to theaters {Fri.|friday} for {$5|five dollars} a ticket.	year, weekday, money
+en-dD-181	en-US	sports	mixed	context	The {6'9"|six foot nine/six nine/six feet nine inches} rookie averaged {21.4|twenty one point four} points in {2024|twenty twenty four/two thousand twenty four}.	height, decimal, year
+en-dD-182	en-US	tech	mixed	hard	Downloads hit {3.4K|three point four thousand/three point four k} within {48 hrs|forty eight hours} of the {v1.0|version one point oh/version one point zero/v one point oh} launch.	count, duration, version
+en-dD-183	en-US	notice	mixed	context	Starting {9/2|september second}, the pool is open {5:30 a.m.-9 p.m.|five thirty a m to nine p m} with a limit of {40|forty} swimmers.	date, time range, cardinal
+en-dD-184	en-US	finance	mixed	context	The euro traded at {$1.08|one dollar and eight cents/a dollar and eight cents/a dollar oh eight/a dollar eight/one oh eight/one dollar oh eight} on {Mar. 3|march third}, a {0.4%|zero point four percent/point four percent} gain.	rate, date, percent
+en-dD-185	en-US	finance	mixed	hard	A {$5,000|five thousand dollars} certificate at {4.1%|four point one percent} matures on {6/30/2028|june thirtieth twenty twenty eight/june thirtieth two thousand twenty eight}.	money, percent, numeric date
+en-dD-186	en-US	chat	mixed	basic	omw!! eta {7:20|seven twenty}, {I-35|i thirty five} is moving at like {5 mph|five miles per hour/five miles an hour}	time, highway, speed
+en-dD-187	en-US	education	mixed	basic	Read chapters {4-6|four through six/four to six} before {Thurs.|thursday}; the quiz is worth {15%|fifteen percent}.	range, weekday, percent
+en-dD-188	en-US	shopping	mixed	context	Avocados are {2 for $5|two for five dollars/two for five}, limes are {3/$1|three for a dollar/three for one dollar}, through {Sun.|sunday}.	multi-buy prices, weekday
+en-dD-189	en-US	sports	mixed	context	Kansas City leads {21-17|twenty one to seventeen/twenty one seventeen} with {4:12|four twelve/four minutes twelve seconds/four minutes and twelve seconds} left in the {3rd|third}.	score, game clock, quarter
+en-dD-190	en-US	news	mixed	basic	About {1 in 5|one in five} adults skipped care in {2025|twenty twenty five/two thousand twenty five}, a survey of {2,400|two thousand four hundred/twenty four hundred} people found.	ratio, year, cardinal
+en-dD-191	en-US	medical	mixed	hard	After fasting {8 hrs|eight hours}, a glucose over {126 mg/dL|one hundred twenty six milligrams per deciliter/one hundred and twenty six milligrams per deciliter/one twenty six milligrams per deciliter/a hundred twenty six milligrams per deciliter/a hundred and twenty six milligrams per deciliter} on {2|two} tests suggests diabetes.	duration, lab unit, cardinal
+en-dD-192	en-US	transport	mixed	basic	Parking is {$3/hr|three dollars an hour/three dollars per hour} downtown, max {4 hrs|four hours}, enforced until {6 PM|six p m}.	rate, duration, time
+en-dD-193	en-US	food	mixed	basic	The {12-oz|twelve ounce} ribeye is {$38|thirty eight dollars} and is served after {5 p.m.|five p m}.	weight, money, time
+en-dD-194	en-US	government	mixed	hard	The {$1.2 trillion|one point two trillion dollars} bill passed {218-214|two eighteen to two fourteen/two hundred eighteen to two hundred fourteen/two hundred and eighteen to two hundred and fourteen} on {Dec. 19|december nineteenth}.	money, vote tally, date
+en-dD-195	en-US	entertainment	mixed	basic	The finale drew {14.6M|fourteen point six million} viewers on {May 18|may eighteenth}, up {22%|twenty two percent} from last year.	count, date, percent
+en-dD-196	en-US	weather	mixed	context	Wind chills near {-20°F|minus twenty degrees fahrenheit/negative twenty degrees fahrenheit/twenty below zero/twenty below} are likely from {11 p.m. to 8 a.m.|eleven p m to eight a m} {Wed.|wednesday}.	negative temp, time range, weekday
+en-dD-197	en-US	tech	mixed	context	Ping dropped to {12 ms|twelve milliseconds} after we switched to {1 Gbps|one gigabit per second/one gig/one gigabit} fiber at {$70/mo|seventy dollars a month/seventy dollars per month}.	latency, bandwidth, monthly price
+en-dD-198	en-US	sports	mixed	hard	He batted {.312|three twelve} with {41 HR|forty one home runs/forty one homers} and finished {5th|fifth} in MVP voting.	batting average, stat abbreviation, ordinal
+en-dD-199	en-US	travel	mixed	context	Our {7-night|seven night} cruise leaves {Jan. 18|january eighteenth} and starts at {$1,099|one thousand ninety nine dollars/one thousand and ninety nine dollars/ten ninety nine/ten ninety nine dollars} per person.	compound, date, money
+en-dD-200	en-US	government	mixed	context	Register by {Oct. 31|october thirty first} at {voteelmira.org|vote elmira dot org} or call {(480) 555-0110|four eight zero five five five zero one one zero/four eight oh five five five oh one one oh}.	date, URL, phone
+en-dD-201	en-US	tech	negative	hard	Run git checkout {a3f9c21|=} to restore the last stable build.	commit hash
+en-dD-202	en-US	tech	negative	hard	Paste the license key {X7KQ-92TF-LM4P-8RZD|=} into the activation box.	license key
+en-dD-203	en-US	notice	negative	context	Download {permit_app_2026.pdf|=} from the city portal and bring it signed.	file name
+en-dD-204	en-US	tech	negative	hard	Set {MAX_RETRIES=5|=} in the env file before deploying.	config literal
+en-dD-205	en-US	education	negative	hard	The off-by-one bug is in {arr[i+1]|=} on the last pass of the loop.	code literal
+en-dD-206	en-US	finance	negative	hard	The payment API returned the token {tok_9Lm2Qx7Vb4Rw|=} for this charge.	token
+en-dD-207	en-US	entertainment	negative	context	The DJ {deadmau5|=} headlines the festival on Saturday night.	stage name pronounced dead mouse
+en-dD-208	en-US	entertainment	negative	context	The thriller {Se7en|=} still holds up decades later.	title pronounced seven, not spelled
+en-dD-212	en-US	shopping	negative	context	Save the receipt as {order_88412_receipt.png|=} for your records.	file name
+en-dD-213	en-US	medical	negative	context	Upload the scan as {MRI_knee_L_0923.dcm|=} to the shared drive.	file name
+en-dD-214	en-US	tech	negative	hard	The update failed again with error code {0x80070005|=}.	hex error code
+en-dD-215	en-US	education	negative	hard	Match version strings with the pattern {\d+\.\d+|=} in your script.	regex
+en-dD-216	en-US	education	negative	hard	Call {parseInt(str, 10)|=} so the input is never parsed as octal.	code literal
+en-dD-217	en-US	tech	negative	hard	Each order gets an ID like {3f2b9c4e-71a8-4d2e-9b6f-0c58e1a7d342|=} in the database.	UUID
+en-dD-218	en-US	finance	negative	hard	Send only stablecoins to {0x9F3aC2b71E4d58A06cB1e2F7a9D04b3E61c8A5f2|=}.	wallet address
+en-dD-219	en-US	government	negative	context	Attach your scanned ID as {ID_front_scan_v2.jpg|=} with the application.	file name
+en-dD-220	en-US	education	negative	context	Submit your code as {hw3_solution.py|=} by the deadline.	file name
+en-dD-221	en-US	tech	negative	hard	The file's checksum should start with {4d7a1e93c0b8f25e|=} if the download is intact.	hash prefix
+en-dD-222	en-US	travel	negative	context	Connect to the network {Lobby_Guest_5G|=} on the second floor.	network name
+en-dD-223	en-US	tech	negative	hard	Pin the image to {nginx:1.25-alpine|=} in the compose file.	image tag
+en-dD-224	en-US	tech	negative	hard	Install the library with {pip install requests==2.31.0|=} first.	command literal
+en-dD-225	en-US	chat	negative	context	lol the wifi password is literally {qwerty123!|=}	password string
+en-dD-226	en-US	travel	negative	context	Your boarding pass is attached as {BP_ORD_LAX_0412.pkpass|=}.	file name
+en-dD-227	en-US	transport	negative	context	The transit feed is published as {gtfs_2026Q4.zip|=} every quarter.	file name
+en-dD-228	en-US	sports	negative	context	Load the season stats from {nba_box_2025_26.csv|=} before the meeting.	file name
+en-dD-229	en-US	weather	negative	hard	The model output is stored in {gfs.t12z.pgrb2.0p25.f048|=} on the server.	model file name
+en-dD-230	en-US	news	negative	context	The leaked memo was saved as {draft_FINAL_v7(2).docx|=}.	file name
+en-dD-231	en-US	food	negative	context	The recipe app exports to {grandmas_chili_v3.json|=}.	file name
+en-dD-232	en-US	entertainment	negative	context	Rename the subtitle file to {S02E07.en.srt|=} so the player finds it.	file name
+en-dD-233	en-US	government	negative	context	The full bill text is in {HB2417_enrolled.pdf|=} on the legislature site.	file name
+en-dD-234	en-US	medical	negative	context	The device log {pump_7731_errlog.txt|=} shows when the alarm went off.	file name
+en-dD-235	en-US	finance	negative	context	Import {ledger_2026-09.qbo|=} into your accounting software.	file name
+en-dD-236	en-US	notice	negative	hard	The poster background must use the hex color {#1E90FF|=}.	hex color, not a hashtag
+en-dD-237	en-US	education	negative	hard	The quiz asks what {x != null && y >= 0|=} returns when x is empty.	code expression
+en-dD-238	en-US	tech	negative	context	The function returns {NaN|=} when the input field is blank.	code constant
+en-dD-239	en-US	chat	negative	hard	why does the config have {dGVzdDEyMzQ=|=} in it, is that encoded or what	encoded string
+en-dD-240	en-US	notice	negative	context	Print the visitor badge template {badge_tmpl_A4.docx|=} before Monday.	file name
+en-dD-241	en-US	education	negative	context	Open the dataset {iris_v2.arff|=} in your stats software.	file name
+en-dD-242	en-US	shopping	negative	context	Import your wish list from {wishlist_export_0915.csv|=}.	file name
+en-dD-243	en-US	news	negative	context	The agency revised {CPI-U_2026_m08.xlsx|=} on Friday.	file name
+en-dD-244	en-US	sports	negative	context	The review footage is clip {cam3_q4_0217.mp4|=}.	file name
+en-dD-245	en-US	transport	negative	hard	Update the car's telematics unit using {tcu_fw_4.8.2b.bin|=}.	firmware file
+en-dD-246	en-US	travel	negative	hard	The hotel Wi-Fi code is {Hx7#pL2q|=}, case sensitive.	access code
+en-dD-247	en-US	food	negative	context	The register exports a nightly file called {sales_0918_store12.txt|=}.	file name
+en-dD-248	en-US	weather	negative	hard	Radar tiles are cached under {/tiles/z7/x36/y48.png|=}.	path literal
+en-dD-249	en-US	entertainment	negative	context	Typing {IDDQD|=} still turns on god mode in the old shooter.	cheat code
+en-dD-250	en-US	government	negative	hard	The form field {applicant_ssn_last4|=} must stay hidden on the public page.	field identifier
