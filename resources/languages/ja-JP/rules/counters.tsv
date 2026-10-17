@@ -392,3 +392,5 @@ counter	ja-JP	銭	せん:s
 # 16号車 じゅうろくごうしゃ, 1〜2滴 にてき (owner v2, 2026-10-15)
 counter	ja-JP	号車	ごうしゃ:-
 counter	ja-JP	滴	てき:t
+# 4分間隔 よんぷんかんかく (ja dev v1, 2026-10-17)
+counter	ja-JP	分間隔	ふんかんかく:f

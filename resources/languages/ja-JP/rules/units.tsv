@@ -134,3 +134,6 @@ latin_unit	ja-JP	mg/L	1
 latin_unit	ja-JP	N·m	1
 unit	ja-JP	g_per_dL	グラムパーデシリットル:-
 unit	ja-JP	nit	ニト:-
+# 1pt いちポイント (ja dev v1, 2026-10-17)
+latin_unit	ja-JP	pt	1
+unit	ja-JP	pt	ポイント:-

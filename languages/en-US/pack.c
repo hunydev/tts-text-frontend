@@ -2056,6 +2056,752 @@ static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     return 0;
 }
 
+/* ---- English dev set v1 forms (2026-10-17) ----
+   A reading is written as @say items separated by '|': c:N cardinal, o:N ordinal, d:DIGITS digit
+   by digit, k:DIGITS a label number in pairs (214 two fourteen, 1600 sixteen hundred), n:NUM a
+   number with its decimals, w:words as written. */
+static size_t say_span(const ttf_pack_input_t *in, ttf_semantic_t *out, size_t end, const char *value,
+                       const char *rule) {
+    if (strlen(value) >= sizeof(out->value))
+        return 0;
+    (void)snprintf(out->value, sizeof(out->value), "%s", value);
+    (void)snprintf(out->unit, sizeof(out->unit), "@say");
+    (void)snprintf(out->rule, sizeof(out->rule), "en.%s", rule);
+    (void)snprintf(out->source_lang, sizeof(out->source_lang), "%s", EN);
+    out->type = TTF_SEM_CUSTOM;
+    out->input_end = end;
+    return tokens_until(in, end);
+}
+/* The lowercase word that starts at p (after one space when skip). */
+static size_t word_at(const char *t, size_t n, size_t p, char *key, size_t cap) {
+    size_t w = p, k = 0;
+    while (w < n && ascii_letter_char(t[w]) && k + 1 < cap)
+        key[k++] = (char)(t[w] >= 'A' && t[w] <= 'Z' ? t[w] - 'A' + 'a' : t[w]), ++w;
+    key[k] = 0;
+    return w < n && ascii_letter_char(t[w]) ? 0 : k;
+}
+static int in_list(const char *key, const char *words) {
+    size_t n = strlen(key);
+    const char *s = words;
+    while (*s) {
+        const char *bar = strchr(s, '|');
+        size_t l = bar ? (size_t)(bar - s) : strlen(s);
+        if (l == n && !memcmp(s, key, n))
+            return 1;
+        if (!bar)
+            break;
+        s = bar + 1;
+    }
+    return 0;
+}
+static const char *const dev_month[] = {"January", "February", "March", "April", "May", "June", "July",
+                                        "August", "September", "October", "November", "December"};
+static size_t dev_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
+    const char *t = in->text;
+    size_t n = in->length, p = in->tokens[in->index].begin, q, r, k;
+    char v[96], key[24], num[40];
+    /* only in an English request and speech output (text output keeps the written forms) */
+    if (p >= n || !english_window(in, p, p + 1) || !in->engine->default_language ||
+        strcmp(in->engine->default_language, EN) || in->engine->frontend_options.output_mode != TTF_OUTPUT_SPEECH)
+        return 0;
+    /* $0.99 ninety nine cents; $2.99/mo two dollars and ninety nine cents a month; a $25 deposit
+       twenty five dollar; a $3.2B transit budget three point two billion dollar */
+    if ((t[p] == '$') && p + 1 < n && ascii_digit_char(t[p + 1]) && !(p && ascii_letter_char(t[p - 1]))) {
+        size_t a = p + 1, ip = 0, dot = 0;
+        char ints[24] = "", frac[8] = "";
+        const char *scale = NULL;
+        for (q = a; q < n && (ascii_digit_char(t[q]) || (t[q] == ',' && q + 3 < n && ascii_digit_char(t[q + 1]) &&
+                                                          ascii_digit_char(t[q + 2]) && ascii_digit_char(t[q + 3])));
+             ++q)
+            if (t[q] != ',' && ip + 1 < sizeof(ints))
+                ints[ip++] = t[q];
+        ints[ip] = 0;
+        if (q + 1 < n && t[q] == '.' && ascii_digit_char(t[q + 1])) {
+            dot = q;
+            for (r = q + 1, k = 0; r < n && ascii_digit_char(t[r]) && k + 1 < sizeof(frac); ++r)
+                frac[k++] = t[r];
+            frac[k] = 0;
+            q = r;
+        }
+        r = q;
+        if (q < n && (t[q] == 'M' || t[q] == 'B' || t[q] == 'K') && !(q + 1 < n && ascii_letter_char(t[q + 1])))
+            scale = t[q] == 'M' ? "million" : t[q] == 'B' ? "billion" : "thousand", r = q + 1;
+        else if (q + 1 < n && t[q] == ' ' && word_at(t, n, q + 1, key, sizeof(key)) &&
+                 in_list(key, "million|billion|trillion|thousand"))
+            scale = key[0] == 'm' ? "million" : key[0] == 'b' ? "billion" : key[0] == 't' && key[1] == 'r' ? "trillion"
+                                                                                                  : "thousand",
+            r = q + 1 + strlen(key);
+        if (ip && ip < 16) {
+            /* $0.99: cents only */
+            if (!scale && !strcmp(ints, "0") && dot && strlen(frac) == 2 && strcmp(frac, "00") &&
+                !(r < n && (t[r] == '/' || ascii_letter_char(t[r])))) {
+                unsigned c = (unsigned)atoi(frac);
+                (void)snprintf(v, sizeof(v), "c:%u|w:%s", c, c == 1 ? "cent" : "cents");
+                return say_span(in, out, r, v, "cents");
+            }
+            /* $2.99/mo: a price per period */
+            if (!scale && r + 1 < n && t[r] == '/') {
+                size_t z = word_at(t, n, r + 1, key, sizeof(key));
+                const char *per = !z ? NULL
+                                  : in_list(key, "mo|month") ? "a month"
+                                  : in_list(key, "yr|year") ? "a year"
+                                  : in_list(key, "hr|hour") ? "an hour"
+                                  : in_list(key, "wk|week") ? "a week"
+                                  : in_list(key, "day") ? "a day" : NULL;
+                if (per) {
+                    unsigned c = dot ? (unsigned)atoi(frac) : 0;
+                    if (dot && strlen(frac) != 2)
+                        return 0;
+                    if (c)
+                        (void)snprintf(v, sizeof(v), "n:%s|w:%s and|c:%u|w:%s %s", ints,
+                                       strcmp(ints, "1") ? "dollars" : "dollar", c, c == 1 ? "cent" : "cents", per);
+                    else
+                        (void)snprintf(v, sizeof(v), "n:%s|w:%s %s", ints, strcmp(ints, "1") ? "dollars" : "dollar", per);
+                    return say_span(in, out, r + 1 + z, v, "price-per");
+                }
+            }
+            /* a $25 deposit, a $45 million extension: an amount before a noun is singular */
+            if ((!dot || scale) && r + 1 < n && t[r] == ' ' && word_before(t, p, "a|an|the|this|that|each|every|another|one|its|their|our|your|his|her|my") &&
+                word_at(t, n, r + 1, key, sizeof(key)) && t[r + 1] >= 'a' && t[r + 1] <= 'z' &&
+                !in_list(key, "of|for|in|on|at|to|and|or|but|per|each|a|an|the|from|with|by|is|was|are|were|be|"
+                               "will|would|can|could|has|have|had|if|than|then|so|as|plus|off|more|less|worth|"
+                               "apiece|total|now|today|back|after|before|when|that|which|who|it|this|less|over|"
+                               "under|up|down|out|into|instead|already|only|just|too|also|still|ago|later|a|"
+                               "annually|monthly|weekly|daily|cash|or|vs|versus")) {
+                (void)snprintf(num, sizeof(num), "%s%s%s", ints, dot ? "." : "", dot ? frac : "");
+                (void)snprintf(v, sizeof(v), "n:%s|w:%s%sdollar", num, scale ? scale : "", scale ? " " : "");
+                return say_span(in, out, r, v, "money-adjective");
+            }
+        }
+    }
+    if (ascii_digit_char(t[p]) && !(p && (ascii_digit_char(t[p - 1]) || t[p - 1] == '.' || t[p - 1] == ',' ||
+                                          t[p - 1] == '/' || t[p - 1] == ':' || ascii_letter_char(t[p - 1])))) {
+        size_t a;
+        for (a = p; a < n && ascii_digit_char(t[a]); ++a)
+            ;
+        /* a 3.2 lb package three point two pound: a decimal measure before a noun */
+        if (a + 4 < n && t[a] == '.' && ascii_digit_char(t[a + 1]) && word_before(t, p, "a|an|the|this|that|each|every|one|your|my")) {
+            size_t f = a + 1, z;
+            char raw[8], noun[24];
+            const char *sing;
+            while (f < n && ascii_digit_char(t[f]))
+                ++f;
+            if (f + 2 < n && t[f] == ' ' && (z = word_at(t, n, f + 1, raw, sizeof(raw))) != 0) {
+                (void)snprintf(raw, sizeof(raw), "%.*s", (int)z, t + f + 1);
+                sing = !strcmp(raw, "lb") ? "pound" : !strcmp(raw, "L") ? "liter" : !strcmp(raw, "oz") ? "ounce"
+                       : !strcmp(raw, "kg") ? "kilogram" : !strcmp(raw, "mi") ? "mile" : !strcmp(raw, "km") ? "kilometer"
+                       : !strcmp(raw, "gal") ? "gallon" : !strcmp(raw, "ft") ? "foot" : !strcmp(raw, "in") ? "inch" : NULL;
+                if (sing && f + 2 + z < n && t[f + 1 + z] == ' ' && word_at(t, n, f + 2 + z, noun, sizeof(noun)) &&
+                    t[f + 2 + z] >= 'a' && t[f + 2 + z] <= 'z' &&
+                    !in_list(noun, "of|for|in|on|at|to|and|or|per|is|was|are|were|from|with|by|away|long|high|wide|"
+                                   "deep|tall|ago|later|each|apart|left|more|less|than|a|an|the")) {
+                    (void)snprintf(v, sizeof(v), "n:%.*s|w:%s", (int)(f - p), t + p, sing);
+                    return say_span(in, out, f + 1 + z, v, "measure-adjective");
+                }
+            }
+        }
+        /* 9/12 September twelfth (a date word before it), 10/27 October twenty seventh (a day after
+           the twelfth); 7/16 is less than 1/2 stays a fraction; 9/11 nine eleven */
+        if (a - p <= 2 && a + 1 < n && t[a] == '/' && ascii_digit_char(t[a + 1])) {
+            unsigned m = (unsigned)atoi(t + p), d = (unsigned)atoi(t + a + 1);
+            for (r = a + 1; r < n && ascii_digit_char(t[r]); ++r)
+                ;
+            if (r - a - 1 <= 2 && !(r < n && (ascii_digit_char(t[r]) || t[r] == '/' || ascii_letter_char(t[r]) ||
+                                               (t[r] == '.' && r + 1 < n && ascii_digit_char(t[r + 1]))))) {
+                int math = 0;
+                char w2[16];
+                /* a comparison or arithmetic word nearby keeps the fraction */
+                for (k = p > 40 ? p - 40 : 0; k < r + 30 && k < n; ++k)
+                    if (k == 0 || !ascii_letter_char(t[k - 1]))
+                        if (word_at(t, n, k, w2, sizeof(w2)) &&
+                            in_list(w2, "less|greater|than|equals|equal|plus|minus|times|fraction|fractions|"
+                                        "simplify|show|compare|sum|half|halves|thirds|quarters|of|cup|cups|"
+                                        "teaspoon|tablespoon|inch|inches|mile|miles|pound|ratio|odds|out"))
+                            math = 1;
+                for (k = p; k < r; ++k)
+                    ;
+                if (m == 9 && d == 11 && !math)
+                    return say_span(in, out, r, "w:nine eleven", "nine-eleven");
+                /* Show that 7/16 is less than 1/2: a fraction where a date could be read */
+                if (math && m < d && d <= 31) {
+                    (void)snprintf(out->value, sizeof(out->value), "%u", m);
+                    (void)snprintf(out->secondary, sizeof(out->secondary), "%u", d);
+                    (void)snprintf(out->rule, sizeof(out->rule), "en.math-fraction");
+                    (void)snprintf(out->source_lang, sizeof(out->source_lang), "%s", EN);
+                    out->unit[0] = 0;
+                    out->type = TTF_SEM_FRACTION;
+                    out->input_end = r;
+                    return tokens_until(in, r);
+                }
+                if (m >= 1 && m <= 12 && d >= 1 && d <= 31 && !math &&
+                    (d > 12 || word_before(t, p, "birthday|on|until|through|since|due|deadline|expires|ends|opens|"
+                                                 "closes|thru") ||
+                     (!(m < d && (d == 2 || d == 3 || d == 4 || d == 8 || d == 16)) &&
+                      word_before(t, p, "by|before|after|from|starting|is|was|for")))) {
+                    (void)snprintf(v, sizeof(v), "w:%s|o:%u", dev_month[m - 1], d);
+                    return say_span(in, out, r, v, "slash-date");
+                }
+            }
+        }
+        /* Room 214 two fourteen, Form 1040 ten forty, Boeing 737, Error 404 four oh four, port 8080,
+           Biology 101 one oh one, PO Box 3120 thirty one twenty: a label number in pairs */
+        if ((a - p == 3 || a - p == 4) && t[p] != '0' && !(a < n && (ascii_digit_char(t[a]) || t[a] == ',' ||
+                                                                    (t[a] == '.' && a + 1 < n && ascii_digit_char(t[a + 1])) ||
+                                                                    t[a] == '/' || (t[a] == ':' && !(a + 1 < n && t[a + 1] == ' ')) || t[a] == '%'))) {
+            int label = word_before(t, p, "room|suite|ste|flight|route|bus|highway|interstate|form|boeing|airbus|"
+                                         "model|error|port|exit|platform|track|channel|box|unit|course|ward|"
+                                         "terminal|pier|hangar|cabin|car|lot|bay|dock|level|floor") ||
+                        (word_before(t, p, "biology|chemistry|physics|history|english|math|economics|psychology|"
+                                           "spanish|french|calculus|statistics|sociology|philosophy|algebra|art|music|"
+                                           "accounting|marketing|writing|composition|government|geography|anatomy") &&
+                         a - p == 3 && t[p] <= '4');
+            /* 3015 Broadway, 350 Fifth Avenue: a house number before a street */
+            if (!label && a - p == 4 && a + 2 < n && t[a] == ' ' && t[a + 1] >= 'A' && t[a + 1] <= 'Z') {
+                size_t z = a + 1, words = 0;
+                while (z < n && words < 3) {
+                    size_t e2 = z;
+                    while (e2 < n && ascii_letter_char(t[e2]))
+                        ++e2;
+                    if (e2 == z)
+                        break;
+                    (void)snprintf(key, sizeof(key), "%.*s", (int)(e2 - z < 20 ? e2 - z : 20), t + z);
+                    for (k = 0; key[k]; ++k)
+                        key[k] = (char)(key[k] >= 'A' && key[k] <= 'Z' ? key[k] - 'A' + 'a' : key[k]);
+                    if (in_list(key, "street|st|avenue|ave|road|rd|boulevard|blvd|broadway|drive|dr|lane|ln|way|"
+                                     "place|pl|court|ct|parkway|pkwy|highway|hwy|plaza|square|terrace|circle|trail"))
+                        label = 1;
+                    ++words;
+                    z = e2;
+                    if (z < n && t[z] == '.')
+                        ++z;
+                    if (z < n && t[z] == ' ')
+                        ++z;
+                    else
+                        break;
+                }
+            }
+            if (label) {
+                (void)snprintf(v, sizeof(v), "k:%.*s", (int)(a - p), t + p);
+                return say_span(in, out, a, v, "label-pairs");
+            }
+        }
+        /* card ending in 4417: digits */
+        if (a - p == 4 && (word_before(t, p, "in") && p >= 10 && (!memcmp(t + p - 10, "ending in ", 10) ||
+                                                                  !memcmp(t + p - 8, "ends in ", 8)))) {
+            int card = 0;
+            char w3[16];
+            for (k = p > 40 ? p - 40 : 0; k < p; ++k)
+                if ((k == 0 || !ascii_letter_char(t[k - 1])) && word_at(t, n, k, w3, sizeof(w3)) &&
+                    in_list(w3, "card|account|number|phone|cell|ssn|visa|mastercard|amex|debit|credit|acct"))
+                    card = 1;
+            if (!card)
+                goto not_card;
+            (void)snprintf(v, sizeof(v), "d:%.*s", 4, t + p);
+            return say_span(in, out, a, v, "card-ending");
+        }
+    not_card:
+        /* in 2:31:08 two hours thirty one minutes and eight seconds; 1:18.442 one minute eighteen
+           point four four two seconds; 2h 40m two hours forty minutes */
+        if (a - p <= 2 && a + 5 < n && t[a] == ':' && ascii_digit_char(t[a + 1]) && ascii_digit_char(t[a + 2]) &&
+            t[a + 3] == ':' && ascii_digit_char(t[a + 4]) && ascii_digit_char(t[a + 5]) &&
+            !(a + 6 < n && ascii_digit_char(t[a + 6])) &&
+            word_before(t, p, "in|of|time|clocked|lasted|record|took|timer|duration|ends|countdown|runs")) {
+            unsigned h = (unsigned)atoi(t + p), mi = (unsigned)atoi(t + a + 1), se = (unsigned)atoi(t + a + 4);
+            (void)snprintf(v, sizeof(v), "c:%u|w:%s|c:%u|w:%s and|c:%u|w:%s", h, h == 1 ? "hour" : "hours", mi,
+                           mi == 1 ? "minute" : "minutes", se, se == 1 ? "second" : "seconds");
+            return say_span(in, out, a + 6, v, "duration");
+        }
+        if (a - p <= 2 && a + 4 < n && t[a] == ':' && ascii_digit_char(t[a + 1]) && ascii_digit_char(t[a + 2]) &&
+            t[a + 3] == '.' && ascii_digit_char(t[a + 4])) {
+            unsigned mi = (unsigned)atoi(t + p);
+            for (r = a + 4; r < n && ascii_digit_char(t[r]); ++r)
+                ;
+            if (r - a - 4 <= 3 && !(r < n && ascii_letter_char(t[r]))) {
+                (void)snprintf(v, sizeof(v), "c:%u|w:%s|n:%.2s.%.*s|w:seconds", mi, mi == 1 ? "minute" : "minutes",
+                               t + a + 1, (int)(r - a - 4), t + a + 4);
+                return say_span(in, out, r, v, "lap-time");
+            }
+        }
+        if (a - p <= 2 && a + 3 < n && t[a] == 'h' && t[a + 1] == ' ' && ascii_digit_char(t[a + 2])) {
+            for (r = a + 2; r < n && ascii_digit_char(t[r]); ++r)
+                ;
+            if (r < n && t[r] == 'm' && !(r + 1 < n && ascii_letter_char(t[r + 1])) && r - a - 2 <= 2) {
+                unsigned h = (unsigned)atoi(t + p), mi = (unsigned)atoi(t + a + 2);
+                (void)snprintf(v, sizeof(v), "c:%u|w:%s|c:%u|w:%s", h, h == 1 ? "hour" : "hours", mi,
+                               mi == 1 ? "minute" : "minutes");
+                return say_span(in, out, r + 1, v, "hm-duration");
+            }
+        }
+        /* 213.555.0115: a dotted North American phone number */
+        if (a - p == 3 && a + 8 < n && t[a] == '.' && ascii_digit_char(t[a + 1]) && ascii_digit_char(t[a + 2]) &&
+            ascii_digit_char(t[a + 3]) && t[a + 4] == '.') {
+            for (r = a + 5; r < n && ascii_digit_char(t[r]); ++r)
+                ;
+            if (r - a - 5 == 4 && !(r < n && (ascii_digit_char(t[r]) || (t[r] == '.' && r + 1 < n && ascii_digit_char(t[r + 1]))))) {
+                (void)snprintf(v, sizeof(v), "d:%.3s|d:%.3s|d:%.4s", t + p, t + a + 1, t + a + 5);
+                return say_span(in, out, r, v, "dotted-phone");
+            }
+        }
+        /* 14 in of snow fourteen inches: inches before of or a clause end */
+        if (a + 3 < n && t[a] == ' ' && t[a + 1] == 'i' && t[a + 2] == 'n' &&
+            (a + 3 == n || t[a + 3] == '.' || t[a + 3] == ',' || t[a + 3] == ';' ||
+             (a + 6 < n && !memcmp(t + a + 3, " of ", 4)))) {
+            unsigned x = (unsigned)atoi(t + p);
+            (void)snprintf(v, sizeof(v), "c:%u|w:%s", x, x == 1 ? "inch" : "inches");
+            return say_span(in, out, a + 3, v, "inches");
+        }
+        /* 40-ft forty foot: a hyphenated measure is an adjective */
+        if (a + 3 < n && t[a] == '-' && word_at(t, n, a + 1, key, sizeof(key)) &&
+            in_list(key, "ft|foot|in|inch|lb|pound|mi|mile|oz|ounce|gal|gallon|yd|yard|km|kilometer|cm|mm|kg|m|"
+                         "meter|metre|ton|watt|volt|hour|day|minute|year|month|week")) {
+            const char *sing = in_list(key, "ft|foot") ? "foot" : in_list(key, "in|inch") ? "inch"
+                               : in_list(key, "lb|pound") ? "pound" : in_list(key, "mi|mile") ? "mile"
+                               : in_list(key, "oz|ounce") ? "ounce" : in_list(key, "gal|gallon") ? "gallon"
+                               : in_list(key, "yd|yard") ? "yard" : in_list(key, "km|kilometer") ? "kilometer"
+                               : !strcmp(key, "cm") ? "centimeter" : !strcmp(key, "mm") ? "millimeter"
+                               : !strcmp(key, "kg") ? "kilogram" : in_list(key, "m|meter|metre") ? "meter" : key;
+            (void)snprintf(v, sizeof(v), "c:%u|w:%s", (unsigned)atoi(t + p), sing);
+            {
+                size_t e2 = a + 1 + strlen(key);
+                if (e2 + 2 < n && t[e2] == '.' && t[e2 + 1] == ' ' && t[e2 + 2] >= 'a' && t[e2 + 2] <= 'z')
+                    ++e2;
+                return say_span(in, out, e2, v, "measure-adjective");
+            }
+        }
+        /* the 65W charger sixty five watt, a 12V battery: an attached unit before a noun */
+        if (a + 3 < n && (t[a] == 'W' || t[a] == 'V') && t[a + 1] == ' ' && t[a + 2] >= 'a' && t[a + 2] <= 'z' &&
+            word_before(t, p, "a|an|the|this|that|each|every|one|new|old")) {
+            char noun[24];
+            if (word_at(t, n, a + 2, noun, sizeof(noun)) &&
+                in_list(noun, "charger|adapter|bulb|battery|motor|speaker|amp|amplifier|heater|fan|light|lamp|system|"
+                              "outlet|plug|supply|brick|panel|microwave|blender|drill")) {
+                (void)snprintf(v, sizeof(v), "c:%u|w:%s", (unsigned)atoi(t + p), t[a] == 'W' ? "watt" : "volt");
+                return say_span(in, out, a + 1, v, "measure-adjective");
+            }
+        }
+        /* the 200 m butterfly, a 2 L bottle: a measure before a noun is singular */
+        if (a + 3 < n && t[a] == ' ' && word_before(t, p, "a|an|the|this|that|each|every|one")) {
+            size_t z = word_at(t, n, a + 1, key, sizeof(key));
+            char noun[24];
+            const char *sing = NULL;
+            if (z && strlen(key) <= 3) {
+                char raw[8];
+                (void)snprintf(raw, sizeof(raw), "%.*s", (int)z, t + a + 1);
+                sing = !strcmp(raw, "m") ? "meter" : !strcmp(raw, "km") ? "kilometer" : !strcmp(raw, "L") ? "liter"
+                       : !strcmp(raw, "ft") ? "foot" : !strcmp(raw, "lb") ? "pound" : !strcmp(raw, "kg") ? "kilogram"
+                       : !strcmp(raw, "mi") ? "mile" : !strcmp(raw, "oz") ? "ounce" : !strcmp(raw, "cm") ? "centimeter"
+                       : !strcmp(raw, "mm") ? "millimeter" : !strcmp(raw, "gal") ? "gallon" : !strcmp(raw, "mL") ? "milliliter"
+                       : !strcmp(raw, "GB") ? "gigabyte" : !strcmp(raw, "TB") ? "terabyte" : NULL;
+            }
+            if (sing && a + 1 + z + 1 < n && t[a + 1 + z] == ' ' && word_at(t, n, a + 2 + z, noun, sizeof(noun)) &&
+                t[a + 2 + z] >= 'a' && t[a + 2 + z] <= 'z' &&
+                !in_list(noun, "of|for|in|on|at|to|and|or|per|is|was|are|were|from|with|by|away|long|high|wide|deep|"
+                               "tall|away|ago|later|each|apart|left|more|less|than|a|an|the")) {
+                (void)snprintf(v, sizeof(v), "c:%u|w:%s", (unsigned)atoi(t + p), sing);
+                return say_span(in, out, a + 1 + z, v, "measure-adjective");
+            }
+        }
+    }
+    /* '08 oh eight: a year written with an apostrophe */
+    if ((t[p] == '\'' || (p + 2 < n && (unsigned char)t[p] == 0xE2 && (unsigned char)t[p + 1] == 0x80 &&
+                          (unsigned char)t[p + 2] == 0x99)) &&
+        !(p && ascii_letter_char(t[p - 1]))) {
+        size_t a = p + (t[p] == '\'' ? 1 : 3);
+        if (a + 1 < n && ascii_digit_char(t[a]) && ascii_digit_char(t[a + 1]) &&
+            !(a + 2 < n && (ascii_digit_char(t[a + 2]) || ascii_letter_char(t[a + 2])))) {
+            unsigned y = (unsigned)atoi(t + a);
+            size_t e2 = a + 2;
+            if (y < 10)
+                (void)snprintf(v, sizeof(v), "w:oh|c:%u", y);
+            else
+                (void)snprintf(v, sizeof(v), "c:%u", y);
+            /* '58-'59 fifty eight to fifty nine */
+            if (e2 + 3 < n && t[e2] == '-' && t[e2 + 1] == '\'' && ascii_digit_char(t[e2 + 2]) &&
+                ascii_digit_char(t[e2 + 3]) && !(e2 + 4 < n && ascii_digit_char(t[e2 + 4]))) {
+                unsigned y2 = (unsigned)atoi(t + e2 + 2);
+                size_t l = strlen(v);
+                (void)snprintf(v + l, sizeof(v) - l, y2 < 10 ? "|w:to|w:oh|c:%u" : "|w:to|c:%u", y2);
+                e2 += 4;
+            }
+            return say_span(in, out, e2, v, "short-year");
+        }
+    }
+    /* Mon–Fri Monday through Friday, Thurs., Feb. 11 Thursday: a weekday abbreviation */
+    if (t[p] >= 'A' && t[p] <= 'Z') {
+        static const char *const abbr[] = {"Mon", "Monday", "Tue", "Tuesday", "Tues", "Tuesday", "Wed", "Wednesday",
+                                           "Thu", "Thursday", "Thur", "Thursday", "Thurs", "Thursday", "Fri", "Friday",
+                                           "Sat", "Saturday", "Sun", "Sunday"};
+        for (k = 0; k < sizeof(abbr) / sizeof(abbr[0]); k += 2) {
+            size_t l = strlen(abbr[k]), z = p + l;
+            if (!strncmp(t + p, abbr[k], l) && !(z < n && ascii_letter_char(t[z]))) {
+                int dot = z < n && t[z] == '.';
+                size_t after = z + dot;
+                int dash = after + 1 < n && (t[after] == '-' || ((unsigned char)t[after] == 0xE2 && after + 2 < n &&
+                                                                  (unsigned char)t[after + 1] == 0x80 &&
+                                                                  (unsigned char)t[after + 2] == 0x93));
+                size_t dw = t[after] == '-' ? 1 : 3;
+                if (dash) {
+                    size_t k2;
+                    for (k2 = 0; k2 < sizeof(abbr) / sizeof(abbr[0]); k2 += 2) {
+                        size_t l2 = strlen(abbr[k2]), z2 = after + dw + l2;
+                        if (!strncmp(t + after + dw, abbr[k2], l2) && !(z2 < n && ascii_letter_char(t[z2]))) {
+                            (void)snprintf(v, sizeof(v), "w:%s through %s", abbr[k + 1], abbr[k2 + 1]);
+                            return say_span(in, out, z2 + (z2 < n && t[z2] == '.'), v, "weekday-range");
+                        }
+                    }
+                }
+                /* Thurs., Feb. 11 / Sat. Oct 3: an abbreviation before a date */
+                if (strcmp(abbr[k], abbr[k + 1]) && (dot || (z < n && t[z] == ',')) ) {
+                    size_t m = after;
+                    if (m < n && t[m] == ',')
+                        ++m;
+                    if (m < n && t[m] == ' ')
+                        ++m;
+                    for (k = 0; k < 12; ++k)
+                        if (!strncmp(t + m, dev_month[k], 3))
+                            break;
+                    if (k < 12) {
+                        size_t kk;
+                        for (kk = 0; kk < sizeof(abbr) / sizeof(abbr[0]); kk += 2)
+                            if (!strncmp(t + p, abbr[kk], strlen(abbr[kk])) && p + strlen(abbr[kk]) == z)
+                                break;
+                        (void)snprintf(v, sizeof(v), "w:%s", abbr[kk + 1]);
+                        return say_span(in, out, after, v, "weekday-abbr");
+                    }
+                }
+                break;
+            }
+        }
+    }
+    /* Dec. 24–Jan. 1, K–5, A1–A12: a dash between dates, grades and labels reads to */
+    if (((unsigned char)t[p] == 0xE2 && p + 2 < n && (unsigned char)t[p + 1] == 0x80 && (unsigned char)t[p + 2] == 0x93) &&
+        p && p + 3 < n) {
+        size_t z = p + 3;
+        int left_digit = ascii_digit_char(t[p - 1]) || (t[p - 1] == '.' && p >= 2 && ascii_digit_char(t[p - 2]));
+        for (k = 0; k < 12; ++k)
+            if (!strncmp(t + z, dev_month[k], 3))
+                break;
+        if (left_digit && k < 12)
+            return say_span(in, out, z, "w: to ", "date-dash");
+        if (p >= 1 && t[p - 1] == 'K' && !(p >= 2 && ascii_letter_char(t[p - 2])) && ascii_digit_char(t[z]))
+            return say_span(in, out, z, "w: through ", "grade-dash");
+        if (ascii_digit_char(t[p - 1]) && t[z] >= 'A' && t[z] <= 'Z' && z + 1 < n && ascii_digit_char(t[z + 1]))
+            return say_span(in, out, z, "w: to ", "label-dash");
+    }
+    /* PO Box 88 P O box eighty eight, Apt. 5C apartment five C, RR 2 rural route two */
+    if (t[p] >= 'A' && t[p] <= 'Z') {
+        size_t z = 0;
+        const char *word = NULL;
+        if (!strncmp(t + p, "PO Box ", 7) || !strncmp(t + p, "P.O. Box ", 9))
+            z = p + (t[p + 1] == '.' ? 9 : 7), word = "P O box";
+        else if (!strncmp(t + p, "Apt. ", 5) || !strncmp(t + p, "Apt #", 5) || !strncmp(t + p, "Apt ", 4))
+            z = p + (t[p + 3] == '.' || t[p + 4] == '#' ? 5 : 4), word = "apartment";
+        else if (!strncmp(t + p, "RR ", 3))
+            z = p + 3, word = "rural route";
+        if (word && z < n && t[z] == '#')
+            ++z;
+        if (word && z < n && ascii_digit_char(t[z])) {
+            size_t a;
+            for (a = z; a < n && ascii_digit_char(t[a]); ++a)
+                ;
+            if (a - z <= 5) {
+                char lab[8] = "";
+                if (a < n && t[a] >= 'A' && t[a] <= 'Z' && !(a + 1 < n && ascii_letter_char(t[a + 1])))
+                    (void)snprintf(lab, sizeof(lab), "|w:%c", t[a]), ++a;
+                (void)snprintf(v, sizeof(v), "w:%s|%s:%.*s%s", word, a - z - (lab[0] != 0) >= 3 ? "k" : "c",
+                               (int)(a - z - (lab[0] != 0)), t + z, lab);
+                return say_span(in, out, a, v, "address-abbr");
+            }
+        }
+    }
+    /* x² squared, 2¹⁰ to the tenth: superscript digits after a number, a letter or a bracket */
+    if (p && (ascii_digit_char(t[p - 1]) || t[p - 1] == ')' ||
+              (ascii_letter_char(t[p - 1]) && !(p >= 2 && ascii_letter_char(t[p - 2]))))) {
+        size_t z = p;
+        unsigned x = 0, cnt = 0;
+        for (;;) {
+            unsigned char c0 = (unsigned char)t[z], c1 = z + 1 < n ? (unsigned char)t[z + 1] : 0,
+                          c2 = z + 2 < n ? (unsigned char)t[z + 2] : 0;
+            int d = -1;
+            if (c0 == 0xC2 && (c1 == 0xB2 || c1 == 0xB3 || c1 == 0xB9))
+                d = c1 == 0xB2 ? 2 : c1 == 0xB3 ? 3 : 1, z += 2;
+            else if (c0 == 0xE2 && c1 == 0x81 && (c2 == 0xB0 || (c2 >= 0xB4 && c2 <= 0xB9)))
+                d = c2 == 0xB0 ? 0 : c2 - 0xB0, z += 3;
+            if (d < 0 || cnt > 3)
+                break;
+            x = x * 10 + (unsigned)d, ++cnt;
+            if (z >= n)
+                break;
+        }
+        if (cnt && !(z < n && (ascii_digit_char(t[z]) || ascii_letter_char(t[z])))) {
+            if (cnt == 1 && x == 2)
+                return say_span(in, out, z, "w: squared", "power");
+            if (cnt == 1 && x == 3)
+                return say_span(in, out, z, "w: cubed", "power");
+            (void)snprintf(v, sizeof(v), "w: to the|o:%u", x);
+            return say_span(in, out, z, v, "power");
+        }
+    }
+    /* ½ the group half the group */
+    if ((unsigned char)t[p] == 0xC2 && p + 1 < n && (unsigned char)t[p + 1] == 0xBD &&
+        (p + 6 < n && (!memcmp(t + p + 2, " the ", 5) || !memcmp(t + p + 2, " a ", 3))))
+        return say_span(in, out, p + 2, "w:half", "half-the");
+    /* PM2.5 p m two point five: capitals before a decimal number */
+    if (t[p] >= 'A' && t[p] <= 'Z' && !(p && ascii_letter_char(t[p - 1]))) {
+        size_t z = p, a;
+        while (z < n && t[z] >= 'A' && t[z] <= 'Z' && z - p < 3)
+            ++z;
+        if (z < n && ascii_digit_char(t[z])) {
+            for (a = z; a < n && ascii_digit_char(t[a]); ++a)
+                ;
+            if (a + 1 < n && t[a] == '.' && ascii_digit_char(t[a + 1]) && a - z <= 2) {
+                for (r = a + 1; r < n && ascii_digit_char(t[r]); ++r)
+                    ;
+                if (r - a - 1 <= 2 && !(r < n && (ascii_letter_char(t[r]) || ascii_digit_char(t[r]) ||
+                                                   (t[r] == '.' && r + 1 < n && ascii_digit_char(t[r + 1]))))) {
+                    (void)snprintf(v, sizeof(v), "s:%.*s|n:%.*s", (int)(z - p), t + p, (int)(r - z), t + z);
+                    return say_span(in, out, r, v, "caps-decimal");
+                }
+            }
+        }
+    }
+    /* 401(k) four oh one k, 403(b) */
+    if (p + 6 <= n && ascii_digit_char(t[p]) && ascii_digit_char(t[p + 1]) && ascii_digit_char(t[p + 2]) &&
+        t[p + 3] == '(' && (t[p + 4] == 'k' || t[p + 4] == 'b') && t[p + 5] == ')' && !(p && ascii_digit_char(t[p - 1]))) {
+        (void)snprintf(v, sizeof(v), "k:%.3s|w:%c", t + p, t[p + 4]);
+        return say_span(in, out, p + 6, v, "retirement-plan");
+    }
+    /* K-12 K through twelve */
+    if (t[p] == 'K' && p + 2 < n && t[p + 1] == '-' && ascii_digit_char(t[p + 2]) && !(p && ascii_letter_char(t[p - 1]))) {
+        unsigned g = (unsigned)atoi(t + p + 2);
+        for (r = p + 2; r < n && ascii_digit_char(t[r]); ++r)
+            ;
+        if (g >= 1 && g <= 12 && !(r < n && (ascii_letter_char(t[r]) || ascii_digit_char(t[r])))) {
+            (void)snprintf(v, sizeof(v), "w:K through|c:%u", g);
+            return say_span(in, out, r, v, "grade-range");
+        }
+    }
+    /* AAA batteries triple A, AA double A */
+    if ((!strncmp(t + p, "AAA batter", 10) || !strncmp(t + p, "AA batter", 9)) && !(p && ascii_letter_char(t[p - 1])))
+        return say_span(in, out, p + (t[p + 2] == 'A' ? 3 : 2), t[p + 2] == 'A' ? "w:triple A" : "w:double A", "battery");
+    /* Agent 007 double oh seven */
+    if (!strncmp(t + p, "007", 3) && !(p + 3 < n && ascii_digit_char(t[p + 3])) && !(p && ascii_digit_char(t[p - 1])) &&
+        word_before(t, p, "agent|bond"))
+        return say_span(in, out, p + 3, "w:double oh seven", "bond");
+    /* Python 3.12 three point twelve: a software version */
+    if (ascii_digit_char(t[p]) && !(p && (ascii_digit_char(t[p - 1]) || t[p - 1] == '.')) &&
+        word_before(t, p, "python|java|node|ios|android|macos|windows|ubuntu|firefox|chrome|version|php|ruby|perl|"
+                          "kotlin|swift|excel|photoshop|unity|blender|django|rails|scratch|xcode|debian|fedora|"
+                          "safari|edge|wordpress|bluetooth|usb|hdmi|ver|release|build|v")) {
+        size_t a, parts = 0;
+        char *o = v;
+        v[0] = 0;
+        for (a = p; a < n && parts < 4;) {
+            size_t b = a;
+            while (b < n && ascii_digit_char(t[b]))
+                ++b;
+            if (b == a || b - a > 4)
+                return 0;
+            o += snprintf(o, sizeof(v) - (size_t)(o - v), "%sc:%.*s", parts ? "|w:point|" : "", (int)(b - a), t + a);
+            ++parts;
+            a = b;
+            if (a + 1 < n && t[a] == '.' && ascii_digit_char(t[a + 1]))
+                ++a;
+            else
+                break;
+        }
+        if (parts >= 2 && !(a < n && (ascii_letter_char(t[a]) || ascii_digit_char(t[a]))))
+            return say_span(in, out, a, v, "version");
+    }
+    /* 85 kt eighty five knots, 120,000 sq ft, 18 ng/mL, 2 million bbl: English-only units
+       (numeric_suffix rows are shared by every language) */
+    if (ascii_digit_char(t[p]) && !(p && (ascii_digit_char(t[p - 1]) || t[p - 1] == '.' || ascii_letter_char(t[p - 1]) ||
+                                          t[p - 1] == '/'))) {
+        static const char *const unit[] = {"kt", "knot", "knots", "inHg", "inch of mercury", "inches of mercury",
+                                           "nmi", "nautical mile", "nautical miles", "bbl", "barrel", "barrels",
+                                           "yds", "yard", "yards", "ppm", "part per million", "parts per million",
+                                           "ppb", "part per billion", "parts per billion", "ng/mL",
+                                           "nanogram per milliliter", "nanograms per milliliter", "sq ft",
+                                           "square foot", "square feet", "sq. ft.", "square foot", "square feet",
+                                           "mmHg", "millimeter of mercury", "millimeters of mercury", "yrs", "year", "years",
+                                           "wks", "week", "weeks", "bpm", "beat per minute", "beats per minute"};
+        size_t a = p, ip = 0;
+        char numtxt[32];
+        const char *scale = NULL;
+        while (a < n && (ascii_digit_char(t[a]) || (t[a] == ',' && a + 3 < n && ascii_digit_char(t[a + 1]) &&
+                                                    ascii_digit_char(t[a + 2]) && ascii_digit_char(t[a + 3])) ||
+                         (t[a] == '.' && a + 1 < n && ascii_digit_char(t[a + 1]))) && ip + 1 < sizeof(numtxt)) {
+            if (t[a] != ',')
+                numtxt[ip++] = t[a];
+            ++a;
+        }
+        numtxt[ip] = 0;
+        r = a;
+        if (r + 1 < n && t[r] == ' ' && word_at(t, n, r + 1, key, sizeof(key)) && in_list(key, "million|billion|thousand"))
+            scale = key[0] == 'm' ? "million" : key[0] == 'b' ? "billion" : "thousand", r += 1 + strlen(key);
+        if (r < n && t[r] == ' ')
+            ++r;
+        for (k = 0; k < sizeof(unit) / sizeof(unit[0]); k += 3) {
+            size_t l = strlen(unit[k]);
+            if (r + l <= n && !strncmp(t + r, unit[k], l) &&
+                !(r + l < n && (ascii_letter_char(t[r + l]) || ascii_digit_char(t[r + l]) || t[r + l] == '/')) &&
+                !(l == 2 && r == a)) {
+                int one = !scale && !strcmp(numtxt, "1");
+                (void)snprintf(v, sizeof(v), "n:%s|w:%s%s%s", numtxt, scale ? scale : "", scale ? " " : "",
+                               unit[k + (one ? 1 : 2)]);
+                return say_span(in, out, r + l, v, "unit-en");
+            }
+        }
+        /* 128/82 mmHg one twenty eight over eighty two millimeters of mercury */
+        if (a - p <= 3 && a + 1 < n && t[a] == '/' && ascii_digit_char(t[a + 1])) {
+            size_t b2;
+            for (b2 = a + 1; b2 < n && ascii_digit_char(t[b2]); ++b2)
+                ;
+            if (b2 - a - 1 <= 3 && b2 + 5 < n && !strncmp(t + b2, " mmHg", 5) && !(b2 + 5 < n && ascii_letter_char(t[b2 + 5]))) {
+                (void)snprintf(v, sizeof(v), "c:%.*s|w:over|c:%.*s|w:millimeters of mercury", (int)(a - p), t + p,
+                               (int)(b2 - a - 1), t + a + 1);
+                return say_span(in, out, b2 + 5, v, "blood-pressure");
+            }
+        }
+    }
+    /* Helena, Montana 59601, Austin, TX 78701: a ZIP code after a state name or a capital state code */
+    if (ascii_digit_char(t[p]) && p >= 3 && !(ascii_digit_char(t[p - 1]))) {
+        size_t a, q2 = p, w0;
+        for (a = p; a < n && ascii_digit_char(t[a]); ++a)
+            ;
+        while (q2 && (t[q2 - 1] == ' ' || t[q2 - 1] == ','))
+            --q2;
+        for (w0 = q2; w0 && ascii_letter_char(t[w0 - 1]); --w0)
+            ;
+        if (a - p == 5 && !(a < n && (ascii_digit_char(t[a]) || ascii_letter_char(t[a]))) && q2 > w0 &&
+            ((q2 - w0 == 2 && t[w0] >= 'A' && t[w0] <= 'Z' && t[w0 + 1] >= 'A' && t[w0 + 1] <= 'Z' &&
+              strstr("|AL|AK|AZ|AR|CA|CO|CT|DE|FL|GA|HI|ID|IL|IN|IA|KS|KY|LA|ME|MD|MA|MI|MN|MS|MO|MT|NE|NV|NH|NJ|"
+                     "NM|NY|NC|ND|OH|OK|OR|PA|RI|SC|SD|TN|TX|UT|VT|VA|WA|WV|WI|WY|DC|",
+                     (char[]){'|', t[w0], t[w0 + 1], '|', 0})) ||
+             (q2 - w0 > 2 && t[w0] >= 'A' && t[w0] <= 'Z' &&
+              word_before(t, p, "alabama|alaska|arizona|arkansas|california|colorado|connecticut|delaware|florida|"
+                                "georgia|hawaii|idaho|illinois|indiana|iowa|kansas|kentucky|louisiana|maine|maryland|"
+                                "massachusetts|michigan|minnesota|mississippi|missouri|montana|nebraska|nevada|"
+                                "hampshire|jersey|mexico|york|carolina|dakota|ohio|oklahoma|oregon|pennsylvania|"
+                                "island|tennessee|texas|utah|vermont|virginia|washington|wisconsin|wyoming")))) {
+            (void)snprintf(v, sizeof(v), "d:%.5s", t + p);
+            return say_span(in, out, a, v, "zip");
+        }
+    }
+    /* Tues. Tuesday, Sept. September: a weekday or month abbreviation with its period alone */
+    if (t[p] >= 'A' && t[p] <= 'Z' && !(p && ascii_letter_char(t[p - 1]))) {
+        static const char *const full[] = {"Mon", "Monday", "Tues", "Tuesday", "Tue", "Tuesday", "Wed", "Wednesday",
+                                           "Thurs", "Thursday", "Thur", "Thursday", "Thu", "Thursday", "Fri", "Friday",
+                                           "Sat", "Saturday", "Jan", "January", "Feb", "February", "Mar", "March",
+                                           "Apr", "April", "Aug", "August", "Sept", "September", "Sep", "September",
+                                           "Oct", "October", "Nov", "November", "Dec", "December"};
+        for (k = 0; k < sizeof(full) / sizeof(full[0]); k += 2) {
+            size_t l = strlen(full[k]);
+            if (!strncmp(t + p, full[k], l) && p + l < n && t[p + l] == '.' &&
+                !(p + l + 2 < n && t[p + l + 1] == ' ' && ascii_digit_char(t[p + l + 2]))) {
+                (void)snprintf(v, sizeof(v), "w:%s", full[k + 1]);
+                return say_span(in, out, p + l + 1 - (p + l + 1 == n || t[p + l + 1] == '\n' ||
+                                                       (p + l + 2 < n && t[p + l + 1] == ' ' && t[p + l + 2] >= 'A' &&
+                                                        t[p + l + 2] <= 'Z')),
+                                v, "abbr-period");
+            }
+        }
+    }
+    /* 4th St fourth Street, 5th Ave fifth Avenue */
+    if (ascii_digit_char(t[p]) && !(p && (ascii_digit_char(t[p - 1]) || ascii_letter_char(t[p - 1])))) {
+        size_t a;
+        for (a = p; a < n && ascii_digit_char(t[a]); ++a)
+            ;
+        if (a + 5 < n && (!strncmp(t + a, "th ", 3) || !strncmp(t + a, "st ", 3) || !strncmp(t + a, "nd ", 3) ||
+                          !strncmp(t + a, "rd ", 3)) &&
+            (!strncmp(t + a + 3, "St", 2) || !strncmp(t + a + 3, "Ave", 3)) &&
+            !(a + 5 < n && ascii_letter_char(t[a + 3 + (t[a + 3] == 'S' ? 2 : 3)]))) {
+            size_t z = a + 3 + (t[a + 3] == 'S' ? 2 : 3);
+            (void)snprintf(v, sizeof(v), "o:%.*s|w:%s", (int)(a - p), t + p, t[a + 3] == 'S' ? "Street" : "Avenue");
+            return say_span(in, out, z + (z < n && t[z] == '.'), v, "street-ordinal");
+        }
+        /* 3/$1 three for a dollar, 2/$5 two for five dollars */
+        if (a - p <= 2 && a + 2 < n && t[a] == '/' && t[a + 1] == '$' && ascii_digit_char(t[a + 2])) {
+            size_t z;
+            for (z = a + 2; z < n && ascii_digit_char(t[z]); ++z)
+                ;
+            if (!(z < n && (t[z] == '.' || ascii_digit_char(t[z])))) {
+                unsigned d2 = (unsigned)atoi(t + a + 2);
+                if (d2 == 1)
+                    (void)snprintf(v, sizeof(v), "c:%u|w:for a dollar", (unsigned)atoi(t + p));
+                else
+                    (void)snprintf(v, sizeof(v), "c:%u|w:for|c:%u|w:dollars", (unsigned)atoi(t + p), d2);
+                return say_span(in, out, z, v, "multi-price");
+            }
+        }
+        /* 1099-NEC ten ninety nine N E C, 529 plan five twenty nine plan: a form or plan number */
+        if ((a - p == 3 || a - p == 4) && t[p] != '0' &&
+            ((a + 2 < n && t[a] == '-' && t[a + 1] >= 'A' && t[a + 1] <= 'Z' && t[a + 2] >= 'A' && t[a + 2] <= 'Z') ||
+             (a + 5 <= n && !strncmp(t + a, " plan", 5) && !(a + 5 < n && ascii_letter_char(t[a + 5]))))) {
+            (void)snprintf(v, sizeof(v), "k:%.*s", (int)(a - p), t + p);
+            return say_span(in, out, a, v, "label-pairs");
+        }
+        /* 988 crisis line, call 211: a three-digit service number is read digit by digit */
+        if (a - p == 3 && (!strncmp(t + p, "988", 3) || (t[p + 1] == '1' && t[p + 2] == '1')) &&
+            !(a < n && (ascii_digit_char(t[a]) || ascii_letter_char(t[a]) || t[a] == '.' || t[a] == ','  ? (t[a] == ',' ? 0 : 1) : 0))) {
+            int phone = 0;
+            char w3[16];
+            for (k = p > 40 ? p - 40 : 0; k < p; ++k)
+                if ((k == 0 || !ascii_letter_char(t[k - 1])) && word_at(t, n, k, w3, sizeof(w3)) &&
+                    in_list(w3, "call|dial|text|line|hotline|lifeline|number|crisis"))
+                    phone = 1;
+            if (phone) {
+                (void)snprintf(v, sizeof(v), "d:%.3s", t + p);
+                return say_span(in, out, a, v, "service-number");
+            }
+        }
+        /* .312 hitting three twelve (a batting average) */
+    }
+    if (t[p] == '.' && p + 3 < n && ascii_digit_char(t[p + 1]) && ascii_digit_char(t[p + 2]) && ascii_digit_char(t[p + 3]) &&
+        !(p + 4 < n && ascii_digit_char(t[p + 4])) && !(p && (ascii_digit_char(t[p - 1]) || ascii_letter_char(t[p - 1]))) &&
+        word_before(t, p, "hitting|batting|batted|hit|average|avg|hits|at|of")) {
+        int baseball = 0;
+        char w3[16];
+        for (k = p > 50 ? p - 50 : 0; k < p; ++k)
+            if ((k == 0 || !ascii_letter_char(t[k - 1])) && word_at(t, n, k, w3, sizeof(w3)) &&
+                in_list(w3, "hitting|batting|batted|average|avg|hits|hitter|season|plate"))
+                baseball = 1;
+        if (baseball) {
+            (void)snprintf(v, sizeof(v), "k:%.3s", t + p + 1);
+            return say_span(in, out, p + 4, v, "batting-average");
+        }
+    }
+    /* x4417 extension four four one seven */
+    if (t[p] == 'x' && p && t[p - 1] == ' ' && p + 3 < n && ascii_digit_char(t[p + 1])) {
+        size_t a;
+        for (a = p + 1; a < n && ascii_digit_char(t[a]); ++a)
+            ;
+        if (a - p - 1 >= 3 && a - p - 1 <= 5 && !(a < n && (ascii_letter_char(t[a]) || ascii_digit_char(t[a]) || t[a] == '.'))) {
+            (void)snprintf(v, sizeof(v), "w:extension|d:%.*s", (int)(a - p - 1), t + p + 1);
+            return say_span(in, out, a, v, "extension");
+        }
+    }
+    /* B2B B to B, 4x100 four by one hundred */
+    if (p + 3 <= n && t[p] >= 'A' && t[p] <= 'Z' && t[p + 1] == '2' && p + 2 < n && t[p + 2] >= 'A' && t[p + 2] <= 'Z' &&
+        !(p && ascii_letter_char(t[p - 1])) && !(p + 3 < n && (ascii_letter_char(t[p + 3]) || ascii_digit_char(t[p + 3])))) {
+        (void)snprintf(v, sizeof(v), "s:%c|w:to|s:%c", t[p], t[p + 2]);
+        return say_span(in, out, p + 3, v, "b-to-b");
+    }
+    if (ascii_digit_char(t[p]) && p + 4 < n && t[p + 1] == 'x' && ascii_digit_char(t[p + 2]) &&
+        !(p && (ascii_digit_char(t[p - 1]) || ascii_letter_char(t[p - 1])))) {
+        size_t a;
+        for (a = p + 2; a < n && ascii_digit_char(t[a]); ++a)
+            ;
+        if ((!strncmp(t + p + 2, "100", 3) || !strncmp(t + p + 2, "200", 3) || !strncmp(t + p + 2, "400", 3) ||
+             !strncmp(t + p + 2, "800", 3)) && a - p - 2 == 3 && !(a < n && (ascii_letter_char(t[a]) || ascii_digit_char(t[a])))) {
+            (void)snprintf(v, sizeof(v), "c:%c|w:by|c:%.3s", t[p], t + p + 2);
+            return say_span(in, out, a, v, "relay");
+        }
+    }
+    return 0;
+}
+
+
 static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     const ttf_token_t *t = &in->tokens[in->index];
     char key[96];
@@ -2065,6 +2811,8 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     if (date_tokens)
         return date_tokens;
     if ((date_tokens = owner_forms(in, out)) != 0)
+        return date_tokens;
+    if ((date_tokens = dev_forms(in, out)) != 0)
         return date_tokens;
     date_tokens = ttf_en_classify_date(in, out);
     if (date_tokens)
@@ -2485,6 +3233,28 @@ static ttf_status_t expression_side(const ttf_engine_t *e, const char *value, si
         part[end - at] = 0;
         if (at && (st = ttf_buffer_puts(out, " ")) != TTF_OK)
             return st;
+        /* 1 / 2 + 1 / 4: a proper fraction of small whole numbers reads as a fraction (en dev v1,
+           2026-10-17) */
+        if (part[0] >= '0' && part[0] <= '9' && !strchr(part, '.') && end + 3 < length && value[end + 1] == '/' &&
+            value[end + 2] == ' ' && value[end + 3] >= '0' && value[end + 3] <= '9') {
+            size_t d0 = end + 3, d1 = d0;
+            char den[8];
+            while (d1 < length && value[d1] >= '0' && value[d1] <= '9')
+                ++d1;
+            if ((d1 >= length || value[d1] == ' ') && d1 - d0 < sizeof(den) && strtoul(part, NULL, 10) >= 1 &&
+                strtoul(part, NULL, 10) < strtoul(value + d0, NULL, 10) && strtoul(value + d0, NULL, 10) <= 16) {
+                ttf_semantic_t frac = {0};
+                frac.struct_size = sizeof(frac);
+                frac.type = TTF_SEM_FRACTION;
+                (void)snprintf(frac.value, sizeof(frac.value), "%s", part);
+                (void)snprintf(frac.secondary, sizeof(frac.secondary), "%.*s", (int)(d1 - d0), value + d0);
+                (void)snprintf(frac.render_lang, sizeof(frac.render_lang), "%s", EN);
+                if ((st = verbalize(e, &frac, part, strlen(part), out)) != TTF_OK)
+                    return st;
+                at = d1 < length ? d1 + 1 : d1;
+                continue;
+            }
+        }
         if ((part[0] >= '0' && part[0] <= '9') || (part[0] == '-' && part[1]))
             st = expression_number(e, part, out);
         else if (!part[1] &&
@@ -2866,6 +3636,63 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
                 return ttf_buffer_append(b, surface, length);
             (void)snprintf(point, sizeof(point), "U+%s", s->value);
             return ttf_en_speech_spelling(e, point, strlen(point), 1, b);
+        }
+        /* @say (dev_forms): c:N cardinal, o:N ordinal, d:digits, k:label pairs, n:number, s:letters,
+           w:words */
+        if (!strcmp(s->unit, "@say")) {
+            const char *it = s->value;
+            int first = 1;
+            while (*it) {
+                const char *bar = strchr(it, '|');
+                size_t l = bar ? (size_t)(bar - it) : strlen(it);
+                char item[64];
+                if (l < 2 || l - 2 >= sizeof(item) || it[1] != ':')
+                    return TTF_EINVAL;
+                memcpy(item, it + 2, l - 2);
+                item[l - 2] = 0;
+                if (!first && (st = space(b)) != TTF_OK)
+                    return st;
+                first = 0;
+                switch (it[0]) {
+                case 'c':
+                    st = card(e, strtoull(item, NULL, 10), b);
+                    break;
+                case 'o':
+                    st = ordinal(e, strtoull(item, NULL, 10), b);
+                    break;
+                case 'd':
+                    st = digits(e, item, b);
+                    break;
+                case 'k': {
+                    uint64_t x = strtoull(item, NULL, 10);
+                    size_t il = strlen(item);
+                    /* 1600 sixteen hundred; 214 two fourteen; 3120 thirty one twenty */
+                    if (il == 4 && x % 100 == 0 && x % 1000) {
+                        if ((st = card(e, x / 100, b)) == TTF_OK && (st = space(b)) == TTF_OK)
+                            st = word(e, b, "number", "100");
+                    } else
+                        st = code_number(e, item, il, 0, 0, b);
+                    break;
+                }
+                case 'n':
+                    st = numeric(e, item, b);
+                    break;
+                case 's':
+                    st = ttf_en_speech_spelling(e, item, strlen(item), 0, b);
+                    break;
+                case 'w':
+                    st = ttf_buffer_puts(b, item);
+                    break;
+                default:
+                    return TTF_EINVAL;
+                }
+                if (st != TTF_OK)
+                    return st;
+                if (!bar)
+                    break;
+                it = bar + 1;
+            }
+            return TTF_OK;
         }
         /* 1M requests: one million (count_scale) */
         if (!strcmp(s->unit, "@scaled-count")) {

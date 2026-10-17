@@ -412,3 +412,18 @@ date_cue	en-US	deadline	1
 date_cue	en-US	before	1
 date_cue	en-US	after	1
 classifier_priority	en-US	en.date.slash-cue	10
+# Apt. 5C, Ste. 200: an address abbreviation does not end the sentence (2026-10-17)
+boundary_period	en-US	apt	1
+boundary_period	en-US	ste	1
+boundary_period	en-US	bldg	1
+boundary_period	en-US	blvd	1
+boundary_period	en-US	ave	1
+boundary_period	en-US	mon	1
+boundary_period	en-US	tue	1
+boundary_period	en-US	tues	1
+boundary_period	en-US	wed	1
+boundary_period	en-US	thu	1
+boundary_period	en-US	thur	1
+boundary_period	en-US	thurs	1
+boundary_period	en-US	fri	1
+boundary_period	en-US	sat	1

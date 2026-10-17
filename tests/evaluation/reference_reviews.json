@@ -2646,6 +2646,18 @@
       },
       "category_overrides": {},
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/en_ja_dev_v97.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Synthetic cases authored with the English and Japanese packs; new sentences, not copied from the dev sets or open-tn",
+        "reason": "Project-owner request 2026-10-17: English and Japanese improvement"
+      },
+      "category_overrides": {},
+      "case_overrides": {}
     }
   ],
   "excluded": [

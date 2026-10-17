@@ -956,6 +956,240 @@ static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *s, size_t 
 
 /* 3本, 2024年10月8日, 4時15分, 1万円, 3〜5個, -5度: digits with written counters
  * become one counted span; the value keeps the normalized source. */
+/* ---- Japanese dev set v1 forms (2026-10-17) ---- */
+static int ja_prev_is(const char *t, size_t p, const char *w) {
+    size_t l = strlen(w);
+    return p >= l && !memcmp(t + p - l, w, l);
+}
+static int ja_next_is(const char *t, size_t n, size_t q, const char *w) {
+    size_t l = strlen(w);
+    return q + l <= n && !memcmp(t + q, w, l);
+}
+static size_t ja_dev_forms(const ttf_pack_input_t *in, ttf_semantic_t *s, size_t begin) {
+    const char *t = in->text;
+    size_t n = in->length, p = begin, q, r;
+    if (p >= n)
+        return 0;
+    /* x² エックスのにじょう, 2¹⁰ にのじゅうじょう: superscript digits after a number, a letter or a bracket */
+    if (p && (digit(t[p - 1]) || alpha(t[p - 1]) || t[p - 1] == ')')) {
+        size_t z = p;
+        unsigned x = 0, cnt = 0;
+        for (;;) {
+            unsigned char c0 = (unsigned char)t[z], c1 = z + 1 < n ? (unsigned char)t[z + 1] : 0,
+                          c2 = z + 2 < n ? (unsigned char)t[z + 2] : 0;
+            int d = -1;
+            if (c0 == 0xC2 && (c1 == 0xB2 || c1 == 0xB3 || c1 == 0xB9))
+                d = c1 == 0xB2 ? 2 : c1 == 0xB3 ? 3 : 1, z += 2;
+            else if (c0 == 0xE2 && c1 == 0x81 && (c2 == 0xB0 || (c2 >= 0xB4 && c2 <= 0xB9)))
+                d = c2 == 0xB0 ? 0 : c2 - 0xB0, z += 3;
+            if (d < 0 || cnt > 3)
+                break;
+            x = x * 10 + (unsigned)d, ++cnt;
+            if (z >= n)
+                break;
+        }
+        if (cnt) {
+            snprintf(s->value, sizeof(s->value), "w:の|n:%u|w:じょう", x);
+            return finish(in, s, z, TTF_SEM_COUNTER, "ja.dev-power", "@say");
+        }
+    }
+    /* 〒100-8926 ゆうびんばんごう…: the postal mark before a code (alone it stays ゆうびん) */
+    if (ja_next_is(t, n, p, "〒") && p + 3 < n && (digit(t[p + 3]) || (t[p + 3] == ' ' && p + 4 < n && digit(t[p + 4])))) {
+        snprintf(s->value, sizeof(s->value), "ゆうびんばんごう");
+        return finish(in, s, p + 3, TTF_SEM_ABBREVIATION, "ja.dev-postal-mark", "");
+    }
+    /* #Jリーグ ハッシュタグジェーリーグ: a hash before a word is a hashtag */
+    if ((t[p] == '#' || ja_next_is(t, n, p, "\xef\xbc\x83")) && !(p && (alpha(t[p - 1]) || digit(t[p - 1])))) {
+        size_t z = p + (t[p] == '#' ? 1 : 3);
+        if (z < n && t[z] != ' ' && !digit(t[z]) && (alpha(t[z]) || ((unsigned char)t[z] & 0x80))) {
+            snprintf(s->value, sizeof(s->value), "ハッシュタグ");
+            return finish(in, s, z, TTF_SEM_ABBREVIATION, "ja.dev-hashtag", "");
+        }
+    }
+    /* ⅛ はちぶんのいち: a vulgar fraction */
+    if ((unsigned char)t[p] == 0xE2 && p + 2 < n && (unsigned char)t[p + 1] == 0x85 &&
+        (unsigned char)t[p + 2] >= 0x93 && (unsigned char)t[p + 2] <= 0x9E) {
+        static const unsigned char nd[][2] = {{1, 3}, {2, 3}, {1, 5}, {2, 5}, {3, 5}, {4, 5}, {1, 6},
+                                              {5, 6}, {1, 8}, {3, 8}, {5, 8}, {7, 8}};
+        unsigned i = (unsigned)((unsigned char)t[p + 2] - 0x93);
+        snprintf(s->value, sizeof(s->value), "%u", nd[i][0]);
+        snprintf(s->secondary, sizeof(s->secondary), "%u", nd[i][1]);
+        return finish(in, s, p + 3, TTF_SEM_FRACTION, "ja.dev-vulgar", "");
+    }
+    if (!digit(t[p]) || (p && (digit(t[p - 1]) || t[p - 1] == '.' || t[p - 1] == ',' || alpha(t[p - 1]))))
+        goto symbols;
+    for (q = p; q < n && digit(t[q]); ++q)
+        ;
+    /* 15−8 じゅうごひくはち: a minus sign between numbers is subtraction, not a range */
+    if (ja_next_is(t, n, q, "\xe2\x88\x92") && q + 3 < n && digit(t[q + 3])) {
+        for (r = q + 3; r < n && digit(t[r]); ++r)
+            ;
+        if (!(r < n && (digit(t[r]) || t[r] == '.' || ja_next_is(t, n, r, "\xe2\x88\x92") || alpha(t[r]))) &&
+            q - p + r - q + 4 < sizeof(s->value)) {
+            snprintf(s->value, sizeof(s->value), "%.*s \xe2\x88\x92 %.*s", (int)(q - p), t + p, (int)(r - q - 3), t + q + 3);
+            return finish(in, s, r, TTF_SEM_SYMBOL, "ja.dev-minus", "@expression");
+        }
+    }
+    /* Python 3.12 さんてんじゅうに: a version after a Latin name or バージョン */
+    if (q + 2 < n && t[q] == '.' && digit(t[q + 1]) && p >= 2 &&
+        ((t[p - 1] == ' ' && alpha(t[p - 2])) || ja_prev_is(t, p, "バージョン") || ja_prev_is(t, p, "Ver.") ||
+         ja_prev_is(t, p, "ver."))) {
+        size_t z = q + 1, k2;
+        char *o = s->value;
+        while (z < n && digit(t[z]))
+            ++z;
+        if (z - q - 1 >= 2 && !(z < n && (digit(t[z]) || alpha(t[z]) || (t[z] == '.' && z + 1 < n && digit(t[z + 1]))))) {
+            o += snprintf(o, sizeof(s->value), "n:%.*s|w:てん|n:%.*s", (int)(q - p), t + p, (int)(z - q - 1), t + q + 1);
+            (void)k2;
+            return finish(in, s, z, TTF_SEM_COUNTER, "ja.dev-version", "@say");
+        }
+    }
+    /* M/D or a fraction: 全日程の7/10 じゅうぶんのなな, 2と3/4, 1/5出発 いちがついつか, 12/29の便 */
+    if (q - p <= 2 && q + 1 < n && t[q] == '/' && digit(t[q + 1])) {
+        unsigned a = (unsigned)atoi(t + p), d;
+        for (r = q + 1; r < n && digit(t[r]); ++r)
+            ;
+        d = (unsigned)atoi(t + q + 1);
+        if (r - q - 1 <= 3 && !(r < n && (digit(t[r]) || t[r] == '/' || t[r] == '.' || alpha(t[r]) || t[r] == '(' ||
+                                           ja_next_is(t, n, r, "\xef\xbc\x88")))) {
+            int common = d == 2 || d == 3 || d == 4 || d == 5 || d == 6 || d == 8 || d == 10 || d == 12 || d == 16 ||
+                         d == 20 || d == 25 || d == 50 || d == 100 || d == 1000;
+            int fraction_cue = ja_prev_is(t, p, "の") || ja_prev_is(t, p, "約") || ja_prev_is(t, p, "およそ") ||
+                               ja_prev_is(t, p, "と");
+            int date_cue = ja_next_is(t, n, r, "出発") || ja_next_is(t, n, r, "発") || ja_next_is(t, n, r, "着") ||
+                           ja_next_is(t, n, r, "入社") || ja_next_is(t, n, r, "生まれ") || ja_next_is(t, n, r, "公開") ||
+                           ja_next_is(t, n, r, "開催") || ja_next_is(t, n, r, "発売") || ja_next_is(t, n, r, "締め切り") ||
+                           ja_next_is(t, n, r, "締切") || ja_next_is(t, n, r, "以降") || ja_next_is(t, n, r, "ごろ") ||
+                           ja_next_is(t, n, r, "頃") || ja_next_is(t, n, r, "まで") || ja_next_is(t, n, r, "から") ||
+                           ja_next_is(t, n, r, "の便") || ja_next_is(t, n, r, "限り") || ja_next_is(t, n, r, "当日") ||
+                           ja_next_is(t, n, r, "予定");
+            if (a >= 1 && a < d && common && fraction_cue &&
+                (!date_cue || ja_prev_is(t, p, "と") || ja_prev_is(t, p, "の"))) {
+                snprintf(s->value, sizeof(s->value), "%u", a);
+                snprintf(s->secondary, sizeof(s->secondary), "%u", d);
+                return finish(in, s, r, TTF_SEM_FRACTION, "ja.dev-fraction", "");
+            }
+            if (a >= 1 && a <= 12 && d >= 1 && d <= 31 && r - q - 1 <= 2 && !ja_prev_is(t, p, "と") && date_cue) {
+                snprintf(s->value, sizeof(s->value), "r:%u月%u日", a, d);
+                return finish(in, s, r, TTF_SEM_COUNTER, "ja.dev-date", "@say");
+            }
+        }
+    }
+    /* 2丁目14-3 にちょうめじゅうよんのさん: a block and house number after 丁目 */
+    if (ja_prev_is(t, p, "丁目") && q + 1 < n && t[q] == '-' && digit(t[q + 1])) {
+        for (r = q + 1; r < n && digit(t[r]); ++r)
+            ;
+        if (r - p < 16 && !(r < n && (digit(t[r]) || alpha(t[r])))) {
+            size_t r2 = r;
+            if (r + 1 < n && t[r] == '-' && digit(t[r + 1]))
+                for (r2 = r + 1; r2 < n && digit(t[r2]); ++r2)
+                    ;
+            if (r2 == r)
+                snprintf(s->value, sizeof(s->value), "n:%.*s|w:の|n:%.*s", (int)(q - p), t + p, (int)(r - q - 1), t + q + 1);
+            else
+                snprintf(s->value, sizeof(s->value), "n:%.*s|w:の|n:%.*s|w:の|n:%.*s", (int)(q - p), t + p, (int)(r - q - 1),
+                         t + q + 1, (int)(r2 - r - 1), t + r + 1);
+            return finish(in, s, r2, TTF_SEM_COUNTER, "ja.dev-address", "@say");
+        }
+    }
+    /* 12.50ドル じゅうにてんごドル: a currency amount drops the trailing zero of its cents */
+    if (q + 2 < n && t[q] == '.' && digit(t[q + 1])) {
+        size_t f = q + 1, z;
+        for (z = f; z < n && digit(t[z]); ++z)
+            ;
+        if (z - f == 2 && t[z - 1] == '0' &&
+            (ja_next_is(t, n, z, "ドル") || ja_next_is(t, n, z, "ユーロ") || ja_next_is(t, n, z, "ポンド") ||
+             ja_next_is(t, n, z, "元"))) {
+            if (t[f] == '0')
+                snprintf(s->value, sizeof(s->value), "n:%.*s", (int)(q - p), t + p);
+            else
+                snprintf(s->value, sizeof(s->value), "n:%.*s.%c", (int)(q - p), t + p, t[f]);
+            return finish(in, s, z, TTF_SEM_COUNTER, "ja.dev-cents", "@say");
+        }
+    }
+    /* 38万km さんじゅうはちまんキロメートル: a unit after 万 or 億 */
+    if (ja_next_is(t, n, q, "万") || ja_next_is(t, n, q, "億")) {
+        static const char *const unit[] = {"km", "キロメートル", "kg", "キログラム", "kW", "キロワット", "kWh",
+                                           "キロワットアワー", "t", "トン", "m", "メートル", "ha", "ヘクタール",
+                                           "TB", "テラバイト", "GB", "ギガバイト"};
+        size_t z = q + 3, i;
+        for (i = 0; i < sizeof(unit) / sizeof(unit[0]); i += 2) {
+            size_t l = strlen(unit[i]);
+            if (ja_next_is(t, n, z, unit[i]) && !(z + l < n && (alpha(t[z + l]) || t[z + l] == '/'))) {
+                snprintf(s->value, sizeof(s->value), "r:%.*s%.3s|w:%s", (int)(q - p), t + p, t + q, unit[i + 1]);
+                return finish(in, s, z + l, TTF_SEM_COUNTER, "ja.dev-scaled-unit", "@say");
+            }
+        }
+    }
+    /* 86°F かしはちじゅうろくど: Fahrenheit before the number */
+    {
+        size_t z = q;
+        if (z + 1 < n && t[z] == '.' && digit(t[z + 1]))
+            for (++z; z < n && digit(t[z]); ++z)
+                ;
+        if (ja_next_is(t, n, z, "°F") || ja_next_is(t, n, z, "℉")) {
+            snprintf(s->value, sizeof(s->value), "w:かし|n:%.*s|w:ど", (int)(z - p), t + p);
+            return finish(in, s, z + 3, TTF_SEM_COUNTER, "ja.dev-fahrenheit", "@say");
+        }
+        /* 0.05μSv れいてんぜろごマイクロシーベルト: a micro unit */
+        if (ja_next_is(t, n, z, "μ") || ja_next_is(t, n, z, "µ")) {
+            static const char *const unit[] = {"Sv", "シーベルト", "g", "グラム", "m", "メートル", "L", "リットル",
+                                               "l", "リットル", "s", "秒", "F", "ファラド", "A", "アンペア"};
+            size_t u = z + 2, i;
+            for (i = 0; i < sizeof(unit) / sizeof(unit[0]); i += 2) {
+                size_t l = strlen(unit[i]);
+                if (ja_next_is(t, n, u, unit[i]) && !(u + l < n && alpha(t[u + l]))) {
+                    snprintf(s->value, sizeof(s->value), "n:%.*s|w:マイクロ%s", (int)(z - p), t + p, unit[i + 1]);
+                    return finish(in, s, u + l, TTF_SEM_COUNTER, "ja.dev-micro", "@say");
+                }
+            }
+        }
+        /* 25.4km/L にじゅうごてんよんキロメートルパーリットル */
+        if (ja_next_is(t, n, z, "km/L") && !(z + 4 < n && alpha(t[z + 4]))) {
+            snprintf(s->value, sizeof(s->value), "n:%.*s|w:キロメートルパーリットル", (int)(z - p), t + p);
+            return finish(in, s, z + 4, TTF_SEM_COUNTER, "ja.dev-fuel", "@say");
+        }
+    }
+    return 0;
+symbols:
+    /* B1階 ちかいっかい: a basement floor */
+    if (t[p] == 'B' && p + 1 < n && digit(t[p + 1]) && !(p && alpha(t[p - 1]))) {
+        for (q = p + 1; q < n && digit(t[q]); ++q)
+            ;
+        if (q - p <= 2 && (ja_next_is(t, n, q, "階") || ja_next_is(t, n, q, "F"))) {
+            snprintf(s->value, sizeof(s->value), "w:ちか|r:%.*s階", (int)(q - p - 1), t + p + 1);
+            return finish(in, s, q + (t[q] == 'F' ? 1 : 3), TTF_SEM_COUNTER, "ja.dev-basement", "@say");
+        }
+    }
+    /* 1ドル＝152円 いちドルひゃくごじゅうにえん: an exchange rate keeps no equals word */
+    if ((ja_next_is(t, n, p, "＝") || t[p] == '=') &&
+        (ja_prev_is(t, p, "ドル") || ja_prev_is(t, p, "ユーロ") || ja_prev_is(t, p, "ポンド") || ja_prev_is(t, p, "元")) &&
+        p + (t[p] == '=' ? 1 : 3) < n && digit(t[p + (t[p] == '=' ? 1 : 3)])) {
+        snprintf(s->value, sizeof(s->value), "、");
+        return finish(in, s, p + (t[p] == '=' ? 1 : 3), TTF_SEM_ABBREVIATION, "ja.dev-rate", "");
+    }
+    /* £5.60 ごポンドろくじゅうペンス, $12.50 じゅうにてんごドル */
+    if ((ja_next_is(t, n, p, "£") || t[p] == '$') && !(p && (alpha(t[p - 1]) || digit(t[p - 1])))) {
+        size_t a = p + (t[p] == '$' ? 1 : 2), z, f;
+        for (z = a; z < n && digit(t[z]); ++z)
+            ;
+        if (z > a && z - a <= 6 && z + 2 < n && t[z] == '.' && digit(t[z + 1]) && digit(t[z + 2]) &&
+            !(z + 3 < n && digit(t[z + 3]))) {
+            f = z + 1;
+            if (t[p] == '$')
+                snprintf(s->value, sizeof(s->value), "n:%.*s.%.*s|w:ドル", (int)(z - a), t + a, t[f + 1] == '0' ? 1 : 2, t + f);
+            else if (t[f] == '0' && t[f + 1] == '0')
+                snprintf(s->value, sizeof(s->value), "n:%.*s|w:ポンド", (int)(z - a), t + a);
+            else
+                snprintf(s->value, sizeof(s->value), "n:%.*s|w:ポンド|n:%u|w:ペンス", (int)(z - a), t + a, (unsigned)atoi(t + f));
+            if (t[p] == '$' && t[f] == '0' && t[f + 1] == '0')
+                snprintf(s->value, sizeof(s->value), "n:%.*s|w:ドル", (int)(z - a), t + a);
+            return finish(in, s, z + 3, TTF_SEM_COUNTER, "ja.dev-money", "@say");
+        }
+    }
+    return 0;
+}
+
 static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     const ttf_engine_t *e = in->engine;
     const ttf_token_t *t;
@@ -969,8 +1203,10 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     t = &in->tokens[in->index];
     begin = t->begin;
     {
-        size_t owned = owner_forms(in, s, begin);
+        size_t owned = ja_dev_forms(in, s, begin);
         if (owned)
+            return owned;
+        if ((owned = owner_forms(in, s, begin)) != 0)
             return owned;
     }
     /* B'z ビーズ, Wi-Fi ワイファイ, 7-Eleven セブンイレブン (latin_phrase). */
@@ -1597,7 +1833,10 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             cue[k] = 0;
             if (q - begin >= 2 && q - begin < sizeof(s->value) && res(e, "digit_cue", cue) &&
                 (q >= n || !(text[q] == '.' || text[q] == ',')) &&
-                !(gap && (q - begin < 4 || counter_at(e, text + q, n - q, key2, sizeof(key2))))) {
+                !(gap && (q - begin < 4 || counter_at(e, text + q, n - q, key2, sizeof(key2)))) &&
+                /* 受付番号15番 じゅうごばん (ja dev v1, 2026-10-17) */
+                !(q - begin <= 3 && q + 3 <= n && !memcmp(text + q, "番", 3) && !(q + 6 <= n && !memcmp(text + q + 3, "号", 3)) &&
+                  k >= 6 && !memcmp(cue + k - 6, "番号", 6))) {
                 snprintf(s->value, sizeof(s->value), "%.*s", (int)(q - begin), text + begin);
                 return finish(in, s, q, groups > 1 ? TTF_SEM_PHONE : TTF_SEM_DIGIT_SEQUENCE,
                               "ja.digit-cue", "");
@@ -2469,6 +2708,23 @@ static ttf_status_t expression(const ttf_engine_t *e, const char *v, ttf_buffer_
             numeric &= digit(part[k]) || part[k] == '.' || part[k] == ',';
             letter &= alpha(part[k]);
         }
+        /* 1 / 2 にぶんのいち: a proper fraction of small whole numbers (ja dev v1, 2026-10-17) */
+        if (numeric && digit(part[0]) && !strchr(part, '.') && j + 3 < n && v[j + 1] == '/' && v[j + 2] == ' ' &&
+            digit(v[j + 3])) {
+            size_t d0 = j + 3, d1 = d0;
+            char den[8];
+            while (d1 < n && digit(v[d1]))
+                ++d1;
+            if ((d1 >= n || v[d1] == ' ') && d1 - d0 < sizeof(den) && strtoul(part, NULL, 10) >= 1 &&
+                strtoul(part, NULL, 10) < strtoul(v + d0, NULL, 10) && strtoul(v + d0, NULL, 10) <= 100) {
+                snprintf(den, sizeof(den), "%.*s", (int)(d1 - d0), v + d0);
+                if ((st = plain_number(e, den, b)) != TTF_OK || (st = ttf_buffer_puts(b, "ぶんの")) != TTF_OK ||
+                    (st = plain_number(e, part, b)) != TTF_OK)
+                    return st;
+                i = d1;
+                continue;
+            }
+        }
         if (numeric && digit(part[0]))
             st = plain_number(e, part, b);
         else if (letter)
@@ -2538,6 +2794,28 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         }
         if (!strcmp(s->unit, "@ja"))
             return render_chain(e, s->value, b);
+        /* @say (ja_dev_forms): w:text as written, n:NUM a number, r:CHAIN a number with its counter */
+        if (!strcmp(s->unit, "@say")) {
+            const char *it = s->value;
+            while (*it) {
+                const char *bar = strchr(it, '|');
+                size_t l = bar ? (size_t)(bar - it) : strlen(it);
+                char item[64];
+                if (l < 2 || l - 2 >= sizeof(item) || it[1] != ':')
+                    return TTF_EINVAL;
+                memcpy(item, it + 2, l - 2);
+                item[l - 2] = 0;
+                st = it[0] == 'w' ? ttf_buffer_puts(b, item)
+                     : it[0] == 'n' ? plain_number(e, item, b)
+                     : it[0] == 'r' ? render_chain(e, item, b) : TTF_EINVAL;
+                if (st != TTF_OK)
+                    return st;
+                if (!bar)
+                    break;
+                it = bar + 1;
+            }
+            return TTF_OK;
+        }
         return measure(e, s, surface, length, b);
     case TTF_SEM_MEASURE:
         return measure(e, s, surface, length, b);

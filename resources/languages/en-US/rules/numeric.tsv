@@ -275,6 +275,7 @@ numeric_suffix	*	㎐	MEASURE:Hz
 # regnal: monarch and pope names (Henry II -> Henry the second). Provisional
 # project policy, pending independent review.
 roman_cue	en-US	chapter	cardinal
+roman_cue	en-US	bowl	cardinal
 roman_cue	en-US	book	cardinal
 roman_cue	en-US	part	cardinal
 # STORY XXIII story twenty three (2026-10-07).
@@ -579,3 +580,44 @@ numeric_suffix	*	sqm	MEASURE:square_m
 classifier_priority	en-US	en.day-range-first	100
 classifier_priority	en-US	en.day-range-second	100
 classifier_priority	en-US	en.count-per	100
+# English dev set v1 forms (2026-10-17): a pack reading over the same span wins
+classifier_priority	en-US	en.cents	20
+classifier_priority	en-US	en.price-per	20
+classifier_priority	en-US	en.money-adjective	20
+classifier_priority	en-US	en.nine-eleven	20
+classifier_priority	en-US	en.slash-date	20
+classifier_priority	en-US	en.label-pairs	20
+classifier_priority	en-US	en.card-ending	20
+classifier_priority	en-US	en.duration	20
+classifier_priority	en-US	en.lap-time	20
+classifier_priority	en-US	en.hm-duration	20
+classifier_priority	en-US	en.dotted-phone	20
+classifier_priority	en-US	en.inches	20
+classifier_priority	en-US	en.measure-adjective	20
+classifier_priority	en-US	en.short-year	20
+classifier_priority	en-US	en.weekday-range	20
+classifier_priority	en-US	en.weekday-abbr	20
+classifier_priority	en-US	en.date-dash	20
+classifier_priority	en-US	en.grade-dash	20
+classifier_priority	en-US	en.label-dash	20
+classifier_priority	en-US	en.address-abbr	20
+classifier_priority	en-US	en.power	20
+classifier_priority	en-US	en.half-the	20
+classifier_priority	en-US	en.caps-decimal	20
+classifier_priority	en-US	en.retirement-plan	20
+classifier_priority	en-US	en.grade-range	20
+classifier_priority	en-US	en.battery	20
+classifier_priority	en-US	en.bond	20
+classifier_priority	en-US	en.version	20
+classifier_priority	en-US	en.zip	20
+classifier_priority	en-US	en.unit-en	20
+classifier_priority	en-US	en.blood-pressure	20
+classifier_priority	en-US	en.math-fraction	20
+classifier_priority	en-US	en.abbr-period	20
+classifier_priority	en-US	en.street-ordinal	20
+classifier_priority	en-US	en.multi-price	20
+classifier_priority	en-US	en.service-number	20
+classifier_priority	en-US	en.batting-average	20
+classifier_priority	en-US	en.extension	20
+classifier_priority	en-US	en.b-to-b	20
+classifier_priority	en-US	en.relay	20

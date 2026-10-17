@@ -75,6 +75,36 @@
   held-out v1 96.0, owner set test 94.7, no engine errors in 14,927 real sentences; TTS-to-STT on
   the 371 v2 sentences: raw text 45.3% to TN 73.3% of sentences (spans 62.9% to 83.0%), no new TN
   problem. Human native review and VoxCPM2 listening remain, as for the other languages.
+- English and Japanese improvement (project-owner request, 2026-10-17):
+  - Dev sets v1: benchmark/datasets/en-ja-dev (en 964, ja 981 sentences; eight fresh subagents from
+    the open-benchmark spec, no repository or open-tn access, deduplicated against open-tn, reviewed).
+    open-tn is scoring-only and was not used for fixes.
+  - Dev spans: en 84.4 → 92.1 (95.7 with letter names), ja 72.3 → 75.8 (85.7 by reading).
+    open-tn v1.1 (scored once at the end): en 84.8 → 87.7, ja 76.5 → 77.0 (reading 82.9 → 83.3); the
+    other four languages unchanged.
+  - English (speech in an English request only): an amount or measure before a noun is singular
+    (a $25 deposit, the 200 m butterfly, 40-ft, a 3.2 lb package, the 65W charger); $0.99 ninety nine
+    cents; $2.99/mo a month; 3/$1; label numbers in pairs after Room, Form, Boeing, Error, port,
+    Route, course names and before a street (3015 Broadway thirty fifteen, 1600 sixteen hundred);
+    card ending in 4417; M/D dates after the twelfth or a date word (9/12, 10/27), fractions near a
+    comparison (7/16 is less than 1/2), 9/11; '08 oh eight, '58-'59; weekday and month abbreviations
+    (Thurs., Mon–Fri, Sept.); en dash ranges between dates, grades and labels (Dec. 24–Jan. 1, K–5,
+    A1–A12, K-12); race times (2:31:08, 1:18.442, 2h 40m); dotted phones, x4417, 988; units kt, inHg,
+    nmi, bbl, yds, ppm, ppb, ng/mL, sq ft, yrs, wks, bpm, 128/82 mmHg, 14 in of; superscripts (x²,
+    2¹⁰ to the tenth); fractions inside equations; √ the square root of; PM2.5; Super Bowl LIX; Python
+    3.12 three point twelve; 401(k), 529 plan, 1099-NEC, B2B, 4x100, AAA batteries, Agent 007, ½ the;
+    PO Box, Apt., RR; ZIP after a state; .312 batting three twelve; 4th St fourth Street.
+  - Japanese: superscripts (エックスのにじょう, にのじゅうじょう), fractions after の and in equations
+    (ぶんの), M/D before a date word (1/5出発), mixed numbers (2と3/4), 2丁目14-3 の, 受付番号15番 じゅうご
+    ばん (内線 stays digits), 12.50ドル drops the zero, £5.60 pence, 1ドル＝152円, μSv, km/L, 38万km,
+    86°F 華氏, B1階 ちかいっかい, 4分間隔, pt, #hashtag, Python 3.12 さんてんじゅうに, latin_phrase
+    HbA1c, 401k, M-1, 1on1, 2in1, 3x3, e-Tax, USB-C, 1080p, and 50 address words (dictionary only).
+  - Not changed (frozen contracts, form only): kanji prefixes 第・午前・午後・令和 stay kanji before a
+    kana number; 〒 alone reads ゆうびん; COVID-19 コビッドじゅうきゅう.
+  - Gates: owner sets dev en 96.0, ja 97.3 (test en 90.5, ja 92.7), others unchanged; ja-tn-eval and
+    JSUT unchanged; Chinese and Vietnamese unchanged; the English benchmark loses 9 sentences whose
+    references read plural or cardinal forms (a four kilometers extension, Boeing seven hundred
+    thirty seven, yds kept). Contract en_ja_dev_v97 (39).
 - Owner decisions on the v2 questions (2026-10-16):
   - Korean letters and digits: a number of two digits or more reads in Korean (WELCOME2026 웰컴
     이천이십육, IP68 아이피 육십팔, SAVE20 세이브 이십, iPhone15 아이폰 십오); long codes read digit by

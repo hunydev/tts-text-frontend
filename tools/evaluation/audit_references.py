@@ -14,6 +14,7 @@ import re
 import sys
 
 ACTIVE_JSONL = (
+    "en_ja_dev_v97",
     "owner_dec_v96",
     "v2_four_v95",
     "en_real_v94",

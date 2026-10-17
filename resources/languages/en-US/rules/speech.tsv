@@ -189,7 +189,8 @@ speech_symbol	en-US	Ψ	psi
 speech_symbol	en-US	Γ	gamma
 speech_symbol	en-US	Ξ	xi
 speech_symbol	en-US	∞	infinity
-speech_symbol	en-US	√	square root
+# √64 the square root of sixty four (en dev v1, 2026-10-17). Was: square root.
+speech_symbol	en-US	√	the square root of
 speech_symbol	en-US	§	section
 speech_symbol	en-US	№	number
 math_relation	en-US	≠	{L} is not equal to {R}
