@@ -2427,7 +2427,7 @@ static size_t dev_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
         }
     }
     /* Mon–Fri Monday through Friday, Thurs., Feb. 11 Thursday: a weekday abbreviation */
-    if (t[p] >= 'A' && t[p] <= 'Z') {
+    if (t[p] >= 'A' && t[p] <= 'Z' && !(p && t[p - 1] == '(')) {
         static const char *const abbr[] = {"Mon", "Monday", "Tue", "Tuesday", "Tues", "Tuesday", "Wed", "Wednesday",
                                            "Thu", "Thursday", "Thur", "Thursday", "Thurs", "Thursday", "Fri", "Friday",
                                            "Sat", "Saturday", "Sun", "Sunday"};
@@ -2688,8 +2688,9 @@ static size_t dev_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
             return say_span(in, out, a, v, "zip");
         }
     }
-    /* Tues. Tuesday, Sept. September: a weekday or month abbreviation with its period alone */
-    if (t[p] >= 'A' && t[p] <= 'Z' && !(p && ascii_letter_char(t[p - 1]))) {
+    /* Tues. Tuesday, Sept. September: a weekday or month abbreviation with its period alone; 5/8(Fri.)
+       keeps the date's weekday mark */
+    if (t[p] >= 'A' && t[p] <= 'Z' && !(p && (ascii_letter_char(t[p - 1]) || t[p - 1] == '('))) {
         static const char *const full[] = {"Mon", "Monday", "Tues", "Tuesday", "Tue", "Tuesday", "Wed", "Wednesday",
                                            "Thurs", "Thursday", "Thur", "Thursday", "Thu", "Thursday", "Fri", "Friday",
                                            "Sat", "Saturday", "Jan", "January", "Feb", "February", "Mar", "March",
