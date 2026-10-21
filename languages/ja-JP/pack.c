@@ -998,6 +998,24 @@ static size_t ja_dev_forms(const ttf_pack_input_t *in, ttf_semantic_t *s, size_t
         snprintf(s->value, sizeof(s->value), "ゆうびんばんごう");
         return finish(in, s, p + 3, TTF_SEM_ABBREVIATION, "ja.dev-postal-mark", "");
     }
+    /* 第2位 だいにい, 午後3時 ごごさんじ, 令和8年 れいわはちねん, 平成元年 へいせいがんねん: a kanji prefix
+       of a number reads in kana with it, so the span is one reading (project-owner decision 2026-10-21) */
+    {
+        static const char *const pre[] = {"第", "だい", "午前", "ごぜん", "午後", "ごご", "令和", "れいわ",
+                                          "平成", "へいせい", "昭和", "しょうわ", "大正", "たいしょう"};
+        size_t i;
+        for (i = 0; i < sizeof(pre) / sizeof(pre[0]); i += 2) {
+            size_t l = strlen(pre[i]);
+            if (ja_next_is(t, n, p, pre[i]) && p + l < n && digit(t[p + l])) {
+                snprintf(s->value, sizeof(s->value), "%s", pre[i + 1]);
+                return finish(in, s, p + l, TTF_SEM_ABBREVIATION, "ja.dev-prefix", "");
+            }
+            if (i >= 6 && ja_next_is(t, n, p, pre[i]) && ja_next_is(t, n, p + l, "元年")) {
+                snprintf(s->value, sizeof(s->value), "%sがんねん", pre[i + 1]);
+                return finish(in, s, p + l + 6, TTF_SEM_ABBREVIATION, "ja.dev-prefix", "");
+            }
+        }
+    }
     /* #Jリーグ ハッシュタグジェーリーグ: a hash before a word is a hashtag */
     if ((t[p] == '#' || ja_next_is(t, n, p, "\xef\xbc\x83")) && !(p && (alpha(t[p - 1]) || digit(t[p - 1])))) {
         size_t z = p + (t[p] == '#' ? 1 : 3);

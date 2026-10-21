@@ -2215,15 +2215,14 @@ static size_t dev_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
                     if (k == 0 || !ascii_letter_char(t[k - 1]))
                         if (word_at(t, n, k, w2, sizeof(w2)) &&
                             in_list(w2, "less|greater|than|equals|equal|plus|minus|times|fraction|fractions|"
-                                        "simplify|show|compare|sum|half|halves|thirds|quarters|of|cup|cups|"
-                                        "teaspoon|tablespoon|inch|inches|mile|miles|pound|ratio|odds|out"))
+                                        "simplify|compare|sum|halves|thirds|quarters|ratio|odds"))
                             math = 1;
                 for (k = p; k < r; ++k)
                     ;
                 if (m == 9 && d == 11 && !math)
                     return say_span(in, out, r, "w:nine eleven", "nine-eleven");
                 /* Show that 7/16 is less than 1/2: a fraction where a date could be read */
-                if (math && m < d && d <= 31) {
+                if (math && m < d && d <= 16) {
                     (void)snprintf(out->value, sizeof(out->value), "%u", m);
                     (void)snprintf(out->secondary, sizeof(out->secondary), "%u", d);
                     (void)snprintf(out->rule, sizeof(out->rule), "en.math-fraction");
@@ -2239,6 +2238,18 @@ static size_t dev_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
                      (!(m < d && (d == 2 || d == 3 || d == 4 || d == 8 || d == 16)) &&
                       word_before(t, p, "by|before|after|from|starting|is|was|for")))) {
                     (void)snprintf(v, sizeof(v), "w:%s|o:%u", dev_month[m - 1], d);
+                    /* 6/21-24 June twenty first to twenty fourth */
+                    if (r + 1 < n && t[r] == '-' && ascii_digit_char(t[r + 1])) {
+                        size_t r2;
+                        unsigned d2 = (unsigned)atoi(t + r + 1);
+                        for (r2 = r + 1; r2 < n && ascii_digit_char(t[r2]); ++r2)
+                            ;
+                        if (r2 - r - 1 <= 2 && d2 > d && d2 <= 31 && !(r2 < n && (ascii_digit_char(t[r2]) || t[r2] == '/'))) {
+                            size_t l = strlen(v);
+                            (void)snprintf(v + l, sizeof(v) - l, "|w:to|o:%u", d2);
+                            r = r2;
+                        }
+                    }
                     return say_span(in, out, r, v, "slash-date");
                 }
             }
@@ -2353,7 +2364,8 @@ static size_t dev_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
         /* 40-ft forty foot: a hyphenated measure is an adjective */
         if (a + 3 < n && t[a] == '-' && word_at(t, n, a + 1, key, sizeof(key)) &&
             in_list(key, "ft|foot|in|inch|lb|pound|mi|mile|oz|ounce|gal|gallon|yd|yard|km|kilometer|cm|mm|kg|m|"
-                         "meter|metre|ton|watt|volt|hour|day|minute|year|month|week")) {
+                         "meter|metre|ton|watt|volt|hour|day|minute|year|month|week") &&
+            !(a + 2 + strlen(key) < n && t[a + 1 + strlen(key)] == '-' && ascii_digit_char(t[a + 2 + strlen(key)]))) {
             const char *sing = in_list(key, "ft|foot") ? "foot" : in_list(key, "in|inch") ? "inch"
                                : in_list(key, "lb|pound") ? "pound" : in_list(key, "mi|mile") ? "mile"
                                : in_list(key, "oz|ounce") ? "ounce" : in_list(key, "gal|gallon") ? "gallon"
@@ -2546,8 +2558,8 @@ static size_t dev_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     if ((unsigned char)t[p] == 0xC2 && p + 1 < n && (unsigned char)t[p + 1] == 0xBD &&
         (p + 6 < n && (!memcmp(t + p + 2, " the ", 5) || !memcmp(t + p + 2, " a ", 3))))
         return say_span(in, out, p + 2, "w:half", "half-the");
-    /* PM2.5 p m two point five: capitals before a decimal number */
-    if (t[p] >= 'A' && t[p] <= 'Z' && !(p && ascii_letter_char(t[p - 1]))) {
+    /* PM2.5 p m two point five: capitals before a decimal number (V1.4 keeps its version word) */
+    if (t[p] >= 'A' && t[p] <= 'Z' && !(p && ascii_letter_char(t[p - 1])) && !(t[p] == 'V' && p + 1 < n && ascii_digit_char(t[p + 1]))) {
         size_t z = p, a;
         while (z < n && t[z] >= 'A' && t[z] <= 'Z' && z - p < 3)
             ++z;
@@ -2576,7 +2588,7 @@ static size_t dev_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
         unsigned g = (unsigned)atoi(t + p + 2);
         for (r = p + 2; r < n && ascii_digit_char(t[r]); ++r)
             ;
-        if (g >= 1 && g <= 12 && !(r < n && (ascii_letter_char(t[r]) || ascii_digit_char(t[r])))) {
+        if ((g == 5 || g == 6 || g == 8 || g == 12) && !(r < n && (ascii_letter_char(t[r]) || ascii_digit_char(t[r])))) {
             (void)snprintf(v, sizeof(v), "w:K through|c:%u", g);
             return say_span(in, out, r, v, "grade-range");
         }
@@ -2592,7 +2604,7 @@ static size_t dev_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     if (ascii_digit_char(t[p]) && !(p && (ascii_digit_char(t[p - 1]) || t[p - 1] == '.')) &&
         word_before(t, p, "python|java|node|ios|android|macos|windows|ubuntu|firefox|chrome|version|php|ruby|perl|"
                           "kotlin|swift|excel|photoshop|unity|blender|django|rails|scratch|xcode|debian|fedora|"
-                          "safari|edge|wordpress|bluetooth|usb|hdmi|ver|release|build|v")) {
+                          "safari|edge|wordpress|bluetooth|usb|hdmi|release|build")) {
         size_t a, parts = 0;
         char *o = v;
         v[0] = 0;
@@ -2699,8 +2711,11 @@ static size_t dev_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
         for (k = 0; k < sizeof(full) / sizeof(full[0]); k += 2) {
             size_t l = strlen(full[k]);
             if (!strncmp(t + p, full[k], l) && p + l < n && t[p + l] == '.' &&
-                !(p + l + 2 < n && t[p + l + 1] == ' ' && ascii_digit_char(t[p + l + 2]))) {
-                (void)snprintf(v, sizeof(v), "w:%s", full[k + 1]);
+                !(p + l + 2 < n && t[p + l + 1] == ' ' && ascii_digit_char(t[p + l + 2])) &&
+                /* Mar.19, 2009: a month before its day; weekdays stay before a number */
+                !(p + l + 1 < n && ascii_digit_char(t[p + l + 1]) && k < 18)) {
+                (void)snprintf(v, sizeof(v), "w:%s%s", full[k + 1],
+                               p + l + 1 < n && ascii_digit_char(t[p + l + 1]) ? " " : "");
                 return say_span(in, out, p + l + 1 - (p + l + 1 == n || t[p + l + 1] == '\n' ||
                                                        (p + l + 2 < n && t[p + l + 1] == ' ' && t[p + l + 2] >= 'A' &&
                                                         t[p + l + 2] <= 'Z')),
@@ -2784,7 +2799,8 @@ static size_t dev_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     }
     /* B2B B to B, 4x100 four by one hundred */
     if (p + 3 <= n && t[p] >= 'A' && t[p] <= 'Z' && t[p + 1] == '2' && p + 2 < n && t[p + 2] >= 'A' && t[p + 2] <= 'Z' &&
-        !(p && ascii_letter_char(t[p - 1])) && !(p + 3 < n && (ascii_letter_char(t[p + 3]) || ascii_digit_char(t[p + 3])))) {
+        !(p && ascii_letter_char(t[p - 1])) && !(p + 3 < n && (ascii_letter_char(t[p + 3]) || ascii_digit_char(t[p + 3]))) &&
+        strstr("|B2B|B2C|C2B|C2C|P2P|D2D|B2G|G2B|G2C|", (char[]){'|', t[p], '2', t[p + 2], '|', 0})) {
         (void)snprintf(v, sizeof(v), "s:%c|w:to|s:%c", t[p], t[p + 2]);
         return say_span(in, out, p + 3, v, "b-to-b");
     }

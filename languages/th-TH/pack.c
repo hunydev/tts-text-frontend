@@ -1530,6 +1530,27 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             return TTF_EINVAL; /* the Korean number systems */
         return ttf_semantic_control(e, s, surface, length, b);
     }
+    /* 10.8 / 1.2 = 9 สิบจุดแปดหารหนึ่งจุดสองเท่ากับเก้า: the shared maths expression (2026-10-21) */
+    if (s->type == TTF_SEM_SYMBOL && !strcmp(s->unit, "@expression")) {
+        char ex[2 * TTF_IR_VALUE_SIZE];
+        size_t i, o = 0;
+        ttf_status_t st;
+        /* the shared grammar writes / and *; the Thai table reads ÷ and × */
+        size_t keep = b->length;
+        for (i = 0; v[i] && o + 3 < sizeof(ex); ++i) {
+            if (v[i] == '/')
+                memcpy(ex + o, "÷", 2), o += 2;
+            else if (v[i] == '*')
+                memcpy(ex + o, "×", 2), o += 2;
+            else
+                ex[o++] = v[i];
+        }
+        ex[o] = 0;
+        st = math_reading(e, b, ex);
+        if (st == TTF_OK)
+            return st;
+        b->length = keep;
+    }
     if (s->layer == TTF_LAYER_USER && strncmp(s->unit, "@th-", 4)) {
         int handled = 1;
         ttf_status_t st = control_object(e, s, b, &handled);

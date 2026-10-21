@@ -75,6 +75,16 @@
   held-out v1 96.0, owner set test 94.7, no engine errors in 14,927 real sentences; TTS-to-STT on
   the 371 v2 sentences: raw text 45.3% to TN 73.3% of sentences (spans 62.9% to 83.0%), no new TN
   problem. Human native review and VoxCPM2 listening remain, as for the other languages.
+- Real-sentence check and the Japanese prefix decision (2026-10-21):
+  - Real sentences after the English and Japanese work: English 13,105 and Thai 14,927 sentences, no
+    errors, sentences with digits left unchanged (0.19%, 0.62%); speed within run-to-run noise.
+  - Fixes from that check: H2O and G2A keep their digit (B2B, B2C, P2P, D2D only), 5-in-1, Mar.19,
+    6/21-24 June twenty first to twenty fourth, K-2SO, V1.4 version; a comparison word list without
+    show, of or units; the Thai pack reads the shared maths expression (10.8 / 1.2 = 9).
+  - Project-owner decision: a Japanese kanji prefix of a number reads in kana with it (第2位 だいにい,
+    午後3時 ごごさんじ, 令和8年 れいわはちねん, 平成元年 へいせいがんねん). Frozen contracts changed with
+    Was notes: ja_gaps78_v49, ja_pack_v36 (2), ja_range_mark_v44 (2), ja_rest_v50, user_eval2_v82.
+  - Gates: owner sets en dev 96.3, others unchanged; ja-tn-eval and JSUT unchanged.
 - English and Japanese improvement (project-owner request, 2026-10-17):
   - Dev sets v1: benchmark/datasets/en-ja-dev (en 964, ja 981 sentences; eight fresh subagents from
     the open-benchmark spec, no repository or open-tn access, deduplicated against open-tn, reviewed).

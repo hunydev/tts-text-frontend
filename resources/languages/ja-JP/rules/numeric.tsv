@@ -273,3 +273,4 @@ latin_phrase	ja-JP	720p	ななひゃくにじゅうピー
 latin_phrase	ja-JP	2160p	にせんひゃくろくじゅうピー
 classifier_priority	ja-JP	ja.dev-postal-mark	100
 classifier_priority	ja-JP	ja.dev-version	100
+classifier_priority	ja-JP	ja.dev-prefix	100
