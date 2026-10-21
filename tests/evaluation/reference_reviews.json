@@ -2670,6 +2670,18 @@
       },
       "category_overrides": {},
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/en_listen_v99.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Synthetic cases authored after the TTS-to-STT listening check; new sentences, not copied from the owner sets, the dev sets or open-tn",
+        "reason": "Project-owner request 2026-10-21: listening check of the other languages"
+      },
+      "category_overrides": {},
+      "case_overrides": {}
     }
   ],
   "excluded": [

@@ -75,6 +75,21 @@
   held-out v1 96.0, owner set test 94.7, no engine errors in 14,927 real sentences; TTS-to-STT on
   the 371 v2 sentences: raw text 45.3% to TN 73.3% of sentences (spans 62.9% to 83.0%), no new TN
   problem. Human native review and VoxCPM2 listening remain, as for the other languages.
+- Listening check and the open-tn comparison (2026-10-22):
+  - TTS-to-STT on 250 sentences each of the owner set dev split: Korean 55.2% of sentences raw to
+    78.8% after TN, English 83.2% to 94.8% (92.4% before the fixes below), Japanese 71.2% to 82.4%.
+    The Korean and Japanese sentences worse after TN are STT digits or mishearing.
+  - English fixes from it: month/day ranges (09/01 – 09/30, 03/15-04/14), a leading-zero month
+    (08/04), ½" half inch, °F and °C without a number, 2×4s two by fours and 4 × 8 ft dimensions,
+    train number 171 one seventy one, C-3PO and B-1B, the extension of an underscored file name.
+  - m/d/yy reads the year in full (5/20/16 twenty sixteen; 00-30 the 2000s, 31-99 the 1900s): the
+    owner set user-tn-en-US reads it so in all four cases. Frozen contract en_wetext_gaps_v26 (2)
+    changed with Was notes; the English benchmark loses one sentence whose reference keeps thirteen.
+  - open-tn v1.1 (scoring only): ours ko 93.4, en 88.1, ja 78.7 (83.3 by reading), zh 96.1, vi 91.4,
+    th 90.7; WeTextProcessing en 69.4, ja 74.3, zh 80.6; NeMo ko 53.1, en 75.4, ja 34.7, zh 63.9,
+    vi 65.8. See docs/tn-comparison.ko.md.
+  - Gates: owner sets en dev 780 to 789 and test 315 to 317, others unchanged; English real sentences
+    13,105 with no errors. Contract en_listen_v99 (13).
 - Vietnamese and Thai improvement from the dev sets v1 (2026-10-21):
   - Dev sets v1 (benchmark/datasets/vi-th-dev): vi 88.4 to 90.8, th 91.4 to 94.3. open-tn v1.1,
     scored once at the end and never used for fixes: vi 90.9 to 91.4, th 89.8 to 90.7.

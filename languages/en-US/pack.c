@@ -547,10 +547,12 @@ static ttf_status_t date(const ttf_engine_t *e, const ttf_semantic_t *s, ttf_buf
         if (sscanf(s->value, "%u-%u-%u%n", &year, &month, &day, &consumed) != 3)
             return TTF_EINVAL;
     } else if (!strcmp(s->unit, "short-year")) {
-        /* 6/17/13: a two-digit year as written (thirteen, oh eight, oh oh). */
+        /* 5/20/16 May twentieth twenty sixteen: a two-digit year reads in full, 00-30 in the
+           2000s and 31-99 in the 1900s (the owner set user-tn-en-US, 2026-10-22; Was: as
+           written, sixteen, oh eight, oh oh). */
         if (sscanf(s->value, "%u-%u-%u%n", &year, &month, &day, &consumed) != 3 || year > 99)
             return TTF_EINVAL;
-        short_year = 1;
+        year += year <= 30 ? 2000 : 1900;
     } else
         return TTF_EINVAL;
     if (s->value[consumed] || (has_year && !short_year && (!year || year > 9999)) ||
@@ -2104,6 +2106,139 @@ static size_t dev_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     if (p >= n || !english_window(in, p, p + 1) || !in->engine->default_language ||
         strcmp(in->engine->default_language, EN) || in->engine->frontend_options.output_mode != TTF_OUTPUT_SPEECH)
         return 0;
+    /* ---- listening check forms (TTS to STT on the owner set dev split, 2026-10-22) ---- */
+    /* °F = °C × 9/5 + 32 degrees Fahrenheit equals degrees Celsius: a degree sign without a number */
+    if (p + 2 < n && (unsigned char)t[p] == 0xC2 && (unsigned char)t[p + 1] == 0xB0 && (t[p + 2] == 'F' || t[p + 2] == 'C') &&
+        !(p + 3 < n && ascii_letter_char(t[p + 3]))) {
+        size_t z = p;
+        while (z && t[z - 1] == ' ')
+            --z;
+        if (!(z && ascii_digit_char(t[z - 1])))
+            return say_span(in, out, p + 3, t[p + 2] == 'F' ? "w:degrees Fahrenheit" : "w:degrees Celsius", "degree-name");
+    }
+    /* the ½" shank half inch: a fraction glyph and an inch mark */
+    if (p + 2 < n && (unsigned char)t[p] == 0xC2 &&
+        ((unsigned char)t[p + 1] == 0xBD || (unsigned char)t[p + 1] == 0xBC || (unsigned char)t[p + 1] == 0xBE) &&
+        (t[p + 2] == '"' || (p + 4 < n && !memcmp(t + p + 2, "\xe2\x80\xb3", 3))) && !(p && ascii_digit_char(t[p - 1])))
+        return say_span(in, out, p + (t[p + 2] == '"' ? 3 : 5),
+                        (unsigned char)t[p + 1] == 0xBD ? "w:half inch"
+                        : (unsigned char)t[p + 1] == 0xBC ? "w:quarter inch" : "w:three quarter inch",
+                        "fraction-inch");
+    /* C-3PO see three pee oh: a letter, a hyphen, a digit and capitals */
+    if (t[p] >= 'A' && t[p] <= 'Z' && p + 3 < n && t[p + 1] == '-' && ascii_digit_char(t[p + 2]) &&
+        t[p + 3] >= 'A' && t[p + 3] <= 'Z' && !(p && (ascii_letter_char(t[p - 1]) || ascii_digit_char(t[p - 1])))) {
+        size_t z = p + 3;
+        while (z < n && t[z] >= 'A' && t[z] <= 'Z' && z - p < 7)
+            ++z;
+        if (z - p - 3 <= 3 && !(z < n && (ascii_letter_char(t[z]) || ascii_digit_char(t[z]) || t[z] == '-'))) {
+            (void)snprintf(v, sizeof(v), "s:%c|c:%c|s:%.*s", t[p], t[p + 2], (int)(z - p - 3), t + p + 3);
+            return say_span(in, out, z, v, "letter-digit-letters");
+        }
+    }
+    /* 2×4s two by fours, a 4 × 8 ft sheet four by eight feet: × between dimensions */
+    if (ascii_digit_char(t[p]) && !(p && (ascii_digit_char(t[p - 1]) || ascii_letter_char(t[p - 1]) || t[p - 1] == '.'))) {
+        size_t a = p, x, b, z, sp1, sp2;
+        while (a < n && ascii_digit_char(t[a]) && a - p < 3)
+            ++a;
+        for (x = a; x < n && t[x] == ' '; ++x)
+            ;
+        sp1 = x - a;
+        z = x + (x < n && (t[x] == 'x' || t[x] == 'X') ? 1 : x + 1 < n && !memcmp(t + x, "\xc3\x97", 2) ? 2 : 0);
+        for (b = z; z > x && b < n && t[b] == ' '; ++b)
+            ;
+        sp2 = b - z;
+        if (z > x && a - p <= 2 && sp1 == sp2 && sp1 <= 1 && b < n && ascii_digit_char(t[b])) {
+            size_t c = b, u, k2;
+            int dims = 0, eq = 0;
+            while (c < n && ascii_digit_char(t[c]) && c - b < 3)
+                ++c;
+            for (k2 = c; k2 < n && k2 < c + 24 && t[k2] != '\n'; ++k2)
+                if (t[k2] == '=')
+                    eq = 1;
+            for (k2 = p > 24 ? p - 24 : 0; k2 < p; ++k2)
+                if (t[k2] == '=')
+                    eq = 1;
+            if (c - b <= 2 && !(c < n && ascii_digit_char(t[c]))) {
+                if (c < n && t[c] == 's' && !(c + 1 < n && ascii_letter_char(t[c + 1])))
+                    dims = 1; /* 2×4s */
+                else if (c < n && (t[c] == '\'' || t[c] == '"' || t[c] == 'x' || !memcmp(t + c, "\xc3\x97", 2)))
+                    dims = 1; /* 4×8', 4×8×10 */
+                else {
+                    for (u = c; u < n && t[u] == ' ' && u - c < 2; ++u)
+                        ;
+                    if (word_at(t, n, u, key, sizeof(key)) &&
+                        in_list(key, "ft|feet|foot|in|inch|inches|cm|mm|m|meter|meters|yd|yards|sheet|sheets|rug|"
+                                     "board|boards|tarp|frame|print|poster|photo|grid|room|tile|tiles"))
+                        dims = 1;
+                }
+            }
+            if (dims && !eq) {
+                static const char *const plural[] = {"", "ones", "twos", "threes", "fours", "fives", "sixes", "sevens",
+                                                     "eights", "nines", "tens", "elevens", "twelves"};
+                unsigned bv = (unsigned)atoi(t + b);
+                size_t end = c, l;
+                (void)snprintf(v, sizeof(v), "c:%.*s|w:by|c:%.*s", (int)(a - p), t + p, (int)(c - b), t + b);
+                if (c < n && t[c] == 's') {
+                    if (bv < 1 || bv > 12)
+                        return 0;
+                    (void)snprintf(v, sizeof(v), "c:%.*s|w:by|w:%s", (int)(a - p), t + p, plural[bv]);
+                    end = c + 1;
+                } else {
+                    const char *unit = NULL;
+                    size_t ue = c;
+                    if (c < n && t[c] == '\'')
+                        unit = "feet", ue = c + 1;
+                    else if (c < n && t[c] == '"')
+                        unit = "inches", ue = c + 1;
+                    else {
+                        for (u = c; u < n && t[u] == ' ' && u - c < 2; ++u)
+                            ;
+                        l = word_at(t, n, u, key, sizeof(key));
+                        if (l && !(u + l < n && t[u + l] == '.' && u + l + 1 < n && ascii_letter_char(t[u + l + 1]))) {
+                            unit = in_list(key, "ft|feet") ? "feet" : in_list(key, "in|inch|inches") ? "inches"
+                                   : !strcmp(key, "cm") ? "centimeters" : !strcmp(key, "mm") ? "millimeters"
+                                   : !strcmp(key, "m") ? "meters" : in_list(key, "yd|yards") ? "yards" : NULL;
+                            /* 4 x 8 in the box: in is a preposition before an article */
+                            if (unit && !strcmp(key, "in") && u + 3 < n && t[u + 2] == ' ')
+                                unit = NULL;
+                            ue = u + l;
+                        }
+                    }
+                    /* a 4 x 8 ft sheet four by eight foot sheet: singular before a noun */
+                    if (unit && ue + 2 < n && t[ue] == ' ' && t[ue + 1] >= 'a' && t[ue + 1] <= 'z' &&
+                        word_at(t, n, ue + 1, key, sizeof(key)) &&
+                        !in_list(key, "of|for|in|on|at|to|and|or|is|was|are|were|from|with|by|long|high|wide|deep|tall|"
+                                      "each|apart|a|an|the|that|which|overall|total|altogether|across|thick|"
+                                      "square|max|maximum|minimum|min|so|but|if|when|then|plus|minus|approx|approximately|about|ca"))
+                        unit = !strcmp(unit, "feet") ? "foot" : !strcmp(unit, "inches") ? "inch"
+                               : !strcmp(unit, "centimeters") ? "centimeter" : !strcmp(unit, "millimeters") ? "millimeter"
+                               : !strcmp(unit, "meters") ? "meter" : "yard";
+                    if (unit) {
+                        size_t vl = strlen(v);
+                        (void)snprintf(v + vl, sizeof(v) - vl, "|w:%s", unit);
+                        end = ue;
+                    }
+                }
+                return say_span(in, out, end, v, "dimension-by");
+            }
+        }
+    }
+    /* report_final.pdf report underscore final dot p d f: the extension of a file name whose
+       parts are read */
+    if (p && t[p - 1] == '_' && ascii_letter_char(t[p])) {
+        size_t z = p, x;
+        while (z < n && ascii_letter_char(t[z]) && z - p < 20)
+            ++z;
+        if (z + 2 < n && t[z] == '.' && t[z + 1] >= 'a' && t[z + 1] <= 'z') {
+            for (x = z + 1; x < n && ((t[x] >= 'a' && t[x] <= 'z') || ascii_digit_char(t[x])) && x - z <= 5; ++x)
+                ;
+            if (x - z - 1 >= 2 && x - z - 1 <= 4 && !(x < n && (ascii_letter_char(t[x]) || ascii_digit_char(t[x]) ||
+                                                                (t[x] == '.' && x + 1 < n && ascii_letter_char(t[x + 1]))))) {
+                (void)snprintf(v, sizeof(v), "w:%.*s|w:dot|s:%.*s", (int)(z - p), t + p, (int)(x - z - 1), t + z + 1);
+                return say_span(in, out, x, v, "file-extension");
+            }
+        }
+    }
     /* $0.99 ninety nine cents; $2.99/mo two dollars and ninety nine cents a month; a $25 deposit
        twenty five dollar; a $3.2B transit budget three point two billion dollar */
     if ((t[p] == '$') && p + 1 < n && ascii_digit_char(t[p + 1]) && !(p && ascii_letter_char(t[p - 1]))) {
@@ -2208,8 +2343,42 @@ static size_t dev_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
                 ;
             if (r - a - 1 <= 2 && !(r < n && (ascii_digit_char(t[r]) || t[r] == '/' || ascii_letter_char(t[r]) ||
                                                (t[r] == '.' && r + 1 < n && ascii_digit_char(t[r + 1]))))) {
-                int math = 0;
+                int math = 0, date_range = 0;
+                unsigned range_m = 0, range_d = 0;
+                size_t range_end = 0;
                 char w2[16];
+                /* 9/1 – 9/30, 09/01-09/30: a second month and day after a dash or to (listening
+                   check, 2026-10-22) */
+                {
+                    size_t z = r, y;
+                    while (z < n && t[z] == ' ')
+                        ++z;
+                    if (z + 2 < n && !memcmp(t + z, "\xe2\x80\x93", 3))
+                        z += 3;
+                    else if (z < n && t[z] == '-')
+                        ++z;
+                    else if (z + 2 < n && !memcmp(t + z, "to ", 3))
+                        z += 2;
+                    else
+                        z = r;
+                    for (y = z; z > r && y < n && t[y] == ' '; ++y)
+                        ;
+                    if (z > r && y < n && ascii_digit_char(t[y])) {
+                        unsigned m2 = (unsigned)atoi(t + y), d2;
+                        while (y < n && ascii_digit_char(t[y]))
+                            ++y;
+                        if (y + 1 < n && t[y] == '/' && ascii_digit_char(t[y + 1])) {
+                            size_t y2 = y + 1;
+                            d2 = (unsigned)atoi(t + y + 1);
+                            while (y2 < n && ascii_digit_char(t[y2]))
+                                ++y2;
+                            date_range = m2 >= 1 && m2 <= 12 && d2 >= 1 && d2 <= 31 && y2 - y - 1 <= 2 &&
+                                         !(y2 < n && (ascii_digit_char(t[y2]) || t[y2] == '/')) &&
+                                         (m2 > m || (m2 == m && d2 > d)) && (t[p] == '0' || d > 12 || d2 > 12);
+                            range_m = m2, range_d = d2, range_end = y2;
+                        }
+                    }
+                }
                 /* a comparison or arithmetic word nearby keeps the fraction */
                 for (k = p > 40 ? p - 40 : 0; k < r + 30 && k < n; ++k)
                     if (k == 0 || !ascii_letter_char(t[k - 1]))
@@ -2233,11 +2402,17 @@ static size_t dev_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
                     return tokens_until(in, r);
                 }
                 if (m >= 1 && m <= 12 && d >= 1 && d <= 31 && !math &&
-                    (d > 12 || word_before(t, p, "birthday|on|until|through|since|due|deadline|expires|ends|opens|"
+                    (d > 12 || date_range || (t[p] == '0' && a - p == 2) ||
+                     word_before(t, p, "birthday|on|until|through|since|due|deadline|expires|ends|opens|"
                                                  "closes|thru") ||
                      (!(m < d && (d == 2 || d == 3 || d == 4 || d == 8 || d == 16)) &&
                       word_before(t, p, "by|before|after|from|starting|is|was|for")))) {
                     (void)snprintf(v, sizeof(v), "w:%s|o:%u", dev_month[m - 1], d);
+                    if (date_range) {
+                        size_t l = strlen(v);
+                        (void)snprintf(v + l, sizeof(v) - l, "|w:to|w:%s|o:%u", dev_month[range_m - 1], range_d);
+                        return say_span(in, out, range_end, v, "slash-date");
+                    }
                     /* 6/21-24 June twenty first to twenty fourth */
                     if (r + 1 < n && t[r] == '-' && ascii_digit_char(t[r + 1])) {
                         size_t r2;
@@ -2256,7 +2431,8 @@ static size_t dev_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
         }
         /* Room 214 two fourteen, Form 1040 ten forty, Boeing 737, Error 404 four oh four, port 8080,
            Biology 101 one oh one, PO Box 3120 thirty one twenty: a label number in pairs */
-        if ((a - p == 3 || a - p == 4) && t[p] != '0' && !(a < n && (ascii_digit_char(t[a]) || t[a] == ',' ||
+        if ((a - p == 3 || a - p == 4) && t[p] != '0' &&
+            !(a < n && (ascii_digit_char(t[a]) || (t[a] == ',' && a + 1 < n && ascii_digit_char(t[a + 1])) ||
                                                                     (t[a] == '.' && a + 1 < n && ascii_digit_char(t[a + 1])) ||
                                                                     t[a] == '/' || (t[a] == ':' && !(a + 1 < n && t[a + 1] == ' ')) || t[a] == '%'))) {
             int label = word_before(t, p, "room|suite|ste|flight|route|bus|highway|interstate|form|boeing|airbus|"
@@ -2266,6 +2442,14 @@ static size_t dev_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
                                            "spanish|french|calculus|statistics|sociology|philosophy|algebra|art|music|"
                                            "accounting|marketing|writing|composition|government|geography|anatomy") &&
                          a - p == 3 && t[p] <= '4');
+            /* Your train is number 171 one seventy one (listening check, 2026-10-22) */
+            if (!label && word_before(t, p, "number")) {
+                size_t z = p > 28 ? p - 28 : 0, y;
+                for (y = z; !label && y < p; ++y)
+                    if (y == 0 || !ascii_letter_char(t[y - 1]))
+                        if (word_at(t, n, y, key, sizeof(key)) && in_list(key, "train|flight|bus|route|tram|ferry"))
+                            label = 1;
+            }
             /* 3015 Broadway, 350 Fifth Avenue: a house number before a street */
             if (!label && a - p == 4 && a + 2 < n && t[a] == ' ' && t[a + 1] >= 'A' && t[a + 1] <= 'Z') {
                 size_t z = a + 1, words = 0;

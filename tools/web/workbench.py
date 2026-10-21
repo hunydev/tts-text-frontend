@@ -36,6 +36,7 @@ CORPORA = {
     "vi-pack4-v77": ("베트남어 팩 4단계", "vi_pack4_v77.jsonl"),
     "vi-pack5-v78": ("베트남어 팩 5단계", "vi_pack5_v78.jsonl"),
     "vi-pack6-v79": ("베트남어 팩 6단계", "vi_pack6_v79.jsonl"),
+    "en-listen-v99": ("영어 청취 비교에서 고친 것 (날짜 범위, 치수 by, °F, ½\", 파일 확장자, 두 자리 연도)", "en_listen_v99.jsonl"),
     "vi-th-dev-v98": ("베트남어·태국어 개발셋 v1 (번지, 날짜, 핫라인, 통화, 단위, 번호판, 약어+숫자)", "vi_th_dev_v98.jsonl"),
     "en-ja-dev-v97": ("영어·일본어 개발셋 v1 (금액, 단위, 라벨 번호, 날짜, 코드, 일본어 단위·분수·주소)", "en_ja_dev_v97.jsonl"),
     "owner-dec-v96": ("소유자 결정: 영문+숫자 라벨, kWh, 주소 단어 사전", "owner_dec_v96.jsonl"),

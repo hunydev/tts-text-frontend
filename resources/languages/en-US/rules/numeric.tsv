@@ -621,3 +621,9 @@ classifier_priority	en-US	en.batting-average	20
 classifier_priority	en-US	en.extension	20
 classifier_priority	en-US	en.b-to-b	20
 classifier_priority	en-US	en.relay	20
+# listening check forms (2026-10-22)
+classifier_priority	en-US	en.dimension-by	100
+classifier_priority	en-US	en.degree-name	100
+classifier_priority	en-US	en.fraction-inch	100
+classifier_priority	en-US	en.letter-digit-letters	100
+classifier_priority	en-US	en.file-extension	100
