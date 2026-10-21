@@ -1,0 +1,965 @@
+vi-dA-001	vi-VN	news	cardinal	basic	Vụ cháy rừng đã thiêu rụi khoảng {37|ba mươi bảy} héc-ta rừng phòng hộ.	
+vi-dA-002	vi-VN	notice	cardinal	context	Hồ sơ gồm {02|hai} bản sao giấy khai sinh có chứng thực.	số 0 đầu trong văn bản hành chính
+vi-dA-003	vi-VN	message	cardinal	basic	Mình đến muộn khoảng {15|mười lăm} phút, mọi người cứ ăn trước nhé.	
+vi-dA-004	vi-VN	shopping	cardinal	basic	Áo khoác này đang giảm giá chỉ còn {289.000|hai trăm tám mươi chín nghìn/hai trăm tám mươi chín ngàn} đồng.	
+vi-dA-005	vi-VN	health	cardinal	basic	Mỗi ngày nên uống ít nhất {8|tám} cốc nước lọc.	
+vi-dA-006	vi-VN	tech	cardinal	basic	Ứng dụng đã vượt mốc {3.400.000|ba triệu bốn trăm nghìn/ba triệu bốn trăm ngàn} lượt tải xuống.	
+vi-dA-007	vi-VN	finance	cardinal	hard	Công ty báo lãi ròng {1.205|một nghìn hai trăm linh năm/một ngàn hai trăm linh năm/một nghìn hai trăm lẻ năm/một ngàn hai trăm lẻ năm} tỷ đồng trong năm nay.	
+vi-dA-008	vi-VN	sports	cardinal	basic	Sân vận động mới có sức chứa khoảng {40.000|bốn mươi nghìn/bốn mươi ngàn} khán giả.	
+vi-dA-009	vi-VN	weather	cardinal	basic	Cơn bão đã làm {126|một trăm hai mươi sáu} ngôi nhà bị tốc mái.	
+vi-dA-010	vi-VN	travel	cardinal	basic	Từ Hà Nội lên Sa Pa khoảng {320|ba trăm hai mươi} cây số.	
+vi-dA-011	vi-VN	education	cardinal	basic	Năm nay trường tuyển {480|bốn trăm tám mươi} chỉ tiêu ngành sư phạm.	
+vi-dA-012	vi-VN	admin	cardinal	context	Thời hạn giải quyết hồ sơ là {05|năm} ngày làm việc kể từ khi nhận đủ giấy tờ.	số 0 đầu
+vi-dA-013	vi-VN	food	cardinal	basic	Phở bò ở quán này giá {45.000|bốn mươi lăm nghìn/bốn mươi lăm ngàn} đồng một tô.	
+vi-dA-014	vi-VN	traffic	cardinal	basic	Trong dịp lễ, cảnh sát đã xử lý {3.718|ba nghìn bảy trăm mười tám/ba ngàn bảy trăm mười tám} trường hợp vi phạm nồng độ cồn.	
+vi-dA-015	vi-VN	entertainment	cardinal	basic	Bộ phim thu hút hơn {2.000.000|hai triệu} lượt xem chỉ sau một tuần.	
+vi-dA-016	vi-VN	news	cardinal	hard	Thành phố đã cấp {2.050|hai nghìn không trăm năm mươi/hai ngàn không trăm năm mươi/hai nghìn năm mươi/hai ngàn năm mươi} sổ đỏ cho người dân trong quý này.	hàng trăm bằng 0
+vi-dA-017	vi-VN	message	cardinal	basic	Tớ chuyển khoản cho cậu {350.000|ba trăm năm mươi nghìn/ba trăm năm mươi ngàn} đồng rồi nhé.	
+vi-dA-018	vi-VN	shopping	cardinal	basic	Mua từ {3|ba} sản phẩm trở lên được miễn phí giao hàng.	
+vi-dA-020	vi-VN	tech	cardinal	basic	Trung tâm dữ liệu đang vận hành {10.240|mười nghìn hai trăm bốn mươi/mười ngàn hai trăm bốn mươi} máy chủ.	
+vi-dA-021	vi-VN	finance	cardinal	basic	Lãi suất tiết kiệm kỳ hạn {12|mười hai} tháng đang ở mức cao nhất.	
+vi-dA-022	vi-VN	sports	cardinal	basic	Tiền đạo này đã ghi {94|chín mươi tư/chín mươi bốn} bàn cho câu lạc bộ.	
+vi-dA-023	vi-VN	weather	cardinal	basic	Lượng mưa đo được tại Huế lên tới {415|bốn trăm mười lăm} mi-li-mét.	
+vi-dA-024	vi-VN	travel	cardinal	basic	Khu nghỉ dưỡng có {68|sáu mươi tám} phòng hướng biển.	
+vi-dA-025	vi-VN	education	cardinal	hard	Kỳ thi năm nay có {1.071.393|một triệu không trăm bảy mươi mốt nghìn ba trăm chín mươi ba/một triệu không trăm bảy mươi mốt ngàn ba trăm chín mươi ba/một triệu bảy mươi mốt nghìn ba trăm chín mươi ba/một triệu bảy mươi mốt ngàn ba trăm chín mươi ba} thí sinh đăng ký dự thi.	
+vi-dA-026	vi-VN	admin	cardinal	basic	Xã hiện có {1.876|một nghìn tám trăm bảy mươi sáu/một ngàn tám trăm bảy mươi sáu} hộ gia đình.	
+vi-dA-027	vi-VN	food	cardinal	basic	Cho thêm {2|hai} thìa nước mắm và một chút tiêu xay.	
+vi-dA-028	vi-VN	traffic	cardinal	basic	Tuyến xe buýt mới có {24|hai mươi tư/hai mươi bốn} điểm dừng.	
+vi-dA-029	vi-VN	entertainment	cardinal	basic	Nữ ca sĩ sẽ biểu diễn {17|mười bảy} ca khúc trong đêm nhạc.	
+vi-dA-030	vi-VN	news	cardinal	hard	Trong quý, cả nước có {103.705|một trăm linh ba nghìn bảy trăm linh năm/một trăm linh ba ngàn bảy trăm linh năm/một trăm lẻ ba nghìn bảy trăm lẻ năm/một trăm lẻ ba ngàn bảy trăm lẻ năm} doanh nghiệp thành lập mới.	
+vi-dA-031	vi-VN	message	cardinal	basic	Nhóm mình có {9|chín} người, cậu đặt bàn giúp nhé.	
+vi-dA-032	vi-VN	shopping	cardinal	basic	Tủ lạnh này giá {12.990.000|mười hai triệu chín trăm chín mươi nghìn/mười hai triệu chín trăm chín mươi ngàn} đồng.	
+vi-dA-033	vi-VN	health	cardinal	context	Bệnh nhân uống {01|một} viên mỗi tối sau khi ăn.	số 0 đầu
+vi-dA-034	vi-VN	tech	cardinal	basic	Bàn phím cơ này có {104|một trăm linh bốn/một trăm lẻ bốn} phím.	
+vi-dA-035	vi-VN	finance	cardinal	hard	Tổng giá trị giao dịch phiên sáng đạt {21.304|hai mươi mốt nghìn ba trăm linh bốn/hai mươi mốt ngàn ba trăm linh bốn/hai mươi mốt nghìn ba trăm lẻ bốn/hai mươi mốt ngàn ba trăm lẻ bốn} tỷ đồng.	
+vi-dA-036	vi-VN	sports	cardinal	basic	Giải chạy năm nay có {7.560|bảy nghìn năm trăm sáu mươi/bảy ngàn năm trăm sáu mươi} vận động viên tham gia.	
+vi-dA-037	vi-VN	weather	cardinal	context	Nhiệt độ ở Mẫu Sơn có lúc xuống {-2|âm hai} độ.	số âm
+vi-dA-038	vi-VN	travel	cardinal	basic	Vé tham quan vịnh dành cho người lớn là {290.000|hai trăm chín mươi nghìn/hai trăm chín mươi ngàn} đồng.	
+vi-dA-039	vi-VN	education	cardinal	basic	Thư viện trường có hơn {16.000|mười sáu nghìn/mười sáu ngàn} đầu sách.	
+vi-dA-040	vi-VN	admin	cardinal	basic	Phường đã tiếp nhận {532|năm trăm ba mươi hai} hồ sơ trực tuyến trong tháng.	
+vi-dA-041	vi-VN	food	cardinal	basic	Công thức này cần {300|ba trăm} gam bột mì và {4|bốn} quả trứng.	
+vi-dA-042	vi-VN	traffic	cardinal	basic	Đoạn cao tốc dài {26|hai mươi sáu} cây số sẽ thông xe vào cuối tháng.	
+vi-dA-043	vi-VN	entertainment	cardinal	basic	Kênh của anh ấy vừa cán mốc {1.000.000|một triệu} người theo dõi.	
+vi-dA-044	vi-VN	news	cardinal	basic	Hơn {600|sáu trăm} tình nguyện viên đã tham gia dọn rác ven biển.	
+vi-dA-045	vi-VN	message	cardinal	basic	Còn {10|mười} ngày nữa là sinh nhật mẹ rồi đấy.	
+vi-dA-046	vi-VN	shopping	cardinal	basic	Combo gồm {6|sáu} hộp sữa chua với giá {39.000|ba mươi chín nghìn/ba mươi chín ngàn} đồng.	
+vi-dA-047	vi-VN	health	cardinal	basic	Chiến dịch đã tiêm vắc-xin cho {85.432|tám mươi lăm nghìn bốn trăm ba mươi hai/tám mươi lăm ngàn bốn trăm ba mươi hai} trẻ em.	
+vi-dA-048	vi-VN	tech	cardinal	basic	Tập đoàn cắt giảm {1.300|một nghìn ba trăm/một ngàn ba trăm} nhân sự mảng phần cứng.	
+vi-dA-049	vi-VN	finance	cardinal	basic	Giá vàng miếng tăng {800.000|tám trăm nghìn/tám trăm ngàn} đồng mỗi lượng.	
+vi-dA-050	vi-VN	sports	cardinal	basic	Đoàn thể thao giành tổng cộng {136|một trăm ba mươi sáu} huy chương vàng.	
+vi-dA-051	vi-VN	weather	cardinal	basic	Gió giật cấp {11|mười một} khiến nhiều cây xanh bị gãy đổ.	
+vi-dA-052	vi-VN	travel	cardinal	basic	Chuyến bay bị hoãn gần {4|bốn} tiếng vì thời tiết xấu.	
+vi-dA-053	vi-VN	education	cardinal	basic	Mỗi lớp học không quá {35|ba mươi lăm} học sinh.	
+vi-dA-054	vi-VN	notice	cardinal	basic	Lệ phí cấp hộ chiếu phổ thông là {200.000|hai trăm nghìn/hai trăm ngàn} đồng.	
+vi-dA-055	vi-VN	food	cardinal	basic	Nhà hàng phục vụ hơn {50|năm mươi} món đặc sản ba miền.	
+vi-dA-056	vi-VN	traffic	cardinal	basic	Có {1.142|một nghìn một trăm bốn mươi hai/một ngàn một trăm bốn mươi hai} phương tiện bị phạt nguội trong tháng qua.	
+vi-dA-057	vi-VN	entertainment	cardinal	basic	Triển lãm trưng bày {73|bảy mươi ba} bức tranh sơn mài.	
+vi-dA-058	vi-VN	news	cardinal	hard	Dân số tỉnh đạt {2.301.000|hai triệu ba trăm linh một nghìn/hai triệu ba trăm linh một ngàn/hai triệu ba trăm lẻ một nghìn/hai triệu ba trăm lẻ một ngàn} người.	
+vi-dA-059	vi-VN	message	cardinal	basic	Anh ơi, em gửi {5|năm} tấm ảnh qua Zalo rồi ạ.	
+vi-dA-060	vi-VN	notice	cardinal	context	Chỉ còn {07|bảy} suất ưu đãi cuối cùng, quý khách nhanh tay đăng ký.	số 0 đầu
+vi-dA-061	vi-VN	health	cardinal	basic	Mỗi khẩu phần cung cấp khoảng {230|hai trăm ba mươi} ca-lo.	
+vi-dA-062	vi-VN	tech	cardinal	hard	Nhà mạng đã lắp đặt {4.009|bốn nghìn không trăm linh chín/bốn ngàn không trăm linh chín/bốn nghìn không trăm lẻ chín/bốn ngàn không trăm lẻ chín/bốn nghìn linh chín/bốn ngàn linh chín/bốn nghìn lẻ chín/bốn ngàn lẻ chín} trạm phát sóng mới.	hàng trăm và hàng chục bằng 0
+vi-dA-063	vi-VN	finance	cardinal	basic	Ngân hàng phát hành thêm {500|năm trăm} tỷ đồng trái phiếu.	
+vi-dA-064	vi-VN	sports	cardinal	basic	Võ sĩ đã có {21|hai mươi mốt} trận thắng liên tiếp.	
+vi-dA-065	vi-VN	weather	cardinal	basic	Bão số {3|ba} đang di chuyển theo hướng tây tây bắc.	
+vi-dA-066	vi-VN	travel	cardinal	basic	Hành khách được mang tối đa {7|bảy} cân hành lý xách tay.	
+vi-dA-067	vi-VN	education	cardinal	basic	Đề thi gồm {40|bốn mươi} câu hỏi trắc nghiệm.	
+vi-dA-068	vi-VN	notice	cardinal	context	Người nộp đơn cần chuẩn bị {03|ba} ảnh chân dung kèm tờ khai.	số 0 đầu
+vi-dA-069	vi-VN	food	cardinal	basic	Mỗi ổ bánh mì nặng khoảng {120|một trăm hai mươi} gam.	
+vi-dA-070	vi-VN	traffic	cardinal	basic	Cây cầu dài {1.535|một nghìn năm trăm ba mươi lăm/một ngàn năm trăm ba mươi lăm} mét bắc qua sông Hồng.	
+vi-dA-071	vi-VN	entertainment	cardinal	basic	Vé xem hòa nhạc hạng phổ thông có giá {650.000|sáu trăm năm mươi nghìn/sáu trăm năm mươi ngàn} đồng.	
+vi-dA-072	vi-VN	news	cardinal	basic	Sau lũ, tỉnh đã trao {9.814|chín nghìn tám trăm mười bốn/chín ngàn tám trăm mười bốn} suất quà cho người dân.	
+vi-dA-073	vi-VN	message	cardinal	basic	Mai họp lớp lúc {8|tám} giờ tối nhé, đừng quên đấy.	
+vi-dA-074	vi-VN	shopping	cardinal	basic	Đơn hàng trên {500.000|năm trăm nghìn/năm trăm ngàn} đồng được tặng phiếu mua hàng {100.000|một trăm nghìn/một trăm ngàn} đồng.	
+vi-dA-075	vi-VN	health	cardinal	basic	Mỗi tuần nên vận động ít nhất {150|một trăm năm mươi} phút.	
+vi-dA-076	vi-VN	tech	cardinal	basic	Bản cập nhật mới vá {63|sáu mươi ba} lỗ hổng bảo mật.	
+vi-dA-077	vi-VN	finance	cardinal	basic	Kim ngạch xuất khẩu đạt {405|bốn trăm linh năm/bốn trăm lẻ năm} tỷ đô la Mỹ.	
+vi-dA-078	vi-VN	sports	cardinal	basic	Đường chạy marathon dài {42|bốn mươi hai} cây số.	
+vi-dA-079	vi-VN	weather	cardinal	basic	Đợt nắng nóng đã kéo dài {13|mười ba} ngày liên tiếp.	
+vi-dA-080	vi-VN	travel	cardinal	basic	Tour trọn gói {6|sáu} ngày {5|năm} đêm khởi hành vào mỗi thứ Sáu.	
+vi-dA-081	vi-VN	education	cardinal	basic	Trường có {2.317|hai nghìn ba trăm mười bảy/hai ngàn ba trăm mười bảy} tân sinh viên nhập học.	
+vi-dA-082	vi-VN	admin	cardinal	basic	Thành phố sắp xếp lại còn {168|một trăm sáu mươi tám} đơn vị hành chính cấp xã.	
+vi-dA-083	vi-VN	food	cardinal	basic	Mỗi ngày quán bán khoảng {250|hai trăm năm mươi} bát bún chả.	
+vi-dA-084	vi-VN	traffic	cardinal	basic	Xe khách chở {52|năm mươi hai} người trong khi chỉ được phép chở {45|bốn mươi lăm} người.	
+vi-dA-085	vi-VN	entertainment	cardinal	basic	Lễ hội âm nhạc kéo dài ba đêm với hơn {30|ba mươi} nghệ sĩ góp mặt.	
+vi-dA-086	vi-VN	news	cardinal	hard	Ngân sách dành cho dự án là {14.000.000.000|mười bốn tỷ/mười bốn tỉ} đồng.	
+vi-dA-087	vi-VN	message	cardinal	basic	Cậu mang giúp tớ {2|hai} cái ô nhé, chiều nay trời mưa đấy.	
+vi-dA-088	vi-VN	shopping	cardinal	basic	Giày thể thao chính hãng chỉ còn {1.490.000|một triệu bốn trăm chín mươi nghìn/một triệu bốn trăm chín mươi ngàn} đồng.	
+vi-dA-089	vi-VN	health	cardinal	basic	Cả nước có khoảng {4.700.000|bốn triệu bảy trăm nghìn/bốn triệu bảy trăm ngàn} người mắc bệnh đái tháo đường.	
+vi-dA-090	vi-VN	tech	cardinal	basic	Hệ thống có thể xử lý {800|tám trăm} giao dịch mỗi giây.	
+vi-dA-091	vi-VN	finance	cardinal	hard	Tổng tài sản của hệ thống ngân hàng vượt {20.000.000|hai mươi triệu} tỷ đồng.	
+vi-dA-093	vi-VN	weather	cardinal	basic	Mực nước sông dâng thêm {60|sáu mươi} xăng-ti-mét trong đêm qua.	
+vi-dA-094	vi-VN	travel	cardinal	basic	Phú Quốc đã đón hơn {700.000|bảy trăm nghìn/bảy trăm ngàn} lượt khách quốc tế.	
+vi-dA-095	vi-VN	education	cardinal	basic	Thí sinh có {90|chín mươi} phút để hoàn thành bài thi môn Toán.	
+vi-dA-096	vi-VN	traffic	cardinal	context	Người điều khiển xe máy vượt đèn đỏ có thể bị phạt tới {7.500.000|bảy triệu năm trăm nghìn/bảy triệu năm trăm ngàn/bảy triệu rưỡi} đồng.	rưỡi
+vi-dA-097	vi-VN	food	cardinal	basic	Hũ mắm tôm này nặng {450|bốn trăm năm mươi} gam.	
+vi-dA-098	vi-VN	traffic	cardinal	basic	Tuyến metro số {1|một} phục vụ trung bình {38.000|ba mươi tám nghìn/ba mươi tám ngàn} lượt khách mỗi ngày.	
+vi-dA-099	vi-VN	entertainment	cardinal	basic	Trò chơi điện tử này có hơn {215|hai trăm mười lăm} màn chơi.	
+vi-dA-100	vi-VN	news	cardinal	basic	Đến nay, {11.000|mười một nghìn/mười một ngàn} hộ dân đã được di dời khỏi vùng sạt lở.	
+vi-dA-101	vi-VN	news	ordinal	basic	Đây là {lần thứ 3|lần thứ ba} Đà Nẵng đăng cai hội nghị thượng đỉnh này.	
+vi-dA-102	vi-VN	sports	ordinal	context	Đội tuyển nữ vươn lên {hạng 2|hạng hai/hạng nhì} sau trận thắng tối qua.	nhì trong xếp hạng
+vi-dA-103	vi-VN	education	ordinal	hard	Nhiều phát minh làm thay đổi thế giới đã ra đời trong {thế kỷ XX|thế kỷ hai mươi/thế kỷ thứ hai mươi}.	số La Mã
+vi-dA-104	vi-VN	notice	ordinal	basic	Phòng tiếp công dân nằm ở {tầng 5|tầng năm} của tòa nhà ủy ban.	
+vi-dA-105	vi-VN	message	ordinal	context	Hẹn cậu {thứ 4|thứ tư} tuần sau ở quán cà phê cũ nhé.	thứ trong tuần
+vi-dA-106	vi-VN	shopping	ordinal	basic	Khách hàng {thứ 100|thứ một trăm} mua hàng hôm nay sẽ được tặng một chiếc xe đạp.	
+vi-dA-107	vi-VN	health	ordinal	context	Bé đã được tiêm mũi {thứ 2|thứ hai} vắc-xin sởi vào tháng trước.	
+vi-dA-108	vi-VN	tech	ordinal	basic	Hãng vừa ra mắt mẫu xe điện thế hệ {thứ 5|thứ năm}.	
+vi-dA-109	vi-VN	finance	ordinal	basic	Việt Nam hiện là đối tác thương mại lớn {thứ 8|thứ tám} của Hoa Kỳ.	
+vi-dA-110	vi-VN	sports	ordinal	context	Vận động viên Việt Nam về đích {thứ 1|thứ nhất} ở nội dung {400|bốn trăm} mét nữ.	thứ nhất
+vi-dA-112	vi-VN	travel	ordinal	basic	Phòng của chị ở {tầng 12|tầng mười hai}, thang máy nằm bên tay trái.	
+vi-dA-113	vi-VN	education	ordinal	hard	Văn học {thế kỷ XVIII|thế kỷ mười tám/thế kỷ thứ mười tám} để lại nhiều tác phẩm nổi tiếng.	số La Mã
+vi-dA-114	vi-VN	admin	ordinal	hard	Kỳ họp {thứ 9|thứ chín} Quốc hội {khóa XV|khóa mười lăm} khai mạc sáng nay.	số La Mã
+vi-dA-116	vi-VN	traffic	ordinal	context	Anh rẽ phải ở ngã tư {thứ 2|thứ hai} rồi đi thẳng thêm {200|hai trăm} mét là tới.	
+vi-dA-117	vi-VN	entertainment	ordinal	context	Bộ phim tài liệu đoạt {giải 3|giải ba} tại liên hoan phim năm nay.	
+vi-dA-118	vi-VN	sports	ordinal	hard	Đại hội Thể thao toàn quốc {lần thứ IX|lần thứ chín} sẽ khai mạc vào cuối năm.	số La Mã
+vi-dA-119	vi-VN	message	ordinal	context	Con đang học bài {thứ 6|thứ sáu} trong sách tiếng Anh ạ.	
+vi-dA-120	vi-VN	shopping	ordinal	context	Mua chiếc {thứ 2|thứ hai} được giảm {50%|năm mươi phần trăm} giá niêm yết.	
+vi-dA-121	vi-VN	health	ordinal	context	Chị ấy đang mang thai tháng {thứ 7|thứ bảy}.	
+vi-dA-122	vi-VN	tech	ordinal	context	Hãng điện thoại này đứng {thứ 3|thứ ba} về thị phần toàn cầu.	
+vi-dA-123	vi-VN	finance	ordinal	context	Công ty báo lỗ quý {thứ 4|thứ tư} liên tiếp.	thứ tư
+vi-dA-124	vi-VN	sports	ordinal	context	Đây là {lần thứ 24|lần thứ hai mươi tư/lần thứ hai mươi bốn} hai đội gặp nhau ở đấu trường châu lục.	
+vi-dA-125	vi-VN	weather	ordinal	basic	Chiều nay, miền Bắc đón đợt không khí lạnh {thứ 11|thứ mười một} trong mùa đông.	
+vi-dA-126	vi-VN	travel	ordinal	hard	Ngôi chùa được xây dựng từ {thế kỷ XI|thế kỷ mười một/thế kỷ thứ mười một} dưới triều Lý.	số La Mã
+vi-dA-127	vi-VN	education	ordinal	context	Em đạt {hạng 1|hạng nhất/hạng một} trong kỳ thi học sinh giỏi cấp tỉnh.	
+vi-dA-128	vi-VN	admin	ordinal	hard	{Chương II|Chương hai} của nghị định quy định về thủ tục cấp phép xây dựng.	số La Mã
+vi-dA-129	vi-VN	food	ordinal	context	Quán phở gia truyền này đã truyền tới đời {thứ 4|thứ tư}.	thứ tư
+vi-dA-130	vi-VN	traffic	ordinal	basic	Đây là tuyến cao tốc {thứ 13|thứ mười ba} được đưa vào khai thác trong năm.	
+vi-dA-131	vi-VN	entertainment	ordinal	basic	Nam ca sĩ phát hành album phòng thu {thứ 10|thứ mười} sau hai năm vắng bóng.	
+vi-dA-132	vi-VN	education	ordinal	basic	Lễ kỷ niệm {lần thứ 50|lần thứ năm mươi} ngày thành lập trường diễn ra sáng nay.	
+vi-dA-133	vi-VN	message	ordinal	context	Em ngồi hàng ghế {thứ 5|thứ năm} gần lối đi, chị vào thì tìm nhé.	
+vi-dA-134	vi-VN	notice	ordinal	basic	Gian hàng của chúng tôi đã chuyển lên {tầng 2|tầng hai}, cạnh thang cuốn.	
+vi-dA-135	vi-VN	health	ordinal	basic	Bệnh nhân đang điều trị tại {tầng 8|tầng tám} khoa Nội tổng hợp.	
+vi-dA-136	vi-VN	tech	ordinal	context	Thế giới đang bước vào cuộc cách mạng công nghiệp {lần thứ 4|lần thứ tư}.	thứ tư
+vi-dA-137	vi-VN	finance	ordinal	context	Ngân hàng này giữ vị trí {thứ 2|thứ hai/thứ nhì} về lợi nhuận toàn ngành.	nhì trong xếp hạng
+vi-dA-138	vi-VN	sports	ordinal	basic	Đội bóng xếp {thứ 18|thứ mười tám} chung cuộc và phải xuống hạng.	
+vi-dA-139	vi-VN	weather	ordinal	basic	Miền Trung đang trải qua ngày nắng nóng {thứ 14|thứ mười bốn} liên tiếp.	
+vi-dA-140	vi-VN	travel	ordinal	basic	Du khách có thể lên {tầng 21|tầng hai mươi mốt} để ngắm toàn cảnh thành phố về đêm.	
+vi-dA-141	vi-VN	education	ordinal	context	Sinh viên năm {thứ 4|thứ tư} sẽ đi thực tập tại doanh nghiệp.	thứ tư
+vi-dA-142	vi-VN	admin	ordinal	hard	Hội đồng nhân dân tỉnh {khóa XVII|khóa mười bảy} họp phiên bất thường.	số La Mã
+vi-dA-143	vi-VN	food	ordinal	basic	Đây là năm {thứ 16|thứ mười sáu} lễ hội ẩm thực đường phố được tổ chức.	
+vi-dA-144	vi-VN	traffic	ordinal	hard	Giao thông đô thị {thế kỷ XXI|thế kỷ hai mươi mốt/thế kỷ thứ hai mươi mốt} cần ưu tiên phương tiện công cộng.	số La Mã
+vi-dA-145	vi-VN	entertainment	ordinal	basic	Chương trình truyền hình thực tế bước sang mùa {thứ 12|thứ mười hai}.	
+vi-dA-146	vi-VN	news	ordinal	basic	Tỉnh đứng {thứ 3|thứ ba} cả nước về thu hút vốn đầu tư nước ngoài.	
+vi-dA-147	vi-VN	message	ordinal	basic	Chị ơi, nhà em ở {tầng 4|tầng bốn}, chị cứ đi thang máy lên thẳng nhé.	
+vi-dA-148	vi-VN	health	ordinal	hard	Bệnh viện vừa thực hiện thành công ca ghép thận {thứ 1.000|thứ một nghìn/thứ một ngàn}.	
+vi-dA-149	vi-VN	sports	ordinal	context	Tay đua trẻ về {thứ 2|thứ hai/thứ nhì} ở chặng đua cuối cùng.	nhì trong xếp hạng
+vi-dA-150	vi-VN	education	ordinal	basic	Cuốn giáo trình được tái bản {lần thứ 7|lần thứ bảy} có bổ sung bài tập.	
+vi-dA-151	vi-VN	news	decimal	basic	Tăng trưởng kinh tế quý ba đạt {7,4%|bảy phẩy bốn phần trăm}.	
+vi-dA-152	vi-VN	weather	decimal	basic	Nhiệt độ trung bình năm nay cao hơn {0,8|không phẩy tám} độ so với năm ngoái.	
+vi-dA-153	vi-VN	health	decimal	basic	Bé nặng {3,2|ba phẩy hai} ki-lô-gam khi chào đời.	
+vi-dA-154	vi-VN	finance	decimal	context	Doanh thu quý này đạt {3,5 tỷ|ba phẩy năm tỷ/ba tỷ rưỡi/ba phẩy năm tỉ/ba tỉ rưỡi} đồng.	rưỡi
+vi-dA-155	vi-VN	tech	decimal	basic	Chiếc điện thoại mới chỉ nặng {187,5|một trăm tám mươi bảy phẩy năm} gam.	
+vi-dA-156	vi-VN	sports	decimal	context	Anh về nhất cự ly {100|một trăm} mét với thành tích {10,25|mười phẩy hai mươi lăm/mười phẩy hai lăm} giây.	
+vi-dA-157	vi-VN	traffic	decimal	hard	Nồng độ cồn trong khí thở của tài xế là {0,31|không phẩy ba mươi mốt/không phẩy ba mốt} mi-li-gam trên một lít.	
+vi-dA-158	vi-VN	shopping	decimal	basic	Gói hàng của bạn nặng {1,8|một phẩy tám} ki-lô-gam.	
+vi-dA-159	vi-VN	education	decimal	basic	Điểm trung bình học kỳ của em là {8,6|tám phẩy sáu}.	
+vi-dA-160	vi-VN	admin	decimal	basic	Diện tích thửa đất được cấp là {125,4|một trăm hai mươi lăm phẩy bốn} mét vuông.	
+vi-dA-161	vi-VN	food	decimal	basic	Mỗi gói mì chứa {2,3|hai phẩy ba} gam muối.	
+vi-dA-162	vi-VN	travel	decimal	context	Đi tàu cao tốc ra đảo mất khoảng {1,5 tiếng|một phẩy năm tiếng/một tiếng rưỡi}.	rưỡi
+vi-dA-163	vi-VN	entertainment	decimal	basic	Bộ phim được chấm {8,9|tám phẩy chín} điểm trên trang đánh giá.	
+vi-dA-164	vi-VN	news	decimal	basic	Dân số thành phố đã vượt {9,3|chín phẩy ba} triệu người.	
+vi-dA-165	vi-VN	health	decimal	context	Bé sốt {38,5 độ|ba mươi tám phẩy năm độ/ba mươi tám độ rưỡi}, mẹ nên cho bé đi khám.	rưỡi
+vi-dA-166	vi-VN	tech	decimal	basic	Chip mới đạt xung nhịp tối đa {4,05|bốn phẩy không năm} gi-ga-héc.	
+vi-dA-167	vi-VN	finance	decimal	basic	Tỷ giá đô la Mỹ hôm nay tăng {0,12%|không phẩy mười hai phần trăm/không phẩy một hai phần trăm}.	
+vi-dA-168	vi-VN	sports	decimal	hard	Vận động viên nhảy xa đạt thành tích {7,86 mét|bảy phẩy tám mươi sáu mét/bảy phẩy tám sáu mét/bảy mét tám mươi sáu/bảy mét tám sáu}.	đọc kiểu số đo
+vi-dA-169	vi-VN	weather	decimal	basic	Lượng mưa trung bình ngày hôm qua đạt {12,7|mười hai phẩy bảy} mi-li-mét.	
+vi-dA-170	vi-VN	traffic	decimal	context	Đoạn đường cấm xe tải dài {4,5 cây số|bốn phẩy năm cây số/bốn cây số rưỡi}.	rưỡi
+vi-dA-171	vi-VN	education	decimal	hard	Tỷ lệ tốt nghiệp năm nay đạt {99,24%|chín mươi chín phẩy hai mươi tư phần trăm/chín mươi chín phẩy hai mươi bốn phần trăm/chín mươi chín phẩy hai tư phần trăm/chín mươi chín phẩy hai bốn phần trăm}.	
+vi-dA-172	vi-VN	admin	decimal	basic	Tỷ lệ hồ sơ trễ hạn đã giảm còn {1,3%|một phẩy ba phần trăm}.	
+vi-dA-173	vi-VN	food	decimal	context	Công thức này cần {0,5 lít|không phẩy năm lít/nửa lít} sữa tươi không đường.	nửa
+vi-dA-174	vi-VN	message	decimal	basic	Sáng nay tớ chạy được {5,6|năm phẩy sáu} cây số, mệt quá.	
+vi-dA-175	vi-VN	shopping	decimal	basic	Giá thịt lợn tăng {2,7%|hai phẩy bảy phần trăm} so với tuần trước.	
+vi-dA-176	vi-VN	health	decimal	hard	Tỷ lệ mắc bệnh ở trẻ dưới năm tuổi là {0,037%|không phẩy không ba mươi bảy phần trăm/không phẩy không ba bảy phần trăm}.	
+vi-dA-177	vi-VN	tech	decimal	basic	Tốc độ tải xuống trung bình tăng {18,6%|mười tám phẩy sáu phần trăm}.	
+vi-dA-178	vi-VN	finance	decimal	hard	Lãi suất cho vay mua nhà giảm xuống {6,85%|sáu phẩy tám mươi lăm phần trăm/sáu phẩy tám lăm phần trăm}.	
+vi-dA-179	vi-VN	sports	decimal	context	Tiền vệ này cao {1,72 mét|một phẩy bảy mươi hai mét/một phẩy bảy hai mét/một mét bảy mươi hai/một mét bảy hai}.	đọc kiểu số đo
+vi-dA-180	vi-VN	weather	decimal	basic	Tâm bão nằm ở khoảng {17,3|mười bảy phẩy ba} độ vĩ bắc.	
+vi-dA-181	vi-VN	travel	decimal	basic	Tuyến cáp treo vượt biển dài {5,8|năm phẩy tám} cây số.	
+vi-dA-182	vi-VN	entertainment	decimal	basic	Album đầu tay của nhóm đã bán được {1,2|một phẩy hai} triệu bản.	
+vi-dA-183	vi-VN	news	decimal	basic	Kinh tế số đóng góp {18,3%|mười tám phẩy ba phần trăm} vào tổng sản phẩm quốc nội.	
+vi-dA-184	vi-VN	message	decimal	context	Cậu chuyển giúp tớ {2,5 triệu|hai phẩy năm triệu/hai triệu rưỡi} tiền nhà tháng này nhé.	rưỡi
+vi-dA-185	vi-VN	shopping	decimal	basic	Máy giặt có khối lượng giặt {9,5|chín phẩy năm} ki-lô-gam.	
+vi-dA-186	vi-VN	health	decimal	basic	Mỗi viên thuốc chứa {0,4|không phẩy bốn} mi-li-gam hoạt chất.	
+vi-dA-187	vi-VN	tech	decimal	hard	Chiếc máy tính bảng chỉ dày {5,15|năm phẩy mười lăm/năm phẩy một năm} mi-li-mét.	
+vi-dA-188	vi-VN	finance	decimal	basic	Giá vàng thế giới giảm {1,05%|một phẩy không năm phần trăm}.	
+vi-dA-189	vi-VN	sports	decimal	hard	Vận động viên thể dục dụng cụ đạt {14,733|mười bốn phẩy bảy trăm ba mươi ba/mười bốn phẩy bảy ba ba} điểm ở bài nhảy chống.	
+vi-dA-190	vi-VN	weather	decimal	context	Mực nước hồ thủy điện đã hạ thấp {1,4 mét|một phẩy bốn mét/một mét tư/một mét bốn} so với tuần trước.	đọc kiểu số đo
+vi-dA-192	vi-VN	education	decimal	context	Học sinh cần đạt tối thiểu {6,5 điểm|sáu phẩy năm điểm/sáu điểm rưỡi} để được xét tuyển.	rưỡi
+vi-dA-193	vi-VN	admin	decimal	basic	Thu ngân sách của phường tăng {3,9%|ba phẩy chín phần trăm} so với cùng kỳ.	
+vi-dA-194	vi-VN	food	decimal	basic	Một quả chuối cung cấp khoảng {0,3|không phẩy ba} gam chất béo.	
+vi-dA-195	vi-VN	traffic	decimal	basic	Giờ cao điểm, tốc độ trung bình chỉ đạt {16,4|mười sáu phẩy bốn} cây số một giờ.	
+vi-dA-196	vi-VN	entertainment	decimal	basic	Tập cuối của chương trình đạt tỷ suất người xem {11,2%|mười một phẩy hai phần trăm}.	
+vi-dA-197	vi-VN	news	decimal	hard	Diện tích rừng cả nước đạt {14,79|mười bốn phẩy bảy mươi chín/mười bốn phẩy bảy chín} triệu héc-ta.	
+vi-dA-198	vi-VN	health	decimal	basic	Huyết sắc tố của bệnh nhân chỉ còn {8,2|tám phẩy hai} gam trên đề-xi-lít.	
+vi-dA-199	vi-VN	tech	decimal	hard	Thiết bị mới giúp tiết kiệm {0,06|không phẩy không sáu} ki-lô-oát giờ điện mỗi ngày.	
+vi-dA-200	vi-VN	finance	decimal	basic	Lạm phát cơ bản tăng {3,12%|ba phẩy mười hai phần trăm/ba phẩy một hai phần trăm}.	
+vi-dA-201	vi-VN	news	fraction	context	Gần {1/3|một phần ba} dân số tỉnh hiện sống ở khu vực thành thị.	
+vi-dA-202	vi-VN	food	fraction	context	Vắt {1/2|nửa/một nửa/một phần hai} quả chanh vào nồi nước dùng rồi khuấy đều.	nửa
+vi-dA-203	vi-VN	shopping	fraction	basic	Khách hàng chỉ cần trả trước {3/10|ba phần mười} giá trị căn hộ.	
+vi-dA-204	vi-VN	health	fraction	context	Khoảng {3/4|ba phần tư/ba phần bốn} số ca nhập viện vì cúm là người cao tuổi.	
+vi-dA-205	vi-VN	education	fraction	context	Bài kiểm tra Toán của em được {9/10|chín trên mười} điểm.	điểm số đọc trên
+vi-dA-206	vi-VN	finance	fraction	basic	Quỹ đầu tư nắm giữ {2/5|hai phần năm} cổ phần của công ty.	
+vi-dA-207	vi-VN	sports	fraction	context	Đội chủ nhà kiểm soát bóng gần {2/3|hai phần ba} thời gian thi đấu.	
+vi-dA-208	vi-VN	weather	fraction	context	Mưa lớn bao phủ khoảng {1/4|một phần tư/một phần bốn} diện tích cả nước.	
+vi-dA-209	vi-VN	travel	fraction	context	Gần {1/2|nửa/một nửa/một phần hai} số du khách quay lại lần thứ hai.	nửa
+vi-dA-210	vi-VN	notice	fraction	context	Cuộc họp chỉ hợp lệ khi có ít nhất {3/5|ba phần năm} số thành viên tham dự.	
+vi-dA-211	vi-VN	message	fraction	context	Tớ mới đọc được {1/5|một phần năm} cuốn sách thôi.	không phải ngày tháng
+vi-dA-212	vi-VN	tech	fraction	context	Ổ cứng của máy đã dùng hết {4/5|bốn phần năm} dung lượng.	
+vi-dA-213	vi-VN	food	fraction	context	Thêm {1/8|một phần tám} thìa cà phê muối vào bột rồi nhào kỹ.	
+vi-dA-214	vi-VN	traffic	fraction	context	Khoảng {1/6|một phần sáu} số vụ tai nạn xảy ra vào ban đêm.	
+vi-dA-215	vi-VN	entertainment	fraction	context	Ban nhạc mới bán được {5/8|năm phần tám} số vé dự kiến.	
+vi-dA-217	vi-VN	news	fraction	basic	Lượng khí thải của thành phố đã giảm {1/10|một phần mười} so với năm ngoái.	
+vi-dA-218	vi-VN	health	fraction	context	Gần {7/10|bảy phần mười} người trưởng thành ở đô thị ngủ không đủ giấc.	
+vi-dA-219	vi-VN	shopping	fraction	context	Cuối mùa, nhiều mặt hàng thời trang được giảm {1/2|nửa/một nửa/một phần hai} giá.	nửa
+vi-dA-220	vi-VN	finance	fraction	context	Cổ đông lớn nhất sở hữu {3/8|ba phần tám} vốn điều lệ.	
+vi-dA-221	vi-VN	sports	fraction	context	Đội bóng đã thắng {11/12|mười một trên mười hai/mười một trong mười hai} trận gần nhất.	tỉ số trận đọc trên
+vi-dA-222	vi-VN	weather	fraction	context	Khoảng {9/10|chín phần mười} diện tích lúa đã được thu hoạch trước bão.	
+vi-dA-223	vi-VN	travel	fraction	context	Đoàn leo núi mới đi được {2/3|hai phần ba} quãng đường lên đỉnh.	
+vi-dA-224	vi-VN	education	fraction	context	Hãy tính tổng của {1/2|một phần hai/một trên hai} và {1/3|một phần ba/một trên ba}.	ngữ cảnh toán học, không đọc nửa
+vi-dA-225	vi-VN	admin	fraction	context	Kiến nghị phải có chữ ký của ít nhất {1/20|một phần hai mươi} tổng số cử tri.	
+vi-dA-226	vi-VN	food	fraction	context	Đổ nước ngập {3/4|ba phần tư/ba phần bốn} nồi rồi đun sôi.	
+vi-dA-227	vi-VN	tech	fraction	hard	Chỉ khoảng {1/100|một phần trăm/một phần một trăm} số lỗi được người dùng báo cáo.	
+vi-dA-228	vi-VN	entertainment	fraction	context	Đoàn phim đã quay xong {5/6|năm phần sáu} số cảnh quay.	
+vi-dA-230	vi-VN	news	fraction	hard	Đã có {4/7|bốn phần bảy} số tỉnh thành hoàn thành chỉ tiêu xóa nhà tạm.	dễ nhầm với ngày 4 tháng 7
+vi-dA-231	vi-VN	admin	address	context	Văn phòng đã chuyển về {số 18/7|số mười tám trên bảy/số mười tám xuyệt bảy} {ngõ 64|ngõ sáu mươi tư/ngõ sáu mươi bốn} phố Lê Thanh Nghị.	dấu / đọc trên hoặc xuyệt
+vi-dA-232	vi-VN	message	address	context	Em ở {hẻm 51/3|hẻm năm mươi mốt trên ba/hẻm năm mươi mốt xuyệt ba/hẻm năm mươi mốt xẹt ba} đường Lê Văn Sỹ, anh giao tới đó giúp em nhé.	dấu / đọc trên hoặc xuyệt
+vi-dA-233	vi-VN	notice	address	basic	Cửa hàng chính thức khai trương tại {số 236|số hai trăm ba mươi sáu} đường Cầu Giấy.	
+vi-dA-234	vi-VN	health	address	basic	Phòng khám nằm ở {số 9|số chín} Nguyễn Thị Minh Khai, {Quận 1|Quận một}.	quận số đọc một, không đọc nhất
+vi-dA-235	vi-VN	food	address	basic	Quán bún bò nằm trong {ngõ 172|ngõ một trăm bảy mươi hai} phố Ngọc Khánh.	
+vi-dA-236	vi-VN	news	address	basic	Vụ cháy xảy ra tại căn nhà {số 37|số ba mươi bảy} đường Quang Trung, {Phường 14|Phường mười bốn}, quận Gò Vấp.	
+vi-dA-237	vi-VN	admin	address	hard	Hồ sơ gửi qua bưu điện cần ghi rõ mã bưu chính {10115|một không một một năm}.	mã bưu chính đọc từng chữ số
+vi-dA-238	vi-VN	travel	address	basic	Nhà nghỉ nằm ở {số 25|số hai mươi lăm} {hẻm 8|hẻm tám} đường Trần Hưng Đạo, gần chợ đêm.	
+vi-dA-239	vi-VN	traffic	address	basic	{Đường số 7|Đường số bảy} thuộc {Phường 10|Phường mười} đang được phân luồng để sửa cống.	
+vi-dA-240	vi-VN	education	address	hard	Trường mầm non đặt tại {số 106|số một trăm linh sáu/số một trăm lẻ sáu} {ngách 32|ngách ba mươi hai} {ngõ 158|ngõ một trăm năm mươi tám} Hồng Mai.	
+vi-dA-241	vi-VN	message	address	context	Mình ở {số 3|số ba} {ngách 41/12|ngách bốn mươi mốt trên mười hai/ngách bốn mươi mốt xuyệt mười hai}, cậu đến đầu ngõ thì gọi nhé.	dấu / đọc trên hoặc xuyệt
+vi-dA-242	vi-VN	shopping	address	hard	Kho hàng đặt tại {số 457|số bốn trăm năm mươi bảy} {Quốc lộ 13|Quốc lộ mười ba}, {Phường 26|Phường hai mươi sáu}.	
+vi-dA-243	vi-VN	health	address	basic	Trung tâm xét nghiệm ở {số 2|số hai} Hải Thượng Lãn Ông, {Quận 5|Quận năm}.	
+vi-dA-244	vi-VN	entertainment	address	context	Sân khấu kịch nằm trong {hẻm 214/9|hẻm hai trăm mười bốn trên chín/hẻm hai trăm mười bốn xuyệt chín/hẻm hai trăm mười bốn xẹt chín} đường Võ Văn Tần, {Quận 3|Quận ba}.	dấu / đọc trên hoặc xuyệt
+vi-dA-245	vi-VN	finance	address	hard	Chi nhánh ngân hàng chuyển đến {số 88|số tám mươi tám} Láng Hạ, mã bưu chính {11512|một một năm một hai}.	mã bưu chính đọc từng chữ số
+vi-dA-246	vi-VN	admin	address	context	Địa chỉ thường trú: {tổ 15|tổ mười lăm}, {khu phố 4|khu phố bốn}, {Phường 7|Phường bảy}, thành phố Vũng Tàu.	
+vi-dA-247	vi-VN	food	address	basic	Tiệm bánh mì ở {số 19|số mười chín} Lý Tự Trọng, {Phường 2|Phường hai} lúc nào cũng đông khách.	
+vi-dA-248	vi-VN	travel	address	context	Khách sạn mini ở {số 120/45|số một trăm hai mươi trên bốn mươi lăm/số một trăm hai mươi xuyệt bốn mươi lăm/số một trăm hai mươi xẹt bốn mươi lăm} Bùi Viện.	dấu / đọc trên hoặc xuyệt
+vi-dA-249	vi-VN	notice	address	hard	Bưu cục đặt tại {số 300|số ba trăm} Lạch Tray, mã bưu chính {04118|không bốn một một tám}.	mã bưu chính có số 0 đầu
+vi-dA-250	vi-VN	traffic	address	basic	Bãi gửi xe ở {ngõ 91|ngõ chín mươi mốt} Nguyễn Chí Thanh đã chuyển sang {số 11|số mười một} cùng ngõ.	
+vi-dB-001	vi-VN	finance	percent	basic	Lãi suất tiết kiệm tại ngân hàng này hiện là {5,5%|năm phẩy năm phần trăm} mỗi năm.	
+vi-dB-002	vi-VN	shop	percent	basic	Toàn bộ giày thể thao đang được giảm giá {30%|ba mươi phần trăm} đến hết tuần.	
+vi-dB-003	vi-VN	news	percent	context	GDP quý ba tăng {7,4%|bảy phẩy bốn phần trăm} so với cùng kỳ năm ngoái.	dấu phẩy thập phân
+vi-dB-004	vi-VN	health	percent	basic	Tỷ lệ tiêm chủng mũi nhắc lại ở xã đã đạt {92%|chín mươi hai phần trăm}.	
+vi-dB-005	vi-VN	tech	percent	basic	Pin điện thoại chỉ còn {9%|chín phần trăm}, bạn nhớ cắm sạc nhé.	
+vi-dB-006	vi-VN	weather	percent	basic	Độ ẩm không khí ở Hà Nội hôm nay lên tới {85%|tám mươi lăm phần trăm}.	
+vi-dB-007	vi-VN	education	percent	context	Tỷ lệ đỗ tốt nghiệp của tỉnh năm nay là {99,12%|chín mươi chín phẩy mười hai phần trăm/chín mươi chín phẩy một hai phần trăm}.	hai chữ số thập phân
+vi-dB-008	vi-VN	finance	percent	hard	Chỉ số chứng khoán phiên hôm nay biến động {-1,25%|âm một phẩy hai mươi lăm phần trăm/âm một phẩy hai lăm phần trăm/giảm một phẩy hai mươi lăm phần trăm/giảm một phẩy hai lăm phần trăm}.	dấu trừ đọc là âm
+vi-dB-009	vi-VN	sports	percent	context	Đội chủ nhà kiểm soát bóng tới {64%|sáu mươi tư phần trăm/sáu mươi bốn phần trăm} trong hiệp một.	tư/bốn
+vi-dB-010	vi-VN	traffic	percent	basic	Số vụ tai nạn giao thông tháng này giảm {12%|mười hai phần trăm} so với tháng trước.	
+vi-dB-011	vi-VN	shop	percent	context	Mua hai sản phẩm được giảm thêm {2%|hai phần trăm}, mua ba sản phẩm giảm {6%|sáu phần trăm}.	
+vi-dB-013	vi-VN	food	percent	basic	Sữa tươi nguyên kem này chứa {3,6%|ba phẩy sáu phần trăm} chất béo.	
+vi-dB-016	vi-VN	finance	percent	hard	Cổ phiếu ngân hàng kết phiên ở mức {+6,9%|cộng sáu phẩy chín phần trăm/tăng sáu phẩy chín phần trăm}.	dấu cộng
+vi-dB-018	vi-VN	tech	percent	context	Bản cập nhật mới giúp hiệu năng tăng {15-20%|mười lăm đến hai mươi phần trăm/mười lăm tới hai mươi phần trăm}.	khoảng
+vi-dB-019	vi-VN	weather	percent	context	Khả năng có mưa rào chiều nay vào khoảng {60-70%|sáu mươi đến bảy mươi phần trăm/sáu mươi tới bảy mươi phần trăm}.	khoảng
+vi-dB-020	vi-VN	message	percent	basic	Mình mới tải được {45%|bốn mươi lăm phần trăm} tập tin thôi, chờ chút nhé.	
+vi-dB-022	vi-VN	education	percent	basic	Học phí đại học năm học mới dự kiến tăng {7%|bảy phần trăm}.	
+vi-dB-023	vi-VN	sports	percent	basic	Tỷ lệ ném phạt thành công của cầu thủ này là {88%|tám mươi tám phần trăm}.	
+vi-dB-024	vi-VN	finance	percent	context	Lợi nhuận sau thuế quý hai của công ty giảm {18,7%|mười tám phẩy bảy phần trăm}.	
+vi-dB-025	vi-VN	health	percent	context	Kết quả đo cho thấy tỷ lệ mỡ cơ thể của anh là {23,4%|hai mươi ba phẩy bốn phần trăm}.	
+vi-dB-026	vi-VN	shop	percent	hard	Đồng hồ thông minh đang gắn nhãn ưu đãi {-35%|giảm ba mươi lăm phần trăm/trừ ba mươi lăm phần trăm}.	nhãn giảm giá
+vi-dB-027	vi-VN	admin	percent	basic	Tỷ lệ hộ nghèo của huyện đã giảm xuống còn {2,1%|hai phẩy một phần trăm}.	
+vi-dB-028	vi-VN	tech	percent	basic	Ổ cứng máy tính đã sử dụng hết {78%|bảy mươi tám phần trăm} dung lượng.	
+vi-dB-029	vi-VN	traffic	percent	context	Lưu lượng xe qua cầu vào giờ cao điểm tăng {26%|hai mươi sáu phần trăm}.	
+vi-dB-030	vi-VN	food	percent	context	Sô-cô-la đen loại này có hàm lượng ca cao {72%|bảy mươi hai phần trăm}.	
+vi-dB-031	vi-VN	entertainment	percent	context	Lượt xem chương trình tăng {140%|một trăm bốn mươi phần trăm} sau tập cuối.	
+vi-dB-032	vi-VN	news	percent	hard	Tỷ lệ thất nghiệp duy trì quanh mức {2,25-2,3%|hai phẩy hai mươi lăm đến hai phẩy ba phần trăm/hai phẩy hai lăm đến hai phẩy ba phần trăm/hai phẩy hai mươi lăm tới hai phẩy ba phần trăm/hai phẩy hai lăm tới hai phẩy ba phần trăm}.	khoảng thập phân
+vi-dB-033	vi-VN	finance	percent	basic	Ngân hàng Nhà nước giữ lãi suất tái cấp vốn ở mức {4,5%|bốn phẩy năm phần trăm}.	
+vi-dB-034	vi-VN	health	percent	basic	Chỉ số ô-xy trong máu của cụ ông đo được {96%|chín mươi sáu phần trăm}.	
+vi-dB-035	vi-VN	weather	percent	basic	Lượng mưa tháng mười chỉ đạt {55%|năm mươi lăm phần trăm} so với trung bình nhiều năm.	
+vi-dB-036	vi-VN	travel	percent	context	Hãng bay giảm {20%|hai mươi phần trăm} giá vé cho trẻ em dưới {11 tuổi|mười một tuổi}.	
+vi-dB-037	vi-VN	education	percent	context	Có {0,8%|không phẩy tám phần trăm} thí sinh bị điểm liệt môn toán.	
+vi-dB-038	vi-VN	sports	percent	context	Chỉ {33,3%|ba mươi ba phẩy ba phần trăm} số cú sút của đội khách trúng đích.	
+vi-dB-039	vi-VN	message	percent	context	Nhóm mình mới xong {65%|sáu mươi lăm phần trăm} đồ án, tối nay họp tiếp nhé.	
+vi-dB-040	vi-VN	admin	percent	context	Tỷ lệ cử tri đi bầu tại phường đạt {99,7%|chín mươi chín phẩy bảy phần trăm}.	
+vi-dB-041	vi-VN	finance	percent	hard	Lãi suất vay mua nhà thả nổi từ {10,5%|mười phẩy năm phần trăm} đến {12,25%|mười hai phẩy hai mươi lăm phần trăm/mười hai phẩy hai lăm phần trăm}.	
+vi-dB-042	vi-VN	tech	percent	context	Thị phần của hệ điều hành này tại Việt Nam chiếm khoảng {27,6%|hai mươi bảy phẩy sáu phần trăm}.	
+vi-dB-043	vi-VN	shop	percent	context	Khách hàng thân thiết được hoàn tiền {1,5%|một phẩy năm phần trăm} cho mỗi đơn hàng.	
+vi-dB-044	vi-VN	food	percent	basic	Loại bia này có nồng độ cồn {4,9%|bốn phẩy chín phần trăm}.	
+vi-dB-045	vi-VN	news	percent	basic	Kim ngạch xuất khẩu nông sản tăng {16%|mười sáu phần trăm} trong chín tháng đầu năm.	
+vi-dB-046	vi-VN	health	percent	context	Thuốc mỡ bôi da chứa {0,05%|không phẩy không năm phần trăm} hoạt chất.	số không sau dấu phẩy
+vi-dB-047	vi-VN	traffic	percent	hard	Tỷ lệ phương tiện vi phạm tốc độ giảm từ {14%|mười bốn phần trăm} xuống {9,5%|chín phẩy năm phần trăm}.	
+vi-dB-048	vi-VN	entertainment	percent	basic	Vé xem đêm nhạc đã bán được {90%|chín mươi phần trăm}.	
+vi-dB-049	vi-VN	finance	percent	context	Biên lợi nhuận gộp cải thiện từ {18%|mười tám phần trăm} lên {21,3%|hai mươi mốt phẩy ba phần trăm}.	mốt
+vi-dB-050	vi-VN	sports	percent	context	Chủ tịch câu lạc bộ sở hữu {51%|năm mươi mốt phần trăm} cổ phần của đội bóng.	mốt
+vi-dB-051	vi-VN	shop	money	basic	Chiếc áo khoác này có giá {459.000 đồng|bốn trăm năm mươi chín nghìn đồng/bốn trăm năm mươi chín ngàn đồng}.	
+vi-dB-052	vi-VN	food	money	basic	Một tô phở bò ở quán đầu ngõ giá {45.000đ|bốn mươi lăm nghìn đồng/bốn mươi lăm ngàn đồng}.	
+vi-dB-053	vi-VN	finance	money	context	Doanh thu năm ngoái của tập đoàn đạt {12.400 tỷ đồng|mười hai nghìn bốn trăm tỷ đồng/mười hai ngàn bốn trăm tỷ đồng}.	
+vi-dB-055	vi-VN	message	money	hard	Chuyển khoản cho mình {250k|hai trăm năm mươi nghìn/hai trăm năm mươi ngàn/hai trăm rưỡi/hai trăm năm mươi ca} tiền ăn trưa nhé.	k = nghìn
+vi-dB-056	vi-VN	news	money	context	Lương tối thiểu tại các thành phố lớn tăng thêm {280.000 đồng|hai trăm tám mươi nghìn đồng/hai trăm tám mươi ngàn đồng}.	
+vi-dB-057	vi-VN	finance	money	basic	Giá vàng miếng hôm nay bán ra {82,5 triệu đồng|tám mươi hai phẩy năm triệu đồng/tám mươi hai triệu rưỡi đồng/tám mươi hai triệu năm trăm nghìn đồng/tám mươi hai triệu năm trăm ngàn đồng} mỗi lượng.	
+vi-dB-058	vi-VN	tech	money	basic	Điện thoại mới có giá bán {27.990.000 đồng|hai mươi bảy triệu chín trăm chín mươi nghìn đồng/hai mươi bảy triệu chín trăm chín mươi ngàn đồng}.	
+vi-dB-059	vi-VN	travel	money	context	Phí tham quan vịnh dành cho khách nước ngoài là {$25|hai mươi lăm đô la/hai mươi lăm đô}.	ký hiệu $ đứng trước
+vi-dB-061	vi-VN	health	money	context	Chi phí phẫu thuật khúc xạ khoảng {15 triệu đồng|mười lăm triệu đồng} cho mỗi mắt.	
+vi-dB-063	vi-VN	shop	money	context	Đơn hàng trên {499k|bốn trăm chín mươi chín nghìn/bốn trăm chín mươi chín ngàn/bốn trăm chín mươi chín ca} được miễn phí vận chuyển.	k = nghìn
+vi-dB-064	vi-VN	finance	money	hard	Tỷ giá trung tâm hôm nay là {25.120 đồng/USD|hai mươi lăm nghìn một trăm hai mươi đồng một đô la Mỹ/hai mươi lăm ngàn một trăm hai mươi đồng một đô la Mỹ/hai mươi lăm nghìn một trăm hai mươi đồng một đô la/hai mươi lăm ngàn một trăm hai mươi đồng một đô la}.	tỷ giá đồng/USD
+vi-dB-065	vi-VN	food	money	context	Combo gà rán cho hai người giá {159.000 VND|một trăm năm mươi chín nghìn đồng/một trăm năm mươi chín ngàn đồng/một trăm năm mươi chín nghìn Việt Nam đồng/một trăm năm mươi chín ngàn Việt Nam đồng}.	
+vi-dB-066	vi-VN	entertainment	money	basic	Vé xem phim cuối tuần đã tăng lên {120.000đ|một trăm hai mươi nghìn đồng/một trăm hai mươi ngàn đồng}.	
+vi-dB-068	vi-VN	traffic	money	basic	Phí qua trạm cho ô tô dưới chín chỗ là {35.000 đồng|ba mươi lăm nghìn đồng/ba mươi lăm ngàn đồng} mỗi lượt.	
+vi-dB-069	vi-VN	traffic	money	context	Tài xế bị phạt {6 triệu đồng|sáu triệu đồng} vì vượt đèn đỏ.	
+vi-dB-070	vi-VN	education	money	basic	Học phí khóa tiếng Anh ba tháng là {4.500.000 đồng|bốn triệu năm trăm nghìn đồng/bốn triệu năm trăm ngàn đồng/bốn triệu rưỡi đồng}.	
+vi-dB-071	vi-VN	travel	money	hard	Ở Tokyo, một bữa trưa bình dân khoảng {¥1.200|một nghìn hai trăm yên/một ngàn hai trăm yên}.	¥ ở Nhật là yên
+vi-dB-072	vi-VN	travel	money	hard	Một ly trà sữa ở Thượng Hải giá khoảng {¥18|mười tám nhân dân tệ/mười tám tệ}.	¥ ở Trung Quốc là nhân dân tệ
+vi-dB-073	vi-VN	finance	money	context	Công ty chia cổ tức bằng tiền mặt {1.500 đồng|một nghìn năm trăm đồng/một ngàn năm trăm đồng/một nghìn rưỡi đồng/một ngàn rưỡi đồng} mỗi cổ phiếu.	
+vi-dB-074	vi-VN	shop	money	basic	Nồi chiên không dầu đang khuyến mãi chỉ còn {1.290.000đ|một triệu hai trăm chín mươi nghìn đồng/một triệu hai trăm chín mươi ngàn đồng}.	
+vi-dB-075	vi-VN	tech	money	context	Gói internet cáp quang gia đình giá {185.000 đồng|một trăm tám mươi lăm nghìn đồng/một trăm tám mươi lăm ngàn đồng} mỗi tháng.	
+vi-dB-076	vi-VN	health	money	basic	Mỗi lần khám chuyên khoa tại bệnh viện tư mất {380.000 đồng|ba trăm tám mươi nghìn đồng/ba trăm tám mươi ngàn đồng}.	
+vi-dB-077	vi-VN	message	money	context	Tiền điện tháng này nhà mình hết {1,2 triệu|một phẩy hai triệu/một triệu hai/một triệu hai trăm nghìn/một triệu hai trăm ngàn} đấy.	
+vi-dB-078	vi-VN	news	money	context	Thu ngân sách chín tháng ước đạt {1,85 triệu tỷ đồng|một phẩy tám mươi lăm triệu tỷ đồng/một phẩy tám lăm triệu tỷ đồng}.	
+vi-dB-079	vi-VN	sports	money	basic	Đội vô địch giải đấu nhận tiền thưởng {3 tỷ đồng|ba tỷ đồng}.	
+vi-dB-081	vi-VN	food	money	basic	Bánh mì pa-tê ở tiệm này có giá {25.000đ|hai mươi lăm nghìn đồng/hai mươi lăm ngàn đồng}.	
+vi-dB-082	vi-VN	admin	money	context	Hành vi xả rác nơi công cộng bị phạt từ {500.000 đồng|năm trăm nghìn đồng/năm trăm ngàn đồng} đến {1 triệu đồng|một triệu đồng}.	
+vi-dB-083	vi-VN	finance	money	basic	Khoản vay tiêu dùng tín chấp tối đa lên đến {70 triệu đồng|bảy mươi triệu đồng}.	
+vi-dB-084	vi-VN	shop	money	hard	Laptop chơi game giảm từ {22,99 triệu|hai mươi hai phẩy chín mươi chín triệu/hai mươi hai phẩy chín chín triệu/hai mươi hai triệu chín trăm chín mươi nghìn/hai mươi hai triệu chín trăm chín mươi ngàn} xuống {19,49 triệu|mười chín phẩy bốn mươi chín triệu/mười chín phẩy bốn chín triệu/mười chín triệu bốn trăm chín mươi nghìn/mười chín triệu bốn trăm chín mươi ngàn}.	triệu thập phân
+vi-dB-085	vi-VN	travel	money	hard	Tour ba ngày hai đêm Đà Lạt trọn gói {2.990.000 đồng/người|hai triệu chín trăm chín mươi nghìn đồng một người/hai triệu chín trăm chín mươi ngàn đồng một người/hai triệu chín trăm chín mươi nghìn đồng mỗi người/hai triệu chín trăm chín mươi ngàn đồng mỗi người}.	đơn giá /người
+vi-dB-086	vi-VN	tech	money	hard	Gói lưu trữ đám mây có giá {$9,99|chín phẩy chín mươi chín đô la/chín phẩy chín chín đô la/chín phẩy chín mươi chín đô/chín đô la chín mươi chín xu} mỗi tháng.	
+vi-dB-087	vi-VN	news	money	basic	Kim ngạch xuất khẩu gạo đạt {4,6 tỷ USD|bốn phẩy sáu tỷ đô la Mỹ/bốn phẩy sáu tỷ đô la/bốn phẩy sáu tỷ đô}.	
+vi-dB-088	vi-VN	finance	money	context	Vốn hóa thị trường của công ty đã vượt {10 tỷ USD|mười tỷ đô la Mỹ/mười tỷ đô la/mười tỷ đô}.	
+vi-dB-089	vi-VN	shop	money	context	Áo dài may đo ở tiệm này giá từ {1,6 triệu đồng|một phẩy sáu triệu đồng/một triệu sáu trăm nghìn đồng/một triệu sáu trăm ngàn đồng}.	
+vi-dB-090	vi-VN	food	money	context	Buffet hải sản giá {599.000đ|năm trăm chín mươi chín nghìn đồng/năm trăm chín mươi chín ngàn đồng} cho người lớn và {299.000đ|hai trăm chín mươi chín nghìn đồng/hai trăm chín mươi chín ngàn đồng} cho trẻ em.	
+vi-dB-091	vi-VN	health	money	context	Bảo hiểm chi trả tối đa {40 triệu đồng|bốn mươi triệu đồng} cho mỗi đợt điều trị nội trú.	
+vi-dB-092	vi-VN	education	money	context	Quỹ khuyến học trao {50 suất|năm mươi suất} học bổng, mỗi suất trị giá {5 triệu đồng|năm triệu đồng}.	
+vi-dB-093	vi-VN	message	money	hard	Tối qua đi hát hết {1tr8|một triệu tám/một triệu tám trăm nghìn/một triệu tám trăm ngàn}, chia ra mỗi người {300k|ba trăm nghìn/ba trăm ngàn/ba trăm ca} nhé.	viết tắt tr, k
+vi-dB-094	vi-VN	sports	money	hard	Vé xem trận chung kết có giá {600.000-1.200.000 đồng|sáu trăm nghìn đến một triệu hai trăm nghìn đồng/sáu trăm ngàn đến một triệu hai trăm ngàn đồng/sáu trăm nghìn tới một triệu hai trăm nghìn đồng/sáu trăm ngàn tới một triệu hai trăm ngàn đồng}.	khoảng giá
+vi-dB-095	vi-VN	traffic	money	basic	Giá xăng sinh học tăng {470 đồng|bốn trăm bảy mươi đồng} mỗi lít từ chiều nay.	
+vi-dB-096	vi-VN	admin	money	basic	Phí công chứng hợp đồng mua bán nhà là {2,4 triệu đồng|hai phẩy bốn triệu đồng/hai triệu bốn trăm nghìn đồng/hai triệu bốn trăm ngàn đồng}.	
+vi-dB-097	vi-VN	entertainment	money	basic	Gói xem phim trực tuyến không quảng cáo giá {79.000 đồng|bảy mươi chín nghìn đồng/bảy mươi chín ngàn đồng} mỗi tháng.	
+vi-dB-098	vi-VN	news	money	hard	Thiệt hại do bão ước tính {3.050 tỷ đồng|ba nghìn không trăm năm mươi tỷ đồng/ba ngàn không trăm năm mươi tỷ đồng}, tương đương khoảng {126 triệu USD|một trăm hai mươi sáu triệu đô la Mỹ/một trăm hai mươi sáu triệu đô la/một trăm hai mươi sáu triệu đô}.	không trăm
+vi-dB-099	vi-VN	finance	money	hard	Gửi {500 triệu đồng|năm trăm triệu đồng} trong một năm sẽ nhận lãi khoảng {27,5 triệu đồng|hai mươi bảy phẩy năm triệu đồng/hai mươi bảy triệu rưỡi đồng/hai mươi bảy triệu năm trăm nghìn đồng/hai mươi bảy triệu năm trăm ngàn đồng}.	
+vi-dB-100	vi-VN	shop	money	basic	Một hộp khẩu trang y tế giá {38.000 đồng|ba mươi tám nghìn đồng/ba mươi tám ngàn đồng}.	
+vi-dB-101	vi-VN	travel	money	context	Phí đổi vé chặng quốc tế là {75 USD|bảy mươi lăm đô la Mỹ/bảy mươi lăm đô la/bảy mươi lăm đô} mỗi chiều.	
+vi-dB-102	vi-VN	food	money	context	Cà phê muối mang đi chỉ {29k|hai mươi chín nghìn/hai mươi chín ngàn/hai mươi chín ca} một ly.	k = nghìn
+vi-dB-103	vi-VN	tech	money	context	Máy tính bảng bản {256 GB|hai trăm năm mươi sáu gi-ga-bai/hai trăm năm mươi sáu gi-ga} đắt hơn bản thường {3 triệu đồng|ba triệu đồng}.	
+vi-dB-104	vi-VN	health	money	basic	Mỗi hộp vitamin tổng hợp giá {205.000đ|hai trăm linh năm nghìn đồng/hai trăm lẻ năm nghìn đồng/hai trăm linh năm ngàn đồng/hai trăm lẻ năm ngàn đồng}.	linh/lẻ
+vi-dB-105	vi-VN	admin	money	context	Công nhân được hỗ trợ tiền thuê nhà {700.000 đồng/tháng|bảy trăm nghìn đồng một tháng/bảy trăm ngàn đồng một tháng/bảy trăm nghìn đồng mỗi tháng/bảy trăm ngàn đồng mỗi tháng}.	
+vi-dB-106	vi-VN	finance	money	basic	Hạn mức thẻ tín dụng của chị là {45 triệu đồng|bốn mươi lăm triệu đồng}.	
+vi-dB-107	vi-VN	sports	money	basic	Giải chạy marathon có tổng giải thưởng {1,5 tỷ đồng|một phẩy năm tỷ đồng/một tỷ rưỡi đồng/một tỷ năm trăm triệu đồng}.	
+vi-dB-108	vi-VN	entertainment	money	context	Bức tranh được bán đấu giá với giá {€1,4 triệu|một phẩy bốn triệu ơ-rô/một triệu bốn trăm nghìn ơ-rô/một triệu bốn trăm ngàn ơ-rô}.	
+vi-dB-109	vi-VN	shop	money	context	Tủ lạnh hai cánh đang bán {9.490.000₫|chín triệu bốn trăm chín mươi nghìn đồng/chín triệu bốn trăm chín mươi ngàn đồng}.	ký hiệu ₫
+vi-dB-110	vi-VN	news	money	basic	Giá lợn hơi tăng lên {62.000 đồng|sáu mươi hai nghìn đồng/sáu mươi hai ngàn đồng} mỗi cân.	
+vi-dB-111	vi-VN	food	money	basic	Đĩa cơm tấm sườn bì chả có giá {55.000 đồng|năm mươi lăm nghìn đồng/năm mươi lăm ngàn đồng}.	
+vi-dB-112	vi-VN	travel	money	basic	Thuê xe máy ở Hà Giang khoảng {150.000đ|một trăm năm mươi nghìn đồng/một trăm năm mươi ngàn đồng} một ngày.	
+vi-dB-113	vi-VN	tech	money	basic	Tai nghe không dây có giá {$129|một trăm hai mươi chín đô la/một trăm hai mươi chín đô} trên cửa hàng quốc tế.	
+vi-dB-114	vi-VN	education	money	basic	Mỗi bộ sách giáo khoa lớp một có giá khoảng {270.000 đồng|hai trăm bảy mươi nghìn đồng/hai trăm bảy mươi ngàn đồng}.	
+vi-dB-115	vi-VN	health	money	context	Viện phí sau năm ngày nằm viện là {8.750.000 đồng|tám triệu bảy trăm năm mươi nghìn đồng/tám triệu bảy trăm năm mươi ngàn đồng}.	
+vi-dB-116	vi-VN	traffic	money	hard	Taxi mở cửa {12.000đ|mười hai nghìn đồng/mười hai ngàn đồng}, mỗi ki-lô-mét tiếp theo {16.500đ|mười sáu nghìn năm trăm đồng/mười sáu ngàn năm trăm đồng/mười sáu nghìn rưỡi đồng/mười sáu ngàn rưỡi đồng}.	
+vi-dB-117	vi-VN	admin	money	hard	Người có thu nhập từ {11 triệu đồng/tháng|mười một triệu đồng một tháng/mười một triệu đồng mỗi tháng} trở lên phải nộp thuế.	đơn giá /tháng
+vi-dB-118	vi-VN	finance	money	context	Quỹ đầu tư rót {35 triệu USD|ba mươi lăm triệu đô la Mỹ/ba mươi lăm triệu đô la/ba mươi lăm triệu đô} vào công ty khởi nghiệp.	
+vi-dB-119	vi-VN	message	money	basic	Nhớ mang theo {100.000 đồng|một trăm nghìn đồng/một trăm ngàn đồng} để đóng quỹ lớp nhé.	
+vi-dB-120	vi-VN	shop	money	hard	Giá niêm yết {3.450.000đ|ba triệu bốn trăm năm mươi nghìn đồng/ba triệu bốn trăm năm mươi ngàn đồng}, sau khi giảm {20%|hai mươi phần trăm} chỉ còn {2.760.000đ|hai triệu bảy trăm sáu mươi nghìn đồng/hai triệu bảy trăm sáu mươi ngàn đồng}.	
+vi-dB-121	vi-VN	sports	money	hard	Lương của ngôi sao này ước tính {£310.000|ba trăm mười nghìn bảng Anh/ba trăm mười ngàn bảng Anh/ba trăm mười nghìn bảng/ba trăm mười ngàn bảng} mỗi tuần.	ký hiệu £
+vi-dB-122	vi-VN	news	money	context	Chính phủ dành {120.000 tỷ đồng|một trăm hai mươi nghìn tỷ đồng/một trăm hai mươi ngàn tỷ đồng} cho gói hỗ trợ lãi suất nhà ở.	
+vi-dB-123	vi-VN	food	money	context	Sầu riêng Thái đang bán {85.000 đồng/kg|tám mươi lăm nghìn đồng một ki-lô-gam/tám mươi lăm ngàn đồng một ki-lô-gam/tám mươi lăm nghìn đồng một cân/tám mươi lăm ngàn đồng một cân/tám mươi lăm nghìn đồng một ký/tám mươi lăm ngàn đồng một ký}.	đơn giá /kg
+vi-dB-124	vi-VN	entertainment	money	basic	Vé xem hòa nhạc hạng VIP được bán với giá {8 triệu đồng|tám triệu đồng}.	
+vi-dB-125	vi-VN	travel	money	context	Phòng khách sạn năm sao ở Paris giá {€180|một trăm tám mươi ơ-rô} một đêm.	
+vi-dB-126	vi-VN	tech	money	hard	Doanh thu mảng chip của hãng đạt {2,75 tỷ USD|hai phẩy bảy mươi lăm tỷ đô la Mỹ/hai phẩy bảy lăm tỷ đô la Mỹ/hai phẩy bảy mươi lăm tỷ đô la/hai phẩy bảy lăm tỷ đô la/hai phẩy bảy mươi lăm tỷ đô/hai phẩy bảy lăm tỷ đô} trong quý.	
+vi-dB-127	vi-VN	health	money	basic	Gói tầm soát ung thư cơ bản có giá {2.300.000 đồng|hai triệu ba trăm nghìn đồng/hai triệu ba trăm ngàn đồng}.	
+vi-dB-128	vi-VN	admin	money	basic	Lệ phí cấp đổi giấy phép lái xe là {135.000 đồng|một trăm ba mươi lăm nghìn đồng/một trăm ba mươi lăm ngàn đồng}.	
+vi-dB-129	vi-VN	traffic	money	hard	Phiên đấu giá biển số xe đẹp kết thúc ở mức {2,05 tỷ đồng|hai phẩy không năm tỷ đồng/hai tỷ không trăm năm mươi triệu đồng}.	số không sau dấu phẩy
+vi-dB-130	vi-VN	shop	money	basic	Bộ chăn ga gối cotton đang bán {899.000 VNĐ|tám trăm chín mươi chín nghìn đồng/tám trăm chín mươi chín ngàn đồng/tám trăm chín mươi chín nghìn Việt Nam đồng/tám trăm chín mươi chín ngàn Việt Nam đồng}.	
+vi-dB-131	vi-VN	food	money	hard	Thực đơn ghi lẩu Thái {329K|ba trăm hai mươi chín nghìn/ba trăm hai mươi chín ngàn/ba trăm hai mươi chín ca} một nồi.	K viết hoa = nghìn
+vi-dB-132	vi-VN	sports	money	context	Phí đăng ký giải bơi mở rộng là {320.000đ|ba trăm hai mươi nghìn đồng/ba trăm hai mươi ngàn đồng} mỗi vận động viên.	
+vi-dB-133	vi-VN	news	money	basic	Giá cà phê nhân xuất khẩu đạt {5.400 USD|năm nghìn bốn trăm đô la Mỹ/năm ngàn bốn trăm đô la Mỹ/năm nghìn bốn trăm đô la/năm ngàn bốn trăm đô la/năm nghìn bốn trăm đô/năm ngàn bốn trăm đô} mỗi tấn.	
+vi-dB-134	vi-VN	traffic	money	basic	Vé xe khách Sài Gòn đi Cần Thơ giá {165.000 đồng|một trăm sáu mươi lăm nghìn đồng/một trăm sáu mươi lăm ngàn đồng}.	
+vi-dB-135	vi-VN	education	money	hard	Học bổng toàn phần trị giá {A$42.000|bốn mươi hai nghìn đô la Úc/bốn mươi hai ngàn đô la Úc/bốn mươi hai nghìn đô Úc/bốn mươi hai ngàn đô Úc} mỗi năm.	A$ = đô la Úc
+vi-dB-136	vi-VN	message	money	context	Con gửi mẹ {2tr|hai triệu} mua quà cho bà nhé.	tr = triệu
+vi-dB-137	vi-VN	entertainment	money	hard	Album bản giới hạn có giá {¥3.300|ba nghìn ba trăm yên/ba ngàn ba trăm yên} tại các cửa hàng ở Nhật.	¥ ở Nhật là yên
+vi-dB-138	vi-VN	tech	money	basic	Chuột không dây đang giảm giá còn {189.000đ|một trăm tám mươi chín nghìn đồng/một trăm tám mươi chín ngàn đồng}.	
+vi-dB-139	vi-VN	finance	money	context	Mệnh giá mỗi cổ phiếu là {10.000 đồng|mười nghìn đồng/mười ngàn đồng}.	
+vi-dB-140	vi-VN	health	money	context	Một liều vắc xin cúm giá {356.000đ|ba trăm năm mươi sáu nghìn đồng/ba trăm năm mươi sáu ngàn đồng}, tiêm hai liều hết {712.000đ|bảy trăm mười hai nghìn đồng/bảy trăm mười hai ngàn đồng}.	
+vi-dB-141	vi-VN	traffic	measure	basic	Tốc độ tối đa trên đoạn cao tốc này là {120 km/h|một trăm hai mươi ki-lô-mét trên giờ/một trăm hai mươi ki-lô-mét một giờ/một trăm hai mươi cây số một giờ}.	
+vi-dB-142	vi-VN	weather	measure	basic	Nhiệt độ cao nhất ở Hà Nội hôm nay khoảng {37°C|ba mươi bảy độ C/ba mươi bảy độ xê}.	
+vi-dB-143	vi-VN	weather	measure	context	Đêm nay ở Sa Pa, nhiệt độ thấp nhất có thể xuống {-2°C|âm hai độ C/âm hai độ xê}.	nhiệt độ âm
+vi-dB-144	vi-VN	health	measure	basic	Bé sốt {38,5°C|ba mươi tám phẩy năm độ C/ba mươi tám phẩy năm độ xê/ba mươi tám độ rưỡi}, mẹ cho uống hạ sốt rồi.	
+vi-dB-145	vi-VN	health	measure	hard	Huyết áp của bác đo được {140/90 mmHg|một trăm bốn mươi trên chín mươi mi-li-mét thủy ngân/một trăm bốn mươi chín mươi mi-li-mét thủy ngân}.	huyết áp tâm thu/tâm trương
+vi-dB-146	vi-VN	health	measure	basic	Uống mỗi lần một viên {500 mg|năm trăm mi-li-gam}, ngày hai lần sau ăn.	
+vi-dB-147	vi-VN	food	measure	basic	Cho {200 ml|hai trăm mi-li-lít} nước cốt dừa vào nồi chè.	
+vi-dB-148	vi-VN	food	measure	context	Chuẩn bị {1,5 kg|một phẩy năm ki-lô-gam/một ki-lô-gam rưỡi/một ki-lô rưỡi/một cân rưỡi/một ký rưỡi} thịt ba chỉ để kho tàu.	
+vi-dB-149	vi-VN	travel	measure	basic	Từ trung tâm thành phố đến sân bay khoảng {28 km|hai mươi tám ki-lô-mét/hai mươi tám cây số}.	
+vi-dB-150	vi-VN	tech	measure	basic	Bản cập nhật hệ điều hành nặng {2,3 GB|hai phẩy ba gi-ga-bai/hai phẩy ba gi-ga}.	
+vi-dB-151	vi-VN	tech	measure	context	Ảnh đại diện tải lên không được vượt quá {5 MB|năm mê-ga-bai/năm mê-ga}.	
+vi-dB-152	vi-VN	admin	measure	basic	Mảnh đất được cấp sổ có diện tích {96 m²|chín mươi sáu mét vuông}.	
+vi-dB-154	vi-VN	shop	measure	basic	Bình giữ nhiệt có dung tích {750 ml|bảy trăm năm mươi mi-li-lít}.	
+vi-dB-155	vi-VN	shop	measure	context	Chai dầu ăn loại {2 l|hai lít} đang được giảm giá.	l = lít
+vi-dB-156	vi-VN	weather	measure	context	Lượng mưa tại Huế đêm qua đo được {245 mm|hai trăm bốn mươi lăm mi-li-mét}.	
+vi-dB-157	vi-VN	sports	measure	basic	Cô ấy phá kỷ lục quốc gia ở nội dung {400 m|bốn trăm mét} vượt rào.	
+vi-dB-158	vi-VN	sports	measure	context	Anh ấy nâng thành công mức tạ {183 kg|một trăm tám mươi ba ki-lô-gam/một trăm tám mươi ba ki-lô} ở nội dung cử giật.	
+vi-dB-159	vi-VN	traffic	measure	context	Xe tải trên {10 tấn|mười tấn} không được lưu thông qua cầu này.	
+vi-dB-160	vi-VN	health	measure	context	Em bé chào đời nặng {3,2 kg|ba phẩy hai ki-lô-gam/ba phẩy hai ki-lô/ba ki-lô hai/ba cân hai/ba ký hai}.	
+vi-dB-161	vi-VN	education	measure	basic	Phòng học mới xây rộng {54 m²|năm mươi tư mét vuông/năm mươi bốn mét vuông}.	
+vi-dB-163	vi-VN	admin	measure	context	Chỉ số điện tiêu thụ tháng này của hộ gia đình là {326 kWh|ba trăm hai mươi sáu ki-lô-oát giờ}.	
+vi-dB-164	vi-VN	news	measure	basic	Nhà máy điện mặt trời mới có công suất {50 MW|năm mươi mê-ga-oát}.	
+vi-dB-165	vi-VN	food	measure	basic	Thêm {15 g|mười lăm gam} đường vào hỗn hợp rồi khuấy đều.	
+vi-dB-166	vi-VN	travel	measure	context	Đỉnh Fansipan cao {3.143 m|ba nghìn một trăm bốn mươi ba mét/ba ngàn một trăm bốn mươi ba mét}, được mệnh danh là nóc nhà Đông Dương.	
+vi-dB-167	vi-VN	traffic	measure	basic	Hầm chui có chiều cao giới hạn {4,2 m|bốn phẩy hai mét/bốn mét hai}.	
+vi-dB-168	vi-VN	entertainment	measure	basic	Màn hình LED trên sân khấu rộng tới {200 m²|hai trăm mét vuông}.	
+vi-dB-169	vi-VN	tech	measure	basic	Chiếc tivi mới có màn hình {65 inch|sáu mươi lăm inh}.	
+vi-dB-170	vi-VN	weather	measure	context	Gió mạnh trên đất liền, giật với tốc độ {88 km/h|tám mươi tám ki-lô-mét trên giờ/tám mươi tám ki-lô-mét một giờ/tám mươi tám cây số một giờ}.	
+vi-dB-171	vi-VN	health	measure	hard	Đường huyết lúc đói của bệnh nhân là {5,6 mmol/l|năm phẩy sáu mi-li-mol trên lít/năm phẩy sáu mi-li-mol một lít}.	
+vi-dB-172	vi-VN	sports	measure	hard	Thủ môn trẻ của đội tuyển cao {1m85|một mét tám mươi lăm/một mét tám lăm}.	chiều cao viết gộp
+vi-dB-173	vi-VN	shop	measure	context	Bao gạo {25 kg|hai mươi lăm ki-lô-gam/hai mươi lăm ki-lô/hai mươi lăm cân/hai mươi lăm ký} được giao tận nhà miễn phí.	
+vi-dB-174	vi-VN	news	measure	context	Mực nước sông Hồng tại Hà Nội đã lên {9,8 m|chín phẩy tám mét/chín mét tám}.	
+vi-dB-176	vi-VN	travel	measure	basic	Hành lý xách tay không được quá {7 kg|bảy ki-lô-gam/bảy ki-lô/bảy cân/bảy ký}.	
+vi-dB-179	vi-VN	admin	measure	basic	Khu công nghiệp được quy hoạch trên diện tích {320 ha|ba trăm hai mươi héc-ta}.	
+vi-dB-180	vi-VN	health	measure	basic	Người trưởng thành nên uống ít nhất {1,5 l|một phẩy năm lít/một lít rưỡi} nước mỗi ngày.	
+vi-dB-181	vi-VN	traffic	measure	hard	Trong khu dân cư, xe máy chạy tối đa {40 km/h|bốn mươi ki-lô-mét trên giờ/bốn mươi ki-lô-mét một giờ/bốn mươi cây số một giờ}, ô tô {50 km/h|năm mươi ki-lô-mét trên giờ/năm mươi ki-lô-mét một giờ/năm mươi cây số một giờ}.	
+vi-dB-182	vi-VN	weather	measure	hard	Nhiệt độ ngày mai dao động từ {23-31°C|hai mươi ba đến ba mươi mốt độ C/hai mươi ba tới ba mươi mốt độ C/hai mươi ba đến ba mươi mốt độ xê/hai mươi ba tới ba mươi mốt độ xê}.	khoảng nhiệt độ
+vi-dB-183	vi-VN	food	measure	basic	Mỗi hộp sữa chua có khối lượng {100 g|một trăm gam}.	
+vi-dB-184	vi-VN	shop	measure	hard	Máy giặt lồng ngang {9 kg|chín ki-lô-gam/chín ki-lô/chín cân/chín ký}, công suất {2.000 W|hai nghìn oát/hai ngàn oát}.	
+vi-dB-185	vi-VN	tech	measure	basic	Gói cước cho bạn {30 GB|ba mươi gi-ga-bai/ba mươi gi-ga} dữ liệu tốc độ cao mỗi tháng.	
+vi-dB-186	vi-VN	news	measure	basic	Trận động đất có độ sâu chấn tiêu khoảng {12 km|mười hai ki-lô-mét/mười hai cây số}.	
+vi-dB-187	vi-VN	sports	measure	hard	Cô hoàn thành cự ly {42,195 km|bốn mươi hai phẩy một trăm chín mươi lăm ki-lô-mét/bốn mươi hai phẩy một trăm chín mươi lăm cây số/bốn mươi hai phẩy một chín lăm ki-lô-mét} trong chưa đầy ba giờ.	ba chữ số thập phân
+vi-dB-188	vi-VN	health	measure	hard	Liều dùng cho trẻ là {15 mg/kg|mười lăm mi-li-gam trên ki-lô-gam/mười lăm mi-li-gam mỗi ki-lô-gam/mười lăm mi-li-gam một ki-lô-gam} cân nặng.	đơn vị ghép
+vi-dB-189	vi-VN	travel	measure	context	Đường bay từ Hà Nội đến Paris dài khoảng {9.200 km|chín nghìn hai trăm ki-lô-mét/chín ngàn hai trăm ki-lô-mét/chín nghìn hai trăm cây số/chín ngàn hai trăm cây số}.	
+vi-dB-190	vi-VN	admin	measure	context	Căn hộ nhà ở xã hội có diện tích từ {25 m²|hai mươi lăm mét vuông} đến {70 m²|bảy mươi mét vuông}.	
+vi-dB-191	vi-VN	weather	measure	basic	Sương mù dày đặc khiến tầm nhìn xa giảm còn {500 m|năm trăm mét}.	
+vi-dB-192	vi-VN	entertainment	measure	context	Bộ phim được quay bằng định dạng phim {70 mm|bảy mươi mi-li-mét/bảy mươi li}.	
+vi-dB-193	vi-VN	food	measure	context	Mỗi suất cơm văn phòng cung cấp khoảng {650 kcal|sáu trăm năm mươi ki-lô-ca-lo/sáu trăm năm mươi ca-lo}.	
+vi-dB-194	vi-VN	tech	measure	hard	Ổ SSD đạt tốc độ đọc {7.000 MB/s|bảy nghìn mê-ga-bai trên giây/bảy ngàn mê-ga-bai trên giây/bảy nghìn mê-ga-bai mỗi giây/bảy ngàn mê-ga-bai mỗi giây}.	
+vi-dB-195	vi-VN	traffic	measure	context	Đoạn đường đang thi công dài {2,7 km|hai phẩy bảy ki-lô-mét/hai phẩy bảy cây số}, đề nghị đi chậm.	
+vi-dB-196	vi-VN	health	measure	basic	Cân nặng hiện tại của tôi là {58 kg|năm mươi tám ki-lô-gam/năm mươi tám ki-lô/năm mươi tám cân/năm mươi tám ký}.	
+vi-dB-197	vi-VN	education	measure	hard	Thể tích bể nước trong bài toán là {2,5 m³|hai phẩy năm mét khối/hai mét khối rưỡi}.	
+vi-dB-198	vi-VN	news	measure	context	Năng suất lúa vụ này đạt {6,1 tấn/ha|sáu phẩy một tấn trên héc-ta/sáu phẩy một tấn một héc-ta/sáu phẩy một tấn mỗi héc-ta}.	
+vi-dB-199	vi-VN	sports	measure	basic	Cú ném lao của anh đạt {68,4 m|sáu mươi tám phẩy bốn mét/sáu mươi tám mét tư/sáu mươi tám mét bốn}.	
+vi-dB-200	vi-VN	shop	measure	basic	Túi nước giặt {3,8 kg|ba phẩy tám ki-lô-gam/ba phẩy tám ki-lô/ba ki-lô tám/ba cân tám/ba ký tám} đang giảm giá.	
+vi-dB-201	vi-VN	weather	measure	context	Tâm bão cách bờ biển Quảng Ngãi khoảng {300 km|ba trăm ki-lô-mét/ba trăm cây số}.	
+vi-dB-202	vi-VN	tech	measure	basic	Củ sạc nhanh có công suất {65 W|sáu mươi lăm oát}.	
+vi-dB-203	vi-VN	food	measure	basic	Đun sôi {600 ml|sáu trăm mi-li-lít} nước rồi thả mì vào.	
+vi-dB-204	vi-VN	travel	measure	hard	Chặng leo núi dài {14 km|mười bốn ki-lô-mét/mười bốn cây số}, độ cao tăng thêm {850 m|tám trăm năm mươi mét}.	
+vi-dB-205	vi-VN	admin	measure	hard	Lô đất {5x20 m|năm nhân hai mươi mét/năm mét nhân hai mươi mét}, tổng diện tích {100 m²|một trăm mét vuông}.	kích thước dài x rộng
+vi-dB-206	vi-VN	health	measure	context	Bệnh nhân cần được truyền {350 ml|ba trăm năm mươi mi-li-lít} máu ngay.	
+vi-dB-207	vi-VN	entertainment	measure	basic	Mô hình khủng long trong công viên giải trí cao {18 m|mười tám mét}.	
+vi-dB-208	vi-VN	traffic	measure	basic	Xe điện đi được {420 km|bốn trăm hai mươi ki-lô-mét/bốn trăm hai mươi cây số} sau mỗi lần sạc đầy.	
+vi-dB-209	vi-VN	tech	measure	hard	Tốc độ mạng đo được là {300 Mbps|ba trăm mê-ga-bít trên giây/ba trăm mê-ga-bít mỗi giây/ba trăm mê-ga-bít}.	
+vi-dB-210	vi-VN	weather	measure	basic	Nhiệt độ cảm nhận ngoài trời trưa nay lên tới {41°C|bốn mươi mốt độ C/bốn mươi mốt độ xê}.	
+vi-dB-211	vi-VN	food	measure	hard	Pha {30 ml|ba mươi mi-li-lít} cà phê espresso với {150 ml|một trăm năm mươi mi-li-lít} sữa tươi.	
+vi-dB-212	vi-VN	education	measure	basic	Cặp sách của học sinh tiểu học không nên nặng quá {3 kg|ba ki-lô-gam/ba ki-lô/ba cân/ba ký}.	
+vi-dB-213	vi-VN	news	measure	context	Tuyến kè chống sạt lở dài {1.250 m|một nghìn hai trăm năm mươi mét/một ngàn hai trăm năm mươi mét}.	
+vi-dB-214	vi-VN	sports	measure	hard	Tay đua đạt vận tốc tối đa {312,5 km/h|ba trăm mười hai phẩy năm ki-lô-mét trên giờ/ba trăm mười hai phẩy năm ki-lô-mét một giờ/ba trăm mười hai phẩy năm cây số một giờ}.	
+vi-dB-215	vi-VN	health	measure	basic	Vòng eo của nam giới nên dưới {90 cm|chín mươi xăng-ti-mét/chín mươi phân}.	
+vi-dB-216	vi-VN	shop	measure	context	Rèm cửa dài {2,6 m|hai phẩy sáu mét/hai mét sáu}, rộng {1,4 m|một phẩy bốn mét/một mét tư/một mét bốn}.	
+vi-dB-217	vi-VN	admin	measure	basic	Hộ gia đình đã dùng {18 m³|mười tám mét khối} nước trong tháng.	
+vi-dB-218	vi-VN	tech	measure	context	Chiếc laptop siêu mỏng chỉ nặng {990 g|chín trăm chín mươi gam}.	
+vi-dB-219	vi-VN	travel	measure	basic	Hồ Ba Bể nằm ở độ cao {145 m|một trăm bốn mươi lăm mét} so với mực nước biển.	
+vi-dB-220	vi-VN	traffic	measure	context	Khi chạy {60 km/h|sáu mươi ki-lô-mét trên giờ/sáu mươi ki-lô-mét một giờ/sáu mươi cây số một giờ}, cần giữ khoảng cách tối thiểu {35 m|ba mươi lăm mét}.	
+vi-dB-221	vi-VN	food	measure	context	Trộn {320 g|ba trăm hai mươi gam} bột mì với {2 quả trứng|hai quả trứng} gà.	
+vi-dB-222	vi-VN	weather	measure	basic	Chênh lệch nhiệt độ ngày và đêm lên tới {12°C|mười hai độ C/mười hai độ xê}.	
+vi-dB-223	vi-VN	health	measure	hard	Mạch {72 lần/phút|bảy mươi hai lần một phút/bảy mươi hai lần mỗi phút/bảy mươi hai lần trên phút}, nhiệt độ {36,8°C|ba mươi sáu phẩy tám độ C/ba mươi sáu phẩy tám độ xê}.	
+vi-dB-224	vi-VN	entertainment	measure	context	Khinh khí cầu bay ở độ cao khoảng {1.500 m|một nghìn năm trăm mét/một ngàn năm trăm mét/một nghìn rưỡi mét/một ngàn rưỡi mét}.	
+vi-dB-225	vi-VN	tech	measure	basic	Thẻ nhớ {128 GB|một trăm hai mươi tám gi-ga-bai/một trăm hai mươi tám gi-ga} đang có giá rất rẻ.	
+vi-dB-226	vi-VN	news	measure	basic	Diện tích rừng trồng mới năm nay đạt {2.400 ha|hai nghìn bốn trăm héc-ta/hai ngàn bốn trăm héc-ta}.	
+vi-dB-227	vi-VN	sports	measure	basic	Bể bơi tiêu chuẩn Olympic dài {50 m|năm mươi mét}.	
+vi-dB-228	vi-VN	shop	measure	basic	Tủ lạnh này có dung tích {360 l|ba trăm sáu mươi lít}.	
+vi-dB-229	vi-VN	traffic	measure	basic	Cây cầu dây văng mới dài {1,7 km|một phẩy bảy ki-lô-mét/một phẩy bảy cây số}.	
+vi-dB-230	vi-VN	food	measure	basic	Một quả bơ trung bình nặng khoảng {300 g|ba trăm gam}.	
+vi-dB-231	vi-VN	admin	measure	hard	Giá điện bậc một áp dụng cho mức sử dụng từ {0-50 kWh|không đến năm mươi ki-lô-oát giờ/không tới năm mươi ki-lô-oát giờ}.	khoảng bắt đầu từ 0
+vi-dB-232	vi-VN	health	measure	context	Ở tuần thai thứ hai mươi, em bé dài khoảng {16 cm|mười sáu xăng-ti-mét/mười sáu phân}.	
+vi-dB-233	vi-VN	weather	measure	context	Mưa đá có đường kính tới {3 cm|ba xăng-ti-mét/ba phân} làm hư hại nhiều mái nhà.	
+vi-dB-235	vi-VN	tech	measure	hard	Màn hình {6,7 inch|sáu phẩy bảy inh}, tần số quét {144 Hz|một trăm bốn mươi tư héc/một trăm bốn mươi bốn héc}.	
+vi-dB-236	vi-VN	education	measure	context	Học sinh đo được chiều dài cái bàn là {1,25 m|một phẩy hai mươi lăm mét/một phẩy hai lăm mét/một mét hai mươi lăm/một mét hai lăm}.	
+vi-dB-237	vi-VN	news	measure	basic	Nhà máy mới xử lý được {680 tấn|sáu trăm tám mươi tấn} rác mỗi ngày.	
+vi-dB-238	vi-VN	sports	measure	context	Cung thủ bắn trúng hồng tâm từ khoảng cách {70 m|bảy mươi mét}.	
+vi-dB-239	vi-VN	shop	measure	hard	Nệm cao su kích thước {1,6 x 2 m|một phẩy sáu nhân hai mét/một mét sáu nhân hai mét}.	kích thước dài x rộng
+vi-dB-240	vi-VN	food	measure	basic	Nồi cơm điện {1,8 l|một phẩy tám lít} đủ cho gia đình năm người.	
+vi-dB-241	vi-VN	traffic	measure	hard	Mức tiêu hao nhiên liệu của xe là {5,8 l/100 km|năm phẩy tám lít trên một trăm ki-lô-mét/năm phẩy tám lít cho một trăm ki-lô-mét/năm phẩy tám lít một trăm cây số}.	đơn vị ghép
+vi-dB-242	vi-VN	health	measure	basic	Mỗi viên canxi chứa {800 mg|tám trăm mi-li-gam} hoạt chất.	
+vi-dB-243	vi-VN	weather	measure	context	Gió trên biển giật mạnh với vận tốc {20 m/s|hai mươi mét trên giây/hai mươi mét một giây}.	
+vi-dB-244	vi-VN	entertainment	measure	basic	Bể cá lớn nhất thủy cung chứa {4.000 m³|bốn nghìn mét khối/bốn ngàn mét khối} nước.	
+vi-dB-245	vi-VN	tech	measure	context	Ứng dụng này chiếm {740 MB|bảy trăm bốn mươi mê-ga-bai/bảy trăm bốn mươi mê-ga} bộ nhớ.	
+vi-dB-246	vi-VN	admin	measure	context	Đường nội bộ trong khu dân cư phải rộng tối thiểu {6,5 m|sáu phẩy năm mét/sáu mét rưỡi}.	
+vi-dB-247	vi-VN	weather	measure	context	Biển động mạnh, sóng cao {4-5 m|bốn đến năm mét/bốn tới năm mét/bốn năm mét}.	khoảng
+vi-dB-248	vi-VN	food	measure	hard	Nhiệt độ lõi của thịt bò chín tái khoảng {54°C|năm mươi tư độ C/năm mươi bốn độ C/năm mươi tư độ xê/năm mươi bốn độ xê}.	
+vi-dB-249	vi-VN	travel	measure	basic	Bãi biển trải dài hơn {20 km|hai mươi ki-lô-mét/hai mươi cây số} cát trắng.	
+vi-dB-250	vi-VN	message	measure	basic	Tớ chạy bộ được {5 km|năm ki-lô-mét/năm cây số} rồi, mai chạy tiếp nhé.	
+vi-dC-001	vi-VN	news	date	basic	Bộ Y tế sẽ công bố số liệu mới vào chiều {18/11/2026|ngày mười tám tháng mười một năm hai nghìn không trăm hai mươi sáu/ngày mười tám tháng mười một năm hai ngàn không trăm hai mươi sáu/ngày mười tám tháng mười một năm hai không hai sáu/mười tám tháng mười một năm hai nghìn không trăm hai mươi sáu/mười tám tháng mười một năm hai ngàn không trăm hai mươi sáu/mười tám tháng mười một năm hai không hai sáu}.	
+vi-dC-002	vi-VN	notice	date	basic	Trường thông báo học sinh được nghỉ học {ngày 2/9|ngày mùng hai tháng chín/mùng hai tháng chín/ngày mồng hai tháng chín/mồng hai tháng chín/ngày hai tháng chín} để mừng Quốc khánh.	
+vi-dC-003	vi-VN	message	date	basic	Mẹ ơi, con về quê thứ Bảy {24/10|ngày hai mươi tư tháng mười/hai mươi tư tháng mười/ngày hai mươi bốn tháng mười/hai mươi bốn tháng mười} nhé.	
+vi-dC-005	vi-VN	health	date	hard	Bệnh nhân được hẹn tái khám vào {05-11-2026|ngày mùng năm tháng mười một năm hai nghìn không trăm hai mươi sáu/mùng năm tháng mười một năm hai nghìn không trăm hai mươi sáu/ngày mồng năm tháng mười một năm hai nghìn không trăm hai mươi sáu/mồng năm tháng mười một năm hai nghìn không trăm hai mươi sáu/ngày năm tháng mười một năm hai nghìn không trăm hai mươi sáu/ngày mùng năm tháng mười một năm hai ngàn không trăm hai mươi sáu/mùng năm tháng mười một năm hai ngàn không trăm hai mươi sáu/ngày mồng năm tháng mười một năm hai ngàn không trăm hai mươi sáu/mồng năm tháng mười một năm hai ngàn không trăm hai mươi sáu/ngày năm tháng mười một năm hai ngàn không trăm hai mươi sáu/ngày mùng năm tháng mười một năm hai không hai sáu/mùng năm tháng mười một năm hai không hai sáu/ngày mồng năm tháng mười một năm hai không hai sáu/mồng năm tháng mười một năm hai không hai sáu/ngày năm tháng mười một năm hai không hai sáu}.	dash-separated date with leading zero
+vi-dC-006	vi-VN	tech	date	basic	Bản cập nhật hệ điều hành mới sẽ phát hành trong {tháng 4/2027|tháng tư năm hai nghìn không trăm hai mươi bảy/tháng tư năm hai ngàn không trăm hai mươi bảy/tháng tư năm hai không hai bảy}.	
+vi-dC-007	vi-VN	finance	date	hard	Báo cáo tài chính {Quý III/2026|quý ba năm hai nghìn không trăm hai mươi sáu/quý ba năm hai ngàn không trăm hai mươi sáu/quý ba năm hai không hai sáu} cho thấy lợi nhuận tăng mạnh.	Roman numeral quarter
+vi-dC-008	vi-VN	sports	date	basic	Trận chung kết lượt về diễn ra tối {12/12|ngày mười hai tháng mười hai/mười hai tháng mười hai} trên sân Mỹ Đình.	
+vi-dC-009	vi-VN	weather	date	basic	Từ {ngày 3/11|ngày mùng ba tháng mười một/mùng ba tháng mười một/ngày mồng ba tháng mười một/mồng ba tháng mười một/ngày ba tháng mười một}, không khí lạnh sẽ tràn xuống Bắc Bộ.	
+vi-dC-010	vi-VN	travel	date	hard	Tour Đà Lạt khởi hành {20.12.2026|ngày hai mươi tháng mười hai năm hai nghìn không trăm hai mươi sáu/ngày hai mươi tháng mười hai năm hai không hai sáu/hai mươi tháng mười hai năm hai nghìn không trăm hai mươi sáu/hai mươi tháng mười hai năm hai không hai sáu/ngày hai mươi tháng mười hai năm hai ngàn không trăm hai mươi sáu/hai mươi tháng mười hai năm hai ngàn không trăm hai mươi sáu} hiện còn ít chỗ.	dot-separated date
+vi-dC-011	vi-VN	education	date	basic	Kỳ thi tốt nghiệp trung học phổ thông năm {2027|hai nghìn không trăm hai mươi bảy/hai không hai bảy/hai ngàn không trăm hai mươi bảy} dự kiến giữ nguyên cấu trúc đề.	
+vi-dC-012	vi-VN	admin	date	basic	Hồ sơ đăng ký phải nộp trước {ngày 10/12/2026|ngày mùng mười tháng mười hai năm hai nghìn không trăm hai mươi sáu/ngày mồng mười tháng mười hai năm hai nghìn không trăm hai mươi sáu/ngày mười tháng mười hai năm hai nghìn không trăm hai mươi sáu/ngày mùng mười tháng mười hai năm hai không hai sáu/ngày mồng mười tháng mười hai năm hai không hai sáu/ngày mười tháng mười hai năm hai không hai sáu/ngày mùng mười tháng mười hai năm hai ngàn không trăm hai mươi sáu/ngày mồng mười tháng mười hai năm hai ngàn không trăm hai mươi sáu/ngày mười tháng mười hai năm hai ngàn không trăm hai mươi sáu}.	
+vi-dC-013	vi-VN	food	date	basic	Lễ hội ẩm thực đường phố khai mạc sáng {7/11|ngày mùng bảy tháng mười một/mùng bảy tháng mười một/ngày mồng bảy tháng mười một/mồng bảy tháng mười một/ngày bảy tháng mười một} tại phố đi bộ.	
+vi-dC-014	vi-VN	transport	date	hard	Tuyến đường sắt đô thị Bến Thành – Tham Lương dự kiến vận hành từ {quý IV/2027|quý bốn năm hai nghìn không trăm hai mươi bảy/quý bốn năm hai không hai bảy/quý tư năm hai nghìn không trăm hai mươi bảy/quý tư năm hai không hai bảy/quý bốn năm hai ngàn không trăm hai mươi bảy/quý tư năm hai ngàn không trăm hai mươi bảy}.	Roman numeral quarter, lowercase
+vi-dC-015	vi-VN	entertainment	date	basic	Bộ phim dự kiến ra rạp đúng dịp lễ {30/4|ba mươi tháng tư/ngày ba mươi tháng tư}.	
+vi-dC-016	vi-VN	news	date	hard	Kiến trúc Đông Dương phát triển mạnh ở Hà Nội vào đầu {thế kỷ XX|thế kỷ hai mươi}.	Roman numeral century
+vi-dC-017	vi-VN	notice	date	basic	Ban quản lý chung cư sẽ cắt nước {ngày 28/10|ngày hai mươi tám tháng mười} để vệ sinh bể chứa.	
+vi-dC-018	vi-VN	message	date	basic	Anh nhớ chuyển tiền nhà trước {mùng 5|mùng năm} tháng sau nhé.	
+vi-dC-019	vi-VN	shopping	date	basic	Đơn hàng của bạn dự kiến được giao vào {ngày 23/10|ngày hai mươi ba tháng mười}.	
+vi-dC-020	vi-VN	health	date	context	Chiến dịch tiêm vắc xin sởi đợt hai kéo dài đến cuối {tháng 1/2027|tháng một năm hai nghìn không trăm hai mươi bảy/tháng một năm hai không hai bảy/tháng một năm hai ngàn không trăm hai mươi bảy}.	solar January read tháng một
+vi-dC-021	vi-VN	tech	date	basic	Hãng điện thoại đã ra mắt mẫu máy gập mới vào {9/9/2026|ngày mùng chín tháng chín năm hai nghìn không trăm hai mươi sáu/mùng chín tháng chín năm hai nghìn không trăm hai mươi sáu/ngày mồng chín tháng chín năm hai nghìn không trăm hai mươi sáu/mồng chín tháng chín năm hai nghìn không trăm hai mươi sáu/ngày chín tháng chín năm hai nghìn không trăm hai mươi sáu/ngày mùng chín tháng chín năm hai không hai sáu/mùng chín tháng chín năm hai không hai sáu/ngày mồng chín tháng chín năm hai không hai sáu/mồng chín tháng chín năm hai không hai sáu/ngày chín tháng chín năm hai không hai sáu/ngày mùng chín tháng chín năm hai ngàn không trăm hai mươi sáu/mùng chín tháng chín năm hai ngàn không trăm hai mươi sáu/ngày mồng chín tháng chín năm hai ngàn không trăm hai mươi sáu/mồng chín tháng chín năm hai ngàn không trăm hai mươi sáu/ngày chín tháng chín năm hai ngàn không trăm hai mươi sáu}.	
+vi-dC-022	vi-VN	finance	date	basic	Ngân hàng điều chỉnh biểu lãi suất tiết kiệm từ {1/7|ngày mùng một tháng bảy/mùng một tháng bảy/ngày mồng một tháng bảy/mồng một tháng bảy/ngày một tháng bảy}.	
+vi-dC-023	vi-VN	sports	date	basic	Giải chạy marathon quốc tế năm nay tổ chức vào Chủ nhật {15/11|ngày mười lăm tháng mười một/mười lăm tháng mười một}.	
+vi-dC-024	vi-VN	weather	date	basic	Theo dự báo, đợt mưa lớn sẽ kết thúc vào khoảng {ngày 26/10|ngày hai mươi sáu tháng mười}.	
+vi-dC-025	vi-VN	travel	date	context	Vé máy bay khởi hành {mùng 2|mùng hai} Tết từ Hà Nội vào Sài Gòn đã gần hết.	lunar new year day
+vi-dC-026	vi-VN	education	date	basic	Lễ khai giảng năm học mới diễn ra vào {ngày 5/9/2027|ngày mùng năm tháng chín năm hai nghìn không trăm hai mươi bảy/ngày mồng năm tháng chín năm hai nghìn không trăm hai mươi bảy/ngày năm tháng chín năm hai nghìn không trăm hai mươi bảy/ngày mùng năm tháng chín năm hai không hai bảy/ngày mồng năm tháng chín năm hai không hai bảy/ngày năm tháng chín năm hai không hai bảy/ngày mùng năm tháng chín năm hai ngàn không trăm hai mươi bảy/ngày mồng năm tháng chín năm hai ngàn không trăm hai mươi bảy/ngày năm tháng chín năm hai ngàn không trăm hai mươi bảy}.	
+vi-dC-027	vi-VN	admin	date	hard	Quy định mới về đăng ký cư trú có hiệu lực từ {01/01/2027|ngày mùng một tháng một năm hai nghìn không trăm hai mươi bảy/mùng một tháng một năm hai nghìn không trăm hai mươi bảy/ngày mồng một tháng một năm hai nghìn không trăm hai mươi bảy/mồng một tháng một năm hai nghìn không trăm hai mươi bảy/ngày một tháng một năm hai nghìn không trăm hai mươi bảy/ngày mùng một tháng một năm hai không hai bảy/mùng một tháng một năm hai không hai bảy/ngày mồng một tháng một năm hai không hai bảy/mồng một tháng một năm hai không hai bảy/ngày một tháng một năm hai không hai bảy/ngày mùng một tháng một năm hai ngàn không trăm hai mươi bảy/mùng một tháng một năm hai ngàn không trăm hai mươi bảy/ngày mồng một tháng một năm hai ngàn không trăm hai mươi bảy/mồng một tháng một năm hai ngàn không trăm hai mươi bảy/ngày một tháng một năm hai ngàn không trăm hai mươi bảy}.	leading zeros in day and month
+vi-dC-028	vi-VN	food	date	context	Tết Trung thu năm nay rơi vào {25/9|ngày hai mươi lăm tháng chín/hai mươi lăm tháng chín} dương lịch nên các tiệm bánh mở bán từ sớm.	
+vi-dC-029	vi-VN	transport	date	basic	Đoạn cao tốc mới sẽ chính thức thông xe vào {ngày 19/12|ngày mười chín tháng mười hai}.	
+vi-dC-030	vi-VN	entertainment	date	basic	Đêm nhạc của nữ ca sĩ diễn ra tại Nhà hát Lớn tối {14/11|ngày mười bốn tháng mười một/mười bốn tháng mười một}.	
+vi-dC-031	vi-VN	news	date	hard	Quốc hội đã khai mạc kỳ họp cuối năm vào {20-10-2026|ngày hai mươi tháng mười năm hai nghìn không trăm hai mươi sáu/ngày hai mươi tháng mười năm hai không hai sáu/hai mươi tháng mười năm hai nghìn không trăm hai mươi sáu/hai mươi tháng mười năm hai không hai sáu/ngày hai mươi tháng mười năm hai ngàn không trăm hai mươi sáu/hai mươi tháng mười năm hai ngàn không trăm hai mươi sáu}.	dash-separated date
+vi-dC-032	vi-VN	notice	date	basic	Thư viện tạm đóng cửa trong {tháng 12|tháng mười hai} để kiểm kê sách.	
+vi-dC-033	vi-VN	message	date	basic	Sinh nhật em là {14/2|ngày mười bốn tháng hai/mười bốn tháng hai}, anh đừng quên đấy nhé.	
+vi-dC-034	vi-VN	shopping	date	hard	Ngày hội mua sắm {11/11|mười một tháng mười một/ngày mười một tháng mười một/mười một mười một} năm nay có rất nhiều mã giảm giá.	double-day sale often read as two numbers
+vi-dC-035	vi-VN	health	date	hard	Hộp thuốc ghi hạn sử dụng đến {03/2028|tháng ba năm hai nghìn không trăm hai mươi tám/tháng ba năm hai không hai tám/tháng ba năm hai ngàn không trăm hai mươi tám}.	MM/YYYY
+vi-dC-036	vi-VN	tech	date	basic	Hỗ trợ kỹ thuật cho phiên bản cũ sẽ chấm dứt vào năm {2032|hai nghìn không trăm ba mươi hai/hai không ba hai/hai không ba mươi hai/hai ngàn không trăm ba mươi hai}.	
+vi-dC-038	vi-VN	sports	date	basic	Đội tuyển bóng đá nam Việt Nam vô địch Đông Nam Á lần thứ hai vào năm {2018|hai nghìn không trăm mười tám/hai không mười tám/hai ngàn không trăm mười tám}.	
+vi-dC-039	vi-VN	weather	date	basic	Năm {1999|một nghìn chín trăm chín mươi chín/một chín chín chín/một ngàn chín trăm chín mươi chín}, miền Trung hứng chịu trận lũ lịch sử.	
+vi-dC-040	vi-VN	travel	date	basic	Thị thực của bạn hết hạn vào {30/6/2027|ngày ba mươi tháng sáu năm hai nghìn không trăm hai mươi bảy/ngày ba mươi tháng sáu năm hai không hai bảy/ba mươi tháng sáu năm hai nghìn không trăm hai mươi bảy/ba mươi tháng sáu năm hai không hai bảy/ngày ba mươi tháng sáu năm hai ngàn không trăm hai mươi bảy/ba mươi tháng sáu năm hai ngàn không trăm hai mươi bảy}.	
+vi-dC-041	vi-VN	education	date	basic	Trường đại học được thành lập ngày {6/3/1956|mùng sáu tháng ba năm một nghìn chín trăm năm mươi sáu/mồng sáu tháng ba năm một nghìn chín trăm năm mươi sáu/sáu tháng ba năm một nghìn chín trăm năm mươi sáu/mùng sáu tháng ba năm một chín năm sáu/mồng sáu tháng ba năm một chín năm sáu/sáu tháng ba năm một chín năm sáu/mùng sáu tháng ba năm một ngàn chín trăm năm mươi sáu/mồng sáu tháng ba năm một ngàn chín trăm năm mươi sáu/sáu tháng ba năm một ngàn chín trăm năm mươi sáu}.	"ngày" outside span
+vi-dC-042	vi-VN	admin	date	hard	Căn cước công dân của anh được cấp ngày {12/03/2021|mười hai tháng ba năm hai nghìn không trăm hai mươi mốt/mười hai tháng ba năm hai không hai mốt/mười hai tháng ba năm hai ngàn không trăm hai mươi mốt}.	leading zero month
+vi-dC-043	vi-VN	food	date	basic	Mùa vải thiều Lục Ngạn thường bắt đầu từ đầu {tháng 6|tháng sáu}.	
+vi-dC-044	vi-VN	transport	date	basic	Từ {15/1/2027|ngày mười lăm tháng một năm hai nghìn không trăm hai mươi bảy/ngày mười lăm tháng một năm hai không hai bảy/mười lăm tháng một năm hai nghìn không trăm hai mươi bảy/mười lăm tháng một năm hai không hai bảy/ngày mười lăm tháng một năm hai ngàn không trăm hai mươi bảy/mười lăm tháng một năm hai ngàn không trăm hai mươi bảy}, xe khách phải lắp camera giám sát hành trình.	
+vi-dC-045	vi-VN	entertainment	date	basic	Album đầu tay của nhóm nhạc phát hành vào mùa hè năm {2025|hai nghìn không trăm hai mươi lăm/hai không hai lăm/hai ngàn không trăm hai mươi lăm}.	
+vi-dC-046	vi-VN	news	date	basic	{Ngày 27/7|ngày hai mươi bảy tháng bảy} hằng năm là Ngày Thương binh – Liệt sĩ.	
+vi-dC-047	vi-VN	notice	date	basic	Lễ trao bằng tốt nghiệp được dời sang thứ Sáu, {30/10|ngày ba mươi tháng mười/ba mươi tháng mười}.	
+vi-dC-048	vi-VN	message	date	basic	Tụi mình họp lớp vào {mồng 4|mồng bốn} tháng Giêng ở nhà cô chủ nhiệm nhé.	
+vi-dC-049	vi-VN	shopping	date	basic	Phiếu quà tặng có giá trị sử dụng đến hết {31/1|ngày ba mươi mốt tháng một/ba mươi mốt tháng một}.	
+vi-dC-050	vi-VN	health	date	hard	Bé được hẹn tiêm mũi nhắc lại vào {ngày 06/12/2026|ngày mùng sáu tháng mười hai năm hai nghìn không trăm hai mươi sáu/ngày mồng sáu tháng mười hai năm hai nghìn không trăm hai mươi sáu/ngày sáu tháng mười hai năm hai nghìn không trăm hai mươi sáu/ngày mùng sáu tháng mười hai năm hai không hai sáu/ngày mồng sáu tháng mười hai năm hai không hai sáu/ngày sáu tháng mười hai năm hai không hai sáu/ngày mùng sáu tháng mười hai năm hai ngàn không trăm hai mươi sáu/ngày mồng sáu tháng mười hai năm hai ngàn không trăm hai mươi sáu/ngày sáu tháng mười hai năm hai ngàn không trăm hai mươi sáu}.	leading zero day
+vi-dC-051	vi-VN	tech	date	hard	Cuộc thi lập trình khóa cổng đăng ký lúc {23:59|hai mươi ba giờ năm mươi chín phút/hai mươi ba giờ năm mươi chín/mười một giờ năm mươi chín phút đêm} {ngày 25/10|ngày hai mươi lăm tháng mười}.	
+vi-dC-052	vi-VN	finance	date	basic	So với cuối năm {2025|hai nghìn không trăm hai mươi lăm/hai không hai lăm/hai ngàn không trăm hai mươi lăm}, tổng tài sản của ngân hàng tăng đáng kể.	
+vi-dC-053	vi-VN	sports	date	basic	Vận động viên trẻ phá kỷ lục quốc gia hôm {16/10|mười sáu tháng mười/ngày mười sáu tháng mười}.	
+vi-dC-054	vi-VN	weather	date	basic	Mùa mưa ở Nam Bộ thường kết thúc vào cuối {tháng 11|tháng mười một}.	
+vi-dC-055	vi-VN	travel	date	basic	Lễ hội pháo hoa quốc tế Đà Nẵng năm sau khai mạc {ngày 31/5|ngày ba mươi mốt tháng năm}.	
+vi-dC-056	vi-VN	education	date	context	Hạn chót nộp luận văn là {17h|mười bảy giờ/năm giờ chiều} {ngày 4/12|ngày mùng bốn tháng mười hai/ngày mồng bốn tháng mười hai/ngày bốn tháng mười hai}.	
+vi-dC-058	vi-VN	food	date	context	Bánh nướng, bánh dẻo bán chạy nhất vào dịp {15/8|rằm tháng tám/mười lăm tháng tám/ngày rằm tháng tám/ngày mười lăm tháng tám} âm lịch.	lunar 15th = rằm
+vi-dC-059	vi-VN	transport	date	basic	Nhà ga mới tại sân bay sẽ khánh thành vào {tháng 3/2027|tháng ba năm hai nghìn không trăm hai mươi bảy/tháng ba năm hai không hai bảy/tháng ba năm hai ngàn không trăm hai mươi bảy}.	
+vi-dC-060	vi-VN	entertainment	date	hard	Vở tuồng cổ này được sáng tác từ {thế kỷ XIX|thế kỷ mười chín}.	Roman numeral century
+vi-dC-061	vi-VN	news	date	basic	Ngày {19/8/1945|mười chín tháng tám năm một nghìn chín trăm bốn mươi lăm/mười chín tháng tám năm một chín bốn lăm/mười chín tháng tám năm một ngàn chín trăm bốn mươi lăm}, nhân dân Hà Nội giành chính quyền.	
+vi-dC-062	vi-VN	notice	date	basic	Hạn nộp học phí học kỳ này là {13/11|ngày mười ba tháng mười một/mười ba tháng mười một}.	
+vi-dC-063	vi-VN	message	date	basic	Chị ơi, lịch khám của bố đổi sang thứ Ba {10/11|ngày mùng mười tháng mười một/mùng mười tháng mười một/ngày mồng mười tháng mười một/mồng mười tháng mười một/ngày mười tháng mười một} rồi.	
+vi-dC-064	vi-VN	shopping	date	basic	Hàng đặt trước sẽ về kho trước Tết Dương lịch {2027|hai nghìn không trăm hai mươi bảy/hai không hai bảy/hai ngàn không trăm hai mươi bảy}.	
+vi-dC-065	vi-VN	health	date	hard	Phiếu hẹn ghi rõ lấy kết quả xét nghiệm vào {22-10|ngày hai mươi hai tháng mười/hai mươi hai tháng mười}.	dash-separated day-month
+vi-dC-066	vi-VN	tech	date	basic	Tên miền website của công ty đã hết hạn vào {17/10/2026|ngày mười bảy tháng mười năm hai nghìn không trăm hai mươi sáu/ngày mười bảy tháng mười năm hai không hai sáu/mười bảy tháng mười năm hai nghìn không trăm hai mươi sáu/mười bảy tháng mười năm hai không hai sáu/ngày mười bảy tháng mười năm hai ngàn không trăm hai mươi sáu/mười bảy tháng mười năm hai ngàn không trăm hai mươi sáu}.	
+vi-dC-067	vi-VN	finance	date	hard	Lô trái phiếu này đáo hạn vào {Quý II/2029|quý hai năm hai nghìn không trăm hai mươi chín/quý hai năm hai không hai chín/quý hai năm hai ngàn không trăm hai mươi chín}.	Roman numeral quarter
+vi-dC-068	vi-VN	sports	date	basic	Thế vận hội mùa đông năm {2030|hai nghìn không trăm ba mươi/hai không ba mươi/hai ngàn không trăm ba mươi} sẽ diễn ra tại Pháp.	
+vi-dC-069	vi-VN	weather	date	basic	Tuyết rơi dày ở Sa Pa vào {tháng 1/2016|tháng một năm hai nghìn không trăm mười sáu/tháng một năm hai không mười sáu/tháng một năm hai ngàn không trăm mười sáu}.	
+vi-dC-070	vi-VN	travel	date	basic	Chuyến bay của chị được đổi sang sáng {2/11|ngày mùng hai tháng mười một/mùng hai tháng mười một/ngày mồng hai tháng mười một/mồng hai tháng mười một/ngày hai tháng mười một}.	
+vi-dC-071	vi-VN	education	date	basic	Kết quả tuyển sinh lớp mười sẽ được công bố trước {ngày 20/7|ngày hai mươi tháng bảy}.	
+vi-dC-072	vi-VN	admin	date	context	Hạn quyết toán thuế thu nhập cá nhân năm {2026|hai nghìn không trăm hai mươi sáu/hai không hai sáu/hai ngàn không trăm hai mươi sáu} là {31/3/2027|ngày ba mươi mốt tháng ba năm hai nghìn không trăm hai mươi bảy/ngày ba mươi mốt tháng ba năm hai không hai bảy/ba mươi mốt tháng ba năm hai nghìn không trăm hai mươi bảy/ba mươi mốt tháng ba năm hai không hai bảy/ngày ba mươi mốt tháng ba năm hai ngàn không trăm hai mươi bảy/ba mươi mốt tháng ba năm hai ngàn không trăm hai mươi bảy}.	
+vi-dC-073	vi-VN	food	date	hard	Hộp sữa ghi hạn dùng {12/09/27|ngày mười hai tháng chín năm hai nghìn không trăm hai mươi bảy/ngày mười hai tháng chín năm hai không hai bảy/mười hai tháng chín năm hai nghìn không trăm hai mươi bảy/mười hai tháng chín năm hai không hai bảy/ngày mười hai tháng chín năm hai mươi bảy/mười hai tháng chín năm hai mươi bảy/ngày mười hai tháng chín năm hai ngàn không trăm hai mươi bảy/mười hai tháng chín năm hai ngàn không trăm hai mươi bảy}.	two-digit year
+vi-dC-074	vi-VN	transport	date	hard	Từ {mồng 1/12|mồng một tháng mười hai}, xe buýt điện chạy thêm tuyến ra sân bay.	mixed word + numeric date
+vi-dC-075	vi-VN	entertainment	date	context	Ca khúc này từng gây sốt vào {thập niên 90|thập niên chín mươi}.	
+vi-dC-076	vi-VN	news	date	basic	Cuộc tổng điều tra dân số tiếp theo dự kiến diễn ra vào {1/4/2029|ngày mùng một tháng tư năm hai nghìn không trăm hai mươi chín/mùng một tháng tư năm hai nghìn không trăm hai mươi chín/ngày mồng một tháng tư năm hai nghìn không trăm hai mươi chín/mồng một tháng tư năm hai nghìn không trăm hai mươi chín/ngày một tháng tư năm hai nghìn không trăm hai mươi chín/ngày mùng một tháng tư năm hai không hai chín/mùng một tháng tư năm hai không hai chín/ngày mồng một tháng tư năm hai không hai chín/mồng một tháng tư năm hai không hai chín/ngày một tháng tư năm hai không hai chín/ngày mùng một tháng tư năm hai ngàn không trăm hai mươi chín/mùng một tháng tư năm hai ngàn không trăm hai mươi chín/ngày mồng một tháng tư năm hai ngàn không trăm hai mươi chín/mồng một tháng tư năm hai ngàn không trăm hai mươi chín/ngày một tháng tư năm hai ngàn không trăm hai mươi chín}.	
+vi-dC-077	vi-VN	notice	date	basic	Phòng giao dịch không làm việc vào {31/10|ngày ba mươi mốt tháng mười/ba mươi mốt tháng mười} do sửa chữa trụ sở.	
+vi-dC-078	vi-VN	message	date	basic	Vậy tụi mình gặp nhau {29/10|ngày hai mươi chín tháng mười/hai mươi chín tháng mười} ở quán cà phê cũ nhé.	
+vi-dC-079	vi-VN	shopping	date	basic	Siêu thị điện máy xả hàng tồn kho đến hết {ngày 6/1|ngày mùng sáu tháng một/ngày mồng sáu tháng một/ngày sáu tháng một}.	
+vi-dC-080	vi-VN	health	date	basic	Ngày {7/4|mùng bảy tháng tư/mồng bảy tháng tư/bảy tháng tư} hằng năm là Ngày Sức khỏe Thế giới.	
+vi-dC-081	vi-VN	tech	date	hard	Bản sao lưu gần nhất được tạo ngày {2026-10-19|mười chín tháng mười năm hai nghìn không trăm hai mươi sáu/mười chín tháng mười năm hai không hai sáu/mười chín tháng mười năm hai ngàn không trăm hai mươi sáu}.	ISO date format
+vi-dC-082	vi-VN	finance	date	basic	Giá vàng trong nước lập đỉnh vào đầu {tháng 9/2026|tháng chín năm hai nghìn không trăm hai mươi sáu/tháng chín năm hai không hai sáu/tháng chín năm hai ngàn không trăm hai mươi sáu}.	
+vi-dC-083	vi-VN	sports	date	basic	Lễ khai mạc giải bóng chuyền nữ quốc tế diễn ra tối {5/12|ngày mùng năm tháng mười hai/mùng năm tháng mười hai/ngày mồng năm tháng mười hai/mồng năm tháng mười hai/ngày năm tháng mười hai}.	
+vi-dC-084	vi-VN	weather	date	basic	Đỉnh điểm nắng nóng năm nay rơi vào hạ tuần {tháng 5|tháng năm}.	
+vi-dC-085	vi-VN	travel	date	hard	Hộ chiếu của tôi được cấp ngày {14.08.2023|mười bốn tháng tám năm hai nghìn không trăm hai mươi ba/mười bốn tháng tám năm hai không hai ba/mười bốn tháng tám năm hai ngàn không trăm hai mươi ba}.	dot-separated date
+vi-dC-086	vi-VN	education	date	basic	Học sinh tặng hoa thầy cô nhân Ngày Nhà giáo Việt Nam {20/11|hai mươi tháng mười một/ngày hai mươi tháng mười một}.	
+vi-dC-087	vi-VN	admin	date	hard	Giấy phép lái xe của anh có giá trị đến {05/2031|tháng năm năm hai nghìn không trăm ba mươi mốt/tháng năm năm hai không ba mốt/tháng năm năm hai không ba mươi mốt/tháng năm năm hai ngàn không trăm ba mươi mốt}.	MM/YYYY; month five
+vi-dC-088	vi-VN	food	date	context	Bánh trôi, bánh chay gắn với Tết Hàn thực {3/3|mùng ba tháng ba/mồng ba tháng ba/ngày mùng ba tháng ba/ngày mồng ba tháng ba} âm lịch.	lunar date
+vi-dC-089	vi-VN	transport	date	basic	Xe của bạn đã hết hạn đăng kiểm từ {12/10|ngày mười hai tháng mười/mười hai tháng mười}.	
+vi-dC-090	vi-VN	entertainment	date	basic	Lễ trao giải điện ảnh được tổ chức vào tối thứ Bảy {21/11|ngày hai mươi mốt tháng mười một/hai mươi mốt tháng mười một}.	
+vi-dC-091	vi-VN	news	date	basic	Hiệp định Paris được ký kết vào {27/1/1973|ngày hai mươi bảy tháng một năm một nghìn chín trăm bảy mươi ba/ngày hai mươi bảy tháng một năm một chín bảy ba/hai mươi bảy tháng một năm một nghìn chín trăm bảy mươi ba/hai mươi bảy tháng một năm một chín bảy ba/ngày hai mươi bảy tháng một năm một ngàn chín trăm bảy mươi ba/hai mươi bảy tháng một năm một ngàn chín trăm bảy mươi ba}.	
+vi-dC-092	vi-VN	notice	date	hard	Lịch tiếp công dân {Quý I/2027|quý một năm hai nghìn không trăm hai mươi bảy/quý một năm hai không hai bảy/quý một năm hai ngàn không trăm hai mươi bảy} đã được niêm yết tại trụ sở.	Roman numeral quarter
+vi-dC-093	vi-VN	message	date	context	Con gửi bố ảnh cả nhà chụp hôm {8/3|mùng tám tháng ba/mồng tám tháng ba/tám tháng ba/ngày mùng tám tháng ba/ngày mồng tám tháng ba/ngày tám tháng ba} nhé.	Women's Day often read tám tháng ba
+vi-dC-094	vi-VN	shopping	date	basic	Mẫu túi phiên bản giới hạn chỉ mở bán duy nhất {ngày 1/11|ngày mùng một tháng mười một/ngày mồng một tháng mười một/ngày một tháng mười một}.	
+vi-dC-095	vi-VN	health	date	hard	Hồ sơ ghi bé sinh ngày {29/2/2024|hai mươi chín tháng hai năm hai nghìn không trăm hai mươi tư/hai mươi chín tháng hai năm hai nghìn không trăm hai mươi bốn/hai mươi chín tháng hai năm hai không hai tư/hai mươi chín tháng hai năm hai không hai bốn/hai mươi chín tháng hai năm hai ngàn không trăm hai mươi tư/hai mươi chín tháng hai năm hai ngàn không trăm hai mươi bốn}, cân nặng lúc sinh bình thường.	leap day; tư/bốn
+vi-dC-096	vi-VN	tech	date	basic	Ứng dụng sẽ ngừng hỗ trợ thiết bị đời cũ kể từ {tháng 2/2027|tháng hai năm hai nghìn không trăm hai mươi bảy/tháng hai năm hai không hai bảy/tháng hai năm hai ngàn không trăm hai mươi bảy}.	
+vi-dC-097	vi-VN	finance	date	context	Hạn nộp tờ khai thuế giá trị gia tăng {tháng 10/2026|tháng mười năm hai nghìn không trăm hai mươi sáu/tháng mười năm hai không hai sáu/tháng mười năm hai ngàn không trăm hai mươi sáu} là {ngày 20/11|ngày hai mươi tháng mười một}.	
+vi-dC-098	vi-VN	sports	date	basic	Tiền vệ sinh năm {2005|hai nghìn không trăm linh năm/hai nghìn không trăm lẻ năm/hai không không năm/hai ngàn không trăm linh năm/hai ngàn không trăm lẻ năm} lần đầu được gọi lên đội tuyển.	
+vi-dC-099	vi-VN	weather	date	basic	Trận lụt lịch sử ở Hà Nội xảy ra vào cuối {tháng 10/2008|tháng mười năm hai nghìn không trăm linh tám/tháng mười năm hai nghìn không trăm lẻ tám/tháng mười năm hai không không tám/tháng mười năm hai ngàn không trăm linh tám/tháng mười năm hai ngàn không trăm lẻ tám}.	
+vi-dC-100	vi-VN	travel	date	context	Lễ hội chùa Hương khai mạc vào {mùng 6 tháng Giêng|mùng sáu tháng giêng}.	lunar month name
+vi-dC-101	vi-VN	news	time	basic	Buổi họp báo của Bộ Ngoại giao bắt đầu lúc {9h|chín giờ} sáng nay.	
+vi-dC-102	vi-VN	notice	time	context	Cửa hàng tiện lợi đóng cửa lúc {22h|hai mươi hai giờ/mười giờ tối/mười giờ đêm} hằng ngày.	
+vi-dC-103	vi-VN	message	time	basic	Em đến đón anh lúc {7h30|bảy giờ ba mươi phút/bảy giờ ba mươi/bảy giờ rưỡi} nhé.	
+vi-dC-104	vi-VN	shopping	time	hard	Đợt giảm giá chớp nhoáng bắt đầu đúng {12:00|mười hai giờ/mười hai giờ trưa} hôm nay.	
+vi-dC-105	vi-VN	health	time	basic	Uống thuốc hai lần mỗi ngày vào {6 giờ|sáu giờ} sáng và {8 giờ|tám giờ} tối.	
+vi-dC-106	vi-VN	tech	time	context	Hệ thống sẽ tạm dừng để bảo trì lúc {0h|không giờ/mười hai giờ đêm} ngày mai.	midnight
+vi-dC-108	vi-VN	sports	time	basic	Trận đấu sẽ bắt đầu lúc {19h15|mười chín giờ mười lăm phút/mười chín giờ mười lăm/bảy giờ mười lăm phút tối/bảy giờ mười lăm tối}.	
+vi-dC-109	vi-VN	weather	time	basic	Mưa lớn bắt đầu từ khoảng {3h|ba giờ} sáng nay và kéo dài đến trưa.	
+vi-dC-110	vi-VN	travel	time	hard	Chuyến bay đi Phú Quốc cất cánh lúc {06:45|sáu giờ bốn mươi lăm phút/sáu giờ bốn mươi lăm/bảy giờ kém mười lăm/bảy giờ kém mười lăm phút}.	leading zero hour
+vi-dC-111	vi-VN	education	time	basic	Học sinh phải có mặt ở trường trước {7h15|bảy giờ mười lăm phút/bảy giờ mười lăm}.	
+vi-dC-112	vi-VN	admin	time	basic	Bộ phận một cửa tiếp nhận hồ sơ đến {16h30|mười sáu giờ ba mươi phút/mười sáu giờ ba mươi/mười sáu giờ rưỡi/bốn giờ rưỡi chiều/bốn giờ ba mươi chiều}.	
+vi-dC-113	vi-VN	food	time	basic	Quán phở đầu ngõ mở bán từ {5h|năm giờ} sáng.	
+vi-dC-114	vi-VN	transport	time	hard	Tàu Thống Nhất rời ga Hà Nội lúc {20:05|hai mươi giờ năm phút/hai mươi giờ không năm phút/tám giờ năm phút tối}.	single-digit minute
+vi-dC-115	vi-VN	entertainment	time	basic	Suất chiếu muộn nhất bắt đầu lúc {23h10|hai mươi ba giờ mười phút/hai mươi ba giờ mười/mười một giờ mười phút đêm/mười một giờ mười đêm}.	
+vi-dC-116	vi-VN	news	time	basic	Vụ cháy xảy ra vào khoảng {2h40|hai giờ bốn mươi phút/hai giờ bốn mươi/ba giờ kém hai mươi/ba giờ kém hai mươi phút} rạng sáng nay.	
+vi-dC-117	vi-VN	notice	time	basic	Điện sẽ được cấp lại trước {14:00|mười bốn giờ/hai giờ chiều}.	
+vi-dC-118	vi-VN	message	time	hard	Mai {8g|tám giờ} anh qua nhà chở em đi làm nha.	g = giờ
+vi-dC-119	vi-VN	shopping	time	basic	Đơn đặt trước {15h|mười lăm giờ/ba giờ chiều} sẽ được giao ngay trong ngày.	
+vi-dC-120	vi-VN	health	time	basic	Phòng khám làm việc ngoài giờ đến {20h30|hai mươi giờ ba mươi phút/hai mươi giờ ba mươi/hai mươi giờ rưỡi/tám giờ rưỡi tối/tám giờ ba mươi tối}.	
+vi-dC-121	vi-VN	tech	time	hard	Lỗi máy chủ được ghi nhận lúc {03:17:42|ba giờ mười bảy phút bốn mươi hai giây}.	hh:mm:ss
+vi-dC-122	vi-VN	finance	time	basic	Ngân hàng chốt lệnh chuyển tiền liên ngân hàng lúc {15:45|mười lăm giờ bốn mươi lăm phút/mười lăm giờ bốn mươi lăm/ba giờ bốn mươi lăm chiều/bốn giờ kém mười lăm chiều}.	
+vi-dC-123	vi-VN	sports	time	hard	Vận động viên về đích với thời gian {2:08:35|hai giờ tám phút ba mươi lăm giây/hai tiếng tám phút ba mươi lăm giây}.	duration h:mm:ss
+vi-dC-124	vi-VN	weather	time	basic	Sáng mai mặt trời mọc lúc {5:52|năm giờ năm mươi hai phút/năm giờ năm mươi hai/sáu giờ kém tám phút/sáu giờ kém tám}.	
+vi-dC-125	vi-VN	travel	time	basic	Khách nhận phòng sau {14h|mười bốn giờ/hai giờ chiều} và trả phòng trước {12h|mười hai giờ/mười hai giờ trưa}.	
+vi-dC-126	vi-VN	education	time	basic	Giờ ra chơi bắt đầu lúc {9 giờ 25|chín giờ hai mươi lăm/chín giờ hai mươi lăm phút}.	
+vi-dC-127	vi-VN	admin	time	basic	Cuộc họp tổ dân phố bắt đầu lúc {19h30|mười chín giờ ba mươi phút/mười chín giờ ba mươi/mười chín giờ rưỡi/bảy giờ rưỡi tối/bảy giờ ba mươi tối}.	
+vi-dC-128	vi-VN	food	time	basic	Nhà hàng chỉ nhận khách đến {21h45|hai mươi mốt giờ bốn mươi lăm phút/hai mươi mốt giờ bốn mươi lăm/chín giờ bốn mươi lăm tối/mười giờ kém mười lăm tối}.	
+vi-dC-129	vi-VN	transport	time	basic	Xe buýt cuối cùng rời bến lúc {21:00|hai mươi mốt giờ/chín giờ tối}.	
+vi-dC-130	vi-VN	entertainment	time	basic	Chương trình truyền hình trực tiếp lên sóng lúc {20h|hai mươi giờ/tám giờ tối}.	
+vi-dC-131	vi-VN	news	time	basic	Lễ thượng cờ diễn ra lúc {6:00|sáu giờ} sáng nay tại quảng trường Ba Đình.	
+vi-dC-132	vi-VN	notice	time	basic	Giờ làm việc buổi chiều bắt đầu từ {13h30|mười ba giờ ba mươi phút/mười ba giờ ba mươi/mười ba giờ rưỡi/một giờ rưỡi chiều/một giờ ba mươi chiều}.	
+vi-dC-133	vi-VN	message	time	basic	Tầm {10h|mười giờ} tối anh gọi lại cho em nhé.	
+vi-dC-134	vi-VN	shopping	time	basic	Nhà sách mở cửa đến {22h30|hai mươi hai giờ ba mươi phút/hai mươi hai giờ ba mươi/hai mươi hai giờ rưỡi/mười giờ rưỡi tối/mười giờ ba mươi tối} vào cuối tuần.	
+vi-dC-135	vi-VN	health	time	hard	Bệnh nhân phải nhịn ăn từ {24h|hai mươi bốn giờ/mười hai giờ đêm} hôm trước ngày phẫu thuật.	24h = midnight
+vi-dC-136	vi-VN	tech	time	hard	Video hướng dẫn dài {1:25:30|một giờ hai mươi lăm phút ba mươi giây/một tiếng hai mươi lăm phút ba mươi giây}.	duration
+vi-dC-137	vi-VN	finance	time	basic	Sàn chứng khoán mở cửa phiên chiều lúc {13:00|mười ba giờ/một giờ chiều}.	
+vi-dC-138	vi-VN	sports	time	context	Bàn thắng quyết định được ghi ở {phút 89|phút tám mươi chín/phút thứ tám mươi chín}.	
+vi-dC-139	vi-VN	weather	time	basic	Chiều nay mặt trời lặn lúc {17h38|mười bảy giờ ba mươi tám phút/mười bảy giờ ba mươi tám/năm giờ ba mươi tám phút chiều/năm giờ ba mươi tám chiều}.	
+vi-dC-140	vi-VN	travel	time	basic	Chuyến bay từ Seoul hạ cánh lúc {23:55|hai mươi ba giờ năm mươi lăm phút/hai mươi ba giờ năm mươi lăm/mười một giờ năm mươi lăm đêm/mười hai giờ kém năm đêm/mười hai giờ kém năm phút đêm}.	
+vi-dC-141	vi-VN	education	time	hard	Thời gian làm bài môn Toán là {90'|chín mươi phút}.	prime mark = phút
+vi-dC-142	vi-VN	admin	time	basic	Phiên hòa giải được dời sang {8h00|tám giờ/tám giờ đúng} sáng thứ Tư.	
+vi-dC-143	vi-VN	food	time	context	Hầm xương trong khoảng {1h30|một giờ ba mươi phút/một tiếng ba mươi phút/một tiếng rưỡi/một giờ rưỡi} để nước dùng ngọt hơn.	duration, not clock time
+vi-dC-145	vi-VN	entertainment	time	basic	Anh đặt hai vé xem phim suất {18:40|mười tám giờ bốn mươi phút/mười tám giờ bốn mươi/sáu giờ bốn mươi tối/bảy giờ kém hai mươi tối}.	
+vi-dC-146	vi-VN	news	time	context	Tính đến {17h|mười bảy giờ/năm giờ chiều} hôm qua, hàng nghìn hộ dân đã được sơ tán.	
+vi-dC-147	vi-VN	notice	time	basic	Ký túc xá đóng cổng lúc {23h|hai mươi ba giờ/mười một giờ đêm/mười một giờ tối}.	
+vi-dC-148	vi-VN	message	time	hard	Họp nhóm lúc {14g|mười bốn giờ/hai giờ chiều} ở thư viện nha mọi người.	g = giờ
+vi-dC-149	vi-VN	shopping	time	basic	Phiên bán hàng trực tuyến mở lúc {21:15|hai mươi mốt giờ mười lăm phút/hai mươi mốt giờ mười lăm/chín giờ mười lăm tối/chín giờ mười lăm phút tối}.	
+vi-dC-150	vi-VN	health	time	basic	Nên đo huyết áp vào {6h30|sáu giờ ba mươi phút/sáu giờ ba mươi/sáu giờ rưỡi} sáng mỗi ngày.	
+vi-dC-151	vi-VN	tech	time	basic	Máy chủ sẽ tự khởi động lại lúc {04:00|bốn giờ/bốn giờ sáng}.	
+vi-dC-152	vi-VN	finance	time	basic	Kết quả xổ số kiến thiết được công bố lúc {16h15|mười sáu giờ mười lăm phút/mười sáu giờ mười lăm/bốn giờ mười lăm chiều/bốn giờ mười lăm phút chiều}.	
+vi-dC-153	vi-VN	sports	time	basic	Tay đua cán đích chặng núi sau {4 giờ 12 phút|bốn giờ mười hai phút/bốn tiếng mười hai phút}.	
+vi-dC-154	vi-VN	weather	time	basic	Lúc {13 giờ|mười ba giờ/một giờ chiều}, nhiệt độ tại Hà Nội đạt mức cao nhất trong ngày.	
+vi-dC-155	vi-VN	travel	time	basic	Bảo tàng Dân tộc học mở cửa lúc {8h30|tám giờ ba mươi phút/tám giờ ba mươi/tám giờ rưỡi} sáng.	
+vi-dC-156	vi-VN	education	time	basic	Lớp tiếng Anh trực tuyến bắt đầu lúc {19:45|mười chín giờ bốn mươi lăm phút/mười chín giờ bốn mươi lăm/bảy giờ bốn mươi lăm tối/tám giờ kém mười lăm tối}.	
+vi-dC-157	vi-VN	admin	time	basic	Trả kết quả hồ sơ lúc {10h45|mười giờ bốn mươi lăm phút/mười giờ bốn mươi lăm/mười một giờ kém mười lăm/mười một giờ kém mười lăm phút} sáng thứ Năm.	
+vi-dC-158	vi-VN	food	time	basic	Tiệc cưới bắt đầu lúc {11 giờ|mười một giờ} trưa Chủ nhật.	
+vi-dC-159	vi-VN	transport	time	basic	Xe khách giường nằm xuất bến lúc {22h15|hai mươi hai giờ mười lăm phút/hai mươi hai giờ mười lăm/mười giờ mười lăm tối/mười giờ mười lăm phút tối/mười giờ mười lăm đêm}.	
+vi-dC-160	vi-VN	entertainment	time	hard	Màn bắn pháo hoa đêm giao thừa bắt đầu đúng {0h00|không giờ/không giờ không phút/mười hai giờ đêm}.	
+vi-dC-161	vi-VN	news	time	hard	Trận động đất xảy ra lúc {1 giờ 07 phút|một giờ bảy phút/một giờ không bảy phút} rạng sáng.	leading zero minute
+vi-dC-162	vi-VN	notice	time	basic	Hạn đăng ký tham gia kết thúc lúc {17h00|mười bảy giờ/năm giờ chiều} thứ Sáu tuần này.	
+vi-dC-163	vi-VN	message	time	hard	Anh đang kẹt xe, chắc {7 giờ kém 15|bảy giờ kém mười lăm} mới tới nơi.	
+vi-dC-164	vi-VN	shopping	time	basic	Ưu đãi chỉ áp dụng cho đơn đặt trước {9h30|chín giờ ba mươi phút/chín giờ ba mươi/chín giờ rưỡi} sáng thứ Hai.	
+vi-dC-165	vi-VN	health	time	basic	Ca sinh diễn ra suôn sẻ lúc {4h18|bốn giờ mười tám phút/bốn giờ mười tám} sáng.	
+vi-dC-166	vi-VN	tech	time	hard	Đồng hồ đếm ngược chỉ còn {00:05:00|năm phút/không giờ năm phút không giây}.	countdown hh:mm:ss
+vi-dC-167	vi-VN	finance	time	basic	Bảng giá vàng được cập nhật lúc {8h05|tám giờ năm phút/tám giờ năm} sáng nay.	
+vi-dC-168	vi-VN	sports	time	hard	Kình ngư về nhất với thành tích {1:58.42|một phút năm mươi tám giây bốn mươi hai/một phút năm mươi tám giây bốn hai/một phút năm mươi tám phẩy bốn mươi hai giây}.	race time m:ss.cc
+vi-dC-169	vi-VN	weather	time	context	Triều cường đạt đỉnh vào khoảng {18h|mười tám giờ/sáu giờ tối/sáu giờ chiều}.	
+vi-dC-170	vi-VN	travel	time	basic	Tàu du lịch đêm trên sông Hàn khởi hành lúc {19:00|mười chín giờ/bảy giờ tối}.	
+vi-dC-171	vi-VN	news	range	basic	Mỗi năm có khoảng {3-4|ba đến bốn/ba tới bốn/ba bốn} cơn bão ảnh hưởng trực tiếp đến nước ta.	
+vi-dC-172	vi-VN	notice	range	context	Giờ tiếp công dân: {8h-11h30|tám giờ đến mười một giờ ba mươi phút/tám giờ đến mười một giờ ba mươi/tám giờ đến mười một giờ rưỡi/từ tám giờ đến mười một giờ ba mươi/từ tám giờ đến mười một giờ rưỡi} các ngày trong tuần.	
+vi-dC-173	vi-VN	message	range	basic	Em đi công tác {2-3|hai đến ba/hai tới ba/hai ba} ngày rồi về.	
+vi-dC-174	vi-VN	shopping	range	basic	Toàn bộ áo khoác mùa đông được giảm {20-30%|hai mươi đến ba mươi phần trăm/hai mươi tới ba mươi phần trăm/hai mươi phần trăm đến ba mươi phần trăm/từ hai mươi đến ba mươi phần trăm}.	
+vi-dC-175	vi-VN	health	range	basic	Người lớn uống {1-2|một đến hai/một tới hai/một hai} viên mỗi lần, cách nhau sáu tiếng.	
+vi-dC-176	vi-VN	tech	range	basic	Pin sạc đầy trong khoảng {45-60|bốn mươi lăm đến sáu mươi/bốn mươi lăm tới sáu mươi} phút.	
+vi-dC-177	vi-VN	finance	range	hard	Lãi suất tiết kiệm kỳ hạn một năm dao động {4,5-6%|bốn phẩy năm đến sáu phần trăm/bốn phẩy năm tới sáu phần trăm/bốn phẩy năm phần trăm đến sáu phần trăm/từ bốn phẩy năm đến sáu phần trăm}.	decimal comma
+vi-dC-178	vi-VN	sports	range	basic	Giải bóng đá sinh viên kéo dài từ {7/12|ngày mùng bảy tháng mười hai/mùng bảy tháng mười hai/ngày mồng bảy tháng mười hai/mồng bảy tháng mười hai/ngày bảy tháng mười hai} đến {18/12|ngày mười tám tháng mười hai/mười tám tháng mười hai}.	
+vi-dC-179	vi-VN	weather	range	basic	Nhiệt độ cao nhất phổ biến {33-35°C|ba mươi ba đến ba mươi lăm độ C/ba mươi ba tới ba mươi lăm độ C/ba mươi ba đến ba mươi lăm độ/từ ba mươi ba đến ba mươi lăm độ C/ba mươi ba đến ba mươi lăm độ xê/ba mươi ba tới ba mươi lăm độ xê/từ ba mươi ba đến ba mươi lăm độ xê}.	
+vi-dC-180	vi-VN	travel	range	hard	Thời gian bay khoảng {1h45-2h|một giờ bốn mươi lăm phút đến hai giờ/một tiếng bốn mươi lăm phút đến hai tiếng/một tiếng bốn mươi lăm đến hai tiếng}.	duration range
+vi-dC-181	vi-VN	education	range	basic	Học sinh lớp {6-9|sáu đến chín/sáu tới chín} được miễn học phí từ năm học này.	
+vi-dC-183	vi-VN	food	range	basic	Luộc trứng lòng đào trong {7-8|bảy đến tám/bảy tới tám/bảy tám} phút.	
+vi-dC-184	vi-VN	transport	range	basic	Cấm xe tải vào nội đô từ {6h-9h|sáu giờ đến chín giờ/sáu giờ tới chín giờ} và {16h-19h|mười sáu giờ đến mười chín giờ/mười sáu giờ tới mười chín giờ/bốn giờ chiều đến bảy giờ tối}.	
+vi-dC-185	vi-VN	entertainment	range	basic	Bộ phim hoạt hình phù hợp cho trẻ từ {6-12|sáu đến mười hai/sáu tới mười hai} tuổi.	
+vi-dC-186	vi-VN	news	range	context	Kế hoạch phát triển kinh tế giai đoạn {2021-2025|hai nghìn không trăm hai mươi mốt đến hai nghìn không trăm hai mươi lăm/hai nghìn không trăm hai mươi mốt tới hai nghìn không trăm hai mươi lăm/hai không hai mốt đến hai không hai lăm/hai ngàn không trăm hai mươi mốt đến hai ngàn không trăm hai mươi lăm/hai ngàn không trăm hai mươi mốt tới hai ngàn không trăm hai mươi lăm} cơ bản hoàn thành.	year range
+vi-dC-187	vi-VN	notice	range	context	Cơ quan nghỉ Tết từ {29 tháng Chạp|hai mươi chín tháng chạp} đến hết {mùng 7|mùng bảy} tháng Giêng.	lunar dates
+vi-dC-188	vi-VN	message	range	hard	Tớ cần mượn khoảng {500-700|năm trăm đến bảy trăm/năm trăm tới bảy trăm/năm đến bảy trăm/năm bảy trăm} nghìn để đóng tiền học.	
+vi-dC-189	vi-VN	shopping	range	basic	Giá áo thun dao động {150.000-250.000 đồng|một trăm năm mươi nghìn đến hai trăm năm mươi nghìn đồng/một trăm năm mươi ngàn đến hai trăm năm mươi ngàn đồng/một trăm năm mươi đến hai trăm năm mươi nghìn đồng/một trăm năm mươi đến hai trăm năm mươi ngàn đồng}.	
+vi-dC-190	vi-VN	health	range	hard	Huyết áp tâm thu bình thường khoảng {90-120 mmHg|chín mươi đến một trăm hai mươi mi li mét thủy ngân/chín mươi tới một trăm hai mươi mi li mét thủy ngân}.	unit mmHg
+vi-dC-191	vi-VN	tech	range	hard	Dòng điện thoại mới có màn hình {6,1-6,7 inch|sáu phẩy một đến sáu phẩy bảy inch/sáu phẩy một tới sáu phẩy bảy inch}.	
+vi-dC-192	vi-VN	finance	range	basic	Doanh thu quý này dự kiến tăng {12-14 tỷ đồng|mười hai đến mười bốn tỷ đồng/mười hai tới mười bốn tỷ đồng}.	
+vi-dC-193	vi-VN	sports	range	hard	Đội chủ nhà thắng ngược với tỷ số {2-1|hai một}.	score, not a range
+vi-dC-194	vi-VN	weather	range	basic	Lượng mưa phổ biến {50-100 mm|năm mươi đến một trăm mi li mét/năm mươi tới một trăm mi li mét/từ năm mươi đến một trăm mi li mét}.	
+vi-dC-195	vi-VN	travel	range	hard	Giá phòng mùa cao điểm khoảng {1,2-1,5 triệu đồng|một phẩy hai đến một phẩy năm triệu đồng/một triệu hai đến một triệu rưỡi đồng/một triệu hai trăm nghìn đến một triệu năm trăm nghìn đồng/một triệu hai trăm ngàn đến một triệu năm trăm ngàn đồng} mỗi đêm.	
+vi-dC-196	vi-VN	education	range	basic	Về nhà các em đọc trước trang {112-130|một trăm mười hai đến một trăm ba mươi/một trăm mười hai tới một trăm ba mươi} sách giáo khoa.	
+vi-dC-197	vi-VN	admin	range	basic	Danh sách được niêm yết công khai từ {9/11|ngày mùng chín tháng mười một/mùng chín tháng mười một/ngày mồng chín tháng mười một/mồng chín tháng mười một/ngày chín tháng mười một} đến {23/11/2026|ngày hai mươi ba tháng mười một năm hai nghìn không trăm hai mươi sáu/ngày hai mươi ba tháng mười một năm hai không hai sáu/hai mươi ba tháng mười một năm hai nghìn không trăm hai mươi sáu/hai mươi ba tháng mười một năm hai không hai sáu/ngày hai mươi ba tháng mười một năm hai ngàn không trăm hai mươi sáu/hai mươi ba tháng mười một năm hai ngàn không trăm hai mươi sáu}.	
+vi-dC-198	vi-VN	food	range	basic	Mỗi suất cơm văn phòng có giá {35.000-45.000đ|ba mươi lăm nghìn đến bốn mươi lăm nghìn đồng/ba mươi lăm ngàn đến bốn mươi lăm ngàn đồng/ba mươi lăm đến bốn mươi lăm nghìn đồng/ba mươi lăm đến bốn mươi lăm ngàn đồng}.	
+vi-dC-199	vi-VN	transport	range	hard	Tốc độ cho phép trên đoạn đường này là {60-80 km/h|sáu mươi đến tám mươi ki lô mét trên giờ/sáu mươi tới tám mươi ki lô mét trên giờ/sáu mươi đến tám mươi ki lô mét một giờ/sáu mươi đến tám mươi cây số một giờ}.	unit km/h
+vi-dC-200	vi-VN	entertainment	range	basic	Vé xem đêm nhạc có giá từ {500.000|năm trăm nghìn/năm trăm ngàn} đến {2.000.000 đồng|hai triệu đồng}.	
+vi-dC-201	vi-VN	news	range	hard	Nhiều công trình kiến trúc cổ ở Huế được xây dựng trong các thế kỷ {XVIII-XIX|mười tám đến mười chín/mười tám mười chín}.	Roman numeral range
+vi-dC-202	vi-VN	notice	range	hard	Phòng đọc mở cửa từ {Thứ 2-Thứ 6|thứ hai đến thứ sáu/thứ hai tới thứ sáu} hằng tuần.	weekday range
+vi-dC-203	vi-VN	message	range	basic	Chiều mai tớ rảnh từ {14h-16h|mười bốn giờ đến mười sáu giờ/mười bốn giờ tới mười sáu giờ/hai giờ đến bốn giờ chiều/hai đến bốn giờ chiều}.	
+vi-dC-204	vi-VN	shopping	range	basic	Mẫu giày này còn đủ cỡ {38-42|ba mươi tám đến bốn mươi hai/ba mươi tám tới bốn mươi hai/ba tám đến bốn hai}.	
+vi-dC-205	vi-VN	health	range	basic	Thời gian ủ bệnh thường kéo dài {2-14|hai đến mười bốn/hai tới mười bốn/từ hai đến mười bốn} ngày.	
+vi-dC-206	vi-VN	tech	range	hard	Thiết bị hoạt động ổn định từ {-10°C|âm mười độ C/trừ mười độ C/âm mười độ/âm mười độ xê/trừ mười độ xê} đến {45°C|bốn mươi lăm độ C/bốn mươi lăm độ/bốn mươi lăm độ xê}.	negative temperature
+vi-dC-207	vi-VN	finance	range	hard	Tỷ giá đô la Mỹ dao động quanh {25.300-25.500|hai mươi lăm nghìn ba trăm đến hai mươi lăm nghìn năm trăm/hai mươi lăm nghìn ba trăm tới hai mươi lăm nghìn năm trăm/hai mươi lăm ngàn ba trăm đến hai mươi lăm ngàn năm trăm/hai mươi lăm nghìn ba đến hai mươi lăm nghìn rưỡi/hai mươi lăm ngàn ba trăm tới hai mươi lăm ngàn năm trăm/hai mươi lăm ngàn ba đến hai mươi lăm ngàn rưỡi} đồng.	thousands separator
+vi-dC-208	vi-VN	sports	range	basic	Giải trẻ dành cho vận động viên từ {18-23|mười tám đến hai mươi ba/mười tám tới hai mươi ba} tuổi.	
+vi-dC-209	vi-VN	weather	range	context	Ngoài khơi có gió mạnh cấp {6-7|sáu đến bảy/sáu, cấp bảy/sáu đến cấp bảy}, giật cấp {9|chín}.	forecast style "cấp sáu, cấp bảy"
+vi-dC-210	vi-VN	travel	range	basic	Hồ sơ xin thị thực du lịch được xử lý trong {8-12|tám đến mười hai/tám tới mười hai} ngày làm việc.	
+vi-dC-211	vi-VN	education	range	basic	Điểm chuẩn các ngành sư phạm dao động {24-27|hai mươi tư đến hai mươi bảy/hai mươi bốn đến hai mươi bảy/hai mươi tư tới hai mươi bảy/hai mươi bốn tới hai mươi bảy/từ hai mươi tư đến hai mươi bảy/từ hai mươi bốn đến hai mươi bảy} điểm.	
+vi-dC-212	vi-VN	admin	range	context	Giai đoạn {1986-1990|một nghìn chín trăm tám mươi sáu đến một nghìn chín trăm chín mươi/một nghìn chín trăm tám mươi sáu tới một nghìn chín trăm chín mươi/một chín tám sáu đến một chín chín mươi/một ngàn chín trăm tám mươi sáu đến một ngàn chín trăm chín mươi/một ngàn chín trăm tám mươi sáu tới một ngàn chín trăm chín mươi} là những năm đầu của công cuộc Đổi mới.	year range
+vi-dC-213	vi-VN	food	range	basic	Nướng bánh ở nhiệt độ {180-200°C|một trăm tám mươi đến hai trăm độ C/một trăm tám mươi tới hai trăm độ C/một trăm tám mươi đến hai trăm độ/một trăm tám mươi đến hai trăm độ xê/một trăm tám mươi tới hai trăm độ xê}.	
+vi-dC-214	vi-VN	transport	range	hard	Tuyến xe buýt này hoạt động từ {5h30-21h|năm giờ ba mươi đến hai mươi mốt giờ/năm giờ ba mươi phút đến hai mươi mốt giờ/năm giờ rưỡi đến hai mươi mốt giờ/năm giờ rưỡi sáng đến chín giờ tối}.	
+vi-dC-215	vi-VN	entertainment	range	hard	Lễ hội âm nhạc ngoài trời diễn ra {26-28/12|ngày hai mươi sáu đến ngày hai mươi tám tháng mười hai/ngày hai mươi sáu đến hai mươi tám tháng mười hai/hai mươi sáu đến hai mươi tám tháng mười hai/từ ngày hai mươi sáu đến ngày hai mươi tám tháng mười hai/từ ngày hai mươi sáu đến hai mươi tám tháng mười hai}.	day range sharing month
+vi-dC-216	vi-VN	news	range	hard	Mực nước trên các sông dâng cao thêm {1,5-2 m|một phẩy năm đến hai mét/một mét rưỡi đến hai mét/một phẩy năm tới hai mét}.	
+vi-dC-217	vi-VN	notice	range	basic	Khu vực phường sẽ bị cắt điện từ {8h15|tám giờ mười lăm phút/tám giờ mười lăm} đến {12h|mười hai giờ/mười hai giờ trưa}.	
+vi-dC-218	vi-VN	message	range	basic	Mấy hôm nay trời nóng {37-38|ba mươi bảy đến ba mươi tám/ba mươi bảy, ba mươi tám/ba bảy ba tám} độ, mẹ nhớ uống nhiều nước nhé.	
+vi-dC-219	vi-VN	shopping	range	hard	Đơn hàng nội thành được giao trong vòng {24-48h|hai mươi bốn đến bốn mươi tám giờ/hai mươi tư đến bốn mươi tám giờ/hai mươi bốn đến bốn mươi tám tiếng/hai mươi tư đến bốn mươi tám tiếng}.	h = duration hours
+vi-dC-221	vi-VN	education	math	basic	Bé tự làm được phép tính {3 + 5 = 8|ba cộng năm bằng tám}.	
+vi-dC-222	vi-VN	education	math	basic	Cô giáo cho cả lớp đọc thuộc {9 x 6 = 54|chín nhân sáu bằng năm mươi tư/chín nhân sáu bằng năm mươi bốn}.	
+vi-dC-223	vi-VN	shopping	math	context	Mua ba hộp sữa chua: {3 x 45.000đ = 135.000đ|ba nhân bốn mươi lăm nghìn đồng bằng một trăm ba mươi lăm nghìn đồng/ba nhân bốn mươi lăm ngàn đồng bằng một trăm ba mươi lăm ngàn đồng}.	
+vi-dC-224	vi-VN	tech	math	hard	Trong tin học, {2^10 = 1024|hai mũ mười bằng một nghìn không trăm hai mươi tư/hai mũ mười bằng một nghìn không trăm hai mươi bốn/hai lũy thừa mười bằng một nghìn không trăm hai mươi tư/hai mũ mười bằng một nghìn hai mươi tư/hai mũ mười bằng một ngàn không trăm hai mươi tư/hai mũ mười bằng một ngàn không trăm hai mươi bốn/hai lũy thừa mười bằng một ngàn không trăm hai mươi tư/hai mũ mười bằng một ngàn hai mươi tư} là con số rất quen thuộc.	caret exponent
+vi-dC-225	vi-VN	education	math	basic	Ta có {√49 = 7|căn bậc hai của bốn mươi chín bằng bảy/căn bậc hai bốn mươi chín bằng bảy/căn bốn mươi chín bằng bảy} vì bảy nhân bảy bằng bốn mươi chín.	
+vi-dC-226	vi-VN	education	math	hard	Giải phương trình {x² - 9 = 0|ích bình phương trừ chín bằng không/xờ bình phương trừ chín bằng không/ích mũ hai trừ chín bằng không/xờ mũ hai trừ chín bằng không} để tìm hai nghiệm.	variable x read ích/xờ
+vi-dC-227	vi-VN	finance	math	hard	Tiền lãi một năm: {50.000.000 x 6% = 3.000.000|năm mươi triệu nhân sáu phần trăm bằng ba triệu} đồng.	
+vi-dC-228	vi-VN	food	math	context	Nhân đôi công thức: {250g x 2 = 500g|hai trăm năm mươi gam nhân hai bằng năm trăm gam} bột mì.	
+vi-dC-229	vi-VN	education	math	basic	Chia đều kẹo cho các bạn: {48 : 6 = 8|bốn mươi tám chia sáu bằng tám/bốn mươi tám chia cho sáu bằng tám}.	
+vi-dC-230	vi-VN	message	math	basic	Mẹ ơi, {72 - 35 = 37|bảy mươi hai trừ ba mươi lăm bằng ba mươi bảy} đúng không ạ?	
+vi-dC-231	vi-VN	sports	math	hard	Điểm trung bình của vận động viên là {(8 + 9 + 10) : 3 = 9|mở ngoặc tám cộng chín cộng mười đóng ngoặc chia ba bằng chín/mở ngoặc tám cộng chín cộng mười đóng ngoặc chia cho ba bằng chín/tám cộng chín cộng mười tất cả chia ba bằng chín}.	parentheses
+vi-dC-232	vi-VN	education	math	basic	Học sinh lớp sáu cần nhớ {2³ = 8|hai mũ ba bằng tám/hai lập phương bằng tám}.	
+vi-dC-233	vi-VN	education	math	hard	Định lý Pi-ta-go được viết là {a² + b² = c²|a bình phương cộng bê bình phương bằng xê bình phương/a mũ hai cộng bê mũ hai bằng xê mũ hai/a bình phương cộng bờ bình phương bằng cờ bình phương}.	letter variables
+vi-dC-234	vi-VN	tech	math	hard	Màn hình có độ phân giải {1920 x 1080|một nghìn chín trăm hai mươi nhân một nghìn không trăm tám mươi/một nghìn chín trăm hai mươi nhân một nghìn tám mươi/một ngàn chín trăm hai mươi nhân một ngàn không trăm tám mươi/một ngàn chín trăm hai mươi nhân một ngàn tám mươi}.	x as dimension separator
+vi-dC-235	vi-VN	education	math	hard	Bài tập: {1/2 + 1/4 = 3/4|một phần hai cộng một phần tư bằng ba phần tư/một phần hai cộng một phần bốn bằng ba phần bốn/một phần hai cộng một phần tư bằng ba phần bốn/một phần hai cộng một phần bốn bằng ba phần tư}.	fractions, not dates
+vi-dC-236	vi-VN	education	math	hard	Theo định nghĩa, {5! = 120|năm giai thừa bằng một trăm hai mươi}.	factorial
+vi-dC-237	vi-VN	shopping	math	context	Sau khi trừ mã giảm giá: {120.000 - 20.000 = 100.000|một trăm hai mươi nghìn trừ hai mươi nghìn bằng một trăm nghìn/một trăm hai mươi ngàn trừ hai mươi ngàn bằng một trăm ngàn} đồng.	
+vi-dC-238	vi-VN	education	math	hard	Trong bài này lấy {π ≈ 3,14|pi xấp xỉ ba phẩy mười bốn/pi xấp xỉ ba phẩy một bốn/pi gần bằng ba phẩy mười bốn/pi gần bằng ba phẩy một bốn}.	
+vi-dC-239	vi-VN	education	math	hard	Biểu thức có nghĩa khi {x ≥ 2|ích lớn hơn hoặc bằng hai/xờ lớn hơn hoặc bằng hai}.	
+vi-dC-240	vi-VN	finance	math	context	Tiền thuê nhà chia đều: {1.200 : 4 = 300|một nghìn hai trăm chia bốn bằng ba trăm/một nghìn hai trăm chia cho bốn bằng ba trăm/một nghìn hai chia bốn bằng ba trăm/một ngàn hai trăm chia bốn bằng ba trăm/một ngàn hai trăm chia cho bốn bằng ba trăm/một ngàn hai chia bốn bằng ba trăm} nghìn đồng mỗi người.	
+vi-dC-241	vi-VN	education	math	basic	Kết quả đúng là {∛27 = 3|căn bậc ba của hai mươi bảy bằng ba/căn bậc ba hai mươi bảy bằng ba}.	
+vi-dC-242	vi-VN	food	math	hard	Pha nước đường theo tỷ lệ {1:3|một trên ba/một ba} để ngâm hoa quả.	ratio, not time
+vi-dC-243	vi-VN	entertainment	math	basic	Câu đố vui cho bé: {12 + 19 = 31|mười hai cộng mười chín bằng ba mươi mốt}, đúng hay sai?	
+vi-dC-244	vi-VN	tech	math	basic	Bộ xử lý thực hiện hơn {10^6|mười mũ sáu/mười lũy thừa sáu} phép tính mỗi giây.	
+vi-dC-245	vi-VN	education	math	hard	Hằng đẳng thức {(a + b)² = a² + 2ab + b²|mở ngoặc a cộng bê đóng ngoặc bình phương bằng a bình phương cộng hai a bê cộng bê bình phương/a cộng bê tất cả bình phương bằng a bình phương cộng hai a bê cộng bê bình phương}.	
+vi-dC-246	vi-VN	sports	math	basic	Tổng điểm ba giám khảo: {9,5 + 9,7 + 9,6 = 28,8|chín phẩy năm cộng chín phẩy bảy cộng chín phẩy sáu bằng hai mươi tám phẩy tám}.	
+vi-dC-247	vi-VN	education	math	hard	Em điền dấu thích hợp: {10 ≠ 9|mười khác chín/mười không bằng chín}.	
+vi-dC-248	vi-VN	education	math	hard	Tìm giá trị của ẩn trong phương trình {3x + 5 = 20|ba ích cộng năm bằng hai mươi/ba xờ cộng năm bằng hai mươi}.	
+vi-dC-249	vi-VN	finance	math	hard	Tỷ suất lợi nhuận: {18 : 120 x 100% = 15%|mười tám chia một trăm hai mươi nhân một trăm phần trăm bằng mười lăm phần trăm/mười tám chia cho một trăm hai mươi nhân một trăm phần trăm bằng mười lăm phần trăm}.	
+vi-dC-250	vi-VN	health	math	hard	Chỉ số khối cơ thể của anh là {60 : 1,6² ≈ 23,4|sáu mươi chia một phẩy sáu bình phương xấp xỉ hai mươi ba phẩy bốn/sáu mươi chia cho một phẩy sáu bình phương xấp xỉ hai mươi ba phẩy bốn/sáu mươi chia một phẩy sáu mũ hai xấp xỉ hai mươi ba phẩy bốn}.	
+vi-dD-001	vi-VN	notice	phone	basic	Gọi tổng đài {1900 6035|một chín không không sáu không ba năm} để được hỗ trợ ngoài giờ hành chính.	
+vi-dD-002	vi-VN	news	phone	basic	Người dân phát hiện cháy rừng cần báo ngay cho lực lượng chữa cháy qua số {114|một một bốn}.	
+vi-dD-003	vi-VN	message	phone	basic	Anh ơi, số mới của em là {0912 467 803|không chín một hai bốn sáu bảy tám không ba}, anh lưu lại nhé.	
+vi-dD-004	vi-VN	shopping	phone	basic	Đặt hàng qua hotline {1800 6601|một tám không không sáu sáu không một} được miễn phí cước gọi.	
+vi-dD-005	vi-VN	health	phone	basic	Khi thấy người có dấu hiệu đột quỵ, hãy gọi cấp cứu {115|một một năm} càng sớm càng tốt.	
+vi-dD-006	vi-VN	tech	phone	context	Bộ phận kỹ thuật trực máy {024.3974.2618|không hai bốn ba chín bảy bốn hai sáu một tám} từ thứ Hai đến thứ Bảy.	dấu chấm phân nhóm
+vi-dD-007	vi-VN	finance	phone	basic	Nếu làm mất thẻ, quý khách gọi ngay {1900 545 413|một chín không không năm bốn năm bốn một ba} để khóa thẻ.	
+vi-dD-008	vi-VN	sports	phone	basic	Vé trận chung kết được đặt qua số {0236 3827 519|không hai ba sáu ba tám hai bảy năm một chín}.	
+vi-dD-009	vi-VN	weather	phone	context	Thông tin cảnh báo mưa lũ có thể hỏi qua tổng đài {1080|một không tám không}.	
+vi-dD-010	vi-VN	travel	phone	hard	Du khách nước ngoài có thể liên hệ trung tâm hỗ trợ theo số {+84 236 3550 111|cộng tám bốn hai ba sáu ba năm năm không một một một/cộng tám mươi tư hai ba sáu ba năm năm không một một một/cộng tám mươi bốn hai ba sáu ba năm năm không một một một}.	mã quốc gia
+vi-dD-011	vi-VN	education	phone	basic	Phụ huynh cần tư vấn tuyển sinh xin gọi cô Lan theo số {0987.215.364|không chín tám bảy hai một năm ba sáu bốn}.	
+vi-dD-012	vi-VN	admin	phone	basic	Đường dây nóng tiếp nhận phản ánh của phường là {028 3829 6052|không hai tám ba tám hai chín sáu không năm hai}.	
+vi-dD-013	vi-VN	food	phone	basic	Quán nhận giao tận nơi, khách gọi {0903 118 279|không chín không ba một một tám hai bảy chín} để đặt món.	
+vi-dD-014	vi-VN	transport	phone	basic	Hành khách gặp sự cố trên xe buýt có thể phản ánh qua số {1900 6189|một chín không không sáu một tám chín}.	
+vi-dD-015	vi-VN	entertainment	phone	context	Khán giả đặt vé xem kịch qua số {(028) 3932 7140|không hai tám ba chín ba hai bảy một bốn không}.	ngoặc mã vùng
+vi-dD-016	vi-VN	notice	phone	basic	Mọi sự cố về điện vui lòng báo về tổng đài {1900 1006|một chín không không một không không sáu}.	
+vi-dD-017	vi-VN	news	phone	basic	Công an khuyến cáo người dân báo tin về tội phạm qua số {113|một một ba}.	
+vi-dD-018	vi-VN	message	phone	basic	Shipper gọi số {0378 902 155|không ba bảy tám chín không hai một năm năm} mà không ai nghe máy.	
+vi-dD-019	vi-VN	shopping	phone	context	Mua hàng trả góp, quý khách liên hệ {1800.1061|một tám không không một không sáu một}.	
+vi-dD-020	vi-VN	health	phone	basic	Bệnh viện mở đường dây tư vấn sức khỏe {1900 9095|một chín không không chín không chín năm} hoạt động cả ngày lẫn đêm.	
+vi-dD-021	vi-VN	tech	phone	context	Soạn tin theo cú pháp hướng dẫn rồi gửi {9123|chín một hai ba} để kiểm tra dung lượng còn lại.	đầu số tin nhắn ngắn
+vi-dD-022	vi-VN	finance	phone	hard	Ngân hàng không bao giờ gọi từ số lạ như {+84 865 302 917|cộng tám bốn tám sáu năm ba không hai chín một bảy/cộng tám mươi tư tám sáu năm ba không hai chín một bảy/cộng tám mươi bốn tám sáu năm ba không hai chín một bảy} để xin mã OTP.	
+vi-dD-023	vi-VN	sports	phone	basic	Liên đoàn quần vợt nhận đăng ký giải qua số {024 3845 7021|không hai bốn ba tám bốn năm bảy không hai một}.	
+vi-dD-024	vi-VN	weather	phone	basic	Trung tâm cứu nạn hàng hải trực số {0225 3842 979|không hai hai năm ba tám bốn hai chín bảy chín} suốt mùa bão.	
+vi-dD-025	vi-VN	travel	phone	basic	Khách sạn ở Đà Lạt nhận đặt phòng qua số {0263.3821.556|không hai sáu ba ba tám hai một năm năm sáu}.	
+vi-dD-026	vi-VN	education	phone	basic	Đường dây hỗ trợ thí sinh thi tốt nghiệp là {1900 8697|một chín không không tám sáu chín bảy}.	
+vi-dD-027	vi-VN	admin	phone	context	Gọi {1022|một không hai hai} để được giải đáp thủ tục hành chính của thành phố.	
+vi-dD-028	vi-VN	food	phone	basic	Đặt bánh sinh nhật qua Zalo số {0839 670 241|không tám ba chín sáu bảy không hai bốn một} nhé chị.	
+vi-dD-029	vi-VN	transport	phone	context	Muốn đặt taxi, chị cứ gọi tổng đài {1055|một không năm năm} là có xe ngay.	
+vi-dD-030	vi-VN	entertainment	phone	context	Bình chọn cho thí sinh yêu thích bằng cách nhắn tin đến đầu số {8577|tám năm bảy bảy}.	
+vi-dD-031	vi-VN	notice	phone	basic	Mất nước kéo dài, cư dân vui lòng báo ban quản lý qua số {0965 314 820|không chín sáu năm ba một bốn tám hai không}.	
+vi-dD-032	vi-VN	news	phone	basic	Tổng đài quốc gia bảo vệ trẻ em {111|một một một} hoạt động miễn phí.	
+vi-dD-033	vi-VN	message	phone	context	Gọi lại cho mình theo số bàn {(024) 3762 5190|không hai bốn ba bảy sáu hai năm một chín không} nha.	
+vi-dD-034	vi-VN	shopping	phone	basic	Quý khách cần đổi trả hàng xin gọi {0274 3866 405|không hai bảy bốn ba tám sáu sáu bốn không năm}.	
+vi-dD-035	vi-VN	health	phone	basic	Tư vấn tiêm chủng cho trẻ qua số {0916 832 704|không chín một sáu tám ba hai bảy không bốn}.	
+vi-dD-036	vi-VN	tech	phone	hard	Văn phòng tại Singapore dùng số {+65 6735 9012|cộng sáu năm sáu bảy ba năm chín không một hai/cộng sáu mươi lăm sáu bảy ba năm chín không một hai}.	
+vi-dD-037	vi-VN	finance	phone	basic	Liên hệ chuyên viên tín dụng qua {0708 451 963|không bảy không tám bốn năm một chín sáu ba}.	
+vi-dD-038	vi-VN	sports	phone	basic	Học viên đăng ký lớp bơi xin gọi thầy Tùng: {0356 728 194|không ba năm sáu bảy hai tám một chín bốn}.	
+vi-dD-039	vi-VN	weather	phone	context	Khi gặp lũ quét, gọi {112|một một hai} để yêu cầu tìm kiếm cứu nạn.	
+vi-dD-040	vi-VN	travel	phone	hard	Đại sứ quán tại Tokyo hỗ trợ công dân qua số {+81 3 3485 2017|cộng tám một ba ba bốn tám năm hai không một bảy/cộng tám mươi mốt ba ba bốn tám năm hai không một bảy}.	
+vi-dD-041	vi-VN	education	electronic	context	Tra cứu điểm thi tại {diemthi.com.vn|điểm thi chấm com chấm vê en/diem thi chấm com chấm vê en/điểm thi chấm com chấm vi en/diem thi chấm com chấm vi en}.	
+vi-dD-042	vi-VN	admin	electronic	context	Nộp hồ sơ trực tuyến tại cổng {dichvucong.vn|dịch vụ công chấm vê en/dich vu cong chấm vê en/dịch vụ công chấm vi en/dich vu cong chấm vi en}.	
+vi-dD-043	vi-VN	food	electronic	context	Theo dõi công thức nấu ăn của mình trên tài khoản {@bepnhaminh|a còng bếp nhà mình/a còng bep nha minh/a móc bếp nhà mình/a móc bep nha minh}.	
+vi-dD-044	vi-VN	transport	electronic	context	Vé tàu Tết được bán chính thức tại {vetau.com.vn|vé tàu chấm com chấm vê en/ve tau chấm com chấm vê en/vé tàu chấm com chấm vi en/ve tau chấm com chấm vi en}.	
+vi-dD-045	vi-VN	entertainment	electronic	context	Xem lại tập mới nhất trên kênh {@phimhayvietnam|a còng phim hay Việt Nam/a còng phim hay viet nam/a móc phim hay Việt Nam/a móc phim hay viet nam}.	
+vi-dD-046	vi-VN	notice	electronic	context	Mọi góp ý xin gửi về {gopy@chungcuxanh.vn|góp ý a còng chung cư xanh chấm vê en/gop y a còng chung cu xanh chấm vê en/góp ý a còng chung cư xanh chấm vi en/gop y a còng chung cu xanh chấm vi en/góp ý a móc chung cư xanh chấm vê en/gop y a móc chung cu xanh chấm vê en/góp ý a móc chung cư xanh chấm vi en/gop y a móc chung cu xanh chấm vi en}.	
+vi-dD-047	vi-VN	news	electronic	context	Độc giả gửi tin bài qua địa chỉ {toasoan@baomoi.net|tòa soạn a còng báo mới chấm nét/toa soan a còng bao moi chấm nét/tòa soạn a móc báo mới chấm nét/toa soan a móc bao moi chấm nét}.	
+vi-dD-048	vi-VN	message	electronic	hard	Gửi file cho chị qua mail {thu.nguyen92@gmail.com|thu chấm nguyễn chín hai a còng gờ meo chấm com/thu chấm nguyen chín hai a còng gờ meo chấm com/thu chấm nguyễn chín hai a còng gi meo chấm com/thu chấm nguyen chín hai a còng gi meo chấm com/thu chấm nguyễn chín hai a móc gờ meo chấm com/thu chấm nguyen chín hai a móc gờ meo chấm com/thu chấm nguyễn chín hai a móc gi meo chấm com/thu chấm nguyen chín hai a móc gi meo chấm com}.	
+vi-dD-049	vi-VN	shopping	electronic	context	Săn mã giảm giá mỗi ngày tại {khuyenmaihot.vn|khuyến mãi hót chấm vê en/khuyen mai hot chấm vê en/khuyến mãi hót chấm vi en/khuyen mai hot chấm vi en}.	
+vi-dD-050	vi-VN	health	electronic	context	Đăng ký khám trước qua {benhvienmat.vn/datlich|bệnh viện mắt chấm vê en gạch chéo đặt lịch/benh vien mat chấm vê en gạch chéo dat lich/bệnh viện mắt chấm vi en gạch chéo đặt lịch/benh vien mat chấm vi en gạch chéo dat lich}.	
+vi-dD-051	vi-VN	tech	electronic	context	Tải bản cập nhật tại {taive.vn/ungdung|tải về chấm vê en gạch chéo ứng dụng/tai ve chấm vê en gạch chéo ung dung/tải về chấm vi en gạch chéo ứng dụng/tai ve chấm vi en gạch chéo ung dung}.	
+vi-dD-052	vi-VN	finance	electronic	context	Khách hàng xem biểu lãi suất tại {nganhang.com.vn/laisuat|ngân hàng chấm com chấm vê en gạch chéo lãi suất/ngan hang chấm com chấm vê en gạch chéo lai suat/ngân hàng chấm com chấm vi en gạch chéo lãi suất/ngan hang chấm com chấm vi en gạch chéo lai suat}.	
+vi-dD-053	vi-VN	sports	electronic	context	Muốn cập nhật tỷ số trực tiếp, mời theo dõi {@bongdasomot|a còng bóng đá số một/a còng bong da so mot/a móc bóng đá số một/a móc bong da so mot}.	
+vi-dD-054	vi-VN	weather	electronic	hard	Bản tin dự báo chính thức được đăng trên {kttv.vn|ca tê tê vê chấm vê en/ca tê tê vê chấm vi en}.	viết tắt đánh vần
+vi-dD-055	vi-VN	travel	electronic	hard	Đặt tour trực tuyến tại {www.dulichviet.com|vê kép vê kép vê kép chấm du lịch Việt chấm com/vê kép vê kép vê kép chấm du lich viet chấm com/ba vê kép chấm du lịch Việt chấm com/ba vê kép chấm du lich viet chấm com}.	
+vi-dD-056	vi-VN	education	electronic	hard	Hồ sơ dự tuyển gửi về {tuyensinh@truongthpt.vn|tuyển sinh a còng trường tê hát pê tê chấm vê en/tuyen sinh a còng truong tê hát pê tê chấm vê en/tuyển sinh a còng trường tê hát pê tê chấm vi en/tuyen sinh a còng truong tê hát pê tê chấm vi en/tuyển sinh a móc trường tê hát pê tê chấm vê en/tuyen sinh a móc truong tê hát pê tê chấm vê en/tuyển sinh a móc trường tê hát pê tê chấm vi en/tuyen sinh a móc truong tê hát pê tê chấm vi en}.	
+vi-dD-057	vi-VN	admin	electronic	context	Thông tin quy hoạch được công khai tại {quyhoach.hanoi.vn|quy hoạch chấm Hà Nội chấm vê en/quy hoach chấm ha noi chấm vê en/quy hoạch chấm Hà Nội chấm vi en/quy hoach chấm ha noi chấm vi en}.	
+vi-dD-058	vi-VN	food	electronic	context	Thực đơn đầy đủ của quán có trên {bunbohue.vn/thucdon|bún bò Huế chấm vê en gạch chéo thực đơn/bun bo hue chấm vê en gạch chéo thuc don/bún bò Huế chấm vi en gạch chéo thực đơn/bun bo hue chấm vi en gạch chéo thuc don}.	
+vi-dD-059	vi-VN	transport	electronic	context	Chủ xe đặt lịch kiểm định tại {dangkiem.vn|đăng kiểm chấm vê en/dang kiem chấm vê en/đăng kiểm chấm vi en/dang kiem chấm vi en}.	
+vi-dD-060	vi-VN	entertainment	electronic	hard	Vé suất chiếu sớm được mở bán trên {ve-xem-phim.com|vé gạch ngang xem gạch ngang phim chấm com/ve gạch ngang xem gạch ngang phim chấm com/vé gạch nối xem gạch nối phim chấm com/ve gạch nối xem gạch nối phim chấm com}.	
+vi-dD-061	vi-VN	notice	electronic	hard	Thắc mắc về hóa đơn vui lòng gửi tới {lienhe@vtc.vn|liên hệ a còng vê tê xê chấm vê en/lien he a còng vê tê xê chấm vê en/liên hệ a còng vê tê xê chấm vi en/lien he a còng vê tê xê chấm vi en/liên hệ a móc vê tê xê chấm vê en/lien he a móc vê tê xê chấm vê en/liên hệ a móc vê tê xê chấm vi en/lien he a móc vê tê xê chấm vi en}.	
+vi-dD-062	vi-VN	news	electronic	hard	Đoạn video được chia sẻ lại từ tài khoản {@thoisu_hangngay|a còng thời sự gạch dưới hằng ngày/a còng thoi su gạch dưới hang ngay/a móc thời sự gạch dưới hằng ngày/a móc thoi su gạch dưới hang ngay}.	
+vi-dD-063	vi-VN	message	electronic	context	Em gửi bản hợp đồng qua {hoatran@congty.vn|hoa trần a còng công ty chấm vê en/hoa tran a còng cong ty chấm vê en/hoa trần a còng công ty chấm vi en/hoa tran a còng cong ty chấm vi en/hoa trần a móc công ty chấm vê en/hoa tran a móc cong ty chấm vê en/hoa trần a móc công ty chấm vi en/hoa tran a móc cong ty chấm vi en} rồi nhé.	
+vi-dD-064	vi-VN	shopping	electronic	context	Khách mua sỉ liên hệ {banhang@noithatgo.vn|bán hàng a còng nội thất gỗ chấm vê en/ban hang a còng noi that go chấm vê en/bán hàng a còng nội thất gỗ chấm vi en/ban hang a còng noi that go chấm vi en/bán hàng a móc nội thất gỗ chấm vê en/ban hang a móc noi that go chấm vê en/bán hàng a móc nội thất gỗ chấm vi en/ban hang a móc noi that go chấm vi en}.	
+vi-dD-065	vi-VN	health	electronic	context	Kết quả xét nghiệm được trả qua cổng {ketqua.xetnghiem.vn|kết quả chấm xét nghiệm chấm vê en/ket qua chấm xet nghiem chấm vê en/kết quả chấm xét nghiệm chấm vi en/ket qua chấm xet nghiem chấm vi en}.	
+vi-dD-066	vi-VN	tech	electronic	hard	Mã nguồn dự án nằm ở {kho.manguon.vn/tts|kho chấm mã nguồn chấm vê en gạch chéo tê tê ét/kho chấm ma nguon chấm vê en gạch chéo tê tê ét/kho chấm mã nguồn chấm vi en gạch chéo tê tê ét/kho chấm ma nguon chấm vi en gạch chéo tê tê ét}.	
+vi-dD-067	vi-VN	finance	electronic	context	Mọi khiếu nại gửi tới {hotro@quytietkiem.vn|hỗ trợ a còng quỹ tiết kiệm chấm vê en/ho tro a còng quy tiet kiem chấm vê en/hỗ trợ a còng quỹ tiết kiệm chấm vi en/ho tro a còng quy tiet kiem chấm vi en/hỗ trợ a móc quỹ tiết kiệm chấm vê en/ho tro a móc quy tiet kiem chấm vê en/hỗ trợ a móc quỹ tiết kiệm chấm vi en/ho tro a móc quy tiet kiem chấm vi en}.	
+vi-dD-068	vi-VN	sports	electronic	context	Đăng ký giải chạy đêm tại {chaybo.vn/dangky|chạy bộ chấm vê en gạch chéo đăng ký/chay bo chấm vê en gạch chéo dang ky/chạy bộ chấm vi en gạch chéo đăng ký/chay bo chấm vi en gạch chéo dang ky}.	
+vi-dD-069	vi-VN	weather	electronic	context	Ảnh mây vệ tinh được cập nhật liên tục trên {thoitiet.vn/vetinh|thời tiết chấm vê en gạch chéo vệ tinh/thoi tiet chấm vê en gạch chéo ve tinh/thời tiết chấm vi en gạch chéo vệ tinh/thoi tiet chấm vi en gạch chéo ve tinh}.	
+vi-dD-070	vi-VN	travel	electronic	context	Hỏi đáp về thị thực xin gửi về {thithuc@xuatnhapcanh.vn|thị thực a còng xuất nhập cảnh chấm vê en/thi thuc a còng xuat nhap canh chấm vê en/thị thực a còng xuất nhập cảnh chấm vi en/thi thuc a còng xuat nhap canh chấm vi en/thị thực a móc xuất nhập cảnh chấm vê en/thi thuc a móc xuat nhap canh chấm vê en/thị thực a móc xuất nhập cảnh chấm vi en/thi thuc a móc xuat nhap canh chấm vi en}.	
+vi-dD-071	vi-VN	education	alnum	basic	Học sinh lớp {12A3|mười hai a ba} được nghỉ học chiều nay để dọn trường.	
+vi-dD-072	vi-VN	admin	alnum	context	Mẫu tờ khai {CT01|xê tê không một} dùng để đăng ký thường trú.	
+vi-dD-073	vi-VN	food	alnum	basic	Món {C12|xê mười hai} trong thực đơn hôm nay đã hết nguyên liệu.	
+vi-dD-074	vi-VN	transport	alnum	hard	Xe khách mang biển số {51B-268.17|năm một bê hai sáu tám một bảy/năm mốt bê hai sáu tám một bảy/năm mươi mốt bê hai sáu tám một bảy} đã bị tạm giữ.	biển số xe
+vi-dD-075	vi-VN	entertainment	alnum	basic	Khán giả có vé ghế {H14|hát mười bốn} vui lòng vào cửa số hai.	
+vi-dD-076	vi-VN	notice	alnum	basic	Thang máy {B3|bê ba} đang bảo trì, cư dân vui lòng dùng thang bên cạnh.	
+vi-dD-077	vi-VN	news	alnum	hard	Biến chủng {XBB.1.5|ích xì bê bê chấm một chấm năm} của {COVID-19|Covid mười chín/cô vít mười chín} đã xuất hiện tại nhiều nước.	
+vi-dD-078	vi-VN	message	alnum	context	Tối nay mình gặp nhau ở phòng {P305|pê ba không năm/pê ba trăm linh năm/pê ba trăm lẻ năm} nhé.	
+vi-dD-079	vi-VN	shopping	alnum	basic	Điện thoại {iPhone 16 Pro Max|iPhone mười sáu Pro Max} chính hãng vừa về cửa hàng.	
+vi-dD-080	vi-VN	health	alnum	context	Người chăn nuôi gia cầm được khuyến cáo phòng cúm {H5N1|hát năm en một/hát năm nờ một}.	
+vi-dD-081	vi-VN	tech	alnum	context	Bản cập nhật {v3.2.1|vê ba chấm hai chấm một/phiên bản ba chấm hai chấm một} sửa lỗi không đăng nhập được.	
+vi-dD-082	vi-VN	finance	alnum	context	Chỉ số {VN30|vê en ba mươi/vê en ba không} tăng nhẹ trong phiên sáng.	
+vi-dD-083	vi-VN	sports	alnum	context	Đội tuyển {U23|u hai mươi ba/u hai ba} Việt Nam lên đường dự giải châu Á.	
+vi-dD-084	vi-VN	weather	alnum	context	Nồng độ bụi mịn {PM2.5|pê em hai chấm năm/pê em hai phẩy năm} vượt ngưỡng an toàn tại nhiều quận.	
+vi-dD-085	vi-VN	travel	alnum	context	Chuyến bay {VN215|vê en hai một năm/vê en hai trăm mười lăm} đi Đà Nẵng bị hoãn do thời tiết xấu.	
+vi-dD-086	vi-VN	education	alnum	basic	Sinh viên phải có chứng chỉ tiếng Anh bậc {B1|bê một} mới được xét tốt nghiệp.	
+vi-dD-087	vi-VN	admin	alnum	basic	Hồ sơ đất đai được tiếp nhận tại quầy {A08|a không tám}.	
+vi-dD-088	vi-VN	food	alnum	basic	Nghêu, trứng và thịt bò là nguồn vitamin {B12|bê mười hai} dồi dào.	
+vi-dD-089	vi-VN	transport	alnum	context	Ùn tắc kéo dài trên {QL1A|quốc lộ một a} đoạn qua tỉnh Bình Định.	
+vi-dD-090	vi-VN	entertainment	alnum	context	Máy chơi game {PS5|pê ét năm/pi ét năm} cháy hàng dịp cuối năm.	
+vi-dD-091	vi-VN	notice	alnum	context	Khu {D4|dê bốn/đê bốn} tạm đóng cửa để phun thuốc diệt muỗi.	
+vi-dD-092	vi-VN	news	alnum	basic	Tên lửa {Falcon 9|Falcon chín} đã đưa vệ tinh vào quỹ đạo thành công.	
+vi-dD-093	vi-VN	message	alnum	basic	Tớ để xe ở hàng {K7|ca bảy} gần lối ra, cậu xuống thì gọi tớ.	
+vi-dD-094	vi-VN	shopping	alnum	context	Mẫu laptop này dùng chip {Core i7|Core i bảy/Core ai bảy} thế hệ mới.	
+vi-dD-095	vi-VN	health	alnum	hard	Nhân viên y tế phải đeo khẩu trang {N95|en chín năm/en chín mươi lăm/nờ chín năm/nờ chín mươi lăm} khi vào khu cách ly.	
+vi-dD-096	vi-VN	tech	alnum	context	Nhà mạng đã phủ sóng {5G|năm gờ/năm giê} tại hầu hết các thành phố lớn.	
+vi-dD-097	vi-VN	finance	alnum	hard	Moody's nâng hạng tín nhiệm quốc gia của Việt Nam lên {Ba2|bê a hai}.	
+vi-dD-098	vi-VN	sports	alnum	context	Chặng đua {F1|ép một/ép oan} tại Singapore thu hút hàng chục nghìn khán giả.	
+vi-dD-099	vi-VN	weather	alnum	basic	Ảnh từ vệ tinh {Himawari-9|Himawari chín} cho thấy mây dày đặc trên Biển Đông.	
+vi-dD-100	vi-VN	travel	alnum	context	Hành khách chuyến {VJ631|vê gi sáu ba một/vê gi sáu trăm ba mươi mốt} xin mời lên tàu bay.	
+vi-dD-101	vi-VN	education	alnum	hard	Thí sinh thi môn Toán tại phòng {204-B5|hai không bốn bê năm/hai trăm linh bốn bê năm/hai trăm lẻ bốn bê năm}.	
+vi-dD-102	vi-VN	admin	alnum	context	Người lao động khai thông tin theo mẫu {TK1-TS|tê ca một tê ét} khi tham gia bảo hiểm xã hội.	
+vi-dD-103	vi-VN	food	alnum	context	Bột mì loại {T55|tê năm năm/tê năm mươi lăm} thích hợp để làm bánh mì kiểu Pháp.	
+vi-dD-104	vi-VN	transport	alnum	basic	Tuyến xe buýt {E05|e không năm} chạy từ bến xe Miền Tây đến sân bay.	
+vi-dD-105	vi-VN	entertainment	alnum	basic	Bom tấn {Avatar 3|Avatar ba} được chiếu sớm tại nhiều rạp.	
+vi-dD-106	vi-VN	notice	alnum	hard	Phòng {A1.317|a một chấm ba một bảy/a một ba một bảy/a một ba trăm mười bảy} chuyển xuống tầng trệt từ tuần sau.	
+vi-dD-107	vi-VN	news	alnum	context	Chiếc {Boeing 787|Boeing bảy tám bảy/Boeing bảy trăm tám mươi bảy} đã hạ cánh khẩn cấp an toàn.	
+vi-dD-108	vi-VN	message	alnum	context	Mua giúp tớ cái bóng đèn đuôi {E27|e hai bảy/e hai mươi bảy} nhé.	
+vi-dD-109	vi-VN	shopping	alnum	context	Điện thoại {Galaxy S25 Ultra|Galaxy ét hai lăm Ultra/Galaxy ét hai mươi lăm Ultra} đang được giảm ba triệu đồng.	
+vi-dD-110	vi-VN	health	alnum	basic	Trẻ ít ra nắng dễ bị thiếu vitamin {D3|dê ba/đê ba}.	
+vi-dD-111	vi-VN	tech	alnum	hard	Máy chủ đã được nâng cấp lên {Ubuntu 24.04|Ubuntu hai bốn chấm không bốn/Ubuntu hai mươi tư chấm không bốn/Ubuntu hai tư chấm không tư}.	
+vi-dD-112	vi-VN	finance	alnum	hard	Mã giao dịch {FT25091748|ép tê hai năm không chín một bảy bốn tám} đã được ngân hàng ghi nhận.	
+vi-dD-113	vi-VN	sports	alnum	context	Vận động viên mang số đeo {A127|a một hai bảy/a một trăm hai mươi bảy} dẫn đầu cuộc đua.	
+vi-dD-114	vi-VN	weather	alnum	context	Chỉ số {UV 11|u vê mười một} ở mức rất cao vào trưa nay.	
+vi-dD-115	vi-VN	travel	alnum	basic	Ghế {14C|mười bốn xê} cạnh cửa sổ vẫn còn trống.	
+vi-dD-116	vi-VN	education	alnum	hard	Sinh viên đăng ký học phần {MAT1042|em a tê một không bốn hai} trước kỳ học mới.	
+vi-dD-117	vi-VN	admin	alnum	basic	Người có giấy phép lái xe hạng {B2|bê hai} cần đổi sang mẫu mới trước thời hạn.	
+vi-dD-118	vi-VN	food	alnum	context	Gạo {ST25|ét tê hai lăm/ét tê hai mươi lăm} từng đoạt giải gạo ngon nhất thế giới.	
+vi-dD-119	vi-VN	transport	alnum	context	Mẫu xe điện {VF8|vê ép tám} đã được giao tới khách hàng châu Âu.	
+vi-dD-120	vi-VN	entertainment	alnum	basic	Chương trình được phát sóng trên kênh {VTV3|vê tê vê ba}.	
+vi-dD-121	vi-VN	notice	alnum	context	Cầu dao tổng nằm trong tủ điện {T3-02|tê ba không hai} cạnh cầu thang.	
+vi-dD-122	vi-VN	news	alnum	context	Tàu ngầm lớp {Kilo 636|Kilo sáu ba sáu/Kilo sáu trăm ba mươi sáu} tham gia cuộc diễn tập.	
+vi-dD-123	vi-VN	message	alnum	context	Sóng {4G|bốn gờ/bốn giê} chỗ tớ yếu quá, gọi video không được.	
+vi-dD-124	vi-VN	shopping	alnum	basic	Tai nghe {AirPods Pro 2|AirPods Pro hai} đang có giá ưu đãi.	
+vi-dD-125	vi-VN	health	alnum	context	Chủng {EV71|e vê bảy một/e vê bảy mươi mốt} gây bệnh tay chân miệng nặng ở trẻ nhỏ.	
+vi-dD-126	vi-VN	tech	alnum	basic	Chip {A18|a mười tám} giúp máy chạy mượt và tiết kiệm pin.	
+vi-dD-127	vi-VN	finance	alnum	hard	Hợp đồng tương lai {VN30F1M|vê en ba mươi ép một em} giảm mạnh cuối phiên.	
+vi-dD-128	vi-VN	sports	alnum	basic	Tiền đạo ra sân với đôi giày {Mercurial Vapor 16|Mercurial Vapor mười sáu}.	
+vi-dD-129	vi-VN	weather	alnum	context	Bản tin thời tiết được phát trên sóng {FM 91|ép em chín mốt/ép em chín mươi mốt} vào sáng sớm.	
+vi-dD-130	vi-VN	travel	alnum	basic	Hành khách vui lòng đến cửa ra máy bay {G12|giê mười hai}.	
+vi-dD-131	vi-VN	education	mixed	context	Hạn nộp học phí {4.500.000đ|bốn triệu năm trăm nghìn đồng/bốn triệu năm trăm ngàn đồng/bốn triệu rưỡi đồng} là {17h|mười bảy giờ} ngày {30/9|ba mươi tháng chín}.	
+vi-dD-132	vi-VN	admin	mixed	context	Từ ngày {1/7|một tháng bảy/mùng một tháng bảy/mồng một tháng bảy}, lệ phí cấp hộ chiếu là {200.000 đồng|hai trăm nghìn đồng/hai trăm ngàn đồng}, trả kết quả sau {5|năm} ngày làm việc.	
+vi-dD-133	vi-VN	food	mixed	hard	Combo gà rán cho {2|hai} người giá {159k|một trăm năm mươi chín nghìn/một trăm năm mươi chín ngàn/một trăm năm chín nghìn/một trăm năm chín ngàn/một trăm năm mươi chín ca} chỉ áp dụng từ {10h-14h|mười giờ đến mười bốn giờ/mười giờ tới mười bốn giờ}.	
+vi-dD-134	vi-VN	transport	mixed	hard	Tàu {SE3|ét e ba} khởi hành lúc {19h25|mười chín giờ hai mươi lăm/mười chín giờ hai mươi lăm phút/mười chín giờ hai lăm}, giá vé từ {1,2 triệu đồng|một phẩy hai triệu đồng/một triệu hai trăm nghìn đồng/một triệu hai trăm ngàn đồng/một triệu hai đồng}.	
+vi-dD-135	vi-VN	entertainment	mixed	context	Liveshow diễn ra lúc {20h|hai mươi giờ} ngày {14/2|mười bốn tháng hai}, vé hạng nhất giá {2.500.000đ|hai triệu năm trăm nghìn đồng/hai triệu năm trăm ngàn đồng/hai triệu rưỡi đồng}.	
+vi-dD-136	vi-VN	notice	mixed	context	Khu phố cắt điện từ {7h30|bảy giờ ba mươi/bảy giờ ba mươi phút/bảy giờ rưỡi/bảy rưỡi} ngày {22/10|hai mươi hai tháng mười} để bảo trì trạm {T15|tê mười lăm}.	
+vi-dD-137	vi-VN	news	mixed	context	Đến {18h|mười tám giờ} hôm qua, mực nước sông Hồng đạt {9,6 m|chín phẩy sáu mét/chín mét sáu}, trên mức báo động {2|hai}.	
+vi-dD-138	vi-VN	message	mixed	context	Mai {6h15|sáu giờ mười lăm/sáu giờ mười lăm phút} đón tớ ở số {48|bốn mươi tám/bốn tám} Lý Thường Kiệt, nhớ mang theo {300k|ba trăm nghìn/ba trăm ngàn/ba trăm ca} nhé.	
+vi-dD-139	vi-VN	shopping	mixed	context	Ngày {11/11|mười một tháng mười một}, giảm {35%|ba mươi lăm phần trăm/ba lăm phần trăm} cho đơn từ {499.000đ|bốn trăm chín mươi chín nghìn đồng/bốn trăm chín mươi chín ngàn đồng/bốn trăm chín chín nghìn đồng/bốn trăm chín chín ngàn đồng}.	
+vi-dD-140	vi-VN	health	mixed	hard	Người lớn uống {500 mg|năm trăm mi li gam/năm trăm mi li gờ ram} paracetamol mỗi {4-6 giờ|bốn đến sáu giờ/bốn tới sáu giờ/bốn đến sáu tiếng}, không quá {8|tám} viên mỗi ngày.	
+vi-dD-141	vi-VN	tech	mixed	context	Gói cước {120GB|một trăm hai mươi gi ga bai/một trăm hai mươi gi ga} dùng trong {30 ngày|ba mươi ngày} có giá {150.000đ|một trăm năm mươi nghìn đồng/một trăm năm mươi ngàn đồng}.	
+vi-dD-142	vi-VN	finance	mixed	context	Lãi suất kỳ hạn {12 tháng|mười hai tháng} tăng lên {5,8%/năm|năm phẩy tám phần trăm một năm/năm phẩy tám phần trăm mỗi năm/năm phẩy tám phần trăm năm} từ ngày {2/1|hai tháng một/mùng hai tháng một/mồng hai tháng một}.	
+vi-dD-143	vi-VN	sports	mixed	context	Trận đấu bắt đầu lúc {19h30|mười chín giờ ba mươi/mười chín giờ ba mươi phút/mười chín giờ rưỡi} tối {9/6|chín tháng sáu/mùng chín tháng sáu/mồng chín tháng sáu}, đội nhà thắng {3-1|ba một}.	
+vi-dD-145	vi-VN	travel	mixed	context	Tour Phú Quốc {3N2Đ|ba ngày hai đêm} giá {5.990.000đ|năm triệu chín trăm chín mươi nghìn đồng/năm triệu chín trăm chín mươi ngàn đồng}, khởi hành ngày {15/12|mười lăm tháng mười hai}.	
+vi-dD-146	vi-VN	education	mixed	context	Sáng {27/6|hai mươi bảy tháng sáu}, hơn {1,1 triệu|một phẩy một triệu/một triệu một trăm nghìn/một triệu một trăm ngàn/một triệu một} thí sinh bắt đầu thi môn đầu tiên lúc {7h35|bảy giờ ba mươi lăm/bảy giờ ba mươi lăm phút/bảy giờ ba lăm}.	
+vi-dD-147	vi-VN	admin	mixed	hard	Lệ phí môn bài {2.000.000đ|hai triệu đồng} phải nộp trước ngày {30/1|ba mươi tháng một}, chậm nộp bị tính {0,03%/ngày|không phẩy không ba phần trăm một ngày/không phẩy không ba phần trăm mỗi ngày}.	
+vi-dD-148	vi-VN	food	mixed	hard	Mỗi {100 g|một trăm gam/một trăm gờ ram} ức gà cung cấp khoảng {165 kcal|một trăm sáu mươi lăm ki lô ca lo/một trăm sáu mươi lăm ca lo}, giá hiện là {89.000đ/kg|tám mươi chín nghìn đồng một ki lô gam/tám mươi chín ngàn đồng một ki lô gam/tám mươi chín nghìn đồng một ký/tám mươi chín ngàn đồng một ký/tám mươi chín nghìn đồng một cân/tám mươi chín ngàn đồng một cân}.	
+vi-dD-149	vi-VN	transport	mixed	context	Từ {0h|không giờ} ngày {5/8|năm tháng tám/mùng năm tháng tám/mồng năm tháng tám}, xe tải trên {10 tấn|mười tấn} bị cấm đi qua cầu.	
+vi-dD-150	vi-VN	entertainment	mixed	context	Bộ phim thu {137 tỷ đồng|một trăm ba mươi bảy tỷ đồng} sau {10|mười} ngày công chiếu và được chấm {4,5/5|bốn phẩy năm trên năm} điểm.	
+vi-dD-151	vi-VN	notice	mixed	context	Họp cư dân lúc {19h|mười chín giờ} ngày {8/3|tám tháng ba/mùng tám tháng ba/mồng tám tháng ba} tại phòng {B-102|bê một không hai/bê một trăm linh hai/bê một trăm lẻ hai}.	
+vi-dD-152	vi-VN	news	mixed	hard	Năm {2024|hai nghìn không trăm hai mươi tư/hai ngàn không trăm hai mươi tư/hai nghìn không trăm hai mươi bốn/hai ngàn không trăm hai mươi bốn/hai không hai tư}, xuất khẩu gạo đạt {9 triệu tấn|chín triệu tấn}, thu về {5,7 tỷ USD|năm phẩy bảy tỷ đô la Mỹ/năm phẩy bảy tỷ đô la/năm phẩy bảy tỷ đô/năm phẩy bảy tỷ u ét đê}.	
+vi-dD-153	vi-VN	message	mixed	hard	Chuyển {250k|hai trăm năm mươi nghìn/hai trăm năm mươi ngàn/hai trăm rưỡi/hai trăm năm mươi ca} vào tài khoản {0071000654321|không không bảy một không không không sáu năm bốn ba hai một} trước {9h|chín giờ} sáng mai giúp tớ nhé.	
+vi-dD-154	vi-VN	shopping	mixed	context	Túi da bò giá {1.250.000đ|một triệu hai trăm năm mươi nghìn đồng/một triệu hai trăm năm mươi ngàn đồng}, giao trong {2-3 ngày|hai đến ba ngày/hai tới ba ngày/hai ba ngày}, đổi trả tại {64|sáu mươi tư/sáu mươi bốn} cửa hàng.	
+vi-dD-155	vi-VN	health	mixed	hard	Bé {18 tháng|mười tám tháng} tuổi nặng {11,5 kg|mười một phẩy năm ki lô gam/mười một phẩy năm ký/mười một ký rưỡi/mười một cân rưỡi/mười một phẩy năm cân}, sốt {38,5°C|ba mươi tám phẩy năm độ xê/ba mươi tám phẩy năm độ/ba mươi tám độ rưỡi}.	
+vi-dD-156	vi-VN	tech	mixed	context	Laptop có RAM {16GB|mười sáu gi ga bai/mười sáu gi ga}, màn hình {14 inch|mười bốn inch/mười bốn in}, giá {22.990.000đ|hai mươi hai triệu chín trăm chín mươi nghìn đồng/hai mươi hai triệu chín trăm chín mươi ngàn đồng}.	
+vi-dD-157	vi-VN	finance	mixed	hard	Sáng {3/11|ba tháng mười một/mùng ba tháng mười một/mồng ba tháng mười một}, vàng miếng lên {86,5 triệu đồng/lượng|tám mươi sáu phẩy năm triệu đồng một lượng/tám mươi sáu phẩy năm triệu đồng mỗi lượng/tám mươi sáu triệu rưỡi đồng một lượng/tám mươi sáu triệu năm trăm nghìn đồng một lượng/tám mươi sáu triệu năm trăm ngàn đồng một lượng}, tăng {1,2%|một phẩy hai phần trăm}.	
+vi-dD-158	vi-VN	sports	mixed	hard	Vận động viên về đích sau {2:08:15|hai giờ tám phút mười lăm giây/hai tiếng tám phút mười lăm giây} trên cự ly {42,195 km|bốn mươi hai phẩy một trăm chín mươi lăm ki lô mét/bốn mươi hai phẩy một chín năm ki lô mét/bốn mươi hai phẩy một trăm chín mươi lăm cây số}, nhận thưởng {50 triệu đồng|năm mươi triệu đồng}.	
+vi-dD-159	vi-VN	weather	mixed	context	Lúc {13h|mười ba giờ}, tâm bão cách đảo Lý Sơn khoảng {120 km|một trăm hai mươi ki lô mét/một trăm hai mươi cây số}, sức gió mạnh nhất {118 km/h|một trăm mười tám ki lô mét trên giờ/một trăm mười tám ki lô mét một giờ/một trăm mười tám ki lô mét mỗi giờ}.	
+vi-dD-160	vi-VN	travel	mixed	context	Phòng đôi giá {1.800.000đ/đêm|một triệu tám trăm nghìn đồng một đêm/một triệu tám trăm ngàn đồng một đêm/một triệu tám trăm nghìn đồng mỗi đêm/một triệu tám trăm ngàn đồng mỗi đêm}, nhận phòng sau {14h|mười bốn giờ}, giảm {10%|mười phần trăm} khi ở từ ba đêm.	
+vi-dD-161	vi-VN	education	mixed	context	Lớp luyện thi khai giảng ngày {5/9|năm tháng chín/mùng năm tháng chín/mồng năm tháng chín}, học từ {18h-20h|mười tám giờ đến hai mươi giờ/mười tám đến hai mươi giờ}, học phí {3,6 triệu/khóa|ba phẩy sáu triệu một khóa/ba triệu sáu một khóa/ba triệu sáu trăm nghìn một khóa/ba triệu sáu trăm ngàn một khóa}.	
+vi-dD-162	vi-VN	admin	mixed	context	Cử tri bỏ phiếu từ {7h-19h|bảy giờ đến mười chín giờ/bảy giờ tới mười chín giờ} ngày {15/3|mười lăm tháng ba} tại {32|ba mươi hai} điểm bầu cử.	
+vi-dD-163	vi-VN	food	mixed	context	Nấu chè cần {240 ml|hai trăm bốn mươi mi li lít} nước cốt dừa, {1/2|nửa/một phần hai} chén đường và đun nhỏ lửa {15 phút|mười lăm phút}.	
+vi-dD-164	vi-VN	transport	mixed	hard	Người chạy quá tốc độ {20 km/h|hai mươi ki lô mét trên giờ/hai mươi ki lô mét một giờ/hai mươi cây số một giờ} bị phạt {4-6 triệu đồng|bốn đến sáu triệu đồng/bốn tới sáu triệu đồng} và tước bằng {1-3 tháng|một đến ba tháng/một tới ba tháng}.	
+vi-dD-165	vi-VN	entertainment	mixed	context	Album bán được {750.000 bản|bảy trăm năm mươi nghìn bản/bảy trăm năm mươi ngàn bản} trong tuần đầu và đứng {#1|số một} bảng xếp hạng ngày {7/4|bảy tháng tư/mùng bảy tháng tư/mồng bảy tháng tư}.	
+vi-dD-166	vi-VN	notice	mixed	hard	Bể bơi mở cửa {5h30-21h|năm giờ ba mươi đến hai mươi mốt giờ/năm giờ rưỡi đến hai mươi mốt giờ/năm giờ ba mươi phút đến hai mươi mốt giờ}, vé {40.000đ/lượt|bốn mươi nghìn đồng một lượt/bốn mươi ngàn đồng một lượt/bốn mươi nghìn đồng mỗi lượt/bốn mươi ngàn đồng mỗi lượt}, trẻ dưới {1,3 m|một phẩy ba mét/một mét ba} được miễn phí.	
+vi-dD-167	vi-VN	news	mixed	context	Trận động đất mạnh {6,8|sáu phẩy tám} độ xảy ra lúc {2h14|hai giờ mười bốn/hai giờ mười bốn phút} sáng giờ địa phương, khiến ít nhất {37|ba mươi bảy} người thiệt mạng.	
+vi-dD-168	vi-VN	message	mixed	hard	Tớ về tới nhà lúc {23h45|hai mươi ba giờ bốn mươi lăm/hai mươi ba giờ bốn mươi lăm phút/hai mươi ba giờ bốn lăm}, điện thoại còn {5%|năm phần trăm} pin, taxi hết {187k|một trăm tám mươi bảy nghìn/một trăm tám mươi bảy ngàn/một trăm tám bảy nghìn/một trăm tám bảy ngàn/một trăm tám mươi bảy ca}.	
+vi-dD-169	vi-VN	shopping	mixed	hard	Can nước giặt {3,8 kg|ba phẩy tám ki lô gam/ba phẩy tám ký/ba ký tám/ba phẩy tám cân/ba cân tám} giá {219.000đ|hai trăm mười chín nghìn đồng/hai trăm mười chín ngàn đồng}, mua {2|hai} can được giảm thêm.	
+vi-dD-170	vi-VN	health	mixed	hard	Huyết áp {140/90 mmHg|một trăm bốn mươi trên chín mươi mi li mét thủy ngân}, đường huyết {7,2 mmol/L|bảy phẩy hai mi li mol trên lít/bảy phẩy hai mi li mol một lít}, bệnh nhân tái khám sau {2 tuần|hai tuần}.	
+vi-dD-171	vi-VN	tech	mixed	context	Điện thoại có pin {5.000 mAh|năm nghìn mi li am pe giờ/năm ngàn mi li am pe giờ}, sạc nhanh {67W|sáu mươi bảy oát}, giá {8,49 triệu|tám phẩy bốn chín triệu/tám phẩy bốn mươi chín triệu/tám triệu bốn trăm chín mươi nghìn/tám triệu bốn trăm chín mươi ngàn}.	
+vi-dD-172	vi-VN	finance	mixed	context	Trong quý {III|ba}, lợi nhuận ngân hàng đạt {2.817 tỷ đồng|hai nghìn tám trăm mười bảy tỷ đồng/hai ngàn tám trăm mười bảy tỷ đồng}, tăng {14,6%|mười bốn phẩy sáu phần trăm}.	số La Mã
+vi-dD-173	vi-VN	sports	mixed	context	Tại {SEA Games 33|SEA Games ba mươi ba/SEA Games ba ba}, đoàn Việt Nam giành {87|tám mươi bảy} huy chương vàng, xếp thứ {3|ba}.	
+vi-dD-174	vi-VN	weather	mixed	context	Từ đêm {12/8|mười hai tháng tám}, Bắc Bộ có mưa {50-100 mm|năm mươi đến một trăm mi li mét/năm mươi tới một trăm mi li mét}, nguy cơ lũ quét ở {9|chín} tỉnh.	
+vi-dD-175	vi-VN	travel	mixed	context	Thị thực điện tử có giá trị {90 ngày|chín mươi ngày}, phí {25 USD|hai mươi lăm đô la Mỹ/hai mươi lăm đô la/hai mươi lăm đô/hai lăm đô/hai mươi lăm u ét đê}, xét duyệt trong {3-5|ba đến năm/ba tới năm} ngày làm việc.	
+vi-dD-176	vi-VN	education	mixed	hard	Trường tuyển {1.480|một nghìn bốn trăm tám mươi/một ngàn bốn trăm tám mươi} chỉ tiêu, điểm chuẩn ngành Y đa khoa là {27,35|hai mươi bảy phẩy ba mươi lăm/hai mươi bảy phẩy ba lăm}, công bố trước {17h30|mười bảy giờ ba mươi/mười bảy giờ ba mươi phút/mười bảy giờ rưỡi}.	
+vi-dD-177	vi-VN	admin	mixed	hard	Từ {1/1/2026|một tháng một năm hai nghìn không trăm hai mươi sáu/mùng một tháng một năm hai nghìn không trăm hai mươi sáu/mồng một tháng một năm hai nghìn không trăm hai mươi sáu/một tháng một năm hai ngàn không trăm hai mươi sáu/mùng một tháng một năm hai ngàn không trăm hai mươi sáu/mồng một tháng một năm hai ngàn không trăm hai mươi sáu}, phí cấp đổi giấy phép lái xe còn {115.000đ|một trăm mười lăm nghìn đồng/một trăm mười lăm ngàn đồng}, giải quyết trong {3 ngày|ba ngày}.	
+vi-dD-178	vi-VN	food	mixed	context	Nhà hàng giảm {20%|hai mươi phần trăm} hóa đơn trên {1 triệu đồng|một triệu đồng} cho nhóm từ {6|sáu} người trở lên.	
+vi-dD-179	vi-VN	transport	mixed	hard	Chuyến bay {VN7823|vê en bảy tám hai ba} cất cánh lúc {6h05|sáu giờ năm phút/sáu giờ không năm/sáu giờ năm} và hạ cánh sau {2 giờ 10 phút|hai giờ mười phút/hai tiếng mười phút}.	
+vi-dD-180	vi-VN	entertainment	mixed	context	Rạp giảm giá vé còn {45.000đ|bốn mươi lăm nghìn đồng/bốn mươi lăm ngàn đồng/bốn lăm nghìn đồng/bốn lăm ngàn đồng} vào {thứ 4|thứ tư} hằng tuần, áp dụng cho suất chiếu sau {22h|hai mươi hai giờ}.	thứ 4 đọc thứ tư
+vi-dD-181	vi-VN	notice	mixed	context	Rác được thu gom vào {thứ 2, 4, 6|thứ hai, tư, sáu} từ {17h-18h|mười bảy giờ đến mười tám giờ/mười bảy đến mười tám giờ}, phí {30.000đ/tháng|ba mươi nghìn đồng một tháng/ba mươi ngàn đồng một tháng/ba mươi nghìn đồng mỗi tháng/ba mươi ngàn đồng mỗi tháng}.	
+vi-dD-182	vi-VN	news	mixed	context	Tính đến ngày {20/10|hai mươi tháng mười}, cả nước ghi nhận {1.432|một nghìn bốn trăm ba mươi hai/một ngàn bốn trăm ba mươi hai} ca sốt xuất huyết, tăng {18%|mười tám phần trăm} so với cùng kỳ.	
+vi-dD-183	vi-VN	message	mixed	hard	Chị ơi em kẹt xe, chắc trễ {20'|hai mươi phút}, chị cứ bắt đầu họp lúc {13h30|mười ba giờ ba mươi/mười ba giờ ba mươi phút/mười ba giờ rưỡi} ở phòng {3.07|ba chấm không bảy/ba không bảy} nhé.	
+vi-dD-184	vi-VN	shopping	mixed	hard	Đơn hàng giao ngày {28/2|hai mươi tám tháng hai}, phí ship {16.500đ|mười sáu nghìn năm trăm đồng/mười sáu ngàn năm trăm đồng/mười sáu nghìn rưỡi/mười sáu ngàn rưỡi}, miễn phí cho đơn từ {99k|chín mươi chín nghìn/chín mươi chín ngàn/chín chín nghìn/chín chín ngàn/chín mươi chín ca}.	
+vi-dD-185	vi-VN	health	mixed	hard	Trẻ từ {6-11 tháng|sáu đến mười một tháng/sáu tới mười một tháng} tuổi được uống vitamin A liều {100.000 IU|một trăm nghìn đơn vị quốc tế/một trăm ngàn đơn vị quốc tế/một trăm nghìn i u/một trăm ngàn i u} vào ngày {1/6|một tháng sáu/mùng một tháng sáu/mồng một tháng sáu}.	
+vi-dD-186	vi-VN	tech	mixed	context	Bản {iOS 18.2|iOS mười tám chấm hai} phát hành ngày {11/12|mười một tháng mười hai}, dung lượng tải về {1,5 GB|một phẩy năm gi ga bai/một phẩy năm gi ga}.	
+vi-dD-187	vi-VN	finance	mixed	hard	Lúc {8h45|tám giờ bốn mươi lăm/tám giờ bốn mươi lăm phút/tám giờ bốn lăm}, tỷ giá đô la Mỹ niêm yết ở mức {25.380 VND|hai mươi lăm nghìn ba trăm tám mươi đồng/hai mươi lăm ngàn ba trăm tám mươi đồng/hai mươi lăm nghìn ba trăm tám mươi Việt Nam đồng/hai mươi lăm ngàn ba trăm tám mươi Việt Nam đồng}, tăng {0,15%|không phẩy mười lăm phần trăm}.	
+vi-dD-188	vi-VN	sports	mixed	hard	Tay vợt hạng {31|ba mươi mốt} thế giới thắng {6-4, 7-6|sáu bốn, bảy sáu} sau {2 giờ 31 phút|hai giờ ba mươi mốt phút/hai tiếng ba mươi mốt phút}.	tỷ số set
+vi-dD-189	vi-VN	weather	mixed	context	Nắng nóng kéo dài đến hết ngày {25/5|hai mươi lăm tháng năm}, nhiệt độ cao nhất {39-41°C|ba mươi chín đến bốn mươi mốt độ xê/ba mươi chín đến bốn mươi mốt độ/ba mươi chín tới bốn mươi mốt độ xê/ba mươi chín tới bốn mươi mốt độ}, độ ẩm thấp nhất {40%|bốn mươi phần trăm}.	
+vi-dD-190	vi-VN	travel	mixed	context	Vịnh Hạ Long đón {2,3 triệu|hai phẩy ba triệu/hai triệu ba trăm nghìn/hai triệu ba trăm ngàn/hai triệu ba} lượt khách trong {6 tháng|sáu tháng} đầu năm, vé tham quan {290.000đ|hai trăm chín mươi nghìn đồng/hai trăm chín mươi ngàn đồng}.	
+vi-dD-191	vi-VN	education	mixed	context	Học kỳ {I|một}, em đạt điểm trung bình {8,75|tám phẩy bảy mươi lăm/tám phẩy bảy lăm}, xếp hạng {3/45|ba trên bốn mươi lăm} của lớp.	
+vi-dD-192	vi-VN	admin	mixed	hard	Dân số cả nước đạt {101,3 triệu người|một trăm linh một phẩy ba triệu người/một trăm lẻ một phẩy ba triệu người}, mật độ {315 người/km²|ba trăm mười lăm người trên ki lô mét vuông/ba trăm mười lăm người một ki lô mét vuông/ba trăm mười lăm người mỗi ki lô mét vuông}, tăng {0,98%|không phẩy chín mươi tám phần trăm/không phẩy chín tám phần trăm} mỗi năm.	
+vi-dD-193	vi-VN	food	mixed	context	Bánh mì {15k/ổ|mười lăm nghìn một ổ/mười lăm ngàn một ổ/mười lăm nghìn mỗi ổ/mười lăm ngàn mỗi ổ/mười lăm ca một ổ}, bán từ {5h|năm giờ} sáng, mua {10|mười} ổ được tặng thêm một ổ.	
+vi-dD-194	vi-VN	transport	mixed	hard	Tàu metro chạy từ {5h45|năm giờ bốn mươi lăm/năm giờ bốn mươi lăm phút/năm giờ bốn lăm}, cách {8-10 phút|tám đến mười phút/tám tới mười phút} một chuyến, giá vé {7.000-20.000đ|bảy nghìn đến hai mươi nghìn đồng/bảy ngàn đến hai mươi ngàn đồng/bảy nghìn tới hai mươi nghìn đồng/bảy ngàn tới hai mươi ngàn đồng}.	
+vi-dD-195	vi-VN	entertainment	mixed	context	Đêm nhạc kỷ niệm {20 năm|hai mươi năm} ca hát của nữ ca sĩ diễn ra ngày {6/1|sáu tháng một/mùng sáu tháng một/mồng sáu tháng một}, vé từ {800k|tám trăm nghìn/tám trăm ngàn/tám trăm ca}.	
+vi-dD-196	vi-VN	notice	mixed	context	Nhà văn hóa cho thuê hội trường {180 chỗ|một trăm tám mươi chỗ}, giá {3,5 triệu/buổi|ba phẩy năm triệu một buổi/ba triệu rưỡi một buổi/ba triệu năm trăm nghìn một buổi/ba triệu năm trăm ngàn một buổi}, cần đặt trước {7|bảy} ngày.	
+vi-dD-197	vi-VN	news	mixed	hard	Lúc {10h20|mười giờ hai mươi/mười giờ hai mươi phút} ngày {26/7|hai mươi sáu tháng bảy}, xe container lật tại {Km15+300|ki lô mét mười lăm cộng ba trăm/cây số mười lăm cộng ba trăm} cao tốc Trung Lương.	lý trình
+vi-dD-198	vi-VN	message	mixed	context	Tối {thứ 7|thứ bảy} này sinh nhật tớ, {18h30|mười tám giờ ba mươi/mười tám giờ ba mươi phút/mười tám giờ rưỡi} ở nhà hàng tầng {12|mười hai} nha.	
+vi-dD-199	vi-VN	shopping	mixed	hard	Sữa bột hộp {900 g|chín trăm gam/chín trăm gờ ram} giá {585.000đ|năm trăm tám mươi lăm nghìn đồng/năm trăm tám mươi lăm ngàn đồng/năm trăm tám lăm nghìn đồng/năm trăm tám lăm ngàn đồng}, hạn dùng đến {03/2027|tháng ba năm hai nghìn không trăm hai mươi bảy/tháng ba năm hai ngàn không trăm hai mươi bảy}.	
+vi-dD-200	vi-VN	health	mixed	context	Người trưởng thành nên ngủ {7-9 tiếng|bảy đến chín tiếng/bảy tới chín tiếng}, uống {2 lít|hai lít} nước và đi bộ {6.000 bước|sáu nghìn bước/sáu ngàn bước} mỗi ngày.	
+vi-dD-201	vi-VN	tech	negative	basic	Chạy lệnh {pip install -r requirements.txt|=} trước khi khởi động dịch vụ.	lệnh
+vi-dD-202	vi-VN	finance	negative	context	Bản sao kê tháng này được lưu với tên {saoke_T09_2025.pdf|=}.	tên tệp
+vi-dD-203	vi-VN	sports	negative	context	Video bàn thắng có tên {chungket_hiep2_full.mp4|=} đã được tải lên nhóm.	tên tệp
+vi-dD-204	vi-VN	weather	negative	hard	Dữ liệu radar sáng nay nằm trong tệp {radar_20250914_0600.nc|=}.	tên tệp
+vi-dD-205	vi-VN	travel	negative	context	Mã đặt chỗ của chị là {K7XQ2M|=}, vui lòng xuất trình khi làm thủ tục.	mã đặt chỗ
+vi-dD-206	vi-VN	education	negative	hard	Nộp tệp {BaiTap3_NguyenVanA.docx|=} trước {23h59|hai mươi ba giờ năm mươi chín/hai mươi ba giờ năm mươi chín phút} tối nay.	tên tệp + giờ
+vi-dD-207	vi-VN	admin	negative	basic	Văn bản điện tử có mã xác thực {a9f3c1e7-2b4d-4e8a-9c6f-1d2e3f4a5b6c|=}.	UUID
+vi-dD-208	vi-VN	food	negative	context	Công thức phở được lưu trong tệp {pho_bo_v2_final.json|=}.	tên tệp
+vi-dD-209	vi-VN	transport	negative	basic	Ứng dụng gọi xe báo lỗi {ERR_CONNECTION_TIMED_OUT|=} khi mất mạng.	mã lỗi
+vi-dD-210	vi-VN	entertainment	negative	context	Nhạc chuông được chia sẻ dưới tên {nhac_chuong_2024_remix.mp3|=}.	tên tệp
+vi-dD-211	vi-VN	notice	negative	hard	Mật khẩu Wi-Fi tạm thời của tòa nhà là {Tg#82kLq!|=}.	mật khẩu
+vi-dD-212	vi-VN	news	negative	basic	Mã độc được nhận diện qua mã băm {e3b0c44298fc1c149afbf4c8996fb924|=}.	mã băm
+vi-dD-213	vi-VN	message	negative	context	Gửi tớ tệp {anh_cuoi_2025(1).zip|=} với, tớ chưa tải được.	tên tệp
+vi-dD-214	vi-VN	shopping	negative	context	Nhập mã {GX7T-QP29|=} ở bước thanh toán để được giảm giá.	mã giảm giá
+vi-dD-215	vi-VN	health	negative	context	Kết quả chụp phim được lưu tại {KQ_XN_BN004521.pdf|=}.	tên tệp
+vi-dD-216	vi-VN	tech	negative	hard	Thêm dòng {export PATH=$HOME/.local/bin:$PATH|=} vào cuối tệp cấu hình.	đoạn mã
+vi-dD-217	vi-VN	finance	negative	basic	Khóa API môi trường thử nghiệm là {sk_test_9fQ2LmX7aB3vR8tY|=}.	khóa API
+vi-dD-218	vi-VN	sports	negative	context	Ứng dụng chạy bộ xuất lộ trình thành tệp {run_0712.gpx|=}.	tên tệp
+vi-dD-219	vi-VN	weather	negative	hard	Lệnh {curl -s api.thoitiet.vn/v1/forecast?city=hanoi|=} trả về dữ liệu dạng JSON.	lệnh
+vi-dD-220	vi-VN	travel	negative	hard	Lịch trình chi tiết nằm trong tệp {lich_trinh_DaNang_4N3D.xlsx|=}.	tên tệp
+vi-dD-221	vi-VN	education	negative	hard	Học sinh gõ đoạn mã {for i in range(10): print(i)|=} trong giờ thực hành.	đoạn mã
+vi-dD-222	vi-VN	admin	negative	basic	Chứng thư số có số sê-ri {3F9A00C1B27E44D8|=}.	số sê-ri hex
+vi-dD-223	vi-VN	food	negative	hard	Ảnh món bún chả {IMG_4821.HEIC|=} nặng {3,2 MB|ba phẩy hai mê ga bai/ba phẩy hai mê ga/ba phẩy hai em bê}.	tên tệp + dung lượng
+vi-dD-224	vi-VN	transport	negative	context	Danh sách điểm dừng xe buýt được lưu ở {/data/gtfs/stops.txt|=}.	đường dẫn
+vi-dD-225	vi-VN	entertainment	negative	basic	Khóa kích hoạt trò chơi là {7KQ3D-XM2PW-9TBR4-HY6CJ-LVF8N|=}.	khóa bản quyền
+vi-dD-226	vi-VN	notice	negative	context	Biểu mẫu đăng ký nằm trong thư mục {\\fileserver\hanhchinh\bieumau|=}.	đường dẫn mạng
+vi-dD-227	vi-VN	news	negative	context	Đoạn mã độc đánh cắp giá trị của {document.cookie|=} trên trình duyệt nạn nhân.	đoạn mã
+vi-dD-228	vi-VN	message	negative	basic	Mã mời vào nhóm học là {xY7_pQ2z|=}, đừng chia sẻ ra ngoài nhé.	token
+vi-dD-229	vi-VN	shopping	negative	context	Đường dẫn thanh toán chứa tham số {ref=a8Kd92Lx|=} bị lỗi.	tham số
+vi-dD-230	vi-VN	health	negative	basic	Máy đo đường huyết xuất dữ liệu sang tệp {glucose_log.csv|=}.	tên tệp
+vi-dD-231	vi-VN	tech	negative	hard	Câu lệnh {SELECT * FROM users WHERE id = 7;|=} chỉ trả về một dòng.	SQL
+vi-dD-232	vi-VN	finance	negative	basic	Giao dịch bị từ chối với mã lỗi {E_INSUFFICIENT_FUNDS|=}.	mã lỗi
+vi-dD-233	vi-VN	sports	negative	context	Mô hình dự đoán kết quả được lưu thành {model_epl_v4.pkl|=}.	tên tệp
+vi-dD-234	vi-VN	weather	negative	basic	Biến môi trường {OPENWEATHER_KEY|=} chưa được thiết lập trên máy chủ.	tên biến
+vi-dD-235	vi-VN	travel	negative	context	Tệp {boarding_pass_SGN-HAN.pkpass|=} đã được thêm vào ví điện thoại.	tên tệp
+vi-dD-236	vi-VN	education	negative	context	Bài thực hành yêu cầu dòng {import numpy as np|=} ở đầu chương trình.	đoạn mã
+vi-dD-237	vi-VN	admin	negative	basic	Mã định danh tài liệu nội bộ là {DOC-7f2e91ab|=}.	mã định danh
+vi-dD-239	vi-VN	transport	negative	context	Dịch vụ tìm đường gọi hàm {getRoute(origin, dest)|=} để tính lộ trình.	đoạn mã
+vi-dD-243	vi-VN	message	negative	context	Tớ dán nhầm token {eyJhbGciOiJIUzI1NiJ9|=} vào nhóm chat, xóa giúp tớ với.	token
+vi-dD-244	vi-VN	shopping	negative	hard	Thuộc tính {data-product-id="88213"|=} trên trang sản phẩm bị sai.	đoạn mã
+vi-dD-245	vi-VN	health	negative	context	Hồ sơ bệnh án điện tử được xuất ra tệp {HSBA_2025_Q3.hl7|=}.	tên tệp
+vi-dD-246	vi-VN	tech	negative	hard	Commit {9c1e4b7|=} đã sửa lỗi rò rỉ bộ nhớ trong bản {v1.8|vê một chấm tám/phiên bản một chấm tám}.	mã băm + phiên bản
+vi-dD-247	vi-VN	finance	negative	context	Tệp cấu hình cổng thanh toán có dòng {TIMEOUT_MS=3000|=}.	cấu hình
+vi-dD-248	vi-VN	sports	negative	hard	Công thức {VLOOKUP(B2;BXH!A:C;3;0)|=} lấy điểm của từng đội trong bảng.	công thức bảng tính
+vi-dD-249	vi-VN	weather	negative	context	Ảnh vệ tinh mới nhất có tên {H09_B13_FLDK_R20.png|=}.	tên tệp
+vi-dD-250	vi-VN	travel	negative	hard	Mạng Wi-Fi của khách sạn có tên {HoangHon_5G_Guest|=}.	SSID
