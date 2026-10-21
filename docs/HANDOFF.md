@@ -18,6 +18,13 @@
 - TN 악화 23건은 STT의 숫자·약어 표기와 잘못 들음이다. 숫자 주변 공백을 붙인 실험도 차이가 없었다(잡음 수준).
 - 상태는 아직 **개발**이다. 운영 전환은 소유자 결정을 기다린다. 상세: [thai-pack.ko.md](thai-pack.ko.md) 끝 절.
 
+## 최근 인계: 베트남어·태국어 개선 (2026-10-21)
+
+- **자료:** 개발셋 v1 `benchmark/datasets/vi-th-dev`. open-tn은 마지막에 점수만 냈다.
+- **점수:** dev vi 88.4→90.8, th 91.4→94.3. open-tn vi 90.9→91.4, th 89.8→90.7.
+- **고친 것:** 베트남어 `vi_dev_forms`, 태국어 `th_dev_forms`(둘 다 `say` 읽기 항목). 계약 `vi_th_dev_v98`.
+- **상세:** [vi-th-dev.ko.md](vi-th-dev.ko.md).
+
 ## 최근 인계: 영어·일본어 개선 (2026-10-17)
 
 - **자료:** 개발셋 v1 `benchmark/datasets/en-ja-dev`(en 964, ja 981). 공개셋 open-tn은 점수만 내고 개선에 쓰지 않는다(`~/datasets/open-tn`, 읽기 전용).

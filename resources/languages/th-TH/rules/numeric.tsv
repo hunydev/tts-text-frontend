@@ -104,3 +104,5 @@ th_cue	th-TH	scale	แสน|ล้าน|หมื่น|พัน|ร้อย
 classifier_priority	th-TH	th.caps	100
 classifier_priority	th-TH	th.abbrtail	100
 classifier_priority	th-TH	th.saraam	100
+# dev v1 forms (2026-10-21)
+classifier_priority	th-TH	th.say	100

@@ -178,3 +178,12 @@ th_unit	th-TH	"	นิ้ว
 th_abbr	th-TH	สรอ.	สหรัฐอเมริกา
 th_abbr	th-TH	มอก.	มอกอ
 th_unit	th-TH	dpi	ดีพีไอ
+# th dev v1 (2026-10-21)
+th_unit	th-TH	MW	เมกะวัตต์
+th_unit	th-TH	hPa	เฮกโตปาสกาล
+th_unit	th-TH	Wh	วัตต์ชั่วโมง
+th_unit	th-TH	ft	ฟุต
+th_unit	th-TH	MP	เมกะพิกเซล
+th_unit	th-TH	GW	กิกะวัตต์
+th_unit	th-TH	ft.lb	ฟุตปอนด์
+th_unit	th-TH	lb.ft	ปอนด์ฟุต

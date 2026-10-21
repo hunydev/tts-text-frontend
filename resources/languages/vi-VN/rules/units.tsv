@@ -89,3 +89,8 @@ vi_unit	vi-VN	rpm	vòng trên phút
 vi_unit	vi-VN	dL	đề-xi-lít
 vi_unit	vi-VN	µmol	mi-crô-mol
 vi_unit	vi-VN	μmol	mi-crô-mol
+# vi dev v1 (2026-10-21)
+vi_unit	vi-VN	MB/s	mê-ga-bai trên giây
+vi_unit	vi-VN	GB/s	gi-ga-bai trên giây
+vi_unit	vi-VN	Mbps	mê-ga-bít trên giây
+vi_unit	vi-VN	Gbps	gi-ga-bít trên giây

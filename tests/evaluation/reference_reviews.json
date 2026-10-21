@@ -2658,6 +2658,18 @@
       },
       "category_overrides": {},
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/vi_th_dev_v98.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Synthetic cases authored with the Vietnamese and Thai packs; new sentences, not copied from the dev sets or open-tn",
+        "reason": "Project-owner request 2026-10-21: Vietnamese and Thai improvement"
+      },
+      "category_overrides": {},
+      "case_overrides": {}
     }
   ],
   "excluded": [

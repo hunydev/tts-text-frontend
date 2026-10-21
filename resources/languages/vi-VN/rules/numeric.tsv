@@ -163,3 +163,10 @@ electronic_word	vi-VN	khachhang	khách hàng
 electronic_word	vi-VN	hanoi	Hà Nội
 electronic_word	vi-VN	danang	Đà Nẵng
 electronic_word	vi-VN	saigon	Sài Gòn
+# vi dev v1 (2026-10-21)
+vi_currency	vi-VN	A$	đô la Úc
+vi_currency	vi-VN	US$	đô la Mỹ
+vi_currency	vi-VN	S$	đô la Singapore
+vi_currency	vi-VN	HK$	đô la Hồng Kông
+vi_currency	vi-VN	C$	đô la Canada
+vi_currency	vi-VN	NZ$	đô la New Zealand

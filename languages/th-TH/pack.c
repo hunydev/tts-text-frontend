@@ -584,6 +584,261 @@ static size_t year_after(const char *t, size_t n, size_t p, char *era, size_t ec
     return p;
 }
 
+/* ---- Thai dev set v1 forms (2026-10-21) ----
+   "say" readings: items separated by '|': w:words, n:number, d:digits one by one, m:month number,
+   u:unit key (th_unit), l:Latin letters, c:Thai consonants by name (ฮม ฮอมอ). */
+static int th_starts(const char *t, size_t n, size_t q, const char *w) {
+    size_t l = strlen(w);
+    return q + l <= n && !memcmp(t + q, w, l);
+}
+/* p is just after a Thai word ending in one of the |-separated words (spaces skipped) */
+static int th_before(const char *t, size_t p, const char *words) {
+    size_t q = p;
+    const char *s = words;
+    while (q && t[q - 1] == ' ')
+        --q;
+    while (*s) {
+        const char *bar = strchr(s, '|');
+        size_t l = bar ? (size_t)(bar - s) : strlen(s);
+        if (q >= l && !memcmp(t + q - l, s, l))
+            return 1;
+        if (!bar)
+            break;
+        s = bar + 1;
+    }
+    return 0;
+}
+static int th_near(const char *t, size_t p, size_t window, const char *words) {
+    size_t a = p > window ? p - window : 0, i;
+    const char *s = words;
+    while (*s) {
+        const char *bar = strchr(s, '|');
+        size_t l = bar ? (size_t)(bar - s) : strlen(s);
+        for (i = a; i + l <= p; ++i)
+            if (!memcmp(t + i, s, l))
+                return 1;
+        if (!bar)
+            break;
+        s = bar + 1;
+    }
+    return 0;
+}
+static size_t th_dev_forms(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    const ttf_engine_t *e = in->engine;
+    const char *t = in->text;
+    size_t n = in->length, p = in->tokens[in->index].begin, q, r, k;
+    char v[TTF_IR_VALUE_SIZE];
+    if (p >= n)
+        return 0;
+    /* #ช้างศึกสู้ตาย แฮชแท็กช้างศึกสู้ตาย: a hashtag before a word */
+    if (t[p] == '#' && p + 1 < n && !digit(t[p + 1]) && t[p + 1] != ' ' &&
+        !(p && (alpha(t[p - 1]) || digit(t[p - 1]) || ((unsigned char)t[p - 1] & 0x80))))
+        return finish(in, s, p + 1, "say", "w:แฮชแท็ก", "");
+    /* ศ. 13 พ.ย. วันศุกร์ที่สิบสามพฤศจิกายน; จ.-พ. วันจันทร์ถึงวันพุธ: a weekday abbreviation */
+    {
+        static const char *const wd[] = {"อา.", "วันอาทิตย์", "จ.", "วันจันทร์", "อ.", "วันอังคาร", "พฤ.", "วันพฤหัสบดี",
+                                         "พ.", "วันพุธ", "ศ.", "วันศุกร์", "ส.", "วันเสาร์", NULL};
+        for (k = 0; wd[k]; k += 2) {
+            size_t l = strlen(wd[k]);
+            if (th_starts(t, n, p, wd[k]) && !(p && ((unsigned char)t[p - 1] & 0x80) && t[p - 1] != ' ')) {
+                size_t z = p + l;
+                if (z + 2 < n && t[z] == ' ' && digit(t[z + 1])) {
+                    size_t d = z + 1;
+                    while (d < n && digit(t[d]))
+                        ++d;
+                    if (d - z - 1 <= 2 && d + 1 < n && t[d] == ' ' && ((unsigned char)t[d + 1] & 0x80)) {
+                        snprintf(v, sizeof(v), "w:%sที่", wd[k + 1]);
+                        return finish(in, s, z, "say", v, "");
+                    }
+                }
+                if (z + 1 < n && t[z] == '-') {
+                    size_t k2;
+                    for (k2 = 0; wd[k2]; k2 += 2)
+                        if (th_starts(t, n, z + 1, wd[k2])) {
+                            snprintf(v, sizeof(v), "w:%sถึง%s", wd[k + 1], wd[k2 + 1]);
+                            return finish(in, s, z + 1 + strlen(wd[k2]), "say", v, "");
+                        }
+                }
+            }
+        }
+    }
+    /* ทะเบียน ฮม 902 ฮอมอเก้าศูนย์สอง: a licence plate after ทะเบียน */
+    if (((unsigned char)t[p] == 0xE0) && th_before(t, p, "ทะเบียน|ป้ายทะเบียน")) {
+        size_t z = p, letters = 0;
+        char *o = v;
+        o += snprintf(o, sizeof(v), "c:");
+        while (z + 2 < n && (unsigned char)t[z] == 0xE0 && (unsigned char)t[z + 1] == 0xB8 &&
+               (unsigned char)t[z + 2] >= 0x81 && (unsigned char)t[z + 2] <= 0xAE && letters < 3) {
+            o += snprintf(o, sizeof(v) - (size_t)(o - v), "%.3s", t + z);
+            z += 3, ++letters;
+        }
+        if (letters >= 1 && z + 1 < n && t[z] == ' ' && digit(t[z + 1])) {
+            size_t d = z + 1;
+            while (d < n && digit(t[d]))
+                ++d;
+            if (d - z - 1 <= 4 && !(d < n && digit(t[d]))) {
+                snprintf(o, sizeof(v) - (size_t)(o - v), "|w: |d:%.*s", (int)(d - z - 1), t + z + 1);
+                return finish(in, s, d, "say", v, "");
+            }
+        }
+    }
+    /* ปอ.511 ปอห้าร้อยสิบเอ็ด, ทร.14, LV.50: letters, a dot and a number (no decimal) */
+    if (!(p && (alpha(t[p - 1]) || ((unsigned char)t[p - 1] & 0x80))) && p < n) {
+        size_t z = p;
+        int thai = (unsigned char)t[p] == 0xE0;
+        while (z < n && z - p < 9 && (thai ? (unsigned char)t[z] == 0xE0 : (t[z] >= 'A' && t[z] <= 'Z')))
+            z += thai ? 3 : 1;
+        if (z > p && z + 1 < n && t[z] == '.' && digit(t[z + 1])) {
+            size_t d = z + 1;
+            char key[32];
+            const char *abbr;
+            while (d < n && digit(t[d]))
+                ++d;
+            snprintf(key, sizeof(key), "%.*s", (int)(z + 1 - p), t + p);
+            abbr = thai ? res(e, "th_abbr", key) : NULL;
+            /* ซม.100 X80 เซนติเมตรหนึ่งร้อย: a unit abbreviation before the size it measures (ม.6 is a grade) */
+            if (thai && z - p >= 6 && d - z - 1 <= 4 && !(d < n && (digit(t[d]) || t[d] == '.')) && res(e, "th_unit", key)) {
+                snprintf(v, sizeof(v), "u:%s|n:%.*s", key, (int)(d - z - 1), t + z + 1);
+                return finish(in, s, d, "say", v, "");
+            }
+            if (d - z - 1 <= 4 && !res(e, "th_unit", key) && !(d < n && (digit(t[d]) || t[d] == '.')) && (z - p) <= (thai ? 6u : 3u) &&
+                (abbr || !thai || z - p == 6)) {
+                if (thai)
+                    snprintf(v, sizeof(v), "w:%s|n:%.*s", abbr ? abbr : key, (int)(d - z - 1), t + z + 1);
+                else
+                    snprintf(v, sizeof(v), "l:%.*s|n:%.*s", (int)(z - p), t + p, (int)(d - z - 1), t + z + 1);
+                /* ทร.14 ทอรอสิบสี่: two consonants without a vowel read by name; ปอ.511 stays ปอ */
+                if (thai && !abbr)
+                    snprintf(v, sizeof(v), "%s:%.*s|n:%.*s",
+                             (unsigned char)t[p + 5] >= 0x81 && (unsigned char)t[p + 5] <= 0xAE &&
+                                     (unsigned char)t[p + 5] != 0xAD && (unsigned char)t[p + 2] >= 0x81 &&
+                                     (unsigned char)t[p + 2] <= 0xAE
+                                 ? "c"
+                                 : "w",
+                             (int)(z - p), t + p, (int)(d - z - 1), t + z + 1);
+                return finish(in, s, d, "say", v, "");
+            }
+        }
+    }
+    /* €45 ล้าน สี่สิบห้าล้านยูโร, US$1.5 ล้าน: a currency sign with a scale word after the amount */
+    {
+        static const char *const cur[] = {"US$", "ดอลลาร์สหรัฐ", "$", "ดอลลาร์", "€", "ยูโร", "£", "ปอนด์", "฿", "บาท", NULL};
+        for (k = 0; cur[k]; k += 2)
+            if (th_starts(t, n, p, cur[k]) && p + strlen(cur[k]) < n && digit(t[p + strlen(cur[k])])) {
+                size_t a = p + strlen(cur[k]), z;
+                char num[32];
+                size_t ni = 0;
+                static const char *const scale[] = {"ล้านล้าน", "แสนล้าน", "หมื่นล้าน", "พันล้าน", "ล้าน", NULL};
+                for (z = a; z < n && (digit(t[z]) || t[z] == ',' || (t[z] == '.' && z + 1 < n && digit(t[z + 1]))) &&
+                            ni + 1 < sizeof(num);
+                     ++z)
+                    if (t[z] != ',')
+                        num[ni++] = t[z];
+                num[ni] = 0;
+                {
+                    size_t w = z < n && t[z] == ' ' ? z + 1 : z, j;
+                    for (j = 0; scale[j]; ++j)
+                        if (th_starts(t, n, w, scale[j])) {
+                            snprintf(v, sizeof(v), "n:%s|w:%s%s", num, scale[j], cur[k + 1]);
+                            return finish(in, s, w + strlen(scale[j]), "say", v, "");
+                        }
+                    /* ฿42/ตร.ม. สี่สิบสองบาทต่อตารางเมตร */
+                    if (z + 1 < n && t[z] == '/' && ((unsigned char)t[z + 1] & 0x80)) {
+                        char ukey[24];
+                        size_t u;
+                        for (u = z + 1; u < n && u - z <= 18 && t[u] != ' ' && t[u] != ','; ++u)
+                            ;
+                        snprintf(ukey, sizeof(ukey), "%.*s", (int)(u - z - 1), t + z + 1);
+                        if (res(e, "th_unit", ukey)) {
+                            snprintf(v, sizeof(v), "n:%s|w:%sต่อ|u:%s", num, cur[k + 1], ukey);
+                            return finish(in, s, u, "say", v, "");
+                        }
+                    }
+                }
+                break;
+            }
+    }
+    if (!digit(t[p]) || (p && (digit(t[p - 1]) || alpha(t[p - 1]) || t[p - 1] == '.' || t[p - 1] == ',' || t[p - 1] == '/')))
+        return 0;
+    for (q = p; q < n && digit(t[q]); ++q)
+        ;
+    /* 3-0 สามต่อศูนย์: a score */
+    if (q - p <= 2 && q + 1 < n && t[q] == '-' && digit(t[q + 1]) &&
+        th_near(t, p, 60, "ชนะ|แพ้|เสมอ|สกอร์|ประตู|นำ|ผลการแข่งขัน|ถล่ม|เฉือน|ตามตีเสมอ")) {
+        for (r = q + 1; r < n && digit(t[r]); ++r)
+            ;
+        if (r - q - 1 <= 2 && !(r < n && (digit(t[r]) || t[r] == '-'))) {
+            snprintf(v, sizeof(v), "n:%.*s|w:ต่อ|n:%.*s", (int)(q - p), t + p, (int)(r - q - 1), t + q + 1);
+            return finish(in, s, r, "say", v, "");
+        }
+    }
+    /* 88/9 หมู่ 3 แปดสิบแปดทับเก้า: a house number */
+    if (q - p <= 4 && q + 1 < n && t[q] == '/' && digit(t[q + 1])) {
+        for (r = q + 1; r < n && digit(t[r]); ++r)
+            ;
+        if (r - q - 1 <= 4 && !(r < n && (digit(t[r]) || t[r] == '/' || t[r] == '.')) &&
+            (th_before(t, p, "ที่อยู่|เลขที่|จัดส่งที่|อยู่ที่|บ้าน|ที่") ||
+             th_starts(t, n, r, " หมู่") || th_starts(t, n, r, " ม.") || th_starts(t, n, r, " ซอย") ||
+             th_starts(t, n, r, " ถนน") || th_starts(t, n, r, " หมู่บ้าน"))) {
+            snprintf(v, sizeof(v), "n:%.*s|w:ทับ|n:%.*s", (int)(q - p), t + p, (int)(r - q - 1), t + q + 1);
+            return finish(in, s, r, "say", v, "");
+        }
+        /* ไตรมาส 2/2569 ไตรมาสสองปีสองพันห้าร้อยหกสิบเก้า; 03/2571 มีนาคมสองพันห้าร้อยเจ็ดสิบเอ็ด */
+        if (r - q - 1 == 4 && !(r < n && digit(t[r]))) {
+            unsigned a = (unsigned)atoi(t + p), y = (unsigned)atoi(t + q + 1);
+            if (th_before(t, p, "ไตรมาส|ไตรมาสที่") && a >= 1 && a <= 4) {
+                snprintf(v, sizeof(v), "n:%u|w:ปี|n:%u", a, y);
+                return finish(in, s, r, "say", v, "");
+            }
+            /* EXP 08/2027 keeps its digits (owner set); เดือน 03/2571 is a month */
+            if (a >= 1 && a <= 12 && q - p == 2 && ((y >= 2400 && y <= 2700) || (y >= 1900 && y <= 2100)) &&
+                (th_before(t, p, "เดือน") || (y >= 2400 && !th_before(t, p, "EXP")))) {
+                snprintf(v, sizeof(v), "m:%u|n:%u", a, y);
+                return finish(in, s, r, "say", v, "");
+            }
+        }
+    }
+    /* 1:54.62 หนึ่งนาทีห้าสิบสี่จุดหกสองวินาที; 1:30 ชม. หนึ่งชั่วโมงสามสิบนาที */
+    if (q - p <= 2 && q + 5 < n && t[q] == ':' && digit(t[q + 1]) && digit(t[q + 2]) && t[q + 3] == '.' &&
+        digit(t[q + 4]) && digit(t[q + 5]) && !(q + 6 < n && digit(t[q + 6]))) {
+        snprintf(v, sizeof(v), "n:%.*s|w:นาที|n:%.2s.%.2s|w:วินาที", (int)(q - p), t + p, t + q + 1, t + q + 4);
+        return finish(in, s, q + 6, "say", v, "");
+    }
+    if (q - p <= 2 && q + 3 < n && t[q] == ':' && digit(t[q + 1]) && digit(t[q + 2]) &&
+        (th_starts(t, n, q + 3, " ชม.") || th_starts(t, n, q + 3, " ชั่วโมง"))) {
+        size_t z = q + 3 + (th_starts(t, n, q + 3, " ชม.") ? strlen(" ชม.") : strlen(" ชั่วโมง"));
+        snprintf(v, sizeof(v), "n:%.*s|w:ชั่วโมง|n:%u|w:นาที", (int)(q - p), t + p, (unsigned)atoi(t + q + 1));
+        return finish(in, s, z, "say", v, "");
+    }
+    /* 2^10 สองยกกำลังสิบ */
+    if (q - p <= 3 && q + 1 < n && t[q] == '^' && digit(t[q + 1])) {
+        for (r = q + 1; r < n && digit(t[r]); ++r)
+            ;
+        snprintf(v, sizeof(v), "n:%.*s|w:ยกกำลัง|n:%.*s", (int)(q - p), t + p, (int)(r - q - 1), t + q + 1);
+        return finish(in, s, r, "say", v, "");
+    }
+    /* โปร 11.11 สิบเอ็ดสิบเอ็ด: a shopping day */
+    if (q - p <= 2 && q + 1 < n && t[q] == '.' && !strncmp(t + p, t + q + 1, q - p) && q + 1 + (q - p) <= n &&
+        !(q + 1 + (q - p) < n && digit(t[q + 1 + (q - p)])) && atoi(t + p) >= 1 && atoi(t + p) <= 12 &&
+        th_before(t, p, "โปร|แคมเปญ|เซล|วัน|มหกรรม|ช้อป")) {
+        snprintf(v, sizeof(v), "n:%.*s|n:%.*s", (int)(q - p), t + p, (int)(q - p), t + p);
+        return finish(in, s, q + 1 + (q - p), "say", v, "");
+    }
+    /* สายด่วน 1182 หนึ่งหนึ่งแปดสอง: a four-digit hotline */
+    if (q - p == 4 && t[p] == '1' && !(q < n && (digit(t[q]) || t[q] == '.' || t[q] == ',' || alpha(t[q]))) &&
+        th_near(t, p, 40, "สายด่วน|โทร|ติดต่อ|หมายเลข|เบอร์|ร้องเรียน|แจ้ง|สอบถาม")) {
+        static const char *const not_after[] = {" บาท", " คน", " ราย", " ล้าน", " ปี", NULL};
+        int bad = 0;
+        for (k = 0; not_after[k]; ++k)
+            bad |= th_starts(t, n, q, not_after[k]);
+        if (!bad && !th_before(t, p, "ปี|พ.ศ.|ค.ศ.|ปีพ.ศ.")) {
+            snprintf(v, sizeof(v), "d:%.4s", t + p);
+            return finish(in, s, q, "say", v, "");
+        }
+    }
+    return 0;
+}
+
 static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     const ttf_engine_t *e = in->engine;
     const char *t = in->text;
@@ -595,6 +850,8 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     p = in->tokens[in->index].begin;
     if (p >= n)
         return 0;
+    if ((z = th_dev_forms(in, s)) != 0)
+        return z;
 
     /* ½ ครึ่ง */
     if (has(t, n, p, "½"))
@@ -1537,6 +1794,10 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         ttf_status_t st;
         /* the shared grammar writes / and *; the Thai table reads ÷ and × */
         size_t keep = b->length;
+        /* กด * 005 * 2 *: a zero-led number is a key code, not an operand */
+        for (i = 0; v[i]; ++i)
+            if (v[i] == '0' && digit(v[i + 1]) && !(i && (digit(v[i - 1]) || v[i - 1] == '.')))
+                return ttf_semantic_control(e, s, surface, length, b);
         for (i = 0; v[i] && o + 3 < sizeof(ex); ++i) {
             if (v[i] == '/')
                 memcpy(ex + o, "÷", 2), o += 2;
@@ -1726,6 +1987,53 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     }
     if (!strcmp(mode, "math"))
         return math_reading(e, b, v);
+    if (!strcmp(mode, "say")) {
+        /* th_dev_forms: w words, n number, d digits, m month, u unit, l Latin letters, c Thai consonants */
+        const char *it = v;
+        while (*it) {
+            const char *bar = strchr(it, '|');
+            size_t l = bar ? (size_t)(bar - it) : strlen(it), i;
+            char item[TTF_IR_VALUE_SIZE];
+            if (l < 2 || l - 2 >= sizeof(item) || it[1] != ':')
+                return TTF_EINVAL;
+            memcpy(item, it + 2, l - 2);
+            item[l - 2] = 0;
+            switch (it[0]) {
+            case 'w':
+                TRY(ttf_buffer_puts(b, item));
+                break;
+            case 'n':
+                TRY(number(e, b, item));
+                break;
+            case 'd':
+                TRY(digits_each(e, b, item, strlen(item)));
+                break;
+            case 'm':
+                TRY(month_name(e, b, item));
+                break;
+            case 'u':
+                TRY(unit_reading(e, b, item));
+                break;
+            case 'l':
+                for (i = 0; item[i]; ++i)
+                    TRY(letter(e, b, item[i]));
+                break;
+            case 'c':
+                /* ฮม ฮอมอ: each consonant with อ */
+                for (i = 0; i + 2 < sizeof(item) && item[i]; i += 3) {
+                    TRY(ttf_buffer_append(b, item + i, 3));
+                    TRY(ttf_buffer_puts(b, "อ"));
+                }
+                break;
+            default:
+                return TTF_EINVAL;
+            }
+            if (!bar)
+                break;
+            it = bar + 1;
+        }
+        return TTF_OK;
+    }
     if (!strcmp(mode, "caps")) {
         /* USB-C ยูเอสบีซี: letter names, the hyphen silent */
         size_t i;

@@ -847,6 +847,253 @@ static ttf_status_t maths_reading(const ttf_engine_t *e, ttf_buffer_t *b, const 
     return TTF_OK;
 }
 
+/* ---- Vietnamese dev set v1 forms (2026-10-21) ----
+   "say" readings: items separated by '|': w:words, n:number (comma decimals), d:digits one by one. */
+static int vi_prev_word(const char *t, size_t p, const char *words) {
+    /* the word (any script, lowercased ASCII only) that ends before p, one space skipped */
+    size_t q = p, w;
+    char key[32];
+    const char *s;
+    if (q && t[q - 1] == ' ')
+        --q;
+    for (w = q; w && t[w - 1] != ' ' && t[w - 1] != ',' && t[w - 1] != '(' && t[w - 1] != '\n'; --w)
+        ;
+    if (w == q || q - w >= sizeof(key))
+        return 0;
+    for (size_t k = 0; k < q - w; ++k)
+        key[k] = (char)(t[w + k] >= 'A' && t[w + k] <= 'Z' ? t[w + k] - 'A' + 'a' : t[w + k]);
+    key[q - w] = 0;
+    for (s = words; *s;) {
+        const char *bar = strchr(s, '|');
+        size_t l = bar ? (size_t)(bar - s) : strlen(s);
+        if (l == q - w && !memcmp(s, key, l))
+            return 1;
+        if (!bar)
+            break;
+        s = bar + 1;
+    }
+    return 0;
+}
+static int vi_near(const char *t, size_t p, size_t window, const char *const *words) {
+    size_t a = p > window ? p - window : 0, k;
+    for (k = 0; words[k]; ++k) {
+        size_t l = strlen(words[k]), i;
+        for (i = a; i + l <= p; ++i)
+            if (!memcmp(t + i, words[k], l))
+                return 1;
+    }
+    return 0;
+}
+static int vi_starts(const char *t, size_t n, size_t q, const char *w) {
+    size_t l = strlen(w);
+    return q + l <= n && !memcmp(t + q, w, l);
+}
+static unsigned vi_roman(const char *t, size_t n, size_t p, size_t *end) {
+    unsigned total = 0, prev = 0;
+    size_t q = p;
+    while (q < n && strchr("IVXLC", t[q]) && t[q]) {
+        unsigned v = t[q] == 'I' ? 1 : t[q] == 'V' ? 5 : t[q] == 'X' ? 10 : t[q] == 'L' ? 50 : 100;
+        total += v;
+        if (v > prev && prev)
+            total -= 2 * prev;
+        prev = v;
+        ++q;
+    }
+    *end = q;
+    return q > p && q - p <= 6 ? total : 0;
+}
+static size_t vi_dev_forms(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    const ttf_engine_t *e = in->engine;
+    const char *t = in->text;
+    size_t n = in->length, p = in->tokens[in->index].begin, q, r;
+    char v[TTF_IR_VALUE_SIZE];
+    if (p >= n)
+        return 0;
+    /* #1 số một */
+    if (t[p] == '#' && p + 1 < n && digit(t[p + 1]) && !(p && (alpha(t[p - 1]) || digit(t[p - 1])))) {
+        for (q = p + 1; q < n && digit(t[q]); ++q)
+            ;
+        if (q - p - 1 <= 3 && !(q < n && (alpha(t[q]) || digit(t[q])))) {
+            snprintf(v, sizeof(v), "w:số|n:%.*s", (int)(q - p - 1), t + p + 1);
+            return finish(in, s, q, "say", v, "");
+        }
+    }
+    /* A$42.000 bốn mươi hai nghìn đô la Úc: a dollar sign with a country prefix */
+    {
+        static const char *const cur[] = {"A$", "đô la Úc", "US$", "đô la Mỹ", "S$", "đô la Singapore", "HK$",
+                                          "đô la Hồng Kông", "C$", "đô la Canada", "NZ$", "đô la New Zealand", NULL};
+        size_t k;
+        for (k = 0; cur[k]; k += 2)
+            if (vi_starts(t, n, p, cur[k]) && p + strlen(cur[k]) < n && digit(t[p + strlen(cur[k])]) &&
+                !(p && alpha(t[p - 1]))) {
+                size_t a = p + strlen(cur[k]), z, o = 0;
+                char num[32];
+                for (z = a; z < n && o + 1 < sizeof(num) &&
+                            (digit(t[z]) || ((t[z] == '.' || t[z] == ',') && z + 1 < n && digit(t[z + 1])));
+                     ++z)
+                    if (t[z] != '.')
+                        num[o++] = t[z];
+                num[o] = 0;
+                snprintf(v, sizeof(v), "n:%s|w:%s", num, cur[k + 1]);
+                return finish(in, s, z, "say", v, "");
+            }
+    }
+    /* PM2.5 PM hai chấm năm: capitals before a dotted number */
+    if (t[p] >= 'A' && t[p] <= 'Z' && !(p && alpha(t[p - 1]))) {
+        size_t z = p, a, d;
+        while (z < n && t[z] >= 'A' && t[z] <= 'Z' && z - p < 3)
+            ++z;
+        for (a = z; a < n && digit(t[a]); ++a)
+            ;
+        if (a > z && a - z <= 2 && a + 1 < n && t[a] == '.' && digit(t[a + 1])) {
+            for (d = a + 1; d < n && digit(t[d]); ++d)
+                ;
+            if (d - a - 1 <= 2 && !(d < n && (alpha(t[d]) || digit(t[d]) || (t[d] == '.' && d + 1 < n && digit(t[d + 1]))))) {
+                /* A12.05 A mười hai chấm không năm: a leading zero after the dot is said */
+                snprintf(v, sizeof(v), "w:%.*s|n:%.*s|w:chấm|%c:%.*s", (int)(z - p), t + p, (int)(a - z), t + z,
+                         t[a + 1] == '0' ? 'd' : 'n', (int)(d - a - 1), t + a + 1);
+                return finish(in, s, d, "say", v, "");
+            }
+        }
+    }
+    /* Km15+300 ki-lô-mét mười lăm cộng ba trăm */
+    if (p + 4 < n && t[p] == 'K' && t[p + 1] == 'm' && digit(t[p + 2]) && !(p && alpha(t[p - 1]))) {
+        size_t a;
+        for (a = p + 2; a < n && digit(t[a]); ++a)
+            ;
+        if (a + 1 < n && t[a] == '+' && digit(t[a + 1])) {
+            for (q = a + 1; q < n && digit(t[q]); ++q)
+                ;
+            snprintf(v, sizeof(v), "w:ki-lô-mét|n:%.*s|w:cộng|n:%.*s", (int)(a - p - 2), t + p + 2, (int)(q - a - 1), t + a + 1);
+            return finish(in, s, q, "say", v, "");
+        }
+    }
+    /* thế kỷ XVIII-XIX mười tám đến mười chín */
+    if (t[p] >= 'C' && strchr("IVXLC", t[p]) && !(p && alpha(t[p - 1])) && p >= 7 &&
+        (vi_prev_word(t, p, "kỷ") || vi_prev_word(t, p, "kỉ"))) {
+        size_t e1, e2;
+        unsigned a = vi_roman(t, n, p, &e1), b;
+        if (a && e1 + 1 < n && t[e1] == '-' && (b = vi_roman(t, n, e1 + 1, &e2)) && !(e2 < n && alpha(t[e2]))) {
+            snprintf(v, sizeof(v), "n:%u|w:đến|n:%u", a, b);
+            return finish(in, s, e2, "say", v, "");
+        }
+    }
+    /* Thứ 2-Thứ 6: a dash between weekdays reads đến */
+    if (t[p] == '-' && p >= 7 && digit(t[p - 1]) && p + 6 < n &&
+        (vi_starts(t, n, p + 1, "Thứ") || vi_starts(t, n, p + 1, "thứ")) &&
+        (!memcmp(t + p - 7, "Thứ ", 6) || !memcmp(t + p - 7, "thứ ", 6)))
+        return finish(in, s, p + 1, "say", "w: đến ", "");
+    if (!digit(t[p]) || (p && (digit(t[p - 1]) || alpha(t[p - 1]) || t[p - 1] == '.' || t[p - 1] == ',' ||
+                                t[p - 1] == '/')))
+        return 0;
+    for (q = p; q < n && digit(t[q]); ++q)
+        ;
+    /* 02 bản sao hai bản sao: a count with a leading zero before a counted word */
+    if (q - p == 2 && t[p] == '0' && t[p + 1] != '0' && q + 2 < n && t[q] == ' ' &&
+        ((t[q + 1] >= 'a' && t[q + 1] <= 'z') || ((unsigned char)t[q + 1] >= 0xC3 && (unsigned char)t[q + 1] <= 0xE1)) &&
+        !vi_prev_word(t, p, "số|mã|phòng|ngày|tháng|lúc|giờ|năm|phút|kỳ|đợt|lần|tầng|khu|lô|biển|xe|tuyến|bàn|ghế") &&
+        !vi_starts(t, n, q + 1, "giờ") && !vi_starts(t, n, q + 1, "phút") && !vi_starts(t, n, q + 1, "tháng") &&
+        !vi_starts(t, n, q + 1, "năm") && !vi_starts(t, n, q + 1, "giây")) {
+        snprintf(v, sizeof(v), "n:%c", t[p + 1]);
+        return finish(in, s, q, "say", v, "");
+    }
+    /* số 18/7, hẻm 51/3 hẻm năm mươi mốt trên ba: a house number with a slash */
+    if (q - p <= 4 && q + 1 < n && t[q] == '/' && digit(t[q + 1]) &&
+        vi_prev_word(t, p, "số|hẻm|ngõ|ngách|kiệt|nhà|kiot|ki-ốt")) {
+        size_t a = q + 1;
+        for (r = a; r < n && digit(t[r]); ++r)
+            ;
+        if (r - a <= 4 && !(r < n && (digit(t[r]) || alpha(t[r])))) {
+            size_t r2 = r;
+            if (r + 1 < n && t[r] == '/' && digit(t[r + 1]))
+                for (r2 = r + 1; r2 < n && digit(t[r2]); ++r2)
+                    ;
+            if (r2 == r)
+                snprintf(v, sizeof(v), "n:%.*s|w:trên|n:%.*s", (int)(q - p), t + p, (int)(r - a), t + a);
+            else
+                snprintf(v, sizeof(v), "n:%.*s|w:trên|n:%.*s|w:trên|n:%.*s", (int)(q - p), t + p, (int)(r - a), t + a,
+                         (int)(r2 - r - 1), t + r + 1);
+            return finish(in, s, r2, "say", v, "");
+        }
+    }
+    /* thứ Ba 10/11, 3/3 âm lịch, 11/11, vào 22-10: a day and a month */
+    if (q - p <= 2 && q + 1 < n && (t[q] == '/' || t[q] == '-') && digit(t[q + 1])) {
+        unsigned d = (unsigned)atoi(t + p), m = (unsigned)atoi(t + q + 1);
+        static const char *const weekday[] = {"thứ Hai ", "thứ Ba ", "thứ Tư ", "thứ Năm ", "thứ Sáu ", "thứ Bảy ",
+                                              "Thứ Hai ", "Thứ Ba ", "Thứ Tư ", "Thứ Năm ", "Thứ Sáu ", "Thứ Bảy ",
+                                              "Chủ nhật ", "chủ nhật ", "thứ 2 ", "thứ 3 ", "thứ 4 ", "thứ 5 ",
+                                              "thứ 6 ", "thứ 7 ", "Thứ 2 ", "Thứ 3 ", "Thứ 4 ", "Thứ 5 ", "Thứ 6 ",
+                                              "Thứ 7 ", NULL};
+        for (r = q + 1; r < n && digit(t[r]); ++r)
+            ;
+        if (r - q - 1 <= 2 && d >= 1 && d <= 31 && m >= 1 && m <= 12 &&
+            !(r < n && (digit(t[r]) || t[r] == '/' || t[r] == '%' || alpha(t[r]) || (t[r] == '-' && r + 1 < n && digit(t[r + 1]))))) {
+            int weekday_before = 0, lunar = 0, k;
+            for (k = 0; weekday[k]; ++k) {
+                size_t l = strlen(weekday[k]);
+                if (p >= l && !memcmp(t + p - l, weekday[k], l))
+                    weekday_before = 1;
+            }
+            lunar = vi_starts(t, n, r, " âm lịch") || vi_starts(t, n, r, " dương lịch");
+            if ((t[q] == '/' && (weekday_before || lunar || (d == m && d >= 2))) ||
+                (t[q] == '-' && d > 12 && d > m && vi_prev_word(t, p, "vào|hạn|trước|sau|đến|từ|lấy|hẹn"))) {
+                snprintf(v, sizeof(v), "%u/%u/", d, m);
+                return finish(in, s, r, "date", v, "ngay");
+            }
+        }
+    }
+    /* Mai 8g tám giờ: g after a day word is giờ */
+    if (q - p <= 2 && q < n && t[q] == 'g' && !(q + 1 < n && (alpha(t[q + 1]) || digit(t[q + 1]))) &&
+        vi_prev_word(t, p, "mai|sáng|chiều|tối|trưa|đêm|nay|khoảng|tầm|hẹn")) {
+        snprintf(v, sizeof(v), "n:%.*s|w:giờ", (int)(q - p), t + p);
+        return finish(in, s, q + 1, "say", v, "");
+    }
+    /* 90' chín mươi phút */
+    if (q - p <= 3 && q < n && t[q] == '\'' && !(q + 1 < n && (digit(t[q + 1]) || alpha(t[q + 1]))) &&
+        !(p >= 2 && ((unsigned char)t[p - 1] == 0xB0 || (unsigned char)t[p - 2] == 0xC2))) {
+        snprintf(v, sizeof(v), "n:%.*s|w:phút", (int)(q - p), t + p);
+        return finish(in, s, q + 1, "say", v, "");
+    }
+    /* 1:58.42 một phút năm mươi tám giây bốn mươi hai */
+    if (q - p <= 2 && q + 5 < n && t[q] == ':' && digit(t[q + 1]) && digit(t[q + 2]) && t[q + 3] == '.' &&
+        digit(t[q + 4]) && digit(t[q + 5]) && !(q + 6 < n && digit(t[q + 6]))) {
+        snprintf(v, sizeof(v), "n:%.*s|w:phút|n:%.2s|w:giây|n:%.2s", (int)(q - p), t + p, t + q + 1, t + q + 4);
+        return finish(in, s, q + 6, "say", v, "");
+    }
+    /* phòng 3.07 ba chấm không bảy */
+    if (q - p <= 2 && q + 2 < n && t[q] == '.' && digit(t[q + 1]) && vi_prev_word(t, p, "phòng|p")) {
+        for (r = q + 1; r < n && digit(t[r]); ++r)
+            ;
+        if (r - q - 1 <= 3 && !(r < n && (digit(t[r]) || alpha(t[r])))) {
+            snprintf(v, sizeof(v), "n:%.*s|w:chấm|d:%.*s", (int)(q - p), t + p, (int)(r - q - 1), t + q + 1);
+            return finish(in, s, r, "say", v, "");
+        }
+    }
+    /* qua số 114, gọi 1022, gửi tin tới 9123: an emergency, hotline or short number digit by digit */
+    if (q - p >= 3 && q - p <= 5 &&
+        !(q < n && (digit(t[q]) || alpha(t[q]) || t[q] == '%' ||
+                    ((t[q] == '.' || t[q] == ',') && q + 1 < n && digit(t[q + 1]))))) {
+        static const char *const emergency_cue[] = {"số", "gọi", "Gọi", "khẩn cấp", "báo", "đường dây", "tổng đài",
+                                                    "cấp cứu", "cứu hỏa", "công an", NULL};
+        static const char *const sms_cue[] = {"tin", "cú pháp", "đầu số", "tổng đài", NULL};
+        int unit_after = q + 2 < n && t[q] == ' ' &&
+                         (vi_starts(t, n, q + 1, "đồng") || vi_starts(t, n, q + 1, "người") || vi_starts(t, n, q + 1, "nghìn") ||
+                          vi_starts(t, n, q + 1, "ngàn") || vi_starts(t, n, q + 1, "triệu") || vi_starts(t, n, q + 1, "tỷ") ||
+                          vi_starts(t, n, q + 1, "km") || vi_starts(t, n, q + 1, "kg") || vi_starts(t, n, q + 1, "học"));
+        int emergency = q - p == 3 && t[p] == '1' && t[p + 1] == '1' && vi_near(t, p, 30, emergency_cue);
+        int hotline = vi_prev_word(t, p, "gọi|hotline|đài");
+        int sms = vi_prev_word(t, p, "gửi|nhắn|soạn|tới|đến") && vi_near(t, p, 40, sms_cue);
+        /* 0888 123 456 stays a phone number */
+        if (!unit_after && (emergency || hotline || sms) && t[p] != '0' &&
+            !(q + 1 < n && t[q] == ' ' && digit(t[q + 1]))) {
+            snprintf(v, sizeof(v), "d:%.*s", (int)(q - p), t + p);
+            return finish(in, s, q, "say", v, "");
+        }
+    }
+    (void)e;
+    return 0;
+}
+
 static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     const ttf_engine_t *e = in->engine;
     const char *t = in->text;
@@ -862,6 +1109,8 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     p = in->tokens[in->index].begin;
     if (p >= n)
         return 0;
+    if ((z = vi_dev_forms(in, s)) != 0)
+        return z;
 
     /* 10 a.m. mười giờ sáng, 7 PM, 7am: an hour with a meridiem marker */
     if (digit(t[p]) && !(p && (digit(t[p - 1]) || t[p - 1] == ':' || t[p - 1] == '.' || t[p - 1] == ','))) {
@@ -1902,6 +2151,31 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         TRY(digits_each(e, b, v, strlen(v)));
     } else if (!strcmp(mode, "lit")) {
         TRY(put(b, v));
+    } else if (!strcmp(mode, "say")) {
+        /* vi_dev_forms: w:words, n:number, d:digits one by one */
+        const char *it = v;
+        int first = 1;
+        while (*it) {
+            const char *bar = strchr(it, '|');
+            size_t l = bar ? (size_t)(bar - it) : strlen(it);
+            char item[TTF_IR_VALUE_SIZE];
+            if (l < 2 || l - 2 >= sizeof(item) || it[1] != ':')
+                return TTF_EINVAL;
+            memcpy(item, it + 2, l - 2);
+            item[l - 2] = 0;
+            (void)first;
+            if (it[0] == 'w')
+                TRY(put(b, item));
+            else if (it[0] == 'n')
+                TRY(number(e, b, item));
+            else if (it[0] == 'd')
+                TRY(digits_each(e, b, item, strlen(item)));
+            else
+                return TTF_EINVAL;
+            if (!bar)
+                break;
+            it = bar + 1;
+        }
     } else if (!strcmp(mode, "circled")) {
         TRY(number(e, b, v));
     } else if (!strcmp(mode, "ratio")) {

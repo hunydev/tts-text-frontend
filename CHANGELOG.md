@@ -75,6 +75,22 @@
   held-out v1 96.0, owner set test 94.7, no engine errors in 14,927 real sentences; TTS-to-STT on
   the 371 v2 sentences: raw text 45.3% to TN 73.3% of sentences (spans 62.9% to 83.0%), no new TN
   problem. Human native review and VoxCPM2 listening remain, as for the other languages.
+- Vietnamese and Thai improvement from the dev sets v1 (2026-10-21):
+  - Dev sets v1 (benchmark/datasets/vi-th-dev): vi 88.4 to 90.8, th 91.4 to 94.3. open-tn v1.1,
+    scored once at the end and never used for fixes: vi 90.9 to 91.4, th 89.8 to 90.7.
+  - Vietnamese vi_dev_forms ("say" readings): #2 số, A$ and other dollar prefixes, PM2.5, Km42+150,
+    Roman century ranges, Thứ 2-Thứ 7, leading-zero counts, house numbers 25/4 trên, dates after a
+    weekday, before âm lịch or after vào, 9g giờ, 120' phút, race times, room 2.05 chấm, emergency
+    numbers and hotlines digit by digit, MB/s and Mbps. One digit after a Latin letter reads in
+    Vietnamese (B3 B ba; alnum_number vi-VN single_digit target).
+  - Thai th_dev_forms ("say" readings): hashtags, weekday abbreviations and ranges, licence plates
+    after ทะเบียน, abbreviation plus number (ปอ.29, ทร.14, LV.50), a unit abbreviation before a size
+    (ซม.100), currency with a scale word (€60 ล้าน), ฿350/ตร.ม., scores, house numbers ทับ, quarters,
+    month and year, race times, H:MM ชม., powers, 12.12 shopping days, four-digit hotlines; units MW,
+    hPa, Wh, ft, MP, GW, ft.lb. The shared expression does not take a zero-led key code (กด * 005 * 2 *).
+  - Gates: owner sets vi dev 840 to 842 and test 343 to 344, Thai unchanged, other languages
+    unchanged; Thai real sentences 14,927 with no errors and digits left unchanged.
+    Contract vi_th_dev_v98 (38).
 - Real-sentence check and the Japanese prefix decision (2026-10-21):
   - Real sentences after the English and Japanese work: English 13,105 and Thai 14,927 sentences, no
     errors, sentences with digits left unchanged (0.19%, 0.62%); speed within run-to-run noise.

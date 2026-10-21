@@ -442,7 +442,11 @@ static ttf_status_t render_at(const ttf_engine_t *e, const ttf_language_pack_t *
                                                 part_begin + d);
                         }
                     } else if ((word_label && !(word_single && end - pos > 1)) ||
-                               (sem.type == TTF_SEM_CARDINAL && end - pos == 1))
+                               (sem.type == TTF_SEM_CARDINAL && end - pos == 1 &&
+                                /* alnum_number <lang> single_digit target: Khu D4 D bốn (vi, 2026-10-21) */
+                                !(ttf_resource_get(e, "alnum_number", target->language_tag, "single_digit", NULL) &&
+                                  !strcmp(ttf_resource_get(e, "alnum_number", target->language_tag, "single_digit", NULL),
+                                          "target"))))
                         st = source_numeral(e, source, target, &sem, text + pos, end - pos, out,
                                             layer, part_begin + pos);
                     else

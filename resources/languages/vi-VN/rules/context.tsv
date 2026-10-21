@@ -160,3 +160,7 @@ classifier_priority	vi-VN	vi.offset	100
 classifier_priority	vi-VN	vi.plusminus	100
 classifier_priority	vi-VN	vi.timeam	100
 classifier_priority	vi-VN	vi.timepm	100
+# dev v1 forms (2026-10-21)
+classifier_priority	vi-VN	vi.say	100
+# Khu D4 D bốn: one digit after letters reads in Vietnamese (2026-10-21)
+alnum_number	vi-VN	single_digit	target

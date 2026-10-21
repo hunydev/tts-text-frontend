@@ -51,6 +51,12 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "number requires a digit or a named word and a reading");
     }
+    if (SAME(k, "alnum_number")) {
+        *handled = 1;
+        return SAME(key, "single_digit") && !strcmp(v, "target")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "alnum_number supports single_digit=target");
+    }
     if (SAME(k, "vi_unit") || SAME(k, "vi_currency") || SAME(k, "vi_scale") || SAME(k, "vi_road") ||
         SAME(k, "address_symbol") || SAME(k, "vi_idiom") || SAME(k, "vi_prefix") || SAME(k, "vi_abbr") ||
         SAME(k, "speech_symbol") || SAME(k, "electronic_word")) {
