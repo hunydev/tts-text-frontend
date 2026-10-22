@@ -53,7 +53,9 @@ ttf_script_t ttf_script_of(uint32_t c) {
         (c >= 0x1e00 && c <= 0x1eff) || (c >= 0x300 && c <= 0x36f))
         return TTF_SCRIPT_LATIN;
     /* Thai digits ๐-๙ are digits too (2026-10-14): ๒๕๖๙ is a number, not a Thai word */
-    if ((c >= '0' && c <= '9') || (c >= 0xff10 && c <= 0xff19) || (c >= 0xe50 && c <= 0xe59))
+    /* Arabic-Indic digits ٠-٩ and ۰-۹ too (2026-10-22): ١٢٥ is a number, not an Arabic word */
+    if ((c >= '0' && c <= '9') || (c >= 0xff10 && c <= 0xff19) || (c >= 0xe50 && c <= 0xe59) ||
+        (c >= 0x660 && c <= 0x669) || (c >= 0x6f0 && c <= 0x6f9))
         return TTF_SCRIPT_DIGIT;
     if (c == ' ' || (c >= 9 && c <= 13) || c == 0xa0 || c == 0x202f || c == 0x3000 ||
         (c >= 0x2000 && c <= 0x200a))
@@ -62,7 +64,9 @@ ttf_script_t ttf_script_of(uint32_t c) {
         c == '\'' || c == '"' || c == '(' || c == ')' || c == '[' || c == ']' || c == '{' ||
         c == '}' || c == '/' || c == '\\' || c == '_' || (c >= 0x2010 && c <= 0x2027) ||
         c == 0x3001 || c == 0x3002 || (c >= 0x300c && c <= 0x300f) || c == 0xab || c == 0xbb ||
-        c == 0xff01 || c == 0xff1f)
+        c == 0xff01 || c == 0xff1f ||
+        /* the Arabic comma, semicolon, question mark, decimal and thousands marks (2026-10-22) */
+        c == 0x60c || c == 0x61b || c == 0x61f || c == 0x66b || c == 0x66c)
         return TTF_SCRIPT_PUNCTUATION;
     if (c == '$' || c == '%' || c == '#' || c == '@' || c == '&' || c == '+' || c == '=' ||
         c == '*' || c == '<' || c == '>' || c == '~' || c == '^' || c == '|' || c == '`' ||
@@ -70,7 +74,7 @@ ttf_script_t ttf_script_of(uint32_t c) {
         (c >= 0x20a0 && c <= 0x20cf) || c == 0xa3 || c == 0xa5 || c == 0xb0 ||
         /* ￥980, ￡, ￦: the fullwidth signs are symbols, not part of the kana before them
            (owner v2, 2026-10-15) */
-        (c >= 0xffe0 && c <= 0xffe6) ||
+        (c >= 0xffe0 && c <= 0xffe6) || c == 0x66a ||
         (c >= 0x2190 && c <= 0x2bff) || (c >= 0x1f000 && c <= 0x1faff))
         return TTF_SCRIPT_SYMBOL;
     if ((c >= 0x3400 && c <= 0x4dbf) || (c >= 0x4e00 && c <= 0x9fff) ||

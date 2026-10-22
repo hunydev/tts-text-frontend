@@ -58,6 +58,9 @@ languages/vi-VN/rules/abbreviations.tsv
 languages/th-TH/rules/numeric.tsv
 languages/th-TH/rules/units.tsv
 languages/th-TH/rules/speech.tsv
+languages/ar/rules/numeric.tsv
+languages/ar/rules/units.tsv
+languages/ar/rules/speech.tsv
 languages/th-TH/rules/names.tsv
 
 common/speech.tsv

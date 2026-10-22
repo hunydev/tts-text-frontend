@@ -528,6 +528,49 @@ static const ttf_language_pack_t *thai_sentence(const ttf_engine_t *e, const ttf
     }
     return thai ? pack : NULL;
 }
+/* An Arabic letter (U+0621-U+064A, U+0671-U+06D3, U+06FA-U+06FF, U+0750-U+077F) starts at
+   u; the tatweel, Arabic digits and marks are no letters. */
+static int arabic_letter(const unsigned char *u, size_t left) {
+    if (left < 2)
+        return 0;
+    return (u[0] == 0xd8 && u[1] >= 0xa1) || (u[0] == 0xd9 && u[1] <= 0x8a && u[1] != 0x80) ||
+           (u[0] == 0xd9 && u[1] >= 0xb1) || u[0] == 0xda || (u[0] == 0xdb && u[1] <= 0x93) ||
+           (u[0] == 0xdb && u[1] >= 0xba) || u[0] == 0xdd;
+}
+/* An Arabic sentence (2026-10-22): a sentence with an Arabic letter and no Hangul or kana
+   belongs to the pack declaring `context <tag> arabic_sentence 1` (ar), every token included,
+   so that the Latin words and codes of a mixed sentence (iOS 19, SV 1023) read in Arabic. */
+static const ttf_language_pack_t *arabic_sentence(const ttf_engine_t *e, const ttf_pack_input_t *in,
+                                                  size_t begin, size_t end) {
+    const ttf_language_pack_t *pack = NULL;
+    size_t j, k, at;
+    int arabic = 0, letters = 0;
+    for (j = 0; j < e->pack_count && !pack; ++j)
+        if (pack_flag(e, e->packs[j], "arabic_sentence", 0))
+            pack = e->packs[j];
+    if (!pack)
+        return NULL;
+    for (k = begin; k < end; ++k) {
+        const ttf_token_t *t = &in->tokens[k];
+        if (t->script == TTF_SCRIPT_HANGUL || t->script == TTF_SCRIPT_KANA)
+            return NULL;
+        letters |= t->script != TTF_SCRIPT_DIGIT && t->script != TTF_SCRIPT_PUNCTUATION &&
+                   t->script != TTF_SCRIPT_WHITESPACE && t->script != TTF_SCRIPT_SYMBOL;
+        for (at = t->begin; !arabic && at + 2 <= t->end; ++at)
+            arabic = arabic_letter((const unsigned char *)in->text + at, t->end - at);
+    }
+    /* a sentence of numbers and marks alone reads with the sentence after it */
+    for (k = end; !arabic && !letters && k < in->token_count; ++k) {
+        const ttf_token_t *t = &in->tokens[k];
+        if (t->script == TTF_SCRIPT_HANGUL || t->script == TTF_SCRIPT_KANA)
+            return NULL;
+        for (at = t->begin; !arabic && at + 2 <= t->end; ++at)
+            arabic = arabic_letter((const unsigned char *)in->text + at, t->end - at);
+        if (sentence_end(in, k))
+            break;
+    }
+    return arabic ? pack : NULL;
+}
 /* A hanzi sentence (2026-10-11, project owner: a kanji-only sentence prefers
    Chinese): no Hangul, no kana, at least two hanzi, at least twice as many hanzi
    as Latin words, and no character the pack lists as han_foreign (Japanese-only
@@ -767,6 +810,9 @@ static void matrix_route(const ttf_engine_t *e, const ttf_pack_input_t *in, size
     if (!kana && e->matrix_policy != TTF_MATRIX_DECLARED &&
         (kana = thai_sentence(e, in, begin, end)) != NULL)
         snprintf(why, sizeof(why), "matrix=%s(thai)", kana->language_tag);
+    else if (!kana && e->matrix_policy != TTF_MATRIX_DECLARED &&
+             (kana = arabic_sentence(e, in, begin, end)) != NULL)
+        snprintf(why, sizeof(why), "matrix=%s(arabic)", kana->language_tag);
     else if (!kana && e->matrix_policy != TTF_MATRIX_DECLARED &&
              (kana = han_sentence(e, in, begin, end)) != NULL)
         snprintf(why, sizeof(why), "matrix=%s(han)", kana->language_tag);
@@ -1989,7 +2035,8 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
             han_context = context && context->classify &&
                           (pack_flag(e, context, "han_sentence", 0) ||
                            pack_flag(e, context, "latin_sentence", 0) ||
-                           pack_flag(e, context, "thai_sentence", 0));
+                           pack_flag(e, context, "thai_sentence", 0) ||
+                           pack_flag(e, context, "arabic_sentence", 0));
             for (j = 0; j < e->pack_count; j++)
                 /* A declared-only pack classifies only where it is the context
                    (its declared request or a kana sentence). A hanzi-sentence
@@ -2008,7 +2055,8 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
                       (e->frozen ? e->han_only[j]
                                  : pack_flag(e, e->packs[j], "han_sentence", 0) ||
                                        pack_flag(e, e->packs[j], "latin_sentence", 0) ||
-                                       pack_flag(e, e->packs[j], "thai_sentence", 0)))) {
+                                       pack_flag(e, e->packs[j], "thai_sentence", 0) ||
+                                       pack_flag(e, e->packs[j], "arabic_sentence", 0)))) {
                     ttf_semantic_t candidate;
                     size_t n;
                     long candidate_priority = 0;

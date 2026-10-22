@@ -10,8 +10,43 @@ static int thai_digit(const char *s, size_t n, size_t at) {
     return n - at >= 3 && (unsigned char)s[at] == 0xe0 && (unsigned char)s[at + 1] == 0xb9 &&
            (unsigned char)s[at + 2] >= 0x90 && (unsigned char)s[at + 2] <= 0x99;
 }
+/* An Arabic-Indic digit ٠-٩ (U+0660-U+0669) or an Eastern Arabic-Indic digit ۰-۹
+   (U+06F0-U+06F9) at `at`; its value, or -1. */
+static int arabic_digit(const char *s, size_t n, size_t at) {
+    const unsigned char *u = (const unsigned char *)s + at;
+    if (n - at < 2)
+        return -1;
+    if (u[0] == 0xd9 && u[1] >= 0xa0 && u[1] <= 0xa9)
+        return u[1] - 0xa0;
+    if (u[0] == 0xdb && u[1] >= 0xb0 && u[1] <= 0xb9)
+        return u[1] - 0xb0;
+    return -1;
+}
 static int ascii_digit_at(const char *s, size_t n, size_t at) {
-    return at < n && ((s[at] >= '0' && s[at] <= '9') || wide(s, n, at));
+    return at < n && ((s[at] >= '0' && s[at] <= '9') || wide(s, n, at) || arabic_digit(s, n, at) >= 0);
+}
+/* An Arabic number form at `at` (2026-10-22): an Arabic-Indic digit, the Arabic decimal
+   mark ٫ (U+066B) and thousands mark ٬ (U+066C) between digits, and the Arabic percent sign ٪
+   (U+066A) after a digit read like ASCII in every request (١٢٫٥٪ is 12.5%). `previous` is the
+   folded character before it. */
+static int arabic_form(const char *s, size_t n, size_t at, char previous, char *ascii) {
+    const unsigned char *u = (const unsigned char *)s + at;
+    int d = arabic_digit(s, n, at), before = previous >= '0' && previous <= '9';
+    if (d >= 0) {
+        *ascii = (char)('0' + d);
+        return 2;
+    }
+    if (n - at < 2 || u[0] != 0xd9)
+        return 0;
+    if ((u[1] == 0xab || u[1] == 0xac) && before && ascii_digit_at(s, n, at + 2)) {
+        *ascii = u[1] == 0xab ? '.' : ',';
+        return 2;
+    }
+    if (u[1] == 0xaa && before) {
+        *ascii = '%';
+        return 2;
+    }
+    return 0;
 }
 /* A tilde operator, full-width tilde or wave dash written between a value and
    a number (5∼6교시, 3～5kg, 20〜40km) is the range mark ~ for classification.
@@ -40,13 +75,15 @@ static int minus_sign(const char *s, size_t n, size_t at) {
            (n - next >= 3 && (!memcmp(s + next, "\xe2\x82\xac", 3) ||
                               !memcmp(s + next, "\xef\xbf\xa5", 3)));
 }
+static int arabic_digit(const char *s, size_t n, size_t at);
 /* An en dash or figure dash between numbers is the range hyphen (9–12, 8:30–4:30,
    $45–$120), in every language. */
 static int en_dash(const char *s, size_t n, size_t at) {
     size_t next = at + 3;
     if (n - at < 3 || (memcmp(s + at, "\xe2\x80\x93", 3) && memcmp(s + at, "\xe2\x80\x92", 3)))
         return 0;
-    if (!((at && s[at - 1] >= '0' && s[at - 1] <= '9') || (at >= 3 && wide(s, n, at - 3))))
+    if (!((at && s[at - 1] >= '0' && s[at - 1] <= '9') || (at >= 3 && wide(s, n, at - 3)) ||
+          (at >= 2 && arabic_digit(s, n, at - 2) >= 0)))
         return 0;
     return ascii_digit_at(s, n, next) || (next < n && s[next] == '$');
 }
@@ -90,8 +127,12 @@ static size_t cjk_form(const char *s, size_t n, size_t at, char previous, int mo
     return 3;
 }
 static int canonical(const char *s, size_t n, size_t at, int mode) {
-    char ascii, previous = (at && s[at - 1] >= '0' && s[at - 1] <= '9') || (at >= 3 && wide(s, n, at - 3)) ? '0' : 0;
+    char ascii, previous = (at && s[at - 1] >= '0' && s[at - 1] <= '9') || (at >= 3 && wide(s, n, at - 3)) ||
+                                   (at >= 2 && arabic_digit(s, n, at - 2) >= 0)
+                               ? '0'
+                               : 0;
     return wide(s, n, at) || wide_tilde(s, n, at) || minus_sign(s, n, at) || en_dash(s, n, at) ||
+           arabic_form(s, n, at, previous, &ascii) ||
            thai_digit(s, n, at) || cjk_form(s, n, at, previous, mode == 3 ? 0 : mode, &ascii);
 }
 int ttf_numeric_width_mode(const char *language) {
@@ -118,7 +159,7 @@ ttf_status_t ttf_numeric_width_create(const char *s, size_t n, const ttf_token_t
        The scan is once per unit, never once per classifier/token. */
     while (at < n) {
         unsigned char c = (unsigned char)s[at];
-        if (c != 0xef && c != 0xe2 && c != 0xe3 && c != 0xe0) {
+        if (c != 0xef && c != 0xe2 && c != 0xe3 && c != 0xe0 && c != 0xd9 && c != 0xdb) {
             ++at;
             continue;
         }
@@ -156,7 +197,11 @@ ttf_status_t ttf_numeric_width_create(const char *s, size_t n, const ttf_token_t
         char ascii = 0;
         v->raw[k] = at;
         v->scan[at] = k;
-        if (!protected && thai_digit(s, n, at)) {
+        if (!protected && arabic_form(s, n, at, k ? v->text[k - 1] : 0, &ascii)) {
+            v->scan[at + 1] = k;
+            v->text[k++] = ascii;
+            at += 2;
+        } else if (!protected && thai_digit(s, n, at)) {
             v->scan[at + 1] = v->scan[at + 2] = k;
             v->text[k++] = (char)('0' + (unsigned char)s[at + 2] - 0x90);
             at += 3;

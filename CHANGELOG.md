@@ -75,6 +75,23 @@
   held-out v1 96.0, owner set test 94.7, no engine errors in 14,927 real sentences; TTS-to-STT on
   the 371 v2 sentences: raw text 45.3% to TN 73.3% of sentences (spans 62.9% to 83.0%), no new TN
   problem. Human native review and VoxCPM2 listening remain, as for the other languages.
+- Arabic pack phase 1 (ar, Modern Standard Arabic; project-owner request 2026-10-22):
+  - benchmark/datasets/user-tn-eval: the owner ar set (1,000 sentences, dev 700 / test 300).
+  - languages/ar: numbers agreeing with the counted noun (3-10 the opposite gender and the plural,
+    11-99 the accusative singular, 2 the dual, the last two digits decide), the oblique and
+    nominative cases paired as the set accepts them, construct forms (مئتي, ألفي), dates with an
+    ordinal day and Hijri months, times with the feminine ordinal hour (التاسعة والنصف, إلا ربعا),
+    money with its minor unit, units, ordinals after cue nouns and الـ, ranges (من … إلى, the dual
+    for 2), fractions, ratios, scores, phone numbers and codes digit by digit with Latin letters by
+    their Arabic names, addresses by known words or letter names, maths and the shared expression.
+  - Core: Arabic-Indic digits ٠-٩ and ۰-۹ are digits, and ٫ ٬ ٪ next to digits read like . , %
+    in every request; an en dash after one is the range hyphen; a sentence with Arabic letters
+    routes to ar in any request (arabic_sentence); CLDR Arabic symbol names
+    (resources/unicode-fallback/ar.*), the builder treats ، ؛ ؟ ۔ as pauses (ar and en rebuilt; en
+    loses only those three names).
+  - Owner set ar span accuracy: 0 to dev 97.7%, test 86.1%. Contract ar_pack1_v101 (27). The other
+    six languages on the owner sets, Korean quick, English, JSUT, ja-tn-eval, Chinese and
+    Vietnamese gates are unchanged; all contracts pass except the three known failures.
 - Project-owner decisions on English readings (2026-10-22):
   - Two-digit years read in full with 00-49 in the 2000s and 50-99 in the 1900s: m/d/yy (7/4/58
     nineteen fifty eight), card expiry after exp, expires or thru and a day that cannot be one

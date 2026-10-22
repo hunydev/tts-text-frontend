@@ -112,3 +112,4 @@
 - 남긴 것(7단계): en 두 자리 연도 5/20/16(영어 참조가 June seventeenth thirteen), ja mmHg ミリエイチジー(ja-tn-eval), ko 24:00·2매·€3.50·#1024·p<0.05(한국어 참조·기존 정책), 날짜·소수 모호(10.13, 3/5)와 이름·로마자 주소는 범위 밖.
 - **태국어(th-TH, 2026-10-14 추가):** 같은 방식으로 dev 700 / test 300(seed 20261014)으로 나눴다. 시작 dev 0.4% → 태국어 팩 1단계 dev 95.6%, test 91.6% → 2단계 dev 98.9%, test 92.5% → 3단계 dev 99.2%, test 93.9% → 4단계 dev 99.4%, test 94.7%. held-out: benchmark/datasets/th-tn-eval. 상세: docs/thai-pack.ko.md.
 - 기존 셋과 맞추느라 남긴 것: ひゃくキロ·ひゃくパーセント(ja-tn-eval), 2班·2排(zh held-out의 반·줄 번호), 1인 1매 일매(한국어 참조), GMT 400·Route 906(영어 참조).
+- **아랍어(ar, 2026-10-22 추가):** 같은 방식으로 dev 700 / test 300(seed 20261014)으로 나눴다. 현대 표준 아랍어, 타슈킬 없는 읽기(채점은 타슈킬과 타트윌을 무시한다). 아랍어 팩 1단계 dev 97.7%, test 86.1%. 상세: docs/arabic-pack.ko.md.

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the owner's TN evaluation sets (ko-KR, en-US, ja-JP, zh-CN, vi-VN, th-TH; 1,000 lines each).
+"""Build the owner's TN evaluation sets (ko-KR, en-US, ja-JP, zh-CN, vi-VN, th-TH, ar; 1,000 lines each).
 
   python3 -I benchmark/datasets/user-tn-eval/build.py     # src/<lang>.tsv + amend.tsv -> user-tn-<lang>.jsonl
 
@@ -24,7 +24,7 @@ import unicodedata
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-LANGS = ["ko-KR", "en-US", "ja-JP", "zh-CN", "vi-VN", "th-TH"]
+LANGS = ["ko-KR", "en-US", "ja-JP", "zh-CN", "vi-VN", "th-TH", "ar"]
 SPAN = re.compile(r"\{([^{}|]+)\|([^{}]*)\}")
 SEED = 20261014
 TEST = 300

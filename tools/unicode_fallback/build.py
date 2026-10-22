@@ -43,6 +43,8 @@ TAGS = set(range(0xE0020, 0xE0080))
 # separate words (유•초•중등, 자택∙직장, 10⋅26). Range marks (5∼6) belong to the
 # range reading, not to a symbol name.
 PAUSE_PUNCTUATION = set(map(ord, "、。，．：；！？…‥・·‧﹐﹑﹒﹔﹕﹖﹗｡､･〃¿¡•∙⋅․‣⁃◦∼～〜"))
+# The Arabic comma, semicolon, question mark and full stop are prosody too (2026-10-22).
+PAUSE_PUNCTUATION |= {0x060C, 0x061B, 0x061F, 0x06D4}
 SYMBOL_CATEGORIES = {"Sm", "Sc", "Sk", "So"}
 PUNCTUATION_NAMED = {"Po"}     # other P* (brackets, quotes, dashes) stay prosody
 

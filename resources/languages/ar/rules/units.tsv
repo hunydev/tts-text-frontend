@@ -1,0 +1,300 @@
+# Arabic pack (ar) nouns read with a number (2026-10-22).
+# ar_noun: a counted noun as written in the singular -> gender|singular|dual|plural|accusative singular.
+#   After 2 the dual alone is read (ساعتين), after 3-10 the plural (ثلاث ساعات), after 11-99 the
+#   accusative singular (أحد عشر شهرا), after 100, 1000 … the singular (مئة ريال).
+# ar_unit: a unit symbol -> the ar_noun key it reads as.
+# ar_currency: a currency sign or abbreviation -> the noun key|the minor unit noun key|minor digits.
+# ar_gender: the gender of a written plural or other form that is no singular key (مدارس f).
+ar_noun	ar	ريال	m|ريال|ريالين|ريالات|ريالا
+ar_noun	ar	دولار	m|دولار|دولارين|دولارات|دولارا
+ar_noun	ar	درهم	m|درهم|درهمين|دراهم|درهما
+ar_noun	ar	جنيه	m|جنيه|جنيهين|جنيهات|جنيها
+ar_noun	ar	جنيه إسترليني	m|جنيه إسترليني|جنيهين إسترلينيين|جنيهات إسترلينية|جنيها إسترلينيا
+ar_noun	ar	دينار	m|دينار|دينارين|دنانير|دينارا
+ar_noun	ar	يورو	m|يورو|يورو|يورو|يورو
+ar_noun	ar	ين	m|ين|ين|ين|ينا
+ar_noun	ar	ليرة	f|ليرة|ليرتين|ليرات|ليرة
+ar_noun	ar	روبية	f|روبية|روبيتين|روبيات|روبية
+ar_noun	ar	هللة	f|هللة|هللتين|هللات|هللة
+ar_noun	ar	سنت	m|سنت|سنتين|سنتات|سنتا
+ar_noun	ar	فلس	m|فلس|فلسين|فلوس|فلسا
+ar_noun	ar	قرش	m|قرش|قرشين|قروش|قرشا
+ar_noun	ar	بنس	m|بنس|بنسين|بنسات|بنسا
+ar_noun	ar	بيسة	f|بيسة|بيستين|بيسات|بيسة
+ar_noun	ar	ساعة	f|ساعة|ساعتين|ساعات|ساعة
+ar_noun	ar	دقيقة	f|دقيقة|دقيقتين|دقائق|دقيقة
+ar_noun	ar	ثانية	f|ثانية|ثانيتين|ثوان|ثانية
+ar_noun	ar	يوم	m|يوم|يومين|أيام|يوما
+ar_noun	ar	ليلة	f|ليلة|ليلتين|ليال|ليلة
+ar_noun	ar	أسبوع	m|أسبوع|أسبوعين|أسابيع|أسبوعا
+ar_noun	ar	شهر	m|شهر|شهرين|أشهر|شهرا
+ar_noun	ar	سنة	f|سنة|سنتين|سنوات|سنة
+ar_noun	ar	عام	m|عام|عامين|أعوام|عاما
+ar_noun	ar	مرة	f|مرة|مرتين|مرات|مرة
+ar_noun	ar	طلب	m|طلب|طلبين|طلبات|طلبا
+ar_noun	ar	قطعة	f|قطعة|قطعتين|قطع|قطعة
+ar_noun	ar	شخص	m|شخص|شخصين|أشخاص|شخصا
+ar_noun	ar	طالب	m|طالب|طالبين|طلاب|طالبا
+ar_noun	ar	مطعم	m|مطعم|مطعمين|مطاعم|مطعما
+ar_noun	ar	متر	m|متر|مترين|أمتار|مترا
+ar_noun	ar	كيلومتر	m|كيلومتر|كيلومترين|كيلومترات|كيلومترا
+ar_noun	ar	سنتيمتر	m|سنتيمتر|سنتيمترين|سنتيمترات|سنتيمترا
+ar_noun	ar	مليمتر	m|مليمتر|مليمترين|مليمترات|مليمترا
+ar_noun	ar	كيلوغرام	m|كيلوغرام|كيلوغرامين|كيلوغرامات|كيلوغراما
+ar_noun	ar	غرام	m|غرام|غرامين|غرامات|غراما
+ar_noun	ar	مليغرام	m|مليغرام|مليغرامين|مليغرامات|مليغراما
+ar_noun	ar	طن	m|طن|طنين|أطنان|طنا
+ar_noun	ar	لتر	m|لتر|لترين|لترات|لترا
+ar_noun	ar	مليلتر	m|مليلتر|مليلترين|مليلترات|مليلترا
+ar_noun	ar	درجة	f|درجة|درجتين|درجات|درجة
+ar_noun	ar	درجة مئوية	f|درجة مئوية|درجتين مئويتين|درجات مئوية|درجة مئوية
+ar_noun	ar	درجة فهرنهايت	f|درجة فهرنهايت|درجتين فهرنهايت|درجات فهرنهايت|درجة فهرنهايت
+ar_noun	ar	بوصة	f|بوصة|بوصتين|بوصات|بوصة
+ar_noun	ar	قدم	f|قدم|قدمين|أقدام|قدما
+ar_noun	ar	ميل	m|ميل|ميلين|أميال|ميلا
+ar_noun	ar	هكتار	m|هكتار|هكتارين|هكتارات|هكتارا
+ar_noun	ar	متر مربع	m|متر مربع|مترين مربعين|أمتار مربعة|مترا مربعا
+ar_noun	ar	كيلومتر مربع	m|كيلومتر مربع|كيلومترين مربعين|كيلومترات مربعة|كيلومترا مربعا
+ar_noun	ar	كيلومتر في الساعة	m|كيلومتر في الساعة|كيلومترين في الساعة|كيلومترات في الساعة|كيلومترا في الساعة
+ar_noun	ar	واط	m|واط|واط|واط|واط
+ar_noun	ar	كيلوواط	m|كيلوواط|كيلوواط|كيلوواط|كيلوواط
+ar_noun	ar	ميغاواط	m|ميغاواط|ميغاواط|ميغاواط|ميغاواط
+ar_noun	ar	كيلوواط ساعة	m|كيلوواط ساعة|كيلوواط ساعة|كيلوواط ساعة|كيلوواط ساعة
+ar_noun	ar	فولت	m|فولت|فولت|فولت|فولت
+ar_noun	ar	أمبير	m|أمبير|أمبير|أمبير|أمبير
+ar_noun	ar	مللي أمبير ساعة	m|مللي أمبير ساعة|مللي أمبير ساعة|مللي أمبير ساعة|مللي أمبير ساعة
+ar_noun	ar	أوم	m|أوم|أوم|أوم|أوم
+ar_noun	ar	غيغابايت	m|غيغابايت|غيغابايت|غيغابايت|غيغابايت
+ar_noun	ar	ميغابايت	m|ميغابايت|ميغابايت|ميغابايت|ميغابايت
+ar_noun	ar	تيرابايت	m|تيرابايت|تيرابايت|تيرابايت|تيرابايت
+ar_noun	ar	كيلوبايت	m|كيلوبايت|كيلوبايت|كيلوبايت|كيلوبايت
+ar_noun	ar	غيغاهرتز	m|غيغاهرتز|غيغاهرتز|غيغاهرتز|غيغاهرتز
+ar_noun	ar	ميغاهرتز	m|ميغاهرتز|ميغاهرتز|ميغاهرتز|ميغاهرتز
+ar_noun	ar	هرتز	m|هرتز|هرتز|هرتز|هرتز
+ar_noun	ar	ميغابت في الثانية	m|ميغابت في الثانية|ميغابت في الثانية|ميغابت في الثانية|ميغابت في الثانية
+ar_noun	ar	غيغابت في الثانية	m|غيغابت في الثانية|غيغابت في الثانية|غيغابت في الثانية|غيغابت في الثانية
+ar_noun	ar	تيرابت في الثانية	m|تيرابت في الثانية|تيرابت في الثانية|تيرابت في الثانية|تيرابت في الثانية
+ar_noun	ar	ديسيبل	m|ديسيبل|ديسيبل|ديسيبل|ديسيبل
+ar_noun	ar	كيلو	m|كيلو|كيلو|كيلو|كيلو
+ar_noun	ar	ميغا	m|ميغا|ميغا|ميغا|ميغا
+ar_noun	ar	جيجا	m|جيجا|جيجا|جيجا|جيجا
+ar_noun	ar	غيغا	m|غيغا|غيغا|غيغا|غيغا
+
+ar_unit	ar	كم	كيلومتر
+ar_unit	ar	km	كيلومتر
+ar_unit	ar	م	متر
+ar_unit	ar	m	متر
+ar_unit	ar	سم	سنتيمتر
+ar_unit	ar	cm	سنتيمتر
+ar_unit	ar	مم	مليمتر
+ar_unit	ar	ملم	مليمتر
+ar_unit	ar	mm	مليمتر
+ar_unit	ar	كغ	كيلوغرام
+ar_unit	ar	كجم	كيلوغرام
+ar_unit	ar	kg	كيلوغرام
+ar_unit	ar	غ	غرام
+ar_unit	ar	جم	غرام
+ar_unit	ar	g	غرام
+ar_unit	ar	ملغ	مليغرام
+ar_unit	ar	مجم	مليغرام
+ar_unit	ar	mg	مليغرام
+ar_unit	ar	طن	طن
+ar_unit	ar	لتر	لتر
+ar_unit	ar	ل	لتر
+ar_unit	ar	L	لتر
+ar_unit	ar	مل	مليلتر
+ar_unit	ar	ml	مليلتر
+ar_unit	ar	mL	مليلتر
+ar_unit	ar	°	درجة
+ar_unit	ar	°م	درجة مئوية
+ar_unit	ar	°C	درجة مئوية
+ar_unit	ar	℃	درجة مئوية
+ar_unit	ar	°F	درجة فهرنهايت
+ar_unit	ar	م²	متر مربع
+ar_unit	ar	م2	متر مربع
+ar_unit	ar	m²	متر مربع
+ar_unit	ar	كم²	كيلومتر مربع
+ar_unit	ar	km²	كيلومتر مربع
+ar_unit	ar	كم/س	كيلومتر في الساعة
+ar_unit	ar	كم/ساعة	كيلومتر في الساعة
+ar_unit	ar	km/h	كيلومتر في الساعة
+ar_unit	ar	W	واط
+ar_unit	ar	kW	كيلوواط
+ar_unit	ar	MW	ميغاواط
+ar_unit	ar	kWh	كيلوواط ساعة
+ar_unit	ar	V	فولت
+ar_unit	ar	A	أمبير
+ar_unit	ar	mAh	مللي أمبير ساعة
+ar_unit	ar	Ω	أوم
+ar_unit	ar	GB	غيغابايت
+ar_unit	ar	MB	ميغابايت
+ar_unit	ar	TB	تيرابايت
+ar_unit	ar	KB	كيلوبايت
+ar_unit	ar	GHz	غيغاهرتز
+ar_unit	ar	MHz	ميغاهرتز
+ar_unit	ar	Hz	هرتز
+ar_unit	ar	Mbps	ميغابت في الثانية
+ar_unit	ar	Gbps	غيغابت في الثانية
+ar_unit	ar	Tbps	تيرابت في الثانية
+ar_unit	ar	dB	ديسيبل
+ar_unit	ar	"	بوصة
+
+ar_currency	ar	ر.س	ريال|هللة|2
+ar_currency	ar	SAR	ريال|هللة|2
+ar_currency	ar	ريال	ريال|هللة|2
+ar_currency	ar	ريالا	ريال|هللة|2
+ar_currency	ar	ريالات	ريال|هللة|2
+ar_currency	ar	د.إ	درهم|فلس|2
+ar_currency	ar	AED	درهم|فلس|2
+ar_currency	ar	درهم	درهم|فلس|2
+ar_currency	ar	درهما	درهم|فلس|2
+ar_currency	ar	دراهم	درهم|فلس|2
+ar_currency	ar	ج.م	جنيه|قرش|2
+ar_currency	ar	EGP	جنيه|قرش|2
+ar_currency	ar	جنيه	جنيه|قرش|2
+ar_currency	ar	جنيها	جنيه|قرش|2
+ar_currency	ar	جنيهات	جنيه|قرش|2
+ar_currency	ar	$	دولار|سنت|2
+ar_currency	ar	USD	دولار|سنت|2
+ar_currency	ar	دولار	دولار|سنت|2
+ar_currency	ar	دولارا	دولار|سنت|2
+ar_currency	ar	دولارات	دولار|سنت|2
+ar_currency	ar	€	يورو|سنت|2
+ar_currency	ar	EUR	يورو|سنت|2
+ar_currency	ar	يورو	يورو|سنت|2
+ar_currency	ar	£	جنيه إسترليني|بنس|2
+ar_currency	ar	GBP	جنيه إسترليني|بنس|2
+ar_currency	ar	د.ك	دينار|فلس|3
+ar_currency	ar	KWD	دينار|فلس|3
+ar_currency	ar	د.ب	دينار|فلس|3
+ar_currency	ar	BHD	دينار|فلس|3
+ar_currency	ar	د.أ	دينار|قرش|2
+ar_currency	ar	JOD	دينار|قرش|2
+ar_currency	ar	دينار	دينار|فلس|3
+ar_currency	ar	دينارا	دينار|فلس|3
+ar_currency	ar	ر.ق	ريال|درهم|2
+ar_currency	ar	QAR	ريال|درهم|2
+ar_currency	ar	ر.ع	ريال|بيسة|3
+ar_currency	ar	OMR	ريال|بيسة|3
+ar_currency	ar	ليرة	ليرة|قرش|2
+ar_currency	ar	¥	ين|سن|2
+
+ar_gender	ar	مدارس	f
+ar_gender	ar	منح	f
+ar_gender	ar	قطع	f
+ar_gender	ar	ليال	f
+ar_gender	ar	ليالي	f
+ar_gender	ar	دقائق	f
+ar_gender	ar	نقاط	f
+ar_gender	ar	غرف	f
+ar_gender	ar	سنين	f
+ar_gender	ar	شقق	f
+ar_gender	ar	مدن	f
+ar_gender	ar	دول	f
+ar_gender	ar	قرى	f
+ar_gender	ar	أسر	f
+ar_gender	ar	مواد	f
+ar_gender	ar	جوائز	f
+ar_gender	ar	مراحل	f
+ar_gender	ar	مسائل	f
+ar_gender	ar	حقائب	f
+ar_gender	ar	بنات	f
+ar_gender	ar	نساء	f
+ar_gender	ar	سيدات	f
+ar_gender	ar	ثوان	f
+ar_gender	ar	مراكز	m
+ar_gender	ar	أيام	m
+ar_gender	ar	رجال	m
+ar_gender	ar	أطفال	m
+ar_gender	ar	أشهر	m
+ar_gender	ar	شهور	m
+ar_gender	ar	أسابيع	m
+ar_gender	ar	أعوام	m
+ar_gender	ar	طلاب	m
+ar_gender	ar	عمال	m
+ar_gender	ar	كتب	m
+ar_gender	ar	أجهزة	m
+ar_gender	ar	أصناف	m
+ar_gender	ar	منافذ	m
+ar_gender	ar	قرارات	m
+ar_gender	ar	فحوصات	m
+ar_gender	ar	طوابق	m
+ar_gender	ar	ملايين	m
+ar_gender	ar	آلاف	m
+ar_gender	ar	مقاعد	m
+ar_gender	ar	لاعبين	m
+ar_gender	ar	مشاريع	m
+ar_gender	ar	ساعات	f
+ar_gender	ar	سنوات	f
+ar_gender	ar	مرات	f
+ar_gender	ar	درجات	f
+ar_gender	ar	كيلو	m
+
+# ar_plural: a written plural -> its singular ar_noun key (٢-٣ أيام يومين إلى ثلاثة أيام)
+ar_plural	ar	أيام	يوم
+ar_plural	ar	ساعات	ساعة
+ar_plural	ar	دقائق	دقيقة
+ar_plural	ar	سنوات	سنة
+ar_plural	ar	سنين	سنة
+ar_plural	ar	أشهر	شهر
+ar_plural	ar	شهور	شهر
+ar_plural	ar	أسابيع	أسبوع
+ar_plural	ar	أعوام	عام
+ar_plural	ar	ليال	ليلة
+ar_plural	ar	ليالي	ليلة
+ar_plural	ar	مرات	مرة
+ar_plural	ar	ريالات	ريال
+ar_plural	ar	دولارات	دولار
+ar_plural	ar	دراهم	درهم
+ar_plural	ar	جنيهات	جنيه
+ar_plural	ar	قطع	قطعة
+ar_plural	ar	طلاب	طالب
+ar_plural	ar	أشخاص	شخص
+ar_plural	ar	درجات	درجة
+ar_plural	ar	كيلومترات	كيلومتر
+ar_plural	ar	أمتار	متر
+ar_plural	ar	طلبات	طلب
+# phase 1 dev fixes (2026-10-22)
+ar_currency	ar	ل.ل	ليرة|قرش|2
+ar_noun	ar	كتاب	m|كتاب|كتابين|كتب|كتابا
+ar_noun	ar	نقطة	f|نقطة|نقطتين|نقاط|نقطة
+ar_noun	ar	بئر	f|بئر|بئرين|آبار|بئرا
+ar_noun	ar	كوب	m|كوب|كوبين|أكواب|كوبا
+ar_plural	ar	آبار	بئر
+ar_plural	ar	نقاط	نقطة
+ar_plural	ar	كتب	كتاب
+ar_plural	ar	أكواب	كوب
+ar_gender	ar	مستودعات	m
+ar_gender	ar	مستشفيات	m
+ar_gender	ar	مطارات	m
+ar_gender	ar	ملفات	m
+ar_gender	ar	مشروعات	m
+ar_gender	ar	اجتماعات	m
+ar_gender	ar	امتحانات	m
+ar_gender	ar	حسابات	m
+ar_gender	ar	طلبات	m
+ar_gender	ar	قطارات	m
+ar_gender	ar	مقررات	m
+ar_gender	ar	مستويات	m
+ar_gender	ar	تطبيقات	m
+ar_gender	ar	مؤتمرات	m
+ar_gender	ar	مهرجانات	m
+ar_noun	ar	سنتيمتر مكعب	m|سنتيمتر مكعب|سنتيمترين مكعبين|سنتيمترات مكعبة|سنتيمترا مكعبا
+ar_noun	ar	متر مكعب	m|متر مكعب|مترين مكعبين|أمتار مكعبة|مترا مكعبا
+ar_unit	ar	سم³	سنتيمتر مكعب
+ar_unit	ar	cm³	سنتيمتر مكعب
+ar_unit	ar	م³	متر مكعب
+ar_unit	ar	m³	متر مكعب
+ar_gender	ar	حدائق	f
+ar_gender	ar	مساجد	m
+ar_gender	ar	رسائل	f
+ar_gender	ar	وسائل	f
+ar_gender	ar	طرق	m
+ar_gender	ar	صور	f
+ar_gender	ar	سفن	f
+ar_gender	ar	فرص	f
+ar_gender	ar	قصص	f
+ar_gender	ar	لغات	f
+ar_gender	ar	كلمات	f
+ar_gender	ar	مقالات	f
+ar_gender	ar	مباريات	f

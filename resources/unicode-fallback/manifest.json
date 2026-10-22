@@ -47,18 +47,18 @@
    "singles": 1710
   },
   "ar": {
-   "build_id": "9c766455",
+   "build_id": "4b43e8b4",
    "chain": [
     "ar"
    ],
    "cldr_id": "ar",
    "files": {
-    "dat": "81a9d8ddea5deb2919b3e39170ce81b6fae2bd01fcb6945477e8c71104665876",
-    "idx": "b3f1ad35405fcf1cb4f0a2112ae30308d76a42ff902dfeea1187c8f4c82f8b63",
-    "seq": "1374f86362bfb952bb51e0bca3de5f11bc357da278404e7d27a89b755092e382"
+    "dat": "e396369d20d83849f0842c8e5722c99adec6e54540aa9614e3f565bf077a9418",
+    "idx": "019b5c0614234ff7c91bc74dd09258875e7db3f7b50eb69c3fe5268288e1276a",
+    "seq": "dbd8d9400e791c60fae0c9defd2e2250e3a69dd1459a0c769875c0e193984b76"
    },
    "sequences": 2553,
-   "singles": 1711
+   "singles": 1708
   },
   "ar-SA": {
    "build_id": "eb30accf",
@@ -472,18 +472,18 @@
    "singles": 1711
   },
   "en": {
-   "build_id": "ac77e554",
+   "build_id": "bdaacd7e",
    "chain": [
     "en"
    ],
    "cldr_id": "en",
    "files": {
-    "dat": "be9aa56085393f32dd83852b98a235e50b5266779d9b748fac25d782e084e7cd",
-    "idx": "13ce0dbcc57a8e10192c697b3c99e1ce0cb215c0b387caded6e33cf7b751e908",
-    "seq": "b09a0f0b8e408271c12fce1f9b9f259fb8321da374295e9925699e389aa44a44"
+    "dat": "de140fde0091c28f32d0a35f72e2de9b1670576dc27ddda952d429350a05e1a9",
+    "idx": "2c1730a7c95ae12e1cc75e42718268cbe0278ebbb4cd424af984f21e338befcb",
+    "seq": "614ecd4772a873b9ba7f282039b849420c1fecca03aa9d54e08aef3476d23081"
    },
    "sequences": 2553,
-   "singles": 7627
+   "singles": 7624
   },
   "en-001": {
    "build_id": "69fb94ab",

@@ -1,0 +1,263 @@
+# Arabic pack (ar, Modern Standard Arabic), phase 1 (2026-10-22). Readings carry no short vowels.
+# Keys of `number`: a final m/f is the gender of the counted noun (3m ثلاثة رجال, 3f ثلاث سيارات);
+# o is the oblique case (اثنين, عشرين), c the construct form before a noun (مئتي, ألفي).
+context	ar	declared_only	1
+context	ar	arabic_sentence	1
+
+number	ar	0	صفر
+number	ar	1m	واحد
+number	ar	1f	واحدة
+number	ar	1fc	إحدى
+number	ar	2m	اثنان
+number	ar	2mo	اثنين
+number	ar	2f	اثنتان
+number	ar	2fo	اثنتين
+number	ar	3m	ثلاثة
+number	ar	4m	أربعة
+number	ar	5m	خمسة
+number	ar	6m	ستة
+number	ar	7m	سبعة
+number	ar	8m	ثمانية
+number	ar	9m	تسعة
+number	ar	10m	عشرة
+number	ar	3f	ثلاث
+number	ar	4f	أربع
+number	ar	5f	خمس
+number	ar	6f	ست
+number	ar	7f	سبع
+number	ar	8f	ثماني
+number	ar	9f	تسع
+number	ar	10f	عشر
+number	ar	11m	أحد عشر
+number	ar	11f	إحدى عشرة
+number	ar	12m	اثنا عشر
+number	ar	12mo	اثني عشر
+number	ar	12f	اثنتا عشرة
+number	ar	12fo	اثنتي عشرة
+number	ar	teenm	عشر
+number	ar	teenf	عشرة
+number	ar	20	عشرون
+number	ar	30	ثلاثون
+number	ar	40	أربعون
+number	ar	50	خمسون
+number	ar	60	ستون
+number	ar	70	سبعون
+number	ar	80	ثمانون
+number	ar	90	تسعون
+number	ar	20o	عشرين
+number	ar	30o	ثلاثين
+number	ar	40o	أربعين
+number	ar	50o	خمسين
+number	ar	60o	ستين
+number	ar	70o	سبعين
+number	ar	80o	ثمانين
+number	ar	90o	تسعين
+number	ar	100	مئة
+number	ar	200	مئتان
+number	ar	200o	مئتين
+number	ar	200c	مئتي
+number	ar	300	ثلاثمئة
+number	ar	400	أربعمئة
+number	ar	500	خمسمئة
+number	ar	600	ستمئة
+number	ar	700	سبعمئة
+number	ar	800	ثمانمئة
+number	ar	900	تسعمئة
+number	ar	k1	ألف
+number	ar	k2	ألفان
+number	ar	k2o	ألفين
+number	ar	k2c	ألفي
+number	ar	kp	آلاف
+number	ar	ka	ألفا
+number	ar	m1	مليون
+number	ar	m2	مليونان
+number	ar	m2o	مليونين
+number	ar	m2c	مليوني
+number	ar	mp	ملايين
+number	ar	ma	مليونا
+number	ar	g1	مليار
+number	ar	g2	ملياران
+number	ar	g2o	مليارين
+number	ar	g2c	ملياري
+number	ar	gp	مليارات
+number	ar	ga	مليارا
+number	ar	t1	تريليون
+number	ar	t2	تريليونان
+number	ar	t2o	تريليونين
+number	ar	t2c	تريليوني
+number	ar	tp	تريليونات
+number	ar	ta	تريليونا
+number	ar	and	و
+number	ar	point	فاصلة
+number	ar	percent	بالمئة
+number	ar	plus	زائد
+number	ar	minus	ناقص
+number	ar	plusminus	زائد أو ناقص
+number	ar	to	إلى
+number	ar	from	من
+number	ar	of	من
+number	ar	versus	مقابل
+number	ar	over	على
+number	ar	half	نصف
+number	ar	and_half	ونصف
+number	ar	dot	دوت
+number	ar	at	آت
+number	ar	dash	داش
+number	ar	slash	سلاش
+number	ar	underscore	أندرسكور
+number	ar	colon	نقطتين
+number	ar	hash	هاشتاغ
+number	ar	version	الإصدار
+number	ar	times	في
+number	ar	divided	على
+number	ar	equals	يساوي
+number	ar	lt	أصغر من
+number	ar	gt	أكبر من
+number	ar	le	أقل من أو تساوي
+number	ar	ge	أكبر من أو يساوي
+number	ar	ne	لا يساوي
+number	ar	squared	تربيع
+number	ar	cubed	تكعيب
+number	ar	root	جذر
+number	ar	pi	باي
+number	ar	below_zero	تحت الصفر
+number	ar	hijri	هجري
+number	ar	gregorian	ميلادي
+number	ar	midnight	منتصف الليل
+number	ar	noon	الثانية عشرة ظهرا
+number	ar	quarter	والربع
+number	ar	third	والثلث
+number	ar	halfhour	والنصف
+number	ar	to_quarter	إلا ربعا
+number	ar	am	صباحا
+number	ar	pm	مساء
+number	ar	noon_period	ظهرا
+number	ar	afternoon	عصرا
+number	ar	night	ليلا
+number	ar	minute	دقيقة
+number	ar	minute2	دقيقتين
+number	ar	minutes	دقائق
+number	ar	hour	ساعة
+number	ar	hour2	ساعتين
+number	ar	hours	ساعات
+
+# ordinals (oblique in compounds: الحادي والعشرين), masculine and feminine
+number	ar	o1m	الأول
+number	ar	o1f	الأولى
+number	ar	o2m	الثاني
+number	ar	o2f	الثانية
+number	ar	o3m	الثالث
+number	ar	o3f	الثالثة
+number	ar	o4m	الرابع
+number	ar	o4f	الرابعة
+number	ar	o5m	الخامس
+number	ar	o5f	الخامسة
+number	ar	o6m	السادس
+number	ar	o6f	السادسة
+number	ar	o7m	السابع
+number	ar	o7f	السابعة
+number	ar	o8m	الثامن
+number	ar	o8f	الثامنة
+number	ar	o9m	التاسع
+number	ar	o9f	التاسعة
+number	ar	o10m	العاشر
+number	ar	o10f	العاشرة
+number	ar	oc1m	الحادي
+number	ar	oc1f	الحادية
+number	ar	oteenm	عشر
+number	ar	oteenf	عشرة
+number	ar	ot20	العشرين
+number	ar	ot30	الثلاثين
+number	ar	ot40	الأربعين
+number	ar	ot50	الخمسين
+number	ar	ot60	الستين
+number	ar	ot70	السبعين
+number	ar	ot80	الثمانين
+number	ar	ot90	التسعين
+number	ar	ot100	المئة
+number	ar	h1	الواحدة
+
+# Gregorian months (the Egyptian and Gulf names) and Hijri months
+ar_month	ar	1	يناير
+ar_month	ar	2	فبراير
+ar_month	ar	3	مارس
+ar_month	ar	4	أبريل
+ar_month	ar	5	مايو
+ar_month	ar	6	يونيو
+ar_month	ar	7	يوليو
+ar_month	ar	8	أغسطس
+ar_month	ar	9	سبتمبر
+ar_month	ar	10	أكتوبر
+ar_month	ar	11	نوفمبر
+ar_month	ar	12	ديسمبر
+ar_hijri	ar	1	محرم
+ar_hijri	ar	2	صفر
+ar_hijri	ar	3	ربيع الأول
+ar_hijri	ar	4	ربيع الآخر
+ar_hijri	ar	5	جمادى الأولى
+ar_hijri	ar	6	جمادى الآخرة
+ar_hijri	ar	7	رجب
+ar_hijri	ar	8	شعبان
+ar_hijri	ar	9	رمضان
+ar_hijri	ar	10	شوال
+ar_hijri	ar	11	ذو القعدة
+ar_hijri	ar	12	ذو الحجة
+
+# Latin letter names in Arabic script
+ar_letter	ar	a	إيه
+ar_letter	ar	b	بي
+ar_letter	ar	c	سي
+ar_letter	ar	d	دي
+ar_letter	ar	e	إي
+ar_letter	ar	f	إف
+ar_letter	ar	g	جي
+ar_letter	ar	h	إتش
+ar_letter	ar	i	آي
+ar_letter	ar	j	جيه
+ar_letter	ar	k	كيه
+ar_letter	ar	l	إل
+ar_letter	ar	m	إم
+ar_letter	ar	n	إن
+ar_letter	ar	o	أو
+ar_letter	ar	p	بي
+ar_letter	ar	q	كيو
+ar_letter	ar	r	آر
+ar_letter	ar	s	إس
+ar_letter	ar	t	تي
+ar_letter	ar	u	يو
+ar_letter	ar	v	في
+ar_letter	ar	w	دبليو
+ar_letter	ar	x	إكس
+ar_letter	ar	y	واي
+ar_letter	ar	z	زد
+
+# the pack readings win over the shared grammar on the same extent (2026-10-22)
+classifier_priority	ar	ar.number	100
+classifier_priority	ar	ar.ip	100
+classifier_priority	ar	ar.version	100
+classifier_priority	ar	ar.date	100
+classifier_priority	ar	ar.monthyear	100
+classifier_priority	ar	ar.year	100
+classifier_priority	ar	ar.ratio	100
+classifier_priority	ar	ar.duration	100
+classifier_priority	ar	ar.timerange	100
+classifier_priority	ar	ar.time	100
+classifier_priority	ar	ar.hourrange	100
+classifier_priority	ar	ar.hour	100
+classifier_priority	ar	ar.ordinal	100
+classifier_priority	ar	ar.fraction	100
+classifier_priority	ar	ar.code	100
+classifier_priority	ar	ar.phone	100
+classifier_priority	ar	ar.score	100
+classifier_priority	ar	ar.daterange	100
+classifier_priority	ar	ar.range	100
+classifier_priority	ar	ar.digits	100
+classifier_priority	ar	ar.relation	100
+classifier_priority	ar	ar.money	100
+classifier_priority	ar	ar.address	100
+classifier_priority	ar	ar.maths	100
+# phase 1 dev fixes (2026-10-22)
+number	ar	8fc	ثمان
+number	ar	lt_lead	أقل من
+number	ar	gt_lead	أكثر من
+classifier_priority	ar	ar.hashtag	100
