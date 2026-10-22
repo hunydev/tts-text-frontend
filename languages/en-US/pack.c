@@ -547,12 +547,12 @@ static ttf_status_t date(const ttf_engine_t *e, const ttf_semantic_t *s, ttf_buf
         if (sscanf(s->value, "%u-%u-%u%n", &year, &month, &day, &consumed) != 3)
             return TTF_EINVAL;
     } else if (!strcmp(s->unit, "short-year")) {
-        /* 5/20/16 May twentieth twenty sixteen: a two-digit year reads in full, 00-30 in the
-           2000s and 31-99 in the 1900s (the owner set user-tn-en-US, 2026-10-22; Was: as
-           written, sixteen, oh eight, oh oh). */
+        /* 5/20/16 May twentieth twenty sixteen: a two-digit year reads in full, 00-49 in the
+           2000s and 50-99 in the 1900s, so exp 09/31 is 2031 (project-owner decision 2026-10-22;
+           Was: as written, sixteen, oh eight, oh oh). */
         if (sscanf(s->value, "%u-%u-%u%n", &year, &month, &day, &consumed) != 3 || year > 99)
             return TTF_EINVAL;
-        year += year <= 30 ? 2000 : 1900;
+        year += year <= 49 ? 2000 : 1900;
     } else
         return TTF_EINVAL;
     if (s->value[consumed] || (has_year && !short_year && (!year || year > 9999)) ||
@@ -2223,22 +2223,147 @@ static size_t dev_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
             }
         }
     }
-    /* report_final.pdf report underscore final dot p d f: the extension of a file name whose
-       parts are read */
-    if (p && t[p - 1] == '_' && ascii_letter_char(t[p])) {
-        size_t z = p, x;
-        while (z < n && ascii_letter_char(t[z]) && z - p < 20)
+    /* report.pdf report dot p d f, my-file.csv my dash file dot c s v, store12.txt store twelve
+       dot t x t: a file name with a known extension reads in full; the body in words (letters
+       without a vowel or a known word are spelled), the separators by name and the extension by
+       letter names or its set word (zip, jpeg). Earlier parts joined by _ are read by the core
+       (project-owner decision 2026-10-22; Was: only after an underscore, report.pdf as written). */
+    if (ascii_letter_char(t[p]) || ascii_digit_char(t[p])) {
+        size_t z = p, x, y;
+        const char *ext_say = NULL;
+        if (p && (ascii_letter_char(t[p - 1]) || ascii_digit_char(t[p - 1]) || t[p - 1] == '-' || t[p - 1] == '.' ||
+                  t[p - 1] == '_' || t[p - 1] == '/' || t[p - 1] == '@'))
+            goto no_file;
+        while (z < n && (ascii_letter_char(t[z]) || ascii_digit_char(t[z]) || t[z] == '-' || t[z] == '_') && z - p < 60)
             ++z;
-        if (z + 2 < n && t[z] == '.' && t[z + 1] >= 'a' && t[z + 1] <= 'z') {
-            for (x = z + 1; x < n && ((t[x] >= 'a' && t[x] <= 'z') || ascii_digit_char(t[x])) && x - z <= 5; ++x)
-                ;
-            if (x - z - 1 >= 2 && x - z - 1 <= 4 && !(x < n && (ascii_letter_char(t[x]) || ascii_digit_char(t[x]) ||
-                                                                (t[x] == '.' && x + 1 < n && ascii_letter_char(t[x + 1]))))) {
-                (void)snprintf(v, sizeof(v), "w:%.*s|w:dot|s:%.*s", (int)(z - p), t + p, (int)(x - z - 1), t + z + 1);
-                return say_span(in, out, x, v, "file-extension");
+        /* draft_v7(2).docx: a copy number in brackets before the extension */
+        if (z + 3 < n && z > p && t[z] == '(' && ascii_digit_char(t[z + 1])) {
+            size_t zz = z + 1;
+            while (zz < n && ascii_digit_char(t[zz]) && zz - z < 4)
+                ++zz;
+            if (zz + 1 < n && t[zz] == ')' && t[zz + 1] == '.')
+                z = zz + 1;
+        }
+        if (z == p || t[z - 1] == '-' || t[z - 1] == '_' || !(z + 2 < n && t[z] == '.'))
+            goto no_file;
+        y = z;
+        {
+            char vb[160];
+            size_t vl = 0, q2 = p;
+            vb[0] = 0;
+            /* the extension (two chained: tar.gz) */
+            for (;;) {
+                char ek[8];
+                size_t k3;
+                for (x = y + 1; x < n && (ascii_letter_char(t[x]) || ascii_digit_char(t[x])) && x - y <= 5; ++x)
+                    ;
+                if (x - y - 1 < 2 || x - y - 1 > 4)
+                    goto no_file;
+                for (k3 = 0; k3 < x - y - 1; ++k3)
+                    ek[k3] = (char)(t[y + 1 + k3] >= 'A' && t[y + 1 + k3] <= 'Z' ? t[y + 1 + k3] - 'A' + 'a' : t[y + 1 + k3]);
+                ek[k3] = 0;
+                ext_say = res(in->engine, "file_extension", ek);
+                if (!ext_say)
+                    goto no_file;
+                {
+                    /* all lowercase or all capitals (REPORT.PDF), not a capitalized word (it.Png) */
+                    int up = 0, low = 0;
+                    for (k3 = y + 1; k3 < x; ++k3)
+                        up += t[k3] >= 'A' && t[k3] <= 'Z', low += t[k3] >= 'a' && t[k3] <= 'z';
+                    if (up && low)
+                        goto no_file;
+                }
+                if (vl + strlen(ext_say) + 12 >= sizeof(vb))
+                    goto no_file;
+                vl += (size_t)snprintf(vb + vl, sizeof(vb) - vl, "|w:dot|%s", ext_say);
+                if (x + 2 < n && t[x] == '.' && ascii_letter_char(t[x + 1])) {
+                    size_t x2;
+                    for (x2 = x + 1; x2 < n && ascii_letter_char(t[x2]); ++x2)
+                        ;
+                    if (!(x2 < n && (ascii_digit_char(t[x2]) || (t[x2] == '.' && x2 + 1 < n && ascii_letter_char(t[x2 + 1]))))) {
+                        char ek2[8];
+                        if (x2 - x - 1 <= 4 && x2 - x - 1 >= 2) {
+                            for (k3 = 0; k3 < x2 - x - 1; ++k3)
+                                ek2[k3] = (char)(t[x + 1 + k3] | 0x20);
+                            ek2[k3] = 0;
+                            if (res(in->engine, "file_extension", ek2)) {
+                                y = x;
+                                continue;
+                            }
+                        }
+                    }
+                }
+                break;
             }
+            if (x < n && (ascii_letter_char(t[x]) || ascii_digit_char(t[x]) || t[x] == '@' || t[x] == '/' ||
+                          (t[x] == '.' && x + 1 < n && (ascii_letter_char(t[x + 1]) || ascii_digit_char(t[x + 1])))))
+                goto no_file;
+            /* the body: words, dashes, letter runs and numbers */
+            v[0] = 0;
+            {
+                size_t o = 0;
+                while (q2 < z) {
+                    size_t r3 = q2;
+                    char piece[48];
+                    const char *item;
+                    if (t[q2] == '(' || t[q2] == ')') {
+                        ++q2;
+                        continue;
+                    }
+                    if (t[q2] == '-' || t[q2] == '_') {
+                        o += (size_t)snprintf(v + o, sizeof(v) - o, "%sw:%s", o ? "|" : "", t[q2] == '-' ? "dash" : "underscore");
+                        ++q2;
+                        continue;
+                    }
+                    if (ascii_digit_char(t[q2])) {
+                        while (r3 < z && ascii_digit_char(t[r3]))
+                            ++r3;
+                        item = (t[q2] == '0' && r3 - q2 > 1) || r3 - q2 > 4 ? "d" : r3 - q2 == 4 ? "k" : "c";
+                    } else {
+                        size_t k4, vowels = 0, upper = 0;
+                        while (r3 < z && ascii_letter_char(t[r3]))
+                            ++r3;
+                        /* a capital starting a word inside (scanA) splits nothing: kept as one run */
+                        for (k4 = q2; k4 < r3 && k4 - q2 + 1 < sizeof(piece); ++k4) {
+                            piece[k4 - q2] = (char)(t[k4] >= 'A' && t[k4] <= 'Z' ? t[k4] - 'A' + 'a' : t[k4]);
+                            vowels += strchr("aeiouy", piece[k4 - q2]) != NULL;
+                            upper += t[k4] >= 'A' && t[k4] <= 'Z';
+                        }
+                        piece[k4 - q2] = 0;
+                        /* my-file my dash file: a short common word stays a word in a file name */
+                        if (res(in->engine, "electronic_word", piece) ||
+                            in_list(piece, "my|me|to|go|do|so|up|in|on|of|at|it|is|be|we|no|by|or|an|as|if|us|hi"))
+                            item = "w";
+                        /* cam3 cam three: three small letters consonant-vowel-consonant read as a word;
+                           nba, gtfs, tmpl and capitals (CPI) are spelled */
+                        else if (r3 - q2 == 3 && !upper && !strchr("aeiou", piece[0]) && strchr("aeiou", piece[1]) &&
+                                 !strchr("aeiouy", piece[2]))
+                            item = "w";
+                        else if (r3 - q2 <= 3 || !vowels || (upper == r3 - q2 && r3 - q2 <= 4))
+                            item = "s";
+                        else
+                            item = "w";
+                        if (item[0] == 'w') {
+                            o += (size_t)snprintf(v + o, sizeof(v) - o, "%sw:%s", o ? "|" : "", piece);
+                            q2 = r3;
+                            if (o >= sizeof(v))
+                                goto no_file;
+                            continue;
+                        }
+                    }
+                    o += (size_t)snprintf(v + o, sizeof(v) - o, "%s%s:%.*s", o ? "|" : "", item, (int)(r3 - q2), t + q2);
+                    if (o >= sizeof(v))
+                        goto no_file;
+                    q2 = r3;
+                }
+                if (o + vl + 1 >= sizeof(v))
+                    goto no_file;
+                memcpy(v + o, vb, vl + 1);
+            }
+            return say_span(in, out, x, v, "file-name");
         }
     }
+no_file:
     /* $0.99 ninety nine cents; $2.99/mo two dollars and ninety nine cents a month; a $25 deposit
        twenty five dollar; a $3.2B transit budget three point two billion dollar */
     if ((t[p] == '$') && p + 1 < n && ascii_digit_char(t[p + 1]) && !(p && ascii_letter_char(t[p - 1]))) {
@@ -2347,6 +2472,21 @@ static size_t dev_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
                 unsigned range_m = 0, range_d = 0;
                 size_t range_end = 0;
                 char w2[16];
+                /* exp 09/31 September twenty thirty one: a card expiry month and two-digit year after
+                   exp, expires or thru, or where the day cannot be one (project-owner decision
+                   2026-10-22: 00-49 are the 2000s) */
+                {
+                    static const unsigned mdays[] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+                    size_t zc = p;
+                    while (zc && (t[zc - 1] == ' ' || t[zc - 1] == ':' || t[zc - 1] == '.'))
+                        --zc;
+                    if (a - p == 2 && r - a - 1 == 2 && m >= 1 && m <= 12 &&
+                        (word_before(t, zc, "exp|expires|expiry|expiration|thru|expiring") || d > mdays[m - 1] ||
+                         (d == 0 && t[a + 1] == '0'))) {
+                        (void)snprintf(v, sizeof(v), "w:%s|y:%u", dev_month[m - 1], d + (d <= 49 ? 2000 : 1900));
+                        return say_span(in, out, r, v, "month-year");
+                    }
+                }
                 /* 9/1 – 9/30, 09/01-09/30: a second month and day after a dash or to (listening
                    check, 2026-10-22) */
                 {
@@ -2598,7 +2738,10 @@ static size_t dev_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
             }
         }
     }
-    /* '08 oh eight: a year written with an apostrophe */
+    /* '08 oh eight, May '16 May twenty sixteen: a year written with an apostrophe reads as
+       written, and in full after a month name, 00-49 in the 2000s and 50-99 in the 1900s
+       (project-owner decision 2026-10-22: the rush of '58 in old books is 1858, and back in '08 is
+       said oh eight) */
     if ((t[p] == '\'' || (p + 2 < n && (unsigned char)t[p] == 0xE2 && (unsigned char)t[p + 1] == 0x80 &&
                           (unsigned char)t[p + 2] == 0x99)) &&
         !(p && ascii_letter_char(t[p - 1]))) {
@@ -2606,8 +2749,26 @@ static size_t dev_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
         if (a + 1 < n && ascii_digit_char(t[a]) && ascii_digit_char(t[a + 1]) &&
             !(a + 2 < n && (ascii_digit_char(t[a + 2]) || ascii_letter_char(t[a + 2])))) {
             unsigned y = (unsigned)atoi(t + a);
-            size_t e2 = a + 2;
-            if (y < 10)
+            size_t e2 = a + 2, k5;
+            /* the nation's '10 Best' list: an opening quote closed after a word is no year */
+            for (k5 = e2; k5 < n && k5 < e2 + 40 && t[k5] != '\n'; ++k5)
+                if (t[k5] == '\'' && ascii_letter_char(t[k5 - 1]) &&
+                    !(k5 + 1 < n && ascii_letter_char(t[k5 + 1])) && t[p] == '\'')
+                    return 0;
+            int month_before;
+            {
+                size_t zm = p;
+                while (zm && t[zm - 1] == ' ')
+                    --zm;
+                if (zm && t[zm - 1] == '.')
+                    --zm;
+                month_before = word_before(t, zm, "january|february|march|april|may|june|july|august|september|"
+                                                  "october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|"
+                                                  "sept|oct|nov|dec");
+            }
+            if (month_before)
+                (void)snprintf(v, sizeof(v), "y:%u", y + (y <= 49 ? 2000 : 1900));
+            else if (y < 10)
                 (void)snprintf(v, sizeof(v), "w:oh|c:%u", y);
             else
                 (void)snprintf(v, sizeof(v), "c:%u", y);
@@ -2616,7 +2777,10 @@ static size_t dev_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
                 ascii_digit_char(t[e2 + 3]) && !(e2 + 4 < n && ascii_digit_char(t[e2 + 4]))) {
                 unsigned y2 = (unsigned)atoi(t + e2 + 2);
                 size_t l = strlen(v);
-                (void)snprintf(v + l, sizeof(v) - l, y2 < 10 ? "|w:to|w:oh|c:%u" : "|w:to|c:%u", y2);
+                if (month_before)
+                    (void)snprintf(v + l, sizeof(v) - l, "|w:to|y:%u", y2 + (y2 <= 49 ? 2000 : 1900));
+                else
+                    (void)snprintf(v + l, sizeof(v) - l, y2 < 10 ? "|w:to|w:oh|c:%u" : "|w:to|c:%u", y2);
                 e2 += 4;
             }
             return say_span(in, out, e2, v, "short-year");
@@ -3839,7 +4003,7 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             return ttf_en_speech_spelling(e, point, strlen(point), 1, b);
         }
         /* @say (dev_forms): c:N cardinal, o:N ordinal, d:digits, k:label pairs, n:number, s:letters,
-           w:words */
+           w:words, y:YEAR a calendar year */
         if (!strcmp(s->unit, "@say")) {
             const char *it = s->value;
             int first = 1;
@@ -3880,6 +4044,9 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
                     break;
                 case 's':
                     st = ttf_en_speech_spelling(e, item, strlen(item), 0, b);
+                    break;
+                case 'y':
+                    st = date_year(e, (unsigned)strtoul(item, NULL, 10), "year_style", b);
                     break;
                 case 'w':
                     st = ttf_buffer_puts(b, item);

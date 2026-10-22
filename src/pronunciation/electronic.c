@@ -113,8 +113,15 @@ static ttf_status_t chunk(const ttf_engine_t *e, const ttf_language_pack_t *sour
         ttf_trace_stage(e, TTF_TRACE_LEXICON, part, part + n);
         hit = ttf_resource_get(e, "electronic_word", target->language_tag, key, NULL);
         if (hit) {
+            int capitalized = text[0] >= 'A' && text[0] <= 'Z';
             st = ttf_trace_resource(e, "electronic_word", target->language_tag, key, key,
                                     "address-word", SIZE_MAX);
+            for (i = 1; capitalized && i < n; ++i)
+                if (text[i] >= 'A' && text[i] <= 'Z')
+                    capitalized = 0;
+            /* GreenLeaf.com Green Leaf: a capitalized word that reads as itself keeps its capital */
+            if (st == TTF_OK && capitalized && !strcmp(hit, key))
+                return ttf_buffer_append(out, text, n);
             return st == TTF_OK ? ttf_buffer_puts(out, hit) : st;
         }
         if (source && source != target) {

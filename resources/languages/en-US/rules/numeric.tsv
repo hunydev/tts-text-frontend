@@ -626,4 +626,5 @@ classifier_priority	en-US	en.dimension-by	100
 classifier_priority	en-US	en.degree-name	100
 classifier_priority	en-US	en.fraction-inch	100
 classifier_priority	en-US	en.letter-digit-letters	100
-classifier_priority	en-US	en.file-extension	100
+classifier_priority	en-US	en.file-name	100
+classifier_priority	en-US	en.month-year	100

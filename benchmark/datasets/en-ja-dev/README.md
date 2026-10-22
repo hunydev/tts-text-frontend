@@ -16,3 +16,11 @@ Development sets for the English and Japanese packs, built after the open-tn com
 - Sizes: en-dev1 964, ja-dev1 981.
 - Scoring: `benchmark/evaluators` runner with the open-tn score.py metric (and the pyopenjtalk
   reading view for Japanese). Fixes come from these sets; they are dev sets from the start.
+
+## amend.tsv (2026-10-22)
+
+Dev lines whose reading conflicts with a later project-owner decision are widened in `amend.tsv`
+(`lang`, `line`, `was`, `now`, `why`); the source tsv files are never edited and the scorer reads an
+amended copy. The first rows widen 15 English file names kept as written (`{report.pdf|=}`) to
+also accept the full reading, after the decision that file names with a known extension are read.
+

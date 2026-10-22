@@ -75,6 +75,27 @@
   held-out v1 96.0, owner set test 94.7, no engine errors in 14,927 real sentences; TTS-to-STT on
   the 371 v2 sentences: raw text 45.3% to TN 73.3% of sentences (spans 62.9% to 83.0%), no new TN
   problem. Human native review and VoxCPM2 listening remain, as for the other languages.
+- Project-owner decisions on English readings (2026-10-22):
+  - Two-digit years read in full with 00-49 in the 2000s and 50-99 in the 1900s: m/d/yy (7/4/58
+    nineteen fifty eight), card expiry after exp, expires or thru and a day that cannot be one
+    (exp 09/31 September twenty thirty one), and an apostrophe year after a month (Aug '19). A bare
+    apostrophe year stays as written ('58 fifty eight, back in '07 oh seven): old books mean 1858
+    and speakers say oh eight; full reading lost 31 LibriTTS sentences.
+  - File names with a known extension read in full (report.pdf report dot p d f, kickoff-deck.pptx,
+    tax_return_2025.pdf): the body in words, letter runs without a vowel spelled, separators by
+    name, the extension by letter names or its set word (zip, jpeg, json). New resource namespace
+    file_extension. Paths (/tiles/y48.png) stay protected.
+  - Address words: common English words and given names of three letters or more read as words in
+    URLs and e-mail addresses (transit.org/live, jess.m@, tom@); single letters, runs without a
+    vowel and two-letter codes stay spelled; a capitalized word keeps its capital (GreenLeaf.com).
+    resources/languages/en-US/rules/electronic-words.tsv (self-authored).
+  - Letter names stay (pee ess five); open-tn gets an adjusted English score with letter names
+    folded next to the official one: 92.5 (official 88.2; WeTextProcessing 69.8, NeMo 75.7).
+  - The en-ja-dev amend.tsv widens 15 dev lines that kept file names as written (the source file
+    is never edited). Frozen contract en_speech_hyphen_v23 (2) changed with Was notes.
+  - Gates: owner sets en dev 789 to 791, test 317 to 321, others unchanged; English real sentences
+    with no errors. Thai dots checked: จุด in decimals, versions and IP addresses, ดอท in URLs,
+    e-mail addresses and file names. Contract en_owner_dec_v100 (13).
 - Listening check and the open-tn comparison (2026-10-22):
   - TTS-to-STT on 250 sentences each of the owner set dev split: Korean 55.2% of sentences raw to
     78.8% after TN, English 83.2% to 94.8% (92.4% before the fixes below), Japanese 71.2% to 82.4%.

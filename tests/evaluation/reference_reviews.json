@@ -2682,6 +2682,18 @@
       },
       "category_overrides": {},
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/en_owner_dec_v100.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Synthetic cases authored for the project-owner decisions of 2026-10-22; new sentences, not copied from the owner sets, the dev sets or open-tn",
+        "reason": "Project-owner decisions 2026-10-22: two-digit years, file names, address words"
+      },
+      "category_overrides": {},
+      "case_overrides": {}
     }
   ],
   "excluded": [

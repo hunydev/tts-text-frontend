@@ -419,6 +419,19 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "count_scale maps K, M or B to 1000|1000000|1000000000");
     }
+    /* file_extension pdf "s:pdf": a known file extension and its @say reading (2026-10-22) */
+    if (SAME(k, "file_extension")) {
+        size_t i, l = strlen(key);
+        *handled = 1;
+        for (i = 0; i < l; ++i)
+            if (!((key[i] >= 'a' && key[i] <= 'z') || (key[i] >= '0' && key[i] <= '9')))
+                break;
+        if (l < 2 || l > 4 || i != l)
+            return ttf_validation_error(d, "file_extension key is 2-4 lowercase letters or digits");
+        return strlen(v) > 2 && strlen(v) < 64 && strchr("swcd", v[0]) && v[1] == ':'
+                   ? TTF_OK
+                   : ttf_validation_error(d, "file_extension value is @say items (s:, w:, c:, d:)");
+    }
     if (SAME(k, "per_word") || SAME(k, "fraction_idiom_not") || SAME(k, "electronic_prefix")) {
         *handled = 1;
         if (!lowercase_letters(key, SAME(k, "electronic_prefix") ? 1 : 15))
