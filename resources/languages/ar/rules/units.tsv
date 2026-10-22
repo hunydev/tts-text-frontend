@@ -45,7 +45,7 @@ ar_noun	ar	غرام	m|غرام|غرامين|غرامات|غراما
 ar_noun	ar	مليغرام	m|مليغرام|مليغرامين|مليغرامات|مليغراما
 ar_noun	ar	طن	m|طن|طنين|أطنان|طنا
 ar_noun	ar	لتر	m|لتر|لترين|لترات|لترا
-ar_noun	ar	مليلتر	m|مليلتر|مليلترين|مليلترات|مليلترا
+ar_noun	ar	مليلتر	m|ملليلتر|ملليلترين|ملليلترات|ملليلترا
 ar_noun	ar	درجة	f|درجة|درجتين|درجات|درجة
 ar_noun	ar	درجة مئوية	f|درجة مئوية|درجتين مئويتين|درجات مئوية|درجة مئوية
 ar_noun	ar	درجة فهرنهايت	f|درجة فهرنهايت|درجتين فهرنهايت|درجات فهرنهايت|درجة فهرنهايت
@@ -90,13 +90,13 @@ ar_unit	ar	مم	مليمتر
 ar_unit	ar	ملم	مليمتر
 ar_unit	ar	mm	مليمتر
 ar_unit	ar	كغ	كيلوغرام
-ar_unit	ar	كجم	كيلوغرام
+ar_unit	ar	كجم	كيلوجرام
 ar_unit	ar	kg	كيلوغرام
 ar_unit	ar	غ	غرام
-ar_unit	ar	جم	غرام
+ar_unit	ar	جم	جرام
 ar_unit	ar	g	غرام
 ar_unit	ar	ملغ	مليغرام
-ar_unit	ar	مجم	مليغرام
+ar_unit	ar	مجم	مليجرام
 ar_unit	ar	mg	مليغرام
 ar_unit	ar	طن	طن
 ar_unit	ar	لتر	لتر
@@ -298,3 +298,12 @@ ar_gender	ar	لغات	f
 ar_gender	ar	كلمات	f
 ar_gender	ar	مقالات	f
 ar_gender	ar	مباريات	f
+ar_noun	ar	كيلوجرام	m|كيلوجرام|كيلوجرامين|كيلوجرامات|كيلوجراما
+ar_noun	ar	جرام	m|جرام|جرامين|جرامات|جراما
+ar_noun	ar	مليجرام	m|مليجرام|مليجرامين|مليجرامات|مليجراما
+ar_gender	ar	مرضى	m
+ar_gender	ar	قتلى	m
+ar_gender	ar	جرحى	m
+ar_gender	ar	أسرى	m
+ar_gender	ar	تذاكر	f
+ar_gender	ar	سيارات	f

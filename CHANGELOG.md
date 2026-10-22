@@ -92,6 +92,19 @@
   - Owner set ar span accuracy: 0 to dev 97.7%, test 86.1%. Contract ar_pack1_v101 (27). The other
     six languages on the owner sets, Korean quick, English, JSUT, ja-tn-eval, Chinese and
     Vietnamese gates are unchanged; all contracts pass except the three known failures.
+- Arabic pack phase 2 (2026-10-22): the owner held-out ar-v2 (400 sentences, kept local) was
+  opened after the phase 1 freeze at 78.8% of spans and is now a dev set.
+  - Plurals in ى and the ات plural of a تفعيل noun are masculine; one of a time noun is the noun
+    alone; the minor amount after an abbreviation takes the oblique for 11-19; a unit after a
+    scale word, the dual scale (مليوني نسمة); 15-17 o'clock read مساء; a version says الإصدار
+    unless written and its dots are فاصلة; digits before a currency abbreviation are an amount;
+    an Arabic letter variable starts an expression; a teen multiplier before lower groups takes
+    ألفا; a Latin unit symbol takes the case of any unit; Hijri years read هجرية; more ordinal and
+    code cue nouns and address words.
+  - Owner set ar: dev 97.7%, test 86.1 to 88.6%; ar-v2 78.8 to 91.0%. Where ar-v2 and the
+    ar set disagree (the address and code hyphen داش/شرطة, the case pairs) the ar set is followed.
+    Contract ar_pack2_v110 (16); ar_pack1_v101 two cases Was (هجرية, مساء at 15-17 o'clock, owner set
+    evidence). The other languages and gates are unchanged.
 - Project-owner decisions on English readings (2026-10-22):
   - Two-digit years read in full with 00-49 in the 2000s and 50-99 in the 1900s: m/d/yy (7/4/58
     nineteen fifty eight), card expiry after exp, expires or thru and a day that cannot be one

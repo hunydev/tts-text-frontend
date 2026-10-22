@@ -2706,6 +2706,18 @@
       },
       "category_overrides": {},
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/ar_pack2_v110.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Synthetic cases authored with the Arabic pack phase 2; new sentences, not copied from the owner sets or open-tn",
+        "reason": "Project-owner request 2026-10-22: Arabic pack phase 2"
+      },
+      "category_overrides": {},
+      "case_overrides": {}
     }
   ],
   "excluded": [

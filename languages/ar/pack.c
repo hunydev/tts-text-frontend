@@ -234,11 +234,12 @@ static void noun_of_word(const ttf_engine_t *e, const char *w, noun_t *x) {
             x->written = 'p';
             return;
         }
-        x->fem = 1;
+        /* تقييمات, تعديلات: the plural of a masculine تفعيل noun */
+        x->fem = !has(w, l, 0, "ت");
         x->written = 'p';
         return;
     }
-    x->fem = ends_with(w, "ة") || ends_with(w, "ى");
+    x->fem = ends_with(w, "ة") || (ends_with(w, "ى") && !res(e, "ar_gender", w));
     x->alif = !x->fem && !ends_with(w, "ا") && !ends_with(w, "ي") && !ends_with(w, "و") &&
               !ends_with(w, "ء");
     if (ends_with(w, "ا") && l > 4)
@@ -381,7 +382,7 @@ static ttf_status_t cardinal(out_t *o, const char *digits, const char *flags) {
             TRY(below1000(o, g, 0, obl, 0));
             if (r >= 3 && r <= 10)
                 snprintf(key, sizeof(key), "%cp", scale[k]);
-            else if (r >= 11 && !obl && lower)
+            else if (r >= 11 && lower && (!obl || r == 11 || (r >= 13 && r <= 19)))
                 snprintf(key, sizeof(key), "%ca", scale[k]);
             else
                 snprintf(key, sizeof(key), "%c1", scale[k]);
@@ -434,6 +435,16 @@ static ttf_status_t ordinal(out_t *o, unsigned n, int fem) {
     unsigned u = n % 10, t = n / 10;
     if (n == 100)
         return num(o, "ot100"); /* الحلقة المئة */
+    if (n < 1000 && n % 100 == 0) {
+        /* الصفحة 300 الصفحة الثلاثمئة */
+        char key[8];
+        snprintf(key, sizeof(key), "%u", n);
+        if (res(o->e, "number", key)) {
+            char word[64];
+            snprintf(word, sizeof(word), "ال%s", res(o->e, "number", key));
+            return emit(o, word);
+        }
+    }
     if (n == 0 || n > 99) {
         char d[24];
         snprintf(d, sizeof(d), "%u", n);
@@ -473,6 +484,8 @@ static ttf_status_t counted(out_t *o, const char *digits, const char *key, const
         return emit(o, text);
     if (n == 1 && *key && noun_text(o->e, key, 's', text, sizeof(text))) {
         TRY(emit(o, text));
+        if (word_is(key, "ساعة|دقيقة|ثانية|يوم|أسبوع|شهر|سنة|عام|ليلة"))
+            return TTF_OK;
         return num(o, strchr(flags, 'f') ? "1f" : "1m");
     }
     TRY(cardinal(o, digits, flags));
@@ -776,12 +789,28 @@ static size_t amount(const ttf_engine_t *e, const char *t, size_t n, const num_t
             add(it, "No:%s", x->d);
             scale_key(scale, x->d, cv != NULL, sk, sizeof(sk));
         }
+        if (x->d[0] == '2' && !x->d[1] && !x->dot) {
+            /* ٢ مليون أسرة مليوني أسرة: the dual of the scale alone */
+            it->n = 0;
+            it->s[0] = 0;
+            snprintf(sk, sizeof(sk), "%c2%s", scale, "c");
+            if (!(z + 1 < n && t[z] == ' ' && ar_at(t, n, z + 1)))
+                snprintf(sk, sizeof(sk), "%c2o", scale);
+        }
         add(it, "R:%s", sk);
         if (cv) {
             char nk[48];
             noun_field(cv, 0, nk, sizeof(nk));
             add(it, "Ks:%s", nk);
             return ce ? ce : z;
+        }
+        {
+            char uk[48];
+            size_t ue = z + 1 < n && t[z] == ' ' ? unit_at(e, t, n, z + 1, uk, sizeof(uk)) : 0;
+            if (ue) {
+                add(it, "Ks:%s", uk);
+                return ue;
+            }
         }
         return z;
     }
@@ -839,8 +868,8 @@ static size_t amount(const ttf_engine_t *e, const char *t, size_t n, const num_t
                     minor *= 10;
             }
             if (main || !minor) {
-                add(it, "C%s%s%s:%s:%s", no.fem ? "f" : "", case_flag, construct_ok(x->d) ? "c" : "",
-                    *x->d ? x->d : "0", nk);
+                add(it, "C%s%s%s%s:%s:%s", no.fem ? "f" : "", case_flag, construct_ok(x->d) ? "c" : "",
+                    !abbreviation && !written_alif ? "b" : "", *x->d ? x->d : "0", nk);
                 if (!main) {
                     /* ٠ ريال صفر ريال */
                     it->n = 0;
@@ -855,7 +884,8 @@ static size_t amount(const ttf_engine_t *e, const char *t, size_t n, const num_t
                    abbreviation the nominative (0.750 د.ك سبعمئة وخمسون فلسا) */
                 noun_t ms;
                 char mk[16];
-                const char *minor_case = main % 100 >= 20 ? case_flag : !main && abbreviation ? "" : "o";
+                const char *minor_case = main % 100 >= 20 || (!main && abbreviation) ? case_flag
+                                         : abbreviation && !prefix_currency && main % 100 <= 10 ? "" : "o";
                 memset(&ms, 0, sizeof(ms));
                 noun_by_key(e, sub, &ms);
                 snprintf(mk, sizeof(mk), "%u", minor);
@@ -875,8 +905,16 @@ static size_t amount(const ttf_engine_t *e, const char *t, size_t n, const num_t
                 /* 2.5 كم اثنين فاصلة خمسة كيلومتر: a decimal with the singular */
                 add(it, "Do:%s", x->dec);
                 add(it, "Ks:%s", nk);
-            } else
-                add(it, "C%s%s:%s:%s", no.fem ? "f" : "", no.alif && !oblique ? "" : "o", x->d, nk);
+            } else {
+                size_t us = ue;
+                int latin = 0;
+                while (us > q && t[us - 1] != ' ' && us > x->end)
+                    --us;
+                latin = alpha(t[us]);
+                (void)latin;
+                add(it, "C%s%s%s:%s:%s", no.fem ? "f" : "", no.alif && !oblique ? "" : "o",
+                    construct_ok(x->d) ? "c" : "", x->d, nk);
+            }
             return ue;
         }
     }
@@ -905,8 +943,8 @@ static size_t amount(const ttf_engine_t *e, const char *t, size_t n, const num_t
             return q;
         }
         if (*no.key && (no.written == 's' || no.written == 'a')) {
-            add(it, "C%s%s%s:%s:%s", no.fem ? "f" : "", no.written == 'a' && no.alif && !oblique ? "" : "o",
-                construct_ok(x->d) ? "c" : "", x->d, no.key);
+            add(it, "C%s%s%s%s:%s:%s", no.fem ? "f" : "", no.written == 'a' && no.alif && !oblique ? "" : "o",
+                construct_ok(x->d) ? "c" : "", no.written == 's' ? "b" : "", x->d, no.key);
             return z;
         }
         int bare_noun = !oblique && !has(w, strlen(w), 0, "و") && !has(w, strlen(w), 0, "ف") &&
@@ -983,8 +1021,10 @@ static void clock_items(items_t *it, int h, int mm, const char *period, int writ
     }
     if (period && !written_period)
         add(it, "R:%s", h12 == 12 && mm != 45 && !strcmp(period, "pm") ? "noon_period" : period);
+    else if (period && written_period && h == 12 && !strcmp(period, "pm"))
+        ; /* 12 ظهرا stays */
     else if (!period && h >= 12 && h <= 23)
-        add(it, "R:%s", h <= 14 ? "noon_period" : h <= 17 ? "afternoon" : "pm");
+        add(it, "R:%s", h <= 14 ? "noon_period" : "pm");
 }
 /* The period word after q: its key (am, pm) and end; *written when the word stays as it is
    written (صباحا), not when it is an abbreviation read as a word (ص صباحا, م مساء). */
@@ -996,6 +1036,11 @@ static size_t period_at(const ttf_engine_t *e, const char *t, size_t n, size_t q
         return 0;
     *written = strcmp(w, "ص") && strcmp(w, "م");
     *key = !strcmp(w, "ص") ? "am" : !strcmp(w, "م") ? "pm" : v;
+    if (word_is(w, "الظهر|العصر|الصبح|الفجر|بالليل|الليل|المغرب|العشاء")) {
+        *written = 0;
+        *key = !strcmp(w, "الظهر") ? "noon_period" : !strcmp(w, "العصر") ? "afternoon" : !strcmp(w, "الصبح") ? "am"
+               : !strcmp(w, "الفجر") ? "dawn" : "night";
+    }
     return z;
 }
 static size_t clock_at(const char *t, size_t n, size_t p, int *h, int *mm) {
@@ -1053,8 +1098,13 @@ static void code_items(const ttf_engine_t *e, items_t *it, const char *s, size_t
                 add(it, "G:%.*s", (int)(z - i), s + i);
             letters_run = 0;
         } else {
-            if (s[i] == '-')
-                add(it, "R:dash");
+            if (s[i] == '-') {
+                size_t d = i + 1;
+                while (d < len && digit(s[d]))
+                    ++d;
+                if (!(d - i - 1 >= 1 && d - i - 1 <= 3 && d == len && i && alpha(s[i - 1])))
+                    add(it, "R:dash");
+            }
             else if (s[i] == '/')
                 add(it, "R:slash");
             else if (s[i] == '_')
@@ -1084,7 +1134,22 @@ static void address_items(const ttf_engine_t *e, items_t *it, const char *s, siz
             low[k] = 0;
             if ((w = res(e, "ar_word", low)) != NULL)
                 add(it, "W:%s", w);
-            else {
+            else if (z - i > 3 && s[i] >= 'A' && s[i] <= 'Z' && s[i + 1] >= 'a' && s[i + 1] <= 'z') {
+                /* AbsherKSA أبشر كيه إس إيه: a capitalized word, then capitals */
+                size_t c = i + 1, k2;
+                char part[48];
+                while (c < z && s[c] >= 'a' && s[c] <= 'z')
+                    ++c;
+                for (k2 = 0; k2 < c - i && k2 + 1 < sizeof(part); ++k2)
+                    part[k2] = (char)(s[i + k2] | 0x20);
+                part[k2] = 0;
+                if (res(e, "ar_word", part))
+                    add(it, "W:%s", res(e, "ar_word", part));
+                else
+                    add(it, "L:%.*s", (int)(c - i), s + i);
+                if (c < z)
+                    add(it, "L:%.*s", (int)(z - c), s + c);
+            } else {
                 size_t cut, l = strlen(low);
                 const char *w1 = NULL, *w2 = NULL;
                 for (cut = l > 3 ? l - 3 : 0; cut >= 3 && !(w1 && w2); --cut) {
@@ -1249,8 +1314,10 @@ static size_t classify_number(const ttf_pack_input_t *in, ttf_semantic_t *s, siz
                 return finish(in, s, z2, "monthyear", &it);
             } else if (sep == '/' && z1 - p <= 2 && z2 - z1 - 1 <= 2 && a >= 1 && a <= 31 && b2 >= 1 && b2 <= 12 &&
                        !(z2 < n && (digit(t[z2]) || t[z2] == '/')) &&
-                       prev_word_is(t, p, "في|يوم|بتاريخ|تاريخ|حتى|موعد|منذ|قبل|بعد|الموافق|ابتداء|اعتبارا|لغاية|"
-                                          "التسليم|التقديم|الاستحقاق|السداد|الدفع|الاجتماع|الموعد")) {
+                       (prev_word_is(t, p, "في|يوم|بتاريخ|تاريخ|حتى|موعد|منذ|قبل|بعد|الموافق|ابتداء|اعتبارا|لغاية|"
+                                           "التسليم|التقديم|الاستحقاق|السداد|الدفع|الاجتماع|الموعد|السبت|الأحد|"
+                                           "الاثنين|الثلاثاء|الأربعاء|الخميس|الجمعة|بكرة|غدا|اليوم|أمس") ||
+                        (a > 12 && !near_before(t, p, "نسبة|بنسبة|قسمة|ناتج|كسر")))) {
                 date_items(&it, a, b2, NULL, 0);
                 return finish(in, s, z2, "date", &it);
             }
@@ -1531,6 +1598,20 @@ static size_t classify_number(const ttf_pack_input_t *in, ttf_semantic_t *s, siz
         if (dash_code && atoi(x.d) >= 1900 && atoi(x.d) <= 2099 && atoi(t + p + 5) > atoi(x.d) &&
             atoi(t + p + 5) <= 2099)
             dash_code = 0, groups = 0;
+        if (dash_code && atoi(t + p + 5) > atoi(x.d) && x.d[0] != '0' && t[p + 5] != '0') {
+            /* 4000-6000 ريال: a range when a currency, a unit or a noun follows */
+            char nw3[48], uk3[48];
+            noun_t n3;
+            size_t ne3 = word_after(t, n, last, nw3, sizeof(nw3), NULL);
+            int follows = unit_at(e, t, n, last < n && t[last] == ' ' ? last + 1 : last, uk3, sizeof(uk3)) != 0 ||
+                          currency_abbr(e, t, n, last < n && t[last] == ' ' ? last + 1 : last, uk3, sizeof(uk3)) != 0;
+            if (ne3 && !follows) {
+                noun_of_word(e, nw3, &n3);
+                follows = *n3.key || res(e, "ar_currency", nw3) != NULL;
+            }
+            if (follows)
+                dash_code = 0, groups = 0;
+        }
         if (groups >= 2 && digits >= 7 && (x.d[0] == '0' || first_len == 3 || dash_code || digits >= 8)) {
             size_t b;
             for (b = p; b < last;) {
@@ -1578,6 +1659,16 @@ static size_t classify_number(const ttf_pack_input_t *in, ttf_semantic_t *s, siz
             size_t end2;
             int m2 = 0, hj2 = 0;
             parse_num(t, n, r2, &b);
+            if (dash && !x.dot && !b.dot && strtod(b.dec, NULL) < strtod(x.dec, NULL) && atoi(x.d) <= 12 &&
+                atoi(b.d) <= 12 && !(b.end < n && (t[b.end] == '/' || t[b.end] == ':' || digit(t[b.end])))) {
+                /* ساعات الدوام 9-5 تسعة إلى خمسة */
+                if (!prev_word_is(t, p, "من|بين"))
+                    add(&it, "R:from");
+                add(&it, "No:%s", x.d);
+                add(&it, "R:to");
+                add(&it, "No:%s", b.d);
+                return finish(in, s, b.end, "range", &it);
+            }
             if (!(b.end < n && (t[b.end] == '/' || t[b.end] == ':')) &&
                 (!dash || strtod(b.dec, NULL) > strtod(x.dec, NULL))) {
                 /* 4-6 ديسمبر الرابع إلى السادس من ديسمبر */
@@ -1613,7 +1704,7 @@ static size_t classify_number(const ttf_pack_input_t *in, ttf_semantic_t *s, siz
                     if (!strcmp(x.d, "2") && !x.dot && *nkey && !unit_written) {
                         /* ٢-٣ أيام يومين إلى ثلاثة أيام, ٢-٤ أشخاص شخصين: a noun reads its dual */
                         add(&it, "Kd:%s", nkey);
-                    } else if (!strcmp(x.d, "1") && !x.dot && *nkey && !unit_written) {
+                    } else if (!strcmp(x.d, "1") && !x.dot && *nkey && !unit_written && atoi(b.d) <= 3) {
                         /* 1-2 كوب كوب إلى كوبين: the noun alone for one */
                         add(&it, "Ks:%s", nkey);
                     } else {
@@ -1644,12 +1735,19 @@ static size_t classify_number(const ttf_pack_input_t *in, ttf_semantic_t *s, siz
             noun_of_word(e, nw, &no);
             counted_after = *no.key || res(e, "ar_currency", nw) || scale_word(nw, nk);
         }
+        counted_after |= currency_abbr(e, t, n, q < n && t[q] == ' ' ? q + 1 : q, nk, sizeof(nk)) != 0;
         if (((strlen(x.d) >= 5 && !counted_after && !ue) || (x.d[0] == '0' && strlen(x.d) >= 2) ||
              (strlen(x.d) >= 3 && !counted_after && !ue && (cue_near(e, t, p, "phone") || cue_near(e, t, p, "code")))) &&
             !(q < n && (alpha(t[q]) || t[q] == '%'))) {
             add(&it, "G:%s", x.d);
             return finish(in, s, q, "digits", &it);
         }
+    }
+    /* 7+ سبعة فما فوق */
+    if (!x.dot && !x.comma && q < n && t[q] == '+' && !(q + 1 < n && (digit(t[q + 1]) || (t[q + 1] == ' ' && q + 2 < n && digit(t[q + 2]))))) {
+        add(&it, "No:%s", x.d);
+        add(&it, "W:فما فوق");
+        return finish(in, s, q + 1, "number", &it);
     }
     /* 5G, 2B, 4A: digits before Latin letters are a code */
     if (q < n && alpha(t[q]) && !x.dot && !x.comma) {
@@ -1665,6 +1763,21 @@ static size_t classify_number(const ttf_pack_input_t *in, ttf_semantic_t *s, siz
 
 /* A maths expression from p: numbers joined by operators with a relation or × ÷ (480 ÷ 6 = 80,
    (0.7 × 92) + (0.3 × 85), 0.03 < 0.05). Returns its end with the items, else 0. */
+/* The name of an Arabic letter used as a variable (س سين, ع عين). */
+static const char *arabic_letter_name(const char *t, size_t n, size_t p, size_t *end) {
+    static const char *const names[] = {"أ", "ألف", "ب", "باء", "ت", "تاء", "ث", "ثاء", "ج", "جيم", "ح", "حاء",
+                                        "خ", "خاء", "د", "دال", "ذ", "ذال", "ر", "راء", "ز", "زاي", "س", "سين",
+                                        "ش", "شين", "ص", "صاد", "ض", "ضاد", "ط", "طاء", "ظ", "ظاء", "ع", "عين",
+                                        "غ", "غين", "ف", "فاء", "ق", "قاف", "ك", "كاف", "ل", "لام", "م", "ميم",
+                                        "ن", "نون", "ه", "هاء", "و", "واو", "ي", "ياء", NULL};
+    int k;
+    for (k = 0; names[k]; k += 2)
+        if (has(t, n, p, names[k]) && !(p + 2 < n && ar_at(t, n, p + 2)) && !(p >= 2 && ar_at(t, n, p - 2))) {
+            *end = p + 2;
+            return names[k + 1];
+        }
+    return NULL;
+}
 static size_t maths(const ttf_engine_t *e, const char *t, size_t n, size_t p, items_t *it) {
     static const struct {
         const char *mark, *key;
@@ -1680,12 +1793,28 @@ static size_t maths(const ttf_engine_t *e, const char *t, size_t n, size_t p, it
         num_t x;
         while (z < n && (t[z] == ' ' || t[z] == '(' || t[z] == ')'))
             ++z;
-        if (!(z < n && digit(t[z])))
+        if (!(z < n && digit(t[z]))) {
+            size_t le;
+            const char *ln = arabic_letter_name(t, n, z, &le);
+            if (ln) {
+                add(&m, "W:%s", ln);
+                ++numbers;
+                z = le;
+                goto operand_done;
+            }
+            if (z < n && alpha(t[z]) && !(z + 1 < n && alpha(t[z + 1]))) {
+                add(&m, "L:%c", t[z]);
+                ++numbers;
+                z += 1;
+                goto operand_done;
+            }
             break;
+        }
         parse_num(t, n, z, &x);
         add(&m, numbers ? "Do:%s" : "D:%s", x.dec);
         ++numbers;
         z = x.end;
+    operand_done:
         if (has(t, n, z, "²")) {
             add(&m, "R:squared");
             z += strlen("²");
@@ -1700,15 +1829,25 @@ static size_t maths(const ttf_engine_t *e, const char *t, size_t n, size_t p, it
         if (!op[k].mark)
             break;
         {
-            size_t after = z + strlen(op[k].mark);
+            size_t after = z + strlen(op[k].mark), le2;
             while (after < n && (t[after] == ' ' || t[after] == '('))
                 ++after;
-            if (!(after < n && digit(t[after])))
+            if (!(after < n && (digit(t[after]) || arabic_letter_name(t, n, after, &le2) ||
+                                (alpha(t[after]) && !(after + 1 < n && alpha(t[after + 1])))))) {
+                /* 5 + 1.8 × المسافة: an operator before a word ends the expression */
+                if (op[k].strong && numbers >= 1 && after < n && ar_at(t, n, after)) {
+                    add(&m, "R:%s", op[k].key);
+                    strong = 1;
+                    last = z + strlen(op[k].mark);
+                    numbers = numbers < 2 ? 2 : numbers;
+                }
                 break;
+            }
             if (op[k].key[0] == 'p' || op[k].key[0] == 'm')
                 if (!(z && t[z - 1] == ' '))
                     break;
-            strong |= op[k].strong;
+            /* 15 + 15: a spaced plus between two numbers is an expression too */
+            strong |= op[k].strong || (op[k].key[0] == 'p' && digit(t[after]));
             add(&m, "R:%s", op[k].key);
             z = after;
         }
@@ -1836,6 +1975,16 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     }
     if (t[p] == '-' && p >= 2 && ar_at(t, n, p - 2) && !mark_at(t, n, p - 2) && p + 1 < n && digit(t[p + 1]))
         return classify_number(in, s, p + 1, "W: ");
+    if ((has(t, n, p, "٪") || t[p] == '%') && p + (t[p] == '%' ? 1 : 2) < n && digit(t[p + (t[p] == '%' ? 1 : 2)]) &&
+        !(p && digit(t[p - 1]))) {
+        size_t a = p + (t[p] == '%' ? 1 : 2);
+        parse_num(t, n, a, &x);
+        if (!(x.end < n && (digit(t[x.end]) || alpha(t[x.end])))) {
+            add(&it, "Do:%s", x.dec);
+            add(&it, "R:percent");
+            return finish(in, s, x.end, "percent", &it);
+        }
+    }
     /* #رمضان_٢٠٢٦: a hashtag of Arabic words */
     if (t[p] == '#' && p + 2 < n && ar_at(t, n, p + 1)) {
         size_t z2 = p + 1, a2;
@@ -1857,6 +2006,11 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                 break;
         }
         return finish(in, s, z2, "hashtag", &it);
+    }
+    {
+        size_t le;
+        if (ar_at(t, n, p) && arabic_letter_name(t, n, p, &le) && (z = maths(e, t, n, p, &it)) != 0)
+            return finish(in, s, z, "maths", &it);
     }
     /* الـ3 الثالث, النسخة الـ22 الثانية والعشرين, الساعة الـ8 مساء, الـ5 والنص الخامسة والنصف */
     if (ar_at(t, n, p)) {
@@ -1903,7 +2057,7 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             if (word_before(t, p, w, sizeof(w)) != (size_t)-1) {
                 char c[72];
                 cue_form(w, c, sizeof(c));
-                fem = ends_with(w, "ة") || (res(e, "ar_cue", c) && !strcmp(res(e, "ar_cue", c), "ordf"));
+                fem = ends_with(w, "ة") || ends_with(w, "ى") || (res(e, "ar_cue", c) && !strcmp(res(e, "ar_cue", c), "ordf"));
             }
             add(&it, "O%c:%s", fem ? 'f' : 'm', x.d);
             return finish(in, s, q, "ordinal", &it);
@@ -1929,7 +2083,8 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         /* v3.4.0 الإصدار ثلاثة فاصلة أربعة فاصلة صفر */
         if ((t[a] == 'v' || t[a] == 'V') && a + 1 < le && digit(t[a + 1]) && memchr(t + a, '.', le - a)) {
             size_t b = a + 1;
-            add(&it, "R:version");
+            if (!prev_word_is(t, p, "الإصدار"))
+                add(&it, "R:version");
             while (b < le) {
                 size_t c = b;
                 while (c < le && digit(t[c]))

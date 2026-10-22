@@ -37,7 +37,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 DATA = ROOT / "benchmark/datasets/user-tn-eval"
 OUT = ROOT / "benchmark/generated/user-tn-eval"
-LANGS = ["ko-KR", "en-US", "ja-JP", "zh-CN", "vi-VN", "th-TH"]
+LANGS = ["ko-KR", "en-US", "ja-JP", "zh-CN", "vi-VN", "th-TH", "ar"]
 LETTERS = dict(a="ay", b="bee", c="see", d="dee", e="ee", f="ef", g="gee", h="aitch", i="eye", j="jay",
                k="kay", l="el", m="em", n="en", o="oh", p="pee", q="cue", r="ar", s="ess", t="tee",
                u="you", v="vee", w="double you", x="ex", y="why", z="zee")
@@ -134,6 +134,10 @@ def fold(s, lang):
     elif lang == "ko-KR":
         # @ 골뱅이 = 앳, . 점 = 닷 in addresses (both in use)
         s = s.replace("에이트", "에잇").replace("골뱅이", "앳").replace("점", "닷").replace("제트", "지")
+    if lang == "ar":
+        # Arabic readings carry no short vowels (the set's policy): diacritics and the tatweel
+        # are dropped from both sides
+        s = "".join(c for c in s if unicodedata.category(c) != "Mn" and c != "\u0640")
     s = "".join(c for c in s if c == "ー" or not c.isspace() and unicodedata.category(c)[0] not in "PS")
     if lang == "vi-VN":
         # gi-ga = ghi-ga, đề-xi-ben = đê-xi-ben, độ C = độ xê, gạch ngang = gạch (address hyphen)

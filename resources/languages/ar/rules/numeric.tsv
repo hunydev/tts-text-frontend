@@ -121,7 +121,7 @@ number	ar	cubed	تكعيب
 number	ar	root	جذر
 number	ar	pi	باي
 number	ar	below_zero	تحت الصفر
-number	ar	hijri	هجري
+number	ar	hijri	هجرية
 number	ar	gregorian	ميلادي
 number	ar	midnight	منتصف الليل
 number	ar	noon	الثانية عشرة ظهرا
@@ -261,3 +261,4 @@ number	ar	8fc	ثمان
 number	ar	lt_lead	أقل من
 number	ar	gt_lead	أكثر من
 classifier_priority	ar	ar.hashtag	100
+number	ar	dawn	فجرا
