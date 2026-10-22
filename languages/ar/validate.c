@@ -117,8 +117,14 @@ static ttf_status_t engine(const ttf_engine_t *e, ttf_resource_diagnostic_t *d, 
     if (!ttf_find_pack(e, AR))
         return TTF_OK;
     for (i = 0; i < sizeof(needed) / sizeof(*needed); ++i)
-        if (!ttf_resource_get(e, "number", AR, needed[i], NULL))
+        if (!ttf_resource_get(e, "number", AR, needed[i], NULL)) {
+            if (d) {
+                snprintf(d->kind, sizeof(d->kind), "number");
+                snprintf(d->language, sizeof(d->language), "%s", AR);
+                snprintf(d->key, sizeof(d->key), "%s", needed[i]);
+            }
             return ttf_validation_error(d, "an Arabic number word is missing");
+        }
     return TTF_OK;
 }
 
