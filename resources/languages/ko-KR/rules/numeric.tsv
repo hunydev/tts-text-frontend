@@ -1134,6 +1134,9 @@ classifier_priority	ko-KR	ko:holiday-date	10
 classifier_priority	ko-KR	ko:ratio	10
 classifier_priority	ko-KR	ko:weekday-mark	10
 classifier_priority	ko-KR	ko:zero-number	10
+# Open set v3 (2026-10-23): 24:00 이십사 시, PM2.5 피엠 이 점 오
+classifier_priority	ko-KR	ko:clock-24	10
+classifier_priority	ko-KR	ko:letters-decimal	10
 classifier_priority	ko-KR	ko:resolution	10
 classifier_priority	ko-KR	ko:date-range	10
 classifier_priority	ko-KR	ko:blood-pressure	10

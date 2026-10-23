@@ -1147,17 +1147,31 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     case TTF_SEM_NUMBER:
     case TTF_SEM_CARDINAL:
         if (!strcmp(s->rule, "ko:ratio")) {
-            /* 일 대 이만 오천 */
-            const char *colon = strchr(s->value, ':');
-            char left[24];
-            if (!colon || (size_t)(colon - s->value) >= sizeof(left))
+            /* 일 대 이만 오천, 이 대 이 대 일 */
+            const char *term = s->value, *colon = strchr(term, ':');
+            char part[24];
+            if (!colon)
                 return TTF_EINVAL;
-            (void)snprintf(left, sizeof(left), "%.*s", (int)(colon - s->value), s->value);
-            TRY(cardinal(e, left, out));
+            for (;;) {
+                size_t len = colon ? (size_t)(colon - term) : strlen(term);
+                if (!len || len >= sizeof(part))
+                    return TTF_EINVAL;
+                (void)snprintf(part, sizeof(part), "%.*s", (int)len, term);
+                TRY(cardinal(e, part, out));
+                if (!colon)
+                    return TTF_OK;
+                TRY(ttf_buffer_puts(out, " "));
+                TRY(ttf_buffer_puts(out, resource(e, "policy", "score_separator", "대")));
+                TRY(ttf_buffer_puts(out, " "));
+                term = colon + 1;
+                colon = strchr(term, ':');
+            }
+        }
+        if (!strcmp(s->rule, "ko:letters-decimal")) {
+            /* 피엠 이 점 오 */
+            TRY(ttf_ko_speech_spelling(e, s->secondary, strlen(s->secondary), 0, out));
             TRY(ttf_buffer_puts(out, " "));
-            TRY(ttf_buffer_puts(out, resource(e, "policy", "score_separator", "대")));
-            TRY(ttf_buffer_puts(out, " "));
-            return cardinal(e, colon + 1, out);
+            return cardinal(e, s->value, out);
         }
         if (!strcmp(s->rule, "ko:quarter")) {
             /* 일 사분기 */
@@ -1698,6 +1712,12 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
                 emitted = 1;
             }
             return TTF_OK;
+        }
+        if (!strcmp(s->rule, "ko:clock-24")) {
+            /* 이십사 시: the Sino number, as the hours past twelve */
+            TRY(cardinal(e, "24", out));
+            TRY(ttf_buffer_puts(out, " "));
+            return ttf_buffer_puts(out, resource(e, "unit", "hour", "시"));
         }
         if (s->secondary[0]) {
             TRY(ttf_buffer_puts(out, resource(e, "meridiem", s->secondary, s->secondary)));
@@ -2739,6 +2759,19 @@ static int word_within(const char *t, size_t p, size_t window, const char *words
    typed-control tests):
    1:30 남았습니다 일 분 삼십 초, 3:05짜리 삼 분 오 초, 기록 2:58:30 두 시간
    오십팔 분 삼십 초; 6/6 현충일 유월 육 일; 1:25,000 일 대 이만 오천. */
+/* A Korean request, or Hangul in the text: the forms below are Korean readings, not for an
+   English request (24:00 and 12:30:60 stay as written there). */
+static int korean_context(const ttf_pack_input_t *in) {
+    size_t i;
+    if (in->engine && in->engine->default_language && !strcmp(in->engine->default_language, "ko-KR"))
+        return 1;
+    for (i = 0; i + 2 < in->length; ++i) {
+        unsigned char c = (unsigned char)in->text[i];
+        if (c >= 0xEA && c <= 0xED)
+            return 1;
+    }
+    return 0;
+}
 static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     const char *t = in->text;
     size_t n = in->length, p = in->tokens[in->index].begin, q, r, z;
@@ -2749,6 +2782,17 @@ static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         ;
     if (q - p > 2 || q + 2 >= n)
         return 0;
+    /* 24:00 이십사 시, 24:00:00: the end of the day (v3, 2026-10-23); the shared clock stops at 23 */
+    if (q - p == 2 && q + 3 <= n && !memcmp(t + p, "24:00", 5) && !(q + 3 < n && ko_digit(t[q + 3])) &&
+        korean_context(in)) {
+        r = q + 3;
+        if (r + 3 <= n && !memcmp(t + r, ":00", 3) && !(r + 3 < n && ko_digit(t[r + 3])))
+            r += 3;
+        if (!(r < n && t[r] == ':')) {
+            s->secondary[0] = '\0';
+            return ko_finish(in, s, r, TTF_SEM_TIME, "24:00", "time", "ko:clock-24");
+        }
+    }
     /* M:SS and H:MM:SS durations */
     if (t[q] == ':' && ko_digit(t[q + 1]) && q + 2 < n && ko_digit(t[q + 2]) && !(q + 3 < n && ko_digit(t[q + 3]))) {
         r = q + 3;
@@ -2785,6 +2829,27 @@ static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     if (t[q] == ':' && ko_digit(t[q + 1])) {
         size_t used = 0;
         int grouped = 0;
+        /* 2:2:1 이 대 이 대 일, 1:2:4로: three terms or more that are not a clock (whose minutes
+           and seconds have two digits under 60) (v3, 2026-10-23) */
+        {
+            size_t a = q, b, terms = 1;
+            int clock = 1;
+            while (a + 1 < n && t[a] == ':' && ko_digit(t[a + 1])) {
+                for (b = a + 1; b < n && ko_digit(t[b]); ++b)
+                    ;
+                if (b - a - 1 > 3)
+                    break;
+                if (b - a - 1 != 2 || atoi(t + a + 1) > 59)
+                    clock = 0;
+                ++terms;
+                a = b;
+            }
+            if (terms >= 3 && !clock && !(a < n && (ko_digit(t[a]) || t[a] == '.' || t[a] == ':')) &&
+                a - p < sizeof(v) && korean_context(in)) {
+                (void)snprintf(v, sizeof(v), "%.*s", (int)(a - p), t + p);
+                return ko_finish(in, s, a, TTF_SEM_CARDINAL, v, "", "ko:ratio");
+            }
+        }
         for (r = q + 1; r < n && (ko_digit(t[r]) || (t[r] == ',' && r + 3 < n && ko_digit(t[r + 1]) && ko_digit(t[r + 2]) && ko_digit(t[r + 3]))); ++r)
             grouped |= t[r] == ',';
         if (grouped && !(r < n && ko_digit(t[r])) && r - p < sizeof(v)) {
@@ -2994,6 +3059,35 @@ static size_t quarter(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     return i - in->index;
 }
 
+/* PM2.5 피엠 이 점 오: capital letters before a decimal number are spelled and the number is
+   read in Korean (v3, 2026-10-23); PM10 stays a model name. */
+static size_t letters_decimal(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    const char *t = in->text;
+    size_t n = in->length, p = in->tokens[in->index].begin, a, b, c, z;
+    char letters[8], v[24];
+    if (p >= n || t[p] < 'A' || t[p] > 'Z' || (p && ((t[p - 1] >= 'A' && t[p - 1] <= 'Z') ||
+                                                    (t[p - 1] >= 'a' && t[p - 1] <= 'z') || ko_digit(t[p - 1]))))
+        return 0;
+    for (a = p; a < n && t[a] >= 'A' && t[a] <= 'Z' && a - p < 4; ++a)
+        ;
+    for (b = a; b < n && ko_digit(t[b]) && b - a < 3; ++b)
+        ;
+    if (b == a || b + 1 >= n || t[b] != '.' || !ko_digit(t[b + 1]))
+        return 0;
+    for (c = b + 1; c < n && ko_digit(t[c]) && c - b - 1 < 2; ++c)
+        ;
+    z = c;
+    if (z < n && (ko_digit(t[z]) || t[z] == '.' || (t[z] >= 'A' && t[z] <= 'Z') || (t[z] >= 'a' && t[z] <= 'z')))
+        return 0;
+    if (!korean_context(in))
+        return 0;
+    (void)snprintf(letters, sizeof(letters), "%.*s", (int)(a - p), t + p);
+    (void)snprintf(v, sizeof(v), "%.*s", (int)(z - a), t + a);
+    z = ko_finish(in, s, z, TTF_SEM_CARDINAL, v, "", "ko:letters-decimal");
+    (void)snprintf(s->secondary, sizeof(s->secondary), "%s", letters);
+    return z;
+}
+
 static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     const char *text = in->text;
     size_t n = in->length, begin = in->tokens[in->index].begin, p, q;
@@ -3002,7 +3096,8 @@ static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     if (identifier)
         return identifier;
     if ((identifier = short_dotted_date(in, s)) != 0 || (identifier = quarter(in, s)) != 0 ||
-        (identifier = owner_forms(in, s)) != 0 || (identifier = owner_forms5(in, s)) != 0)
+        (identifier = owner_forms(in, s)) != 0 || (identifier = owner_forms5(in, s)) != 0 ||
+        (identifier = letters_decimal(in, s)) != 0)
         return identifier;
     identifier = ttf_ko_classify_basement(in, s);
     if (identifier)

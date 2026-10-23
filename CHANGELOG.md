@@ -108,6 +108,15 @@
     شرطة, the standard word; a hyphen inside a phone number stays silent.
     Contract ar_pack2_v110 (16); ar_pack1_v101 three cases Was (هجرية, مساء at 15-17 o'clock, owner
     set evidence; the code hyphen شرطة, owner decision). The other languages and gates are unchanged.
+- Korean fixes found against xvoice5 TN on the open set v3 (2026-10-23):
+  - 24:00 and 24:00:00 read 이십사 시 (the end of the day; the 2026-10-02 guard that kept a
+    colon that looks like a time preserved is lifted on the owner set v3, two contracts Was);
+    PM2.5 피엠 이 점 오 (capital letters before a decimal number); 2:2:1 이 대 이 대 일 (three
+    terms or more that cannot be a clock). Korean requests or Hangul sentences only.
+  - v3 ko-KR spans: dev 92.2 to 93.1%, test 93.7 to 94.3%; owner set ko-KR dev 96.2 to 96.5%.
+    xvoice5 TN on v3: dev 74.8%, test 75.5% (80.4 / 80.8% with its sound spellings read as
+    spelled; our 22 lexicon words as its user dictionary do not raise it). docs/xvoice5-comparison.ko.md.
+    Contract ko_v3_fixes_v113 (6).
 - Arabic variants (owner decision 2026-10-23): where the Arabic brief accepts two readings and an
   author listed one, both owner sets are widened by rule in amend.tsv (the original reading kept as
   `was`, the v1 test split by the same rule): case (عشرون/عشرين, اثنان/اثنين, مئتان/مئتين, خمسا/خمس,
