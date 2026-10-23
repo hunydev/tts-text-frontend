@@ -2007,6 +2007,52 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         }
         return finish(in, s, z2, "hashtag", &it);
     }
+    /* تقرير_2026.pdf: an Arabic file name, its parts joined by _ - and digits, then .ext */
+    if (ar_at(t, n, p)) {
+        size_t y = p, a2, x2;
+        int joined = 0;
+        while (y < n && (ar_at(t, n, y) || t[y] == '_' || t[y] == '-' || digit(t[y]))) {
+            joined |= t[y] == '_' || t[y] == '-' || digit(t[y]);
+            y += ar_at(t, n, y) ? 2 : 1;
+        }
+        for (x2 = y + 1; x2 < n && alpha(t[x2]); ++x2)
+            ;
+        if (joined && y < n && t[y] == '.' && x2 - y - 1 >= 2 && x2 - y - 1 <= 4 &&
+            !(x2 < n && (digit(t[x2]) || t[x2] == '_'))) {
+            size_t z2 = p;
+            while (z2 < y) {
+                a2 = z2;
+                if (ar_at(t, n, z2)) {
+                    while (z2 < y && ar_at(t, n, z2))
+                        z2 += 2;
+                    add(&it, "W:%.*s", (int)(z2 - a2), t + a2);
+                } else if (digit(t[z2])) {
+                    while (z2 < y && digit(t[z2]))
+                        ++z2;
+                    add(&it, "No:%.*s", (int)(z2 - a2), t + a2);
+                } else {
+                    add(&it, t[z2] == '_' ? "W:شرطة سفلية" : "R:dash");
+                    ++z2;
+                }
+            }
+            add(&it, "R:dot");
+            address_items(e, &it, t + y + 1, x2 - y - 1);
+            return finish(in, s, x2, "address", &it);
+        }
+    }
+    /* .sa, .com: a top-level domain written alone */
+    if (t[p] == '.' && (!p || t[p - 1] == ' ' || (p >= 2 && has(t, n, p - 2, "و") && (p == 2 || t[p - 3] == ' '))) &&
+        p + 2 < n && alpha(t[p + 1])) {
+        size_t le = p + 1;
+        while (le < n && alpha(t[le]))
+            ++le;
+        if (le - p - 1 >= 2 && le - p - 1 <= 6 && !(le < n && (digit(t[le]) || t[le] == '_' || t[le] == '@' ||
+                                                             (t[le] == '.' && le + 1 < n && alpha(t[le + 1]))))) {
+            add(&it, "R:dot");
+            address_items(e, &it, t + p + 1, le - p - 1);
+            return finish(in, s, le, "address", &it);
+        }
+    }
     {
         size_t le;
         if (ar_at(t, n, p) && arabic_letter_name(t, n, p, &le) && (z = maths(e, t, n, p, &it)) != 0)

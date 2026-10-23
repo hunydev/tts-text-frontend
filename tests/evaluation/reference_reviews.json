@@ -2718,6 +2718,18 @@
       },
       "category_overrides": {},
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/ar_pack3_v111.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Synthetic cases authored with the Arabic pack after the owner variant decision; new sentences, not copied from the owner sets or open-tn",
+        "reason": "Project-owner decision 2026-10-23: Arabic variants widened, remaining engine fixes"
+      },
+      "category_overrides": {},
+      "case_overrides": {}
     }
   ],
   "excluded": [

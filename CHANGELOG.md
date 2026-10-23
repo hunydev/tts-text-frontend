@@ -108,6 +108,15 @@
     شرطة, the standard word; a hyphen inside a phone number stays silent.
     Contract ar_pack2_v110 (16); ar_pack1_v101 three cases Was (هجرية, مساء at 15-17 o'clock, owner
     set evidence; the code hyphen شرطة, owner decision). The other languages and gates are unchanged.
+- Arabic variants (owner decision 2026-10-23): where the Arabic brief accepts two readings and an
+  author listed one, both owner sets are widened by rule in amend.tsv (the original reading kept as
+  `was`, the v1 test split by the same rule): case (عشرون/عشرين, اثنان/اثنين, مئتان/مئتين, خمسا/خمس,
+  the accusative alif of the noun after a number), مئة/مائة, unit spelling (غرام/جرام, غيغا/جيجا),
+  دوت/نقطة in addresses and فاصلة in versions; v1 884 spans, ar-v2 348. One v1 reference error
+  (masculine numbers with سنة) gets the agreeing reading.
+  - Engine: المخرج is an ordinal cue (المخرج 4A a code), psi, a top-level domain written alone
+    (.sa, و.org), Arabic file names (تقرير_2026.pdf). Contract ar_pack3_v111 (6).
+  - Owner set ar: dev 99.2%, test 89.8%; ar-v2 99.1%. The other languages are unchanged.
 - Project-owner decisions on English readings (2026-10-22):
   - Two-digit years read in full with 00-49 in the 2000s and 50-99 in the 1900s: m/d/yy (7/4/58
     nineteen fifty eight), card expiry after exp, expires or thru and a day that cannot be one
