@@ -38,7 +38,7 @@
 {"id": "ko-counter-37", "category": "ko/counters", "text": "3 분", "expected": "삼 분", "expected_spans": [{"surface": "3 분", "semantic_type": "COUNTER"}]}
 {"id": "ko-counter-38", "category": "ko/counters", "text": "3 초", "expected": "삼 초", "expected_spans": [{"surface": "3 초", "semantic_type": "COUNTER"}]}
 {"id": "ko-quantity-scale-won", "category": "ko/quantities", "text": "3.5만원", "expected": "삼만 오천 원"}
-{"id": "ko-quantity-scale-large", "category": "ko/quantities", "text": "1.25억원", "expected": "일억 이천오백만 원"}
+{"id": "ko-quantity-scale-large", "category": "ko/quantities", "text": "1.25억원", "expected": "일 점 이오억 원", "notes": " Project-owner decision 2026-10-23 (xvoice5 comparison, open set v3): a decimal before 억/조 is read as written (3.5억 원 삼 점 오억 원, as news reads it). Was: 일억 이천오백만 원"}
 {"id": "ko-quantity-scale-negative", "category": "ko/quantities", "text": "-0.25만원", "expected": "마이너스 이천오백 원"}
 {"id": "ko-quantity-scale-spaced", "category": "ko/quantities", "text": "3천만 원", "expected": "삼천만 원"}
 {"id": "ko-quantity-won-prefix-spaced", "category": "ko/quantities", "text": "₩ 12,500", "expected": "만 이천오백 원"}

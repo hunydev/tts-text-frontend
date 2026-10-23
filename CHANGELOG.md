@@ -108,6 +108,23 @@
     شرطة, the standard word; a hyphen inside a phone number stays silent.
     Contract ar_pack2_v110 (16); ar_pack1_v101 three cases Was (هجرية, مساء at 15-17 o'clock, owner
     set evidence; the code hyphen شرطة, owner decision). The other languages and gates are unchanged.
+- Korean project-owner decisions after the xvoice5 comparison (2026-10-23):
+  - Ranges: a native first number keeps its unit (2~4시간 두 시간에서 네 시간; was 둘에서 네 시간),
+    a Sino one stays bare (2~4층 이에서 사 층); a prefixed unit keeps its prefix at both ends and
+    the unit once (60~70℃ 섭씨 육십에서 섭씨 칠십 도, 2~3 mph 시속 이에서 시속 삼 마일). Adjacent
+    contraction stays (40~50분 사오십 분).
+  - 석 (up to ten) and 문항 count natively (2석 두 석, 15문항 열다섯 문항); 평 stays Sino.
+  - A decimal before one scale word is read as written (1.25만 일 점 이오만, 3.5억 원 삼 점 오억 원,
+    -4.5조); won in 만 (3.5만 원) and three decimals or more (1.001만 원) keep the sum; ranges
+    keep the sum (1~1.5만 원). Port numbers stay digit by digit.
+  - An IP address reads its zero 공; go and or before .kr are spelled (지오, 오알); weather 웨더;
+    court case numbers read the year and the number (2025타경10492 이천이십오 타경 만 사백구십이).
+  - Contracts Was: cases, counter_frequency_v22, identifier_fallback_v22, ko_control_ignore_v24,
+    ko_identifier_shapes_v23, ko_range_reading_v24 (one each), electronic_v21 (two), typed_controls_v22
+    (one); 24:00 is no longer the invalid-time example (25:00 in help.json and the typed-control
+    test). New contract ko_owner_dec_v114 (10). v3 widened for 50번째 (쉰/오십 번째).
+  - v3 ko-KR: dev 94.0%, test 94.6%; owner set ko-KR dev 96.6%, test 92.1%; Korean quick loses
+    one sentence whose reference reads 12~15살 열둘에서 열다섯 살. Other languages unchanged.
 - Korean fixes found against xvoice5 TN on the open set v3 (2026-10-23):
   - 24:00 and 24:00:00 read 이십사 시 (the end of the day; the 2026-10-02 guard that kept a
     colon that looks like a time preserved is lifted on the owner set v3, two contracts Was);

@@ -1137,6 +1137,14 @@ classifier_priority	ko-KR	ko:zero-number	10
 # Open set v3 (2026-10-23): 24:00 이십사 시, PM2.5 피엠 이 점 오
 classifier_priority	ko-KR	ko:clock-24	10
 classifier_priority	ko-KR	ko:letters-decimal	10
+classifier_priority	ko-KR	ko:court-case	10
+# 2석 두 석, 15문항 열다섯 문항 (project-owner decision 2026-10-23, open set v3); seats past ten
+# (의석 35석) stay Sino
+counter	ko-KR	석	native
+counter_native_max	ko-KR	석	10
+numeric_suffix	*	석	COUNTER:석
+counter	ko-KR	문항	native
+numeric_suffix	*	문항	COUNTER:문항
 classifier_priority	ko-KR	ko:resolution	10
 classifier_priority	ko-KR	ko:date-range	10
 classifier_priority	ko-KR	ko:blood-pressure	10

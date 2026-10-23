@@ -180,6 +180,18 @@ static ttf_status_t cardinal(const ttf_engine_t *e, const char *value, ttf_buffe
     size_t n = 0, start, groups, i;
     static const char *const powers[] = {"",   "만", "억", "조", "경", "해",
                                          "자", "양", "구", "간", "정"};
+    const char *exponent = strchr(value, 'e');
+    if (exponent) {
+        /* 1.25e4 일 점 이오만: a written decimal before its scale word (written_scale) */
+        char mantissa[TTF_IR_VALUE_SIZE], key[16];
+        unsigned power = (unsigned)atoi(exponent + 1);
+        if ((size_t)(exponent - value) >= sizeof(mantissa) || power < 4 || power > 16 || power % 4)
+            return TTF_EINVAL;
+        (void)snprintf(mantissa, sizeof(mantissa), "%.*s", (int)(exponent - value), value);
+        TRY(cardinal(e, mantissa, out));
+        (void)snprintf(key, sizeof(key), "10^%u", power);
+        return ttf_buffer_puts(out, resource(e, "magnitude", key, powers[power / 4]));
+    }
     if (*p == '-') {
         TRY(ttf_buffer_puts(out, resource(e, "number", "negative", "마이너스 ")));
         ++p;
@@ -889,7 +901,13 @@ static ttf_status_t dotted_numbers(const ttf_engine_t *e, const ttf_semantic_t *
                         ? TTF_SEM_DIGIT_SEQUENCE
                         : TTF_SEM_CARDINAL;
         memcpy(part.value, surface + at, end - at);
-        if ((status = verbalize(e, &part, surface + at, end - at, out)) != TTF_OK)
+        /* 10.20.30.45 일공 점 이공: an IP address reads its zero 공, as codes do
+           (project-owner decision 2026-10-23) */
+        if (s->type == TTF_SEM_IP_ADDRESS && part.type == TTF_SEM_DIGIT_SEQUENCE)
+            status = digits(e, part.value, 1, out);
+        else
+            status = verbalize(e, &part, surface + at, end - at, out);
+        if (status != TTF_OK)
             return status;
         at = end;
         if (at < length) {
@@ -1088,10 +1106,11 @@ static ttf_status_t range_first_bare(const ttf_engine_t *e, const ttf_semantic_t
     /* 2~4.1배 이에서 사 점 일 배: the second endpoint past the native limit makes the range Sino. */
     if (max && (strchr(s->secondary, '.') || strlen(s->secondary) > 2 || atoi(s->secondary) > atoi(max)))
         return cardinal(e, s->value, out);
+    /* 2~4시간 두 시간에서 네 시간: a native first number keeps its unit, a Sino one stays
+       bare (2~4층 이에서 사 층) (project-owner decision 2026-10-23; was 둘에서 네 시간) */
     if (native_endpoint(e, endpoint) && endpoint->type == TTF_SEM_COUNTER &&
-        plain_integer(s->value, &value) && value <= 99 &&
-        standalone_native(e, s->value, out) == TTF_OK)
-        return TTF_OK;
+        plain_integer(s->value, &value) && value <= 99)
+        return verbalize(e, endpoint, surface, length, out);
     return cardinal(e, s->value, out);
 }
 /* U+20A9: 유 플러스 이공에이구. The hex digits are spelled and 0 reads 공, as in
@@ -1166,6 +1185,19 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
                 term = colon + 1;
                 colon = strchr(term, ':');
             }
+        }
+        if (!strcmp(s->rule, "ko:court-case")) {
+            /* 이천이십오 타경 만 사백구십이 */
+            const char *colon = strchr(s->value, ':');
+            char year[8];
+            if (!colon || colon - s->value != 4)
+                return TTF_EINVAL;
+            (void)snprintf(year, sizeof(year), "%.4s", s->value);
+            TRY(cardinal(e, year, out));
+            TRY(ttf_buffer_puts(out, " "));
+            TRY(ttf_buffer_puts(out, s->secondary));
+            TRY(ttf_buffer_puts(out, " "));
+            return cardinal(e, colon + 1, out);
         }
         if (!strcmp(s->rule, "ko:letters-decimal")) {
             /* 피엠 이 점 오 */
@@ -1593,7 +1625,12 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             repeat_unit = 0;
         /* 3개~4개 keeps both written units (세 개에서 네 개); only a unit written
            once, after the second number, is shared by the range. */
-        /* A prefixed unit (시속 삼 마일) keeps its reading at both ends. */
+        /* A prefixed unit (섭씨, 시속) keeps its prefix at both ends and its unit once:
+           섭씨 육십에서 섭씨 칠십 도 (project-owner decision 2026-10-23; was 섭씨 육십 도에서
+           섭씨 칠십 도). Below zero keeps both readings. */
+        int prefixed = s->unit[0] && *resource(e, "quantity_prefix", s->unit, "") &&
+                       range_unit_shared(surface, length) && endpoint.type != TTF_SEM_ORDINAL &&
+                       !below_zero(e, s) && s->secondary[0] != '-';
         if (!range_unit_shared(surface, length) || endpoint.type == TTF_SEM_ORDINAL ||
             (s->unit[0] && *resource(e, "quantity_prefix", s->unit, "")))
             repeat_unit = 1;
@@ -1603,7 +1640,10 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             return TTF_OK;
         if (unit_repeat && !strcmp(unit_repeat, "wide"))
             repeat_unit = 1;
-        if (repeat_unit || !s->unit[0] || !strcmp(s->unit, "time"))
+        if (prefixed) {
+            TRY(ttf_buffer_puts(out, resource(e, "quantity_prefix", s->unit, "")));
+            TRY(cardinal(e, s->value, out));
+        } else if (repeat_unit || !s->unit[0] || !strcmp(s->unit, "time"))
             TRY(verbalize(e, &endpoint, surface, length, out));
         else
             TRY(range_first_bare(e, s, &endpoint, surface, length, out));
@@ -2263,6 +2303,45 @@ static size_t compound_amount(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     }
     return classified(in, s, end, type,
                       type == TTF_SEM_CURRENCY ? "ko:compound-currency" : "ko:compound-number");
+}
+
+/* 1.25만 일 점 이오만, -4.5조 마이너스 사 점 오조, 3.5억 원 삼 점 오억 원: a decimal before
+   one scale word is read as written, as news reading does (project-owner decision
+   2026-10-23, open set v3; was 만 이천오백); 3.5만 원 and 1.001만 keep their sum. The value keeps the scale as an exponent
+   (1.25e4) for cardinal(); ranges and several groups (1.5억 3천만) keep the exact sum. */
+static void written_scale(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    static const char *const words[] = {"만", "억", "조", "경"};
+    const char *t = in->text;
+    size_t n = in->length, p = in->tokens[in->index].begin, a, b, c, k, w = 0;
+    char v[TTF_IR_VALUE_SIZE];
+    if (s->type != TTF_SEM_CARDINAL && s->type != TTF_SEM_CURRENCY && s->type != TTF_SEM_COUNTER &&
+        s->type != TTF_SEM_MEASURE)
+        return;
+    a = p + (p < n && (t[p] == '-' || t[p] == '+'));
+    for (b = a; b < n && t[b] >= '0' && t[b] <= '9'; ++b)
+        ;
+    if (b == a || b + 1 >= n || t[b] != '.' || !(t[b + 1] >= '0' && t[b + 1] <= '9'))
+        return;
+    for (c = ++b; b < n && t[b] >= '0' && t[b] <= '9'; ++b)
+        ;
+    if (b - c > 2)
+        return; /* 1.001만 원 만 십 원: an exact amount keeps its sum */
+    for (k = 0; k < 4; ++k) {
+        w = strlen(words[k]);
+        if (b + w <= n && !memcmp(t + b, words[k], w))
+            break;
+    }
+    if (k == 4)
+        return;
+    for (c = b + w; c < n && t[c] == ' '; ++c)
+        ;
+    if ((c < n && t[c] >= '0' && t[c] <= '9') || b - p + 4 >= sizeof(v))
+        return;
+    /* 3.5만 원 삼만 오천 원: an amount of won in 만 is said as its sum */
+    if (!k && c + strlen("원") <= n && !memcmp(t + c, "원", strlen("원")))
+        return;
+    (void)snprintf(v, sizeof(v), "%.*se%u", (int)(b - p), t + p, (unsigned)(4 * (k + 1)));
+    (void)snprintf(s->value, sizeof(s->value), "%s", v);
 }
 
 /* Scaled Korean currency endpoints reuse the exact compound arithmetic above.
@@ -3059,6 +3138,44 @@ static size_t quarter(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     return i - in->index;
 }
 
+/* 2025타경10492 이천이십오 타경 만 사백구십이: a court case number, a year, the case type and
+   the case number read as numbers (project-owner decision 2026-10-23). */
+static size_t court_case(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    static const char *const types = "타경|타채|가합|가단|가소|고합|고단|고정|구합|구단|드합|드단|카합|카단|"
+                                     "헌마|헌바|헌가|노|도|누|두|나|다|머|브|스|르";
+    const char *t = in->text;
+    size_t n = in->length, p = in->tokens[in->index].begin, q, z;
+    char v[32];
+    if (p + 4 >= n || (p && ko_digit(t[p - 1])))
+        return 0;
+    for (q = p; q < n && ko_digit(t[q]); ++q)
+        ;
+    if (q - p != 4 || !(t[p] == '1' || t[p] == '2'))
+        return 0;
+    {
+        const char *w = types;
+        size_t m = 0;
+        while (*w) {
+            size_t len = strcspn(w, "|");
+            if (q + len < n && !memcmp(t + q, w, len) && ko_digit(t[q + len])) {
+                m = len;
+                break;
+            }
+            w += len + (w[len] == '|');
+        }
+        if (!m)
+            return 0;
+        for (z = q + m; z < n && ko_digit(t[z]); ++z)
+            ;
+        if (z - q - m > 7 || (z < n && (ko_digit(t[z]) || t[z] == '-' || t[z] == '.')))
+            return 0;
+        (void)snprintf(v, sizeof(v), "%.*s:%.*s", (int)(q - p), t + p, (int)(z - q - m), t + q + m);
+        z = ko_finish(in, s, z, TTF_SEM_CARDINAL, v, "", "ko:court-case");
+        (void)snprintf(s->secondary, sizeof(s->secondary), "%.*s", (int)m, t + q);
+        return z;
+    }
+}
+
 /* PM2.5 피엠 이 점 오: capital letters before a decimal number are spelled and the number is
    read in Korean (v3, 2026-10-23); PM10 stays a model name. */
 static size_t letters_decimal(const ttf_pack_input_t *in, ttf_semantic_t *s) {
@@ -3097,7 +3214,7 @@ static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         return identifier;
     if ((identifier = short_dotted_date(in, s)) != 0 || (identifier = quarter(in, s)) != 0 ||
         (identifier = owner_forms(in, s)) != 0 || (identifier = owner_forms5(in, s)) != 0 ||
-        (identifier = letters_decimal(in, s)) != 0)
+        (identifier = letters_decimal(in, s)) != 0 || (identifier = court_case(in, s)) != 0)
         return identifier;
     identifier = ttf_ko_classify_basement(in, s);
     if (identifier)
@@ -3186,7 +3303,10 @@ static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     p = compound_currency_range(in, s);
     if (p)
         return p;
-    return compound_amount(in, s);
+    p = compound_amount(in, s);
+    if (p)
+        written_scale(in, s);
+    return p;
 }
 
 static int script_score(ttf_script_t script) {

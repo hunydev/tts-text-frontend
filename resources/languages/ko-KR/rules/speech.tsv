@@ -377,6 +377,9 @@ speech_symbol	ko-KR	㈛	하
 # spelled as e-mail and URL labels: an account name must survive exactly (2026-10-12).
 address_spelled	ko-KR	alex	1
 address_spelled	ko-KR	john	1
+# go.kr 지오, or.kr 오알: the second-level labels of .kr are spelled (2026-10-23)
+address_spelled	ko-KR	go	1
+address_spelled	ko-KR	or	1
 address_spelled	ko-KR	david	1
 address_spelled	ko-KR	william	1
 address_spelled	ko-KR	thomas	1
@@ -476,6 +479,7 @@ electronic_word	ko-KR	service	서비스
 electronic_word	ko-KR	sales	세일즈
 electronic_word	ko-KR	team	팀
 electronic_word	ko-KR	web	웹
+electronic_word	ko-KR	weather	웨더
 electronic_word	ko-KR	app	앱
 electronic_word	ko-KR	store	스토어
 electronic_word	ko-KR	market	마켓
