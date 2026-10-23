@@ -106,7 +106,8 @@ cases = [
     (
         "ko-KR",
         "속도는 2~3 mph입니다.",
-        "속도는 시속 이 마일에서 시속 삼 마일입니다.",
+        # 2026-10-23 owner decision: the prefix at both ends, the unit once (was 시속 이 마일에서 시속 삼 마일)
+        "속도는 시속 이에서 시속 삼 마일입니다.",
         "2~3 mph",
         "mph",
     ),
