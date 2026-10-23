@@ -67,11 +67,13 @@
 22/7	칠 분의 이십이
 3.5만원	삼만 오천 원
 3.5만원입니다.	삼만 오천 원입니다.
-1.25억원	일억 이천오백만 원
+# 2026-10-23 (project-owner decision, open set v3): a decimal before 억/조, or before 만 that is not
+# won, is read as written (was 일억 이천오백만 원, 삼만 오천); won in 만 and three decimals keep the sum.
+1.25억원	일 점 이오억 원
 12,500만원	일억 이천오백만 원
 3천만 원	삼천만 원
 2억명	이억 명
-3.5만	삼만 오천
+3.5만	삼 점 오만
 -0.25만원	마이너스 이천오백 원
 1.001만원	만 십 원
 2조원	이조 원
@@ -99,8 +101,8 @@
 # A scale prefix inside an ordinary word is not arithmetic.
 1.5천국	일 점 오천국
 3만들기	삼만들기
-3.5만입니다.	삼만 오천입니다.
-3.5만에 도착합니다.	삼만 오천에 도착합니다.
+3.5만입니다.	삼 점 오만입니다.
+3.5만에 도착합니다.	삼 점 오만에 도착합니다.
 
 # Exact compound amounts: one semantic currency, descending scale groups.
 1억2천3백만원	일억 이천삼백만 원

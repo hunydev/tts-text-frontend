@@ -179,7 +179,7 @@
           "syntax": "[[…]]{@ip}",
           "meaning": "IP 주소",
           "example": "[[192.168.0.1]]{@ip}",
-          "output": "일구이 점 일육팔 점 영 점 일"
+          "output": "일구이 점 일육팔 점 공 점 일"
         },
         {
           "syntax": "[[…]]{@address}",

@@ -12,7 +12,8 @@ library, resources = [Path(x).resolve() for x in sys.argv[1:]]
 corpus = ROOT/'tests/evaluation/typed_controls_v22.jsonl'
 # 2026-09-30 (v0.24): range rows follow the range-reading decision.
 # 2026-10-02: {@digits} reads 0 as 공 (typed-digits-ko, typed-atom).
-assert hashlib.sha256(corpus.read_bytes()).hexdigest() == '6a954c253e351916b23ac28ff22759bb9f9a6ccdbf35a724ffff99acf0e7efd1'
+# 2026-10-23: an IP address reads 0 as 공 (typed-ip-ko; project-owner decision).
+assert hashlib.sha256(corpus.read_bytes()).hexdigest() == '321b03939290f8ec1e2ff52660f1ed5c3f1b79aa8e14b7af76f305edeb6a1eaf'
 rows = [json.loads(x) for x in corpus.read_text().splitlines()]
 rng = random.Random(20260928)
 checks = 0
@@ -79,7 +80,7 @@ long = '漢🙂'*100
 check('[['+long+']]{@preserve}',long)
 check('가[['+long+']]{@skip}나','가나')
 check('[[2000-02-29]]{@date}','이천 년 이 월 이십구 일')
-check('[[255.000.0.1]]{@ip}','이오오 점 영영영 점 영 점 일')
+check('[[255.000.0.1]]{@ip}','이오오 점 공공공 점 공 점 일')  # 2026-10-23: IP zero 공 (was 영)
 check('[[v2.1.3]]{@version}','브이 이 점 일 점 삼')
 check('[[12,500.50]]{@decimal}','만 이천오백 점 오영')
 # {@digits} reads 0 as 공 since 2026-10-02 (number digits_zero; was 영).
