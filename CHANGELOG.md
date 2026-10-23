@@ -108,6 +108,14 @@
     شرطة, the standard word; a hyphen inside a phone number stays silent.
     Contract ar_pack2_v110 (16); ar_pack1_v101 three cases Was (هجرية, مساء at 15-17 o'clock, owner
     set evidence; the code hyphen شرطة, owner decision). The other languages and gates are unchanged.
+- Korean superscript powers (project-owner request 2026-10-23; the superscript was passed through):
+  3²=9 삼의 제곱은 구, 10³=1000 십의 세제곱은 천, 2¹⁰ 이의 십제곱, 10⁻⁶ 십의 마이너스 육제곱,
+  x²+y²=z² 엑스 제곱 더하기 와이 제곱은 제트 제곱; a power left after a Latin letter or digit
+  reads 제곱 (mc² 엠씨 제곱); superscripts alone (¹²³, 각주¹) stay. Korean requests or Hangul
+  sentences only. Contract ko_superscript_v115 (7); unit_symbol_v21 one case Was (1² 일의 제곱).
+  v3 ko-KR dev 94.4% (math 17 to 23 of 25), owner set ko-KR dev 96.9%.
+- Speed against xvoice5 TN (docs/xvoice5-comparison.ko.md): engine load 45 ms against 161 ms;
+  per sentence 2.4-2.9 ms against 1.0-1.4 ms on the v3 sentences (TTF varies 1.2-3.2 ms by run).
 - Korean project-owner decisions after the xvoice5 comparison (2026-10-23):
   - Ranges: a native first number keeps its unit (2~4시간 두 시간에서 네 시간; was 둘에서 네 시간),
     a Sino one stays bare (2~4층 이에서 사 층); a prefixed unit keeps its prefix at both ends and

@@ -2754,6 +2754,18 @@
       },
       "category_overrides": {},
       "case_overrides": {}
+    },
+    {
+      "path": "tests/evaluation/ko_superscript_v115.jsonl",
+      "format": "jsonl",
+      "default": {
+        "classification": "reference-policy",
+        "review_status": "pending-independent-review",
+        "reference_source": "Synthetic cases authored after the xvoice5 comparison on the open set v3; new sentences, not copied from v3 or the other owner sets",
+        "reason": "Project-owner request 2026-10-23: superscript powers are read, not passed through"
+      },
+      "category_overrides": {},
+      "case_overrides": {}
     }
   ],
   "excluded": [

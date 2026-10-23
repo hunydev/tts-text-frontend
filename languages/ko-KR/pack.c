@@ -774,6 +774,7 @@ static ttf_status_t expression_side(const ttf_engine_t *e, const char *value, si
                                     ttf_buffer_t *out) {
     size_t at = 0;
     ttf_status_t st;
+    int letter = 0;
     while (at < length) {
         char part[48];
         size_t end = at;
@@ -783,8 +784,32 @@ static ttf_status_t expression_side(const ttf_engine_t *e, const char *value, si
             return TTF_EINVAL;
         memcpy(part, value + at, end - at);
         part[end - at] = 0;
+        if (part[0] == '^' && part[1]) {
+            /* 3² 삼의 제곱, 10³ 십의 세제곱, 2¹⁰ 이의 십제곱, a² 에이 제곱: the power of the operand
+               before it (owner request 2026-10-23; the superscript was passed through) */
+            const char *power = part + 1;
+            /* a power alone (ko:trailing-power) follows a word already read: 엑스 제곱 */
+            TRY(ttf_buffer_puts(out, letter || !at ? " " : "의 "));
+            if (!strcmp(power, "2"))
+                st = ttf_buffer_puts(out, resource(e, "math_power", "2", "제곱"));
+            else if (!strcmp(power, "3"))
+                st = ttf_buffer_puts(out, resource(e, "math_power", "3", "세제곱"));
+            else {
+                if (*power == '-') {
+                    TRY(ttf_buffer_puts(out, resource(e, "number", "negative", "마이너스 ")));
+                    ++power;
+                }
+                TRY(cardinal(e, power, out));
+                st = ttf_buffer_puts(out, resource(e, "math_power", "n", "제곱"));
+            }
+            if (st != TTF_OK)
+                return st;
+            at = end < length ? end + 1 : end;
+            continue;
+        }
         if (at && (st = ttf_buffer_puts(out, " ")) != TTF_OK)
             return st;
+        letter = !part[1] && ((part[0] >= 'a' && part[0] <= 'z') || (part[0] >= 'A' && part[0] <= 'Z'));
         if ((part[0] >= '0' && part[0] <= '9') || (part[0] == '-' && part[1]))
             st = expression_number(e, part, out);
         else if (!part[1] &&
@@ -3138,6 +3163,116 @@ static size_t quarter(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     return i - in->index;
 }
 
+/* A superscript digit or minus at t: its ASCII character and byte width, else 0. */
+static size_t superscript_at(const char *t, size_t n, size_t q, char *c) {
+    const unsigned char *u = (const unsigned char *)t + q;
+    if (q + 2 <= n && u[0] == 0xC2 && (u[1] == 0xB9 || u[1] == 0xB2 || u[1] == 0xB3)) {
+        *c = u[1] == 0xB9 ? '1' : u[1] == 0xB2 ? '2' : '3';
+        return 2;
+    }
+    if (q + 3 <= n && u[0] == 0xE2 && u[1] == 0x81 && (u[2] == 0xB0 || (u[2] >= 0xB4 && u[2] <= 0xB9) || u[2] == 0xBB)) {
+        *c = u[2] == 0xB0 ? '0' : u[2] == 0xBB ? '-' : (char)('4' + u[2] - 0xB4);
+        return 3;
+    }
+    return 0;
+}
+/* 3²=9 삼의 제곱은 구, a²+b²=c², 2¹⁰=1024, 10³: numbers and single letters with superscript
+   powers, joined by operators, read as an expression (owner request 2026-10-23). A unit (5m²,
+   km²) and a letter alone (x²) are not this. */
+static size_t superscript_expression(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    static const char *const ops[] = {"+", "-", "×", "÷", "*", "/", "=", "<", ">", "≤", "≥", "≠", "≈"};
+    const char *t = in->text;
+    size_t n = in->length, p = in->tokens[in->index].begin, q = p, end = p, used = 0, operands = 0, k, w;
+    int powers = 0, operators = 0, number_base = 0;
+    char v[TTF_IR_VALUE_SIZE], c;
+    if (p >= n || (p && ((t[p - 1] >= 'a' && t[p - 1] <= 'z') || (t[p - 1] >= 'A' && t[p - 1] <= 'Z') ||
+                          ko_digit(t[p - 1]) || t[p - 1] == '.')))
+        return 0;
+    for (;;) {
+        size_t a = q;
+        if (q < n && ko_digit(t[q])) {
+            while (q < n && ko_digit(t[q]))
+                ++q;
+            if (q + 1 < n && t[q] == '.' && ko_digit(t[q + 1]))
+                for (++q; q < n && ko_digit(t[q]); ++q)
+                    ;
+            number_base |= operands == 0;
+        } else if (q < n && ((t[q] >= 'a' && t[q] <= 'z') || (t[q] >= 'A' && t[q] <= 'Z')) &&
+                   !(q + 1 < n && ((t[q + 1] >= 'a' && t[q + 1] <= 'z') || (t[q + 1] >= 'A' && t[q + 1] <= 'Z') ||
+                                   ko_digit(t[q + 1]))))
+            ++q;
+        else
+            return 0;
+        if (used + (q - a) + 2 >= sizeof(v))
+            return 0;
+        if (used)
+            v[used++] = ' ';
+        memcpy(v + used, t + a, q - a);
+        used += q - a;
+        ++operands;
+        if (superscript_at(t, n, q, &c)) {
+            if (used + 2 >= sizeof(v))
+                return 0;
+            v[used++] = ' ';
+            v[used++] = '^';
+            while ((w = superscript_at(t, n, q, &c)) != 0 && used + 1 < sizeof(v)) {
+                v[used++] = c;
+                q += w;
+            }
+            ++powers;
+        }
+        end = q;
+        while (q < n && t[q] == ' ')
+            ++q;
+        for (k = 0; k < sizeof(ops) / sizeof(*ops); ++k)
+            if (q + strlen(ops[k]) <= n && !memcmp(t + q, ops[k], strlen(ops[k])))
+                break;
+        if (k == sizeof(ops) / sizeof(*ops))
+            break;
+        w = strlen(ops[k]);
+        {
+            size_t r = q + w;
+            while (r < n && t[r] == ' ')
+                ++r;
+            if (!(r < n && (ko_digit(t[r]) || (t[r] >= 'a' && t[r] <= 'z') || (t[r] >= 'A' && t[r] <= 'Z'))))
+                break;
+            if (used + w + 2 >= sizeof(v))
+                return 0;
+            v[used++] = ' ';
+            memcpy(v + used, ops[k], w);
+            used += w;
+            ++operators;
+            q = r;
+        }
+    }
+    if (!powers || (!operators && !number_base) || !korean_context(in) ||
+        (end < n && ((t[end] >= 'a' && t[end] <= 'z') || (t[end] >= 'A' && t[end] <= 'Z') || ko_digit(t[end]) ||
+                     (t[end] == '.' && end + 1 < n && ko_digit(t[end + 1])))))
+        return 0;
+    v[used] = '\0';
+    return ko_finish(in, s, end, TTF_SEM_SYMBOL, v, "@expression", "ko:superscript-expression");
+}
+
+/* x², mc², km²: a superscript power right after a Latin letter or digit that no grammar took
+   reads 제곱 (2026-10-23; was passed through). Superscripts written alone (¹²³, 각주¹) stay. */
+static size_t trailing_power(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    const char *t = in->text;
+    size_t n = in->length, p = in->tokens[in->index].begin, q = p, w, used = 0;
+    char power[8], c, v[48];
+    if (!p || !((t[p - 1] >= 'a' && t[p - 1] <= 'z') || (t[p - 1] >= 'A' && t[p - 1] <= 'Z') || ko_digit(t[p - 1])) ||
+        !korean_context(in))
+        return 0;
+    while ((w = superscript_at(t, n, q, &c)) != 0 && used + 1 < sizeof(power)) {
+        power[used++] = c;
+        q += w;
+    }
+    if (!used || (q < n && superscript_at(t, n, q, &c)))
+        return 0;
+    power[used] = '\0';
+    (void)snprintf(v, sizeof(v), "^%s", power);
+    return ko_finish(in, s, q, TTF_SEM_SYMBOL, v, "@expression", "ko:trailing-power");
+}
+
 /* 2025타경10492 이천이십오 타경 만 사백구십이: a court case number, a year, the case type and
    the case number read as numbers (project-owner decision 2026-10-23). */
 static size_t court_case(const ttf_pack_input_t *in, ttf_semantic_t *s) {
@@ -3214,7 +3349,8 @@ static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         return identifier;
     if ((identifier = short_dotted_date(in, s)) != 0 || (identifier = quarter(in, s)) != 0 ||
         (identifier = owner_forms(in, s)) != 0 || (identifier = owner_forms5(in, s)) != 0 ||
-        (identifier = letters_decimal(in, s)) != 0 || (identifier = court_case(in, s)) != 0)
+        (identifier = letters_decimal(in, s)) != 0 || (identifier = court_case(in, s)) != 0 ||
+        (identifier = superscript_expression(in, s)) != 0 || (identifier = trailing_power(in, s)) != 0)
         return identifier;
     identifier = ttf_ko_classify_basement(in, s);
     if (identifier)
