@@ -7,9 +7,18 @@ static size_t rules(const ttf_engine_t *e) {
     for (p = e->rules; p; p = p->rule_next) ++n;
     return n;
 }
+/* exact and pattern rows live in their own table (2026-10-25) */
+static size_t rule_rows(const ttf_engine_t *e) {
+    size_t i, n = 0;
+    for (i = 0; e->rule_table && i < e->rule_buckets; ++i) {
+        const ttf_entry_t *p;
+        for (p = e->rule_table[i]; p; p = p->next) ++n;
+    }
+    return n;
+}
 static size_t common_rows(const ttf_engine_t *e) {
     size_t i, n = 0;
-    for (i = 0; i < TTF_RESOURCE_BUCKETS; ++i) {
+    for (i = 0; i < ttf_buckets(e); ++i) {
         const ttf_entry_t *p;
         for (p = e->resources[i]; p; p = p->next) ++n;
     }
@@ -29,7 +38,7 @@ static int checked_freeze(ttf_engine_t *e, size_t added) {
     ttf_resource_validation_report_init(&before);
     ttf_resource_validation_report_init(&after);
     CHECK(ttf_engine_validate_resources(e, &before, NULL) == TTF_OK);
-    for (i = 0; i < TTF_RESOURCE_BUCKETS; ++i) {
+    for (i = 0; i < ttf_buckets(e); ++i) {
         const ttf_entry_t *p;
         for (p = e->resources[i]; p; p = p->next) {
             saved[at].entry = p;
@@ -44,7 +53,7 @@ static int checked_freeze(ttf_engine_t *e, size_t added) {
     CHECK(index && common_rows(e) == ordinary);
     CHECK(ttf_engine_freeze(e) == TTF_OK && e->cjk == index);
     CHECK(ttf_engine_validate_resources(e, &after, NULL) == TTF_OK);
-    CHECK(before.records == n && after.records == n + added);
+    CHECK(before.records == n + rule_rows(e) && after.records == n + rule_rows(e) + added);
     CHECK(before.validated_records + added == after.validated_records);
     CHECK(before.unvalidated_records == after.unvalidated_records);
     for (i = 0; i < n; ++i) {
