@@ -22,12 +22,62 @@ static size_t pattern_match(const char *pattern, const char *text, size_t n, siz
     *specificity = s;
     return i;
 }
+/* The exact rules whose key is text[0, len) for lang or `*`, then the rule list (patterns
+   and long exact keys): the matching rules in turn, through *cursor (2026-10-25: a million
+   exact rules scanned in a list took seconds a sentence). */
+typedef struct {
+    const ttf_entry_t *chain;
+    uint64_t lengths;
+    size_t len, pass;
+    const char *lang;
+    char key[64];
+    int listed;
+} rule_cursor_t;
+static const ttf_entry_t *next_rule(const ttf_engine_t *e, const char *text, size_t n, rule_cursor_t *c) {
+    for (;;) {
+        if (c->listed)
+            return c->chain ? (c->chain = c->chain->rule_next, c->chain) : NULL;
+        while (c->chain) {
+            const ttf_entry_t *p = c->chain;
+            c->chain = p->next;
+            if (!strcmp(p->kind, "exact") && !strcmp(p->key, c->key) &&
+                !strcmp(p->lang, c->pass ? "*" : c->lang))
+                return p;
+        }
+        if (!c->pass && strcmp(c->lang, "*")) {
+            c->pass = 1;
+            c->chain = ttf_resource_chain(e, ttf_entry_hash("exact", "*", c->key));
+            continue;
+        }
+        do
+            ++c->len;
+        while (c->len < 63 && c->len <= n && !((c->lengths >> c->len) & 1));
+        if (c->len >= 63 || c->len > n) {
+            c->listed = 1;
+            c->chain = e->rules;
+            return c->chain;
+        }
+        memcpy(c->key, text, c->len);
+        c->key[c->len] = 0;
+        c->pass = 0;
+        c->chain = ttf_resource_chain(e, ttf_entry_hash("exact", c->lang, c->key));
+    }
+}
 const ttf_entry_t *ttf_rule_match(const ttf_engine_t *e, const char *lang, const char *text,
                                   size_t n, size_t *length) {
     const ttf_entry_t *best = NULL, *p;
     size_t best_len = 0, best_spec = 0;
     int best_exact = 0;
-    for (p = e->rules; p; p = p->rule_next) {
+    rule_cursor_t cursor;
+    memset(&cursor, 0, sizeof(cursor));
+    cursor.lang = lang;
+    cursor.lengths = e->rules_indexed ? ttf_resource_key_lengths(e, "exact", lang) : 0;
+    cursor.pass = 1; /* the first call moves to the first key length */
+    if (!e->rules_indexed) {
+        cursor.listed = 1;
+        cursor.chain = e->rules;
+    }
+    for (p = cursor.listed ? e->rules : next_rule(e, text, n, &cursor); p; p = next_rule(e, text, n, &cursor)) {
         size_t len, spec;
         int exact = !strcmp(p->kind, "exact");
         if (strcmp(p->lang, "*") && strcmp(p->lang, lang))

@@ -21,7 +21,7 @@ static inline ttf_script_t ttf_script_legacy(ttf_script_t script) {
    engine keeps it on the heap so request views copy one pointer. 2026-10-24:
    the lookups were 93% of the run time again; with about 43k rows, 65521 buckets
    keep a chain near one row and the stored hash skips the string compares. */
-#define TTF_RESOURCE_BUCKETS 65521
+#define TTF_RESOURCE_BUCKETS 65521 /* the starting size; freeze grows it with the rows */
 #define TTF_PHRASE_WORDS 8
 #define TTF_PHRASE_INPUT 255
 
@@ -47,7 +47,7 @@ typedef struct ttf_entry {
 /* Owner of the detached CJK rows; word buckets only borrow entry pointers.
    Request-local engine views copy this pointer, never the bucket arrays. */
 typedef struct {
-    ttf_entry_t *resources[TTF_RESOURCE_BUCKETS];
+    ttf_entry_t **resources; /* the owner's bucket count (ttf_buckets) */
     ttf_entry_t *words[TTF_HASH_BUCKETS];
     size_t max_length;
 } ttf_cjk_index_t;
@@ -84,7 +84,20 @@ struct ttf_engine {
     const ttf_resource_validator_t *validators[TTF_MAX_RESOURCE_VALIDATORS];
     size_t validator_count;
     size_t builtin_validators; /* engine and pack validators; a row check is reused only with no others */
-    ttf_entry_t **resources; /* TTF_RESOURCE_BUCKETS heads, allocated on first insert */
+    ttf_entry_t **resources; /* ttf_buckets(e) heads, allocated on first insert */
+    /* The bucket count: 0 (a staging engine) is TTF_RESOURCE_BUCKETS; freeze grows it
+       to the row count so a dictionary of a million rows keeps chains short
+       (2026-10-25). */
+    size_t resource_buckets;
+    /* Freeze indexes `exact` rules by hash (rule.c); e->rules then holds only patterns
+       and exact keys of 63 bytes or more. */
+    int rules_indexed;
+    /* exact and pattern rows live in their own table from their first insert, so a
+       dictionary of a million rules does not slow every other lookup or the freeze passes
+       (2026-10-25). Its TTF_RULE_BUCKETS heads are one sparse calloc: untouched pages cost
+       no memory. Freeze grows it past two rows a bucket. */
+    ttf_entry_t **rule_table;
+    size_t rule_buckets, rule_rows;
     ttf_entry_t *boundary_cues;
     ttf_entry_t *rules;
     ttf_entry_t *phrases[TTF_HASH_BUCKETS];
@@ -108,6 +121,20 @@ struct ttf_kind_lengths {
    another lang, the `*` rows); every bit before freeze. */
 uint64_t ttf_resource_key_lengths(const ttf_engine_t *e, const char *kind, const char *lang);
 uint32_t ttf_kind_slot(const char *kind, const char *lang);
+static inline size_t ttf_buckets(const ttf_engine_t *e) {
+    return e->resource_buckets ? e->resource_buckets : TTF_RESOURCE_BUCKETS;
+}
+uint32_t ttf_entry_hash(const char *kind, const char *lang, const char *key);
+/* The main table's chain that holds kind/lang/key rows with this hash. */
+const ttf_entry_t *ttf_resource_chain(const ttf_engine_t *e, uint32_t hash);
+/* Grows the table to about one bucket per row (freeze; before the CJK split). */
+ttf_status_t ttf_resource_resize(ttf_engine_t *e);
+#define TTF_RULE_BUCKETS 1048573
+/* Grows e->rule_table past two rows a bucket (freeze). */
+ttf_status_t ttf_resource_resize_rules(ttf_engine_t *e);
+static inline int ttf_rule_resource_kind(const char *kind) {
+    return (kind[0] == 'e' && !strcmp(kind, "exact")) || (kind[0] == 'p' && !strcmp(kind, "pattern"));
+}
 char *ttf_strdup(const char *s);
 char *ttf_strndup(const char *s, size_t n);
 int ttf_ascii_equal(const char *a, const char *b);

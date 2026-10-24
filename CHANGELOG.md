@@ -108,6 +108,20 @@
     شرطة, the standard word; a hyphen inside a phone number stays silent.
     Contract ar_pack2_v110 (16); ar_pack1_v101 three cases Was (هجرية, مساء at 15-17 o'clock, owner
     set evidence; the code hyphen شرطة, owner decision). The other languages and gates are unchanged.
+- Large user dictionaries (project-owner request 2026-10-25), measured with a million exact rules
+  (1000000..2000000) at the user layer: before, a sentence took 3.2 s (every exact rule walked at
+  each position), freeze 3.1 s and 286 MB.
+  - exact rules are found by hash at each key length that exists (the list keeps patterns and
+    keys of 63 bytes or more); exact and pattern rows live in their own table from their first
+    insert (one sparse calloc of 1048573 heads, grown at freeze past two rows a bucket); the main
+    table grows at freeze to about one bucket per row (the bucket count is the engine's own);
+    a row and its four strings are one allocation.
+  - With the million rules: a sentence with dictionary hits 0.11-0.13 ms, other v3 sentences
+    0.28-0.31 ms (0.25-0.29 ms without the dictionary); load 0.6 s, freeze 0.35 s, 223 MB
+    (14 MB without). xvoice5 TN with the same million entries: 222 ms a sentence (it reads its
+    dictionary on every call). Outputs unchanged on 23,686 sentences in seven languages.
+  - Test large_dictionary: 300,000 rules in three customer files, 200 sentences under 30 s
+    (0.46 s now).
 - Speed (project-owner request 2026-10-24): resource lookups were 93% of the run time (gprof).
   The table has 65521 buckets (was 8191 for about 43k rows) and each row keeps its hash, compared
   before the strings; at freeze the key byte lengths of every kind and language are recorded,

@@ -8,18 +8,18 @@ static uint32_t hash_bytes(uint32_t h, const char *s) {
     }
     return h;
 }
-static uint32_t entry_hash(const char *kind, const char *lang, const char *key) {
+uint32_t ttf_entry_hash(const char *kind, const char *lang, const char *key);
+#define entry_hash ttf_entry_hash
+uint32_t ttf_entry_hash(const char *kind, const char *lang, const char *key) {
     uint32_t h = hash_bytes(2166136261u, kind);
     h = hash_bytes(h, "\t");
     h = hash_bytes(h, lang);
     h = hash_bytes(h, "\t");
     return hash_bytes(h, key);
 }
+/* A row and its four strings are one allocation (2026-10-25: a million rows took 286 MB as
+   five allocations each, and freeze walked them scattered). */
 static void entry_free(ttf_entry_t *p) {
-    free(p->kind);
-    free(p->lang);
-    free(p->key);
-    free(p->value);
     free(p);
 }
 static ttf_status_t resource_insert(ttf_engine_t *e, const char *kind, const char *lang, const char *key,
@@ -29,32 +29,50 @@ static ttf_status_t resource_insert(ttf_engine_t *e, const char *kind, const cha
     if (e->resource_order == SIZE_MAX)
         return TTF_ELIMIT;
     if (!e->resources &&
-        !(e->resources = (ttf_entry_t **)calloc(TTF_RESOURCE_BUCKETS, sizeof(*e->resources))))
+        !(e->resources = (ttf_entry_t **)calloc(ttf_buckets(e), sizeof(*e->resources))))
         return TTF_ENOMEM;
-    p = (ttf_entry_t *)calloc(1, sizeof(*p));
-    if (!p)
-        return TTF_ENOMEM;
-    p->kind = ttf_strdup(kind);
-    p->lang = ttf_strdup(lang);
-    if (!strcmp(kind, "lexicon")) {
-        ttf_status_t key_status = ttf_lexicon_canonical_key(key, &p->key);
-        if (key_status != TTF_OK) {
-            entry_free(p);
-            return key_status == TTF_EINVAL ? TTF_ERESOURCE : key_status;
+    if (ttf_rule_resource_kind(kind) && !e->rule_table) {
+        if (!(e->rule_table = (ttf_entry_t **)calloc(TTF_RULE_BUCKETS, sizeof(*e->rule_table))))
+            return TTF_ENOMEM;
+        e->rule_buckets = TTF_RULE_BUCKETS;
+    }
+    {
+        char *canonical = NULL, *at;
+        size_t kl = strlen(kind) + 1, ll = strlen(lang) + 1, keyl, vl = strlen(value) + 1;
+        if (!strcmp(kind, "lexicon")) {
+            ttf_status_t key_status = ttf_lexicon_canonical_key(key, &canonical);
+            if (key_status != TTF_OK) {
+                free(canonical);
+                return key_status == TTF_EINVAL ? TTF_ERESOURCE : key_status;
+            }
+            key = canonical;
         }
-    } else
-        p->key = ttf_strdup(key);
-    p->value = ttf_strdup(value);
+        keyl = strlen(key) + 1;
+        p = (ttf_entry_t *)calloc(1, sizeof(*p) + kl + ll + keyl + vl);
+        if (!p) {
+            free(canonical);
+            return TTF_ENOMEM;
+        }
+        at = (char *)(p + 1);
+        p->kind = memcpy(at, kind, kl);
+        p->lang = memcpy(at += kl, lang, ll);
+        p->key = memcpy(at += ll, key, keyl);
+        p->value = memcpy(at + keyl, value, vl);
+        free(canonical);
+    }
     p->layer = layer;
     p->order = e->resource_order++;
-    if (!p->kind || !p->lang || !p->key || !p->value) {
-        entry_free(p);
-        return TTF_ENOMEM;
-    }
     p->hash = entry_hash(kind, lang, p->key);
-    h = p->hash % TTF_RESOURCE_BUCKETS;
-    p->next = e->resources[h];
-    e->resources[h] = p;
+    if (ttf_rule_resource_kind(kind)) {
+        h = p->hash % e->rule_buckets;
+        p->next = e->rule_table[h];
+        e->rule_table[h] = p;
+        ++e->rule_rows;
+    } else {
+        h = p->hash % ttf_buckets(e);
+        p->next = e->resources[h];
+        e->resources[h] = p;
+    }
     if (e->staging) {
         p->load_next = e->staged;
         e->staged = p;
@@ -71,8 +89,9 @@ static const ttf_entry_t *find_entry(const ttf_engine_t *e, const char *kind, co
                                      const char *key) {
     const ttf_entry_t *p, *best = NULL;
     uint32_t full = entry_hash(kind, lang, key);
-    size_t h = full % TTF_RESOURCE_BUCKETS;
-    p = e->cjk && ttf_cjk_resource_kind(kind) ? e->cjk->resources[h]
+    size_t h = full % ttf_buckets(e);
+    p = e->rule_table && ttf_rule_resource_kind(kind) ? e->rule_table[full % e->rule_buckets]
+        : e->cjk && ttf_cjk_resource_kind(kind) ? e->cjk->resources[h]
         : e->resources                         ? e->resources[h]
                                                : NULL;
     for (; p; p = p->next) {
@@ -93,6 +112,73 @@ const ttf_entry_t *ttf_resource_entry(const ttf_engine_t *e, const char *kind, c
     if (b && (!a || b->layer > a->layer))
         a = b;
     return a;
+}
+const ttf_entry_t *ttf_resource_chain(const ttf_engine_t *e, uint32_t hash) {
+    if (e->rule_table)
+        return e->rule_table[hash % e->rule_buckets];
+    return e->resources ? e->resources[hash % ttf_buckets(e)] : NULL;
+}
+static size_t table_size(size_t rows) {
+    static const size_t primes[] = {1021, 8191, 65521, 131071, 262139, 524287, 1048573, 2097143, 4194301,
+                                    8388593, 16777213, 33554393};
+    size_t i;
+    for (i = 0; i + 1 < sizeof(primes) / sizeof(*primes) && primes[i] < rows; ++i)
+        ;
+    return primes[i];
+}
+ttf_status_t ttf_resource_resize_rules(ttf_engine_t *e) {
+    size_t i, size;
+    ttf_entry_t **table, *p, *next;
+    if (!e->rule_table || e->rule_rows <= 2 * e->rule_buckets)
+        return TTF_OK;
+    size = table_size(e->rule_rows);
+    table = (ttf_entry_t **)calloc(size, sizeof(*table));
+    if (!table)
+        return TTF_OK; /* longer chains, same rows */
+    for (i = 0; i < e->rule_buckets; ++i)
+        for (p = e->rule_table[i]; p; p = next) {
+            next = p->next;
+            p->next = table[p->hash % size];
+            table[p->hash % size] = p;
+        }
+    free(e->rule_table);
+    e->rule_table = table;
+    e->rule_buckets = size;
+    return TTF_OK;
+}
+ttf_status_t ttf_resource_resize(ttf_engine_t *e) {
+    static const size_t primes[] = {65521, 131071, 262139, 524287, 1048573, 2097143, 4194301, 8388593,
+                                    16777213, 33554393};
+    size_t rows = 0, i, size = ttf_buckets(e);
+    ttf_entry_t **table, *p, *next;
+    if (!e->resources)
+        return TTF_OK;
+    for (i = 0; i < ttf_buckets(e); ++i)
+        for (p = e->resources[i]; p; p = p->next)
+            ++rows;
+    for (i = 0; i < sizeof(primes) / sizeof(*primes) && primes[i] < rows; ++i)
+        ;
+    if (i < sizeof(primes) / sizeof(*primes))
+        size = primes[i] > size ? primes[i] : size;
+    else
+        size = primes[i - 1];
+    if (size < ttf_buckets(e))
+        size = ttf_buckets(e);
+    if (size == ttf_buckets(e))
+        return TTF_OK;
+    table = (ttf_entry_t **)calloc(size, sizeof(*table));
+    if (!table)
+        return TTF_ENOMEM;
+    for (i = 0; i < ttf_buckets(e); ++i)
+        for (p = e->resources[i]; p; p = next) {
+            next = p->next;
+            p->next = table[p->hash % size];
+            table[p->hash % size] = p;
+        }
+    free(e->resources);
+    e->resources = table;
+    e->resource_buckets = size;
+    return TTF_OK;
 }
 uint32_t ttf_kind_slot(const char *kind, const char *lang) {
     uint32_t h = hash_bytes(2166136261u, kind);
@@ -130,7 +216,7 @@ const char *ttf_resource_get(const ttf_engine_t *e, const char *kind, const char
 }
 void ttf_resource_destroy(ttf_engine_t *e) {
     size_t i, table;
-    for (table = 0; table < (e->cjk ? 2u : 1u); ++table) for (i = 0; i < TTF_RESOURCE_BUCKETS; i++) {
+    for (table = 0; table < (e->cjk ? 2u : 1u); ++table) for (i = 0; i < ttf_buckets(e); i++) {
         ttf_entry_t **head;
         if (!table && !e->resources)
             break;
@@ -143,14 +229,38 @@ void ttf_resource_destroy(ttf_engine_t *e) {
         }
         *head = NULL;
     }
+    for (i = 0; e->rule_table && i < e->rule_buckets; i++) {
+        ttf_entry_t *p = e->rule_table[i], *n;
+        for (; p; p = n) {
+            n = p->next;
+            entry_free(p);
+        }
+    }
+    free(e->rule_table);
+    e->rule_table = NULL;
     free(e->resources);
     e->resources = NULL;
+    if (e->cjk)
+        free(e->cjk->resources);
     free(e->cjk); /* Word buckets borrow rows; never free their entries again. */
     e->cjk = NULL;
 }
 void ttf_resource_rollback(ttf_engine_t *e, size_t checkpoint) {
     size_t i;
-    for (i = 0; e->resources && i < TTF_RESOURCE_BUCKETS; ++i) {
+    for (i = 0; e->rule_table && i < e->rule_buckets; ++i) {
+        ttf_entry_t **at = &e->rule_table[i];
+        while (*at) {
+            ttf_entry_t *entry = *at;
+            if (entry->order < checkpoint) {
+                at = &entry->next;
+            } else {
+                *at = entry->next;
+                entry_free(entry);
+                --e->rule_rows;
+            }
+        }
+    }
+    for (i = 0; e->resources && i < ttf_buckets(e); ++i) {
         ttf_entry_t **at = &e->resources[i];
         while (*at) {
             ttf_entry_t *entry = *at;
@@ -313,21 +423,38 @@ ttf_status_t ttf_resource_load_ex(ttf_engine_t *e, const char *path, ttf_resourc
     if (st == TTF_OK && tmp->resource_order > SIZE_MAX - e->resource_order)
         st = TTF_ELIMIT;
     if (st == TTF_OK && !e->resources &&
-        !(e->resources = (ttf_entry_t **)calloc(TTF_RESOURCE_BUCKETS, sizeof(*e->resources))))
+        !(e->resources = (ttf_entry_t **)calloc(ttf_buckets(e), sizeof(*e->resources))))
         st = TTF_ENOMEM;
     if (st == TTF_OK) {
         ttf_entry_t *p = tmp->staged, *next;
-        for (; p; p = next) {
+        if (tmp->rule_table && !e->rule_table) {
+            if (!(e->rule_table = (ttf_entry_t **)calloc(TTF_RULE_BUCKETS, sizeof(*e->rule_table))))
+                st = TTF_ENOMEM;
+            else
+                e->rule_buckets = TTF_RULE_BUCKETS;
+        }
+        for (; st == TTF_OK && p; p = next) {
             next = p->load_next;
-            i = p->hash % TTF_RESOURCE_BUCKETS;
             p->load_next = NULL;
             p->order += e->resource_order;
-            p->next = e->resources[i];
-            e->resources[i] = p;
+            if (ttf_rule_resource_kind(p->kind)) {
+                i = p->hash % e->rule_buckets;
+                p->next = e->rule_table[i];
+                e->rule_table[i] = p;
+                ++e->rule_rows;
+            } else {
+                i = p->hash % ttf_buckets(e);
+                p->next = e->resources[i];
+                e->resources[i] = p;
+            }
         }
+    }
+    if (st == TTF_OK) {
         tmp->staged = NULL;
         free(tmp->resources); /* every row moved: nothing left to walk */
         tmp->resources = NULL;
+        free(tmp->rule_table);
+        tmp->rule_table = NULL;
         e->resource_order += tmp->resource_order;
         ttf_resource_diagnostic_init(diagnostic);
     }
@@ -360,7 +487,7 @@ static ttf_status_t lexkey(const char *source, const char *word, char **out) {
 }
 static void remove_key(ttf_engine_t *e, ttf_resource_layer_t layer, const char *render,
                        const char *key) {
-    size_t h = entry_hash("lexicon", render, key) % TTF_RESOURCE_BUCKETS;
+    size_t h = entry_hash("lexicon", render, key) % ttf_buckets(e);
     ttf_entry_t **at = &e->resources[h];
     while (*at) {
         ttf_entry_t *p = *at;
@@ -425,9 +552,9 @@ ttf_status_t ttf_lexicon_add(ttf_engine_t *e, ttf_resource_layer_t layer, const 
             return st;
         }
         remove_key(e, layer, render, key);
-        h = entry_hash("lexicon", render, key) % TTF_RESOURCE_BUCKETS;
-        p = tmp.resources[h];
+        p = tmp.resources[entry_hash("lexicon", render, key) % ttf_buckets(&tmp)];
         free(tmp.resources);
+        h = p->hash % ttf_buckets(e);
         p->order = e->resource_order++;
         p->next = e->resources[h];
         e->resources[h] = p;

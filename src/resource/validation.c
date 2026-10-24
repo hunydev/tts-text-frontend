@@ -185,9 +185,12 @@ ttf_status_t ttf_engine_validate_resources(const ttf_engine_t *e,
     if (!diagnostic)
         diagnostic = &local;
     ttf_resource_diagnostic_init(diagnostic);
-    for (table = 0; table < (e->cjk ? 2u : 1u); ++table) for (bucket = 0; bucket < TTF_RESOURCE_BUCKETS; ++bucket) {
+    for (table = 0; table < 3u; ++table) for (bucket = 0; bucket < (table == 2 ? e->rule_buckets : ttf_buckets(e)); ++bucket) {
         const ttf_entry_t *entry;
-        for (entry = table ? e->cjk->resources[bucket] : e->resources[bucket]; entry; entry = entry->next)
+        if ((table == 1 && !e->cjk) || (table == 2 && !e->rule_table))
+            break;
+        for (entry = table == 2 ? e->rule_table[bucket] : table ? e->cjk->resources[bucket] : e->resources[bucket];
+             entry; entry = entry->next)
             ++count;
     }
     if (count > SIZE_MAX / sizeof(*rows))
@@ -196,9 +199,12 @@ ttf_status_t ttf_engine_validate_resources(const ttf_engine_t *e,
     if (count && !rows)
         return TTF_ENOMEM;
     i = 0;
-    for (table = 0; table < (e->cjk ? 2u : 1u); ++table) for (bucket = 0; bucket < TTF_RESOURCE_BUCKETS; ++bucket) {
+    for (table = 0; table < 3u; ++table) for (bucket = 0; bucket < (table == 2 ? e->rule_buckets : ttf_buckets(e)); ++bucket) {
         const ttf_entry_t *entry;
-        for (entry = table ? e->cjk->resources[bucket] : e->resources[bucket]; entry; entry = entry->next) {
+        if ((table == 1 && !e->cjk) || (table == 2 && !e->rule_table))
+            break;
+        for (entry = table == 2 ? e->rule_table[bucket] : table ? e->cjk->resources[bucket] : e->resources[bucket];
+             entry; entry = entry->next) {
             rows[i++] = entry;
             unchecked += !already_checked(e, entry);
         }

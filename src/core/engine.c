@@ -214,6 +214,12 @@ ttf_status_t ttf_engine_freeze(ttf_engine_t *e) {
     /* Allocate/detach only after all files and engine validators succeed.
        Index allocation is the last fallible operation; on failure no rows
        have moved and the complete deferred load can be rolled back. */
+    /* the rules to their own table, then about one bucket per row before the CJK rows split
+       off (2026-10-25) */
+    if (status == TTF_OK)
+        status = ttf_resource_resize_rules(e);
+    if (status == TTF_OK)
+        status = ttf_resource_resize(e);
     if (status == TTF_OK)
         status = ttf_cjk_index(e);
     if (status != TTF_OK) {
@@ -225,14 +231,26 @@ ttf_status_t ttf_engine_freeze(ttf_engine_t *e) {
        cues must not scan pronunciation dictionaries during normalization. */
     e->rules = NULL;
     e->boundary_cues = NULL;
-    for (bucket = 0; bucket < TTF_RESOURCE_BUCKETS; ++bucket) {
+    for (bucket = 0; e->rule_table && bucket < e->rule_buckets; ++bucket) {
+        ttf_entry_t *entry;
+        for (entry = e->rule_table[bucket]; entry; entry = entry->next) {
+            entry->rule_next = NULL;
+            if (!strcmp(entry->kind, "pattern") || (!strcmp(entry->kind, "exact") && strlen(entry->key) >= 63)) {
+                entry->rule_next = e->rules;
+                e->rules = entry;
+            }
+        }
+    }
+    for (bucket = 0; bucket < ttf_buckets(e); ++bucket) {
         ttf_entry_t *entry;
         for (entry = e->resources[bucket]; entry; entry = entry->next) {
             int active = 0;
             size_t pack;
             entry->rule_next = NULL;
             entry->boundary_next = NULL;
-            if (!strcmp(entry->kind, "exact") || !strcmp(entry->kind, "pattern")) {
+            /* exact rules are found by hash (rule.c); the list keeps patterns and exact
+               keys of 63 bytes or more, which the key-length table cannot name */
+            if (!strcmp(entry->kind, "pattern") || (!strcmp(entry->kind, "exact") && strlen(entry->key) >= 63)) {
                 entry->rule_next = e->rules;
                 e->rules = entry;
             }
@@ -278,10 +296,13 @@ ttf_status_t ttf_engine_freeze(ttf_engine_t *e) {
         size_t table, used = 0;
         free(e->kind_lengths);
         e->kind_lengths = (struct ttf_kind_lengths *)calloc(TTF_KIND_SLOTS, sizeof(*e->kind_lengths));
-        for (table = 0; e->kind_lengths && table < (e->cjk ? 2u : 1u); ++table)
-            for (bucket = 0; e->kind_lengths && bucket < TTF_RESOURCE_BUCKETS; ++bucket) {
+        for (table = 0; e->kind_lengths && table < 3u; ++table)
+            for (bucket = 0; e->kind_lengths && bucket < (table == 2 ? e->rule_buckets : ttf_buckets(e)); ++bucket) {
                 ttf_entry_t *entry;
-                for (entry = table ? e->cjk->resources[bucket] : e->resources[bucket]; entry && e->kind_lengths;
+                if ((table == 1 && !e->cjk) || (table == 2 && !e->rule_table))
+                    break;
+                for (entry = table == 2 ? e->rule_table[bucket] : table ? e->cjk->resources[bucket] : e->resources[bucket];
+                     entry && e->kind_lengths;
                      entry = entry->next) {
                     uint32_t i = ttf_kind_slot(entry->kind, entry->lang);
                     size_t length = strlen(entry->key);
@@ -314,6 +335,7 @@ ttf_status_t ttf_engine_freeze(ttf_engine_t *e) {
         flag = ttf_resource_get(e, "context", tag, "arabic_sentence", NULL);
         e->han_only[bucket] |= flag && strcmp(flag, "0");
     }
+    e->rules_indexed = 1;
     e->frozen = 1;
     return TTF_OK;
 }
