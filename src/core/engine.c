@@ -271,6 +271,36 @@ ttf_status_t ttf_engine_freeze(ttf_engine_t *e) {
         }
     }
     ttf_phrase_index(e);
+    {
+        /* the key lengths of each kind and language (longest-prefix scans); with more
+           pairs than three quarters of the slots the table is dropped and scans try
+           every length */
+        size_t table, used = 0;
+        free(e->kind_lengths);
+        e->kind_lengths = (struct ttf_kind_lengths *)calloc(TTF_KIND_SLOTS, sizeof(*e->kind_lengths));
+        for (table = 0; e->kind_lengths && table < (e->cjk ? 2u : 1u); ++table)
+            for (bucket = 0; e->kind_lengths && bucket < TTF_RESOURCE_BUCKETS; ++bucket) {
+                ttf_entry_t *entry;
+                for (entry = table ? e->cjk->resources[bucket] : e->resources[bucket]; entry && e->kind_lengths;
+                     entry = entry->next) {
+                    uint32_t i = ttf_kind_slot(entry->kind, entry->lang);
+                    size_t length = strlen(entry->key);
+                    while (e->kind_lengths[i].kind &&
+                           (strcmp(e->kind_lengths[i].kind, entry->kind) || strcmp(e->kind_lengths[i].lang, entry->lang)))
+                        i = (i + 1) % TTF_KIND_SLOTS;
+                    if (!e->kind_lengths[i].kind) {
+                        if (++used > TTF_KIND_SLOTS / 4 * 3) {
+                            free(e->kind_lengths);
+                            e->kind_lengths = NULL;
+                            break;
+                        }
+                        e->kind_lengths[i].kind = entry->kind;
+                        e->kind_lengths[i].lang = entry->lang;
+                    }
+                    e->kind_lengths[i].lengths |= (uint64_t)1 << (length < 63 ? length : 63);
+                }
+            }
+    }
     for (bucket = 0; bucket < e->pack_count; ++bucket) {
         const char *tag = e->packs[bucket]->language_tag,
                    *flag = ttf_resource_get(e, "context", tag, "declared_only", NULL);
@@ -290,6 +320,7 @@ ttf_status_t ttf_engine_freeze(ttf_engine_t *e) {
 void ttf_engine_destroy(ttf_engine_t *e) {
     if (e) {
         ttf_resource_destroy(e);
+        free(e->kind_lengths);
         ttf_symbol_fallback_detach(e);
         free(e->resource_root);
         free(e->default_language);

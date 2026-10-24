@@ -2082,8 +2082,12 @@ static const char *quantity_resource_at(const ttf_pack_input_t *in, const char *
                                         size_t position, size_t *width) {
     char key[64];
     size_t available = in->length - position;
+    /* only the key lengths this kind has (built at freeze, 2026-10-24) */
+    uint64_t lengths = ttf_resource_key_lengths(in->engine, kind, "ko-KR");
     for (*width = available < sizeof(key) - 1 ? available : sizeof(key) - 1; *width > 0; --*width) {
         const char *label;
+        if (!((lengths >> *width) & 1))
+            continue;
         memcpy(key, in->text + position, *width);
         key[*width] = '\0';
         label = ttf_resource_get(in->engine, kind, "ko-KR", key, NULL);
@@ -3253,6 +3257,42 @@ static size_t superscript_expression(const ttf_pack_input_t *in, ttf_semantic_t 
     return ko_finish(in, s, end, TTF_SEM_SYMBOL, v, "@expression", "ko:superscript-expression");
 }
 
+/* 6천여 m² 육천여 제곱미터, 100여 m 백여 미터, 500여 ㎡: a unit symbol after a number with the
+   approximate 여 (and a space) reads as its unit; the grammar takes a unit only right after
+   the number, and the symbol was spelled (엠 제곱) (2026-10-24). */
+static size_t approximate_unit(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    static const char yeo[] = "\xec\x97\xac"; /* 여 */
+    const char *t = in->text, *suffix, *label;
+    size_t n = in->length, p = in->tokens[in->index].begin, b = p, width;
+    char id[48];
+    while (b && t[b - 1] == ' ')
+        --b;
+    if (b < 4 || memcmp(t + b - 3, yeo, 3) || !korean_context(in))
+        return 0;
+    {
+        /* 여 after a digit or a Korean number word (6천여, 8,400여, 3만여) */
+        size_t c = b - 3;
+        int number = c && ko_digit(t[c - 1]);
+        static const char *const words[] = {"\xec\xb2\x9c", "\xeb\xb0\xb1", "\xeb\xa7\x8c", "\xec\x8b\xad", "\xec\x96\xb5"}; /* 천 백 만 십 억 */
+        size_t k;
+        for (k = 0; !number && k < sizeof(words) / sizeof(*words); ++k)
+            number = c >= 3 && !memcmp(t + c - 3, words[k], 3) && c >= 4;
+        if (!number)
+            return 0;
+    }
+    suffix = quantity_resource_at(in, "numeric_suffix", p, &width);
+    if (!suffix || strncmp(suffix, "MEASURE:", 8) || strlen(suffix + 8) >= sizeof(id))
+        return 0;
+    if (p + width < n && ((t[p + width] >= 'a' && t[p + width] <= 'z') || (t[p + width] >= 'A' && t[p + width] <= 'Z') ||
+                          ko_digit(t[p + width])))
+        return 0;
+    (void)snprintf(id, sizeof(id), "%s", suffix + 8);
+    label = ttf_resource_get(in->engine, "unit", "ko-KR", id, NULL);
+    if (!label)
+        return 0;
+    return ko_finish(in, s, p + width, TTF_SEM_SYMBOL, label, "@word", "ko:approximate-unit");
+}
+
 /* x², mc², km²: a superscript power right after a Latin letter or digit that no grammar took
    reads 제곱 (2026-10-23; was passed through). Superscripts written alone (¹²³, 각주¹) stay. */
 static size_t trailing_power(const ttf_pack_input_t *in, ttf_semantic_t *s) {
@@ -3350,7 +3390,8 @@ static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     if ((identifier = short_dotted_date(in, s)) != 0 || (identifier = quarter(in, s)) != 0 ||
         (identifier = owner_forms(in, s)) != 0 || (identifier = owner_forms5(in, s)) != 0 ||
         (identifier = letters_decimal(in, s)) != 0 || (identifier = court_case(in, s)) != 0 ||
-        (identifier = superscript_expression(in, s)) != 0 || (identifier = trailing_power(in, s)) != 0)
+        (identifier = superscript_expression(in, s)) != 0 || (identifier = trailing_power(in, s)) != 0 ||
+        (identifier = approximate_unit(in, s)) != 0)
         return identifier;
     identifier = ttf_ko_classify_basement(in, s);
     if (identifier)

@@ -8,12 +8,12 @@ static uint32_t hash_bytes(uint32_t h, const char *s) {
     }
     return h;
 }
-static size_t bucket(const char *kind, const char *lang, const char *key) {
+static uint32_t entry_hash(const char *kind, const char *lang, const char *key) {
     uint32_t h = hash_bytes(2166136261u, kind);
     h = hash_bytes(h, "\t");
     h = hash_bytes(h, lang);
     h = hash_bytes(h, "\t");
-    return hash_bytes(h, key) % TTF_RESOURCE_BUCKETS;
+    return hash_bytes(h, key);
 }
 static void entry_free(ttf_entry_t *p) {
     free(p->kind);
@@ -51,9 +51,14 @@ static ttf_status_t resource_insert(ttf_engine_t *e, const char *kind, const cha
         entry_free(p);
         return TTF_ENOMEM;
     }
-    h = bucket(kind, lang, p->key);
+    p->hash = entry_hash(kind, lang, p->key);
+    h = p->hash % TTF_RESOURCE_BUCKETS;
     p->next = e->resources[h];
     e->resources[h] = p;
+    if (e->staging) {
+        p->load_next = e->staged;
+        e->staged = p;
+    }
     if (inserted)
         *inserted = p;
     return TTF_OK;
@@ -65,12 +70,13 @@ ttf_status_t ttf_resource_set(ttf_engine_t *e, const char *kind, const char *lan
 static const ttf_entry_t *find_entry(const ttf_engine_t *e, const char *kind, const char *lang,
                                      const char *key) {
     const ttf_entry_t *p, *best = NULL;
-    size_t h = bucket(kind, lang, key);
+    uint32_t full = entry_hash(kind, lang, key);
+    size_t h = full % TTF_RESOURCE_BUCKETS;
     p = e->cjk && ttf_cjk_resource_kind(kind) ? e->cjk->resources[h]
         : e->resources                         ? e->resources[h]
                                                : NULL;
     for (; p; p = p->next) {
-        if (strcmp(kind, p->kind) || strcmp(lang, p->lang) || strcmp(key, p->key))
+        if (p->hash != full || strcmp(kind, p->kind) || strcmp(lang, p->lang) || strcmp(key, p->key))
             continue;
         if (!best || p->layer > best->layer || (p->layer == best->layer && p->order < best->order))
             best = p;
@@ -87,6 +93,31 @@ const ttf_entry_t *ttf_resource_entry(const ttf_engine_t *e, const char *kind, c
     if (b && (!a || b->layer > a->layer))
         a = b;
     return a;
+}
+uint32_t ttf_kind_slot(const char *kind, const char *lang) {
+    uint32_t h = hash_bytes(2166136261u, kind);
+    h = hash_bytes(h, "\t");
+    return hash_bytes(h, lang) % TTF_KIND_SLOTS;
+}
+static uint64_t kind_lengths(const ttf_engine_t *e, const char *kind, const char *lang) {
+    uint32_t i = ttf_kind_slot(kind, lang), probes;
+    for (probes = 0; probes < TTF_KIND_SLOTS; ++probes, i = (i + 1) % TTF_KIND_SLOTS) {
+        const struct ttf_kind_lengths *slot = &e->kind_lengths[i];
+        if (!slot->kind)
+            return 0;
+        if (!strcmp(slot->kind, kind) && !strcmp(slot->lang, lang))
+            return slot->lengths;
+    }
+    return 0;
+}
+uint64_t ttf_resource_key_lengths(const ttf_engine_t *e, const char *kind, const char *lang) {
+    uint64_t lengths;
+    if (!e->frozen || !e->kind_lengths)
+        return ~(uint64_t)0;
+    lengths = kind_lengths(e, kind, lang);
+    if (strcmp(lang, "*"))
+        lengths |= kind_lengths(e, kind, "*");
+    return lengths;
 }
 const char *ttf_resource_get(const ttf_engine_t *e, const char *kind, const char *lang,
                              const char *key, ttf_resource_layer_t *layer) {
@@ -269,6 +300,8 @@ ttf_status_t ttf_resource_load_ex(ttf_engine_t *e, const char *path, ttf_resourc
         offset = 16;
     }
     tmp = (ttf_engine_t *)calloc(1, sizeof(*tmp));
+    if (tmp)
+        tmp->staging = 1;
     if (!tmp) {
         free(data);
         return TTF_ENOMEM;
@@ -283,17 +316,18 @@ ttf_status_t ttf_resource_load_ex(ttf_engine_t *e, const char *path, ttf_resourc
         !(e->resources = (ttf_entry_t **)calloc(TTF_RESOURCE_BUCKETS, sizeof(*e->resources))))
         st = TTF_ENOMEM;
     if (st == TTF_OK) {
-        for (i = 0; tmp->resources && i < TTF_RESOURCE_BUCKETS; i++) {
-            ttf_entry_t *p = tmp->resources[i];
-            while (p) {
-                ttf_entry_t *next = p->next;
-                p->order += e->resource_order;
-                p->next = e->resources[i];
-                e->resources[i] = p;
-                p = next;
-            }
-            tmp->resources[i] = NULL;
+        ttf_entry_t *p = tmp->staged, *next;
+        for (; p; p = next) {
+            next = p->load_next;
+            i = p->hash % TTF_RESOURCE_BUCKETS;
+            p->load_next = NULL;
+            p->order += e->resource_order;
+            p->next = e->resources[i];
+            e->resources[i] = p;
         }
+        tmp->staged = NULL;
+        free(tmp->resources); /* every row moved: nothing left to walk */
+        tmp->resources = NULL;
         e->resource_order += tmp->resource_order;
         ttf_resource_diagnostic_init(diagnostic);
     }
@@ -326,7 +360,7 @@ static ttf_status_t lexkey(const char *source, const char *word, char **out) {
 }
 static void remove_key(ttf_engine_t *e, ttf_resource_layer_t layer, const char *render,
                        const char *key) {
-    size_t h = bucket("lexicon", render, key);
+    size_t h = entry_hash("lexicon", render, key) % TTF_RESOURCE_BUCKETS;
     ttf_entry_t **at = &e->resources[h];
     while (*at) {
         ttf_entry_t *p = *at;
@@ -391,7 +425,7 @@ ttf_status_t ttf_lexicon_add(ttf_engine_t *e, ttf_resource_layer_t layer, const 
             return st;
         }
         remove_key(e, layer, render, key);
-        h = bucket("lexicon", render, key);
+        h = entry_hash("lexicon", render, key) % TTF_RESOURCE_BUCKETS;
         p = tmp.resources[h];
         free(tmp.resources);
         p->order = e->resource_order++;

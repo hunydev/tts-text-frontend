@@ -108,6 +108,17 @@
     شرطة, the standard word; a hyphen inside a phone number stays silent.
     Contract ar_pack2_v110 (16); ar_pack1_v101 three cases Was (هجرية, مساء at 15-17 o'clock, owner
     set evidence; the code hyphen شرطة, owner decision). The other languages and gates are unchanged.
+- Speed (project-owner request 2026-10-24): resource lookups were 93% of the run time (gprof).
+  The table has 65521 buckets (was 8191 for about 43k rows) and each row keeps its hash, compared
+  before the strings; at freeze the key byte lengths of every kind and language are recorded,
+  so longest-prefix scans (core resource_prefix, Korean quantity_resource_at) try only lengths
+  that exist; a loaded file merges from its staged row list instead of walking every bucket.
+  Korean v3 sentences: 2.4-2.9 ms to 0.28-0.38 ms each (xvoice5 TN 1.1-1.4 ms); the run-to-run
+  spread is gone; engine load unchanged within noise. Outputs are byte for byte the same on
+  23,686 sentences in seven languages.
+- Korean: a unit symbol after an approximate number reads as its unit (6천여 m² 육천여 제곱미터,
+  200여 m 이백여 미터; was 엠 제곱, 엠). Contract ko_approx_unit_v116 (4); Korean quick 5 sentences
+  better.
 - Korean superscript powers (project-owner request 2026-10-23; the superscript was passed through):
   3²=9 삼의 제곱은 구, 10³=1000 십의 세제곱은 천, 2¹⁰ 이의 십제곱, 10⁻⁶ 십의 마이너스 육제곱,
   x²+y²=z² 엑스 제곱 더하기 와이 제곱은 제트 제곱; a power left after a Latin letter or digit

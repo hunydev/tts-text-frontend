@@ -18,8 +18,10 @@ static inline ttf_script_t ttf_script_legacy(ttf_script_t script) {
 #define TTF_HASH_BUCKETS 1021
 /* The resource table has its own, larger size (2026-10-11): with 1021 buckets
    a lookup walked about 24 rows, and lookups were most of the run time. The
-   engine keeps it on the heap so request views copy one pointer. */
-#define TTF_RESOURCE_BUCKETS 8191
+   engine keeps it on the heap so request views copy one pointer. 2026-10-24:
+   the lookups were 93% of the run time again; with about 43k rows, 65521 buckets
+   keep a chain near one row and the stored hash skips the string compares. */
+#define TTF_RESOURCE_BUCKETS 65521
 #define TTF_PHRASE_WORDS 8
 #define TTF_PHRASE_INPUT 255
 
@@ -27,6 +29,8 @@ typedef struct ttf_entry {
     char *kind, *lang, *key, *value;
     ttf_resource_layer_t layer;
     size_t order;
+    uint32_t hash; /* of kind, lang and key; compared before the strings */
+    struct ttf_entry *load_next; /* a staging table's rows in insertion order (load merge) */
     struct ttf_entry *next;
     struct ttf_entry *boundary_next;
     struct ttf_entry *phrase_next;
@@ -85,7 +89,25 @@ struct ttf_engine {
     ttf_entry_t *rules;
     ttf_entry_t *phrases[TTF_HASH_BUCKETS];
     ttf_cjk_index_t *cjk;
+    /* The byte lengths (bit n = n bytes, bit 63 = 63 or more) of the keys of each kind
+       and language, built at freeze in TTF_KIND_SLOTS open-addressed slots: a
+       longest-prefix scan tries only lengths that exist (2026-10-24; it was most of
+       the lookups). Request views share the owner's. NULL: every length. */
+    struct ttf_kind_lengths *kind_lengths;
+    /* A file being loaded is parsed into a staging engine; its rows are listed so
+       the merge does not walk every bucket (2026-10-24). */
+    int staging;
+    ttf_entry_t *staged;
 };
+#define TTF_KIND_SLOTS 4096
+struct ttf_kind_lengths {
+    const char *kind, *lang; /* borrowed from a resource row; NULL kind = empty slot */
+    uint64_t lengths;
+};
+/* The key lengths ttf_resource_get(e, kind, lang, …) can match (lang's rows and, for
+   another lang, the `*` rows); every bit before freeze. */
+uint64_t ttf_resource_key_lengths(const ttf_engine_t *e, const char *kind, const char *lang);
+uint32_t ttf_kind_slot(const char *kind, const char *lang);
 char *ttf_strdup(const char *s);
 char *ttf_strndup(const char *s, size_t n);
 int ttf_ascii_equal(const char *a, const char *b);

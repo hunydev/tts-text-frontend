@@ -42,6 +42,7 @@ CORPORA = {
     "ko-v3-fixes-v113": ("한국어 v3 비교 뒤 (24:00, PM2.5, 세 항 비율)", "ko_v3_fixes_v113.jsonl"),
     "ko-owner-dec-v114": ("한국어 소유자 결정 (범위 단위, 석·문항, 소수 규모, IP 공, 사건번호)", "ko_owner_dec_v114.jsonl"),
     "ko-superscript-v115": ("한국어 거듭제곱 위첨자 (3²=9 삼의 제곱은 구)", "ko_superscript_v115.jsonl"),
+    "ko-approx-unit-v116": ("한국어 어림수 뒤 단위 (6천여 m² 육천여 제곱미터)", "ko_approx_unit_v116.jsonl"),
     "en-owner-dec-v100": ("영어 소유자 결정: 두 자리 연도, 카드 만료일, 파일명 읽기, 주소의 흔한 낱말·이름", "en_owner_dec_v100.jsonl"),
     "en-listen-v99": ("영어 청취 비교에서 고친 것 (날짜 범위, 치수 by, °F, ½\", 파일 확장자, 두 자리 연도)", "en_listen_v99.jsonl"),
     "vi-th-dev-v98": ("베트남어·태국어 개발셋 v1 (번지, 날짜, 핫라인, 통화, 단위, 번호판, 약어+숫자)", "vi_th_dev_v98.jsonl"),

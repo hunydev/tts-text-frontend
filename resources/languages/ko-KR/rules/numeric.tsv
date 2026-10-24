@@ -1140,6 +1140,7 @@ classifier_priority	ko-KR	ko:letters-decimal	10
 classifier_priority	ko-KR	ko:court-case	10
 classifier_priority	ko-KR	ko:superscript-expression	10
 classifier_priority	ko-KR	ko:trailing-power	10
+classifier_priority	ko-KR	ko:approximate-unit	10
 # 2석 두 석, 15문항 열다섯 문항 (project-owner decision 2026-10-23, open set v3); seats past ten
 # (의석 35석) stay Sino
 counter	ko-KR	석	native

@@ -226,6 +226,10 @@ static int resource_prefix(const ttf_pack_input_t *in, const char *kind, size_t 
                            const char **value, size_t *end, ttf_resource_layer_t *layer) {
     char key[64];
     size_t source[64], n = 0, at = p;
+    /* only the key lengths this kind has (kind_lengths, built at freeze) */
+    uint64_t lengths = ttf_resource_key_lengths(in->engine, kind, "*");
+    if (!lengths)
+        return 0;
     /* Fullwidth ASCII (63ｍ, 5ｋｇ; U+FF01..U+FF5E) matches its ASCII key: source[k]
        is the input offset after the k-th key byte (2026-10-06). */
     while (at < in->length && n < sizeof(key) - 1) {
@@ -241,6 +245,8 @@ static int resource_prefix(const ttf_pack_input_t *in, const char *kind, size_t 
         source[n++] = at;
     }
     for (; n; --n) {
+        if (!((lengths >> n) & 1))
+            continue;
         key[n] = '\0';
         *value = ttf_resource_get(in->engine, kind, "*", key, layer);
         if (*value) {
