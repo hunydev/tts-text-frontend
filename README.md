@@ -25,6 +25,8 @@ WiFi를 사용합니다.           → 와이파이를 사용합니다.
 `Apple → 애플` is pronunciation rendering. Source, context and render languages
 remain distinct in the semantic IR and output metadata.
 
+사용자 가이드(한국어): [docs/user-guide.ko.md](docs/user-guide.ko.md) — 엔진 준비, 정규화, 멀티스레드, 출력 옵션, 사전 TSV, 요청 사전.
+
 ## Continue quality work with another model
 
 Start with [HANDOFF](docs/HANDOFF.md) and the [TN improvement playbook](docs/tn-improvement-playbook.ko.md).
