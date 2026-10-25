@@ -71,6 +71,7 @@ struct ttf_engine {
     int frozen, validating;
     struct ttf_trace_state *trace_state;   /* Request view only; frozen owner stays NULL. */
     struct ttf_context_memo *context_memo; /* Unit-local context callback view only. */
+    const struct ttf_dict *dict;           /* Request view only: the request dictionary. */
     /* Unit-local view only: the previous unit's tail, so a sentence cut into
        units keeps its language (latin_sentence). */
     const char *unit_prefix;
@@ -113,6 +114,27 @@ struct ttf_engine {
     ttf_entry_t *staged;
 };
 #define TTF_KIND_SLOTS 4096
+#define TTF_DICT_LENGTH_SLOTS 64
+/* A request dictionary (dict.c): rows of layer TTF_LAYER_REQUEST in a small table, the
+   key lengths of each kind and language, the exact keys of 63 bytes or more
+   (rule_next) and the multiword lexicon keys by first word (phrase_next). */
+struct ttf_dict {
+    ttf_entry_t **buckets;
+    size_t bucket_count, rows, order;
+    struct {
+        const char *kind, *lang;
+        uint64_t lengths;
+    } lengths[TTF_DICT_LENGTH_SLOTS];
+    size_t length_count;
+    int lengths_full; /* more kind/language pairs than slots: every length */
+    ttf_entry_t *long_rules;
+    ttf_entry_t *phrases[TTF_HASH_BUCKETS];
+};
+const ttf_entry_t *ttf_dict_find(const ttf_dict_t *d, const char *kind, const char *lang,
+                                 const char *key);
+uint64_t ttf_dict_lengths(const ttf_dict_t *d, const char *kind, const char *lang);
+/* The phrase bucket of a multiword lexicon word (its first letter run). */
+size_t ttf_phrase_bucket(const char *word);
 struct ttf_kind_lengths {
     const char *kind, *lang; /* borrowed from a resource row; NULL kind = empty slot */
     uint64_t lengths;

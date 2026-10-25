@@ -193,6 +193,23 @@ ttf_status_t ttf_stream_create_traced(const ttf_engine_t *e, const ttf_trace_opt
                                       ttf_traced_callback_fn cb, void *user, ttf_stream_t **out) {
     return stream_create(e, NULL, cb, options, user, out);
 }
+ttf_status_t ttf_stream_set_dict(ttf_stream_t *s, const ttf_dict_t *dict) {
+    if (!s)
+        return TTF_EINVAL;
+    if (s->pending.length || s->input_offset || s->segments || s->finished || s->busy ||
+        s->failed != TTF_OK)
+        return TTF_ESTATE;
+    /* The request view carries the dictionary to every lookup, nested ones included. */
+    if (!s->engine_view) {
+        s->engine_view = (ttf_engine_t *)malloc(sizeof(*s->engine_view));
+        if (!s->engine_view)
+            return TTF_ENOMEM;
+        *s->engine_view = *s->engine;
+        s->engine = s->engine_view;
+    }
+    s->engine_view->dict = dict;
+    return TTF_OK;
+}
 ttf_status_t ttf_stream_write(ttf_stream_t *s, const char *data, size_t n) {
     size_t at = 0;
     ttf_status_t st;

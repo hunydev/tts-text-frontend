@@ -2,6 +2,15 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Request dictionaries (2026-10-26): `ttf_dict_t` holds exact rules and lexicon rows for one
+  request (`ttf_normalize_with`) or stream (`ttf_stream_set_dict`) of a frozen engine, above
+  every engine layer (`TTF_LAYER_REQUEST`, trace name `request`); CLI `--request-dict FILE`.
+  Rows match as written (no particle or case folding, owner decision). Among engine exact
+  rules of one layer and length, a rule of the sentence language now beats a `*` rule (file
+  order decided it). Without a dictionary 26,456 sentences of the seven languages keep
+  byte-identical output and spans. Test `request_dictionary`.
+- en-US: a digit at the start of the text no longer reads two bytes before it in the
+  scripture verse check (AddressSanitizer).
 - The owner's TN evaluation sets (benchmark/datasets/user-tn-eval): 1,000 sentences each for
   ko-KR, en-US, ja-JP, zh-CN and vi-VN, split once into dev 700 / test 300 (fixes come from
   dev only). Scorer: benchmark/evaluators/user_tn_eval.py.

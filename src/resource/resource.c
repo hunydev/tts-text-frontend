@@ -107,6 +107,10 @@ const ttf_entry_t *ttf_resource_entry(const ttf_engine_t *e, const char *kind, c
     const ttf_entry_t *a, *b;
     if (!e || !kind || !lang || !key)
         return NULL;
+    /* a request dictionary row is above every engine layer */
+    if (e->dict && ((a = ttf_dict_find(e->dict, kind, lang, key)) != NULL ||
+                    (strcmp(lang, "*") && (a = ttf_dict_find(e->dict, kind, "*", key)) != NULL)))
+        return a;
     a = find_entry(e, kind, lang, key);
     b = strcmp(lang, "*") ? find_entry(e, kind, "*", key) : NULL;
     if (b && (!a || b->layer > a->layer))
@@ -203,6 +207,11 @@ uint64_t ttf_resource_key_lengths(const ttf_engine_t *e, const char *kind, const
     lengths = kind_lengths(e, kind, lang);
     if (strcmp(lang, "*"))
         lengths |= kind_lengths(e, kind, "*");
+    if (e->dict) {
+        lengths |= ttf_dict_lengths(e->dict, kind, lang);
+        if (strcmp(lang, "*"))
+            lengths |= ttf_dict_lengths(e->dict, kind, "*");
+    }
     return lengths;
 }
 const char *ttf_resource_get(const ttf_engine_t *e, const char *kind, const char *lang,

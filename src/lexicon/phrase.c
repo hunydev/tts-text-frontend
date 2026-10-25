@@ -157,11 +157,19 @@ void ttf_phrase_index(ttf_engine_t *engine) {
     }
 }
 
+size_t ttf_phrase_bucket(const char *word) {
+    return first_bucket(word, first_run(word));
+}
+/* The phrases starting with this token's letters: the engine's, or with which = 1 the
+   request dictionary's. */
 static const ttf_entry_t *first_entries(const ttf_engine_t *engine, const char *text,
-                                       const ttf_token_t *token) {
-    if (!lexical(token->script) || token->end - token->begin >= TTF_IR_VALUE_SIZE)
+                                       const ttf_token_t *token, int which) {
+    size_t at;
+    if (!lexical(token->script) || token->end - token->begin >= TTF_IR_VALUE_SIZE ||
+        (which && !engine->dict))
         return NULL;
-    return engine->phrases[first_bucket(text + token->begin, token->end - token->begin)];
+    at = first_bucket(text + token->begin, token->end - token->begin);
+    return which ? engine->dict->phrases[at] : engine->phrases[at];
 }
 
 /* Return a matching prefix extent even after a later mismatch. Earlier cuts
@@ -222,18 +230,20 @@ size_t ttf_phrase_protect_until(const ttf_engine_t *engine, const char *text, si
     const ttf_token_t *token = &tokens[index];
     const ttf_entry_t *entry;
     size_t until = token->begin;
+    int which;
     if (engine->frontend_options.hanja != TTF_HANJA_PASSTHROUGH ||
         engine->frontend_options.kana != TTF_KANA_PASSTHROUGH)
         until = ttf_cjk_protect_until(engine, text, length, until);
     if (engine->config.render_policy != TTF_PHONETIC_LOCALIZE ||
         word_started_before(text, tokens, index))
         return until;
-    for (entry = first_entries(engine, text, token); entry; entry = entry->phrase_next) {
-        const char *key = strchr(entry->key, ':') + 1;
-        size_t end = prefix_end(text, length, token->begin, key);
-        if (end > until)
-            until = end;
-    }
+    for (which = 0; which < 2; ++which)
+        for (entry = first_entries(engine, text, token, which); entry; entry = entry->phrase_next) {
+            const char *key = strchr(entry->key, ':') + 1;
+            size_t end = prefix_end(text, length, token->begin, key);
+            if (end > until)
+                until = end;
+        }
     return until;
 }
 
@@ -249,7 +259,8 @@ const char *ttf_phrase_match(const ttf_engine_t *engine, const char *source, con
     const char *best = NULL;
     ttf_script_t script = tokens[index].script;
     if (word_started_before(text, tokens, index) ||
-        !first_entries(engine, text, &tokens[index]))
+        (!first_entries(engine, text, &tokens[index], 0) &&
+         !first_entries(engine, text, &tokens[index], 1)))
         return NULL;
     memcpy(key, source, prefix - 1);
     key[prefix - 1] = ':';

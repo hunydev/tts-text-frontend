@@ -24,6 +24,7 @@ static void usage(FILE *out) {
           "Validation: --resource-layer common|system|domain|customer|user\n"
           "            --require-complete-validation (reject unknown namespaces)\n"
           "Options: --resources DIR --language TAG --domain FILE --customer FILE\n"
+          "         --request-dict FILE (exact/lexicon rows for this request only)\n"
           "         --first-target N --normal-target N --max-length N\n"
           "Trace: --trace (inspect or stream-json), --trace-max-events N --trace-max-bytes N\n"
           "Frontend: --input-format plain|annotated --output-mode text|speech\n"
@@ -250,6 +251,8 @@ int main(int argc, char **argv) {
     ttf_trace_options_t trace_options;
     int is_trace = 0, trace_limit_set = 0;
     ttf_engine_t *engine = NULL;
+    ttf_dict_t *dict = NULL;
+    const char *dict_path = NULL;
     ttf_status_t status;
     ttf_resource_diagnostic_t diagnostic;
     ttf_resource_validation_report_t validation;
@@ -426,7 +429,8 @@ int main(int argc, char **argv) {
             else
                 config.max_segment_length = value;
         } else if (!positional_only && (!strcmp(arg, "--resources") || !strcmp(arg, "--language") ||
-                                        !strcmp(arg, "--domain") || !strcmp(arg, "--customer"))) {
+                                        !strcmp(arg, "--domain") || !strcmp(arg, "--customer") ||
+                                        !strcmp(arg, "--request-dict"))) {
             if (++i == argc) {
                 usage(stderr);
                 exit_code = EXIT_FAILURE;
@@ -436,6 +440,8 @@ int main(int argc, char **argv) {
                 config.resource_root = argv[i];
             else if (!strcmp(arg, "--language"))
                 config.default_language = argv[i];
+            else if (!strcmp(arg, "--request-dict"))
+                dict_path = argv[i];
             else {
                 overrides[count] = argv[i];
                 layers[count++] = !strcmp(arg, "--domain") ? TTF_LAYER_DOMAIN : TTF_LAYER_CUSTOMER;
@@ -534,6 +540,20 @@ int main(int argc, char **argv) {
         exit_code = resource_report("freeze engine", status, &diagnostic);
         goto done;
     }
+    if (dict_path) {
+        if (is_trace) {
+            fputs("ttf: --request-dict does not support --trace yet\n", stderr);
+            exit_code = EXIT_FAILURE;
+            goto done;
+        }
+        status = ttf_dict_create(&dict);
+        if (status == TTF_OK)
+            status = ttf_dict_load(dict, dict_path);
+        if (status != TTF_OK) {
+            exit_code = report(dict_path, status);
+            goto done;
+        }
+    }
     if (is_stream) {
         FILE *file = !strcmp(input, "-") ? stdin : fopen(input, "rb");
         ttf_stream_t *stream = NULL;
@@ -562,6 +582,8 @@ int main(int argc, char **argv) {
         else
             status = ttf_stream_create(engine, is_json ? emit_json : emit,
                                        is_json ? (void *)&json_output : (void *)stdout, &stream);
+        if (status == TTF_OK && dict)
+            status = ttf_stream_set_dict(stream, dict);
         while (status == TTF_OK) {
             status = read_input(file, buffer, chunk_bytes, &n);
             if (status != TTF_OK || !n)
@@ -593,7 +615,7 @@ int main(int argc, char **argv) {
             status = ttf_normalize_traced(engine, input, strlen(input), &trace_options, &traced);
             result = traced.result;
         } else
-            status = ttf_normalize(engine, input, strlen(input), &result);
+            status = ttf_normalize_with(engine, dict, input, strlen(input), &result);
         if (status != TTF_OK) {
             exit_code = report("normalize", status);
             goto done;
@@ -642,6 +664,7 @@ int main(int argc, char **argv) {
             exit_code = report("write output", TTF_EIO);
     }
 done:
+    ttf_dict_destroy(dict);
     ttf_engine_destroy(engine);
     free(overrides);
     free(layers);

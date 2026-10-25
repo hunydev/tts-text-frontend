@@ -86,7 +86,9 @@ typedef enum {
     TTF_LAYER_SYSTEM = 1,
     TTF_LAYER_DOMAIN = 2,
     TTF_LAYER_CUSTOMER = 3,
-    TTF_LAYER_USER = 4
+    TTF_LAYER_USER = 4,
+    /* Rows of a request dictionary (ttf_dict_t) only: resource loads reject it. */
+    TTF_LAYER_REQUEST = 5
 } ttf_resource_layer_t;
 typedef enum {
     TTF_PRESERVE_LANGUAGE,
@@ -164,11 +166,37 @@ TTF_API ttf_status_t ttf_lexicon_add(ttf_engine_t *engine, ttf_resource_layer_t 
 TTF_API ttf_status_t ttf_lexicon_remove(ttf_engine_t *engine, ttf_resource_layer_t layer,
                                         const char *source_lang, const char *render_lang,
                                         const char *word);
+/* A request dictionary (2026-10-26): exact rules and lexicon rows owned by the caller and
+   attached to one request or stream of a frozen engine, above every engine layer. Strings
+   are copied. Do not change a dictionary while a request that uses it is running; one
+   dictionary may serve concurrent requests while nobody changes it. */
+typedef struct ttf_dict ttf_dict_t;
+TTF_API ttf_status_t ttf_dict_create(ttf_dict_t **out);
+TTF_API void ttf_dict_destroy(ttf_dict_t *dict);
+TTF_API void ttf_dict_clear(ttf_dict_t *dict);
+TTF_API size_t ttf_dict_size(const ttf_dict_t *dict);
+/* language: a pack tag or "*" (every sentence language); input as written. */
+TTF_API ttf_status_t ttf_dict_add_exact(ttf_dict_t *dict, const char *language,
+                                        const char *input, const char *output);
+TTF_API ttf_status_t ttf_dict_remove_exact(ttf_dict_t *dict, const char *language,
+                                           const char *input);
+TTF_API ttf_status_t ttf_dict_add_lexicon(ttf_dict_t *dict, const char *source_lang,
+                                          const char *render_lang, const char *word,
+                                          const char *pronunciation);
+TTF_API ttf_status_t ttf_dict_remove_lexicon(ttf_dict_t *dict, const char *source_lang,
+                                             const char *render_lang, const char *word);
+/* Resource TSV with exact and lexicon rows only (any other kind: TTF_ERESOURCE). */
+TTF_API ttf_status_t ttf_dict_load(ttf_dict_t *dict, const char *path);
+/* ttf_normalize with a request dictionary (NULL: none). */
+TTF_API ttf_status_t ttf_normalize_with(const ttf_engine_t *engine, const ttf_dict_t *dict,
+                                        const char *text, size_t length, ttf_result_t *out);
 TTF_API ttf_status_t ttf_stream_create(const ttf_engine_t *engine, ttf_callback_fn callback,
                                        void *user_data, ttf_stream_t **out);
 TTF_API ttf_status_t ttf_stream_write(ttf_stream_t *stream, const char *data, size_t length);
 TTF_API ttf_status_t ttf_stream_flush(ttf_stream_t *stream);
 TTF_API void ttf_stream_destroy(ttf_stream_t *stream);
+/* Attach a request dictionary (NULL: none) before the first write; TTF_ESTATE after. */
+TTF_API ttf_status_t ttf_stream_set_dict(ttf_stream_t *stream, const ttf_dict_t *dict);
 TTF_API ttf_status_t ttf_tokenize(const char *text, size_t length, ttf_token_t **tokens,
                                   size_t *count);
 TTF_API void ttf_tokens_free(ttf_token_t *tokens);

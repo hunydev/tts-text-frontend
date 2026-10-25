@@ -11,7 +11,9 @@ builds. ABI version and descriptor structure sizes are checked at setup.
 2. `ttf_engine_create(&config, &engine)` loads builtin packs and system resources.
 3. Optionally register packs, load resources, and add/remove lexicon entries.
 4. `ttf_engine_freeze(engine)` finalizes immutable setup.
-5. Call `ttf_normalize` concurrently, or create request-local streams.
+5. Call `ttf_normalize` concurrently, or create request-local streams. A request
+   dictionary (`ttf_normalize_with`, `ttf_stream_set_dict`) adds exact and lexicon rows to
+   one request above every engine layer ([request-dictionary.ko.md](request-dictionary.ko.md)).
 6. Free results and destroy all streams, then destroy the engine.
 
 Configuration copies used internally belong to the engine. Set a resource root for
@@ -32,6 +34,8 @@ comparison in release CI remains future work.
 | `ttf_result_free` | Frees text/spans; use for every successful result |
 | `ttf_resource_load` | Reads a file; engine owns parsed records |
 | `ttf_lexicon_add`, `ttf_lexicon_remove` | Setup-only mutation; strings are copied |
+| `ttf_dict_create`, `ttf_dict_destroy`, `ttf_dict_add_exact`, `ttf_dict_add_lexicon`, `ttf_dict_remove_*`, `ttf_dict_load`, `ttf_dict_clear` | Caller owns the request dictionary; strings are copied; do not change it while a request uses it |
+| `ttf_normalize_with`, `ttf_stream_set_dict` | Borrow the dictionary for the request; set a stream's before its first write |
 | `ttf_stream_create`, `ttf_stream_destroy` | Caller owns request; engine must outlive it |
 | `ttf_stream_write` | Copies pending input; caller can release bytes after return |
 | `ttf_stream_flush` | Final commit; closes logical request |

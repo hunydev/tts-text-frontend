@@ -81,7 +81,7 @@ const char *ttf_script_name(ttf_script_t s) {
     return (unsigned)s < sizeof(names) / sizeof(names[0]) ? names[s] : "UNKNOWN";
 }
 const char *ttf_layer_name(ttf_resource_layer_t s) {
-    static const char *const names[] = {"common", "system", "domain", "customer", "user"};
+    static const char *const names[] = {"common", "system", "domain", "customer", "user", "request"};
     return (unsigned)s < sizeof(names) / sizeof(names[0]) ? names[s] : "unknown";
 }
 const char *ttf_semantic_type_name(ttf_semantic_type_t s) {

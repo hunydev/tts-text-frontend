@@ -88,6 +88,14 @@ to 95 bytes), allowing user/customer whole-term overrides before G2P fallback.
 English context preserves the original spelling. These three curated entries fix
 known vocabulary cases; they do not establish general unknown-word accuracy.
 
+## Request dictionaries (2026-10-26)
+
+Engine layers are fixed at freeze. A request dictionary (`ttf_dict_t`) adds exact rules and
+lexicon rows to one request or stream of a frozen engine, above the user layer
+(`TTF_LAYER_REQUEST`, trace name `request`), without copying or changing the engine. Rows
+match as written, like the engine's own exact and lexicon rows. Details, the TSV format,
+threading and cost: [request-dictionary.ko.md](request-dictionary.ko.md).
+
 ## Multiword names (v0.8)
 
 The same lexicon resource and public add/remove APIs support bounded multiword

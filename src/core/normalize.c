@@ -2709,6 +2709,10 @@ static int collect(const ttf_segment_t *seg, void *userdata) {
 }
 ttf_status_t ttf_normalize(const ttf_engine_t *e, const char *text, size_t length,
                            ttf_result_t *out) {
+    return ttf_normalize_with(e, NULL, text, length, out);
+}
+ttf_status_t ttf_normalize_with(const ttf_engine_t *e, const ttf_dict_t *dict, const char *text,
+                                size_t length, ttf_result_t *out) {
     ttf_stream_t *s = NULL;
     collector_t c;
     ttf_status_t st;
@@ -2720,7 +2724,9 @@ ttf_status_t ttf_normalize(const ttf_engine_t *e, const char *text, size_t lengt
     st = ttf_stream_create(e, collect, &c, &s);
     if (st != TTF_OK)
         return st;
-    st = ttf_stream_write(s, text, length);
+    st = dict ? ttf_stream_set_dict(s, dict) : TTF_OK;
+    if (st == TTF_OK)
+        st = ttf_stream_write(s, text, length);
     if (st == TTF_OK)
         st = ttf_stream_flush(s);
     ttf_stream_destroy(s);

@@ -258,7 +258,7 @@ ttf_status_t ttf_trace_record(const ttf_engine_t *engine, const ttf_trace_note_t
         return TTF_OK;
     if ((note->disposition != TTF_TRACE_SELECTED && note->disposition != TTF_TRACE_REJECTED) ||
         (note->layer_known != 0 && note->layer_known != 1) ||
-        (note->layer_known && (note->layer < TTF_LAYER_COMMON || note->layer > TTF_LAYER_USER)))
+        (note->layer_known && (note->layer < TTF_LAYER_COMMON || note->layer > TTF_LAYER_REQUEST)))
         return engine->trace_state->status = TTF_EINVAL;
     memset(&event, 0, sizeof(event));
     event.disposition = note->disposition;
