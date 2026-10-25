@@ -148,6 +148,8 @@ Setup mutation, freeze and destruction require caller synchronization. Each stre
 is single-owner and must not receive concurrent writes; callback reentry into the
 same stream is unsupported. Pack callbacks must meet the same reentrancy contract.
 
+A usage guide with measurements: [threading.ko.md](threading.ko.md).
+
 No global mutable language state is needed. To update resources during service,
 create and freeze a replacement engine, route new requests to it, and retain the
 old engine until its streams/requests finish. Callback data must be copied before
