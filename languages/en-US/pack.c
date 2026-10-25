@@ -1147,7 +1147,9 @@ static size_t scripture_verse(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     unsigned field[3] = {0, 0, 0};
     char key[24];
     ttf_resource_layer_t layer = TTF_LAYER_COMMON;
-    if (!ascii_digit_at(s, n, p) || (p && s[p - 1] != ' '))
+    /* a book name comes first: a digit at the start is no verse (2026-10-26: p 0 read two
+       bytes before the text) */
+    if (!ascii_digit_at(s, n, p) || !p || s[p - 1] != ' ')
         return 0;
     w = p - 1;
     while (w && s[w - 1] == ' ')
