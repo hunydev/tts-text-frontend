@@ -541,11 +541,6 @@ int main(int argc, char **argv) {
         goto done;
     }
     if (dict_path) {
-        if (is_trace) {
-            fputs("ttf: --request-dict does not support --trace yet\n", stderr);
-            exit_code = EXIT_FAILURE;
-            goto done;
-        }
         status = ttf_dict_create(&dict);
         if (status == TTF_OK)
             status = ttf_dict_load(dict, dict_path);
@@ -612,7 +607,7 @@ int main(int argc, char **argv) {
         ttf_result_t result = {0};
         ttf_traced_result_t traced = {0};
         if (is_trace) {
-            status = ttf_normalize_traced(engine, input, strlen(input), &trace_options, &traced);
+            status = ttf_normalize_traced_with(engine, dict, input, strlen(input), &trace_options, &traced);
             result = traced.result;
         } else
             status = ttf_normalize_with(engine, dict, input, strlen(input), &result);

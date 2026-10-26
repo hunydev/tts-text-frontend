@@ -249,7 +249,7 @@ ttf_dict_destroy(dict);
 ## 8. 도구
 
 - **CLI:** `ttf normalize|inspect '문장'`, `ttf stream FILE`, `ttf validate-resource FILE`. 옵션은 `--language`, `--output-mode`, `--customer`, `--domain`, `--request-dict`, 5절의 옵션 이름. `inspect`는 구간마다 언어·규칙·사전 층을 보여준다.
-- **웹 워크벤치:** `tools/web/server.py`(포트 8000). 정규화, 구간 확인, 사용자 사전·고객 정책 편집, 스트림 조각 검증. 상세: [web-workbench.md](web-workbench.md).
+- **웹 워크벤치:** `tools/web/server.py`(포트 8000). 정규화, 구간 확인, 사용자 사전·고객 정책·요청 사전 편집, 스트림 조각 검증. 상세: [web-workbench.md](web-workbench.md).
 
 ## 9. 자주 묻는 것
 

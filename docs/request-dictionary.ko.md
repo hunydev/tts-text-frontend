@@ -51,7 +51,8 @@ ttf_dict_destroy(dict);
 
 - 같은 키를 다시 넣으면 바꾼다. 없는 키를 지워도 오류가 아니다.
 - 잘못된 언어 태그, 빈 값, 탭·줄바꿈이 든 값, 잘못된 UTF-8은 `TTF_EINVAL`이다. 파일에 다른 종류의 행이나 칸 수가 틀린 행이 있으면 `TTF_ERESOURCE`이고, 파일이 없으면 `TTF_EIO`다.
-- CLI: `ttf normalize|inspect|stream --request-dict FILE`(`--trace`와는 아직 같이 쓸 수 없다).
+- CLI: `ttf normalize|inspect|stream --request-dict FILE`. `--trace`와 함께 쓰면 추적에도 `request` 층이 나온다(`ttf_normalize_traced_with`).
+- 웹 워크벤치: **발음사전 / 고객 리소스 실험**의 **요청 사전 TSV** 칸. 그 실행에만 적용되고, 정규화·상세 추적·스트리밍·청크 검증 모두에 쓰인다. 예제 선택의 **요청 사전 · 이모지·영문 이름**에 예가 있다.
 
 ## 스레드
 

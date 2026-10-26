@@ -212,11 +212,28 @@ class Engine:
                 "ttf_trace_stage_name": (C.c_char_p, [I]),
                 "ttf_trace_disposition_name": (C.c_char_p, [I]),
             })
+        # Request dictionaries (2026-10-26): exact and lexicon rows for each run.
+        self.has_dict = hasattr(self.lib, "ttf_dict_create")
+        if self.has_dict:
+            definitions.update({
+                "ttf_dict_create": (I, [C.POINTER(P)]),
+                "ttf_dict_destroy": (None, [P]),
+                "ttf_dict_load": (I, [P, C.c_char_p]),
+                "ttf_dict_size": (Z, [P]),
+                "ttf_normalize_with": (I, [P, P, C.c_char_p, Z, C.POINTER(Result)]),
+                "ttf_stream_set_dict": (I, [P, P]),
+            })
+            if self.has_trace:
+                definitions["ttf_normalize_traced_with"] = (
+                    I, [P, P, C.c_char_p, Z, C.POINTER(TraceOptions), C.POINTER(TracedResult)])
+        elif options.get("request_dict_tsv", "").strip():
+            raise ValueError("This native library does not support request dictionaries")
         for name, (result, args) in definitions.items():
             fn = getattr(self.lib, name)
             fn.restype = result
             fn.argtypes = args
         self.handle = P()
+        self.dict = P()
         cfg = Config()
         self.lib.ttf_config_init(C.byref(cfg))
         cfg.resource_root = str(resources).encode()
@@ -314,6 +331,16 @@ class Engine:
                 self.resource_validation = {key: int(getattr(report, key)) for key in
                     ("records", "validated_records", "unvalidated_records")}
             self.check(self.lib.ttf_engine_freeze(self.handle))
+            if options.get("request_dict_tsv", "").strip():
+                # A dictionary of this run on the frozen engine (docs/request-dictionary.ko.md).
+                self.check(self.lib.ttf_dict_create(C.byref(self.dict)))
+                with tempfile.TemporaryDirectory(prefix="ttf-web-request-") as directory:
+                    path = Path(directory) / "request.tsv"
+                    path.write_text(options["request_dict_tsv"], encoding="utf-8")
+                    status = self.lib.ttf_dict_load(self.dict, str(path).encode())
+                if status:
+                    raise ValueError("요청 사전: " + string(self.lib.ttf_status_string(status)) +
+                                     " (exact·lexicon 행만, 탭으로 나눈 4칸)")
         except BaseException:
             self.close()
             raise
@@ -346,6 +373,9 @@ class Engine:
             self.check(self.lib.ttf_resource_load(self.handle, str(path).encode(), layer))
 
     def close(self):
+        if self.dict:
+            self.lib.ttf_dict_destroy(self.dict)
+            self.dict = P()
         if self.handle:
             self.lib.ttf_engine_destroy(self.handle)
             self.handle = P()
@@ -406,11 +436,19 @@ class Engine:
         result = Result()
         traced = TracedResult()
         if self.detailed_trace:
-            self.check(self.lib.ttf_normalize_traced(self.handle, source, len(source),
-                                                    None, C.byref(traced)))
+            if self.dict:
+                self.check(self.lib.ttf_normalize_traced_with(self.handle, self.dict, source,
+                                                              len(source), None, C.byref(traced)))
+            else:
+                self.check(self.lib.ttf_normalize_traced(self.handle, source, len(source),
+                                                        None, C.byref(traced)))
             result = traced.result
         else:
-            self.check(self.lib.ttf_normalize(self.handle, source, len(source), C.byref(result)))
+            if self.dict:
+                self.check(self.lib.ttf_normalize_with(self.handle, self.dict, source, len(source),
+                                                       C.byref(result)))
+            else:
+                self.check(self.lib.ttf_normalize(self.handle, source, len(source), C.byref(result)))
         try:
             output = C.string_at(result.text, result.length)
             row = {
@@ -494,6 +532,8 @@ class Engine:
             self.check(self.lib.ttf_stream_create_traced(self.handle, None, callback, None, C.byref(stream)))
         else:
             self.check(self.lib.ttf_stream_create(self.handle, callback, None, C.byref(stream)))
+        if self.dict:
+            self.check(self.lib.ttf_stream_set_dict(stream, self.dict))
         try:
             at = 0
             for write_index, size in enumerate(sizes):

@@ -9,6 +9,9 @@
   rules of one layer and length, a rule of the sentence language now beats a `*` rule (file
   order decided it). Without a dictionary 26,456 sentences of the seven languages keep
   byte-identical output and spans. Test `request_dictionary`.
+- Request dictionaries in the web workbench and traces (2026-10-26): a **요청 사전 TSV** field
+  (option `request_dict_tsv`, 16 KiB) for normalize, detailed trace, stream and chunk runs, and
+  a sample; `ttf_normalize_traced_with`; CLI `--request-dict` now works with `--trace`.
 - Dictionary entries win inside grammar spans (2026-10-26): when a classification would take
   a later token where an exact rule above the system layer (domain, customer, user or request
   dictionary) starts, it is classified again up to that token (제 1231987호 now reads the user's

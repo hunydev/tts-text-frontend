@@ -242,6 +242,7 @@ DEFAULTS = dict(
     delay_ms=0,
     domain="none",
     customer_tsv="",
+    request_dict_tsv="",
     user_lexicon=[],
     remove_system_words=[],
     verify_chunks=[1, 7, 64],
@@ -341,6 +342,7 @@ def validate(request, corpus=False):
     integer(opts["delay_ms"], "delay_ms", 0, 100)
     integer(opts["random_seed"], "random_seed", 0, 2147483647)
     bounded_string(opts["customer_tsv"], "customer_tsv", 16384)
+    bounded_string(opts["request_dict_tsv"], "request_dict_tsv", 16384)
     if (
         not isinstance(opts["verify_chunks"], list)
         or not 1 <= len(opts["verify_chunks"]) <= 6
@@ -441,6 +443,18 @@ def catalog():
             text="TV와 OLED, K3의 이름입니다.",
             expected="티비와 올레드, 케이쓰리의 이름입니다.",
             options={"customer_tsv": (ROOT / "resources/customers/reading-preferences/ko-KR/lexicon.tsv").read_text(encoding="utf-8")},
+        ),
+        dict(
+            id="request-dictionary",
+            category="사전",
+            title="요청 사전 · 이모지·영문 이름",
+            text="어제 2NE1 콘서트에서 🍔👌 Qorvex 신제품도 봤어",
+            expected="어제 투에니원 콘서트에서 햄버거 좋아 코르벡스 신제품도 봤어",
+            options={"request_dict_tsv": (
+                "exact\tko-KR\t2NE1\t투에니원\n"
+                "exact\t*\t🍔👌\t햄버거 좋아\n"
+                "lexicon\tko-KR\ten-US:Qorvex\t코르벡스\n"
+            )},
         ),
         dict(
             id="layer",

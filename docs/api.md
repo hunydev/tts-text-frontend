@@ -35,7 +35,7 @@ comparison in release CI remains future work.
 | `ttf_resource_load` | Reads a file; engine owns parsed records |
 | `ttf_lexicon_add`, `ttf_lexicon_remove` | Setup-only mutation; strings are copied |
 | `ttf_dict_create`, `ttf_dict_destroy`, `ttf_dict_add_exact`, `ttf_dict_add_lexicon`, `ttf_dict_remove_*`, `ttf_dict_load`, `ttf_dict_clear` | Caller owns the request dictionary; strings are copied; do not change it while a request uses it |
-| `ttf_normalize_with`, `ttf_stream_set_dict` | Borrow the dictionary for the request; set a stream's before its first write |
+| `ttf_normalize_with`, `ttf_stream_set_dict`, `ttf_normalize_traced_with` | Borrow the dictionary for the request; set a stream's before its first write |
 | `ttf_stream_create`, `ttf_stream_destroy` | Caller owns request; engine must outlive it |
 | `ttf_stream_write` | Copies pending input; caller can release bytes after return |
 | `ttf_stream_flush` | Final commit; closes logical request |

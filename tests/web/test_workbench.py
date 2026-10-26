@@ -163,6 +163,21 @@ try:
         run("Apple은 사과입니다.", opts={"render_policy": "preserve"})[0]["text"]
         == "Apple은 사과입니다."
     )
+    # A request dictionary is above the user layer, in batch, traced and stream runs.
+    request_dict = dict(request_dict_tsv="exact\tko-KR\t2NE1\t투에니원\n"
+                        "lexicon\tko-KR\ten-US:Apple\t요청애플\n",
+                        user_lexicon=[dict(word="Apple", pronunciation="사용자애플")])
+    for trace in (False, True):
+        result, _ = run("2NE1과 Apple", opts=dict(request_dict, detailed_trace=trace))
+        assert result["text"] == "투에니원과 요청애플", result["text"]
+        assert result["spans"][0]["resource_layer"] == "request"
+    result, events = run("2NE1과 Apple", mode="stream", opts=request_dict)
+    assert "".join(e["text"] for e in events if e["event"] == "segment") == "투에니원과 요청애플"
+    with post("/api/run", dict(mode="normalize", text="2NE1",
+                               options={"request_dict_tsv": "pattern\tko-KR\tA{digits}\tB\n"})) as r:
+        errors = [json.loads(x) for x in r]
+    assert errors[-1]["event"] == "error" and "요청 사전" in errors[-1].get("message", ""), errors
+    checks += 1
     result, _ = run("WiFi를 사용합니다.", opts={"remove_system_words": ["wifi"]})
     assert result["text"] and "WiFi" not in result["text"]
     assert result["spans"][0]["lexicon"] != "lexicon:system"

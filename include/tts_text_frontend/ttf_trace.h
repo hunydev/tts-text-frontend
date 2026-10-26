@@ -65,6 +65,11 @@ TTF_API void ttf_trace_options_init(ttf_trace_options_t *options);
 TTF_API ttf_status_t ttf_normalize_traced(const ttf_engine_t *engine, const char *text,
                                           size_t length, const ttf_trace_options_t *options,
                                           ttf_traced_result_t *out);
+/* ttf_normalize_traced with a request dictionary (NULL: none). */
+TTF_API ttf_status_t ttf_normalize_traced_with(const ttf_engine_t *engine, const ttf_dict_t *dict,
+                                               const char *text, size_t length,
+                                               const ttf_trace_options_t *options,
+                                               ttf_traced_result_t *out);
 TTF_API void ttf_traced_result_free(ttf_traced_result_t *result);
 /* Engine must remain frozen and alive until stream destruction. Events and all
    callback pointers expire on callback return. Copy them to retain evidence.

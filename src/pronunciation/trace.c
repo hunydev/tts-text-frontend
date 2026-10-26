@@ -416,6 +416,11 @@ fail:
 }
 ttf_status_t ttf_normalize_traced(const ttf_engine_t *engine, const char *text, size_t length,
                                   const ttf_trace_options_t *options, ttf_traced_result_t *out) {
+    return ttf_normalize_traced_with(engine, NULL, text, length, options, out);
+}
+ttf_status_t ttf_normalize_traced_with(const ttf_engine_t *engine, const ttf_dict_t *dict,
+                                       const char *text, size_t length,
+                                       const ttf_trace_options_t *options, ttf_traced_result_t *out) {
     ttf_stream_t *stream = NULL;
     trace_collector_t collector;
     ttf_status_t status;
@@ -427,6 +432,8 @@ ttf_status_t ttf_normalize_traced(const ttf_engine_t *engine, const char *text, 
     memset(&collector, 0, sizeof(collector));
     collector.out = out;
     status = ttf_stream_create_traced(engine, options, collect_traced, &collector, &stream);
+    if (status == TTF_OK && dict)
+        status = ttf_stream_set_dict(stream, dict);
     if (status == TTF_OK)
         status = ttf_stream_write(stream, text, length);
     if (status == TTF_OK)
