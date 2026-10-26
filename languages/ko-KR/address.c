@@ -33,17 +33,21 @@ ttf_status_t ttf_ko_address(const ttf_engine_t *e, const char *s, size_t n, ttf_
                             strchr("-.,()", (int)cp)))))
             return TTF_EINVAL;
         if (cp == '-') {
-            /* 12-3, and a unit letter or syllable before it: B-101호, 가-101호 (2026-10-27) */
-            size_t left = p, right = p + 1;
+            /* 12-3, and one unit letter or syllable right before it: B-101호, 가-101호 (2026-10-27);
+               서울시 -12 stays invalid */
+            size_t left = p, right = p + 1, unit = 0, w;
             uint32_t before = 0;
-            size_t w;
             while (left && space(s[left - 1])) --left;
             while (right < n && space(s[right])) ++right;
-            if (left >= 3 && ttf_utf8_decode(s + left - 3, 3, &before, &w) != 1)
-                before = 0;
-            if (!left || right == n || !digit(s[right]) ||
-                !(digit(s[left - 1]) || alpha(s[left - 1]) ||
-                  (left >= 3 && before >= 0xac00 && before <= 0xd7a3)))
+            if (left == p && left && alpha(s[left - 1]))
+                unit = 1;
+            else if (left == p && left >= 3 && ttf_utf8_decode(s + left - 3, 3, &before, &w) == 1 &&
+                     before >= 0xac00 && before <= 0xd7a3)
+                unit = 3;
+            if (unit && left > unit && !space(s[left - unit - 1]) && s[left - unit - 1] != '(' &&
+                s[left - unit - 1] != ',')
+                unit = 0; /* a word, not a one-character unit label */
+            if (!left || right == n || !digit(s[right]) || !(digit(s[left - 1]) || unit))
                 return TTF_EINVAL;
         }
         if (ttf_script_of(cp) == TTF_SCRIPT_HANGUL || (cp < 128 && (alpha((char)cp) || digit((char)cp))))
