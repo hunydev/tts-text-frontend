@@ -105,7 +105,8 @@ int main(int argc, char **argv) {
     if (argc != 2)
         return 2;
     /* the engine's user layer; `*` first, so file order would pick it (2026-10-26) */
-    CHECK(write_file(user, "exact\t*\t알쓰\t엔진 별표\nexact\tko-KR\t알쓰\t엔진 사용자\n"));
+    CHECK(write_file(user, "exact\t*\t알쓰\t엔진 별표\nexact\tko-KR\t알쓰\t엔진 사용자\n"
+                           "exact\tko-KR\t1279455\t일이칠구사오오\n"));
     CHECK((e = engine(argv[1], user)) != NULL);
     CHECK((plain = engine(argv[1], NULL)) != NULL);
     CHECK(!strcmp(ttf_layer_name(TTF_LAYER_REQUEST), "request"));
@@ -113,6 +114,9 @@ int main(int argc, char **argv) {
 
     /* a language's rule beats a `*` rule of the same layer */
     CHECK(same(e, NULL, "알쓰 모임", "엔진 사용자 모임"));
+    /* an entry inside a grammar span is read as written (제 N호, 2026-10-26) */
+    CHECK(same(e, NULL, "전자관보 제 1279455호에", "전자관보 제 일이칠구사오오호에"));
+    CHECK(same(plain, NULL, "전자관보 제 1279455호에", "전자관보 제백이십칠만 구천사백오십오 호에"));
     CHECK(ttf_dict_create(&d) == TTF_OK && ttf_dict_size(d) == 0);
     CHECK(same(e, d, "알쓰 모임", "엔진 사용자 모임"));
 
@@ -139,6 +143,10 @@ int main(int argc, char **argv) {
     CHECK(ttf_dict_remove_exact(d, "ko-KR", "알쓰") == TTF_OK && ttf_dict_size(d) == 4);
     CHECK(same(e, d, "알쓰 모임", "엔진 사용자 모임"));
     CHECK(ttf_dict_remove_exact(d, "ko-KR", "없는 키") == TTF_OK && ttf_dict_size(d) == 4);
+    CHECK(ttf_dict_add_exact(d, "ko-KR", "1231987", "일이삼일구팔칠") == TTF_OK);
+    CHECK(same(plain, d, "법원 제 1231987호 법정", "법원 제 일이삼일구팔칠호 법정"));
+    CHECK(same(plain, d, "제 50조와 제 1231987호", "제오십 조와 제 일이삼일구팔칠호"));
+    CHECK(ttf_dict_remove_exact(d, "ko-KR", "1231987") == TTF_OK);
     /* a key of 63 bytes or more */
     memset(long_key, 'q', 70);
     long_key[70] = 0;

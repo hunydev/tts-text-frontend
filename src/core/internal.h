@@ -93,6 +93,9 @@ struct ttf_engine {
     /* Freeze indexes `exact` rules by hash (rule.c); e->rules then holds only patterns
        and exact keys of 63 bytes or more. */
     int rules_indexed;
+    /* Freeze: some exact rule is above the system layer (a domain, customer or user
+       dictionary entry), so classification checks for entries inside its span. */
+    int dictionary_rules;
     /* exact and pattern rows live in their own table from their first insert, so a
        dictionary of a million rules does not slow every other lookup or the freeze passes
        (2026-10-25). Its TTF_RULE_BUCKETS heads are one sparse calloc: untouched pages cost

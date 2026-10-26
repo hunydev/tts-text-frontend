@@ -9,6 +9,11 @@
   rules of one layer and length, a rule of the sentence language now beats a `*` rule (file
   order decided it). Without a dictionary 26,456 sentences of the seven languages keep
   byte-identical output and spans. Test `request_dictionary`.
+- Dictionary entries win inside grammar spans (2026-10-26): when a classification would take
+  a later token where an exact rule above the system layer (domain, customer, user or request
+  dictionary) starts, it is classified again up to that token (제 1231987호 now reads the user's
+  entry, 제 일이삼일구팔칠호). No shipped resource has such a rule; output without dictionaries is
+  unchanged (26,456 sentences) and a million-entry dictionary keeps its speed.
 - en-US: a digit at the start of the text no longer reads two bytes before it in the
   scripture verse check (AddressSanitizer).
 - The owner's TN evaluation sets (benchmark/datasets/user-tn-eval): 1,000 sentences each for

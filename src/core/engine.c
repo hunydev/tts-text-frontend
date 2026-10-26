@@ -231,10 +231,13 @@ ttf_status_t ttf_engine_freeze(ttf_engine_t *e) {
        cues must not scan pronunciation dictionaries during normalization. */
     e->rules = NULL;
     e->boundary_cues = NULL;
+    e->dictionary_rules = 0;
     for (bucket = 0; e->rule_table && bucket < e->rule_buckets; ++bucket) {
         ttf_entry_t *entry;
         for (entry = e->rule_table[bucket]; entry; entry = entry->next) {
             entry->rule_next = NULL;
+            if (entry->layer > TTF_LAYER_SYSTEM && !strcmp(entry->kind, "exact"))
+                e->dictionary_rules = 1;
             if (!strcmp(entry->kind, "pattern") || (!strcmp(entry->kind, "exact") && strlen(entry->key) >= 63)) {
                 entry->rule_next = e->rules;
                 e->rules = entry;

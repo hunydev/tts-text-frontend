@@ -1742,6 +1742,29 @@ ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t le
    unit, with token offsets moved past it; what they return is moved back. Only
    classification sees it: routing, rendering and spans are unchanged, and a
    stream decides like a batch because both cut the same units (2026-10-07). */
+/* The first token after `from` and before `to` where a dictionary entry starts: an exact rule
+   above the system layer (domain, customer, user or request dictionary) in lang. The grammar
+   at `from` stops before it, so the entry is read as written (2026-10-26: 제 1231987호 read the
+   number through the ordinal grammar, past the user's entry). marks caches each token's
+   answer for one language: 0 unknown, 1 none, 2 an entry. */
+static size_t dictionary_cut(const ttf_engine_t *e, const char *lang, const char *text,
+                             size_t length, const ttf_token_t *tokens, size_t from, size_t to,
+                             unsigned char *marks, const char **mark_lang) {
+    size_t k, matched;
+    for (k = from + 1; k < to; ++k) {
+        if (tokens[k].script == TTF_SCRIPT_WHITESPACE)
+            continue;
+        if (mark_lang[k] != lang) {
+            const ttf_entry_t *rule =
+                ttf_rule_match(e, lang, text + tokens[k].begin, length - tokens[k].begin, &matched);
+            marks[k] = rule && rule->layer > TTF_LAYER_SYSTEM && !strcmp(rule->kind, "exact") ? 2 : 1;
+            mark_lang[k] = lang;
+        }
+        if (marks[k] == 2)
+            return k;
+    }
+    return to;
+}
 ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
                                       size_t context_length, const char *text, size_t length,
                                       size_t offset, ttf_result_t *out) {
@@ -1765,6 +1788,8 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
     size_t trace_mark = ttf_trace_mark(e);
     size_t *phoneme_regions = NULL, phoneme_count = 0, phoneme_cap = 0;
     int ignore = 0;
+    unsigned char *dict_marks = NULL;
+    const char **dict_lang = NULL;
     context_view.context_memo = &memo;
     context_view.unit_prefix = prefix;
     context_view.unit_prefix_length = prefix ? context_length : 0;
@@ -1777,6 +1802,18 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
         free(tokens);
         free(regions);
         return TTF_ENOMEM;
+    }
+    if (count && (e->dictionary_rules || (e->dict && e->dict->rows))) {
+        dict_marks = (unsigned char *)calloc(count, 1);
+        dict_lang = (const char **)calloc(count, sizeof(*dict_lang));
+        if (!dict_marks || !dict_lang) {
+            free(dict_marks);
+            free(dict_lang);
+            free(scopes);
+            free(tokens);
+            free(regions);
+            return TTF_ENOMEM;
+        }
     }
     st = ttf_numeric_width_create(text, length, tokens, count, regions, region_count,
                                   ttf_numeric_width_mode(e->default_language), &width_view);
@@ -1985,7 +2022,15 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
             goto fail;
         }
         if (tokens[i].script != TTF_SCRIPT_WHITESPACE) {
+            /* A dictionary entry inside the classified span: classify again up to it. */
+            const ttf_semantic_t sem_before = *sem;
+            const size_t consumed_before = consumed;
+            const long priority_before = classifier_priority;
+            size_t cap = count;
+            int retry;
+            do {
             ttf_pack_input_t classification = in;
+            retry = 0;
             if (region_index < region_count) {
                 classification.length = regions[region_index].begin;
                 classification.token_count = i;
@@ -1995,6 +2040,10 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
             }
             semantic_limit = classification.length;
             phrase_count = classification.token_count;
+            if (cap < classification.token_count) {
+                classification.length = tokens[cap].begin;
+                classification.token_count = cap;
+            }
             if (width_view.text) {
                 width_view.tokens[i].begin = width_view.scan[tokens[i].begin];
                 classification.text = width_view.text;
@@ -2159,6 +2208,18 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
             }
             rule = ttf_rule_match(e, context->language_tag, text + tokens[i].begin,
                                   semantic_limit - tokens[i].begin, &matched);
+            if (!rule && dict_marks && cap == count && consumed > 1) {
+                size_t cut = dictionary_cut(e, context->language_tag, text, semantic_limit, tokens, i,
+                                            i + consumed, dict_marks, dict_lang);
+                if (cut < i + consumed) {
+                    cap = cut;
+                    retry = 1;
+                    *sem = sem_before;
+                    consumed = consumed_before;
+                    classifier_priority = priority_before;
+                }
+            }
+            } while (retry);
         }
         if (rule) {
             sem->type = TTF_SEM_CUSTOM;
@@ -2670,8 +2731,12 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
     free(regions);
     free(context_text);
     free(context_tokens);
+    free(dict_marks);
+    free(dict_lang);
     return TTF_OK;
 fail:
+    free(dict_marks);
+    free(dict_lang);
     free(phoneme_regions);
     free(context_text);
     free(context_tokens);
