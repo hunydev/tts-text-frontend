@@ -163,9 +163,18 @@ size_t ttf_ko_classify_basement(const ttf_pack_input_t *in, ttf_semantic_t *out)
         out->type = TTF_SEM_MEASURE;
     } else
         return 0;
+    {
+        /* 지하 B2층 지하 이 층: 지하 already written, B2층 reads as a floor (2026-10-27) */
+        size_t b = start;
+        while (b && (in->text[b - 1] == ' ' || in->text[b - 1] == '\t'))
+            --b;
+        if (b >= 6 && !memcmp(in->text + b - 6, "지하", 6) && !(second_end && second_unit))
+            snprintf(out->unit, sizeof(out->unit), "floor");
+    }
     out->input_end = end;
+    /* B1층에 지하 일 층에: the floor word may carry its particle (2026-10-27; was 비원층에) */
     for (next = in->index; next < in->token_count && in->tokens[next].begin < end; ++next)
-        if (in->tokens[next].end > end)
+        if (in->tokens[next].end > end && in->tokens[next].script != TTF_SCRIPT_HANGUL)
             return 0;
     return next - in->index;
 }
