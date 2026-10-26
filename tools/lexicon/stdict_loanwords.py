@@ -22,7 +22,17 @@ Selection
     * Rows are kind loanword, not lexicon: the engine reads a word with them only
       when no declared reading exists, and they never make a word "declared"
       (ham7239 keeps its letters; SAVE20 세이브 트웬티 needs a project entry).
+    * Accented originals (2026-10-26): one word of Latin letters with diacritics, small or
+      capitalized (café 카페, Düsseldorf 뒤셀도르프), keyed by its spelling without the
+      accents, which is how the engine looks a foreign word up. A key the ASCII entries
+      already have keeps theirs (xylene 자일렌), and keys that are other English words are
+      left out (college is not collège 콜레주, loss is not Löss 뢰스).
+    * Accented phrases (2026-10-26): two to four words (São Paulo 상파울루, Les Misérables
+      레 미제라블) go to stdict_loanword_phrases.tsv as lexicon rows, the only kind phrase
+      matching reads, with the accents and without them. Headwords that read only part of a
+      name (Siddhārtha Gautama 싯다르타) are left out.
 """
+import unicodedata
 import collections
 import json
 import re
@@ -44,6 +54,22 @@ down each even here just made make many most never other over said same some sti
 upon well were where which while would yes off yet set ever per via via""".split())
 # Spellings whose dictionary form is not the one Korean text uses: net 네트 (넷제로, 닷넷).
 EXCLUDE = {"net"}
+LATIN = "A-Za-zÀ-ÖØ-öø-ɏḀ-ỿ"
+# Accent-free keys that are other English words (reviewed 2026-10-26 against CMUdict).
+ENGLISH_WORDS = {"alcove", "amphitheatre", "assemble", "college", "daemon", "deformation", "glace", "har",
+                 "hue", "ideologues", "lame", "liege", "loss", "masse", "meme", "munster", "ore", "orleans",
+                 "pique", "sebi"}
+# Headwords that read only part of the original (the given name or the surname alone).
+PARTIAL = {"Don Carlos de Borbón", "Mahāvīra Vardhamāna Jñātiputra", "Budé Guillaume",
+           "Charles le Téméraire", "Siddhārtha Gautama", "Abū Bakr alsiddiq", "Paré Ambroise",
+           "Gundulić Ivan Franov", "Nadar Félix", "Novotný Antonín", "Delcassé Théophile",
+           "La Pléiade"}
+PHRASE_HEADER = HEADER.replace("Standard Korean spellings of loanwords, keyed by the original\n# Latin spelling",
+                               "Standard Korean spellings of accented loanword phrases, keyed by the\n# original Latin spelling and by it without accents")
+
+
+def fold(text):
+    return "".join(c for c in unicodedata.normalize("NFKD", text) if not unicodedata.combining(c))
 
 
 def headword(word):
@@ -58,11 +84,18 @@ def entries(archive):
             for item in json.loads(z.read(name))["channel"]["item"]:
                 w = item["word_info"]
                 ol = w.get("original_language_info") or []
-                if w["word_unit"] != "단어" or w["word_type"] != "외래어" or len(ol) != 1:
+                if w["word_unit"] not in ("단어", "구") or w["word_type"] != "외래어" or len(ol) != 1:
                     continue
                 src = ol[0].get("original_language", "").strip()
-                reading = headword(w["word"])
-                if not re.fullmatch(r"[a-z]{3,}", src) or not re.fullmatch(r"[가-힣]+", reading):
+                # phrase headwords (구) only for the accented phrases (레 미제라블)
+                if w["word_unit"] == "구" and (src.isascii() or " " not in src):
+                    continue
+                reading = headword(w["word"]).replace("^", " ")
+                if src.isascii() and not re.fullmatch(r"[a-z]{3,}", src):
+                    continue
+                if not src.isascii() and not re.fullmatch(f"[{LATIN}]{{3,}}|[{LATIN}]+( [{LATIN}]+){{1,3}}", src):
+                    continue
+                if not re.fullmatch(r"[가-힣]+( [가-힣]+)*", reading) or (" " in reading and " " not in src):
                     continue
                 senses = [s for p in w["pos_info"] for c in p["comm_pattern_info"] for s in c["sense_info"]]
                 if senses and all(s["definition"].lstrip().startswith("→") for s in senses):
@@ -73,7 +106,7 @@ def entries(archive):
 def existing_keys():
     keys = set()
     for path in (ROOT / "resources").rglob("*.tsv"):
-        if path.name == "stdict_loanwords.tsv":
+        if path.name in ("stdict_loanwords.tsv", "stdict_loanword_phrases.tsv"):
             continue
         for line in path.open(encoding="utf-8"):
             if line.startswith("lexicon\tko-KR\ten-US:"):
@@ -83,8 +116,12 @@ def existing_keys():
 
 def build(archive):
     by = collections.defaultdict(lambda: collections.defaultdict(set))
+    accented = collections.defaultdict(set)
     for src, reading, lang in entries(archive):
-        by[src][lang].add(reading)
+        if src.isascii():
+            by[src][lang].add(reading)
+        elif " " not in src:
+            accented[fold(src).lower()].add(reading)
     have = existing_keys()
     table, skipped = {}, collections.Counter()
     for src, langs in by.items():
@@ -99,7 +136,31 @@ def build(archive):
             skipped["ambiguous"] += 1
             continue
         table[src] = next(iter(readings))
+    for key, readings in accented.items():
+        if not re.fullmatch(r"[a-z]{3,}", key) or key in ENGLISH_WORDS:
+            skipped["accented: english word"] += 1
+        elif key in table or key in by or key in have:
+            skipped["accented: ascii entry"] += 1
+        elif len(readings) != 1:
+            skipped["accented: ambiguous"] += 1
+        else:
+            table[key] = next(iter(readings))
     return table, skipped
+
+
+def phrases(archive):
+    """Accented multiword originals: lexicon keys with and without the accents."""
+    have = existing_keys()
+    rows, readings = {}, collections.defaultdict(set)
+    for src, reading, _ in entries(archive):
+        if src.isascii() or " " not in src or src in PARTIAL:
+            continue
+        for key in {src.lower(), fold(src).lower()}:
+            readings[key].add(reading)
+    for key, values in readings.items():
+        if len(values) == 1 and key not in have:
+            rows[key] = next(iter(values))
+    return rows
 
 
 def main():
@@ -107,6 +168,11 @@ def main():
     rows = ["loanword\tko-KR\ten-US:%s\t%s\n" % (k, table[k]) for k in sorted(table)]
     Path(sys.argv[2]).write_text(HEADER + "".join(rows), encoding="utf-8", newline="\n")
     print("%d loanwords; skipped %s" % (len(table), dict(skipped)))
+    multi = phrases(sys.argv[1])
+    out = Path(sys.argv[2]).with_name("stdict_loanword_phrases.tsv")
+    out.write_text(PHRASE_HEADER + "".join("lexicon\tko-KR\ten-US:%s\t%s\n" % (k, multi[k]) for k in sorted(multi)),
+                   encoding="utf-8", newline="\n")
+    print("%d phrase keys -> %s" % (len(multi), out.name))
 
 
 if __name__ == "__main__":

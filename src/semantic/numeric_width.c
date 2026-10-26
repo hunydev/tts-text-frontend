@@ -22,8 +22,17 @@ static int arabic_digit(const char *s, size_t n, size_t at) {
         return u[1] - 0xb0;
     return -1;
 }
+/* A mathematical digit 𝟏 𝟙 𝟣 𝟭 𝟷 (U+1D7CE-U+1D7FF: bold, double-struck, sans-serif, sans-serif
+   bold, monospace) at `at`, as styled text writes numbers (2026-10-26); its value, or -1. */
+static int math_digit(const char *s, size_t n, size_t at) {
+    const unsigned char *u = (const unsigned char *)s + at;
+    if (n - at < 4 || u[0] != 0xf0 || u[1] != 0x9d || u[2] != 0x9f || u[3] < 0x8e || u[3] > 0xbf)
+        return -1;
+    return (u[3] - 0x8e) % 10;
+}
 static int ascii_digit_at(const char *s, size_t n, size_t at) {
-    return at < n && ((s[at] >= '0' && s[at] <= '9') || wide(s, n, at) || arabic_digit(s, n, at) >= 0);
+    return at < n && ((s[at] >= '0' && s[at] <= '9') || wide(s, n, at) || arabic_digit(s, n, at) >= 0 ||
+                      math_digit(s, n, at) >= 0);
 }
 /* An Arabic number form at `at` (2026-10-22): an Arabic-Indic digit, the Arabic decimal
    mark ٫ (U+066B) and thousands mark ٬ (U+066C) between digits, and the Arabic percent sign ٪
@@ -128,12 +137,14 @@ static size_t cjk_form(const char *s, size_t n, size_t at, char previous, int mo
 }
 static int canonical(const char *s, size_t n, size_t at, int mode) {
     char ascii, previous = (at && s[at - 1] >= '0' && s[at - 1] <= '9') || (at >= 3 && wide(s, n, at - 3)) ||
-                                   (at >= 2 && arabic_digit(s, n, at - 2) >= 0)
+                                   (at >= 2 && arabic_digit(s, n, at - 2) >= 0) ||
+                                   (at >= 4 && math_digit(s, n, at - 4) >= 0)
                                ? '0'
                                : 0;
     return wide(s, n, at) || wide_tilde(s, n, at) || minus_sign(s, n, at) || en_dash(s, n, at) ||
            arabic_form(s, n, at, previous, &ascii) ||
-           thai_digit(s, n, at) || cjk_form(s, n, at, previous, mode == 3 ? 0 : mode, &ascii);
+           thai_digit(s, n, at) || math_digit(s, n, at) >= 0 ||
+           cjk_form(s, n, at, previous, mode == 3 ? 0 : mode, &ascii);
 }
 int ttf_numeric_width_mode(const char *language) {
     if (!language)
@@ -159,7 +170,7 @@ ttf_status_t ttf_numeric_width_create(const char *s, size_t n, const ttf_token_t
        The scan is once per unit, never once per classifier/token. */
     while (at < n) {
         unsigned char c = (unsigned char)s[at];
-        if (c != 0xef && c != 0xe2 && c != 0xe3 && c != 0xe0 && c != 0xd9 && c != 0xdb) {
+        if (c != 0xef && c != 0xe2 && c != 0xe3 && c != 0xe0 && c != 0xd9 && c != 0xdb && c != 0xf0) {
             ++at;
             continue;
         }
@@ -201,6 +212,10 @@ ttf_status_t ttf_numeric_width_create(const char *s, size_t n, const ttf_token_t
             v->scan[at + 1] = k;
             v->text[k++] = ascii;
             at += 2;
+        } else if (!protected && math_digit(s, n, at) >= 0) {
+            v->scan[at + 1] = v->scan[at + 2] = v->scan[at + 3] = k;
+            v->text[k++] = (char)('0' + math_digit(s, n, at));
+            at += 4;
         } else if (!protected && thai_digit(s, n, at)) {
             v->scan[at + 1] = v->scan[at + 2] = k;
             v->text[k++] = (char)('0' + (unsigned char)s[at + 2] - 0x90);

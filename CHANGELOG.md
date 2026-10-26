@@ -2,6 +2,16 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Styled characters, chemical formulas and accented words (2026-10-26,
+  docs/styled-accents.ko.md): mathematical digits 𝟏𝟐𝟑 read as numbers (numeric width view);
+  mathematical letters 𝐀𝐁𝐂 and letterlike ℝ read like full-width letters (speech-math-letters.tsv);
+  Korean chemical formulas spell the elements and read counts as English numerals (owner decision:
+  H₂O 에이치투오, H2SO4 에이치투에스오포, C6H12O6 씨식스에이치트웰브오식스; x₁ 엑스원); the stdict
+  loanword build takes accented originals (café 카페, München 뮌헨, 404 words) and phrases
+  (São Paulo 상파울루, Les Misérables 레 미제라블; stdict_loanword_phrases.tsv, CC BY-SA 2.0 KR);
+  ten project entries (Pokémon 포켓몬, Beyoncé 비욘세); for unknown words the accents guide the
+  guess (final é, ï/ë, ñ, ç). Contract ko_styled_accent_v117 (30). The 26,456 evaluation sentences
+  and the Korean release benchmark keep their output.
 - Request dictionaries (2026-10-26): `ttf_dict_t` holds exact rules and lexicon rows for one
   request (`ttf_normalize_with`) or stream (`ttf_stream_set_dict`) of a frozen engine, above
   every engine layer (`TTF_LAYER_REQUEST`, trace name `request`); CLI `--request-dict FILE`.

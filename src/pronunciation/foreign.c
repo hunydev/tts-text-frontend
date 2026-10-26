@@ -688,6 +688,77 @@ static char latin_base(uint32_t cp) {
     return 0;
 }
 
+/* What the accents of a word say about its sound, for a word no dictionary knows
+   (2026-10-26): folding them away lost it (café 캐프). A final é is said (cafe+i), ï and ë
+   start a syllable of their own (naïve na|ive 나이브, Zoë zo|e 조이), ñ is ny (jalapeño
+   잴래페뇨) and ç is s (façade). ü, ö and the nasal ã stay folded: the English guess reads
+   their respellings worse (München 모온첸). Vietnamese letters keep the plain fold.
+   Returns the respelled length, 0 when nothing differs from the plain fold; cuts[] gets
+   the syllable breaks. */
+static size_t accent_cues(const char *text, size_t n, char *out, size_t cap, size_t cuts[4],
+                          size_t *cut_count) {
+    size_t at = 0, used = 0;
+    int cued = 0;
+    *cut_count = 0;
+    while (at < n) {
+        uint32_t cp;
+        size_t w;
+        char base;
+        if ((unsigned char)text[at] < 0x80) {
+            if (used + 1 >= cap)
+                return 0;
+            out[used++] = text[at++];
+            continue;
+        }
+        if (ttf_utf8_decode(text + at, n - at, &cp, &w) != 1)
+            return 0;
+        /* ă â ê ô ơ ư đ and the Latin Extended Additional block are Vietnamese */
+        if (cp == 0x102 || cp == 0x103 || cp == 0xc2 || cp == 0xe2 || cp == 0xca || cp == 0xea ||
+            cp == 0xd4 || cp == 0xf4 || cp == 0x1a0 || cp == 0x1a1 || cp == 0x1af || cp == 0x1b0 ||
+            cp == 0x110 || cp == 0x111 || (cp >= 0x1ea0 && cp <= 0x1ef9))
+            return 0;
+        if (used + 3 >= cap)
+            return 0;
+        if ((cp == 0xe9 || cp == 0xc9) && (at + w == n || (at + w + 1 == n && (text[at + w] == 's' || text[at + w] == 'S')))) {
+            out[used++] = cp == 0xe9 ? 'e' : 'E';
+            out[used++] = 'i';
+            cued = 1;
+        } else if (cp == 0xef || cp == 0xeb || cp == 0xcf || cp == 0xcb) {
+            if (used && *cut_count < 4)
+                cuts[(*cut_count)++] = used;
+            out[used++] = cp == 0xef ? 'i' : cp == 0xeb ? 'e' : cp == 0xcf ? 'I' : 'E';
+            cued = 1;
+        } else if (cp == 0xf1 || cp == 0xd1) {
+            out[used++] = cp == 0xf1 ? 'n' : 'N';
+            out[used++] = 'y';
+            cued = 1;
+        } else if (cp == 0xe7 || cp == 0xc7) {
+            out[used++] = cp == 0xe7 ? 's' : 'S';
+            cued = 1;
+        } else if ((base = latin_base(cp)) != 0) {
+            if (base != '-')
+                out[used++] = base;
+        } else
+            return 0;
+        at += w;
+    }
+    return cued ? used : 0;
+}
+/* A declared reading for the folded spelling: a lexicon or loanword row, or the source
+   pronunciation dictionary (cafe 카페 wins over the cues). */
+static int folded_declared(const ttf_engine_t *e, const ttf_language_pack_t *source,
+                           const ttf_language_pack_t *target, const char *text, size_t n,
+                           ttf_lexical_class_t lexical) {
+    const char *hit = NULL;
+    ttf_resource_layer_t layer = TTF_LAYER_COMMON;
+    if (ttf_foreign_lookup(e, source->language_tag, target->language_tag, text, n, &hit, &layer) == TTF_OK && hit)
+        return 1;
+    if (e->unknown_foreign_policy == TTF_UNKNOWN_FOREIGN_GUESS &&
+        ttf_foreign_loanword(e, source->language_tag, target->language_tag, text, n, &hit, &layer) == TTF_OK && hit)
+        return 1;
+    return declared_pronunciation(e, source, text, n, lexical);
+}
+
 ttf_status_t ttf_foreign_render(const ttf_engine_t *e, const ttf_language_pack_t *source,
                                 const ttf_language_pack_t *target, const char *text, size_t n,
                                 ttf_lexical_class_t lexical, ttf_buffer_t *out, char trace[64],
@@ -720,7 +791,23 @@ ttf_status_t ttf_foreign_render(const ttf_engine_t *e, const ttf_language_pack_t
         changed = 1;
         at += w;
     }
-    if (changed && at == n && used)
+    if (changed && at == n && used) {
+        char cued[192];
+        size_t cuts[4], cut_count = 0,
+               m = lexical == TTF_LEX_INITIALISM || e->unknown_foreign_policy != TTF_UNKNOWN_FOREIGN_GUESS
+                       ? 0
+                       : accent_cues(text, n, cued, sizeof(cued), cuts, &cut_count);
+        if (m && source && target && !folded_declared(e, source, target, folded, used, lexical)) {
+            size_t k, from = 0;
+            ttf_status_t st = TTF_OK;
+            for (k = 0; st == TTF_OK && k <= cut_count; ++k) {
+                size_t to = k < cut_count ? cuts[k] : m;
+                st = render_at(e, source, target, cued + from, to - from, lexical, out, trace, layer, from);
+                from = to;
+            }
+            return st;
+        }
         return render_at(e, source, target, folded, used, lexical, out, trace, layer, 0);
+    }
     return render_at(e, source, target, text, n, lexical, out, trace, layer, 0);
 }

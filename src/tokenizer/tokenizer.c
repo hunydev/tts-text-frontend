@@ -54,8 +54,9 @@ ttf_script_t ttf_script_of(uint32_t c) {
         return TTF_SCRIPT_LATIN;
     /* Thai digits ๐-๙ are digits too (2026-10-14): ๒๕๖๙ is a number, not a Thai word */
     /* Arabic-Indic digits ٠-٩ and ۰-۹ too (2026-10-22): ١٢٥ is a number, not an Arabic word */
+    /* mathematical digits 𝟏𝟐𝟑 too (2026-10-26): styled text, read like 123 */
     if ((c >= '0' && c <= '9') || (c >= 0xff10 && c <= 0xff19) || (c >= 0xe50 && c <= 0xe59) ||
-        (c >= 0x660 && c <= 0x669) || (c >= 0x6f0 && c <= 0x6f9))
+        (c >= 0x660 && c <= 0x669) || (c >= 0x6f0 && c <= 0x6f9) || (c >= 0x1d7ce && c <= 0x1d7ff))
         return TTF_SCRIPT_DIGIT;
     if (c == ' ' || (c >= 9 && c <= 13) || c == 0xa0 || c == 0x202f || c == 0x3000 ||
         (c >= 0x2000 && c <= 0x200a))

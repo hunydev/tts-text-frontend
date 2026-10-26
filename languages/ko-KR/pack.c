@@ -474,6 +474,39 @@ static const char *english_numeral(const ttf_engine_t *e, const char *value) {
 }
 static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, const char *surface,
                               size_t length, ttf_buffer_t *out);
+/* A chemical formula's count as an English numeral (H₂ 투, C₁₂ 트웰브, 2026-10-26): ten and below
+   from english_numeral, 11-99 from the teen and tens words, longer counts digit by digit. */
+static ttf_status_t formula_count(const ttf_engine_t *e, const char *digits, ttf_buffer_t *out) {
+    static const char *const teens[] = {"eleven", "twelve", "thirteen", "fourteen", "fifteen",
+                                        "sixteen", "seventeen", "eighteen", "nineteen"};
+    static const char *const tens[] = {"twenty", "thirty", "forty", "fifty", "sixty", "seventy",
+                                       "eighty", "ninety"};
+    const char *word = english_numeral(e, digits), *ones = NULL;
+    char key[24];
+    size_t n = strlen(digits), i;
+    if (word)
+        return ttf_buffer_puts(out, word);
+    if (n == 2 && digits[0] != '0') {
+        unsigned value = (unsigned)(digits[0] - '0') * 10 + (unsigned)(digits[1] - '0');
+        char unit[2] = {digits[1], '\0'};
+        (void)snprintf(key, sizeof(key), "en-US:%s", value < 20 ? teens[value - 11] : tens[value / 10 - 2]);
+        word = ttf_resource_get(e, "lexicon", "ko-KR", key, NULL);
+        ones = value < 20 || value % 10 == 0 ? "" : english_numeral(e, unit);
+        if (word && ones) {
+            ttf_status_t st = ttf_buffer_puts(out, word);
+            return st == TTF_OK ? ttf_buffer_puts(out, ones) : st;
+        }
+    }
+    for (i = 0; i < n; ++i) {
+        char one[2] = {digits[i], '\0'};
+        if (!(word = english_numeral(e, one)))
+            return TTF_EINVAL;
+        ttf_status_t st = ttf_buffer_puts(out, word);
+        if (st != TTF_OK)
+            return st;
+    }
+    return TTF_OK;
+}
 static ttf_status_t expression_number(const ttf_engine_t *e, const char *value, ttf_buffer_t *out);
 static ttf_status_t expression_letter(const ttf_engine_t *e, char letter, ttf_buffer_t *out) {
     char key[16];
@@ -1190,6 +1223,22 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         return ttf_ko_speech_spelling(e, surface, length, 1, out);
     case TTF_SEM_NUMBER:
     case TTF_SEM_CARDINAL:
+        if (!strcmp(s->rule, "ko:chemical-formula")) {
+            /* 에이치투에스오포: each element spelled, each count an English numeral, joined */
+            const char *p = s->value;
+            while (*p) {
+                size_t m = p[1] >= 'a' && p[1] <= 'z' ? 2 : 1, c = 0;
+                char count[8];
+                TRY(ttf_ko_speech_spelling(e, p, m, 0, out));
+                p += m;
+                while (*p >= '0' && *p <= '9' && c + 1 < sizeof(count))
+                    count[c++] = *p++;
+                count[c] = '\0';
+                if (c)
+                    TRY(formula_count(e, count, out));
+            }
+            return TTF_OK;
+        }
         if (!strcmp(s->rule, "ko:ratio")) {
             /* 일 대 이만 오천, 이 대 이 대 일 */
             const char *term = s->value, *colon = strchr(term, ':');
@@ -3351,6 +3400,120 @@ static size_t court_case(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     }
 }
 
+/* H₂O 에이치투오, H2SO4 에이치투에스오포, Fe2O3 에프이투오쓰리, C6H12O6 씨식스에이치트웰브오식스: a
+   chemical formula spells its element symbols and reads each count as an English numeral, as
+   Korean says it (project-owner decision 2026-10-26). A subscript count (₂, U+2080-U+2089) always
+   makes a formula; in ASCII, two counts or a two-letter symbol do (CO2 and B7 already read so as
+   letter-digit labels). Every symbol must be an element and every count one or two digits.
+   Product codes look alike (BC40F28, P3K48 after 제품번호; release benchmark 2026-10-26), so an
+   ASCII formula uses only common elements (no B, V, W, Y, U), no count starts with 0, and none
+   follows 번호, 코드, 모델 or 품번. */
+static int element_symbol(const char *t, size_t len) {
+    static const char elements[] =
+        "|H|He|Li|Be|B|C|N|O|F|Ne|Na|Mg|Al|Si|P|S|Cl|Ar|K|Ca|Sc|Ti|V|Cr|Mn|Fe|Co|Ni|Cu|Zn|Ga|Ge|As|Se|Br|Kr"
+        "|Rb|Sr|Y|Zr|Nb|Mo|Tc|Ru|Rh|Pd|Ag|Cd|In|Sn|Sb|Te|I|Xe|Cs|Ba|La|Ce|Pr|Nd|Pm|Sm|Eu|Gd|Tb|Dy|Ho|Er"
+        "|Tm|Yb|Lu|Hf|Ta|W|Re|Os|Ir|Pt|Au|Hg|Tl|Pb|Bi|Po|At|Rn|Fr|Ra|Ac|Th|Pa|U|Np|Pu|Am|Cm|Bk|Cf|Es"
+        "|Fm|Md|No|Lr|Rf|Db|Sg|Bh|Hs|Mt|Ds|Rg|Cn|Nh|Fl|Mc|Lv|Ts|Og|";
+    char key[5];
+    key[0] = '|';
+    memcpy(key + 1, t, len);
+    key[len + 1] = '|';
+    key[len + 2] = '\0';
+    return len <= 2 && strstr(elements, key) != NULL;
+}
+/* The elements an ASCII formula may use: the ones everyday chemistry writes. */
+static int common_element(const char *t, size_t len) {
+    static const char common[] = "|H|C|N|O|F|P|S|Cl|Br|I|Na|K|Mg|Ca|Fe|Al|Si|Cu|Zn|Ag|Au|Pb|Mn|Cr|Ni|Co|Ba|Li|Hg|Sn|Ti|Pt|He|Ne|Ar|";
+    char key[5];
+    key[0] = '|';
+    memcpy(key + 1, t, len);
+    key[len + 1] = '|';
+    key[len + 2] = '\0';
+    return len <= 2 && strstr(common, key) != NULL;
+}
+static int subscript_digit(const char *t, size_t n, size_t p) {
+    const unsigned char *u = (const unsigned char *)t + p;
+    return p + 3 <= n && u[0] == 0xe2 && u[1] == 0x82 && u[2] >= 0x80 && u[2] <= 0x89 ? u[2] - 0x80 : -1;
+}
+static size_t chemical_formula(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    const char *t = in->text;
+    size_t n = in->length, p = in->tokens[in->index].begin, q = p, used = 0;
+    int groups = 0, counts = 0, subscripts = 0, two = 0, uncommon = 0, zero = 0;
+    char v[TTF_IR_VALUE_SIZE];
+    if (p >= n || t[p] < 'A' || t[p] > 'Z' ||
+        (p && ((t[p - 1] >= 'A' && t[p - 1] <= 'Z') || (t[p - 1] >= 'a' && t[p - 1] <= 'z') || ko_digit(t[p - 1]))))
+        return 0;
+    while (q < n && t[q] >= 'A' && t[q] <= 'Z') {
+        size_t len = q + 1 < n && t[q + 1] >= 'a' && t[q + 1] <= 'z' ? 2 : 1;
+        int counted = 0, d;
+        if (!element_symbol(t + q, len) || used + len + 8 >= sizeof(v))
+            return 0;
+        uncommon |= !common_element(t + q, len);
+        memcpy(v + used, t + q, len);
+        used += len;
+        q += len;
+        two |= len == 2;
+        ++groups;
+        for (;;) {
+            if (q < n && ko_digit(t[q]))
+                d = t[q++] - '0';
+            else if ((d = subscript_digit(t, n, q)) >= 0) {
+                q += 3;
+                subscripts = 1;
+            } else
+                break;
+            /* a count has one or two digits: K47YI5124 is a passport number (benchmark, 2026-10-26) */
+            if (used + 2 >= sizeof(v) || counted == 2)
+                return 0;
+            zero |= !counted && d == 0;
+            v[used++] = (char)('0' + d);
+            ++counted;
+        }
+        counted = counted != 0;
+        counts += counted;
+    }
+    v[used] = '\0';
+    if (q < n && ((t[q] >= 'a' && t[q] <= 'z') || ko_digit(t[q]) || t[q] == '.' || subscript_digit(t, n, q) >= 0))
+        return 0;
+    if (!(subscripts && counts) && !(groups >= 2 && (counts >= 2 || (two && counts))))
+        return 0;
+    if (!subscripts) {
+        size_t from = p > 16 ? p - 16 : 0;
+        int labeled = 0;
+        for (size_t k = from; k + 6 <= p && !labeled; ++k)
+            labeled = !memcmp(t + k, "번호", 6) || !memcmp(t + k, "코드", 6) || !memcmp(t + k, "모델", 6) ||
+                      !memcmp(t + k, "품번", 6);
+        if (uncommon || zero || labeled)
+            return 0;
+    }
+    if (!korean_context(in))
+        return 0;
+    return ko_finish(in, s, q, TTF_SEM_CARDINAL, v, "", "ko:chemical-formula");
+}
+/* x₁ 엑스원, a₁₂ 에이트웰브: a letter with a subscript index reads the index as an English
+   numeral, like a formula count (2026-10-26). */
+static size_t subscript_index(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    const char *t = in->text;
+    size_t n = in->length, p = in->tokens[in->index].begin, q, used = 0;
+    char v[16];
+    int d;
+    if (p >= n || !((t[p] >= 'a' && t[p] <= 'z') || (t[p] >= 'A' && t[p] <= 'Z')) ||
+        (p && ((t[p - 1] >= 'A' && t[p - 1] <= 'Z') || (t[p - 1] >= 'a' && t[p - 1] <= 'z') || ko_digit(t[p - 1]))))
+        return 0;
+    v[used++] = t[p];
+    for (q = p + 1; (d = subscript_digit(t, n, q)) >= 0 && used + 1 < sizeof(v); q += 3)
+        v[used++] = (char)('0' + d);
+    v[used] = '\0';
+    if (used < 2 ||
+        (q < n && ((t[q] >= 'a' && t[q] <= 'z') || (t[q] >= 'A' && t[q] <= 'Z') || ko_digit(t[q]) ||
+                   subscript_digit(t, n, q) >= 0)) ||
+        !korean_context(in))
+        return 0;
+    if (v[0] >= 'a' && v[0] <= 'z')
+        v[0] = (char)(v[0] - 'a' + 'A');
+    return ko_finish(in, s, q, TTF_SEM_CARDINAL, v, "", "ko:chemical-formula");
+}
+
 /* PM2.5 피엠 이 점 오: capital letters before a decimal number are spelled and the number is
    read in Korean (v3, 2026-10-23); PM10 stays a model name. */
 static size_t letters_decimal(const ttf_pack_input_t *in, ttf_semantic_t *s) {
@@ -3389,6 +3552,7 @@ static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         return identifier;
     if ((identifier = short_dotted_date(in, s)) != 0 || (identifier = quarter(in, s)) != 0 ||
         (identifier = owner_forms(in, s)) != 0 || (identifier = owner_forms5(in, s)) != 0 ||
+        (identifier = chemical_formula(in, s)) != 0 || (identifier = subscript_index(in, s)) != 0 ||
         (identifier = letters_decimal(in, s)) != 0 || (identifier = court_case(in, s)) != 0 ||
         (identifier = superscript_expression(in, s)) != 0 || (identifier = trailing_power(in, s)) != 0 ||
         (identifier = approximate_unit(in, s)) != 0)

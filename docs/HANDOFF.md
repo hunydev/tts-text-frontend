@@ -2,6 +2,12 @@
 
 갱신: 2026-10-11. Release **0.20.0**, public ABI **v1**.
 
+## 최근 인계: 꾸민 글자·화학식·악센트 낱말 (2026-10-26)
+
+- **무엇:** 𝟏𝟐𝟑 백이십삼, 𝐀𝐁𝐂 에이비씨, H₂O 에이치투오(소유자 결정), café 카페, München 뮌헨, São Paulo 상파울루, Pokémon 포켓몬, 사전에 없는 악센트 낱말은 악센트 단서로 추측(Saïd 사이드). 상세: [styled-accents.ko.md](styled-accents.ko.md).
+- **화학식 오판 주의:** 원소 기호로만 된 제품 코드(BC40F28, K47YI5124)가 많다. ASCII 화학식은 흔한 원소·한두 자리 개수·번호 뒤 아님 조건일 때만 읽는다.
+- **확인:** 7개 언어 평가 26,456문장과 한국어 릴리스 벤치마크 142,248문장 모두 main과 같다. 계약 `ko_styled_accent_v117`(30).
+
 ## 최근 인계: 요청 사전 (2026-10-26)
 
 - **무엇:** 고정된 엔진은 그대로 두고 요청(또는 스트림) 하나에만 exact·lexicon 행을 얹는 `ttf_dict_t`. 우선순위는 요청 > 사용자 > 고객 > 도메인 > 시스템. `ttf_normalize_with`, `ttf_stream_set_dict`, CLI `--request-dict`. 상세: [request-dictionary.ko.md](request-dictionary.ko.md).

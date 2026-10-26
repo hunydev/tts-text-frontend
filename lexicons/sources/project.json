@@ -112,6 +112,14 @@
       "kind": "editorial-policy",
       "checked_at": "2026-10-13",
       "note": "Common English words whose spelling guess was wrong in a mixed Korean/English text (English 엥리시, Set 셋, Tech 텍, regex 리겍스), read with the 외래어 표기법 spelling or established usage; regex 레젝스 by the project owner. No human approval and no synthesized audio."
+    },
+    {
+      "id": "project-accented-v27",
+      "title": "Project readings of accented words in Korean context, v27",
+      "url": "https://www.korean.go.kr/front/page/pageView.do?mn_id=97&page_id=P000124",
+      "kind": "editorial-policy",
+      "checked_at": "2026-10-26",
+      "note": "Common brand, name and food words written with accents (Pokémon, Beyoncé, jalapeño) that the 표준국어대사전 loanword table does not have, read with their established Korean spelling (외래어 표기법 and common usage). Keys are the spelling without accents, as the engine looks them up. No human approval is claimed."
     }
   ]
 }

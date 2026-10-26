@@ -44,6 +44,7 @@ boundary_word	ko-KR	노선	1
 boundary_word	ko-KR	문항	1
 boundary_word	ko-KR	항목	1
 classifier_priority	ko-KR	ko:prefix-ordinal	10
+classifier_priority	ko-KR	ko:chemical-formula	20
 classifier_priority	ko-KR	ko:invalid-ordinal	10
 classifier_priority	ko-KR	ko:suffix-ordinal	10
 classifier_priority	ko-KR	ko:ordinal-range	10

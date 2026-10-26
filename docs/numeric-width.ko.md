@@ -26,6 +26,10 @@ build/ttf inspect --output-mode speech --trace '０１０-１２３４-５６７
 웹 도구의 **전각 숫자 · 금액 / 날짜 / 전화 / 셈단위** 코퍼스와 예문에서 검증할 수 있다.
 이는 저장소의 웹 도구를 갱신한 것이며 실행 중인 서비스 배포·재시작과는 별개다.
 
+## 수학용 숫자 (2026-10-26)
+
+꾸민 글자에 쓰는 수학용 숫자 `𝟏𝟐𝟑`·`𝟙𝟚𝟛`·`𝟣𝟤𝟥`·`𝟭𝟮𝟯`·`𝟷𝟸𝟹`(U+1D7CE–U+1D7FF)도 같은 scanner view에서 ASCII 숫자로 읽는다(`𝟏𝟐,𝟗𝟎𝟎원` 만 이천구백 원). 상세: [styled-accents.ko.md](styled-accents.ko.md).
+
 ## 공통 scanner view
 
 기존에는 universal numeric, phone, EN date, KO counters가 각각 ASCII 숫자를 스캔했다.
