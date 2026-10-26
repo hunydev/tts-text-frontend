@@ -10,7 +10,7 @@
   일; 슛으로 24-21 and KCC가 27-26 are particles, not streets). B-101호 비 다시 백일 호 (one
   capital, a hyphen and a unit number before 호 or 동). B1층에 지하 일 층에: a basement floor may
   carry its particle, and after a written 지하 reads as a floor (지하 B2층 지하 이 층). Held-out
-  address comparison (150 sentences, 323 spans): TTF 311, xvoice5 288 (290 with its
+  address comparison (150 sentences, 323 spans): TTF 311, xvoice5 297 (299 with its
   pronunciation spellings standardised). Korean release benchmark +804 −261 (the lost
   references read road-name hyphen numbers digit by digit: 무명로 234-3 이삼사 다시 삼).
   Contract ko_address_v121 (13).
