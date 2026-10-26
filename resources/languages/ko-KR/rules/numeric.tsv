@@ -238,6 +238,9 @@ numeric_suffix_word	*	배속	1
 numeric_suffix_word	*	배럴	1
 numeric_suffix_word	*	배율	1
 numeric_suffix_word	*	배스	1
+# Apart from its number, 정도 is about, not the counter 정 with the particle 도 (€89.90 정도, v3 dev
+# 2026-10-26); attached, 3정도 stays 세 정도.
+numeric_suffix_word	*	정도	spaced
 numeric_suffix	*	곳	COUNTER:곳
 numeric_suffix	*	건	COUNTER:건
 numeric_suffix	*	박스	COUNTER:박스

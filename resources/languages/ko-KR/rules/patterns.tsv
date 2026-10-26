@@ -68,6 +68,19 @@ event_date	ko-KR	4·27	1
 event_date_word	ko-KR	전쟁	1
 event_date_word	ko-KR	운동	1
 event_date_word	ko-KR	민주	1
+# 8.15 연휴 팔일오, 5.18 추모 오일팔 (v3 dev, 2026-10-26)
+event_date_word	ko-KR	연휴	1
+event_date_word	ko-KR	추모	1
+event_date_word	ko-KR	기념	1
+event_date_word	ko-KR	혁명	1
+event_date_word	ko-KR	항쟁	1
+event_date_word	ko-KR	사태	1
+event_date_word	ko-KR	정신	1
+event_date_word	ko-KR	희생	1
+event_date_word	ko-KR	유공자	1
+event_date_word	ko-KR	참전	1
+event_date_word	ko-KR	묘역	1
+event_date_word	ko-KR	당시	1
 event_date_word	ko-KR	혁명	1
 event_date_word	ko-KR	사건	1
 event_date_word	ko-KR	항쟁	1

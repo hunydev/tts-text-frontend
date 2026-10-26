@@ -767,7 +767,9 @@ static int suffix_word(const ttf_pack_input_t *in, size_t p, size_t end) {
         q += width;
         memcpy(key, in->text + p, q - p);
         key[q - p] = '\0';
-        if (ttf_resource_get(in->engine, "numeric_suffix_word", "*", key, NULL))
+        const char *word = ttf_resource_get(in->engine, "numeric_suffix_word", "*", key, NULL);
+        /* value spaced: only a suffix written apart from its number (€89.90 정도, but 3정도 세 정도) */
+        if (word && (strcmp(word, "spaced") || (p && (in->text[p - 1] == ' ' || in->text[p - 1] == '\t'))))
             return 1;
     }
     return 0;

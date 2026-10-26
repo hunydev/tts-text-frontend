@@ -1887,10 +1887,14 @@ static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
         /* 53.5 /km², 50 m²: a unit keeps its own reading */
         !word_before(t, p, "m|cm|mm|km|dm|ft|in|mi|yd|nm|um"))
     {
-        /* I²R eye squared R: a space only before a following letter */
+        /* I²R eye squared R: a space only before a following letter. Otherwise written ^2, as
+           the Korean pack writes a power, so a Korean reading says 제곱 ((x+1)²=0, E=mc²;
+           2026-10-26, was the English word spelled 에스큐유에이알이디). */
         int tight = p + 2 < n && (ascii_letter_char(t[p + 2]) || ascii_digit_char(t[p + 2]));
-        return owner_finish(in, out, p + 2, TTF_SEM_SYMBOL, "@word",
-                            t[p + 1] == '\xb2' ? (tight ? " squared " : " squared") : (tight ? " cubed " : " cubed"),
+        if (!tight)
+            return owner_finish(in, out, p + 2, TTF_SEM_SYMBOL, "@expression", t[p + 1] == '\xb2' ? "^2" : "^3",
+                                "en.power");
+        return owner_finish(in, out, p + 2, TTF_SEM_SYMBOL, "@word", t[p + 1] == '\xb2' ? " squared " : " cubed ",
                             "en.power");
     }
     /* (x + 2)(x − 3) x plus two times x minus three */
@@ -2881,6 +2885,11 @@ no_file:
               (ascii_letter_char(t[p - 1]) && !(p >= 2 && ascii_letter_char(t[p - 2]))))) {
         size_t z = p;
         unsigned x = 0, cnt = 0;
+        /* 10⁻³ ten to the minus three: a superscript minus before the digits (2026-10-26; was
+           ten superscript minus ³) */
+        int minus = z + 3 < n && !strncmp(t + z, "\xe2\x81\xbb", 3);
+        if (minus)
+            z += 3;
         for (;;) {
             unsigned char c0 = (unsigned char)t[z], c1 = z + 1 < n ? (unsigned char)t[z + 1] : 0,
                           c2 = z + 2 < n ? (unsigned char)t[z + 2] : 0;
@@ -2896,12 +2905,14 @@ no_file:
                 break;
         }
         if (cnt && !(z < n && (ascii_digit_char(t[z]) || ascii_letter_char(t[z])))) {
-            if (cnt == 1 && x == 2)
-                return say_span(in, out, z, "w: squared", "power");
-            if (cnt == 1 && x == 3)
-                return say_span(in, out, z, "w: cubed", "power");
-            (void)snprintf(v, sizeof(v), "w: to the|o:%u", x);
-            return say_span(in, out, z, v, "power");
+            /* written ^N, as the Korean pack writes a power, so a Korean reading of the sentence
+               says 제곱 (E=mc² E 이퀄 mc 제곱; 2026-10-26, was the English word spelled
+               에스큐유에이알이디) and English says squared, cubed or to the tenth */
+            (void)snprintf(v, sizeof(v), "^%s%u", minus ? "-" : "", x);
+            (void)say_span(in, out, z, v, "power");
+            out->type = TTF_SEM_SYMBOL;
+            (void)snprintf(out->unit, sizeof(out->unit), "@expression");
+            return tokens_until(in, z);
         }
     }
     /* ½ the group half the group */
@@ -3598,6 +3609,30 @@ static ttf_status_t expression_side(const ttf_engine_t *e, const char *value, si
             return TTF_EINVAL;
         memcpy(part, value + at, end - at);
         part[end - at] = 0;
+        /* 3 ^2 = 9 three squared equals nine, ^10 to the tenth, ^-3 to the minus three: the power
+           of the part before it, also alone after a word already read (mc ^2). The Korean pack
+           writes powers so (ko:superscript-expression) and a sentence routed to English read
+           them here (2026-10-26; was three ² equals nine). */
+        if (part[0] == '^' && part[1]) {
+            const char *power = part + 1;
+            int minus = *power == '-';
+            char *stop;
+            unsigned long x = strtoul(power + minus, &stop, 10);
+            if (*stop || stop == power + minus)
+                return TTF_EINVAL;
+            if ((st = ttf_buffer_puts(out, " ")) != TTF_OK)
+                return st;
+            if (!minus && x == 2)
+                st = ttf_buffer_puts(out, "squared");
+            else if (!minus && x == 3)
+                st = ttf_buffer_puts(out, "cubed");
+            else if ((st = ttf_buffer_puts(out, minus ? "to the minus " : "to the ")) == TTF_OK)
+                st = minus ? card(e, x, out) : ordinal(e, x, out);
+            if (st != TTF_OK)
+                return st;
+            at = end < length ? end + 1 : end;
+            continue;
+        }
         if (at && (st = ttf_buffer_puts(out, " ")) != TTF_OK)
             return st;
         /* 1 / 2 + 1 / 4: a proper fraction of small whole numbers reads as a fraction (en dev v1,

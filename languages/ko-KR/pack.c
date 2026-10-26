@@ -1616,7 +1616,10 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     }
     case TTF_SEM_CURRENCY:
         /* 1,182.60원 천백팔십이 점 육영 원: the Korean references read every written decimal
-           digit, so €3.50 stays 삼 점 오영 유로 (owner sets want 삼 점 오; kept, 2026-10-14) */
+           digit, so €3.50 stays 삼 점 오영 유로 (owner sets want 삼 점 오; kept, 2026-10-14).
+           Checked again 2026-10-26: dropping the zeros won two v3 dev sentences (€89.90) and lost
+           33 Korean release sentences (760.00달러 칠백육십 점 영영 달러), and v3 itself accepts
+           +3.20달러 삼 점 이영 달러. */
         return quantity(e, s->value, resource(e, "currency", s->unit, s->unit), 0, out);
     case TTF_SEM_PERCENT:
         return quantity(e, s->value, resource(e, "unit", "%", "퍼센트"), 0, out);
@@ -1815,9 +1818,12 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             /* 3:05짜리 삼 분 오 초; 2:58:30 두 시간 오십팔 분 삼십 초 */
             unsigned part[3] = {hour, minute, second};
             static const char *const units[][2] = {{"hours", "시간"}, {"minutes", "분"}, {"seconds", "초"}};
-            int k, first = fields == 3 ? 0 : 1, emitted = 0;
+            /* 비행 2:10 소요 두 시간 십 분 (unit hours); 0:45 길이 사십오 초: a zero leading unit is
+               not said (2026-10-26) */
+            int k, first = fields == 3 || !strcmp(s->unit, "hours") ? 0 : 1, emitted = 0,
+                   last = first + fields - 1;
             for (k = first; k < 3 && k - first < fields; ++k) {
-                if (!part[k - first] && emitted)
+                if (!part[k - first] && (emitted || k < last))
                     continue;
                 if (emitted)
                     TRY(ttf_buffer_puts(out, " "));
@@ -2912,6 +2918,22 @@ static int word_within(const char *t, size_t p, size_t window, const char *words
     }
     return 0;
 }
+/* One of the |-separated words starts within `window` bytes after `end`. */
+static int word_after(const char *t, size_t n, size_t end, size_t window, const char *words) {
+    const char *w = words;
+    size_t to = end + window < n ? end + window : n;
+    while (*w) {
+        size_t m = strcspn(w, "|"), k;
+        for (k = end; k + m <= to; ++k)
+            if (!memcmp(t + k, w, m))
+                return 1;
+        w += m + (w[m] == '|');
+    }
+    return 0;
+}
+/* Words around M:SS that make it a length of time, not a clock (v3 dev, 2026-10-26):
+   영상 1:30 분량 일 분 삼십 초, 재생 길이는 3:45, 4:25의 기록, 스톱워치로 3:30를. */
+#define KO_DURATION_WORDS "길이|분량|재생|영상|노래|음원|랩타임|스톱워치|타이머|조리|전자레인지|구간|기록|러닝타임|플레이타임"
 /* Owner evaluation sets, phase 4 (2026-10-14; 24:00 stays as written, golden and
    typed-control tests):
    1:30 남았습니다 일 분 삼십 초, 3:05짜리 삼 분 오 초, 기록 2:58:30 두 시간
@@ -2954,13 +2976,50 @@ static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     if (t[q] == ':' && ko_digit(t[q + 1]) && q + 2 < n && ko_digit(t[q + 2]) && !(q + 3 < n && ko_digit(t[q + 3]))) {
         r = q + 3;
         if (r + 2 < n && t[r] == ':' && ko_digit(t[r + 1]) && ko_digit(t[r + 2]) && !(r + 3 < n && ko_digit(t[r + 3]))) {
-            if (word_within(t, p, 30, "기록|완주|소요|걸렸")) {
+            /* 2:58:30의 기록으로, 분량이 1:15:40에, 인코딩 2:58:30 만에: before or after */
+            if (word_within(t, p, 30, "기록|완주|소요|걸렸|분량|길이|재생|녹음|영상") ||
+                word_after(t, n, r + 3, 30, "기록|완주|소요|걸렸|만에|분량")) {
                 (void)snprintf(v, sizeof(v), "%.*s", (int)(r + 3 - p), t + p);
                 return ko_finish(in, s, r + 3, TTF_SEM_TIME, v, "duration", "ko:duration");
             }
         } else if (starts_with_word(t, n, r, "짜리| 남았| 남은| 남겨| 동안")) {
             (void)snprintf(v, sizeof(v), "%.*s", (int)(r - p), t + p);
             return ko_finish(in, s, r, TTF_SEM_TIME, v, "minutes", "ko:duration");
+        } else if (!starts_with_word(t, n, r, "에|부터|까지|쯤|경") &&
+                   !word_within(t, p, 12, "오전|오후|새벽|아침|저녁|밤|낮") &&
+                   !word_within(t, p, 30, "비율|축척|배합|시각|시점|일시") && korean_context(in)) {
+            /* a clock takes 에, 부터 and 까지 and follows 오전 or 오후 or 시각 (복구 완료 시각은
+               16:05로 기록되었고 열여섯 시 오 분); a length sits by a length word, or by 소요 for
+               hours and minutes (비행 2:10 정도 소요 두 시간 십 분) */
+            (void)snprintf(v, sizeof(v), "%.*s", (int)(r - p), t + p);
+            if (word_within(t, p, 30, KO_DURATION_WORDS) || word_after(t, n, r, 30, KO_DURATION_WORDS))
+                return ko_finish(in, s, r, TTF_SEM_TIME, v, "minutes", "ko:duration");
+            if (atoi(t + q + 1) < 60 && (word_within(t, p, 30, "비행시간|비행 시간") || word_after(t, n, r, 24, "소요")))
+                return ko_finish(in, s, r, TTF_SEM_TIME, v, "hours", "ko:duration");
+        }
+    }
+    /* 오는 11. 18. 십일 월 십팔 일, 매월 09.15 구월 십오 일: a month and day without a year, the
+       spaced form ending in a period or a month with a leading zero, after a date word (v3 dev,
+       2026-10-26). A full date (2026. 11. 18.) is read from its year. */
+    if (t[q] == '.' && korean_context(in) && !(p >= 2 && t[p - 1] == ' ' && t[p - 2] == '.') &&
+        word_within(t, p, 24, "오는|지난|다음|이번|요일인|날짜|일정|기한|마감|매년|매월|기준일|결제일")) {
+        unsigned month = (unsigned)atoi(t + p), day = 0;
+        size_t d = q + 1, e2 = 0;
+        int spaced = d < n && t[d] == ' ';
+        if (spaced)
+            ++d;
+        for (r = d; r < n && ko_digit(t[r]); ++r)
+            ;
+        if (r > d && r - d <= 2)
+            day = (unsigned)atoi(t + d);
+        if (spaced && r < n && t[r] == '.' && !(r + 1 < n && (ko_digit(t[r + 1]) || t[r + 1] == '.')))
+            e2 = r + 1;
+        else if (!spaced && t[p] == '0' && q - p == 2 && r - d == 2 &&
+                 !(r < n && (ko_digit(t[r]) || t[r] == '.' || t[r] == '%' || t[r] == ':')))
+            e2 = r;
+        if (e2 && month >= 1 && month <= 12 && day >= 1 && day <= 31) {
+            (void)snprintf(v, sizeof(v), "--%02u-%02u", month, day);
+            return ko_finish(in, s, e2, TTF_SEM_DATE, v, "month-day", "ko:yearless-date");
         }
     }
     /* 6/6 현충일, 3/1은 삼일절, 12.25 크리스마스: a month and day before a holiday */
@@ -3014,6 +3073,13 @@ static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                 if (t[z] != ',')
                     v[used++] = t[z];
             v[used] = '\0';
+            return ko_finish(in, s, r, TTF_SEM_CARDINAL, v, "", "ko:ratio");
+        }
+        /* 축척 비율은 실물의 1:25 크기 일 대 이십오: a ratio word before a clock-like pair (v3 dev,
+           2026-10-26) */
+        if (!grouped && r - q - 1 <= 3 && !(r < n && (ko_digit(t[r]) || t[r] == '.' || t[r] == ':')) &&
+            word_within(t, p, 30, "비율|축척|배합") && r - p < sizeof(v) && korean_context(in)) {
+            (void)snprintf(v, sizeof(v), "%.*s", (int)(r - p), t + p);
             return ko_finish(in, s, r, TTF_SEM_CARDINAL, v, "", "ko:ratio");
         }
         /* 물 1:1.2로 일 대 일 점 이: a one-digit second number with a decimal part (owner v2,
@@ -3343,12 +3409,15 @@ static size_t approximate_unit(const ttf_pack_input_t *in, ttf_semantic_t *s) {
 }
 
 /* x², mc², km²: a superscript power right after a Latin letter or digit that no grammar took
-   reads 제곱 (2026-10-23; was passed through). Superscripts written alone (¹²³, 각주¹) stay. */
+   reads 제곱 (2026-10-23; was passed through). Superscripts written alone (¹²³, 각주¹) stay.
+   After a closing bracket too: (x+1)²=0을 (엑스 더하기 일) 제곱 (2026-10-26). */
 static size_t trailing_power(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     const char *t = in->text;
     size_t n = in->length, p = in->tokens[in->index].begin, q = p, w, used = 0;
     char power[8], c, v[48];
-    if (!p || !((t[p - 1] >= 'a' && t[p - 1] <= 'z') || (t[p - 1] >= 'A' && t[p - 1] <= 'Z') || ko_digit(t[p - 1])) ||
+    if (!p ||
+        !((t[p - 1] >= 'a' && t[p - 1] <= 'z') || (t[p - 1] >= 'A' && t[p - 1] <= 'Z') || ko_digit(t[p - 1]) ||
+          t[p - 1] == ')') ||
         !korean_context(in))
         return 0;
     while ((w = superscript_at(t, n, q, &c)) != 0 && used + 1 < sizeof(power)) {

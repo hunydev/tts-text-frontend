@@ -355,8 +355,8 @@ static ttf_status_t core_record(const ttf_resource_record_t *r, int *handled,
         if (!ok)
             return ttf_validation_error(d, "numeric_suffix_cue requires a suffix and '|'-separated cue words");
     } else if (KIND("numeric_suffix_word")) {
-        if (strlen(key) >= 64 || strcmp(value, "1"))
-            return ttf_validation_error(d, "numeric_suffix_word requires a word under 64 bytes and value 1");
+        if (strlen(key) >= 64 || (strcmp(value, "1") && strcmp(value, "spaced")))
+            return ttf_validation_error(d, "numeric_suffix_word requires a word under 64 bytes and value 1 or spaced");
     } else if (KIND("currency_name")) {
         const char *colon = strchr(value, ':');
         char currency[32];

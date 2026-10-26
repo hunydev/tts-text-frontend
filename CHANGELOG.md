@@ -2,6 +2,25 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Korean forms both engines missed in the v3 comparison (2026-10-26): lengths of time
+  M:SS and H:MM:SS by a length word before or after (재생 길이 3:45 삼 분 사십오 초, 0:45 길이
+  사십오 초, 2:58:30 만에 두 시간 오십팔 분 삼십 초, 4:25의 기록 사 분 이십오 초) and H:MM before
+  소요 (비행 2:10 정도 소요 두 시간 십 분); a clock stays a clock after 오전/오후, before
+  에/부터/까지 and after 시각/시점/일시. A ratio word before a pair (축척 1:25 일 대 이십오).
+  Month and day without a year after a date word (오는 11. 18. 십일 월 십팔 일, 매월 09.15 구 월
+  십오 일); a list 1. 2. 3. and a full date keep their reading. Anniversaries before 연휴, 추모,
+  혁명 and other event words (8.15 연휴 팔일오). 정도 apart from its number is about, not the
+  counter 정 with 도 (€89.90 정도 no longer fails; 3정도 stays 세 정도; numeric_suffix_word value
+  `spaced`). Foreign amounts keep reading every written digit (€89.90 팔십구 점 구영 유로):
+  dropping the zeros won two v3 dev sentences and lost 33 Korean release sentences. Contract
+  ko_both_weak_v118 (26); Korean release benchmark +7, -0; v3 ko spans dev 94.4% → 95.7%,
+  test 94.6% → 94.8%.
+- Superscript powers across languages (2026-10-26): an English sentence routed from Korean
+  reads the Korean pack's powers (If 3²=9 three squared equals nine; was three ² equals nine,
+  16 one six); en.power writes a power as ^N so a Korean reading says 제곱 ((x+1)²=0 (엑스
+  더하기 일) 제곱, E=mc² mc 제곱; was the English word spelled 에스큐유에이알이디); a superscript
+  minus reads (10⁻³ ten to the minus three, 십의 마이너스 삼제곱). Contract
+  superscript_power_v119 (7).
 - Styled characters, chemical formulas and accented words (2026-10-26,
   docs/styled-accents.ko.md): mathematical digits 𝟏𝟐𝟑 read as numbers (numeric width view);
   mathematical letters 𝐀𝐁𝐂 and letterlike ℝ read like full-width letters (speech-math-letters.tsv);
