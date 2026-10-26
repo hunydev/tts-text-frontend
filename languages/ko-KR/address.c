@@ -33,10 +33,17 @@ ttf_status_t ttf_ko_address(const ttf_engine_t *e, const char *s, size_t n, ttf_
                             strchr("-.,()", (int)cp)))))
             return TTF_EINVAL;
         if (cp == '-') {
+            /* 12-3, and a unit letter or syllable before it: B-101호, 가-101호 (2026-10-27) */
             size_t left = p, right = p + 1;
+            uint32_t before = 0;
+            size_t w;
             while (left && space(s[left - 1])) --left;
             while (right < n && space(s[right])) ++right;
-            if (!left || right == n || !digit(s[left - 1]) || !digit(s[right]))
+            if (left >= 3 && ttf_utf8_decode(s + left - 3, 3, &before, &w) != 1)
+                before = 0;
+            if (!left || right == n || !digit(s[right]) ||
+                !(digit(s[left - 1]) || alpha(s[left - 1]) ||
+                  (left >= 3 && before >= 0xac00 && before <= 0xd7a3)))
                 return TTF_EINVAL;
         }
         if (ttf_script_of(cp) == TTF_SCRIPT_HANGUL || (cp < 128 && (alpha((char)cp) || digit((char)cp))))
@@ -48,12 +55,15 @@ ttf_status_t ttf_ko_address(const ttf_engine_t *e, const char *s, size_t n, ttf_
     p = 0;
     while (p < n && st == TTF_OK) {
         size_t end = p;
-        /* 20F 이십 층, B1F 지하 일 층: a floor written with F (2026-10-02). */
+        /* 20F 이십 층, B1F 지하 일 층: a floor written with F (2026-10-02); B1층 지하 일 층 too
+           (2026-10-27; was 비일층). */
         {
-            size_t q = p + ((s[p] == 'B' || s[p] == 'b') && p + 1 < n && digit(s[p + 1])), r = q;
+            size_t q = p + ((s[p] == 'B' || s[p] == 'b') && p + 1 < n && digit(s[p + 1])), r = q, after;
             while (r < n && digit(s[r])) ++r;
-            if (r > q && (q == p || s[p] == 'B' || s[p] == 'b') && r < n && (s[r] == 'F' || s[r] == 'f') &&
-                (r + 1 == n || !alpha(s[r + 1])) && (!p || !alpha(s[p - 1]) || q > p) && r - q < 8) {
+            after = q > p && r + 3 <= n && !memcmp(s + r, "층", 3) ? r + 3 : r + 1;
+            if (r > q && (q == p || s[p] == 'B' || s[p] == 'b') && r < n &&
+                (after == r + 3 || ((s[r] == 'F' || s[r] == 'f') && (r + 1 == n || !alpha(s[r + 1])))) &&
+                (!p || !alpha(s[p - 1]) || q > p) && r - q < 8) {
                 ttf_semantic_t part = {0};
                 const char *floor = ttf_resource_get(e, "unit", "ko-KR", "floor", NULL);
                 const char *below = ttf_resource_get(e, "quantity_prefix", "ko-KR", "basement_floor", NULL);
@@ -64,7 +74,7 @@ ttf_status_t ttf_ko_address(const ttf_engine_t *e, const char *s, size_t n, ttf_
                 part.struct_size = sizeof(part);
                 part.type = TTF_SEM_CARDINAL;
                 memcpy(part.value, s + q, r - q);
-                ttf_trace_stage(e, TTF_TRACE_POLICY, p, r + 1);
+                ttf_trace_stage(e, TTF_TRACE_POLICY, p, after);
                 if (st == TTF_OK)
                     st = ttf_trace_resource(e, "unit", "ko-KR", "floor", floor, "explicit-address-floor",
                                             SIZE_MAX);
@@ -74,7 +84,7 @@ ttf_status_t ttf_ko_address(const ttf_engine_t *e, const char *s, size_t n, ttf_
                     st = ttf_buffer_puts(out, " ");
                 if (st == TTF_OK)
                     st = ttf_buffer_puts(out, floor);
-                p = r + 1;
+                p = after;
                 continue;
             }
         }

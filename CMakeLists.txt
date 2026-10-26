@@ -515,7 +515,7 @@ if(BUILD_TESTING)
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources cjk_declared_v120.jsonl 16)
     add_test(NAME ko_address_v121_evaluation COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
-      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources ko_address_v121.jsonl 13)
+      $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources ko_address_v121.jsonl 14)
     add_test(NAME th_pack4_v93_evaluation COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/evaluation/test_domain.py
       $<TARGET_FILE:ttf> ${CMAKE_CURRENT_SOURCE_DIR}/resources th_pack4_v93.jsonl 28)

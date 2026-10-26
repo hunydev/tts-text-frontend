@@ -2,18 +2,16 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
-- Korean address numbers (2026-10-27): a hyphenated lot or building number right after an
-  address word (a word ending in 로, 길, 동 or 리, or in 가 after its number; 산 between them)
-  reads as two numbers joined by 다시 without 번지 (성수이로7길 27-1 이십칠 다시 일, 역삼동
-  737-32 칠백삼십칠 다시 삼십이; owner decision: the hyphen reads 다시; was digit by digit), when
-  a particle, a space or punctuation follows and no score word is near (2-1로 이겼다 stays 이 대
-  일; 슛으로 24-21 and KCC가 27-26 are particles, not streets). B-101호 비 다시 백일 호 (one
-  capital, a hyphen and a unit number before 호 or 동). B1층에 지하 일 층에: a basement floor may
-  carry its particle, and after a written 지하 reads as a floor (지하 B2층 지하 이 층). Held-out
-  address comparison (150 sentences, 323 spans): TTF 311, xvoice5 297 (299 with its
-  pronunciation spellings standardised). Korean release benchmark +804 −261 (the lost
-  references read road-name hyphen numbers digit by digit: 무명로 234-3 이삼사 다시 삼).
-  Contract ko_address_v121 (13).
+- Korean addresses (2026-10-27, owner decision: plain-text rules stay general and must not
+  touch other rules; a caller marks `[[…]]{@address}` for address reading). Plain text: B1층에
+  reads 지하 일 층에 (a basement floor may carry its particle; was 비원층에) and 지하 B2층 지하 이
+  층 (was 지하 지하 이 층); an address lot number keeps the identifier reading (역삼동 123-45
+  일이삼 다시 사오, also correct; an address-word heuristic tried the same day was withdrawn).
+  `{@address}`: B1층 지하 일 층 (was 비일층), and a unit letter or syllable before the hyphen
+  (B-101호 비 다시 백일호, 가-101호 가 다시 백일호). Held-out address comparison (150 sentences,
+  323 spans, digits or numbers both accepted for lot numbers): TTF plain text 312 (305 before),
+  with the 90 address spans marked 319; xvoice5 297 (299 with its pronunciation spellings
+  standardised). Contract ko_address_v121 (14); the Korean release benchmark is unchanged.
 - Chinese and Japanese read in Korean under matrix=declared (2026-10-26, owner request:
   compare with xvoice5 with the hanja and kana readings on). With `--matrix declared`
   every sentence is read in Korean, so simplified Chinese and Japanese new forms take

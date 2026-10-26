@@ -435,94 +435,11 @@ static int frequency_after_count(const ttf_pack_input_t *in, size_t p) {
     return best && !strcmp(best, "frequency");
 }
 
-/* One of the |-separated words at t. */
-static size_t word_at_list(const char *t, size_t n, size_t p, const char *words) {
-    const char *w = words;
-    while (*w) {
-        size_t m = strcspn(w, "|");
-        if (p + m <= n && !memcmp(t + p, w, m))
-            return m;
-        w += m + (w[m] == '|');
-    }
-    return 0;
-}
-/* 성수이로7길 27-1, 역삼동 737-32, 남포동6가 117-8, 고내리 산 24-1: the word right before ends
- * in an address syllable (로 길 동 리, 가 after a number) and holds at least two characters, not
- * the particle 으로; no score word nearby (2-1 승리) (2026-10-27). */
-static int address_word_before(const ttf_pack_input_t *in, size_t begin) {
-    static const char *const ends[] = {"로", "길", "동", "리", "가"};
-    const char *t = in->text;
-    size_t p = begin, word, k, from, to;
-    int round;
-    for (round = 0; round < 2; ++round) {
-        if (!p || (t[p - 1] != ' ' && t[p - 1] != '\t'))
-            return 0;
-        while (p && (t[p - 1] == ' ' || t[p - 1] == '\t'))
-            --p;
-        word = p;
-        while (word && t[word - 1] != ' ' && t[word - 1] != '\t' && t[word - 1] != '\n' &&
-               t[word - 1] != ',' && t[word - 1] != '(')
-            --word;
-        if (round == 0 && p - word == 3 && !memcmp(t + word, "산", 3)) {
-            p = word; /* 산 24-1: the word before 산 decides */
-            continue;
-        }
-        break;
-    }
-    if (p - word < 4 || p < 3)
-        return 0;
-    for (k = 0; k < sizeof(ends) / sizeof(*ends); ++k)
-        if (!memcmp(t + p - 3, ends[k], 3))
-            break;
-    /* the particles 으로 and 가 are not address words: 슛으로 24-21, KCC가 27-26 (scores); 가 is
-       a street only after its number (남포동6가) */
-    if (k == sizeof(ends) / sizeof(*ends) || (k == 0 && p >= 6 && !memcmp(t + p - 6, "으", 3)) ||
-        (k == 4 && !decimal_digit(t[p - 4])))
-        return 0;
-    from = begin > 90 ? begin - 90 : 0;
-    to = begin + 90 < in->length ? begin + 90 : in->length;
-    for (k = from; k < to; ++k)
-        if (word_at_list(t, to, k, "승리|패배|스코어|점수|세트|이겼|졌다|꺾|무승부|득점|결승|라운드|골을|역전|쿼터"))
-            return 0;
-    return 1;
-}
-
-/* B-101호 비 다시 백일 호, D-302동: one capital letter, a hyphen and a unit number before
- * 호 or 동 (2026-10-27; was 비 다시 일공일 호). */
-static size_t letter_unit(const ttf_pack_input_t *in, ttf_semantic_t *s) {
-    const char *t = in->text;
-    size_t begin = in->tokens[in->index].begin, p = begin + 2, end, i;
-    if (begin + 3 >= in->length || !(t[begin] >= 'A' && t[begin] <= 'Z') || t[begin + 1] != '-' ||
-        !decimal_digit(t[p]) || t[p] == '0' ||
-        (begin && ((t[begin - 1] | 0x20) >= 'a' && (t[begin - 1] | 0x20) <= 'z')) ||
-        (begin && (decimal_digit(t[begin - 1]) || t[begin - 1] == '-')))
-        return 0;
-    while (p < in->length && decimal_digit(t[p]) && p - begin - 2 < 5)
-        ++p;
-    end = p;
-    if (end - begin - 2 > 4 || !word_at_list(t, in->length, end, "호|동"))
-        return 0;
-    memcpy(s->value, t + begin, end - begin);
-    s->value[end - begin] = '\0';
-    (void)snprintf(s->unit, sizeof(s->unit), "financial_identifier");
-    (void)snprintf(s->rule, sizeof(s->rule), "ko:lot-number");
-    s->type = TTF_SEM_DIGIT_SEQUENCE;
-    s->input_end = end;
-    s->layer = TTF_LAYER_COMMON;
-    for (i = in->index; i < in->token_count && in->tokens[i].begin < end; ++i) {
-    }
-    return i - in->index;
-}
-
 /* 231-29번지: a lot number, two groups of up to four digits before 번지, is not a
  * range; each group is a number joined by 다시 (산 12-3번지 십이 다시 삼번지;
- * Jev review, 2026-10-07). After an address word it needs no 번지 (성수이로7길 27-1
- * 이십칠 다시 일, 역삼동 737-32; 2026-10-27, was read digit by digit), when a particle,
- * a space or punctuation follows. */
+ * Jev review, 2026-10-07). */
 size_t ttf_ko_classify_lot_number(const ttf_pack_input_t *in, ttf_semantic_t *s) {
-    size_t begin = in->tokens[in->index].begin, p = begin, dash, end, i, unit;
-    if ((unit = letter_unit(in, s)) != 0)
-        return unit;
+    size_t begin = in->tokens[in->index].begin, p = begin, dash, end, i;
     if (begin && (decimal_digit(in->text[begin - 1]) || in->text[begin - 1] == '-' ||
                   ((in->text[begin - 1] | 0x20) >= 'a' && (in->text[begin - 1] | 0x20) <= 'z')))
         return 0;
@@ -534,17 +451,9 @@ size_t ttf_ko_classify_lot_number(const ttf_pack_input_t *in, ttf_semantic_t *s)
     while (p < in->length && decimal_digit(in->text[p]) && p - dash <= 5)
         ++p;
     end = p;
-    if (end == dash + 1 || end - dash - 1 > 4 || in->text[dash + 1] == '0')
+    if (end == dash + 1 || end - dash - 1 > 4 || in->text[dash + 1] == '0' ||
+        end + 6 > in->length || memcmp(in->text + end, "번지", 6))
         return 0;
-    if (end + 6 > in->length || memcmp(in->text + end, "번지", 6)) {
-        unsigned char c = end < in->length ? (unsigned char)in->text[end] : ' ';
-        if (!address_word_before(in, begin) ||
-            !(c == ' ' || c == '\t' || c == '\n' || c == ',' || c == '.' || c == ')' || c == '(' ||
-              c == '"' || c == '\'' || end == in->length ||
-              (c >= 0xea && word_at_list(in->text, in->length, end,
-                                         "에서|에|의|으로|로|은|는|이|가|을|를|도|만|까지|부터|번지|앞|뒤|옆|일대|일원|근처"))))
-            return 0;
-    }
     memcpy(s->value, in->text + begin, end - begin);
     s->value[end - begin] = '\0';
     (void)snprintf(s->unit, sizeof(s->unit), "financial_identifier");
