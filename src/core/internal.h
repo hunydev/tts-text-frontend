@@ -226,7 +226,7 @@ static inline int ttf_numeric_suffix_cued(const ttf_engine_t *e, const char *key
     }
     return 0;
 }
-/* Exactly the eleven resource kinds separated at freeze (not all kana_* kinds): the
+/* Exactly the thirteen resource kinds separated at freeze (not all kana_* kinds): the
    CJK readings and the Korean pronunciation dictionary (phoneme_word, phoneme_stem,
    phoneme_noun; 2026-10-09),
    large tables whose rows would otherwise lengthen every ordinary lookup. */
@@ -239,6 +239,7 @@ static inline int ttf_cjk_resource_kind(const char *kind) {
                (!strcmp(kind + 8, "word") || !strcmp(kind + 8, "stem") || !strcmp(kind + 8, "noun"));
     if (kind[0] == 'h')
         return !strcmp(kind, "hanja_reading") || !strcmp(kind, "hanja_variant_reading") ||
+               !strcmp(kind, "hanja_chinese_reading") || !strcmp(kind, "hanja_japanese_reading") ||
                !strcmp(kind, "hanja_soft_after") ||
                !strcmp(kind, "hanja_before_initial");
     if (kind[0] == 'c') return !strcmp(kind, "cjk_word");

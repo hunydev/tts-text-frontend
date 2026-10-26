@@ -8,3 +8,22 @@ hanja_soft_after	ko-KR	률	율
 # 不 reads 부 before a syllable beginning with ㄷ or ㅈ (不正 부정, 不動産 부동산, 不得已 부득이).
 hanja_before_initial	ko-KR	不:ㄷ	부
 hanja_before_initial	ko-KR	不:ㅈ	부
+# A character whose own reading differs from the form it stands for in Chinese or Japanese
+# (2026-10-26). Chinese: a sentence with neither Hangul nor kana under matrix=declared
+# (银行几点 은행기점, 台湾 대만, 广告 광고); Japanese: a sentence with kana (予約 예약, 体 체).
+hanja_chinese_reading	ko-KR	几	기
+hanja_chinese_reading	ko-KR	机	기
+hanja_chinese_reading	ko-KR	价	가
+hanja_chinese_reading	ko-KR	广	광
+hanja_chinese_reading	ko-KR	适	적
+hanja_chinese_reading	ko-KR	叶	엽
+hanja_chinese_reading	ko-KR	台	대
+hanja_chinese_reading	ko-KR	体	체
+hanja_chinese_reading	ko-KR	虫	충
+hanja_japanese_reading	ko-KR	予	예
+hanja_japanese_reading	ko-KR	体	체
+hanja_japanese_reading	ko-KR	芸	예
+hanja_japanese_reading	ko-KR	虫	충
+hanja_japanese_reading	ko-KR	欠	결
+hanja_japanese_reading	ko-KR	糸	사
+hanja_japanese_reading	ko-KR	缶	관

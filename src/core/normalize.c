@@ -438,6 +438,27 @@ static int hangul_sentence(const ttf_pack_input_t *in, size_t index) {
             return 1;
     return 0;
 }
+/* The CJK reading flags of a sentence: with Hangul, variant forms read; under
+   matrix=declared a sentence without Hangul is read in Korean too, as Japanese when it
+   has kana and as Chinese otherwise (2026-10-26). */
+static int cjk_sentence(const ttf_engine_t *e, const ttf_pack_input_t *in, size_t index) {
+    size_t begin, end, k, at, w;
+    uint32_t cp;
+    int kana = 0;
+    if (hangul_sentence(in, index))
+        return TTF_CJK_VARIANTS;
+    if (e->matrix_policy != TTF_MATRIX_DECLARED)
+        return 0;
+    sentence_bounds(in, index, &begin, &end);
+    for (k = begin; k < end && !kana; ++k)
+        for (at = in->tokens[k].begin; at < in->tokens[k].end && !kana; at += w) {
+            if (ttf_utf8_decode(in->text + at, in->tokens[k].end - at, &cp, &w) != 1)
+                break;
+            kana = (cp >= 0x3041 && cp <= 0x30ff && cp != 0x30fb && cp != 0x30fc) ||
+                   (cp >= 0x31f0 && cp <= 0x31ff) || (cp >= 0xff66 && cp <= 0xff9d);
+        }
+    return TTF_CJK_VARIANTS | (kana ? TTF_CJK_JAPANESE : TTF_CJK_CHINESE);
+}
 static int reading_options(const ttf_engine_t *e) {
     return e->frontend_options.kana == TTF_KANA_KOREAN || e->frontend_options.hanja == TTF_HANJA_KOREAN;
 }
@@ -2501,7 +2522,7 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
                    !strcmp(sem->rule, "identity") && ttf_cjk_applies(renderer->language_tag, span.script))
             st = ttf_cjk_render(e, renderer->language_tag, text + tokens[i].begin,
                                 end - tokens[i].begin, sem, &normalized,
-                                span.lexicon, &span.pronunciation_layer, hangul_sentence(&in, i));
+                                span.lexicon, &span.pronunciation_layer, cjk_sentence(e, &in, i));
         else {
             st = renderer->verbalize(e, sem, render_text, render_length, &normalized);
             /* A reading the pack cannot produce (missing resource, value outside

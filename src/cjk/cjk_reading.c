@@ -287,11 +287,11 @@ static const ttf_entry_t *before_initial(const ttf_engine_t *e, const char *lang
 ttf_status_t ttf_cjk_render(const ttf_engine_t *e, const char *lang, const char *text,
                             size_t length, ttf_semantic_t *sem, ttf_buffer_t *out,
                             char lexicon[64], ttf_resource_layer_t *pronunciation_layer,
-                            int korean_sentence) {
+                            int sentence) {
     size_t at = 0, last_position = 0;
     uint32_t last = 0;
     ttf_script_t previous = TTF_SCRIPT_OTHER;
-    int initial = 1, mapped = 0, sequence = 0;
+    int initial = 1, mapped = 0, sequence = 0, previous_hiragana = 0;
     const char *path = NULL;
     ttf_status_t st = TTF_OK;
     while (at < length && st == TTF_OK) {
@@ -305,7 +305,19 @@ ttf_status_t ttf_cjk_render(const ttf_engine_t *e, const char *lang, const char 
         if (!width) return TTF_EUTF8;
         script = ttf_script_of(cp);
         enabled = enabled_script(e, script);
-        if (script != previous) { initial = 1; last = 0; }
+        /* 待って 댓테, 行きます 행키마스, 家族と 가족토: in a Japanese sentence, hiragana right
+           after a read kanji goes on with its word, so a small っ closes the kanji's syllable
+           and the kana is not word-initial (a reading written after its kanji elsewhere,
+           東京とうきょう 동경도쿄, stays a word). A katakana after hiragana starts a word
+           (のチケット 노지켓토); ー belongs to either (2026-10-26; was every script change a
+           new word). */
+        if (script == TTF_SCRIPT_KANA && cp != 0x30fc) {
+            int hiragana = cp >= 0x3041 && cp <= 0x309f;
+            if (previous == TTF_SCRIPT_HAN && hiragana && last && (sentence & TTF_CJK_JAPANESE))
+                initial = 0;
+            else if (script != previous || (previous_hiragana && !hiragana)) { initial = 1; last = 0; }
+            previous_hiragana = hiragana;
+        } else if (script != previous) { initial = 1; last = 0; }
         previous = script;
         used = width;
         encode(cp, key);
@@ -341,12 +353,19 @@ ttf_status_t ttf_cjk_render(const ttf_engine_t *e, const char *lang, const char 
             at += used;
             continue;
         }
-        if (script == TTF_SCRIPT_HAN)
+        /* 银行几点 은행기점, 予約 예약: where a character's own reading differs from the
+           form it stands for in Chinese or Japanese (hanja_rules.tsv, 2026-10-26) */
+        if (script == TTF_SCRIPT_HAN && (sentence & TTF_CJK_CHINESE))
+            reading = ttf_resource_entry(e, "hanja_chinese_reading", lang, key);
+        if (script == TTF_SCRIPT_HAN && !reading && (sentence & TTF_CJK_JAPANESE))
+            reading = ttf_resource_entry(e, "hanja_japanese_reading", lang, key);
+        if (script == TTF_SCRIPT_HAN && !reading)
             reading = ttf_resource_entry(e, "hanja_reading", lang, key);
         /* 中国チーム에도 중국: inside a Korean sentence a simplified or Japanese
            new form takes its traditional reading; a bare 中国 日本 keeps it
-           (2026-10-12, project owner). */
-        if (script == TTF_SCRIPT_HAN && !reading && korean_sentence)
+           (2026-10-12, project owner) unless the request declares its language
+           (matrix=declared), where every sentence is read in Korean (2026-10-26). */
+        if (script == TTF_SCRIPT_HAN && !reading && (sentence & TTF_CJK_VARIANTS))
             reading = ttf_resource_entry(e, "hanja_variant_reading", lang, key);
         if (script == TTF_SCRIPT_KANA) {
             first = glyph(e, lang, text + at, length - at);
@@ -494,7 +513,8 @@ ttf_status_t ttf_cjk_validate(const ttf_resource_record_t *r, int *handled,
                               ttf_resource_diagnostic_t *d) {
     uint32_t cp;
     int valid;
-    if (!strcmp(r->kind, "hanja_reading") || !strcmp(r->kind, "hanja_variant_reading"))
+    if (!strcmp(r->kind, "hanja_reading") || !strcmp(r->kind, "hanja_variant_reading") ||
+        !strcmp(r->kind, "hanja_chinese_reading") || !strcmp(r->kind, "hanja_japanese_reading"))
         valid = one_cp(r->key, &cp) && ttf_script_of(cp) == TTF_SCRIPT_HAN &&
                 hangul_value(r->value, 1);
     else if (!strcmp(r->kind, "cjk_word"))

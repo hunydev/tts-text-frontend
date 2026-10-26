@@ -2,6 +2,22 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Chinese and Japanese read in Korean under matrix=declared (2026-10-26, owner request:
+  compare with xvoice5 with the hanja and kana readings on). With `--matrix declared`
+  every sentence is read in Korean, so simplified Chinese and Japanese new forms take
+  their traditional reading there too (a bare 中国 in auto routing still keeps it);
+  hanja_rules.tsv gains readings for a character whose own reading differs from the
+  form it stands for, Chinese in a sentence with neither Hangul nor kana (几 기, 价 가,
+  广 광, 台 대) and Japanese in a sentence with kana (予 예, 体 체). In a Japanese
+  sentence, hiragana after a read kanji goes on with its word (待って 댓테, 行きます
+  행키마스, 家族と 가족토); a katakana word after hiragana starts a word (のチケット
+  노지켓토). hanja_readings_variants.tsv grows from 627 to 1,582 rows: more simplified,
+  Japanese and glyph-variant pairs (青 靑, 教 敎, 税 稅), project readings for
+  frequent characters Unihan has no Korean reading for (你 니, 吗 마, 吧 파, 哪 나),
+  and the Unihan kHangul of characters outside K0/K1. Held-out comparison (110
+  sentences, Korean with hanja or kana, Chinese, Japanese): TTF 108 sentences right,
+  xvoice5 22. Contract cjk_declared_v120 (16). Output without the reading options,
+  and the Korean release benchmark, are unchanged.
 - Korean forms both engines missed in the v3 comparison (2026-10-26): lengths of time
   M:SS and H:MM:SS by a length word before or after (재생 길이 3:45 삼 분 사십오 초, 0:45 길이
   사십오 초, 2:58:30 만에 두 시간 오십팔 분 삼십 초, 4:25의 기록 사 분 이십오 초) and H:MM before
