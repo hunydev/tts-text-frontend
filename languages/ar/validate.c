@@ -44,12 +44,13 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "an Arabic number word, month, letter, word or unit needs a short key and a reading");
     }
-    if (SAME(k, "speech_symbol")) {
-        /* a symbol read in an Arabic sentence (× في, π باي) */
+    if (SAME(k, "speech_symbol") || SAME(k, "address_symbol")) {
+        /* a symbol read in an Arabic sentence (× في, π باي), or inside an {@email} or {@url}
+           (? علامة استفهام, 2026-10-27) */
         *handled = 1;
         return short_key(key, 15) && label(v, 0)
                    ? TTF_OK
-                   : ttf_validation_error(d, "speech_symbol requires a symbol and a reading");
+                   : ttf_validation_error(d, "speech_symbol and address_symbol require a symbol and a reading");
     }
     if (SAME(k, "ar_plural")) {
         /* a written plural and the ar_noun key of its singular (أيام يوم) */
