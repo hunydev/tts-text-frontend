@@ -206,3 +206,16 @@ counter_role_after	ko-KR	틀렸	frequency
 counter_role_after	ko-KR	틀리	frequency
 counter_role_after	ko-KR	오류	frequency
 counter_role_after	ko-KR	잘못	frequency
+# Food pieces before 쪽 (사과 2쪽 두 쪽; 2026-10-27)
+counter_role_before	ko-KR	사과	frequency
+counter_role_before	ko-KR	토스트	frequency
+counter_role_before	ko-KR	식빵	frequency
+counter_role_before	ko-KR	마늘	frequency
+counter_role_before	ko-KR	귤	frequency
+counter_role_before	ko-KR	수박	frequency
+boundary_word	ko-KR	사과	1
+boundary_word	ko-KR	토스트	1
+boundary_word	ko-KR	식빵	1
+boundary_word	ko-KR	마늘	1
+boundary_word	ko-KR	귤	1
+boundary_word	ko-KR	수박	1

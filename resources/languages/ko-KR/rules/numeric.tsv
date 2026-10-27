@@ -313,7 +313,10 @@ counter	ko-KR	바퀴	native
 numeric_suffix	*	바퀴	COUNTER:바퀴
 counter	ko-KR	걸음	native
 numeric_suffix	*	걸음	COUNTER:걸음
-counter	ko-KR	쪽	native
+# 쪽 counts pages with Sino numbers (설명서 4쪽 사 쪽, 70쪽 칠십 쪽); after a food word it is a
+# piece (사과 2쪽 두 쪽). Owner-delegated decision 2026-10-27, Korean release references
+# 9 Sino : 3 native. Was: native.
+counter	ko-KR	쪽	sino
 numeric_suffix	*	쪽	COUNTER:쪽
 counter	ko-KR	캔	native
 numeric_suffix	*	캔	COUNTER:캔

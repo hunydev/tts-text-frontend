@@ -6,6 +6,8 @@ ordinal_first	ko-KR	1	첫
 # 121번째 stays 백이십일 번째 (project-owner decision 2026-10-14; was sino, 백일 번째)
 ordinal_policy	ko-KR	large	mixed
 counter_role_unit	ko-KR	번	1
+# 사과 2쪽 두 쪽, 토스트 2쪽: a piece of food is counted natively (2026-10-27)
+counter_role_unit	ko-KR	쪽	1
 ordinal_prefix_unit	ko-KR	장	1
 ordinal_prefix_unit	ko-KR	회	1
 ordinal_prefix_unit	ko-KR	차	1

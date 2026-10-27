@@ -1615,11 +1615,25 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         }
     }
     case TTF_SEM_CURRENCY:
-        /* 1,182.60원 천백팔십이 점 육영 원: the Korean references read every written decimal
-           digit, so €3.50 stays 삼 점 오영 유로 (owner sets want 삼 점 오; kept, 2026-10-14).
-           Checked again 2026-10-26: dropping the zeros won two v3 dev sentences (€89.90) and lost
-           33 Korean release sentences (760.00달러 칠백육십 점 영영 달러), and v3 itself accepts
-           +3.20달러 삼 점 이영 달러. */
+        /* 1,182.60원 천백팔십이 점 육영 원: a won amount reads every written digit. A foreign
+           amount with two decimals (cents) drops their trailing zeros: €89.90 팔십구 점 구 유로,
+           $15.00 십오 달러 (owner-delegated decision 2026-10-27: the owner sets and v3 accept
+           it, as spoken; the Korean release references read 영 and lose about 20 sentences).
+           A rate with more decimals keeps them (1.13890달러). Was: 팔십구 점 구영 유로. */
+        {
+            const char *dot = strchr(s->value, '.');
+            if (strcmp(s->unit, "KRW") && dot && strlen(dot + 1) == 2) {
+                char amount[TTF_IR_VALUE_SIZE];
+                size_t len;
+                (void)snprintf(amount, sizeof(amount), "%s", s->value);
+                len = strlen(amount);
+                while (amount[len - 1] == '0')
+                    amount[--len] = '\0';
+                if (amount[len - 1] == '.')
+                    amount[--len] = '\0';
+                return quantity(e, amount, resource(e, "currency", s->unit, s->unit), 0, out);
+            }
+        }
         return quantity(e, s->value, resource(e, "currency", s->unit, s->unit), 0, out);
     case TTF_SEM_PERCENT:
         return quantity(e, s->value, resource(e, "unit", "%", "퍼센트"), 0, out);

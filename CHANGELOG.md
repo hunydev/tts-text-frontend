@@ -2,6 +2,15 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Foreign cents and 쪽 (2026-10-27, decisions the owner delegated): a foreign amount with
+  two decimals drops their trailing zeros (€89.90 팔십구 점 구 유로, $15.00 십오 달러; was
+  팔십구 점 구영 유로); a won amount and a rate with more decimals keep every digit
+  (1,182.60원 육영 원, 1.13890달러). 쪽 counts pages with Sino numbers (설명서 4쪽 사 쪽,
+  12~15쪽 십이에서 십오 쪽; was 네 쪽), and a piece of food stays native (사과 2쪽 두 쪽,
+  하루 10쪽씩 열 쪽씩). The owner sets and v3 accept both; the Korean release references read
+  쪽 9 Sino : 3 native. Contracts ko_counter_native2_v21 and ko_both_weak_v118 (Was notes).
+  Korean release benchmark +8 (쪽), -27 (26 cents read 영 in the references, 1쪽 한 쪽);
+  v3 ko spans dev 95.7% → 96.0%, test 94.8% → 95.0%.
 - Dictionary controls (2026-10-27, owner request): `[[group]]{@dictionary:NAME}` and
   `{@exact:NAME}` (NAME or NAME.tsv) read a group with a named dictionary of the engine, in
   place of the request dictionary; `[[group]]{@nodict}` reads it with no dictionary of any

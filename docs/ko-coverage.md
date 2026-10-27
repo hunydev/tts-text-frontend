@@ -62,7 +62,8 @@ Native counters cover 1–99, including contractions before a counter. Zero and
 100 or greater use Sino-Korean readings. Times preserve the 24-hour number;
 AM/PM conversion is not enabled. Sino-Korean composition supports four-digit
 magnitude groups through `정` (10^40). Larger values within the 95-byte semantic
-value limit fall back to individual digits. Decimal readings preserve trailing zeros.
+value limit fall back to individual digits. Decimal readings preserve trailing zeros, except a foreign currency amount with
+two decimals (€89.90 팔십구 점 구 유로).
 Fraction IR holds the numerator and denominator separately; Korean rendering puts
 the denominator first. Signed fractions place the sign before the entire reading.
 
