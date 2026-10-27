@@ -57,6 +57,9 @@ TAG_MEANING = {
 # Preferred-reading order. A basic-education reading outranks a code-set
 # listing, which outranks a personal-name-only reading. Deterministic.
 TAG_RANK = (("E", 0), ("0", 1), ("1", 2), ("N", 3))
+# Hand-ordered first readings (2026-10-27): where Unihan ranks two readings alike, the
+# one Korean words use goes first. 滑 활 (원활 평활 활주로 滑雪 활설; 골 only in 滑稽 골계).
+PREFERRED_FIRST = {"滑": "활"}
 
 SYLLABLE_BASE, LEAD_COUNT, VOWEL_COUNT, TAIL_COUNT = 0xAC00, 19, 21, 28
 LEAD_N, LEAD_R, LEAD_NG = 2, 5, 11
@@ -221,6 +224,8 @@ def build(unihan, out, selected):
         ordered, folded = resolve(readings.get(codepoint, []))
         if not ordered:
             continue
+        if chr(codepoint) in PREFERRED_FIRST:
+            ordered.sort(key=lambda item: item[0] != PREFERRED_FIRST[chr(codepoint)])
         resolved += 1
         folded_total += len(folded)
         multi[len(ordered)] += 1

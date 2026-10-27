@@ -1004,6 +1004,9 @@
 # Project readings for frequent characters Unihan gives no Korean reading (2026-10-26):
 # the reading Korean hanja dictionaries list (你 니, 吧 파, 哪 나).
 你	=니
+# 啡 배 as in 咖啡 가배, the reading Korean hanja dictionaries give (커피 배; 2026-10-27,
+# Unihan lists it in K2 without a reading).
+啡	=배
 您	=니
 吧	=파
 哪	=나

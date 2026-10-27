@@ -130,9 +130,9 @@ int main(int argc, char **argv) {
     ttf_engine_destroy(e);
     /* Production manifest counts, both explicit and compiled-in NULL roots. */
     for (mode = -1; mode < 4; ++mode) {
-        /* hanja: 15554 rows, 1,582 of them hanja_readings_variants.tsv and 16 Chinese and
+        /* hanja: 15555 rows, 1,583 of them hanja_readings_variants.tsv (啡 배, 2026-10-27) and 16 Chinese and
            Japanese context readings (2026-10-26; was 14583 with 627 variants) */
-        size_t added = mode <= 0 ? 0 : (mode & 1 ? 15554 : 0) + (mode & 2 ? 301 : 0) + 5;
+        size_t added = mode <= 0 ? 0 : (mode & 1 ? 15555 : 0) + (mode & 2 ? 301 : 0) + 5;
         CHECK(create(mode == 3 ? NULL : argv[1], mode, &e) == 0);
         CHECK(records(e) == base_records);
         CHECK(ttf_engine_freeze(e) == TTF_OK && records(e) == base_records + added);

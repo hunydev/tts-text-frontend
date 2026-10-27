@@ -178,6 +178,16 @@ try:
         errors = [json.loads(x) for x in r]
     assert errors[-1]["event"] == "error" and "요청 사전" in errors[-1].get("message", ""), errors
     checks += 1
+    named = dict(named_dict_tsv="[brand]\nexact\tko-KR\tTV\t테레비\n")
+    result, _ = run("[[TV]]{@dictionary:brand} 광고와 [[TV]]{@nodict} 화면, TV 리모컨", opts=named)
+    assert result["text"] == "테레비 광고와 티브이 화면, 티비 리모컨", result["text"]
+    result, _ = run("[[TV]]{@exact:brand.tsv}와 TV", opts=named)
+    assert result["text"] == "테레비와 티비", result["text"]
+    with post("/api/run", dict(mode="normalize", text="TV",
+                               options={"named_dict_tsv": "exact\tko-KR\tTV\tX\n"})) as r:
+        errors = [json.loads(x) for x in r]
+    assert errors[-1]["event"] == "error" and "이름 있는 사전" in errors[-1].get("message", ""), errors
+    checks += 1
     result, _ = run("WiFi를 사용합니다.", opts={"remove_system_words": ["wifi"]})
     assert result["text"] and "WiFi" not in result["text"]
     assert result["spans"][0]["lexicon"] != "lexicon:system"

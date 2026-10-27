@@ -128,6 +128,41 @@ static size_t basement_endpoint(const ttf_pack_input_t *in, size_t p, char *valu
     return p;
 }
 
+static int hangul_syllable_at(const ttf_pack_input_t *in, size_t p) {
+    const unsigned char *u = (const unsigned char *)in->text + p;
+    unsigned cp;
+    if (p + 3 > in->length || u[0] < 0xea || u[0] > 0xed)
+        return 0;
+    cp = ((unsigned)(u[0] & 0x0f) << 12) | ((unsigned)(u[1] & 0x3f) << 6) | (u[2] & 0x3f);
+    return cp >= 0xac00 && cp <= 0xd7a3;
+}
+
+/* B3F로 지하 삼 층으로: the writer chose the particle for 에프, and the reading ends
+   in 층, so 로 를 가 는 와 take their consonant forms (2026-10-27; was 층로). Only a
+   particle that ends the word (로 may go on as 로부터 로서 로는 로도 로만 로의), so
+   B1F로비 is not touched. Returns the end of the particle, or 0. */
+static size_t floor_particle(const ttf_pack_input_t *in, size_t p, ttf_semantic_t *out) {
+    static const char *const pairs[][2] = {{"로", "으로"}, {"를", "을"}, {"가", "이"},
+                                           {"는", "은"}, {"와", "과"}};
+    static const char *const after_ro[] = {"부터", "서", "는", "도", "만", "의"};
+    size_t k, j, q;
+    for (k = 0; k < sizeof(pairs) / sizeof(pairs[0]); ++k) {
+        if (p + 3 > in->length || memcmp(in->text + p, pairs[k][0], 3))
+            continue;
+        q = p + 3;
+        for (j = 0; k == 0 && j < sizeof(after_ro) / sizeof(after_ro[0]); ++j)
+            if (q + strlen(after_ro[j]) <= in->length &&
+                !memcmp(in->text + q, after_ro[j], strlen(after_ro[j])) &&
+                !hangul_syllable_at(in, q + strlen(after_ro[j])))
+                q += strlen(after_ro[j]);
+        if (hangul_syllable_at(in, q))
+            return 0;
+        (void)snprintf(out->secondary, sizeof(out->secondary), "%s", pairs[k][1]);
+        return p + 3;
+    }
+    return 0;
+}
+
 size_t ttf_ko_classify_basement(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     size_t start = in->tokens[in->index].begin, end, second_end = 0, next;
     char first[32], second[32];
@@ -172,6 +207,11 @@ size_t ttf_ko_classify_basement(const ttf_pack_input_t *in, ttf_semantic_t *out)
             snprintf(out->unit, sizeof(out->unit), "floor");
     }
     out->input_end = end;
+    if (!(second_end && second_unit) && ((in->text[end - 1] | 0x20) >= 'a' && (in->text[end - 1] | 0x20) <= 'z')) {
+        size_t particle = floor_particle(in, end, out);
+        if (particle)
+            out->input_end = end = particle;
+    }
     /* B1층에 지하 일 층에: the floor word may carry its particle (2026-10-27; was 비원층에) */
     for (next = in->index; next < in->token_count && in->tokens[next].begin < end; ++next)
         if (in->tokens[next].end > end && in->tokens[next].script != TTF_SCRIPT_HANGUL)

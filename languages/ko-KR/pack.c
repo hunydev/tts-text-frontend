@@ -1669,6 +1669,11 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             return quantity(e, s->value + 1, resource(e, "unit", s->unit, s->unit), 0, out);
         }
         TRY(ttf_buffer_puts(out, resource(e, "quantity_prefix", s->unit, "")));
+        if (!strcmp(s->rule, "ko:basement-floor") && s->secondary[0]) {
+            /* B3F로 지하 삼 층으로: the particle the recognizer agreed (patterns.c) */
+            TRY(quantity(e, s->value, resource(e, "unit", s->unit, s->unit), 0, out));
+            return ttf_buffer_puts(out, s->secondary);
+        }
         return quantity(e, s->value, resource(e, "unit", s->unit, s->unit), 0, out);
     case TTF_SEM_RANGE: {
         int contracted = 0;

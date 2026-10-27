@@ -2,6 +2,15 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Small fixes (2026-10-27). A particle written for 에프 after a basement floor takes the
+  form 층 needs: B3F로 지하 삼 층으로 (was 층로), B2F를 층을, B1F와 층과, B1F로부터 층으로부터;
+  B1F로비 is not touched. 啡 reads 배 (咖啡 가배; it had no reading) and 滑 reads 활 first
+  (滑雪 활설; was 골설); words the dictionary writes with a compatibility ideograph are
+  listed under the unified form too (滑稽 골계, 頻數 빈삭; cjk_words_stdict.tsv 4,890 rows,
+  80 滑 words now read by the character rule). Web workbench: a named-dictionary field
+  (`[NAME]` sections, option `named_dict_tsv`) for `{@dictionary:NAME}`, help rows and a
+  sample with `{@nodict}`. Contract ko_floor_cjk_v122 (15); 38 evaluation sets, the Korean
+  release benchmark and v3 are unchanged.
 - Foreign cents and 쪽 (2026-10-27, decisions the owner delegated): a foreign amount with
   two decimals drops their trailing zeros (€89.90 팔십구 점 구 유로, $15.00 십오 달러; was
   팔십구 점 구영 유로); a won amount and a rate with more decimals keep every digit

@@ -1,5 +1,6 @@
 """Word table part of tools/cjk/stdict_readings.py (merged into the tool after validation)."""
 import collections
+import unicodedata
 from pathlib import Path
 
 CJK = Path(__file__).resolve().parents[2] / "resources/languages/ko-KR/cjk"
@@ -81,6 +82,16 @@ def word_table(pairs, chars):
     readings = collections.defaultdict(set)
     for source, hangul in pairs:
         readings[source].add(hangul)
+    # The dictionary writes some words with a compatibility ideograph (滑稽 with U+F904,
+    # read 골), but text uses the unified character (滑 U+6ED1, read 활 first). List such
+    # a word under the unified form too, unless that form is a word of its own (2026-10-27).
+    folded = collections.defaultdict(set)
+    for source, hs in readings.items():
+        unified = unicodedata.normalize("NFC", source)
+        if unified != source:
+            folded[unified] |= hs
+    for unified, hs in folded.items():
+        readings.setdefault(unified, hs)
     table = {}
     for source, hs in readings.items():
         if 2 <= len(source) <= 6 and len(hs) == 1:

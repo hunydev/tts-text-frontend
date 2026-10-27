@@ -142,6 +142,21 @@ def string(value):
     return value.decode("utf-8")
 
 
+def named_dictionaries(text):
+    """Split `[NAME]` sections; the rows under each header are that dictionary's TSV."""
+    sections = []
+    for line in text.splitlines():
+        if line.startswith("[") and line.rstrip().endswith("]"):
+            sections.append([line.strip()[1:-1].strip(), []])
+        elif line.strip() and not line.lstrip().startswith("#"):
+            if not sections:
+                raise ValueError("이름 있는 사전: 첫 행 앞에 [이름] 줄이 필요합니다.")
+            sections[-1][1].append(line)
+        elif sections:
+            sections[-1][1].append(line)
+    return [(name, "\n".join(rows) + "\n") for name, rows in sections]
+
+
 class Engine:
     def __init__(self, library, resources, options, overrides=()):
         self.lib = C.CDLL(str(library))
@@ -228,6 +243,12 @@ class Engine:
                     I, [P, P, C.c_char_p, Z, C.POINTER(TraceOptions), C.POINTER(TracedResult)])
         elif options.get("request_dict_tsv", "").strip():
             raise ValueError("This native library does not support request dictionaries")
+        # Named dictionaries (2026-10-27) for [[…]]{@dictionary:NAME} and {@exact:NAME}.
+        self.has_named_dict = self.has_dict and hasattr(self.lib, "ttf_engine_add_dictionary")
+        if self.has_named_dict:
+            definitions["ttf_engine_add_dictionary"] = (I, [P, C.c_char_p, P])
+        elif options.get("named_dict_tsv", "").strip():
+            raise ValueError("This native library does not support named dictionaries")
         for name, (result, args) in definitions.items():
             fn = getattr(self.lib, name)
             fn.restype = result
@@ -330,6 +351,8 @@ class Engine:
                            C.byref(report), C.byref(diagnostic)), diagnostic)
                 self.resource_validation = {key: int(getattr(report, key)) for key in
                     ("records", "validated_records", "unvalidated_records")}
+            for name, rows in named_dictionaries(options.get("named_dict_tsv", "")):
+                self.add_dictionary(name, rows)
             self.check(self.lib.ttf_engine_freeze(self.handle))
             if options.get("request_dict_tsv", "").strip():
                 # A dictionary of this run on the frozen engine (docs/request-dictionary.ko.md).
@@ -343,6 +366,25 @@ class Engine:
                                      " (exact·lexicon 행만, 탭으로 나눈 4칸)")
         except BaseException:
             self.close()
+            raise
+
+    def add_dictionary(self, name, rows):
+        # The engine owns a dictionary once it is added; until then it is ours to destroy.
+        dictionary = P()
+        self.check(self.lib.ttf_dict_create(C.byref(dictionary)))
+        try:
+            with tempfile.TemporaryDirectory(prefix="ttf-web-named-") as directory:
+                path = Path(directory) / "named.tsv"
+                path.write_text(rows, encoding="utf-8")
+                status = self.lib.ttf_dict_load(dictionary, str(path).encode())
+            if status:
+                raise ValueError(f"이름 있는 사전 [{name}]: " +
+                                 string(self.lib.ttf_status_string(status)) +
+                                 " (exact·lexicon 행만, 탭으로 나눈 4칸)")
+            if self.lib.ttf_engine_add_dictionary(self.handle, name.encode(), dictionary):
+                raise ValueError(f"이름 있는 사전 [{name}]: 이름은 영문·숫자·_·- 64자 이내, 한 번씩")
+        except BaseException:
+            self.lib.ttf_dict_destroy(dictionary)
             raise
 
     def diagnostic(self):

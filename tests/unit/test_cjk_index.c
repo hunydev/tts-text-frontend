@@ -105,9 +105,9 @@ int main(int argc, char **argv) {
                        (char)(0x80 | (cp & 63)), 0};
         CHECK(ttf_resource_set(e, "cjk_word", "ko-KR", key, "가", TTF_LAYER_SYSTEM) == TTF_OK);
     }
-    /* the deferred CJK tables, hanja_readings_variants.tsv (1,582 rows) and the 16
+    /* the deferred CJK tables, hanja_readings_variants.tsv (1,583 rows; 啡 배 2026-10-27) and the 16
        Chinese and Japanese context readings in hanja_rules.tsv included (2026-10-26) */
-    CHECK(checked_freeze(e, 15860) == 0);
+    CHECK(checked_freeze(e, 15861) == 0);
     CHECK(rules(e) == rules(base));
     for (i = 0; i < TTF_HASH_BUCKETS; ++i) {
         const ttf_entry_t *p;
@@ -118,9 +118,11 @@ int main(int argc, char **argv) {
             previous = p->cjk_length; ++indexed;
         }
     }
-    /* five effective word rows + user lexicon + stress, and the 4932 dictionary
-       words of cjk_words_stdict.tsv (two to six characters) since 2026-10-05 */
-    CHECK(indexed == 18006 + 4932);
+    /* five effective word rows + user lexicon + stress, and the 4890 dictionary
+       words of cjk_words_stdict.tsv (two to six characters) since 2026-10-05
+       (2026-10-27: 4932 before 滑 read 활 first and words written with a
+       compatibility ideograph were listed under the unified form) */
+    CHECK(indexed == 18006 + 4890);
     CHECK(e->cjk->max_length == 6);
     CHECK(!strcmp(ttf_resource_get(e, "hanja_reading", "ko-KR", "山", NULL), "산"));
     CHECK(!strcmp(ttf_resource_get(e, "hanja_reading", "xx-Test", "山", NULL), "뫼"));

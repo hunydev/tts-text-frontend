@@ -243,6 +243,7 @@ DEFAULTS = dict(
     domain="none",
     customer_tsv="",
     request_dict_tsv="",
+    named_dict_tsv="",
     user_lexicon=[],
     remove_system_words=[],
     verify_chunks=[1, 7, 64],
@@ -343,6 +344,7 @@ def validate(request, corpus=False):
     integer(opts["random_seed"], "random_seed", 0, 2147483647)
     bounded_string(opts["customer_tsv"], "customer_tsv", 16384)
     bounded_string(opts["request_dict_tsv"], "request_dict_tsv", 16384)
+    bounded_string(opts["named_dict_tsv"], "named_dict_tsv", 16384)
     if (
         not isinstance(opts["verify_chunks"], list)
         or not 1 <= len(opts["verify_chunks"]) <= 6
@@ -455,6 +457,14 @@ def catalog():
                 "exact\t*\t🍔👌\t햄버거 좋아\n"
                 "lexicon\tko-KR\ten-US:Qorvex\t코르벡스\n"
             )},
+        ),
+        dict(
+            id="dictionary-controls",
+            category="사전",
+            title="구간 사전 · {@dictionary:이름}과 {@nodict}",
+            text="[[TV]]{@dictionary:brand} 광고와 [[TV]]{@nodict} 화면, TV 리모컨",
+            expected="테레비 광고와 티브이 화면, 티비 리모컨",
+            options={"named_dict_tsv": "[brand]\nexact\tko-KR\tTV\t테레비\n"},
         ),
         dict(
             id="layer",
