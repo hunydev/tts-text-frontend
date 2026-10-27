@@ -1175,8 +1175,12 @@ static void address_items(const ttf_engine_t *e, items_t *it, const char *s, siz
         } else {
             const char *k = s[i] == '.' ? "dot" : s[i] == '@' ? "at" : s[i] == '/' ? "slash" : s[i] == '-' ? "dash"
                           : s[i] == '_' ? "underscore" : NULL;
+            char mark[2] = {s[i], 0};
+            const char *name;
             if (k)
                 add(it, "R:%s", k);
+            else if ((name = res(e, "address_symbol", mark)) != NULL)
+                add(it, "W:%s", name); /* ?id=7 علامة استفهام … يساوي (an {@url} query, 2026-10-27) */
             z = i + 1;
         }
         i = z;
@@ -2349,8 +2353,23 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     out_t o = {e, b, 0};
     char all[2 * TTF_IR_VALUE_SIZE + 2];
     if (s->type == TTF_SEM_CUSTOM && !strcmp(s->rule, "control.pattern") && strcmp(s->unit, "@alphabet")) {
-        if (!strcmp(s->unit, "@email") || !strcmp(s->unit, "@url"))
-            return ttf_electronic_control(e, s, surface, length, b);
+        if (!strcmp(s->unit, "@email") || !strcmp(s->unit, "@url")) {
+            /* [[a1@b2.com]]{@email} إيه واحد آت بي اثنين دوت كوم: the shared check of the
+               address shape, then the Arabic reading of an address in plain text (2026-10-27;
+               was invalid resource, the shared reader found no Arabic mark names) */
+            items_t it = {{0}, 0, 0};
+            size_t keep = b->length;
+            ttf_status_t st = ttf_electronic_control(e, s, surface, length, b);
+            b->length = keep;
+            if (b->data)
+                b->data[keep] = 0;
+            if (st != TTF_OK)
+                return st;
+            address_items(e, &it, surface, length);
+            if (it.bad || !it.n)
+                return TTF_EINVAL;
+            return say(&o, it.s);
+        }
         if (!strcmp(s->unit, "@native") || !strcmp(s->unit, "@sino") || !strcmp(s->unit, "@counter"))
             return TTF_EINVAL;
         return ttf_semantic_control(e, s, surface, length, b);

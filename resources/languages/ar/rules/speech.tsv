@@ -389,3 +389,19 @@ ar_word	ar	rashid	راشد
 ar_word	ar	mariam	مريم
 ar_word	ar	layla	ليلى
 ar_word	ar	sami	سامي
+# Marks inside an email or URL under [[…]]{@email} / {@url} (2026-10-27): the words the Arabic
+# pack already reads in plain text (number ar at, dot, slash, dash, underscore, colon, equals,
+# percent, plus); the others name the mark. Without these rows the controls failed in Arabic.
+address_symbol	ar	@	آت
+address_symbol	ar	.	دوت
+address_symbol	ar	/	سلاش
+address_symbol	ar	-	شرطة
+address_symbol	ar	:	نقطتين
+address_symbol	ar	_	أندرسكور
+address_symbol	ar	?	علامة استفهام
+address_symbol	ar	=	يساوي
+address_symbol	ar	&	آند
+address_symbol	ar	#	هاش
+address_symbol	ar	%	بالمئة
+address_symbol	ar	+	زائد
+address_symbol	ar	~	تيلدا

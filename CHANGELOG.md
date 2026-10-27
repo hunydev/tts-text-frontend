@@ -2,6 +2,11 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Arabic email and URL controls (2026-10-27, owner report: the language comparison listed
+  them as unsupported): `[[a1@b2.com]]{@email}` and `{@url}` failed with invalid resource,
+  as the shared reader found no Arabic mark names. They now pass the shared shape check and
+  read as an address in Arabic plain text does (إيه واحد آت بي اثنين دوت كوم); 13 Arabic
+  `address_symbol` rows also read a URL query (? = &). Contract ar_controls_v123 (5).
 - Startup gate relative (2026-10-27, owner decision): `tools/cjk/check_startup.py` starts a
   before and an after build in alternating order and gates the passthrough median ratio at
   1.25 (`--before`, `--before-resources`, `--after`, `--after-resources`). The fixed 16.5 ms
