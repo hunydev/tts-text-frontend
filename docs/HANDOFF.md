@@ -2,6 +2,11 @@
 
 갱신: 2026-10-11. Release **0.20.0**, public ABI **v1**.
 
+## 최근 인계: 기동 검사를 비율로, 속도 재측정 (2026-10-27)
+
+- **기동 검사:** `tools/cjk/check_startup.py`는 이제 이전 빌드(`--before`)와 바꾼 빌드(`--after`)를 번갈아 띄워 passthrough 중앙값 비율이 1.25 이하인지 본다(소유자 결정). 고정 기준 16.5ms는 7개 언어 팩 이전 값이었고, 같은 빌드가 VM에서 한 시간 사이 55ms와 100ms로 재져 어떤 고정값도 맞지 않았다. 77b92cd 대 0d57382: 0.97(통과).
+- **변형 표 확장 전후(47ae6fd → 0d57382, 같은 VM 번갈아):** 기동 passthrough 52.6 → 54.7ms, hanja 64.4 → 68.1ms. 한자·가나 없는 처리 1.03×(한도 1.25 통과). 한자·가나 읽기 처리 시간은 차이 없음(한자·가나 문장 4,200개 715 → 702ms, 한국어 2,000문장 691 → 697ms).
+
 ## 최근 인계: 작은 개선 (2026-10-27)
 
 - **층 조사:** B3F로 지하 삼 층으로(was 층로). 에프에 맞춰 쓴 로·를·가·는·와가 층에 맞게 바뀐다(로부터·로서·로도 포함). 뒤에 한글이 이어지는 B1F로비는 그대로. 범위(B1~B3F로)는 아직 층로.
@@ -1786,7 +1791,7 @@ cmake -S . -B build
 cmake --build build -j2
 ctest --test-dir build --output-on-failure --stop-on-failure -R '^cjk_'
 python3 tests/integration/test_cjk_passthrough.py --before artifacts/tn/cjk-v22/baseline/libtts_text_frontend.so --before-resources artifacts/tn/cjk-v22/baseline/resources --after build/libtts_text_frontend.so --after-resources resources --report artifacts/tn/cjk-v22/NEW-passthrough.json
-python3 tools/cjk/check_startup.py --ttf build/ttf --resources resources --report artifacts/tn/cjk-v22/NEW-startup.json
+python3 tools/cjk/check_startup.py --before artifacts/tn/cjk-v22/baseline/ttf --before-resources artifacts/tn/cjk-v22/baseline/resources --after build/ttf --after-resources resources --report artifacts/tn/cjk-v22/NEW-startup.json
 python3 tools/cjk/check_throughput.py --before artifacts/tn/cjk-v22/baseline/libtts_text_frontend.so --before-resources artifacts/tn/cjk-v22/baseline/resources --after build/libtts_text_frontend.so --after-resources resources --report artifacts/tn/cjk-v22/NEW-throughput.json
 cmake -S . -B build-v20-asan
 cmake --build build-v20-asan -j2

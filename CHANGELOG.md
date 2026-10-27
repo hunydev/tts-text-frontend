@@ -2,6 +2,11 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Startup gate relative (2026-10-27, owner decision): `tools/cjk/check_startup.py` starts a
+  before and an after build in alternating order and gates the passthrough median ratio at
+  1.25 (`--before`, `--before-resources`, `--after`, `--after-resources`). The fixed 16.5 ms
+  reference predated the language packs, and the shared VM measured the same build at 55 ms
+  and 100 ms an hour apart.
 - Small fixes (2026-10-27). A particle written for 에프 after a basement floor takes the
   form 층 needs: B3F로 지하 삼 층으로 (was 층로), B2F를 층을, B1F와 층과, B1F로부터 층으로부터;
   B1F로비 is not touched. 啡 reads 배 (咖啡 가배; it had no reading) and 滑 reads 활 first
