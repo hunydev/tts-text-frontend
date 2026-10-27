@@ -674,9 +674,11 @@ $("expected").addEventListener("input", () => {
   $("expected-enabled").checked = $("expected").value !== "";
   $("sample-review").textContent = "직접 편집한 기대 출력 · 독립 검토 상태 없음";
 });
-function useExample(text, annotated) {
+function useExample(text, annotated, namedDict) {
   $("source").value = text;
   if (annotated) $("input-format").value = "annotated";
+  // A help row for {@dictionary:NAME} brings the dictionary it names.
+  if (namedDict) $("named-dict-tsv").value = namedDict;
   manualEdit();
   count();
   markStale();
@@ -686,10 +688,10 @@ function useExample(text, annotated) {
       : "예시를 입력칸에 넣었습니다. 설정을 바꿔 가며 실행해 보세요.",
   );
 }
-function exampleButton(text, annotated) {
+function exampleButton(text, annotated, namedDict) {
   const b = node("button", text, "example-link");
   b.type = "button";
-  b.addEventListener("click", () => useExample(text, annotated));
+  b.addEventListener("click", () => useExample(text, annotated, namedDict));
   return b;
 }
 /* Help text comes from tools/web/help.json via the catalog; the workbench test
@@ -707,7 +709,7 @@ function renderHelp() {
       const syntax = node("td");
       syntax.append(node("code", r.syntax));
       const example = node("td");
-      example.append(exampleButton(r.example, true), " → ", node("code", r.output));
+      example.append(exampleButton(r.example, true, r.named_dict_tsv), " → ", node("code", r.output));
       tr.append(syntax, node("td", r.meaning), example);
       table.append(tr);
     });

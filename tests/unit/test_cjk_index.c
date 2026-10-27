@@ -105,9 +105,10 @@ int main(int argc, char **argv) {
                        (char)(0x80 | (cp & 63)), 0};
         CHECK(ttf_resource_set(e, "cjk_word", "ko-KR", key, "가", TTF_LAYER_SYSTEM) == TTF_OK);
     }
-    /* the deferred CJK tables, hanja_readings_variants.tsv (1,583 rows; 啡 배 2026-10-27) and the 16
-       Chinese and Japanese context readings in hanja_rules.tsv included (2026-10-26) */
-    CHECK(checked_freeze(e, 15861) == 0);
+    /* the deferred CJK tables, hanja_readings_variants.tsv (1,583 rows) and the 16
+       Chinese and Japanese context readings in hanja_rules.tsv included (2026-10-26;
+       2026-10-27 啡 배 +1 and 42 fewer dictionary words: was 15860) */
+    CHECK(checked_freeze(e, 15819) == 0);
     CHECK(rules(e) == rules(base));
     for (i = 0; i < TTF_HASH_BUCKETS; ++i) {
         const ttf_entry_t *p;

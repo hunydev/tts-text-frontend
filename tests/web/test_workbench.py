@@ -74,7 +74,8 @@ try:
     help_cases = 0
     for group in catalog["help"]["controls"]:
         for item in group["rows"]:
-            assert run(item["example"], opts={"input_format": "annotated"})[0]["text"] == item["output"], item
+            opts = {"input_format": "annotated", "named_dict_tsv": item.get("named_dict_tsv", "")}
+            assert run(item["example"], opts=opts)[0]["text"] == item["output"], item
             help_cases += 1
     for item in catalog["help"]["options"]:
         assert item["key"] in catalog["defaults"], item

@@ -225,13 +225,15 @@
           "syntax": "[[…]]{@dictionary:이름}",
           "meaning": "구간만 이름 있는 사전으로 읽음 (이름.tsv도 됨, 요청 사전 자리를 대신함)",
           "example": "[[TV]]{@dictionary:brand} 광고",
-          "output": "테레비 광고 (brand: TV 테레비)"
+          "output": "테레비 광고",
+          "named_dict_tsv": "[brand]\nexact\tko-KR\tTV\t테레비\n"
         },
         {
           "syntax": "[[…]]{@exact:이름}",
           "meaning": "{@dictionary:이름}과 같음",
           "example": "[[TV]]{@exact:brand.tsv} 광고",
-          "output": "테레비 광고 (brand: TV 테레비)"
+          "output": "테레비 광고",
+          "named_dict_tsv": "[brand]\nexact\tko-KR\tTV\t테레비\n"
         },
         {
           "syntax": "[[…]]{@nodict}",
