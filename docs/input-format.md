@@ -189,6 +189,39 @@ spacing. Inspect reports one `CUSTOM` span with `rule=control.pattern`,
 `unit=@join`; the trace records `JOIN` (the inner read adds no events). An
 unknown name such as `{@joinx}` is ignored like any invalid control.
 
+## Dictionary controls (2026-10-27)
+
+`[[group]]{@dictionary:NAME}` (also `{@exact:NAME}`, and `NAME.tsv` for either) reads the
+group with the engine's named dictionary NAME; `[[group]]{@nodict}` reads it with no
+dictionary at all. Both also bind one atom like other controls (`Samsung{@nodict}`,
+`알쓰{@dictionary:kpop}라서`).
+
+| Input (dictionary `kpop`: `exact ko-KR 알쓰 알콜 쓰레기`, `lexicon ko-KR en-US:samsung 쌤쑹`) | Output (ko-KR) |
+|---|---|
+| `알쓰라서 [[알쓰]]{@dictionary:kpop}라서` | `알쓰라서 알콜 쓰레기라서` |
+| `Samsung 폰, [[Samsung]]{@exact:kpop.tsv} 폰` | `삼성 폰, 쌤쑹 폰` |
+| `Samsung 폰과 [[Samsung]]{@nodict} 폰` | `삼성 폰과 샘성 폰` |
+| `Pokémon 카드, [[Pokémon]]{@nodict} 카드` | `포켓몬 카드, 포케먼 카드` |
+
+- **Named dictionaries** are registered by the operator before the engine is frozen:
+  `ttf_engine_add_dictionary(engine, "kpop", dict)` (the engine owns `dict`), or the CLI
+  `--dictionary kpop=FILE` (repeatable). NAME is 1–64 of `A-Z a-z 0-9 _ -`; the text names a
+  dictionary, it never opens a file.
+- Inside the group the named dictionary takes the place of the request dictionary
+  (`ttf_normalize_with`); the engine's own layers (system, domain, customer, user) still
+  apply below it. A group entry matches as written, so `[[알쓰]]` matches `알쓰` although
+  `라서` follows the group.
+- **`{@nodict}`** turns off every dictionary in the group, without telling system and user
+  dictionaries apart: exact rules, lexicon rows (with `lexicon_case`) and the 표준국어대사전
+  loanwords of every layer, and the request dictionary. Grammar (numbers, units, dates) and
+  letter-by-letter readings still apply; an English word is guessed, a word with no guess
+  (an accented one, `café`) stays as written.
+- The group is read in its sentence (two words on each side, as `X{@pronounce}`), so a Latin
+  word in a Korean sentence stays Korean; only the group's own output is kept.
+- An unknown NAME reads the group as usual, or fails the request under
+  `invalid_control=error`. A malformed name (`{@dictionary:a/b}`, `{@dictionary:}`) is an
+  invalid control.
+
 ## Pronounce control (2026-10-09)
 
 `[[group]]{@pronounce}` reads the group as usual and then writes its Korean as it

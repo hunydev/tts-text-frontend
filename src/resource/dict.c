@@ -355,3 +355,57 @@ uint64_t ttf_dict_lengths(const ttf_dict_t *d, const char *kind, const char *lan
             return d->lengths[i].lengths;
     return 0;
 }
+
+/* ---- named dictionaries ({@dictionary:NAME}, 2026-10-27) ---- */
+static int name_ok(const char *name, size_t n) {
+    size_t i;
+    if (!n || n > 64)
+        return 0;
+    for (i = 0; i < n; ++i)
+        if (!((name[i] >= 'a' && name[i] <= 'z') || (name[i] >= 'A' && name[i] <= 'Z') ||
+              (name[i] >= '0' && name[i] <= '9') || name[i] == '_' || name[i] == '-'))
+            return 0;
+    return 1;
+}
+ttf_status_t ttf_engine_add_dictionary(ttf_engine_t *e, const char *name, ttf_dict_t *dict) {
+    struct ttf_named_dict *grown;
+    size_t n;
+    if (!e || !name || !dict || !name_ok(name, strlen(name)))
+        return TTF_EINVAL;
+    if (e->frozen)
+        return TTF_ESTATE;
+    n = strlen(name);
+    if (ttf_named_dict(e, name, n))
+        return TTF_EINVAL;
+    grown = (struct ttf_named_dict *)realloc(e->named_dicts, (e->named_dict_count + 1) * sizeof(*grown));
+    if (!grown)
+        return TTF_ENOMEM;
+    e->named_dicts = grown;
+    memcpy(grown[e->named_dict_count].name, name, n + 1);
+    grown[e->named_dict_count++].dict = dict;
+    return TTF_OK;
+}
+const ttf_dict_t *ttf_named_dict(const ttf_engine_t *e, const char *name, size_t n) {
+    size_t i;
+    if (n > 4 && !memcmp(name + n - 4, ".tsv", 4))
+        n -= 4;
+    if (!e || !name_ok(name, n))
+        return NULL;
+    for (i = 0; i < e->named_dict_count; ++i)
+        if (strlen(e->named_dicts[i].name) == n && !memcmp(e->named_dicts[i].name, name, n))
+            return e->named_dicts[i].dict;
+    return NULL;
+}
+void ttf_named_dicts_free(ttf_engine_t *e) {
+    size_t i;
+    for (i = 0; i < e->named_dict_count; ++i)
+        ttf_dict_destroy(e->named_dicts[i].dict);
+    free(e->named_dicts);
+    e->named_dicts = NULL;
+    e->named_dict_count = 0;
+}
+int ttf_dictionary_kind(const char *kind) {
+    return (kind[0] == 'e' && !strcmp(kind, "exact")) ||
+           (kind[0] == 'l' && (!strcmp(kind, "lexicon") || !strcmp(kind, "lexicon_case") ||
+                               !strcmp(kind, "loanword")));
+}

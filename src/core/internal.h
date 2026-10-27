@@ -72,6 +72,11 @@ struct ttf_engine {
     struct ttf_trace_state *trace_state;   /* Request view only; frozen owner stays NULL. */
     struct ttf_context_memo *context_memo; /* Unit-local context callback view only. */
     const struct ttf_dict *dict;           /* Request view only: the request dictionary. */
+    /* Named dictionaries for {@dictionary:NAME} (owned), and a view inside {@nodict}: no
+       exact, lexicon or loanword row of any layer applies (2026-10-27). */
+    struct ttf_named_dict *named_dicts;
+    size_t named_dict_count;
+    int no_dictionary;
     /* Unit-local view only: the previous unit's tail, so a sentence cut into
        units keeps its language (latin_sentence). */
     const char *unit_prefix;
@@ -136,6 +141,15 @@ struct ttf_dict {
 const ttf_entry_t *ttf_dict_find(const ttf_dict_t *d, const char *kind, const char *lang,
                                  const char *key);
 uint64_t ttf_dict_lengths(const ttf_dict_t *d, const char *kind, const char *lang);
+struct ttf_named_dict {
+    char name[65];
+    ttf_dict_t *dict;
+};
+/* The engine's dictionary of this name (n bytes, a trailing .tsv ignored), or NULL. */
+const ttf_dict_t *ttf_named_dict(const ttf_engine_t *e, const char *name, size_t n);
+void ttf_named_dicts_free(ttf_engine_t *e);
+/* The kinds a dictionary holds: exact rules, lexicon rows and loanwords ({@nodict}). */
+int ttf_dictionary_kind(const char *kind);
 /* The phrase bucket of a multiword lexicon word (its first letter run). */
 size_t ttf_phrase_bucket(const char *word);
 struct ttf_kind_lengths {

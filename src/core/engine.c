@@ -345,6 +345,7 @@ ttf_status_t ttf_engine_freeze(ttf_engine_t *e) {
 void ttf_engine_destroy(ttf_engine_t *e) {
     if (e) {
         ttf_resource_destroy(e);
+        ttf_named_dicts_free(e);
         free(e->kind_lengths);
         ttf_symbol_fallback_detach(e);
         free(e->resource_root);

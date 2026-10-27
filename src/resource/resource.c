@@ -107,6 +107,8 @@ const ttf_entry_t *ttf_resource_entry(const ttf_engine_t *e, const char *kind, c
     const ttf_entry_t *a, *b;
     if (!e || !kind || !lang || !key)
         return NULL;
+    if (e->no_dictionary && ttf_dictionary_kind(kind))
+        return NULL; /* [[…]]{@nodict} */
     /* a request dictionary row is above every engine layer */
     if (e->dict && ((a = ttf_dict_find(e->dict, kind, lang, key)) != NULL ||
                     (strcmp(lang, "*") && (a = ttf_dict_find(e->dict, kind, "*", key)) != NULL)))

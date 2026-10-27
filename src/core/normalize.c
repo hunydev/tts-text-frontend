@@ -1325,6 +1325,60 @@ region:
     (*regions)[(*region_count)++] = output->length;
     return TTF_OK;
 }
+/* [[삼성]]{@nodict}: the span is normalized with no dictionary (exact rules, lexicon rows
+   and loanwords of every layer, the request dictionary included); [[2NE1]]{@dictionary:kpop}
+   and {@exact:kpop} with the engine's named dictionary in place of the request dictionary
+   (2026-10-27, owner request). The span is read in its sentence (two words each side, as
+   X{@pronounce}), so [[Samsung]] in a Korean sentence stays Korean; only its own output is
+   kept. An unknown name fails under invalid_control=error and otherwise reads the span as
+   usual. */
+static ttf_status_t dictionary_control(const ttf_engine_t *e, const char *text, size_t length,
+                                       const ttf_control_match_t *control, size_t offset,
+                                       ttf_buffer_t *output, ttf_result_t *out, size_t *capacity) {
+    ttf_buffer_t base = {0};
+    ttf_result_t inner;
+    ttf_engine_t view = *e;
+    const char *payload = text + control->payload_begin;
+    size_t n = control->payload_end - control->payload_begin, begin = output->length, k;
+    ttf_status_t st;
+    if (n == 7 && !memcmp(payload, "@nodict", 7)) {
+        view.no_dictionary = 1;
+        view.dict = NULL;
+        view.dictionary_rules = 0;
+    } else {
+        size_t skip = payload[1] == 'd' ? 12 : 7;
+        const ttf_dict_t *named = ttf_named_dict(e, payload + skip, n - skip);
+        if (named)
+            view.dict = named;
+        else if (e->strict_controls)
+            return TTF_EINVAL;
+    }
+    st = ttf_control_decode(text, control->base_begin, control->base_end, &base);
+    if (st != TTF_OK)
+        return st;
+    if (atom_in_context(&view, text, length, control, &base, offset, output, out, capacity, &st)) {
+        ttf_buffer_free(&base);
+        return st;
+    }
+    st = ttf_process_unit(&view, base.data ? base.data : "", base.length, offset + control->base_begin,
+                          &inner);
+    ttf_buffer_free(&base);
+    if (st != TTF_OK)
+        return st;
+    st = ttf_buffer_append(output, inner.text, inner.length);
+    for (k = 0; st == TTF_OK && k < inner.span_count; ++k) {
+        ttf_span_t span = inner.spans[k];
+        span.begin += begin;
+        span.end += begin;
+        if (!k)
+            span.input_begin = span.semantic.input_begin = offset + control->begin;
+        if (k + 1 == inner.span_count)
+            span.input_end = span.semantic.input_end = offset + control->end;
+        st = add_span(out, &span, capacity);
+    }
+    ttf_result_free(&inner);
+    return st;
+}
 static ttf_status_t render_control(const ttf_engine_t *e, const ttf_pack_input_t *in,
                                    const ttf_control_match_t *control, size_t offset,
                                    ttf_span_t *span, ttf_buffer_t *output) {
@@ -1824,7 +1878,7 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
         free(regions);
         return TTF_ENOMEM;
     }
-    if (count && (e->dictionary_rules || (e->dict && e->dict->rows))) {
+    if (count && !e->no_dictionary && (e->dictionary_rules || (e->dict && e->dict->rows))) {
         dict_marks = (unsigned char *)calloc(count, 1);
         dict_lang = (const char **)calloc(count, sizeof(*dict_lang));
         if (!dict_marks || !dict_lang) {
@@ -1956,6 +2010,16 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
                 !memcmp(text + literal->control.payload_begin, "@pronounce", 10)) {
                 st = phoneme_control(e, text, length, &literal->control, offset, &output, out, &capacity,
                                      &phoneme_regions, &phoneme_count, &phoneme_cap);
+                if (st != TTF_OK)
+                    goto fail;
+                removed_before = 0;
+                ++i;
+                continue;
+            }
+            if (literal->control.kind == TTF_CONTROL_PATTERN &&
+                ttf_control_dictionary(text + literal->control.payload_begin,
+                                       literal->control.payload_end - literal->control.payload_begin)) {
+                st = dictionary_control(e, text, length, &literal->control, offset, &output, out, &capacity);
                 if (st != TTF_OK)
                     goto fail;
                 removed_before = 0;

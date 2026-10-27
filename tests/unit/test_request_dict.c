@@ -219,6 +219,43 @@ int main(int argc, char **argv) {
         CHECK(!failed);
     }
 #endif
+    {
+        /* [[...]]{@dictionary:NAME}, {@exact:NAME.tsv} and {@nodict} (2026-10-27): a named
+           dictionary owned by the engine, added before the freeze */
+        ttf_config_t config;
+        ttf_frontend_options_t options;
+        ttf_engine_t *n = NULL;
+        ttf_dict_t *kpop = NULL, *other = NULL;
+        ttf_config_init(&config);
+        config.resource_root = argv[1];
+        config.default_language = "ko-KR";
+        ttf_frontend_options_init(&options);
+        options.output_mode = TTF_OUTPUT_SPEECH;
+        options.input_format = TTF_INPUT_ANNOTATED;
+        CHECK(ttf_engine_create(&config, &n) == TTF_OK && ttf_engine_set_frontend_options(n, &options) == TTF_OK);
+        CHECK(ttf_dict_create(&kpop) == TTF_OK && ttf_dict_create(&other) == TTF_OK);
+        CHECK(ttf_dict_add_exact(kpop, "ko-KR", "알쓰", "명명값") == TTF_OK);
+        CHECK(ttf_engine_add_dictionary(n, "bad name", kpop) == TTF_EINVAL);
+        CHECK(ttf_engine_add_dictionary(n, "kpop.tsv", kpop) == TTF_EINVAL);
+        CHECK(ttf_engine_add_dictionary(n, "kpop", kpop) == TTF_OK);
+        CHECK(ttf_engine_add_dictionary(n, "kpop", other) == TTF_EINVAL);
+        CHECK(ttf_engine_freeze(n) == TTF_OK);
+        CHECK(ttf_engine_add_dictionary(n, "other", other) == TTF_ESTATE);
+        ttf_dict_destroy(other);
+        CHECK(same(n, NULL, "알쓰 [[알쓰]]{@dictionary:kpop} [[알쓰]]{@exact:kpop.tsv}", "알쓰 명명값 명명값"));
+        /* inside the group the named dictionary takes the request dictionary's place */
+        {
+            ttf_dict_t *req = NULL;
+            CHECK(ttf_dict_create(&req) == TTF_OK && ttf_dict_add_exact(req, "ko-KR", "알쓰", "요청값") == TTF_OK);
+            CHECK(same(n, req, "알쓰 [[알쓰]]{@dictionary:kpop}", "요청값 명명값"));
+            CHECK(same(n, req, "알쓰 [[알쓰]]{@nodict}", "요청값 알쓰"));
+            CHECK(!strcmp(bytewise(n, req, "알쓰 [[알쓰]]{@dictionary:kpop} [[알쓰]]{@nodict}"), "요청값 명명값 알쓰"));
+            /* an unknown name reads the group as usual (invalid_control=ignore) */
+            CHECK(same(n, req, "[[알쓰]]{@dictionary:missing}", "요청값"));
+            ttf_dict_destroy(req);
+        }
+        ttf_engine_destroy(n);
+    }
     ttf_dict_destroy(d);
     ttf_dict_destroy(NULL);
     ttf_engine_destroy(e);

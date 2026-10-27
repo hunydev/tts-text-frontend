@@ -25,6 +25,26 @@ static int break_pattern(const char *text, size_t begin, size_t end) {
     return end - begin == 8 && !memcmp(text + begin, "@break:", 7) && text[begin + 7] >= '1' &&
            text[begin + 7] <= '3';
 }
+/* {@dictionary:NAME}, {@exact:NAME} (NAME 1-64 of A-Z a-z 0-9 _ -, then optionally .tsv)
+   and {@nodict}: the group read with a named dictionary or with none (2026-10-27). */
+int ttf_control_dictionary(const char *payload, size_t n) {
+    size_t skip = n > 12 && !memcmp(payload, "@dictionary:", 12) ? 12 : n > 7 && !memcmp(payload, "@exact:", 7) ? 7 : 0;
+    size_t i, name;
+    if (n == 7 && !memcmp(payload, "@nodict", 7))
+        return 1;
+    if (!skip)
+        return 0;
+    name = n - skip;
+    if (name > 4 && !memcmp(payload + n - 4, ".tsv", 4))
+        name -= 4;
+    if (!name || name > 64)
+        return 0;
+    for (i = skip; i < skip + name; ++i)
+        if (!((payload[i] >= 'a' && payload[i] <= 'z') || (payload[i] >= 'A' && payload[i] <= 'Z') ||
+              digit(payload[i]) || payload[i] == '_' || payload[i] == '-'))
+            return 0;
+    return 1;
+}
 /* {@mark} and {@mark:name} (name [a-z][a-z0-9_-]{0,23}): a position marker with
    no reading (2026-10-13). 1 a complete marker ending before *end, 0 not one,
    -1 an unfinished prefix of one. */
@@ -156,7 +176,8 @@ static ttf_status_t payload(const ttf_engine_t *engine, const char *text, size_t
                 (n == 5 || text[match->payload_begin + 5] == ':'))
                 return TTF_EINVAL;
             if (match->kind == TTF_CONTROL_PATTERN && !break_pattern(text, match->payload_begin, p) &&
-                !digits_pattern(text, match->payload_begin, p)) {
+                !digits_pattern(text, match->payload_begin, p) &&
+                !ttf_control_dictionary(text + match->payload_begin, n)) {
                 /* The public CUSTOM.unit field includes '@' and its terminator. */
                 if (n < 2 || n > 31)
                     return TTF_EINVAL;

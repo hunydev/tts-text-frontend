@@ -187,6 +187,12 @@ TTF_API ttf_status_t ttf_dict_remove_lexicon(ttf_dict_t *dict, const char *sourc
                                              const char *render_lang, const char *word);
 /* Resource TSV with exact and lexicon rows only (any other kind: TTF_ERESOURCE). */
 TTF_API ttf_status_t ttf_dict_load(ttf_dict_t *dict, const char *path);
+/* A named dictionary for the controls [[text]]{@dictionary:NAME} and {@exact:NAME}
+   (2026-10-27): the engine takes ownership of dict and destroys it with the engine. Add
+   before the engine is frozen (TTF_ESTATE after). name: 1-64 of A-Z a-z 0-9 _ - (a
+   control may also write NAME.tsv). */
+TTF_API ttf_status_t ttf_engine_add_dictionary(ttf_engine_t *engine, const char *name,
+                                               ttf_dict_t *dict);
 /* ttf_normalize with a request dictionary (NULL: none). */
 TTF_API ttf_status_t ttf_normalize_with(const ttf_engine_t *engine, const ttf_dict_t *dict,
                                         const char *text, size_t length, ttf_result_t *out);

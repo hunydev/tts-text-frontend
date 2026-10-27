@@ -124,7 +124,7 @@ const ttf_entry_t *ttf_rule_match(const ttf_engine_t *e, const char *lang, const
     size_t best_len = 0, best_spec = 0;
     int best_exact = 0, best_specific = 0;
     rule_cursor_t cursor;
-    if (e->dict && (best = dict_rule(e->dict, lang, text, n, length)) != NULL)
+    if (e->dict && !e->no_dictionary && (best = dict_rule(e->dict, lang, text, n, length)) != NULL)
         return best;
     memset(&cursor, 0, sizeof(cursor));
     cursor.lang = lang;
@@ -137,7 +137,7 @@ const ttf_entry_t *ttf_rule_match(const ttf_engine_t *e, const char *lang, const
     for (p = cursor.listed ? e->rules : next_rule(e, text, n, &cursor); p; p = next_rule(e, text, n, &cursor)) {
         size_t len, spec;
         int exact = !strcmp(p->kind, "exact"), specific = strcmp(p->lang, "*") != 0;
-        if (strcmp(p->lang, "*") && strcmp(p->lang, lang))
+        if ((strcmp(p->lang, "*") && strcmp(p->lang, lang)) || (exact && e->no_dictionary))
             continue;
         if (exact) {
             len = strlen(p->key);

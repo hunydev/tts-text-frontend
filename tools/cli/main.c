@@ -25,6 +25,7 @@ static void usage(FILE *out) {
           "            --require-complete-validation (reject unknown namespaces)\n"
           "Options: --resources DIR --language TAG --domain FILE --customer FILE\n"
           "         --request-dict FILE (exact/lexicon rows for this request only)\n"
+          "         --dictionary NAME=FILE (repeatable; for [[...]]{@dictionary:NAME})\n"
           "         --first-target N --normal-target N --max-length N\n"
           "Trace: --trace (inspect or stream-json), --trace-max-events N --trace-max-bytes N\n"
           "Frontend: --input-format plain|annotated --output-mode text|speech\n"
@@ -253,6 +254,8 @@ int main(int argc, char **argv) {
     ttf_engine_t *engine = NULL;
     ttf_dict_t *dict = NULL;
     const char *dict_path = NULL;
+    const char *named[32];
+    size_t named_count = 0;
     ttf_status_t status;
     ttf_resource_diagnostic_t diagnostic;
     ttf_resource_validation_report_t validation;
@@ -430,7 +433,7 @@ int main(int argc, char **argv) {
                 config.max_segment_length = value;
         } else if (!positional_only && (!strcmp(arg, "--resources") || !strcmp(arg, "--language") ||
                                         !strcmp(arg, "--domain") || !strcmp(arg, "--customer") ||
-                                        !strcmp(arg, "--request-dict"))) {
+                                        !strcmp(arg, "--request-dict") || !strcmp(arg, "--dictionary"))) {
             if (++i == argc) {
                 usage(stderr);
                 exit_code = EXIT_FAILURE;
@@ -442,6 +445,14 @@ int main(int argc, char **argv) {
                 config.default_language = argv[i];
             else if (!strcmp(arg, "--request-dict"))
                 dict_path = argv[i];
+            else if (!strcmp(arg, "--dictionary")) {
+                if (named_count == sizeof(named) / sizeof(*named) || !strchr(argv[i], '=')) {
+                    usage(stderr);
+                    exit_code = EXIT_FAILURE;
+                    goto done;
+                }
+                named[named_count++] = argv[i];
+            }
             else {
                 overrides[count] = argv[i];
                 layers[count++] = !strcmp(arg, "--domain") ? TTF_LAYER_DOMAIN : TTF_LAYER_CUSTOMER;
@@ -504,6 +515,29 @@ int main(int argc, char **argv) {
             if (is_validation)
                 validation_json(status, &validation, &diagnostic);
             exit_code = resource_report(overrides[j], status, &diagnostic);
+            goto done;
+        }
+    }
+    for (j = 0; j < named_count; ++j) {
+        /* --dictionary NAME=FILE: a named dictionary for {@dictionary:NAME} (2026-10-27) */
+        const char *eq = strchr(named[j], '=');
+        char name[65];
+        ttf_dict_t *named_dict = NULL;
+        size_t n = (size_t)(eq - named[j]);
+        if (n >= sizeof(name)) {
+            exit_code = report(named[j], TTF_EINVAL);
+            goto done;
+        }
+        memcpy(name, named[j], n);
+        name[n] = '\0';
+        status = ttf_dict_create(&named_dict);
+        if (status == TTF_OK)
+            status = ttf_dict_load(named_dict, eq + 1);
+        if (status == TTF_OK)
+            status = ttf_engine_add_dictionary(engine, name, named_dict);
+        if (status != TTF_OK) {
+            ttf_dict_destroy(named_dict);
+            exit_code = report(named[j], status);
             goto done;
         }
     }

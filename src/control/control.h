@@ -29,4 +29,6 @@ ttf_status_t ttf_control_parse(const ttf_engine_t *engine, const char *text, siz
 /* Decode the five reserved escapes: \\, \{, \}, \[, \]. Appends to caller-owned
    output. Decoded aliases are output text and must never be parsed recursively. */
 ttf_status_t ttf_control_decode(const char *text, size_t begin, size_t end, ttf_buffer_t *output);
+/* {@nodict}, {@dictionary:NAME} or {@exact:NAME} (payload of n bytes from its '@'). */
+int ttf_control_dictionary(const char *payload, size_t n);
 #endif

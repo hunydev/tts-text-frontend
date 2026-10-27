@@ -2,6 +2,14 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Dictionary controls (2026-10-27, owner request): `[[group]]{@dictionary:NAME}` and
+  `{@exact:NAME}` (NAME or NAME.tsv) read a group with a named dictionary of the engine, in
+  place of the request dictionary; `[[group]]{@nodict}` reads it with no dictionary of any
+  layer (exact, lexicon, lexicon_case and loanword rows, the request dictionary too). The group
+  is read in its sentence. `ttf_engine_add_dictionary` registers a dictionary before the
+  freeze (the engine owns it); CLI `--dictionary NAME=FILE`. An unknown name reads as usual,
+  or fails under invalid_control=error. Tests `dictionary_controls`, `request_dictionary`.
+  Output without these controls is unchanged.
 - Korean addresses (2026-10-27, owner decision: plain-text rules stay general and must not
   touch other rules; a caller marks `[[…]]{@address}` for address reading). Plain text: B1층에
   reads 지하 일 층에 (a basement floor may carry its particle; was 비원층에) and 지하 B2층 지하 이

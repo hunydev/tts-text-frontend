@@ -244,6 +244,28 @@ ttf_dict_destroy(dict);
 | `[[서울시 12-3]]{@address}` | 서울시 십이 다시 삼 |
 | `[[abc@example.com]]{@email}` | 에이비씨 앳 이그잼플 닷 컴 |
 
+### 7.1 구간 사전 (2026-10-27)
+
+문장의 일부에만 사전을 바꿔 쓴다.
+
+| 입력 | 뜻 |
+|---|---|
+| `[[알쓰]]{@dictionary:kpop}`, `[[알쓰]]{@dictionary:kpop.tsv}` | 그 구간만 이름 있는 사전 `kpop`으로 읽는다 |
+| `[[알쓰]]{@exact:kpop}` | 위와 같다 |
+| `[[Samsung]]{@nodict}` | 그 구간에는 사전을 쓰지 않는다(시스템·도메인·고객·사용자·요청 사전 모두) |
+
+이름 있는 사전은 운영자가 엔진을 고정하기 전에 등록한다. 문장 안의 이름은 등록된 사전을 고를 뿐 파일을 열지 않는다.
+
+```c
+ttf_dict_t *kpop;
+ttf_dict_create(&kpop);
+ttf_dict_load(kpop, "kpop.tsv");                      /* exact·lexicon 행 */
+ttf_engine_add_dictionary(engine, "kpop", kpop);      /* 엔진이 소유, freeze 전 */
+```
+
+CLI: `ttf normalize --input-format annotated --dictionary kpop=kpop.tsv "[[알쓰]]{@dictionary:kpop}"`.
+구간 안에서는 이름 있는 사전이 요청 사전 자리를 대신하고, 엔진 층은 그 아래에서 그대로 쓰인다. 없는 이름은 평소처럼 읽고, `invalid_control=error`면 요청이 실패한다. 상세: [input-format.md](input-format.md#dictionary-controls-2026-10-27).
+
 상세: [input-format.md](input-format.md), [explicit-pattern-controls.ko.md](explicit-pattern-controls.ko.md).
 
 ## 8. 도구
