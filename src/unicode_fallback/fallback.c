@@ -344,7 +344,8 @@ ttf_status_t ttf_symbol_fallback_speak(const ttf_engine_t *e, const ttf_language
     char key[KEY_BYTES + 1];
     size_t at = 0, key_length = 0, scalars = 0, slot, j;
     uint32_t cp, first = 0;
-    const char *name = NULL;
+    const char *name = NULL, *flag;
+    int native;
     const ttf_language_pack_t *owner = renderer;
     ttf_buffer_t digits = {0};
     ttf_status_t status = TTF_OK;
@@ -375,8 +376,12 @@ ttf_status_t ttf_symbol_fallback_speak(const ttf_engine_t *e, const ttf_language
         ttf_resource_get(e, "speech_decorative", renderer->language_tag, key, NULL))
         return TTF_OK;
     name = lookup(e->symbol_fallback[slot], key, key_length, scalars == 1, first);
-    /* symbol_fallback=on: a name the language lacks comes from English. */
-    for (j = 0; !name && e->symbol_fallback_policy == TTF_SYMBOL_FALLBACK_ON && j < e->pack_count;
+    /* symbol_fallback=on: a name the language lacks comes from English, unless the language
+       declares `context <tag> native_symbol_names 1` (ar: no reader of English words, so
+       ★ black star stayed English; 2026-10-28). */
+    native = (flag = ttf_resource_get(e, "context", renderer->language_tag, "native_symbol_names", NULL)) &&
+             strcmp(flag, "0");
+    for (j = 0; !name && !native && e->symbol_fallback_policy == TTF_SYMBOL_FALLBACK_ON && j < e->pack_count;
          ++j)
         if (j != slot && !strncmp(e->packs[j]->language_tag, "en", 2) &&
             (e->packs[j]->language_tag[2] == 0 || e->packs[j]->language_tag[2] == '-') &&

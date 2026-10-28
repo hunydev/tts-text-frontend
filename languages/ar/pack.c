@@ -1004,9 +1004,9 @@ static void minute_items(items_t *it, int mm) {
     }
 }
 /* A clock time h:mm with an optional period (am, pm, a written word kept). */
-static void clock_items(items_t *it, int h, int mm, const char *period, int written_period) {
+static void clock_items(items_t *it, int h, int mm, int ss, const char *period, int written_period) {
     int h12;
-    if (h == 0 && mm == 0 && !period) {
+    if (h == 0 && mm == 0 && ss <= 0 && !period) {
         add(it, "R:midnight");
         return;
     }
@@ -1019,6 +1019,9 @@ static void clock_items(items_t *it, int h, int mm, const char *period, int writ
         add(it, "H:%d", h12);
         minute_items(it, mm);
     }
+    /* 21:05:10 التاسعة وخمس دقائق وعشر ثوان مساء (2026-10-28; was the seconds dropped) */
+    if (ss > 0)
+        add(it, ss <= 10 ? "&Cf:%d:ثانية" : "&Cfo:%d:ثانية", ss);
     if (period && !written_period)
         add(it, "R:%s", h12 == 12 && mm != 45 && !strcmp(period, "pm") ? "noon_period" : period);
     else if (period && written_period && h == 12 && !strcmp(period, "pm"))
@@ -1058,6 +1061,13 @@ static size_t clock_at(const char *t, size_t n, size_t p, int *h, int *mm) {
     if (q + 2 < n && t[q] == ':' && digit(t[q + 1]) && digit(t[q + 2]))
         q += 3;
     return q;
+}
+/* The seconds of the clock time p..z from clock_at (21:05:10), or 0. */
+static int clock_seconds(const char *t, size_t p, size_t z) {
+    size_t k, colons = 0;
+    for (k = p; k < z; ++k)
+        colons += t[k] == ':';
+    return colons == 2 && atoi(t + z - 2) <= 59 ? atoi(t + z - 2) : 0;
 }
 /* Letters and digits of a code (SV 1023, EK203, SN7F2K9, #SA-48213, JL-0098217, 5G, iOS 19). */
 static void code_items(const ttf_engine_t *e, items_t *it, const char *s, size_t len) {
@@ -1435,7 +1445,7 @@ static size_t classify_number(const ttf_pack_input_t *in, ttf_semantic_t *s, siz
             }
             return finish(in, s, z, "duration", &it);
         }
-        clock_items(&it, h, mm, period, written);
+        clock_items(&it, h, mm, clock_seconds(t, p, z), period, written);
         if (period && written)
             pe = 0;
         /* 9:00-17:00, ١:٠٠ إلى ٣:٠٠: a range of times */
@@ -1444,7 +1454,7 @@ static size_t classify_number(const ttf_pack_input_t *in, ttf_semantic_t *s, siz
             int h2, mm2;
             while (r2 < n && t[r2] == ' ')
                 ++r2;
-            if (r2 < n && t[r2] == '-')
+            if (r2 < n && (t[r2] == '-' || t[r2] == '~'))
                 ++r2;
             else if (has(t, n, r2, "إلى"))
                 r2 += strlen("إلى");
@@ -1459,7 +1469,7 @@ static size_t classify_number(const ttf_pack_input_t *in, ttf_semantic_t *s, siz
                 if (!prev_word_is(t, p, "من|بين"))
                     prepend(&it, "R:from");
                 add(&it, "R:to");
-                clock_items(&it, h2, mm2, period2, written2);
+                clock_items(&it, h2, mm2, clock_seconds(t, r2, z), period2, written2);
                 return finish(in, s, pe2 && !written2 ? pe2 : z, "timerange", &it);
             }
         }
@@ -1472,7 +1482,7 @@ static size_t classify_number(const ttf_pack_input_t *in, ttf_semantic_t *s, siz
         size_t pe = period_at(e, t, n, q, &period, &written);
         if (pe || (cue && !strcmp(cue, "hour"))) {
             int hh = atoi(x.d);
-            clock_items(&it, hh, 0, period, written);
+            clock_items(&it, hh, 0, 0, period, written);
             {
                 size_t r = pe && !written ? pe : q, r2 = r;
                 num_t b;
@@ -1494,7 +1504,7 @@ static size_t classify_number(const ttf_pack_input_t *in, ttf_semantic_t *s, siz
                     pe2 = period_at(e, t, n, b.end, &period2, &written2);
                     if (!b.dot && strlen(b.d) <= 2 && (pe2 || pe) && !(b.end < n && t[b.end] == ':')) {
                         add(&it, "R:to");
-                        clock_items(&it, atoi(b.d), 0, period2, written2);
+                        clock_items(&it, atoi(b.d), 0, 0, period2, written2);
                         return finish(in, s, pe2 && !written2 ? pe2 : b.end, "hourrange", &it);
                     }
                 }
@@ -1516,7 +1526,7 @@ static size_t classify_number(const ttf_pack_input_t *in, ttf_semantic_t *s, siz
         }
     }
     if (cue && (!strcmp(cue, "ordm") || !strcmp(cue, "ordf")) && !x.dot && !x.comma && strlen(x.d) <= 3 &&
-        !(q < n && (alpha(t[q]) || t[q] == '/' || t[q] == '-' || t[q] == ':' || t[q] == '%' ||
+        !(q < n && (alpha(t[q]) || t[q] == '/' || t[q] == '-' || t[q] == '~' || t[q] == ':' || t[q] == '%' ||
                     has(t, n, q, "°") || has(t, n, q, " %") || has(t, n, q, "٪")))) {
         add(&it, "O%c:%s", cue[3], x.d);
         return finish(in, s, q, "ordinal", &it);
@@ -1642,14 +1652,15 @@ static size_t classify_number(const ttf_pack_input_t *in, ttf_semantic_t *s, siz
             return finish(in, s, y.end, "score", &it);
         }
     }
-    /* ranges: 3-5 أيام, ٢٥٠-٤٠٠ ريال, 4-6 ديسمبر, 2 إلى 10 سنوات, بين 10 و20 ملم */
+    /* ranges: 3-5 أيام, ٢٥٠-٤٠٠ ريال, 4-6 ديسمبر, 2 إلى 10 سنوات, بين 10 و20 ملم; 3~5 like 3-5
+       (2026-10-28; was ثلاثة~خمسة) */
     {
         size_t r = q, r2;
         int dash = 0;
         while (r < n && t[r] == ' ')
             ++r;
         r2 = r;
-        if (r2 < n && t[r2] == '-' && r2 == q)
+        if (r2 < n && (t[r2] == '-' || t[r2] == '~') && r2 == q)
             ++r2, dash = 1;
         else if (has(t, n, r2, "إلى "))
             r2 += strlen("إلى ");
@@ -2120,10 +2131,22 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         size_t a = t[p] == '#' ? p + 1 : p, le = latin_run(t, n, a);
         int digits = 0;
         size_t i;
+        size_t run = le;
         while (le > a && (t[le - 1] == '.' || t[le - 1] == '-' || t[le - 1] == ':' || t[le - 1] == '/'))
             --le;
         for (i = a; i < le; ++i)
             digits |= digit(t[i]);
+        if (t[p] != '@' && is_address(t + a, le - a) && run + 1 < n && t[run] == '?' &&
+            (alpha(t[run + 1]) || digit(t[run + 1]))) {
+            /* https://example.com/a?b=c&d=1: the query belongs to the address (2026-10-28; was
+               the shared URL reading with its Latin labels as written) */
+            le = run;
+            while (le < n && (alpha(t[le]) || digit(t[le]) || (t[le] && strchr("?=&%+-_./#:", t[le]))))
+                ++le;
+            while (le > a && (t[le - 1] == '.' || t[le - 1] == '-' || t[le - 1] == ':' || t[le - 1] == '/' ||
+                              t[le - 1] == '?' || t[le - 1] == '&' || t[le - 1] == '='))
+                --le;
+        }
         if (t[p] == '@' || is_address(t + a, le - a)) {
             if (t[p] == '@')
                 add(&it, "R:at");
@@ -2348,6 +2371,78 @@ static ttf_status_t say(out_t *o, const char *v) {
     return TTF_OK;
 }
 
+/* The object a control asked for (3{@ordinal}, [[2024-10-08]]{@date}, 10:10{@score}), read by its
+   items or as the pack reads its written form; *handled 0 leaves it to the shared-object path
+   (2026-10-28; was the written form kept, so the controls did nothing in Arabic). */
+static ttf_status_t control_object(const ttf_engine_t *e, const ttf_semantic_t *s, const char *surface,
+                                   size_t length, out_t *o, int *handled) {
+    const char *v = s->value;
+    char text[2 * TTF_IR_VALUE_SIZE + 8];
+    items_t it = {{0}, 0, 0};
+    switch (s->type) {
+    case TTF_SEM_ORDINAL:
+        add(&it, "Om:%s", v); /* 3{@ordinal} الثالث, as الـ3 */
+        return say(o, it.s);
+    case TTF_SEM_DATE:
+        if (!strcmp(s->unit, "year")) {
+            add(&it, "No:%s", v); /* [[1984]]{@year} ألف وتسعمئة وأربعة وثمانين */
+            return say(o, it.s);
+        }
+        snprintf(text, sizeof(text), "%s", v); /* 2024-10-08, also for {@date-mdy} and {@date-dmy} */
+        break;
+    case TTF_SEM_TIME: {
+        /* [[10:30 PM]]{@time} العاشرة والنصف مساء: a written AM or PM as ص or م */
+        char half = (char)(s->secondary[0] | 0x20);
+        snprintf(text, sizeof(text), "%s%s", v, half == 'p' ? " م" : half == 'a' ? " ص" : "");
+        break;
+    }
+    case TTF_SEM_RANGE:
+        if (!strcmp(s->rule, "syntax.score")) {
+            add(&it, "No:%s", v); /* 10:10{@score} عشرة مقابل عشرة */
+            add(&it, "R:versus");
+            add(&it, "No:%s", s->secondary);
+            return say(o, it.s);
+        }
+        snprintf(text, sizeof(text), "%s-%s", v, s->secondary);
+        break;
+    case TTF_SEM_FRACTION:
+        snprintf(text, sizeof(text), "%s/%s", v, s->secondary);
+        break;
+    case TTF_SEM_VERSION:
+        if (*v == 'v' || *v == 'V') {
+            snprintf(text, sizeof(text), "%s", v); /* v2.1.3 الإصدار اثنان فاصلة … */
+            break;
+        }
+        while (*v) { /* [[2.1.3]]{@version} اثنان فاصلة واحد فاصلة ثلاثة: no word that is not written */
+            size_t c = strspn(v, "0123456789");
+            if (!c)
+                return TTF_EINVAL;
+            add(&it, "N:%.*s", (int)c, v);
+            v += c;
+            if (*v == '.' && v[1]) {
+                add(&it, "R:point");
+                ++v;
+            } else if (*v)
+                return TTF_EINVAL;
+        }
+        return say(o, it.s);
+    case TTF_SEM_IP_ADDRESS:
+        snprintf(text, sizeof(text), "%s", v);
+        break;
+    case TTF_SEM_CURRENCY:
+    case TTF_SEM_MEASURE:
+        /* [[$5]]{@currency}, [[5kg]]{@measure}, 3M{@unit} (3m): the written amount */
+        if (length >= sizeof(text))
+            return TTF_ELIMIT;
+        snprintf(text, sizeof(text), "%.*s", (int)length, surface);
+        break;
+    default:
+        *handled = 0;
+        return TTF_OK;
+    }
+    return ttf_control_reread(e, ttf_find_pack(e, AR), text, o->b);
+}
+
 static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, const char *surface,
                               size_t length, ttf_buffer_t *b) {
     out_t o = {e, b, 0};
@@ -2373,6 +2468,29 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         if (!strcmp(s->unit, "@native") || !strcmp(s->unit, "@sino") || !strcmp(s->unit, "@counter"))
             return TTF_EINVAL;
         return ttf_semantic_control(e, s, surface, length, b);
+    }
+    if (s->layer == TTF_LAYER_USER && strcmp(s->unit, "@ar-say")) {
+        int handled = 1;
+        ttf_status_t st = control_object(e, s, surface, length, &o, &handled);
+        if (handled)
+            return st;
+    }
+    if (s->type == TTF_SEM_CUSTOM && !strcmp(s->unit, "@alphabet")) {
+        /* ABC{@alphabet} إيه بي سي: Latin letters by name, digits one by one (2026-10-28; was
+           the letters as written) */
+        items_t it = {{0}, 0, 0};
+        size_t i = 0;
+        while (i < length) {
+            size_t z = i + 1;
+            if (alpha(surface[i]) || digit(surface[i])) {
+                int letters = alpha(surface[i]);
+                while (z < length && (letters ? alpha(surface[z]) : digit(surface[z])))
+                    ++z;
+                add(&it, "%c:%.*s", letters ? 'L' : 'G', (int)(z - i), surface + i);
+            }
+            i = z;
+        }
+        return it.n ? say(&o, it.s) : ttf_buffer_append(b, surface, length);
     }
     if (strcmp(s->unit, "@ar-say")) {
         /* shared objects in an Arabic sentence */

@@ -2,6 +2,12 @@
 
 갱신: 2026-10-11. Release **0.20.0**, public ABI **v1**.
 
+## 최근 인계: 아랍어 운영 준비 1단계 (2026-10-28)
+
+- **무엇:** 운영 전환 점검(소유자 요청). ar에서 원문을 그대로 돌려주던 제어 14개(@ordinal, @year, @date 셋, @time, @currency, @measure, @unit, @fraction, @range, @score, @version, @ip, @alphabet)를 읽게 했다. 일반 텍스트에서는 시각의 초, 3~5 범위, 쿼리가 붙은 URL을 읽고, 아랍어 이름이 없는 기호에 영어 이름을 쓰지 않는다(`context ar native_symbol_names 1`). 상세: [arabic-pack.ko.md](arabic-pack.ko.md) "운영 준비" 절.
+- **점수:** 소유자 ar dev 99.2%, test 89.8%, ar-v2 99.1%(그대로). 계약 `ar_controls2_v124`(21).
+- **다음:** 이 커밋으로 코드를 고정하고 소유자 ar v3(held-out)를 처음 연다. 그 뒤 견고성(실제 원문)과 TTS→STT 비교.
+
 ## 최근 인계: 아랍어 이메일·URL 제어 (2026-10-27)
 
 - **무엇:** ar의 `[[…]]{@email}`·`{@url}`이 invalid resource로 실패하던 것을 고쳤다(언어 팩 비교에서 미지원으로 표시, 소유자 보고). 공용 모양 검사 뒤 ar 일반 텍스트의 주소 읽기를 쓰고, ar `address_symbol` 13행으로 URL 쿼리 기호도 읽는다. 상세: [arabic-pack.ko.md](arabic-pack.ko.md).

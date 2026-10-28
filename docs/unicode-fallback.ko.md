@@ -83,7 +83,8 @@ python3 tools/unicode_fallback/build.py --ucd <ucd-17.0.0> --cldr <cldr-release-
   fallback도 읽지 않는다.
 - 이름에 숫자가 있으면(`1st place medal`, `키 캡, 10`) fallback을 끈 채로 한 번 더 정규화한다
   (`first place medal`, `키 캡, 십`).
-- 해당 언어에 이름이 없고 `symbol_fallback=on`이면 영어 파일의 이름을 쓴다. 영어가 아닌 문장에서는 그
+- 해당 언어에 이름이 없고 `symbol_fallback=on`이면 영어 파일의 이름을 쓴다. 단 `context <tag> native_symbol_names 1`을
+  선언한 언어(ar: 영어 낱말을 읽는 렌더러가 없다, 2026-10-28)는 영어 이름을 쓰지 않는다. 영어가 아닌 문장에서는 그
   이름을 외래어 렌더러로 읽는다(`∢` → 스퍼리컬 앵글). 음차가 어색할 수 있어서 `native`를 두었다.
 - 이름의 언어는 그 구간의 render 언어다. 문장 언어 라우팅(`docs/matrix-language.ko.md`)을 따르므로
   영어 문장의 이모지는 영어 이름으로 읽는다.

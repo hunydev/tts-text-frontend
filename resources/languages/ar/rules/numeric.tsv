@@ -3,6 +3,8 @@
 # o is the oblique case (اثنين, عشرين), c the construct form before a noun (مئتي, ألفي).
 context	ar	declared_only	1
 context	ar	arabic_sentence	1
+# ★ ✓: a symbol name Arabic lacks is not taken from English, which Arabic cannot read (2026-10-28)
+context	ar	native_symbol_names	1
 
 number	ar	0	صفر
 number	ar	1m	واحد
