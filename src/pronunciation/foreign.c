@@ -305,6 +305,33 @@ static ttf_status_t render_at(const ttf_engine_t *e, const ttf_language_pack_t *
                                 source->language_tag, hit, hit, "whole-part-loanword", SIZE_MAX);
             return st == TTF_OK ? ttf_buffer_puts(out, hit) : st;
         }
+        /* apples, dollars: a plural whose singular has a reading takes that reading and 스
+           (애플스, 달러스); before, the grapheme guess read 애플레스 (2026-10-28). */
+        if (n >= 4 && n < 64 && (text[n - 1] == 's' || text[n - 1] == 'S') && text[n - 2] != 's' &&
+            text[n - 2] != 'S' && text[n - 2] != '\'') {
+            const char *stem = NULL;
+            ttf_resource_layer_t stem_layer = TTF_LAYER_COMMON;
+            st = ttf_foreign_lookup(e, source->language_tag, target->language_tag, text, n - 1, &stem,
+                                    &stem_layer);
+            if (st == TTF_OK && !stem)
+                st = ttf_foreign_loanword(e, source->language_tag, target->language_tag, text, n - 1,
+                                          &stem, &stem_layer);
+            if (st != TTF_OK)
+                return st;
+            if (stem && strlen(stem) >= 3 && (unsigned char)stem[0] >= 0xe0) {
+                const char *plural = ttf_resource_get(e, "context", target->language_tag, "loanword_plural", NULL);
+                if (plural && *plural) {
+                    *layer = stem_layer;
+                    snprintf(trace, 64, "plural:%s", ttf_layer_name(stem_layer));
+                    st = ttf_trace_emit(e, TTF_TRACE_SELECTED, stem_layer, 0, target->language_tag,
+                                        "loanword", source->language_tag, stem, plural, "singular-plus-plural",
+                                        SIZE_MAX);
+                    if (st == TTF_OK)
+                        st = ttf_buffer_puts(out, stem);
+                    return st == TTF_OK ? ttf_buffer_puts(out, plural) : st;
+                }
+            }
+        }
     }
     /* R&D: letter runs keep initialism phones; the joiner follows the output
        mode, a target symbol name in speech and the written mark in text. */

@@ -85,7 +85,11 @@ typedef struct {
    rejects is read as spoken, or kept), "invalid_control" = ignore|error (an
    unknown control is dropped, or the call fails), "pronunciation" =
    orthographic|hangul (hangul writes Korean as it is pronounced, colloquial and
-   without vowel length: 국물이 궁무리; see docs/korean-phoneme.ko.md). */
+   without vowel length: 국물이 궁무리; see docs/korean-phoneme.ko.md),
+   "foreign_sentence" = keep|localize (speech: keep an English sentence's
+   reading in English, or write that reading in the default language's
+   letters through its loanword readings: I have 3 apples 아이 해브 쓰리 애플스;
+   see docs/foreign-sentence.ko.md). */
 TTF_API ttf_status_t ttf_engine_set_option(ttf_engine_t *engine, const char *name,
                                            const char *value);
 

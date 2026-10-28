@@ -32,12 +32,13 @@ School 스쿨, Time 타임, James 제임스, Guam 괌, ost 오에스티, iot 아
 웹 옵션 `영어 발음 사전`(`english_dictionary=cmu`)을 켜면 사전에 없는 영어 단어를 CMU 발음 사전
 (약 11만 7천 단어)의 발음으로 읽는다(Helsinki 헬신키 → 헬싱키, Paul 패얼 → 폴).
 
-- 기본은 끔이다. 미국식 발음을 옮기므로 관례 표기와 어긋나는 경우가 있다(Korea 코리어, Golf 갈프).
+- 영어 문장 밖에서는 기본이 끔이다. 미국식 발음을 옮기므로 관례 표기와 어긋나는 경우가 있다(Korea 코리어, Golf 갈프).
   직접 작성한 사전(위 283개, 지명, 브랜드)과 사용자·고객 사전이 우선하므로 Korea는 코리아로 남는다.
 - 사전 파일은 저장소에 넣지 않는다. CMU importer의 runtime export
   (`benchmark/generated/cmudict-runtime-full/pronunciation.tsv`, 또는 환경 변수 `TTF_CMU_RUNTIME`)를
   도메인 층으로 불러온다. 만드는 방법은 `benchmark/importers/cmudict/README.md`에 있다.
   CMU 라이선스(BSD 형식)는 재배포 시 원본 `COPYING` 고지를 요구한다.
+- 웹 기본값은 자동이다: 영어 문장을 한글로 읽을 때(`foreign_sentence=localize`, [foreign-sentence.ko.md](foreign-sentence.ko.md)) 켠다.
 - 켜면 엔진 시작이 약 0.6초 늘어난다. C API·CLI에서는 같은 파일을 `--domain`으로 불러오면 된다.
 - 국립국어원 개체명 사전 2022(로컬 전용)의 개체 표기 쌍 288개에서 CMU를 켜면 일치가 +19, −5였다
   (2026-10-03 측정, 이 문서의 단어 사전을 넣기 전).

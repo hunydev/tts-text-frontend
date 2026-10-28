@@ -222,13 +222,14 @@ DEFAULTS = dict(
     initialism="spell",
     spacing="orthographic",
     matrix="auto",
+    foreign_sentence="keep",
     symbol_fallback="on",
     particle_agreement="off",
     pronunciation="orthographic",
     invalid_control="ignore",
     numeric_fallback="read",
     brand_lexicon="off",
-    english_dictionary="off",
+    english_dictionary="auto",
     max_control_bytes=4096,
     sentence_split=True,
     phrase_split=True,
@@ -321,13 +322,14 @@ def validate(request, corpus=False):
         ("initialism", ("spell", "word")),
         ("spacing", ("orthographic", "reading-unit")),
         ("matrix", ("auto", "legacy", "declared")),
+        ("foreign_sentence", ("keep", "localize")),
         ("symbol_fallback", ("on", "native", "off")),
         ("particle_agreement", ("off", "on")),
         ("pronunciation", ("orthographic", "hangul")),
         ("invalid_control", ("ignore", "error")),
         ("numeric_fallback", ("read", "preserve")),
         ("brand_lexicon", ("off", "on")),
-        ("english_dictionary", ("off", "cmu")),
+        ("english_dictionary", ("auto", "off", "cmu")),
         ("domain", ("none", "finance", "finance-vocabulary")),
     ]:
         if opts[key] not in allowed:
@@ -618,7 +620,7 @@ def catalog():
                 options={key: row[key] for key in (
                     "default_language", "input_format", "output_mode", "unreadable", "brackets", "unknown_foreign",
                     "decorative", "initialism", "spacing", "matrix", "symbol_fallback", "particle_agreement",
-                    "pronunciation"
+                    "pronunciation", "foreign_sentence"
                 ) if key in row},
                 reference_review=reviewed_cases[(relative, row["id"])],
             ))

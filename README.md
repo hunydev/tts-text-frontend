@@ -455,7 +455,9 @@ The current priority is finance, with content narration and general-purpose
 multilingual text retained as reference domains. Compound amounts such as
 `1억2천3백만원` yield one `CURRENCY` span with value `123000000`, then render as
 `일억 이천삼백만 원`. See [scenario evidence](docs/domain-corpus.md) and
-[context routing](docs/context-routing.md) for measured changes and remaining gaps.
+[context routing](docs/context-routing.md) for measured changes and remaining gaps. To read an English
+sentence in Korean letters for a Korean-only voice, set `foreign_sentence=localize`
+([foreign-sentence.ko.md](docs/foreign-sentence.ko.md)).
 
 The v0.5 finance and content additions include:
 

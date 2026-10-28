@@ -115,3 +115,5 @@ particle_reading	ko-KR	티	톤|t
 # KS-2026-0418: a hyphen after a code with a letter joins the code, no minus sign (project-owner
 # decision 2026-10-16, letters and digits)
 context	ko-KR	code_hyphen	1
+# A Latin plural whose singular has a loanword reading: reading + this (apples 애플스, 2026-10-28)
+context	ko-KR	loanword_plural	스

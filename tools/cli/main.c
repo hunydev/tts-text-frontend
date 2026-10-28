@@ -33,6 +33,7 @@ static void usage(FILE *out) {
           "          --unknown-foreign guess|spell|preserve --decorative follow|read\n"
           "          --initialism spell|word --hanja passthrough|korean --kana passthrough|korean\n"
           "          --spacing orthographic|reading-unit --matrix auto|legacy|declared\n"
+          "          --foreign-sentence keep|localize\n"
           "          --symbol-fallback on|native|off\n"
           "          --max-control-bytes N --invalid-control ignore|error\n"
           "          --particle-agreement off|on --numeric-fallback read|preserve\n"
@@ -247,8 +248,8 @@ int main(int argc, char **argv) {
     ttf_frontend_options_t frontend;
     const char *invalid_control = NULL, *particle_agreement = NULL, *numeric_fallback = NULL;
     const char *bracket_policy = NULL, *unknown_foreign = NULL, *decorative = NULL,
-               *initialism = NULL, *spacing = NULL, *matrix = NULL, *symbol_fallback = NULL,
-               *pronunciation = NULL;
+               *initialism = NULL, *spacing = NULL, *matrix = NULL, *foreign_sentence = NULL,
+               *symbol_fallback = NULL, *pronunciation = NULL;
     ttf_trace_options_t trace_options;
     int is_trace = 0, trace_limit_set = 0;
     ttf_engine_t *engine = NULL;
@@ -304,6 +305,7 @@ int main(int argc, char **argv) {
              !strcmp(arg, "--unknown-foreign") || !strcmp(arg, "--decorative") ||
              !strcmp(arg, "--initialism") || !strcmp(arg, "--hanja") ||
              !strcmp(arg, "--kana") || !strcmp(arg, "--spacing") || !strcmp(arg, "--matrix") ||
+             !strcmp(arg, "--foreign-sentence") ||
              !strcmp(arg, "--symbol-fallback") || !strcmp(arg, "--invalid-control") ||
              !strcmp(arg, "--particle-agreement") || !strcmp(arg, "--numeric-fallback") ||
              !strcmp(arg, "--pronunciation") ||
@@ -343,6 +345,9 @@ int main(int argc, char **argv) {
                 valid = !strcmp(argv[i], "auto") || !strcmp(argv[i], "legacy") ||
                         !strcmp(argv[i], "declared");
                 matrix = argv[i];
+            } else if (!strcmp(arg, "--foreign-sentence")) {
+                valid = !strcmp(argv[i], "keep") || !strcmp(argv[i], "localize");
+                foreign_sentence = argv[i];
             } else if (!strcmp(arg, "--symbol-fallback")) {
                 valid = !strcmp(argv[i], "on") || !strcmp(argv[i], "native") ||
                         !strcmp(argv[i], "off");
@@ -503,6 +508,8 @@ int main(int argc, char **argv) {
         status = ttf_engine_set_option(engine, "pronunciation", pronunciation);
     if (status == TTF_OK && matrix)
         status = ttf_engine_set_option(engine, "matrix", matrix);
+    if (status == TTF_OK && foreign_sentence)
+        status = ttf_engine_set_option(engine, "foreign_sentence", foreign_sentence);
     if (status == TTF_OK && symbol_fallback)
         status = ttf_engine_set_option(engine, "symbol_fallback", symbol_fallback);
     if (status != TTF_OK) {

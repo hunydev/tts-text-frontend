@@ -250,6 +250,10 @@
               <option value="declared">기본 언어로 고정</option>
               <option value="legacy">이전 방식 (토큰별 점수)</option>
             </select></label><p class="option-help" data-option="matrix"></p></div>
+          <div class="option-row"><label>영어 문장<select id="foreign-sentence">
+              <option value="keep">영어로 읽기 (기본)</option>
+              <option value="localize">한글로 읽기 (I have 3 apples → 아이 해브 쓰리 애플스)</option>
+            </select></label><p class="option-help" data-option="foreign-sentence"></p></div>
           <div class="option-row"><label>기호·이모지 이름<select id="symbol-fallback">
               <option value="on">읽기 (없으면 영어 이름)</option>
               <option value="native">읽기 (해당 언어 이름만)</option>
@@ -272,6 +276,7 @@
               <option value="on">켜기 (Wikidata 기업·브랜드)</option>
             </select></label><p class="option-help" data-option="brand-lexicon"></p></div>
           <div class="option-row"><label>영어 발음 사전<select id="english-dictionary">
+              <option value="auto">자동 (영어 문장을 한글로 읽을 때 켜기)</option>
               <option value="off">끄기</option>
               <option value="cmu">켜기 (CMU, 사전에 없는 영어 단어)</option>
             </select></label><p class="option-help" data-option="english-dictionary"></p></div>

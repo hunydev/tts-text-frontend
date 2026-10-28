@@ -298,6 +298,7 @@ class Engine:
                 for name, default in (("brackets", "read"), ("unknown_foreign", "guess"),
                                       ("decorative", "follow"), ("initialism", "spell"),
                                       ("spacing", "orthographic"), ("matrix", "auto"),
+                                      ("foreign_sentence", "keep"),
                                       ("symbol_fallback", "on"), ("invalid_control", "ignore"), ("numeric_fallback", "read"),
                                       ("particle_agreement", "off"), ("pronunciation", "orthographic")):
                     if options.get(name, default) != default:
@@ -309,7 +310,12 @@ class Engine:
                 self.load(resources / "domains/finance/ko-KR/rules.tsv", 2)
             if options.get("brand_lexicon") == "on":
                 self.load(resources / "domains/brands/ko-KR/lexicon.tsv", 2)
-            if options.get("english_dictionary") == "cmu":
+            # auto: on when an English sentence is read in Korean letters (foreign_sentence=localize,
+            # 2026-10-28), off otherwise; a missing export then leaves the loanword readings alone.
+            cmu = options.get("english_dictionary", "auto")
+            if cmu == "auto" and options.get("foreign_sentence") == "localize" and cmu_runtime().is_file():
+                cmu = "cmu"
+            if cmu == "cmu":
                 # Optional CMUdict pronunciations (BSD-style, not in Git): the importer's local
                 # runtime export, or TTF_CMU_RUNTIME. Authored lexicons still win over it.
                 path = cmu_runtime()

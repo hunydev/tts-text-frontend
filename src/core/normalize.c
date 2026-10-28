@@ -152,6 +152,49 @@ static int undeclared(const ttf_engine_t *e, size_t j) {
     return flag && strcmp(flag, "0") &&
            (!e->default_language || strcmp(e->default_language, e->packs[j]->language_tag));
 }
+static const ttf_language_pack_t *script_pack(const ttf_engine_t *e, ttf_script_t script);
+
+/* foreign_sentence=localize (2026-10-28): the English pack has already read the token
+   (3 three, 3pm three p m, 1st first, 2019 twenty nineteen); each Latin word of that
+   reading is written in the request language through its loanword readings (lexicon,
+   standard loanwords, an optional CMU layer, letter names, the grapheme guess), so
+   I have 3 apples reads 아이 해브 쓰리 애플스. Everything else in the reading stays. */
+static ttf_status_t localize_reading(const ttf_engine_t *e, const ttf_language_pack_t *source,
+                                     const ttf_language_pack_t *target, ttf_buffer_t *reading) {
+    ttf_buffer_t out = {0};
+    ttf_status_t st = TTF_OK;
+    const char *s = reading->data ? reading->data : "";
+    size_t n = reading->length, at = 0;
+    while (st == TTF_OK && at < n) {
+        size_t end = at, upper = 0;
+        while (end < n && (((s[end] | 32) >= 'a' && (s[end] | 32) <= 'z') ||
+                           (s[end] == '\'' && end > at && end + 1 < n && ((s[end + 1] | 32) >= 'a' &&
+                                                                          (s[end + 1] | 32) <= 'z')))) {
+            upper += s[end] >= 'A' && s[end] <= 'Z';
+            ++end;
+        }
+        if (end == at) {
+            st = ttf_buffer_append(&out, s + at, 1);
+            ++at;
+            continue;
+        }
+        {
+            char trace[64] = {0};
+            ttf_resource_layer_t layer = TTF_LAYER_COMMON;
+            ttf_lexical_class_t lexical =
+                end - at >= 2 && upper == end - at && end - at <= 5 ? TTF_LEX_INITIALISM : TTF_LEX_WORD;
+            st = ttf_foreign_render(e, source, target, s + at, end - at, lexical, &out, trace, &layer);
+        }
+        at = end;
+    }
+    if (st == TTF_OK) {
+        ttf_buffer_free(reading);
+        *reading = out;
+    } else
+        ttf_buffer_free(&out);
+    return st;
+}
+
 static const ttf_language_pack_t *script_pack(const ttf_engine_t *e, ttf_script_t script) {
     const ttf_language_pack_t *best = NULL;
     int score = 0;
@@ -1905,6 +1948,7 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
         size_t render_length;
         const ttf_entry_t *rule = NULL;
         const char *phrase_hit = NULL;
+        const ttf_language_pack_t *phrase_target = NULL;
         ttf_buffer_t normalized = {0};
         int identifier_read = 0;
         int han_context = 0;
@@ -2328,8 +2372,14 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
                 tokens[i].script == TTF_SCRIPT_LATIN ? TTF_LEX_UNKNOWN_LATIN : TTF_LEX_NONE;
             snprintf(sem->rule, sizeof(sem->rule), "identity");
         }
+        /* foreign_sentence=localize: an English sentence takes the request language's
+           phrase readings too (thank you, bank of america; 2026-10-28). */
+        phrase_target = context;
+        if (e->foreign_sentence_localize && e->frontend_options.output_mode == TTF_OUTPUT_SPEECH &&
+            source == context && e->default_language && context == script_pack(e, TTF_SCRIPT_LATIN))
+            phrase_target = ttf_find_pack(e, e->default_language);
         if (!rule && (consumed == 1 || !strcmp(sem->rule, "pack.hyphenated-word")) && source &&
-            source != context &&
+            phrase_target && source != phrase_target &&
             e->config.render_policy == TTF_PHONETIC_LOCALIZE &&
             (sem->type == TTF_SEM_WORD || sem->type == TTF_SEM_INITIALISM ||
              sem->type == TTF_SEM_ACRONYM)) {
@@ -2337,7 +2387,7 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
             char phrase_value[TTF_IR_VALUE_SIZE];
             ttf_resource_layer_t phrase_layer = TTF_LAYER_COMMON;
             phrase_hit =
-                ttf_phrase_match(e, source->language_tag, context->language_tag, text, tokens,
+                ttf_phrase_match(e, source->language_tag, phrase_target->language_tag, text, tokens,
                                  phrase_count, i, &phrase_consumed, phrase_value, &phrase_layer);
             if (phrase_hit && phrase_consumed < consumed)
                 phrase_hit = NULL;
@@ -2709,6 +2759,13 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
             } else
                 st = ttf_speech_output(e, renderer, &normalized, output.data, output.length,
                                        text + end, length - end);
+        }
+        if (st == TTF_OK && e->foreign_sentence_localize && !rule &&
+            e->frontend_options.output_mode == TTF_OUTPUT_SPEECH) {
+            const ttf_language_pack_t *home =
+                e->default_language ? ttf_find_pack(e, e->default_language) : NULL;
+            if (home && renderer != home && renderer == script_pack(e, TTF_SCRIPT_LATIN))
+                st = localize_reading(e, renderer, home, &normalized);
         }
         /* Only a particle written directly against the previous reading, with no
            space, is part of that phrase; a separate word keeps its own text.

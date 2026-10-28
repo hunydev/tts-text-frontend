@@ -64,6 +64,8 @@ struct ttf_engine {
     int reading_unit_spacing; /* spacing=reading-unit; 0 keeps resource spacing */
     int phoneme_output;       /* pronunciation=hangul: Hangul read as spoken (2026-10-09) */
     ttf_matrix_policy_t matrix_policy; /* matrix=auto (0), legacy or declared */
+    int foreign_sentence_localize; /* foreign_sentence=localize: an English reading is written in the
+                                      request language (I have 3 apples 아이 해브 쓰리 애플스) */
     ttf_symbol_fallback_policy_t symbol_fallback_policy; /* symbol_fallback=on (0) */
     /* Mapped Unicode fallback files per pack slot; the frozen owner closes them. */
     struct ttf_symbol_fallback *symbol_fallback[TTF_MAX_PACKS];

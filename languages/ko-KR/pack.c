@@ -3784,6 +3784,26 @@ static int run_particle_score(const ttf_pack_input_t *in, size_t begin, size_t e
                : 0;
 }
 
+/* We need 5개, Thank you for coming 3명, 1,000원: a number written against a Hangul
+   counter or particle belongs to the Korean grammar, whatever the clause before it
+   (2026-10-28; was the English run's context, five 개). */
+static int attached_hangul_quantity(const ttf_pack_input_t *in, size_t i) {
+    if (in->tokens[i].script != TTF_SCRIPT_DIGIT)
+        return 0;
+    while (i + 1 < in->token_count && in->tokens[i].end == in->tokens[i + 1].begin) {
+        const ttf_token_t *next = &in->tokens[i + 1];
+        char c = in->text[next->begin];
+        if (next->script == TTF_SCRIPT_HANGUL)
+            return 1;
+        if (next->script != TTF_SCRIPT_DIGIT &&
+            !(next->end == next->begin + 1 && (c == ',' || c == '.') && i + 2 < in->token_count &&
+              in->tokens[i + 2].script == TTF_SCRIPT_DIGIT))
+            return 0;
+        ++i;
+    }
+    return 0;
+}
+
 typedef struct {
     int base;
     int scores[];
@@ -3805,7 +3825,7 @@ static ttf_status_t build_context_scores(const ttf_pack_input_t *in, void **out)
     scores->base = scope_context_score(in);
     for (i = 0; i < in->token_count; ++i) {
         size_t begin, end;
-        if (in->tokens[i].script == TTF_SCRIPT_HANGUL) {
+        if (in->tokens[i].script == TTF_SCRIPT_HANGUL || attached_hangul_quantity(in, i)) {
             scores->scores[i] = scores->base + script_bonus;
             continue;
         }
@@ -3837,7 +3857,7 @@ static int context_score(const ttf_pack_input_t *in) {
     score = scope_context_score(in);
     if (in->index >= in->token_count)
         return score;
-    if (in->tokens[in->index].script == TTF_SCRIPT_HANGUL)
+    if (in->tokens[in->index].script == TTF_SCRIPT_HANGUL || attached_hangul_quantity(in, in->index))
         return score + resource_integer(in->engine, "context", "script_weight", 0, 1000, 1000);
     context_run_bounds(in, &begin, &end);
     return score + run_particle_score(in, begin, end);
