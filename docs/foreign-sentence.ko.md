@@ -29,7 +29,7 @@
 | `Meeting at 3pm on Oct 5, 2019.` | Meeting at three p m on October fifth twenty nineteen. | 미팅 앳 쓰리 피 엠 온 옥토버 피프스 트웬티 나인틴. | 같음 |
 | `Please go to the 1st floor.` | Please go to the first floor. | 플리스 고 투 더 퍼스트 플로어. | 플리즈 고 투 더 퍼스트 플로어. |
 | `The GPU costs $500.` | The GPU costs five hundred dollars. | 더 지피유 카스트스 파이브 헌드레드 달러스. | 같음 |
-| `오늘 Thank you for coming 3명` | 오늘 Thank you for coming 세 명 | 오늘 생크 유 포 카밍 세 명 | 오늘 생크 유 포 커밍 세 명 |
+| `오늘 Thank you for coming 3명` | 오늘 Thank you for coming 세 명 | 오늘 땡큐 포 카밍 세 명 | 오늘 땡큐 포 커밍 세 명 |
 
 ## 숫자
 
@@ -56,6 +56,6 @@ CMU가 없으면 사전에 없는 낱말은 철자 규칙으로 읽어 거칠다
 
 - 철자 규칙 읽기의 품질(friend 프린드, today 토데이)은 CMU를 켜거나 렉시콘에 넣어야 나아진다.
 - 관례 표기와 CMU 미국식 발음이 다를 수 있다(costs 카스트스). 자주 쓰는 낱말은 렉시콘으로 고정한다.
-- `Thank you` 같은 관용 표현은 구문 사전 행이 있어야 땡큐가 된다(기본 리소스에는 없다).
+- 관용 표현은 구문 사전 행으로 읽는다(thank you 땡큐는 사전 v28에 있다).
 
 계약: `foreign_sentence_v128`(15).

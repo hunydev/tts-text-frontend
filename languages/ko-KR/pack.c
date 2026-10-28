@@ -3968,12 +3968,15 @@ static ttf_status_t render_phones(const ttf_engine_t *e, const ttf_pronunciation
         phones[count++][n] = '\0';
     }
     {
-        size_t letters = 0;
-        for (i = 0; i < count; ++i)
+        size_t letters = 0, axes = 0;
+        for (i = 0; i < count; ++i) {
             letters += !strncmp(phones[i], "letter.", 7);
+            axes += !strncmp(phones[i], "letter.", 7) && strlen(phones[i]) == 8 && strchr("XYZ", phones[i][7]);
+        }
         /* DMZ 디엠지, MZ 엠지: a letter may have another name inside a run of two or more
-           letters (phone_letter letter.Z.run; 2026-10-28, was 디엠제트). A lone Z stays 제트. */
-        if (letters >= 2)
+           letters (phone_letter letter.Z.run; 2026-10-28, was 디엠제트). A lone Z stays 제트,
+           and so do axis names written together (XYZ 엑스와이제트, XZ). */
+        if (letters >= 2 && axes < letters)
             for (i = 0; i < count; ++i)
                 if (!strncmp(phones[i], "letter.", 7) && strlen(phones[i]) == 8) {
                     char run[16];
