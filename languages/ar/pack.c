@@ -938,7 +938,7 @@ static size_t amount(const ttf_engine_t *e, const char *t, size_t n, const num_t
                 /* more decimals than the minor unit has, a signed amount or a price or rate
                    (سعر صرف … 4.12 ريال): a decimal amount */
                 if (fl > want || oblique ||
-                    (!written_alif && !abbreviation && near_before(t, x->begin, "سعر|أسعار|أغلق|سجل|صرف|السهم|سهم|مقابل"))) {
+                    (!written_alif && !abbreviation && near_before(t, x->begin, "سعر|أسعار|أغلق|سجل|صرف|السهم|سهم|مقابل|كلفة|تعرفة|التعرفة|الأجرة|أجرة"))) {
                     add(it, "D%s:%s", oblique ? "o" : "", x->dec);
                     add(it, "Ks:%s", nk);
                     return ce ? ce : q;
@@ -1636,6 +1636,10 @@ static size_t classify_number(const ttf_pack_input_t *in, ttf_semantic_t *s, siz
                 return finish(in, s, pe2 && !written2 ? pe2 : z, "timerange", &it);
             }
         }
+        /* الساعة 03:00 الثالثة صباحا: a 24-hour time before six without a period word says it
+           (2026-10-28; owner sets ask صباحا or فجرا) */
+        if (!pe && h >= 1 && h <= 5 && clock_at(t, n, p, &h, &mm) && t[p] == '0')
+            add(&it, "R:am");
         return finish(in, s, pe ? pe : z, "time", &it);
     }
     /* 11 صباحا, الساعة ٩, ٩ ص - ٩ م: an hour with a period word or after الساعة */
