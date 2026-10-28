@@ -318,6 +318,12 @@ ar_cue	ar	العربة	ordf
 ar_cue	ar	المنفذ	code
 ar_cue	ar	التصويت	code
 ar_cue	ar	المنفذ	code
+# ordinal cues from the ar v4 set, 2026-10-28
+ar_cue	ar	الزيارة	ordf
+ar_cue	ar	السلعة	ordf
+ar_cue	ar	الجدول	ordm
+ar_cue	ar	القسم	ordm
+ar_cue	ar	الشارع	ordm
 ar_word	ar	admission	أدميشن
 ar_word	ar	billing	بيلينغ
 ar_word	ar	reservations	ريزيرفيشنز
@@ -619,6 +625,31 @@ ar_word	ar	twitter	تويتر
 ar_word	ar	facebook	فيسبوك
 ar_word	ar	zoom	زوم
 ar_word	ar	teams	تيمز
+# address words from the ar v4 set, 2026-10-28
+ar_word	ar	creator	كرييتور
+ar_word	ar	studio	ستوديو
+ar_word	ar	gallery	جاليري
+ar_word	ar	alsaif	السيف
+ar_word	ar	alrajhi	الراجحي
+ar_word	ar	corp	كورب
+ar_word	ar	error	إيرور
+ar_word	ar	hub	هب
+ar_word	ar	safari	سفاري
+ar_word	ar	tours	تورز
+ar_word	ar	tour	تور
+ar_word	ar	contest	كونتست
+ar_word	ar	culture	كالتشر
+ar_word	ar	fest	فيست
+ar_word	ar	traffic	ترافيك
+ar_word	ar	editor	إديتور
+ar_word	ar	train	ترين
+ar_word	ar	client	كلاينت
+ar_word	ar	audio	أوديو
+ar_word	ar	weather	ويذر
+ar_word	ar	raid	ريد
+ar_word	ar	meteo	ميتيو
+ar_word	ar	inst	إنست
+ar_word	ar	reg	ريج
 # Marks inside an email or URL under [[…]]{@email} / {@url} (2026-10-27): the words the Arabic
 # pack already reads in plain text (number ar at, dot, slash, dash, underscore, colon, equals,
 # percent, plus); the others name the mark. Without these rows the controls failed in Arabic.

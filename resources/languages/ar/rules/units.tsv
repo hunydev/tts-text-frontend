@@ -280,6 +280,15 @@ ar_plural	ar	آبار	بئر
 ar_plural	ar	نقاط	نقطة
 ar_plural	ar	كتب	كتاب
 ar_plural	ar	أكواب	كوب
+# 2026-10-28
+ar_plural	ar	زملاء	زميل
+ar_plural	ar	ركاب	راكب
+ar_plural	ar	كواكب	كوكب
+ar_plural	ar	فحوص	فحص
+ar_plural	ar	أبيات	بيت
+ar_plural	ar	حقائب	حقيبة
+ar_plural	ar	أشجار	شجرة
+ar_plural	ar	مراكز	مركز
 ar_gender	ar	مستودعات	m
 ar_gender	ar	مستشفيات	m
 ar_gender	ar	مطارات	m
@@ -301,6 +310,15 @@ ar_unit	ar	سم³	سنتيمتر مكعب
 ar_unit	ar	cm³	سنتيمتر مكعب
 ar_unit	ar	م³	متر مكعب
 ar_unit	ar	m³	متر مكعب
+# units from the ar v4 set, 2026-10-28
+ar_unit	ar	م/ث	متر في الثانية
+ar_unit	ar	ميجابت/ث	ميغابت في الثانية
+ar_unit	ar	ميغابت/ث	ميغابت في الثانية
+ar_unit	ar	MB/s	ميغابايت في الثانية
+ar_unit	ar	ملجم	مليغرام
+ar_unit	ar	مغ	مليغرام
+ar_unit	ar	سم²	سنتيمتر مربع
+ar_unit	ar	ديسيبل	ديسيبل
 ar_gender	ar	حدائق	f
 ar_gender	ar	مساجد	m
 ar_gender	ar	رسائل	f
@@ -338,6 +356,23 @@ ar_noun	ar	سنتيم	m|سنتيم|سنتيمين|سنتيمات|سنتيما
 ar_noun	ar	مليم	m|مليم|مليمين|مليمات|مليما
 # nouns from the v1 test split, 2026-10-28
 ar_noun	ar	كيس	m|كيس|كيسين|أكياس|كيسا
+# nouns from the ar v4 set, 2026-10-28
+ar_noun	ar	زميل	m|زميل|زميلين|زملاء|زميلا
+ar_noun	ar	كاميرا	f|كاميرا|كاميرتين|كاميرات|كاميرا
+ar_noun	ar	راكب	m|راكب|راكبين|ركاب|راكبا
+ar_noun	ar	كوكب	m|كوكب|كوكبين|كواكب|كوكبا
+ar_noun	ar	فحص	m|فحص|فحصين|فحوص|فحصا
+ar_noun	ar	بيت	m|بيت|بيتين|أبيات|بيتا
+ar_noun	ar	صفحة	f|صفحة|صفحتين|صفحات|صفحة
+ar_noun	ar	جرعة	f|جرعة|جرعتين|جرعات|جرعة
+ar_noun	ar	حقيبة	f|حقيبة|حقيبتين|حقائب|حقيبة
+ar_noun	ar	شجرة	f|شجرة|شجرتين|أشجار|شجرة
+ar_noun	ar	ملعقة	f|ملعقة|ملعقتين|ملاعق|ملعقة
+ar_noun	ar	مركز	m|مركز|مركزين|مراكز|مركزا
+ar_noun	ar	نبضة	f|نبضة|نبضتين|نبضات|نبضة
+ar_noun	ar	متر في الثانية	m|متر في الثانية|مترين في الثانية|أمتار في الثانية|مترا في الثانية
+ar_noun	ar	ميغابايت في الثانية	m|ميغابايت في الثانية|ميغابايت في الثانية|ميغابايت في الثانية|ميغابايت في الثانية
+ar_noun	ar	سنتيمتر مربع	m|سنتيمتر مربع|سنتيمترين مربعين|سنتيمترات مربعة|سنتيمترا مربعا
 ar_gender	ar	مرضى	m
 ar_gender	ar	قتلى	m
 ar_gender	ar	جرحى	m
@@ -522,3 +557,11 @@ ar_gender	ar	مأوى	m
 ar_gender	ar	مصاعد	m
 ar_gender	ar	منحدرات	f
 ar_gender	ar	أكياس	m
+# 2026-10-28
+ar_gender	ar	حساسات	m
+ar_gender	ar	ضوابط	f
+ar_gender	ar	أرصفة	m
+ar_gender	ar	فرق	f
+ar_gender	ar	مخططات	m
+ar_gender	ar	حالات	f
+ar_gender	ar	ميكروفونات	m

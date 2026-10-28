@@ -1012,11 +1012,18 @@ static size_t amount(const ttf_engine_t *e, const char *t, size_t n, const num_t
     }
     /* a counted noun (3 سيارات, 11 طالبا, 2 شنطة, 208 ريال, 1 رسالة) */
     /* after a sign a word with an attached و ب ل ك ف is no counted noun (-1 وشحنة, +1 بوحدة) */
-    if (z && !x->dot && !function_word(w) && !has(w, strlen(w), 0, "ال") && !(ends_with(w, "وا") && strlen(w) >= 10) &&
+    /* للمرتبة 6 يوم ١ يونيو: يوم before a date starts the date, it counts nothing (2026-10-28) */
+    int day_before_date = z && word_is(w, "يوم") && z + 1 < n && t[z] == ' ' && digit(t[z + 1]);
+    if (z && !day_before_date && !x->dot && !function_word(w) && !has(w, strlen(w), 0, "ال") &&
+        !(ends_with(w, "وا") && strlen(w) >= 10) &&
         !(oblique && (has(w, strlen(w), 0, "و") || has(w, strlen(w), 0, "ب") || has(w, strlen(w), 0, "ل") ||
                       has(w, strlen(w), 0, "ك") || has(w, strlen(w), 0, "ف")) && !res(e, "ar_noun", w))) {
         unsigned long long v = strtoull(x->d, NULL, 10);
         noun_of_word(e, w, &no);
+        if (*no.key && no.written == 'p' && v == 2) {
+            add(it, "Kd:%s", no.key); /* 2 زملاء زميلين: two reads the dual of the singular (2026-10-28) */
+            return z;
+        }
         if (*no.key && no.written == 'p') {
             add(it, "N%s%s%s:%s", no.fem ? "f" : "", "o", construct_ok(x->d) ? "c" : "", x->d);
             add(it, "Wp:%s", no.key);
@@ -1346,14 +1353,16 @@ static size_t law_number(const char *t, size_t n, size_t p, items_t *it) {
     while (q < n && digit(t[q]))
         ++q;
     if (q == p || q - p > 4 || t[p] == '0' || q + 4 >= n || t[q] != '/' ||
-        !(has(t, n, q + 1, "19") || has(t, n, q + 1, "20")) || !digit(t[q + 3]) || !digit(t[q + 4]) ||
+        !(has(t, n, q + 1, "19") || has(t, n, q + 1, "20") || has(t, n, q + 1, "14")) || !digit(t[q + 3]) ||
+        !digit(t[q + 4]) ||
         (q + 5 < n && (digit(t[q + 5]) || t[q + 5] == '/')) ||
         !near_before(t, p, "رقم|الرقم|برقم|بالرقم|القانون|قانون|المرسوم|مرسوم|القرار|قرار|اللائحة|لائحة|"
                            "التعميم|تعميم|القضية|قضية|الدعوى|العقد|عقد|المعاملة|النظام|الأمر|التوجيه|البلاغ"))
         return 0;
     add(it, "No:%.*s", (int)(q - p), t + p);
     add(it, "W:لسنة");
-    add(it, "No:%.4s", t + q + 1);
+    /* a Hijri year agrees with سنة (ألف وأربعمئة وخمس وأربعين) */
+    add(it, has(t, n, q + 1, "14") ? "Nfo:%.4s" : "No:%.4s", t + q + 1);
     return q + 5;
 }
 static size_t classify_number(const ttf_pack_input_t *in, ttf_semantic_t *s, size_t p, const char *lead) {
@@ -1593,7 +1602,8 @@ static size_t classify_number(const ttf_pack_input_t *in, ttf_semantic_t *s, siz
             add(&it, "No:%s", r2.d);
             return finish(in, s, r2.end > z ? r2.end : z, "ratio", &it);
         }
-        if (near_before(t, p, "تستغرق|يستغرق|استغرق|استغرقت|مدة|المدة|مدته|مدتها|زمن")) {
+        if (near_before(t, p, "تستغرق|يستغرق|استغرق|استغرقت|مدة|المدة|مدته|مدتها|زمن|بزمن|زمنا|توقيت|بتوقيت")) {
+            int ss = clock_seconds(t, p, z);
             if (h == 1)
                 add(&it, "R:hour");
             else if (h == 2)
@@ -1606,6 +1616,8 @@ static size_t classify_number(const ttf_pack_input_t *in, ttf_semantic_t *s, siz
                 add(&it, "%sNfo:%d", h ? "&" : "", mm);
                 add(&it, mm <= 10 && mm > 2 ? "R:minutes" : "R:minute");
             }
+            if (ss > 0) /* 2:04:18 ساعتين وأربع دقائق وثماني عشرة ثانية (2026-10-28) */
+                add(&it, ss <= 10 ? "&Cf:%d:ثانية" : "&Cfo:%d:ثانية", ss);
             return finish(in, s, z, "duration", &it);
         }
         clock_items(&it, h, mm, clock_seconds(t, p, z), period, written);
@@ -1722,11 +1734,28 @@ static size_t classify_number(const ttf_pack_input_t *in, ttf_semantic_t *s, siz
             /* الجرعة 500 ملغ: a unit after the number is a measure, not an ordinal (2026-10-28) */
             if (same_noun || (q < n && t[q] == ' ' && unit_at(e, t, n, q + 1, uk3, sizeof(uk3))))
                 counted_noun = 1;
+            /* الأسبوع الماضي 35 سفينة, المجموعة السياحية 8 غرف: a cue found through a nisba adjective
+               gives way to an indefinite noun after the number (2026-10-28) */
+            if (cb != (size_t)-1 && has(cw, strlen(cw), 0, "ال") && (ends_with(cw, "ي") || ends_with(cw, "ية")) &&
+                !cue_of(e, cw) && !has(nw2, strlen(nw2), 0, "ال") && !function_word(nw2) &&
+                !has(nw2, strlen(nw2), 0, "ل") && !has(nw2, strlen(nw2), 0, "ب") &&
+                (ends_with(nw2, "ة") || ends_with(nw2, "ات") || ends_with(nw2, "ين") || res(e, "ar_gender", nw2) ||
+                 (*nn.key && nn.written != '?')))
+                counted_noun = 1;
             int construct = word_after(t, n, ne2, nw3, sizeof(nw3), NULL) && has(nw3, strlen(nw3), 0, "ال");
+            /* المستوى 4 يوم ١ يونيو: يوم before a date leaves the cue */
+            if (!strcmp(nw2, "يوم") && ne2 + 1 < n && t[ne2] == ' ' && digit(t[ne2 + 1]))
+                construct = 1;
             if (scale_word(nw2, &sk2) || res(e, "ar_currency", nw2) || (*nn.key && nn.written != '?' && !construct) ||
                 (!strcmp(nw2, "من") && ne2 + 1 < n && digit(t[ne2 + 1])) || counted_noun)
                 cue = NULL;
         }
+    }
+    {
+        char uk4[48];
+        /* في الشارع 85 dB: a Latin unit after the cued number is a measure (2026-10-28) */
+        if (cue && q + 1 < n && t[q] == ' ' && alpha(t[q + 1]) && unit_at(e, t, n, q + 1, uk4, sizeof(uk4)))
+            cue = NULL;
     }
     if (cue && (!strcmp(cue, "ordm") || !strcmp(cue, "ordf")) && !x.dot && !x.comma && strlen(x.d) <= 3 &&
         !(q < n && (alpha(t[q]) || t[q] == '/' || t[q] == '-' || t[q] == '~' || t[q] == ':' || t[q] == '%' ||
@@ -2015,11 +2044,18 @@ static size_t classify_number(const ttf_pack_input_t *in, ttf_semantic_t *s, siz
         if (ne) {
             noun_of_word(e, nw, &no);
             /* المنفذ ٤٠٥ حجاج: a noun of known gender after the number counts it, no code */
-            counted_after = *no.key || res(e, "ar_currency", nw) || scale_word(nw, nk) || res(e, "ar_gender", nw);
+            counted_after = *no.key || res(e, "ar_currency", nw) || scale_word(nw, nk) || res(e, "ar_gender", nw) ||
+                            (ends_with(nw, "ات") && strlen(nw) >= 8 && !has(nw, strlen(nw), 0, "ال"));
+            /* … ٤٩١٠ يوم ٢٠٢٦/٠٤/١٢: يوم before a date counts nothing */
+            if (word_is(nw, "يوم") && ne + 1 < n && t[ne] == ' ' && digit(t[ne + 1]))
+                counted_after = 0;
         }
         counted_after |= currency_abbr(e, t, n, q < n && t[q] == ' ' ? q + 1 : q, nk, sizeof(nk)) != 0;
         if (!prev_word_is(t, p, "عام|العام|سنة|السنة|لعام|بعام|منذ") &&
             ((strlen(x.d) >= 5 && !counted_after && !ue) || (x.d[0] == '0' && strlen(x.d) >= 2) ||
+             /* القضية رقم 7720 سبعة سبعة اثنان صفر (2026-10-28) */
+             (strlen(x.d) >= 4 && !counted_after && !ue && !ends_with(x.d, "000") &&
+              prev_word_is(t, p, "رقم|برقم|بالرقم|الرقم|ورقم")) || /* العميل رقم 1000 stays ألف */
              (strlen(x.d) >= 3 && !counted_after && !ue && (cue_near(e, t, p, "phone") || cue_near(e, t, p, "code")))) &&
             !(q < n && (alpha(t[q]) || t[q] == '%'))) {
             add(&it, "G:%s", x.d);
@@ -2588,9 +2624,17 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             char low[32];
             size_t k, caps = 0, letters = 1;
             const char *wv;
+            size_t hyphens = 0;
             for (k = a; k < le; ++k) {
-                letters &= alpha(t[k]);
+                hyphens += t[k] == '-' && k > a && k + 1 < le;
+                letters &= alpha(t[k]) || (t[k] == '-' && k > a && k + 1 < le);
                 caps += t[k] >= 'A' && t[k] <= 'Z';
+            }
+            if (letters && hyphens && caps + hyphens == le - a && caps <= 6) {
+                for (k = a; k < le; ++k) /* USB-C يو إس بي سي (2026-10-28; was as written) */
+                    if (t[k] != '-')
+                        add(&it, "L:%c", t[k]);
+                return finish(in, s, le, "initialism", &it);
             }
             for (k = 0; k < le - a && k + 1 < sizeof(low); ++k)
                 low[k] = (char)(t[a + k] | 0x20);
