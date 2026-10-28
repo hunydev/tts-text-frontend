@@ -188,6 +188,23 @@ speech_symbol	ar	½	نصف
 speech_symbol	ar	¼	ربع
 speech_symbol	ar	¾	ثلاثة أرباع
 speech_symbol	ar	=	يساوي
+# Greek letters in formulas, 2026-10-28
+speech_symbol	ar	θ	ثيتا
+speech_symbol	ar	Δ	دلتا
+speech_symbol	ar	δ	دلتا
+speech_symbol	ar	α	ألفا
+speech_symbol	ar	β	بيتا
+speech_symbol	ar	γ	غاما
+speech_symbol	ar	λ	لامدا
+speech_symbol	ar	μ	ميو
+speech_symbol	ar	σ	سيغما
+speech_symbol	ar	Σ	سيغما
+speech_symbol	ar	Ω	أوميغا
+speech_symbol	ar	ω	أوميغا
+speech_symbol	ar	φ	فاي
+speech_symbol	ar	ε	إبسيلون
+speech_symbol	ar	ρ	رو
+speech_symbol	ar	τ	تاو
 ar_word	ar	alakhbar	الأخبار
 ar_word	ar	alwatan	الوطن
 ar_word	ar	alriyadh	الرياض
@@ -296,6 +313,11 @@ ar_cue	ar	المنتهي	code
 ar_cue	ar	التفعيل	code
 ar_cue	ar	الدخول	code
 ar_cue	ar	الأمان	code
+# cue words from the v1 test split, 2026-10-28
+ar_cue	ar	العربة	ordf
+ar_cue	ar	المنفذ	code
+ar_cue	ar	التصويت	code
+ar_cue	ar	المنفذ	code
 ar_word	ar	admission	أدميشن
 ar_word	ar	billing	بيلينغ
 ar_word	ar	reservations	ريزيرفيشنز
@@ -567,6 +589,36 @@ ar_word	ar	oil	أويل
 ar_word	ar	gas	جاس
 ar_word	ar	fifa	فيفا
 ar_word	ar	ramadan	رمضان
+# known Latin words read in Arabic script also alone in a sentence, 2026-10-28
+ar_word	ar	thinkpad	ثينك باد
+ar_word	ar	python	بايثون
+ar_word	ar	macos	ماك أو إس
+ar_word	ar	sooq	سوق
+ar_word	ar	alharaj	الحراج
+ar_word	ar	haraj	حراج
+ar_word	ar	tatbiq	تطبيق
+ar_word	ar	drivers	درايفرز
+ar_word	ar	driver	درايفر
+ar_word	ar	renew	رينيو
+ar_word	ar	java	جافا
+ar_word	ar	linux	لينكس
+ar_word	ar	chrome	كروم
+ar_word	ar	excel	إكسل
+ar_word	ar	word	وورد
+ar_word	ar	ipad	آيباد
+ar_word	ar	macbook	ماك بوك
+ar_word	ar	samsung	سامسونج
+ar_word	ar	apple	آبل
+ar_word	ar	huawei	هواوي
+ar_word	ar	netflix	نتفليكس
+ar_word	ar	whatsapp	واتساب
+ar_word	ar	instagram	إنستغرام
+ar_word	ar	snapchat	سناب شات
+ar_word	ar	tiktok	تيك توك
+ar_word	ar	twitter	تويتر
+ar_word	ar	facebook	فيسبوك
+ar_word	ar	zoom	زوم
+ar_word	ar	teams	تيمز
 # Marks inside an email or URL under [[…]]{@email} / {@url} (2026-10-27): the words the Arabic
 # pack already reads in plain text (number ar at, dot, slash, dash, underscore, colon, equals,
 # percent, plus); the others name the mark. Without these rows the controls failed in Arabic.

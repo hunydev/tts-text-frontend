@@ -260,6 +260,9 @@ classifier_priority	ar	ar.address	100
 classifier_priority	ar	ar.maths	100
 classifier_priority	ar	ar.lawnumber	100
 classifier_priority	ar	ar.lettercode	100
+classifier_priority	ar	ar.word	100
+classifier_priority	ar	ar.initialism	100
+classifier_priority	ar	ar.rating	100
 # phase 1 dev fixes (2026-10-22)
 number	ar	8fc	ثمان
 number	ar	lt_lead	أقل من
