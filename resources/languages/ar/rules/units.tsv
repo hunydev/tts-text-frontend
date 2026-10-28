@@ -143,22 +143,22 @@ ar_unit	ar	dB	ديسيبل
 ar_unit	ar	"	بوصة
 
 ar_currency	ar	ر.س	ريال|هللة|2
-ar_currency	ar	SAR	ريال|هللة|2
+ar_currency	ar	SAR	ريال سعودي|هللة|2
 ar_currency	ar	ريال	ريال|هللة|2
 ar_currency	ar	ريالا	ريال|هللة|2
 ar_currency	ar	ريالات	ريال|هللة|2
 ar_currency	ar	د.إ	درهم|فلس|2
-ar_currency	ar	AED	درهم|فلس|2
+ar_currency	ar	AED	درهم إماراتي|فلس|2
 ar_currency	ar	درهم	درهم|فلس|2
 ar_currency	ar	درهما	درهم|فلس|2
 ar_currency	ar	دراهم	درهم|فلس|2
 ar_currency	ar	ج.م	جنيه|قرش|2
-ar_currency	ar	EGP	جنيه|قرش|2
+ar_currency	ar	EGP	جنيه مصري|قرش|2
 ar_currency	ar	جنيه	جنيه|قرش|2
 ar_currency	ar	جنيها	جنيه|قرش|2
 ar_currency	ar	جنيهات	جنيه|قرش|2
 ar_currency	ar	$	دولار|سنت|2
-ar_currency	ar	USD	دولار|سنت|2
+ar_currency	ar	USD	دولار أمريكي|سنت|2
 ar_currency	ar	دولار	دولار|سنت|2
 ar_currency	ar	دولارا	دولار|سنت|2
 ar_currency	ar	دولارات	دولار|سنت|2
@@ -167,18 +167,18 @@ ar_currency	ar	EUR	يورو|سنت|2
 ar_currency	ar	يورو	يورو|سنت|2
 ar_currency	ar	£	جنيه إسترليني|بنس|2
 ar_currency	ar	GBP	جنيه إسترليني|بنس|2
-ar_currency	ar	د.ك	دينار|فلس|3
-ar_currency	ar	KWD	دينار|فلس|3
-ar_currency	ar	د.ب	دينار|فلس|3
-ar_currency	ar	BHD	دينار|فلس|3
-ar_currency	ar	د.أ	دينار|قرش|2
-ar_currency	ar	JOD	دينار|قرش|2
+ar_currency	ar	د.ك	دينار كويتي|فلس|3
+ar_currency	ar	KWD	دينار كويتي|فلس|3
+ar_currency	ar	د.ب	دينار بحريني|فلس|3
+ar_currency	ar	BHD	دينار بحريني|فلس|3
+ar_currency	ar	د.أ	دينار أردني|قرش|2
+ar_currency	ar	JOD	دينار أردني|قرش|2
 ar_currency	ar	دينار	دينار|فلس|3
 ar_currency	ar	دينارا	دينار|فلس|3
-ar_currency	ar	ر.ق	ريال|درهم|2
-ar_currency	ar	QAR	ريال|درهم|2
-ar_currency	ar	ر.ع	ريال|بيسة|3
-ar_currency	ar	OMR	ريال|بيسة|3
+ar_currency	ar	ر.ق	ريال قطري|درهم|2
+ar_currency	ar	QAR	ريال قطري|درهم|2
+ar_currency	ar	ر.ع	ريال عماني|بيسة|3
+ar_currency	ar	OMR	ريال عماني|بيسة|3
 ar_currency	ar	ليرة	ليرة|قرش|2
 ar_currency	ar	¥	ين|سن|2
 
@@ -258,7 +258,20 @@ ar_plural	ar	كيلومترات	كيلومتر
 ar_plural	ar	أمتار	متر
 ar_plural	ar	طلبات	طلب
 # phase 1 dev fixes (2026-10-22)
-ar_currency	ar	ل.ل	ليرة|قرش|2
+ar_currency	ar	ل.ل	ليرة لبنانية|قرش|2
+# a currency code or a shared abbreviation names its country (2026-10-28)
+ar_currency	ar	د.ع	دينار عراقي|فلس|3
+ar_currency	ar	IQD	دينار عراقي|فلس|3
+ar_currency	ar	د.ج	دينار جزائري|سنتيم|2
+ar_currency	ar	DZD	دينار جزائري|سنتيم|2
+ar_currency	ar	د.ت	دينار تونسي|مليم|3
+ar_currency	ar	TND	دينار تونسي|مليم|3
+ar_currency	ar	د.ل	دينار ليبي|درهم|3
+ar_currency	ar	LYD	دينار ليبي|درهم|3
+ar_currency	ar	MAD	درهم مغربي|سنتيم|2
+ar_currency	ar	ل.س	ليرة سورية|قرش|2
+ar_currency	ar	SYP	ليرة سورية|قرش|2
+ar_currency	ar	LBP	ليرة لبنانية|قرش|2
 ar_noun	ar	كتاب	m|كتاب|كتابين|كتب|كتابا
 ar_noun	ar	نقطة	f|نقطة|نقطتين|نقاط|نقطة
 ar_noun	ar	بئر	f|بئر|بئرين|آبار|بئرا
@@ -304,9 +317,202 @@ ar_gender	ar	مباريات	f
 ar_noun	ar	كيلوجرام	m|كيلوجرام|كيلوجرامين|كيلوجرامات|كيلوجراما
 ar_noun	ar	جرام	m|جرام|جرامين|جرامات|جراما
 ar_noun	ar	مليجرام	m|مليجرام|مليجرامين|مليجرامات|مليجراما
+# currencies with their country and minor units (2026-10-28)
+ar_noun	ar	ريال سعودي	m|ريال سعودي|ريالين سعوديين|ريالات سعودية|ريالا سعوديا
+ar_noun	ar	درهم إماراتي	m|درهم إماراتي|درهمين إماراتيين|دراهم إماراتية|درهما إماراتيا
+ar_noun	ar	جنيه مصري	m|جنيه مصري|جنيهين مصريين|جنيهات مصرية|جنيها مصريا
+ar_noun	ar	دولار أمريكي	m|دولار أمريكي|دولارين أمريكيين|دولارات أمريكية|دولارا أمريكيا
+ar_noun	ar	دينار كويتي	m|دينار كويتي|دينارين كويتيين|دنانير كويتية|دينارا كويتيا
+ar_noun	ar	دينار بحريني	m|دينار بحريني|دينارين بحرينيين|دنانير بحرينية|دينارا بحرينيا
+ar_noun	ar	دينار أردني	m|دينار أردني|دينارين أردنيين|دنانير أردنية|دينارا أردنيا
+ar_noun	ar	دينار عراقي	m|دينار عراقي|دينارين عراقيين|دنانير عراقية|دينارا عراقيا
+ar_noun	ar	دينار جزائري	m|دينار جزائري|دينارين جزائريين|دنانير جزائرية|دينارا جزائريا
+ar_noun	ar	دينار تونسي	m|دينار تونسي|دينارين تونسيين|دنانير تونسية|دينارا تونسيا
+ar_noun	ar	دينار ليبي	m|دينار ليبي|دينارين ليبيين|دنانير ليبية|دينارا ليبيا
+ar_noun	ar	ريال قطري	m|ريال قطري|ريالين قطريين|ريالات قطرية|ريالا قطريا
+ar_noun	ar	ريال عماني	m|ريال عماني|ريالين عمانيين|ريالات عمانية|ريالا عمانيا
+ar_noun	ar	درهم مغربي	m|درهم مغربي|درهمين مغربيين|دراهم مغربية|درهما مغربيا
+ar_noun	ar	ليرة سورية	f|ليرة سورية|ليرتين سوريتين|ليرات سورية|ليرة سورية
+ar_noun	ar	ليرة لبنانية	f|ليرة لبنانية|ليرتين لبنانيتين|ليرات لبنانية|ليرة لبنانية
+ar_noun	ar	سنتيم	m|سنتيم|سنتيمين|سنتيمات|سنتيما
+ar_noun	ar	مليم	m|مليم|مليمين|مليمات|مليما
 ar_gender	ar	مرضى	m
 ar_gender	ar	قتلى	m
 ar_gender	ar	جرحى	m
 ar_gender	ar	أسرى	m
 ar_gender	ar	تذاكر	f
 ar_gender	ar	سيارات	f
+# gender of common counted nouns: broken plurals, masculine ة/ى words (2026-10-28)
+ar_gender	ar	نسخ	f
+ar_gender	ar	لجان	f
+ar_gender	ar	ملاعق	f
+ar_gender	ar	خزائن	f
+ar_gender	ar	وظائف	f
+ar_gender	ar	صحف	f
+ar_gender	ar	مجلات	f
+ar_gender	ar	قصائد	f
+ar_gender	ar	روايات	f
+ar_gender	ar	حلقات	f
+ar_gender	ar	محاضرات	f
+ar_gender	ar	شهادات	f
+ar_gender	ar	خطط	f
+ar_gender	ar	فقرات	f
+ar_gender	ar	صفحات	f
+ar_gender	ar	حبات	f
+ar_gender	ar	وجبات	f
+ar_gender	ar	جرعات	f
+ar_gender	ar	دراسات	f
+ar_gender	ar	بيانات	f
+ar_gender	ar	لوحات	f
+ar_gender	ar	خطوات	f
+ar_gender	ar	جولات	f
+ar_gender	ar	دورات	f
+ar_gender	ar	بطولات	f
+ar_gender	ar	ميداليات	f
+ar_gender	ar	شاحنات	f
+ar_gender	ar	دراجات	f
+ar_gender	ar	شاشات	f
+ar_gender	ar	حافلات	f
+ar_gender	ar	طائرات	f
+ar_gender	ar	أشجار	f
+ar_gender	ar	زهور	f
+ar_gender	ar	نوافذ	f
+ar_gender	ar	ممرضات	f
+ar_gender	ar	معلمات	f
+ar_gender	ar	طبيبات	f
+ar_gender	ar	موظفات	f
+ar_gender	ar	لاعبات	f
+ar_gender	ar	مهندسات	f
+ar_gender	ar	عاملات	f
+ar_gender	ar	فتيات	f
+ar_gender	ar	أمهات	f
+ar_gender	ar	أخوات	f
+ar_gender	ar	زوجات	f
+ar_gender	ar	شركات	f
+ar_gender	ar	جامعات	f
+ar_gender	ar	مؤسسات	f
+ar_gender	ar	منظمات	f
+ar_gender	ar	جمعيات	f
+ar_gender	ar	هيئات	f
+ar_gender	ar	وزارات	f
+ar_gender	ar	إدارات	f
+ar_gender	ar	مديريات	f
+ar_gender	ar	محافظات	f
+ar_gender	ar	ولايات	f
+ar_gender	ar	قارات	f
+ar_gender	ar	جزر	f
+ar_gender	ar	مناطق	f
+ar_gender	ar	بنايات	f
+ar_gender	ar	عمارات	f
+ar_gender	ar	فيلات	f
+ar_gender	ar	قاعات	f
+ar_gender	ar	صالات	f
+ar_gender	ar	مكتبات	f
+ar_gender	ar	مدرجات	f
+ar_gender	ar	ساحات	f
+ar_gender	ar	مزارع	f
+ar_gender	ar	مصانع	f
+ar_gender	ar	آلات	f
+ar_gender	ar	معدات	f
+ar_gender	ar	مكالمات	f
+ar_gender	ar	طلقات	f
+ar_gender	ar	قذائف	f
+ar_gender	ar	صواريخ	f
+ar_gender	ar	ضربات	f
+ar_gender	ar	غارات	f
+ar_gender	ar	عمليات	f
+ar_gender	ar	جلسات	f
+ar_gender	ar	مخيمات	m
+ar_gender	ar	طهاة	m
+ar_gender	ar	قضاة	m
+ar_gender	ar	دعاة	m
+ar_gender	ar	رعاة	m
+ar_gender	ar	رماة	m
+ar_gender	ar	غزاة	m
+ar_gender	ar	زوار	m
+ar_gender	ar	خبراء	m
+ar_gender	ar	أطباء	m
+ar_gender	ar	علماء	m
+ar_gender	ar	وزراء	m
+ar_gender	ar	سفراء	m
+ar_gender	ar	رؤساء	m
+ar_gender	ar	أعضاء	m
+ar_gender	ar	نواب	m
+ar_gender	ar	عملاء	m
+ar_gender	ar	سكان	m
+ar_gender	ar	مواطنين	m
+ar_gender	ar	موظفين	m
+ar_gender	ar	معلمين	m
+ar_gender	ar	مهندسين	m
+ar_gender	ar	مراجعين	m
+ar_gender	ar	مرشحين	m
+ar_gender	ar	مشاركين	m
+ar_gender	ar	متسابقين	m
+ar_gender	ar	مسافرين	m
+ar_gender	ar	حجاج	m
+ar_gender	ar	لاجئين	m
+ar_gender	ar	جنود	m
+ar_gender	ar	ضباط	m
+ar_gender	ar	بنوك	m
+ar_gender	ar	فنادق	m
+ar_gender	ar	مطاعم	m
+ar_gender	ar	مقاه	m
+ar_gender	ar	منازل	m
+ar_gender	ar	بيوت	m
+ar_gender	ar	أبواب	m
+ar_gender	ar	شوارع	m
+ar_gender	ar	أحياء	m
+ar_gender	ar	مبان	m
+ar_gender	ar	ملاعب	m
+ar_gender	ar	أهداف	m
+ar_gender	ar	أسهم	m
+ar_gender	ar	أفلام	m
+ar_gender	ar	برامج	m
+ar_gender	ar	مسلسلات	m
+ar_gender	ar	دروس	m
+ar_gender	ar	اختبارات	m
+ar_gender	ar	قوانين	m
+ar_gender	ar	بنود	m
+ar_gender	ar	أسطر	m
+ar_gender	ar	حروف	m
+ar_gender	ar	أطباق	m
+ar_gender	ar	أقراص	m
+ar_gender	ar	ملليغرامات	m
+ar_gender	ar	مليغرامات	m
+ar_gender	ar	غرامات	m
+ar_gender	ar	كيلوغرامات	m
+ar_gender	ar	لترات	m
+ar_gender	ar	ملليلترات	m
+ar_gender	ar	مليلترات	m
+ar_gender	ar	سنتيمترات	m
+ar_gender	ar	مليمترات	m
+ar_gender	ar	قرون	m
+ar_gender	ar	عقود	m
+ar_gender	ar	أشواط	m
+ar_gender	ar	أبحاث	m
+ar_gender	ar	تقارير	m
+ar_gender	ar	فيديوهات	m
+ar_gender	ar	مقاطع	m
+ar_gender	ar	رسوم	m
+ar_gender	ar	تماثيل	m
+ar_gender	ar	حبوب	m
+ar_gender	ar	أدوية	m
+ar_gender	ar	هواتف	m
+ar_gender	ar	حواسيب	m
+ar_gender	ar	منتجات	m
+ar_gender	ar	مختبرات	m
+ar_gender	ar	مخازن	m
+ar_gender	ar	مكاتب	m
+ar_gender	ar	مواقع	m
+ar_gender	ar	مستشفى	m
+ar_gender	ar	مبنى	m
+ar_gender	ar	مقهى	m
+ar_gender	ar	معنى	m
+ar_gender	ar	منتدى	m
+ar_gender	ar	مرمى	m
+ar_gender	ar	مسعى	m
+ar_gender	ar	مستوى	m
+ar_gender	ar	ملتقى	m
+ar_gender	ar	مشفى	m
+ar_gender	ar	مصلى	m
+ar_gender	ar	مأوى	m

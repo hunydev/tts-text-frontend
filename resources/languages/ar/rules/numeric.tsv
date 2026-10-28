@@ -202,8 +202,8 @@ ar_hijri	ar	7	رجب
 ar_hijri	ar	8	شعبان
 ar_hijri	ar	9	رمضان
 ar_hijri	ar	10	شوال
-ar_hijri	ar	11	ذو القعدة
-ar_hijri	ar	12	ذو الحجة
+ar_hijri	ar	11	ذي القعدة
+ar_hijri	ar	12	ذي الحجة
 
 # Latin letter names in Arabic script
 ar_letter	ar	a	إيه
@@ -258,6 +258,8 @@ classifier_priority	ar	ar.relation	100
 classifier_priority	ar	ar.money	100
 classifier_priority	ar	ar.address	100
 classifier_priority	ar	ar.maths	100
+classifier_priority	ar	ar.lawnumber	100
+classifier_priority	ar	ar.lettercode	100
 # phase 1 dev fixes (2026-10-22)
 number	ar	8fc	ثمان
 number	ar	lt_lead	أقل من

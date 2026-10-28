@@ -110,18 +110,57 @@ static void cue_form(const char *w, char *out, size_t cap) {
     else
         snprintf(out, cap, "%s", s);
 }
-/* The cue of the word before p (ordm, ordf, hour, phone, code) or NULL. */
-static const char *cue_before(const ttf_engine_t *e, const char *t, size_t p) {
-    char w[64], c[72];
-    if (word_before(t, p, w, sizeof(w)) == (size_t)-1)
-        return NULL;
+static int word_is(const char *w, const char *list);
+/* The cue of a word: as written (الجلسة), with a possessive ending (جلستها الجلسة, نسختها
+   النسخة; 2026-10-28) or NULL. */
+static const char *cue_of(const ttf_engine_t *e, const char *w) {
+    static const char *const endings[] = {"ها", "هم", "هن", "نا", "كم", "ه"};
+    char c[72], stem[72];
+    const char *v;
+    size_t k, l = strlen(w);
     cue_form(w, c, sizeof(c));
-    return res(e, "ar_cue", c);
+    if ((v = res(e, "ar_cue", c)) != NULL || has(w, l, 0, "ال"))
+        return v;
+    for (k = 0; k < sizeof(endings) / sizeof(endings[0]); ++k) {
+        size_t m = strlen(endings[k]);
+        if (l > m + 4 && !memcmp(w + l - m, endings[k], m)) {
+            size_t sl = l - m;
+            if (sl >= 2 && !memcmp(w + sl - 2, "ت", 2)) /* جلست-ها: the taa marbuta before an ending */
+                snprintf(stem, sizeof(stem), "ال%.*sة", (int)(sl - 2), w);
+            else
+                snprintf(stem, sizeof(stem), "ال%.*s", (int)sl, w);
+            if ((v = res(e, "ar_cue", stem)) != NULL && !strncmp(v, "ord", 3))
+                return v;
+        }
+    }
+    return NULL;
 }
+static int ends_with(const char *w, const char *s);
+/* The cue of the word before p (ordm, ordf, hour, phone, code) or NULL; an ordinal cue may have
+   a nisba adjective after it (الفصل الدراسي ٢ الثاني, 2026-10-28). */
+static const char *cue_before(const ttf_engine_t *e, const char *t, size_t p) {
+    char w[64];
+    const char *v;
+    size_t b = word_before(t, p, w, sizeof(w));
+    if (b == (size_t)-1)
+        return NULL;
+    if ((v = cue_of(e, w)) != NULL)
+        return v;
+    if (has(w, strlen(w), 0, "ال") && (ends_with(w, "ي") || ends_with(w, "ية")) && strlen(w) >= 10 &&
+        word_before(t, b, w, sizeof(w)) != (size_t)-1 && (v = cue_of(e, w)) != NULL && !strncmp(v, "ord", 3))
+        return v;
+    return NULL;
+}
+static int word_is(const char *w, const char *list);
 /* A phone or code cue among the four words before p. */
 static const char *cue_near(const ttf_engine_t *e, const char *t, size_t p, const char *kind) {
-    size_t q = p, k;
-    for (k = 0; k < 6; ++k) {
+    size_t q = p, k, words = 6;
+    char w0[64];
+    /* رمز التحقق لمرة واحدة لتأكيد عملية التحويل البنكي هو 4809: after هو the cue may be far
+       (2026-10-28) */
+    if (word_before(t, p, w0, sizeof(w0)) != (size_t)-1 && word_is(w0, "هو|هي|وهو|وهي"))
+        words = 12;
+    for (k = 0; k < words; ++k) {
         char w[64], c[72];
         size_t b = word_before(t, q, w, sizeof(w));
         const char *v;
@@ -196,6 +235,7 @@ static int noun_by_key(const ttf_engine_t *e, const char *key, noun_t *x) {
 }
 /* The written word w as a counted noun: a singular key, its accusative (ريالا), its plural in
    ات, or a gender entry; otherwise the gender by its ending (ة, ات feminine). */
+static const char *noun_text(const ttf_engine_t *e, const char *key, char form, char *out, size_t cap);
 static void noun_of_word(const ttf_engine_t *e, const char *w, noun_t *x) {
     char k[52];
     const char *g;
@@ -231,6 +271,14 @@ static void noun_of_word(const ttf_engine_t *e, const char *w, noun_t *x) {
         }
         snprintf(k, sizeof(k), "%.*s", (int)(l - 4), w);
         if (noun_by_key(e, k, x)) {
+            char plural[64];
+            /* طالبات: not the plural of طالب (طلاب) but of طالبة, feminine (2026-10-28; was
+               ثمانية طالبات) */
+            if (noun_text(e, k, 'p', plural, sizeof(plural)) && strcmp(plural, w)) {
+                memset(x, 0, sizeof(*x));
+                snprintf(x->form, sizeof(x->form), "%s", w);
+                x->fem = 1;
+            }
             x->written = 'p';
             return;
         }
@@ -379,7 +427,9 @@ static ttf_status_t cardinal(out_t *o, const char *digits, const char *flags) {
         } else {
             /* the multiplier takes the case of the whole number: خمسة وعشرون ألفا, خمسة وعشرين ألف
                (the pairs the owner set accepts) */
-            TRY(below1000(o, g, 0, obl, 0));
+            /* 1,200,000 مليون ومئتا ألف: hundreds right before the scale word are a construct
+               (2026-10-28; was ومئتان ألف) */
+            TRY(below1000(o, g, 0, obl, r == 0));
             if (r >= 3 && r <= 10)
                 snprintf(key, sizeof(key), "%cp", scale[k]);
             else if (r >= 11 && lower && (!obl || r == 11 || (r >= 13 && r <= 19)))
@@ -480,8 +530,16 @@ static ttf_status_t noun_after(out_t *o, const char *key, unsigned long long n, 
 static ttf_status_t counted(out_t *o, const char *digits, const char *key, const char *flags) {
     unsigned long long n = strtoull(digits, NULL, 10);
     char text[64];
-    if (n == 2 && *key && noun_text(o->e, key, 'd', text, sizeof(text)))
+    if (n == 2 && *key && noun_text(o->e, key, 'd', text, sizeof(text))) {
+        char one[64];
+        /* 2 GB اثنان غيغابايت: a noun with no dual of its own keeps the number (2026-10-28; was the
+           noun alone) */
+        if (noun_text(o->e, key, 's', one, sizeof(one)) && !strcmp(one, text)) {
+            TRY(cardinal(o, digits, flags));
+            return emit(o, text);
+        }
         return emit(o, text);
+    }
     if (n == 1 && *key && noun_text(o->e, key, 's', text, sizeof(text))) {
         TRY(emit(o, text));
         if (word_is(key, "ساعة|دقيقة|ثانية|يوم|أسبوع|شهر|سنة|عام|ليلة"))
@@ -602,7 +660,8 @@ static size_t parse_num(const char *t, size_t n, size_t p, num_t *x) {
 }
 /* A dotted currency abbreviation at q (ر.س, د.إ, ج.م …): its key and end. */
 static size_t currency_abbr(const ttf_engine_t *e, const char *t, size_t n, size_t q, char *key, size_t cap) {
-    static const char *const abbr[] = {"ر.س", "د.إ", "ج.م", "د.ك", "د.ب", "د.أ", "ر.ق", "ر.ع", "ل.ل", NULL};
+    static const char *const abbr[] = {"ر.س", "د.إ", "ج.م", "د.ك", "د.ب", "د.أ", "ر.ق", "ر.ع", "ل.ل",
+                                       "ل.س", "د.ع", "د.ج", "د.ت", "د.ل", NULL};
     int k;
     for (k = 0; abbr[k]; ++k)
         if (has(t, n, q, abbr[k]) && !(q + strlen(abbr[k]) < n && ar_at(t, n, q + strlen(abbr[k])))) {
@@ -722,7 +781,7 @@ static int near_before(const char *t, size_t p, const char *list);
 
 /* Words that never are a counted noun after a number (على, ثم, من …). */
 static int function_word(const char *w) {
-    return word_is(w, "على|إلى|الى|في|من|عن|مع|حتى|لدى|أو|او|ثم|بعد|قبل|عند|منذ|خلال|حسب|وفق|فقط|تقريبا|أي|"
+    return word_is(w, "على|إلى|الى|في|من|عن|مع|حتى|لدى|أو|او|ثم|بعد|قبل|عند|منذ|خلال|حسب|وفق|فقط|تقريبا|أي|دون|بدون|"
                       "هو|هي|ما|لا|لم|لن|قد|كل|بين|نحو|حوالي|أكثر|أقل|فوق|تحت|عبر|ضمن|مثل|غير|سوى|إلا|"
                       "يوميا|سنويا|شهريا|أسبوعيا|فما|مقابل|لكل|بس|وبس|يا|وش|و");
 }
@@ -770,6 +829,13 @@ static size_t amount(const ttf_engine_t *e, const char *t, size_t n, const num_t
         if (!cv) {
             if (z + 1 < n && t[z] == ' ' && (ce = currency_abbr(e, t, n, z + 1, cur, sizeof(cur))) != 0)
                 cv = res(e, "ar_currency", cur);
+            else if (z + 4 <= n && t[z] == ' ' && alpha(t[z + 1]) && alpha(t[z + 2]) && alpha(t[z + 3]) &&
+                     !(z + 4 < n && alpha(t[z + 4]))) {
+                /* 85 مليون JOD خمسة وثمانين مليون دينار أردني (2026-10-28; was JOD as written) */
+                char lk[4] = {t[z + 1], t[z + 2], t[z + 3], 0};
+                if ((cv = res(e, "ar_currency", lk)) != NULL)
+                    ce = z + 4;
+            }
             else if ((z2 = word_after(t, n, z, cw, sizeof(cw), NULL)) != 0 && (cv = res(e, "ar_currency", cw)) != NULL)
                 ce = z2;
             else {
@@ -786,7 +852,8 @@ static size_t amount(const ttf_engine_t *e, const char *t, size_t n, const num_t
             add(it, "Do:%s", x->dec);
             snprintf(sk, sizeof(sk), "%c1", scale);
         } else {
-            add(it, "No:%s", x->d);
+            /* ٢٠٠ ألف سهم مئتي ألف سهم: a construct before the scale word (2026-10-28; was مئتين) */
+            add(it, "No%s:%s", construct_ok(x->d) && x->d[1] ? "c" : "", x->d);
             scale_key(scale, x->d, cv != NULL, sk, sizeof(sk));
         }
         if (x->d[0] == '2' && !x->d[1] && !x->dot) {
@@ -864,7 +931,7 @@ static size_t amount(const ttf_engine_t *e, const char *t, size_t n, const num_t
                     return ce ? ce : q;
                 }
                 minor = (unsigned)atoi(dot + 1);
-                if (fl == 1)
+                for (; fl < want; ++fl) /* 31.5 د.ك: five hundred fils of a thousand (2026-10-28; was fifty) */
                     minor *= 10;
             }
             if (main || !minor) {
@@ -1023,11 +1090,14 @@ static void clock_items(items_t *it, int h, int mm, int ss, const char *period, 
     if (ss > 0)
         add(it, ss <= 10 ? "&Cf:%d:ثانية" : "&Cfo:%d:ثانية", ss);
     if (period && !written_period)
-        add(it, "R:%s", h12 == 12 && mm != 45 && !strcmp(period, "pm") ? "noon_period" : period);
+        /* 12:45 م, 1:30 م ظهرا as 12:45 and 13:30 read; 2 م stays مساء (ar-v2) (2026-10-28; was مساء) */
+        add(it, "R:%s", !strcmp(period, "pm") && (h == 12 || h == 1) ? "noon_period" : period);
     else if (period && written_period && h == 12 && !strcmp(period, "pm"))
         ; /* 12 ظهرا stays */
     else if (!period && h >= 12 && h <= 23)
         add(it, "R:%s", h <= 14 ? "noon_period" : "pm");
+    else if (!period && h == 0)
+        add(it, "R:night"); /* 00:20 الثانية عشرة وعشرين دقيقة ليلا (2026-10-28) */
 }
 /* The period word after q: its key (am, pm) and end; *written when the word stays as it is
    written (صباحا), not when it is an abbreviation read as a word (ص صباحا, م مساء). */
@@ -1253,6 +1323,24 @@ static int is_address(const char *s, size_t len) {
     return letters_after >= 2 && letters_after <= 6 && alpha(s[0]);
 }
 
+static const char *arabic_letter_name(const char *t, size_t n, size_t p, size_t *end);
+/* القانون رقم 42/2025 اثنين وأربعين لسنة ألفين وخمسة وعشرين: the number of a law, decree or
+   decision and its year after such a word (2026-10-28; was a fraction or a month). The end, or 0. */
+static size_t law_number(const char *t, size_t n, size_t p, items_t *it) {
+    size_t q = p;
+    while (q < n && digit(t[q]))
+        ++q;
+    if (q == p || q - p > 4 || t[p] == '0' || q + 4 >= n || t[q] != '/' ||
+        !(has(t, n, q + 1, "19") || has(t, n, q + 1, "20")) || !digit(t[q + 3]) || !digit(t[q + 4]) ||
+        (q + 5 < n && (digit(t[q + 5]) || t[q + 5] == '/')) ||
+        !near_before(t, p, "رقم|الرقم|برقم|بالرقم|القانون|قانون|المرسوم|مرسوم|القرار|قرار|اللائحة|لائحة|"
+                           "التعميم|تعميم|القضية|قضية|الدعوى|العقد|عقد|المعاملة|النظام|الأمر|التوجيه|البلاغ"))
+        return 0;
+    add(it, "No:%.*s", (int)(q - p), t + p);
+    add(it, "W:لسنة");
+    add(it, "No:%.4s", t + q + 1);
+    return q + 5;
+}
 static size_t classify_number(const ttf_pack_input_t *in, ttf_semantic_t *s, size_t p, const char *lead) {
     const ttf_engine_t *e = in->engine;
     const char *t = in->text, *cue;
@@ -1268,6 +1356,56 @@ static size_t classify_number(const ttf_pack_input_t *in, ttf_semantic_t *s, siz
     q = x.end;
     cue = cue_before(e, t, p);
 
+    /* 4%-6% من أربعة إلى ستة بالمئة (2026-10-28; was بالمئةناقص) */
+    if (q + 2 < n && t[q] == '%' && t[q + 1] == '-' && digit(t[q + 2])) {
+        parse_num(t, n, q + 2, &y);
+        if (y.end < n && t[y.end] == '%') {
+            int pair = prev_word_is(t, p, "بين|وبين");
+            if (!pair && !prev_word_is(t, p, "من"))
+                add(&it, "R:from");
+            add(&it, "Do:%s", x.dec);
+            add(&it, pair ? "&Do:%s" : "R:to", y.dec);
+            if (!pair)
+                add(&it, "Do:%s", y.dec);
+            add(&it, "R:percent");
+            return finish(in, s, y.end + 1, "range", &it);
+        }
+    }
+    /* الرمز 2026-DX ألفين وستة وعشرين شرطة دي إكس, ٢٠٢٦-أب: a number and letters after a code word */
+    if (!x.dot && !x.comma && q + 1 < n && t[q] == '-' && (cue_near(e, t, p, "code") || prev_word_is(t, p, "الرمز|رمز"))) {
+        size_t c = q + 1, le;
+        int latin = alpha(t[c]);
+        if (latin) {
+            while (c < n && t[c] >= 'A' && t[c] <= 'Z')
+                ++c;
+            if (c - q - 1 >= 1 && c - q - 1 <= 3 && !(c < n && (alpha(t[c]) || digit(t[c])))) {
+                add(&it, "N%s:%s", strlen(x.d) == 4 ? "o" : "", x.d);
+                add(&it, "R:dash");
+                add(&it, "L:%.*s", (int)(c - q - 1), t + q + 1);
+                return finish(in, s, c, "code", &it);
+            }
+        } else if (ar_at(t, n, c)) {
+            size_t e2 = c;
+            int k = 0;
+            while (e2 < n && ar_at(t, n, e2) && k < 4)
+                e2 += 2, ++k;
+            if (k >= 1 && k <= 3 && !(e2 < n && ar_at(t, n, e2))) {
+                add(&it, "N%s:%s", strlen(x.d) == 4 ? "o" : "", x.d);
+                add(&it, "R:dash");
+                for (; c < e2; c += 2) {
+                    char one[8];
+                    snprintf(one, sizeof(one), " %.2s ", t + c);
+                    if (!arabic_letter_name(one, strlen(one), 1, &le))
+                        break;
+                    add(&it, "W:%s", arabic_letter_name(one, strlen(one), 1, &le));
+                }
+                if (c == e2)
+                    return finish(in, s, e2, "code", &it);
+                it.n = 0;
+                it.s[0] = 0;
+            }
+        }
+    }
     /* 192.168.10.5: an IP address; 5.2.1 after الإصدار: a version */
     {
         size_t z2 = p;
@@ -1326,6 +1464,11 @@ static size_t classify_number(const ttf_pack_input_t *in, ttf_semantic_t *s, siz
                 add(&it, "M:%d", a);
                 add(&it, "No:%.4s", t + z1 + 1);
                 return finish(in, s, z2, "monthyear", &it);
+            } else if (sep == '-' && z1 - p == 2 && z2 - z1 - 1 == 2 && a >= 1 && a <= 31 && b2 >= 1 && b2 <= 12 &&
+                       !(z2 < n && (digit(t[z2]) || t[z2] == '-')) && prev_word_is(t, p, "يوم|بتاريخ|تاريخ|الموافق")) {
+                /* يستأنف … يوم 02-09 الثاني من سبتمبر: two-digit day and month after a date word (2026-10-28) */
+                date_items(&it, a, b2, NULL, 0);
+                return finish(in, s, z2, "date", &it);
             } else if (sep == '/' && z1 - p <= 2 && z2 - z1 - 1 <= 2 && a >= 1 && a <= 31 && b2 >= 1 && b2 <= 12 &&
                        !(z2 < n && (digit(t[z2]) || t[z2] == '/')) &&
                        (prev_word_is(t, p, "في|يوم|بتاريخ|تاريخ|حتى|موعد|منذ|قبل|بعد|الموافق|ابتداء|اعتبارا|لغاية|"
@@ -1424,7 +1567,7 @@ static size_t classify_number(const ttf_pack_input_t *in, ttf_semantic_t *s, siz
         const char *period = NULL;
         int written = 0;
         size_t pe = period_at(e, t, n, z, &period, &written);
-        if (near_before(t, p, "نسبة|بنسبة|النسبة|بمعدل|مقياس|بمقياس")) {
+        if (near_before(t, p, "نسبة|بنسبة|النسبة|بمعدل|مقياس|بمقياس|بتخفيف|تخفيف|بخلط|خلط")) {
             add(&it, "No:%d", h);
             add(&it, "R:to");
             add(&it, "No:%d", mm);
@@ -1480,6 +1623,18 @@ static size_t classify_number(const ttf_pack_input_t *in, ttf_semantic_t *s, siz
         const char *period = NULL;
         int written = 0;
         size_t pe = period_at(e, t, n, q, &period, &written);
+        int time_word = near_before(t, p, "الساعة|ساعة|عند|تمام|حتى|موعد|يبدأ|تبدأ|ينطلق|تنطلق|يفتح|تفتح|"
+                                          "يغلق|تغلق|يقلع|تقلع|يصل|تصل|يغادر|تغادر|الدوام|اليوم|غدا|الليلة|"
+                                          "صباحا|مساء") ||
+                        prev_word_is(t, p, "قبل|حتى|منذ|وحتى|لغاية") ||
+                        (prev_word_is(t, p, "بعد") && !near_before(t, p, "على"));
+        if (pe && !written && q + 3 <= n && has(t, n, pe - 2, "م") &&
+            ((pe < n && (has(t, n, pe, "²") || has(t, n, pe, "³"))) || !time_word)) {
+            /* ارتفاع الموج إلى 4 م أربعة أمتار, ٢٠ م² عشرين مترا مربعا: م is the metre unless a time
+               word is near (2026-10-28; was الرابعة مساء, and م² read as a time) */
+            pe = 0;
+            period = NULL;
+        }
         if (pe || (cue && !strcmp(cue, "hour"))) {
             int hh = atoi(x.d);
             clock_items(&it, hh, 0, 0, period, written);
@@ -1520,8 +1675,31 @@ static size_t classify_number(const ttf_pack_input_t *in, ttf_semantic_t *s, siz
         if (cue && ne2) {
             char sk2;
             noun_of_word(e, nw2, &nn);
-            if (scale_word(nw2, &sk2) || res(e, "ar_currency", nw2) || (*nn.key && nn.written != '?') ||
-                (!strcmp(nw2, "من") && ne2 + 1 < n && digit(t[ne2 + 1])))
+            unsigned long long cv = strtoull(x.d, NULL, 10);
+            char nw3[48];
+            /* للمبنى 10 مهندسين: an indefinite sound plural after a number of 3-10 makes it a count
+               (a singular after 11-99 does not: المادة 23 غرامة); في
+               الدائرة ٥ طلبات الطعون keeps the cue, the plural is a construct (2026-10-28) */
+            char uk3[48], cw[64];
+            /* تبعد المحطة 2 محطة: the cue's own noun after the number counts it */
+            size_t cb = word_before(t, p, cw, sizeof(cw));
+            int same_noun = cb != (size_t)-1 && has(cw, strlen(cw), 0, "ال") && !strcmp(cw + 4, nw2);
+            char dw[64];
+            /* هذا الفصل ١٨ ممرضة: after a demonstrative the cue noun is already known and an
+               indefinite noun after the number is counted (هذه النسخة 15 من keeps the ordinal) */
+            if (cb != (size_t)-1 && word_before(t, cb, dw, sizeof(dw)) != (size_t)-1 &&
+                word_is(dw, "هذا|هذه|ذلك|تلك|وهذا|وهذه") && !has(nw2, strlen(nw2), 0, "ال") &&
+                !has(nw2, strlen(nw2), 0, "و") && !function_word(nw2) && strlen(nw2) >= 6)
+                same_noun = 1;
+            int counted_noun = !has(nw2, strlen(nw2), 0, "ال") && !function_word(nw2) && strlen(nw2) >= 8 &&
+                               !(word_after(t, n, ne2, nw3, sizeof(nw3), NULL) && has(nw3, strlen(nw3), 0, "ال")) &&
+                               cv >= 3 && cv <= 10 && (ends_with(nw2, "ات") || ends_with(nw2, "ين") || ends_with(nw2, "ون"));
+            /* الجرعة 500 ملغ: a unit after the number is a measure, not an ordinal (2026-10-28) */
+            if (same_noun || (q < n && t[q] == ' ' && unit_at(e, t, n, q + 1, uk3, sizeof(uk3))))
+                counted_noun = 1;
+            int construct = word_after(t, n, ne2, nw3, sizeof(nw3), NULL) && has(nw3, strlen(nw3), 0, "ال");
+            if (scale_word(nw2, &sk2) || res(e, "ar_currency", nw2) || (*nn.key && nn.written != '?' && !construct) ||
+                (!strcmp(nw2, "من") && ne2 + 1 < n && digit(t[ne2 + 1])) || counted_noun)
                 cue = NULL;
         }
     }
@@ -1564,7 +1742,9 @@ static size_t classify_number(const ttf_pack_input_t *in, ttf_semantic_t *s, siz
         if (!y.dot && !(y.end < n && (digit(t[y.end]) || t[y.end] == '/')) && b) {
             if (b <= 10 && a < b && a >= 1) {
                 char nw[64];
-                int definite = word_after(t, n, y.end, nw, sizeof(nw), NULL) && has(nw, strlen(nw), 0, "ال");
+                size_t nwe = word_after(t, n, y.end, nw, sizeof(nw), NULL);
+                /* ٢/٣ كوب ثلثي كوب: before a noun, definite or not (2026-10-28; was ثلثين كوب) */
+                int definite = nwe && ar_at(t, n, y.end + 1) && !function_word(nw);
                 if (a == 1)
                     add(&it, "W:%s", fr[b]);
                 else if (a == 2)
@@ -1612,7 +1792,10 @@ static size_t classify_number(const ttf_pack_input_t *in, ttf_semantic_t *s, siz
         if (dash_code && atoi(x.d) >= 1900 && atoi(x.d) <= 2099 && atoi(t + p + 5) > atoi(x.d) &&
             atoi(t + p + 5) <= 2099)
             dash_code = 0, groups = 0;
-        if (dash_code && atoi(t + p + 5) > atoi(x.d) && x.d[0] != '0' && t[p + 5] != '0') {
+        if (groups == 2 && sepc == '-' && first_len == 3 && x.d[0] != '0' && t[p + 4] != '0' &&
+            atoi(t + p + 4) > atoi(x.d))
+            dash_code = 1; /* ٨٠٠-١٠٠٠ ريال ثمانمئة وألف ريال, not a phone number (2026-10-28) */
+        if (dash_code && atoi(t + p + first_len + 1) > atoi(x.d) && x.d[0] != '0' && t[p + first_len + 1] != '0') {
             /* 4000-6000 ريال: a range when a currency, a unit or a noun follows */
             char nw3[48], uk3[48];
             noun_t n3;
@@ -1642,7 +1825,7 @@ static size_t classify_number(const ttf_pack_input_t *in, ttf_semantic_t *s, siz
     }
     /* 2-1 after a score word: a score */
     if (!x.dot && !x.comma && q + 1 < n && t[q] == '-' && digit(t[q + 1]) &&
-        near_before(t, p, "التعادل|بالتعادل|تعادل|تعادلا|بنتيجة|النتيجة|مباراة|المباراة|فاز|فوز|هزم|خسر|تغلب|"
+        near_before(t, p, "التعادل|بالتعادل|تعادل|تعادلا|بنتيجة|النتيجة|مباراة|المباراة|فاز|فوز|هزم|خسر|تغلب|بنقاط|نقاط|"
                           "الديربي|بفوز|بخسارة")) {
         parse_num(t, n, q + 1, &y);
         if (strlen(x.d) <= 3 && strlen(y.d) <= 3 && !y.dot) {
@@ -1653,10 +1836,11 @@ static size_t classify_number(const ttf_pack_input_t *in, ttf_semantic_t *s, siz
         }
     }
     /* ranges: 3-5 أيام, ٢٥٠-٤٠٠ ريال, 4-6 ديسمبر, 2 إلى 10 سنوات, بين 10 و20 ملم; 3~5 like 3-5
-       (2026-10-28; was ثلاثة~خمسة) */
+       (2026-10-28; was ثلاثة~خمسة). After بين or يومي a written dash reads و (بين 75-80 دولارا بين
+       خمسة وسبعين وثمانين دولارا, يومي 14-15 فبراير; 2026-10-28; was إلى). */
     {
         size_t r = q, r2;
-        int dash = 0;
+        int dash = 0, pair = prev_word_is(t, p, "بين|وبين|يومي|ليلتي");
         while (r < n && t[r] == ' ')
             ++r;
         r2 = r;
@@ -1677,22 +1861,30 @@ static size_t classify_number(const ttf_pack_input_t *in, ttf_semantic_t *s, siz
             if (dash && !x.dot && !b.dot && strtod(b.dec, NULL) < strtod(x.dec, NULL) && atoi(x.d) <= 12 &&
                 atoi(b.d) <= 12 && !(b.end < n && (t[b.end] == '/' || t[b.end] == ':' || digit(t[b.end])))) {
                 /* ساعات الدوام 9-5 تسعة إلى خمسة */
-                if (!prev_word_is(t, p, "من|بين"))
+                if (!prev_word_is(t, p, "من|بين") && !pair)
                     add(&it, "R:from");
                 add(&it, "No:%s", x.d);
-                add(&it, "R:to");
-                add(&it, "No:%s", b.d);
+                if (pair)
+                    add(&it, "&No:%s", b.d);
+                else {
+                    add(&it, "R:to");
+                    add(&it, "No:%s", b.d);
+                }
                 return finish(in, s, b.end, "range", &it);
             }
             if (!(b.end < n && (t[b.end] == '/' || t[b.end] == ':')) &&
                 (!dash || strtod(b.dec, NULL) > strtod(x.dec, NULL))) {
                 /* 4-6 ديسمبر الرابع إلى السادس من ديسمبر */
                 if (!x.dot && !b.dot && strlen(b.d) <= 2 && (z = month_at(e, t, n, b.end, &m2, &hj2)) != 0) {
-                    if (dash && !prev_word_is(t, p, "من|بين"))
+                    if (dash && !prev_word_is(t, p, "من|بين") && !pair)
                         add(&it, "R:from");
                     add(&it, "Om:%s", x.d);
-                    add(&it, "R:to");
-                    add(&it, "Om:%s", b.d);
+                    if (dash && pair)
+                        add(&it, "&Om:%s", b.d);
+                    else {
+                        add(&it, "R:to");
+                        add(&it, "Om:%s", b.d);
+                    }
                     add(&it, "R:of");
                     add(&it, "%c:%d", hj2 ? 'J' : 'M', m2);
                     return finish(in, s, z, "daterange", &it);
@@ -1704,7 +1896,7 @@ static size_t classify_number(const ttf_pack_input_t *in, ttf_semantic_t *s, siz
                     char first[96];
                     const char *c = strchr(second.s, ':');
                     char fl[8] = "o";
-                    if (dash && !prev_word_is(t, p, "من|بين"))
+                    if (dash && !prev_word_is(t, p, "من|بين") && !pair)
                         add(&it, "R:from");
                     if ((second.s[0] == 'C' || second.s[0] == 'N') && c && strchr(second.s, 'f') &&
                         strchr(second.s, 'f') < c)
@@ -1726,7 +1918,7 @@ static size_t classify_number(const ttf_pack_input_t *in, ttf_semantic_t *s, siz
                         snprintf(first, sizeof(first), "%s%s:%s", x.dot ? "D" : "N", fl, x.dot ? x.dec : x.d);
                         add(&it, "%s", first);
                     }
-                    if (has(t, n, r, "و") && !dash)
+                    if ((has(t, n, r, "و") && !dash) || (dash && pair))
                         add(&it, "&%s", second.s);
                     else {
                         add(&it, "R:to");
@@ -1751,7 +1943,8 @@ static size_t classify_number(const ttf_pack_input_t *in, ttf_semantic_t *s, siz
             counted_after = *no.key || res(e, "ar_currency", nw) || scale_word(nw, nk);
         }
         counted_after |= currency_abbr(e, t, n, q < n && t[q] == ' ' ? q + 1 : q, nk, sizeof(nk)) != 0;
-        if (((strlen(x.d) >= 5 && !counted_after && !ue) || (x.d[0] == '0' && strlen(x.d) >= 2) ||
+        if (!prev_word_is(t, p, "عام|العام|سنة|السنة|لعام|بعام|منذ") &&
+            ((strlen(x.d) >= 5 && !counted_after && !ue) || (x.d[0] == '0' && strlen(x.d) >= 2) ||
              (strlen(x.d) >= 3 && !counted_after && !ue && (cue_near(e, t, p, "phone") || cue_near(e, t, p, "code")))) &&
             !(q < n && (alpha(t[q]) || t[q] == '%'))) {
             add(&it, "G:%s", x.d);
@@ -1792,6 +1985,53 @@ static const char *arabic_letter_name(const char *t, size_t n, size_t p, size_t 
             return names[k + 1];
         }
     return NULL;
+}
+/* A single Arabic letter at p (also هـ) and its name, or NULL. */
+static const char *letter_at(const char *t, size_t n, size_t p, size_t *end) {
+    if (has(t, n, p, "هـ") && !(p >= 2 && ar_at(t, n, p - 2)) && !(p + 4 < n && ar_at(t, n, p + 4))) {
+        *end = p + 4;
+        return "هاء";
+    }
+    return arabic_letter_name(t, n, p, end);
+}
+/* د٣ دال ثلاثة, أ+ ألف زائد, د هـ ر ١١١ دال هاء راء واحد واحد واحد: single Arabic letters of a code
+   by their names (2026-10-28; was the letters as written). و ب ل ك ف before a digit are words. */
+static size_t letter_code(const char *t, size_t n, size_t p, items_t *it) {
+    size_t z = p, le, letters = 0;
+    const char *ln;
+    while (z < n && (ln = letter_at(t, n, z, &le)) != NULL && !has(t, n, z, "و")) {
+        add(it, "W:%s", ln);
+        ++letters;
+        z = le;
+        if (z + 1 < n && t[z] == ' ' && letter_at(t, n, z + 1, &le) && !has(t, n, z + 1, "و"))
+            ++z;
+        else
+            break;
+    }
+    if (letters == 1 && z < n && digit(t[z]) && !has(t, n, p, "ب") && !has(t, n, p, "ل") && !has(t, n, p, "ك") &&
+        !has(t, n, p, "ف")) {
+        size_t c = z;
+        while (c < n && digit(t[c]))
+            ++c;
+        if (c - z <= 3 && !(c < n && (t[c] == '.' || t[c] == ',' || t[c] == ':'))) {
+            add(it, "N:%.*s", (int)(c - z), t + z);
+            return c;
+        }
+    }
+    if (letters >= 2 && z + 1 < n && t[z] == ' ' && digit(t[z + 1])) {
+        size_t c = z + 1;
+        while (c < n && digit(t[c]))
+            ++c;
+        add(it, "G:%.*s", (int)(c - z - 1), t + z + 1);
+        return c;
+    }
+    /* أ+ ألف زائد, not س + 5 (maths) */
+    if (letters == 1 && z < n && t[z] == '+' && !(z + 1 < n && digit(t[z + 1])) &&
+        !(z + 2 < n && t[z + 1] == ' ' && digit(t[z + 2]))) {
+        add(it, "R:plus");
+        return z + 1;
+    }
+    return 0;
 }
 static size_t maths(const ttf_engine_t *e, const char *t, size_t n, size_t p, items_t *it) {
     static const struct {
@@ -1931,6 +2171,26 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                     break;
                 parse_num(t, n, p + strlen(sign[k]), &x);
                 z = amount(e, t, n, &x, &it, cv, 0);
+                if (z + 1 + strlen(sign[k]) < n && t[z] == '-' && has(t, n, z + 1, sign[k]) &&
+                    digit(t[z + 1 + strlen(sign[k])])) {
+                    /* $80-$110 من ثمانين دولارا إلى مئة وعشرة دولارات (2026-10-28) */
+                    int pair = prev_word_is(t, p, "بين|وبين");
+                    items_t second = {{0}, 0, 0};
+                    num_t y2;
+                    parse_num(t, n, z + 1 + strlen(sign[k]), &y2);
+                    z = amount(e, t, n, &y2, &second, cv, 0);
+                    /* the first amount after من or بين is oblique (من ثمانين دولارا) */
+                    memset(&it, 0, sizeof(it));
+                    (void)amount(e, t, n, &x, &it, cv, 1);
+                    if (!pair && !prev_word_is(t, p, "من"))
+                        prepend(&it, "R:from");
+                    if (pair)
+                        add(&it, "&%s", second.s);
+                    else {
+                        add(&it, "R:to");
+                        add(&it, "%s", second.s);
+                    }
+                }
                 return finish(in, s, z, "money", &it);
             }
     }
@@ -2073,17 +2333,23 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         if (ar_at(t, n, p) && arabic_letter_name(t, n, p, &le) && (z = maths(e, t, n, p, &it)) != 0)
             return finish(in, s, z, "maths", &it);
     }
+    if (ar_at(t, n, p)) {
+        items_t code = {{0}, 0, 0};
+        if ((z = letter_code(t, n, p, &code)) != 0)
+            return finish(in, s, z, "lettercode", &code);
+    }
     /* الـ3 الثالث, النسخة الـ22 الثانية والعشرين, الساعة الـ8 مساء, الـ5 والنص الخامسة والنصف */
     if (ar_at(t, n, p)) {
         size_t te = in->tokens[in->index].end;
-        if (te - p >= 6 && has(t, n, te - 6, "الـ") && te < n && digit(t[te])) {
+        if (te - p >= 6 && has(t, n, te - 6, "الـ") && te < n &&
+            (digit(t[te]) || (t[te] == ' ' && te + 1 < n && digit(t[te + 1])))) {
             size_t q;
             char w[64];
             int hour = 0, fem = 0;
             const char *cue;
-            parse_num(t, n, te, &x);
+            parse_num(t, n, te + (t[te] == ' '), &x); /* للمرة الـ 4 الرابعة (2026-10-28) */
             q = x.end;
-            if (x.dot || x.comma || strlen(x.d) > 2 || (q < n && (alpha(t[q]) || t[q] == ':')))
+            if (x.dot || x.comma || strlen(x.d) > 2 || (q < n && (alpha(t[q]) || t[q] == ':' || t[q] == '/')))
                 return 0;
             if (te - p > 6)
                 add(&it, "W:%.*s", (int)(te - 6 - p), t + p);
@@ -2231,6 +2497,11 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     }
     if (!digit(t[p]) || (p && (digit(t[p - 1]) || alpha(t[p - 1]) || t[p - 1] == '.' || t[p - 1] == ',')))
         return 0;
+    {
+        items_t law = {{0}, 0, 0};
+        if ((z = law_number(t, n, p, &law)) != 0)
+            return finish(in, s, z, "lawnumber", &law);
+    }
     if ((z = maths(e, t, n, p, &it)) != 0)
         return finish(in, s, z, "maths", &it);
     return classify_number(in, s, p, NULL);

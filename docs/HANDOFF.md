@@ -2,6 +2,14 @@
 
 갱신: 2026-10-11. Release **0.20.0**, public ABI **v1**.
 
+## 최근 인계: 아랍어 held-out v3와 수정 (2026-10-28)
+
+- **held-out:** 0810e7b로 고정 후 소유자 ar v3(2,000문장, 로컬)를 처음 열어 구간 90.5%, 문장 89.0%. 이후 개발셋.
+- **고친 것:** 법령 번호 لسنة, بين X-Y و, 서수 단서 확장과 셈 판별, م 미터/오후, 통화(3자리 보조 단위, 나라 이름, 코드),
+  연결형 مئتي ألف, 명사 성(طالبات, 불규칙 복수 173개), 아랍 글자 코드, 주소 낱말 137개 등. 계약 `ar_v3fix_v125`(44).
+- **점수:** v1 dev 99.2%, test 90.4%. ar-v2 99.3%. ar v3 96.6%. 다른 언어 바이트 동일.
+- **소유자 확인 필요:** 시간대 낱말, 소수 정수부의 성, https:// 읽기. 상세: [arabic-pack.ko.md](arabic-pack.ko.md) "held-out ar v3" 절.
+
 ## 최근 인계: 아랍어 운영 준비 1단계 (2026-10-28)
 
 - **무엇:** 운영 전환 점검(소유자 요청). ar에서 원문을 그대로 돌려주던 제어 14개(@ordinal, @year, @date 셋, @time, @currency, @measure, @unit, @fraction, @range, @score, @version, @ip, @alphabet)를 읽게 했다. 일반 텍스트에서는 시각의 초, 3~5 범위, 쿼리가 붙은 URL을 읽고, 아랍어 이름이 없는 기호에 영어 이름을 쓰지 않는다(`context ar native_symbol_names 1`). 상세: [arabic-pack.ko.md](arabic-pack.ko.md) "운영 준비" 절.
