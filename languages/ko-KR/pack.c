@@ -3967,6 +3967,21 @@ static ttf_status_t render_phones(const ttf_engine_t *e, const ttf_pronunciation
             --n;
         phones[count++][n] = '\0';
     }
+    {
+        size_t letters = 0;
+        for (i = 0; i < count; ++i)
+            letters += !strncmp(phones[i], "letter.", 7);
+        /* DMZ 디엠지, MZ 엠지: a letter may have another name inside a run of two or more
+           letters (phone_letter letter.Z.run; 2026-10-28, was 디엠제트). A lone Z stays 제트. */
+        if (letters >= 2)
+            for (i = 0; i < count; ++i)
+                if (!strncmp(phones[i], "letter.", 7) && strlen(phones[i]) == 8) {
+                    char run[16];
+                    snprintf(run, sizeof(run), "%s.run", phones[i]);
+                    if (ttf_resource_get(e, "phone_letter", "ko-KR", run, NULL))
+                        memcpy(phones[i], run, strlen(run) + 1);
+                }
+    }
     for (i = 0; i < count; ++i) {
         const char *phone = phones[i];
         int v, c;

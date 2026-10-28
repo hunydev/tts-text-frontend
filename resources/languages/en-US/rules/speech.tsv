@@ -28,6 +28,8 @@ speech_symbol	en-US	/	slash
 speech_symbol	en-US	?	question mark
 speech_symbol	en-US	=	equals
 speech_symbol	en-US	&	and
+# The full-width ampersand reads like & (R＆D, 국수＆만두; was kept as written, 2026-10-28).
+speech_symbol	en-US	＆	and
 speech_symbol	en-US	#	hash
 speech_symbol	en-US	%	percent
 speech_symbol	en-US	+	plus

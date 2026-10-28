@@ -103,11 +103,15 @@ static ttf_status_t lookup_kind(const ttf_engine_t *e, const char *kind, const c
             if (text[i] < 'A' || text[i] > 'Z')
                 capitals = 0;
         }
-        if (rule && ((!strcmp(rule, "lower") && capitals) ||
+        /* lower keeps short capital runs letters (AS, IS, HMM); a capital word of four
+           letters or more is the word (OPEN 오픈, NEWS 뉴스, KOREA 코리아; 2026-10-28) */
+        if (rule && ((!strcmp(rule, "lower") && capitals && n < 4) ||
                      (!strcmp(rule, "upper") && lowercase)))
             *hit = NULL;
-        /* A loanword is always lower-case only: PET, CAT are initialisms. */
-        if (capitals && !strcmp(kind, "loanword"))
+        /* A loanword is always lower-case only: PET, CAT are initialisms. A capital word of
+           four letters or more that reached the loanwords is a word (OPEN 오픈, NEWS 뉴스;
+           2026-10-28): spelled runs never ask for a loanword. */
+        if (capitals && !strcmp(kind, "loanword") && n < 4)
             *hit = NULL;
     }
     free(key);
@@ -311,10 +315,15 @@ static ttf_status_t render_at(const ttf_engine_t *e, const ttf_language_pack_t *
             text[n - 2] != 'S' && text[n - 2] != '\'') {
             const char *stem = NULL;
             ttf_resource_layer_t stem_layer = TTF_LAYER_COMMON;
-            st = ttf_foreign_lookup(e, source->language_tag, target->language_tag, text, n - 1, &stem,
+            char lower[64];
+            size_t k;
+            /* NEWS: the singular of a capital plural is looked up as a word (new 뉴) */
+            for (k = 0; k + 1 < n; ++k)
+                lower[k] = text[k] >= 'A' && text[k] <= 'Z' ? (char)(text[k] + 32) : text[k];
+            st = ttf_foreign_lookup(e, source->language_tag, target->language_tag, lower, n - 1, &stem,
                                     &stem_layer);
             if (st == TTF_OK && !stem)
-                st = ttf_foreign_loanword(e, source->language_tag, target->language_tag, text, n - 1,
+                st = ttf_foreign_loanword(e, source->language_tag, target->language_tag, lower, n - 1,
                                           &stem, &stem_layer);
             if (st != TTF_OK)
                 return st;
@@ -326,9 +335,16 @@ static ttf_status_t render_at(const ttf_engine_t *e, const ttf_language_pack_t *
                     st = ttf_trace_emit(e, TTF_TRACE_SELECTED, stem_layer, 0, target->language_tag,
                                         "loanword", source->language_tag, stem, plural, "singular-plus-plural",
                                         SIZE_MAX);
+                    /* kids 키즈, shirts 셔츠: 드/트 and the plural s are one syllable */
+                    size_t sn = strlen(stem);
+                    const char *joined = NULL;
+                    if (sn >= 3 && !strcmp(stem + sn - 3, "드"))
+                        joined = "즈";
+                    else if (sn >= 3 && !strcmp(stem + sn - 3, "트"))
+                        joined = "츠";
                     if (st == TTF_OK)
-                        st = ttf_buffer_puts(out, stem);
-                    return st == TTF_OK ? ttf_buffer_puts(out, plural) : st;
+                        st = ttf_buffer_append(out, stem, joined ? sn - 3 : sn);
+                    return st == TTF_OK ? ttf_buffer_puts(out, joined ? joined : plural) : st;
                 }
             }
         }

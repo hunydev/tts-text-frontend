@@ -68,6 +68,8 @@ phone_letter	ko-KR	letter.W	더블유
 phone_letter	ko-KR	letter.X	엑스
 phone_letter	ko-KR	letter.Y	와이
 phone_letter	ko-KR	letter.Z	제트
+# Inside a run of two or more letters Z is 지 (DMZ 디엠지, MZ세대 엠지세대; owner, 2026-10-28).
+phone_letter	ko-KR	letter.Z.run	지
 
 # Korean loanword spelling drops r after a vowel (market 마켓, partner 파트너).
 phone_mapping	ko-KR	coda_r	drop

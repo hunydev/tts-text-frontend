@@ -24,6 +24,8 @@ speech_symbol	ko-KR	/	슬래시
 speech_symbol	ko-KR	?	물음표
 speech_symbol	ko-KR	=	이퀄
 speech_symbol	ko-KR	&	앤
+# The full-width ampersand reads like & (R＆D, 국수＆만두; was kept as written, 2026-10-28).
+speech_symbol	ko-KR	＆	앤
 # Korean usage reads # as 샵 (project-owner decision 2026-09-22).
 speech_symbol	ko-KR	#	샵
 speech_symbol	ko-KR	%	퍼센트

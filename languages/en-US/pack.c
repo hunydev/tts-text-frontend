@@ -3348,6 +3348,12 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
             if (neighbours)
                 all_upper = 0;
         }
+        /* OPEN, SOLD OUT, NEWS: an all-capital run of four letters or more that is a common
+           English word (the electronic_word list) is that word, as signs and headlines write
+           it; shorter runs stay letters (IT, CAT, WHO). A lexicon entry still wins
+           (2026-10-28; was 오피이엔). */
+        if (all_upper && consumed == 1 && n >= 4 && res(in->engine, "electronic_word", key))
+            all_upper = 0;
         if (all_upper) {
             out->type = TTF_SEM_INITIALISM;
             out->lexical_class = TTF_LEX_INITIALISM;

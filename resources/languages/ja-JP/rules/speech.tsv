@@ -12,6 +12,8 @@ speech_symbol	ja-JP	/	スラッシュ
 speech_symbol	ja-JP	?	クエスチョン
 speech_symbol	ja-JP	=	イコール
 speech_symbol	ja-JP	&	アンド
+# The full-width ampersand reads like & (R＆D, 국수＆만두; was kept as written, 2026-10-28).
+speech_symbol	ja-JP	＆	アンド
 speech_symbol	ja-JP	#	シャープ
 speech_symbol	ja-JP	%	パーセント
 speech_symbol	ja-JP	+	プラス

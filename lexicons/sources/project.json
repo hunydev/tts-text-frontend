@@ -120,6 +120,14 @@
       "kind": "editorial-policy",
       "checked_at": "2026-10-26",
       "note": "Common brand, name and food words written with accents (Pokémon, Beyoncé, jalapeño) that the 표준국어대사전 loanword table does not have, read with their established Korean spelling (외래어 표기법 and common usage). Keys are the spelling without accents, as the engine looks them up. No human approval is claimed."
+    },
+    {
+      "id": "project-english-ko-v28",
+      "title": "Project readings of English names, brands and capital words in Korean context, v28",
+      "url": "https://www.korean.go.kr/front/page/pageView.do?mn_id=97&page_id=P000124",
+      "kind": "editorial-policy",
+      "checked_at": "2026-10-28",
+      "note": "Common names, brands, capital acronym-words and signage words whose reading was wrong in Korean speech (ZARA 지에이알에이, Nike 나이크, Johnson 조흐느슨, Christmas 크리스트매스), read with the 외래어 표기법 spelling or established Korean usage. Project-owner request 2026-10-28. No human approval and no synthesized audio."
     }
   ]
 }

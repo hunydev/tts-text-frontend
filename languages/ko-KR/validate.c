@@ -728,9 +728,10 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     } else if (SAME(k, "phone_letter")) {
         *handled = 1;
         if (!phone_key(key) &&
-            (strlen(key) != 8 || memcmp(key, "letter.", 7) || key[7] < 'A' || key[7] > 'Z'))
+            ((strlen(key) != 8 && (strlen(key) != 12 || strcmp(key + 8, ".run"))) ||
+             memcmp(key, "letter.", 7) || key[7] < 'A' || key[7] > 'Z'))
             return ttf_validation_error(
-                d, "phone_letter key must be an uppercase phone symbol or letter.A");
+                d, "phone_letter key must be an uppercase phone symbol, letter.A or letter.A.run");
     } else if (SAME(k, "grapheme")) {
         *handled = 1;
         if ((status = bounded_key(r, 4, d)) != TTF_OK)
