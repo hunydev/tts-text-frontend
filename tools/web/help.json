@@ -497,10 +497,10 @@
       "desc": "한국어 요청에서 영어로 판정된 문장을 영어 대신 한글로 읽습니다. 숫자·날짜·통화는 영어 규칙으로 먼저 읽고(3 three, 1st first, 2019 twenty nineteen) 그 읽기를 외래어 발음으로 옮깁니다. 한글 단위나 조사가 붙은 숫자(3명, 3시에)는 한국어로 읽습니다. 영어 발음 사전이 자동이면 함께 켜집니다.",
       "examples": [
         {
-          "text": "I have 3 apples.",
+          "text": "Meeting at 3pm on Oct 5.",
           "outputs": {
-            "keep": "I have three apples.",
-            "localize": "아이 해브 쓰리 애플스."
+            "keep": "Meeting at three p m on October fifth.",
+            "localize": "미팅 앳 쓰리 피 엠 온 옥토버 피프스."
           }
         }
       ]

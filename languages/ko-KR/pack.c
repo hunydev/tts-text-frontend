@@ -3786,9 +3786,16 @@ static int run_particle_score(const ttf_pack_input_t *in, size_t begin, size_t e
 
 /* We need 5개, Thank you for coming 3명, 1,000원: a number written against a Hangul
    counter or particle belongs to the Korean grammar, whatever the clause before it
-   (2026-10-28; was the English run's context, five 개). */
-static int attached_hangul_quantity(const ttf_pack_input_t *in, size_t i) {
+   (2026-10-28; was the English run's context, five 개). Only a run with Latin words
+   needs it; a Korean run keeps its scores. */
+static int attached_hangul_quantity(const ttf_pack_input_t *in, size_t i, size_t begin, size_t end) {
+    size_t k;
+    int latin = 0;
     if (in->tokens[i].script != TTF_SCRIPT_DIGIT)
+        return 0;
+    for (k = begin; k < end && !latin; ++k)
+        latin = in->tokens[k].script == TTF_SCRIPT_LATIN;
+    if (!latin)
         return 0;
     while (i + 1 < in->token_count && in->tokens[i].end == in->tokens[i + 1].begin) {
         const ttf_token_t *next = &in->tokens[i + 1];
@@ -3825,12 +3832,16 @@ static ttf_status_t build_context_scores(const ttf_pack_input_t *in, void **out)
     scores->base = scope_context_score(in);
     for (i = 0; i < in->token_count; ++i) {
         size_t begin, end;
-        if (in->tokens[i].script == TTF_SCRIPT_HANGUL || attached_hangul_quantity(in, i)) {
+        if (in->tokens[i].script == TTF_SCRIPT_HANGUL) {
             scores->scores[i] = scores->base + script_bonus;
             continue;
         }
         cursor.index = i;
         context_run_bounds(&cursor, &begin, &end);
+        if (attached_hangul_quantity(in, i, begin, end)) {
+            scores->scores[i] = scores->base + script_bonus;
+            continue;
+        }
         if (begin != last_begin || end != last_end) {
             particle = run_particle_score(&cursor, begin, end);
             last_begin = begin;
@@ -3857,9 +3868,11 @@ static int context_score(const ttf_pack_input_t *in) {
     score = scope_context_score(in);
     if (in->index >= in->token_count)
         return score;
-    if (in->tokens[in->index].script == TTF_SCRIPT_HANGUL || attached_hangul_quantity(in, in->index))
+    if (in->tokens[in->index].script == TTF_SCRIPT_HANGUL)
         return score + resource_integer(in->engine, "context", "script_weight", 0, 1000, 1000);
     context_run_bounds(in, &begin, &end);
+    if (attached_hangul_quantity(in, in->index, begin, end))
+        return score + resource_integer(in->engine, "context", "script_weight", 0, 1000, 1000);
     return score + run_particle_score(in, begin, end);
 }
 
