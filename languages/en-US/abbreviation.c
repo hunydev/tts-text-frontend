@@ -294,7 +294,11 @@ size_t ttf_en_classify_abbreviation(const ttf_pack_input_t *in, ttf_semantic_t *
         /* No. 5, no. 7: a number abbreviation before digits reads its word
            (number five); without a number it keeps its text (2026-10-07). */
         expansion = lookup(in->engine, "abbreviation_number", key, NULL);
-        if (expansion && strcmp(expansion, "preserve") && following_digit(in, token->end + 1)) {
+        /* Vol.2: a number written against the period reads the number word; Vol. 3 with a
+           space keeps the dotted reading and its overrides (2026-10-29) */
+        if (expansion && strcmp(expansion, "preserve") && following_digit(in, token->end + 1) &&
+            !(lookup(in->engine, "abbreviation_dotted", key, NULL) && token->end + 1 < in->length &&
+              horizontal(in->text[token->end + 1]))) {
             if (strlen(expansion) >= sizeof(out->value))
                 return 0;
             out->type = TTF_SEM_ABBREVIATION;
