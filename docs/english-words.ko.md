@@ -180,6 +180,9 @@ python3 tools/lexicon/english/author_common.py
 - **다음 회차 후보(16:50 탐색):** 한글 꼬리가 짧은 문장은 기본 모드에서 영어 문장으로 판정돼 BTS 'b t s',
   LE SSERAFIM 'l e SSERAFIM'이 된다(`BTS 'Butter' (feat. …) Remix 버전`; localize에서는 비 티 에스, 르세라핌).
   일본 아티스트·곡명(Ado 애도, Usseewa 어시와), 해시태그 '#'가 샵으로 읽힘.
+  CMU를 켜면 철자 o의 미국식 모음 AA가 아로 옮겨진다(Monster 만스터, Growl 그라울, Anne-Marie 앤머리; CMU 없이는
+  몬스터). 외래어 표기법은 철자 o를 오로 적는 경우가 많으니 CMU 음소와 철자 모음을 맞대 o→오를 고르는 규칙을
+  검토할 것(예외: hot 핫, pop 팝). 연도 축약 '69는 육십구로 읽힌다.
 
 계약: `ko_song_titles_v130`(20).
 
