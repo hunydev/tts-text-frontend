@@ -183,6 +183,9 @@ python3 tools/lexicon/english/author_common.py
   CMU를 켜면 철자 o의 미국식 모음 AA가 아로 옮겨진다(Monster 만스터, Growl 그라울, Anne-Marie 앤머리; CMU 없이는
   몬스터). 외래어 표기법은 철자 o를 오로 적는 경우가 많으니 CMU 음소와 철자 모음을 맞대 o→오를 고르는 규칙을
   검토할 것(예외: hot 핫, pop 팝). 연도 축약 '69는 육십구로 읽힌다.
+  규모: 곡명 세트 v1~v4에서 CMU를 켜서 오히려 틀린 구간 28개(Zombie, Rollin', Roly-Poly, Robinson, TOMBOY,
+  Shopper, Earth Wind 와인드, Maroon 머룬 …). 위치: `phones.tsv`의 `phone_vowel ko-KR AA 0`(ㅏ 고정)과
+  `languages/ko-KR/pack.c` render_phones; 철자 모음 정렬이 필요하다.
 
 계약: `ko_song_titles_v130`(20).
 
