@@ -177,6 +177,9 @@ python3 tools/lexicon/english/author_common.py
   신사동호랭이), 네 글자 대문자 곡명(HEYA, DASH; 약어와 구별할 근거 없음), CMU 미국식 모음(Zombie 잠비 →
   사전으로만 고침), 공백 둔 슬래시(' / ' 슬래시), 해시태그의 붙여 쓴 대소문자(#AnySongChallenge; 브랜드명 영향을
   벤치마크로 확인한 뒤 나눌 것).
+- **다음 회차 후보(16:50 탐색):** 한글 꼬리가 짧은 문장은 기본 모드에서 영어 문장으로 판정돼 BTS 'b t s',
+  LE SSERAFIM 'l e SSERAFIM'이 된다(`BTS 'Butter' (feat. …) Remix 버전`; localize에서는 비 티 에스, 르세라핌).
+  일본 아티스트·곡명(Ado 애도, Usseewa 어시와), 해시태그 '#'가 샵으로 읽힘.
 
 계약: `ko_song_titles_v130`(20).
 
