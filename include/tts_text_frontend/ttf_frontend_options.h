@@ -89,6 +89,7 @@ typedef struct {
    "foreign_sentence" = keep|localize (speech: keep an English sentence's
    reading in English, or write that reading in the default language's
    letters through its loanword readings: I have 3 apples 아이 해브 쓰리 애플스;
+   with matrix=declared, localize still decides English sentences;
    see docs/foreign-sentence.ko.md). */
 TTF_API ttf_status_t ttf_engine_set_option(ttf_engine_t *engine, const char *name,
                                            const char *value);

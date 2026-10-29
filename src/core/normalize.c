@@ -867,9 +867,23 @@ static void matrix_route(const ttf_engine_t *e, const ttf_pack_input_t *in, size
     const ttf_language_pack_t *matrix = e->matrix_policy == TTF_MATRIX_DECLARED
                                             ? ttf_find_pack(e, e->default_language)
                                             : sentence_matrix(e, in, begin, end, why);
-    int forced = matrix && !pack_flag(e, matrix, "absorb_foreign", 1);
+    int declared = e->matrix_policy == TTF_MATRIX_DECLARED, forced;
     size_t k;
-    if (e->matrix_policy == TTF_MATRIX_DECLARED)
+    /* matrix=declared with foreign_sentence=localize: an English sentence keeps its
+       English reading, which localize then writes in the request language, so a
+       Korean name inside it does not make it Korean (My friend 민수 bought 3 books
+       쓰리; 2026-10-29 owner request, was 삼). */
+    if (declared && e->foreign_sentence_localize &&
+        e->frontend_options.output_mode == TTF_OUTPUT_SPEECH) {
+        const ttf_language_pack_t *vote = sentence_matrix(e, in, begin, end, why);
+        if (vote && vote != matrix && vote == script_pack(e, TTF_SCRIPT_LATIN) &&
+            !strstr(why, "(default")) {
+            matrix = vote;
+            declared = 0;
+        }
+    }
+    forced = matrix && !pack_flag(e, matrix, "absorb_foreign", 1);
+    if (declared)
         snprintf(why, sizeof(why), "matrix=%s(declared)", matrix ? matrix->language_tag : "und");
     if (!kana && e->matrix_policy != TTF_MATRIX_DECLARED &&
         (kana = thai_sentence(e, in, begin, end)) != NULL)
@@ -896,8 +910,7 @@ static void matrix_route(const ttf_engine_t *e, const ttf_pack_input_t *in, size
     for (k = begin; k < end; ++k) {
         const ttf_language_pack_t *owner = script_pack(e, in->tokens[k].script);
         routes[k - begin].pack = forced && (!owner || owner == matrix) ? matrix : NULL;
-        routes[k - begin].sentence =
-            e->matrix_policy == TTF_MATRIX_DECLARED || strstr(why, "(default") ? NULL : matrix;
+        routes[k - begin].sentence = declared || strstr(why, "(default") ? NULL : matrix;
         memcpy(routes[k - begin].why, why, sizeof(why));
     }
 }
