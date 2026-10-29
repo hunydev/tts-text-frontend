@@ -127,3 +127,25 @@ score_cue	ja-JP	デュース	1
 score_cue	ja-JP	サーブ	1
 # 1:10に希釈 いちたいじゅう (owner sets, 2026-10-14)
 ratio_cue	ja-JP	希釈	1
+# latin_name: a brand or service name written in mixed case, matched in that case
+# (iPhone アイフォン; 2026-10-30, round 5). Lowercase or all-capital spellings are not matched.
+latin_name	ja-JP	iPhone	アイフォン
+latin_name	ja-JP	iPad	アイパッド
+latin_name	ja-JP	YouTube	ユーチューブ
+latin_name	ja-JP	Google	グーグル
+latin_name	ja-JP	Amazon	アマゾン
+latin_name	ja-JP	Twitter	ツイッター
+latin_name	ja-JP	Instagram	インスタグラム
+latin_name	ja-JP	Facebook	フェイスブック
+latin_name	ja-JP	Netflix	ネットフリックス
+latin_name	ja-JP	Microsoft	マイクロソフト
+latin_name	ja-JP	Windows	ウィンドウズ
+latin_name	ja-JP	Excel	エクセル
+latin_name	ja-JP	PowerPoint	パワーポイント
+latin_name	ja-JP	Zoom	ズーム
+latin_name	ja-JP	Slack	スラック
+latin_name	ja-JP	TikTok	ティックトック
+latin_name	ja-JP	Yahoo	ヤフー
+latin_name	ja-JP	Android	アンドロイド
+latin_name	ja-JP	Nintendo	ニンテンドー
+latin_name	ja-JP	PlayStation	プレイステーション

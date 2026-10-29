@@ -736,6 +736,12 @@ static size_t latin(const ttf_pack_input_t *in, ttf_semantic_t *s, const ttf_tok
         snprintf(s->value, sizeof(s->value), "%s", reading);
         return finish(in, s, end, TTF_SEM_ABBREVIATION, "ja.latin-abbreviation", "");
     }
+    /* iPhone アイフォン, YouTube ユーチューブ: a declared name in its written case
+       (latin_name, 2026-10-30; was kept in Latin letters). */
+    if ((reading = res(e, "latin_name", key)) && strlen(reading) < sizeof(s->value)) {
+        snprintf(s->value, sizeof(s->value), "%s", reading);
+        return finish(in, s, end, TTF_SEM_ABBREVIATION, "ja.latin-name", "");
+    }
     /* COVID-19 goes on to the hyphen term below. */
     if ((reading = res(e, "latin_word", key)) && strlen(reading) < sizeof(s->value) &&
         !(end + 1 < n && text[end] == '-' && digit(text[end + 1]))) {

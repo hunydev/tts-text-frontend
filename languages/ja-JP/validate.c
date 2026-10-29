@@ -182,6 +182,17 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "latin_word requires 2-10 capital letters and a reading");
     }
+    if (SAME(k, "latin_name")) {
+        size_t i, upper = 0, lower = 0;
+        *handled = 1;
+        for (i = 0; alpha_ascii(key[i]); ++i) {
+            upper += key[i] >= 'A' && key[i] <= 'Z';
+            lower += key[i] >= 'a' && key[i] <= 'z';
+        }
+        return !key[i] && i >= 2 && i <= 14 && upper && lower && label(v)
+                   ? TTF_OK
+                   : ttf_validation_error(d, "latin_name requires 2-14 letters in mixed case and a reading");
+    }
     if (SAME(k, "latin_abbreviation")) {
         size_t i;
         *handled = 1;
