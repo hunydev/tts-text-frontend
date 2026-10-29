@@ -377,3 +377,5 @@ caps_word	en-US	say	1
 caps_word	en-US	see	1
 caps_word	en-US	why	1
 caps_word	en-US	yes	1
+# Vol.2 볼륨 투, Vol. 2 (2026-10-29 owner request: English song titles; was 브오르.투)
+abbreviation_number	en-US	vol	volume
