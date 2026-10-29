@@ -327,12 +327,16 @@ static int opaque_element(const char *s, size_t length, const markup_tag_t *open
  * English song titles). */
 static int title_brackets(const char *s, size_t length, size_t begin) {
     size_t p = begin + 1;
+    int small = 0;
     if (p >= length || s[p] < 'A' || s[p] > 'Z')
         return 0;
     for (++p; p < length && name_char((unsigned char)s[p]); ++p)
-        if (s[p] >= 'a' && s[p] <= 'z')
-            return 1;
-    return 0;
+        small |= s[p] >= 'a' && s[p] <= 'z';
+    /* attributes and slashes are markup (<CoDe title="a > b">) */
+    for (; small && p < length && s[p] != '>'; ++p)
+        if (s[p] == '=' || s[p] == '"' || s[p] == '/' || s[p] == '<')
+            return 0;
+    return small;
 }
 int ttf_protect_markup(const ttf_engine_t *e, const char *s, size_t length, size_t begin,
                        int final, ttf_protected_match_t *out) {
