@@ -186,6 +186,9 @@ python3 tools/lexicon/english/author_common.py
   규모: 곡명 세트 v1~v4에서 CMU를 켜서 오히려 틀린 구간 28개(Zombie, Rollin', Roly-Poly, Robinson, TOMBOY,
   Shopper, Earth Wind 와인드, Maroon 머룬 …). 위치: `phones.tsv`의 `phone_vowel ko-KR AA 0`(ㅏ 고정)과
   `languages/ko-KR/pack.c` render_phones; 철자 모음 정렬이 필요하다.
+  시도(2026-10-29, 되돌림): 철자 모음 묶음과 CMU 모음을 일대일로 맞대 o의 AA를 짧은 ㅗ로 바꾸자 Rollin'·Sherlock을
+  얻고 Nobody 노보디·Hotter 호터를 잃어 곡명 세트에서 설정마다 +2/−3이었다. 관례가 낱말마다 다르므로(body 바디,
+  hot 핫 / monster 몬스터, zombie 좀비) 철자 규칙이 아니라 사전 행으로 고친다.
   영어가 아닌 라틴 문자 곡명은 영어 규칙으로 읽힌다(La Vie en Rose 라 비 엔 로즈, Bésame Mucho 베세임 머초,
   La Bamba 라 뱀바, Les Champs-Élysées 레스 챔프스에르시스). é·ò 같은 악센트 글자와 la/les/con 같은 기능어를
   언어 단서로 삼는 방안, 또는 유명 곡명 사전 행을 검토할 것.
