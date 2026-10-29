@@ -190,6 +190,7 @@ python3 tools/lexicon/english/author_common.py
   La Bamba 라 뱀바, Les Champs-Élysées 레스 챔프스에르시스). é·ò 같은 악센트 글자와 la/les/con 같은 기능어를
   언어 단서로 삼는 방안, 또는 유명 곡명 사전 행을 검토할 것.
   팬 표기 소문자: omg 옴그(대문자 OMG는 오엠지), 붙여 쓴 lesserafim 레서래핌. 사전 행의 소문자·붙여쓰기 별칭을 검토할 것.
+  붙여 쓴 Vol.2는 브오르.투(띄어 쓴 Vol. 1은 볼륨 원): 숫자 앞 점 약어 vol도 volume으로 풀 것. Part1·Pt.3·Season2·EP 2는 정상.
 - **최종 코드(6be0638) 개발 세트 문장 정확도(기본/CMU/localize+CMU):** v1 66.2/70.0/87.5%, v2 42.0/49.5/60.5%,
   v3 24.0/30.5/43.5%, v4 35.3/44.0/59.3%.
 
