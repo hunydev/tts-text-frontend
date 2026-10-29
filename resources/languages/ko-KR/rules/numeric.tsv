@@ -556,6 +556,10 @@ weekday	ko-KR	7	일요일
 exact	ko-KR	코로나19	코로나 일구
 # 24/7 is the always-open hours, read in English, not a fraction (2026-10-29).
 exact	ko-KR	24/7	투엔티포 세븐
+# Latin abbreviations inside Korean read as their Korean words (2026-10-29).
+exact	ko-KR	etc.	등
+exact	ko-KR	e.g.	예를 들어
+exact	ko-KR	vs.	대
 
 # Latin unit letters attached to a number in a Korean sentence (speech output):
 # 75t급 -> 칠십오 톤급, 3,000P -> 삼천 포인트, 4Km -> 사 킬로미터. Korean only; shared

@@ -289,6 +289,12 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    : ttf_validation_error(
                          d, "speech_decorative requires a printable key and a reading");
     }
+    if (SAME(k, "currency_pair_word")) {
+        *handled = 1;
+        return label(key) && strlen(key) <= 9 && SAME(v, "1")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "currency_pair_word requires a short word and 1");
+    }
     if (SAME(k, "file_extension")) {
         *handled = 1;
         return strlen(key) >= 2 && strlen(key) < 8 && SAME(v, "1")

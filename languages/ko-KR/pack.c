@@ -1907,6 +1907,24 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             return expression(e, s->value, out);
         if (!strcmp(s->unit, "@word"))
             return ttf_buffer_puts(out, s->value);
+        if (!strcmp(s->unit, "@per-unit")) {
+            /* label|number|scale|particle: 킬로그램당 구만 팔천 원 */
+            char label[64], number[32];
+            const char *bar = strchr(s->value, '|'), *bar2 = bar ? strchr(bar + 1, '|') : NULL,
+                       *bar3 = bar2 ? strchr(bar2 + 1, '|') : NULL;
+            if (!bar3 || (size_t)(bar - s->value) >= sizeof(label) || (size_t)(bar2 - bar - 1) >= sizeof(number))
+                return TTF_EINVAL;
+            (void)snprintf(label, sizeof(label), "%.*s", (int)(bar - s->value), s->value);
+            (void)snprintf(number, sizeof(number), "%.*s", (int)(bar2 - bar - 1), bar + 1);
+            TRY(ttf_buffer_puts(out, label));
+            TRY(ttf_buffer_puts(out, resource(e, "unit", "per_unit", "당")));
+            TRY(ttf_buffer_puts(out, " "));
+            TRY(cardinal(e, number, out));
+            TRY(ttf_buffer_append(out, bar2 + 1, (size_t)(bar3 - bar2 - 1)));
+            TRY(ttf_buffer_puts(out, " "));
+            TRY(ttf_buffer_puts(out, resource(e, "currency", "KRW", "원")));
+            return ttf_buffer_puts(out, bar3 + 1);
+        }
         if (!strcmp(s->unit, "@mark")) {
             /* mark|number|unit reading, placed by the number_mark template */
             char mark[8], number[32], unit[64];
@@ -3421,6 +3439,100 @@ static size_t superscript_expression(const ttf_pack_input_t *in, ttf_semantic_t 
     return ko_finish(in, s, end, TTF_SEM_SYMBOL, v, "@expression", "ko:superscript-expression");
 }
 
+/* ▲8.4%로 … 상승으로: a particle that ends the word after a reading that now ends in the
+   syllable cp takes that syllable's form (로/으로 를/을 가/이 는/은 와/과); it is appended to
+   v and the returned end passes it. Otherwise d is returned unchanged. */
+static size_t fitted_particle(const char *t, size_t n, size_t d, uint32_t cp, char *v, size_t capacity) {
+    static const char *const pairs[][2] = {{"로", "으로"}, {"를", "을"}, {"가", "이"},
+                                           {"는", "은"}, {"와", "과"}};
+    size_t k;
+    for (k = 0; cp >= 0xac00 && cp <= 0xd7a3 && k < sizeof(pairs) / sizeof(*pairs); ++k) {
+        int form;
+        for (form = 0; form < 2; ++form) {
+            size_t width = strlen(pairs[k][form]);
+            const unsigned char *u = (const unsigned char *)t + d + width;
+            unsigned final;
+            int consonant;
+            size_t used;
+            if (d + width > n || memcmp(t + d, pairs[k][form], width) ||
+                (d + width + 3 <= n && u[0] >= 0xea && u[0] <= 0xed))
+                continue;
+            final = (unsigned)((cp - 0xac00) % 28);
+            consonant = final && !(k == 0 && final == 8); /* ㄹ keeps 로 */
+            used = strlen(v);
+            (void)snprintf(v + used, capacity - used, "%s", pairs[k][consonant]);
+            return d + width;
+        }
+    }
+    return d;
+}
+
+/* 98,000원/kg 킬로그램당 구만 팔천 원, 520만 원/㎡ 제곱미터당 오백이십만 원: a won price
+   per measure unit reads the unit first with 당 (2026-10-29; was 원 슬래시 킬로그램). */
+static size_t price_per_unit(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    static const char won[] = "\xec\x9b\x90"; /* 원 */
+    static const char *const scales[] = {"\xec\xa1\xb0", "\xec\x96\xb5", "\xeb\xa7\x8c", "\xec\xb2\x9c"}; /* 조 억 만 천 */
+    const char *t = in->text, *suffix, *label;
+    size_t n = in->length, p = in->tokens[in->index].begin, d, q, w, used = 0, k;
+    char number[32], scale[16] = "", id[48], v[TTF_IR_VALUE_SIZE];
+    if (!ko_digit(t[p]) || (p && (ko_digit(t[p - 1]) || t[p - 1] == '.' || t[p - 1] == ',')))
+        return 0;
+    for (d = p; d < n && (ko_digit(t[d]) || ((t[d] == ',' || t[d] == '.') && d + 1 < n && ko_digit(t[d + 1]))); ++d)
+        if (t[d] != ',' && used + 1 < sizeof(number))
+            number[used++] = t[d];
+    number[used] = 0;
+    q = d;
+    for (k = 0; k < sizeof(scales) / sizeof(*scales); ++k)
+        if (q + 3 <= n && !memcmp(t + q, scales[k], 3)) {
+            memcpy(scale, t + q, 3);
+            scale[3] = 0;
+            q += 3;
+            break;
+        }
+    if (q < n && t[q] == ' ')
+        ++q;
+    if (q + 4 > n || memcmp(t + q, won, 3) || t[q + 3] != '/')
+        return 0;
+    q += 4;
+    suffix = quantity_resource_at(in, "numeric_suffix", q, &w);
+    if (!suffix || strncmp(suffix, "MEASURE:", 8) || strlen(suffix + 8) >= sizeof(id))
+        return 0;
+    (void)snprintf(id, sizeof(id), "%s", suffix + 8);
+    label = ttf_resource_get(in->engine, "unit", "ko-KR", id, NULL);
+    if (!label || (q + w < n && (ko_digit(t[q + w]) || ((t[q + w] | 0x20) >= 'a' && (t[q + w] | 0x20) <= 'z'))))
+        return 0;
+    (void)snprintf(v, sizeof(v), "%s|%s|%s|", label, number, scale);
+    return ko_finish(in, s, fitted_particle(t, n, q + w, 0xc6d0 /* 원 */, v, sizeof(v)), TTF_SEM_SYMBOL, v,
+                     "@per-unit", "ko:price-per-unit");
+}
+
+/* 원/달러 환율 원 달러: a slash between two currency words names the pair (currency_pair_word;
+   2026-10-29, was 원 슬래시 달러). */
+static size_t currency_pair(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    const char *t = in->text;
+    size_t n = in->length, p = in->tokens[in->index].begin, a = p, b = p + 1, k;
+    char left[16], right[16];
+    int found_left = 0, found_right = 0;
+    if (t[p] != '/' || !p)
+        return 0;
+    for (k = 3; k <= 9 && k <= a && !found_left; k += 3) {
+        memcpy(left, t + a - k, k);
+        left[k] = 0;
+        found_left = ttf_resource_get(in->engine, "currency_pair_word", "ko-KR", left, NULL) != NULL &&
+                     !(a - k >= 3 && (unsigned char)t[a - k - 3] >= 0xea && (unsigned char)t[a - k - 3] <= 0xed);
+    }
+    for (k = 9; k >= 3 && !found_right; k -= 3) {
+        if (b + k > n)
+            continue;
+        memcpy(right, t + b, k);
+        right[k] = 0;
+        found_right = ttf_resource_get(in->engine, "currency_pair_word", "ko-KR", right, NULL) != NULL;
+    }
+    if (!found_left || !found_right)
+        return 0;
+    return ko_finish(in, s, p + 1, TTF_SEM_SYMBOL, " ", "@word", "ko:currency-pair");
+}
+
 /* report_final.pdf 리포트 언더스코어 파이널 닷 피디에프: the period before a declared file
    extension (file_extension) reads with its symbol name; it was kept as written and so
    was silent (2026-10-29). Only right after a letter or digit and before the end of the
@@ -3561,35 +3673,14 @@ static size_t number_mark(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     {
         /* ▲8.4%로 팔 점 사 퍼센트 상승으로: a word after the number ends the reading, so a
            particle that ends the word takes the form for that word's last syllable. */
-        static const char *const pairs[][2] = {{"로", "으로"}, {"를", "을"}, {"가", "이"},
-                                               {"는", "은"}, {"와", "과"}};
         const char *template = ttf_resource_get(in->engine, "number_mark", "ko-KR", key, NULL);
-        size_t tl = strlen(template), k;
+        size_t tl = strlen(template);
         uint32_t cp = 0;
         if (tl >= 3 && strcmp(template + tl - 3, "{N}") && (unsigned char)template[tl - 3] >= 0xea &&
             (unsigned char)template[tl - 3] <= 0xed)
             cp = ((uint32_t)(template[tl - 3] & 0x0f) << 12) | ((uint32_t)(template[tl - 2] & 0x3f) << 6) |
                  (uint32_t)(template[tl - 1] & 0x3f);
-        for (k = 0; cp >= 0xac00 && cp <= 0xd7a3 && k < sizeof(pairs) / sizeof(*pairs); ++k) {
-            int form;
-            for (form = 0; form < 2; ++form) {
-                size_t width = strlen(pairs[k][form]);
-                const unsigned char *u = (const unsigned char *)t + d + width;
-                if (d + width > n || memcmp(t + d, pairs[k][form], width) ||
-                    (d + width + 3 <= n && u[0] >= 0xea && u[0] <= 0xed))
-                    continue;
-                {
-                    unsigned final = (unsigned)((cp - 0xac00) % 28);
-                    int consonant = final && !(k == 0 && final == 8); /* ㄹ keeps 로 */
-                    size_t used = strlen(v);
-                    (void)snprintf(v + used, sizeof(v) - used, "%s", pairs[k][consonant]);
-                    d += width;
-                }
-                break;
-            }
-            if (form < 2)
-                break;
-        }
+        d = fitted_particle(t, n, d, cp, v, sizeof(v));
     }
     return ko_finish(in, s, d, TTF_SEM_SYMBOL, v, "@mark", "ko:number-mark");
 }
@@ -3841,7 +3932,8 @@ static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     size_t identifier = below_zero_degrees(in, s);
     if (identifier)
         return identifier;
-    if ((identifier = number_mark(in, s)) != 0 || (identifier = promo_plus(in, s)) != 0 || (identifier = file_dot(in, s)) != 0 || (identifier = short_dotted_date(in, s)) != 0 || (identifier = quarter(in, s)) != 0 ||
+    if ((identifier = number_mark(in, s)) != 0 || (identifier = promo_plus(in, s)) != 0 || (identifier = file_dot(in, s)) != 0 || (identifier = price_per_unit(in, s)) != 0 ||
+        (identifier = currency_pair(in, s)) != 0 || (identifier = short_dotted_date(in, s)) != 0 || (identifier = quarter(in, s)) != 0 ||
         (identifier = owner_forms(in, s)) != 0 || (identifier = owner_forms5(in, s)) != 0 ||
         (identifier = chemical_formula(in, s)) != 0 || (identifier = subscript_index(in, s)) != 0 ||
         (identifier = letters_decimal(in, s)) != 0 || (identifier = court_case(in, s)) != 0 ||

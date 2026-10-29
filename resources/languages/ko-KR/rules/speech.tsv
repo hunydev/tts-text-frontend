@@ -155,6 +155,18 @@ speech_range_mark	ko-KR	〜	에서
 # as a range (2026-10-29; was kept as written). Between words (가→나) it keeps its policy.
 speech_range_mark	ko-KR	→	에서 
 speech_range_numeric	ko-KR	→	1
+# 원/달러 환율 원 달러: a slash between two of these words names a currency pair (2026-10-29).
+currency_pair_word	ko-KR	원	1
+currency_pair_word	ko-KR	달러	1
+currency_pair_word	ko-KR	엔	1
+currency_pair_word	ko-KR	유로	1
+currency_pair_word	ko-KR	위안	1
+currency_pair_word	ko-KR	파운드	1
+currency_pair_word	ko-KR	엔화	1
+currency_pair_word	ko-KR	원화	1
+currency_pair_word	ko-KR	달러화	1
+currency_pair_word	ko-KR	유로화	1
+currency_pair_word	ko-KR	위안화	1
 # File extensions whose period is read (report.pdf 리포트 닷 피디에프; 2026-10-29).
 file_extension	ko-KR	pdf	1
 file_extension	ko-KR	txt	1
