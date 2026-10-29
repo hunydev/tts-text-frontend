@@ -155,6 +155,9 @@ speech_range_mark	ko-KR	〜	에서
 # as a range (2026-10-29; was kept as written). Between words (가→나) it keeps its policy.
 speech_range_mark	ko-KR	→	에서 
 speech_range_numeric	ko-KR	→	1
+# D-30 디 마이너스 삼십: a countdown to a day (2026-10-29).
+countdown	ko-KR	D-	디 마이너스 
+classifier_priority	ko-KR	ko:day-countdown	10
 # 원/달러 환율 원 달러: a slash between two of these words names a currency pair (2026-10-29).
 currency_pair_word	ko-KR	원	1
 currency_pair_word	ko-KR	달러	1

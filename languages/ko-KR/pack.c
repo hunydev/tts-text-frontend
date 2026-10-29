@@ -1907,6 +1907,10 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             return expression(e, s->value, out);
         if (!strcmp(s->unit, "@word"))
             return ttf_buffer_puts(out, s->value);
+        if (!strcmp(s->unit, "@countdown")) {
+            TRY(ttf_buffer_puts(out, resource(e, "countdown", "D-", "디 마이너스 ")));
+            return cardinal(e, s->value, out);
+        }
         if (!strcmp(s->unit, "@per-unit")) {
             /* label|number|scale|particle: 킬로그램당 구만 팔천 원 */
             char label[64], number[32];
@@ -3439,6 +3443,25 @@ static size_t superscript_expression(const ttf_pack_input_t *in, ttf_semantic_t 
     return ko_finish(in, s, end, TTF_SEM_SYMBOL, v, "@expression", "ko:superscript-expression");
 }
 
+/* D-30 디 마이너스 삼십, D-7 디 마이너스 칠: a countdown to a day (2026-10-29; was 디삼십).
+   The capital D opens the word and the number ends it (a letter or digit after it, or a
+   letter before the D, makes it a code such as AD-30A). */
+static size_t day_countdown(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    const char *t = in->text;
+    size_t n = in->length, p = in->tokens[in->index].begin, q = p + 2, used = 0;
+    char v[8];
+    if (t[p] != 'D' || p + 2 >= n || t[p + 1] != '-' || !ko_digit(t[p + 2]) ||
+        (p && (ko_digit(t[p - 1]) || ((t[p - 1] | 0x20) >= 'a' && (t[p - 1] | 0x20) <= 'z') || t[p - 1] == '-')))
+        return 0;
+    while (q < n && ko_digit(t[q]) && used + 1 < 4)
+        v[used++] = t[q++];
+    v[used] = 0;
+    if ((q < n && (ko_digit(t[q]) || ((t[q] | 0x20) >= 'a' && (t[q] | 0x20) <= 'z') || t[q] == '-' || t[q] == '.')) ||
+        !korean_context(in))
+        return 0;
+    return ko_finish(in, s, q, TTF_SEM_SYMBOL, v, "@countdown", "ko:day-countdown");
+}
+
 /* ▲8.4%로 … 상승으로: a particle that ends the word after a reading that now ends in the
    syllable cp takes that syllable's form (로/으로 를/을 가/이 는/은 와/과); it is appended to
    v and the returned end passes it. Otherwise d is returned unchanged. */
@@ -3932,7 +3955,7 @@ static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     size_t identifier = below_zero_degrees(in, s);
     if (identifier)
         return identifier;
-    if ((identifier = number_mark(in, s)) != 0 || (identifier = promo_plus(in, s)) != 0 || (identifier = file_dot(in, s)) != 0 || (identifier = price_per_unit(in, s)) != 0 ||
+    if ((identifier = number_mark(in, s)) != 0 || (identifier = day_countdown(in, s)) != 0 || (identifier = promo_plus(in, s)) != 0 || (identifier = file_dot(in, s)) != 0 || (identifier = price_per_unit(in, s)) != 0 ||
         (identifier = currency_pair(in, s)) != 0 || (identifier = short_dotted_date(in, s)) != 0 || (identifier = quarter(in, s)) != 0 ||
         (identifier = owner_forms(in, s)) != 0 || (identifier = owner_forms5(in, s)) != 0 ||
         (identifier = chemical_formula(in, s)) != 0 || (identifier = subscript_index(in, s)) != 0 ||

@@ -30,6 +30,7 @@ lexicon	ko-KR	en-US:and	앤드
 lexicon	ko-KR	en-US:angels	에인절스
 lexicon	ko-KR	en-US:anti	안티
 lexicon	ko-KR	en-US:antifragile	안티프래자일
+lexicon	ko-KR	en-US:any	애니
 lexicon	ko-KR	en-US:anymore	애니모어
 lexicon	ko-KR	en-US:anything	애니싱
 lexicon	ko-KR	en-US:apink	에이핑크
@@ -111,10 +112,12 @@ lexicon	ko-KR	en-US:cancel	캔슬
 lexicon	ko-KR	en-US:cancer	캔서
 lexicon	ko-KR	en-US:care	케어
 lexicon	ko-KR	en-US:case	케이스
+lexicon	ko-KR	en-US:caution	코션
 lexicon	ko-KR	en-US:celebrity	셀러브리티
 lexicon	ko-KR	en-US:cellular	셀룰러
 lexicon	ko-KR	en-US:chainsmokers	체인스모커스
 lexicon	ko-KR	en-US:challenge	챌린지
+lexicon	ko-KR	en-US:champions	챔피언스
 lexicon	ko-KR	en-US:championship	챔피언십
 lexicon	ko-KR	en-US:changer	체인저
 lexicon	ko-KR	en-US:cheer	치어
@@ -236,6 +239,7 @@ lexicon	ko-KR	en-US:excellence	엑설런스
 lexicon	ko-KR	en-US:excellent	엑설런트
 lexicon	ko-KR	en-US:executive	이그제큐티브
 lexicon	ko-KR	en-US:exhibition	엑시비션
+lexicon	ko-KR	en-US:exit	엑시트
 lexicon	ko-KR	en-US:exo	엑소
 lexicon	ko-KR	en-US:explicit	익스플리싯
 lexicon	ko-KR	en-US:facade	파사드
@@ -243,6 +247,7 @@ lexicon	ko-KR	en-US:facetime	페이스타임
 lexicon	ko-KR	en-US:fair	페어
 lexicon	ko-KR	en-US:falling	폴링
 lexicon	ko-KR	en-US:fantastic	판타스틱
+lexicon	ko-KR	en-US:fasten	패슨
 lexicon	ko-KR	en-US:fearless	피어리스
 lexicon	ko-KR	en-US:features	피처스
 lexicon	ko-KR	en-US:featuring	피처링
@@ -258,6 +263,7 @@ lexicon	ko-KR	en-US:film	필름
 lexicon	ko-KR	en-US:final	파이널
 lexicon	ko-KR	en-US:finance	파이낸스
 lexicon	ko-KR	en-US:financing	파이낸싱
+lexicon	ko-KR	en-US:fine	파인
 lexicon	ko-KR	en-US:first	퍼스트
 lexicon	ko-KR	en-US:five	파이브
 lexicon	ko-KR	en-US:flavor	플레이버
@@ -282,11 +288,13 @@ lexicon	ko-KR	en-US:g-dragon	지드래곤
 lexicon	ko-KR	en-US:gabbana	가바나
 lexicon	ko-KR	en-US:games	게임스
 lexicon	ko-KR	en-US:garfunkel	가펑클
+lexicon	ko-KR	en-US:gatsby	개츠비
 lexicon	ko-KR	en-US:gen	젠
 lexicon	ko-KR	en-US:general	제너럴
 lexicon	ko-KR	en-US:generation	제너레이션
 lexicon	ko-KR	en-US:genie	지니
 lexicon	ko-KR	en-US:genome	게놈
+lexicon	ko-KR	en-US:gentlemen	젠틀맨
 lexicon	ko-KR	en-US:george	조지
 lexicon	ko-KR	en-US:gershwin	거슈윈
 lexicon	ko-KR	en-US:gfriend	여자친구
@@ -354,6 +362,7 @@ lexicon	ko-KR	en-US:ikon	아이콘
 lexicon	ko-KR	en-US:illit	아일릿
 lexicon	ko-KR	en-US:imagine	이매진
 lexicon	ko-KR	en-US:imf	아이엠에프
+lexicon	ko-KR	en-US:impossible	임파서블
 lexicon	ko-KR	en-US:improvement	임프루브먼트
 lexicon	ko-KR	en-US:incubator	인큐베이터
 lexicon	ko-KR	en-US:innovative	이노베이티브
@@ -399,6 +408,7 @@ lexicon	ko-KR	en-US:k-pop	케이팝
 lexicon	ko-KR	en-US:kakaotalk	카카오톡
 lexicon	ko-KR	en-US:karina	카리나
 lexicon	ko-KR	en-US:kcal	킬로칼로리
+lexicon	ko-KR	en-US:keep	킵
 lexicon	ko-KR	en-US:kids	키즈
 lexicon	ko-KR	en-US:kitsch	키치
 lexicon	ko-KR	en-US:know	노
@@ -408,6 +418,7 @@ lexicon	ko-KR	en-US:kpop	케이팝
 lexicon	ko-KR	en-US:kryptonite	크립토나이트
 lexicon	ko-KR	en-US:lab	랩
 lexicon	ko-KR	en-US:laboratory	래버러토리
+lexicon	ko-KR	en-US:ladies	레이디스
 lexicon	ko-KR	en-US:lalisa	라리사
 lexicon	ko-KR	en-US:last	라스트
 lexicon	ko-KR	en-US:latto	라토
@@ -466,11 +477,13 @@ lexicon	ko-KR	en-US:mike	마이크
 lexicon	ko-KR	en-US:million	밀리언
 lexicon	ko-KR	en-US:mind	마인드
 lexicon	ko-KR	en-US:minute	미닛
+lexicon	ko-KR	en-US:minutes	미니츠
 lexicon	ko-KR	en-US:missus	미시즈
 lexicon	ko-KR	en-US:mister	미스터
 lexicon	ko-KR	en-US:model	모델
 lexicon	ko-KR	en-US:molecular	몰레큘러
 lexicon	ko-KR	en-US:monday	먼데이
+lexicon	ko-KR	en-US:mondays	먼데이즈
 lexicon	ko-KR	en-US:monster	몬스터
 lexicon	ko-KR	en-US:mother	마더
 lexicon	ko-KR	en-US:mountain	마운틴
@@ -534,6 +547,7 @@ lexicon	ko-KR	en-US:pdogg	피독
 lexicon	ko-KR	en-US:peaches	피치스
 lexicon	ko-KR	en-US:people	피플
 lexicon	ko-KR	en-US:person	퍼슨
+lexicon	ko-KR	en-US:pets	펫츠
 lexicon	ko-KR	en-US:pfizer	화이자
 lexicon	ko-KR	en-US:pharrell	퍼렐
 lexicon	ko-KR	en-US:piaf	피아프
@@ -545,6 +559,7 @@ lexicon	ko-KR	en-US:pneumonia	뉴모니아
 lexicon	ko-KR	en-US:poets	포이츠
 lexicon	ko-KR	en-US:porsche	포르쉐
 lexicon	ko-KR	en-US:powder	파우더
+lexicon	ko-KR	en-US:practice	프랙티스
 lexicon	ko-KR	en-US:prayer	프레이어
 lexicon	ko-KR	en-US:prejudice	프레주디스
 lexicon	ko-KR	en-US:private	프라이빗
@@ -558,6 +573,7 @@ lexicon	ko-KR	en-US:psy	싸이
 lexicon	ko-KR	en-US:quality	퀄리티
 lexicon	ko-KR	en-US:quasar	퀘이사
 lexicon	ko-KR	en-US:queencard	퀸카
+lexicon	ko-KR	en-US:questions	퀘스천스
 lexicon	ko-KR	en-US:radiohead	라디오헤드
 lexicon	ko-KR	en-US:rainbow	레인보우
 lexicon	ko-KR	en-US:reality	리얼리티
@@ -764,6 +780,7 @@ lexicon	ko-KR	en-US:welfare	웰페어
 lexicon	ko-KR	en-US:what	왓
 lexicon	ko-KR	en-US:what's	왓츠
 lexicon	ko-KR	en-US:whatsapp	왓츠앱
+lexicon	ko-KR	en-US:where	웨어
 lexicon	ko-KR	en-US:whiplash	위플래시
 lexicon	ko-KR	en-US:white	화이트
 lexicon	ko-KR	en-US:wicked	위키드
