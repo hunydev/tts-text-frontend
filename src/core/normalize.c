@@ -1599,6 +1599,30 @@ static ttf_status_t particle_agreement(const ttf_engine_t *e, const ttf_language
     }
     if (normalized->length != source_length || memcmp(normalized->data, source, source_length))
         return TTF_OK;
+    /* 'Butter'은 '버터'는: the particle agrees with the reading inside a closing quotation
+       mark or bracket (2026-10-29 owner request: English song titles) */
+    for (;;) {
+        static const char *const closers[] = {"\xe2\x80\x99", "\xe2\x80\x9d", "\xe3\x80\x8b", "\xe3\x80\x89",
+                                              "\xe3\x80\x8d", "\xe3\x80\x8f"};
+        size_t k;
+        int skipped = 0;
+        if (start && strchr("'\")]>", output->data[start - 1])) {
+            --start;
+            /* 'APT.'이: the title's own final mark sits inside the quotation */
+            while (start && strchr(".!?", output->data[start - 1]))
+                --start;
+            continue;
+        }
+        for (k = 0; k < sizeof(closers) / sizeof(closers[0]) && !skipped; ++k)
+            if (start >= 3 && !memcmp(output->data + start - 3, closers[k], 3)) {
+                start -= 3;
+                skipped = 1;
+            }
+        if (!skipped)
+            break;
+    }
+    if (!start)
+        return TTF_OK;
     while (start && ((unsigned char)output->data[start - 1] & 0xc0) == 0x80)
         --start;
     if (!start ||
@@ -2812,7 +2836,13 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
             !(out->span_count &&
               ((!strcmp(out->spans[out->span_count - 1].semantic.unit, "@unreadable-cluster")) ||
                (ttf_script_legacy(out->spans[out->span_count - 1].script) == TTF_SCRIPT_OTHER &&
-                !strcmp(out->spans[out->span_count - 1].semantic.rule, "identity")))))
+                !strcmp(out->spans[out->span_count - 1].semantic.rule, "identity") &&
+                /* 《Supernova》을: a closing title bracket does end the noun (2026-10-29) */
+                !(tokens[i].begin >= 3 &&
+                  (!memcmp(text + tokens[i].begin - 3, "\xe3\x80\x8b", 3) ||
+                   !memcmp(text + tokens[i].begin - 3, "\xe3\x80\x89", 3) ||
+                   !memcmp(text + tokens[i].begin - 3, "\xe3\x80\x8d", 3) ||
+                   !memcmp(text + tokens[i].begin - 3, "\xe3\x80\x8f", 3)))))))
         {
             if (normalized.length == end - tokens[i].begin &&
                 !memcmp(normalized.data, text + tokens[i].begin, normalized.length))

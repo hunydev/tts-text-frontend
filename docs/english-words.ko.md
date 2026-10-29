@@ -191,9 +191,9 @@ python3 tools/lexicon/english/author_common.py
   언어 단서로 삼는 방안, 또는 유명 곡명 사전 행을 검토할 것.
   팬 표기 소문자: omg 옴그(대문자 OMG는 오엠지), 붙여 쓴 lesserafim 레서래핌. 사전 행의 소문자·붙여쓰기 별칭을 검토할 것.
   붙여 쓴 Vol.2는 브오르.투였다 → 고침(`abbreviation_number en-US vol volume`, 볼륨투). Part1·Pt.3·Season2·EP 2는 정상.
-  조사 호응(`particle_agreement on`)은 닫는 따옴표를 넘지 못한다('Butter'은 → '버터'은 그대로). 따옴표 뒤 조사도 읽기 받침에 맞출 것.
+  조사 호응(`particle_agreement on`)이 닫는 따옴표·괄호·《》를 넘지 못하던 것 → 고침('버터'는, 《슈퍼노바》를, '아파트.'가). 기본 off는 그대로.
 - **최종 코드(6be0638) 개발 세트 문장 정확도(기본/CMU/localize+CMU):** v1 66.2/70.0/87.5%, v2 42.0/49.5/60.5%,
   v3 24.0/30.5/43.5%, v4 35.3/44.0/59.3%.
 
-계약: `ko_song_titles_v130`(21).
+계약: `ko_song_titles_v130`(23).
 
