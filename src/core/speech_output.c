@@ -364,10 +364,14 @@ ttf_status_t ttf_speech_output(const ttf_engine_t *e, const ttf_language_pack_t 
                         --k;
                     last = k ? left[k - 1] : '\0';
                 }
-                if (PREV_SPOKEN() ||
-                    (last && strchr(".,;:!?", last) &&
-                     word_follows(text->data + at + width, text->length - at - width, right,
-                                  right_length)))
+                /* <Wicked>의: a closing title bracket keeps its particle attached (2026-10-29) */
+                if ((PREV_SPOKEN() ||
+                     (last && strchr(".,;:!?", last) &&
+                      word_follows(text->data + at + width, text->length - at - width, right,
+                                   right_length))) &&
+                    !(key[0] == '>' && width == 1 &&
+                      particle_next(e, lang, text->data + at + width, text->length - at - width,
+                                    right, right_length)))
                     pending_space = 1;
             }
         } else if ((mapped = ttf_resource_get(e, "speech_symbol", lang, key, NULL))) {
