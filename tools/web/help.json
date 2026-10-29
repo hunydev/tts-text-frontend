@@ -482,11 +482,11 @@
       "desc": "문장마다 언어를 판정합니다. 영어 문장 속 한글 단어는 그대로 두고 영어로 읽습니다.",
       "examples": [
         {
-          "text": "My friend 민수 bought 3 books.",
+          "text": "My friend 민수 bought 12 books.",
           "outputs": {
-            "auto": "My friend 민수 bought three books.",
-            "declared": "마이 프린드 민수 바우그흐트 삼 북스.",
-            "legacy": "마이 프린드 민수 바우그흐트 삼 북스."
+            "auto": "My friend 민수 bought twelve books.",
+            "declared": "마이 프린드 민수 바우그흐트 십이 북스.",
+            "legacy": "마이 프린드 민수 바우그흐트 십이 북스."
           }
         }
       ]

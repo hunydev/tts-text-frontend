@@ -762,6 +762,8 @@ model_name	ko-KR	number	1
 model_name	ko-KR	act	1
 model_name	ko-KR	scene	1
 model_name	ko-KR	maroon	1
+model_name	ko-KR	cd	1
+model_name	ko-KR	disc	1
 # Baseball counts read English numerals (2아웃 투 아웃, 1스트라이크 원 스트라이크).
 numeric_suffix	*	아웃	COUNTER:아웃
 numeric_suffix	*	스트라이크	COUNTER:스트라이크

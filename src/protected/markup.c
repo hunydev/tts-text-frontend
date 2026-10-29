@@ -321,6 +321,19 @@ static int opaque_element(const char *s, size_t length, const markup_tag_t *open
                   layer, final);
 }
 
+/* <Run Devil Run>, <Wicked>, <La La Land>: an opening bracket whose name is capitalized
+ * (a capital and then a small letter) marks a title, as Korean text writes 《》 and <>;
+ * markup names are lowercase (<br>) or capitals (<BR>) (2026-10-29 owner request:
+ * English song titles). */
+static int title_brackets(const char *s, size_t length, size_t begin) {
+    size_t p = begin + 1;
+    if (p >= length || s[p] < 'A' || s[p] > 'Z')
+        return 0;
+    for (++p; p < length && name_char((unsigned char)s[p]); ++p)
+        if (s[p] >= 'a' && s[p] <= 'z')
+            return 1;
+    return 0;
+}
 int ttf_protect_markup(const ttf_engine_t *e, const char *s, size_t length, size_t begin,
                        int final, ttf_protected_match_t *out) {
     ttf_resource_layer_t markup_layer = TTF_LAYER_COMMON, code_layer = TTF_LAYER_COMMON;
@@ -345,7 +358,7 @@ int ttf_protect_markup(const ttf_engine_t *e, const char *s, size_t length, size
                       markup_layer, end ? 1 : final);
     }
     status = parse_tag(s, length, begin, &tag);
-    if (!status)
+    if (!status || title_brackets(s, length, begin))
         return 0;
     if (status < 0) {
         if (!markup_on) {
