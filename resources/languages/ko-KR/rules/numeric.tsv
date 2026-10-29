@@ -554,6 +554,8 @@ weekday	ko-KR	7	일요일
 # A number inside a fixed name is read as the name says: the disease name
 # 코로나19 is 코로나 일구, never 코로나 십구. The spaced count 코로나 19명 is unaffected.
 exact	ko-KR	코로나19	코로나 일구
+# 24/7 is the always-open hours, read in English, not a fraction (2026-10-29).
+exact	ko-KR	24/7	투엔티포 세븐
 
 # Latin unit letters attached to a number in a Korean sentence (speech output):
 # 75t급 -> 칠십오 톤급, 3,000P -> 삼천 포인트, 4Km -> 사 킬로미터. Korean only; shared

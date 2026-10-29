@@ -1907,6 +1907,36 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             return expression(e, s->value, out);
         if (!strcmp(s->unit, "@word"))
             return ttf_buffer_puts(out, s->value);
+        if (!strcmp(s->unit, "@mark")) {
+            /* mark|number|unit reading, placed by the number_mark template */
+            char mark[8], number[32], unit[64];
+            const char *bar = strchr(s->value, '|'), *bar2 = bar ? strchr(bar + 1, '|') : NULL,
+                       *bar3 = bar2 ? strchr(bar2 + 1, '|') : NULL, *p, *template;
+            if (!bar3 || (size_t)(bar - s->value) >= sizeof(mark) ||
+                (size_t)(bar2 - bar - 1) >= sizeof(number) || (size_t)(bar3 - bar2 - 1) >= sizeof(unit))
+                return TTF_EINVAL;
+            (void)snprintf(unit, sizeof(unit), "%.*s", (int)(bar3 - bar2 - 1), bar2 + 1);
+            (void)snprintf(mark, sizeof(mark), "%.*s", (int)(bar - s->value), s->value);
+            (void)snprintf(number, sizeof(number), "%.*s", (int)(bar2 - bar - 1), bar + 1);
+            if (!(template = ttf_resource_get(e, "number_mark", "ko-KR", mark, NULL)))
+                return TTF_ERESOURCE;
+            TRY(ttf_trace_resource(e, "number_mark", "ko-KR", mark, template, "number-mark-reading",
+                                   SIZE_MAX));
+            for (p = template; *p;) {
+                if (!strncmp(p, "{N}", 3)) {
+                    TRY(cardinal(e, number, out));
+                    if (unit[0]) {
+                        TRY(ttf_buffer_puts(out, " "));
+                        TRY(ttf_buffer_puts(out, unit));
+                    }
+                    p += 3;
+                } else {
+                    TRY(ttf_buffer_append(out, p, 1));
+                    ++p;
+                }
+            }
+            return ttf_buffer_puts(out, bar3 + 1);
+        }
         if (!strcmp(s->unit, "@pressure")) {
             /* 150|95 백오십에 구십오; 140|90|mmHg 백사십에 구십 수은주밀리미터 */
             char part[8];
@@ -3391,6 +3421,179 @@ static size_t superscript_expression(const ttf_pack_input_t *in, ttf_semantic_t 
     return ko_finish(in, s, end, TTF_SEM_SYMBOL, v, "@expression", "ko:superscript-expression");
 }
 
+/* report_final.pdf 리포트 언더스코어 파이널 닷 피디에프: the period before a declared file
+   extension (file_extension) reads with its symbol name; it was kept as written and so
+   was silent (2026-10-29). Only right after a letter or digit and before the end of the
+   name, so a sentence period stays punctuation. */
+static size_t file_dot(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    const char *t = in->text, *name;
+    size_t n = in->length, p = in->tokens[in->index].begin, q = p + 1, k;
+    char ext[8], word[32];
+    if (t[p] != '.' || !p || !(ko_digit(t[p - 1]) || ((t[p - 1] | 0x20) >= 'a' && (t[p - 1] | 0x20) <= 'z')))
+        return 0;
+    for (k = 0; q + k < n && k + 1 < sizeof(ext) && (((t[q + k] | 0x20) >= 'a' && (t[q + k] | 0x20) <= 'z') || ko_digit(t[q + k])); ++k)
+        ext[k] = (char)(t[q + k] | (ko_digit(t[q + k]) ? 0 : 0x20));
+    ext[k] = 0;
+    if (!k || (q + k < n && (ko_digit(t[q + k]) || ((t[q + k] | 0x20) >= 'a' && (t[q + k] | 0x20) <= 'z') ||
+                             (t[q + k] == '.' && q + k + 1 < n && t[q + k + 1] != ' '))) ||
+        !ttf_resource_get(in->engine, "file_extension", "ko-KR", ext, NULL) || !korean_context(in))
+        return 0;
+    name = ttf_resource_get(in->engine, "speech_symbol", "ko-KR", ".", NULL);
+    if (!name || strlen(name) + 3 > sizeof(word))
+        return 0;
+    (void)snprintf(word, sizeof(word), " %s ", name);
+    return ko_finish(in, s, q, TTF_SEM_SYMBOL, word, "@word", "ko:file-dot");
+}
+
+/* 1+1 행사 원 플러스 원, 2+1이라 투 플러스 원: a one-digit sum before a sales word
+   (promo_cue) is the shop offer, read with the English numbers (promo_number; 2026-10-29,
+   was 일 더하기 일). 1+1은 2 stays arithmetic. */
+static size_t promo_plus(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    const char *t = in->text, *a, *b;
+    size_t n = in->length, p = in->tokens[in->index].begin, q = p + 3, r, k;
+    char key[2] = {0, 0}, v[96];
+    int cue = 0;
+    if (q > n || !ko_digit(t[p]) || t[p + 1] != '+' || !ko_digit(t[p + 2]) ||
+        (p && (ko_digit(t[p - 1]) || t[p - 1] == '+' || t[p - 1] == '-' || t[p - 1] == '.' ||
+               ((t[p - 1] | 0x20) >= 'a' && (t[p - 1] | 0x20) <= 'z'))) ||
+        (q < n && (ko_digit(t[q]) || t[q] == '+' || t[q] == '=' || t[q] == '.' || t[q] == '-' ||
+                   ((t[q] | 0x20) >= 'a' && (t[q] | 0x20) <= 'z'))))
+        return 0;
+    key[0] = t[p];
+    a = ttf_resource_get(in->engine, "promo_number", "ko-KR", key, NULL);
+    key[0] = t[p + 2];
+    b = ttf_resource_get(in->engine, "promo_number", "ko-KR", key, NULL);
+    if (!a || !b)
+        return 0;
+    r = q < n && t[q] == ' ' ? q + 1 : q;
+    for (k = 3; k <= 15 && r + k <= n && !cue; k += 3) {
+        char word[16];
+        memcpy(word, t + r, k);
+        word[k] = 0;
+        cue = ttf_resource_get(in->engine, "promo_cue", "ko-KR", word, NULL) != NULL;
+    }
+    if (!cue)
+        return 0;
+    (void)snprintf(v, sizeof(v), "%s %s %s", a,
+                   ttf_resource_get(in->engine, "speech_symbol", "ko-KR", "+", NULL)
+                       ? ttf_resource_get(in->engine, "speech_symbol", "ko-KR", "+", NULL)
+                       : "플러스",
+                   b);
+    return ko_finish(in, s, q, TTF_SEM_SYMBOL, v, "@word", "ko:promo-plus");
+}
+
+/* ▲1.2% 일 점 이 퍼센트 상승, ≥60점 육십 점 이상, ~10분 약 십 분: a mark written before a
+   number reads around it (number_mark, {N} is the number and its unit; 2026-10-29, was the
+   mark's name before the number). The mark opens a word, so x ≥ 5 stays a relation and 3~5
+   a range. The unit is a declared word (number_mark_unit) or a measure symbol; without one
+   only a particle may follow. */
+static size_t number_mark(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    const char *t = in->text, *unit = NULL;
+    size_t n = in->length, b = in->tokens[in->index].begin, m = in->tokens[in->index].end, p, d, w = 0;
+    char key[8], number[32], v[TTF_IR_VALUE_SIZE], id[48];
+    size_t used = 0;
+    if (m - b >= sizeof(key))
+        return 0;
+    memcpy(key, t + b, m - b);
+    key[m - b] = 0;
+    if (!ttf_resource_get(in->engine, "number_mark", "ko-KR", key, NULL) || !korean_context(in))
+        return 0;
+    if (b) {
+        /* written apart from the word before (37.5도~38도 is a range) */
+        size_t c = b;
+        if (t[b - 1] != ' ' && t[b - 1] != '(')
+            return 0;
+        while (c && t[c - 1] == ' ')
+            --c;
+        if (c && (ko_digit(t[c - 1]) || (t[c - 1] >= 'a' && t[c - 1] <= 'z') ||
+                  (t[c - 1] >= 'A' && t[c - 1] <= 'Z') || t[c - 1] == ')' || t[c - 1] == ']'))
+            return 0;
+    }
+    p = m;
+    if (p < n && t[p] == ' ')
+        ++p;
+    for (d = p; d < n && (ko_digit(t[d]) || (t[d] == ',' && d > p && d + 1 < n && ko_digit(t[d + 1])) ||
+                          (t[d] == '.' && d > p && d + 1 < n && ko_digit(t[d + 1])));
+         ++d)
+        if (t[d] != ',' && used + 1 < sizeof(number))
+            number[used++] = t[d];
+    if (d == p || !ko_digit(t[p]) || used + 1 >= sizeof(number))
+        return 0;
+    number[used] = 0;
+    {
+        /* the longest declared unit word, else a measure symbol (%, %p, ml) */
+        size_t k;
+        for (k = d + 12 < n ? 12 : n - d; k > 0 && !unit; --k)
+            if (d + k == n || ((unsigned char)t[d + k] & 0xc0u) != 0x80u) {
+                char word[16];
+                memcpy(word, t + d, k);
+                word[k] = 0;
+                if ((unit = ttf_resource_get(in->engine, "number_mark_unit", "ko-KR", word, NULL)))
+                    w = k;
+            }
+        if (!unit) {
+            const char *suffix = d < n ? quantity_resource_at(in, "numeric_suffix", d, &w) : NULL;
+            if (suffix && !strncmp(suffix, "MEASURE:", 8) && strlen(suffix + 8) < sizeof(id)) {
+                (void)snprintf(id, sizeof(id), "%s", suffix + 8);
+                unit = ttf_resource_get(in->engine, "unit", "ko-KR", id, NULL);
+            }
+            if (!unit)
+                w = 0;
+        }
+    }
+    d += w;
+    if (d < n && (ko_digit(t[d]) || (t[d] >= 'a' && t[d] <= 'z') || (t[d] >= 'A' && t[d] <= 'Z')))
+        return 0;
+    if (!unit && d + 3 <= n && (unsigned char)t[d] >= 0xea && (unsigned char)t[d] <= 0xed) {
+        /* ≥25이면: only a particle may follow a bare number */
+        size_t k;
+        int particle = 0;
+        for (k = 3; k <= 9 && d + k <= n && !particle; k += 3) {
+            char word[16];
+            memcpy(word, t + d, k);
+            word[k] = 0;
+            particle = ttf_resource_get(in->engine, "particle", "ko-KR", word, NULL) != NULL;
+        }
+        if (!particle)
+            return 0;
+    }
+    (void)snprintf(v, sizeof(v), "%s|%s|%s|", key, number, unit ? unit : "");
+    {
+        /* ▲8.4%로 팔 점 사 퍼센트 상승으로: a word after the number ends the reading, so a
+           particle that ends the word takes the form for that word's last syllable. */
+        static const char *const pairs[][2] = {{"로", "으로"}, {"를", "을"}, {"가", "이"},
+                                               {"는", "은"}, {"와", "과"}};
+        const char *template = ttf_resource_get(in->engine, "number_mark", "ko-KR", key, NULL);
+        size_t tl = strlen(template), k;
+        uint32_t cp = 0;
+        if (tl >= 3 && strcmp(template + tl - 3, "{N}") && (unsigned char)template[tl - 3] >= 0xea &&
+            (unsigned char)template[tl - 3] <= 0xed)
+            cp = ((uint32_t)(template[tl - 3] & 0x0f) << 12) | ((uint32_t)(template[tl - 2] & 0x3f) << 6) |
+                 (uint32_t)(template[tl - 1] & 0x3f);
+        for (k = 0; cp >= 0xac00 && cp <= 0xd7a3 && k < sizeof(pairs) / sizeof(*pairs); ++k) {
+            int form;
+            for (form = 0; form < 2; ++form) {
+                size_t width = strlen(pairs[k][form]);
+                const unsigned char *u = (const unsigned char *)t + d + width;
+                if (d + width > n || memcmp(t + d, pairs[k][form], width) ||
+                    (d + width + 3 <= n && u[0] >= 0xea && u[0] <= 0xed))
+                    continue;
+                {
+                    unsigned final = (unsigned)((cp - 0xac00) % 28);
+                    int consonant = final && !(k == 0 && final == 8); /* ㄹ keeps 로 */
+                    size_t used = strlen(v);
+                    (void)snprintf(v + used, sizeof(v) - used, "%s", pairs[k][consonant]);
+                    d += width;
+                }
+                break;
+            }
+            if (form < 2)
+                break;
+        }
+    }
+    return ko_finish(in, s, d, TTF_SEM_SYMBOL, v, "@mark", "ko:number-mark");
+}
+
 /* 6천여 m² 육천여 제곱미터, 100여 m 백여 미터, 500여 ㎡: a unit symbol after a number with the
    approximate 여 (and a space) reads as its unit; the grammar takes a unit only right after
    the number, and the symbol was spelled (엠 제곱) (2026-10-24). */
@@ -3638,7 +3841,7 @@ static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     size_t identifier = below_zero_degrees(in, s);
     if (identifier)
         return identifier;
-    if ((identifier = short_dotted_date(in, s)) != 0 || (identifier = quarter(in, s)) != 0 ||
+    if ((identifier = number_mark(in, s)) != 0 || (identifier = promo_plus(in, s)) != 0 || (identifier = file_dot(in, s)) != 0 || (identifier = short_dotted_date(in, s)) != 0 || (identifier = quarter(in, s)) != 0 ||
         (identifier = owner_forms(in, s)) != 0 || (identifier = owner_forms5(in, s)) != 0 ||
         (identifier = chemical_formula(in, s)) != 0 || (identifier = subscript_index(in, s)) != 0 ||
         (identifier = letters_decimal(in, s)) != 0 || (identifier = court_case(in, s)) != 0 ||

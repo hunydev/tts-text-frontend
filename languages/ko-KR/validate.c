@@ -289,6 +289,42 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    : ttf_validation_error(
                          d, "speech_decorative requires a printable key and a reading");
     }
+    if (SAME(k, "file_extension")) {
+        *handled = 1;
+        return strlen(key) >= 2 && strlen(key) < 8 && SAME(v, "1")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "file_extension requires a short lowercase extension and 1");
+    }
+    if (SAME(k, "promo_number")) {
+        *handled = 1;
+        return strlen(key) == 1 && key[0] >= '1' && key[0] <= '9' && label(v) && strlen(v) < 32
+                   ? TTF_OK
+                   : ttf_validation_error(d, "promo_number requires one digit and a reading");
+    }
+    if (SAME(k, "promo_cue")) {
+        *handled = 1;
+        return label(key) && strlen(key) <= 15 && SAME(v, "1")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "promo_cue requires a short word and 1");
+    }
+    if (SAME(k, "number_mark")) {
+        *handled = 1;
+        return symbol_key(key) && label(v) && strstr(v, "{N}") && strlen(v) < 64
+                   ? TTF_OK
+                   : ttf_validation_error(d, "number_mark requires one symbol and a {N} template");
+    }
+    if (SAME(k, "number_mark_unit")) {
+        *handled = 1;
+        return label(key) && strlen(key) < 13 && label(v) && strlen(v) < 64
+                   ? TTF_OK
+                   : ttf_validation_error(d, "number_mark_unit requires a short word and a reading");
+    }
+    if (SAME(k, "speech_range_numeric")) {
+        *handled = 1;
+        return symbol_key(key) && SAME(v, "1")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "speech_range_numeric requires one symbol and 1");
+    }
     if (SAME(k, "speech_range_mark")) {
         *handled = 1;
         return symbol_key(key) && label(v) && strlen(v) < 64

@@ -136,6 +136,14 @@
       "kind": "editorial-policy",
       "checked_at": "2026-10-29",
       "note": "Artist names, English song-title words, music terms and contractions whose reading was wrong in Korean speech (BLACKPINK spelled out, aespa 애에스파, Supernova 서퍼노바, Don't 던티), read with established Korean usage in music news and broadcasting. Project-owner request 2026-10-29. No human approval and no synthesized audio."
+    },
+    {
+      "id": "project-rounds-ko-v30",
+      "title": "Project readings found by the TN improvement rounds in Korean context, v30",
+      "url": "https://www.korean.go.kr/front/page/pageView.do?mn_id=97&page_id=P000124",
+      "kind": "editorial-policy",
+      "checked_at": "2026-10-29",
+      "note": "Artist names, song-title words, brands and key names whose reading was wrong in the round evaluation sets (Peaches 피처즈, KakaoTalk 캐캐오토크, Ctrl 씨티알엘), read with the 외래어 표기법 spelling or established Korean usage. TN improvement rounds 2026-10-29. No human approval and no synthesized audio."
     }
   ]
 }

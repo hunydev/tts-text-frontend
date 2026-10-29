@@ -68,6 +68,13 @@ const char *ttf_speech_range_mark(const ttf_engine_t *e, const char *language, c
             !memcmp(left + left_length - span_length, key, span_length))
             return NULL;
     }
+    /* A mark declared numeric (speech_range_numeric) joins only a number on its right:
+       3%→5% 삼 퍼센트에서 오 퍼센트, while 가→나 keeps the mark's own policy. */
+    {
+        const char *numeric = ttf_resource_get(e, "speech_range_numeric", language, key, NULL);
+        if (numeric && !strcmp(numeric, "1") && !(right_length && right[0] >= '0' && right[0] <= '9'))
+            return NULL;
+    }
     /* A customer who disabled this mark as a range separator keeps its name. */
     {
         const char *separator = ttf_resource_get(e, "quantity_range_separator", "*", key, NULL);

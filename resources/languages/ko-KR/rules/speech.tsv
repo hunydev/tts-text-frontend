@@ -151,6 +151,61 @@ speech_range_mark	ko-KR	~	에서
 speech_range_mark	ko-KR	～	에서 
 speech_range_mark	ko-KR	∼	에서 
 speech_range_mark	ko-KR	〜	에서 
+# 3%→5% 삼 퍼센트에서 오 퍼센트: an arrow written against a number on both sides reads
+# as a range (2026-10-29; was kept as written). Between words (가→나) it keeps its policy.
+speech_range_mark	ko-KR	→	에서 
+speech_range_numeric	ko-KR	→	1
+# File extensions whose period is read (report.pdf 리포트 닷 피디에프; 2026-10-29).
+file_extension	ko-KR	pdf	1
+file_extension	ko-KR	txt	1
+file_extension	ko-KR	doc	1
+file_extension	ko-KR	docx	1
+file_extension	ko-KR	hwp	1
+file_extension	ko-KR	hwpx	1
+file_extension	ko-KR	ppt	1
+file_extension	ko-KR	pptx	1
+file_extension	ko-KR	xls	1
+file_extension	ko-KR	xlsx	1
+file_extension	ko-KR	csv	1
+file_extension	ko-KR	jpg	1
+file_extension	ko-KR	jpeg	1
+file_extension	ko-KR	png	1
+file_extension	ko-KR	gif	1
+file_extension	ko-KR	mp3	1
+file_extension	ko-KR	mp4	1
+file_extension	ko-KR	zip	1
+file_extension	ko-KR	exe	1
+file_extension	ko-KR	json	1
+# 1+1 행사 원 플러스 원: a shop offer before a sales word (2026-10-29).
+promo_number	ko-KR	1	원
+promo_number	ko-KR	2	투
+promo_number	ko-KR	3	쓰리
+promo_cue	ko-KR	행사	1
+promo_cue	ko-KR	이벤트	1
+promo_cue	ko-KR	상품	1
+promo_cue	ko-KR	제품	1
+promo_cue	ko-KR	할인	1
+promo_cue	ko-KR	증정	1
+promo_cue	ko-KR	특가	1
+promo_cue	ko-KR	혜택	1
+promo_cue	ko-KR	프로모션	1
+promo_cue	ko-KR	이라	1
+# A mark before a number reads around it (▲1.2% 일 점 이 퍼센트 상승; 2026-10-29).
+number_mark	ko-KR	▲	{N} 상승
+number_mark	ko-KR	▼	{N} 하락
+number_mark	ko-KR	≥	{N} 이상
+number_mark	ko-KR	≤	{N} 이하
+number_mark	ko-KR	~	약 {N}
+number_mark	ko-KR	≒	약 {N}
+number_mark_unit	ko-KR	원	원
+number_mark_unit	ko-KR	%	퍼센트
+number_mark_unit	ko-KR	%p	퍼센트포인트
+number_mark_unit	ko-KR	점	점
+number_mark_unit	ko-KR	포인트	포인트
+number_mark_unit	ko-KR	분	분
+number_mark_unit	ko-KR	배	배
+number_mark_unit	ko-KR	달러	달러
+number_mark_unit	ko-KR	위	위
 
 # Names used only when the decorative policy asks for them; otherwise these
 # characters follow the unreadable policy. Provisional, pending review.
