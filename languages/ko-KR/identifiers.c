@@ -1526,6 +1526,10 @@ size_t ttf_ko_classify_model_number(const ttf_pack_input_t *in, ttf_semantic_t *
     size_t n = in->length, b = in->tokens[in->index].begin, e = b, word;
     char key[64];
     int latin;
+    /* OST Part.1, EP.1: the period joins the number to its Latin label (2026-10-29) */
+    if (in->index > 0 && t[b] == '.' && b + 1 < n && decimal_digit(t[b + 1]) && b &&
+        latin_letter(t[b - 1]))
+        e = ++b;
     if (in->index == 0 || !decimal_digit(t[b]))
         return 0;
     while (e < n && decimal_digit(t[e]))

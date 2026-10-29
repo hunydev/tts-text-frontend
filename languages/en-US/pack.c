@@ -21,10 +21,11 @@ static const char *res(const ttf_engine_t *e, const char *kind, const char *key)
     return ttf_resource_get(e, kind, EN, key, NULL);
 }
 /* Lowercase ASCII letters that read as a word: two vowel letters or more (y after the
-   first letter counts) and no run of three consonant letters. A romanized Korean syllable
-   (eun, jeong, seol: EUNJOO, JEONGHO) is a name spelled out, not an English word. */
+   first letter counts) with no run of four consonant letters (MAESTRO, SANCTUARY), or one
+   vowel letter with no run of three (SPARK, CRUSH; NCSOFT stays letters). A romanized Korean
+   syllable (eun, jeong, seol: EUNJOO, JEONGHO) is a name spelled out, not an English word. */
 static int word_shaped(const char *key, size_t n) {
-    size_t j, vowels = 0, run = 0;
+    size_t j, vowels = 0, run = 0, longest = 0;
     for (j = 0; j + 2 < n; ++j)
         if (key[j] == 'e' && (key[j + 1] == 'o' || key[j + 1] == 'u') && strchr("nlm", key[j + 2]))
             return 0;
@@ -34,10 +35,10 @@ static int word_shaped(const char *key, size_t n) {
             return 0;
         vowels += vowel;
         run = vowel ? 0 : run + 1;
-        if (run > 2)
-            return 0;
+        if (run > longest)
+            longest = run;
     }
-    return vowels >= 2;
+    return longest <= 2 ? vowels >= 1 : longest == 3 && vowels >= 2;
 }
 /* An all-capital run that is still a word (caller checked the run is all capitals).
    THERE IS NO BODY, Silent NO More, I AM THE BEST: a short capital word that is a common

@@ -2,6 +2,15 @@
 
 갱신: 2026-10-11. Release **0.20.0**, public ABI **v1**.
 
+## 최근 인계: 영어 곡명 (2026-10-29)
+
+- **소유자 요청:** 영어 곡명. 서브에이전트 세트 v1·v2·v3(곡명·가수·차트·크레디트, 640문장)를 코드 고정 뒤 측정.
+  처음 연 v3 구간 정확도 main → 브랜치: 기본 27.1→42.7%, CMU 31.3→47.0%, localize+CMU 42.7→64.8%.
+- **고친 것:** 대문자 낱말 모양 판정, caps_word 확대, localize 대문자 낱말·관사 a, feat./ft./Ver./Prod./pt.,
+  라틴 라벨 숫자(Track 3, No.1, Part.1), 숫자 한 자리+영어 낱말(7 rings), 꺾쇠 곡명, 사전 v29.
+- **계약:** `ko_song_titles_v130`(20), `matrix_language_v24` legacy(3 books 쓰리 북스, Was: 삼).
+  상세: [english-words.ko.md](english-words.ko.md) "영어 곡명".
+
 ## 최근 인계: 문장 언어 declared + 영어 문장 localize (2026-10-29)
 
 - **소유자 요청:** 둘 다 켜면 `localize`가 우선. 영어 문장 투표가 영어인 문장은 한글 이름이 끼어 있어도
