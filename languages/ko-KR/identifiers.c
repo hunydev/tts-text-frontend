@@ -1541,9 +1541,17 @@ size_t ttf_ko_classify_model_number(const ttf_pack_input_t *in, ttf_semantic_t *
         if (l > e && !(l < n && alnum(t[l])))
             e = l; /* 6S, 13X, 아이폰 6s (2026-10-02) */
     }
-    if (e - b > 4 || (e < n && (alnum(t[e]) || t[e] == '.' || t[e] == ',' || t[e] == '-' ||
-                                t[e] == ':' || t[e] == '/')))
-        return 0;
+    /* OST Part.1, Part.2: after a Latin label a comma or period followed by a space or the
+       end closes the number (2026-10-29) */
+    {
+        int closing = e < n && (t[e] == '.' || t[e] == ',') && (e + 1 >= n || t[e + 1] == ' ') && b &&
+                      (latin_letter(t[b - 1]) || t[b - 1] == '.' ||
+                       (t[b - 1] == ' ' && b >= 2 && (latin_letter(t[b - 2]) || t[b - 2] == '.')));
+        if (e - b > 4 || (e < n && !closing &&
+                          (alnum(t[e]) || t[e] == '.' || t[e] == ',' || t[e] == '-' || t[e] == ':' ||
+                           t[e] == '/')))
+            return 0;
+    }
     {
         size_t d = b;
         while (d < e && decimal_digit(t[d]))

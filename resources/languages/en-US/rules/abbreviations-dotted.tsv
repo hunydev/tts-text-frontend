@@ -26,3 +26,7 @@ abbreviation_credit	en-US	ft	featuring
 abbreviation_dotted_period	en-US	feat	continuation
 abbreviation_dotted_period	en-US	prod	continuation
 abbreviation_dotted_period	en-US	ver	continuation
+# Ep.4 episode four (2026-10-29)
+abbreviation	en-US	ep	preserve
+abbreviation_number	en-US	ep	episode
+abbreviation_number_case	en-US	ep	mixed

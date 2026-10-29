@@ -296,7 +296,12 @@ size_t ttf_en_classify_abbreviation(const ttf_pack_input_t *in, ttf_semantic_t *
         expansion = lookup(in->engine, "abbreviation_number", key, NULL);
         /* Vol.2: a number written against the period reads the number word; Vol. 3 with a
            space keeps the dotted reading and its overrides (2026-10-29) */
+        /* EP.1 (a record) is letters while Ep.4 is an episode: a key marked
+           abbreviation_number_case mixed skips an all-capital spelling; NO.1 still reads
+           number (2026-10-29) */
         if (expansion && strcmp(expansion, "preserve") && following_digit(in, token->end + 1) &&
+            !(n >= 2 && upper(in->text[start]) && upper(in->text[start + 1]) &&
+              lookup(in->engine, "abbreviation_number_case", key, NULL)) &&
             !(lookup(in->engine, "abbreviation_dotted", key, NULL) && token->end + 1 < in->length &&
               horizontal(in->text[token->end + 1]))) {
             if (strlen(expansion) >= sizeof(out->value))
