@@ -128,6 +128,14 @@
       "kind": "editorial-policy",
       "checked_at": "2026-10-28",
       "note": "Common names, brands, capital acronym-words and signage words whose reading was wrong in Korean speech (ZARA 지에이알에이, Nike 나이크, Johnson 조흐느슨, Christmas 크리스트매스), read with the 외래어 표기법 spelling or established Korean usage. Project-owner request 2026-10-28. No human approval and no synthesized audio."
+    },
+    {
+      "id": "project-music-ko-v29",
+      "title": "Project readings of music names, title words and contractions in Korean context, v29",
+      "url": "https://www.korean.go.kr/front/page/pageView.do?mn_id=97&page_id=P000124",
+      "kind": "editorial-policy",
+      "checked_at": "2026-10-29",
+      "note": "Artist names, English song-title words, music terms and contractions whose reading was wrong in Korean speech (BLACKPINK spelled out, aespa 애에스파, Supernova 서퍼노바, Don't 던티), read with established Korean usage in music news and broadcasting. Project-owner request 2026-10-29. No human approval and no synthesized audio."
     }
   ]
 }

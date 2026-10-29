@@ -29,6 +29,22 @@ static const char *lookup(const ttf_engine_t *engine, const char *kind, const ch
         merge_layer(semantic, layer);
     return value;
 }
+/* The previous visible character closes a quotation or bracket, or opens a bracket. */
+static int credit_position(const ttf_pack_input_t *in, size_t start) {
+    static const char *const marks[] = {"\xe2\x80\x99", "\xe2\x80\x9d", "\xe3\x80\x8b",
+                                        "\xe3\x80\x89", "\xe3\x80\x8d", "\xe3\x80\x8f"};
+    size_t p = start, k;
+    while (p && horizontal(in->text[p - 1]))
+        --p;
+    if (!p)
+        return 0;
+    if (strchr("'\")(>", in->text[p - 1]))
+        return 1;
+    for (k = 0; k < sizeof(marks) / sizeof(marks[0]); ++k)
+        if (p >= 3 && !memcmp(in->text + p - 3, marks[k], 3))
+            return 1;
+    return 0;
+}
 static int left_boundary(const ttf_pack_input_t *in, size_t start) {
     char c;
     if (!start)
@@ -245,6 +261,21 @@ size_t ttf_en_classify_abbreviation(const ttf_pack_input_t *in, ttf_semantic_t *
                 (void)snprintf(out->rule, sizeof(out->rule), "en.abbreviation.street");
                 return token_count(in, out->input_end);
             }
+        }
+        /* 'Girls Like You' ft. Cardi B, (ft. Justin Bieber): right after a title's closing
+           quote or bracket, or opening a bracket, ft. credits a featured artist; elsewhere it
+           stays Fort (Ft. Worth; 2026-10-29 owner request: English song titles). */
+        expansion = lookup(in->engine, "abbreviation_credit", key, NULL);
+        if (expansion && credit_position(in, start)) {
+            out->type = TTF_SEM_ABBREVIATION;
+            out->lexical_class = TTF_LEX_WORD;
+            out->input_end = token->end + 1;
+            (void)lookup(in->engine, "abbreviation_credit", key, out);
+            (void)snprintf(out->value, sizeof(out->value), "%s", key);
+            (void)snprintf(out->secondary, sizeof(out->secondary), "credit");
+            (void)snprintf(out->source_lang, sizeof(out->source_lang), "%s", EN);
+            (void)snprintf(out->rule, sizeof(out->rule), "en.abbreviation.credit");
+            return token_count(in, out->input_end);
         }
         expansion = lookup(in->engine, "abbreviation_expansion", key, NULL);
         if (expansion && following_name(in, token->end + 1)) {
@@ -521,6 +552,10 @@ ttf_status_t ttf_en_verbalize_abbreviation(const ttf_engine_t *engine, const ttf
             status = ttf_trace_resource(engine, kind, EN, s->value, s->value, "abbreviation-reading",
                                         SIZE_MAX);
             return status == TTF_OK ? ttf_buffer_puts(out, value) : status;
+        }
+        if (!strcmp(s->secondary, "credit")) {
+            value = lookup(engine, "abbreviation_credit", s->value, NULL);
+            return value ? ttf_buffer_puts(out, value) : ttf_buffer_append(out, surface, length);
         }
         if (!strcmp(s->secondary, "number")) {
             value = lookup(engine, "abbreviation_number", s->value, NULL);

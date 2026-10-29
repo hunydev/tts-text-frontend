@@ -482,7 +482,7 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "sentence-language context flag must be 0 or 1");
     }
-    if (SAME(k, "context") && SAME(key, "loanword_plural")) {
+    if (SAME(k, "context") && (SAME(key, "loanword_plural") || SAME(key, "article_a"))) {
         *handled = 1;
         return label(v) && strlen(v) < 16
                    ? TTF_OK

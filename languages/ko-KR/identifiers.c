@@ -1525,6 +1525,7 @@ size_t ttf_ko_classify_model_number(const ttf_pack_input_t *in, ttf_semantic_t *
     const char *t = in->text;
     size_t n = in->length, b = in->tokens[in->index].begin, e = b, word;
     char key[64];
+    int latin;
     if (in->index == 0 || !decimal_digit(t[b]))
         return 0;
     while (e < n && decimal_digit(t[e]))
@@ -1552,12 +1553,28 @@ size_t ttf_ko_classify_model_number(const ttf_pack_input_t *in, ttf_semantic_t *
             return 0;
         --word;
     }
-    if (in->tokens[word].script != TTF_SCRIPT_HANGUL ||
+    /* Track 3, No.1, Vol. 1, pt.2, Top 10: a label written in Latin letters (model_name
+       key in lowercase), its period included; a counter only counts when attached
+       (No.1 곡 넘버원 곡; 2026-10-29 owner request: English song titles). */
+    latin = in->tokens[word].script == TTF_SCRIPT_LATIN;
+    if (!latin && word > 0 && in->tokens[word].end - in->tokens[word].begin == 1 &&
+        t[in->tokens[word].begin] == '.' && in->tokens[word - 1].script == TTF_SCRIPT_LATIN) {
+        --word;
+        latin = 1;
+    }
+    if ((!latin && in->tokens[word].script != TTF_SCRIPT_HANGUL) ||
         in->tokens[word].end - in->tokens[word].begin >= sizeof(key))
         return 0;
     memcpy(key, t + in->tokens[word].begin, in->tokens[word].end - in->tokens[word].begin);
     key[in->tokens[word].end - in->tokens[word].begin] = '\0';
-    if (!ttf_resource_get(in->engine, "model_name", "ko-KR", key, NULL) || quantity_word(in, e, 1))
+    if (latin) {
+        size_t k;
+        for (k = 0; key[k]; ++k)
+            if (key[k] >= 'A' && key[k] <= 'Z')
+                key[k] = (char)(key[k] + 'a' - 'A');
+    }
+    if (!ttf_resource_get(in->engine, "model_name", "ko-KR", key, NULL) ||
+        ((!latin || (e < n && t[e] != ' ')) && quantity_word(in, e, 1)))
         return 0;
     memcpy(s->value, t + b, e - b);
     s->value[e - b] = '\0';
@@ -1644,6 +1661,27 @@ size_t ttf_ko_classify_digit_identifier(const ttf_pack_input_t *in, ttf_semantic
                 !unit_letters(in, p, u) && ttf_classify_universal(in, &shared) &&
                 shared.type == TTF_SEM_TEXT && !strcmp(shared.rule, "syntax.unsupported-numeric") &&
                 shared.input_end == u) {
+                memcpy(s->value, t + b, u - b);
+                s->value[u - b] = '\0';
+                s->unit[0] = s->secondary[0] = '\0';
+                (void)snprintf(s->source_lang, sizeof(s->source_lang), "en-US");
+                s->lexical_class = TTF_LEX_ALNUM_TERM;
+                return classified(in, s, u, TTF_SEM_ALNUM_TERM, "ko:numeral-word");
+            }
+        }
+        /* 7 rings, 2 Baddies: one digit, one space and an English word of three letters or
+           more with a vowel (not a unit) is a title or name that reads the English numeral,
+           as attached (2Baddies 투배디스); more digits keep the Sino-Korean number (2026-10-29
+           owner request: English song titles). */
+        if (a_end - b == 1 && p + 4 < n && t[p] == ' ' &&
+            ((t[p + 1] >= 'a' && t[p + 1] <= 'z') || (t[p + 1] >= 'A' && t[p + 1] <= 'Z')) &&
+            t[p + 2] >= 'a' && t[p + 2] <= 'z') {
+            int vowel = 0;
+            u = p + 1;
+            while (u < n && ((t[u] >= 'a' && t[u] <= 'z') || (u == p + 1 && t[u] >= 'A' && t[u] <= 'Z')))
+                vowel |= strchr("aeiouyAEIOUY", t[u++]) != NULL;
+            if (u - p - 1 >= 3 && vowel && !(u < n && alnum(t[u])) && u - b < sizeof(s->value) &&
+                !unit_letters(in, p + 1, u)) {
                 memcpy(s->value, t + b, u - b);
                 s->value[u - b] = '\0';
                 s->unit[0] = s->secondary[0] = '\0';

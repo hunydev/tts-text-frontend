@@ -429,7 +429,7 @@ static ttf_status_t render_at(const ttf_engine_t *e, const ttf_language_pack_t *
             unsigned char c = (unsigned char)text[k];
             if (c >= '0' && c <= '9')
                 digits = 1;
-            else if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '-'))
+            else if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '-' || c == ' '))
                 valid = 0;
         }
         if (valid && digits) {
@@ -439,6 +439,14 @@ static ttf_status_t render_at(const ttf_engine_t *e, const ttf_language_pack_t *
                 size_t end = pos;
                 if (text[pos] == '-') {
                     /* The hyphen is a label joiner, not a negative sign. */
+                    ++pos;
+                    continue;
+                }
+                if (text[pos] == ' ') {
+                    /* 7 rings: a numeral and a word one space apart (2026-10-29) */
+                    st = ttf_buffer_puts(out, " ");
+                    if (st != TTF_OK)
+                        return st;
                     ++pos;
                     continue;
                 }

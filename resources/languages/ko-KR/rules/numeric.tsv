@@ -740,6 +740,28 @@ model_name	ko-KR	판타스틱	1
 model_name	ko-KR	폴스타	1
 model_name	ko-KR	플러스	1
 model_name	ko-KR	시즌	1
+# Labels written in Latin letters (Track 3 트랙 쓰리, No.1 넘버원, Top 10 탑 텐, Vol. 1, pt.2;
+# 2026-10-29 owner request: English song titles).
+model_name	ko-KR	track	1
+model_name	ko-KR	no	1
+model_name	ko-KR	top	1
+model_name	ko-KR	vol	1
+model_name	ko-KR	part	1
+model_name	ko-KR	pt	1
+model_name	ko-KR	season	1
+model_name	ko-KR	episode	1
+model_name	ko-KR	ep	1
+model_name	ko-KR	level	1
+model_name	ko-KR	round	1
+model_name	ko-KR	chapter	1
+model_name	ko-KR	stage	1
+model_name	ko-KR	phase	1
+model_name	ko-KR	day	1
+model_name	ko-KR	volume	1
+model_name	ko-KR	number	1
+model_name	ko-KR	act	1
+model_name	ko-KR	scene	1
+model_name	ko-KR	maroon	1
 # Baseball counts read English numerals (2아웃 투 아웃, 1스트라이크 원 스트라이크).
 numeric_suffix	*	아웃	COUNTER:아웃
 numeric_suffix	*	스트라이크	COUNTER:스트라이크

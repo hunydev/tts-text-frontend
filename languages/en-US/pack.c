@@ -20,6 +20,58 @@ static char ascii_lower(char c) {
 static const char *res(const ttf_engine_t *e, const char *kind, const char *key) {
     return ttf_resource_get(e, kind, EN, key, NULL);
 }
+/* Lowercase ASCII letters that read as a word: two vowel letters or more (y after the
+   first letter counts) and no run of three consonant letters. A romanized Korean syllable
+   (eun, jeong, seol: EUNJOO, JEONGHO) is a name spelled out, not an English word. */
+static int word_shaped(const char *key, size_t n) {
+    size_t j, vowels = 0, run = 0;
+    for (j = 0; j + 2 < n; ++j)
+        if (key[j] == 'e' && (key[j + 1] == 'o' || key[j + 1] == 'u') && strchr("nlm", key[j + 2]))
+            return 0;
+    for (j = 0; j < n; ++j) {
+        int vowel = strchr("aeiou", key[j]) != NULL || (j && key[j] == 'y');
+        if (key[j] < 'a' || key[j] > 'z')
+            return 0;
+        vowels += vowel;
+        run = vowel ? 0 : run + 1;
+        if (run > 2)
+            return 0;
+    }
+    return vowels >= 2;
+}
+/* An all-capital run that is still a word (caller checked the run is all capitals).
+   THERE IS NO BODY, Silent NO More, I AM THE BEST: a short capital word that is a common
+   English word (caps_word) next to a capitalized word of three letters or more is that
+   word, not letters; NO between lowercase words stays n o (2026-10-07; AM, THE 2026-10-29).
+   OPEN, SOLD OUT, NEWS: a run of four letters or more that is a common English word (the
+   electronic_word list) is that word, as signs and headlines write it; shorter runs stay
+   letters (IT, CAT, WHO). A lexicon entry still wins (2026-10-28; was 오피이엔).
+   FANCY, FEARLESS, KOSPI, UNESCO: a run of five letters or more shaped like a word is that
+   word, as song titles, brands and headlines write it; UNHCR, NCSOFT stay letters
+   (2026-10-29 owner request: English song titles; was 에프에이엔씨와이). */
+static int caps_as_word(const ttf_pack_input_t *in, const char *key, size_t n, size_t consumed) {
+    if (n <= 3 && res(in->engine, "caps_word", key)) {
+        size_t k = in->index;
+        while (k && in->tokens[k - 1].script == TTF_SCRIPT_WHITESPACE)
+            --k;
+        if (k && in->tokens[k - 1].script == TTF_SCRIPT_LATIN &&
+            in->tokens[k - 1].end - in->tokens[k - 1].begin >= 3 &&
+            in->text[in->tokens[k - 1].begin] >= 'A' && in->text[in->tokens[k - 1].begin] <= 'Z')
+            return 1;
+        k = in->index + consumed;
+        while (k < in->token_count && in->tokens[k].script == TTF_SCRIPT_WHITESPACE)
+            ++k;
+        if (k < in->token_count && in->tokens[k].script == TTF_SCRIPT_LATIN &&
+            in->tokens[k].end - in->tokens[k].begin >= 3 &&
+            in->text[in->tokens[k].begin] >= 'A' && in->text[in->tokens[k].begin] <= 'Z')
+            return 1;
+    }
+    if (consumed != 1)
+        return 0;
+    if (n >= 4 && res(in->engine, "electronic_word", key))
+        return 1;
+    return n >= 5 && word_shaped(key, n);
+}
 static int weight(const char *s, int fallback) {
     char *end;
     long n;
@@ -3279,7 +3331,8 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
        is an abbreviation under the spelling policy. A lexicon entry still wins
        later, because it is an explicit reading for the term. */
     if (kind && in->engine->initialism_policy == TTF_INITIALISM_SPELL && consumed == 1 && n > 1 &&
-        strcmp(kind, "ACRONYM") && strcmp(kind, "INITIALISM") && strcmp(kind, "PROPER_NOUN")) {
+        strcmp(kind, "ACRONYM") && strcmp(kind, "INITIALISM") && strcmp(kind, "PROPER_NOUN") &&
+        !caps_as_word(in, key, n, consumed)) {
         size_t upper;
         for (upper = 0; upper < n; ++upper)
             if (in->text[t->begin + upper] < 'A' || in->text[t->begin + upper] > 'Z')
@@ -3327,32 +3380,7 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
                     break;
                 }
         }
-        /* THERE IS NO BODY, Silent NO More: a short capital word that is a common
-           English word (caps_word) next to a capitalized word is that word, not
-           letters; NO between lowercase words stays n o (2026-10-07). */
-        if (all_upper && n <= 3 && res(in->engine, "caps_word", key)) {
-            size_t k = in->index, neighbours = 0;
-            while (k && in->tokens[k - 1].script == TTF_SCRIPT_WHITESPACE)
-                --k;
-            if (k && in->tokens[k - 1].script == TTF_SCRIPT_LATIN &&
-                in->tokens[k - 1].end - in->tokens[k - 1].begin >= 3 &&
-                in->text[in->tokens[k - 1].begin] >= 'A' && in->text[in->tokens[k - 1].begin] <= 'Z')
-                ++neighbours;
-            k = in->index + consumed;
-            while (k < in->token_count && in->tokens[k].script == TTF_SCRIPT_WHITESPACE)
-                ++k;
-            if (k < in->token_count && in->tokens[k].script == TTF_SCRIPT_LATIN &&
-                in->tokens[k].end - in->tokens[k].begin >= 3 &&
-                in->text[in->tokens[k].begin] >= 'A' && in->text[in->tokens[k].begin] <= 'Z')
-                ++neighbours;
-            if (neighbours)
-                all_upper = 0;
-        }
-        /* OPEN, SOLD OUT, NEWS: an all-capital run of four letters or more that is a common
-           English word (the electronic_word list) is that word, as signs and headlines write
-           it; shorter runs stay letters (IT, CAT, WHO). A lexicon entry still wins
-           (2026-10-28; was 오피이엔). */
-        if (all_upper && consumed == 1 && n >= 4 && res(in->engine, "electronic_word", key))
+        if (all_upper && caps_as_word(in, key, n, consumed))
             all_upper = 0;
         if (all_upper) {
             out->type = TTF_SEM_INITIALISM;

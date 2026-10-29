@@ -158,9 +158,12 @@ static const ttf_language_pack_t *script_pack(const ttf_engine_t *e, ttf_script_
    (3 three, 3pm three p m, 1st first, 2019 twenty nineteen); each Latin word of that
    reading is written in the request language through its loanword readings (lexicon,
    standard loanwords, an optional CMU layer, letter names, the grapheme guess), so
-   I have 3 apples reads 아이 해브 쓰리 애플스. Everything else in the reading stays. */
+   I have 3 apples reads 아이 해브 쓰리 애플스. Everything else in the reading stays.
+   A capital run of two to five letters is spelled, unless the token was read as a word
+   (I AM THE BEST 아이 엠 더 베스트, HOW YOU LIKE THAT; 2026-10-29) or as letters. */
 static ttf_status_t localize_reading(const ttf_engine_t *e, const ttf_language_pack_t *source,
-                                     const ttf_language_pack_t *target, ttf_buffer_t *reading) {
+                                     const ttf_language_pack_t *target, ttf_semantic_type_t type,
+                                     ttf_buffer_t *reading) {
     ttf_buffer_t out = {0};
     ttf_status_t st = TTF_OK;
     const char *s = reading->data ? reading->data : "";
@@ -182,8 +185,26 @@ static ttf_status_t localize_reading(const ttf_engine_t *e, const ttf_language_p
             char trace[64] = {0};
             ttf_resource_layer_t layer = TTF_LAYER_COMMON;
             ttf_lexical_class_t lexical =
-                end - at >= 2 && upper == end - at && end - at <= 5 ? TTF_LEX_INITIALISM : TTF_LEX_WORD;
-            st = ttf_foreign_render(e, source, target, s + at, end - at, lexical, &out, trace, &layer);
+                type == TTF_SEM_INITIALISM ||
+                        (type != TTF_SEM_WORD && end - at >= 2 && upper == end - at && end - at <= 5)
+                    ? TTF_LEX_INITIALISM
+                    : TTF_LEX_WORD;
+            /* a word written in capitals looks up its lowercase entries (HOW 하우, YOU 유) */
+            char word[64];
+            const char *run = s + at;
+            if (type == TTF_SEM_WORD && upper && end - at < sizeof(word)) {
+                size_t k;
+                for (k = 0; k < end - at; ++k)
+                    word[k] = s[at + k] >= 'A' && s[at + k] <= 'Z' ? (char)(s[at + k] | 32) : s[at + k];
+                run = word;
+            }
+            /* What a Wonderful World: the article a of a word token is 어, not the letter name
+               (context <tag> article_a; 2026-10-29) */
+            const char *article = type == TTF_SEM_WORD && end - at == 1 && s[at] == 'a'
+                                      ? ttf_resource_get(e, "context", target->language_tag, "article_a", NULL)
+                                      : NULL;
+            st = article ? ttf_buffer_puts(&out, article)
+                         : ttf_foreign_render(e, source, target, run, end - at, lexical, &out, trace, &layer);
         }
         at = end;
     }
@@ -2778,7 +2799,7 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
             const ttf_language_pack_t *home =
                 e->default_language ? ttf_find_pack(e, e->default_language) : NULL;
             if (home && renderer != home && renderer == script_pack(e, TTF_SCRIPT_LATIN))
-                st = localize_reading(e, renderer, home, &normalized);
+                st = localize_reading(e, renderer, home, sem->type, &normalized);
         }
         /* Only a particle written directly against the previous reading, with no
            space, is part of that phrase; a separate word keeps its own text.

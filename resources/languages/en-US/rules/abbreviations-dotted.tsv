@@ -13,4 +13,17 @@ abbreviation	en-US	ltd	preserve
 abbreviation	en-US	jr	preserve
 # Unlike a company suffix, 'vs. Beta' continues before a capitalized operand.
 abbreviation_dotted_period	en-US	vs	continuation
-
+# Music credits and versions (2026-10-29 owner request: English song titles):
+# Butter (feat. Megan Thee Stallion), English Ver., Prod. by Pdogg, pt.2
+abbreviation_dotted	en-US	feat	featuring
+abbreviation_dotted	en-US	ver	version
+abbreviation_dotted	en-US	prod	produced
+abbreviation	en-US	feat	preserve
+abbreviation	en-US	prod	preserve
+abbreviation	en-US	pt	preserve
+abbreviation_number	en-US	pt	part
+abbreviation_credit	en-US	ft	featuring
+abbreviation_expansion	en-US	ms	Miz
+abbreviation_dotted_period	en-US	feat	continuation
+abbreviation_dotted_period	en-US	prod	continuation
+abbreviation_dotted_period	en-US	ver	continuation

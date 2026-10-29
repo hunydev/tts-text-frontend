@@ -395,7 +395,8 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK : ttf_validation_error(
                        d, "abbreviation_dotted_period requires a lowercase key and sentence|continuation");
     }
-    if (SAME(k, "abbreviation_bare") || SAME(k, "abbreviation_dotted")) {
+    if (SAME(k, "abbreviation_bare") || SAME(k, "abbreviation_dotted") ||
+        SAME(k, "abbreviation_credit")) {
         *handled = 1;
         if (!lowercase_letters(key, 31))
             return ttf_validation_error(d,

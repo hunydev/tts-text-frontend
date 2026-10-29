@@ -117,3 +117,5 @@ particle_reading	ko-KR	티	톤|t
 context	ko-KR	code_hyphen	1
 # A Latin plural whose singular has a loanword reading: reading + this (apples 애플스, 2026-10-28)
 context	ko-KR	loanword_plural	스
+# foreign_sentence=localize: the English article a (What a Wonderful World 왓 어 원더풀 월드; 2026-10-29)
+context	ko-KR	article_a	어
