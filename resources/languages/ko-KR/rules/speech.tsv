@@ -158,6 +158,9 @@ speech_range_numeric	ko-KR	→	1
 # D-30 디 마이너스 삼십: a countdown to a day (2026-10-29).
 countdown	ko-KR	D-	디 마이너스 
 classifier_priority	ko-KR	ko:day-countdown	10
+# 2x 두 배, 1Q 일 분기 (2026-10-30, round 7)
+classifier_priority	ko-KR	ko:times	10
+classifier_priority	ko-KR	ko:quarter-q	10
 # 원/달러 환율 원 달러: a slash between two of these words names a currency pair (2026-10-29).
 currency_pair_word	ko-KR	원	1
 currency_pair_word	ko-KR	달러	1
@@ -273,6 +276,8 @@ speech_symbol	ko-KR	Γ	감마
 speech_symbol	ko-KR	Ξ	크시
 speech_symbol	ko-KR	∞	무한
 speech_symbol	ko-KR	√	루트
+# 1달러≒1,380원 일 달러 약 천삼백팔십 원 (2026-10-30, round 7; was 근사값)
+speech_symbol	ko-KR	≒	약
 speech_symbol	ko-KR	§	절
 speech_symbol	ko-KR	№	번호
 math_relation	ko-KR	≠	{L}{은/는} {R}와 같지 않다

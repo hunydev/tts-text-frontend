@@ -330,6 +330,9 @@ counter	ko-KR	근	native
 numeric_suffix	*	근	COUNTER:근
 counter	ko-KR	관	native
 numeric_suffix	*	관	COUNTER:관
+# 2관왕 이 관왕: the title count reads Sino, unlike 관 (2026-10-30, round 7; was 두 관왕)
+counter	ko-KR	관왕	sino
+numeric_suffix	*	관왕	COUNTER:관왕
 counter	ko-KR	짝	native
 numeric_suffix	*	짝	COUNTER:짝
 counter	ko-KR	사발	native

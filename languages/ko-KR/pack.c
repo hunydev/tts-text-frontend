@@ -1907,6 +1907,10 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             return expression(e, s->value, out);
         if (!strcmp(s->unit, "@word"))
             return ttf_buffer_puts(out, s->value);
+        if (!strcmp(s->unit, "@times"))
+            return quantity(e, s->value, resource(e, "unit", "times", "배"), !strchr(s->value, '.') && atoi(s->value) <= 10, out);
+        if (!strcmp(s->unit, "@quarter"))
+            return quantity(e, s->value, resource(e, "unit", "quarter", "분기"), 0, out);
         if (!strcmp(s->unit, "@countdown")) {
             TRY(ttf_buffer_puts(out, resource(e, "countdown", "D-", "디 마이너스 ")));
             return cardinal(e, s->value, out);
@@ -3462,6 +3466,30 @@ static size_t day_countdown(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     return ko_finish(in, s, q, TTF_SEM_SYMBOL, v, "@countdown", "ko:day-countdown");
 }
 
+/* 2x로 두 배, 1.5x 일 점 오 배: a number with a lowercase x after it is a multiple (speed or
+   size; 2026-10-30, was 이 엑스). 1Q 일 분기, 3Q 삼 분기: a quarter of the year (was 일 큐).
+   Both must close the word, and the number must not follow a letter or digit. */
+static size_t times_or_quarter(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    const char *t = in->text;
+    size_t n = in->length, p = in->tokens[in->index].begin, d = p;
+    char v[16];
+    if (!ko_digit(t[p]) || (p && (ko_digit(t[p - 1]) || ((t[p - 1] | 0x20) >= 'a' && (t[p - 1] | 0x20) <= 'z') ||
+                                  t[p - 1] == '.' || t[p - 1] == '-' || t[p - 1] == '/')))
+        return 0;
+    while (d < n && (ko_digit(t[d]) || (t[d] == '.' && d + 1 < n && ko_digit(t[d + 1]))) && d - p < sizeof(v) - 1)
+        ++d;
+    if (d >= n || (t[d] != 'x' && t[d] != 'Q') || (d + 1 < n && (ko_digit(t[d + 1]) || ((t[d + 1] | 0x20) >= 'a' && (t[d + 1] | 0x20) <= 'z'))) ||
+        !korean_context(in))
+        return 0;
+    (void)snprintf(v, sizeof(v), "%.*s", (int)(d - p), t + p);
+    if (t[d] == 'Q') {
+        if (d - p != 1 || t[p] < '1' || t[p] > '4')
+            return 0;
+        return ko_finish(in, s, d + 1, TTF_SEM_SYMBOL, v, "@quarter", "ko:quarter-q");
+    }
+    return ko_finish(in, s, d + 1, TTF_SEM_SYMBOL, v, "@times", "ko:times");
+}
+
 /* ▲8.4%로 … 상승으로: a particle that ends the word after a reading that now ends in the
    syllable cp takes that syllable's form (로/으로 를/을 가/이 는/은 와/과); it is appended to
    v and the returned end passes it. Otherwise d is returned unchanged. */
@@ -3679,6 +3707,12 @@ static size_t number_mark(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     d += w;
     if (d < n && (ko_digit(t[d]) || (t[d] >= 'a' && t[d] <= 'z') || (t[d] >= 'A' && t[d] <= 'Z')))
         return 0;
+    /* ~10/31까지, ~12:00: a date or time after the mark is not an amount. A range mark
+       there means "until" and is not read; the other marks keep their names. */
+    if (!unit && d + 1 < n && (t[d] == '/' || t[d] == ':' || t[d] == '.' || t[d] == '-') && ko_digit(t[d + 1]))
+        return ttf_resource_get(in->engine, "speech_range_mark", "ko-KR", key, NULL)
+                   ? ko_finish(in, s, m, TTF_SEM_SYMBOL, "", "@word", "ko:mark-until")
+                   : 0;
     if (!unit && d + 3 <= n && (unsigned char)t[d] >= 0xea && (unsigned char)t[d] <= 0xed) {
         /* ≥25이면: only a particle may follow a bare number */
         size_t k;
@@ -3955,7 +3989,7 @@ static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     size_t identifier = below_zero_degrees(in, s);
     if (identifier)
         return identifier;
-    if ((identifier = number_mark(in, s)) != 0 || (identifier = day_countdown(in, s)) != 0 || (identifier = promo_plus(in, s)) != 0 || (identifier = file_dot(in, s)) != 0 || (identifier = price_per_unit(in, s)) != 0 ||
+    if ((identifier = number_mark(in, s)) != 0 || (identifier = day_countdown(in, s)) != 0 || (identifier = times_or_quarter(in, s)) != 0 || (identifier = promo_plus(in, s)) != 0 || (identifier = file_dot(in, s)) != 0 || (identifier = price_per_unit(in, s)) != 0 ||
         (identifier = currency_pair(in, s)) != 0 || (identifier = short_dotted_date(in, s)) != 0 || (identifier = quarter(in, s)) != 0 ||
         (identifier = owner_forms(in, s)) != 0 || (identifier = owner_forms5(in, s)) != 0 ||
         (identifier = chemical_formula(in, s)) != 0 || (identifier = subscript_index(in, s)) != 0 ||

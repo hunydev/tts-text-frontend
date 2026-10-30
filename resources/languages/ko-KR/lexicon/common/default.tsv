@@ -2,6 +2,7 @@
 # Review status and provenance are in lexicons/; matching a default is not linguistic approval.
 lexicon	ko-KR	en-US:abba	아바
 lexicon	ko-KR	en-US:abc	에이비씨
+lexicon	ko-KR	en-US:abrams	에이브럼스
 lexicon	ko-KR	en-US:access	액세스
 lexicon	ko-KR	en-US:acoustic	어쿠스틱
 lexicon	ko-KR	en-US:address	어드레스
@@ -44,6 +45,7 @@ lexicon	ko-KR	en-US:asia	아시아
 lexicon	ko-KR	en-US:asian	아시안
 lexicon	ko-KR	en-US:association	어소시에이션
 lexicon	ko-KR	en-US:ateez	에이티즈
+lexicon	ko-KR	en-US:atlas	아틀라스
 lexicon	ko-KR	en-US:audi	아우디
 lexicon	ko-KR	en-US:auto	오토
 lexicon	ko-KR	en-US:automation	오토메이션
@@ -188,6 +190,7 @@ lexicon	ko-KR	en-US:don't	돈트
 lexicon	ko-KR	en-US:down	다운
 lexicon	ko-KR	en-US:download	다운로드
 lexicon	ko-KR	en-US:dr	닥터
+lexicon	ko-KR	en-US:dreams	드림스
 lexicon	ko-KR	en-US:drive	드라이브
 lexicon	ko-KR	en-US:drunk	드렁크
 lexicon	ko-KR	en-US:dune	듄
@@ -278,6 +281,7 @@ lexicon	ko-KR	en-US:four	포
 lexicon	ko-KR	en-US:fourteen	포틴
 lexicon	ko-KR	en-US:fourteenth	포틴스
 lexicon	ko-KR	en-US:fourth	포스
+lexicon	ko-KR	en-US:fragments	프래그먼츠
 lexicon	ko-KR	en-US:friday	프라이데이
 lexicon	ko-KR	en-US:friendship	프렌드십
 lexicon	ko-KR	en-US:frontend	프런트엔드
@@ -407,6 +411,7 @@ lexicon	ko-KR	en-US:jungkook	정국
 lexicon	ko-KR	en-US:k-pop	케이팝
 lexicon	ko-KR	en-US:kakaotalk	카카오톡
 lexicon	ko-KR	en-US:karina	카리나
+lexicon	ko-KR	en-US:katseye	캣츠아이
 lexicon	ko-KR	en-US:kcal	킬로칼로리
 lexicon	ko-KR	en-US:keep	킵
 lexicon	ko-KR	en-US:kids	키즈
@@ -462,6 +467,7 @@ lexicon	ko-KR	en-US:mashup	매시업
 lexicon	ko-KR	en-US:match	매치
 lexicon	ko-KR	en-US:materials	머티리얼즈
 lexicon	ko-KR	en-US:may	메이
+lexicon	ko-KR	en-US:mcrae	맥레이
 lexicon	ko-KR	en-US:me	미
 lexicon	ko-KR	en-US:media	미디어
 lexicon	ko-KR	en-US:medley	메들리
@@ -493,6 +499,7 @@ lexicon	ko-KR	en-US:mraz	므라즈
 lexicon	ko-KR	en-US:mrna	엠알엔에이
 lexicon	ko-KR	en-US:mumford	멈퍼드
 lexicon	ko-KR	en-US:my	마이
+lexicon	ko-KR	en-US:myles	마일스
 lexicon	ko-KR	en-US:naive	나이브
 lexicon	ko-KR	en-US:name	네임
 lexicon	ko-KR	en-US:national	내셔널
@@ -625,9 +632,11 @@ lexicon	ko-KR	en-US:seventh	세븐스
 lexicon	ko-KR	en-US:seventieth	세븐티스
 lexicon	ko-KR	en-US:seventy	세븐티
 lexicon	ko-KR	en-US:sf9	에스에프나인
+lexicon	ko-KR	en-US:shaboozey	샤부지
 lexicon	ko-KR	en-US:shakespeare	셰익스피어
 lexicon	ko-KR	en-US:shakira	샤키라
 lexicon	ko-KR	en-US:sheeran	시런
+lexicon	ko-KR	en-US:sheesh	쉬시
 lexicon	ko-KR	en-US:sherlock	셜록
 lexicon	ko-KR	en-US:shinee	샤이니
 lexicon	ko-KR	en-US:shop	숍
@@ -645,6 +654,7 @@ lexicon	ko-KR	en-US:sixtieth	식스티스
 lexicon	ko-KR	en-US:sixty	식스티
 lexicon	ko-KR	en-US:sky	스카이
 lexicon	ko-KR	en-US:smells	스멜스
+lexicon	ko-KR	en-US:smile	스마일
 lexicon	ko-KR	en-US:smoothie	스무디
 lexicon	ko-KR	en-US:social	소셜
 lexicon	ko-KR	en-US:society	소사이어티
@@ -696,6 +706,7 @@ lexicon	ko-KR	en-US:texas	텍사스
 lexicon	ko-KR	en-US:text	텍스트
 lexicon	ko-KR	en-US:thank	생크
 lexicon	ko-KR	en-US:that	댓
+lexicon	ko-KR	en-US:that's	댓츠
 lexicon	ko-KR	en-US:the	더
 lexicon	ko-KR	en-US:their	데어
 lexicon	ko-KR	en-US:there	데어
@@ -803,6 +814,7 @@ lexicon	ko-KR	en-US:you	유
 lexicon	ko-KR	en-US:you're	유어
 lexicon	ko-KR	en-US:young	영
 lexicon	ko-KR	en-US:your	유어
+lexicon	ko-KR	en-US:yourself	유어셀프
 lexicon	ko-KR	en-US:youth	유스
 lexicon	ko-KR	en-US:yuzu	유자
 lexicon	ko-KR	en-US:zero	제로

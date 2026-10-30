@@ -200,7 +200,7 @@ static ttf_status_t localize_reading(const ttf_engine_t *e, const ttf_language_p
             }
             /* What a Wonderful World: the article a of a word token is 어, not the letter name
                (context <tag> article_a; 2026-10-29) */
-            const char *article = type == TTF_SEM_WORD && end - at == 1 && s[at] == 'a'
+            const char *article = type == TTF_SEM_WORD && end - at == 1 && (s[at] | 32) == 'a'
                                       ? ttf_resource_get(e, "context", target->language_tag, "article_a", NULL)
                                       : NULL;
             st = article ? ttf_buffer_puts(&out, article)
