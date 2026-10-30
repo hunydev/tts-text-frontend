@@ -8,6 +8,9 @@ hanja_soft_after	ko-KR	률	율
 # 不 reads 부 before a syllable beginning with ㄷ or ㅈ (不正 부정, 不動産 부동산, 不得已 부득이).
 hanja_before_initial	ko-KR	不:ㄷ	부
 hanja_before_initial	ko-KR	不:ㅈ	부
+# 속음 before 月 (한글 맞춤법 제52항): 六月 유월, 十月 시월 (2026-10-30, round 8).
+hanja_before_char	ko-KR	六:月	유
+hanja_before_char	ko-KR	十:月	시
 # A character whose own reading differs from the form it stands for in Chinese or Japanese
 # (2026-10-26). Chinese: a sentence with neither Hangul nor kana under matrix=declared
 # (银行几点 은행기점, 台湾 대만, 广告 광고); Japanese: a sentence with kana (予約 예약, 体 체).

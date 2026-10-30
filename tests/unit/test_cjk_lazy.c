@@ -132,8 +132,9 @@ int main(int argc, char **argv) {
     for (mode = -1; mode < 4; ++mode) {
         /* hanja: 15513 rows, 1,583 of them hanja_readings_variants.tsv and 16 Chinese and
            Japanese context readings (2026-10-26; was 14583 with 627 variants; 2026-10-27 啡 배
-           +1 and 4,890 dictionary words, was 4,932: 15554) */
-        size_t added = mode <= 0 ? 0 : (mode & 1 ? 15513 : 0) + (mode & 2 ? 301 : 0) + 5;
+           +1 and 4,890 dictionary words, was 4,932: 15554; 2026-10-30 hanja_before_char 六:月 十:月
+           +2, was 15513, and kana_final は +1, was 301) */
+        size_t added = mode <= 0 ? 0 : (mode & 1 ? 15515 : 0) + (mode & 2 ? 302 : 0) + 5;
         CHECK(create(mode == 3 ? NULL : argv[1], mode, &e) == 0);
         CHECK(records(e) == base_records);
         CHECK(ttf_engine_freeze(e) == TTF_OK && records(e) == base_records + added);

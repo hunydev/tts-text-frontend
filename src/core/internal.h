@@ -257,10 +257,11 @@ static inline int ttf_cjk_resource_kind(const char *kind) {
         return !strcmp(kind, "hanja_reading") || !strcmp(kind, "hanja_variant_reading") ||
                !strcmp(kind, "hanja_chinese_reading") || !strcmp(kind, "hanja_japanese_reading") ||
                !strcmp(kind, "hanja_soft_after") ||
-               !strcmp(kind, "hanja_before_initial");
+               !strcmp(kind, "hanja_before_initial") || !strcmp(kind, "hanja_before_char");
     if (kind[0] == 'c') return !strcmp(kind, "cjk_word");
     return kind[0] == 'k' && (!strcmp(kind, "kana_reading") || !strcmp(kind, "kana_mark") ||
-                             !strcmp(kind, "kana_fold") || !strcmp(kind, "kana_long_after"));
+                             !strcmp(kind, "kana_fold") || !strcmp(kind, "kana_long_after") ||
+                             !strcmp(kind, "kana_final"));
 }
 size_t ttf_phrase_protect_until(const ttf_engine_t *engine, const char *text, size_t length,
                                 const ttf_token_t *tokens, size_t index);

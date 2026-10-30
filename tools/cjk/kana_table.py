@@ -148,6 +148,9 @@ def build(out):
     )
     lines = ["%s\tko-KR\t%s\t%s\n" % (kind, key, value) for kind, key, value in rows]
     lines += ["kana_long_after\tko-KR\t%s\t%s\n" % (v, k) for _, v, k in marks]
+    # こんにちは 곤니치와, わたしは 와타시와: the topic particle は is pronounced わ; it applies
+    # to a は that closes a kana run after other kana (2026-10-30, TN round 8).
+    lines += ["kana_final\tko-KR\tは\t와\n"]
     out.mkdir(parents=True, exist_ok=True)
     (out / "kana_readings.tsv").write_text(header + "".join(lines), encoding="utf-8", newline="\n")
 
