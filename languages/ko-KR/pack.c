@@ -3994,11 +3994,53 @@ static size_t letters_decimal(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     return z;
 }
 
+/* A month and day written as M.D or M/D at `at` (1-2 digits each, a real date). */
+static int bare_month_day(const char *t, size_t n, size_t at, size_t *end) {
+    size_t q, r;
+    unsigned month, day;
+    for (q = at; q < n && ko_digit(t[q]); ++q)
+        ;
+    if (q == at || q - at > 2 || q + 1 >= n || (t[q] != '.' && t[q] != '/') || !ko_digit(t[q + 1]))
+        return 0;
+    for (r = q + 1; r < n && ko_digit(t[r]); ++r)
+        ;
+    if (r - q - 1 > 2)
+        return 0;
+    month = (unsigned)atoi(t + at);
+    day = (unsigned)atoi(t + q + 1);
+    *end = r;
+    return month >= 1 && month <= 12 && day >= 1 && day <= 31;
+}
+
+static int date_tail(const char *t, size_t n, size_t r) {
+    return r < n && (ko_digit(t[r]) || t[r] == '.' || t[r] == '/' || t[r] == '%' || t[r] == ':' || t[r] == '~' ||
+                     t[r] == '-');
+}
+
+/* After a month and day pair: the end, a space or mark, a particle, or a copula (입니다). */
+static int date_follow_ok(const ttf_pack_input_t *in, size_t at) {
+    const char *t = in->text;
+    size_t n = in->length, k;
+    if (at >= n || (unsigned char)t[at] < 0xea || (unsigned char)t[at] > 0xed)
+        return 1;
+    if (starts_with_word(t, n, at, "입니|이다|이며|이고|이었|였다"))
+        return 1;
+    for (k = 3; k <= 9 && at + k <= n; k += 3) {
+        char word[16];
+        memcpy(word, t + at, k);
+        word[k] = 0;
+        if (ttf_resource_get(in->engine, "particle", "ko-KR", word, NULL))
+            return 1;
+    }
+    return 0;
+}
+
 /* 2024.1.1~12.31 이천이십사 년 일 월 일 일에서 십이 월 삼십일 일, 11/1~ 시작 십일 월 일 일부터
    시작: a month and day without a year reads as a date right after a full dotted date and
    its range mark, or right before an open range mark (~ then a space and a word, or the
-   end) (2026-10-30, TN round 9; was 십이 점 삼일, 일 분의 십일). 7.1~8.31 between two bare
-   pairs and 3.5~ 4.0 stay numbers. */
+   end) (2026-10-30, TN round 9; was 십이 점 삼일, 일 분의 십일). Two bare pairs (7.1~8.31)
+   are dates only after a period word (기간, 성수기, 일정 …) shortly before; otherwise they and
+   3.5~ 4.0 stay numbers. */
 static size_t range_month_day(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     const char *t = in->text;
     size_t n = in->length, p = in->tokens[in->index].begin, q, r, k;
@@ -4032,10 +4074,25 @@ static size_t range_month_day(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     if (r < n && t[r] == '~' && (r + 1 == n || (t[r + 1] == ' ' && r + 2 < n && !ko_digit(t[r + 2]) &&
                                                 t[r + 2] != '~' && t[r + 2] != '.')))
         open = 1;
-    if (!after_date && !open)
-        return 0;
-    if (!open && r < n && (ko_digit(t[r]) || t[r] == '.' || t[r] == '/' || t[r] == '%' || t[r] == ':' ||
-                           t[r] == '~' || t[r] == '-'))
+    if (!after_date && !open) {
+        /* 여름 성수기는 7.1~8.31: both sides of the range are month and day pairs */
+        size_t e2, from;
+        int pair = 0;
+        if (r < n && t[r] == '~' && bare_month_day(t, n, r + 1, &e2) && !date_tail(t, n, e2) &&
+            date_follow_ok(in, e2))
+            pair = 1;
+        else if (p >= 4 && t[p - 1] == '~' && !date_tail(t, n, r) && date_follow_ok(in, r)) {
+            for (from = p - 1; from > 0 && (ko_digit(t[from - 1]) || t[from - 1] == '.' || t[from - 1] == '/');
+                 --from)
+                ;
+            pair = bare_month_day(t, n, from, &e2) && e2 == p - 1 &&
+                   !(from && (((t[from - 1] | 0x20) >= 'a' && (t[from - 1] | 0x20) <= 'z') || t[from - 1] == '\''));
+        }
+        if (!pair || !word_within(t, p, 40, "기간|성수기|일정|시즌|휴가|방학|연휴|행사"))
+            return 0;
+        open = 1; /* the right side and the range mark are checked above */
+    }
+    if (!open && date_tail(t, n, r))
         return 0;
     if (!korean_context(in))
         return 0;
