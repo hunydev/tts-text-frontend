@@ -185,6 +185,9 @@ abbreviation_expansion	en-US	capt	Captain
 abbreviation_expansion	en-US	lt	Lieutenant
 abbreviation_expansion	en-US	sgt	Sergeant
 abbreviation_expansion	en-US	gov	Governor
+# Sen. Whitfield, Rep. Ortiz (2026-10-30, round 6)
+abbreviation_expansion	en-US	sen	Senator
+abbreviation_expansion	en-US	rep	Representative
 # Short common words that stay words among capitalized words (THERE IS NO BODY).
 caps_word	en-US	no	1
 caps_word	en-US	is	1

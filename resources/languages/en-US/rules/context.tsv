@@ -95,6 +95,8 @@ abbreviation	en-US	capt	preserve
 abbreviation	en-US	lt	preserve
 abbreviation	en-US	sgt	preserve
 abbreviation	en-US	gov	preserve
+abbreviation	en-US	sen	preserve
+abbreviation	en-US	rep	preserve
 abbreviation	en-US	etc	preserve
 abbreviation	en-US	vs	preserve
 # Titles before a name (St. Louis): the period is not a sentence end.

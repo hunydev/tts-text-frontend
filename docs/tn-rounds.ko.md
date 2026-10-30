@@ -113,6 +113,7 @@ localize+CMU 문장 정확도(%). 처음 측정은 고정한 브랜치 코드로
 | 회차 | 영역 | 줄 수 (dev / test) | dev 처음 → 수정 뒤 | test 처음 → 수정 뒤 | test main | 벤치마크 손익 | 소유자셋 변화 | CI |
 |---|---|---|---|---|---|---|---|---|
 | 5 | ja 숫자·날짜·시각·라틴 문자, zh 숫자·날짜·단위·기호 | 280 (139 / 141) | 96.4 → 99.3 | 95.0 (넓힌 뒤 95.7) → 97.2 | 95.7 | +0 / −0 | ja 4 (의도한 개선) | CI_EXIT=0 |
+| 6 | en 숫자·통화, 날짜·시각, 약어·기호, 식별자 | 264 (131 / 133) | 80.9 (넓힌 뒤 87.0) → 93.1 | 86.5 (넓힌 뒤 93.2) → 94.7 | 93.2 | +0 / −0 | 0 | CI_EXIT=0 |
 
 ### 5회차
 
@@ -128,3 +129,20 @@ localize+CMU 문장 정확도(%). 처음 측정은 고정한 브랜치 코드로
 소유자셋 변화: ja 4문장(iPhone, Windows, Zoom, Android가 가타카나로 읽힘). 소유자 참조가 `Windows 11`을 うぃんどうずじゅういち로 읽으므로 같은 방향이다. 이 네 문장의 채점 대상은 숫자여서 소유자셋 점수는 그대로다(ja dev 96.4, test 91.3).
 
 남은 과제: zh에서 단위 없는 다섯 자리 숫자(`数字12345`)를 자릿수로 읽는 기본값(幺二三四五). 소유자 zh 셋에 맞춘 기본값이라 바꾸지 않았다.
+
+### 6회차
+
+- 셋: `~/arw/rounds/r6.jsonl`, `r6_dev.jsonl`, `r6_test.jsonl`(en-US 264줄, 시드 20261031). 기준 코드는 브랜치 91360ad.
+- 넓힌 것(dev·test 전체, 기계 규칙): 엔진은 글자를 낱말 이름으로 쓴다(b → bee, q → cue, `letter_name` 표). 그래서 읽기의 한 글자 낱말마다 그 이름으로 바꾼 대안을 더했다. 실행 전 검토에서는 °F·°C를 단위 없이 끝내는 읽기, `1080p`의 pee, `≈` 읽기, 마스크 X를 건너뛴 읽기를 더했다.
+
+수정(모두 en-US):
+
+- `Mr. and Mrs. Lee` Mister and Missus Lee: 칭호 뒤에 and와 또 다른 칭호가 오고 그 뒤에 이름이 오면 앞 칭호도 편다(전에는 Mr. 그대로).
+- 칭호 `Sen.` Senator, `Rep.` Representative.
+- 마침표 약어 `Sr.` senior, `Co.` company, `approx.` approximately, `dept.` department.
+- 비율 뒤에 ratio가 오는 경우: `a 3:1 ratio` three to one, `a 16:9 aspect ratio` sixteen to nine. 전에는 앞 낱말(ratio of, dilute)만 보아서 출력에 `16:9`가 그대로 남았다. 시각 `10:30`은 그대로 ten thirty.
+- 관용 분수 `20/20` twenty twenty, `50/50` fifty fifty(`fraction_idiom`, 24/7과 같은 표).
+- 계약 `tn_rounds_v133.jsonl` 11건(반례 2건).
+
+남은 과제: 군 시각 `0800 hours`, 해상도 `1080p`, `π ≈ 3.14`(기호 이름 almost equal), 목재 `2×4` two by four, 주문 번호 `#48213`의 자릿수 읽기, URL 경로 낱말(acme가 글자로 읽힘), 짧은 문자 번호 `87654`.
+

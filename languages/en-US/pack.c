@@ -1832,14 +1832,22 @@ static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
             (void)snprintf(out->secondary, sizeof(out->secondary), "mdy");
             return used;
         }
-        /* dilute 1:10 one to ten, a ratio of 3:1 */
-        if (q + 1 < n && t[q] == ':' && ascii_digit_char(t[q + 1]) &&
-            (word_before(t, p, "dilute|diluted|dilution|ratio|mix|mixed|scale|odds|concentrate|stock") ||
-             (word_before(t, p, "of") && strstr_before(t, p, "ratio of")))) {
+        /* dilute 1:10 one to ten, a ratio of 3:1; a 3:1 ratio, a 16:9 aspect ratio (the
+           ratio word after the numbers, 2026-10-30) */
+        if (q + 1 < n && t[q] == ':' && ascii_digit_char(t[q + 1])) {
+            size_t a;
+            int after;
             for (r = q + 1; r < n && (ascii_digit_char(t[r]) || (t[r] == ',' && r + 1 < n && ascii_digit_char(t[r + 1])));
                  ++r)
                 ;
-            if (!(r < n && (ascii_digit_char(t[r]) || t[r] == ':')) && r - p < sizeof(v)) {
+            for (a = r; a < n && t[a] == ' '; ++a)
+                ;
+            if (a + 7 <= n && !strncmp(t + a, "aspect ", 7))
+                a += 7;
+            after = a > r && a + 5 <= n && !strncmp(t + a, "ratio", 5) && !(a + 5 < n && ascii_letter_char(t[a + 5]));
+            if ((after || word_before(t, p, "dilute|diluted|dilution|ratio|mix|mixed|scale|odds|concentrate|stock") ||
+                 (word_before(t, p, "of") && strstr_before(t, p, "ratio of"))) &&
+                !(r < n && (ascii_digit_char(t[r]) || t[r] == ':')) && r - p < sizeof(v)) {
                 size_t k, used = 0;
                 for (k = p; k < r; ++k)
                     if (t[k] != ',')

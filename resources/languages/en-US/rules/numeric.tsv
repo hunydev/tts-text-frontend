@@ -519,6 +519,9 @@ count_scale	en-US	B	1000000000
 classifier_priority	en-US	en.count-scale	10
 # 24/7 is an idiom; after these words it stays a fraction (a ratio of 24/7).
 fraction_idiom	en-US	24/7	twenty four seven
+# 20/20 vision, a 50/50 chance (2026-10-30, round 6)
+fraction_idiom	en-US	20/20	twenty twenty
+fraction_idiom	en-US	50/50	fifty fifty
 fraction_idiom_not	en-US	of	1
 fraction_idiom_not	en-US	ratio	1
 classifier_priority	en-US	en.fraction-idiom	10

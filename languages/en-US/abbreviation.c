@@ -84,6 +84,17 @@ static int following_name(const ttf_pack_input_t *in, size_t end) {
     size_t p = end;
     while (p < in->length && horizontal(in->text[p]))
         ++p;
+    /* Mr. and Mrs. Lee: a title joined by "and" to another title before the name
+       (2026-10-30; was Mr. kept as written) */
+    if (p > end && p + 4 < in->length && !memcmp(in->text + p, "and ", 4)) {
+        size_t q = p + 4, w = q;
+        char key[8];
+        while (w < in->length && alpha(in->text[w]) && w - q < sizeof(key) - 1)
+            key[w - q] = lower(in->text[w]), ++w;
+        key[w - q] = 0;
+        if (w > q && w < in->length && in->text[w] == '.' && lookup(in->engine, "abbreviation_expansion", key, NULL))
+            return following_name(in, w + 1);
+    }
     return p > end && p < in->length && upper(in->text[p]) && p + 1 < in->length &&
            (alpha(in->text[p + 1]) || in->text[p + 1] == '.');
 }

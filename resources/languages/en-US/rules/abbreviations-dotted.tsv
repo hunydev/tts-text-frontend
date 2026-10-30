@@ -11,6 +11,15 @@ abbreviation	en-US	vol	preserve
 abbreviation	en-US	ext	preserve
 abbreviation	en-US	ltd	preserve
 abbreviation	en-US	jr	preserve
+# Sr. senior, Co. company, approx. approximately, dept. department (2026-10-30, round 6)
+abbreviation_dotted	en-US	sr	senior
+abbreviation_dotted	en-US	co	company
+abbreviation_dotted	en-US	approx	approximately
+abbreviation_dotted	en-US	dept	department
+abbreviation	en-US	sr	preserve
+abbreviation	en-US	co	preserve
+abbreviation	en-US	approx	preserve
+abbreviation	en-US	dept	preserve
 # Unlike a company suffix, 'vs. Beta' continues before a capitalized operand.
 abbreviation_dotted_period	en-US	vs	continuation
 # Music credits and versions (2026-10-29 owner request: English song titles):
