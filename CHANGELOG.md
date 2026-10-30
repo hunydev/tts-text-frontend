@@ -2,6 +2,12 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- xvoice5 comparison rerun (2026-10-30, owner request): the owner supplied an xvoice5 TN built
+  from the internal engine source (TN1.14.16; the copy bundled with the engine was TN1.14.5 and
+  lacked a 2026-09-23 fix). On the v3 Korean test spans it scores 76.5% (83.4% with the
+  spelling adjustment; was 75.5% / 80.8%) against TTF 95.0% on main 710f10c. Held-out address
+  and CJK sets are unchanged for xvoice5 (24 wrong spans; 82 of 210 sentences). Details in
+  docs/xvoice5-comparison.ko.md. Documentation only; no engine change.
 - Arabic email and URL controls (2026-10-27, owner report: the language comparison listed
   them as unsupported): `[[a1@b2.com]]{@email}` and `{@url}` failed with invalid resource,
   as the shared reader found no Arabic mark names. They now pass the shared shape check and

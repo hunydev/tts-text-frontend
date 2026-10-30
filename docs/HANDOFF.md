@@ -2,6 +2,12 @@
 
 갱신: 2026-10-11. Release **0.20.0**, public ABI **v1**.
 
+## 최근 인계: xvoice5 최신 빌드 재측정 (2026-10-30)
+
+- **무엇:** 소유자가 준 새 xvoice5 TN 패키지(사내 소스로 빌드한 TN1.14.16, 옛 동봉본은 TN1.14.5)로 비교를 다시 냈다. VM `~/xvoice5-tn`이 새 빌드, `~/xvoice5-tn-114-5`가 옛 빌드.
+- **결과:** v3 test 스팬 xvoice5 76.5%(조정 83.4%), TTF 95.0%. 주소 held-out 틀림 TTF 9 / xvoice5 24, 한자·가나 210문장 TTF 201 / xvoice5 82. 백만 개 사전 문장 TTF 0.46ms / xvoice5 5.02ms. 상세: [xvoice5-comparison.ko.md](xvoice5-comparison.ko.md).
+- **발표 덱:** https://claude.ai/artifact/EezPZ2tpot8sHo2rAsYBvH 를 같은 숫자로 바꿨다. xvoice5가 사내 소스로 빌드되므로 "닫힌 바이너리라 고칠 수 없다"는 "고치려면 C 엔진 소스를 고쳐 .so를 다시 빌드·배포해야 한다"로 고쳤다.
+
 ## 최근 인계: 영어 곡명 (2026-10-29)
 
 - **소유자 요청:** 영어 곡명. 서브에이전트 세트 v1~v4(곡명·가수·차트·크레디트, 790문장)를 코드 고정 뒤 측정.
