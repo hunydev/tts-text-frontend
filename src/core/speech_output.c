@@ -50,9 +50,12 @@ const char *ttf_speech_range_mark(const ttf_engine_t *e, const char *language, c
                                   const char *right, size_t right_length) {
     char key[8];
     size_t width;
+    /* '25.11.3~'25.11.9: the apostrophe of a short year opens the right side (2026-10-30,
+       TN round 9; the mark was silent) */
+    int short_year = right_length >= 2 && right[0] == '\'' && right[1] >= '0' && right[1] <= '9';
     if (!span_length || span_length >= sizeof(key) ||
         !ttf_speech_spoken_before(e, language, left, left_length) ||
-        !spoken_at(e, language, right, right_length))
+        !(short_year || spoken_at(e, language, right, right_length)))
         return NULL;
     memcpy(key, span, span_length);
     key[span_length] = 0;
@@ -145,7 +148,8 @@ const char *ttf_speech_range_open(const ttf_engine_t *e, const char *language,
     uint32_t cp;
     ttf_script_t script;
     const char *reading;
-    if (!span_length || span_length >= sizeof(key) || spoken_at(e, language, right, right_length))
+    if (!span_length || span_length >= sizeof(key) || spoken_at(e, language, right, right_length) ||
+        (right_length >= 2 && right[0] == '\'' && right[1] >= '0' && right[1] <= '9'))
         return NULL;
     memcpy(key, span, span_length);
     key[span_length] = 0;

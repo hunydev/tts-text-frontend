@@ -3586,24 +3586,36 @@ static size_t currency_pair(const ttf_pack_input_t *in, ttf_semantic_t *s) {
 
 /* report_final.pdf 리포트 언더스코어 파이널 닷 피디에프: the period before a declared file
    extension (file_extension) reads with its symbol name; it was kept as written and so
-   was silent (2026-10-29). Only right after a letter or digit and before the end of the
-   name, so a sentence period stays punctuation. */
+   was silent (2026-10-29). Only right after a letter, digit or Hangul syllable (보고서.pdf;
+   2026-10-30, was 보고서.피디에프) and before the end of the name, so a sentence period
+   stays punctuation. An extension declared with a reading (exe 이엑스이) is read with it. */
 static size_t file_dot(const ttf_pack_input_t *in, ttf_semantic_t *s) {
-    const char *t = in->text, *name;
+    const char *t = in->text, *name, *reading;
     size_t n = in->length, p = in->tokens[in->index].begin, q = p + 1, k;
-    char ext[8], word[32];
-    if (t[p] != '.' || !p || !(ko_digit(t[p - 1]) || ((t[p - 1] | 0x20) >= 'a' && (t[p - 1] | 0x20) <= 'z')))
+    char ext[8], word[64];
+    int hangul = p >= 3 && (unsigned char)t[p - 3] >= 0xea && (unsigned char)t[p - 3] <= 0xed &&
+                 ((unsigned char)t[p - 2] & 0xc0) == 0x80 && ((unsigned char)t[p - 1] & 0xc0) == 0x80;
+    if (t[p] != '.' || !p ||
+        !(hangul || ko_digit(t[p - 1]) || ((t[p - 1] | 0x20) >= 'a' && (t[p - 1] | 0x20) <= 'z')))
         return 0;
     for (k = 0; q + k < n && k + 1 < sizeof(ext) && (((t[q + k] | 0x20) >= 'a' && (t[q + k] | 0x20) <= 'z') || ko_digit(t[q + k])); ++k)
         ext[k] = (char)(t[q + k] | (ko_digit(t[q + k]) ? 0 : 0x20));
     ext[k] = 0;
     if (!k || (q + k < n && (ko_digit(t[q + k]) || ((t[q + k] | 0x20) >= 'a' && (t[q + k] | 0x20) <= 'z') ||
                              (t[q + k] == '.' && q + k + 1 < n && t[q + k + 1] != ' '))) ||
-        !ttf_resource_get(in->engine, "file_extension", "ko-KR", ext, NULL) || !korean_context(in))
+        !(reading = ttf_resource_get(in->engine, "file_extension", "ko-KR", ext, NULL)) || !korean_context(in))
         return 0;
     name = ttf_resource_get(in->engine, "speech_symbol", "ko-KR", ".", NULL);
-    if (!name || strlen(name) + 3 > sizeof(word))
+    if (!name || strlen(name) + strlen(reading) + 3 > sizeof(word))
         return 0;
+    if (strcmp(reading, "1")) {
+        size_t a = strlen(name), b = strlen(reading);
+        word[0] = ' ';
+        memcpy(word + 1, name, a);
+        word[a + 1] = ' ';
+        memcpy(word + a + 2, reading, b + 1);
+        return ko_finish(in, s, q + k, TTF_SEM_SYMBOL, word, "@word", "ko:file-dot");
+    }
     (void)snprintf(word, sizeof(word), " %s ", name);
     return ko_finish(in, s, q, TTF_SEM_SYMBOL, word, "@word", "ko:file-dot");
 }
@@ -3982,6 +3994,55 @@ static size_t letters_decimal(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     return z;
 }
 
+/* 2024.1.1~12.31 이천이십사 년 일 월 일 일에서 십이 월 삼십일 일, 11/1~ 시작 십일 월 일 일부터
+   시작: a month and day without a year reads as a date right after a full dotted date and
+   its range mark, or right before an open range mark (~ then a space and a word, or the
+   end) (2026-10-30, TN round 9; was 십이 점 삼일, 일 분의 십일). 7.1~8.31 between two bare
+   pairs and 3.5~ 4.0 stay numbers. */
+static size_t range_month_day(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    const char *t = in->text;
+    size_t n = in->length, p = in->tokens[in->index].begin, q, r, k;
+    unsigned month, day;
+    int after_date = 0, open = 0;
+    char v[16];
+    if (p >= n || !ko_digit(t[p]) || (p && (ko_digit(t[p - 1]) || t[p - 1] == '.' || t[p - 1] == '/')))
+        return 0;
+    for (q = p; q < n && ko_digit(t[q]); ++q)
+        ;
+    if (q - p > 2 || q + 1 >= n || (t[q] != '.' && t[q] != '/') || !ko_digit(t[q + 1]))
+        return 0;
+    for (r = q + 1; r < n && ko_digit(t[r]); ++r)
+        ;
+    if (r - q - 1 > 2)
+        return 0;
+    month = (unsigned)atoi(t + p);
+    day = (unsigned)atoi(t + q + 1);
+    if (month < 1 || month > 12 || day < 1 || day > 31)
+        return 0;
+    if (p >= 6 && t[p - 1] == '~' && ko_digit(t[p - 2])) {
+        /* the left side is Y.M.D: four year digits, or 'YY */
+        size_t dots = 0, lead = 0;
+        for (k = p - 1; k > 0 && p - k < 14 && (ko_digit(t[k - 1]) || t[k - 1] == '.'); --k)
+            dots += t[k - 1] == '.';
+        while (k + lead < p && ko_digit(t[k + lead]))
+            ++lead;
+        after_date = dots == 2 && (lead == 4 || (lead == 2 && k && t[k - 1] == '\'')) &&
+                     !(k && (ko_digit(t[k - 1]) || ((t[k - 1] | 0x20) >= 'a' && (t[k - 1] | 0x20) <= 'z')));
+    }
+    if (r < n && t[r] == '~' && (r + 1 == n || (t[r + 1] == ' ' && r + 2 < n && !ko_digit(t[r + 2]) &&
+                                                t[r + 2] != '~' && t[r + 2] != '.')))
+        open = 1;
+    if (!after_date && !open)
+        return 0;
+    if (!open && r < n && (ko_digit(t[r]) || t[r] == '.' || t[r] == '/' || t[r] == '%' || t[r] == ':' ||
+                           t[r] == '~' || t[r] == '-'))
+        return 0;
+    if (!korean_context(in))
+        return 0;
+    (void)snprintf(v, sizeof(v), "--%02u-%02u", month, day);
+    return ko_finish(in, s, r, TTF_SEM_DATE, v, "month-day", "ko:range-month-day");
+}
+
 static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     const char *text = in->text;
     size_t n = in->length, begin = in->tokens[in->index].begin, p, q;
@@ -3989,7 +4050,7 @@ static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     size_t identifier = below_zero_degrees(in, s);
     if (identifier)
         return identifier;
-    if ((identifier = number_mark(in, s)) != 0 || (identifier = day_countdown(in, s)) != 0 || (identifier = times_or_quarter(in, s)) != 0 || (identifier = promo_plus(in, s)) != 0 || (identifier = file_dot(in, s)) != 0 || (identifier = price_per_unit(in, s)) != 0 ||
+    if ((identifier = number_mark(in, s)) != 0 || (identifier = day_countdown(in, s)) != 0 || (identifier = times_or_quarter(in, s)) != 0 || (identifier = promo_plus(in, s)) != 0 || (identifier = file_dot(in, s)) != 0 || (identifier = range_month_day(in, s)) != 0 || (identifier = price_per_unit(in, s)) != 0 ||
         (identifier = currency_pair(in, s)) != 0 || (identifier = short_dotted_date(in, s)) != 0 || (identifier = quarter(in, s)) != 0 ||
         (identifier = owner_forms(in, s)) != 0 || (identifier = owner_forms5(in, s)) != 0 ||
         (identifier = chemical_formula(in, s)) != 0 || (identifier = subscript_index(in, s)) != 0 ||
