@@ -2923,6 +2923,7 @@ static int two_digits_at(const char *t, size_t n, size_t p, unsigned *v, size_t 
 
 /* '25.11.3, 26.12.24: a two-digit year, month and day joined by dots is a date
    (owner sets, 2026-10-14); the apostrophe of a shortened year is part of it. */
+static int word_within(const char *t, size_t p, size_t window, const char *words);
 static size_t short_dotted_date(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     const char *t = in->text;
     size_t n = in->length, begin = in->tokens[in->index].begin, p = begin, q, i;
@@ -2932,6 +2933,10 @@ static size_t short_dotted_date(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         ++p;
     if (p >= n || t[p] < '0' || t[p] > '9' ||
         (begin && ((t[begin - 1] >= '0' && t[begin - 1] <= '9') || t[begin - 1] == '.')))
+        return 0;
+    /* 카카오톡 버전 10.8.5 십 점 팔 점 오: after a version word it is a version, not a date
+       (2026-10-30, TN round 10; was 십 년 팔 월 오 일) */
+    if (word_within(t, begin, 12, "버전|ver|Ver|VER"))
         return 0;
     if (!two_digits_at(t, n, p, &year, &q) || q - p != 2 || q >= n || t[q] != '.' ||
         !two_digits_at(t, n, q + 1, &month, &q) || q >= n || t[q] != '.' ||
