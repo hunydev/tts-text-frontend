@@ -4043,6 +4043,33 @@ static size_t range_month_day(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     return ko_finish(in, s, r, TTF_SEM_DATE, v, "month-day", "ko:range-month-day");
 }
 
+/* 월~금 운영 월요일부터 금요일까지 운영: a range between two one-syllable weekday names
+   standing alone reads the full names (owner set ko-KR-0776 accepts 월요일부터 금요일까지;
+   2026-10-30, TN round 9; was 월에서 금). Before a particle (월~금에는) it stays a plain
+   range. */
+static size_t weekday_range(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    const char *t = in->text;
+    size_t n = in->length, p = in->tokens[in->index].begin, end = p + 7;
+    char a[4], b[4], v[64];
+    if (end > n || t[p + 3] != '~' || (unsigned char)t[p] < 0xea || (unsigned char)t[p] > 0xed ||
+        (unsigned char)t[p + 4] < 0xea || (unsigned char)t[p + 4] > 0xed)
+        return 0;
+    if (p && ((unsigned char)t[p - 1] >= 0x80 || ko_digit(t[p - 1]) || ((t[p - 1] | 0x20) >= 'a' && (t[p - 1] | 0x20) <= 'z')))
+        return 0;
+    if (end < n && ((unsigned char)t[end] >= 0x80 || ko_digit(t[end]) || ((t[end] | 0x20) >= 'a' && (t[end] | 0x20) <= 'z') ||
+                    t[end] == '~' || t[end] == '-'))
+        return 0;
+    memcpy(a, t + p, 3);
+    a[3] = 0;
+    memcpy(b, t + p + 4, 3);
+    b[3] = 0;
+    if (!strcmp(a, b) || !ttf_resource_get(in->engine, "weekday_label", "ko-KR", a, NULL) ||
+        !ttf_resource_get(in->engine, "weekday_label", "ko-KR", b, NULL) || !korean_context(in))
+        return 0;
+    (void)snprintf(v, sizeof(v), "%s요일부터 %s요일까지", a, b);
+    return ko_finish(in, s, end, TTF_SEM_SYMBOL, v, "@word", "ko:weekday-range");
+}
+
 static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     const char *text = in->text;
     size_t n = in->length, begin = in->tokens[in->index].begin, p, q;
@@ -4050,7 +4077,7 @@ static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     size_t identifier = below_zero_degrees(in, s);
     if (identifier)
         return identifier;
-    if ((identifier = number_mark(in, s)) != 0 || (identifier = day_countdown(in, s)) != 0 || (identifier = times_or_quarter(in, s)) != 0 || (identifier = promo_plus(in, s)) != 0 || (identifier = file_dot(in, s)) != 0 || (identifier = range_month_day(in, s)) != 0 || (identifier = price_per_unit(in, s)) != 0 ||
+    if ((identifier = number_mark(in, s)) != 0 || (identifier = day_countdown(in, s)) != 0 || (identifier = times_or_quarter(in, s)) != 0 || (identifier = promo_plus(in, s)) != 0 || (identifier = file_dot(in, s)) != 0 || (identifier = range_month_day(in, s)) != 0 || (identifier = weekday_range(in, s)) != 0 || (identifier = price_per_unit(in, s)) != 0 ||
         (identifier = currency_pair(in, s)) != 0 || (identifier = short_dotted_date(in, s)) != 0 || (identifier = quarter(in, s)) != 0 ||
         (identifier = owner_forms(in, s)) != 0 || (identifier = owner_forms5(in, s)) != 0 ||
         (identifier = chemical_formula(in, s)) != 0 || (identifier = subscript_index(in, s)) != 0 ||
