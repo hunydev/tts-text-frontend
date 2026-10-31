@@ -18,6 +18,21 @@ static int cue(const ttf_pack_input_t *in, const char *kind, size_t index,
     value = ttf_resource_get(in->engine, kind, "ko-KR", key, layer);
     if (value)
         return !strcmp(value, "1");
+    /* 행사장은 3F, 3F 그랜드홀입니다: a cue word may carry a particle (2026-10-31, TN round 18) */
+    for (size_t cut = width; cut > 0; --cut) {
+        if (((unsigned char)key[cut] & 0xc0u) == 0x80u || cut == width)
+            continue;
+        if (!ttf_resource_get(in->engine, "particle", "ko-KR", key + cut, NULL))
+            continue;
+        {
+            char saved = key[cut];
+            key[cut] = 0;
+            value = ttf_resource_get(in->engine, kind, "ko-KR", key, layer);
+            key[cut] = saved;
+            if (value)
+                return !strcmp(value, "1");
+        }
+    }
     if (!strcmp(kind, "floor_cue_before")) {
         /* A named building can retain its productive noun ending: the longest
            declared suffix wins, including an explicit disabled suffix. */

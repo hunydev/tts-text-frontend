@@ -28,6 +28,28 @@ floor_cue_after	ko-KR	로비	1
 floor_cue_after	ko-KR	사무실	1
 floor_cue_after	ko-KR	회의실	1
 boundary_word	ko-KR	회의실	1
+# 1F 정문 옆 일 층, 3F 그랜드홀 삼 층: places that name a floor's room or hall (2026-10-31, TN round 18;
+# was 일 에프). An airport zone (1F 구역) or a size (100F) has no cue and keeps F.
+floor_cue_before	ko-KR	행사장	1
+boundary_word	ko-KR	행사장	1
+floor_cue_after	ko-KR	정문	1
+floor_cue_after	ko-KR	그랜드홀	1
+floor_cue_after	ko-KR	홀	1
+floor_cue_after	ko-KR	라운지	1
+floor_cue_after	ko-KR	강당	1
+floor_cue_after	ko-KR	매장	1
+floor_cue_after	ko-KR	식당	1
+floor_cue_after	ko-KR	푸드코트	1
+floor_cue_after	ko-KR	연회장	1
+floor_cue_after	ko-KR	전시장	1
+boundary_word	ko-KR	정문	1
+boundary_word	ko-KR	그랜드홀	1
+boundary_word	ko-KR	라운지	1
+boundary_word	ko-KR	강당	1
+boundary_word	ko-KR	매장	1
+boundary_word	ko-KR	푸드코트	1
+boundary_word	ko-KR	연회장	1
+boundary_word	ko-KR	전시장	1
 floor_cue_before_suffix	ko-KR	타워	1
 floor_cue_before_suffix	ko-KR	빌딩	1
 

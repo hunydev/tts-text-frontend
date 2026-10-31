@@ -4240,10 +4240,6 @@ static size_t letter_unit(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         unit = "channel", k = 2;
     else if (t[q] == 'R' && w <= 2 && !strchr(v, '.'))
         unit = "round", k = 1;
-    /* 3F 삼 층: a floor written with F (2026-10-31, TN round 18; was 삼 에프); an airport zone or gate
-       code keeps its letters (1F 구역 일 에프, references), and so does a size (100F 백 에프) */
-    else if (t[q] == 'F' && w <= 2 && !strchr(v, '.') && !word_after(t, n, q + 1, 16, "구역|게이트|탑승구|출구|존|라인"))
-        unit = "floor", k = 1;
     else
         return 0;
     if (q + k < n && (ko_digit(t[q + k]) || ((t[q + k] | 0x20) >= 'a' && (t[q + k] | 0x20) <= 'z') || t[q + k] == '-'))
