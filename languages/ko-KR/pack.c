@@ -4475,7 +4475,7 @@ typedef struct {
     const ttf_engine_t *e;
     const char *t;
     size_t n, p;
-    int vars, groups, powers, fractions, numbers, operators;
+    int vars, groups, powers, fractions, numbers, operators, chains;
 } algebra_t;
 static int algebra_var(char c) { return c >= 'a' && c <= 'z' && strchr("abcdknpqrtuvwxyz", c) != NULL; }
 static int algebra_side(algebra_t *a, ttf_buffer_t *out);
@@ -4641,7 +4641,32 @@ static int algebra_expression(algebra_t *a, ttf_buffer_t *out) {
         return ok;
     }
     a->p += strlen(relations[k].text);
-    ok = algebra_side(a, &right) && (template = ttf_resource_get(a->e, "math_relation", "ko-KR", relations[k].key, NULL));
+    ok = algebra_side(a, &right);
+    /* 1<x<5 엑스는 일보다 크고 오보다 작다, -2≤x≤3 …보다 크거나 같고 …보다 작거나 같다: a value between two
+       bounds, read from the middle (2026-10-31, TN round 16; was 일 엑스 오) */
+    if (ok && (k == 1 || k == 3) && a->p < a->n) {
+        size_t k2, w2 = 0;
+        for (k2 = 0; k2 < sizeof(relations) / sizeof(*relations); ++k2)
+            if (a->p + strlen(relations[k2].text) <= a->n &&
+                !memcmp(a->t + a->p, relations[k2].text, (w2 = strlen(relations[k2].text))))
+                break;
+        if (k2 == 1 || k2 == 3) {
+            ttf_buffer_t high = {0};
+            a->p += w2;
+            ++a->chains;
+            ok = algebra_side(a, &high) && ttf_buffer_append(out, right.data, right.length) == TTF_OK &&
+                 algebra_put(out, final_consonant(out) ? "은 " : "는 ") &&
+                 ttf_buffer_append(out, left.data, left.length) == TTF_OK &&
+                 algebra_put(out, resource(a->e, "math_chain", k == 1 ? "<.low" : "≤.low", k == 1 ? "보다 크고 " : "보다 크거나 같고 ")) &&
+                 ttf_buffer_append(out, high.data, high.length) == TTF_OK &&
+                 algebra_put(out, resource(a->e, "math_chain", k2 == 1 ? "<.high" : "≤.high", k2 == 1 ? "보다 작다" : "보다 작거나 같다"));
+            ttf_buffer_free(&left);
+            ttf_buffer_free(&right);
+            ttf_buffer_free(&high);
+            return ok;
+        }
+    }
+    ok = ok && (template = ttf_resource_get(a->e, "math_relation", "ko-KR", relations[k].key, NULL));
     for (q = template; ok && *q;) {
         if (!strncmp(q, "{L}", 3)) {
             ok = ttf_buffer_append(out, left.data, left.length) == TTF_OK;
@@ -4662,7 +4687,8 @@ static int algebra_expression(algebra_t *a, ttf_buffer_t *out) {
     return ok;
 }
 /* (a+b)² alone keeps its written brackets, (에이 더하기 비) 제곱 (contract superscript-power-v119,
-   2026-10-26; on the owner decision list with the 괄호 reading used inside a longer expression). */
+   2026-10-26; on the owner decision list with the 괄호 reading used inside a longer expression); so does
+   a lone group, √(2x-1) 루트(이 엑스 빼기 일) (2026-10-31, TN round 16; was 이 엑스 다시 일). */
 static int algebra_lone_power(const ttf_engine_t *e, const char *value, ttf_buffer_t *out) {
     size_t n = strlen(value), open = value[0] == '-', close, depth = 0, q;
     char c;
@@ -4674,22 +4700,22 @@ static int algebra_lone_power(const ttf_engine_t *e, const char *value, ttf_buff
         if (!depth)
             break;
     }
-    if (close >= n || close + 1 >= n)
+    if (close >= n)
         return 0;
     for (q = close + 1; q < n && superscript_at(value, n, q, &c); q += superscript_at(value, n, q, &c))
         ;
     if (q != n)
         return 0;
     {
-        algebra_t inner = {e, value + open + 1, close - open - 1, 0, 0, 0, 0, 0, 0, 0};
-        algebra_t power = {e, value, n, close + 1, 0, 0, 0, 0, 0, 0};
+        algebra_t inner = {e, value + open + 1, close - open - 1, 0, 0, 0, 0, 0, 0, 0, 0};
+        algebra_t power = {e, value, n, close + 1, 0, 0, 0, 0, 0, 0, 0};
         return (!open || algebra_put(out, resource(e, "number", "negative", "마이너스 "))) && algebra_put(out, "(") &&
                algebra_side(&inner, out) && inner.p == inner.n && algebra_put(out, ")") && algebra_power(&power, out, 0) &&
                power.p == n;
     }
 }
 static ttf_status_t algebra_read(const ttf_engine_t *e, const char *value, ttf_buffer_t *out) {
-    algebra_t a = {e, value, strlen(value), 0, 0, 0, 0, 0, 0, 0};
+    algebra_t a = {e, value, strlen(value), 0, 0, 0, 0, 0, 0, 0, 0};
     size_t mark = out->length;
     if (algebra_lone_power(e, value, out))
         return TTF_OK;
@@ -4699,7 +4725,7 @@ static ttf_status_t algebra_read(const ttf_engine_t *e, const char *value, ttf_b
 static size_t algebra(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     const char *t = in->text, *key;
     size_t n = in->length, p = in->tokens[in->index].begin, end;
-    algebra_t a = {in->engine, t, n, p, 0, 0, 0, 0, 0, 0};
+    algebra_t a = {in->engine, t, n, p, 0, 0, 0, 0, 0, 0, 0};
     ttf_buffer_t check = {0};
     char v[TTF_IR_VALUE_SIZE], c;
     int ok;
@@ -4710,7 +4736,7 @@ static size_t algebra(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     ok = algebra_expression(&a, &check);
     ttf_buffer_free(&check);
     end = a.p;
-    if (!ok || !a.vars || !(a.groups || a.powers || a.fractions) || end - p >= sizeof(v) ||
+    if (!ok || !a.vars || !(a.groups || a.powers || a.fractions || a.chains) || end - p >= sizeof(v) ||
         (end < n && ((t[end] >= 'a' && t[end] <= 'z') || (t[end] >= 'A' && t[end] <= 'Z') || ko_digit(t[end]) ||
                      t[end] == '(' || t[end] == '/' || t[end] == '_' || t[end] == '^' || t[end] == '=' ||
                      t[end] == '<' || t[end] == '>' || (t[end] == '.' && end + 1 < n && ko_digit(t[end + 1])) ||
@@ -4721,6 +4747,80 @@ static size_t algebra(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     return ko_finish(in, s, end, TTF_SEM_SYMBOL, v, "@algebra", "ko:algebra");
 }
 
+/* sin 30° 사인 삼십 도, cos x 코사인 엑스, tan²θ 탄젠트 제곱 세타: a trigonometric function name before
+   its argument (a number, θ, a variable letter or a bracket) (2026-10-31, TN round 16; was 신, 코스, 탠).
+   cosplay and a tan coat stay words. */
+static size_t trig_function(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    const char *t = in->text, *name;
+    size_t n = in->length, p = in->tokens[in->index].begin, q, r;
+    char v[64], c;
+    if (p + 3 > n || (p && ((t[p - 1] >= 'a' && t[p - 1] <= 'z') || (t[p - 1] >= 'A' && t[p - 1] <= 'Z'))))
+        return 0;
+    if (!memcmp(t + p, "sin", 3))
+        name = resource(in->engine, "math_function", "sin", "사인");
+    else if (!memcmp(t + p, "cos", 3))
+        name = resource(in->engine, "math_function", "cos", "코사인");
+    else if (!memcmp(t + p, "tan", 3))
+        name = resource(in->engine, "math_function", "tan", "탄젠트");
+    else
+        return 0;
+    q = p + 3;
+    if (q < n && ((t[q] >= 'a' && t[q] <= 'z') || (t[q] >= 'A' && t[q] <= 'Z')))
+        return 0;
+    (void)snprintf(v, sizeof(v), "%s", name);
+    if (superscript_at(t, n, q, &c) && (c == '2' || c == '3')) {
+        (void)snprintf(v + strlen(v), sizeof(v) - strlen(v), " %s",
+                       c == '2' ? resource(in->engine, "math_power", "2", "제곱") : resource(in->engine, "math_power", "3", "세제곱"));
+        q += superscript_at(t, n, q, &c);
+    }
+    r = q < n && t[q] == ' ' ? q + 1 : q;
+    if (!(r < n && (ko_digit(t[r]) || t[r] == '(' || (r + 1 < n && (unsigned char)t[r] == 0xCE && (unsigned char)t[r + 1] == 0xB8) ||
+                    (algebra_var(t[r]) && !(r + 1 < n && ((t[r + 1] >= 'a' && t[r + 1] <= 'z') || (t[r + 1] >= 'A' && t[r + 1] <= 'Z')))))) ||
+        !korean_context(in))
+        return 0;
+    return ko_finish(in, s, q, TTF_SEM_SYMBOL, v, "@word", "ko:trig-function");
+}
+
+/* log₂8 로그 이의 팔, log₁₀1000 로그 십의 천, log₂x 로그 이의 엑스: a logarithm with a subscript base
+   (2026-10-31, TN round 16; was 로그₂팔). */
+static size_t log_base(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    const char *t = in->text;
+    size_t n = in->length, p = in->tokens[in->index].begin, q, r, used = 0;
+    char base[8], arg[24], v[TTF_IR_VALUE_SIZE];
+    ttf_buffer_t buf = {0};
+    int ok;
+    if (p + 6 > n || memcmp(t + p, "log", 3) || (p && ((t[p - 1] >= 'a' && t[p - 1] <= 'z') || (t[p - 1] >= 'A' && t[p - 1] <= 'Z'))))
+        return 0;
+    for (q = p + 3; q + 3 <= n && (unsigned char)t[q] == 0xE2 && (unsigned char)t[q + 1] == 0x82 &&
+                    (unsigned char)t[q + 2] >= 0x80 && (unsigned char)t[q + 2] <= 0x89 && used + 1 < sizeof(base);
+         q += 3)
+        base[used++] = (char)('0' + (unsigned char)t[q + 2] - 0x80);
+    base[used] = 0;
+    if (!used || q >= n)
+        return 0;
+    if (ko_digit(t[q])) {
+        for (r = q; r < n && ko_digit(t[r]) && r - q + 1 < sizeof(arg); ++r)
+            ;
+    } else if (algebra_var(t[q]))
+        r = q + 1;
+    else
+        return 0;
+    if ((r < n && ((t[r] >= 'a' && t[r] <= 'z') || (t[r] >= 'A' && t[r] <= 'Z') || ko_digit(t[r]) || t[r] == '.')) ||
+        !korean_context(in))
+        return 0;
+    (void)snprintf(arg, sizeof(arg), "%.*s", (int)(r - q), t + q);
+    ok = ttf_buffer_puts(&buf, resource(in->engine, "math_function", "log", "로그")) == TTF_OK && ttf_buffer_puts(&buf, " ") == TTF_OK &&
+         cardinal(in->engine, base, &buf) == TTF_OK && ttf_buffer_puts(&buf, "의 ") == TTF_OK &&
+         (ko_digit(arg[0]) ? cardinal(in->engine, arg, &buf) : expression_letter(in->engine, arg[0], &buf)) == TTF_OK &&
+         buf.length < sizeof(v);
+    if (ok)
+        (void)snprintf(v, sizeof(v), "%.*s", (int)buf.length, buf.data);
+    ttf_buffer_free(&buf);
+    if (!ok)
+        return 0;
+    return ko_finish(in, s, r, TTF_SEM_SYMBOL, v, "@word", "ko:log-base");
+}
+
 static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     const char *text = in->text;
     size_t n = in->length, begin = in->tokens[in->index].begin, p, q;
@@ -4728,7 +4828,7 @@ static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     size_t identifier = below_zero_degrees(in, s);
     if (identifier)
         return identifier;
-    if ((identifier = algebra(in, s)) != 0 || (identifier = number_mark(in, s)) != 0 || (identifier = day_countdown(in, s)) != 0 || (identifier = times_or_quarter(in, s)) != 0 || (identifier = promo_plus(in, s)) != 0 || (identifier = file_dot(in, s)) != 0 || (identifier = range_month_day(in, s)) != 0 || (identifier = weekday_range(in, s)) != 0 || (identifier = letter_unit(in, s)) != 0 || (identifier = name_version(in, s)) != 0 || (identifier = geo_coordinate(in, s)) != 0 || (identifier = colon_score(in, s)) != 0 || (identifier = price_per_unit(in, s)) != 0 ||
+    if ((identifier = algebra(in, s)) != 0 || (identifier = trig_function(in, s)) != 0 || (identifier = log_base(in, s)) != 0 || (identifier = number_mark(in, s)) != 0 || (identifier = day_countdown(in, s)) != 0 || (identifier = times_or_quarter(in, s)) != 0 || (identifier = promo_plus(in, s)) != 0 || (identifier = file_dot(in, s)) != 0 || (identifier = range_month_day(in, s)) != 0 || (identifier = weekday_range(in, s)) != 0 || (identifier = letter_unit(in, s)) != 0 || (identifier = name_version(in, s)) != 0 || (identifier = geo_coordinate(in, s)) != 0 || (identifier = colon_score(in, s)) != 0 || (identifier = price_per_unit(in, s)) != 0 ||
         (identifier = currency_pair(in, s)) != 0 || (identifier = short_dotted_date(in, s)) != 0 || (identifier = quarter(in, s)) != 0 ||
         (identifier = owner_forms(in, s)) != 0 || (identifier = owner_forms5(in, s)) != 0 ||
         (identifier = chemical_formula(in, s)) != 0 || (identifier = subscript_index(in, s)) != 0 ||

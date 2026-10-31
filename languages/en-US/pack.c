@@ -2501,11 +2501,51 @@ no_file:
             }
         }
     }
+    /* W 125th St west one twenty fifth street: a compass letter before a numbered street (2026-10-31,
+       TN round 16; was W one hundred twenty fifth Street) */
+    if ((t[p] == 'N' || t[p] == 'S' || t[p] == 'E' || t[p] == 'W') && p + 2 < n && t[p + 1] == ' ' &&
+        ascii_digit_char(t[p + 2]) && !(p && (ascii_letter_char(t[p - 1]) || ascii_digit_char(t[p - 1])))) {
+        size_t z = p + 2;
+        while (z < n && ascii_digit_char(t[z]))
+            ++z;
+        if (z + 3 < n && (!strncmp(t + z, "st ", 3) || !strncmp(t + z, "nd ", 3) || !strncmp(t + z, "rd ", 3) ||
+                          !strncmp(t + z, "th ", 3)) &&
+            word_at(t, n, z + 3, key, sizeof(key)) &&
+            in_list(key, "St|st|Ave|ave|Street|street|Avenue|avenue|Blvd|blvd|Rd|rd|Road|road|Pl|pl|Dr|dr|Drive|drive"))
+            return say_span(in, out, p + 1,
+                            t[p] == 'N' ? "w:north" : t[p] == 'S' ? "w:south" : t[p] == 'E' ? "w:east" : "w:west",
+                            "street-direction");
+    }
     if (ascii_digit_char(t[p]) && !(p && (ascii_digit_char(t[p - 1]) || t[p - 1] == '.' || t[p - 1] == ',' ||
                                           t[p - 1] == '/' || t[p - 1] == ':' || ascii_letter_char(t[p - 1])))) {
         size_t a;
         for (a = p; a < n && ascii_digit_char(t[a]); ++a)
             ;
+        /* CA 90210 nine oh two one oh: a ZIP code after a state abbreviation or near a mail word
+           (2026-10-31, TN round 16; was ninety thousand two hundred ten) */
+        if (a - p == 5 && !(a < n && (ascii_letter_char(t[a]) || ascii_digit_char(t[a]) || t[a] == '-' ||
+                                      ((t[a] == ',' || t[a] == '.') && a + 1 < n && ascii_digit_char(t[a + 1]))))) {
+            int zip = p >= 3 && t[p - 1] == ' ' && t[p - 2] >= 'A' && t[p - 2] <= 'Z' && t[p - 3] >= 'A' &&
+                      t[p - 3] <= 'Z' && (p == 3 || !ascii_letter_char(t[p - 4]));
+            for (k = p > 80 ? p - 80 : 0; !zip && k < n && k < a + 60; ++k)
+                if ((k == 0 || !ascii_letter_char(t[k - 1])) && word_at(t, n, k, key, sizeof(key)) &&
+                    in_list(key, "zip|ZIP|Zip|postal|envelope|envelopes|address|addresses|mail|mailing|postcode"))
+                    zip = 1;
+            if (zip) {
+                (void)snprintf(v, sizeof(v), "d:%.5s", t + p);
+                return say_span(in, out, a, v, "zip-code");
+            }
+        }
+        /* finished the season 12-3 twelve and three: a win-loss record (2026-10-31, TN round 16; was
+           twelve to three) */
+        if (a - p <= 2 && a + 1 < n && t[a] == '-' && ascii_digit_char(t[a + 1]) && word_before(t, p, "season|record")) {
+            for (r = a + 1; r < n && ascii_digit_char(t[r]); ++r)
+                ;
+            if (r - a - 1 <= 2 && !(r < n && (ascii_letter_char(t[r]) || ascii_digit_char(t[r]) || t[r] == '-'))) {
+                (void)snprintf(v, sizeof(v), "c:%.*s|w:and|c:%.*s", (int)(a - p), t + p, (int)(r - a - 1), t + a + 1);
+                return say_span(in, out, r, v, "win-loss");
+            }
+        }
         /* 9:00am-12:00pm nine a m to twelve p m, 10 p.m.-6 a.m. ten p m to six a m: two clock times,
            each with its meridiem, joined by a hyphen or an en dash (2026-10-31, TN round 15; was nine
            zero zero a m, ten p.m.minus six) */
