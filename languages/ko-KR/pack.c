@@ -4240,6 +4240,10 @@ static size_t letter_unit(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         unit = "channel", k = 2;
     else if (t[q] == 'R' && w <= 2 && !strchr(v, '.'))
         unit = "round", k = 1;
+    /* 3F 삼 층: a floor written with F (2026-10-31, TN round 18; was 삼 에프); an airport zone or gate
+       code keeps its letters (1F 구역 일 에프, references), and so does a size (100F 백 에프) */
+    else if (t[q] == 'F' && w <= 2 && !strchr(v, '.') && !word_after(t, n, q + 1, 16, "구역|게이트|탑승구|출구|존|라인"))
+        unit = "floor", k = 1;
     else
         return 0;
     if (q + k < n && (ko_digit(t[q + k]) || ((t[q + k] | 0x20) >= 'a' && (t[q + k] | 0x20) <= 'z') || t[q + k] == '-'))
@@ -5049,6 +5053,65 @@ static size_t chem_isotope(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     return ko_finish(in, s, end, TTF_SEM_SYMBOL, v, "@word", "ko:chem-isotope");
 }
 
+/* 신림동 1422-7 신림동 천사백이십이 다시 칠, 인사동 194-27 백구십사 다시 이십칠: a lot number after a
+   동 or 리 name reads both parts as values joined by 다시 (2026-10-31, TN round 18; was 일사이이 다시 칠,
+   백구십사에서 스물일곱). Words that only end in 동 or 리 (운동 3-4회, 거리 1-2) and a counter after
+   the number keep their readings; 번지 may follow. */
+static size_t lot_number(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    static const char *const common[] = {"운동", "행동", "활동", "이동", "자동", "공동", "노동", "감동", "출동", "변동",
+                                         "작동", "연동", "진동", "충동", "소동", "가동", "난동", "아동", "관리", "처리",
+                                         "정리", "거리", "요리", "무리", "논리", "원리", "수리", "승리", "다리", "머리",
+                                         "소리", "자리", "우리", "유리", "마리", "미리", "심리", "물리", "권리", "총리",
+                                         "대리", "경리", "합리", "진리"};
+    const char *t = in->text;
+    size_t n = in->length, p = in->tokens[in->index].begin, a, b, e, w, i;
+    char left[8], right[8], v[64];
+    ttf_buffer_t buf = {0};
+    int ok;
+    if (p < 7 || !ko_digit(t[p]) || t[p - 1] != ' ' ||
+        !((unsigned char)t[p - 4] == 0xEB && (((unsigned char)t[p - 3] == 0x8F && (unsigned char)t[p - 2] == 0x99) ||
+                                              ((unsigned char)t[p - 3] == 0xA6 && (unsigned char)t[p - 2] == 0xAC))))
+        return 0;
+    for (w = p - 1; w >= 3 && (unsigned char)t[w - 3] >= 0xEA && (unsigned char)t[w - 3] <= 0xED; w -= 3)
+        ;
+    if (p - 1 - w < 6)
+        return 0;
+    for (i = 0; i < sizeof(common) / sizeof(*common); ++i)
+        if (p - 1 - w == strlen(common[i]) && !memcmp(t + w, common[i], p - 1 - w))
+            return 0;
+    for (a = p; a < n && ko_digit(t[a]); ++a)
+        ;
+    if (a - p > 4 || a + 1 >= n || t[a] != '-' || !ko_digit(t[a + 1]))
+        return 0;
+    for (b = a + 1; b < n && ko_digit(t[b]); ++b)
+        ;
+    if (b - a - 1 > 3 || (b < n && (ko_digit(t[b]) || t[b] == '-' || t[b] == '.' || t[b] == '~' ||
+                                     (t[b] >= 'a' && t[b] <= 'z') || (t[b] >= 'A' && t[b] <= 'Z'))))
+        return 0;
+    if (b + 3 <= n && (unsigned char)t[b] >= 0xEA && (unsigned char)t[b] <= 0xED && !(b + 6 <= n && !memcmp(t + b, "번지", 6))) {
+        char syl[4];
+        memcpy(syl, t + b, 3);
+        syl[3] = 0;
+        if (ttf_resource_get(in->engine, "counter", "ko-KR", syl, NULL) ||
+            ttf_resource_get(in->engine, "numeric_suffix", "*", syl, NULL))
+            return 0;
+    }
+    if (!korean_context(in))
+        return 0;
+    e = b;
+    (void)snprintf(left, sizeof(left), "%.*s", (int)(a - p), t + p);
+    (void)snprintf(right, sizeof(right), "%.*s", (int)(b - a - 1), t + a + 1);
+    ok = cardinal(in->engine, left, &buf) == TTF_OK && ttf_buffer_puts(&buf, " ") == TTF_OK &&
+         ttf_buffer_puts(&buf, resource(in->engine, "lot_number", "joiner", "다시")) == TTF_OK &&
+         ttf_buffer_puts(&buf, " ") == TTF_OK && cardinal(in->engine, right, &buf) == TTF_OK && buf.length < sizeof(v);
+    if (ok)
+        (void)snprintf(v, sizeof(v), "%.*s", (int)buf.length, buf.data);
+    ttf_buffer_free(&buf);
+    if (!ok)
+        return 0;
+    return ko_finish(in, s, e, TTF_SEM_SYMBOL, v, "@word", "ko:lot-number");
+}
+
 static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     const char *text = in->text;
     size_t n = in->length, begin = in->tokens[in->index].begin, p, q;
@@ -5056,7 +5119,7 @@ static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     size_t identifier = below_zero_degrees(in, s);
     if (identifier)
         return identifier;
-    if ((identifier = algebra(in, s)) != 0 || (identifier = chem_isotope(in, s)) != 0 || (identifier = chem_formula_rule(in, s)) != 0 || (identifier = trig_function(in, s)) != 0 || (identifier = log_base(in, s)) != 0 || (identifier = number_mark(in, s)) != 0 || (identifier = day_countdown(in, s)) != 0 || (identifier = times_or_quarter(in, s)) != 0 || (identifier = promo_plus(in, s)) != 0 || (identifier = file_dot(in, s)) != 0 || (identifier = range_month_day(in, s)) != 0 || (identifier = weekday_range(in, s)) != 0 || (identifier = letter_unit(in, s)) != 0 || (identifier = name_version(in, s)) != 0 || (identifier = geo_coordinate(in, s)) != 0 || (identifier = colon_score(in, s)) != 0 || (identifier = price_per_unit(in, s)) != 0 ||
+    if ((identifier = algebra(in, s)) != 0 || (identifier = lot_number(in, s)) != 0 || (identifier = chem_isotope(in, s)) != 0 || (identifier = chem_formula_rule(in, s)) != 0 || (identifier = trig_function(in, s)) != 0 || (identifier = log_base(in, s)) != 0 || (identifier = number_mark(in, s)) != 0 || (identifier = day_countdown(in, s)) != 0 || (identifier = times_or_quarter(in, s)) != 0 || (identifier = promo_plus(in, s)) != 0 || (identifier = file_dot(in, s)) != 0 || (identifier = range_month_day(in, s)) != 0 || (identifier = weekday_range(in, s)) != 0 || (identifier = letter_unit(in, s)) != 0 || (identifier = name_version(in, s)) != 0 || (identifier = geo_coordinate(in, s)) != 0 || (identifier = colon_score(in, s)) != 0 || (identifier = price_per_unit(in, s)) != 0 ||
         (identifier = currency_pair(in, s)) != 0 || (identifier = short_dotted_date(in, s)) != 0 || (identifier = quarter(in, s)) != 0 ||
         (identifier = owner_forms(in, s)) != 0 || (identifier = owner_forms5(in, s)) != 0 ||
         (identifier = chemical_formula(in, s)) != 0 || (identifier = subscript_index(in, s)) != 0 ||
