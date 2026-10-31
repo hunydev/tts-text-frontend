@@ -607,6 +607,10 @@ classifier_priority	en-US	en.vanity-phone	99
 classifier_priority	en-US	en.text-code	20
 classifier_priority	en-US	en.dial-short	20
 classifier_priority	en-US	en.jet-model	20
+classifier_priority	en-US	en.page-of	20
+classifier_priority	en-US	en.fraction-unit	20
+classifier_priority	en-US	en.glyph-unit	20
+classifier_priority	en-US	en.times-multiplier	20
 classifier_priority	en-US	en.dotted-phone	20
 classifier_priority	en-US	en.inches	20
 classifier_priority	en-US	en.measure-adjective	20

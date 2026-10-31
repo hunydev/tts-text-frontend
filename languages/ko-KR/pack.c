@@ -5049,6 +5049,50 @@ static size_t chem_isotope(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     return ko_finish(in, s, end, TTF_SEM_SYMBOL, v, "@word", "ko:chem-isotope");
 }
 
+/* Wi-Fi 6E 와이파이 식스 이, Thunderbolt 4 선더볼트 포: the generation number of these standards is read
+   in English (owner set ko-KR-0099, 0462, 0967; 2026-10-31, TN round 19; was 와이파이 육 이, 선더볼트 사). */
+static size_t english_generation(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    static const struct {
+        const char *written, *key, *reading;
+    } names[] = {{"Wi-Fi", "wifi", "와이파이"}, {"WiFi", "wifi", "와이파이"}, {"Thunderbolt", "thunderbolt", "선더볼트"}};
+    static const char *const numbers[] = {"", "원", "투", "쓰리", "포", "파이브", "식스", "세븐", "에잇", "나인", "텐"};
+    const char *t = in->text;
+    size_t n = in->length, p = in->tokens[in->index].begin, i, w, q, r;
+    char v[TTF_IR_VALUE_SIZE];
+    ttf_buffer_t buf = {0};
+    int value, ok;
+    if (p >= n || (p && ((t[p - 1] >= 'a' && t[p - 1] <= 'z') || (t[p - 1] >= 'A' && t[p - 1] <= 'Z'))))
+        return 0;
+    for (i = 0; i < sizeof(names) / sizeof(*names); ++i) {
+        w = strlen(names[i].written);
+        if (p + w + 1 < n && !memcmp(t + p, names[i].written, w) && t[p + w] == ' ' && ko_digit(t[p + w + 1]))
+            break;
+    }
+    if (i == sizeof(names) / sizeof(*names))
+        return 0;
+    for (q = r = p + w + 1; r < n && ko_digit(t[r]) && r - q < 2; ++r)
+        ;
+    value = atoi(t + q);
+    if (value < 1 || value > 10 || (r < n && ko_digit(t[r])))
+        return 0;
+    if (r < n && t[r] >= 'A' && t[r] <= 'Z' && !(r + 1 < n && ((t[r + 1] >= 'a' && t[r + 1] <= 'z') || (t[r + 1] >= 'A' && t[r + 1] <= 'Z') || ko_digit(t[r + 1]))))
+        ++r;
+    if ((r < n && ((t[r] >= 'a' && t[r] <= 'z') || (t[r] >= 'A' && t[r] <= 'Z') || ko_digit(t[r]) || (t[r] == '.' && r + 1 < n && ko_digit(t[r + 1])))) ||
+        !korean_context(in))
+        return 0;
+    ok = ttf_buffer_puts(&buf, resource(in->engine, "english_generation", names[i].key, names[i].reading)) == TTF_OK &&
+         ttf_buffer_puts(&buf, " ") == TTF_OK && ttf_buffer_puts(&buf, numbers[value]) == TTF_OK;
+    if (ok && t[r - 1] >= 'A' && t[r - 1] <= 'Z')
+        ok = ttf_buffer_puts(&buf, " ") == TTF_OK && expression_letter(in->engine, t[r - 1], &buf) == TTF_OK;
+    ok = ok && buf.length < sizeof(v);
+    if (ok)
+        (void)snprintf(v, sizeof(v), "%.*s", (int)buf.length, buf.data);
+    ttf_buffer_free(&buf);
+    if (!ok)
+        return 0;
+    return ko_finish(in, s, r, TTF_SEM_SYMBOL, v, "@word", "ko:english-generation");
+}
+
 static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     const char *text = in->text;
     size_t n = in->length, begin = in->tokens[in->index].begin, p, q;
@@ -5056,7 +5100,7 @@ static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     size_t identifier = below_zero_degrees(in, s);
     if (identifier)
         return identifier;
-    if ((identifier = algebra(in, s)) != 0 || (identifier = chem_isotope(in, s)) != 0 || (identifier = chem_formula_rule(in, s)) != 0 || (identifier = trig_function(in, s)) != 0 || (identifier = log_base(in, s)) != 0 || (identifier = number_mark(in, s)) != 0 || (identifier = day_countdown(in, s)) != 0 || (identifier = times_or_quarter(in, s)) != 0 || (identifier = promo_plus(in, s)) != 0 || (identifier = file_dot(in, s)) != 0 || (identifier = range_month_day(in, s)) != 0 || (identifier = weekday_range(in, s)) != 0 || (identifier = letter_unit(in, s)) != 0 || (identifier = name_version(in, s)) != 0 || (identifier = geo_coordinate(in, s)) != 0 || (identifier = colon_score(in, s)) != 0 || (identifier = price_per_unit(in, s)) != 0 ||
+    if ((identifier = algebra(in, s)) != 0 || (identifier = english_generation(in, s)) != 0 || (identifier = chem_isotope(in, s)) != 0 || (identifier = chem_formula_rule(in, s)) != 0 || (identifier = trig_function(in, s)) != 0 || (identifier = log_base(in, s)) != 0 || (identifier = number_mark(in, s)) != 0 || (identifier = day_countdown(in, s)) != 0 || (identifier = times_or_quarter(in, s)) != 0 || (identifier = promo_plus(in, s)) != 0 || (identifier = file_dot(in, s)) != 0 || (identifier = range_month_day(in, s)) != 0 || (identifier = weekday_range(in, s)) != 0 || (identifier = letter_unit(in, s)) != 0 || (identifier = name_version(in, s)) != 0 || (identifier = geo_coordinate(in, s)) != 0 || (identifier = colon_score(in, s)) != 0 || (identifier = price_per_unit(in, s)) != 0 ||
         (identifier = currency_pair(in, s)) != 0 || (identifier = short_dotted_date(in, s)) != 0 || (identifier = quarter(in, s)) != 0 ||
         (identifier = owner_forms(in, s)) != 0 || (identifier = owner_forms5(in, s)) != 0 ||
         (identifier = chemical_formula(in, s)) != 0 || (identifier = subscript_index(in, s)) != 0 ||

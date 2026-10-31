@@ -35,6 +35,8 @@ currency	en-US	EUR.minor.one	cent
 currency	en-US	EUR.minor.many	cents
 # Explicit degree mark disambiguates temperature from contextual building F.
 numeric_suffix	*	°F	MEASURE:°F
+# 450° F with a space after the degree sign (2026-10-31, TN round 19; was degrees F)
+numeric_suffix	*	° F	MEASURE:°F
 numeric_suffix	*	℉	MEASURE:°F
 unit	en-US	°F.one	degree Fahrenheit
 unit	en-US	°F.many	degrees Fahrenheit
@@ -308,6 +310,8 @@ numeric_suffix	*	μg/㎥	MEASURE:ug_per_cubic_m
 numeric_suffix	*	µg/㎥	MEASURE:ug_per_cubic_m
 numeric_suffix	*	mg/L	MEASURE:mg_per_L
 numeric_suffix	*	mol/L	MEASURE:mol_per_L
+# 2 qt two quarts (2026-10-31, TN round 19)
+numeric_suffix	*	qt	MEASURE:qt
 numeric_suffix	*	g/mol	MEASURE:g_per_mol
 numeric_suffix_cue	*	V	전압|전원|볼트|배터리|건전지|電圧|定格|電源|電池|充電|バッテリー|ボルト|충전|콘센트|어댑터|직류|교류|전기|전력|플러그|AC|DC|volt|battery|outlet|power|charger
 numeric_suffix_cue	*	A	전류|암페어|충전|퓨즈|차단기|어댑터|amp|current|fuse|charger
@@ -423,6 +427,8 @@ unit	en-US	ug_per_cubic_m.many	micrograms per cubic meter
 unit	en-US	mg_per_L.one	milligram per liter
 unit	en-US	mg_per_L.many	milligrams per liter
 unit	en-US	mol_per_L.one	mole per liter
+unit	en-US	qt.one	quart
+unit	en-US	qt.many	quarts
 unit	en-US	mol_per_L.many	moles per liter
 unit	en-US	g_per_mol.one	gram per mole
 unit	en-US	g_per_mol.many	grams per mole

@@ -1876,6 +1876,18 @@ static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
                 }
             }
             inches = z + 3 <= n && !strncmp(t + z, " in", 3) && !(z + 3 < n && ascii_letter_char(t[z + 3]));
+            /* 1½ tbsp one and a half tablespoons (2026-10-31, TN round 19; was one and a half tbsp) */
+            if (!inches && z + 1 < n && t[z] == ' ') {
+                static const char *const abbr[][2] = {{"tbsp", " tablespoons"}, {"tsp", " teaspoons"}, {"lbs", " pounds"},
+                                                      {"lb", " pounds"}, {"oz", " ounces"}};
+                for (size_t ai = 0; ai < sizeof(abbr) / sizeof(*abbr); ++ai) {
+                    size_t l = strlen(abbr[ai][0]);
+                    if (z + 1 + l <= n && !strncmp(t + z + 1, abbr[ai][0], l) && !(z + 1 + l < n && ascii_letter_char(t[z + 1 + l]))) {
+                        (void)snprintf(v, sizeof(v), "%.*s|%s%s", (int)(q - p), t + p, frac, abbr[ai][1]);
+                        return owner_finish(in, out, z + 1 + l, TTF_SEM_SYMBOL, "@mixed", v, "en.mixed-fraction");
+                    }
+                }
+            }
             (void)snprintf(v, sizeof(v), "%.*s|%s%s", (int)(q - p), t + p, frac, inches ? " inches" : "");
             return owner_finish(in, out, inches ? z + 3 : z, TTF_SEM_SYMBOL, "@mixed", v, "en.mixed-fraction");
         }
@@ -2235,7 +2247,7 @@ static size_t dev_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
                         ;
                     if (word_at(t, n, u, key, sizeof(key)) &&
                         in_list(key, "ft|feet|foot|in|inch|inches|cm|mm|m|meter|meters|yd|yards|sheet|sheets|rug|"
-                                     "board|boards|tarp|frame|print|poster|photo|grid|room|tile|tiles"))
+                                     "board|boards|tarp|frame|print|poster|photo|grid|room|tile|tiles|pan|pans|loaf|dish|tray|tin"))
                         dims = 1;
                 }
             }
@@ -2541,6 +2553,13 @@ no_file:
         size_t a;
         for (a = p; a < n && ascii_digit_char(t[a]); ++a)
             ;
+        /* I made 3x the usual amount three times: x after a count before the, as or a comparative word
+           (2026-10-31, TN round 19; was three x) */
+        if (a - p <= 2 && a + 2 < n && t[a] == 'x' && t[a + 1] == ' ' && word_at(t, n, a + 2, key, sizeof(key)) &&
+            in_list(key, "the|as|more|faster|bigger|larger|longer|higher|stronger|cheaper|slower|smaller|less|better")) {
+            (void)snprintf(v, sizeof(v), "c:%.*s|w:times", (int)(a - p), t + p);
+            return say_span(in, out, a + 1, v, "times-multiplier");
+        }
         /* 1-800-FLOWERS one eight hundred flowers, 1-866-BOOK-NOW, 1-800-555-CARE: a toll-free number
            spelled with words (2026-10-31, TN round 17; was one eight hundredFLOWERS) */
         if (a - p == 1 && t[p] == '1' && a + 5 < n && t[a] == '-' && ascii_digit_char(t[a + 1]) &&
@@ -2779,6 +2798,27 @@ no_file:
                             math = 1;
                 for (k = p; k < r; ++k)
                     ;
+                /* on 1/2 lb of beef one half pound: a fraction before a unit is never a date (2026-10-31,
+                   TN round 19; was January second) */
+                if (word_at(t, n, r < n && t[r] == ' ' ? r + 1 : r, w2, sizeof(w2)) &&
+                    in_list(w2, "cup|cups|tsp|tbsp|teaspoon|teaspoons|tablespoon|tablespoons|lb|lbs|pound|pounds|oz|"
+                                "ounce|ounces|inch|inches|stick|sticks|gallon|gallons|quart|quarts|qt|pint|pints")) {
+                    static const char *const abbr[][2] = {{"tsp", "teaspoon"}, {"tbsp", "tablespoon"}, {"lb", "pound"},
+                                                          {"lbs", "pound"}, {"oz", "ounce"}, {"qt", "quart"}};
+                    math = 1;
+                    /* 1/2 lb one half pound, 3/4 tsp three quarters teaspoon: the abbreviation is read with it */
+                    for (size_t ai = 0; ai < sizeof(abbr) / sizeof(*abbr); ++ai)
+                        if (!strcmp(w2, abbr[ai][0]) && m < d && (d == 2 || d == 3 || d == 4 || d == 8 || d == 16)) {
+                            const char *den = d == 2 ? "half" : d == 3 ? "third" : d == 4 ? "quarter" : d == 8 ? "eighth" : "sixteenth";
+                            (void)snprintf(v, sizeof(v), "c:%u|w:%s%s %s", m, den, m > 1 ? "s" : "", abbr[ai][1]);
+                            return say_span(in, out, r + 1 + strlen(w2), v, "fraction-unit");
+                        }
+                }
+                /* Page 1/2 page one of two (2026-10-31, TN round 19; was page one half) */
+                if (word_before(t, p, "page|pages") && !(r < n && (t[r] == '/' || ascii_digit_char(t[r])))) {
+                    (void)snprintf(v, sizeof(v), "c:%u|w:of|c:%u", m, d);
+                    return say_span(in, out, r, v, "page-of");
+                }
                 if (m == 9 && d == 11 && !math)
                     return say_span(in, out, r, "w:nine eleven", "nine-eleven");
                 /* Show that 7/16 is less than 1/2: a fraction where a date could be read */
@@ -2792,8 +2832,13 @@ no_file:
                     out->input_end = r;
                     return tokens_until(in, r);
                 }
+                /* Tuesday, 3/4 Tuesday March fourth: a weekday before M/D names the date (owner set en-US-0062;
+                   2026-10-31, TN round 19; was Tuesday, three quarters) */
                 if (m >= 1 && m <= 12 && d >= 1 && d <= 31 && !math &&
                     (d > 12 || date_range || (t[p] == '0' && a - p == 2) ||
+                     word_before(t, p, "monday|tuesday|wednesday|thursday|friday|saturday|sunday") ||
+                     (p >= 2 && t[p - 1] == ' ' && t[p - 2] == ',' &&
+                      word_before(t, p - 2, "monday|tuesday|wednesday|thursday|friday|saturday|sunday")) ||
                      word_before(t, p, "birthday|on|until|through|since|due|deadline|expires|ends|opens|"
                                                  "closes|thru") ||
                      (!(m < d && (d == 2 || d == 3 || d == 4 || d == 8 || d == 16)) &&
@@ -3204,6 +3249,25 @@ no_file:
             out->type = TTF_SEM_SYMBOL;
             (void)snprintf(out->unit, sizeof(out->unit), "@expression");
             return tokens_until(in, z);
+        }
+    }
+    /* ¼ tsp one quarter teaspoon, ⅔ cup two thirds cup: a fraction glyph before a recipe unit (2026-10-31,
+       TN round 19; was one quarter tsp) */
+    if (p + 3 < n && !(p && ascii_digit_char(t[p - 1]))) {
+        const char *fw = NULL;
+        size_t gw = 0;
+        if ((unsigned char)t[p] == 0xC2)
+            fw = (unsigned char)t[p + 1] == 0xBD ? "one half" : (unsigned char)t[p + 1] == 0xBC ? "one quarter"
+                 : (unsigned char)t[p + 1] == 0xBE ? "three quarter" : NULL, gw = 2;
+        else if ((unsigned char)t[p] == 0xE2 && (unsigned char)t[p + 1] == 0x85)
+            fw = (unsigned char)t[p + 2] == 0x93 ? "one third" : (unsigned char)t[p + 2] == 0x94 ? "two thirds"
+                 : (unsigned char)t[p + 2] == 0x9B ? "one eighth" : NULL, gw = 3;
+        if (fw && p + gw + 1 < n && t[p + gw] == ' ' && word_at(t, n, p + gw + 1, key, sizeof(key)) &&
+            in_list(key, "tsp|tbsp|lb|oz|cup")) {
+            const char *unit = !strcmp(key, "tsp") ? "teaspoon" : !strcmp(key, "tbsp") ? "tablespoon"
+                               : !strcmp(key, "lb") ? "pound" : !strcmp(key, "oz") ? "ounce" : "cup";
+            (void)snprintf(v, sizeof(v), "w:%s %s", fw, unit);
+            return say_span(in, out, p + gw + 1 + strlen(key), v, "glyph-unit");
         }
     }
     /* ½ the group half the group */
