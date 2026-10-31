@@ -446,6 +446,15 @@ static size_t math_expression_scan(const ttf_pack_input_t *in, size_t b, ttf_sem
                 if (s[k] != ',')
                     operand[length++] = s[k];
             p = q;
+            /* 3x-5=10, 5x>20: a coefficient written against one lowercase variable letter is a term of
+               the expression, stored as "3 x" (2026-10-31, TN round 14; was 삼 엑스 다시 오) */
+            if (p < n && s[p] >= 'a' && s[p] <= 'z' && !(p + 1 < n && (ascii_letter(s[p + 1]) || digit(s[p + 1]) ||
+                                                              s[p + 1] == '.' || s[p + 1] == '_')) &&
+                length + 2 < sizeof(operand)) {
+                operand[length++] = ' ';
+                operand[length++] = s[p++];
+                letters = 1;
+            }
         } else if (length == 0 && p < n && ascii_letter(s[p]) &&
                    !(p + 1 < n && (ascii_letter(s[p + 1]) || digit(s[p + 1])))) {
             operand[length++] = s[p++];

@@ -4378,6 +4378,84 @@ static size_t name_version(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     return ko_finish(in, s, r, TTF_SEM_SYMBOL, v, "@word", "ko:name-version");
 }
 
+/* 37.5665°N 북위 삼십칠 점 오육육오 도, 37°33′59″N 북위 삼십칠 도 삼십삼 분 오십구 초, 131°52′E 동경
+   백삼십일 도 오십이 분: a latitude or longitude with its hemisphere letter, or degrees with minutes
+   (′ or ') and seconds (″ or "), reads the hemisphere word first and the minutes and seconds as
+   분 and 초 (2026-10-31, TN round 14; was 도 엔, 프라임, 더블 프라임). */
+static size_t geo_coordinate(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    const char *t = in->text, *hemi = NULL;
+    size_t n = in->length, p = in->tokens[in->index].begin, q, r, m0 = 0, m1 = 0, s0 = 0, s1 = 0, end;
+    char v[TTF_IR_VALUE_SIZE], num[24];
+    ttf_buffer_t buf = {0};
+    int ok = 1;
+    if (p >= n || !ko_digit(t[p]) || (p && (ko_digit(t[p - 1]) || t[p - 1] == '.')))
+        return 0;
+    for (q = p; q < n && ko_digit(t[q]); ++q)
+        ;
+    if (q - p > 3)
+        return 0;
+    if (q + 1 < n && t[q] == '.' && ko_digit(t[q + 1]))
+        for (++q; q < n && ko_digit(t[q]); ++q)
+            ;
+    /* the degree sign U+00B0 */
+    if (!(q + 2 <= n && (unsigned char)t[q] == 0xc2 && (unsigned char)t[q + 1] == 0xb0))
+        return 0;
+    r = q + 2;
+    /* minutes: digits then U+2032 or ' */
+    if (r < n && ko_digit(t[r])) {
+        size_t a = r, b;
+        for (b = a; b < n && ko_digit(t[b]) && b - a < 2; ++b)
+            ;
+        if (b + 3 <= n && (unsigned char)t[b] == 0xe2 && (unsigned char)t[b + 1] == 0x80 && (unsigned char)t[b + 2] == 0xb2)
+            m0 = a, m1 = b, r = b + 3;
+        else if (b < n && t[b] == '\'')
+            m0 = a, m1 = b, r = b + 1;
+        else
+            return 0;
+        if (r < n && ko_digit(t[r]) && m1) {
+            a = r;
+            for (b = a; b < n && ko_digit(t[b]) && b - a < 2; ++b)
+                ;
+            if (b + 3 <= n && (unsigned char)t[b] == 0xe2 && (unsigned char)t[b + 1] == 0x80 && (unsigned char)t[b + 2] == 0xb3)
+                s0 = a, s1 = b, r = b + 3;
+            else if (b < n && t[b] == '"')
+                s0 = a, s1 = b, r = b + 1;
+            else
+                return 0;
+        }
+    }
+    end = r;
+    if (r < n && (t[r] == 'N' || t[r] == 'S' || t[r] == 'E' || t[r] == 'W') &&
+        !(r + 1 < n && ((t[r + 1] | 0x20) >= 'a' && (t[r + 1] | 0x20) <= 'z'))) {
+        hemi = t[r] == 'N' ? "북위 " : t[r] == 'S' ? "남위 " : t[r] == 'E' ? "동경 " : "서경 ";
+        end = r + 1;
+    }
+    if (!hemi && !m1)
+        return 0; /* 45° alone keeps the shared degree reading */
+    if ((end < n && (ko_digit(t[end]) || t[end] == '.')) || !korean_context(in))
+        return 0;
+    (void)snprintf(num, sizeof(num), "%.*s", (int)(q - p), t + p);
+    ok = ttf_buffer_puts(&buf, hemi ? hemi : "") == TTF_OK && cardinal(in->engine, num, &buf) == TTF_OK &&
+         ttf_buffer_puts(&buf, " 도") == TTF_OK;
+    if (ok && m1) {
+        (void)snprintf(num, sizeof(num), "%d", atoi(t + m0));
+        ok = ttf_buffer_puts(&buf, " ") == TTF_OK && cardinal(in->engine, num, &buf) == TTF_OK &&
+             ttf_buffer_puts(&buf, " 분") == TTF_OK;
+    }
+    if (ok && s1) {
+        (void)snprintf(num, sizeof(num), "%d", atoi(t + s0));
+        ok = ttf_buffer_puts(&buf, " ") == TTF_OK && cardinal(in->engine, num, &buf) == TTF_OK &&
+             ttf_buffer_puts(&buf, " 초") == TTF_OK;
+    }
+    ok = ok && buf.data && buf.length < sizeof(v);
+    if (ok)
+        (void)snprintf(v, sizeof(v), "%.*s", (int)buf.length, buf.data);
+    ttf_buffer_free(&buf);
+    if (!ok)
+        return 0;
+    return ko_finish(in, s, end, TTF_SEM_SYMBOL, v, "@word", "ko:geo-coordinate");
+}
+
 static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     const char *text = in->text;
     size_t n = in->length, begin = in->tokens[in->index].begin, p, q;
@@ -4385,7 +4463,7 @@ static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     size_t identifier = below_zero_degrees(in, s);
     if (identifier)
         return identifier;
-    if ((identifier = number_mark(in, s)) != 0 || (identifier = day_countdown(in, s)) != 0 || (identifier = times_or_quarter(in, s)) != 0 || (identifier = promo_plus(in, s)) != 0 || (identifier = file_dot(in, s)) != 0 || (identifier = range_month_day(in, s)) != 0 || (identifier = weekday_range(in, s)) != 0 || (identifier = letter_unit(in, s)) != 0 || (identifier = name_version(in, s)) != 0 || (identifier = colon_score(in, s)) != 0 || (identifier = price_per_unit(in, s)) != 0 ||
+    if ((identifier = number_mark(in, s)) != 0 || (identifier = day_countdown(in, s)) != 0 || (identifier = times_or_quarter(in, s)) != 0 || (identifier = promo_plus(in, s)) != 0 || (identifier = file_dot(in, s)) != 0 || (identifier = range_month_day(in, s)) != 0 || (identifier = weekday_range(in, s)) != 0 || (identifier = letter_unit(in, s)) != 0 || (identifier = name_version(in, s)) != 0 || (identifier = geo_coordinate(in, s)) != 0 || (identifier = colon_score(in, s)) != 0 || (identifier = price_per_unit(in, s)) != 0 ||
         (identifier = currency_pair(in, s)) != 0 || (identifier = short_dotted_date(in, s)) != 0 || (identifier = quarter(in, s)) != 0 ||
         (identifier = owner_forms(in, s)) != 0 || (identifier = owner_forms5(in, s)) != 0 ||
         (identifier = chemical_formula(in, s)) != 0 || (identifier = subscript_index(in, s)) != 0 ||
