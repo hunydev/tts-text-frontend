@@ -4283,6 +4283,101 @@ static size_t colon_score(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     }
 }
 
+/* GPT-4.5 지피티 사 점 오, 라마-3.1 라마 삼 점 일, HTTP/2 에이치티티피 이, H.264 에이치 이육사: a name and
+   its version joined by a hyphen (a decimal version), a slash after an acronym, or a period after one
+   capital (a three-digit codec number) reads the name and then the number, the joining mark silent
+   (2026-10-31, TN round 13; was 지피티포영 점 오, 라마마이너스 삼 점 일, 에이치티티피 슬래시 이,
+   에이치영 점 이육사). A capitalized or lowercase name needs a lexicon reading (Gemini 제미나이);
+   hyphenated integers (KF-21, COVID-19) keep their own readings. */
+static size_t name_version(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    const char *t = in->text, *label;
+    size_t n = in->length, p = in->tokens[in->index].begin, q = p, r, k, caps = 0, letters = 0, used = 0;
+    char key[80], num[16], v[TTF_IR_VALUE_SIZE];
+    ttf_buffer_t buf = {0};
+    int hangul = 0, codec = 0, ok;
+    char sep;
+    if (p >= n || (p && t[p - 1] != ' ' && t[p - 1] != '(' && t[p - 1] != '"' && t[p - 1] != '\''))
+        return 0;
+    if ((unsigned char)t[p] >= 0xea && (unsigned char)t[p] <= 0xed) {
+        while (q + 3 <= n && (unsigned char)t[q] >= 0xea && (unsigned char)t[q] <= 0xed && q - p < 15)
+            q += 3;
+        hangul = 1;
+    } else {
+        while (q < n && ((t[q] | 0x20) >= 'a' && (t[q] | 0x20) <= 'z') && q - p < 12) {
+            caps += t[q] >= 'A' && t[q] <= 'Z';
+            ++q;
+        }
+        letters = q - p;
+    }
+    if (q == p || q + 1 >= n || !ko_digit(t[q + 1]))
+        return 0;
+    sep = t[q];
+    for (r = q + 1; r < n && ko_digit(t[r]); ++r)
+        ;
+    if (sep == '.') {
+        codec = !hangul && letters == 1 && caps == 1 && r - q - 1 == 3;
+        if (!codec)
+            return 0;
+    } else if (sep == '-' || (sep == '/' && !hangul && letters >= 3 && caps == letters)) {
+        if (r - q - 1 > 2)
+            return 0;
+        if (r + 1 < n && t[r] == '.' && ko_digit(t[r + 1])) {
+            for (++r; r < n && ko_digit(t[r]); ++r)
+                ;
+        } else if (sep == '-')
+            return 0; /* KF-21, COVID-19: an integer after a hyphen keeps its reading */
+    } else
+        return 0;
+    if (r < n && (ko_digit(t[r]) || ((t[r] | 0x20) >= 'a' && (t[r] | 0x20) <= 'z') || t[r] == '-' || t[r] == '/' ||
+                  (t[r] == '.' && r + 1 < n && ko_digit(t[r + 1]))))
+        return 0;
+    if (hangul && r < n && (unsigned char)t[r] >= 0x80)
+        return 0; /* 기온-3.5도: a Hangul name needs a space or mark after the version */
+    if (r - q - 1 >= sizeof(num) || !korean_context(in))
+        return 0;
+    /* the name */
+    if (hangul) {
+        (void)snprintf(v, sizeof(v), "%.*s", (int)(q - p), t + p);
+        used = q - p;
+    } else if (caps == letters && letters <= 6) {
+        for (k = p; k < q; ++k) {
+            (void)snprintf(key, sizeof(key), "letter.%c", t[k]);
+            label = ttf_resource_get(in->engine, "phone_letter", "ko-KR", key, NULL);
+            if (!label || used + strlen(label) + 1 >= sizeof(v))
+                return 0;
+            used += (size_t)snprintf(v + used, sizeof(v) - used, "%s", label);
+        }
+    } else {
+        size_t m = (size_t)snprintf(key, sizeof(key), "en-US:");
+        for (k = p; k < q && m + 1 < sizeof(key); ++k)
+            key[m++] = (char)(t[k] | 0x20);
+        key[m] = 0;
+        label = ttf_resource_get(in->engine, "lexicon", "ko-KR", key, NULL);
+        if (!label || strlen(label) + 1 >= sizeof(v))
+            return 0;
+        used = (size_t)snprintf(v, sizeof(v), "%s", label);
+    }
+    /* the number: a codec number digit by digit, a version as a Sino number */
+    (void)snprintf(num, sizeof(num), "%.*s", (int)(r - q - 1), t + q + 1);
+    if (codec) {
+        for (k = 0; num[k]; ++k) {
+            char d[2] = {num[k], 0};
+            label = ttf_resource_get(in->engine, "digit", "ko-KR", d, NULL);
+            if (!label || used + strlen(label) + 2 >= sizeof(v))
+                return 0;
+            used += (size_t)snprintf(v + used, sizeof(v) - used, "%s%s", k ? "" : " ", label);
+        }
+    } else {
+        ok = cardinal(in->engine, num, &buf) == TTF_OK && buf.data && used + buf.length + 2 < sizeof(v);
+        if (ok)
+            used += (size_t)snprintf(v + used, sizeof(v) - used, " %.*s", (int)buf.length, buf.data);
+        ttf_buffer_free(&buf);
+        if (!ok)
+            return 0;
+    }
+    return ko_finish(in, s, r, TTF_SEM_SYMBOL, v, "@word", "ko:name-version");
+}
+
 static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     const char *text = in->text;
     size_t n = in->length, begin = in->tokens[in->index].begin, p, q;
@@ -4290,7 +4385,7 @@ static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     size_t identifier = below_zero_degrees(in, s);
     if (identifier)
         return identifier;
-    if ((identifier = number_mark(in, s)) != 0 || (identifier = day_countdown(in, s)) != 0 || (identifier = times_or_quarter(in, s)) != 0 || (identifier = promo_plus(in, s)) != 0 || (identifier = file_dot(in, s)) != 0 || (identifier = range_month_day(in, s)) != 0 || (identifier = weekday_range(in, s)) != 0 || (identifier = letter_unit(in, s)) != 0 || (identifier = colon_score(in, s)) != 0 || (identifier = price_per_unit(in, s)) != 0 ||
+    if ((identifier = number_mark(in, s)) != 0 || (identifier = day_countdown(in, s)) != 0 || (identifier = times_or_quarter(in, s)) != 0 || (identifier = promo_plus(in, s)) != 0 || (identifier = file_dot(in, s)) != 0 || (identifier = range_month_day(in, s)) != 0 || (identifier = weekday_range(in, s)) != 0 || (identifier = letter_unit(in, s)) != 0 || (identifier = name_version(in, s)) != 0 || (identifier = colon_score(in, s)) != 0 || (identifier = price_per_unit(in, s)) != 0 ||
         (identifier = currency_pair(in, s)) != 0 || (identifier = short_dotted_date(in, s)) != 0 || (identifier = quarter(in, s)) != 0 ||
         (identifier = owner_forms(in, s)) != 0 || (identifier = owner_forms5(in, s)) != 0 ||
         (identifier = chemical_formula(in, s)) != 0 || (identifier = subscript_index(in, s)) != 0 ||
