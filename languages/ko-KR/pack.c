@@ -4047,6 +4047,9 @@ static int date_follow_ok(const ttf_pack_input_t *in, size_t at) {
         return 0;
     if (a > at)
         return 1;
+    /* 1.5~2.5만원: a number scale is not the particle 만 */
+    if (starts_with_word(t, n, at, "만|억|천|조|배"))
+        return 0;
     if (starts_with_word(t, n, at, "입니|이다|이며|이고|이었|였다"))
         return 1;
     for (k = 3; k <= 9 && at + k <= n; k += 3) {
@@ -4135,6 +4138,12 @@ static size_t range_month_day(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             pair = bare_month_day(t, n, from, &e2) && e2 == p - 1 &&
                    !(from && (((t[from - 1] | 0x20) >= 'a' && (t[from - 1] | 0x20) <= 'z') || t[from - 1] == '\''));
         }
+        /* a bare pair needs Hangul words around it: 1.5~2.5 alone stays numbers */
+        for (k = 0; pair && k < n; ++k)
+            if ((unsigned char)t[k] >= 0xea && (unsigned char)t[k] <= 0xed)
+                break;
+        if (k == n)
+            pair = 0;
         if (!pair || (word_within(t, p, 40, "수치|비율|지수|점수|평점|금리|성장률|확률|농도|배율|환율|지표|수익률|증가율|감소율|오차|버전") &&
                       !word_within(t, p, 40, "기간|성수기|일정|시즌|휴가|방학|연휴|행사")))
             return 0;
