@@ -3667,6 +3667,7 @@ static size_t promo_plus(const ttf_pack_input_t *in, ttf_semantic_t *s) {
    mark's name before the number). The mark opens a word, so x ≥ 5 stays a relation and 3~5
    a range. The unit is a declared word (number_mark_unit) or a measure symbol; without one
    only a particle may follow. */
+static int bare_month_day(const char *t, size_t n, size_t at, size_t *end);
 static size_t number_mark(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     const char *t = in->text, *unit = NULL;
     size_t n = in->length, b = in->tokens[in->index].begin, m = in->tokens[in->index].end, p, d, w = 0;
@@ -3700,6 +3701,15 @@ static size_t number_mark(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     if (d == p || !ko_digit(t[p]) || used + 1 >= sizeof(number))
         return 0;
     number[used] = 0;
+    {
+        /* ~11.14까지 십일 월 십사 일까지: a dotted month and day before 까지 is a date, so the
+           range mark means "until" and is not read (2026-10-31, TN round 11; was 약 십일 점 일사) */
+        size_t e;
+        if (bare_month_day(t, n, p, &e) && e == d && starts_with_word(t, n, d, "까지"))
+            return ttf_resource_get(in->engine, "speech_range_mark", "ko-KR", key, NULL)
+                       ? ko_finish(in, s, m, TTF_SEM_SYMBOL, "", "@word", "ko:mark-until")
+                       : 0;
+    }
     {
         /* the longest declared unit word, else a measure symbol (%, %p, ml) */
         size_t k;
@@ -4022,11 +4032,20 @@ static int date_tail(const char *t, size_t n, size_t r) {
                      t[r] == '-');
 }
 
-/* After a month and day pair: the end, a space or mark, a particle, or a copula (입니다). */
+/* After a month and day pair: the end, punctuation, a space before a word, a particle, or a
+   copula (입니다). A unit in Latin letters or a symbol (2.4~3.6km, 1.5~2.0℃) keeps it a number. */
 static int date_follow_ok(const ttf_pack_input_t *in, size_t at) {
     const char *t = in->text;
-    size_t n = in->length, k;
-    if (at >= n || (unsigned char)t[at] < 0xea || (unsigned char)t[at] > 0xed)
+    size_t n = in->length, k, a = at;
+    while (a < n && t[a] == ' ')
+        ++a;
+    if (a >= n)
+        return 1;
+    if ((unsigned char)t[a] < 0x80)
+        return !(((t[a] | 0x20) >= 'a' && (t[a] | 0x20) <= 'z') || ko_digit(t[a]) || t[a] == '%');
+    if ((unsigned char)t[a] < 0xea || (unsigned char)t[a] > 0xed)
+        return 0;
+    if (a > at)
         return 1;
     if (starts_with_word(t, n, at, "입니|이다|이며|이고|이었|였다"))
         return 1;
@@ -4040,12 +4059,22 @@ static int date_follow_ok(const ttf_pack_input_t *in, size_t at) {
     return 0;
 }
 
+/* 1.5~2.5 정도: an amount word after the pair (정도, 가량, 내외 …) makes it a number range */
+static int approx_after(const char *t, size_t n, size_t at) {
+    while (at < n && t[at] == ' ')
+        ++at;
+    return starts_with_word(t, n, at, "정도|가량|내외|안팎|수준|이상|이하|미만|초과");
+}
+
 /* 2024.1.1~12.31 이천이십사 년 일 월 일 일에서 십이 월 삼십일 일, 11/1~ 시작 십일 월 일 일부터
    시작: a month and day without a year reads as a date right after a full dotted date and
    its range mark, or right before an open range mark (~ then a space and a word, or the
-   end) (2026-10-30, TN round 9; was 십이 점 삼일, 일 분의 십일). Two bare pairs (7.1~8.31)
-   are dates only after a period word (기간, 성수기, 일정 …) shortly before; otherwise they and
-   3.5~ 4.0 stay numbers. */
+   end) (2026-10-30, TN round 9; was 십이 점 삼일, 일 분의 십일). Two bare pairs (8.5~8.9 휴관)
+   are dates unless a numeric word (수치, 비율, 금리 …) comes shortly before without a period
+   word, or a unit follows (1.2~1.8배, 2.4~3.6km); a pair before a clock time (12.6 13:00~15:00)
+   and one between ~ and 까지 (~11.14까지) are dates too; an amount word after the pair
+   (1.5~2.5 정도) keeps numbers (2026-10-31, TN round 11; was 팔 점 오에서
+   팔 점 구, 십이 점 육 열세 시, 약 십일 점 일사). 3.5~ 4.0 stays a number. */
 static size_t range_month_day(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     const char *t = in->text;
     size_t n = in->length, p = in->tokens[in->index].begin, q, r, k;
@@ -4079,21 +4108,35 @@ static size_t range_month_day(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     if (r < n && t[r] == '~' && (r + 1 == n || (t[r + 1] == ' ' && r + 2 < n && !ko_digit(t[r + 2]) &&
                                                 t[r + 2] != '~' && t[r + 2] != '.')))
         open = 1;
+    /* 12.6 13:00~15:00: a clock time after one space */
+    if (!after_date && !open && r + 5 < n && t[r] == ' ' && ko_digit(t[r + 1])) {
+        size_t c = r + 1;
+        while (c < n && c - r - 1 < 2 && ko_digit(t[c]))
+            ++c;
+        if (c + 2 < n && t[c] == ':' && ko_digit(t[c + 1]) && ko_digit(t[c + 2]) &&
+            !(c + 3 < n && ko_digit(t[c + 3])))
+            open = 1;
+    }
+    /* ~11.14까지 */
+    if (!after_date && !open && p && t[p - 1] == '~' && !(p >= 2 && (ko_digit(t[p - 2]) || t[p - 2] == '.')) &&
+        starts_with_word(t, n, r, "까지"))
+        open = 1;
     if (!after_date && !open) {
         /* 여름 성수기는 7.1~8.31: both sides of the range are month and day pairs */
         size_t e2, from;
         int pair = 0;
         if (r < n && t[r] == '~' && bare_month_day(t, n, r + 1, &e2) && !date_tail(t, n, e2) &&
-            date_follow_ok(in, e2))
+            date_follow_ok(in, e2) && !approx_after(t, n, e2))
             pair = 1;
-        else if (p >= 4 && t[p - 1] == '~' && !date_tail(t, n, r) && date_follow_ok(in, r)) {
+        else if (p >= 4 && t[p - 1] == '~' && !date_tail(t, n, r) && date_follow_ok(in, r) && !approx_after(t, n, r)) {
             for (from = p - 1; from > 0 && (ko_digit(t[from - 1]) || t[from - 1] == '.' || t[from - 1] == '/');
                  --from)
                 ;
             pair = bare_month_day(t, n, from, &e2) && e2 == p - 1 &&
                    !(from && (((t[from - 1] | 0x20) >= 'a' && (t[from - 1] | 0x20) <= 'z') || t[from - 1] == '\''));
         }
-        if (!pair || !word_within(t, p, 40, "기간|성수기|일정|시즌|휴가|방학|연휴|행사"))
+        if (!pair || (word_within(t, p, 40, "수치|비율|지수|점수|평점|금리|성장률|확률|농도|배율|환율|지표|수익률|증가율|감소율|오차|버전") &&
+                      !word_within(t, p, 40, "기간|성수기|일정|시즌|휴가|방학|연휴|행사")))
             return 0;
         open = 1; /* the right side and the range mark are checked above */
     }
