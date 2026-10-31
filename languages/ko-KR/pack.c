@@ -3086,8 +3086,9 @@ static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         r = q + 3;
         if (r + 2 < n && t[r] == ':' && ko_digit(t[r + 1]) && ko_digit(t[r + 2]) && !(r + 3 < n && ko_digit(t[r + 3]))) {
             /* 2:58:30의 기록으로, 분량이 1:15:40에, 인코딩 2:58:30 만에: before or after */
-            if (word_within(t, p, 30, "기록|완주|소요|걸렸|분량|길이|재생|녹음|영상") ||
-                word_after(t, n, r + 3, 30, "기록|완주|소요|걸렸|만에|분량")) {
+            /* 1:02:15에 결승선을 밟았다 한 시간 이 분 십오 초 (2026-10-31, TN round 20; was 한 시) */
+            if (word_within(t, p, 30, "기록|완주|소요|걸렸|분량|길이|재생|녹음|영상|마라톤|레이스") ||
+                word_after(t, n, r + 3, 30, "기록|완주|소요|걸렸|만에|분량|결승선|골인|주파")) {
                 (void)snprintf(v, sizeof(v), "%.*s", (int)(r + 3 - p), t + p);
                 return ko_finish(in, s, r + 3, TTF_SEM_TIME, v, "duration", "ko:duration");
             }

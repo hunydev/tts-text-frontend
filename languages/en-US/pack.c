@@ -2641,10 +2641,32 @@ no_file:
         }
         /* finished the season 12-3 twelve and three: a win-loss record (2026-10-31, TN round 16; was
            twelve to three) */
-        if (a - p <= 2 && a + 1 < n && t[a] == '-' && ascii_digit_char(t[a + 1]) && word_before(t, p, "season|record")) {
+        /* went 10-6-1 ten six and one; at 45-37, a 98-64 record, closed the year 52-30 (2026-10-31, TN round 20;
+           was forty five to thirty seven, one zero six one) */
+        if (a - p <= 2 && a + 1 < n && t[a] == '-' && ascii_digit_char(t[a + 1])) {
+            size_t r3;
             for (r = a + 1; r < n && ascii_digit_char(t[r]); ++r)
                 ;
-            if (r - a - 1 <= 2 && !(r < n && (ascii_letter_char(t[r]) || ascii_digit_char(t[r]) || t[r] == '-'))) {
+            if (r - a - 1 <= 2 && r + 1 < n && t[r] == '-' && ascii_digit_char(t[r + 1]) &&
+                word_before(t, p, "went|finished|closed|stands|sits|improved|record|season|year")) {
+                for (r3 = r + 1; r3 < n && ascii_digit_char(t[r3]); ++r3)
+                    ;
+                if (r3 - r - 1 <= 2 && !(r3 < n && (ascii_letter_char(t[r3]) || ascii_digit_char(t[r3]) || t[r3] == '-'))) {
+                    (void)snprintf(v, sizeof(v), "c:%.*s|c:%.*s|w:and|c:%.*s", (int)(a - p), t + p, (int)(r - a - 1), t + a + 1,
+                                   (int)(r3 - r - 1), t + r + 1);
+                    return say_span(in, out, r3, v, "win-loss");
+                }
+            }
+        }
+        if (a - p <= 2 && a + 1 < n && t[a] == '-' && ascii_digit_char(t[a + 1]) &&
+            (word_before(t, p, "season|record|went|finished|closed|stands|sits|improved|year") ||
+             (word_before(t, p, "at") && strncmp(t + p, t + a + 1, a - p)) ||
+             (a + 9 < n && !strncmp(t + a + 1 + strspn(t + a + 1, "0123456789"), " record", 7)))) {
+            for (r = a + 1; r < n && ascii_digit_char(t[r]); ++r)
+                ;
+            if (r - a - 1 <= 2 && !(r < n && (ascii_letter_char(t[r]) || ascii_digit_char(t[r]) || t[r] == '-' || t[r] == '%' ||
+                                              (r + 1 < n && t[r] == ' ' && word_at(t, n, r + 1, key, sizeof(key)) &&
+                                               in_list(key, "percent|degrees|points|years|days|hours|minutes|am|pm"))))) {
                 (void)snprintf(v, sizeof(v), "c:%.*s|w:and|c:%.*s", (int)(a - p), t + p, (int)(r - a - 1), t + a + 1);
                 return say_span(in, out, r, v, "win-loss");
             }
@@ -3491,12 +3513,14 @@ no_file:
     }
     if (t[p] == '.' && p + 3 < n && ascii_digit_char(t[p + 1]) && ascii_digit_char(t[p + 2]) && ascii_digit_char(t[p + 3]) &&
         !(p + 4 < n && ascii_digit_char(t[p + 4])) && !(p && (ascii_digit_char(t[p - 1]) || ascii_letter_char(t[p - 1]))) &&
-        word_before(t, p, "hitting|batting|batted|hit|average|avg|hits|at|of")) {
+        word_before(t, p, "hitting|batting|batted|hit|average|avg|hits|at|of|just|above|below|over|under")) {
         int baseball = 0;
         char w3[16];
+        /* hit just .250, finished above .300 in the league (2026-10-31, TN round 20; was zero point two five zero) */
         for (k = p > 50 ? p - 50 : 0; k < p; ++k)
             if ((k == 0 || !ascii_letter_char(t[k - 1])) && word_at(t, n, k, w3, sizeof(w3)) &&
-                in_list(w3, "hitting|batting|batted|average|avg|hits|hitter|season|plate"))
+                in_list(w3, "hitting|batting|batted|average|avg|hits|hit|hitter|season|plate|league|rookie|catcher|"
+                            "shortstop|pitcher|batter|slugger|lineup|inning|innings"))
                 baseball = 1;
         if (baseball) {
             (void)snprintf(v, sizeof(v), "k:%.3s", t + p + 1);

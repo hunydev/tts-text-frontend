@@ -678,6 +678,12 @@ score_cue	ko-KR	경기	1
 score_cue	ko-KR	세트	1
 score_cue	ko-KR	골	1
 score_cue	ko-KR	점차	1
+# 1세트를 25-23으로 따냈다, 112-108로 따돌렸다 (2026-10-31, TN round 20; was 이오 다시 이삼)
+score_cue	ko-KR	따냈	1
+score_cue	ko-KR	따내	1
+score_cue	ko-KR	따돌렸	1
+score_cue	ko-KR	따돌리	1
+score_cue	ko-KR	접전	1
 # Model numbers (2026-10-01, project-owner decision): a number right after a
 # product name reads English numerals up to ten (아이폰6 아이폰식스, 노트10 노트텐)
 # and Sino-Korean from eleven (아이폰 14 아이폰 십사). A counter after it (아이폰
