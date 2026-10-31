@@ -4825,11 +4825,11 @@ static size_t log_base(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     return ko_finish(in, s, r, TTF_SEM_SYMBOL, v, "@word", "ko:log-base");
 }
 
-/* Chemistry notation (2026-10-31, TN round 17): H₂O 에이치 투 오, C₆H₁₂O₆ 씨 식스 에이치 트웰브 오 식스,
-   Fe³⁺ 에프 이 쓰리 플러스, SO₄²⁻ 에스 오 포 투 마이너스, 2H₂+O₂→2H₂O 이 에이치 투 플러스 오 투 화살표
-   이 에이치 투 오 (was 에이치₂, 페이 세제곱⁺, 오투에서). Element symbols are spelled by letter, a
-   subscript or charge count is read with the English number words classrooms use, a coefficient
-   with Sino-Korean. A formula needs a subscript, a charge or an arrow; NaCl, B1, A4 stay as they
+/* Chemistry notation (2026-10-31, TN round 17): H₂O 에이치투오, C₆H₁₂O₆ 씨식스에이치트웰브오식스,
+   Fe³⁺ 에프이쓰리플러스, SO₄²⁻ 에스오포투마이너스, 2H₂+O₂→2H₂O 이 에이치투 플러스 오투 화살표 이 에이치투오
+   (was 에이치₂, 페이 세제곱⁺, 오투에서). Element symbols are spelled by letter, a subscript or charge
+   count is read with the English number words classrooms use, a coefficient with Sino-Korean; one
+   formula is written together as contract ko-styled-accent-v117 has it (에이치투오, 씨오투). A formula needs a subscript, a charge or an arrow; NaCl, B1, A4 stay as they
    are. ¹⁴C 탄소 십사, U-235 우라늄 이백삼십오: an isotope reads the element name and its mass
    number (a hyphen form only within the element's mass range, and for a light element only
    beside a nuclear word, so F-16 and B-52 stay names). */
@@ -4884,16 +4884,18 @@ static size_t chem_formula(const ttf_engine_t *e, const char *t, size_t n, size_
     size_t q = p, w, k;
     int elements = 0, d;
     char digits[8];
+    if (!chem_sep(out))
+        return p;
     if (q < n && ko_digit(t[q])) {
         for (k = 0; q < n && ko_digit(t[q]) && k + 1 < sizeof(digits); ++q)
             digits[k++] = t[q];
         digits[k] = 0;
-        if (!chem_sep(out) || cardinal(e, digits, out) != TTF_OK)
+        if (cardinal(e, digits, out) != TTF_OK || !algebra_put(out, " "))
             return p;
     }
     while (chem_element_at(t, n, q, &w) >= 0) {
         for (k = 0; k < w; ++k)
-            if (!chem_sep(out) || expression_letter(e, t[q + k], out) != TTF_OK)
+            if (expression_letter(e, t[q + k], out) != TTF_OK)
                 return p;
         q += w;
         ++elements;
@@ -4902,7 +4904,7 @@ static size_t chem_formula(const ttf_engine_t *e, const char *t, size_t n, size_
         if (k) {
             digits[k] = 0;
             ++*marks;
-            if (!chem_sep(out) || !chem_count(e, digits, out))
+            if (!chem_count(e, digits, out))
                 return p;
         }
     }
@@ -4916,7 +4918,7 @@ static size_t chem_formula(const ttf_engine_t *e, const char *t, size_t n, size_
         digits[k] = 0;
         if (r + 3 <= n && (unsigned char)t[r] == 0xE2 && (unsigned char)t[r + 1] == 0x81 &&
             ((unsigned char)t[r + 2] == 0xBA || (unsigned char)t[r + 2] == 0xBB)) {
-            if ((k && (!chem_sep(out) || !chem_count(e, digits, out))) || !chem_sep(out) ||
+            if ((k && !chem_count(e, digits, out)) ||
                 !algebra_put(out, (unsigned char)t[r + 2] == 0xBA ? resource(e, "chem_charge", "+", "플러스")
                                                                   : resource(e, "chem_charge", "-", "마이너스")))
                 return p;
@@ -4975,7 +4977,7 @@ static size_t chem_formula_rule(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     }
     end = chem_equation(in->engine, t, n, p, &check, &marks);
     ttf_buffer_free(&check);
-    /* 소금의 주성분인 NaCl 엔 에이 씨 엘: two or more elements without marks are a formula only in a
+    /* 소금의 주성분인 NaCl 엔에이씨엘: two or more elements without marks are a formula only in a
        chemistry sentence */
     if (!marks && end > p) {
         static const char *const cues[] = {"화학", "이온", "분자", "결합", "성분", "용액", "반응", "원소", "화합물"};

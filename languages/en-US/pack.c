@@ -2501,8 +2501,9 @@ no_file:
             }
         }
     }
-    /* 555-0140, x204 extension two hundred four; reached at x31 extension thirty one: x before an
-       extension number in a phone sentence (2026-10-31, TN round 17; was ex two oh four) */
+    /* 555-0140, x204 extension two zero four; reached at x31 extension three one: x before an
+       extension number in a phone sentence, digit by digit as contract en-ja-dev-v97 reads x2210
+       (2026-10-31, TN round 17; was ex two oh four) */
     if (t[p] == 'x' && p >= 2 && p + 1 < n && t[p - 1] == ' ' && ascii_digit_char(t[p + 1])) {
         size_t z = p + 1;
         while (z < n && ascii_digit_char(t[z]))
@@ -2515,7 +2516,7 @@ no_file:
                     in_list(key, "call|calls|reach|reached|transfer|dial|phone|line|desk|operator|extension|sales|support"))
                     cue = 1;
             if (cue && (comma || word_before(t, p, "at|to|on|dial|press|enter|use"))) {
-                (void)snprintf(v, sizeof(v), "w:extension|c:%.*s", (int)(z - p - 1), t + p + 1);
+                (void)snprintf(v, sizeof(v), "w:extension|d:%.*s", (int)(z - p - 1), t + p + 1);
                 return say_span(in, out, z, v, "x-extension");
             }
         }
