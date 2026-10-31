@@ -2506,6 +2506,66 @@ no_file:
         size_t a;
         for (a = p; a < n && ascii_digit_char(t[a]); ++a)
             ;
+        /* 9:00am-12:00pm nine a m to twelve p m, 10 p.m.-6 a.m. ten p m to six a m: two clock times,
+           each with its meridiem, joined by a hyphen or an en dash (2026-10-31, TN round 15; was nine
+           zero zero a m, ten p.m.minus six) */
+        {
+            size_t z = p, h0, used = 0;
+            unsigned hh, mm;
+            int side, dotted = 0;
+            for (side = 0; side < 2; ++side) {
+                char mer;
+                for (h0 = z; z < n && ascii_digit_char(t[z]); ++z)
+                    ;
+                if (z == h0 || z - h0 > 2)
+                    break;
+                hh = (unsigned)atoi(t + h0);
+                mm = 0;
+                if (z + 2 < n && t[z] == ':' && ascii_digit_char(t[z + 1]) && ascii_digit_char(t[z + 2])) {
+                    mm = (unsigned)atoi(t + z + 1);
+                    z += 3;
+                }
+                if (z < n && t[z] == ' ')
+                    ++z;
+                if (hh < 1 || hh > 12 || mm > 59 || z + 1 >= n || ((t[z] | 0x20) != 'a' && (t[z] | 0x20) != 'p'))
+                    break;
+                mer = (char)(t[z] | 0x20);
+                if ((t[z + 1] | 0x20) == 'm')
+                    dotted = 0, z += 2;
+                else if (z + 3 < n && t[z + 1] == '.' && (t[z + 2] | 0x20) == 'm' && t[z + 3] == '.')
+                    dotted = 1, z += 4;
+                else
+                    break;
+                if (used >= sizeof(v))
+                    break;
+                if (mm)
+                    used += (size_t)snprintf(v + used, sizeof(v) - used, "%sc:%u|%sc:%u|w:%c m", side ? "|w:to|" : "", hh,
+                                             mm < 10 ? "w:oh|" : "", mm, mer);
+                else
+                    used += (size_t)snprintf(v + used, sizeof(v) - used, "%sc:%u|w:%c m", side ? "|w:to|" : "", hh, mer);
+                if (side == 0) {
+                    if (z < n && t[z] == '-')
+                        ++z;
+                    else if (z + 3 <= n && !memcmp(t + z, "\xe2\x80\x93", 3))
+                        z += 3;
+                    else
+                        break;
+                    if (!(z < n && ascii_digit_char(t[z])))
+                        break;
+                }
+            }
+            if (side == 2 && used < sizeof(v) && !(z < n && (ascii_letter_char(t[z]) || ascii_digit_char(t[z])))) {
+                /* at 6 a.m. The: the last dot of a final meridiem is the full stop */
+                if (dotted) {
+                    size_t r2 = z;
+                    while (r2 < n && t[r2] == ' ')
+                        ++r2;
+                    if (r2 == n || t[r2] == '\n' || (r2 > z && t[r2] >= 'A' && t[r2] <= 'Z'))
+                        --z;
+                }
+                return say_span(in, out, z, v, "clock-range");
+            }
+        }
         /* a 3.2 lb package three point two pound: a decimal measure before a noun */
         if (a + 4 < n && t[a] == '.' && ascii_digit_char(t[a + 1]) && word_before(t, p, "a|an|the|this|that|each|every|one|your|my")) {
             size_t f = a + 1, z;
@@ -2729,10 +2789,56 @@ no_file:
                 ;
             if (r < n && t[r] == 'm' && !(r + 1 < n && ascii_letter_char(t[r + 1])) && r - a - 2 <= 2) {
                 unsigned h = (unsigned)atoi(t + p), mi = (unsigned)atoi(t + a + 2);
+                /* 2h 05m 41s two hours five minutes forty one seconds (2026-10-31, TN round 15) */
+                if (r + 3 < n && t[r + 1] == ' ' && ascii_digit_char(t[r + 2])) {
+                    size_t z;
+                    for (z = r + 2; z < n && ascii_digit_char(t[z]); ++z)
+                        ;
+                    if (z < n && t[z] == 's' && z - r - 2 <= 2 && !(z + 1 < n && ascii_letter_char(t[z + 1]))) {
+                        unsigned se = (unsigned)atoi(t + r + 2);
+                        (void)snprintf(v, sizeof(v), "c:%u|w:%s|c:%u|w:%s|c:%u|w:%s", h, h == 1 ? "hour" : "hours", mi,
+                                       mi == 1 ? "minute" : "minutes", se, se == 1 ? "second" : "seconds");
+                        return say_span(in, out, z + 1, v, "hms-duration");
+                    }
+                }
                 (void)snprintf(v, sizeof(v), "c:%u|w:%s|c:%u|w:%s", h, h == 1 ? "hour" : "hours", mi,
                                mi == 1 ? "minute" : "minutes");
                 return say_span(in, out, r + 1, v, "hm-duration");
             }
+        }
+        /* 45m 20s forty five minutes twenty seconds: minutes and seconds written short (2026-10-31,
+           TN round 15; was forty five meters twenties) */
+        if (a - p <= 2 && a + 3 < n && t[a] == 'm' && t[a + 1] == ' ' && ascii_digit_char(t[a + 2])) {
+            for (r = a + 2; r < n && ascii_digit_char(t[r]); ++r)
+                ;
+            if (r < n && t[r] == 's' && r - a - 2 <= 2 && !(r + 1 < n && ascii_letter_char(t[r + 1]))) {
+                unsigned mi = (unsigned)atoi(t + p), se = (unsigned)atoi(t + a + 2);
+                (void)snprintf(v, sizeof(v), "c:%u|w:%s|c:%u|w:%s", mi, mi == 1 ? "minute" : "minutes", se,
+                               se == 1 ? "second" : "seconds");
+                return say_span(in, out, r + 1, v, "ms-duration");
+            }
+        }
+        /* 10.82s ten point eight two seconds: a decimal before s is seconds, never a decade
+           (2026-10-31, TN round 15; was ten point eight two s) */
+        if (a - p <= 3 && a + 2 < n && t[a] == '.' && ascii_digit_char(t[a + 1])) {
+            for (r = a + 1; r < n && ascii_digit_char(t[r]); ++r)
+                ;
+            if (r < n && t[r] == 's' && r - a - 1 <= 3 &&
+                !(r + 1 < n && (ascii_letter_char(t[r + 1]) || ascii_digit_char(t[r + 1]) || t[r + 1] == '\''))) {
+                (void)snprintf(v, sizeof(v), "n:%.*s|w:seconds", (int)(r - p), t + p);
+                return say_span(in, out, r + 1, v, "decimal-seconds");
+            }
+        }
+        /* timed out after 30s, hold for 1s: whole seconds right after a duration word; the 30s,
+           their 20s, early 1990s and 1s and 0s stay plurals (2026-10-31, TN round 15; was thirties, ones) */
+        if (a - p <= 3 && a < n && t[a] == 's' &&
+            !(a + 1 < n && (ascii_letter_char(t[a + 1]) || ascii_digit_char(t[a + 1]) || t[a + 1] == '\'')) &&
+            word_before(t, p, "after|for|within|every|in|under|took|takes|lasted|lasts|than|only|just") &&
+            !(a + 6 < n && (!memcmp(t + a + 1, " and ", 5) || !memcmp(t + a + 1, " or ", 4) || t[a + 1] == '-' ||
+                            t[a + 1] == '/'))) {
+            unsigned se = (unsigned)atoi(t + p);
+            (void)snprintf(v, sizeof(v), "c:%u|w:%s", se, se == 1 ? "second" : "seconds");
+            return say_span(in, out, a + 1, v, "whole-seconds");
         }
         /* 213.555.0115: a dotted North American phone number */
         if (a - p == 3 && a + 8 < n && t[a] == '.' && ascii_digit_char(t[a + 1]) && ascii_digit_char(t[a + 2]) &&
@@ -3235,6 +3341,13 @@ no_file:
              !strncmp(t + p + 2, "800", 3)) && a - p - 2 == 3 && !(a < n && (ascii_letter_char(t[a]) || ascii_digit_char(t[a])))) {
             (void)snprintf(v, sizeof(v), "c:%c|w:by|c:%.3s", t[p], t + p + 2);
             return say_span(in, out, a, v, "relay");
+        }
+        /* 4x100m four by one hundred meter (2026-10-31, TN round 15; was four x one hundred m) */
+        if ((!strncmp(t + p + 2, "100", 3) || !strncmp(t + p + 2, "200", 3) || !strncmp(t + p + 2, "400", 3) ||
+             !strncmp(t + p + 2, "800", 3)) && a - p - 2 == 3 && a < n && t[a] == 'm' &&
+            !(a + 1 < n && (ascii_letter_char(t[a + 1]) || ascii_digit_char(t[a + 1])))) {
+            (void)snprintf(v, sizeof(v), "c:%c|w:by|c:%.3s|w:meter", t[p], t + p + 2);
+            return say_span(in, out, a + 1, v, "relay");
         }
     }
     return 0;

@@ -508,6 +508,7 @@ static ttf_status_t formula_count(const ttf_engine_t *e, const char *digits, ttf
     return TTF_OK;
 }
 static ttf_status_t expression_number(const ttf_engine_t *e, const char *value, ttf_buffer_t *out);
+static ttf_status_t algebra_read(const ttf_engine_t *e, const char *value, ttf_buffer_t *out);
 static ttf_status_t expression_letter(const ttf_engine_t *e, char letter, ttf_buffer_t *out) {
     char key[16];
     const char *label;
@@ -827,6 +828,9 @@ static ttf_status_t expression_side(const ttf_engine_t *e, const char *value, si
                 st = ttf_buffer_puts(out, resource(e, "math_power", "2", "제곱"));
             else if (!strcmp(power, "3"))
                 st = ttf_buffer_puts(out, resource(e, "math_power", "3", "세제곱"));
+            /* x⁴ 엑스 네제곱: the dictionary word (2026-10-31, TN round 15; was 사제곱) */
+            else if (!strcmp(power, "4"))
+                st = ttf_buffer_puts(out, resource(e, "math_power", "4", "네제곱"));
             else {
                 if (*power == '-') {
                     TRY(ttf_buffer_puts(out, resource(e, "number", "negative", "마이너스 ")));
@@ -1910,6 +1914,8 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
         }
         if (!strcmp(s->unit, "@expression"))
             return expression(e, s->value, out);
+        if (!strcmp(s->unit, "@algebra"))
+            return algebra_read(e, s->value, out);
         if (!strcmp(s->unit, "@word"))
             return ttf_buffer_puts(out, s->value);
         if (!strcmp(s->unit, "@times"))
@@ -4456,6 +4462,234 @@ static size_t geo_coordinate(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     return ko_finish(in, s, end, TTF_SEM_SYMBOL, v, "@word", "ko:geo-coordinate");
 }
 
+/* Algebra with a parenthesized group, a superscript power or a variable fraction:
+   2(x-3)=8 이 괄호 엑스 빼기 삼 괄호 닫고는 팔, (x+1)² 괄호 엑스 더하기 일 괄호 닫고 제곱,
+   x/3=4 삼 분의 엑스는 사, (a+b)/2 이 분의 에이 더하기 비, 2x²+3x 이 엑스 제곱 더하기 삼 엑스,
+   -3ab² 마이너스 삼 에이 비 제곱 (2026-10-31, TN round 15; was 이(엑스쓰리)이퀄 팔, (엑스 더하기 일)
+   제곱, 엑스 나누기 삼은 사, 두 배 제곱). Variables are single lowercase letters that are not
+   units (5m², km/h, m/s stay units); letters stand together only after a coefficient (3ab);
+   a fraction needs a number or a group on one side; a group needs an operator inside or a
+   power after it (3/4(월), (a) stay as they are). The written form is kept as the value and
+   read again by algebra_read. */
+typedef struct {
+    const ttf_engine_t *e;
+    const char *t;
+    size_t n, p;
+    int vars, groups, powers, fractions, numbers, operators;
+} algebra_t;
+static int algebra_var(char c) { return c >= 'a' && c <= 'z' && strchr("abcdknpqrtuvwxyz", c) != NULL; }
+static int algebra_side(algebra_t *a, ttf_buffer_t *out);
+static int algebra_put(ttf_buffer_t *out, const char *text) { return ttf_buffer_puts(out, text) == TTF_OK; }
+static int algebra_power(algebra_t *a, ttf_buffer_t *out, int number_base) {
+    char c, power[8];
+    size_t w, used = 0;
+    while ((w = superscript_at(a->t, a->n, a->p, &c)) != 0 && used + 1 < sizeof(power)) {
+        power[used++] = c;
+        a->p += w;
+    }
+    if (!used)
+        return 1;
+    power[used] = 0;
+    ++a->powers;
+    if (power[0] == '-' || !algebra_put(out, number_base ? "의 " : " "))
+        return 0;
+    if (!strcmp(power, "2"))
+        return algebra_put(out, resource(a->e, "math_power", "2", "제곱"));
+    if (!strcmp(power, "3"))
+        return algebra_put(out, resource(a->e, "math_power", "3", "세제곱"));
+    if (!strcmp(power, "4"))
+        return algebra_put(out, resource(a->e, "math_power", "4", "네제곱"));
+    return cardinal(a->e, power, out) == TTF_OK && algebra_put(out, resource(a->e, "math_power", "n", "제곱"));
+}
+/* Factors written together (3x, 2(x-3), a(b+c), (2a)²). bare gets the inner reading of a lone
+   group without a power, which a fraction reads without 괄호. */
+static int algebra_factors(algebra_t *a, ttf_buffer_t *out, ttf_buffer_t *bare) {
+    const char *t = a->t;
+    size_t n = a->n, count = 0;
+    int coefficient = 0, letter = 0, lone = 0, ok = 1;
+    ttf_buffer_t inner = {0};
+    for (; ok; ++count) {
+        size_t p = a->p;
+        if (count && !algebra_put(out, " "))
+            ok = 0;
+        else if (p < n && ko_digit(t[p]) && !count) {
+            char num[24];
+            size_t q = p;
+            while (q < n && ko_digit(t[q]))
+                ++q;
+            if (q + 1 < n && t[q] == '.' && ko_digit(t[q + 1]))
+                for (++q; q < n && ko_digit(t[q]); ++q)
+                    ;
+            if (q - p >= sizeof(num))
+                return 0;
+            memcpy(num, t + p, q - p);
+            num[q - p] = 0;
+            a->p = q;
+            ++a->numbers;
+            coefficient = 1;
+            ok = cardinal(a->e, num, out) == TTF_OK && algebra_power(a, out, 1);
+        } else if (p < n && algebra_var(t[p]) && !(letter && !coefficient)) {
+            a->p = p + 1;
+            ++a->vars;
+            letter = 1;
+            ok = expression_letter(a->e, t[p], out) == TTF_OK && algebra_power(a, out, 0);
+        } else if (p < n && t[p] == '(') {
+            int operators = a->operators, powers;
+            ttf_buffer_free(&inner);
+            a->p = p + 1;
+            if (!algebra_side(a, &inner) || a->p >= n || t[a->p] != ')') {
+                ok = 0;
+                break;
+            }
+            ++a->p;
+            ++a->groups;
+            powers = a->powers;
+            ok = algebra_put(out, resource(a->e, "math_group", "open", "괄호")) && algebra_put(out, " ") &&
+                 ttf_buffer_append(out, inner.data, inner.length) == TTF_OK && algebra_put(out, " ") &&
+                 algebra_put(out, resource(a->e, "math_group", "close", "괄호 닫고")) && algebra_power(a, out, 0);
+            if (a->operators == operators && a->powers == powers)
+                ok = 0;
+            lone = !count && a->powers == powers;
+            letter = 0;
+        } else {
+            /* the separator written for a factor that is not there */
+            if (count)
+                out->length -= 1;
+            break;
+        }
+    }
+    if (ok && count) {
+        if (lone && count == 1)
+            ok = ttf_buffer_append(bare, inner.data, inner.length) == TTF_OK;
+        else
+            ok = ttf_buffer_append(bare, out->data, out->length) == TTF_OK;
+    }
+    ttf_buffer_free(&inner);
+    return ok && count;
+}
+static int algebra_term(algebra_t *a, ttf_buffer_t *out) {
+    ttf_buffer_t num = {0}, num_bare = {0}, den = {0}, den_bare = {0};
+    int numbers = a->numbers, groups = a->groups, ok = algebra_factors(a, &num, &num_bare);
+    if (ok && a->p < a->n && a->t[a->p] == '/') {
+        ++a->p;
+        ok = algebra_factors(a, &den, &den_bare) && (a->numbers > numbers || a->groups > groups);
+        ok = ok && ttf_buffer_append(out, den_bare.data, den_bare.length) == TTF_OK && algebra_put(out, " ") &&
+             algebra_put(out, resource(a->e, "math_fraction", "of", "분의")) && algebra_put(out, " ") &&
+             ttf_buffer_append(out, num_bare.data, num_bare.length) == TTF_OK;
+        ++a->fractions;
+    } else if (ok)
+        ok = ttf_buffer_append(out, num.data, num.length) == TTF_OK;
+    ttf_buffer_free(&num);
+    ttf_buffer_free(&num_bare);
+    ttf_buffer_free(&den);
+    ttf_buffer_free(&den_bare);
+    return ok;
+}
+/* An operator at p: its canonical math_operator key and byte width, else 0. */
+static size_t algebra_operator(const algebra_t *a, size_t p, const char **key) {
+    const char *t = a->t;
+    if (p < a->n && (t[p] == '+' || t[p] == '-' || t[p] == '*')) {
+        *key = t[p] == '+' ? "+" : t[p] == '-' ? "-" : "*";
+        return 1;
+    }
+    if (p + 2 <= a->n && (unsigned char)t[p] == 0xC3 && ((unsigned char)t[p + 1] == 0x97 || (unsigned char)t[p + 1] == 0xB7)) {
+        *key = (unsigned char)t[p + 1] == 0x97 ? "×" : "÷";
+        return 2;
+    }
+    if (p + 3 <= a->n && !memcmp(t + p, "\xe2\x88\x92", 3)) {
+        *key = "-";
+        return 3;
+    }
+    return 0;
+}
+static int algebra_side(algebra_t *a, ttf_buffer_t *out) {
+    const char *key;
+    size_t w;
+    if (algebra_operator(a, a->p, &key) == 1 && !strcmp(key, "-")) {
+        ++a->p;
+        if (!algebra_put(out, resource(a->e, "number", "negative", "마이너스 ")))
+            return 0;
+    }
+    for (;;) {
+        const char *label;
+        if (!algebra_term(a, out))
+            return 0;
+        if (!(w = algebra_operator(a, a->p, &key)))
+            return 1;
+        if (!(label = ttf_resource_get(a->e, "math_operator", "ko-KR", key, NULL)))
+            return 0;
+        a->p += w;
+        ++a->operators;
+        if (!algebra_put(out, " ") || !algebra_put(out, label) || !algebra_put(out, " "))
+            return 0;
+    }
+}
+static int algebra_expression(algebra_t *a, ttf_buffer_t *out) {
+    static const struct {
+        const char *text, *key;
+    } relations[] = {{"=", "="}, {"<", "<"}, {">", ">"}, {"\xe2\x89\xa4", "≤"}, {"\xe2\x89\xa5", "≥"}, {"\xe2\x89\xa0", "≠"}};
+    ttf_buffer_t left = {0}, right = {0};
+    const char *template = NULL, *q;
+    size_t k;
+    int ok = algebra_side(a, &left);
+    for (k = 0; ok && k < sizeof(relations) / sizeof(*relations); ++k)
+        if (a->p + strlen(relations[k].text) <= a->n && !memcmp(a->t + a->p, relations[k].text, strlen(relations[k].text)))
+            break;
+    if (!ok || k == sizeof(relations) / sizeof(*relations)) {
+        ok = ok && ttf_buffer_append(out, left.data, left.length) == TTF_OK;
+        ttf_buffer_free(&left);
+        return ok;
+    }
+    a->p += strlen(relations[k].text);
+    ok = algebra_side(a, &right) && (template = ttf_resource_get(a->e, "math_relation", "ko-KR", relations[k].key, NULL));
+    for (q = template; ok && *q;) {
+        if (!strncmp(q, "{L}", 3)) {
+            ok = ttf_buffer_append(out, left.data, left.length) == TTF_OK;
+            q += 3;
+        } else if (!strncmp(q, "{R}", 3)) {
+            ok = ttf_buffer_append(out, right.data, right.length) == TTF_OK;
+            q += 3;
+        } else if (*q == '{' && strchr(q, '/') && strchr(q, '}') && strchr(q, '/') < strchr(q, '}')) {
+            const char *slash = strchr(q, '/'), *close = strchr(q, '}');
+            ok = (final_consonant(out) ? ttf_buffer_append(out, q + 1, (size_t)(slash - q - 1))
+                                       : ttf_buffer_append(out, slash + 1, (size_t)(close - slash - 1))) == TTF_OK;
+            q = close + 1;
+        } else
+            ok = ttf_buffer_append(out, q++, 1) == TTF_OK;
+    }
+    ttf_buffer_free(&left);
+    ttf_buffer_free(&right);
+    return ok;
+}
+static ttf_status_t algebra_read(const ttf_engine_t *e, const char *value, ttf_buffer_t *out) {
+    algebra_t a = {e, value, strlen(value), 0, 0, 0, 0, 0, 0, 0};
+    return algebra_expression(&a, out) && a.p == a.n ? TTF_OK : TTF_EINVAL;
+}
+static size_t algebra(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    const char *t = in->text, *key;
+    size_t n = in->length, p = in->tokens[in->index].begin, end;
+    algebra_t a = {in->engine, t, n, p, 0, 0, 0, 0, 0, 0};
+    ttf_buffer_t check = {0};
+    char v[TTF_IR_VALUE_SIZE], c;
+    int ok;
+    if (p >= n || !(ko_digit(t[p]) || algebra_var(t[p]) || t[p] == '(' || t[p] == '-') ||
+        (p && ((t[p - 1] >= 'a' && t[p - 1] <= 'z') || (t[p - 1] >= 'A' && t[p - 1] <= 'Z') || ko_digit(t[p - 1]) ||
+               t[p - 1] == '.' || t[p - 1] == ')' || t[p - 1] == '/' || t[p - 1] == '-' || t[p - 1] == '+')))
+        return 0;
+    ok = algebra_expression(&a, &check);
+    ttf_buffer_free(&check);
+    end = a.p;
+    if (!ok || !a.vars || !(a.groups || a.powers || a.fractions) || end - p >= sizeof(v) ||
+        (end < n && ((t[end] >= 'a' && t[end] <= 'z') || (t[end] >= 'A' && t[end] <= 'Z') || ko_digit(t[end]) ||
+                     t[end] == '(' || t[end] == '/' || t[end] == '_' || t[end] == '^' || t[end] == '=' ||
+                     t[end] == '<' || t[end] == '>' || (t[end] == '.' && end + 1 < n && ko_digit(t[end + 1])) ||
+                     superscript_at(t, n, end, &c) || algebra_operator(&a, end, &key))) ||
+        !korean_context(in))
+        return 0;
+    (void)snprintf(v, sizeof(v), "%.*s", (int)(end - p), t + p);
+    return ko_finish(in, s, end, TTF_SEM_SYMBOL, v, "@algebra", "ko:algebra");
+}
+
 static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     const char *text = in->text;
     size_t n = in->length, begin = in->tokens[in->index].begin, p, q;
@@ -4463,7 +4697,7 @@ static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     size_t identifier = below_zero_degrees(in, s);
     if (identifier)
         return identifier;
-    if ((identifier = number_mark(in, s)) != 0 || (identifier = day_countdown(in, s)) != 0 || (identifier = times_or_quarter(in, s)) != 0 || (identifier = promo_plus(in, s)) != 0 || (identifier = file_dot(in, s)) != 0 || (identifier = range_month_day(in, s)) != 0 || (identifier = weekday_range(in, s)) != 0 || (identifier = letter_unit(in, s)) != 0 || (identifier = name_version(in, s)) != 0 || (identifier = geo_coordinate(in, s)) != 0 || (identifier = colon_score(in, s)) != 0 || (identifier = price_per_unit(in, s)) != 0 ||
+    if ((identifier = algebra(in, s)) != 0 || (identifier = number_mark(in, s)) != 0 || (identifier = day_countdown(in, s)) != 0 || (identifier = times_or_quarter(in, s)) != 0 || (identifier = promo_plus(in, s)) != 0 || (identifier = file_dot(in, s)) != 0 || (identifier = range_month_day(in, s)) != 0 || (identifier = weekday_range(in, s)) != 0 || (identifier = letter_unit(in, s)) != 0 || (identifier = name_version(in, s)) != 0 || (identifier = geo_coordinate(in, s)) != 0 || (identifier = colon_score(in, s)) != 0 || (identifier = price_per_unit(in, s)) != 0 ||
         (identifier = currency_pair(in, s)) != 0 || (identifier = short_dotted_date(in, s)) != 0 || (identifier = quarter(in, s)) != 0 ||
         (identifier = owner_forms(in, s)) != 0 || (identifier = owner_forms5(in, s)) != 0 ||
         (identifier = chemical_formula(in, s)) != 0 || (identifier = subscript_index(in, s)) != 0 ||

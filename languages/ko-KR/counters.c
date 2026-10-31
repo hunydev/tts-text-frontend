@@ -97,7 +97,7 @@ static int role_value(const char *value) {
     return value && !strcmp(value, "identifier") ? 2 : value && !strcmp(value, "frequency") ? 1 : 0;
 }
 
-static int role(const ttf_pack_input_t *in, size_t begin, size_t end, ttf_resource_layer_t *layer) {
+static int role(const ttf_pack_input_t *in, size_t begin, size_t end, ttf_resource_layer_t *layer, int after) {
     size_t i, p = begin, q;
     int found = 0, case_particle = 0;
     ttf_resource_layer_t right_layer = TTF_LAYER_COMMON;
@@ -169,7 +169,7 @@ static int role(const ttf_pack_input_t *in, size_t begin, size_t end, ttf_resour
     /* The right cue must be a following word, never an attached unrelated noun. */
     if (p == q)
         return found;
-    q = match(in, "counter_role_after", p, key, sizeof(key), &right_layer);
+    q = after ? match(in, "counter_role_after", p, key, sizeof(key), &right_layer) : 0;
     if (q) {
         int current =
             role_value(ttf_resource_get(in->engine, "counter_role_after", "ko-KR", key, NULL));
@@ -428,7 +428,9 @@ size_t ttf_ko_classify_counter(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                       : is_range             ? "ko:ordinal-range"
                                              : "ko:suffix-ordinal");
     }
-    detected_role = role(in, begin, end, &s->layer);
+    /* 45쪽을 읽는다 사십오 쪽: the words after a count (읽었, 넘) tell how often for 번; a piece of
+       쪽 is named only by the food before it (2026-10-31, TN round 15; was 마흔다섯 쪽) */
+    detected_role = role(in, begin, end, &s->layer, strcmp(unit, "쪽") != 0);
     if (!detected_role || !valid || !right_valid)
         return 0;
     if (!is_range)

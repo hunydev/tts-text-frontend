@@ -594,6 +594,11 @@ classifier_priority	en-US	en.card-ending	20
 classifier_priority	en-US	en.duration	20
 classifier_priority	en-US	en.lap-time	20
 classifier_priority	en-US	en.hm-duration	20
+classifier_priority	en-US	en.hms-duration	20
+classifier_priority	en-US	en.ms-duration	20
+classifier_priority	en-US	en.decimal-seconds	20
+classifier_priority	en-US	en.whole-seconds	20
+classifier_priority	en-US	en.clock-range	100
 classifier_priority	en-US	en.dotted-phone	20
 classifier_priority	en-US	en.inches	20
 classifier_priority	en-US	en.measure-adjective	20

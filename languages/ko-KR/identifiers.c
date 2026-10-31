@@ -625,7 +625,10 @@ size_t ttf_ko_classify_identifier(const ttf_pack_input_t *in, ttf_semantic_t *se
     }
     /* A word ending in 번호 that is not a declared label only marks a code of
        four or more digits (번호 3번을 keeps its counter reading). */
-    if (!cue && end - begin < 4 && !ttf_resource_get(in->engine, "identifier_label", "ko-KR", label, NULL))
+    /* ...but a service number keeps its digits after one (모르는 번호는 114를 통해 일일사; 2026-10-31,
+       TN round 15; was 백십사). */
+    if (!cue && end - begin < 4 && !ttf_resource_get(in->engine, "identifier_label", "ko-KR", label, NULL) &&
+        !service_number(in, begin, end))
         return 0;
     while (end + 1 < in->length && in->text[end] == '-' && decimal_digit(in->text[end + 1])) {
         ++end;
