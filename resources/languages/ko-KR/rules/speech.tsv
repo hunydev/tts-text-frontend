@@ -171,7 +171,6 @@ classifier_priority	ko-KR	ko:trig-function	100
 classifier_priority	ko-KR	ko:log-base	100
 classifier_priority	ko-KR	ko:chem-formula	100
 classifier_priority	ko-KR	ko:chem-isotope	100
-classifier_priority	ko-KR	ko:lot-number	100
 # D-30 디 마이너스 삼십: a countdown to a day (2026-10-29).
 countdown	ko-KR	D-	디 마이너스 
 classifier_priority	ko-KR	ko:day-countdown	10
