@@ -307,6 +307,8 @@ numeric_suffix	*	㎍/m³	MEASURE:ug_per_cubic_m
 numeric_suffix	*	μg/㎥	MEASURE:ug_per_cubic_m
 numeric_suffix	*	µg/㎥	MEASURE:ug_per_cubic_m
 numeric_suffix	*	mg/L	MEASURE:mg_per_L
+numeric_suffix	*	mol/L	MEASURE:mol_per_L
+numeric_suffix	*	g/mol	MEASURE:g_per_mol
 numeric_suffix_cue	*	V	전압|전원|볼트|배터리|건전지|電圧|定格|電源|電池|充電|バッテリー|ボルト|충전|콘센트|어댑터|직류|교류|전기|전력|플러그|AC|DC|volt|battery|outlet|power|charger
 numeric_suffix_cue	*	A	전류|암페어|충전|퓨즈|차단기|어댑터|amp|current|fuse|charger
 numeric_suffix_cue	*	J	에너지|열량|칼로리|kcal|cal|joule|energy
@@ -420,6 +422,10 @@ unit	en-US	ug_per_cubic_m.one	microgram per cubic meter
 unit	en-US	ug_per_cubic_m.many	micrograms per cubic meter
 unit	en-US	mg_per_L.one	milligram per liter
 unit	en-US	mg_per_L.many	milligrams per liter
+unit	en-US	mol_per_L.one	mole per liter
+unit	en-US	mol_per_L.many	moles per liter
+unit	en-US	g_per_mol.one	gram per mole
+unit	en-US	g_per_mol.many	grams per mole
 numeric_suffix	*	Bq/kg	MEASURE:Bq_per_kg
 numeric_suffix	*	Bq/㎏	MEASURE:Bq_per_kg
 numeric_suffix	*	Bq/L	MEASURE:Bq_per_L

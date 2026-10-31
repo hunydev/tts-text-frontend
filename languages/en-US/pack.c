@@ -2501,6 +2501,25 @@ no_file:
             }
         }
     }
+    /* 555-0140, x204 extension two hundred four; reached at x31 extension thirty one: x before an
+       extension number in a phone sentence (2026-10-31, TN round 17; was ex two oh four) */
+    if (t[p] == 'x' && p >= 2 && p + 1 < n && t[p - 1] == ' ' && ascii_digit_char(t[p + 1])) {
+        size_t z = p + 1;
+        while (z < n && ascii_digit_char(t[z]))
+            ++z;
+        if (z - p - 1 <= 4 && !(z < n && (ascii_letter_char(t[z]) || t[z] == '-' ||
+                                          ((t[z] == '.' || t[z] == ',') && z + 1 < n && ascii_digit_char(t[z + 1]))))) {
+            int comma = p >= 3 && t[p - 2] == ',' && ascii_digit_char(t[p - 3]), cue = comma;
+            for (k = 0; !cue && k < n; ++k)
+                if ((k == 0 || !ascii_letter_char(t[k - 1])) && word_at(t, n, k, key, sizeof(key)) &&
+                    in_list(key, "call|calls|reach|reached|transfer|dial|phone|line|desk|operator|extension|sales|support"))
+                    cue = 1;
+            if (cue && (comma || word_before(t, p, "at|to|on|dial|press|enter|use"))) {
+                (void)snprintf(v, sizeof(v), "w:extension|c:%.*s", (int)(z - p - 1), t + p + 1);
+                return say_span(in, out, z, v, "x-extension");
+            }
+        }
+    }
     /* W 125th St west one twenty fifth street: a compass letter before a numbered street (2026-10-31,
        TN round 16; was W one hundred twenty fifth Street) */
     if ((t[p] == 'N' || t[p] == 'S' || t[p] == 'E' || t[p] == 'W') && p + 2 < n && t[p + 1] == ' ' &&
@@ -2521,6 +2540,70 @@ no_file:
         size_t a;
         for (a = p; a < n && ascii_digit_char(t[a]); ++a)
             ;
+        /* 1-800-FLOWERS one eight hundred flowers, 1-866-BOOK-NOW, 1-800-555-CARE: a toll-free number
+           spelled with words (2026-10-31, TN round 17; was one eight hundredFLOWERS) */
+        if (a - p == 1 && t[p] == '1' && a + 5 < n && t[a] == '-' && ascii_digit_char(t[a + 1]) &&
+            ascii_digit_char(t[a + 2]) && ascii_digit_char(t[a + 3]) && t[a + 4] == '-') {
+            size_t z = a + 4, used = (size_t)snprintf(v, sizeof(v), "d:1|%s%.3s", !strncmp(t + a + 1, "800", 3) ? "c:" : "d:", t + a + 1);
+            int lettered = 0, fine = 1;
+            while (fine && z + 1 < n && t[z] == '-') {
+                size_t g = z + 1, e2 = g;
+                if (ascii_digit_char(t[e2])) {
+                    while (e2 < n && ascii_digit_char(t[e2]))
+                        ++e2;
+                    used += (size_t)snprintf(v + used, used < sizeof(v) ? sizeof(v) - used : 0, "|d:%.*s", (int)(e2 - g), t + g);
+                } else if (t[e2] >= 'A' && t[e2] <= 'Z') {
+                    while (e2 < n && t[e2] >= 'A' && t[e2] <= 'Z')
+                        ++e2;
+                    if (e2 - g < 2 || used + (e2 - g) + 4 >= sizeof(v))
+                        fine = 0;
+                    else {
+                        used += (size_t)snprintf(v + used, sizeof(v) - used, "|w:");
+                        for (k = g; k < e2; ++k)
+                            v[used++] = (char)(t[k] - 'A' + 'a');
+                        v[used] = 0;
+                        ++lettered;
+                    }
+                } else
+                    fine = 0;
+                if (used >= sizeof(v))
+                    fine = 0;
+                z = e2;
+            }
+            if (fine && lettered && !(z < n && (ascii_letter_char(t[z]) || ascii_digit_char(t[z]))))
+                return say_span(in, out, z, v, "vanity-phone");
+        }
+        /* text HOME to 741741 seven four one seven four one: a text short code (2026-10-31, TN round 17;
+           was seven hundred forty one thousand ...) */
+        if (a - p >= 5 && a - p <= 6 && word_before(t, p, "to") &&
+            !(a < n && (ascii_letter_char(t[a]) || ascii_digit_char(t[a]) || t[a] == '-' ||
+                        ((t[a] == '.' || t[a] == ',') && a + 1 < n && ascii_digit_char(t[a + 1]))))) {
+            int texting = 0;
+            for (k = p > 40 ? p - 40 : 0; !texting && k < p; ++k)
+                if ((k == 0 || !ascii_letter_char(t[k - 1])) && word_at(t, n, k, key, sizeof(key)) && in_list(key, "text|texting"))
+                    texting = 1;
+            if (texting) {
+                (void)snprintf(v, sizeof(v), "d:%.*s", (int)(a - p), t + p);
+                return say_span(in, out, a, v, "text-code");
+            }
+        }
+        /* call or text 988 nine eight eight: a three-digit number right after call, text or dial
+           (2026-10-31, TN round 17; was nine hundred eighty eight) */
+        if (a - p == 3 && t[p] != '0' && word_before(t, p, "call|text|dial|calling|texting|dialing") &&
+            !(a < n && (ascii_letter_char(t[a]) || ascii_digit_char(t[a]) || t[a] == '-' || t[a] == '/' ||
+                        ((t[a] == '.' || t[a] == ',') && a + 1 < n && ascii_digit_char(t[a + 1]))))) {
+            (void)snprintf(v, sizeof(v), "d:%.3s", t + p);
+            return say_span(in, out, a, v, "dial-short");
+        }
+        /* on a 747 seven forty seven: a Boeing model number (2026-10-31, TN round 17; was seven hundred
+           forty seven) */
+        if (a - p == 3 && t[p] == '7' && t[p + 2] == '7' && t[p + 1] >= '0' && t[p + 1] <= '8' &&
+            word_before(t, p, "a|the|boeing|their|our|this|that|new|old") &&
+            !(a < n && (ascii_letter_char(t[a]) || ascii_digit_char(t[a]) || t[a] == '-' || t[a] == '/' ||
+                        ((t[a] == '.' || t[a] == ',') && a + 1 < n && ascii_digit_char(t[a + 1]))))) {
+            (void)snprintf(v, sizeof(v), "k:%.3s", t + p);
+            return say_span(in, out, a, v, "jet-model");
+        }
         /* CA 90210 nine oh two one oh: a ZIP code after a state abbreviation or near a mail word
            (2026-10-31, TN round 16; was ninety thousand two hundred ten) */
         if (a - p == 5 && !(a < n && (ascii_letter_char(t[a]) || ascii_digit_char(t[a]) || t[a] == '-' ||

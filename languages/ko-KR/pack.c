@@ -509,6 +509,7 @@ static ttf_status_t formula_count(const ttf_engine_t *e, const char *digits, ttf
 }
 static ttf_status_t expression_number(const ttf_engine_t *e, const char *value, ttf_buffer_t *out);
 static ttf_status_t algebra_read(const ttf_engine_t *e, const char *value, ttf_buffer_t *out);
+static ttf_status_t chem_read(const ttf_engine_t *e, const char *value, ttf_buffer_t *out);
 static ttf_status_t expression_letter(const ttf_engine_t *e, char letter, ttf_buffer_t *out) {
     char key[16];
     const char *label;
@@ -1916,6 +1917,8 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             return expression(e, s->value, out);
         if (!strcmp(s->unit, "@algebra"))
             return algebra_read(e, s->value, out);
+        if (!strcmp(s->unit, "@chem"))
+            return chem_read(e, s->value, out);
         if (!strcmp(s->unit, "@word"))
             return ttf_buffer_puts(out, s->value);
         if (!strcmp(s->unit, "@times"))
@@ -4228,10 +4231,11 @@ static size_t letter_unit(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     v[w] = 0;
     if (q >= n || w + 1 >= sizeof(v))
         return 0;
-    if (t[q] == 'K' && !strchr(v, '.') &&
-        (word_within(t, p, 40, "온도|끓는점|녹는점|절대영도|색온도|조명|빛|광|냉각|극저온|표면|항성|태양|켈빈") ||
+    /* 273 K 이백칠십삼 켈빈: one space may stand before the K (2026-10-31, TN round 17) */
+    if ((t[q] == 'K' || (t[q] == ' ' && q + 1 < n && t[q + 1] == 'K')) && !strchr(v, '.') &&
+        (word_within(t, p, 40, "온도|끓는점|녹는점|어는점|절대영도|색온도|조명|빛|광|냉각|극저온|표면|항성|태양|켈빈") ||
          word_after(t, n, q + 1, 16, "색온도|조명|광|빛")))
-        unit = "kelvin", k = 1;
+        unit = "kelvin", k = t[q] == ' ' ? 2 : 1;
     else if (q + 1 < n && t[q] == 'c' && t[q + 1] == 'h')
         unit = "channel", k = 2;
     else if (t[q] == 'R' && w <= 2 && !strchr(v, '.'))
@@ -4821,6 +4825,228 @@ static size_t log_base(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     return ko_finish(in, s, r, TTF_SEM_SYMBOL, v, "@word", "ko:log-base");
 }
 
+/* Chemistry notation (2026-10-31, TN round 17): H₂O 에이치 투 오, C₆H₁₂O₆ 씨 식스 에이치 트웰브 오 식스,
+   Fe³⁺ 에프 이 쓰리 플러스, SO₄²⁻ 에스 오 포 투 마이너스, 2H₂+O₂→2H₂O 이 에이치 투 플러스 오 투 화살표
+   이 에이치 투 오 (was 에이치₂, 페이 세제곱⁺, 오투에서). Element symbols are spelled by letter, a
+   subscript or charge count is read with the English number words classrooms use, a coefficient
+   with Sino-Korean. A formula needs a subscript, a charge or an arrow; NaCl, B1, A4 stay as they
+   are. ¹⁴C 탄소 십사, U-235 우라늄 이백삼십오: an isotope reads the element name and its mass
+   number (a hyphen form only within the element's mass range, and for a light element only
+   beside a nuclear word, so F-16 and B-52 stay names). */
+static const struct {
+    const char *symbol, *name;
+    int z;
+} chem_elements[] = {{"He", "헬륨", 2},      {"Li", "리튬", 3},      {"Be", "베릴륨", 4},     {"Ne", "네온", 10},
+                     {"Na", "나트륨", 11},   {"Mg", "마그네슘", 12}, {"Al", "알루미늄", 13},  {"Si", "규소", 14},
+                     {"Cl", "염소", 17},     {"Ar", "아르곤", 18},   {"Ca", "칼슘", 20},      {"Ti", "타이타늄", 22},
+                     {"Cr", "크로뮴", 24},   {"Mn", "망가니즈", 25}, {"Fe", "철", 26},        {"Co", "코발트", 27},
+                     {"Ni", "니켈", 28},     {"Cu", "구리", 29},     {"Zn", "아연", 30},      {"Br", "브로민", 35},
+                     {"Kr", "크립톤", 36},   {"Sr", "스트론튬", 38}, {"Tc", "테크네튬", 43},  {"Ag", "은", 47},
+                     {"Sn", "주석", 50},     {"Xe", "제논", 54},     {"Cs", "세슘", 55},      {"Ba", "바륨", 56},
+                     {"Pt", "백금", 78},     {"Au", "금", 79},       {"Hg", "수은", 80},      {"Pb", "납", 82},
+                     {"Rn", "라돈", 86},     {"Ra", "라듐", 88},     {"Th", "토륨", 90},      {"Pu", "플루토늄", 94},
+                     {"Am", "아메리슘", 95}, {"H", "수소", 1},       {"B", "붕소", 5},        {"C", "탄소", 6},
+                     {"N", "질소", 7},       {"O", "산소", 8},       {"F", "플루오린", 9},    {"P", "인", 15},
+                     {"S", "황", 16},        {"K", "칼륨", 19},      {"I", "아이오딘", 53},   {"U", "우라늄", 92}};
+static int chem_element_at(const char *t, size_t n, size_t p, size_t *width) {
+    size_t i, w;
+    if (p >= n || t[p] < 'A' || t[p] > 'Z')
+        return -1;
+    for (i = 0; i < sizeof(chem_elements) / sizeof(*chem_elements); ++i) {
+        w = strlen(chem_elements[i].symbol);
+        if (p + w <= n && !memcmp(t + p, chem_elements[i].symbol, w) && !(w == 1 && p + 1 < n && t[p + 1] >= 'a' && t[p + 1] <= 'z')) {
+            *width = w;
+            return (int)i;
+        }
+    }
+    return -1;
+}
+/* A subscript digit (U+2080..2089) at p: its value, else -1. */
+static int chem_subscript(const char *t, size_t n, size_t p) {
+    return p + 3 <= n && (unsigned char)t[p] == 0xE2 && (unsigned char)t[p + 1] == 0x82 && (unsigned char)t[p + 2] >= 0x80 &&
+                   (unsigned char)t[p + 2] <= 0x89
+               ? (unsigned char)t[p + 2] - 0x80
+               : -1;
+}
+static int chem_count(const ttf_engine_t *e, const char *digits, ttf_buffer_t *out) {
+    static const char *const words[] = {"", "원", "투", "쓰리", "포", "파이브", "식스", "세븐", "에잇", "나인", "텐", "일레븐", "트웰브"};
+    int value = atoi(digits);
+    char key[16];
+    if (value >= 1 && value <= 12 && strlen(digits) <= 2) {
+        (void)snprintf(key, sizeof(key), "%d", value);
+        return algebra_put(out, resource(e, "chem_count", key, words[value]));
+    }
+    return cardinal(e, digits, out) == TTF_OK;
+}
+static int chem_sep(ttf_buffer_t *out) { return !out->length || algebra_put(out, " "); }
+/* One formula from p: [coefficient] (element [subscript])+ [charge]. Returns its end, or p. */
+static size_t chem_formula(const ttf_engine_t *e, const char *t, size_t n, size_t p, ttf_buffer_t *out, int *marks) {
+    size_t q = p, w, k;
+    int elements = 0, d;
+    char digits[8];
+    if (q < n && ko_digit(t[q])) {
+        for (k = 0; q < n && ko_digit(t[q]) && k + 1 < sizeof(digits); ++q)
+            digits[k++] = t[q];
+        digits[k] = 0;
+        if (!chem_sep(out) || cardinal(e, digits, out) != TTF_OK)
+            return p;
+    }
+    while (chem_element_at(t, n, q, &w) >= 0) {
+        for (k = 0; k < w; ++k)
+            if (!chem_sep(out) || expression_letter(e, t[q + k], out) != TTF_OK)
+                return p;
+        q += w;
+        ++elements;
+        for (k = 0; (d = chem_subscript(t, n, q)) >= 0 && k + 1 < sizeof(digits); q += 3)
+            digits[k++] = (char)('0' + d);
+        if (k) {
+            digits[k] = 0;
+            ++*marks;
+            if (!chem_sep(out) || !chem_count(e, digits, out))
+                return p;
+        }
+    }
+    if (!elements)
+        return p;
+    {
+        char c;
+        size_t r = q, sw;
+        for (k = 0; (sw = superscript_at(t, n, r, &c)) != 0 && c != '-' && k + 1 < sizeof(digits); r += sw)
+            digits[k++] = c;
+        digits[k] = 0;
+        if (r + 3 <= n && (unsigned char)t[r] == 0xE2 && (unsigned char)t[r + 1] == 0x81 &&
+            ((unsigned char)t[r + 2] == 0xBA || (unsigned char)t[r + 2] == 0xBB)) {
+            if ((k && (!chem_sep(out) || !chem_count(e, digits, out))) || !chem_sep(out) ||
+                !algebra_put(out, (unsigned char)t[r + 2] == 0xBA ? resource(e, "chem_charge", "+", "플러스")
+                                                                  : resource(e, "chem_charge", "-", "마이너스")))
+                return p;
+            ++*marks;
+            q = r + 3;
+        }
+    }
+    return q;
+}
+/* A formula or an equation of formulas joined by + and →. Returns its end, or p. */
+static size_t chem_equation(const ttf_engine_t *e, const char *t, size_t n, size_t p, ttf_buffer_t *out, int *marks) {
+    size_t q = chem_formula(e, t, n, p, out, marks), r;
+    while (q > p && q < n) {
+        const char *label;
+        if (t[q] == '+' && !(q + 1 < n && t[q + 1] == ' '))
+            label = resource(e, "chem_operator", "+", "플러스"), r = q + 1;
+        else if (q + 3 <= n && !memcmp(t + q, "\xe2\x86\x92", 3))
+            label = resource(e, "chem_operator", "→", "화살표"), r = q + 3, ++*marks;
+        else
+            break;
+        {
+            size_t mark = out->length, next;
+            if (!chem_sep(out) || !algebra_put(out, label) || (next = chem_formula(e, t, n, r, out, marks)) == r) {
+                out->length = mark;
+                break;
+            }
+            q = next;
+        }
+    }
+    return q;
+}
+static ttf_status_t chem_read(const ttf_engine_t *e, const char *value, ttf_buffer_t *out) {
+    ttf_buffer_t buf = {0};
+    size_t n = strlen(value);
+    int marks = 0, ok = chem_equation(e, value, n, 0, &buf, &marks) == n &&
+                        ttf_buffer_append(out, buf.data, buf.length) == TTF_OK;
+    ttf_buffer_free(&buf);
+    return ok ? TTF_OK : TTF_EINVAL;
+}
+static size_t chem_formula_rule(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    const char *t = in->text;
+    size_t n = in->length, p = in->tokens[in->index].begin, end, w;
+    ttf_buffer_t check = {0};
+    char v[TTF_IR_VALUE_SIZE];
+    int marks = 0;
+    if (p >= n || !(ko_digit(t[p]) || (t[p] >= 'A' && t[p] <= 'Z')) ||
+        (p && ((t[p - 1] >= 'a' && t[p - 1] <= 'z') || (t[p - 1] >= 'A' && t[p - 1] <= 'Z') || ko_digit(t[p - 1]) ||
+               t[p - 1] == '.' || t[p - 1] == '-' || t[p - 1] == '+')))
+        return 0;
+    if (ko_digit(t[p])) {
+        size_t q = p;
+        while (q < n && ko_digit(t[q]))
+            ++q;
+        if (chem_element_at(t, n, q, &w) < 0)
+            return 0;
+    }
+    end = chem_equation(in->engine, t, n, p, &check, &marks);
+    ttf_buffer_free(&check);
+    /* 소금의 주성분인 NaCl 엔 에이 씨 엘: two or more elements without marks are a formula only in a
+       chemistry sentence */
+    if (!marks && end > p) {
+        static const char *const cues[] = {"화학", "이온", "분자", "결합", "성분", "용액", "반응", "원소", "화합물"};
+        size_t i, q, elements = 0, mixed = 0;
+        /* ...with a two-letter symbol among them (KBO, NC, SOS are initialisms) */
+        for (q = p; q < end && chem_element_at(t, n, q, &w) >= 0; q += w)
+            ++elements, mixed += w == 2;
+        for (i = 0; elements >= 2 && mixed && q == end && i < sizeof(cues) / sizeof(*cues); ++i)
+            if (strstr(t, cues[i]))
+                marks = 1;
+    }
+    if (end == p || !marks || end - p >= sizeof(v) ||
+        (end < n && ((t[end] >= 'a' && t[end] <= 'z') || (t[end] >= 'A' && t[end] <= 'Z') || ko_digit(t[end]) ||
+                     chem_subscript(t, n, end) >= 0)) ||
+        !korean_context(in))
+        return 0;
+    (void)snprintf(v, sizeof(v), "%.*s", (int)(end - p), t + p);
+    return ko_finish(in, s, end, TTF_SEM_SYMBOL, v, "@chem", "ko:chem-formula");
+}
+static int chem_nuclear_cue(const ttf_pack_input_t *in) {
+    static const char *const cues[] = {"동위", "방사", "반감기", "원자", "연대", "감마선", "핵", "피폭", "검출", "측정법", "원소"};
+    size_t i;
+    for (i = 0; i < sizeof(cues) / sizeof(*cues); ++i)
+        if (strstr(in->text, cues[i]))
+            return 1;
+    return 0;
+}
+static size_t chem_isotope(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    const char *t = in->text;
+    size_t n = in->length, p = in->tokens[in->index].begin, q = p, w, sw, k = 0, end;
+    char mass[8], c, v[TTF_IR_VALUE_SIZE];
+    int el, a;
+    ttf_buffer_t buf = {0};
+    if (p >= n || (p && ((t[p - 1] >= 'a' && t[p - 1] <= 'z') || (t[p - 1] >= 'A' && t[p - 1] <= 'Z') || ko_digit(t[p - 1]))))
+        return 0;
+    /* ¹⁴C: a mass number written before the symbol */
+    while ((sw = superscript_at(t, n, q, &c)) != 0 && c != '-' && k + 1 < sizeof(mass)) {
+        mass[k++] = c;
+        q += sw;
+    }
+    mass[k] = 0;
+    if (k) {
+        if ((el = chem_element_at(t, n, q, &w)) < 0)
+            return 0;
+        end = q + w;
+    } else {
+        /* U-235, Co-60: the symbol, a hyphen and the mass number */
+        if ((el = chem_element_at(t, n, q, &w)) < 0 || q + w + 1 >= n || t[q + w] != '-')
+            return 0;
+        for (end = q + w + 1; end < n && ko_digit(t[end]) && k + 1 < sizeof(mass); ++end)
+            mass[k++] = t[end];
+        mass[k] = 0;
+        a = atoi(mass);
+        if (!k || k > 3 || a < chem_elements[el].z || a * 10 > chem_elements[el].z * 26 + 40 ||
+            (chem_elements[el].z < 20 && !chem_nuclear_cue(in)))
+            return 0;
+    }
+    if ((end < n && ((t[end] >= 'a' && t[end] <= 'z') || (t[end] >= 'A' && t[end] <= 'Z') || ko_digit(t[end]) ||
+                     t[end] == '-' || chem_subscript(t, n, end) >= 0)) ||
+        !korean_context(in))
+        return 0;
+    if (ttf_buffer_puts(&buf, chem_elements[el].name) != TTF_OK || ttf_buffer_puts(&buf, " ") != TTF_OK ||
+        cardinal(in->engine, mass, &buf) != TTF_OK || buf.length >= sizeof(v)) {
+        ttf_buffer_free(&buf);
+        return 0;
+    }
+    (void)snprintf(v, sizeof(v), "%.*s", (int)buf.length, buf.data);
+    ttf_buffer_free(&buf);
+    return ko_finish(in, s, end, TTF_SEM_SYMBOL, v, "@word", "ko:chem-isotope");
+}
+
 static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     const char *text = in->text;
     size_t n = in->length, begin = in->tokens[in->index].begin, p, q;
@@ -4828,7 +5054,7 @@ static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     size_t identifier = below_zero_degrees(in, s);
     if (identifier)
         return identifier;
-    if ((identifier = algebra(in, s)) != 0 || (identifier = trig_function(in, s)) != 0 || (identifier = log_base(in, s)) != 0 || (identifier = number_mark(in, s)) != 0 || (identifier = day_countdown(in, s)) != 0 || (identifier = times_or_quarter(in, s)) != 0 || (identifier = promo_plus(in, s)) != 0 || (identifier = file_dot(in, s)) != 0 || (identifier = range_month_day(in, s)) != 0 || (identifier = weekday_range(in, s)) != 0 || (identifier = letter_unit(in, s)) != 0 || (identifier = name_version(in, s)) != 0 || (identifier = geo_coordinate(in, s)) != 0 || (identifier = colon_score(in, s)) != 0 || (identifier = price_per_unit(in, s)) != 0 ||
+    if ((identifier = algebra(in, s)) != 0 || (identifier = chem_isotope(in, s)) != 0 || (identifier = chem_formula_rule(in, s)) != 0 || (identifier = trig_function(in, s)) != 0 || (identifier = log_base(in, s)) != 0 || (identifier = number_mark(in, s)) != 0 || (identifier = day_countdown(in, s)) != 0 || (identifier = times_or_quarter(in, s)) != 0 || (identifier = promo_plus(in, s)) != 0 || (identifier = file_dot(in, s)) != 0 || (identifier = range_month_day(in, s)) != 0 || (identifier = weekday_range(in, s)) != 0 || (identifier = letter_unit(in, s)) != 0 || (identifier = name_version(in, s)) != 0 || (identifier = geo_coordinate(in, s)) != 0 || (identifier = colon_score(in, s)) != 0 || (identifier = price_per_unit(in, s)) != 0 ||
         (identifier = currency_pair(in, s)) != 0 || (identifier = short_dotted_date(in, s)) != 0 || (identifier = quarter(in, s)) != 0 ||
         (identifier = owner_forms(in, s)) != 0 || (identifier = owner_forms5(in, s)) != 0 ||
         (identifier = chemical_formula(in, s)) != 0 || (identifier = subscript_index(in, s)) != 0 ||

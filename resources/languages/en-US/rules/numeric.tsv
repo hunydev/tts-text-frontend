@@ -602,6 +602,11 @@ classifier_priority	en-US	en.clock-range	100
 classifier_priority	en-US	en.zip-code	20
 classifier_priority	en-US	en.win-loss	20
 classifier_priority	en-US	en.street-direction	20
+classifier_priority	en-US	en.x-extension	20
+classifier_priority	en-US	en.vanity-phone	99
+classifier_priority	en-US	en.text-code	20
+classifier_priority	en-US	en.dial-short	20
+classifier_priority	en-US	en.jet-model	20
 classifier_priority	en-US	en.dotted-phone	20
 classifier_priority	en-US	en.inches	20
 classifier_priority	en-US	en.measure-adjective	20
