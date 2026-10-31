@@ -287,6 +287,17 @@ service_number	ko-KR	1393	1
 service_number	ko-KR	1398	1
 service_number	ko-KR	1399	1
 call_cue	ko-KR	이용	1
+# 110 정부민원안내, 111, 117 학교폭력, 118 사이버, 127, 128 환경, 129 보건복지 (2026-10-31,
+# TN round 15; was 백십, 백십칠, 백이십구 with a call cue).
+service_number	ko-KR	110	1
+service_number	ko-KR	111	1
+service_number	ko-KR	117	1
+service_number	ko-KR	118	1
+service_number	ko-KR	127	1
+service_number	ko-KR	128	1
+service_number	ko-KR	129	1
+# 내선 123 내선 일이삼: an extension is dialed digit by digit (2026-10-31, TN round 15; was 백이십삼).
+identifier_label	ko-KR	내선	digits
 # A password or keypad sentence (pin_cue; 2026-10-07).
 pin_cue	ko-KR	비밀번호	1
 pin_cue	ko-KR	번호키	1

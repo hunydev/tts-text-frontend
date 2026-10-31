@@ -241,7 +241,8 @@ static ttf_status_t row_trace(const ttf_engine_t *e, const char *lang,
 
 /* Hand-authored reading rules over the generated table (hanja_rules.tsv):
    hanja_soft_after 렬 열 after a vowel or ㄴ (比率 비율, 旋律 선율), and
-   hanja_before_initial 不:ㄷ 부 before a syllable with that initial (不正 부정). */
+   hanja_before_initial 不:ㄷ 부 before a syllable with that initial (不正 부정), and
+   hanja_before_char 六:月 유 before that one character (六月 유월, 十月 시월; 2026-10-30). */
 static uint32_t rule_syllable(const ttf_entry_t *rule) {
     uint32_t cp = 0;
     size_t w;
@@ -269,12 +270,15 @@ static const ttf_entry_t *before_initial(const ttf_engine_t *e, const char *lang
                                       0x3142, 0x3143, 0x3145, 0x3146, 0x3147, 0x3148, 0x3149,
                                       0x314a, 0x314b, 0x314c, 0x314d, 0x314e};
     const ttf_entry_t *reading;
-    char next_key[9], rule_key[16], letter[5];
+    char next_key[9], rule_key[24], letter[5];
     uint32_t cp, first;
     size_t width = n ? cluster(next, n, &cp) : 0, w;
     if (!width || ttf_script_of(cp) != TTF_SCRIPT_HAN)
         return NULL;
     encode(cp, next_key);
+    snprintf(rule_key, sizeof(rule_key), "%s:%s", key, next_key);
+    if ((reading = ttf_resource_entry(e, "hanja_before_char", lang, rule_key)))
+        return reading;
     reading = ttf_resource_entry(e, "hanja_reading", lang, next_key);
     if (!reading || ttf_utf8_decode(reading->value, strlen(reading->value), &first, &w) != 1 ||
         !syllable(first))
@@ -327,6 +331,17 @@ ttf_status_t ttf_cjk_render(const ttf_engine_t *e, const char *lang, const char 
             continue;
         }
         word = word_match(e, lang, text + at, length - at, cp, &used);
+        /* ぎゅうどん 규돈: an う or お that lengthens the kana before it (kana_long_after) is
+           not the start of a word, so うどん is not read inside it (2026-10-30; was 규우동). */
+        if (word && script == TTF_SCRIPT_KANA && last && syllable(last) && (last - 0xac00) % 28 == 0) {
+            char vowel[5], long_key[16];
+            encode(0xac00 + 11 * 588 + ((last - 0xac00) % 588 / 28) * 28, vowel);
+            snprintf(long_key, sizeof(long_key), "%s:%s", vowel, key);
+            if (ttf_resource_entry(e, "kana_long_after", lang, long_key)) {
+                word = NULL;
+                used = width;
+            }
+        }
         if (word) {
             const char *wk = word_key(word);
             size_t wi = 0, wn = strlen(wk), ww;
@@ -382,6 +397,14 @@ ttf_status_t ttf_cjk_render(const ttf_engine_t *e, const char *lang, const char 
                 snprintf(key, sizeof(key), "%s", first.key);
                 second.fold = NULL;
                 reading = ttf_resource_entry(e, "kana_reading", lang, key);
+                /* こんにちは 곤니치와, わたしは 와타시와: the particle は closing a kana run
+                   after other kana is read as written in kana_final (2026-10-30; was 하);
+                   a repeated letter (ははは laughter) is not a particle. */
+                if (!initial && last && at >= used && memcmp(text + at - used, text + at, used) &&
+                    (at + used >= length || ttf_script_of(second.cp) != TTF_SCRIPT_KANA)) {
+                    const ttf_entry_t *final = ttf_resource_entry(e, "kana_final", lang, key);
+                    if (final) reading = final;
+                }
             }
             mark = ttf_resource_entry(e, "kana_mark", lang, key);
             st = row_trace(e, lang, first.fold, at, at + first.bytes, "cjk-kana-fold");
@@ -537,6 +560,18 @@ ttf_status_t ttf_cjk_validate(const ttf_resource_record_t *r, int *handled,
             memcpy(han, r->key, (size_t)(sep - r->key)); han[sep - r->key] = 0;
             valid = one_cp(han, &cp) && ttf_script_of(cp) == TTF_SCRIPT_HAN &&
                     one_cp(sep + 1, &cp) && cp >= 0x3131 && cp <= 0x314e &&
+                    one_cp(r->value, &cp) && syllable(cp);
+        }
+    } else if (!strcmp(r->kind, "kana_final")) {
+        valid = kana_key(r->key, 1, 0) && one_cp(r->value, &cp) && syllable(cp);
+    } else if (!strcmp(r->kind, "hanja_before_char")) {
+        const char *sep = strchr(r->key, ':');
+        char han[5];
+        valid = 0;
+        if (sep && sep > r->key && sep - r->key < 5) {
+            memcpy(han, r->key, (size_t)(sep - r->key)); han[sep - r->key] = 0;
+            valid = one_cp(han, &cp) && ttf_script_of(cp) == TTF_SCRIPT_HAN &&
+                    one_cp(sep + 1, &cp) && ttf_script_of(cp) == TTF_SCRIPT_HAN &&
                     one_cp(r->value, &cp) && syllable(cp);
         }
     } else if (!strcmp(r->kind, "kana_long_after")) {

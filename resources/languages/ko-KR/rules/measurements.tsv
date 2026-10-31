@@ -115,6 +115,11 @@ unit	ko-KR	MPa	메가파스칼
 unit	ko-KR	GPa	기가파스칼
 unit	ko-KR	ug_per_cubic_m	마이크로그램 퍼 세제곱미터
 unit	ko-KR	mg_per_L	밀리그램 퍼 리터
+# 2 mol/L 이 몰 퍼 리터, 18 g/mol 십팔 그램 퍼 몰 (2026-10-31, TN round 17; was 몰 슬래시 엘)
+unit	ko-KR	mol_per_L	몰 퍼 리터
+# 2 qt 이 쿼트: the shared quart unit (2026-10-31, TN round 19)
+unit	ko-KR	qt	쿼트
+unit	ko-KR	g_per_mol	그램 퍼 몰
 unit	ko-KR	Bq_per_kg	베크렐 퍼 킬로그램
 unit	ko-KR	Bq_per_L	베크렐 퍼 리터
 # Units the English owner-set phase added as shared suffixes (2026-10-14); a Korean request
@@ -142,3 +147,7 @@ unit	ko-KR	Mbps	메가비피에스
 unit	ko-KR	Gbps	기가비피에스
 unit	ko-KR	g_per_dL	그램 퍼 데시리터
 unit	ko-KR	nit	니트
+# 2026-10-31, TN round 12: units the ko pack gives to K (temperature or light), ch and R.
+unit	ko-KR	kelvin	켈빈
+unit	ko-KR	channel	채널
+unit	ko-KR	round	라운드

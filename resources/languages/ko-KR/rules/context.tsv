@@ -73,6 +73,11 @@ particle_form	ko-KR	야말로	이야말로|야말로
 particle_form	ko-KR	이야말로	이야말로|야말로
 particle_form	ko-KR	라든지	이라든지|라든지
 particle_form	ko-KR	이라든지	이라든지|라든지
+# AI이라고 에이아이라고, 7이라는 칠이라는 (2026-10-30, round 8)
+particle_form	ko-KR	라고	이라고|라고
+particle_form	ko-KR	이라고	이라고|라고
+particle_form	ko-KR	라는	이라는|라는
+particle_form	ko-KR	이라는	이라는|라는
 
 # Both written forms also close numeric quantities and signal Korean context.
 particle	ko-KR	랑	1

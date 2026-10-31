@@ -1876,6 +1876,18 @@ static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
                 }
             }
             inches = z + 3 <= n && !strncmp(t + z, " in", 3) && !(z + 3 < n && ascii_letter_char(t[z + 3]));
+            /* 1½ tbsp one and a half tablespoons (2026-10-31, TN round 19; was one and a half tbsp) */
+            if (!inches && z + 1 < n && t[z] == ' ') {
+                static const char *const abbr[][2] = {{"tbsp", " tablespoons"}, {"tsp", " teaspoons"}, {"lbs", " pounds"},
+                                                      {"lb", " pounds"}, {"oz", " ounces"}};
+                for (size_t ai = 0; ai < sizeof(abbr) / sizeof(*abbr); ++ai) {
+                    size_t l = strlen(abbr[ai][0]);
+                    if (z + 1 + l <= n && !strncmp(t + z + 1, abbr[ai][0], l) && !(z + 1 + l < n && ascii_letter_char(t[z + 1 + l]))) {
+                        (void)snprintf(v, sizeof(v), "%.*s|%s%s", (int)(q - p), t + p, frac, abbr[ai][1]);
+                        return owner_finish(in, out, z + 1 + l, TTF_SEM_SYMBOL, "@mixed", v, "en.mixed-fraction");
+                    }
+                }
+            }
             (void)snprintf(v, sizeof(v), "%.*s|%s%s", (int)(q - p), t + p, frac, inches ? " inches" : "");
             return owner_finish(in, out, inches ? z + 3 : z, TTF_SEM_SYMBOL, "@mixed", v, "en.mixed-fraction");
         }
@@ -2235,7 +2247,7 @@ static size_t dev_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
                         ;
                     if (word_at(t, n, u, key, sizeof(key)) &&
                         in_list(key, "ft|feet|foot|in|inch|inches|cm|mm|m|meter|meters|yd|yards|sheet|sheets|rug|"
-                                     "board|boards|tarp|frame|print|poster|photo|grid|room|tile|tiles"))
+                                     "board|boards|tarp|frame|print|poster|photo|grid|room|tile|tiles|pan|pans|loaf|dish|tray|tin"))
                         dims = 1;
                 }
             }
@@ -2501,11 +2513,224 @@ no_file:
             }
         }
     }
+    /* 555-0140, x204 extension two zero four; reached at x31 extension three one: x before an
+       extension number in a phone sentence, digit by digit as contract en-ja-dev-v97 reads x2210
+       (2026-10-31, TN round 17; was ex two oh four) */
+    if (t[p] == 'x' && p >= 2 && p + 1 < n && t[p - 1] == ' ' && ascii_digit_char(t[p + 1])) {
+        size_t z = p + 1;
+        while (z < n && ascii_digit_char(t[z]))
+            ++z;
+        if (z - p - 1 <= 4 && !(z < n && (ascii_letter_char(t[z]) || t[z] == '-' ||
+                                          ((t[z] == '.' || t[z] == ',') && z + 1 < n && ascii_digit_char(t[z + 1]))))) {
+            int comma = p >= 3 && t[p - 2] == ',' && ascii_digit_char(t[p - 3]), cue = comma;
+            for (k = 0; !cue && k < n; ++k)
+                if ((k == 0 || !ascii_letter_char(t[k - 1])) && word_at(t, n, k, key, sizeof(key)) &&
+                    in_list(key, "call|calls|reach|reached|transfer|dial|phone|line|desk|operator|extension|sales|support"))
+                    cue = 1;
+            if (cue && (comma || word_before(t, p, "at|to|on|dial|press|enter|use"))) {
+                (void)snprintf(v, sizeof(v), "w:extension|d:%.*s", (int)(z - p - 1), t + p + 1);
+                return say_span(in, out, z, v, "x-extension");
+            }
+        }
+    }
+    /* W 125th St west one twenty fifth street: a compass letter before a numbered street (2026-10-31,
+       TN round 16; was W one hundred twenty fifth Street) */
+    if ((t[p] == 'N' || t[p] == 'S' || t[p] == 'E' || t[p] == 'W') && p + 2 < n && t[p + 1] == ' ' &&
+        ascii_digit_char(t[p + 2]) && !(p && (ascii_letter_char(t[p - 1]) || ascii_digit_char(t[p - 1])))) {
+        size_t z = p + 2;
+        while (z < n && ascii_digit_char(t[z]))
+            ++z;
+        if (z + 3 < n && (!strncmp(t + z, "st ", 3) || !strncmp(t + z, "nd ", 3) || !strncmp(t + z, "rd ", 3) ||
+                          !strncmp(t + z, "th ", 3)) &&
+            word_at(t, n, z + 3, key, sizeof(key)) &&
+            in_list(key, "St|st|Ave|ave|Street|street|Avenue|avenue|Blvd|blvd|Rd|rd|Road|road|Pl|pl|Dr|dr|Drive|drive"))
+            return say_span(in, out, p + 1,
+                            t[p] == 'N' ? "w:north" : t[p] == 'S' ? "w:south" : t[p] == 'E' ? "w:east" : "w:west",
+                            "street-direction");
+    }
     if (ascii_digit_char(t[p]) && !(p && (ascii_digit_char(t[p - 1]) || t[p - 1] == '.' || t[p - 1] == ',' ||
                                           t[p - 1] == '/' || t[p - 1] == ':' || ascii_letter_char(t[p - 1])))) {
         size_t a;
         for (a = p; a < n && ascii_digit_char(t[a]); ++a)
             ;
+        /* I made 3x the usual amount three times: x after a count before the, as or a comparative word
+           (2026-10-31, TN round 19; was three x) */
+        if (a - p <= 2 && a + 2 < n && t[a] == 'x' && t[a + 1] == ' ' && word_at(t, n, a + 2, key, sizeof(key)) &&
+            in_list(key, "the|as|more|faster|bigger|larger|longer|higher|stronger|cheaper|slower|smaller|less|better")) {
+            (void)snprintf(v, sizeof(v), "c:%.*s|w:times", (int)(a - p), t + p);
+            return say_span(in, out, a + 1, v, "times-multiplier");
+        }
+        /* 1-800-FLOWERS one eight hundred flowers, 1-866-BOOK-NOW, 1-800-555-CARE: a toll-free number
+           spelled with words (2026-10-31, TN round 17; was one eight hundredFLOWERS) */
+        if (a - p == 1 && t[p] == '1' && a + 5 < n && t[a] == '-' && ascii_digit_char(t[a + 1]) &&
+            ascii_digit_char(t[a + 2]) && ascii_digit_char(t[a + 3]) && t[a + 4] == '-') {
+            size_t z = a + 4, used = (size_t)snprintf(v, sizeof(v), "d:1|%s%.3s", !strncmp(t + a + 1, "800", 3) ? "c:" : "d:", t + a + 1);
+            int lettered = 0, fine = 1;
+            while (fine && z + 1 < n && t[z] == '-') {
+                size_t g = z + 1, e2 = g;
+                if (ascii_digit_char(t[e2])) {
+                    while (e2 < n && ascii_digit_char(t[e2]))
+                        ++e2;
+                    used += (size_t)snprintf(v + used, used < sizeof(v) ? sizeof(v) - used : 0, "|d:%.*s", (int)(e2 - g), t + g);
+                } else if (t[e2] >= 'A' && t[e2] <= 'Z') {
+                    while (e2 < n && t[e2] >= 'A' && t[e2] <= 'Z')
+                        ++e2;
+                    if (e2 - g < 2 || used + (e2 - g) + 4 >= sizeof(v))
+                        fine = 0;
+                    else {
+                        used += (size_t)snprintf(v + used, sizeof(v) - used, "|w:");
+                        for (k = g; k < e2; ++k)
+                            v[used++] = (char)(t[k] - 'A' + 'a');
+                        v[used] = 0;
+                        ++lettered;
+                    }
+                } else
+                    fine = 0;
+                if (used >= sizeof(v))
+                    fine = 0;
+                z = e2;
+            }
+            if (fine && lettered && !(z < n && (ascii_letter_char(t[z]) || ascii_digit_char(t[z]))))
+                return say_span(in, out, z, v, "vanity-phone");
+        }
+        /* text HOME to 741741 seven four one seven four one: a text short code (2026-10-31, TN round 17;
+           was seven hundred forty one thousand ...) */
+        if (a - p >= 5 && a - p <= 6 && word_before(t, p, "to") &&
+            !(a < n && (ascii_letter_char(t[a]) || ascii_digit_char(t[a]) || t[a] == '-' ||
+                        ((t[a] == '.' || t[a] == ',') && a + 1 < n && ascii_digit_char(t[a + 1]))))) {
+            int texting = 0;
+            for (k = p > 40 ? p - 40 : 0; !texting && k < p; ++k)
+                if ((k == 0 || !ascii_letter_char(t[k - 1])) && word_at(t, n, k, key, sizeof(key)) && in_list(key, "text|texting"))
+                    texting = 1;
+            if (texting) {
+                (void)snprintf(v, sizeof(v), "d:%.*s", (int)(a - p), t + p);
+                return say_span(in, out, a, v, "text-code");
+            }
+        }
+        /* call or text 988 nine eight eight: a three-digit number right after call, text or dial
+           (2026-10-31, TN round 17; was nine hundred eighty eight) */
+        if (a - p == 3 && t[p] != '0' && word_before(t, p, "call|text|dial|calling|texting|dialing") &&
+            !(a < n && (ascii_letter_char(t[a]) || ascii_digit_char(t[a]) || t[a] == '-' || t[a] == '/' ||
+                        ((t[a] == '.' || t[a] == ',') && a + 1 < n && ascii_digit_char(t[a + 1]))))) {
+            (void)snprintf(v, sizeof(v), "d:%.3s", t + p);
+            return say_span(in, out, a, v, "dial-short");
+        }
+        /* on a 747 seven forty seven: a Boeing model number (2026-10-31, TN round 17; was seven hundred
+           forty seven) */
+        if (a - p == 3 && t[p] == '7' && t[p + 2] == '7' && t[p + 1] >= '0' && t[p + 1] <= '8' &&
+            word_before(t, p, "a|the|boeing|their|our|this|that|new|old") &&
+            !(a < n && (ascii_letter_char(t[a]) || ascii_digit_char(t[a]) || t[a] == '-' || t[a] == '/' ||
+                        ((t[a] == '.' || t[a] == ',') && a + 1 < n && ascii_digit_char(t[a + 1]))))) {
+            (void)snprintf(v, sizeof(v), "k:%.3s", t + p);
+            return say_span(in, out, a, v, "jet-model");
+        }
+        /* CA 90210 nine oh two one oh: a ZIP code after a state abbreviation or near a mail word
+           (2026-10-31, TN round 16; was ninety thousand two hundred ten) */
+        if (a - p == 5 && !(a < n && (ascii_letter_char(t[a]) || ascii_digit_char(t[a]) || t[a] == '-' ||
+                                      ((t[a] == ',' || t[a] == '.') && a + 1 < n && ascii_digit_char(t[a + 1]))))) {
+            int zip = p >= 3 && t[p - 1] == ' ' && t[p - 2] >= 'A' && t[p - 2] <= 'Z' && t[p - 3] >= 'A' &&
+                      t[p - 3] <= 'Z' && (p == 3 || !ascii_letter_char(t[p - 4]));
+            for (k = p > 80 ? p - 80 : 0; !zip && k < n && k < a + 60; ++k)
+                if ((k == 0 || !ascii_letter_char(t[k - 1])) && word_at(t, n, k, key, sizeof(key)) &&
+                    in_list(key, "zip|ZIP|Zip|postal|envelope|envelopes|address|addresses|mail|mailing|postcode"))
+                    zip = 1;
+            if (zip) {
+                (void)snprintf(v, sizeof(v), "d:%.5s", t + p);
+                return say_span(in, out, a, v, "zip-code");
+            }
+        }
+        /* finished the season 12-3 twelve and three: a win-loss record (2026-10-31, TN round 16; was
+           twelve to three) */
+        /* went 10-6-1 ten six and one; at 45-37, a 98-64 record, closed the year 52-30 (2026-10-31, TN round 20;
+           was forty five to thirty seven, one zero six one) */
+        if (a - p <= 2 && a + 1 < n && t[a] == '-' && ascii_digit_char(t[a + 1])) {
+            size_t r3;
+            for (r = a + 1; r < n && ascii_digit_char(t[r]); ++r)
+                ;
+            if (r - a - 1 <= 2 && r + 1 < n && t[r] == '-' && ascii_digit_char(t[r + 1]) &&
+                word_before(t, p, "went|finished|closed|stands|sits|improved|record|season|year")) {
+                for (r3 = r + 1; r3 < n && ascii_digit_char(t[r3]); ++r3)
+                    ;
+                if (r3 - r - 1 <= 2 && !(r3 < n && (ascii_letter_char(t[r3]) || ascii_digit_char(t[r3]) || t[r3] == '-'))) {
+                    (void)snprintf(v, sizeof(v), "c:%.*s|c:%.*s|w:and|c:%.*s", (int)(a - p), t + p, (int)(r - a - 1), t + a + 1,
+                                   (int)(r3 - r - 1), t + r + 1);
+                    return say_span(in, out, r3, v, "win-loss");
+                }
+            }
+        }
+        if (a - p <= 2 && a + 1 < n && t[a] == '-' && ascii_digit_char(t[a + 1]) &&
+            (word_before(t, p, "season|record|went|finished|closed|stands|sits|improved|year") ||
+             (word_before(t, p, "at") && strncmp(t + p, t + a + 1, a - p)) ||
+             (a + 9 < n && !strncmp(t + a + 1 + strspn(t + a + 1, "0123456789"), " record", 7)))) {
+            for (r = a + 1; r < n && ascii_digit_char(t[r]); ++r)
+                ;
+            if (r - a - 1 <= 2 && !(r < n && (ascii_letter_char(t[r]) || ascii_digit_char(t[r]) || t[r] == '-' || t[r] == '%' ||
+                                              (r + 1 < n && t[r] == ' ' && word_at(t, n, r + 1, key, sizeof(key)) &&
+                                               in_list(key, "percent|degrees|points|years|days|hours|minutes|am|pm"))))) {
+                (void)snprintf(v, sizeof(v), "c:%.*s|w:and|c:%.*s", (int)(a - p), t + p, (int)(r - a - 1), t + a + 1);
+                return say_span(in, out, r, v, "win-loss");
+            }
+        }
+        /* 9:00am-12:00pm nine a m to twelve p m, 10 p.m.-6 a.m. ten p m to six a m: two clock times,
+           each with its meridiem, joined by a hyphen or an en dash (2026-10-31, TN round 15; was nine
+           zero zero a m, ten p.m.minus six) */
+        {
+            size_t z = p, h0, used = 0;
+            unsigned hh, mm;
+            int side, dotted = 0;
+            for (side = 0; side < 2; ++side) {
+                char mer;
+                for (h0 = z; z < n && ascii_digit_char(t[z]); ++z)
+                    ;
+                if (z == h0 || z - h0 > 2)
+                    break;
+                hh = (unsigned)atoi(t + h0);
+                mm = 0;
+                if (z + 2 < n && t[z] == ':' && ascii_digit_char(t[z + 1]) && ascii_digit_char(t[z + 2])) {
+                    mm = (unsigned)atoi(t + z + 1);
+                    z += 3;
+                }
+                if (z < n && t[z] == ' ')
+                    ++z;
+                if (hh < 1 || hh > 12 || mm > 59 || z + 1 >= n || ((t[z] | 0x20) != 'a' && (t[z] | 0x20) != 'p'))
+                    break;
+                mer = (char)(t[z] | 0x20);
+                if ((t[z + 1] | 0x20) == 'm')
+                    dotted = 0, z += 2;
+                else if (z + 3 < n && t[z + 1] == '.' && (t[z + 2] | 0x20) == 'm' && t[z + 3] == '.')
+                    dotted = 1, z += 4;
+                else
+                    break;
+                if (used >= sizeof(v))
+                    break;
+                if (mm)
+                    used += (size_t)snprintf(v + used, sizeof(v) - used, "%sc:%u|%sc:%u|w:%c m", side ? "|w:to|" : "", hh,
+                                             mm < 10 ? "w:oh|" : "", mm, mer);
+                else
+                    used += (size_t)snprintf(v + used, sizeof(v) - used, "%sc:%u|w:%c m", side ? "|w:to|" : "", hh, mer);
+                if (side == 0) {
+                    if (z < n && t[z] == '-')
+                        ++z;
+                    else if (z + 3 <= n && !memcmp(t + z, "\xe2\x80\x93", 3))
+                        z += 3;
+                    else
+                        break;
+                    if (!(z < n && ascii_digit_char(t[z])))
+                        break;
+                }
+            }
+            if (side == 2 && used < sizeof(v) && !(z < n && (ascii_letter_char(t[z]) || ascii_digit_char(t[z])))) {
+                /* at 6 a.m. The: the last dot of a final meridiem is the full stop */
+                if (dotted) {
+                    size_t r2 = z;
+                    while (r2 < n && t[r2] == ' ')
+                        ++r2;
+                    if (r2 == n || t[r2] == '\n' || (r2 > z && t[r2] >= 'A' && t[r2] <= 'Z'))
+                        --z;
+                }
+                return say_span(in, out, z, v, "clock-range");
+            }
+        }
         /* a 3.2 lb package three point two pound: a decimal measure before a noun */
         if (a + 4 < n && t[a] == '.' && ascii_digit_char(t[a + 1]) && word_before(t, p, "a|an|the|this|that|each|every|one|your|my")) {
             size_t f = a + 1, z;
@@ -2595,6 +2820,27 @@ no_file:
                             math = 1;
                 for (k = p; k < r; ++k)
                     ;
+                /* on 1/2 lb of beef one half pound: a fraction before a unit is never a date (2026-10-31,
+                   TN round 19; was January second) */
+                if (word_at(t, n, r < n && t[r] == ' ' ? r + 1 : r, w2, sizeof(w2)) &&
+                    in_list(w2, "cup|cups|tsp|tbsp|teaspoon|teaspoons|tablespoon|tablespoons|lb|lbs|pound|pounds|oz|"
+                                "ounce|ounces|inch|inches|stick|sticks|gallon|gallons|quart|quarts|qt|pint|pints")) {
+                    static const char *const abbr[][2] = {{"tsp", "teaspoon"}, {"tbsp", "tablespoon"}, {"lb", "pound"},
+                                                          {"lbs", "pound"}, {"oz", "ounce"}, {"qt", "quart"}};
+                    math = 1;
+                    /* 1/2 lb one half pound, 3/4 tsp three quarters teaspoon: the abbreviation is read with it */
+                    for (size_t ai = 0; ai < sizeof(abbr) / sizeof(*abbr); ++ai)
+                        if (!strcmp(w2, abbr[ai][0]) && m < d && (d == 2 || d == 3 || d == 4 || d == 8 || d == 16)) {
+                            const char *den = d == 2 ? "half" : d == 3 ? "third" : d == 4 ? "quarter" : d == 8 ? "eighth" : "sixteenth";
+                            (void)snprintf(v, sizeof(v), "c:%u|w:%s%s %s", m, den, m > 1 ? "s" : "", abbr[ai][1]);
+                            return say_span(in, out, r + 1 + strlen(w2), v, "fraction-unit");
+                        }
+                }
+                /* Page 1/2 page one of two (2026-10-31, TN round 19; was page one half) */
+                if (word_before(t, p, "page|pages") && !(r < n && (t[r] == '/' || ascii_digit_char(t[r])))) {
+                    (void)snprintf(v, sizeof(v), "c:%u|w:of|c:%u", m, d);
+                    return say_span(in, out, r, v, "page-of");
+                }
                 if (m == 9 && d == 11 && !math)
                     return say_span(in, out, r, "w:nine eleven", "nine-eleven");
                 /* Show that 7/16 is less than 1/2: a fraction where a date could be read */
@@ -2608,8 +2854,13 @@ no_file:
                     out->input_end = r;
                     return tokens_until(in, r);
                 }
+                /* Tuesday, 3/4 Tuesday March fourth: a weekday before M/D names the date (owner set en-US-0062;
+                   2026-10-31, TN round 19; was Tuesday, three quarters) */
                 if (m >= 1 && m <= 12 && d >= 1 && d <= 31 && !math &&
                     (d > 12 || date_range || (t[p] == '0' && a - p == 2) ||
+                     word_before(t, p, "monday|tuesday|wednesday|thursday|friday|saturday|sunday") ||
+                     (p >= 2 && t[p - 1] == ' ' && t[p - 2] == ',' &&
+                      word_before(t, p - 2, "monday|tuesday|wednesday|thursday|friday|saturday|sunday")) ||
                      word_before(t, p, "birthday|on|until|through|since|due|deadline|expires|ends|opens|"
                                                  "closes|thru") ||
                      (!(m < d && (d == 2 || d == 3 || d == 4 || d == 8 || d == 16)) &&
@@ -2729,10 +2980,56 @@ no_file:
                 ;
             if (r < n && t[r] == 'm' && !(r + 1 < n && ascii_letter_char(t[r + 1])) && r - a - 2 <= 2) {
                 unsigned h = (unsigned)atoi(t + p), mi = (unsigned)atoi(t + a + 2);
+                /* 2h 05m 41s two hours five minutes forty one seconds (2026-10-31, TN round 15) */
+                if (r + 3 < n && t[r + 1] == ' ' && ascii_digit_char(t[r + 2])) {
+                    size_t z;
+                    for (z = r + 2; z < n && ascii_digit_char(t[z]); ++z)
+                        ;
+                    if (z < n && t[z] == 's' && z - r - 2 <= 2 && !(z + 1 < n && ascii_letter_char(t[z + 1]))) {
+                        unsigned se = (unsigned)atoi(t + r + 2);
+                        (void)snprintf(v, sizeof(v), "c:%u|w:%s|c:%u|w:%s|c:%u|w:%s", h, h == 1 ? "hour" : "hours", mi,
+                                       mi == 1 ? "minute" : "minutes", se, se == 1 ? "second" : "seconds");
+                        return say_span(in, out, z + 1, v, "hms-duration");
+                    }
+                }
                 (void)snprintf(v, sizeof(v), "c:%u|w:%s|c:%u|w:%s", h, h == 1 ? "hour" : "hours", mi,
                                mi == 1 ? "minute" : "minutes");
                 return say_span(in, out, r + 1, v, "hm-duration");
             }
+        }
+        /* 45m 20s forty five minutes twenty seconds: minutes and seconds written short (2026-10-31,
+           TN round 15; was forty five meters twenties) */
+        if (a - p <= 2 && a + 3 < n && t[a] == 'm' && t[a + 1] == ' ' && ascii_digit_char(t[a + 2])) {
+            for (r = a + 2; r < n && ascii_digit_char(t[r]); ++r)
+                ;
+            if (r < n && t[r] == 's' && r - a - 2 <= 2 && !(r + 1 < n && ascii_letter_char(t[r + 1]))) {
+                unsigned mi = (unsigned)atoi(t + p), se = (unsigned)atoi(t + a + 2);
+                (void)snprintf(v, sizeof(v), "c:%u|w:%s|c:%u|w:%s", mi, mi == 1 ? "minute" : "minutes", se,
+                               se == 1 ? "second" : "seconds");
+                return say_span(in, out, r + 1, v, "ms-duration");
+            }
+        }
+        /* 10.82s ten point eight two seconds: a decimal before s is seconds, never a decade
+           (2026-10-31, TN round 15; was ten point eight two s) */
+        if (a - p <= 3 && a + 2 < n && t[a] == '.' && ascii_digit_char(t[a + 1])) {
+            for (r = a + 1; r < n && ascii_digit_char(t[r]); ++r)
+                ;
+            if (r < n && t[r] == 's' && r - a - 1 <= 3 &&
+                !(r + 1 < n && (ascii_letter_char(t[r + 1]) || ascii_digit_char(t[r + 1]) || t[r + 1] == '\''))) {
+                (void)snprintf(v, sizeof(v), "n:%.*s|w:seconds", (int)(r - p), t + p);
+                return say_span(in, out, r + 1, v, "decimal-seconds");
+            }
+        }
+        /* timed out after 30s, hold for 1s: whole seconds right after a duration word; the 30s,
+           their 20s, early 1990s and 1s and 0s stay plurals (2026-10-31, TN round 15; was thirties, ones) */
+        if (a - p <= 3 && a < n && t[a] == 's' &&
+            !(a + 1 < n && (ascii_letter_char(t[a + 1]) || ascii_digit_char(t[a + 1]) || t[a + 1] == '\'')) &&
+            word_before(t, p, "after|for|within|every|in|under|took|takes|lasted|lasts|than|only|just") &&
+            !(a + 6 < n && (!memcmp(t + a + 1, " and ", 5) || !memcmp(t + a + 1, " or ", 4) || t[a + 1] == '-' ||
+                            t[a + 1] == '/'))) {
+            unsigned se = (unsigned)atoi(t + p);
+            (void)snprintf(v, sizeof(v), "c:%u|w:%s", se, se == 1 ? "second" : "seconds");
+            return say_span(in, out, a + 1, v, "whole-seconds");
         }
         /* 213.555.0115: a dotted North American phone number */
         if (a - p == 3 && a + 8 < n && t[a] == '.' && ascii_digit_char(t[a + 1]) && ascii_digit_char(t[a + 2]) &&
@@ -2976,6 +3273,25 @@ no_file:
             return tokens_until(in, z);
         }
     }
+    /* ¼ tsp one quarter teaspoon, ⅔ cup two thirds cup: a fraction glyph before a recipe unit (2026-10-31,
+       TN round 19; was one quarter tsp) */
+    if (p + 3 < n && !(p && ascii_digit_char(t[p - 1]))) {
+        const char *fw = NULL;
+        size_t gw = 0;
+        if ((unsigned char)t[p] == 0xC2)
+            fw = (unsigned char)t[p + 1] == 0xBD ? "one half" : (unsigned char)t[p + 1] == 0xBC ? "one quarter"
+                 : (unsigned char)t[p + 1] == 0xBE ? "three quarter" : NULL, gw = 2;
+        else if ((unsigned char)t[p] == 0xE2 && (unsigned char)t[p + 1] == 0x85)
+            fw = (unsigned char)t[p + 2] == 0x93 ? "one third" : (unsigned char)t[p + 2] == 0x94 ? "two thirds"
+                 : (unsigned char)t[p + 2] == 0x9B ? "one eighth" : NULL, gw = 3;
+        if (fw && p + gw + 1 < n && t[p + gw] == ' ' && word_at(t, n, p + gw + 1, key, sizeof(key)) &&
+            in_list(key, "tsp|tbsp|lb|oz|cup")) {
+            const char *unit = !strcmp(key, "tsp") ? "teaspoon" : !strcmp(key, "tbsp") ? "tablespoon"
+                               : !strcmp(key, "lb") ? "pound" : !strcmp(key, "oz") ? "ounce" : "cup";
+            (void)snprintf(v, sizeof(v), "w:%s %s", fw, unit);
+            return say_span(in, out, p + gw + 1 + strlen(key), v, "glyph-unit");
+        }
+    }
     /* ½ the group half the group */
     if ((unsigned char)t[p] == 0xC2 && p + 1 < n && (unsigned char)t[p + 1] == 0xBD &&
         (p + 6 < n && (!memcmp(t + p + 2, " the ", 5) || !memcmp(t + p + 2, " a ", 3))))
@@ -3197,12 +3513,14 @@ no_file:
     }
     if (t[p] == '.' && p + 3 < n && ascii_digit_char(t[p + 1]) && ascii_digit_char(t[p + 2]) && ascii_digit_char(t[p + 3]) &&
         !(p + 4 < n && ascii_digit_char(t[p + 4])) && !(p && (ascii_digit_char(t[p - 1]) || ascii_letter_char(t[p - 1]))) &&
-        word_before(t, p, "hitting|batting|batted|hit|average|avg|hits|at|of")) {
+        word_before(t, p, "hitting|batting|batted|hit|average|avg|hits|at|of|just|above|below|over|under")) {
         int baseball = 0;
         char w3[16];
+        /* hit just .250, finished above .300 in the league (2026-10-31, TN round 20; was zero point two five zero) */
         for (k = p > 50 ? p - 50 : 0; k < p; ++k)
             if ((k == 0 || !ascii_letter_char(t[k - 1])) && word_at(t, n, k, w3, sizeof(w3)) &&
-                in_list(w3, "hitting|batting|batted|average|avg|hits|hitter|season|plate"))
+                in_list(w3, "hitting|batting|batted|average|avg|hits|hit|hitter|season|plate|league|rookie|catcher|"
+                            "shortstop|pitcher|batter|slugger|lineup|inning|innings"))
                 baseball = 1;
         if (baseball) {
             (void)snprintf(v, sizeof(v), "k:%.3s", t + p + 1);
@@ -3235,6 +3553,13 @@ no_file:
              !strncmp(t + p + 2, "800", 3)) && a - p - 2 == 3 && !(a < n && (ascii_letter_char(t[a]) || ascii_digit_char(t[a])))) {
             (void)snprintf(v, sizeof(v), "c:%c|w:by|c:%.3s", t[p], t + p + 2);
             return say_span(in, out, a, v, "relay");
+        }
+        /* 4x100m four by one hundred meter (2026-10-31, TN round 15; was four x one hundred m) */
+        if ((!strncmp(t + p + 2, "100", 3) || !strncmp(t + p + 2, "200", 3) || !strncmp(t + p + 2, "400", 3) ||
+             !strncmp(t + p + 2, "800", 3)) && a - p - 2 == 3 && a < n && t[a] == 'm' &&
+            !(a + 1 < n && (ascii_letter_char(t[a + 1]) || ascii_digit_char(t[a + 1])))) {
+            (void)snprintf(v, sizeof(v), "c:%c|w:by|c:%.3s|w:meter", t[p], t + p + 2);
+            return say_span(in, out, a + 1, v, "relay");
         }
     }
     return 0;

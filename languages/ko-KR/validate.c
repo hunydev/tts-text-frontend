@@ -303,9 +303,9 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     }
     if (SAME(k, "file_extension")) {
         *handled = 1;
-        return strlen(key) >= 2 && strlen(key) < 8 && SAME(v, "1")
+        return strlen(key) >= 2 && strlen(key) < 8 && (SAME(v, "1") || (label(v) && strlen(v) < 40))
                    ? TTF_OK
-                   : ttf_validation_error(d, "file_extension requires a short lowercase extension and 1");
+                   : ttf_validation_error(d, "file_extension requires a short lowercase extension and 1 or a reading");
     }
     if (SAME(k, "promo_number")) {
         *handled = 1;
@@ -336,6 +336,12 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
         return symbol_key(key) && SAME(v, "1")
                    ? TTF_OK
                    : ttf_validation_error(d, "speech_range_numeric requires one symbol and 1");
+    }
+    if (SAME(k, "speech_range_open")) {
+        *handled = 1;
+        return symbol_key(key) && label(v) && strlen(v) < 32
+                   ? TTF_OK
+                   : ttf_validation_error(d, "speech_range_open requires one symbol and a reading");
     }
     if (SAME(k, "speech_range_mark")) {
         *handled = 1;

@@ -130,6 +130,7 @@ lexicon	ko-KR	en-US:circle	서클
 lexicon	ko-KR	en-US:citation	사이테이션
 lexicon	ko-KR	en-US:cities	시티스
 lexicon	ko-KR	en-US:citizen	시티즌
+lexicon	ko-KR	en-US:claude	클로드
 lexicon	ko-KR	en-US:client	클라이언트
 lexicon	ko-KR	en-US:climate	클라이밋
 lexicon	ko-KR	en-US:cloud	클라우드
@@ -154,6 +155,7 @@ lexicon	ko-KR	en-US:cooperation	코퍼레이션
 lexicon	ko-KR	en-US:corona	코로나
 lexicon	ko-KR	en-US:corporation	코퍼레이션
 lexicon	ko-KR	en-US:cosmic	코스믹
+lexicon	ko-KR	en-US:cosplay	코스프레
 lexicon	ko-KR	en-US:costco	코스트코
 lexicon	ko-KR	en-US:council	카운슬
 lexicon	ko-KR	en-US:countdown	카운트다운
@@ -165,6 +167,7 @@ lexicon	ko-KR	en-US:ctrl	컨트롤
 lexicon	ko-KR	en-US:cu	씨유
 lexicon	ko-KR	en-US:cupid	큐피드
 lexicon	ko-KR	en-US:daesung	대성
+lexicon	ko-KR	en-US:dall-e	달리
 lexicon	ko-KR	en-US:dash	대시
 lexicon	ko-KR	en-US:data	데이터
 lexicon	ko-KR	en-US:day6	데이식스
@@ -179,6 +182,7 @@ lexicon	ko-KR	en-US:despacito	데스파시토
 lexicon	ko-KR	en-US:development	디벨롭먼트
 lexicon	ko-KR	en-US:device	디바이스
 lexicon	ko-KR	en-US:director	디렉터
+lexicon	ko-KR	en-US:directx	다이렉트엑스
 lexicon	ko-KR	en-US:disease	디지즈
 lexicon	ko-KR	en-US:disney	디즈니
 lexicon	ko-KR	en-US:ditto	디토
@@ -293,6 +297,7 @@ lexicon	ko-KR	en-US:gabbana	가바나
 lexicon	ko-KR	en-US:games	게임스
 lexicon	ko-KR	en-US:garfunkel	가펑클
 lexicon	ko-KR	en-US:gatsby	개츠비
+lexicon	ko-KR	en-US:gemini	제미나이
 lexicon	ko-KR	en-US:gen	젠
 lexicon	ko-KR	en-US:general	제너럴
 lexicon	ko-KR	en-US:generation	제너레이션
@@ -505,6 +510,7 @@ lexicon	ko-KR	en-US:name	네임
 lexicon	ko-KR	en-US:national	내셔널
 lexicon	ko-KR	en-US:natural	내추럴
 lexicon	ko-KR	en-US:needs	니즈
+lexicon	ko-KR	en-US:neo	네오
 lexicon	ko-KR	en-US:nestle	네슬레
 lexicon	ko-KR	en-US:new	뉴
 lexicon	ko-KR	en-US:newjeans	뉴진스
@@ -536,6 +542,7 @@ lexicon	ko-KR	en-US:onerepublic	원리퍼블릭
 lexicon	ko-KR	en-US:online	온라인
 lexicon	ko-KR	en-US:oops	웁스
 lexicon	ko-KR	en-US:open	오픈
+lexicon	ko-KR	en-US:openssl	오픈에스에스엘
 lexicon	ko-KR	en-US:or	오어
 lexicon	ko-KR	en-US:oracle	오라클
 lexicon	ko-KR	en-US:orchestra	오케스트라
@@ -740,6 +747,7 @@ lexicon	ko-KR	en-US:travel	트래블
 lexicon	ko-KR	en-US:travelgram	트래블그램
 lexicon	ko-KR	en-US:treatment	트리트먼트
 lexicon	ko-KR	en-US:triples	트리플에스
+lexicon	ko-KR	en-US:tsingtao	칭다오
 lexicon	ko-KR	en-US:tuesday	튜즈데이
 lexicon	ko-KR	en-US:tvxq	동방신기
 lexicon	ko-KR	en-US:twelfth	트웰프스
@@ -755,6 +763,7 @@ lexicon	ko-KR	en-US:unforgiven	언포기븐
 lexicon	ko-KR	en-US:union	유니언
 lexicon	ko-KR	en-US:unis	유니스
 lexicon	ko-KR	en-US:united	유나이티드
+lexicon	ko-KR	en-US:unity	유니티
 lexicon	ko-KR	en-US:universe	유니버스
 lexicon	ko-KR	en-US:universities	유니버시티스
 lexicon	ko-KR	en-US:upload	업로드

@@ -155,6 +155,23 @@ speech_range_mark	ko-KR	〜	에서
 # as a range (2026-10-29; was kept as written). Between words (가→나) it keeps its policy.
 speech_range_mark	ko-KR	→	에서 
 speech_range_numeric	ko-KR	→	1
+# 11/1~ 시작 십일 월 일 일부터 시작, 19:00~ 열아홉 시부터: a range mark after a number with
+# nothing on its right opens the range (2026-10-30, TN round 9; the mark was silent).
+speech_range_open	ko-KR	~	부터
+speech_range_open	ko-KR	～	부터
+speech_range_open	ko-KR	∼	부터
+speech_range_open	ko-KR	〜	부터
+classifier_priority	ko-KR	ko:range-month-day	100
+classifier_priority	ko-KR	ko:weekday-range	10
+classifier_priority	ko-KR	ko:letter-unit	100
+classifier_priority	ko-KR	ko:name-version	100
+classifier_priority	ko-KR	ko:geo-coordinate	100
+classifier_priority	ko-KR	ko:algebra	100
+classifier_priority	ko-KR	ko:trig-function	100
+classifier_priority	ko-KR	ko:log-base	100
+classifier_priority	ko-KR	ko:chem-formula	100
+classifier_priority	ko-KR	ko:chem-isotope	100
+classifier_priority	ko-KR	ko:english-generation	100
 # D-30 디 마이너스 삼십: a countdown to a day (2026-10-29).
 countdown	ko-KR	D-	디 마이너스 
 classifier_priority	ko-KR	ko:day-countdown	10
@@ -192,7 +209,8 @@ file_extension	ko-KR	gif	1
 file_extension	ko-KR	mp3	1
 file_extension	ko-KR	mp4	1
 file_extension	ko-KR	zip	1
-file_extension	ko-KR	exe	1
+# exe 이엑스이: an extension that is not read as a word carries its reading (2026-10-30, TN round 9).
+file_extension	ko-KR	exe	이엑스이
 file_extension	ko-KR	json	1
 # 1+1 행사 원 플러스 원: a shop offer before a sales word (2026-10-29).
 promo_number	ko-KR	1	원
@@ -628,3 +646,11 @@ electronic_word	ko-KR	family	패밀리
 electronic_word	ko-KR	health	헬스
 electronic_word	ko-KR	media	미디어
 electronic_word	ko-KR	studio	스튜디오
+# Common words in handles and file names (@seoul_jazz, @IU_official, README.md; 2026-10-30, TN round 9).
+electronic_word	ko-KR	jazz	재즈
+electronic_word	ko-KR	official	오피셜
+electronic_word	ko-KR	book	북
+electronic_word	ko-KR	books	북스
+electronic_word	ko-KR	readme	리드미
+electronic_word	ko-KR	setup	셋업
+electronic_word	ko-KR	bit	비트
