@@ -4661,8 +4661,39 @@ static int algebra_expression(algebra_t *a, ttf_buffer_t *out) {
     ttf_buffer_free(&right);
     return ok;
 }
+/* (a+b)² alone keeps its written brackets, (에이 더하기 비) 제곱 (contract superscript-power-v119,
+   2026-10-26; on the owner decision list with the 괄호 reading used inside a longer expression). */
+static int algebra_lone_power(const ttf_engine_t *e, const char *value, ttf_buffer_t *out) {
+    size_t n = strlen(value), open = value[0] == '-', close, depth = 0, q;
+    char c;
+    if (open >= n || value[open] != '(')
+        return 0;
+    for (close = open; close < n; ++close) {
+        depth += value[close] == '(';
+        depth -= value[close] == ')';
+        if (!depth)
+            break;
+    }
+    if (close >= n || close + 1 >= n)
+        return 0;
+    for (q = close + 1; q < n && superscript_at(value, n, q, &c); q += superscript_at(value, n, q, &c))
+        ;
+    if (q != n)
+        return 0;
+    {
+        algebra_t inner = {e, value + open + 1, close - open - 1, 0, 0, 0, 0, 0, 0, 0};
+        algebra_t power = {e, value, n, close + 1, 0, 0, 0, 0, 0, 0};
+        return (!open || algebra_put(out, resource(e, "number", "negative", "마이너스 "))) && algebra_put(out, "(") &&
+               algebra_side(&inner, out) && inner.p == inner.n && algebra_put(out, ")") && algebra_power(&power, out, 0) &&
+               power.p == n;
+    }
+}
 static ttf_status_t algebra_read(const ttf_engine_t *e, const char *value, ttf_buffer_t *out) {
     algebra_t a = {e, value, strlen(value), 0, 0, 0, 0, 0, 0, 0};
+    size_t mark = out->length;
+    if (algebra_lone_power(e, value, out))
+        return TTF_OK;
+    out->length = mark;
     return algebra_expression(&a, out) && a.p == a.n ? TTF_OK : TTF_EINVAL;
 }
 static size_t algebra(const ttf_pack_input_t *in, ttf_semantic_t *s) {
