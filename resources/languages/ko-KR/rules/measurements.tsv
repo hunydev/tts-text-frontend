@@ -142,3 +142,7 @@ unit	ko-KR	Mbps	메가비피에스
 unit	ko-KR	Gbps	기가비피에스
 unit	ko-KR	g_per_dL	그램 퍼 데시리터
 unit	ko-KR	nit	니트
+# 2026-10-31, TN round 12: units the ko pack gives to K (temperature or light), ch and R.
+unit	ko-KR	kelvin	켈빈
+unit	ko-KR	channel	채널
+unit	ko-KR	round	라운드

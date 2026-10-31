@@ -1850,6 +1850,11 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
                 TRY(quantity(e, value, resource(e, "unit", units[k][0], units[k][1]), k == 0, out));
                 emitted = 1;
             }
+            if (!strcmp(s->unit, "minutes-fraction") && strchr(s->value, '.')) {
+                /* the hundredths after the seconds, as a number (오십팔 초 십이) */
+                TRY(ttf_buffer_puts(out, " "));
+                TRY(cardinal(e, strchr(s->value, '.') + 1, out));
+            }
             return TTF_OK;
         }
         if (!strcmp(s->rule, "ko:clock-24")) {
@@ -2938,6 +2943,9 @@ static size_t short_dotted_date(const ttf_pack_input_t *in, ttf_semantic_t *s) {
        (2026-10-30, TN round 10; was 십 년 팔 월 오 일) */
     if (word_within(t, begin, 12, "버전|ver|Ver|VER"))
         return 0;
+    /* iOS 17.4.1 십칠 점 사 점 일: after a Latin product name, too (2026-10-31, TN round 12) */
+    if (begin >= 2 && t[begin - 1] == ' ' && ((t[begin - 2] | 0x20) >= 'a' && (t[begin - 2] | 0x20) <= 'z'))
+        return 0;
     if (!two_digits_at(t, n, p, &year, &q) || q - p != 2 || q >= n || t[q] != '.' ||
         !two_digits_at(t, n, q + 1, &month, &q) || q >= n || t[q] != '.' ||
         !two_digits_at(t, n, q + 1, &day, &q))
@@ -3050,6 +3058,18 @@ static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         if (!(r < n && t[r] == ':')) {
             s->secondary[0] = '\0';
             return ko_finish(in, s, r, TTF_SEM_TIME, "24:00", "time", "ko:clock-24");
+        }
+    }
+    /* 3:58.12로 신기록 삼 분 오십팔 초 십이: minutes, seconds and hundredths of a record
+       (2026-10-31, TN round 12; was left as written) */
+    if (t[q] == ':' && q + 5 < n && ko_digit(t[q + 1]) && ko_digit(t[q + 2]) && t[q + 3] == '.' &&
+        ko_digit(t[q + 4]) && atoi(t + q + 1) < 60) {
+        size_t f = q + 4;
+        while (f < n && ko_digit(t[f]) && f - q - 4 < 3)
+            ++f;
+        if (!(f < n && (ko_digit(t[f]) || t[f] == '.' || t[f] == ':')) && korean_context(in)) {
+            (void)snprintf(v, sizeof(v), "%.*s", (int)(f - p), t + p);
+            return ko_finish(in, s, f, TTF_SEM_TIME, v, "minutes-fraction", "ko:duration");
         }
     }
     /* M:SS and H:MM:SS durations */
@@ -4184,6 +4204,85 @@ static size_t weekday_range(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     return ko_finish(in, s, end, TTF_SEM_SYMBOL, v, "@word", "ko:weekday-range");
 }
 
+/* 4,000K 조명 사천 켈빈, 7.1ch 칠 점 일 채널, 2R 이 라운드: a number with K near a temperature or
+   light word (4K 해상도 stays 포케이), with ch, or with R (2026-10-31, TN round 12; was 케이, 씨에이치,
+   알). */
+static size_t letter_unit(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    const char *t = in->text;
+    size_t n = in->length, p = in->tokens[in->index].begin, q = p, w = 0, k;
+    char v[32];
+    const char *unit = NULL;
+    if (p >= n || !ko_digit(t[p]) || (p && (ko_digit(t[p - 1]) || t[p - 1] == '.' || t[p - 1] == ',' ||
+                                            ((t[p - 1] | 0x20) >= 'a' && (t[p - 1] | 0x20) <= 'z'))))
+        return 0;
+    while (q < n && (ko_digit(t[q]) || (t[q] == ',' && q + 1 < n && ko_digit(t[q + 1])) ||
+                     (t[q] == '.' && q + 1 < n && ko_digit(t[q + 1]))))
+        if (t[q++] != ',' && w + 1 < sizeof(v))
+            v[w++] = t[q - 1];
+    v[w] = 0;
+    if (q >= n || w + 1 >= sizeof(v))
+        return 0;
+    if (t[q] == 'K' && !strchr(v, '.') &&
+        (word_within(t, p, 40, "온도|끓는점|녹는점|절대영도|색온도|조명|빛|광|냉각|극저온|표면|항성|태양|켈빈") ||
+         word_after(t, n, q + 1, 16, "색온도|조명|광|빛")))
+        unit = "kelvin", k = 1;
+    else if (q + 1 < n && t[q] == 'c' && t[q + 1] == 'h')
+        unit = "channel", k = 2;
+    else if (t[q] == 'R' && w <= 2 && !strchr(v, '.'))
+        unit = "round", k = 1;
+    else
+        return 0;
+    if (q + k < n && (ko_digit(t[q + k]) || ((t[q + k] | 0x20) >= 'a' && (t[q + k] | 0x20) <= 'z') || t[q + k] == '-'))
+        return 0;
+    if (!korean_context(in))
+        return 0;
+    return ko_finish(in, s, q + k, TTF_SEM_MEASURE, v, unit, "ko:letter-unit");
+}
+
+/* 마지막 세트에서 15:13으로 이기며 십오 대 십삼: a colon pair in a sentence with a result word
+   (이기, 졌, 꺾, 역전 …), with a particle after it and not after a clock word, is a score
+   (2026-10-31, TN round 12; was 열다섯 시 십삼 분). */
+static size_t colon_score(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    const char *t = in->text;
+    size_t n = in->length, p = in->tokens[in->index].begin, q, r, k;
+    static const char *const cues[] = {"이기", "이겼", "졌", "꺾", "역전", "승리", "패배", "완승", "완패", "제압",
+                                       "완파", "격파", "눌렀", "누르", "뒤집", "무승부", "동점", "스코어"};
+    int cue = 0;
+    if (p >= n || !ko_digit(t[p]) || (p && (ko_digit(t[p - 1]) || t[p - 1] == ':' || t[p - 1] == '.')))
+        return 0;
+    for (q = p; q < n && ko_digit(t[q]); ++q)
+        ;
+    if (q - p > 2 || q + 1 >= n || t[q] != ':' || !ko_digit(t[q + 1]))
+        return 0;
+    for (r = q + 1; r < n && ko_digit(t[r]); ++r)
+        ;
+    if (r - q - 1 > 2 || (r < n && (ko_digit(t[r]) || t[r] == ':' || (t[r] == '.' && r + 1 < n && ko_digit(t[r + 1])))) ||
+        starts_with_word(t, n, r, "에|부터|까지|쯤|경") || word_within(t, p, 12, "오전|오후|새벽|아침|저녁|밤|낮"))
+        return 0;
+    for (k = 0; k < sizeof(cues) / sizeof(cues[0]) && !cue; ++k) {
+        size_t m = strlen(cues[k]), i;
+        for (i = 0; i + m <= n && !cue; ++i)
+            cue = !memcmp(t + i, cues[k], m);
+    }
+    if (!cue || !korean_context(in))
+        return 0;
+    /* 15:13으로: a particle right after it; at the end or before a mark only when the minutes
+       could not be a round clock time (결승 15:30 킥오프 stays a time) */
+    if (!starts_with_word(t, n, r, "으로|로|의|이|가") &&
+        !((r == n || t[r] == '.' || t[r] == ',' || t[r] == ')') && !(t[q + 1] == '0' && t[q + 2] == '0') &&
+          !(t[q + 1] == '3' && t[q + 2] == '0') && r - q - 1 == 2))
+        return 0;
+    {
+        char a[4], b[4];
+        size_t z;
+        (void)snprintf(a, sizeof(a), "%.*s", (int)(q - p), t + p);
+        (void)snprintf(b, sizeof(b), "%.*s", (int)(r - q - 1), t + q + 1);
+        z = ko_finish(in, s, r, TTF_SEM_RANGE, a, "", "ko:score");
+        (void)snprintf(s->secondary, sizeof(s->secondary), "%s", b);
+        return z;
+    }
+}
+
 static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     const char *text = in->text;
     size_t n = in->length, begin = in->tokens[in->index].begin, p, q;
@@ -4191,7 +4290,7 @@ static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     size_t identifier = below_zero_degrees(in, s);
     if (identifier)
         return identifier;
-    if ((identifier = number_mark(in, s)) != 0 || (identifier = day_countdown(in, s)) != 0 || (identifier = times_or_quarter(in, s)) != 0 || (identifier = promo_plus(in, s)) != 0 || (identifier = file_dot(in, s)) != 0 || (identifier = range_month_day(in, s)) != 0 || (identifier = weekday_range(in, s)) != 0 || (identifier = price_per_unit(in, s)) != 0 ||
+    if ((identifier = number_mark(in, s)) != 0 || (identifier = day_countdown(in, s)) != 0 || (identifier = times_or_quarter(in, s)) != 0 || (identifier = promo_plus(in, s)) != 0 || (identifier = file_dot(in, s)) != 0 || (identifier = range_month_day(in, s)) != 0 || (identifier = weekday_range(in, s)) != 0 || (identifier = letter_unit(in, s)) != 0 || (identifier = colon_score(in, s)) != 0 || (identifier = price_per_unit(in, s)) != 0 ||
         (identifier = currency_pair(in, s)) != 0 || (identifier = short_dotted_date(in, s)) != 0 || (identifier = quarter(in, s)) != 0 ||
         (identifier = owner_forms(in, s)) != 0 || (identifier = owner_forms5(in, s)) != 0 ||
         (identifier = chemical_formula(in, s)) != 0 || (identifier = subscript_index(in, s)) != 0 ||
