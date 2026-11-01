@@ -3522,10 +3522,59 @@ no_file:
         }
         /* .312 hitting three twelve (a batting average) */
     }
+    /* c.1600 circa sixteen hundred, ca. 1200: a four-digit year after the circa abbreviation
+       (2026-11-01, round 23; c.1600 was circa one thousand six hundred, run together) */
+    if (ascii_digit_char(t[p]) && p >= 2) {
+        size_t a, b = p;
+        int circa = 0;
+        for (a = p; a < n && ascii_digit_char(t[a]); ++a)
+            ;
+        while (b && t[b - 1] == ' ')
+            --b;
+        if (b >= 2 && t[b - 1] == '.' && (t[b - 2] | 0x20) == 'c' && (b == 2 || !ascii_letter_char(t[b - 3])))
+            circa = 1;
+        if (b >= 3 && t[b - 1] == '.' && t[b - 2] == 'a' && (t[b - 3] | 0x20) == 'c' && (b == 3 || !ascii_letter_char(t[b - 4])))
+            circa = 1;
+        if (circa && a - p == 4 && atoi(t + p) >= 1000 && atoi(t + p) < 2100 &&
+            !(a < n && (ascii_digit_char(t[a]) || ascii_letter_char(t[a]) || (t[a] == '.' && a + 1 < n && ascii_digit_char(t[a + 1]))))) {
+            (void)snprintf(v, sizeof(v), "%sy:%.4s", t[p - 1] == '.' ? "w:|" : "", t + p);
+            return say_span(in, out, a, v, "circa-year");
+        }
+    }
+    /* .312/.401/.550 three twelve slash four oh one slash five fifty: a baseball slash line,
+       two or three batting figures joined by slashes (2026-11-01, round 23; was . three hundred
+       twelve slash . four hundred one ...) */
+    if (t[p] == '.' && p + 3 < n && !(p && (ascii_digit_char(t[p - 1]) || ascii_letter_char(t[p - 1])))) {
+        size_t z = p, parts = 0, used = 0;
+        while (parts < 3 && z + 3 < n && t[z] == '.' && ascii_digit_char(t[z + 1]) && ascii_digit_char(t[z + 2]) &&
+               ascii_digit_char(t[z + 3]) && !(z + 4 < n && ascii_digit_char(t[z + 4]))) {
+            size_t y = z + 4;
+            used += (size_t)snprintf(v + used, sizeof(v) - used, "%sk:%.3s", parts ? "|w:slash|" : "", t + z + 1);
+            ++parts;
+            z = y;
+            while (y < n && t[y] == ' ')
+                ++y;
+            if (parts < 3 && y < n && t[y] == '/') {
+                ++y;
+                while (y < n && t[y] == ' ')
+                    ++y;
+                if (y + 3 < n && t[y] == '.' && ascii_digit_char(t[y + 1])) {
+                    z = y;
+                    continue;
+                }
+            }
+            break;
+        }
+        if (parts >= 2 && used < sizeof(v))
+            return say_span(in, out, z, v, "slash-line");
+    }
+    /* a .400 hitter, dipped to .199: a figure before hitter or average, or after a word near a
+       baseball word (2026-11-01, round 23) */
     if (t[p] == '.' && p + 3 < n && ascii_digit_char(t[p + 1]) && ascii_digit_char(t[p + 2]) && ascii_digit_char(t[p + 3]) &&
         !(p + 4 < n && ascii_digit_char(t[p + 4])) && !(p && (ascii_digit_char(t[p - 1]) || ascii_letter_char(t[p - 1]))) &&
-        word_before(t, p, "hitting|batting|batted|hit|average|avg|hits|at|of|just|above|below|over|under")) {
-        int baseball = 0;
+        (word_before(t, p, "hitting|batting|batted|hit|average|avg|hits|at|of|just|above|below|over|under|to|from|a|an|his|her|was|is|with|around|near") ||
+         (p + 5 < n && t[p + 4] == ' ' && (!strncmp(t + p + 5, "hitter", 6) || !strncmp(t + p + 5, "average", 7))))) {
+        int baseball = p + 5 < n && t[p + 4] == ' ' && (!strncmp(t + p + 5, "hitter", 6) || !strncmp(t + p + 5, "average", 7));
         char w3[16];
         /* hit just .250, finished above .300 in the league (2026-10-31, TN round 20; was zero point two five zero) */
         for (k = p > 50 ? p - 50 : 0; k < p; ++k)

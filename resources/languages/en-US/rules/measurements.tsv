@@ -460,6 +460,9 @@ unit	en-US	square_mi.many	square miles
 unit	en-US	per_square_mi.one	per square mile
 unit	en-US	per_square_mi.many	per square miles
 numeric_suffix	*	lbs	MEASURE:lb
+# 40 LBS forty pounds (2026-11-01, round 23; was l b s)
+numeric_suffix	*	LBS	MEASURE:lb
+numeric_suffix	*	LB	MEASURE:lb
 
 # Abbreviations in the owner's evaluation sets (2026-10-14).
 numeric_suffix	*	hrs	MEASURE:hr

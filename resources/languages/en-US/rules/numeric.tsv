@@ -648,3 +648,6 @@ classifier_priority	en-US	en.fraction-inch	100
 classifier_priority	en-US	en.letter-digit-letters	100
 classifier_priority	en-US	en.file-name	100
 classifier_priority	en-US	en.month-year	100
+# .312/.401/.550 slash lines and c.1600 circa years (2026-11-01, round 23)
+classifier_priority	en-US	en.slash-line	100
+classifier_priority	en-US	en.circa-year	100

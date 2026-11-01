@@ -195,6 +195,15 @@ currency_pair_word	ko-KR	유로화	1
 currency_pair_word	ko-KR	위안화	1
 # File extensions whose period is read (report.pdf 리포트 닷 피디에프; 2026-10-29).
 file_extension	ko-KR	pdf	1
+# index.html 인덱스 닷 에이치티엠엘 (2026-11-01, round 23; the period was kept)
+file_extension	ko-KR	html	1
+file_extension	ko-KR	htm	1
+file_extension	ko-KR	xml	1
+file_extension	ko-KR	css	1
+file_extension	ko-KR	svg	1
+file_extension	ko-KR	wav	1
+file_extension	ko-KR	mov	1
+file_extension	ko-KR	apk	1
 file_extension	ko-KR	txt	1
 file_extension	ko-KR	doc	1
 file_extension	ko-KR	docx	1

@@ -13,6 +13,13 @@ abbreviation_expansion	en-US	rev	Reverend
 abbreviation_expansion	en-US	hon	Honorable
 # No. 5 number five: only before a number (No. I will not stays).
 abbreviation_number	en-US	no	number
+# c. 1850, ca. 1200, c.1600 circa (2026-11-01, round 23; was c. eighteen fifty)
+abbreviation	en-US	c	preserve
+abbreviation	en-US	ca	preserve
+abbreviation_number	en-US	c	circa
+abbreviation_number	en-US	ca	circa
+# the 12th c. twelfth century: a dotted c after an ordinal number (2026-11-01, round 23)
+abbreviation_ordinal	en-US	c	century
 # Existing undotted initialisms keep their text spelling by default.
 # Options: preserve, letters (g p u), names (gee pee you).
 # Unknown ALL-CAPS words never acquire an English spelling pronunciation by default.
