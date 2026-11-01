@@ -258,6 +258,9 @@ numeric_suffix	*	㎕	MEASURE:uL
 numeric_suffix	*	μg	MEASURE:ug
 numeric_suffix	*	µg	MEASURE:ug
 numeric_suffix	*	㎍	MEASURE:ug
+# 200mcg 이백 마이크로그램, two hundred micrograms: the supplement-label spelling (2026-11-01, TN round 28;
+# was 이백 엠씨지)
+numeric_suffix	*	mcg	MEASURE:ug
 numeric_suffix	*	ng	MEASURE:ng
 numeric_suffix	*	μm	MEASURE:um
 numeric_suffix	*	µm	MEASURE:um
