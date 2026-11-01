@@ -1089,6 +1089,10 @@ static size_t roman_numeral(const ttf_pack_input_t *in, ttf_semantic_t *out, int
     }
     if (cardinal_only && (!cue || strcmp(cue, "cardinal")))
         return 0;
+    /* Section C, Part D, Appendix M: a lone C, D, L or M is a letter label, not 100, 500, 50
+       or 1000 (round 25; Section C. 5 was section one hundred. five). Chapter I, Part V stay. */
+    if (n == 1 && strchr("CDLM", in->text[t->begin]))
+        return 0;
     if (!cue) {
         if (!roman_standalone(in, t))
             return 0;
@@ -3521,6 +3525,64 @@ no_file:
             }
         }
         /* .312 hitting three twelve (a batting average) */
+    }
+    /* rise for 3h three hours, rest for 1.5 h: a number with h after a duration word reads hours.
+       A single letter is not a declared unit (measurements.tsv), so the word before decides
+       (round 25; was two h). 2h30 and 3hp are not taken. */
+    if (ascii_digit_char(t[p]) && !(p && (ascii_digit_char(t[p - 1]) || ascii_letter_char(t[p - 1]) || t[p - 1] == '.'))) {
+        size_t a = p, h;
+        for (; a < n && (ascii_digit_char(t[a]) || (t[a] == '.' && a + 1 < n && ascii_digit_char(t[a + 1]))); ++a)
+            ;
+        h = a + (a < n && t[a] == ' ');
+        if (a - p <= 5 && h < n && t[h] == 'h' && !(h + 1 < n && (ascii_letter_char(t[h + 1]) || ascii_digit_char(t[h + 1]))) &&
+            word_before(t, p, "for|in|about|after|within|over|every|takes|took|take|around|approximately|roughly|nearly|under|than|another|extra|least|to|lasts|lasted")) {
+            (void)snprintf(v, sizeof(v), "n:%.*s|w:%s", (int)(a - p), t + p, a - p == 1 && t[p] == '1' ? "hour" : "hours");
+            return say_span(in, out, h + 1, v, "hours-h");
+        }
+    }
+    /* $3.50/lb three dollars and fifty cents per pound, $1,200/mo: a price per unit (round 25;
+       was dollar three point five zero slash lb) */
+    if (t[p] == '$' && p + 1 < n && ascii_digit_char(t[p + 1])) {
+        static const char *const units[][2] = {{"lb", "pound"}, {"lbs", "pound"}, {"oz", "ounce"}, {"kg", "kilogram"},
+                                               {"g", "gram"}, {"gal", "gallon"}, {"hr", "hour"}, {"h", "hour"},
+                                               {"mo", "month"}, {"month", "month"}, {"yr", "year"}, {"year", "year"},
+                                               {"wk", "week"}, {"week", "week"}, {"day", "day"}, {"night", "night"},
+                                               {"person", "person"}, {"ft", "foot"}, {"sq ft", "square foot"}};
+        char whole[24];
+        size_t a = p + 1, wl = 0, z, u;
+        unsigned long cents = 0;
+        for (; a < n && wl + 1 < sizeof(whole); ++a) {
+            if (ascii_digit_char(t[a]))
+                whole[wl++] = t[a];
+            else if (t[a] == ',' && a + 3 < n && ascii_digit_char(t[a + 1]) && ascii_digit_char(t[a + 2]) && ascii_digit_char(t[a + 3]))
+                continue;
+            else
+                break;
+        }
+        whole[wl] = 0;
+        if (a + 2 < n && t[a] == '.' && ascii_digit_char(t[a + 1]) && ascii_digit_char(t[a + 2]) && !(a + 3 < n && ascii_digit_char(t[a + 3]))) {
+            cents = (unsigned long)((t[a + 1] - '0') * 10 + (t[a + 2] - '0'));
+            a += 3;
+        }
+        z = a;
+        if (z + 1 < n && t[z] == '/' && ascii_letter_char(t[z + 1])) {
+            for (u = 0; u < sizeof(units) / sizeof(*units); ++u) {
+                size_t l = strlen(units[u][0]);
+                if (z + 1 + l <= n && !strncmp(t + z + 1, units[u][0], l) && !(z + 1 + l < n && ascii_letter_char(t[z + 1 + l]))) {
+                    unsigned long long dollars = strtoull(whole, NULL, 10);
+                    size_t used = 0;
+                    if (dollars || !cents)
+                        used += (size_t)snprintf(v + used, sizeof(v) - used, "c:%llu|w:%s", dollars, dollars == 1 ? "dollar" : "dollars");
+                    if (cents && used < sizeof(v))
+                        used += (size_t)snprintf(v + used, sizeof(v) - used, "%sc:%lu|w:%s", used ? "|w:and|" : "", cents, cents == 1 ? "cent" : "cents");
+                    if (used < sizeof(v))
+                        used += (size_t)snprintf(v + used, sizeof(v) - used, "|w:per|w:%s", units[u][1]);
+                    if (used < sizeof(v))
+                        return say_span(in, out, z + 1 + l, v, "price-per-unit");
+                    break;
+                }
+            }
+        }
     }
     /* c.1600 circa sixteen hundred, ca. 1200: a four-digit year after the circa abbreviation
        (2026-11-01, round 23; c.1600 was circa one thousand six hundred, run together) */

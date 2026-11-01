@@ -651,3 +651,6 @@ classifier_priority	en-US	en.month-year	100
 # .312/.401/.550 slash lines and c.1600 circa years (2026-11-01, round 23)
 classifier_priority	en-US	en.slash-line	100
 classifier_priority	en-US	en.circa-year	100
+# rise for 3h, $3.50/lb (2026-11-01, round 25)
+classifier_priority	en-US	en.hours-h	100
+classifier_priority	en-US	en.price-per-unit	100

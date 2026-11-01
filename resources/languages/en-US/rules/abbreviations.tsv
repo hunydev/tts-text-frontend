@@ -18,6 +18,9 @@ abbreviation	en-US	c	preserve
 abbreviation	en-US	ca	preserve
 abbreviation_number	en-US	c	circa
 abbreviation_number	en-US	ca	circa
+# Section C. 5, CA. 1200 in capitals are not circa (2026-11-01, round 25)
+abbreviation_number_case	en-US	c	mixed
+abbreviation_number_case	en-US	ca	mixed
 # the 12th c. twelfth century: a dotted c after an ordinal number (2026-11-01, round 23)
 abbreviation_ordinal	en-US	c	century
 # Existing undotted initialisms keep their text spelling by default.

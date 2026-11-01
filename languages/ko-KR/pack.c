@@ -3714,6 +3714,55 @@ static size_t screen_inch(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     return ko_finish(in, s, e, TTF_SEM_SYMBOL, v, "@inch", "ko:screen-inch");
 }
 
+/* 9,900원~, 10시~ 영업: a tilde after a number and its unit with no second number is an open
+   range and reads 부터 (round 25; the tilde was dropped, and before 입니다 it read 에서). A
+   tilde before a number (9,900원~19,900원) stays a range. */
+static size_t open_tilde(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    static const char *const units[] = {"원", "일", "시", "세", "명", "개", "분", "인", "회", "층", "점", "장", "권", "대", "주", "년", "월"};
+    static const char *const scales[] = {"만", "천", "억"};
+    const char *t = in->text;
+    size_t n = in->length, p = in->tokens[in->index].begin, w, b, k, j;
+    int unit = 0;
+    if (p + 1 <= n && t[p] == '~')
+        w = 1;
+    else if (p + 3 <= n && !memcmp(t + p, "\xef\xbd\x9e", 3))
+        w = 3;
+    else
+        return 0;
+    if (p < 4)
+        return 0;
+    for (k = 0; !unit && k < sizeof(units) / sizeof(*units); ++k)
+        unit = !memcmp(t + p - 3, units[k], 3);
+    if (!unit)
+        return 0;
+    b = p - 3;
+    for (k = 0; k < 2; ++k) {
+        if (b && t[b - 1] == ' ')
+            --b;
+        for (j = 0; j < sizeof(scales) / sizeof(*scales); ++j)
+            if (b >= 3 && !memcmp(t + b - 3, scales[j], 3)) {
+                b -= 3;
+                break;
+            }
+    }
+    if (!b || !ko_digit(t[b - 1]))
+        return 0;
+    k = p + w;
+    if (k < n && t[k] == ' ')
+        ++k;
+    /* 10시~오후 9시: a word or two before the second number still makes a range */
+    for (j = 0; j < 2 && k + 3 <= n && (unsigned char)t[k] >= 0xea && (unsigned char)t[k] <= 0xed; ++j)
+        k += 3;
+    if (j && k < n && t[k] == ' ')
+        ++k;
+    if (k < n && (ko_digit(t[k]) || t[k] == '$' || (k + 3 <= n && !memcmp(t + k, "\xe2\x82\xa9", 3)) ||
+                  (k + 3 <= n && !memcmp(t + k, "\xef\xbc", 2) && (unsigned char)t[k + 2] >= 0x90 && (unsigned char)t[k + 2] <= 0x99)))
+        return 0;
+    if (!korean_context(in))
+        return 0;
+    return ko_finish(in, s, p + w, TTF_SEM_SYMBOL, resource(in->engine, "unit", "open_range", "부터"), "@word", "ko:open-tilde");
+}
+
 /* 2x로 두 배, 1.5x 일 점 오 배: a number with a lowercase x after it is a multiple (speed or
    size; 2026-10-30, was 이 엑스). 1Q 일 분기, 3Q 삼 분기: a quarter of the year (was 일 큐).
    Both must close the word, and the number must not follow a letter or digit. */
@@ -5324,7 +5373,7 @@ static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     size_t identifier = below_zero_degrees(in, s);
     if (identifier)
         return identifier;
-    if ((identifier = official_number(in, s)) != 0 || (identifier = count_per_time(in, s)) != 0 || (identifier = field_mark(in, s)) != 0 || (identifier = screen_inch(in, s)) != 0 || (identifier = algebra(in, s)) != 0 || (identifier = english_generation(in, s)) != 0 || (identifier = chem_isotope(in, s)) != 0 || (identifier = chem_formula_rule(in, s)) != 0 || (identifier = trig_function(in, s)) != 0 || (identifier = log_base(in, s)) != 0 || (identifier = number_mark(in, s)) != 0 || (identifier = day_countdown(in, s)) != 0 || (identifier = times_or_quarter(in, s)) != 0 || (identifier = promo_plus(in, s)) != 0 || (identifier = file_dot(in, s)) != 0 || (identifier = range_month_day(in, s)) != 0 || (identifier = weekday_range(in, s)) != 0 || (identifier = letter_unit(in, s)) != 0 || (identifier = name_version(in, s)) != 0 || (identifier = geo_coordinate(in, s)) != 0 || (identifier = colon_score(in, s)) != 0 || (identifier = price_per_unit(in, s)) != 0 ||
+    if ((identifier = official_number(in, s)) != 0 || (identifier = count_per_time(in, s)) != 0 || (identifier = field_mark(in, s)) != 0 || (identifier = open_tilde(in, s)) != 0 || (identifier = screen_inch(in, s)) != 0 || (identifier = algebra(in, s)) != 0 || (identifier = english_generation(in, s)) != 0 || (identifier = chem_isotope(in, s)) != 0 || (identifier = chem_formula_rule(in, s)) != 0 || (identifier = trig_function(in, s)) != 0 || (identifier = log_base(in, s)) != 0 || (identifier = number_mark(in, s)) != 0 || (identifier = day_countdown(in, s)) != 0 || (identifier = times_or_quarter(in, s)) != 0 || (identifier = promo_plus(in, s)) != 0 || (identifier = file_dot(in, s)) != 0 || (identifier = range_month_day(in, s)) != 0 || (identifier = weekday_range(in, s)) != 0 || (identifier = letter_unit(in, s)) != 0 || (identifier = name_version(in, s)) != 0 || (identifier = geo_coordinate(in, s)) != 0 || (identifier = colon_score(in, s)) != 0 || (identifier = price_per_unit(in, s)) != 0 ||
         (identifier = currency_pair(in, s)) != 0 || (identifier = short_dotted_date(in, s)) != 0 || (identifier = quarter(in, s)) != 0 ||
         (identifier = owner_forms(in, s)) != 0 || (identifier = owner_forms5(in, s)) != 0 ||
         (identifier = chemical_formula(in, s)) != 0 || (identifier = subscript_index(in, s)) != 0 ||

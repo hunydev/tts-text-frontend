@@ -479,6 +479,12 @@ numeric_suffix	*	tbsp	MEASURE:tbsp
 unit	en-US	tbsp.one	tablespoon
 unit	en-US	tbsp.many	tablespoons
 numeric_suffix	*	tsp	MEASURE:tsp
+# 2 Tbsp. two tablespoons, 1 tsp. one teaspoon (2026-11-01, round 25; Tbsp. was kept)
+numeric_suffix	*	Tbsp	MEASURE:tbsp
+numeric_suffix	*	Tbsp.	MEASURE:tbsp
+numeric_suffix	*	TBSP	MEASURE:tbsp
+numeric_suffix	*	tbsp.	MEASURE:tbsp
+numeric_suffix	*	tsp.	MEASURE:tsp
 unit	en-US	tsp.one	teaspoon
 unit	en-US	tsp.many	teaspoons
 numeric_suffix	*	L/min	MEASURE:L_per_min
