@@ -3022,7 +3022,11 @@ no_file:
         if (a - p <= 2 && a + 5 < n && t[a] == ':' && ascii_digit_char(t[a + 1]) && ascii_digit_char(t[a + 2]) &&
             t[a + 3] == ':' && ascii_digit_char(t[a + 4]) && ascii_digit_char(t[a + 5]) &&
             !(a + 6 < n && ascii_digit_char(t[a + 6])) &&
-            word_before(t, p, "in|of|time|clocked|lasted|record|took|timer|duration|ends|countdown|runs")) {
+            (word_before(t, p, "in|of|time|clocked|lasted|record|took|timer|duration|ends|countdown|runs") ||
+             /* my half marathon time was 1:52:40 (2026-11-01, TN round 30; was one fifty two and
+                forty seconds) */
+             phrase_before(t, p, "time was") || phrase_before(t, p, "time is") ||
+             phrase_before(t, p, "record was") || phrase_before(t, p, "record is"))) {
             unsigned h = (unsigned)atoi(t + p), mi = (unsigned)atoi(t + a + 1), se = (unsigned)atoi(t + a + 4);
             (void)snprintf(v, sizeof(v), "c:%u|w:%s|c:%u|w:%s and|c:%u|w:%s", h, h == 1 ? "hour" : "hours", mi,
                            mi == 1 ? "minute" : "minutes", se, se == 1 ? "second" : "seconds");
@@ -3039,11 +3043,22 @@ no_file:
                 return say_span(in, out, r, v, "lap-time");
             }
         }
-        if (a - p <= 2 && a + 3 < n && t[a] == 'h' && t[a + 1] == ' ' && ascii_digit_char(t[a + 2])) {
-            for (r = a + 2; r < n && ascii_digit_char(t[r]); ++r)
+        /* 1h50m, 11h20m and a 2h30 layover: the minutes may follow h without a space, and two
+           minute digits need no m (2026-11-01, TN round 30; was one h fifty m) */
+        if (a - p <= 2 && a + 2 < n && t[a] == 'h' && (t[a + 1] == ' ' || ascii_digit_char(t[a + 1])) &&
+            ascii_digit_char(t[a + 1 + (t[a + 1] == ' ')])) {
+            size_t m0 = a + 1 + (t[a + 1] == ' ');
+            for (r = m0; r < n && ascii_digit_char(t[r]); ++r)
                 ;
-            if (r < n && t[r] == 'm' && !(r + 1 < n && ascii_letter_char(t[r + 1])) && r - a - 2 <= 2) {
-                unsigned h = (unsigned)atoi(t + p), mi = (unsigned)atoi(t + a + 2);
+            if (m0 == a + 1 && r - m0 == 2 && t[m0] <= '5' && !(r < n && (ascii_letter_char(t[r]) || t[r] == ':' || (t[r] == '.' && r + 1 < n && ascii_digit_char(t[r + 1])))) &&
+                !(p && (ascii_letter_char(t[p - 1]) || t[p - 1] == '.'))) {
+                unsigned h = (unsigned)atoi(t + p), mi = (unsigned)atoi(t + m0);
+                (void)snprintf(v, sizeof(v), "c:%u|w:%s|c:%u|w:%s", h, h == 1 ? "hour" : "hours", mi,
+                               mi == 1 ? "minute" : "minutes");
+                return say_span(in, out, r, v, "hm-duration");
+            }
+            if (r < n && t[r] == 'm' && !(r + 1 < n && ascii_letter_char(t[r + 1])) && r - m0 <= 2) {
+                unsigned h = (unsigned)atoi(t + p), mi = (unsigned)atoi(t + m0);
                 /* 2h 05m 41s two hours five minutes forty one seconds (2026-10-31, TN round 15) */
                 if (r + 3 < n && t[r + 1] == ' ' && ascii_digit_char(t[r + 2])) {
                     size_t z;
