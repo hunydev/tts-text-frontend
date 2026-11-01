@@ -178,6 +178,14 @@ classifier_priority	ko-KR	ko:day-countdown	10
 # 2x 두 배, 1Q 일 분기 (2026-10-30, round 7)
 classifier_priority	ko-KR	ko:times	10
 classifier_priority	ko-KR	ko:quarter-q	10
+# 4Q23 이십삼 년 사 분기, 공고 제2024-123호 제이천이십사 다시 백이십삼 호 (2026-11-01, round 21)
+classifier_priority	ko-KR	ko:quarter-year	100
+classifier_priority	ko-KR	ko:official-number	100
+# 8m22 field-event marks and 32″ screen inches (2026-11-01, round 24)
+classifier_priority	ko-KR	ko:field-mark	100
+classifier_priority	ko-KR	ko:screen-inch	100
+# 9,900원~ 구천구백 원부터: an open range (2026-11-01, round 25)
+classifier_priority	ko-KR	ko:open-tilde	100
 # 원/달러 환율 원 달러: a slash between two of these words names a currency pair (2026-10-29).
 currency_pair_word	ko-KR	원	1
 currency_pair_word	ko-KR	달러	1
@@ -192,6 +200,15 @@ currency_pair_word	ko-KR	유로화	1
 currency_pair_word	ko-KR	위안화	1
 # File extensions whose period is read (report.pdf 리포트 닷 피디에프; 2026-10-29).
 file_extension	ko-KR	pdf	1
+# index.html 인덱스 닷 에이치티엠엘 (2026-11-01, round 23; the period was kept)
+file_extension	ko-KR	html	1
+file_extension	ko-KR	htm	1
+file_extension	ko-KR	xml	1
+file_extension	ko-KR	css	1
+file_extension	ko-KR	svg	1
+file_extension	ko-KR	wav	1
+file_extension	ko-KR	mov	1
+file_extension	ko-KR	apk	1
 file_extension	ko-KR	txt	1
 file_extension	ko-KR	doc	1
 file_extension	ko-KR	docx	1

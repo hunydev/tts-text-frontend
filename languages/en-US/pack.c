@@ -1089,6 +1089,10 @@ static size_t roman_numeral(const ttf_pack_input_t *in, ttf_semantic_t *out, int
     }
     if (cardinal_only && (!cue || strcmp(cue, "cardinal")))
         return 0;
+    /* Section C, Part D, Appendix M: a lone C, D, L or M is a letter label, not 100, 500, 50
+       or 1000 (round 25; Section C. 5 was section one hundred. five). Chapter I, Part V stay. */
+    if (n == 1 && strchr("CDLM", in->text[t->begin]))
+        return 0;
     if (!cue) {
         if (!roman_standalone(in, t))
             return 0;
@@ -1845,7 +1849,18 @@ static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
             if (a + 7 <= n && !strncmp(t + a, "aspect ", 7))
                 a += 7;
             after = a > r && a + 5 <= n && !strncmp(t + a, "ratio", 5) && !(a + 5 < n && ascii_letter_char(t[a + 5]));
-            if ((after || word_before(t, p, "dilute|diluted|dilution|ratio|mix|mixed|scale|odds|concentrate|stock") ||
+            /* stands at 4:1, is 18:1, a 2:1 split: a one-digit second number is never minutes, so
+               after a lowercase word it is a ratio without a cue (round 22; was left as 4:1). A
+               capitalized word before it may be a book and verse (Genesis 1:1). */
+            int lone = r == q + 2 && p >= 2 && t[p - 1] == ' ' && t[p - 2] >= 'a' && t[p - 2] <= 'z' &&
+                       !(r < n && (t[r] == '-' || (t[r] == '.' && r + 1 < n && ascii_digit_char(t[r + 1]))));
+            if (lone) {
+                size_t w = p - 2;
+                while (w && ascii_letter_char(t[w - 1]))
+                    --w;
+                lone = t[w] >= 'a' && t[w] <= 'z';
+            }
+            if ((after || lone || word_before(t, p, "dilute|diluted|dilution|ratio|mix|mixed|scale|odds|concentrate|stock") ||
                  (word_before(t, p, "of") && strstr_before(t, p, "ratio of"))) &&
                 !(r < n && (ascii_digit_char(t[r]) || t[r] == ':')) && r - p < sizeof(v)) {
                 size_t k, used = 0;
@@ -2177,6 +2192,37 @@ static int in_list(const char *key, const char *words) {
 }
 static const char *const dev_month[] = {"January", "February", "March", "April", "May", "June", "July",
                                         "August", "September", "October", "November", "December"};
+/* A superscript exponent at p (⁻³¹, ²³): writes the digits to exp and sets *neg; returns its end
+   or 0. */
+static size_t superscript_exponent(const char *t, size_t n, size_t p, char *exp, size_t cap, int *neg) {
+    size_t k = 0;
+    *neg = 0;
+    if (p + 3 <= n && !memcmp(t + p, "\xe2\x81\xbb", 3)) {
+        *neg = 1;
+        p += 3;
+    }
+    for (;;) {
+        char d = 0;
+        if (p + 2 <= n && (unsigned char)t[p] == 0xc2 && (unsigned char)t[p + 1] == 0xb9)
+            d = '1';
+        else if (p + 2 <= n && (unsigned char)t[p] == 0xc2 && ((unsigned char)t[p + 1] == 0xb2 || (unsigned char)t[p + 1] == 0xb3))
+            d = (unsigned char)t[p + 1] == 0xb2 ? '2' : '3';
+        if (d) {
+            p += 2;
+        } else if (p + 3 <= n && (unsigned char)t[p] == 0xe2 && (unsigned char)t[p + 1] == 0x81 &&
+                   ((unsigned char)t[p + 2] == 0xb0 || ((unsigned char)t[p + 2] >= 0xb4 && (unsigned char)t[p + 2] <= 0xb9))) {
+            d = (unsigned char)t[p + 2] == 0xb0 ? '0' : (char)('4' + (unsigned char)t[p + 2] - 0xb4);
+            p += 3;
+        } else
+            break;
+        if (k + 1 >= cap)
+            return 0;
+        exp[k++] = d;
+    }
+    exp[k] = 0;
+    return k ? p : 0;
+}
+
 static size_t dev_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     const char *t = in->text;
     size_t n = in->length, p = in->tokens[in->index].begin, q, r, k;
@@ -3511,10 +3557,201 @@ no_file:
         }
         /* .312 hitting three twelve (a batting average) */
     }
+    /* 3 × 10^8 m/s three times ten to the eighth meters per second, 1.38e-23 one point three
+       eight times ten to the minus twenty three, 2^10 two to the tenth, 9.11×10⁻³¹ kg ... kilograms:
+       scientific notation reads like a superscript power, and a unit symbol after it is read
+       (round 26; the caret was read, e-23 expanded to a long decimal, and kg stayed letters). */
+    if (ascii_digit_char(t[p]) && !(p && (ascii_digit_char(t[p - 1]) || ascii_letter_char(t[p - 1]) || t[p - 1] == '.'))) {
+        static const char *const units[][2] = {{"m/s", "meters per second"}, {"km", "kilometers"}, {"kg", "kilograms"},
+                                               {"cm", "centimeters"}, {"mm", "millimeters"}, {"nm", "nanometers"},
+                                               {"mol", "moles"}, {"eV", "electron volts"}, {"Hz", "hertz"},
+                                               {"J", "joules"}, {"C", "coulombs"}, {"K", "kelvins"}, {"W", "watts"},
+                                               {"V", "volts"}, {"L", "liters"}, {"g", "grams"}, {"m", "meters"}, {"s", "seconds"}};
+        char a_num[24], b_num[24], exp[8];
+        size_t a = p, b = 0, e = 0, x, z, u;
+        int neg = 0, form = 0; /* 1: A × B^E, 2: B^E, 3: A e E */
+        for (; a < n && (ascii_digit_char(t[a]) || (t[a] == '.' && a + 1 < n && ascii_digit_char(t[a + 1]))) && a - p < sizeof(a_num) - 1; ++a)
+            ;
+        (void)snprintf(a_num, sizeof(a_num), "%.*s", (int)(a - p), t + p);
+        x = a;
+        while (x < n && t[x] == ' ')
+            ++x;
+        if (x + 2 <= n && (!memcmp(t + x, "\xc3\x97", 2) || t[x] == '*' || (t[x] == 'x' && x > a))) {
+            size_t bb;
+            x += t[x] == '*' || t[x] == 'x' ? 1 : 2;
+            while (x < n && t[x] == ' ')
+                ++x;
+            for (bb = x; bb < n && ascii_digit_char(t[bb]) && bb - x < sizeof(b_num) - 1; ++bb)
+                ;
+            if (bb > x && !(bb < n && ascii_digit_char(t[bb]))) {
+                (void)snprintf(b_num, sizeof(b_num), "%.*s", (int)(bb - x), t + x);
+                b = bb;
+                form = 1;
+            }
+        }
+        if (!form && a - p <= 3 && !strchr(a_num, '.'))
+            b = a, form = 2, (void)snprintf(b_num, sizeof(b_num), "%s", a_num);
+        if (form) {
+            if (b + 1 < n && t[b] == '^') {
+                size_t s0 = b + 1 + (b + 2 < n && (t[b + 1] == '-' || t[b + 1] == '+'));
+                neg = t[b + 1] == '-';
+                for (e = s0; e < n && ascii_digit_char(t[e]) && e - s0 < sizeof(exp) - 1; ++e)
+                    ;
+                if (e > s0)
+                    (void)snprintf(exp, sizeof(exp), "%.*s", (int)(e - s0), t + s0);
+                else
+                    e = 0;
+            } else if (!strcmp(b_num, "10")) /* 5² five squared stays with the power reader */
+                e = superscript_exponent(t, n, b, exp, sizeof(exp), &neg);
+        }
+        if (!e && (t[a] == 'e' || t[a] == 'E') && a + 1 < n) {
+            size_t s0 = a + 1 + (a + 2 < n && (t[a + 1] == '-' || t[a + 1] == '+'));
+            neg = t[a + 1] == '-';
+            for (e = s0; e < n && ascii_digit_char(t[e]) && e - s0 < sizeof(exp) - 1; ++e)
+                ;
+            if (e > s0 && (strchr(a_num, '.') || s0 > a + 1))
+                (void)snprintf(exp, sizeof(exp), "%.*s", (int)(e - s0), t + s0), form = 3;
+            else
+                e = 0;
+        }
+        if (e && !(e < n && (ascii_letter_char(t[e]) || ascii_digit_char(t[e])))) {
+            size_t used;
+            if (form == 1)
+                used = (size_t)snprintf(v, sizeof(v), "n:%s|w:times|n:%s|w:to the", a_num, b_num);
+            else if (form == 2)
+                used = (size_t)snprintf(v, sizeof(v), "n:%s|w:to the", b_num);
+            else
+                used = (size_t)snprintf(v, sizeof(v), "n:%s|w:times ten to the", a_num);
+            if (used < sizeof(v))
+                used += (size_t)snprintf(v + used, sizeof(v) - used, neg ? "|w:minus|c:%s" : "|o:%s", exp);
+            z = e;
+            if (z + 1 < n && t[z] == ' ')
+                for (u = 0; u < sizeof(units) / sizeof(*units); ++u) {
+                    size_t l = strlen(units[u][0]);
+                    if (z + 1 + l <= n && !memcmp(t + z + 1, units[u][0], l) &&
+                        !(z + 1 + l < n && (ascii_letter_char(t[z + 1 + l]) || ascii_digit_char(t[z + 1 + l]) ||
+                                            (unsigned char)t[z + 1 + l] >= 0x80 || t[z + 1 + l] == '/'))) {
+                        if (used < sizeof(v))
+                            used += (size_t)snprintf(v + used, sizeof(v) - used, "|w:%s", units[u][1]);
+                        z += 1 + l;
+                        break;
+                    }
+                }
+            if (used < sizeof(v))
+                return say_span(in, out, z, v, "sci-power");
+        }
+    }
+    /* rise for 3h three hours, rest for 1.5 h: a number with h after a duration word reads hours.
+       A single letter is not a declared unit (measurements.tsv), so the word before decides
+       (round 25; was two h). 2h30 and 3hp are not taken. */
+    if (ascii_digit_char(t[p]) && !(p && (ascii_digit_char(t[p - 1]) || ascii_letter_char(t[p - 1]) || t[p - 1] == '.'))) {
+        size_t a = p, h;
+        for (; a < n && (ascii_digit_char(t[a]) || (t[a] == '.' && a + 1 < n && ascii_digit_char(t[a + 1]))); ++a)
+            ;
+        h = a + (a < n && t[a] == ' ');
+        if (a - p <= 5 && h < n && t[h] == 'h' && !(h + 1 < n && (ascii_letter_char(t[h + 1]) || ascii_digit_char(t[h + 1]))) &&
+            word_before(t, p, "for|in|about|after|within|over|every|takes|took|take|around|approximately|roughly|nearly|under|than|another|extra|least|to|lasts|lasted")) {
+            (void)snprintf(v, sizeof(v), "n:%.*s|w:%s", (int)(a - p), t + p, a - p == 1 && t[p] == '1' ? "hour" : "hours");
+            return say_span(in, out, h + 1, v, "hours-h");
+        }
+    }
+    /* $3.50/lb three dollars and fifty cents per pound, $1,200/mo: a price per unit (round 25;
+       was dollar three point five zero slash lb) */
+    if (t[p] == '$' && p + 1 < n && ascii_digit_char(t[p + 1])) {
+        static const char *const units[][2] = {{"lb", "pound"}, {"lbs", "pound"}, {"oz", "ounce"}, {"kg", "kilogram"},
+                                               {"g", "gram"}, {"gal", "gallon"}, {"hr", "hour"}, {"h", "hour"},
+                                               {"mo", "month"}, {"month", "month"}, {"yr", "year"}, {"year", "year"},
+                                               {"wk", "week"}, {"week", "week"}, {"day", "day"}, {"night", "night"},
+                                               {"person", "person"}, {"ft", "foot"}, {"sq ft", "square foot"}};
+        char whole[24];
+        size_t a = p + 1, wl = 0, z, u;
+        unsigned long cents = 0;
+        for (; a < n && wl + 1 < sizeof(whole); ++a) {
+            if (ascii_digit_char(t[a]))
+                whole[wl++] = t[a];
+            else if (t[a] == ',' && a + 3 < n && ascii_digit_char(t[a + 1]) && ascii_digit_char(t[a + 2]) && ascii_digit_char(t[a + 3]))
+                continue;
+            else
+                break;
+        }
+        whole[wl] = 0;
+        if (a + 2 < n && t[a] == '.' && ascii_digit_char(t[a + 1]) && ascii_digit_char(t[a + 2]) && !(a + 3 < n && ascii_digit_char(t[a + 3]))) {
+            cents = (unsigned long)((t[a + 1] - '0') * 10 + (t[a + 2] - '0'));
+            a += 3;
+        }
+        z = a;
+        if (z + 1 < n && t[z] == '/' && ascii_letter_char(t[z + 1])) {
+            for (u = 0; u < sizeof(units) / sizeof(*units); ++u) {
+                size_t l = strlen(units[u][0]);
+                if (z + 1 + l <= n && !strncmp(t + z + 1, units[u][0], l) && !(z + 1 + l < n && ascii_letter_char(t[z + 1 + l]))) {
+                    unsigned long long dollars = strtoull(whole, NULL, 10);
+                    size_t used = 0;
+                    if (dollars || !cents)
+                        used += (size_t)snprintf(v + used, sizeof(v) - used, "c:%llu|w:%s", dollars, dollars == 1 ? "dollar" : "dollars");
+                    if (cents && used < sizeof(v))
+                        used += (size_t)snprintf(v + used, sizeof(v) - used, "%sc:%lu|w:%s", used ? "|w:and|" : "", cents, cents == 1 ? "cent" : "cents");
+                    if (used < sizeof(v))
+                        used += (size_t)snprintf(v + used, sizeof(v) - used, "|w:per|w:%s", units[u][1]);
+                    if (used < sizeof(v))
+                        return say_span(in, out, z + 1 + l, v, "price-per-unit");
+                    break;
+                }
+            }
+        }
+    }
+    /* c.1600 circa sixteen hundred, ca. 1200: a four-digit year after the circa abbreviation
+       (2026-11-01, round 23; c.1600 was circa one thousand six hundred, run together) */
+    if (ascii_digit_char(t[p]) && p >= 2) {
+        size_t a, b = p;
+        int circa = 0;
+        for (a = p; a < n && ascii_digit_char(t[a]); ++a)
+            ;
+        while (b && t[b - 1] == ' ')
+            --b;
+        if (b >= 2 && t[b - 1] == '.' && (t[b - 2] | 0x20) == 'c' && (b == 2 || !ascii_letter_char(t[b - 3])))
+            circa = 1;
+        if (b >= 3 && t[b - 1] == '.' && t[b - 2] == 'a' && (t[b - 3] | 0x20) == 'c' && (b == 3 || !ascii_letter_char(t[b - 4])))
+            circa = 1;
+        if (circa && a - p == 4 && atoi(t + p) >= 1000 && atoi(t + p) < 2100 &&
+            !(a < n && (ascii_digit_char(t[a]) || ascii_letter_char(t[a]) || (t[a] == '.' && a + 1 < n && ascii_digit_char(t[a + 1]))))) {
+            (void)snprintf(v, sizeof(v), "%sy:%.4s", t[p - 1] == '.' ? "w:|" : "", t + p);
+            return say_span(in, out, a, v, "circa-year");
+        }
+    }
+    /* .312/.401/.550 three twelve slash four oh one slash five fifty: a baseball slash line,
+       two or three batting figures joined by slashes (2026-11-01, round 23; was . three hundred
+       twelve slash . four hundred one ...) */
+    if (t[p] == '.' && p + 3 < n && !(p && (ascii_digit_char(t[p - 1]) || ascii_letter_char(t[p - 1])))) {
+        size_t z = p, parts = 0, used = 0;
+        while (parts < 3 && z + 3 < n && t[z] == '.' && ascii_digit_char(t[z + 1]) && ascii_digit_char(t[z + 2]) &&
+               ascii_digit_char(t[z + 3]) && !(z + 4 < n && ascii_digit_char(t[z + 4]))) {
+            size_t y = z + 4;
+            used += (size_t)snprintf(v + used, sizeof(v) - used, "%sk:%.3s", parts ? "|w:slash|" : "", t + z + 1);
+            ++parts;
+            z = y;
+            while (y < n && t[y] == ' ')
+                ++y;
+            if (parts < 3 && y < n && t[y] == '/') {
+                ++y;
+                while (y < n && t[y] == ' ')
+                    ++y;
+                if (y + 3 < n && t[y] == '.' && ascii_digit_char(t[y + 1])) {
+                    z = y;
+                    continue;
+                }
+            }
+            break;
+        }
+        if (parts >= 2 && used < sizeof(v))
+            return say_span(in, out, z, v, "slash-line");
+    }
+    /* a .400 hitter, dipped to .199: a figure before hitter or average, or after a word near a
+       baseball word (2026-11-01, round 23) */
     if (t[p] == '.' && p + 3 < n && ascii_digit_char(t[p + 1]) && ascii_digit_char(t[p + 2]) && ascii_digit_char(t[p + 3]) &&
         !(p + 4 < n && ascii_digit_char(t[p + 4])) && !(p && (ascii_digit_char(t[p - 1]) || ascii_letter_char(t[p - 1]))) &&
-        word_before(t, p, "hitting|batting|batted|hit|average|avg|hits|at|of|just|above|below|over|under")) {
-        int baseball = 0;
+        (word_before(t, p, "hitting|batting|batted|hit|average|avg|hits|at|of|just|above|below|over|under|to|from|a|an|his|her|was|is|with|around|near") ||
+         (p + 5 < n && t[p + 4] == ' ' && (!strncmp(t + p + 5, "hitter", 6) || !strncmp(t + p + 5, "average", 7))))) {
+        int baseball = p + 5 < n && t[p + 4] == ' ' && (!strncmp(t + p + 5, "hitter", 6) || !strncmp(t + p + 5, "average", 7));
         char w3[16];
         /* hit just .250, finished above .300 in the league (2026-10-31, TN round 20; was zero point two five zero) */
         for (k = p > 50 ? p - 50 : 0; k < p; ++k)

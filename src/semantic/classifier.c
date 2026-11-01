@@ -377,6 +377,16 @@ static int ascii_web(char c) {
     unsigned char u = (unsigned char)c;
     return u > 32 && u < 127 && c != '<' && c != '>' && c != '"';
 }
+/* A web prefix (www. http:// https://) in any letter case (WWW.DAUM.NET; 2026-11-01, round 23) */
+static int web_prefix(const char *s, size_t n, const char *prefix) {
+    size_t k, l = strlen(prefix);
+    if (n < l)
+        return 0;
+    for (k = 0; k < l; ++k)
+        if ((s[k] >= 'A' && s[k] <= 'Z' ? (char)(s[k] | 0x20) : s[k]) != prefix[k])
+            return 0;
+    return 1;
+}
 /* Math operators and relations: ASCII or the UTF-8 signs × ÷ − ≤ ≥ ≠ ≈ ≡.
    Returns the byte width and writes the canonical operator, or 0 when absent. */
 static size_t math_operator_at(const char *s, size_t n, size_t p, const char **op) {
@@ -1503,9 +1513,8 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     }
     /* Protected lexical objects: retaining their entire surface also prevents
        punctuation inside them from becoming a sentence boundary. */
-    if ((n - b >= 7 && !memcmp(s + b, "http://", 7)) ||
-        (n - b >= 8 && !memcmp(s + b, "https://", 8)) ||
-        (n - b >= 4 && !memcmp(s + b, "www.", 4))) {
+    if (web_prefix(s + b, n - b, "http://") || web_prefix(s + b, n - b, "https://") ||
+        web_prefix(s + b, n - b, "www.")) {
         q = b;
         while (q < n && ascii_web(s[q]))
             ++q;

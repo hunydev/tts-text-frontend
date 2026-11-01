@@ -243,6 +243,9 @@ digit_cue	ja-JP	下4桁	1
 digit_cue	ja-JP	下四桁	1
 digit_cue	ja-JP	コード	1
 digit_cue	ja-JP	ホットライン	1
+# ボーイング787 ななはちなな, エアバス350: aircraft models (2026-11-01, round 25; was ななひゃくはちじゅうなな)
+digit_cue	ja-JP	ボーイング	1
+digit_cue	ja-JP	エアバス	1
 classifier_priority	ja-JP	ja.year-month	100
 # Japanese dev set v1 (2026-10-17)
 classifier_priority	ja-JP	ja.dev-power	100

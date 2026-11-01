@@ -302,6 +302,29 @@ size_t ttf_en_classify_abbreviation(const ttf_pack_input_t *in, ttf_semantic_t *
             (void)snprintf(out->rule, sizeof(out->rule), "en.abbreviation.title");
             return token_count(in, out->input_end);
         }
+        /* the 12th c. twelfth century, the 5th c. BC: after an ordinal number a dotted c
+           reads abbreviation_ordinal (2026-11-01, round 23; was the twelfth c.) */
+        expansion = lookup(in->engine, "abbreviation_ordinal", key, NULL);
+        if (expansion && strlen(expansion) < sizeof(out->value)) {
+            size_t p = start;
+            char a, b;
+            while (p && horizontal(in->text[p - 1]))
+                --p;
+            a = p >= 3 ? lower(in->text[p - 2]) : 0;
+            b = p >= 3 ? lower(in->text[p - 1]) : 0;
+            if (p != start && p >= 3 && in->text[p - 3] >= '0' && in->text[p - 3] <= '9' &&
+                ((a == 's' && b == 't') || (a == 'n' && b == 'd') || (a == 'r' && b == 'd') || (a == 't' && b == 'h'))) {
+                out->type = TTF_SEM_ABBREVIATION;
+                out->lexical_class = TTF_LEX_WORD;
+                out->input_end = token->end + 1;
+                (void)lookup(in->engine, "abbreviation_ordinal", key, out);
+                (void)snprintf(out->value, sizeof(out->value), "%s", key);
+                (void)snprintf(out->secondary, sizeof(out->secondary), "ordinal");
+                (void)snprintf(out->source_lang, sizeof(out->source_lang), "%s", EN);
+                (void)snprintf(out->rule, sizeof(out->rule), "en.abbreviation.ordinal");
+                return token_count(in, out->input_end);
+            }
+        }
         /* No. 5, no. 7: a number abbreviation before digits reads its word
            (number five); without a number it keeps its text (2026-10-07). */
         expansion = lookup(in->engine, "abbreviation_number", key, NULL);
@@ -309,9 +332,10 @@ size_t ttf_en_classify_abbreviation(const ttf_pack_input_t *in, ttf_semantic_t *
            space keeps the dotted reading and its overrides (2026-10-29) */
         /* EP.1 (a record) is letters while Ep.4 is an episode: a key marked
            abbreviation_number_case mixed skips an all-capital spelling; NO.1 still reads
-           number (2026-10-29) */
+           number (2026-10-29). A one-letter key in capitals is all-capital too: Section C. 5
+           is a letter label, c. 1850 circa (round 25) */
         if (expansion && strcmp(expansion, "preserve") && following_digit(in, token->end + 1) &&
-            !(n >= 2 && upper(in->text[start]) && upper(in->text[start + 1]) &&
+            !(upper(in->text[start]) && (n == 1 || upper(in->text[start + 1])) &&
               lookup(in->engine, "abbreviation_number_case", key, NULL)) &&
             !(lookup(in->engine, "abbreviation_dotted", key, NULL) && token->end + 1 < in->length &&
               horizontal(in->text[token->end + 1]))) {
@@ -575,6 +599,10 @@ ttf_status_t ttf_en_verbalize_abbreviation(const ttf_engine_t *engine, const ttf
         }
         if (!strcmp(s->secondary, "credit")) {
             value = lookup(engine, "abbreviation_credit", s->value, NULL);
+            return value ? ttf_buffer_puts(out, value) : ttf_buffer_append(out, surface, length);
+        }
+        if (!strcmp(s->secondary, "ordinal")) {
+            value = lookup(engine, "abbreviation_ordinal", s->value, NULL);
             return value ? ttf_buffer_puts(out, value) : ttf_buffer_append(out, surface, length);
         }
         if (!strcmp(s->secondary, "number")) {

@@ -508,11 +508,12 @@ size_t ttf_ko_classify_batting_average(const ttf_pack_input_t *in, ttf_semantic_
 }
 
 /* 수완 03번, 종로 08번: a route number with a leading zero reads its digits (it
- * was 세 번); 70-2번, 330-1번: a branch route, a smaller number after the hyphen,
+ * was 세 번); KE 081편 케이이 공팔일 편, a flight number too (round 22, was 여든한 편); 70-2번, 330-1번: a branch route, a smaller number after the hyphen,
  * reads its numbers joined by 다시 (3-5번 문제 stays a range; 2026-10-07). */
 size_t ttf_ko_classify_route_number(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     size_t begin = in->tokens[in->index].begin, p = begin, dash = 0, end, i;
     unsigned first = 0, second = 0;
+    int flight;
     if (begin && (decimal_digit(in->text[begin - 1]) || in->text[begin - 1] == '-' ||
                   in->text[begin - 1] == '.' || in->text[begin - 1] == ',' ||
                   ((in->text[begin - 1] | 0x20) >= 'a' && (in->text[begin - 1] | 0x20) <= 'z')))
@@ -528,11 +529,12 @@ size_t ttf_ko_classify_route_number(const ttf_pack_input_t *in, ttf_semantic_t *
             second = second * 10 + (unsigned)(in->text[p++] - '0');
         end = p;
     }
-    if (end + 3 > in->length || memcmp(in->text + end, "\xeb\xb2\x88", 3) ||
+    flight = !dash && end + 3 <= in->length && !memcmp(in->text + end, "\xed\x8e\xb8", 3); /* 편 */
+    if (end + 3 > in->length || (!flight && memcmp(in->text + end, "\xeb\xb2\x88", 3)) ||
         (end + 6 <= in->length && !memcmp(in->text + end, "번지", 6)))
         return 0;
     if (!dash) {
-        if (end - begin < 2 || end - begin > 3 || in->text[begin] != '0')
+        if (end - begin < 2 || end - begin > (size_t)(3 + flight) || in->text[begin] != '0')
             return 0;
         memcpy(s->value, in->text + begin, end - begin);
         s->value[end - begin] = '\0';

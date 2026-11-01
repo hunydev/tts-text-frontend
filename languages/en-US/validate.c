@@ -693,7 +693,8 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
         if (!lowercase_letters(key, 1))
             return ttf_validation_error(d, "letter_name key must be one lowercase ASCII letter");
     } else if (SAME(k, "abbreviation") || SAME(k, "abbreviation_expansion") ||
-               SAME(k, "abbreviation_number") || SAME(k, "abbreviation_street")) {
+               SAME(k, "abbreviation_number") || SAME(k, "abbreviation_street") ||
+               SAME(k, "abbreviation_ordinal")) {
         /* Common protected abbreviations use a generic marker and may include
          * periods (e.g/i.e); the core validator owns that namespace. */
         if (wildcard && SAME(k, "abbreviation"))
@@ -705,7 +706,7 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
         if (SAME(k, "abbreviation") && !SAME(v, "preserve"))
             return ttf_validation_error(d, "abbreviation marker supports preserve only");
         if ((SAME(k, "abbreviation_expansion") || SAME(k, "abbreviation_number") ||
-             SAME(k, "abbreviation_street")) &&
+             SAME(k, "abbreviation_street") || SAME(k, "abbreviation_ordinal")) &&
             strlen(v) >= TTF_IR_VALUE_SIZE)
             return ttf_validation_error(
                 d, "abbreviation expansion exceeds the semantic value capacity");

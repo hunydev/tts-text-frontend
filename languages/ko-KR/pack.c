@@ -1925,6 +1925,60 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             return quantity(e, s->value, resource(e, "unit", "times", "배"), !strchr(s->value, '.') && atoi(s->value) <= 10, out);
         if (!strcmp(s->unit, "@quarter"))
             return quantity(e, s->value, resource(e, "unit", "quarter", "분기"), 0, out);
+        if (!strcmp(s->unit, "@quarter-year")) {
+            /* q|yy: 이십삼 년 사 분기 */
+            char quarter[2] = {s->value[0], 0};
+            if (!s->value[0] || s->value[1] != '|')
+                return TTF_EINVAL;
+            TRY(cardinal(e, s->value + 2, out));
+            TRY(ttf_buffer_puts(out, " 년 "));
+            return quantity(e, quarter, resource(e, "unit", "quarter", "분기"), 0, out);
+        }
+        if (!strcmp(s->unit, "@official-number")) {
+            /* [제]year|serial: 제이천이십사 다시 백이십삼 호 */
+            char year[8];
+            const char *v = s->value, *bar = strchr(v, '|');
+            if (!strncmp(v, "제", 3)) {
+                TRY(ttf_buffer_puts(out, "제"));
+                v += 3;
+            }
+            if (!bar || bar < v || (size_t)(bar - v) >= sizeof(year))
+                return TTF_EINVAL;
+            (void)snprintf(year, sizeof(year), "%.*s", (int)(bar - v), v);
+            TRY(cardinal(e, year, out));
+            TRY(ttf_buffer_puts(out, " 다시 "));
+            TRY(cardinal(e, bar + 1, out));
+            return ttf_buffer_puts(out, " 호");
+        }
+        if (!strcmp(s->unit, "@field-mark")) {
+            /* m|cc[|cm]: 팔 미터 이십이, 팔 미터 십오 센티미터 */
+            char metres[8], centimetres[4];
+            const char *bar = strchr(s->value, '|');
+            if (!bar || (size_t)(bar - s->value) >= sizeof(metres) || strlen(bar + 1) < 2)
+                return TTF_EINVAL;
+            (void)snprintf(metres, sizeof(metres), "%.*s", (int)(bar - s->value), s->value);
+            (void)snprintf(centimetres, sizeof(centimetres), "%.2s", bar + 1);
+            TRY(quantity(e, metres, resource(e, "unit", "meter", "미터"), 0, out));
+            TRY(ttf_buffer_puts(out, " "));
+            if (strchr(bar + 1, '|'))
+                return quantity(e, centimetres, resource(e, "unit", "centimeter", "센티미터"), 0, out);
+            return cardinal(e, centimetres, out);
+        }
+        if (!strcmp(s->unit, "@inch"))
+            return quantity(e, s->value, resource(e, "unit", "inch", "인치"), 0, out);
+        if (!strcmp(s->unit, "@count-per")) {
+            /* time|count: 분당 칠십이 회 */
+            char label[16];
+            const char *bar = strchr(s->value, '|');
+            if (!bar || (size_t)(bar - s->value) >= sizeof(label))
+                return TTF_EINVAL;
+            (void)snprintf(label, sizeof(label), "%.*s", (int)(bar - s->value), s->value);
+            TRY(ttf_buffer_puts(out, label));
+            TRY(ttf_buffer_puts(out, resource(e, "unit", "per_unit", "당")));
+            TRY(ttf_buffer_puts(out, " "));
+            TRY(cardinal(e, bar + 1, out));
+            return ttf_buffer_puts(out, " 회");
+        }
         if (!strcmp(s->unit, "@countdown")) {
             TRY(ttf_buffer_puts(out, resource(e, "countdown", "D-", "디 마이너스 ")));
             return cardinal(e, s->value, out);
@@ -3212,20 +3266,24 @@ static size_t owner_forms5(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     const char *t = in->text;
     size_t n = in->length, p = in->tokens[in->index].begin, q;
     char v[32];
-    /* (월) after a date: a weekday mark */
-    if (p >= 1 && p + 5 <= n && t[p] == '(' && t[p + 4] == ')' &&
-        (ko_digit(t[p - 1]) || (p >= 3 && !memcmp(t + p - 3, "일", 3)))) {
+    /* (월) after a date: a weekday mark. 2025. 1. 31.(금) and 7일 (월) too: a date's closing dot
+       and one space before the mark (round 21). */
+    if (p >= 1 && p + 5 <= n && t[p] == '(' && t[p + 4] == ')') {
         static const char *const days[] = {"월", "화", "수", "목", "금", "토", "일"};
-        size_t k;
-        for (k = 0; k < 7; ++k)
+        size_t k, m = p;
+        if (m >= 5 && t[m - 1] == ' ' && (t[m - 2] == '.' || (!memcmp(t + m - 4, "일", 3) && ko_digit(t[m - 5]))))
+            --m;
+        if (m >= 2 && t[m - 1] == '.' && ko_digit(t[m - 2]))
+            --m;
+        for (k = 0; k < 7 && (ko_digit(t[m - 1]) || (m >= 3 && !memcmp(t + m - 3, "일", 3))); ++k)
             if (!memcmp(t + p + 1, days[k], 3)) {
-                size_t z = p - (ko_digit(t[p - 1]) ? 1 : 3);
-                /* a date before it: 10/13, 5/3, 21일 */
+                size_t z = m - (ko_digit(t[m - 1]) ? 1 : 3);
+                /* a date before it: 10/13, 5/3, 21일, 2025. 1. 31. */
                 while (z && (ko_digit(t[z - 1]) || t[z - 1] == '/' || t[z - 1] == '.'))
                     --z;
-                if (!memchr(t + z, '/', p - z) && !memchr(t + z, '.', p - z) && memcmp(t + p - 3, "일", 3))
+                if (!memchr(t + z, '/', p - z) && !memchr(t + z, '.', p - z) && memcmp(t + m - 3, "일", 3))
                     break;
-                (void)snprintf(v, sizeof(v), " %s요일", days[k]);
+                (void)snprintf(v, sizeof(v), t[p - 1] == ' ' ? "%s요일" : " %s요일", days[k]);
                 return ko_finish(in, s, p + 5, TTF_SEM_SYMBOL, v, "@word", "ko:weekday-mark");
             }
     }
@@ -3501,6 +3559,210 @@ static size_t day_countdown(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     return ko_finish(in, s, q, TTF_SEM_SYMBOL, v, "@countdown", "ko:day-countdown");
 }
 
+/* 공고 제2024-123호 제이천이십사 다시 백이십삼 호: an official document number, a year and a
+   serial joined by a hyphen and closed by 호, after 제 or a document word (round 21; was read
+   digit by digit). Spaces around the hyphen and – or － are taken too. */
+static size_t official_number(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    static const char *const words[] = {"공고", "고시", "훈령", "예규", "지침", "예고", "조례", "규칙"};
+    const char *t = in->text;
+    size_t n = in->length, p = in->tokens[in->index].begin, start = p, q, a, b, k;
+    int cue = 0, year;
+    char v[32];
+    if (p + 4 <= n && !memcmp(t + p, "제", 3)) /* the token may begin at 제 */
+        p += 3;
+    if (p + 4 > n || !ko_digit(t[p]) || (p && (ko_digit(t[p - 1]) || t[p - 1] == '-' || t[p - 1] == '.')))
+        return 0;
+    for (q = p; q < n && ko_digit(t[q]); ++q)
+        ;
+    year = atoi(t + p);
+    if (q - p != 4 || year < 1900 || year > 2099)
+        return 0;
+    if (p >= 3 && !memcmp(t + p - 3, "제", 3))
+        cue = 1;
+    for (k = 0; !cue && k < sizeof(words) / sizeof(*words); ++k) {
+        size_t w = strlen(words[k]);
+        cue = p >= w + 1 && t[p - 1] == ' ' && !memcmp(t + p - 1 - w, words[k], w);
+    }
+    if (!cue)
+        return 0;
+    for (a = q; a < n && t[a] == ' '; ++a)
+        ;
+    if (a < n && t[a] == '-')
+        a += 1;
+    else if (a + 3 <= n && (!memcmp(t + a, "\xe2\x80\x93", 3) || !memcmp(t + a, "\xef\xbc\x8d", 3)))
+        a += 3;
+    else
+        return 0;
+    while (a < n && t[a] == ' ')
+        ++a;
+    for (b = a; b < n && ko_digit(t[b]) && b - a < 6; ++b)
+        ;
+    if (b == a || (b < n && ko_digit(t[b])) || b + 3 > n || memcmp(t + b, "호", 3) || !korean_context(in))
+        return 0;
+    (void)snprintf(v, sizeof(v), "%s%.4s|%.*s", start < p ? "제" : "", t + p, (int)(b - a), t + a);
+    return ko_finish(in, s, b + 3, TTF_SEM_SYMBOL, v, "@official-number", "ko:official-number");
+}
+
+/* 72회/분 분당 칠십이 회: a count per hour, minute or second reads the time unit first with 당
+   (round 21; was 칠십이회 슬래시 분). The unit must close the word or take a particle, so
+   3회/분기 is not taken. */
+static size_t count_per_time(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    static const char *const units[] = {"시간", "분", "초"};
+    static const char *const particles[] = {"로", "으로", "이", "가", "을", "를", "은", "는", "의", "에", "와", "도", "만", "까지"};
+    const char *t = in->text;
+    size_t n = in->length, p = in->tokens[in->index].begin, q, k, j;
+    char v[32];
+    if (p >= n || !ko_digit(t[p]) || (p && (ko_digit(t[p - 1]) || t[p - 1] == '.' || t[p - 1] == ',')))
+        return 0;
+    for (q = p; q < n && ko_digit(t[q]) && q - p < 6; ++q)
+        ;
+    if (q + 4 > n || memcmp(t + q, "회", 3) || t[q + 3] != '/')
+        return 0;
+    for (k = 0; k < sizeof(units) / sizeof(*units); ++k) {
+        size_t w = strlen(units[k]), e = q + 4 + w;
+        int ok;
+        if (e > n || memcmp(t + q + 4, units[k], w))
+            continue;
+        ok = e >= n || (unsigned char)t[e] < 0xea || (unsigned char)t[e] > 0xed;
+        for (j = 0; !ok && j < sizeof(particles) / sizeof(*particles); ++j)
+            ok = e + strlen(particles[j]) <= n && !memcmp(t + e, particles[j], strlen(particles[j]));
+        if (!ok || !korean_context(in))
+            return 0;
+        (void)snprintf(v, sizeof(v), "%s|%.*s", units[k], (int)(q - p), t + p);
+        return ko_finish(in, s, e, TTF_SEM_SYMBOL, v, "@count-per", "ko:count-per-time");
+    }
+    return 0;
+}
+
+/* 8m22 팔 미터 이십이, 2m 35: a field-event mark, metres then two centimetre digits with the
+   centimetre unit left unwritten (round 24; was 팔엠이십이); 8m15cm 팔 미터 십오 센티미터 (was
+   팔 엠 일오 씨엠). The mark must close the word or take a particle, so 5m30s and 8m 22개 are
+   not taken. */
+static size_t field_mark(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    static const char *const particles[] = {"로", "으로", "를", "을", "은", "는", "이", "가", "의", "에", "와", "과", "도", "만", "까지", "에서", "였", "이었", "이다", "다"};
+    const char *t = in->text;
+    size_t n = in->length, p = in->tokens[in->index].begin, q, c, e, j;
+    int cm;
+    char v[16];
+    if (p >= n || !ko_digit(t[p]) || (p && (ko_digit(t[p - 1]) || ((t[p - 1] | 0x20) >= 'a' && (t[p - 1] | 0x20) <= 'z') ||
+                                           t[p - 1] == '.' || t[p - 1] == '-')))
+        return 0;
+    for (q = p; q < n && ko_digit(t[q]) && q - p < 3; ++q)
+        ;
+    if (q - p > 2 || q >= n || t[q] != 'm')
+        return 0;
+    c = q + 1 + (q + 1 < n && t[q + 1] == ' ');
+    if (c + 2 > n || !ko_digit(t[c]) || !ko_digit(t[c + 1]))
+        return 0;
+    e = c + 2;
+    cm = e + 1 < n && t[e] == 'c' && t[e + 1] == 'm' && !(e + 2 < n && ((t[e + 2] | 0x20) >= 'a' && (t[e + 2] | 0x20) <= 'z'));
+    if (cm)
+        e += 2;
+    if (e < n && (ko_digit(t[e]) || ((t[e] | 0x20) >= 'a' && (t[e] | 0x20) <= 'z') || t[e] == '%' || t[e] == ':' ||
+                  ((t[e] == '.' || t[e] == ',') && e + 1 < n && ko_digit(t[e + 1]))))
+        return 0;
+    if (e < n && (unsigned char)t[e] >= 0xea && (unsigned char)t[e] <= 0xed) {
+        int ok = 0;
+        for (j = 0; !ok && j < sizeof(particles) / sizeof(*particles); ++j)
+            ok = e + strlen(particles[j]) <= n && !memcmp(t + e, particles[j], strlen(particles[j]));
+        if (!ok)
+            return 0;
+    }
+    if (!korean_context(in))
+        return 0;
+    (void)snprintf(v, sizeof(v), "%.*s|%.2s%s", (int)(q - p), t + p, t + c, cm ? "|cm" : "");
+    return ko_finish(in, s, e, TTF_SEM_SYMBOL, v, "@field-mark", "ko:field-mark");
+}
+
+/* 27" 이십칠 인치, 32″ 삼십이 인치: a double prime or a straight double quote after a screen size
+   reads 인치 when a screen or device word is near (round 24; 32″ was 더블 프라임). Without
+   such a word the mark stays ambiguous (seconds, a closing quote), as unit-symbol-v21 left it;
+   a size after a foot mark (5'11") and a closing quote (an odd count of " before) are not taken. */
+static size_t screen_inch(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    static const char *const cues[] = {"모니터", "화면", "텔레비전", "티브이", "TV", "노트북", "디스플레이", "태블릿",
+                                       "스마트폰", "휴대폰", "액정", "패널", "아이패드", "맥북", "인치"};
+    const char *t = in->text;
+    size_t n = in->length, p = in->tokens[in->index].begin, q, e, a, b, k, j, quotes = 0;
+    int cue = 0;
+    char v[16];
+    if (p >= n || !ko_digit(t[p]) || (p && (ko_digit(t[p - 1]) || t[p - 1] == '\'' || t[p - 1] == '.' ||
+                                           ((t[p - 1] | 0x20) >= 'a' && (t[p - 1] | 0x20) <= 'z'))) ||
+        (p >= 3 && !memcmp(t + p - 3, "\xe2\x80\xb2", 3)))
+        return 0;
+    for (q = p; q < n && (ko_digit(t[q]) || (t[q] == '.' && q > p && q + 1 < n && ko_digit(t[q + 1]))) && q - p < 6; ++q)
+        ;
+    if (q < n && t[q] == '"') {
+        for (k = 0; k < p; ++k)
+            quotes += t[k] == '"';
+        if (quotes % 2)
+            return 0;
+        e = q + 1;
+    } else if (q + 3 <= n && !memcmp(t + q, "\xe2\x80\xb3", 3))
+        e = q + 3;
+    else
+        return 0;
+    if (e < n && ko_digit(t[e]))
+        return 0;
+    a = p > 90 ? p - 90 : 0;
+    b = e + 90 < n ? e + 90 : n;
+    for (k = a; !cue && k < b; ++k)
+        for (j = 0; !cue && j < sizeof(cues) / sizeof(*cues); ++j)
+            cue = k + strlen(cues[j]) <= b && !memcmp(t + k, cues[j], strlen(cues[j]));
+    if (!cue || !korean_context(in))
+        return 0;
+    (void)snprintf(v, sizeof(v), "%.*s", (int)(q - p), t + p);
+    return ko_finish(in, s, e, TTF_SEM_SYMBOL, v, "@inch", "ko:screen-inch");
+}
+
+/* 9,900원~, 10시~ 영업: a tilde after a number and its unit with no second number is an open
+   range and reads 부터 (round 25; the tilde was dropped, and before 입니다 it read 에서). A
+   tilde before a number (9,900원~19,900원) stays a range. */
+static size_t open_tilde(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    static const char *const units[] = {"원", "일", "시", "세", "명", "개", "분", "인", "회", "층", "점", "장", "권", "대", "주", "년", "월"};
+    static const char *const scales[] = {"만", "천", "억"};
+    const char *t = in->text;
+    size_t n = in->length, p = in->tokens[in->index].begin, w, b, k, j;
+    int unit = 0;
+    if (p + 1 <= n && t[p] == '~')
+        w = 1;
+    else if (p + 3 <= n && !memcmp(t + p, "\xef\xbd\x9e", 3))
+        w = 3;
+    else
+        return 0;
+    if (p < 4)
+        return 0;
+    for (k = 0; !unit && k < sizeof(units) / sizeof(*units); ++k)
+        unit = !memcmp(t + p - 3, units[k], 3);
+    if (!unit)
+        return 0;
+    b = p - 3;
+    for (k = 0; k < 2; ++k) {
+        if (b && t[b - 1] == ' ')
+            --b;
+        for (j = 0; j < sizeof(scales) / sizeof(*scales); ++j)
+            if (b >= 3 && !memcmp(t + b - 3, scales[j], 3)) {
+                b -= 3;
+                break;
+            }
+    }
+    if (!b || !ko_digit(t[b - 1]))
+        return 0;
+    k = p + w;
+    if (k < n && t[k] == ' ')
+        ++k;
+    /* 10시~오후 9시: a word or two before the second number still makes a range */
+    for (j = 0; j < 2 && k + 3 <= n && (unsigned char)t[k] >= 0xea && (unsigned char)t[k] <= 0xed; ++j)
+        k += 3;
+    if (j && k < n && t[k] == ' ')
+        ++k;
+    if (k < n && (ko_digit(t[k]) || t[k] == '$' || (k + 3 <= n && !memcmp(t + k, "\xe2\x82\xa9", 3)) ||
+                  (k + 3 <= n && !memcmp(t + k, "\xef\xbc", 2) && (unsigned char)t[k + 2] >= 0x90 && (unsigned char)t[k + 2] <= 0x99)))
+        return 0;
+    if (!korean_context(in))
+        return 0;
+    return ko_finish(in, s, p + w, TTF_SEM_SYMBOL, resource(in->engine, "unit", "open_range", "부터"), "@word", "ko:open-tilde");
+}
+
 /* 2x로 두 배, 1.5x 일 점 오 배: a number with a lowercase x after it is a multiple (speed or
    size; 2026-10-30, was 이 엑스). 1Q 일 분기, 3Q 삼 분기: a quarter of the year (was 일 큐).
    Both must close the word, and the number must not follow a letter or digit. */
@@ -3513,6 +3775,16 @@ static size_t times_or_quarter(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         return 0;
     while (d < n && (ko_digit(t[d]) || (t[d] == '.' && d + 1 < n && ko_digit(t[d + 1]))) && d - p < sizeof(v) - 1)
         ++d;
+    /* 4Q23 이십삼 년 사 분기, 1Q'24: a quarter with a two-digit year after it (round 21; was 사큐이십삼) */
+    if (d < n && t[d] == 'Q' && d - p == 1 && t[p] >= '1' && t[p] <= '4') {
+        size_t y = d + 1 + (d + 1 < n && t[d + 1] == '\'');
+        if (y + 2 <= n && ko_digit(t[y]) && ko_digit(t[y + 1]) &&
+            !(y + 2 < n && (ko_digit(t[y + 2]) || ((t[y + 2] | 0x20) >= 'a' && (t[y + 2] | 0x20) <= 'z'))) &&
+            korean_context(in)) {
+            (void)snprintf(v, sizeof(v), "%c|%.2s", t[p], t + y);
+            return ko_finish(in, s, y + 2, TTF_SEM_SYMBOL, v, "@quarter-year", "ko:quarter-year");
+        }
+    }
     if (d >= n || (t[d] != 'x' && t[d] != 'Q') || (d + 1 < n && (ko_digit(t[d + 1]) || ((t[d + 1] | 0x20) >= 'a' && (t[d + 1] | 0x20) <= 'z'))) ||
         !korean_context(in))
         return 0;
@@ -5101,7 +5373,7 @@ static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     size_t identifier = below_zero_degrees(in, s);
     if (identifier)
         return identifier;
-    if ((identifier = algebra(in, s)) != 0 || (identifier = english_generation(in, s)) != 0 || (identifier = chem_isotope(in, s)) != 0 || (identifier = chem_formula_rule(in, s)) != 0 || (identifier = trig_function(in, s)) != 0 || (identifier = log_base(in, s)) != 0 || (identifier = number_mark(in, s)) != 0 || (identifier = day_countdown(in, s)) != 0 || (identifier = times_or_quarter(in, s)) != 0 || (identifier = promo_plus(in, s)) != 0 || (identifier = file_dot(in, s)) != 0 || (identifier = range_month_day(in, s)) != 0 || (identifier = weekday_range(in, s)) != 0 || (identifier = letter_unit(in, s)) != 0 || (identifier = name_version(in, s)) != 0 || (identifier = geo_coordinate(in, s)) != 0 || (identifier = colon_score(in, s)) != 0 || (identifier = price_per_unit(in, s)) != 0 ||
+    if ((identifier = official_number(in, s)) != 0 || (identifier = count_per_time(in, s)) != 0 || (identifier = field_mark(in, s)) != 0 || (identifier = open_tilde(in, s)) != 0 || (identifier = screen_inch(in, s)) != 0 || (identifier = algebra(in, s)) != 0 || (identifier = english_generation(in, s)) != 0 || (identifier = chem_isotope(in, s)) != 0 || (identifier = chem_formula_rule(in, s)) != 0 || (identifier = trig_function(in, s)) != 0 || (identifier = log_base(in, s)) != 0 || (identifier = number_mark(in, s)) != 0 || (identifier = day_countdown(in, s)) != 0 || (identifier = times_or_quarter(in, s)) != 0 || (identifier = promo_plus(in, s)) != 0 || (identifier = file_dot(in, s)) != 0 || (identifier = range_month_day(in, s)) != 0 || (identifier = weekday_range(in, s)) != 0 || (identifier = letter_unit(in, s)) != 0 || (identifier = name_version(in, s)) != 0 || (identifier = geo_coordinate(in, s)) != 0 || (identifier = colon_score(in, s)) != 0 || (identifier = price_per_unit(in, s)) != 0 ||
         (identifier = currency_pair(in, s)) != 0 || (identifier = short_dotted_date(in, s)) != 0 || (identifier = quarter(in, s)) != 0 ||
         (identifier = owner_forms(in, s)) != 0 || (identifier = owner_forms5(in, s)) != 0 ||
         (identifier = chemical_formula(in, s)) != 0 || (identifier = subscript_index(in, s)) != 0 ||
