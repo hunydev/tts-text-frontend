@@ -1486,6 +1486,20 @@ static int word_before(const char *t, size_t p, const char *words) {
     }
     return 0;
 }
+/* phrase (lower case) ends just before p, ignoring case and spaces, and starts a word */
+static int phrase_before(const char *t, size_t p, const char *phrase) {
+    size_t q = p, k = strlen(phrase), i;
+    while (q && t[q - 1] == ' ')
+        --q;
+    if (q < k || (q > k && ascii_letter_char(t[q - k - 1])))
+        return 0;
+    for (i = 0; i < k; ++i) {
+        char c = t[q - k + i];
+        if ((c >= 'A' && c <= 'Z' ? c - 'A' + 'a' : c) != phrase[i])
+            return 0;
+    }
+    return 1;
+}
 static int strstr_before(const char *t, size_t p, const char *phrase) {
     size_t q = p, k = strlen(phrase);
     while (q && t[q - 1] == ' ')
@@ -2909,6 +2923,10 @@ no_file:
                       word_before(t, p - 2, "monday|tuesday|wednesday|thursday|friday|saturday|sunday")) ||
                      word_before(t, p, "birthday|on|until|through|since|due|deadline|expires|ends|opens|"
                                                  "closes|thru") ||
+                     /* The deadline is 5/8 May eighth: a deadline or date named just before (round 27;
+                        was five eighths) */
+                     phrase_before(t, p, "deadline is") || phrase_before(t, p, "deadline was") ||
+                     phrase_before(t, p, "date is") || phrase_before(t, p, "deadline:") ||
                      (!(m < d && (d == 2 || d == 3 || d == 4 || d == 8 || d == 16)) &&
                       word_before(t, p, "by|before|after|from|starting|is|was|for")))) {
                     (void)snprintf(v, sizeof(v), "w:%s|o:%u", dev_month[m - 1], d);
@@ -3641,6 +3659,40 @@ no_file:
                 return say_span(in, out, z, v, "sci-power");
         }
     }
+    /* 0.5 in of rain zero point five inches, 2-4 in of snow two to four inches, 6-10" of snow: a
+       decimal or a range before in or an inch mark reads inches when of follows (a decimal also before
+       a comma). Whole numbers keep the older rule (14 in of snow); 3 in a row stays (round 27). */
+    if (ascii_digit_char(t[p]) && !(p && (ascii_digit_char(t[p - 1]) || ascii_letter_char(t[p - 1]) || t[p - 1] == '.'))) {
+        size_t a = p, b0 = 0, b = 0, q;
+        int dec = 0;
+        for (; a < n && (ascii_digit_char(t[a]) || (t[a] == '.' && a + 1 < n && ascii_digit_char(t[a + 1]))); ++a)
+            dec |= t[a] == '.';
+        q = a;
+        if (q + 1 < n && (t[q] == '-' || (q + 3 < n && !memcmp(t + q, "\xe2\x80\x93", 3))) &&
+            ascii_digit_char(t[q + (t[q] == '-' ? 1 : 3)])) {
+            b0 = q + (t[q] == '-' ? 1 : 3);
+            for (b = b0; b < n && (ascii_digit_char(t[b]) || (t[b] == '.' && b + 1 < n && ascii_digit_char(t[b + 1]))); ++b)
+                dec |= t[b] == '.';
+            q = b;
+        }
+        if (a - p <= 6 && (dec || b)) {
+            size_t e = 0;
+            if (q + 3 <= n && t[q] == ' ' && t[q + 1] == 'i' && t[q + 2] == 'n') {
+                if (q + 7 <= n && !memcmp(t + q + 3, " of ", 4))
+                    e = q + 3;
+                else if (!b && (q + 3 == n || t[q + 3] == ',' || t[q + 3] == ';')) /* in. is the older rule */
+                    e = q + 3;
+            } else if (q + 5 <= n && t[q] == '"' && !memcmp(t + q + 1, " of ", 4))
+                e = q + 1;
+            if (e) {
+                if (b)
+                    (void)snprintf(v, sizeof(v), "n:%.*s|w:to|n:%.*s|w:inches", (int)(a - p), t + p, (int)(b - b0), t + b0);
+                else
+                    (void)snprintf(v, sizeof(v), "n:%.*s|w:inches", (int)(a - p), t + p);
+                return say_span(in, out, e, v, "inches-range");
+            }
+        }
+    }
     /* rise for 3h three hours, rest for 1.5 h: a number with h after a duration word reads hours.
        A single letter is not a declared unit (measurements.tsv), so the word before decides
        (round 25; was two h). 2h30 and 3hp are not taken. */
@@ -3662,7 +3714,11 @@ no_file:
                                                {"g", "gram"}, {"gal", "gallon"}, {"hr", "hour"}, {"h", "hour"},
                                                {"mo", "month"}, {"month", "month"}, {"yr", "year"}, {"year", "year"},
                                                {"wk", "week"}, {"week", "week"}, {"day", "day"}, {"night", "night"},
-                                               {"person", "person"}, {"ft", "foot"}, {"sq ft", "square foot"}};
+                                               {"person", "person"}, {"ft", "foot"}, {"sq ft", "square foot"},
+                                               /* $5/share five dollars per share (round 27) */
+                                               {"share", "share"}, {"hour", "hour"}, {"unit", "unit"},
+                                               {"seat", "seat"}, {"ticket", "ticket"}, {"user", "user"},
+                                               {"bbl", "barrel"}, {"barrel", "barrel"}};
         char whole[24];
         size_t a = p + 1, wl = 0, z, u;
         unsigned long cents = 0;
