@@ -304,6 +304,12 @@ numeric_suffix	*	㎑	MEASURE:kHz
 numeric_suffix	*	㎧	MEASURE:m_per_second
 numeric_suffix	*	㎍/㎥	MEASURE:ug_per_cubic_m
 numeric_suffix	*	μg/m³	MEASURE:ug_per_cubic_m
+# ASCII and micro-sign spellings of the same unit (2026-11-01, round 22; 48ug/m3 was 사팔 유지 엠 삼)
+numeric_suffix	*	µg/m³	MEASURE:ug_per_cubic_m
+numeric_suffix	*	μg/m3	MEASURE:ug_per_cubic_m
+numeric_suffix	*	µg/m3	MEASURE:ug_per_cubic_m
+numeric_suffix	*	ug/m3	MEASURE:ug_per_cubic_m
+numeric_suffix	*	ug/m³	MEASURE:ug_per_cubic_m
 numeric_suffix	*	µg/m³	MEASURE:ug_per_cubic_m
 numeric_suffix	*	㎍/m³	MEASURE:ug_per_cubic_m
 numeric_suffix	*	μg/㎥	MEASURE:ug_per_cubic_m

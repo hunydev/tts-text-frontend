@@ -1845,7 +1845,18 @@ static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
             if (a + 7 <= n && !strncmp(t + a, "aspect ", 7))
                 a += 7;
             after = a > r && a + 5 <= n && !strncmp(t + a, "ratio", 5) && !(a + 5 < n && ascii_letter_char(t[a + 5]));
-            if ((after || word_before(t, p, "dilute|diluted|dilution|ratio|mix|mixed|scale|odds|concentrate|stock") ||
+            /* stands at 4:1, is 18:1, a 2:1 split: a one-digit second number is never minutes, so
+               after a lowercase word it is a ratio without a cue (round 22; was left as 4:1). A
+               capitalized word before it may be a book and verse (Genesis 1:1). */
+            int lone = r == q + 2 && p >= 2 && t[p - 1] == ' ' && t[p - 2] >= 'a' && t[p - 2] <= 'z' &&
+                       !(r < n && (t[r] == '-' || (t[r] == '.' && r + 1 < n && ascii_digit_char(t[r + 1]))));
+            if (lone) {
+                size_t w = p - 2;
+                while (w && ascii_letter_char(t[w - 1]))
+                    --w;
+                lone = t[w] >= 'a' && t[w] <= 'z';
+            }
+            if ((after || lone || word_before(t, p, "dilute|diluted|dilution|ratio|mix|mixed|scale|odds|concentrate|stock") ||
                  (word_before(t, p, "of") && strstr_before(t, p, "ratio of"))) &&
                 !(r < n && (ascii_digit_char(t[r]) || t[r] == ':')) && r - p < sizeof(v)) {
                 size_t k, used = 0;
