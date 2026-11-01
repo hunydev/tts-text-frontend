@@ -644,6 +644,10 @@ service_after	zh-CN	吗	1
 service_after	zh-CN	查	1
 service_after	zh-CN	拨	1
 service_after	zh-CN	热线	1
+# 登录12306网站 一二三零六: a site named by its number reads digit by digit (2026-11-02, TN round 31;
+# was 一万二千三百零六)
+service_after	zh-CN	网站	1
+service_after	zh-CN	官网	1
 service_after	zh-CN	电话	1
 service_after	zh-CN	咨询	1
 service_after	zh-CN	举报	1
