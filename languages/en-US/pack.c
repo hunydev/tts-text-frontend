@@ -2192,6 +2192,37 @@ static int in_list(const char *key, const char *words) {
 }
 static const char *const dev_month[] = {"January", "February", "March", "April", "May", "June", "July",
                                         "August", "September", "October", "November", "December"};
+/* A superscript exponent at p (⁻³¹, ²³): writes the digits to exp and sets *neg; returns its end
+   or 0. */
+static size_t superscript_exponent(const char *t, size_t n, size_t p, char *exp, size_t cap, int *neg) {
+    size_t k = 0;
+    *neg = 0;
+    if (p + 3 <= n && !memcmp(t + p, "\xe2\x81\xbb", 3)) {
+        *neg = 1;
+        p += 3;
+    }
+    for (;;) {
+        char d = 0;
+        if (p + 2 <= n && (unsigned char)t[p] == 0xc2 && (unsigned char)t[p + 1] == 0xb9)
+            d = '1';
+        else if (p + 2 <= n && (unsigned char)t[p] == 0xc2 && ((unsigned char)t[p + 1] == 0xb2 || (unsigned char)t[p + 1] == 0xb3))
+            d = (unsigned char)t[p + 1] == 0xb2 ? '2' : '3';
+        if (d) {
+            p += 2;
+        } else if (p + 3 <= n && (unsigned char)t[p] == 0xe2 && (unsigned char)t[p + 1] == 0x81 &&
+                   ((unsigned char)t[p + 2] == 0xb0 || ((unsigned char)t[p + 2] >= 0xb4 && (unsigned char)t[p + 2] <= 0xb9))) {
+            d = (unsigned char)t[p + 2] == 0xb0 ? '0' : (char)('4' + (unsigned char)t[p + 2] - 0xb4);
+            p += 3;
+        } else
+            break;
+        if (k + 1 >= cap)
+            return 0;
+        exp[k++] = d;
+    }
+    exp[k] = 0;
+    return k ? p : 0;
+}
+
 static size_t dev_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     const char *t = in->text;
     size_t n = in->length, p = in->tokens[in->index].begin, q, r, k;
@@ -3525,6 +3556,90 @@ no_file:
             }
         }
         /* .312 hitting three twelve (a batting average) */
+    }
+    /* 3 × 10^8 m/s three times ten to the eighth meters per second, 1.38e-23 one point three
+       eight times ten to the minus twenty three, 2^10 two to the tenth, 9.11×10⁻³¹ kg ... kilograms:
+       scientific notation reads like a superscript power, and a unit symbol after it is read
+       (round 26; the caret was read, e-23 expanded to a long decimal, and kg stayed letters). */
+    if (ascii_digit_char(t[p]) && !(p && (ascii_digit_char(t[p - 1]) || ascii_letter_char(t[p - 1]) || t[p - 1] == '.'))) {
+        static const char *const units[][2] = {{"m/s", "meters per second"}, {"km", "kilometers"}, {"kg", "kilograms"},
+                                               {"cm", "centimeters"}, {"mm", "millimeters"}, {"nm", "nanometers"},
+                                               {"mol", "moles"}, {"eV", "electron volts"}, {"Hz", "hertz"},
+                                               {"J", "joules"}, {"C", "coulombs"}, {"K", "kelvins"}, {"W", "watts"},
+                                               {"V", "volts"}, {"L", "liters"}, {"g", "grams"}, {"m", "meters"}, {"s", "seconds"}};
+        char a_num[24], b_num[24], exp[8];
+        size_t a = p, b = 0, e = 0, x, z, u;
+        int neg = 0, form = 0; /* 1: A × B^E, 2: B^E, 3: A e E */
+        for (; a < n && (ascii_digit_char(t[a]) || (t[a] == '.' && a + 1 < n && ascii_digit_char(t[a + 1]))) && a - p < sizeof(a_num) - 1; ++a)
+            ;
+        (void)snprintf(a_num, sizeof(a_num), "%.*s", (int)(a - p), t + p);
+        x = a;
+        while (x < n && t[x] == ' ')
+            ++x;
+        if (x + 2 <= n && (!memcmp(t + x, "\xc3\x97", 2) || t[x] == '*' || (t[x] == 'x' && x > a))) {
+            size_t bb;
+            x += t[x] == '*' || t[x] == 'x' ? 1 : 2;
+            while (x < n && t[x] == ' ')
+                ++x;
+            for (bb = x; bb < n && ascii_digit_char(t[bb]) && bb - x < sizeof(b_num) - 1; ++bb)
+                ;
+            if (bb > x && !(bb < n && ascii_digit_char(t[bb]))) {
+                (void)snprintf(b_num, sizeof(b_num), "%.*s", (int)(bb - x), t + x);
+                b = bb;
+                form = 1;
+            }
+        }
+        if (!form && a - p <= 3 && !strchr(a_num, '.'))
+            b = a, form = 2, (void)snprintf(b_num, sizeof(b_num), "%s", a_num);
+        if (form) {
+            if (b + 1 < n && t[b] == '^') {
+                size_t s0 = b + 1 + (b + 2 < n && (t[b + 1] == '-' || t[b + 1] == '+'));
+                neg = t[b + 1] == '-';
+                for (e = s0; e < n && ascii_digit_char(t[e]) && e - s0 < sizeof(exp) - 1; ++e)
+                    ;
+                if (e > s0)
+                    (void)snprintf(exp, sizeof(exp), "%.*s", (int)(e - s0), t + s0);
+                else
+                    e = 0;
+            } else if (!strcmp(b_num, "10")) /* 5² five squared stays with the power reader */
+                e = superscript_exponent(t, n, b, exp, sizeof(exp), &neg);
+        }
+        if (!e && (t[a] == 'e' || t[a] == 'E') && a + 1 < n) {
+            size_t s0 = a + 1 + (a + 2 < n && (t[a + 1] == '-' || t[a + 1] == '+'));
+            neg = t[a + 1] == '-';
+            for (e = s0; e < n && ascii_digit_char(t[e]) && e - s0 < sizeof(exp) - 1; ++e)
+                ;
+            if (e > s0 && (strchr(a_num, '.') || s0 > a + 1))
+                (void)snprintf(exp, sizeof(exp), "%.*s", (int)(e - s0), t + s0), form = 3;
+            else
+                e = 0;
+        }
+        if (e && !(e < n && (ascii_letter_char(t[e]) || ascii_digit_char(t[e])))) {
+            size_t used;
+            if (form == 1)
+                used = (size_t)snprintf(v, sizeof(v), "n:%s|w:times|n:%s|w:to the", a_num, b_num);
+            else if (form == 2)
+                used = (size_t)snprintf(v, sizeof(v), "n:%s|w:to the", b_num);
+            else
+                used = (size_t)snprintf(v, sizeof(v), "n:%s|w:times ten to the", a_num);
+            if (used < sizeof(v))
+                used += (size_t)snprintf(v + used, sizeof(v) - used, neg ? "|w:minus|c:%s" : "|o:%s", exp);
+            z = e;
+            if (z + 1 < n && t[z] == ' ')
+                for (u = 0; u < sizeof(units) / sizeof(*units); ++u) {
+                    size_t l = strlen(units[u][0]);
+                    if (z + 1 + l <= n && !memcmp(t + z + 1, units[u][0], l) &&
+                        !(z + 1 + l < n && (ascii_letter_char(t[z + 1 + l]) || ascii_digit_char(t[z + 1 + l]) ||
+                                            (unsigned char)t[z + 1 + l] >= 0x80 || t[z + 1 + l] == '/'))) {
+                        if (used < sizeof(v))
+                            used += (size_t)snprintf(v + used, sizeof(v) - used, "|w:%s", units[u][1]);
+                        z += 1 + l;
+                        break;
+                    }
+                }
+            if (used < sizeof(v))
+                return say_span(in, out, z, v, "sci-power");
+        }
     }
     /* rise for 3h three hours, rest for 1.5 h: a number with h after a duration word reads hours.
        A single letter is not a declared unit (measurements.tsv), so the word before decides
