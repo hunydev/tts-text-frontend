@@ -13,6 +13,10 @@ abbreviation_expansion	en-US	rev	Reverend
 abbreviation_expansion	en-US	hon	Honorable
 # No. 5 number five: only before a number (No. I will not stays).
 abbreviation_number	en-US	no	number
+# Op. 27 No. 2 opus twenty seven number two, a music catalog number: only before a number
+# (2026-11-01, TN round 29; was Op. / 압.)
+abbreviation	en-US	op	preserve
+abbreviation_number	en-US	op	opus
 # c. 1850, ca. 1200, c.1600 circa (2026-11-01, round 23; was c. eighteen fifty)
 abbreviation	en-US	c	preserve
 abbreviation	en-US	ca	preserve
