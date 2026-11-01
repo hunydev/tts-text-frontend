@@ -181,6 +181,9 @@ classifier_priority	ko-KR	ko:quarter-q	10
 # 4Q23 이십삼 년 사 분기, 공고 제2024-123호 제이천이십사 다시 백이십삼 호 (2026-11-01, round 21)
 classifier_priority	ko-KR	ko:quarter-year	100
 classifier_priority	ko-KR	ko:official-number	100
+# 8m22 field-event marks and 32″ screen inches (2026-11-01, round 24)
+classifier_priority	ko-KR	ko:field-mark	100
+classifier_priority	ko-KR	ko:screen-inch	100
 # 원/달러 환율 원 달러: a slash between two of these words names a currency pair (2026-10-29).
 currency_pair_word	ko-KR	원	1
 currency_pair_word	ko-KR	달러	1

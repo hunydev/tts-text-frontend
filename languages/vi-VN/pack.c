@@ -1396,6 +1396,15 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                               d - d0 >= 3 && t[p] == 'P' && previous_word(t, p, "Phòng|phòng") ? "named" : "");
             }
         }
+        /* 15 độ C: when a chunk ends after độ the scale letter comes alone; after a number and
+           độ it is the scale (xê, ép), not a Roman numeral (round 24; Béo phì độ I stays) */
+        if ((t[p] == 'C' || t[p] == 'F') && !letter_at(t, n, p + 1) && p >= 3 + strlen("độ") &&
+            t[p - 1] == ' ' && !memcmp(t + p - 1 - strlen("độ"), "độ", strlen("độ")) &&
+            t[p - 2 - strlen("độ")] == ' ' && digit(t[p - 3 - strlen("độ")])) {
+            const char *u = res(e, "vi_unit", t[p] == 'C' ? "°C" : "°F");
+            if (u && !strncmp(u, "độ ", strlen("độ ")))
+                return finish(in, s, p + 1, "lit", u + strlen("độ "), "");
+        }
         /* Thế kỷ XXI, quý II/2026, lần thứ XIV, vùng I */
         if ((r = roman(t, n, p, &re)) != 0 && !(re + 1 < n && t[re] == '-' && digit(t[re + 1])) &&
             (previous_cue(e, t, p, "roman") ||
@@ -1936,9 +1945,14 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         return finish(in, s, q, "digits", a.value, fl);
     }
 
-    /* giải 1 giải nhất, giải 2 giải nhì (owner sets) */
+    /* giải 1 giải nhất, giải 2 giải nhì (owner sets); giành hạng 1 hạng nhất, đứng hạng 2 hạng nhì:
+       a placing after a ranking verb (round 24; was hạng một). Vé hạng 2, bệnh viện hạng 1 are
+       classes and stay cardinal. */
     if (!negative && !a.grouped && !a.decimal && (!strcmp(a.value, "1") || !strcmp(a.value, "2")) &&
-        !letter_at(t, n, q) && previous_word(t, p, "giải|Giải")) {
+        !letter_at(t, n, q) &&
+        (previous_word(t, p, "giải|Giải") ||
+         (previous_word(t, p, "hạng|Hạng") && p >= 8 &&
+          previous_word(t, p - 1 - strlen("hạng"), "giành|đoạt|đạt|xếp|đứng|về|giữ|chiếm|lên|leo|tụt|xuống|Giành|Đoạt|Xếp|Đứng")))) {
         snprintf(v, sizeof(v), "%s", a.value);
         return finish(in, s, q, "prize", v, "");
     }
@@ -1955,6 +1969,14 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     {
         char mid[24], per[24];
         size_t end = amount_tail(e, t, n, q, key, sizeof(key), mid, sizeof(mid), per, sizeof(per));
+        /* 15 độ C mười lăm độ xê: the scale letter written after the word độ reads as °C, °F
+           (round 24; the C was the Roman numeral một trăm) */
+        if (!key[0] && !mid[0] && q + 7 < n && t[q] == ' ' && !memcmp(t + q + 1, "độ ", strlen("độ ")) &&
+            (t[q + 1 + strlen("độ ")] == 'C' || t[q + 1 + strlen("độ ")] == 'F') &&
+            !letter_at(t, n, q + 2 + strlen("độ ")) && !(q + 2 + strlen("độ ") < n && digit(t[q + 2 + strlen("độ ")]))) {
+            snprintf(key, sizeof(key), "u:°%c", t[q + 1 + strlen("độ ")]);
+            end = q + 2 + strlen("độ ");
+        }
         if (prefix_currency) {
             char sym[4] = {0};
             memcpy(sym, t + p, t[p] == '$' ? 1 : t[p] == '\xe2' ? 3 : 2); /* € ₫ are three bytes */

@@ -1950,6 +1950,22 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             TRY(cardinal(e, bar + 1, out));
             return ttf_buffer_puts(out, " 호");
         }
+        if (!strcmp(s->unit, "@field-mark")) {
+            /* m|cc[|cm]: 팔 미터 이십이, 팔 미터 십오 센티미터 */
+            char metres[8], centimetres[4];
+            const char *bar = strchr(s->value, '|');
+            if (!bar || (size_t)(bar - s->value) >= sizeof(metres) || strlen(bar + 1) < 2)
+                return TTF_EINVAL;
+            (void)snprintf(metres, sizeof(metres), "%.*s", (int)(bar - s->value), s->value);
+            (void)snprintf(centimetres, sizeof(centimetres), "%.2s", bar + 1);
+            TRY(quantity(e, metres, resource(e, "unit", "meter", "미터"), 0, out));
+            TRY(ttf_buffer_puts(out, " "));
+            if (strchr(bar + 1, '|'))
+                return quantity(e, centimetres, resource(e, "unit", "centimeter", "센티미터"), 0, out);
+            return cardinal(e, centimetres, out);
+        }
+        if (!strcmp(s->unit, "@inch"))
+            return quantity(e, s->value, resource(e, "unit", "inch", "인치"), 0, out);
         if (!strcmp(s->unit, "@count-per")) {
             /* time|count: 분당 칠십이 회 */
             char label[16];
@@ -3618,6 +3634,86 @@ static size_t count_per_time(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     return 0;
 }
 
+/* 8m22 팔 미터 이십이, 2m 35: a field-event mark, metres then two centimetre digits with the
+   centimetre unit left unwritten (round 24; was 팔엠이십이); 8m15cm 팔 미터 십오 센티미터 (was
+   팔 엠 일오 씨엠). The mark must close the word or take a particle, so 5m30s and 8m 22개 are
+   not taken. */
+static size_t field_mark(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    static const char *const particles[] = {"로", "으로", "를", "을", "은", "는", "이", "가", "의", "에", "와", "과", "도", "만", "까지", "에서", "였", "이었", "이다", "다"};
+    const char *t = in->text;
+    size_t n = in->length, p = in->tokens[in->index].begin, q, c, e, j;
+    int cm;
+    char v[16];
+    if (p >= n || !ko_digit(t[p]) || (p && (ko_digit(t[p - 1]) || ((t[p - 1] | 0x20) >= 'a' && (t[p - 1] | 0x20) <= 'z') ||
+                                           t[p - 1] == '.' || t[p - 1] == '-')))
+        return 0;
+    for (q = p; q < n && ko_digit(t[q]) && q - p < 3; ++q)
+        ;
+    if (q - p > 2 || q >= n || t[q] != 'm')
+        return 0;
+    c = q + 1 + (q + 1 < n && t[q + 1] == ' ');
+    if (c + 2 > n || !ko_digit(t[c]) || !ko_digit(t[c + 1]))
+        return 0;
+    e = c + 2;
+    cm = e + 1 < n && t[e] == 'c' && t[e + 1] == 'm' && !(e + 2 < n && ((t[e + 2] | 0x20) >= 'a' && (t[e + 2] | 0x20) <= 'z'));
+    if (cm)
+        e += 2;
+    if (e < n && (ko_digit(t[e]) || ((t[e] | 0x20) >= 'a' && (t[e] | 0x20) <= 'z') || t[e] == '%' || t[e] == ':' ||
+                  ((t[e] == '.' || t[e] == ',') && e + 1 < n && ko_digit(t[e + 1]))))
+        return 0;
+    if (e < n && (unsigned char)t[e] >= 0xea && (unsigned char)t[e] <= 0xed) {
+        int ok = 0;
+        for (j = 0; !ok && j < sizeof(particles) / sizeof(*particles); ++j)
+            ok = e + strlen(particles[j]) <= n && !memcmp(t + e, particles[j], strlen(particles[j]));
+        if (!ok)
+            return 0;
+    }
+    if (!korean_context(in))
+        return 0;
+    (void)snprintf(v, sizeof(v), "%.*s|%.2s%s", (int)(q - p), t + p, t + c, cm ? "|cm" : "");
+    return ko_finish(in, s, e, TTF_SEM_SYMBOL, v, "@field-mark", "ko:field-mark");
+}
+
+/* 27" 이십칠 인치, 32″ 삼십이 인치: a double prime or a straight double quote after a screen size
+   reads 인치 when a screen or device word is near (round 24; 32″ was 더블 프라임). Without
+   such a word the mark stays ambiguous (seconds, a closing quote), as unit-symbol-v21 left it;
+   a size after a foot mark (5'11") and a closing quote (an odd count of " before) are not taken. */
+static size_t screen_inch(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    static const char *const cues[] = {"모니터", "화면", "텔레비전", "티브이", "TV", "노트북", "디스플레이", "태블릿",
+                                       "스마트폰", "휴대폰", "액정", "패널", "아이패드", "맥북", "인치"};
+    const char *t = in->text;
+    size_t n = in->length, p = in->tokens[in->index].begin, q, e, a, b, k, j, quotes = 0;
+    int cue = 0;
+    char v[16];
+    if (p >= n || !ko_digit(t[p]) || (p && (ko_digit(t[p - 1]) || t[p - 1] == '\'' || t[p - 1] == '.' ||
+                                           ((t[p - 1] | 0x20) >= 'a' && (t[p - 1] | 0x20) <= 'z'))) ||
+        (p >= 3 && !memcmp(t + p - 3, "\xe2\x80\xb2", 3)))
+        return 0;
+    for (q = p; q < n && (ko_digit(t[q]) || (t[q] == '.' && q > p && q + 1 < n && ko_digit(t[q + 1]))) && q - p < 6; ++q)
+        ;
+    if (q < n && t[q] == '"') {
+        for (k = 0; k < p; ++k)
+            quotes += t[k] == '"';
+        if (quotes % 2)
+            return 0;
+        e = q + 1;
+    } else if (q + 3 <= n && !memcmp(t + q, "\xe2\x80\xb3", 3))
+        e = q + 3;
+    else
+        return 0;
+    if (e < n && ko_digit(t[e]))
+        return 0;
+    a = p > 90 ? p - 90 : 0;
+    b = e + 90 < n ? e + 90 : n;
+    for (k = a; !cue && k < b; ++k)
+        for (j = 0; !cue && j < sizeof(cues) / sizeof(*cues); ++j)
+            cue = k + strlen(cues[j]) <= b && !memcmp(t + k, cues[j], strlen(cues[j]));
+    if (!cue || !korean_context(in))
+        return 0;
+    (void)snprintf(v, sizeof(v), "%.*s", (int)(q - p), t + p);
+    return ko_finish(in, s, e, TTF_SEM_SYMBOL, v, "@inch", "ko:screen-inch");
+}
+
 /* 2x로 두 배, 1.5x 일 점 오 배: a number with a lowercase x after it is a multiple (speed or
    size; 2026-10-30, was 이 엑스). 1Q 일 분기, 3Q 삼 분기: a quarter of the year (was 일 큐).
    Both must close the word, and the number must not follow a letter or digit. */
@@ -5228,7 +5324,7 @@ static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     size_t identifier = below_zero_degrees(in, s);
     if (identifier)
         return identifier;
-    if ((identifier = official_number(in, s)) != 0 || (identifier = count_per_time(in, s)) != 0 || (identifier = algebra(in, s)) != 0 || (identifier = english_generation(in, s)) != 0 || (identifier = chem_isotope(in, s)) != 0 || (identifier = chem_formula_rule(in, s)) != 0 || (identifier = trig_function(in, s)) != 0 || (identifier = log_base(in, s)) != 0 || (identifier = number_mark(in, s)) != 0 || (identifier = day_countdown(in, s)) != 0 || (identifier = times_or_quarter(in, s)) != 0 || (identifier = promo_plus(in, s)) != 0 || (identifier = file_dot(in, s)) != 0 || (identifier = range_month_day(in, s)) != 0 || (identifier = weekday_range(in, s)) != 0 || (identifier = letter_unit(in, s)) != 0 || (identifier = name_version(in, s)) != 0 || (identifier = geo_coordinate(in, s)) != 0 || (identifier = colon_score(in, s)) != 0 || (identifier = price_per_unit(in, s)) != 0 ||
+    if ((identifier = official_number(in, s)) != 0 || (identifier = count_per_time(in, s)) != 0 || (identifier = field_mark(in, s)) != 0 || (identifier = screen_inch(in, s)) != 0 || (identifier = algebra(in, s)) != 0 || (identifier = english_generation(in, s)) != 0 || (identifier = chem_isotope(in, s)) != 0 || (identifier = chem_formula_rule(in, s)) != 0 || (identifier = trig_function(in, s)) != 0 || (identifier = log_base(in, s)) != 0 || (identifier = number_mark(in, s)) != 0 || (identifier = day_countdown(in, s)) != 0 || (identifier = times_or_quarter(in, s)) != 0 || (identifier = promo_plus(in, s)) != 0 || (identifier = file_dot(in, s)) != 0 || (identifier = range_month_day(in, s)) != 0 || (identifier = weekday_range(in, s)) != 0 || (identifier = letter_unit(in, s)) != 0 || (identifier = name_version(in, s)) != 0 || (identifier = geo_coordinate(in, s)) != 0 || (identifier = colon_score(in, s)) != 0 || (identifier = price_per_unit(in, s)) != 0 ||
         (identifier = currency_pair(in, s)) != 0 || (identifier = short_dotted_date(in, s)) != 0 || (identifier = quarter(in, s)) != 0 ||
         (identifier = owner_forms(in, s)) != 0 || (identifier = owner_forms5(in, s)) != 0 ||
         (identifier = chemical_formula(in, s)) != 0 || (identifier = subscript_index(in, s)) != 0 ||
