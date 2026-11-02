@@ -318,7 +318,11 @@
           "text": "7 7 7",
           "outputs": {
             "ko-KR": "칠 칠 칠",
-            "en-US": "seven seven seven"
+            "en-US": "seven seven seven",
+            "zh-CN": "七 七 七",
+            "vi-VN": "bảy bảy bảy",
+            "th-TH": "เจ็ด เจ็ด เจ็ด",
+            "ar": "سبعة سبعة سبعة"
           }
         }
       ]
@@ -571,7 +575,7 @@
     {
       "id": "brand-lexicon",
       "key": "brand_lexicon",
-      "desc": "기업·브랜드 영문 표기를 한국어로 널리 쓰는 발음으로 읽는 선택 사전(약 4,800항목)입니다. 사용자·고객 사전이 우선합니다.",
+      "desc": "기업·브랜드 영문 표기를 한국어로 널리 쓰는 발음으로 읽는 선택 사전(약 6,500항목: Wikidata 기업·브랜드 5,108, 공정위 가맹사업 브랜드 1,350)입니다. 사용자·고객 사전이 우선합니다.",
       "examples": [
         {
           "text": "Ericsson과 Samsonite",

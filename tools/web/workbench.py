@@ -309,7 +309,7 @@ def validate(request, corpus=False):
         raise ValueError("알 수 없는 설정입니다.")
     opts = dict(DEFAULTS, **given)
     for key, allowed in [
-        ("default_language", ("ko-KR", "en-US", "ja-JP")),
+        ("default_language", ("ko-KR", "en-US", "ja-JP", "zh-CN", "vi-VN", "th-TH", "ar")),
         ("render_policy", ("phonetic", "preserve", "semantic")),
         ("input_format", ("plain", "annotated")),
         ("output_mode", ("text", "speech")),
