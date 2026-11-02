@@ -131,7 +131,34 @@ function settings(options = {}) {
   $("customer-tsv").value = o.customer_tsv;
   $("request-dict-tsv").value = o.request_dict_tsv || "";
   $("named-dict-tsv").value = o.named_dict_tsv || "";
+  syncSymbols();
 }
+/* The 기호·이모지 row is a preset over three engine options (help.json "presets"). */
+function symbolPresets() {
+  const item = (state.catalog?.help?.options || []).find((x) => x.id === "symbols");
+  return item ? item.presets : {};
+}
+function symbolPreset(o) {
+  const match = Object.entries(symbolPresets()).find(([, p]) =>
+    Object.entries(p).every(([k, v]) => o[k] === v));
+  return match ? match[0] : "custom";
+}
+function syncSymbols() {
+  $("symbols").value = symbolPreset({
+    unreadable: $("unreadable").value,
+    decorative: $("decorative").value,
+    symbol_fallback: $("symbol-fallback").value,
+  });
+}
+$("symbols").addEventListener("change", () => {
+  const preset = symbolPresets()[$("symbols").value];
+  if (!preset) return;
+  $("unreadable").value = preset.unreadable;
+  $("decorative").value = preset.decorative;
+  $("symbol-fallback").value = preset.symbol_fallback;
+});
+["unreadable", "decorative", "symbol-fallback"].forEach((id) =>
+  $(id).addEventListener("change", syncSymbols));
 function options() {
   const number = (id) => {
     const n = Number($(id).value);
@@ -699,6 +726,7 @@ function exampleButton(text, annotated, namedDict) {
 function renderHelp() {
   const help = state.catalog.help;
   if (!help) return;
+  syncSymbols();
   const body = $("control-help-body");
   body.replaceChildren();
   help.controls.forEach((group) => {
@@ -723,7 +751,7 @@ function renderHelp() {
       const option = field.tagName === "SELECT" && [...field.options].find((o) => o.value === value);
       return option ? option.dataset.label || option.textContent : String(value);
     };
-    const fallback = state.catalog.defaults[item.key];
+    const fallback = item.presets ? symbolPreset(state.catalog.defaults) : state.catalog.defaults[item.key];
     if (field.tagName === "SELECT")
       [...field.options].forEach((o) => {
         o.dataset.label = o.textContent;

@@ -220,11 +220,6 @@
               <option value="speech">발화용 텍스트</option>
               <option value="text">표기 보존 텍스트</option>
             </select></label><p class="option-help" data-option="output-mode"></p></div>
-          <div class="option-row"><label>읽을 수 없는 문자<select id="unreadable">
-              <option value="preserve">원문 유지</option>
-              <option value="drop">제거</option>
-              <option value="read">모두 읽기</option>
-            </select></label><p class="option-help" data-option="unreadable"></p></div>
           <div class="option-row"><label>괄호 안<select id="brackets">
               <option value="read">읽기</option>
               <option value="skip">건너뛰기</option>
@@ -235,10 +230,6 @@
               <option value="spell">철자 읽기</option>
               <option value="preserve">원문 유지</option>
             </select></label><p class="option-help" data-option="unknown-foreign"></p></div>
-          <div class="option-row"><label>장식 문자<select id="decorative">
-              <option value="follow">위 정책 따름</option>
-              <option value="read">이름으로 읽기</option>
-            </select></label><p class="option-help" data-option="decorative"></p></div>
           <div class="option-row"><label>대문자 약어<select id="initialism">
               <option value="spell">철자 읽기</option>
               <option value="word">단어 읽기</option>
@@ -255,11 +246,30 @@
               <option value="keep">영어로 읽기 (기본)</option>
               <option value="localize">한글로 읽기 (I have 3 apples → 아이 해브 쓰리 애플스)</option>
             </select></label><p class="option-help" data-option="foreign-sentence"></p></div>
-          <div class="option-row"><label>기호·이모지 이름<select id="symbol-fallback">
-              <option value="on">읽기 (없으면 영어 이름)</option>
-              <option value="native">읽기 (해당 언어 이름만)</option>
-              <option value="off">읽지 않음 (처리 불가 정책)</option>
-            </select></label><p class="option-help" data-option="symbol-fallback"></p></div>
+          <div class="option-row"><label>기호·이모지<select id="symbols">
+              <option value="name-keep">이름으로 읽고 나머지는 원문 유지</option>
+              <option value="name-drop">이름으로 읽고 나머지는 지움</option>
+              <option value="all-names">장식 문자까지 이름으로</option>
+              <option value="off">읽지 않음 (원문 유지)</option>
+              <option value="custom" disabled>세부 설정 조합</option>
+            </select></label><p class="option-help" data-option="symbols"></p></div>
+          <details class="option-details">
+            <summary>기호 세부 설정 (읽을 수 없는 문자 · 장식 문자 · 기호 이름)</summary>
+            <div class="option-row"><label>읽을 수 없는 문자<select id="unreadable">
+                <option value="preserve">원문 유지</option>
+                <option value="drop">제거</option>
+                <option value="read">모두 읽기</option>
+              </select></label><p class="option-help" data-option="unreadable"></p></div>
+            <div class="option-row"><label>장식 문자<select id="decorative">
+                <option value="follow">위 정책 따름</option>
+                <option value="read">이름으로 읽기</option>
+              </select></label><p class="option-help" data-option="decorative"></p></div>
+            <div class="option-row"><label>기호·이모지 이름<select id="symbol-fallback">
+                <option value="on">읽기 (없으면 영어 이름)</option>
+                <option value="native">읽기 (해당 언어 이름만)</option>
+                <option value="off">읽지 않음 (처리 불가 정책)</option>
+              </select></label><p class="option-help" data-option="symbol-fallback"></p></div>
+          </details>
           <div class="option-row"><label>조사 맞춤<select id="particle-agreement">
               <option value="off">쓴 그대로 (기본)</option>
               <option value="on">읽기에 맞춤 (3랑 → 삼이랑)</option>

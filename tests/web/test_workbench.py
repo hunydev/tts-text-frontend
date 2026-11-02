@@ -78,10 +78,16 @@ try:
             assert run(item["example"], opts=opts)[0]["text"] == item["output"], item
             help_cases += 1
     for item in catalog["help"]["options"]:
-        assert item["key"] in catalog["defaults"], item
+        presets = item.get("presets")
+        if presets:
+            # A preset row sets several options; the defaults are one of its presets.
+            assert any(all(catalog["defaults"][k] == v for k, v in p.items()) for p in presets.values())
+        else:
+            assert item["key"] in catalog["defaults"], item
         for example in item["examples"]:
             for value, output in example["outputs"].items():
-                actual = run(example["text"], opts={item["key"]: value})[0]["text"]
+                opts = presets[value] if presets else {item["key"]: value}
+                actual = run(example["text"], opts=opts)[0]["text"]
                 assert actual == output, (item["id"], value, actual, output)
                 help_cases += 1
     assert help_cases > 60

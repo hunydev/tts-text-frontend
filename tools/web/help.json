@@ -384,6 +384,44 @@
       ]
     },
     {
+      "id": "symbols",
+      "key": "symbols",
+      "desc": "기호·이모지와 읽을 수 없는 문자를 한 번에 정합니다. 값마다 아래 세부 설정 세 개(읽을 수 없는 문자, 장식 문자, 기호·이모지 이름)를 함께 바꾸며, 세부 설정을 따로 바꾸면 '세부 설정 조합'으로 표시됩니다.",
+      "presets": {
+        "name-keep": {
+          "symbol_fallback": "on",
+          "decorative": "follow",
+          "unreadable": "preserve"
+        },
+        "name-drop": {
+          "symbol_fallback": "on",
+          "decorative": "follow",
+          "unreadable": "drop"
+        },
+        "all-names": {
+          "symbol_fallback": "on",
+          "decorative": "read",
+          "unreadable": "preserve"
+        },
+        "off": {
+          "symbol_fallback": "off",
+          "decorative": "follow",
+          "unreadable": "preserve"
+        }
+      },
+      "examples": [
+        {
+          "text": "★ 신메뉴 🍔 ∢ 가⸮나 ※ 참고",
+          "outputs": {
+            "name-keep": "★ 신메뉴 햄버거 스퍼리컬 앵글 가⸮나 ※ 참고",
+            "name-drop": "신메뉴 햄버거 스퍼리컬 앵글 가 나 참고",
+            "all-names": "별 신메뉴 햄버거 스퍼리컬 앵글 가⸮나 참고표 참고",
+            "off": "★ 신메뉴 🍔 ∢ 가⸮나 ※ 참고"
+          }
+        }
+      ]
+    },
+    {
       "id": "unreadable",
       "key": "unreadable",
       "desc": "읽을 방법이 없는 문자(이름도 없는 문자)와 해석을 거부한 표기 중 숫자 폴백이 읽지 않는 것(25:00 같은 시각 모양)의 처리입니다. 발화용 출력에서만 적용됩니다.",
