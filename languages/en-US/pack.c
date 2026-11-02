@@ -3704,6 +3704,27 @@ no_file:
                 return say_span(in, out, z, v, "sci-power");
         }
     }
+    /* 1920x1080 one thousand nine hundred twenty times one thousand eighty, solve 3x4 three times
+       four: two whole numbers joined by a letter x read like the sign x (2026-11-02, TN round 36; was
+       one nine two zero x one zero eight zero). Small numbers only at the end of a phrase: a 4x4 truck
+       keeps four x four; 2x faster and 30x40cm keep their own readings. */
+    if (ascii_digit_char(t[p]) && t[p] != '0' &&
+        !(p && (ascii_digit_char(t[p - 1]) || ascii_letter_char(t[p - 1]) || t[p - 1] == '.'))) {
+        size_t a = p, b;
+        while (a < n && ascii_digit_char(t[a]))
+            ++a;
+        if (a - p <= 5 && a + 1 < n && (t[a] == 'x' || t[a] == 'X') && ascii_digit_char(t[a + 1]) &&
+            t[a + 1] != '0') {
+            for (b = a + 1; b < n && ascii_digit_char(t[b]); ++b)
+                ;
+            if (b - a - 1 <= 5 && !(b < n && (ascii_letter_char(t[b]) || ascii_digit_char(t[b]) ||
+                                               t[b] == '-' || (t[b] == '.' && b + 1 < n && ascii_digit_char(t[b + 1])))) &&
+                ((a - p >= 3 && b - a - 1 >= 3) || b >= n || strchr(".,;:!?)", t[b]))) {
+                (void)snprintf(v, sizeof(v), "c:%u|w:times|c:%u", (unsigned)atoi(t + p), (unsigned)atoi(t + a + 1));
+                return say_span(in, out, b, v, "times-x");
+            }
+        }
+    }
     /* 0.5 in of rain zero point five inches, 2-4 in of snow two to four inches, 6-10" of snow: a
        decimal or a range before in or an inch mark reads inches when of follows (a decimal also before
        a comma). Whole numbers keep the older rule (14 in of snow); 3 in a row stays (round 27). */

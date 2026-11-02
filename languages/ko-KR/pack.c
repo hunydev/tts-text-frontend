@@ -1666,6 +1666,8 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
                 TRY(ttf_buffer_puts(out, " "));
                 TRY(cardinal(e, right, out));
             }
+            if (!s->unit[0])
+                return TTF_OK; /* 3840x2160: a resolution has no unit (round 36) */
             TRY(ttf_buffer_puts(out, " "));
             return ttf_buffer_puts(out, resource(e, "unit", s->unit, s->unit));
         }

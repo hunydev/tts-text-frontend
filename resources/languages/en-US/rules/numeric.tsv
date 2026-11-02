@@ -657,4 +657,5 @@ classifier_priority	en-US	en.hours-h	100
 classifier_priority	en-US	en.sci-power	100
 # 0.5 in of rain, 2-4 in of snow (2026-11-01, round 27)
 classifier_priority	en-US	en.inches-range	100
+classifier_priority	en-US	en.times-x	100
 classifier_priority	en-US	en.price-per-unit	100

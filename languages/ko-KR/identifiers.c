@@ -1734,6 +1734,19 @@ size_t ttf_ko_classify_digit_identifier(const ttf_pack_input_t *in, ttf_semantic
             return classified(in, s, c_end, TTF_SEM_RANGE, "ko:score");
         }
     }
+    /* 3840x2160 해상도 삼천팔백사십 곱하기 이천백육십: two numbers of three to five digits joined by
+       x read like × (2026-11-02, TN round 36; was 삼팔사공 엑스 이일육공). 3x3 stays a score. */
+    if (a_end + 1 < n && (t[a_end] == 'x' || t[a_end] == 'X') && decimal_digit(t[a_end + 1]) &&
+        a_end - b >= 3 && a_end - b <= 5 && t[b] != '0' && t[a_end + 1] != '0') {
+        size_t c = a_end + 1, c_end = digit_run(t, n, c);
+        if (c_end - c >= 3 && c_end - c <= 5 && c_end - b < sizeof(s->value) &&
+            !(c_end < n && (alnum(t[c_end]) || t[c_end] == '.' || t[c_end] == ','))) {
+            memcpy(s->value, t + b, c_end - b);
+            s->value[c_end - b] = '\0';
+            s->unit[0] = s->secondary[0] = '\0';
+            return classified(in, s, c_end, TTF_SEM_MEASURE, "ko:dimensions");
+        }
+    }
     /* 3 대 2로, 6 대 1이: a score or ratio written with 대 between spaced numbers
        reads Sino like 3:2 (benchmark references 85 : 0; 2026-10-05). */
     if (a_end - b <= 3 && a_end + 6 <= n && !memcmp(t + a_end, " \xeb\x8c\x80 ", 5) &&
