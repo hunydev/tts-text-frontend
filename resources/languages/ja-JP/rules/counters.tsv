@@ -61,6 +61,8 @@ counter	ja-JP	度	ど:-
 counter	ja-JP	位	い:-
 counter	ja-JP	名	めい:-
 counter	ja-JP	人前	にんまえ:-
+# 3人分 さんにんぶん, 2人分 ふたりぶん (2026-11-02, TN round 33; was さんにん分)
+counter	ja-JP	人分	にんぶん:-
 counter	ja-JP	行	ぎょう:-
 counter	ja-JP	ドル	ドル:-
 counter	ja-JP	ユーロ	ユーロ:-
@@ -79,6 +81,9 @@ counter	ja-JP	%	パーセント:p10
 counter_reading	ja-JP	人:1	ひとり
 counter_reading	ja-JP	人:2	ふたり
 counter_reading	ja-JP	人:*4	よにん
+counter_reading	ja-JP	人分:1	ひとりぶん
+counter_reading	ja-JP	人分:2	ふたりぶん
+counter_reading	ja-JP	人分:*4	よにんぶん
 counter_reading	ja-JP	つ:1	ひとつ
 counter_reading	ja-JP	つ:2	ふたつ
 counter_reading	ja-JP	つ:3	みっつ

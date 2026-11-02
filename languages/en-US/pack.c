@@ -825,6 +825,27 @@ static int run_context_score(const ttf_pack_input_t *in, size_t begin, size_t en
     return total + (words ? context_cue_score(in, begin) : 0);
 }
 
+/* KODEX 200, HLB 200 in a Korean request: a run whose Latin words are all written in capitals
+   (codes and brand names) and that has no clause signal is not English text, so a number in it
+   keeps the request language (2026-11-02, TN round 35; was KODEX two hundred). Only a number
+   standing after a space: AS/400 stays one English name (slash-v21-neg-two-letter). */
+static int capital_names_only(const ttf_pack_input_t *in, size_t begin, size_t end, int score) {
+    size_t i, j;
+    int words = 0;
+    if (score <= 0 || score >= weight(res(in->engine, "context", "clause_weight"), 500))
+        return 0;
+    for (i = begin; i < end; ++i) {
+        const ttf_token_t *t = &in->tokens[i];
+        if (t->script != TTF_SCRIPT_LATIN)
+            continue;
+        for (j = t->begin; j < t->end; ++j)
+            if (in->text[j] >= 'a' && in->text[j] <= 'z')
+                return 0;
+        ++words;
+    }
+    return words > 0;
+}
+
 static int numeric_label_context_score(const ttf_pack_input_t *in) {
     const ttf_token_t *current = &in->tokens[in->index];
     size_t width = current->end - current->begin;
@@ -843,7 +864,7 @@ static const char context_memo_identity = 0;
 static ttf_status_t build_context_scores(const ttf_pack_input_t *in, void **out) {
     ttf_pack_input_t cursor = *in;
     size_t i, last_begin = SIZE_MAX, last_end = SIZE_MAX;
-    int *scores, last_score = 0;
+    int *scores, last_score = 0, last_capitals = 0;
     *out = NULL;
     if (in->token_count > SIZE_MAX / sizeof(*scores))
         return TTF_ELIMIT;
@@ -862,10 +883,14 @@ static ttf_status_t build_context_scores(const ttf_pack_input_t *in, void **out)
          * contiguous run is evaluated once, without changing its extent. */
         if (begin != last_begin || end != last_end) {
             last_score = run_context_score(&cursor, begin, end);
+            last_capitals = capital_names_only(&cursor, begin, end, last_score);
             last_begin = begin;
             last_end = end;
         }
-        scores[i] = last_score;
+        scores[i] = last_capitals && in->tokens[i].script == TTF_SCRIPT_DIGIT && i &&
+                            in->tokens[i - 1].script == TTF_SCRIPT_WHITESPACE
+                        ? 0
+                        : last_score;
     }
     *out = scores;
     return TTF_OK;
@@ -888,6 +913,9 @@ static int context_score(const ttf_pack_input_t *in) {
          * remain sticky on the request and are propagated by the core. */
         context_run_bounds(in, &begin, &end);
         run_score = run_context_score(in, begin, end);
+        if (in->tokens[in->index].script == TTF_SCRIPT_DIGIT && in->index &&
+            in->tokens[in->index - 1].script == TTF_SCRIPT_WHITESPACE && capital_names_only(in, begin, end, run_score))
+            run_score = 0;
     }
     return run_score + numeric_label_context_score(in);
 }
@@ -3022,7 +3050,9 @@ no_file:
         if (a - p <= 2 && a + 5 < n && t[a] == ':' && ascii_digit_char(t[a + 1]) && ascii_digit_char(t[a + 2]) &&
             t[a + 3] == ':' && ascii_digit_char(t[a + 4]) && ascii_digit_char(t[a + 5]) &&
             !(a + 6 < n && ascii_digit_char(t[a + 6])) &&
-            (word_before(t, p, "in|of|time|clocked|lasted|record|took|timer|duration|ends|countdown|runs") ||
+            (word_before(t, p, "in|of|time|clocked|lasted|record|took|timer|duration|ends|countdown|runs|"
+                                  /* broke the barrier with 1:59:40, posted 2:09:56 (round 32) */
+                                  "with|posted|ran|recorded|finished|won|completed") ||
              /* my half marathon time was 1:52:40 (2026-11-01, TN round 30; was one fifty two and
                 forty seconds) */
              phrase_before(t, p, "time was") || phrase_before(t, p, "time is") ||
@@ -3672,6 +3702,27 @@ no_file:
                 }
             if (used < sizeof(v))
                 return say_span(in, out, z, v, "sci-power");
+        }
+    }
+    /* 1920x1080 one thousand nine hundred twenty times one thousand eighty, solve 3x4 three times
+       four: two whole numbers joined by a letter x read like the sign x (2026-11-02, TN round 36; was
+       one nine two zero x one zero eight zero). Small numbers only at the end of a phrase: a 4x4 truck
+       keeps four x four; 2x faster and 30x40cm keep their own readings. */
+    if (ascii_digit_char(t[p]) && t[p] != '0' &&
+        !(p && (ascii_digit_char(t[p - 1]) || ascii_letter_char(t[p - 1]) || t[p - 1] == '.'))) {
+        size_t a = p, b;
+        while (a < n && ascii_digit_char(t[a]))
+            ++a;
+        if (a - p <= 5 && a + 1 < n && (t[a] == 'x' || t[a] == 'X') && ascii_digit_char(t[a + 1]) &&
+            t[a + 1] != '0') {
+            for (b = a + 1; b < n && ascii_digit_char(t[b]); ++b)
+                ;
+            if (b - a - 1 <= 5 && !(b < n && (ascii_letter_char(t[b]) || ascii_digit_char(t[b]) ||
+                                               t[b] == '-' || (t[b] == '.' && b + 1 < n && ascii_digit_char(t[b + 1])))) &&
+                ((a - p >= 3 && b - a - 1 >= 3) || b >= n || strchr(".,;:!?)", t[b]))) {
+                (void)snprintf(v, sizeof(v), "c:%u|w:times|c:%u", (unsigned)atoi(t + p), (unsigned)atoi(t + a + 1));
+                return say_span(in, out, b, v, "times-x");
+            }
         }
     }
     /* 0.5 in of rain zero point five inches, 2-4 in of snow two to four inches, 6-10" of snow: a

@@ -262,3 +262,6 @@ counter	ko-KR	큰술	native
 counter	ko-KR	작은술	native
 numeric_suffix	*	큰술	COUNTER:큰술
 numeric_suffix	*	작은술	COUNTER:작은술
+# 소금 2꼬집 두 꼬집 (2026-11-02, TN round 33; was 이꼬집)
+counter	ko-KR	꼬집	native
+numeric_suffix	*	꼬집	COUNTER:꼬집

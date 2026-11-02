@@ -1666,6 +1666,8 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
                 TRY(ttf_buffer_puts(out, " "));
                 TRY(cardinal(e, right, out));
             }
+            if (!s->unit[0])
+                return TTF_OK; /* 3840x2160: a resolution has no unit (round 36) */
             TRY(ttf_buffer_puts(out, " "));
             return ttf_buffer_puts(out, resource(e, "unit", s->unit, s->unit));
         }
@@ -3204,6 +3206,16 @@ static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             (void)snprintf(v, sizeof(v), "--%02u-%02u", month, day);
             return ko_finish(in, s, r, TTF_SEM_DATE, v, "month-day", "ko:holiday-date");
         }
+        /* 11/3에 김장을 했다 십일 월 삼 일: two small numbers over one before a time particle are a
+           month and day, not a fraction (2026-11-02, TN round 33; was 삼 분의 십일). 에서 is left
+           out: it also starts a subtraction (7/3에서 1/3을 빼면). */
+        if (t[q] == '/' && r - q - 1 <= 2 && month >= 2 && month <= 12 && day >= 1 && day < month &&
+            !(r < n && (ko_digit(t[r]) || t[r] == '.' || t[r] == '/')) &&
+            !(p && (ko_digit(t[p - 1]) || t[p - 1] == '/' || t[p - 1] == '.')) && korean_context(in) &&
+            starts_with_word(t, n, r, "에|부터|까지") && !starts_with_word(t, n, r, "에서")) {
+            (void)snprintf(v, sizeof(v), "--%02u-%02u", month, day);
+            return ko_finish(in, s, r, TTF_SEM_DATE, v, "month-day", "ko:slash-date-particle");
+        }
     }
     /* 1:25,000 일 대 이만 오천, 1:1,000으로 희석: a ratio with a grouped second number */
     if (t[q] == ':' && ko_digit(t[q + 1])) {
@@ -3964,6 +3976,40 @@ static size_t promo_plus(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     return ko_finish(in, s, q, TTF_SEM_SYMBOL, v, "@word", "ko:promo-plus");
 }
 
+/* AA-이상 에이에이 마이너스 이상, BBB- 등급: a credit rating (one to three of the same letter A, B
+   or C) and a minus sign before a space, a bracket, a particle or 이상/이하/등급. The plus sign is
+   already read (A+ 에이 플러스); a hyphen there was a silent joiner (2026-11-02, TN round 35; was
+   에이에이 이상). B-팀 and KF-21 keep the joiner. */
+static size_t rating_minus(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    const char *t = in->text;
+    size_t n = in->length, p = in->tokens[in->index].begin, q = p, r, i;
+    char v[96];
+    const char *minus;
+    if (p >= n || (t[p] != 'A' && t[p] != 'B' && t[p] != 'C') ||
+        (p && (((t[p - 1] | 0x20) >= 'a' && (t[p - 1] | 0x20) <= 'z') || ko_digit(t[p - 1]))))
+        return 0;
+    while (q < n && t[q] == t[p] && q - p < 4)
+        ++q;
+    if (q - p > 3 || q >= n || t[q] != '-')
+        return 0;
+    r = q + 1;
+    if (!(r >= n || t[r] == ' ' || t[r] == ')' || t[r] == ',' || t[r] == '.' || t[r] == '/' ||
+          starts_with_word(t, n, r, "이상|이하|등급|급|였|이었|으로|로|을|를|은|는|이|가|에|의|)|\xef\xbc\x89")))
+        return 0;
+    minus = ttf_resource_get(in->engine, "rating_sign", "ko-KR", "-", NULL);
+    if (!minus)
+        return 0;
+    v[0] = '\0';
+    for (i = p; i < q; ++i) {
+        char key[4] = {'\xef', '\xbc', (char)(0xa1 + (t[i] - 'A')), 0};
+        const char *name = ttf_resource_get(in->engine, "speech_character", "ko-KR", key, NULL);
+        if (!name)
+            return 0;
+        (void)snprintf(v + strlen(v), sizeof(v) - strlen(v), "%s", name);
+    }
+    (void)snprintf(v + strlen(v), sizeof(v) - strlen(v), " %s", minus);
+    return ko_finish(in, s, r, TTF_SEM_SYMBOL, v, "@word", "ko:rating-minus");
+}
 /* ▲1.2% 일 점 이 퍼센트 상승, ≥60점 육십 점 이상, ~10분 약 십 분: a mark written before a
    number reads around it (number_mark, {N} is the number and its unit; 2026-10-29, was the
    mark's name before the number). The mark opens a word, so x ≥ 5 stays a relation and 3~5
@@ -5373,7 +5419,7 @@ static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     size_t identifier = below_zero_degrees(in, s);
     if (identifier)
         return identifier;
-    if ((identifier = official_number(in, s)) != 0 || (identifier = count_per_time(in, s)) != 0 || (identifier = field_mark(in, s)) != 0 || (identifier = open_tilde(in, s)) != 0 || (identifier = screen_inch(in, s)) != 0 || (identifier = algebra(in, s)) != 0 || (identifier = english_generation(in, s)) != 0 || (identifier = chem_isotope(in, s)) != 0 || (identifier = chem_formula_rule(in, s)) != 0 || (identifier = trig_function(in, s)) != 0 || (identifier = log_base(in, s)) != 0 || (identifier = number_mark(in, s)) != 0 || (identifier = day_countdown(in, s)) != 0 || (identifier = times_or_quarter(in, s)) != 0 || (identifier = promo_plus(in, s)) != 0 || (identifier = file_dot(in, s)) != 0 || (identifier = range_month_day(in, s)) != 0 || (identifier = weekday_range(in, s)) != 0 || (identifier = letter_unit(in, s)) != 0 || (identifier = name_version(in, s)) != 0 || (identifier = geo_coordinate(in, s)) != 0 || (identifier = colon_score(in, s)) != 0 || (identifier = price_per_unit(in, s)) != 0 ||
+    if ((identifier = official_number(in, s)) != 0 || (identifier = count_per_time(in, s)) != 0 || (identifier = field_mark(in, s)) != 0 || (identifier = open_tilde(in, s)) != 0 || (identifier = screen_inch(in, s)) != 0 || (identifier = algebra(in, s)) != 0 || (identifier = english_generation(in, s)) != 0 || (identifier = chem_isotope(in, s)) != 0 || (identifier = chem_formula_rule(in, s)) != 0 || (identifier = trig_function(in, s)) != 0 || (identifier = log_base(in, s)) != 0 || (identifier = number_mark(in, s)) != 0 || (identifier = day_countdown(in, s)) != 0 || (identifier = times_or_quarter(in, s)) != 0 || (identifier = promo_plus(in, s)) != 0 || (identifier = rating_minus(in, s)) != 0 || (identifier = file_dot(in, s)) != 0 || (identifier = range_month_day(in, s)) != 0 || (identifier = weekday_range(in, s)) != 0 || (identifier = letter_unit(in, s)) != 0 || (identifier = name_version(in, s)) != 0 || (identifier = geo_coordinate(in, s)) != 0 || (identifier = colon_score(in, s)) != 0 || (identifier = price_per_unit(in, s)) != 0 ||
         (identifier = currency_pair(in, s)) != 0 || (identifier = short_dotted_date(in, s)) != 0 || (identifier = quarter(in, s)) != 0 ||
         (identifier = owner_forms(in, s)) != 0 || (identifier = owner_forms5(in, s)) != 0 ||
         (identifier = chemical_formula(in, s)) != 0 || (identifier = subscript_index(in, s)) != 0 ||

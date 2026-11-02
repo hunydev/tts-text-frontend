@@ -30,6 +30,8 @@ speech_symbol	ko-KR	＆	앤
 speech_symbol	ko-KR	#	샵
 speech_symbol	ko-KR	%	퍼센트
 speech_symbol	ko-KR	+	플러스
+# A credit rating's minus sign (AA-이상 에이에이 마이너스 이상; 2026-11-02, TN round 35).
+rating_sign	ko-KR	-	마이너스
 speech_symbol	ko-KR	~	물결
 speech_symbol	ko-KR	!	느낌표
 speech_symbol	ko-KR	$	달러
