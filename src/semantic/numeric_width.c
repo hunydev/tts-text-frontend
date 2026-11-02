@@ -74,10 +74,19 @@ static int wide_tilde(const char *s, size_t n, size_t at) {
     return before > 0 && s[before - 1] != '\n' && ascii_digit_at(s, n, next);
 }
 /* U+2212 MINUS SIGN is the minus of the number after it (−5, −$23.50):
-   it folds to '-' before a digit or a currency sign. */
+   it folds to '-' before a digit or a currency sign. The fullwidth hyphen-minus (－3℃)
+   does too in every request when it stands as a sign, not after a letter or digit (Ａ－１
+   stays) (2026-11-01, TN round 28; ja and zh already folded it). */
 static int minus_sign(const char *s, size_t n, size_t at) {
     size_t next = at + 3;
-    if (n - at < 3 || memcmp(s + at, "\xe2\x88\x92", 3))
+    const unsigned char *u = (const unsigned char *)s;
+    if (n - at < 3 || (memcmp(s + at, "\xe2\x88\x92", 3) && memcmp(s + at, "\xef\xbc\x8d", 3)))
+        return 0;
+    if (u[at] == 0xef && ((at && ((s[at - 1] >= '0' && s[at - 1] <= '9') || (s[at - 1] >= 'A' && s[at - 1] <= 'Z') ||
+                                  (s[at - 1] >= 'a' && s[at - 1] <= 'z'))) ||
+                          (at >= 3 && u[at - 3] == 0xef &&
+                           ((u[at - 2] == 0xbc && ((u[at - 1] >= 0x90 && u[at - 1] <= 0x99) || (u[at - 1] >= 0xa1 && u[at - 1] <= 0xba))) ||
+                            (u[at - 2] == 0xbd && u[at - 1] >= 0x81 && u[at - 1] <= 0x9a)))))
         return 0;
     return ascii_digit_at(s, n, next) || (next < n && (s[next] == '$' || s[next] == '.')) ||
            (n - next >= 2 && !memcmp(s + next, "\xc2\xa3", 2)) ||
