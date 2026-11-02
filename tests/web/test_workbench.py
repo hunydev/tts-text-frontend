@@ -189,9 +189,6 @@ try:
         errors = [json.loads(x) for x in r]
     assert errors[-1]["event"] == "error" and "이름 있는 사전" in errors[-1].get("message", ""), errors
     checks += 1
-    result, _ = run("WiFi를 사용합니다.", opts={"remove_system_words": ["wifi"]})
-    assert result["text"] and "WiFi" not in result["text"]
-    assert result["spans"][0]["lexicon"] != "lexicon:system"
     assert run("")[0]["text"] == ""
     # Frontend options traverse HTTP -> worker -> native, and remain request-local.
     for source, expected in (
@@ -403,6 +400,12 @@ try:
         dict(mode="normalize", text="x", options={"input_format": "html"}),
         dict(mode="normalize", text="x", options={"output_mode": "audio"}),
         dict(mode="normalize", text="x", options={"unreadable": "guess"}),
+        # Removed from the panel 2026-11-03: no semantic-only behavior, the pre-v0.24 router,
+        # the finance example number policy and the WiFi removal demo.
+        dict(mode="normalize", text="x", options={"render_policy": "semantic"}),
+        dict(mode="normalize", text="x", options={"matrix": "legacy"}),
+        dict(mode="normalize", text="x", options={"domain": "finance"}),
+        dict(mode="normalize", text="x", options={"remove_system_words": ["wifi"]}),
         dict(mode="normalize", text="x", options={"max_control_bytes": 0}),
         dict(mode="normalize", text="x", options={"max_control_bytes": True}),
         dict(mode="normalize", text="x", options={"max_control_bytes": 16385}),

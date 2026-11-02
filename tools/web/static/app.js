@@ -131,7 +131,6 @@ function settings(options = {}) {
   $("customer-tsv").value = o.customer_tsv;
   $("request-dict-tsv").value = o.request_dict_tsv || "";
   $("named-dict-tsv").value = o.named_dict_tsv || "";
-  $("remove-wifi").checked = o.remove_system_words.includes("wifi");
 }
 function options() {
   const number = (id) => {
@@ -204,7 +203,6 @@ function options() {
     request_dict_tsv: $("request-dict-tsv").value,
     named_dict_tsv: $("named-dict-tsv").value,
     user_lexicon: lexicon,
-    remove_system_words: $("remove-wifi").checked ? ["wifi"] : [],
   };
 }
 function mode(value) {

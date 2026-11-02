@@ -336,8 +336,7 @@
           "text": "Apple은 사과입니다.",
           "outputs": {
             "phonetic": "애플은 사과입니다.",
-            "preserve": "Apple은 사과입니다.",
-            "semantic": "에이피피엘이은 사과입니다."
+            "preserve": "Apple은 사과입니다."
           }
         }
       ]
@@ -345,14 +344,13 @@
     {
       "id": "domain",
       "key": "domain",
-      "desc": "업무 도메인 리소스를 더합니다. 금융 발음사전은 약어 발음만, 금융 예제 정책은 숫자 규칙까지 바꿉니다.",
+      "desc": "업무 도메인 발음사전을 더합니다. 금융 발음사전은 시스템 사전에 없는 금융 약어 읽기를 더합니다.",
       "examples": [
         {
-          "text": "123-456",
+          "text": "isa 계좌",
           "outputs": {
-            "none": "일이삼 다시 사오육",
-            "finance-vocabulary": "일이삼 다시 사오육",
-            "finance": "일이삼 사오육"
+            "none": "이사 계좌",
+            "finance-vocabulary": "아이에스에이 계좌"
           }
         }
       ]
@@ -489,8 +487,7 @@
           "text": "My friend 민수 bought 12 books.",
           "outputs": {
             "auto": "My friend 민수 bought twelve books.",
-            "declared": "마이 프린드 민수 바우그흐트 십이 북스.",
-            "legacy": "마이 프린드 민수 바우그흐트 십이 북스."
+            "declared": "마이 프린드 민수 바우그흐트 십이 북스."
           }
         }
       ]
