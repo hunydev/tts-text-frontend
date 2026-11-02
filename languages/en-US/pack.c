@@ -3022,7 +3022,9 @@ no_file:
         if (a - p <= 2 && a + 5 < n && t[a] == ':' && ascii_digit_char(t[a + 1]) && ascii_digit_char(t[a + 2]) &&
             t[a + 3] == ':' && ascii_digit_char(t[a + 4]) && ascii_digit_char(t[a + 5]) &&
             !(a + 6 < n && ascii_digit_char(t[a + 6])) &&
-            (word_before(t, p, "in|of|time|clocked|lasted|record|took|timer|duration|ends|countdown|runs") ||
+            (word_before(t, p, "in|of|time|clocked|lasted|record|took|timer|duration|ends|countdown|runs|"
+                                  /* broke the barrier with 1:59:40, posted 2:09:56 (round 32) */
+                                  "with|posted|ran|recorded|finished|won|completed") ||
              /* my half marathon time was 1:52:40 (2026-11-01, TN round 30; was one fifty two and
                 forty seconds) */
              phrase_before(t, p, "time was") || phrase_before(t, p, "time is") ||

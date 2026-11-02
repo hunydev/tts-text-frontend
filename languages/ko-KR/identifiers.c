@@ -1891,6 +1891,22 @@ size_t ttf_ko_classify_digit_identifier(const ttf_pack_input_t *in, ttf_semantic
                 s->unit[0] = '\0';
                 return classified(in, s, c_end, TTF_SEM_RANGE, "ko:year-range");
             }
+            /* 2025-26 시즌 이천이십오에서 이십육: a year and the last two digits of the next year
+               (2026-11-02, TN round 32; was 이공이오 다시 이육). 제2024-25호 keeps its counter and
+               문서번호 2024-25 its label. */
+            if (!kind && la == 4 && lb == 2 && x >= 1900 && x <= 2098 && y == (x + 1) % 100 &&
+                valid_tail(in, c_end)) {
+                char label[TTF_IR_VALUE_SIZE];
+                ttf_resource_layer_t layer = TTF_LAYER_COMMON;
+                if (!preceding_label(in, b, label, sizeof(label), &layer)) {
+                    memcpy(s->value, t + b, la);
+                    s->value[la] = '\0';
+                    memcpy(s->secondary, t + c, lb);
+                    s->secondary[lb] = '\0';
+                    s->unit[0] = '\0';
+                    return classified(in, s, c_end, TTF_SEM_RANGE, "ko:year-range");
+                }
+            }
         }
         if (c_end - b >= sizeof(s->value))
             return 0;

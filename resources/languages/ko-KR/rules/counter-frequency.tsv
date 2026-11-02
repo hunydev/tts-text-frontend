@@ -200,6 +200,12 @@ counter_role_after	ko-KR	이사했	frequency
 counter_role_after	ko-KR	결혼했	frequency
 counter_role_after	ko-KR	이겼	frequency
 counter_role_after	ko-KR	졌	frequency
+# Laps and climbs after N번 (운동장을 20번 돌았다 스무 번; 2026-11-02, TN round 32).
+counter_role_after	ko-KR	돌았	frequency
+counter_role_after	ko-KR	돌아	frequency
+counter_role_after	ko-KR	돌고	frequency
+counter_role_after	ko-KR	뛰었	frequency
+counter_role_after	ko-KR	오르내	frequency
 # Errors after N번 are counts too (5번 틀려서, 5번 오류로; 2026-10-08).
 counter_role_after	ko-KR	틀려	frequency
 counter_role_after	ko-KR	틀렸	frequency
