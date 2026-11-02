@@ -144,6 +144,14 @@
       "kind": "editorial-policy",
       "checked_at": "2026-10-29",
       "note": "Artist names, song-title words, brands and key names whose reading was wrong in the round evaluation sets (Peaches 피처즈, KakaoTalk 캐캐오토크, Ctrl 씨티알엘), read with the 외래어 표기법 spelling or established Korean usage. TN improvement rounds 2026-10-29. No human approval and no synthesized audio."
+    },
+    {
+      "id": "project-rounds-ko-v31",
+      "title": "Project readings of Korean ETF brands and listed company names, v31",
+      "url": "https://www.korean.go.kr/front/page/pageView.do?mn_id=97&page_id=P000124",
+      "kind": "editorial-policy",
+      "checked_at": "2026-11-02",
+      "note": "ETF brands and listed company names whose reading was wrong in a stock-name test of 1,929 non-Hangul names (ACE 에이씨이, SOL 에스오엘, HANARO 해나로, WON 더블유오엔, KoAct 코크트), read as the brands are pronounced. Project-owner request 2026-11-02 (TN round 35). No human approval and no synthesized audio."
     }
   ]
 }

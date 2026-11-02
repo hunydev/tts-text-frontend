@@ -313,6 +313,12 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "promo_number requires one digit and a reading");
     }
+    if (SAME(k, "rating_sign")) {
+        *handled = 1;
+        return (SAME(key, "-") || SAME(key, "+")) && label(v) && strlen(v) < 32
+                   ? TTF_OK
+                   : ttf_validation_error(d, "rating_sign requires + or - and a reading");
+    }
     if (SAME(k, "promo_cue")) {
         *handled = 1;
         return label(key) && strlen(key) <= 15 && SAME(v, "1")
