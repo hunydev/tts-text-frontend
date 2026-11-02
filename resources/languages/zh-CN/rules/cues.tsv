@@ -313,6 +313,10 @@ liang_counter	zh-CN	题	1
 liang_counter	zh-CN	集	1
 liang_counter	zh-CN	厅	1
 liang_counter	zh-CN	卫	1
+# 2室1厅 两室一厅, 2梯4户 两梯四户: rooms of a layout and lifts (2026-11-02, TN round 34; was
+# 二室). A room number of three or more digits (1502室) is read by room_after first.
+liang_counter	zh-CN	室	1
+liang_counter	zh-CN	梯	1
 liang_counter	zh-CN	盏	1
 standard_cue	zh-CN	GB	1
 standard_cue	zh-CN	GB/T	1
