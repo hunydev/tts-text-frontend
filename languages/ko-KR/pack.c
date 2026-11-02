@@ -3204,6 +3204,16 @@ static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             (void)snprintf(v, sizeof(v), "--%02u-%02u", month, day);
             return ko_finish(in, s, r, TTF_SEM_DATE, v, "month-day", "ko:holiday-date");
         }
+        /* 11/3에 김장을 했다 십일 월 삼 일: two small numbers over one before a time particle are a
+           month and day, not a fraction (2026-11-02, TN round 33; was 삼 분의 십일). 에서 is left
+           out: it also starts a subtraction (7/3에서 1/3을 빼면). */
+        if (t[q] == '/' && r - q - 1 <= 2 && month >= 2 && month <= 12 && day >= 1 && day < month &&
+            !(r < n && (ko_digit(t[r]) || t[r] == '.' || t[r] == '/')) &&
+            !(p && (ko_digit(t[p - 1]) || t[p - 1] == '/' || t[p - 1] == '.')) && korean_context(in) &&
+            starts_with_word(t, n, r, "에|부터|까지") && !starts_with_word(t, n, r, "에서")) {
+            (void)snprintf(v, sizeof(v), "--%02u-%02u", month, day);
+            return ko_finish(in, s, r, TTF_SEM_DATE, v, "month-day", "ko:slash-date-particle");
+        }
     }
     /* 1:25,000 일 대 이만 오천, 1:1,000으로 희석: a ratio with a grouped second number */
     if (t[q] == ':' && ko_digit(t[q + 1])) {

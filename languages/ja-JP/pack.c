@@ -1770,7 +1770,14 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                     return finish(in, s, r, TTF_SEM_FRACTION, "ja.slash-fraction", "");
                 }
                 /* 4/1入社 しがつついたち: nothing is a fraction over one (owner v2, 2026-10-15) */
-                if (date && (weekday || range || d == 1 || cue_near(e, "date_cue", text, n, begin, r, 18))) {
+                /* 11/3に栗ご飯 じゅういちがつみっか: over one before に, から or まで (round 33); not
+                   before になる or a number after から (7/3から1/3を引く) */
+                if (date && (weekday || range || d == 1 || cue_near(e, "date_cue", text, n, begin, r, 18) ||
+                             (m > d && ((ja_next_is(text, n, r, "\xe3\x81\xab") &&
+                                         !ja_next_is(text, n, r, "\xe3\x81\xab\xe3\x81\xaa")) ||
+                                        (ja_next_is(text, n, r, "\xe3\x81\x8b\xe3\x82\x89") &&
+                                         !(r + 6 < n && digit(text[r + 6]))) ||
+                                        ja_next_is(text, n, r, "\xe3\x81\xbe\xe3\x81\xa7"))))) {
                     snprintf(s->value, sizeof(s->value), "%lu\xe6\x9c\x88%lu\xe6\x97\xa5", m, d);
                     if (weekday && !holiday) {
                         size_t vl = strlen(s->value);
