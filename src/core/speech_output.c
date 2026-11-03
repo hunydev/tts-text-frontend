@@ -1,6 +1,7 @@
 #include "speech_output.h"
 #include "../unicode_fallback/fallback.h"
 #include "../pronunciation/trace.h"
+#include "../semantic/text_ranges.h"
 
 /* A character is spoken content when it is neither whitespace nor punctuation
    kept for prosody. Symbol names are separated only from spoken neighbors. */
@@ -227,6 +228,30 @@ static int symbol_spaced(const ttf_engine_t *e, const char *language, const char
 /* A registered particle right after a circled or parenthesized character (①과,
    ㉮와 …): its name joins it (일과, 가와), while a noun keeps its space (⑷항 사 항).
    Other symbols keep their space (*을 별표 을; 2026-10-08). */
+static int in_ranges(const uint32_t (*ranges)[2], size_t count, uint32_t cp) {
+    size_t low = 0, high = count;
+    while (low < high) {
+        size_t middle = low + (high - low) / 2;
+        if (cp < ranges[middle][0])
+            high = middle;
+        else if (cp > ranges[middle][1])
+            low = middle + 1;
+        else
+            return 1;
+    }
+    return 0;
+}
+/* unreadable=drop and read remove symbols, not text (2026-11-03): a letter, mark, number (³) or
+   punctuation mark of any script stays, so a Thai or Arabic sentence, ＪＬ and ，「」 keep
+   their text. Hanja and kana stay with the hanja and kana options (漢字 테스트 → 테스트), and a
+   declared decorative mark (※) with the decorative option. */
+static int unreadable_text(const ttf_engine_t *e, const char *lang, const char *key, uint32_t cp,
+                           ttf_script_t script) {
+    return script != TTF_SCRIPT_HAN && script != TTF_SCRIPT_KANA &&
+           !ttf_resource_get(e, "speech_decorative", lang, key, NULL) &&
+           in_ranges(ttf_text_characters,
+                     sizeof(ttf_text_characters) / sizeof(ttf_text_characters[0]), cp);
+}
 static int enclosed_mark(uint32_t cp) {
     return (cp >= 0x2460 && cp <= 0x24ff) || (cp >= 0x2776 && cp <= 0x2793) ||
            (cp >= 0x3200 && cp <= 0x32ff);
@@ -458,22 +483,28 @@ ttf_status_t ttf_speech_output(const ttf_engine_t *e, const ttf_language_pack_t 
             at += fallback;
             continue;
         } else {
-        unknown:
+        unknown: {
+            int kept = e->frontend_options.unreadable_policy == TTF_UNREADABLE_PRESERVE ||
+                       unreadable_text(e, lang, key, cp, script);
             status = ttf_trace_emit(e, TTF_TRACE_SELECTED, TTF_LAYER_COMMON, 0, lang, "decision",
                                     "unreadable", "", key,
-                                    e->frontend_options.unreadable_policy == TTF_UNREADABLE_DROP
-                                        ? "final-unreadable-dropped"
-                                        : "final-unreadable-preserved",
+                                    kept ? "final-unreadable-preserved"
+                                         : "final-unreadable-dropped",
                                     SIZE_MAX);
-            if (e->frontend_options.unreadable_policy == TTF_UNREADABLE_PRESERVE) {
+            if (kept) {
                 if (status == TTF_OK && pending_space && spoken)
                     status = ttf_buffer_puts(&out, " ");
                 pending_space = 0;
                 if (status == TTF_OK)
                     status = ttf_buffer_append(&out, key, width);
-            } else if (PREV_SPOKEN())
-                /* Removing a character between two words must not join them. */
+            } else if (PREV_SPOKEN() &&
+                       !in_ranges(ttf_silent_characters,
+                                  sizeof(ttf_silent_characters) / sizeof(ttf_silent_characters[0]),
+                                  cp))
+                /* Removing a character between two words must not join them; a format
+                   character or variation selector was never a separator. */
                 pending_space = 1;
+        }
         }
         if (status != TTF_OK)
             break;
