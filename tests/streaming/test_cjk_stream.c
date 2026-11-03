@@ -37,6 +37,7 @@ int main(int argc, char **argv) {
     config.max_segment_length = 12;
     for (mode = 0; mode < 4; ++mode) {
         ttf_frontend_options_init(&options);
+        options.unreadable_policy = TTF_UNREADABLE_PRESERVE; /* 가𠮷나 and っん stay as written */
         options.hanja = (mode & 1) ? TTF_HANJA_KOREAN : TTF_HANJA_PASSTHROUGH;
         options.kana = (mode & 2) ? TTF_KANA_KOREAN : TTF_KANA_PASSTHROUGH;
         CHECK(ttf_engine_create(&config, &e) == TTF_OK);

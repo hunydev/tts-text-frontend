@@ -63,7 +63,7 @@ try:
     assert catalog["defaults"]["detailed_trace"] is True
     assert {key: catalog["defaults"][key] for key in (
         "input_format", "output_mode", "unreadable", "max_control_bytes"
-    )} == dict(input_format="annotated", output_mode="speech", unreadable="preserve", max_control_bytes=4096)
+    )} == dict(input_format="annotated", output_mode="speech", unreadable="drop", max_control_bytes=4096)
     assert catalog["defaults"]["invalid_control"] == "ignore"
     assert next(item for item in catalog["corpora"] if item["id"] == "user-patterns-v20")["count"] == 51
     assert catalog["reference_summary"]["human_approved_cases"] == 0
@@ -209,7 +209,7 @@ try:
     assert run("a1@b2.com", opts={"output_mode": "text"})[0]["text"] == "a1@b2.com"
     # Unnamed characters follow the unreadable policy; v0.24 names emoji by default.
     assert run("가👨‍👩‍👧‍👦漢나", opts={"unreadable": "drop", "symbol_fallback": "off"})[0]["text"] == "가 나"
-    assert run("가👨‍👩‍👧‍👦漢나", opts={"symbol_fallback": "off"})[0]["text"] == "가👨‍👩‍👧‍👦漢나"
+    assert run("가👨‍👩‍👧‍👦漢나", opts={"unreadable": "preserve", "symbol_fallback": "off"})[0]["text"] == "가👨‍👩‍👧‍👦漢나"
     assert run("가🙂나")[0]["text"] == "가 살짝 미소 짓는 얼굴 나"
     assert run("가🙂나", opts={"output_mode": "text", "unreadable": "drop"})[0]["text"] == "가🙂나"
     for source, extra, message in (

@@ -2,6 +2,15 @@
 
 ## Unreleased — speech output, measurement and the final gate
 
+- Speech output removes what it cannot say by default (2026-11-03, project owner):
+  `unreadable` defaults to `drop` (was `preserve`) in `ttf_frontend_options_init`, the CLI and
+  the workbench. Before the switch `drop` and `read` were narrowed to symbols: letters, marks,
+  numbers and punctuation of any script stay (a Thai or Arabic sentence was emptied, ＪＬ and
+  ，「」 removed), from a table built from the Unicode general categories
+  (`tools/unicode_fallback/text_ranges.py`). Unconverted hanja and kana, declared decorative
+  marks and nameless symbols are still removed (`가漢★나` 가 나), and the bullet operator ∙ in
+  `자택∙직장` is kept like ·. Owner sets: 11 of 7,000 sentences change, every language scores as
+  before, Korean benchmark lost 0; contract unreadable_text_v164 (9). `--unreadable preserve` keeps the old output.
 - xvoice5 comparison rerun (2026-10-30, owner request): the owner supplied an xvoice5 TN built
   from the internal engine source (TN1.14.16; the copy bundled with the engine was TN1.14.5 and
   lacked a 2026-09-23 fix). On the v3 Korean test spans it scores 76.5% (83.4% with the

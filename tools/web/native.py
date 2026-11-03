@@ -248,8 +248,8 @@ class Engine:
             frontend.kana = {"passthrough": 0, "korean": 1}[options.get("kana", "passthrough")]
             frontend.input_format = {"plain": 0, "annotated": 1}[options.get("input_format", "plain")]
             frontend.output_mode = {"text": 0, "speech": 1}[options.get("output_mode", "text")]
-            frontend.unreadable_policy = {"preserve": 0, "drop": 1, "read": 2}[
-                options.get("unreadable", "preserve")]
+            if "unreadable" in options:  # otherwise the engine default (drop since 2026-11-03)
+                frontend.unreadable_policy = {"preserve": 0, "drop": 1, "read": 2}[options["unreadable"]]
             frontend.max_control_bytes = options.get("max_control_bytes", 4096)
             self.check(self.lib.ttf_engine_set_frontend_options(self.handle, C.byref(frontend)))
             for name, default in (("brackets", "read"), ("unknown_foreign", "guess"),

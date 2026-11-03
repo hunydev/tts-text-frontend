@@ -9,7 +9,9 @@ sys.path.insert(0, str(ROOT / "tools/web"))
 from native import Engine, flatten
 
 library, resources, cli = map(lambda s: Path(s).resolve(), sys.argv[1:])
-options = dict(hanja="korean", kana="korean", output_mode="speech", detailed_trace=True)
+# Unresolved characters stay as written here (preserve; the default is drop since 2026-11-03).
+options = dict(hanja="korean", kana="korean", output_mode="speech", detailed_trace=True,
+               unreadable="preserve")
 
 def check(text, expected, extra=None):
     engine = Engine(library, resources, dict(options, **(extra or {})))
