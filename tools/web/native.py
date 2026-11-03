@@ -162,17 +162,14 @@ class Engine:
         self.lib = C.CDLL(str(library))
         definitions = {
             "ttf_config_init": (None, [C.POINTER(Config)]),
-            "ttf_engine_create": (I, [C.POINTER(Config), C.POINTER(P)]),
             "ttf_engine_freeze": (I, [P]),
             "ttf_engine_destroy": (None, [P]),
             "ttf_normalize": (I, [P, C.c_char_p, Z, C.POINTER(Result)]),
             "ttf_result_free": (None, [C.POINTER(Result)]),
-            "ttf_resource_load": (I, [P, C.c_char_p, I]),
             "ttf_lexicon_add": (
                 I,
                 [P, I, C.c_char_p, C.c_char_p, C.c_char_p, C.c_char_p],
             ),
-            "ttf_lexicon_remove": (I, [P, I, C.c_char_p, C.c_char_p, C.c_char_p]),
             "ttf_stream_create": (I, [P, Callback, P, C.POINTER(P)]),
             "ttf_stream_write": (I, [P, C.c_char_p, Z]),
             "ttf_stream_flush": (I, [P]),
@@ -186,69 +183,38 @@ class Engine:
             "ttf_script_name": (C.c_char_p, [I]),
             "ttf_semantic_type_name": (C.c_char_p, [I]),
             "ttf_layer_name": (C.c_char_p, [I]),
+            # Resource validation, frontend options, traces and dictionaries: every library
+            # built since 2026-10-27 has them; older snapshots are no longer loaded.
+            "ttf_resource_diagnostic_init": (None, [C.POINTER(ResourceDiagnostic)]),
+            "ttf_resource_validation_report_init": (None, [C.POINTER(ResourceValidationReport)]),
+            "ttf_engine_create_ex": (I, [C.POINTER(Config), C.POINTER(P), C.POINTER(ResourceDiagnostic)]),
+            "ttf_resource_load_ex": (I, [P, C.c_char_p, I, C.POINTER(ResourceDiagnostic)]),
+            "ttf_engine_validate_resources": (I, [P, C.POINTER(ResourceValidationReport), C.POINTER(ResourceDiagnostic)]),
+            "ttf_frontend_options_init_sized": (None, [C.POINTER(FrontendOptions), Z]),
+            "ttf_engine_set_frontend_options": (I, [P, C.POINTER(FrontendOptions)]),
+            "ttf_engine_set_option": (I, [P, C.c_char_p, C.c_char_p]),
+            "ttf_trace_options_init": (None, [C.POINTER(TraceOptions)]),
+            "ttf_normalize_traced": (I, [P, C.c_char_p, Z, C.POINTER(TraceOptions), C.POINTER(TracedResult)]),
+            "ttf_traced_result_free": (None, [C.POINTER(TracedResult)]),
+            "ttf_stream_create_traced": (I, [P, C.POINTER(TraceOptions), TracedCallback, P, C.POINTER(P)]),
+            "ttf_trace_stage_name": (C.c_char_p, [I]),
+            "ttf_trace_disposition_name": (C.c_char_p, [I]),
+            "ttf_dict_create": (I, [C.POINTER(P)]),
+            "ttf_dict_destroy": (None, [P]),
+            "ttf_dict_load": (I, [P, C.c_char_p]),
+            "ttf_dict_size": (Z, [P]),
+            "ttf_normalize_with": (I, [P, P, C.c_char_p, Z, C.POINTER(Result)]),
+            "ttf_normalize_traced_with": (
+                I, [P, P, C.c_char_p, Z, C.POINTER(TraceOptions), C.POINTER(TracedResult)]),
+            "ttf_stream_set_dict": (I, [P, P]),
+            "ttf_engine_add_dictionary": (I, [P, C.c_char_p, P]),
         }
-        # Older baseline libraries remain usable for benchmark comparisons.
-        self.has_resource_validation = hasattr(self.lib, "ttf_engine_create_ex")
-        self.resource_validation = None
-        if self.has_resource_validation:
-            definitions.update({
-                "ttf_resource_diagnostic_init": (None, [C.POINTER(ResourceDiagnostic)]),
-                "ttf_resource_validation_report_init": (None, [C.POINTER(ResourceValidationReport)]),
-                "ttf_engine_create_ex": (I, [C.POINTER(Config), C.POINTER(P), C.POINTER(ResourceDiagnostic)]),
-                "ttf_resource_load_ex": (I, [P, C.c_char_p, I, C.POINTER(ResourceDiagnostic)]),
-                "ttf_engine_validate_resources": (I, [P, C.POINTER(ResourceValidationReport), C.POINTER(ResourceDiagnostic)]),
-            })
-        frontend_keys = {"input_format", "output_mode", "unreadable", "brackets",
-                         "unknown_foreign", "decorative", "initialism", "spacing", "matrix", "symbol_fallback", "max_control_bytes",
-                         "hanja", "kana"}
-        has_frontend = hasattr(self.lib, "ttf_engine_set_frontend_options")
-        if frontend_keys.intersection(options) and not has_frontend:
-            raise ValueError("This native library does not support frontend output/input options")
-        if has_frontend:
-            definitions.update({
-                "ttf_frontend_options_init": (None, [C.POINTER(FrontendOptions)]),
-                "ttf_engine_set_frontend_options": (I, [P, C.POINTER(FrontendOptions)]),
-            })
-        has_cjk_options = hasattr(self.lib, "ttf_frontend_options_init_sized")
-        if has_cjk_options:
-            definitions["ttf_frontend_options_init_sized"] = (None, [C.POINTER(FrontendOptions), Z])
-        elif any(options.get(key, "passthrough") != "passthrough" for key in ("hanja", "kana")):
-            raise ValueError("This native library does not support CJK options")
+        missing = [name for name in definitions if not hasattr(self.lib, name)]
+        if missing:
+            raise ValueError("This native library predates the workbench ABI (missing "
+                             + ", ".join(missing[:3]) + "); rebuild it from this checkout")
         self.detailed_trace = bool(options.get("detailed_trace", False))
-        self.has_trace = hasattr(self.lib, "ttf_normalize_traced")
-        if self.detailed_trace and not self.has_trace:
-            raise ValueError("This native library does not support detailed pronunciation trace")
-        if self.has_trace:
-            definitions.update({
-                "ttf_trace_options_init": (None, [C.POINTER(TraceOptions)]),
-                "ttf_normalize_traced": (I, [P, C.c_char_p, Z, C.POINTER(TraceOptions), C.POINTER(TracedResult)]),
-                "ttf_traced_result_free": (None, [C.POINTER(TracedResult)]),
-                "ttf_stream_create_traced": (I, [P, C.POINTER(TraceOptions), TracedCallback, P, C.POINTER(P)]),
-                "ttf_trace_stage_name": (C.c_char_p, [I]),
-                "ttf_trace_disposition_name": (C.c_char_p, [I]),
-            })
-        # Request dictionaries (2026-10-26): exact and lexicon rows for each run.
-        self.has_dict = hasattr(self.lib, "ttf_dict_create")
-        if self.has_dict:
-            definitions.update({
-                "ttf_dict_create": (I, [C.POINTER(P)]),
-                "ttf_dict_destroy": (None, [P]),
-                "ttf_dict_load": (I, [P, C.c_char_p]),
-                "ttf_dict_size": (Z, [P]),
-                "ttf_normalize_with": (I, [P, P, C.c_char_p, Z, C.POINTER(Result)]),
-                "ttf_stream_set_dict": (I, [P, P]),
-            })
-            if self.has_trace:
-                definitions["ttf_normalize_traced_with"] = (
-                    I, [P, P, C.c_char_p, Z, C.POINTER(TraceOptions), C.POINTER(TracedResult)])
-        elif options.get("request_dict_tsv", "").strip():
-            raise ValueError("This native library does not support request dictionaries")
-        # Named dictionaries (2026-10-27) for [[…]]{@dictionary:NAME} and {@exact:NAME}.
-        self.has_named_dict = self.has_dict and hasattr(self.lib, "ttf_engine_add_dictionary")
-        if self.has_named_dict:
-            definitions["ttf_engine_add_dictionary"] = (I, [P, C.c_char_p, P])
-        elif options.get("named_dict_tsv", "").strip():
-            raise ValueError("This native library does not support named dictionaries")
+        self.resource_validation = None
         for name, (result, args) in definitions.items():
             fn = getattr(self.lib, name)
             fn.restype = result
@@ -272,38 +238,29 @@ class Engine:
         ]:
             if key in options:
                 setattr(cfg, field, options[key])
-        if self.has_resource_validation:
-            diagnostic = self.diagnostic()
-            self.check(self.lib.ttf_engine_create_ex(C.byref(cfg), C.byref(self.handle),
-                                                     C.byref(diagnostic)), diagnostic)
-        else:
-            self.check(self.lib.ttf_engine_create(C.byref(cfg), C.byref(self.handle)))
+        diagnostic = self.diagnostic()
+        self.check(self.lib.ttf_engine_create_ex(C.byref(cfg), C.byref(self.handle),
+                                                 C.byref(diagnostic)), diagnostic)
         try:
-            if has_frontend:
-                frontend = FrontendOptions()
-                if has_cjk_options:
-                    self.lib.ttf_frontend_options_init_sized(C.byref(frontend), C.sizeof(frontend))
-                    frontend.hanja = {"passthrough": 0, "korean": 1}[options.get("hanja", "passthrough")]
-                    frontend.kana = {"passthrough": 0, "korean": 1}[options.get("kana", "passthrough")]
-                else:
-                    self.lib.ttf_frontend_options_init(C.byref(frontend))
-                frontend.input_format = {"plain": 0, "annotated": 1}[options.get("input_format", "plain")]
-                frontend.output_mode = {"text": 0, "speech": 1}[options.get("output_mode", "text")]
-                frontend.unreadable_policy = {"preserve": 0, "drop": 1, "read": 2}[
-                    options.get("unreadable", "preserve")]
-                frontend.max_control_bytes = options.get("max_control_bytes", 4096)
-
-                self.check(self.lib.ttf_engine_set_frontend_options(self.handle, C.byref(frontend)))
-            if hasattr(self.lib, "ttf_engine_set_option"):
-                for name, default in (("brackets", "read"), ("unknown_foreign", "guess"),
-                                      ("decorative", "follow"), ("initialism", "spell"),
-                                      ("spacing", "orthographic"), ("matrix", "auto"),
-                                      ("foreign_sentence", "keep"),
-                                      ("symbol_fallback", "on"), ("invalid_control", "ignore"), ("numeric_fallback", "read"),
-                                      ("particle_agreement", "off"), ("pronunciation", "orthographic")):
-                    if options.get(name, default) != default:
-                        self.check(self.lib.ttf_engine_set_option(
-                            self.handle, name.encode(), options[name].encode()))
+            frontend = FrontendOptions()
+            self.lib.ttf_frontend_options_init_sized(C.byref(frontend), C.sizeof(frontend))
+            frontend.hanja = {"passthrough": 0, "korean": 1}[options.get("hanja", "passthrough")]
+            frontend.kana = {"passthrough": 0, "korean": 1}[options.get("kana", "passthrough")]
+            frontend.input_format = {"plain": 0, "annotated": 1}[options.get("input_format", "plain")]
+            frontend.output_mode = {"text": 0, "speech": 1}[options.get("output_mode", "text")]
+            if "unreadable" in options:  # otherwise the engine default (drop since 2026-11-03)
+                frontend.unreadable_policy = {"preserve": 0, "drop": 1, "read": 2}[options["unreadable"]]
+            frontend.max_control_bytes = options.get("max_control_bytes", 4096)
+            self.check(self.lib.ttf_engine_set_frontend_options(self.handle, C.byref(frontend)))
+            for name, default in (("brackets", "read"), ("unknown_foreign", "guess"),
+                                  ("decorative", "follow"), ("initialism", "spell"),
+                                  ("spacing", "orthographic"), ("matrix", "auto"),
+                                  ("foreign_sentence", "keep"),
+                                  ("symbol_fallback", "on"), ("invalid_control", "ignore"), ("numeric_fallback", "read"),
+                                  ("particle_agreement", "off"), ("pronunciation", "orthographic")):
+                if options.get(name, default) != default:
+                    self.check(self.lib.ttf_engine_set_option(
+                        self.handle, name.encode(), options[name].encode()))
             if options.get("domain") in ("finance", "finance-vocabulary"):
                 self.load(resources / "domains/finance/ko-KR/lexicon.tsv", 2)
             if options.get("domain") == "finance":
@@ -332,12 +289,6 @@ class Engine:
                     path = Path(directory) / "customer.tsv"
                     path.write_text(options["customer_tsv"], encoding="utf-8")
                     self.load(path, 3)
-            for word in options.get("remove_system_words", []):
-                self.check(
-                    self.lib.ttf_lexicon_remove(
-                        self.handle, 1, b"en-US", b"ko-KR", word.encode()
-                    )
-                )
             for row in options.get("user_lexicon", []):
                 self.check(
                     self.lib.ttf_lexicon_add(
@@ -349,14 +300,13 @@ class Engine:
                         row["pronunciation"].encode(),
                     )
                 )
-            if self.has_resource_validation:
-                diagnostic = self.diagnostic()
-                report = ResourceValidationReport()
-                self.lib.ttf_resource_validation_report_init(C.byref(report))
-                self.check(self.lib.ttf_engine_validate_resources(self.handle,
-                           C.byref(report), C.byref(diagnostic)), diagnostic)
-                self.resource_validation = {key: int(getattr(report, key)) for key in
-                    ("records", "validated_records", "unvalidated_records")}
+            diagnostic = self.diagnostic()
+            report = ResourceValidationReport()
+            self.lib.ttf_resource_validation_report_init(C.byref(report))
+            self.check(self.lib.ttf_engine_validate_resources(self.handle,
+                       C.byref(report), C.byref(diagnostic)), diagnostic)
+            self.resource_validation = {key: int(getattr(report, key)) for key in
+                ("records", "validated_records", "unvalidated_records")}
             for name, rows in named_dictionaries(options.get("named_dict_tsv", "")):
                 self.add_dictionary(name, rows)
             self.check(self.lib.ttf_engine_freeze(self.handle))
@@ -413,12 +363,9 @@ class Engine:
             raise ValueError(message)
 
     def load(self, path, layer):
-        if self.has_resource_validation:
-            diagnostic = self.diagnostic()
-            self.check(self.lib.ttf_resource_load_ex(self.handle, str(path).encode(),
-                                                     layer, C.byref(diagnostic)), diagnostic)
-        else:
-            self.check(self.lib.ttf_resource_load(self.handle, str(path).encode(), layer))
+        diagnostic = self.diagnostic()
+        self.check(self.lib.ttf_resource_load_ex(self.handle, str(path).encode(),
+                                                 layer, C.byref(diagnostic)), diagnostic)
 
     def close(self):
         if self.dict:

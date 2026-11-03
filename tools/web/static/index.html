@@ -199,16 +199,18 @@
               <option value="ko-KR">한국어 · ko-KR</option>
               <option value="en-US">영어 · en-US</option>
               <option value="ja-JP">일본어 · ja-JP</option>
+              <option value="zh-CN">중국어(간체) · zh-CN</option>
+              <option value="vi-VN">베트남어 · vi-VN</option>
+              <option value="th-TH">태국어 · th-TH</option>
+              <option value="ar">아랍어 · ar</option>
             </select></label><p class="option-help" data-option="language"></p></div>
           <div class="option-row"><label>외국어 읽기 정책<select id="policy">
               <option value="phonetic">문맥 언어로 발음화</option>
               <option value="preserve">원래 언어 유지</option>
-              <option value="semantic">의미 현지화 (번역 아님)</option>
             </select></label><p class="option-help" data-option="policy"></p></div>
           <div class="option-row"><label>업무 도메인<select id="domain">
               <option value="none">기본 시스템</option>
               <option value="finance-vocabulary">금융 발음사전</option>
-              <option value="finance">금융 예제 정책</option>
             </select></label><p class="option-help" data-option="domain"></p></div>
           <div class="option-row"><label>입력 형식<select id="input-format">
               <option value="annotated">발음 제어 표기 사용</option>
@@ -218,11 +220,6 @@
               <option value="speech">발화용 텍스트</option>
               <option value="text">표기 보존 텍스트</option>
             </select></label><p class="option-help" data-option="output-mode"></p></div>
-          <div class="option-row"><label>읽을 수 없는 문자<select id="unreadable">
-              <option value="preserve">원문 유지</option>
-              <option value="drop">제거</option>
-              <option value="read">모두 읽기</option>
-            </select></label><p class="option-help" data-option="unreadable"></p></div>
           <div class="option-row"><label>괄호 안<select id="brackets">
               <option value="read">읽기</option>
               <option value="skip">건너뛰기</option>
@@ -233,10 +230,6 @@
               <option value="spell">철자 읽기</option>
               <option value="preserve">원문 유지</option>
             </select></label><p class="option-help" data-option="unknown-foreign"></p></div>
-          <div class="option-row"><label>장식 문자<select id="decorative">
-              <option value="follow">위 정책 따름</option>
-              <option value="read">이름으로 읽기</option>
-            </select></label><p class="option-help" data-option="decorative"></p></div>
           <div class="option-row"><label>대문자 약어<select id="initialism">
               <option value="spell">철자 읽기</option>
               <option value="word">단어 읽기</option>
@@ -248,17 +241,35 @@
           <div class="option-row"><label>문장 언어<select id="matrix">
               <option value="auto">자동 (문장마다 판정)</option>
               <option value="declared">기본 언어로 고정</option>
-              <option value="legacy">이전 방식 (토큰별 점수)</option>
             </select></label><p class="option-help" data-option="matrix"></p></div>
           <div class="option-row"><label>영어 문장<select id="foreign-sentence">
               <option value="keep">영어로 읽기 (기본)</option>
               <option value="localize">한글로 읽기 (I have 3 apples → 아이 해브 쓰리 애플스)</option>
             </select></label><p class="option-help" data-option="foreign-sentence"></p></div>
-          <div class="option-row"><label>기호·이모지 이름<select id="symbol-fallback">
-              <option value="on">읽기 (없으면 영어 이름)</option>
-              <option value="native">읽기 (해당 언어 이름만)</option>
-              <option value="off">읽지 않음 (처리 불가 정책)</option>
-            </select></label><p class="option-help" data-option="symbol-fallback"></p></div>
+          <div class="option-row"><label>기호·이모지<select id="symbols">
+              <option value="name-keep">이름으로 읽고 나머지는 원문 유지</option>
+              <option value="name-drop">이름으로 읽고 나머지는 지움</option>
+              <option value="all-names">장식 문자까지 이름으로</option>
+              <option value="off">읽지 않음 (원문 유지)</option>
+              <option value="custom" disabled>세부 설정 조합</option>
+            </select></label><p class="option-help" data-option="symbols"></p></div>
+          <details class="option-details">
+            <summary>기호 세부 설정 (읽을 수 없는 문자 · 장식 문자 · 기호 이름)</summary>
+            <div class="option-row"><label>읽을 수 없는 문자<select id="unreadable">
+                <option value="preserve">원문 유지</option>
+                <option value="drop">제거</option>
+                <option value="read">모두 읽기</option>
+              </select></label><p class="option-help" data-option="unreadable"></p></div>
+            <div class="option-row"><label>장식 문자<select id="decorative">
+                <option value="follow">위 정책 따름</option>
+                <option value="read">이름으로 읽기</option>
+              </select></label><p class="option-help" data-option="decorative"></p></div>
+            <div class="option-row"><label>기호·이모지 이름<select id="symbol-fallback">
+                <option value="on">읽기 (없으면 영어 이름)</option>
+                <option value="native">읽기 (해당 언어 이름만)</option>
+                <option value="off">읽지 않음 (처리 불가 정책)</option>
+              </select></label><p class="option-help" data-option="symbol-fallback"></p></div>
+          </details>
           <div class="option-row"><label>조사 맞춤<select id="particle-agreement">
               <option value="off">쓴 그대로 (기본)</option>
               <option value="on">읽기에 맞춤 (3랑 → 삼이랑)</option>
@@ -273,7 +284,7 @@
             </select></label><p class="option-help" data-option="numeric-fallback"></p></div>
           <div class="option-row"><label>브랜드 발음 사전<select id="brand-lexicon">
               <option value="off">끄기</option>
-              <option value="on">켜기 (Wikidata 기업·브랜드)</option>
+              <option value="on">켜기 (Wikidata 기업·브랜드, 공정위 가맹 브랜드)</option>
             </select></label><p class="option-help" data-option="brand-lexicon"></p></div>
           <div class="option-row"><label>영어 발음 사전<select id="english-dictionary">
               <option value="auto">자동 (영어 문장을 한글로 읽을 때 켜기)</option>
@@ -463,10 +474,6 @@
               구간에 사전을 하나도 쓰지 않습니다.
               <a href="https://github.com/hunydev/tts-text-frontend/blob/main/docs/input-format.md#dictionary-controls-2026-10-27" target="_blank" rel="noopener">사전 제어 안내 ↗</a></span
             ></label
-          >
-          <label class="check"
-            ><input id="remove-wifi" type="checkbox" />WiFi 시스템 발음사전 제외
-            후 fallback 확인</label
           >
         </details>
       </section>

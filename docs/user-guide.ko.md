@@ -132,7 +132,7 @@ void *channel(void *arg) {
 | `unknown_foreign` | **guess** / spell / preserve | 사전에 없는 영어 낱말. spell: `제트오알비엘와이` |
 | `initialism` | **spell** / word | 대문자 줄임말을 글자로 읽을지 낱말로 읽을지 (사전 항목이 먼저) |
 | `hanja`, `kana` | **passthrough** / korean | korean: `國語` → `국어` |
-| `unreadable_policy` | **preserve** / drop / read | 읽을 수 없는 문자. drop: `國語 ★`가 빠짐 |
+| `unreadable_policy` | preserve / **drop** / read | 읽을 수 없는 문자(기본값 drop, 2026-11-03까지는 preserve). drop: `國語 ★`가 빠지고, 다른 문자 체계의 글자·문장부호(`ไทย`, `，`)는 남음 |
 | `decorative` | **follow** / read | 별·하트·이모지의 이름을 읽을지 |
 | `symbol_fallback` | **on** / native / off | 규칙이 없는 기호·이모지를 유니코드 이름으로 읽을지 |
 | `pronunciation` | **orthographic** / hangul | hangul: `국물이 맛있다` → `궁무리 마싣따` |

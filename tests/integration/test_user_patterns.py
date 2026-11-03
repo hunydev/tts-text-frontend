@@ -321,7 +321,8 @@ class Native:
         self.handle = C.c_void_p()
         assert self.lib.ttf_engine_create(C.byref(cfg), C.byref(self.handle)) == 0
         self.opts = FrontendOptions(); self.lib.ttf_frontend_options_init(C.byref(self.opts))
-        assert self.opts.input_format == 0 and self.opts.output_mode == 1 and self.opts.unreadable_policy == 0
+        # unreadable defaults to drop (1) since 2026-11-03; was preserve (0).
+        assert self.opts.input_format == 0 and self.opts.output_mode == 1 and self.opts.unreadable_policy == 1
         self.opts.input_format = row.get("input_format") == "annotated"
         self.opts.output_mode = row.get("output_mode", "speech") == "speech"
         self.opts.unreadable_policy = row.get("unreadable", "preserve") == "drop"

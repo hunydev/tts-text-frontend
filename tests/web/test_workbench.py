@@ -63,7 +63,7 @@ try:
     assert catalog["defaults"]["detailed_trace"] is True
     assert {key: catalog["defaults"][key] for key in (
         "input_format", "output_mode", "unreadable", "max_control_bytes"
-    )} == dict(input_format="annotated", output_mode="speech", unreadable="preserve", max_control_bytes=4096)
+    )} == dict(input_format="annotated", output_mode="speech", unreadable="drop", max_control_bytes=4096)
     assert catalog["defaults"]["invalid_control"] == "ignore"
     assert next(item for item in catalog["corpora"] if item["id"] == "user-patterns-v20")["count"] == 51
     assert catalog["reference_summary"]["human_approved_cases"] == 0
@@ -78,10 +78,16 @@ try:
             assert run(item["example"], opts=opts)[0]["text"] == item["output"], item
             help_cases += 1
     for item in catalog["help"]["options"]:
-        assert item["key"] in catalog["defaults"], item
+        presets = item.get("presets")
+        if presets:
+            # A preset row sets several options; the defaults are one of its presets.
+            assert any(all(catalog["defaults"][k] == v for k, v in p.items()) for p in presets.values())
+        else:
+            assert item["key"] in catalog["defaults"], item
         for example in item["examples"]:
             for value, output in example["outputs"].items():
-                actual = run(example["text"], opts={item["key"]: value})[0]["text"]
+                opts = presets[value] if presets else {item["key"]: value}
+                actual = run(example["text"], opts=opts)[0]["text"]
                 assert actual == output, (item["id"], value, actual, output)
                 help_cases += 1
     assert help_cases > 60
@@ -189,9 +195,6 @@ try:
         errors = [json.loads(x) for x in r]
     assert errors[-1]["event"] == "error" and "이름 있는 사전" in errors[-1].get("message", ""), errors
     checks += 1
-    result, _ = run("WiFi를 사용합니다.", opts={"remove_system_words": ["wifi"]})
-    assert result["text"] and "WiFi" not in result["text"]
-    assert result["spans"][0]["lexicon"] != "lexicon:system"
     assert run("")[0]["text"] == ""
     # Frontend options traverse HTTP -> worker -> native, and remain request-local.
     for source, expected in (
@@ -206,7 +209,7 @@ try:
     assert run("a1@b2.com", opts={"output_mode": "text"})[0]["text"] == "a1@b2.com"
     # Unnamed characters follow the unreadable policy; v0.24 names emoji by default.
     assert run("가👨‍👩‍👧‍👦漢나", opts={"unreadable": "drop", "symbol_fallback": "off"})[0]["text"] == "가 나"
-    assert run("가👨‍👩‍👧‍👦漢나", opts={"symbol_fallback": "off"})[0]["text"] == "가👨‍👩‍👧‍👦漢나"
+    assert run("가👨‍👩‍👧‍👦漢나", opts={"unreadable": "preserve", "symbol_fallback": "off"})[0]["text"] == "가👨‍👩‍👧‍👦漢나"
     assert run("가🙂나")[0]["text"] == "가 살짝 미소 짓는 얼굴 나"
     assert run("가🙂나", opts={"output_mode": "text", "unreadable": "drop"})[0]["text"] == "가🙂나"
     for source, extra, message in (
@@ -403,6 +406,12 @@ try:
         dict(mode="normalize", text="x", options={"input_format": "html"}),
         dict(mode="normalize", text="x", options={"output_mode": "audio"}),
         dict(mode="normalize", text="x", options={"unreadable": "guess"}),
+        # Removed from the panel 2026-11-03: no semantic-only behavior, the pre-v0.24 router,
+        # the finance example number policy and the WiFi removal demo.
+        dict(mode="normalize", text="x", options={"render_policy": "semantic"}),
+        dict(mode="normalize", text="x", options={"matrix": "legacy"}),
+        dict(mode="normalize", text="x", options={"domain": "finance"}),
+        dict(mode="normalize", text="x", options={"remove_system_words": ["wifi"]}),
         dict(mode="normalize", text="x", options={"max_control_bytes": 0}),
         dict(mode="normalize", text="x", options={"max_control_bytes": True}),
         dict(mode="normalize", text="x", options={"max_control_bytes": 16385}),

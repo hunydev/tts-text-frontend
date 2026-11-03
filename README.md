@@ -53,8 +53,8 @@ build/ttf normalize --output-mode speech '1+1은 귀요미'
 # 일 더하기 일은 귀요미
 build/ttf normalize --output-mode speech '이메일 abc@example.com'
 # 이메일 에이비씨 앳 이그잼플 닷 컴
-build/ttf normalize --output-mode speech --unreadable drop '가漢🙂나'
-# 가 나
+build/ttf normalize --output-mode speech '가漢★나'
+# 가 나  (--unreadable preserve keeps 가漢★나)
 build/ttf normalize --input-format annotated --output-mode speech '1{첫}번째 1{@native} 1{@sino} ABC{@alphabet}마트'
 # 첫번째 하나 일 에이비씨마트
 ```
@@ -88,9 +88,9 @@ build/ttf inspect --trace --hanja korean --kana korean '東京とうきょう'
 `--hanja` and `--kana` each default to `passthrough`. Enable only the script you
 want to read in Korean context. System CJK tables are loaded at engine freeze
 only for enabled scripts; default and legacy engines never open these files.
-Unregistered characters remain unchanged by
-default; `--output-mode speech --unreadable drop` uses the existing word-separating
-drop policy. These are Korean character readings and a limited Kana transcription,
+Unregistered characters are removed from speech output by
+default (`--unreadable drop`, the word-separating drop policy, since 2026-11-03);
+`--unreadable preserve` keeps them. These are Korean character readings and a limited Kana transcription,
 not Japanese/Chinese language packs or translation. Source language stays `und`.
 Simplified/shinjitai forms have no extra dictionary; unknown forms remain visible.
 Hiragana vowel sequences may be absorbed as long vowels, while Katakana sequences

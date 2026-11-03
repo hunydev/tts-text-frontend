@@ -9,7 +9,8 @@ sys.path.insert(0, str(ROOT / "tools/web"))
 from native import Engine, flatten
 
 library, resources, cli = (Path(p).resolve() for p in sys.argv[1:])
-options = dict(kana="korean", output_mode="speech", detailed_trace=True)
+# Unresolved kana stay as written here (preserve; the default is drop since 2026-11-03).
+options = dict(kana="korean", output_mode="speech", detailed_trace=True, unreadable="preserve")
 cases = [("っか", "っ가"), ("んか", "ん가"), ("かっん", "갓ん"),
          ("かんっ", "간っ"), ("ｯ", "ｯ"), ("ﾝ", "ﾝ"), ("ｯｶ", "ｯ가"),
          ("かー", "가"), ("か\ufe0f", "가"), ("ゔ", "ゔ"),

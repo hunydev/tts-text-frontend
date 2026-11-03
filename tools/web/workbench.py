@@ -213,7 +213,7 @@ DEFAULTS = dict(
     render_policy="phonetic",
     input_format="annotated",
     output_mode="speech",
-    unreadable="preserve",
+    unreadable="drop",
     hanja="passthrough",
     kana="passthrough",
     brackets="read",
@@ -246,7 +246,6 @@ DEFAULTS = dict(
     request_dict_tsv="",
     named_dict_tsv="",
     user_lexicon=[],
-    remove_system_words=[],
     verify_chunks=[1, 7, 64],
     random_seed=42,
 )
@@ -309,8 +308,8 @@ def validate(request, corpus=False):
         raise ValueError("알 수 없는 설정입니다.")
     opts = dict(DEFAULTS, **given)
     for key, allowed in [
-        ("default_language", ("ko-KR", "en-US", "ja-JP")),
-        ("render_policy", ("phonetic", "preserve", "semantic")),
+        ("default_language", ("ko-KR", "en-US", "ja-JP", "zh-CN", "vi-VN", "th-TH", "ar")),
+        ("render_policy", ("phonetic", "preserve")),
         ("input_format", ("plain", "annotated")),
         ("output_mode", ("text", "speech")),
         ("unreadable", ("preserve", "drop", "read")),
@@ -321,7 +320,7 @@ def validate(request, corpus=False):
         ("decorative", ("follow", "read")),
         ("initialism", ("spell", "word")),
         ("spacing", ("orthographic", "reading-unit")),
-        ("matrix", ("auto", "legacy", "declared")),
+        ("matrix", ("auto", "declared")),
         ("foreign_sentence", ("keep", "localize")),
         ("symbol_fallback", ("on", "native", "off")),
         ("particle_agreement", ("off", "on")),
@@ -330,7 +329,7 @@ def validate(request, corpus=False):
         ("numeric_fallback", ("read", "preserve")),
         ("brand_lexicon", ("off", "on")),
         ("english_dictionary", ("auto", "off", "cmu")),
-        ("domain", ("none", "finance", "finance-vocabulary")),
+        ("domain", ("none", "finance-vocabulary")),
     ]:
         if opts[key] not in allowed:
             raise ValueError(key + ": 지원하지 않는 값입니다.")
@@ -367,11 +366,6 @@ def validate(request, corpus=False):
         for key in ("word", "pronunciation"):
             if not bounded_string(row[key], key, 512).strip():
                 raise ValueError("사전 단어/발음을 비울 수 없습니다.")
-    words = opts["remove_system_words"]
-    if not isinstance(words, list) or len(words) > 32:
-        raise ValueError("시스템 사전 제외 항목은 최대 32개입니다.")
-    for word in words:
-        bounded_string(word, "remove_system_words", 128)
     writes = len(stream_sizes(len(result["text"].encode()), opts))
     if result["mode"] == "stream" and max(0, writes - 1) * opts["delay_ms"] > 8000:
         raise ValueError(
@@ -479,13 +473,6 @@ def catalog():
             },
         ),
         dict(
-            id="fallback",
-            category="발음",
-            title="WiFi 시스템 사전 제외",
-            text="WiFi를 사용합니다.",
-            options={"remove_system_words": ["wifi"]},
-        ),
-        dict(
             id="pronunciation-variant",
             category="발음",
             title="복수 발음의 명시적 선택과 상세 출처",
@@ -497,21 +484,12 @@ def catalog():
             )},
         ),
         dict(
-            id="range-layer",
-            category="금융",
-            title="금융 도메인 숫자 정책",
-            text="123-456",
-            expected="일이삼 사오육",
-            options={"domain": "finance"},
-        ),
-        dict(
             id="customer",
             category="리소스",
             title="고객 규칙 덮어쓰기",
             text="123-456",
             expected="일이삼 번에 사오육",
             options={
-                "domain": "finance",
                 "customer_tsv": (
                     ROOT / "resources/customers/example/ko-KR/rules.tsv"
                 ).read_text(),
@@ -702,7 +680,6 @@ def catalog():
         "amount-range": ("finance-v7", "range-krw"),
         "mixed": ("regression", "mixed-ordinal"),
         "foreign": ("regression", "wifi"),
-        "fallback": ("regression", "unknown-foobar"),
         "multiword": ("multiword-v8", "multiword-after-effects"),
         "protected": ("protected", "protected-code-challenge"),
         "reading-preferences": ("lexical-coverage-v22", "lexical-v22-preference-tv"),

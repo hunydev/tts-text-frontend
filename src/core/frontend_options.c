@@ -8,7 +8,9 @@ void ttf_frontend_options_init_sized(ttf_frontend_options_t *options, size_t siz
     defaults.struct_size = (uint32_t)size;
     defaults.abi_version = TTF_ABI_VERSION;
     defaults.output_mode = TTF_OUTPUT_SPEECH;
-    defaults.unreadable_policy = TTF_UNREADABLE_PRESERVE;
+    /* Speech removes what it cannot say (2026-11-03, project owner; was PRESERVE). Text
+       of any script and punctuation stay (speech_output.c unreadable_text). */
+    defaults.unreadable_policy = TTF_UNREADABLE_DROP;
     defaults.max_control_bytes = 4096;
     memcpy(options, &defaults, size);
 }

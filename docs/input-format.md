@@ -21,9 +21,9 @@ Input syntax and output purpose are independent:
 | `input_format=annotated` | Enable the strict control grammar below |
 | `output_mode=text` | Existing text normalization, preserving electronic address spelling |
 | `output_mode=speech` | Also render electronic addresses and configured characters for speech |
-| `unreadable=preserve` | Keep unsupported characters in speech output |
-| `unreadable=drop` | Remove unsupported characters from speech output |
-| `unreadable=read` | Say every segment: an object the engine refused to interpret (`20F`, `11st`) is spelled by the final gate, a character with no name is removed, punctuation stays |
+| `unreadable=preserve` | Keep unsupported characters in speech output (the default until 2026-11-03) |
+| `unreadable=drop` | Default since 2026-11-03 (project owner). Remove unsupported characters from speech output: symbols and emoji without a name, declared decorative marks, unconverted hanja and kana. Letters, numbers and punctuation of any other script stay (a Thai or Arabic sentence, `ＪＬ`, `，「」`; 2026-11-03, was removed too) |
+| `unreadable=read` | Say every segment: an object the engine refused to interpret (`20F`, `11st`) is spelled by the final gate, a character with no name is removed as under `drop`, text and punctuation stay |
 
 Two options can ask for opposite things. `unknown_foreign=preserve` keeps an
 unregistered foreign word exactly as written, which is what a caller does when a

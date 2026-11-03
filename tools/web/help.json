@@ -318,7 +318,11 @@
           "text": "7 7 7",
           "outputs": {
             "ko-KR": "칠 칠 칠",
-            "en-US": "seven seven seven"
+            "en-US": "seven seven seven",
+            "zh-CN": "七 七 七",
+            "vi-VN": "bảy bảy bảy",
+            "th-TH": "เจ็ด เจ็ด เจ็ด",
+            "ar": "سبعة سبعة سبعة"
           }
         }
       ]
@@ -332,8 +336,7 @@
           "text": "Apple은 사과입니다.",
           "outputs": {
             "phonetic": "애플은 사과입니다.",
-            "preserve": "Apple은 사과입니다.",
-            "semantic": "에이피피엘이은 사과입니다."
+            "preserve": "Apple은 사과입니다."
           }
         }
       ]
@@ -341,14 +344,13 @@
     {
       "id": "domain",
       "key": "domain",
-      "desc": "업무 도메인 리소스를 더합니다. 금융 발음사전은 약어 발음만, 금융 예제 정책은 숫자 규칙까지 바꿉니다.",
+      "desc": "업무 도메인 발음사전을 더합니다. 금융 발음사전은 시스템 사전에 없는 금융 약어 읽기를 더합니다.",
       "examples": [
         {
-          "text": "123-456",
+          "text": "isa 계좌",
           "outputs": {
-            "none": "일이삼 다시 사오육",
-            "finance-vocabulary": "일이삼 다시 사오육",
-            "finance": "일이삼 사오육"
+            "none": "이사 계좌",
+            "finance-vocabulary": "아이에스에이 계좌"
           }
         }
       ]
@@ -382,16 +384,62 @@
       ]
     },
     {
-      "id": "unreadable",
-      "key": "unreadable",
-      "desc": "읽을 방법이 없는 문자(이름도 없는 문자)와 해석을 거부한 표기 중 숫자 폴백이 읽지 않는 것(25:00 같은 시각 모양)의 처리입니다. 발화용 출력에서만 적용됩니다.",
+      "id": "symbols",
+      "key": "symbols",
+      "desc": "기호·이모지와 읽을 수 없는 문자를 한 번에 정합니다. 값마다 아래 세부 설정 세 개(읽을 수 없는 문자, 장식 문자, 기호·이모지 이름)를 함께 바꾸며, 세부 설정을 따로 바꾸면 '세부 설정 조합'으로 표시됩니다.",
+      "presets": {
+        "name-keep": {
+          "symbol_fallback": "on",
+          "decorative": "follow",
+          "unreadable": "preserve"
+        },
+        "name-drop": {
+          "symbol_fallback": "on",
+          "decorative": "follow",
+          "unreadable": "drop"
+        },
+        "all-names": {
+          "symbol_fallback": "on",
+          "decorative": "read",
+          "unreadable": "preserve"
+        },
+        "off": {
+          "symbol_fallback": "off",
+          "decorative": "follow",
+          "unreadable": "preserve"
+        }
+      },
       "examples": [
         {
-          "text": "가⸮나",
+          "text": "★ 신메뉴 🍔 ∢ 漢字 ※ 참고",
           "outputs": {
-            "preserve": "가⸮나",
+            "name-keep": "★ 신메뉴 햄버거 스퍼리컬 앵글 漢字 ※ 참고",
+            "name-drop": "신메뉴 햄버거 스퍼리컬 앵글 참고",
+            "all-names": "별 신메뉴 햄버거 스퍼리컬 앵글 漢字 참고표 참고",
+            "off": "★ 신메뉴 🍔 ∢ 漢字 ※ 참고"
+          }
+        }
+      ]
+    },
+    {
+      "id": "unreadable",
+      "key": "unreadable",
+      "desc": "읽을 방법이 없는 문자(이름도 없는 기호, 변환하지 않은 한자·가나, 장식 문자)와 해석을 거부한 표기 중 숫자 폴백이 읽지 않는 것(25:00 같은 시각 모양)의 처리입니다. 지움·모두 읽기에서도 글자·숫자·문장부호(태국·아랍 문자, 전각 영문, ，「」)는 지우지 않습니다. 발화용 출력에서만 적용됩니다.",
+      "examples": [
+        {
+          "text": "가漢나",
+          "outputs": {
+            "preserve": "가漢나",
             "drop": "가 나",
             "read": "가 나"
+          }
+        },
+        {
+          "text": "ไทย 漢字 ★ 테스트",
+          "outputs": {
+            "preserve": "ไทย 漢字 ★ 테스트",
+            "drop": "ไทย 테스트",
+            "read": "ไทย 테스트"
           }
         },
         {
@@ -437,12 +485,12 @@
     {
       "id": "decorative",
       "key": "decorative",
-      "desc": "★ ※ ♥ → 같은 장식 문자입니다. '따름'이면 '읽을 수 없는 문자' 정책을 따릅니다.",
+      "desc": "★ ※ ♥ → 같은 장식 문자입니다. '따름'이면 '읽을 수 없는 문자' 정책을 따릅니다(기본값 지움).",
       "examples": [
         {
           "text": "★ 별점 ※ 참고",
           "outputs": {
-            "follow": "★ 별점 ※ 참고",
+            "follow": "별점 참고",
             "read": "별 별점 참고표 참고"
           }
         }
@@ -485,8 +533,7 @@
           "text": "My friend 민수 bought 12 books.",
           "outputs": {
             "auto": "My friend 민수 bought twelve books.",
-            "declared": "마이 프린드 민수 바우그흐트 십이 북스.",
-            "legacy": "마이 프린드 민수 바우그흐트 십이 북스."
+            "declared": "마이 프린드 민수 바우그흐트 십이 북스."
           }
         }
       ]
@@ -514,8 +561,8 @@
           "text": "점심은 🍔 ∢",
           "outputs": {
             "on": "점심은 햄버거 스퍼리컬 앵글",
-            "native": "점심은 햄버거 ∢",
-            "off": "점심은 🍔 ∢"
+            "native": "점심은 햄버거 ",
+            "off": "점심은 "
           }
         }
       ]
@@ -571,7 +618,7 @@
     {
       "id": "brand-lexicon",
       "key": "brand_lexicon",
-      "desc": "기업·브랜드 영문 표기를 한국어로 널리 쓰는 발음으로 읽는 선택 사전(약 4,800항목)입니다. 사용자·고객 사전이 우선합니다.",
+      "desc": "기업·브랜드 영문 표기를 한국어로 널리 쓰는 발음으로 읽는 선택 사전(약 6,500항목: Wikidata 기업·브랜드 5,108, 공정위 가맹사업 브랜드 1,350)입니다. 사용자·고객 사전이 우선합니다.",
       "examples": [
         {
           "text": "Ericsson과 Samsonite",
@@ -590,7 +637,7 @@
         {
           "text": "北京 출장",
           "outputs": {
-            "passthrough": "北京 출장",
+            "passthrough": "출장",
             "korean": "북경 출장"
           }
         }
@@ -604,7 +651,7 @@
         {
           "text": "カメラ 구매",
           "outputs": {
-            "passthrough": "カメラ 구매",
+            "passthrough": "구매",
             "korean": "가메라 구매"
           }
         }

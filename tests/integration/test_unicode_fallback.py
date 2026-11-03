@@ -85,10 +85,11 @@ def main():
     with tempfile.TemporaryDirectory(prefix="ttf-unicode-fallback-") as temp:
         copy = Path(temp) / "resources"
         shutil.copytree(args.resources, copy)
-        # Without the files the engine keeps the unreadable policy.
+        # Without the files the engine keeps the unreadable policy: the default drop removes
+        # the emoji (2026-11-03; was preserve, 점심은 🍔 어때?).
         shutil.rmtree(copy / "unicode-fallback")
         result = run(args.cli, copy, "ko-KR", "점심은 🍔 어때?")
-        assert result.returncode == 0 and result.stdout.strip() == "점심은 🍔 어때?", result
+        assert result.returncode == 0 and result.stdout.strip() == "점심은 어때?", result
         # A damaged or mismatched triple is a resource error, never a partial read.
         shutil.copytree(args.resources / "unicode-fallback", copy / "unicode-fallback")
         dat = copy / "unicode-fallback/ko.dat"
@@ -97,8 +98,9 @@ def main():
         shutil.copy(args.resources / "unicode-fallback/en.dat", dat)
         assert run(args.cli, copy, "ko-KR", "점심은 🍔 어때?").returncode != 0
         # symbol_fallback=off never opens the files, damaged or not.
+        # The emoji then follows the default drop (2026-11-03; was preserve, 점심은 🍔 어때?).
         result = run(args.cli, copy, "ko-KR", "점심은 🍔 어때?", symbol_fallback="off")
-        assert result.returncode == 0 and result.stdout.strip() == "점심은 🍔 어때?", result
+        assert result.returncode == 0 and result.stdout.strip() == "점심은 어때?", result
         checks += 4
     print("unicode fallback: %d entries and file checks" % checks)
 

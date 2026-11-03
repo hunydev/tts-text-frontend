@@ -65,10 +65,15 @@ def frontend_settings(case: dict) -> dict:
 
 
 def frontend_flags(case: dict) -> list[str]:
-    """Only explicit options are sent, so old corpora still run on old CLIs."""
+    """Only explicit options are sent, so old corpora still run on old CLIs. A speech case
+    without `unreadable` still names preserve: the corpora were written while it was the CLI
+    default, and FRONTEND_DEFAULTS records it (the CLI default is drop since 2026-11-03)."""
     settings = frontend_settings(case)
-    return [value for field in FRONTEND_DEFAULTS if field in case
-            for value in ("--" + field.replace("_", "-"), str(settings[field]))]
+    flags = [value for field in FRONTEND_DEFAULTS if field in case
+             for value in ("--" + field.replace("_", "-"), str(settings[field]))]
+    if "unreadable" not in case and settings["output_mode"] == "speech":
+        flags += ["--unreadable", "preserve"]
+    return flags
 
 
 def integer(value: object, field: str) -> int:
