@@ -207,6 +207,26 @@ ratio_after	zh-CN	结束	1
 ratio_after	zh-CN	收官	1
 ratio_after	zh-CN	横扫	1
 ratio_after	zh-CN	逆转	1
+# Traditional spellings and 负于, 不敌, 的比分 (以8-6擊敗, 以6-2的比分取勝; 2026-11-09, real-text cycle R2:
+# these scores were read 八到六 in Chinese Wikipedia text).
+ratio_after	zh-CN	贏下	1
+ratio_after	zh-CN	獲勝	1
+ratio_after	zh-CN	戰勝	1
+ratio_after	zh-CN	擊敗	1
+ratio_after	zh-CN	告負	1
+ratio_after	zh-CN	落敗	1
+ratio_after	zh-CN	勝出	1
+ratio_after	zh-CN	險勝	1
+ratio_after	zh-CN	輸給	1
+ratio_after	zh-CN	贏得	1
+ratio_after	zh-CN	結束	1
+ratio_after	zh-CN	橫掃	1
+ratio_after	zh-CN	逆轉	1
+ratio_after	zh-CN	负于	1
+ratio_after	zh-CN	負於	1
+ratio_after	zh-CN	不敌	1
+ratio_after	zh-CN	不敵	1
+ratio_after	zh-CN	的比分	1
 count_before	zh-CN	将近	1
 count_before	zh-CN	超过	1
 count_before	zh-CN	长达	1
@@ -413,6 +433,24 @@ score_after	zh-CN	胜出	1
 score_after	zh-CN	逆转	1
 score_after	zh-CN	战胜	1
 score_after	zh-CN	击败	1
+# Traditional spellings and 输给, 负于, 不敌, 的比分 (2026-11-09, real-text cycle R2).
+score_after	zh-CN	獲勝	1
+score_after	zh-CN	險勝	1
+score_after	zh-CN	取勝	1
+score_after	zh-CN	告負	1
+score_after	zh-CN	落敗	1
+score_after	zh-CN	勝出	1
+score_after	zh-CN	逆轉	1
+score_after	zh-CN	戰勝	1
+score_after	zh-CN	擊敗	1
+score_after	zh-CN	戰平	1
+score_after	zh-CN	输给	1
+score_after	zh-CN	輸給	1
+score_after	zh-CN	负于	1
+score_after	zh-CN	負於	1
+score_after	zh-CN	不敌	1
+score_after	zh-CN	不敵	1
+score_after	zh-CN	的比分	1
 holiday_after	zh-CN	晚会	1
 liang_counter	zh-CN	顿	1
 liang_counter	zh-CN	卷	1
@@ -613,6 +651,11 @@ score_cue	zh-CN	追成	1
 score_cue	zh-CN	战平	1
 score_cue	zh-CN	打平	1
 score_cue	zh-CN	比数	1
+score_cue	zh-CN	戰成	1
+score_cue	zh-CN	比數	1
+score_cue	zh-CN	贏了	1
+score_cue	zh-CN	輸了	1
+score_cue	zh-CN	盤	1
 score_cue	zh-CN	赢了	1
 score_cue	zh-CN	输了	1
 short_year_after	zh-CN	年那	1

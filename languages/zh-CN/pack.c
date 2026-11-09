@@ -1515,6 +1515,17 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                 if (k < p - 3 && k >= 2 && t[k - 1] == '-' && digit(t[k - 2]))
                     listed = 1;
             }
+            /* 以0比2（19-21、11-21）: the first set score of a bracketed list after a match
+               score N比M (2026-11-09, real-text cycle R2; it was read 十九到二十一) */
+            if (!listed && (prev_is(t, p, "（") || prev_is(t, p, "(")) && has(t, n, b2 + l2, "、")) {
+                size_t k = p - (prev_is(t, p, "（") ? 3 : 1);
+                if (k >= 4 && digit(t[k - 1])) {
+                    while (k > 0 && digit(t[k - 1]))
+                        --k;
+                    if (k >= 3 && (prev_is(t, k, "比") || prev_is(t, k, ":")))
+                        listed = 1;
+                }
+            }
             if (cue_before(e, "score_cue", t, p, 3) || listed ||
                 (prev_is(t, p, "以") && (has(t, n, b2 + l2, "、") || word_after(e, "ratio_after", t, n, b2 + l2)))) {
                 char v[24];

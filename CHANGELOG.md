@@ -1,5 +1,12 @@
 # Changelog
 
+## Real-text cycle R2 (2026-11-09)
+
+- Korean: 골 and 덩이 count natively (`4골` 네 골, was 사골); rank and title words after N대 read Sino numbers (`7대 번주` 칠 대 번주, was 일곱 대).
+- English: the Korean rating rule no longer runs in English requests (`B-` was 비 마이너스); English reads a grade minus (`a B- grade` B minus).
+- Chinese: match scores read 比 after traditional and more score words and in a bracketed list of set scores (`以8-6擊敗` 八比六, was 八到六).
+- Real-text sample test 93.6 → 93.8, Korean benchmark +9/−1 (77골, reference Sino, kept), owner sets unchanged; contract real_text_v166 (16).
+
 ## Real-text cycle R1 (2026-11-09)
 
 - Korean speech: a range mark with one space on each side between numbers reads as the range word (`1921년 3월 4일 ~ 2008년 11월 30일` …사 일에서 이천팔 년…, was 물결); Japanese gets から the same way.

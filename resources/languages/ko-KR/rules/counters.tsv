@@ -265,3 +265,53 @@ numeric_suffix	*	작은술	COUNTER:작은술
 # 소금 2꼬집 두 꼬집 (2026-11-02, TN round 33; was 이꼬집)
 counter	ko-KR	꼬집	native
 numeric_suffix	*	꼬집	COUNTER:꼬집
+# Goals and lumps count natively: 4골 네 골, 12골 열두 골, 3덩이 세 덩이 (2026-11-09, real-text
+# cycle R2; 72% of N골 in Korean Wikipedia text were read 사골, 십이골).
+counter	ko-KR	골	native
+numeric_suffix	*	골	COUNTER:골
+counter	ko-KR	덩이	native
+numeric_suffix	*	덩이	COUNTER:덩이
+# Rank, title and top-N words after N대 from Korean Wikipedia text, most frequent first
+# (2026-11-09, real-text cycle R2: 7대 번주, 24대 당주, 10대 총재, 5대 개혁 were read in native numbers).
+counter_band_after	ko-KR	번주	band
+counter_band_after	ko-KR	당주	band
+counter_band_after	ko-KR	닥터	band
+counter_band_after	ko-KR	감독	band
+counter_band_after	ko-KR	상임지휘자	band
+counter_band_after	ko-KR	국회의원	band
+counter_band_after	ko-KR	황제	band
+counter_band_after	ko-KR	슈트	band
+counter_band_after	ko-KR	가수상	band
+counter_band_after	ko-KR	기타리스트	band
+counter_band_after	ko-KR	부맹주	band
+counter_band_after	ko-KR	담임목사	band
+counter_band_after	ko-KR	제자	band
+counter_band_after	ko-KR	조상	band
+counter_band_after	ko-KR	성주	band
+counter_band_after	ko-KR	총재	band
+counter_band_after	ko-KR	국왕	band
+counter_band_after	ko-KR	지류	band
+counter_band_after	ko-KR	히트곡	band
+counter_band_after	ko-KR	활불	band
+counter_band_after	ko-KR	총학생회	band
+counter_band_after	ko-KR	대주주	band
+counter_band_after	ko-KR	군주	band
+counter_band_after	ko-KR	개혁	band
+counter_band_after	ko-KR	예술감독	band
+counter_band_after	ko-KR	교황	band
+counter_band_after	ko-KR	이사장	band
+counter_band_after	ko-KR	위원장	band
+counter_band_after	ko-KR	총독	band
+counter_band_after	ko-KR	술탄	band
+counter_band_after	ko-KR	칼리프	band
+counter_band_after	ko-KR	천황	band
+counter_band_after	ko-KR	종정	band
+counter_band_after	ko-KR	단장	band
+counter_band_after	ko-KR	구단주	band
+counter_band_after	ko-KR	사장	band
+counter_band_after	ko-KR	대학	band
+counter_band_after	ko-KR	여행지	band
+counter_band_after	ko-KR	핵무기	band
+counter_band_after	ko-KR	브랜드	band
+counter_band_after	ko-KR	국제	band
+counter_band_after	ko-KR	글로벌	band

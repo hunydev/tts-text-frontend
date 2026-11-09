@@ -3996,6 +3996,10 @@ static size_t rating_minus(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     if (!(r >= n || t[r] == ' ' || t[r] == ')' || t[r] == ',' || t[r] == '.' || t[r] == '/' ||
           starts_with_word(t, n, r, "이상|이하|등급|급|였|이었|으로|로|을|를|은|는|이|가|에|의|)|\xef\xbc\x89")))
         return 0;
+    /* Korean requests only: an English request read B- as 비 마이너스 (2026-11-09, real-text
+       cycle R2; the grade stays for the English pack) */
+    if (!in->engine->config.default_language || strncmp(in->engine->config.default_language, "ko", 2))
+        return 0;
     minus = ttf_resource_get(in->engine, "rating_sign", "ko-KR", "-", NULL);
     if (!minus)
         return 0;
