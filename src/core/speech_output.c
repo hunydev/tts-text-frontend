@@ -205,6 +205,71 @@ static int word_follows(const char *s, size_t n, const char *right, size_t right
     return script == TTF_SCRIPT_HANGUL || script == TTF_SCRIPT_LATIN;
 }
 
+/* 경남 - 창원, 영하 - 아니: a mark with one space on each side between two words is a pause
+   (2026-11-09, real-text cycle R3; it was read 하이픈). `left` ends with the space. */
+static int spaced_between_words(const char *left, size_t left_length, const char *s, size_t n,
+                                const char *right, size_t right_length) {
+    size_t start;
+    uint32_t cp;
+    size_t width;
+    ttf_script_t script;
+    if (left_length < 2 || left[left_length - 1] != ' ')
+        return 0;
+    start = left_length - 1;
+    do
+        --start;
+    while (start && ((unsigned char)left[start] & 0xc0) == 0x80);
+    if (ttf_utf8_decode(left + start, left_length - 1 - start, &cp, &width) != 1)
+        return 0;
+    script = ttf_script_of(cp);
+    if (script != TTF_SCRIPT_HANGUL && script != TTF_SCRIPT_LATIN)
+        return 0;
+    if (!n) {
+        s = right;
+        n = right_length;
+    }
+    return n >= 2 && s[0] == ' ' && word_follows(s + 1, n - 1, NULL, 0);
+}
+
+/* 주연/제작 주연 제작: a mark between two Hangul syllables (2026-11-09, real-text cycle R3;
+   it was 슬래시). `left` is the spoken text before the mark. A word declared in
+   speech_per_word after it keeps the mark (3회/분기 is a rate, not two words). */
+static int between_hangul(const ttf_engine_t *e, const char *lang, const char *left,
+                          size_t left_length, const char *s, size_t n, const char *right,
+                          size_t right_length) {
+    size_t start;
+    uint32_t cp;
+    size_t width;
+    if (!left_length)
+        return 0;
+    start = left_length;
+    do
+        --start;
+    while (start && ((unsigned char)left[start] & 0xc0) == 0x80);
+    if (ttf_utf8_decode(left + start, left_length - start, &cp, &width) != 1 ||
+        !(cp >= 0xac00 && cp <= 0xd7a3))
+        return 0;
+    if (!n) {
+        s = right;
+        n = right_length;
+    }
+    if (!(n && ttf_utf8_decode(s, n, &cp, &width) == 1 && cp >= 0xac00 && cp <= 0xd7a3))
+        return 0;
+    {
+        char key[16];
+        size_t k = 0;
+        while (k + 3 <= n && k + 3 < sizeof(key) && ttf_utf8_decode(s + k, n - k, &cp, &width) == 1 &&
+               cp >= 0xac00 && cp <= 0xd7a3) {
+            k += 3;
+            memcpy(key, s, k);
+            key[k] = 0;
+            if (ttf_resource_get(e, "speech_per_word", lang, key, NULL))
+                return 0;
+        }
+    }
+    return 1;
+}
+
 /* `speech_join symbol.<char>` overrides `speech_join symbol`; the default
    separates a symbol name from neighboring words. */
 static int symbol_spaced(const ttf_engine_t *e, const char *language, const char *key) {
@@ -383,7 +448,17 @@ ttf_status_t ttf_speech_output(const ttf_engine_t *e, const ttf_language_pack_t 
                     (!strcmp(ttf_resource_get(e, "speech_silent", lang, key, NULL), "between") &&
                      PREV_SPOKEN() &&
                      word_follows(text->data + at + width, text->length - at - width, right,
-                                  right_length)))) {
+                                  right_length)) ||
+                    (!strcmp(ttf_resource_get(e, "speech_silent", lang, key, NULL), "between") &&
+                     (out.length ? spaced_between_words(out.data, out.length, text->data + at + width,
+                                                        text->length - at - width, right, right_length)
+                                 : spaced_between_words(left, left_length, text->data + at + width,
+                                                        text->length - at - width, right, right_length))) ||
+                    (!strcmp(ttf_resource_get(e, "speech_silent", lang, key, NULL), "hangul") &&
+                     (out.length ? between_hangul(e, lang, out.data, out.length, text->data + at + width,
+                                                  text->length - at - width, right, right_length)
+                                 : between_hangul(e, lang, left, left_length, text->data + at + width,
+                                                  text->length - at - width, right, right_length))))) {
             /* A path or bracket mark outside an expression is not spoken; it
                still separates the words on either side. */
             status = ttf_trace_resource(e, "speech_silent", lang, key, key, "final-silent-mark",

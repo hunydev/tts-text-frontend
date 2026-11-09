@@ -369,11 +369,16 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "particle_reading needs alternative|digits or alternative|LETTER");
     }
+    if (SAME(k, "speech_per_word")) {
+        *handled = 1;
+        return v && !strcmp(v, "1") ? TTF_OK
+                                    : ttf_validation_error(d, "speech_per_word requires a word and 1");
+    }
     if (SAME(k, "speech_silent")) {
         *handled = 1;
-        return symbol_key(key) && ttf_validation_enum(v, "0|1|between")
+        return symbol_key(key) && ttf_validation_enum(v, "0|1|between|hangul")
                    ? TTF_OK
-                   : ttf_validation_error(d, "speech_silent requires one symbol and 0|1|between");
+                   : ttf_validation_error(d, "speech_silent requires one symbol and 0|1|between|hangul");
     }
     if (SAME(k, "speech_lengthening")) {
         *handled = 1;

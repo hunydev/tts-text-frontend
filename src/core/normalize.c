@@ -1946,16 +1946,31 @@ static size_t dictionary_cut(const ttf_engine_t *e, const char *lang, const char
    word like an attached mark (2026-11-09, real-text cycle R1; it was the symbol name 물결
    in 4,455 per million Korean Wikipedia sentences). Returns the reading or NULL. */
 static const char *spaced_range_mark(const ttf_engine_t *e, const char *text, size_t length,
-                                     const ttf_token_t *tokens, size_t count, size_t i) {
+                                     const ttf_token_t *tokens, size_t count, size_t i,
+                                     size_t *taken) {
     char key[8];
-    size_t w, at, k;
+    size_t w, at, k, after;
     uint32_t cp;
     const char *separator;
-    if (i + 2 >= count || tokens[i].end - tokens[i].begin != 1 ||
-        tokens[i + 2].end - tokens[i + 2].begin != 1 || text[tokens[i].begin] != ' ' ||
-        text[tokens[i + 2].begin] != ' ' || tokens[i + 1].begin != tokens[i].end ||
-        tokens[i + 2].begin != tokens[i + 1].end || tokens[i + 2].end >= length ||
-        text[tokens[i + 2].end] < '0' || text[tokens[i + 2].end] > '9' || !tokens[i].begin)
+    int open = 0;
+    if (i + 1 >= count || tokens[i].end - tokens[i].begin != 1 || text[tokens[i].begin] != ' ' ||
+        tokens[i + 1].begin != tokens[i].end || !tokens[i].begin)
+        return NULL;
+    /* 1975년 3월 18일 ~ ): nothing spoken after the mark opens the range (2026-11-09,
+       real-text cycle R3; it was 물결 in 2.8% of Korean Wikipedia sentences with a token) */
+    after = tokens[i + 1].end;
+    *taken = 2;
+    if (after < length && text[after] == ' ') {
+        ++after;
+        if (i + 2 < count && tokens[i + 2].begin == tokens[i + 1].end &&
+            tokens[i + 2].end - tokens[i + 2].begin == 1)
+            *taken = 3;
+    }
+    /* only before a closing bracket: the end of a stream chunk is not the end of the range */
+    if (after < length && (text[after] == ')' ||
+                           (after + 3 <= length && !memcmp(text + after, "\xef\xbc\x89", 3))))
+        open = 1;
+    else if (*taken != 3 || after >= length || text[after] < '0' || text[after] > '9')
         return NULL;
     w = tokens[i + 1].end - tokens[i + 1].begin;
     if (!w || w >= sizeof(key))
@@ -1980,7 +1995,8 @@ static const char *spaced_range_mark(const ttf_engine_t *e, const char *text, si
     separator = ttf_resource_get(e, "quantity_range_separator", "*", key, NULL);
     if (separator && !strcmp(separator, "0"))
         return NULL;
-    return ttf_resource_get(e, "speech_range_mark", e->default_language, key, NULL);
+    return ttf_resource_get(e, open ? "speech_range_open" : "speech_range_mark", e->default_language,
+                            key, NULL);
 }
 
 ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
@@ -2108,15 +2124,16 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
                 continue;
             }
         }
+        size_t range_taken = 0;
         if (e->frontend_options.output_mode == TTF_OUTPUT_SPEECH &&
             tokens[i].script == TTF_SCRIPT_WHITESPACE &&
-            (reading = spaced_range_mark(e, text, length, tokens, count, i))) {
+            (reading = spaced_range_mark(e, text, length, tokens, count, i, &range_taken))) {
             char mark[8];
             size_t mark_length = tokens[i + 1].end - tokens[i + 1].begin;
             memcpy(mark, text + tokens[i + 1].begin, mark_length);
             mark[mark_length] = 0;
             span.input_begin = sem->input_begin = tokens[i].begin + offset;
-            span.input_end = sem->input_end = tokens[i + 2].end + offset;
+            span.input_end = sem->input_end = tokens[i + range_taken - 1].end + offset;
             snprintf(sem->rule, sizeof(sem->rule), "syntax.spaced-range-mark");
             sem->type = TTF_SEM_SYMBOL;
             tag(sem->source_lang, "und");
@@ -2125,7 +2142,7 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
             tag(span.verbalizer, "identity");
             span.script = TTF_SCRIPT_SYMBOL;
             ttf_trace_span_begin(e, span.input_begin, span.input_end);
-            ttf_trace_stage(e, TTF_TRACE_POLICY, 0, tokens[i + 2].end - tokens[i].begin);
+            ttf_trace_stage(e, TTF_TRACE_POLICY, 0, tokens[i + range_taken - 1].end - tokens[i].begin);
             st = ttf_trace_resource(e, "speech_range_mark", e->default_language, mark, reading,
                                     "spaced-range-mark-reading", SIZE_MAX);
             span.begin = output.length;
@@ -2138,7 +2155,7 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
             if (st != TTF_OK)
                 goto fail;
             removed_before = 0;
-            i += 3;
+            i += range_taken;
             continue;
         }
         if (e->bracket_policy != TTF_BRACKET_READ) {

@@ -1,5 +1,10 @@
 # Changelog
 
+## Real-text cycle R3 (2026-11-09)
+
+- Korean speech: a range mark after a date that ends at a closing bracket opens the range (`(1981년 5월 2일 ~ )` …이 일부터, was 물결); a dash with one space on each side between two words is a pause (`서울 - 부산` 서울 부산, was 하이픈); a slash between two Hangul syllables is a pause (`작사/작곡` 작사 작곡, was 슬래시; new `speech_silent` value `hangul`; before a period word in `speech_per_word`, as in `3회/분기`, the slash stays).
+- In 5,000 Korean Wikipedia sentences the symbol names left in speech fell from 142 to 41 (물결), 49 to 21 (슬래시) and 35 to 25 (하이픈); Korean benchmark +4/−0, owner sets unchanged; contract real_text_v167 (12). Was: ko-list-break-v24-guard-midline read 영하 하이픈 아니, slash-v21-neg-hangul 찬성 슬래시 반대.
+
 ## Real-text cycle R2 (2026-11-09)
 
 - Korean: 골 and 덩이 count natively (`4골` 네 골, was 사골); rank and title words after N대 read Sino numbers (`7대 번주` 칠 대 번주, was 일곱 대).
