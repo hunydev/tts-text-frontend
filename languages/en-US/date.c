@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include <string.h>
 
 #define EN "en-US"
@@ -740,6 +741,45 @@ static size_t contextual_year(const ttf_pack_input_t *in, ttf_semantic_t *out, s
     return consumed;
 }
 
+/* 1083-1093 after an issue number "37 (6)", or after p., pp., page(s): a page range. */
+static int page_cue(const ttf_pack_input_t *in, size_t start) {
+    size_t q = start, b;
+    char word[8];
+    size_t n = 0;
+    while (q && (in->text[q - 1] == ' ' || in->text[q - 1] == '\t'))
+        --q;
+    if (q && in->text[q - 1] == ')')
+        return 1;
+    /* Neuropsychologia, 41, 1422 - 1429; 37:1083-1093: a volume number before the pages */
+    if (q && (in->text[q - 1] == ',' || in->text[q - 1] == ':')) {
+        size_t d = q - 1;
+        while (d && (in->text[d - 1] == ' ' || in->text[d - 1] == '\t'))
+            --d;
+        if (d && ascii_digit(in->text[d - 1]))
+            return 1;
+    }
+    b = q;
+    while (b && (isalpha((unsigned char)in->text[b - 1]) || in->text[b - 1] == '.') && q - b < sizeof(word) - 1)
+        --b;
+    for (n = 0; b + n < q && n < sizeof(word) - 1; ++n)
+        word[n] = (char)tolower((unsigned char)in->text[b + n]);
+    word[n] = 0;
+    return !strcmp(word, "p.") || !strcmp(word, "pp.") || !strcmp(word, "pp") || !strcmp(word, "page") ||
+           !strcmp(word, "pages");
+}
+
+/* 1245 - 1251, Dec. 1987: a citation gives its year right after the page range. */
+static int year_follows(const ttf_pack_input_t *in, size_t from) {
+    size_t q, limit = from + 20 < in->length ? from + 20 : in->length;
+    for (q = from; q + 4 <= limit; ++q)
+        if (ascii_digit(in->text[q]) && ascii_digit(in->text[q + 1]) && ascii_digit(in->text[q + 2]) &&
+            ascii_digit(in->text[q + 3]) && !(q && ascii_digit(in->text[q - 1])) &&
+            !(q + 4 < in->length && ascii_digit(in->text[q + 4])) &&
+            (in->text[q] == '1' || in->text[q] == '2'))
+            return 1;
+    return 0;
+}
+
 /* "from 1988 - 93", "the 1988 - 1993 period": the word form already reads both
    endpoints as years, and the hyphen form should too. The cue rule is unchanged,
    so an uncued pair and a page range keep their cardinals. */
@@ -769,13 +809,24 @@ static size_t year_range(const ttf_pack_input_t *in, ttf_semantic_t *out, size_t
     if (!preceding_cue(in, start, first.end, &layer)) {
         size_t r = skip_horizontal(in->text, in->length, first.end), k;
         unsigned second_year = 0;
-        if (first.value < 1900 || first.value > 2099 || r >= in->length || in->text[r] != '-')
+        if (first.value < 1000 || first.value > 2099 || r >= in->length || in->text[r] != '-')
+            return 0;
+        /* the extension below 1900 is for English requests only: 1588-1688 is a Korean
+           service number */
+        if (first.value < 1900 && !(in->engine->config.default_language &&
+                                    !strncmp(in->engine->config.default_language, "en", 2)))
             return 0;
         r = skip_horizontal(in->text, in->length, r + 1);
         for (k = 0; k < 4 && r + k < in->length && ascii_digit(in->text[r + k]); ++k)
             second_year = second_year * 10 + (unsigned)(in->text[r + k] - '0');
         if (k != 4 || (r + 4 < in->length && ascii_digit(in->text[r + 4])) || second_year <= first.value ||
             second_year > 2099)
+            return 0;
+        /* (1857 - 1952), Infantry, 1861 - 1864: before 1900 a pair reads as years too when it
+           spans at most 150 years and no page cue precedes it (2026-11-09, real-text cycle R1;
+           55% of such pairs in English Wikipedia text were read as cardinals). */
+        if (first.value < 1900 && (second_year - first.value > 150 || page_cue(in, start) ||
+                                   year_follows(in, r + 4)))
             return 0;
     }
     p = skip_horizontal(in->text, in->length, first.end);

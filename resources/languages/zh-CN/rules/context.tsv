@@ -20,6 +20,8 @@ classifier_priority	zh-CN	zh.pos	100
 classifier_priority	zh-CN	zh.money	100
 classifier_priority	zh-CN	zh.math	100
 classifier_priority	zh-CN	zh.latin	100
+# UTC-5 UTC负五: a time zone offset before the letter-digit code (2026-11-09, real-text cycle R1).
+classifier_priority	zh-CN	zh.utc	100
 classifier_priority	zh-CN	zh.to	100
 classifier_priority	zh-CN	zh.unit	100
 classifier_priority	zh-CN	zh.range	100

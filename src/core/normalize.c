@@ -1941,6 +1941,48 @@ static size_t dictionary_cut(const ttf_engine_t *e, const char *lang, const char
     }
     return to;
 }
+/* 1932년 10월 8일 ~ 2019년 9월 8일, 1990年 〜 1994年: a range mark with one space on each
+   side, between a number (or one counter after a number) and a number, reads as the range
+   word like an attached mark (2026-11-09, real-text cycle R1; it was the symbol name 물결
+   in 4,455 per million Korean Wikipedia sentences). Returns the reading or NULL. */
+static const char *spaced_range_mark(const ttf_engine_t *e, const char *text, size_t length,
+                                     const ttf_token_t *tokens, size_t count, size_t i) {
+    char key[8];
+    size_t w, at, k;
+    uint32_t cp;
+    const char *separator;
+    if (i + 2 >= count || tokens[i].end - tokens[i].begin != 1 ||
+        tokens[i + 2].end - tokens[i + 2].begin != 1 || text[tokens[i].begin] != ' ' ||
+        text[tokens[i + 2].begin] != ' ' || tokens[i + 1].begin != tokens[i].end ||
+        tokens[i + 2].begin != tokens[i + 1].end || tokens[i + 2].end >= length ||
+        text[tokens[i + 2].end] < '0' || text[tokens[i + 2].end] > '9' || !tokens[i].begin)
+        return NULL;
+    w = tokens[i + 1].end - tokens[i + 1].begin;
+    if (!w || w >= sizeof(key))
+        return NULL;
+    memcpy(key, text + tokens[i + 1].begin, w);
+    key[w] = 0;
+    /* the left side ends in a digit, or in one Hangul or Han counter right after a digit */
+    for (k = 0, at = tokens[i].begin; k < 2 && at; ++k) {
+        size_t width;
+        size_t start = at - 1;
+        while (start && ((unsigned char)text[start] & 0xc0) == 0x80)
+            --start;
+        if (text[start] >= '0' && text[start] <= '9')
+            break;
+        if (k || ttf_utf8_decode(text + start, at - start, &cp, &width) != 1 ||
+            !((cp >= 0xac00 && cp <= 0xd7a3) || ttf_script_of(cp) == TTF_SCRIPT_HAN))
+            return NULL;
+        at = start;
+    }
+    if (k == 2 || !at)
+        return NULL;
+    separator = ttf_resource_get(e, "quantity_range_separator", "*", key, NULL);
+    if (separator && !strcmp(separator, "0"))
+        return NULL;
+    return ttf_resource_get(e, "speech_range_mark", e->default_language, key, NULL);
+}
+
 ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
                                       size_t context_length, const char *text, size_t length,
                                       size_t offset, ttf_result_t *out) {
@@ -2065,6 +2107,39 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
                 }
                 continue;
             }
+        }
+        if (e->frontend_options.output_mode == TTF_OUTPUT_SPEECH &&
+            tokens[i].script == TTF_SCRIPT_WHITESPACE &&
+            (reading = spaced_range_mark(e, text, length, tokens, count, i))) {
+            char mark[8];
+            size_t mark_length = tokens[i + 1].end - tokens[i + 1].begin;
+            memcpy(mark, text + tokens[i + 1].begin, mark_length);
+            mark[mark_length] = 0;
+            span.input_begin = sem->input_begin = tokens[i].begin + offset;
+            span.input_end = sem->input_end = tokens[i + 2].end + offset;
+            snprintf(sem->rule, sizeof(sem->rule), "syntax.spaced-range-mark");
+            sem->type = TTF_SEM_SYMBOL;
+            tag(sem->source_lang, "und");
+            tag(sem->context_lang, "und");
+            tag(sem->render_lang, "und");
+            tag(span.verbalizer, "identity");
+            span.script = TTF_SCRIPT_SYMBOL;
+            ttf_trace_span_begin(e, span.input_begin, span.input_end);
+            ttf_trace_stage(e, TTF_TRACE_POLICY, 0, tokens[i + 2].end - tokens[i].begin);
+            st = ttf_trace_resource(e, "speech_range_mark", e->default_language, mark, reading,
+                                    "spaced-range-mark-reading", SIZE_MAX);
+            span.begin = output.length;
+            if (st == TTF_OK)
+                st = ttf_buffer_puts(&output, reading);
+            span.end = output.length;
+            ttf_trace_span_finish(e, span.begin, span.end);
+            if (st == TTF_OK)
+                st = add_span(out, &span, &capacity);
+            if (st != TTF_OK)
+                goto fail;
+            removed_before = 0;
+            i += 3;
+            continue;
         }
         if (e->bracket_policy != TTF_BRACKET_READ) {
             size_t close = bracket_region(e, text, length, tokens, count, i);

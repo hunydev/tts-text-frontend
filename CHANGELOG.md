@@ -1,5 +1,12 @@
 # Changelog
 
+## Real-text cycle R1 (2026-11-09)
+
+- Korean speech: a range mark with one space on each side between numbers reads as the range word (`1921년 3월 4일 ~ 2008년 11월 30일` …사 일에서 이천팔 년…, was 물결); Japanese gets から the same way.
+- Chinese: a time zone offset keeps its sign (`UTC-5` UTC负五, was UTC五).
+- English: a pair of years before 1900 reads as years in English requests when it spans at most 150 years and no page cue is near (`(1857 - 1952)` eighteen fifty seven to nineteen fifty two).
+- Measured on a frequency-weighted real-text sample (docs/tn-real-text.ko.md): test 93.2 → 93.6, Korean benchmark +0/−0, owner sets unchanged; contract real_text_v165 (14).
+
 ## Unreleased — speech output, measurement and the final gate
 
 - Speech output removes what it cannot say by default (2026-11-03, project owner):
