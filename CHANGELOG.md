@@ -1,5 +1,11 @@
 # Changelog
 
+## Real-text cycle R4 (2026-11-09)
+
+- Chinese and Japanese: Han text votes for the request language, and a Han or kana run counts as three words, so numbers among Latin names keep the request language (`演员John Smith于1985年3月出生` 一九八五年三月, was one thousand nine hundred eighty five年three月).
+- Japanese: a slash between kana or Han is a pause (`少女漫画/アニメ`, new `speech_silent` value `cjk`); a number before a small-letter Latin unit no table lists is read (`150hp` ひゃくごじゅうhp, was left as written); 29 counters from Japanese Wikipedia text read with their sound changes (`11試合` じゅういっしあい).
+- Real-text sample test 93.8 → 94.1 (ja 91.6 → 92.3, zh 92.9 → 94.8); output leftovers on 20,000 fixed sentences 499 → 409; Korean benchmark +0/−0; owner ja set 8 intended changes; contract real_text_v168 (13).
+
 ## Real-text cycle R3 (2026-11-09)
 
 - Korean speech: a range mark after a date that ends at a closing bracket opens the range (`(1981년 5월 2일 ~ )` …이 일부터, was 물결); a dash with one space on each side between two words is a pause (`서울 - 부산` 서울 부산, was 하이픈); a slash between two Hangul syllables is a pause (`작사/작곡` 작사 작곡, was 슬래시; new `speech_silent` value `hangul`; before a period word in `speech_per_word`, as in `3회/분기`, the slash stays).

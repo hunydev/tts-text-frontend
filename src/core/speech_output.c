@@ -231,12 +231,19 @@ static int spaced_between_words(const char *left, size_t left_length, const char
     return n >= 2 && s[0] == ' ' && word_follows(s + 1, n - 1, NULL, 0);
 }
 
+/* A Hangul syllable, or with `cjk` a kana or Han character. */
+static int native_letter(uint32_t cp, int cjk) {
+    if (!cjk)
+        return cp >= 0xac00 && cp <= 0xd7a3;
+    return (cp >= 0x3041 && cp <= 0x30ff) || cp == 0x3005 || ttf_script_of(cp) == TTF_SCRIPT_HAN;
+}
 /* 주연/제작 주연 제작: a mark between two Hangul syllables (2026-11-09, real-text cycle R3;
-   it was 슬래시). `left` is the spoken text before the mark. A word declared in
+   it was 슬래시), and with `cjk` between kana or Han (少女漫画/アニメ 少女漫画 アニメ, cycle R4;
+   it was スラッシュ). `left` is the spoken text before the mark. A word declared in
    speech_per_word after it keeps the mark (3회/분기 is a rate, not two words). */
 static int between_hangul(const ttf_engine_t *e, const char *lang, const char *left,
                           size_t left_length, const char *s, size_t n, const char *right,
-                          size_t right_length) {
+                          size_t right_length, int cjk) {
     size_t start;
     uint32_t cp;
     size_t width;
@@ -246,20 +253,19 @@ static int between_hangul(const ttf_engine_t *e, const char *lang, const char *l
     do
         --start;
     while (start && ((unsigned char)left[start] & 0xc0) == 0x80);
-    if (ttf_utf8_decode(left + start, left_length - start, &cp, &width) != 1 ||
-        !(cp >= 0xac00 && cp <= 0xd7a3))
+    if (ttf_utf8_decode(left + start, left_length - start, &cp, &width) != 1 || !native_letter(cp, cjk))
         return 0;
     if (!n) {
         s = right;
         n = right_length;
     }
-    if (!(n && ttf_utf8_decode(s, n, &cp, &width) == 1 && cp >= 0xac00 && cp <= 0xd7a3))
+    if (!(n && ttf_utf8_decode(s, n, &cp, &width) == 1 && native_letter(cp, cjk)))
         return 0;
     {
         char key[16];
         size_t k = 0;
         while (k + 3 <= n && k + 3 < sizeof(key) && ttf_utf8_decode(s + k, n - k, &cp, &width) == 1 &&
-               cp >= 0xac00 && cp <= 0xd7a3) {
+               width == 3 && native_letter(cp, cjk)) {
             k += 3;
             memcpy(key, s, k);
             key[k] = 0;
@@ -454,11 +460,14 @@ ttf_status_t ttf_speech_output(const ttf_engine_t *e, const ttf_language_pack_t 
                                                         text->length - at - width, right, right_length)
                                  : spaced_between_words(left, left_length, text->data + at + width,
                                                         text->length - at - width, right, right_length))) ||
-                    (!strcmp(ttf_resource_get(e, "speech_silent", lang, key, NULL), "hangul") &&
+                    ((!strcmp(ttf_resource_get(e, "speech_silent", lang, key, NULL), "hangul") ||
+                      !strcmp(ttf_resource_get(e, "speech_silent", lang, key, NULL), "cjk")) &&
                      (out.length ? between_hangul(e, lang, out.data, out.length, text->data + at + width,
-                                                  text->length - at - width, right, right_length)
+                                                  text->length - at - width, right, right_length,
+                                                  !strcmp(ttf_resource_get(e, "speech_silent", lang, key, NULL), "cjk"))
                                  : between_hangul(e, lang, left, left_length, text->data + at + width,
-                                                  text->length - at - width, right, right_length))))) {
+                                                  text->length - at - width, right, right_length,
+                                                  !strcmp(ttf_resource_get(e, "speech_silent", lang, key, NULL), "cjk")))))) {
             /* A path or bracket mark outside an expression is not spoken; it
                still separates the words on either side. */
             status = ttf_trace_resource(e, "speech_silent", lang, key, key, "final-silent-mark",

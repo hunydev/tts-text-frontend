@@ -1644,6 +1644,30 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             }
         }
     }
+    /* 136hp ひゃくさんじゅうろくhp, 26.5kgm, 50kt: a number before a Latin unit with a small
+       letter that no table lists reads the number and keeps the letters as written, like
+       136 hp (2026-11-09, real-text cycle R4; the digits were left as written). Capital codes
+       (4K, 5G, 2R) keep their rules. */
+    if (digit(text[begin]) && !(begin && (digit(text[begin - 1]) || alpha(text[begin - 1])))) {
+        size_t q = begin, r;
+        int small = 0;
+        while (q < n && (digit(text[q]) || (text[q] == '.' && q + 1 < n && digit(text[q + 1]))))
+            ++q;
+        for (r = q; r < n && alpha(text[r]) && r - q < 5; ++r)
+            small |= text[r] >= 'a' && text[r] <= 'z';
+        char letters[8] = {0};
+        if (r > q && r - q < sizeof(letters))
+            memcpy(letters, text + q, r - q);
+        /* a unit or counter some table reads (100km, 5mg, 900t) keeps its reading */
+        if (small && r > q && r - q <= 4 && q - begin <= 9 && q - begin < sizeof(s->value) &&
+            !ttf_resource_get(e, "numeric_suffix", "*", letters, NULL) && !res(e, "unit", letters) &&
+            !res(e, "latin_unit", letters) && !res(e, "counter", letters) &&
+            !(r < n && (alpha(text[r]) || digit(text[r]) || text[r] == '-' || text[r] == '.' ||
+                        text[r] == '/' || text[r] == '+'))) {
+            snprintf(s->value, sizeof(s->value), "%.*s", (int)(q - begin), text + begin);
+            return finish(in, s, q, TTF_SEM_CARDINAL, "ja.number-before-latin", "");
+        }
+    }
     /* 7G3K2 ななじーさんけーに: digits and capitals that alternate three times or more are a
        code (owner v2, 2026-10-15) */
     if (digit(text[begin]) && !(begin && (alpha(text[begin - 1]) || digit(text[begin - 1])))) {

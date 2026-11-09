@@ -129,6 +129,12 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    ? TTF_OK
                    : ttf_validation_error(d, "han_foreign requires one CJK character and 1");
     }
+    if (SAME(k, "context") && SAME(key, "sentence_word_weight")) {
+        *handled = 1;
+        return ttf_validation_integer(v, 1, 9, NULL)
+                   ? TTF_OK
+                   : ttf_validation_error(d, "sentence_word_weight must be an integer in 1..9");
+    }
     if (SAME(k, "context")) {
         *handled = 1;
         return ttf_validation_enum(key, "declared_only|absorb_foreign|han_sentence") &&

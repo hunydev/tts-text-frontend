@@ -9,6 +9,19 @@ speech_symbol	ja-JP	-	ハイフン
 speech_symbol	ja-JP	_	アンダーバー
 speech_symbol	ja-JP	:	コロン
 speech_symbol	ja-JP	/	スラッシュ
+# 少女漫画/アニメ 少女漫画 アニメ, 慶応4年/明治元年: a slash between kana or Han is a pause (2026-11-09,
+# real-text cycle R4; it was スラッシュ). Before a period word it is a rate and keeps its reading
+# (3回/分); Latin (Goose Hollow/SW) and paths (/dev/zero) keep theirs.
+speech_silent	ja-JP	/	cjk
+speech_per_word	ja-JP	秒	1
+speech_per_word	ja-JP	分	1
+speech_per_word	ja-JP	時	1
+speech_per_word	ja-JP	日	1
+speech_per_word	ja-JP	週	1
+speech_per_word	ja-JP	月	1
+speech_per_word	ja-JP	年	1
+speech_per_word	ja-JP	回	1
+speech_per_word	ja-JP	人	1
 speech_symbol	ja-JP	?	クエスチョン
 speech_symbol	ja-JP	=	イコール
 speech_symbol	ja-JP	&	アンド

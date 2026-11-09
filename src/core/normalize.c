@@ -367,6 +367,17 @@ static const ttf_language_pack_t *sentence_matrix(const ttf_engine_t *e,
         const ttf_language_pack_t *owner;
         if (inner)
             nested += inner[k - begin];
+        /* 是在1997年推出 in a Chinese (or Japanese) request: Han text is the request's own
+           script, so it votes for the request language even after a number (1997年) and
+           against Latin names around it (2026-11-09, real-text cycle R4; Han text did not
+           vote, and two Latin names made the sentence English: one thousand nine hundred
+           ninety seven年). */
+        if (nested <= 0 && t->script == TTF_SCRIPT_HAN && fallback &&
+            (pack_flag(e, fallback, "han_sentence", 0) || pack_flag(e, fallback, "kana_sentence", 0)) &&
+            (j = pack_index(e, fallback)) != SIZE_MAX) {
+            votes[j] += word_weight(e, fallback);
+            continue;
+        }
         if (nested > 0 || !(owner = script_pack(e, t->script)) ||
             (j = pack_index(e, owner)) == SIZE_MAX)
             continue;

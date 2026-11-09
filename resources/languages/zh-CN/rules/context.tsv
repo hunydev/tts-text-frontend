@@ -4,6 +4,10 @@
 context	zh-CN	declared_only	1
 context	zh-CN	absorb_foreign	1
 context	zh-CN	han_sentence	1
+# A Han or kana run has no spaces and holds several words: it counts as three words against
+# Latin words, so a number with its counter (1937年4月) keeps the sentence language when names in
+# Latin letters surround it (2026-11-09, real-text cycle R4; it was read in English).
+context	zh-CN	sentence_word_weight	3
 classifier_priority	zh-CN	zh.int	100
 classifier_priority	zh-CN	zh.digits	100
 classifier_priority	zh-CN	zh.year	100
