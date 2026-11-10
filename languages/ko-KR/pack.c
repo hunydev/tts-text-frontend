@@ -2843,6 +2843,17 @@ static size_t compound_currency_range(const ttf_pack_input_t *in, ttf_semantic_t
 }
 
 /* Longest resource key that is a prefix of the Hangul word at `p`. */
+/* The rest of a word after a cue is only a particle (중에, 중의) or nothing. */
+static int particle_rest(const char *s, size_t n) {
+    static const char *const particles[] = {"", "은", "는", "이", "가", "을", "를", "에", "에서", "의",
+                                            "도", "만", "과", "와", "으로", "로", "에는", "에도",
+                                            "에서는", "까지", "부터", "이다", "이며", "이었다"};
+    size_t k;
+    for (k = 0; k < sizeof(particles) / sizeof(particles[0]); ++k)
+        if (strlen(particles[k]) == n && !memcmp(particles[k], s, n))
+            return 1;
+    return 0;
+}
 static const char *band_cue(const ttf_pack_input_t *in, const char *kind, size_t begin,
                             size_t end) {
     char key[64];
@@ -2854,6 +2865,14 @@ static const char *band_cue(const ttf_pack_input_t *in, const char *kind, size_t
         memcpy(key, in->text + begin, width);
         key[width] = 0;
         value = ttf_resource_get(in->engine, kind, "ko-KR", key, NULL);
+        /* 3대 중 세 대 중, but 4대 중앙경마 사 대: a `count-word` cue is the whole word or the
+           word before a particle (2026-11-10, real-text cycle R7). Like `count-small` it leaves a
+           decade or a large number to the band (30대 중 삼십 대). */
+        if (value && !strcmp(value, "count-word")) {
+            if (!particle_rest(in->text + begin + width, end - begin - width))
+                continue;
+            value = "count-small";
+        }
         if (value)
             best = value;
     }
@@ -2885,12 +2904,23 @@ static int band_role(const ttf_pack_input_t *in, const ttf_semantic_t *s) {
             const ttf_token_t *t = &in->tokens[i];
             if (t->begin <= p && p < t->end) {
                 /* The word may start inside the counter's own token (4대째, 2대나). */
-                if (t->script == TTF_SCRIPT_HANGUL)
+                if (t->script == TTF_SCRIPT_HANGUL) {
                     cue = band_cue(in, "counter_band_after", p, t->end);
+                    /* 17대 루이지애나주 부지사 십칠 대, 3대 악성 삼 대: a word after a space that
+                       no cue lists names the generation or the top N, as in most Korean
+                       Wikipedia text (2026-11-10, real-text cycle R7; it was read natively,
+                       열일곱 대). Machines take a cue (차량, 판매, 있다, 중). */
+                    if (!cue && p > end && s->type != TTF_SEM_RANGE)
+                        cue = "band";
+                }
                 break;
             }
         }
     }
+    /* 12대 한정 열두 대, 50대 한정 오십 대: a `count-small` cue counts machines below a decade
+       (2026-11-10, real-text cycle R7) */
+    if (cue && !strcmp(cue, "count-small"))
+        return band_value(s->value) && (s->type != TTF_SEM_RANGE || band_value(s->secondary));
     if (cue)
         return !strcmp(cue, "band");
     return band_value(s->value) && (s->type != TTF_SEM_RANGE || band_value(s->secondary));

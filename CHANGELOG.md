@@ -1,5 +1,11 @@
 # Changelog
 
+## Real-text cycle R7 (2026-11-10)
+
+- Chinese: in a Chinese request a sentence with traditional or Japanese forms (`han_foreign`) is still a hanzi sentence, so two Latin words no longer make it English (`1727年布蓋以論文《On the masting of ships》擊敗…` 一七二七年…; was one thousand seven hundred twenty seven年 and the Han text after the title dropped). Han text lost from 5,000 fixed Chinese sentences: 30 → 10 (the rest is kana under the drop policy).
+- Korean: N대 before a spaced word no cue lists reads the band (`17대 텍사스주 부지사` 십칠 대, `3대 악단` 삼 대; was 열일곱 대, 세 대); machine counts keep native numbers through cues (verbs and quantity words such as 있다, 모두, 감차; machine names such as 헬기). New cue values `count-word` (중 only as a whole word: `3대 중` 세 대, `4대 중앙경마` 사 대) and `count-small` (decades and large numbers stay the band: `50대 한정` 오십 대).
+- Real-text sample test 94.6 → 94.7 (ko 94.0 → 94.2), dev 96.9 → 97.2; output leftovers 294 → 293; Korean benchmark +36/−0; owner sets unchanged; contract real_text_v171 (7).
+
 ## Real-text cycle R6 (2026-11-10)
 
 - Japanese: a single digit after a Latin word reads as the English numeral from the Japanese `english_number` table (`Room3` Roomスリー, was the English word three); a slash before a date number is a pause (`2月1日/2月12日`, was スラッシュ).

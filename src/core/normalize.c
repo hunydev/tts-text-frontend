@@ -669,8 +669,8 @@ static const ttf_language_pack_t *arabic_sentence(const ttf_engine_t *e, const t
 }
 /* A hanzi sentence (2026-10-11, project owner: a kanji-only sentence prefers
    Chinese): no Hangul, no kana, at least two hanzi, at least twice as many hanzi
-   as Latin words, and no character the pack lists as han_foreign (Japanese-only
-   or traditional forms: 駅 円 國 時) belongs to the pack declaring `context <tag>
+   as Latin words, and (in another language's request) no character the pack lists as
+   han_foreign (Japanese-only or traditional forms: 駅 円 國 時) belongs to the pack declaring `context <tag>
    han_sentence 1` (zh-CN), every token included. A request whose own pack takes
    kana sentences (ja-JP) keeps its kanji sentences; with the Korean kana/hanja
    reading options only a whole sentence counts. In a zh-CN request one hanzi is
@@ -712,7 +712,11 @@ static const ttf_language_pack_t *han_sentence(const ttf_engine_t *e, const ttf_
                 break;
             memcpy(key, in->text + at, w);
             key[w] = '\0';
-            if (cp >= 0x3000 &&
+            /* 1727年布蓋以論文《On …》擊敗…: in the pack's own request a traditional form is
+               still Chinese (2026-11-10, real-text cycle R7; two Latin words made the sentence
+               English, its year was read one thousand seven hundred twenty seven and the Han
+               text after the Latin title was dropped) */
+            if (cp >= 0x3000 && declared != pack &&
                 ttf_resource_get(e, "han_foreign", pack->language_tag, key, NULL))
                 return NULL;
             /* a hanzi may share a token with a symbol (10²是一百) */

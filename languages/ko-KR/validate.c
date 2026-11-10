@@ -197,9 +197,10 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     }
     if (SAME(k, "counter_band_before") || SAME(k, "counter_band_after")) {
         *handled = 1;
-        return label(key) && strlen(key) < 64 && ttf_validation_enum(v, "band|count")
+        return label(key) && strlen(key) < 64 && ttf_validation_enum(v, "band|count|count-word|count-small")
                    ? TTF_OK
-                   : ttf_validation_error(d, "counter band cue requires a word and band|count");
+                   : ttf_validation_error(
+                         d, "counter band cue requires a word and band|count|count-word|count-small");
     }
     if (SAME(k, "lexicon_case")) {
         *handled = 1;
