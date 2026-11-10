@@ -158,3 +158,7 @@ address_symbol	zh-CN	`	反引号
 address_symbol	zh-CN	{	左花括号
 address_symbol	zh-CN	|	竖线
 address_symbol	zh-CN	}	右花括号
+# 新☆王道: a decorative star (2026-11-11, real-text cycle R11; the English Unicode names white star
+# and black star were read). Like ko, the decorative policy decides (drop by default).
+speech_decorative	zh-CN	★	星
+speech_decorative	zh-CN	☆	星

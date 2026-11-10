@@ -1,5 +1,11 @@
 # Changelog
 
+## Real-text cycle R11 (2026-11-11)
+
+- Japanese: a year and a later year within a century across a slash are a span of years (`1998/1999` …からせんきゅうひゃくきゅうじゅうきゅう, was a fraction); counters 男 なん, 女 じょ, 分野 ぶんや (`2男4女` になんよんじょ, `5分野` ごぶんや).
+- Chinese: decorative stars ☆ ★ follow the decorative policy (dropped by default; were the English names white star, black star).
+- Real-text dev 97.1 → 97.3; output leftovers 276 → 274; Korean benchmark +0/−0; owner sets unchanged; contract real_text_v175 (5).
+
 ## Real-text cycle R10 (2026-11-10)
 
 - Japanese: a field-event mark reads metres and centimetres (`6m95` ろくメートルきゅうじゅうご, was left as digits); a slash with one space on each side between kana or Han words is a pause (`主 / 副`, was スラッシュ).

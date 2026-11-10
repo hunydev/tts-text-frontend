@@ -1644,6 +1644,26 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             }
         }
     }
+    /* 1998/1999 ISU…: a year and a later year within a century across a slash are a span of
+       years (2026-11-11, real-text cycle R11; it was read as a fraction, …ぶんの…) */
+    if (digit(text[begin]) && !(begin && (digit(text[begin - 1]) || text[begin - 1] == '/' ||
+                                          text[begin - 1] == '.'))) {
+        size_t q = begin, r;
+        unsigned x = 0, y = 0;
+        while (q < n && digit(text[q]) && q - begin < 5)
+            x = x * 10 + (unsigned)(text[q++] - '0');
+        if (q - begin == 4 && q < n && text[q] == '/') {
+            for (r = q + 1; r < n && digit(text[r]) && r - q - 1 < 5; ++r)
+                y = y * 10 + (unsigned)(text[r] - '0');
+            if (r - q - 1 == 4 && !(r < n && (digit(text[r]) || text[r] == '/' || text[r] == '.')) &&
+                x >= 1000 && x <= 2099 && y > x && y <= x + 100) {
+                int year = r + 3 <= n && !memcmp(text + r, "\xe5\xb9\xb4", 3);
+                snprintf(s->value, sizeof(s->value), "%.4s", text + begin);
+                snprintf(s->secondary, sizeof(s->secondary), "%.4s", text + q + 1);
+                return finish(in, s, year ? r + 3 : r, TTF_SEM_RANGE, "ja.year-slash", year ? "year" : "");
+            }
+        }
+    }
     /* 6m95 ろくメートルきゅうじゅうご, 73m09: a field-event mark, metres and centimetres
        (2026-11-10, real-text cycle R10; the digits were left as written) */
     if (digit(text[begin]) && !(begin && (digit(text[begin - 1]) || alpha(text[begin - 1]) ||
