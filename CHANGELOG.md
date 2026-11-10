@@ -1,5 +1,10 @@
 # Changelog
 
+## Real-text cycle R13 (2026-11-11)
+
+- Cubic units with a plain 3 and a capital-K square kilometre are measure units (`300 m3` 삼백 세제곱미터 / three hundred cubic meters, `2445 cm3`, `72.9Km²` 제곱킬로미터; Korean read 엠쓰리, 센티미터 쓰리, 킬로미터 제곱).
+- Real-text dev 97.4 → 97.6; Korean benchmark +0/−0; owner sets unchanged; contract real_text_v177 (5).
+
 ## Real-text cycle R12 (2026-11-11)
 
 - Korean: inflected score verbs are score cues (`4-0으로 이긴` 사 대 영, `11-15로 패하며` 십일 대 십오; were 사 다시 공); a range mark before a number with a counter reads 약 (`~5000명` 약 오천 명, was 물결), except before a date, where it ends a span, and before a date and 까지, where it is not read (`~1933년까지`).
