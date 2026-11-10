@@ -1,5 +1,10 @@
 # Changelog
 
+## Real-text cycle R12 (2026-11-11)
+
+- Korean: inflected score verbs are score cues (`4-0으로 이긴` 사 대 영, `11-15로 패하며` 십일 대 십오; were 사 다시 공); a range mark before a number with a counter reads 약 (`~5000명` 약 오천 명, was 물결), except before a date, where it ends a span, and before a date and 까지, where it is not read (`~1933년까지`).
+- Real-text sample test 94.6 → 94.7 (ko 94.2 → 94.4), dev 97.3 → 97.4; Korean benchmark +7/−0; owner sets unchanged; contract real_text_v176 (4).
+
 ## Real-text cycle R11 (2026-11-11)
 
 - Japanese: a year and a later year within a century across a slash are a span of years (`1998/1999` …からせんきゅうひゃくきゅうじゅうきゅう, was a fraction); counters 男 なん, 女 じょ, 分野 ぶんや (`2男4女` になんよんじょ, `5分野` ごぶんや).
