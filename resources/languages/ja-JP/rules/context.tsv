@@ -5,10 +5,18 @@ context	ja-JP	absorb_foreign	1
 # A sentence with hiragana grammar and no Hangul is Japanese in any request
 # (phase 2, project owner 2026-10-08); Korean kana/hanja options keep Korean.
 context	ja-JP	kana_sentence	1
+# A Han or kana run has no spaces and holds several words: it counts as three words against
+# Latin words, so a number with its counter (1937年4月) keeps the sentence language when names in
+# Latin letters surround it (2026-11-09, real-text cycle R4; it was read in English).
+context	ja-JP	sentence_word_weight	3
 # Pack readings over the same extent as a shared one (USB: katakana letter names).
 classifier_priority	ja-JP	ja.initialism	50
 classifier_priority	ja-JP	ja.alnum	50
 classifier_priority	ja-JP	ja.latin-unit	50
+# 136hp ひゃくさんじゅうろくhp (2026-11-09, real-text cycle R4)
+classifier_priority	ja-JP	ja.number-before-latin	100
+# 6m95 ろくメートルきゅうじゅうご (2026-11-10, real-text cycle R10)
+classifier_priority	ja-JP	ja.field-mark	100
 classifier_priority	ja-JP	ja.digit-cue	50
 classifier_priority	ja-JP	ja.latin-word	50
 classifier_priority	ja-JP	ja.latin-abbreviation	50

@@ -367,6 +367,17 @@ static const ttf_language_pack_t *sentence_matrix(const ttf_engine_t *e,
         const ttf_language_pack_t *owner;
         if (inner)
             nested += inner[k - begin];
+        /* 是在1997年推出 in a Chinese (or Japanese) request: Han text is the request's own
+           script, so it votes for the request language even after a number (1997年) and
+           against Latin names around it (2026-11-09, real-text cycle R4; Han text did not
+           vote, and two Latin names made the sentence English: one thousand nine hundred
+           ninety seven年). */
+        if (nested <= 0 && t->script == TTF_SCRIPT_HAN && fallback &&
+            (pack_flag(e, fallback, "han_sentence", 0) || pack_flag(e, fallback, "kana_sentence", 0)) &&
+            (j = pack_index(e, fallback)) != SIZE_MAX) {
+            votes[j] += word_weight(e, fallback);
+            continue;
+        }
         if (nested > 0 || !(owner = script_pack(e, t->script)) ||
             (j = pack_index(e, owner)) == SIZE_MAX)
             continue;
@@ -658,8 +669,8 @@ static const ttf_language_pack_t *arabic_sentence(const ttf_engine_t *e, const t
 }
 /* A hanzi sentence (2026-10-11, project owner: a kanji-only sentence prefers
    Chinese): no Hangul, no kana, at least two hanzi, at least twice as many hanzi
-   as Latin words, and no character the pack lists as han_foreign (Japanese-only
-   or traditional forms: 駅 円 國 時) belongs to the pack declaring `context <tag>
+   as Latin words, and (in another language's request) no character the pack lists as
+   han_foreign (Japanese-only or traditional forms: 駅 円 國 時) belongs to the pack declaring `context <tag>
    han_sentence 1` (zh-CN), every token included. A request whose own pack takes
    kana sentences (ja-JP) keeps its kanji sentences; with the Korean kana/hanja
    reading options only a whole sentence counts. In a zh-CN request one hanzi is
@@ -701,7 +712,11 @@ static const ttf_language_pack_t *han_sentence(const ttf_engine_t *e, const ttf_
                 break;
             memcpy(key, in->text + at, w);
             key[w] = '\0';
-            if (cp >= 0x3000 &&
+            /* 1727年布蓋以論文《On …》擊敗…: in the pack's own request a traditional form is
+               still Chinese (2026-11-10, real-text cycle R7; two Latin words made the sentence
+               English, its year was read one thousand seven hundred twenty seven and the Han
+               text after the Latin title was dropped) */
+            if (cp >= 0x3000 && declared != pack &&
                 ttf_resource_get(e, "han_foreign", pack->language_tag, key, NULL))
                 return NULL;
             /* a hanzi may share a token with a symbol (10²是一百) */
@@ -1941,6 +1956,113 @@ static size_t dictionary_cut(const ttf_engine_t *e, const char *lang, const char
     }
     return to;
 }
+/* 1932년 10월 8일 ~ 2019년 9월 8일, 1990年 〜 1994年: a range mark with one space on each
+   side, between a number (or one counter after a number) and a number, reads as the range
+   word like an attached mark (2026-11-09, real-text cycle R1; it was the symbol name 물결
+   in 4,455 per million Korean Wikipedia sentences). Returns the reading or NULL. */
+static const char *spaced_range_mark(const ttf_engine_t *e, const char *text, size_t length,
+                                     const ttf_token_t *tokens, size_t count, size_t i,
+                                     size_t *taken) {
+    char key[8];
+    size_t w, at, k, after, left;
+    uint32_t cp;
+    const char *separator;
+    int open = 0;
+    if (i + 1 >= count || tokens[i].end - tokens[i].begin != 1 || text[tokens[i].begin] != ' ' ||
+        tokens[i + 1].begin != tokens[i].end || !tokens[i].begin)
+        return NULL;
+    /* 1975년 3월 18일 ~ ): nothing spoken after the mark opens the range (2026-11-09,
+       real-text cycle R3; it was 물결 in 2.8% of Korean Wikipedia sentences with a token) */
+    after = tokens[i + 1].end;
+    *taken = 2;
+    if (after < length && text[after] == ' ') {
+        ++after;
+        if (i + 2 < count && tokens[i + 2].begin == tokens[i + 1].end &&
+            tokens[i + 2].end - tokens[i + 2].begin == 1)
+            *taken = 3;
+    }
+    /* only before a closing bracket: the end of a stream chunk is not the end of the range */
+    if (after < length && (text[after] == ')' ||
+                           (after + 3 <= length && !memcmp(text + after, "\xef\xbc\x89", 3))))
+        open = 1;
+    else if (*taken != 3 || after >= length || text[after] < '0' || text[after] > '9')
+        return NULL;
+    w = tokens[i + 1].end - tokens[i + 1].begin;
+    if (!w || w >= sizeof(key))
+        return NULL;
+    memcpy(key, text + tokens[i + 1].begin, w);
+    key[w] = 0;
+    /* (음력 8월 1일) ~ 1505년, (분카 3년 5월 2일) - 1851년: a closing bracket after the date is
+       stepped over (2026-11-10, real-text cycle R9; it was 물결, 하이픈) */
+    left = tokens[i].begin;
+    if (left && text[left - 1] == ')')
+        --left;
+    else if (left >= 3 && !memcmp(text + left - 3, "\xef\xbc\x89", 3))
+        left -= 3;
+    /* the left side ends in a digit, or in one Hangul or Han counter right after a digit */
+    for (k = 0, at = left; k < 2 && at; ++k) {
+        size_t width;
+        size_t start = at - 1;
+        while (start && ((unsigned char)text[start] & 0xc0) == 0x80)
+            --start;
+        if (text[start] >= '0' && text[start] <= '9')
+            break;
+        if (k || ttf_utf8_decode(text + start, at - start, &cp, &width) != 1 ||
+            !((cp >= 0xac00 && cp <= 0xd7a3) || ttf_script_of(cp) == TTF_SCRIPT_HAN))
+            return NULL;
+        at = start;
+    }
+    if (k == 2 || !at)
+        return NULL;
+    /* 2003년 12월 1일 - 2004년 11월 22일: a dash with one space on each side after a date
+       counter (년 월 일, 年 月 日) reads like the wave mark (2026-11-10, real-text cycle R6; it was
+       하이픈). A score or a plain number pair keeps its reading. */
+    if (!strcmp(key, "-") || !strcmp(key, "\xe2\x80\x93")) {
+        static const char *const dated[] = {"\xeb\x85\x84", "\xec\x9b\x94", "\xec\x9d\xbc",
+                                            "\xe5\xb9\xb4", "\xe6\x9c\x88", "\xe6\x97\xa5"};
+        size_t d;
+        int date = 0;
+        if (!k)
+            return NULL;
+        for (d = 0; d < sizeof(dated) / sizeof(dated[0]); ++d)
+            date |= left >= 3 && !memcmp(text + left - 3, dated[d], 3);
+        if (!date)
+            return NULL;
+        memcpy(key, "~", 2);
+    }
+    separator = ttf_resource_get(e, "quantity_range_separator", "*", key, NULL);
+    if (separator && !strcmp(separator, "0"))
+        return NULL;
+    return ttf_resource_get(e, open ? "speech_range_open" : "speech_range_mark", e->default_language,
+                            key, NULL);
+}
+
+/* ttf_speech_spaced_silent with the output so far as its left side; when that is empty or only
+   spaces (a unit cut after `?` in (? ~ ?)), the previous unit's source tail stands in. */
+static int spaced_silent_mark(const ttf_engine_t *e, const char *language, const char *prefix,
+                              size_t prefix_length, const ttf_buffer_t *output, const char *span,
+                              size_t span_length, const char *right, size_t right_length) {
+    char joined[40];
+    size_t k = 0, take;
+    const char *p;
+    while (k < output->length && output->data[k] == ' ')
+        ++k;
+    if (k < output->length || !prefix || !prefix_length || output->length > 4)
+        return ttf_speech_spaced_silent(e, language, output->data, output->length, span,
+                                        span_length, right, right_length);
+    take = prefix_length < 24 ? prefix_length : 24;
+    p = prefix + prefix_length - take;
+    while (take && ((unsigned char)*p & 0xc0) == 0x80) {
+        ++p;
+        --take;
+    }
+    memcpy(joined, p, take);
+    if (output->length)
+        memcpy(joined + take, output->data, output->length);
+    return ttf_speech_spaced_silent(e, language, joined, take + output->length, span, span_length,
+                                    right, right_length);
+}
+
 ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
                                       size_t context_length, const char *text, size_t length,
                                       size_t offset, ttf_result_t *out) {
@@ -2065,6 +2187,40 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
                 }
                 continue;
             }
+        }
+        size_t range_taken = 0;
+        if (e->frontend_options.output_mode == TTF_OUTPUT_SPEECH &&
+            tokens[i].script == TTF_SCRIPT_WHITESPACE &&
+            (reading = spaced_range_mark(e, text, length, tokens, count, i, &range_taken))) {
+            char mark[8];
+            size_t mark_length = tokens[i + 1].end - tokens[i + 1].begin;
+            memcpy(mark, text + tokens[i + 1].begin, mark_length);
+            mark[mark_length] = 0;
+            span.input_begin = sem->input_begin = tokens[i].begin + offset;
+            span.input_end = sem->input_end = tokens[i + range_taken - 1].end + offset;
+            snprintf(sem->rule, sizeof(sem->rule), "syntax.spaced-range-mark");
+            sem->type = TTF_SEM_SYMBOL;
+            tag(sem->source_lang, "und");
+            tag(sem->context_lang, "und");
+            tag(sem->render_lang, "und");
+            tag(span.verbalizer, "identity");
+            span.script = TTF_SCRIPT_SYMBOL;
+            ttf_trace_span_begin(e, span.input_begin, span.input_end);
+            ttf_trace_stage(e, TTF_TRACE_POLICY, 0, tokens[i + range_taken - 1].end - tokens[i].begin);
+            st = ttf_trace_resource(e, "speech_range_mark", e->default_language, mark, reading,
+                                    "spaced-range-mark-reading", SIZE_MAX);
+            span.begin = output.length;
+            if (st == TTF_OK)
+                st = ttf_buffer_puts(&output, reading);
+            span.end = output.length;
+            ttf_trace_span_finish(e, span.begin, span.end);
+            if (st == TTF_OK)
+                st = add_span(out, &span, &capacity);
+            if (st != TTF_OK)
+                goto fail;
+            removed_before = 0;
+            i += range_taken;
+            continue;
         }
         if (e->bracket_policy != TTF_BRACKET_READ) {
             size_t close = bracket_region(e, text, length, tokens, count, i);
@@ -2689,6 +2845,17 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
                                 SIZE_MAX);
             if (st == TTF_OK && e->frontend_options.output_mode == TTF_OUTPUT_TEXT)
                 st = ttf_buffer_append(&normalized, text + tokens[i].begin, end - tokens[i].begin);
+        } else if (sem->type == TTF_SEM_SYMBOL && !sem->unit[0] &&
+                   e->frontend_options.output_mode == TTF_OUTPUT_SPEECH &&
+                   spaced_silent_mark(e, renderer->language_tag, prefix, context_length, &output,
+                                      text + tokens[i].begin, end - tokens[i].begin, text + end,
+                                      length - end)) {
+            /* 오지 ~ 다카다: a spaced mark between words is a pause (2026-11-10, real-text
+               cycle R5) */
+            ttf_trace_stage(e, TTF_TRACE_POLICY, 0, end - tokens[i].begin);
+            st = ttf_trace_emit(e, TTF_TRACE_SELECTED, TTF_LAYER_COMMON, 0, renderer->language_tag,
+                                "decision", "spaced-silent-mark", "", "", "spaced-mark-pause",
+                                SIZE_MAX);
         } else if ((e->frontend_options.hanja == TTF_HANJA_KOREAN ||
                     e->frontend_options.kana == TTF_KANA_KOREAN) &&
                    !strcmp(sem->rule, "identity") && ttf_cjk_applies(renderer->language_tag, span.script))

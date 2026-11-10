@@ -1,5 +1,64 @@
 # Changelog
 
+## Real-text cycle R10 (2026-11-10)
+
+- Japanese: a field-event mark reads metres and centimetres (`6m95` ろくメートルきゅうじゅうご, was left as digits); a slash with one space on each side between kana or Han words is a pause (`主 / 副`, was スラッシュ).
+- Output leftovers 281 → 276 (ja 144 → 139); sample test, Korean benchmark and owner sets unchanged; contract real_text_v174 (5).
+
+## Real-text cycle R9 (2026-11-10)
+
+- Korean speech: a spaced range mark after the closing bracket of a date reads like one after the date (`9월 6일(음력 8월 1일) ~ 1505년` …일)에서…, was 물결; a dash was 하이픈), or is a pause before a word (`(1593년) ~ 만력`); a hyphen right before a Hangul syllable, a Hangul letter or a Han character after an opening quote or bracket, a space or nothing marks an affix and is not read (`'-마이신'` '마이신', was 하이픈).
+- Output leftovers 293 → 281 (ko 63 → 52); sample test, Korean benchmark and owner sets unchanged; contract real_text_v173 (6).
+
+## Real-text cycle R8 (2026-11-10)
+
+- English: a year with the next years' last two digits reads as a year range in English text (`War Diary: 1914 - 15` nineteen fourteen to fifteen, was one thousand nine hundred fourteen to fifteen); a pair before 1900 reads as years whatever its span (`1796 - 1950`); a slash between a year and a later year within a century reads like the hyphen (`1988 / 1989 season`, `1941 / 42`; was over). Bare pairs, page ranges and scores keep their cardinals.
+- The real-text scorer is back to its original equivalences (the R5 widening for a silent English slash is withdrawn). With it the sample test is 94.5 → 94.6 (en 96.4 → 96.8); Korean benchmark +0/−0; owner sets unchanged; contract real_text_v172 (5).
+
+## Real-text cycle R7 (2026-11-10)
+
+- Chinese: in a Chinese request a sentence with traditional or Japanese forms (`han_foreign`) is still a hanzi sentence, so two Latin words no longer make it English (`1727年布蓋以論文《On the masting of ships》擊敗…` 一七二七年…; was one thousand seven hundred twenty seven年 and the Han text after the title dropped). Han text lost from 5,000 fixed Chinese sentences: 30 → 10 (the rest is kana under the drop policy).
+- Korean: N대 before a spaced word no cue lists reads the band (`17대 텍사스주 부지사` 십칠 대, `3대 악단` 삼 대; was 열일곱 대, 세 대); machine counts keep native numbers through cues (verbs and quantity words such as 있다, 모두, 감차; machine names such as 헬기). New cue values `count-word` (중 only as a whole word: `3대 중` 세 대, `4대 중앙경마` 사 대) and `count-small` (decades and large numbers stay the band: `50대 한정` 오십 대).
+- Real-text sample test 94.6 → 94.7 (ko 94.0 → 94.2), dev 96.9 → 97.2; output leftovers 294 → 293; Korean benchmark +36/−0; owner sets unchanged; contract real_text_v171 (7).
+
+## Real-text cycle R6 (2026-11-10)
+
+- Japanese: a single digit after a Latin word reads as the English numeral from the Japanese `english_number` table (`Room3` Roomスリー, was the English word three); a slash before a date number is a pause (`2月1日/2月12日`, was スラッシュ).
+- Korean and Japanese: a year pair whose short year starts with a zero before a season word is a season range (`2008-09シーズン` にせんはちからきゅう, `2006-07 시즌` 이천육에서 칠; was digits left and 이공공육 다시 공칠); without the word it stays an identifier (`코드 2008-09`).
+- Korean: a dash with one space on each side after a date counter reads as the range word (`1일 - 1980년` 일 일에서 천구백팔십 년, was 하이픈); Japanese reads it から, also before a closing bracket (Was: real-text-v168-ja-latin-names-date …みっか ）).
+- Real-text sample test 94.3 → 94.6 (ko 93.4 → 94.0); output leftovers 321 → 294; Korean benchmark +0/−0; owner ja set 1 intended change (`GPT-4o`); contract real_text_v170 (10).
+
+## Real-text cycle R5 (2026-11-10)
+
+- English speech: a slash with one space on each side between two words is a pause (`singer / dancer` singer dancer, was slash; new `speech_silent` value `spaced`); a rate keeps it (`15 km / L`, one letter or a measure unit on the right), as do `and/or`, paths and numbers.
+- Korean speech: a wave mark with one space on each side between words, next to an unknown date `?`, or before a closing bracket is a pause (`서울역 ~ 부산역`, `(? ~ 1650년)`, `(1801년 ~ ?)`, was 물결); right after its own name it is named (`물결 ~ 기호`); a spaced slash between words is a pause (`작사 / 작곡`); a Greek letter before a hyphen and a word drops the hyphen (`β-카로틴` 베타 카로틴, was 베타 하이픈 카로틴).
+- Real-text sample test 94.2 → 94.3 with the widened scorer (ko 93.2 → 93.4; an English lone spaced slash may be silent, as in the sproat references; main rescored 93.3); output leftovers 409 → 321; Korean benchmark +0/−0; owner ko set 2 intended changes; contract real_text_v169 (12). Was: real-text-v165-ko-tilde-words-neg read 화이팅 물결 내일.
+
+## Real-text cycle R4 (2026-11-09)
+
+- Chinese and Japanese: Han text votes for the request language, and a Han or kana run counts as three words, so numbers among Latin names keep the request language (`演员John Smith于1985年3月出生` 一九八五年三月, was one thousand nine hundred eighty five年three月).
+- Japanese: a slash between kana or Han is a pause (`少女漫画/アニメ`, new `speech_silent` value `cjk`); a number before a small-letter Latin unit no table lists is read (`150hp` ひゃくごじゅうhp, was left as written); 29 counters from Japanese Wikipedia text read with their sound changes (`11試合` じゅういっしあい).
+- Real-text sample test 93.8 → 94.1 (ja 91.6 → 92.3, zh 92.9 → 94.8); output leftovers on 20,000 fixed sentences 499 → 409; Korean benchmark +0/−0; owner ja set 8 intended changes; contract real_text_v168 (13).
+
+## Real-text cycle R3 (2026-11-09)
+
+- Korean speech: a range mark after a date that ends at a closing bracket opens the range (`(1981년 5월 2일 ~ )` …이 일부터, was 물결); a dash with one space on each side between two words is a pause (`서울 - 부산` 서울 부산, was 하이픈); a slash between two Hangul syllables is a pause (`작사/작곡` 작사 작곡, was 슬래시; new `speech_silent` value `hangul`; before a period word in `speech_per_word`, as in `3회/분기`, the slash stays).
+- In 5,000 Korean Wikipedia sentences the symbol names left in speech fell from 142 to 41 (물결), 49 to 21 (슬래시) and 35 to 25 (하이픈); Korean benchmark +4/−0, owner sets unchanged; contract real_text_v167 (12). Was: ko-list-break-v24-guard-midline read 영하 하이픈 아니, slash-v21-neg-hangul 찬성 슬래시 반대.
+
+## Real-text cycle R2 (2026-11-09)
+
+- Korean: 골 and 덩이 count natively (`4골` 네 골, was 사골); rank and title words after N대 read Sino numbers (`7대 번주` 칠 대 번주, was 일곱 대).
+- English: the Korean rating rule no longer runs in English requests (`B-` was 비 마이너스); English reads a grade minus (`a B- grade` B minus).
+- Chinese: match scores read 比 after traditional and more score words and in a bracketed list of set scores (`以8-6擊敗` 八比六, was 八到六).
+- Real-text sample test 93.6 → 93.8, Korean benchmark +9/−1 (77골, reference Sino, kept), owner sets unchanged; contract real_text_v166 (16).
+
+## Real-text cycle R1 (2026-11-09)
+
+- Korean speech: a range mark with one space on each side between numbers reads as the range word (`1921년 3월 4일 ~ 2008년 11월 30일` …사 일에서 이천팔 년…, was 물결); Japanese gets から the same way.
+- Chinese: a time zone offset keeps its sign (`UTC-5` UTC负五, was UTC五).
+- English: a pair of years before 1900 reads as years in English requests when it spans at most 150 years and no page cue is near (`(1857 - 1952)` eighteen fifty seven to nineteen fifty two).
+- Measured on a frequency-weighted real-text sample (docs/tn-real-text.ko.md): test 93.2 → 93.6, Korean benchmark +0/−0, owner sets unchanged; contract real_text_v165 (14).
+
 ## Unreleased — speech output, measurement and the final gate
 
 - Speech output removes what it cannot say by default (2026-11-03, project owner):

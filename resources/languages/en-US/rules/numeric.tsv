@@ -619,6 +619,8 @@ classifier_priority	en-US	en.weekday-range	20
 classifier_priority	en-US	en.weekday-abbr	20
 classifier_priority	en-US	en.date-dash	20
 classifier_priority	en-US	en.grade-dash	20
+# a B- B minus (2026-11-09, real-text cycle R2)
+classifier_priority	en-US	en.rating-minus	20
 classifier_priority	en-US	en.label-dash	20
 classifier_priority	en-US	en.address-abbr	20
 classifier_priority	en-US	en.power	20

@@ -3321,6 +3321,26 @@ no_file:
         if (ascii_digit_char(t[p - 1]) && t[z] >= 'A' && t[z] <= 'Z' && z + 1 < n && ascii_digit_char(t[z + 1]))
             return say_span(in, out, z, "w: to ", "label-dash");
     }
+    /* a B- B minus, rated AA- A A minus: a grade or credit rating with a minus sign before a
+       space, a bracket or punctuation (2026-11-09, real-text cycle R2; the sign was dropped,
+       and before that the Korean rating rule read it in Korean). A- 14 (a label) keeps it. */
+    if (t[p] >= 'A' && t[p] <= 'F' && t[p] != 'E' &&
+        !(p && (ascii_letter_char(t[p - 1]) || ascii_digit_char(t[p - 1]) || t[p - 1] == '-'))) {
+        size_t z = p;
+        while (z < n && t[z] == t[p] && z - p < 3)
+            ++z;
+        if (z < n && t[z] == '-' &&
+            (z + 1 >= n || t[z + 1] == ')' || t[z + 1] == ',' || t[z + 1] == '.' || t[z + 1] == ';' ||
+             (t[z + 1] == ' ' && !(z + 2 < n && ascii_digit_char(t[z + 2]))))) {
+            char v[48];
+            size_t k;
+            (void)snprintf(v, sizeof(v), "w:");
+            for (k = p; k < z; ++k)
+                (void)snprintf(v + strlen(v), sizeof(v) - strlen(v), "%s%c", k > p ? " " : "", t[k]);
+            (void)snprintf(v + strlen(v), sizeof(v) - strlen(v), " minus");
+            return say_span(in, out, z + 1, v, "rating-minus");
+        }
+    }
     /* PO Box 88 P O box eighty eight, Apt. 5C apartment five C, RR 2 rural route two */
     if (t[p] >= 'A' && t[p] <= 'Z') {
         size_t z = 0;

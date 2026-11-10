@@ -352,6 +352,30 @@ latin_possessive	ko-KR	s	스
 policy	ko-KR	particle_agreement	off
 # A hyphen between two spoken words is a joiner, not 하이픈 (K-팝 케이 팝; 2026-10-07).
 speech_silent	ko-KR	-	between
+# 주연/제작 주연 제작: a slash between two Hangul syllables is a pause (2026-11-09, real-text
+# cycle R3; it was 슬래시 in 1% of Korean Wikipedia sentences with a token). 원/달러 keeps its
+# currency-pair rule; 1/2, km/h and AC/DC keep theirs.
+speech_silent	ko-KR	/	hangul
+# 완정역 ~ 루원역, 함양 ~ 율곡선, (? ~ 207년), (? ~ ?): a wave mark with one space on each side
+# between words or an unknown date is a pause (2026-11-10, real-text cycle R5; it was 물결 in
+# 1,690 per million Korean Wikipedia sentences). Between numbers it is the range word (cycle R1);
+# attached (화이팅~) it lengthens; right after its own name (물결 ~ 기호) it keeps the name.
+# The slash value `hangul` also covers a spaced slash between words (목초지 / 초원).
+speech_silent	ko-KR	~	spaced
+speech_silent	ko-KR	～	spaced
+speech_silent	ko-KR	∼	spaced
+# 3회/분기, 프레임/초: before a period word the slash is a rate and keeps its reading.
+speech_per_word	ko-KR	초	1
+speech_per_word	ko-KR	분	1
+speech_per_word	ko-KR	시간	1
+speech_per_word	ko-KR	일	1
+speech_per_word	ko-KR	주	1
+speech_per_word	ko-KR	월	1
+speech_per_word	ko-KR	개월	1
+speech_per_word	ko-KR	년	1
+speech_per_word	ko-KR	분기	1
+speech_per_word	ko-KR	회	1
+speech_per_word	ko-KR	번	1
 # Circled and parenthesized letters (Ⓐ 에이, ㉠ 기역, ㉮ 가, ㈀ 기역, ㈎ 가; 2026-10-08).
 speech_symbol	ko-KR	Ⓐ	에이
 speech_symbol	ko-KR	ⓐ	에이

@@ -399,3 +399,35 @@ counter	ja-JP	号車	ごうしゃ:-
 counter	ja-JP	滴	てき:t
 # 4分間隔 よんぷんかんかく (ja dev v1, 2026-10-17)
 counter	ja-JP	分間隔	ふんかんかく:f
+# Counters after numbers in Japanese Wikipedia text that the table lacked, most frequent first
+# (2026-11-09, real-text cycle R4: 11試合 じゅういっしあい, 1作目 いっさくめ; they were read じゅういち試合,
+# losing the sound change). 形, 型 and 石 have two readings and stay out.
+counter	ja-JP	試合	しあい:s
+counter	ja-JP	作目	さくめ:s
+counter	ja-JP	作品	さくひん:s
+counter	ja-JP	作	さく:s
+counter	ja-JP	種	しゅ:s
+counter	ja-JP	線	せん:s
+counter	ja-JP	機	き:k
+counter	ja-JP	節	せつ:s
+counter	ja-JP	系統	けいとう:k
+counter	ja-JP	系	けい:k
+counter	ja-JP	席	せき:s
+counter	ja-JP	盗塁	とうるい:t
+counter	ja-JP	編	へん:f
+counter	ja-JP	部門	ぶもん:-
+counter	ja-JP	部	ぶ:-
+counter	ja-JP	面	めん:-
+counter	ja-JP	打点	だてん:-
+counter	ja-JP	安打	あんだ:-
+counter	ja-JP	段階	だんかい:-
+counter	ja-JP	段	だん:-
+counter	ja-JP	連覇	れんぱ:-
+counter	ja-JP	連勝	れんしょう:-
+counter	ja-JP	連隊	れんたい:-
+counter	ja-JP	門	もん:-
+counter	ja-JP	駅	えき:-
+counter	ja-JP	巡目	じゅんめ:-
+counter	ja-JP	馬身	ばしん:-
+counter	ja-JP	支社	ししゃ:s
+counter	ja-JP	支店	してん:s

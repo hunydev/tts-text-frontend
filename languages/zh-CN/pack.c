@@ -905,6 +905,25 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         q = digits_end(t, n, p + 3);
         return finish(in, s, q, "ordno", t + p + 3, q - p - 3, "");
     }
+    /* UTC-5 UTC负五, GMT+8 GMT加八, UTC−3:30 UTC负三点三十分: a time zone offset is a signed
+       number, not a code joined by a hyphen (2026-11-09, real-text cycle R1; the sign was
+       dropped, UTC五, in 64% of Chinese Wikipedia sentences with an offset). */
+    if ((has(t, n, p, "UTC") || has(t, n, p, "GMT")) && p + 3 < n) {
+        size_t sign = p + 3, w = has(t, n, sign, "\xE2\x88\x92") ? 3 : 1;
+        if (t[sign] == '+' || t[sign] == '-' || w == 3) {
+            q = sign + w;
+            if (q < n && digit(t[q])) {
+                q = digits_end(t, n, q);
+                if (q - sign - w <= 2) {
+                    if (q + 2 < n && t[q] == ':' && digit(t[q + 1]) && digit(t[q + 2]) &&
+                        !(q + 3 < n && digit(t[q + 3])))
+                        q += 3;
+                    if (!(q < n && alnum(t[q])))
+                        return finish(in, s, q, "utc", t + p, q - p, "");
+                }
+            }
+        }
+    }
     /* Letters with digits: CA1234 G20 COVID-19 PM2.5 B2B abc123 USB3.0 H₂O SPF30+. */
     if (alpha(t[p])) {
         int digits_seen = 0;
@@ -1495,6 +1514,17 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
                     --k;
                 if (k < p - 3 && k >= 2 && t[k - 1] == '-' && digit(t[k - 2]))
                     listed = 1;
+            }
+            /* 以0比2（19-21、11-21）: the first set score of a bracketed list after a match
+               score N比M (2026-11-09, real-text cycle R2; it was read 十九到二十一) */
+            if (!listed && (prev_is(t, p, "（") || prev_is(t, p, "(")) && has(t, n, b2 + l2, "、")) {
+                size_t k = p - (prev_is(t, p, "（") ? 3 : 1);
+                if (k >= 4 && digit(t[k - 1])) {
+                    while (k > 0 && digit(t[k - 1]))
+                        --k;
+                    if (k >= 3 && (prev_is(t, k, "比") || prev_is(t, k, ":")))
+                        listed = 1;
+                }
             }
             if (cue_before(e, "score_cue", t, p, 3) || listed ||
                 (prev_is(t, p, "以") && (has(t, n, b2 + l2, "、") || word_after(e, "ratio_after", t, n, b2 + l2)))) {
@@ -2288,6 +2318,27 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
     }
     if (!strcmp(mode, "latin"))
         return latin(e, b, v);
+    if (!strcmp(mode, "utc")) {
+        /* UTC-5 UTC负五, UTC+5:30 UTC加五点三十分 */
+        size_t i = 3, z;
+        TRY(ttf_buffer_append(b, v, 3));
+        if (v[i] == '+') {
+            TRY(word(e, b, "plus"));
+            ++i;
+        } else {
+            TRY(word(e, b, "minus"));
+            i += v[i] == '-' ? 1 : 3;
+        }
+        for (z = i; z < vn && digit(v[z]); ++z)
+            ;
+        TRY(integer(e, b, v + i, z - i, 0));
+        if (z + 2 < vn + 1 && v[z] == ':' && strncmp(v + z + 1, "00", 2)) {
+            TRY(word(e, b, "point"));
+            TRY(integer(e, b, v + z + 1, 2, 0));
+            TRY(ttf_buffer_puts(b, "分"));
+        }
+        return TTF_OK;
+    }
     if (!strcmp(mode, "valence")) {
         TRY(word(e, b, "positive"));
         return number(e, b, v, vn, 0);

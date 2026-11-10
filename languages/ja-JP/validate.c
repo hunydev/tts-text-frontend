@@ -269,11 +269,16 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    : ttf_validation_error(
                          d, "speech_symbol/weekday_mark requires one character and a reading");
     }
+    if (SAME(k, "speech_per_word")) {
+        *handled = 1;
+        return v && !strcmp(v, "1") ? TTF_OK
+                                    : ttf_validation_error(d, "speech_per_word requires a word and 1");
+    }
     if (SAME(k, "speech_silent")) {
         *handled = 1;
-        return symbol_key(key) && ttf_validation_enum(v, "0|1")
+        return symbol_key(key) && ttf_validation_enum(v, "0|1|cjk")
                    ? TTF_OK
-                   : ttf_validation_error(d, "speech_silent requires one symbol and 0|1");
+                   : ttf_validation_error(d, "speech_silent requires one symbol and 0|1|cjk");
     }
     if (SAME(k, "speech_join")) {
         *handled = 1;
@@ -291,6 +296,12 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
         return i && i < 64 && label(v)
                    ? TTF_OK
                    : ttf_validation_error(d, "electronic_word requires a reading");
+    }
+    if (SAME(k, "context") && SAME(key, "sentence_word_weight")) {
+        *handled = 1;
+        return ttf_validation_integer(v, 1, 9, NULL)
+                   ? TTF_OK
+                   : ttf_validation_error(d, "sentence_word_weight must be an integer in 1..9");
     }
     if (SAME(k, "context")) {
         *handled = 1;
