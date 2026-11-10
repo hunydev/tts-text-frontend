@@ -2003,6 +2003,22 @@ static const char *spaced_range_mark(const ttf_engine_t *e, const char *text, si
     }
     if (k == 2 || !at)
         return NULL;
+    /* 2003년 12월 1일 - 2004년 11월 22일: a dash with one space on each side after a date
+       counter (년 월 일, 年 月 日) reads like the wave mark (2026-11-10, real-text cycle R6; it was
+       하이픈). A score or a plain number pair keeps its reading. */
+    if (!strcmp(key, "-") || !strcmp(key, "\xe2\x80\x93")) {
+        static const char *const dated[] = {"\xeb\x85\x84", "\xec\x9b\x94", "\xec\x9d\xbc",
+                                            "\xe5\xb9\xb4", "\xe6\x9c\x88", "\xe6\x97\xa5"};
+        size_t d;
+        int date = 0;
+        if (!k)
+            return NULL;
+        for (d = 0; d < sizeof(dated) / sizeof(dated[0]); ++d)
+            date |= tokens[i].begin >= 3 && !memcmp(text + tokens[i].begin - 3, dated[d], 3);
+        if (!date)
+            return NULL;
+        memcpy(key, "~", 2);
+    }
     separator = ttf_resource_get(e, "quantity_range_separator", "*", key, NULL);
     if (separator && !strcmp(separator, "0"))
         return NULL;

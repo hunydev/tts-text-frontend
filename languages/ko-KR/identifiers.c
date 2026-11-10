@@ -1880,6 +1880,26 @@ size_t ttf_ko_classify_digit_identifier(const ttf_pack_input_t *in, ttf_semantic
                 (shared_identifier_pair(la, lb, t + b, t + c) && !raw_suffix(in, c_end)))
                 return 0;
         }
+        /* 2006-07 시즌 이천육에서 칠: before a season word the next year's last two digits may
+           start with a zero (2026-11-10, real-text cycle R6; it was 이공공육 다시 공칠). 00, a
+           labelled number and a pair without the word keep their readings. */
+        if (la == 4 && lb == 2 && t[b] != '0' && t[c] == '0' && t[c + 1] != '0' &&
+            ttf_season_word_at(t, n, c_end)) {
+            unsigned long x = 0;
+            char label[TTF_IR_VALUE_SIZE];
+            ttf_resource_layer_t layer = TTF_LAYER_COMMON;
+            for (i = b; i < a_end; ++i)
+                x = x * 10 + (unsigned long)(t[i] - '0');
+            if (x >= 1900 && x <= 2098 && (x + 1) % 100 == (unsigned long)(t[c + 1] - '0') &&
+                !preceding_label(in, b, label, sizeof(label), &layer)) {
+                memcpy(s->value, t + b, la);
+                s->value[la] = '\0';
+                s->secondary[0] = t[c + 1];
+                s->secondary[1] = '\0';
+                s->unit[0] = '\0';
+                return classified(in, s, c_end, TTF_SEM_RANGE, "ko:year-range");
+            }
+        }
         if (la <= 9 && lb <= 9 && !(la > 1 && t[b] == '0') && !(lb > 1 && t[c] == '0')) {
             unsigned long x = 0, y = 0;
             size_t limit;

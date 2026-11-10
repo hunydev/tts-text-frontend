@@ -1006,8 +1006,45 @@ static size_t quantity_endpoint(const ttf_pack_input_t *in, size_t start, ttf_se
    digits, or sides of different lengths where the longer has five or more.
    Equal-length pairs (12000-15000, 1995-2005), small pairs and grouped or
    decimal values stay ranges; units and counters take another path. */
-static int identifier_pair(const char *s, size_t a, size_t a_end, size_t b, size_t b_end) {
+/* A season word after a year pair (2008-09シーズン, 2006-07 시즌). */
+int ttf_season_word_at(const char *s, size_t n, size_t at) {
+    static const char *const words[] = {"\xec\x8b\x9c\xec\xa6\x8c", /* 시즌 */
+                                        "\xe3\x82\xb7\xe3\x83\xbc\xe3\x82\xba\xe3\x83\xb3", /* シーズン */
+                                        "\xe8\xb5\x9b\xe5\xad\xa3", /* 赛季 */
+                                        "season", "Season"};
+    size_t k;
+    if (at < n && s[at] == ' ')
+        ++at;
+    for (k = 0; k < sizeof(words) / sizeof(words[0]); ++k)
+        if (at + strlen(words[k]) <= n && !memcmp(s + at, words[k], strlen(words[k])))
+            return 1;
+    return 0;
+}
+/* 2008-09 シーズン, 2006-07 시즌: a year and the zero-led last two digits of the next year
+   (not 00) before a season word are a season, not an identifier (2026-11-10, real-text cycle
+   R6; ja kept the digits and ko read 이공공육 다시 공칠). Without the word (코드 2008-09) the
+   zero keeps it an identifier. */
+static int season_pair(const char *s, size_t n, size_t a, size_t a_end, size_t b, size_t b_end) {
+    unsigned x = 0, y;
+    size_t i;
+    if (a_end - a != 4 || b_end - b != 2 || s[b] != '0' || s[b + 1] == '0' ||
+        !ttf_season_word_at(s, n, b_end))
+        return 0;
+    for (i = a; i < a_end; ++i) {
+        if (!digit(s[i]))
+            return 0;
+        x = x * 10 + (unsigned)(s[i] - '0');
+    }
+    if (!digit(s[b + 1]))
+        return 0;
+    y = (unsigned)(s[b + 1] - '0');
+    return x >= 1900 && x <= 2098 && (x + 1) % 100 == y;
+}
+static int identifier_pair(const char *s, size_t n, size_t a, size_t a_end, size_t b,
+                           size_t b_end) {
     size_t la = a_end - a, lb = b_end - b, i;
+    if (season_pair(s, n, a, a_end, b, b_end))
+        return 0;
     for (i = a; i < a_end; ++i)
         if (!digit(s[i]))
             return 0;
@@ -1814,8 +1851,10 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
                 if (quantity_separator(in, skip_quantity_space(in, end), NULL) &&
                     !dash_after(in, end))
                     return preserve(in, out, range_chain_end(in, end), "syntax.invalid-range");
-                if (legacy_hyphen && identifier_pair(s, b, p, start, end))
+                if (legacy_hyphen && identifier_pair(s, n, b, p, start, end))
                     return preserve(in, out, ttf_numeric_atom_end(in, end), "syntax.invalid-range");
+                if (legacy_hyphen && season_pair(s, n, b, p, start, end))
+                    (void)snprintf(out->secondary, sizeof(out->secondary), "%c", s[start + 1]);
                 if (!structured_tail(in, end)) {
                     out->layer = separator_layer > out->layer ? separator_layer : out->layer;
                     return finish(in, out, end, TTF_SEM_RANGE,

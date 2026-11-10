@@ -274,6 +274,8 @@ size_t ttf_classify_universal(const ttf_pack_input_t *input, ttf_semantic_t *out
 /* {@math}: reads all of text as one arithmetic expression (classifier.c). */
 int ttf_math_expression(const char *text, size_t n, ttf_semantic_t *out);
 /* Normalize one stable context unit; shared by batch and streaming. */
+/* A season word (시즌, シーズン, 赛季, season) at `at`, after one optional space. */
+int ttf_season_word_at(const char *s, size_t n, size_t at);
 ttf_status_t ttf_process_unit(const ttf_engine_t *e, const char *text, size_t length,
                               size_t input_offset, ttf_result_t *out);
 /* The same, with up to 64 bytes of the text before the unit for the

@@ -162,7 +162,16 @@ static ttf_status_t source_numeral(const ttf_engine_t *e, const ttf_language_pac
     ttf_buffer_t spoken = {0};
     char part_trace[64] = {0};
     ttf_resource_layer_t part_layer = TTF_LAYER_COMMON;
-    ttf_status_t st = source->verbalize(e, sem, text, n, &spoken);
+    ttf_status_t st;
+    /* Room3 Roomスリー, PlayStation4 PlayStationフォー: a target that writes the English numerals
+       in its own script (english_number) reads them from its table (2026-11-10, real-text cycle
+       R6; the English word three was left in Japanese speech) */
+    if (sem->type == TTF_SEM_CARDINAL && source && !strcmp(source->language_tag, "en-US")) {
+        const char *own = ttf_resource_get(e, "english_number", target->language_tag, sem->value, NULL);
+        if (own)
+            return ttf_buffer_puts(out, own);
+    }
+    st = source->verbalize(e, sem, text, n, &spoken);
     if (st == TTF_OK && spoken.length)
         st = render_at(e, source, target, spoken.data, spoken.length, TTF_LEX_WORD, out, part_trace,
                        &part_layer, part_begin);

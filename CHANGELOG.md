@@ -1,5 +1,12 @@
 # Changelog
 
+## Real-text cycle R6 (2026-11-10)
+
+- Japanese: a single digit after a Latin word reads as the English numeral from the Japanese `english_number` table (`Room3` Roomスリー, was the English word three); a slash before a date number is a pause (`2月1日/2月12日`, was スラッシュ).
+- Korean and Japanese: a year pair whose short year starts with a zero before a season word is a season range (`2008-09シーズン` にせんはちからきゅう, `2006-07 시즌` 이천육에서 칠; was digits left and 이공공육 다시 공칠); without the word it stays an identifier (`코드 2008-09`).
+- Korean: a dash with one space on each side after a date counter reads as the range word (`1일 - 1980년` 일 일에서 천구백팔십 년, was 하이픈); Japanese reads it から, also before a closing bracket (Was: real-text-v168-ja-latin-names-date …みっか ）).
+- Real-text sample test 94.3 → 94.6 (ko 93.4 → 94.0); output leftovers 321 → 294; Korean benchmark +0/−0; owner ja set 1 intended change (`GPT-4o`); contract real_text_v170 (10).
+
 ## Real-text cycle R5 (2026-11-10)
 
 - English speech: a slash with one space on each side between two words is a pause (`singer / dancer` singer dancer, was slash; new `speech_silent` value `spaced`); a rate keeps it (`15 km / L`, one letter or a measure unit on the right), as do `and/or`, paths and numbers.

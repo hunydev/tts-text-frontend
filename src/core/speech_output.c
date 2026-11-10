@@ -327,6 +327,15 @@ static int between_hangul(const ttf_engine_t *e, const char *lang, const char *l
         s = right;
         n = right_length;
     }
+    /* 1378年/1379年, 7月28日/8月10日: with `cjk` a date number on the right (digits, then 年 月 日)
+       is a word too (2026-11-10, real-text cycle R6; it was スラッシュ) */
+    if (cjk && n && s[0] >= '0' && s[0] <= '9') {
+        size_t k = 0;
+        while (k < n && s[k] >= '0' && s[k] <= '9')
+            ++k;
+        return k + 3 <= n && (!memcmp(s + k, "\xe5\xb9\xb4", 3) || !memcmp(s + k, "\xe6\x9c\x88", 3) ||
+                              !memcmp(s + k, "\xe6\x97\xa5", 3));
+    }
     if (!(n && ttf_utf8_decode(s, n, &cp, &width) == 1 && native_letter(cp, cjk)))
         return 0;
     {
