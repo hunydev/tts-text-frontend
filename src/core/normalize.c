@@ -2010,6 +2010,32 @@ static const char *spaced_range_mark(const ttf_engine_t *e, const char *text, si
                             key, NULL);
 }
 
+/* ttf_speech_spaced_silent with the output so far as its left side; when that is empty or only
+   spaces (a unit cut after `?` in (? ~ ?)), the previous unit's source tail stands in. */
+static int spaced_silent_mark(const ttf_engine_t *e, const char *language, const char *prefix,
+                              size_t prefix_length, const ttf_buffer_t *output, const char *span,
+                              size_t span_length, const char *right, size_t right_length) {
+    char joined[40];
+    size_t k = 0, take;
+    const char *p;
+    while (k < output->length && output->data[k] == ' ')
+        ++k;
+    if (k < output->length || !prefix || !prefix_length || output->length > 4)
+        return ttf_speech_spaced_silent(e, language, output->data, output->length, span,
+                                        span_length, right, right_length);
+    take = prefix_length < 24 ? prefix_length : 24;
+    p = prefix + prefix_length - take;
+    while (take && ((unsigned char)*p & 0xc0) == 0x80) {
+        ++p;
+        --take;
+    }
+    memcpy(joined, p, take);
+    if (output->length)
+        memcpy(joined + take, output->data, output->length);
+    return ttf_speech_spaced_silent(e, language, joined, take + output->length, span, span_length,
+                                    right, right_length);
+}
+
 ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
                                       size_t context_length, const char *text, size_t length,
                                       size_t offset, ttf_result_t *out) {
@@ -2792,6 +2818,17 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
                                 SIZE_MAX);
             if (st == TTF_OK && e->frontend_options.output_mode == TTF_OUTPUT_TEXT)
                 st = ttf_buffer_append(&normalized, text + tokens[i].begin, end - tokens[i].begin);
+        } else if (sem->type == TTF_SEM_SYMBOL && !sem->unit[0] &&
+                   e->frontend_options.output_mode == TTF_OUTPUT_SPEECH &&
+                   spaced_silent_mark(e, renderer->language_tag, prefix, context_length, &output,
+                                      text + tokens[i].begin, end - tokens[i].begin, text + end,
+                                      length - end)) {
+            /* 오지 ~ 다카다: a spaced mark between words is a pause (2026-11-10, real-text
+               cycle R5) */
+            ttf_trace_stage(e, TTF_TRACE_POLICY, 0, end - tokens[i].begin);
+            st = ttf_trace_emit(e, TTF_TRACE_SELECTED, TTF_LAYER_COMMON, 0, renderer->language_tag,
+                                "decision", "spaced-silent-mark", "", "", "spaced-mark-pause",
+                                SIZE_MAX);
         } else if ((e->frontend_options.hanja == TTF_HANJA_KOREAN ||
                     e->frontend_options.kana == TTF_KANA_KOREAN) &&
                    !strcmp(sem->rule, "identity") && ttf_cjk_applies(renderer->language_tag, span.script))

@@ -25,6 +25,10 @@ speech_silent	en-US	-	1
 speech_symbol	en-US	_	underscore
 speech_symbol	en-US	:	colon
 speech_symbol	en-US	/	slash
+# investor / broker: a slash with one space on each side between two words is a pause
+# (2026-11-10, real-text cycle R5; it was slash). and/or, km/h, paths and numbers (3 / 4)
+# keep their readings.
+speech_silent	en-US	/	spaced
 speech_symbol	en-US	?	question mark
 speech_symbol	en-US	=	equals
 speech_symbol	en-US	&	and

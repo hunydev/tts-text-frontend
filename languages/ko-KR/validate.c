@@ -376,9 +376,9 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     }
     if (SAME(k, "speech_silent")) {
         *handled = 1;
-        return symbol_key(key) && ttf_validation_enum(v, "0|1|between|hangul")
+        return symbol_key(key) && ttf_validation_enum(v, "0|1|between|hangul|spaced")
                    ? TTF_OK
-                   : ttf_validation_error(d, "speech_silent requires one symbol and 0|1|between|hangul");
+                   : ttf_validation_error(d, "speech_silent requires one symbol and 0|1|between|hangul|spaced");
     }
     if (SAME(k, "speech_lengthening")) {
         *handled = 1;

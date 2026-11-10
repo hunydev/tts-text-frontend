@@ -1,5 +1,11 @@
 # Changelog
 
+## Real-text cycle R5 (2026-11-10)
+
+- English speech: a slash with one space on each side between two words is a pause (`singer / dancer` singer dancer, was slash; new `speech_silent` value `spaced`); a rate keeps it (`15 km / L`, one letter or a measure unit on the right), as do `and/or`, paths and numbers.
+- Korean speech: a wave mark with one space on each side between words, next to an unknown date `?`, or before a closing bracket is a pause (`서울역 ~ 부산역`, `(? ~ 1650년)`, `(1801년 ~ ?)`, was 물결); right after its own name it is named (`물결 ~ 기호`); a spaced slash between words is a pause (`작사 / 작곡`); a Greek letter before a hyphen and a word drops the hyphen (`β-카로틴` 베타 카로틴, was 베타 하이픈 카로틴).
+- Real-text sample test 94.2 → 94.3 with the widened scorer (ko 93.2 → 93.4; an English lone spaced slash may be silent, as in the sproat references; main rescored 93.3); output leftovers 409 → 321; Korean benchmark +0/−0; owner ko set 2 intended changes; contract real_text_v169 (12). Was: real-text-v165-ko-tilde-words-neg read 화이팅 물결 내일.
+
 ## Real-text cycle R4 (2026-11-09)
 
 - Chinese and Japanese: Han text votes for the request language, and a Han or kana run counts as three words, so numbers among Latin names keep the request language (`演员John Smith于1985年3月出生` 一九八五年三月, was one thousand nine hundred eighty five年three月).

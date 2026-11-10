@@ -206,13 +206,19 @@ static int word_follows(const char *s, size_t n, const char *right, size_t right
 }
 
 /* 경남 - 창원, 영하 - 아니: a mark with one space on each side between two words is a pause
-   (2026-11-09, real-text cycle R3; it was read 하이픈). `left` ends with the space. */
-static int spaced_between_words(const char *left, size_t left_length, const char *s, size_t n,
-                                const char *right, size_t right_length) {
+   (2026-11-09, real-text cycle R3; it was read 하이픈). The value `spaced` keeps only this case
+   (investor / broker, cycle R5; it was slash). With `loose` an unknown date `?` may stand on
+   either side, a number on the right, and an opening or closing bracket ends the range
+   (? ~ ?, ? ~ 207년, 1950년대 ~ ), ( ~ 1600년), cycle R5). A mark right after its
+   own name is being named and keeps it (물결 ~ 기호). `left` ends with the space. */
+static int spaced_between_words(const ttf_engine_t *e, const char *lang, const char *key,
+                                const char *left, size_t left_length, const char *s, size_t n,
+                                const char *right, size_t right_length, int loose) {
     size_t start;
     uint32_t cp;
     size_t width;
     ttf_script_t script;
+    const char *name;
     if (left_length < 2 || left[left_length - 1] != ' ')
         return 0;
     start = left_length - 1;
@@ -222,13 +228,75 @@ static int spaced_between_words(const char *left, size_t left_length, const char
     if (ttf_utf8_decode(left + start, left_length - 1 - start, &cp, &width) != 1)
         return 0;
     script = ttf_script_of(cp);
-    if (script != TTF_SCRIPT_HANGUL && script != TTF_SCRIPT_LATIN)
+    if (script != TTF_SCRIPT_HANGUL && script != TTF_SCRIPT_LATIN &&
+        !(loose && (cp == '?' || cp == '(' || cp == 0xff08)))
+        return 0;
+    name = ttf_resource_get(e, "speech_symbol", lang, key, NULL);
+    if (name && *name && strlen(name) < left_length &&
+        !memcmp(left + left_length - 1 - strlen(name), name, strlen(name)))
         return 0;
     if (!n) {
         s = right;
         n = right_length;
     }
-    return n >= 2 && s[0] == ' ' && word_follows(s + 1, n - 1, NULL, 0);
+    /* 뮌헨 ~): with `loose` a closing bracket right after the mark ends an open range */
+    if (loose && n && (s[0] == ')' || (n >= 3 && !memcmp(s, "\xef\xbc\x89", 3))))
+        return 1;
+    if (n < 2 || s[0] != ' ')
+        return 0;
+    if (loose && (s[1] == '?' || s[1] == ')' || (s[1] >= '0' && s[1] <= '9') ||
+                  (n >= 4 && !memcmp(s + 1, "\xef\xbc\x89", 3))))
+        return 1;
+    /* km / h, kg / ha: one Latin letter, or a measure unit some table reads, on the right is a
+       rate; keep the mark */
+    {
+        char word[8];
+        size_t k = 0;
+        const char *unit;
+        while (1 + k < n && k + 1 < sizeof(word) &&
+               ((s[1 + k] >= 'A' && s[1 + k] <= 'Z') || (s[1 + k] >= 'a' && s[1 + k] <= 'z'))) {
+            word[k] = s[1 + k];
+            ++k;
+        }
+        word[k] = 0;
+        if (k == 1 && !(1 + k < n && s[1 + k] == '.'))
+            return 0;
+        if (k && !(1 + k < n && ((unsigned char)s[1 + k] >= 0x80 ||
+                                 (s[1 + k] >= 'a' && s[1 + k] <= 'z')))) {
+            unit = ttf_resource_get(e, "numeric_suffix", "*", word, NULL);
+            if (unit && !strncmp(unit, "MEASURE:", 8))
+                return 0;
+        }
+    }
+    return word_follows(s + 1, n - 1, NULL, 0);
+}
+
+/* 오지 ~ 다카다 오지 다카다: a symbol token whose speech_silent value is `spaced` and that
+   stands with one space on each side between words is a pause (2026-11-10, real-text cycle
+   R5; it was 물결). `left` is the output so far, `right` the source after the mark. */
+int ttf_speech_spaced_silent(const ttf_engine_t *e, const char *language, const char *left,
+                             size_t left_length, const char *span, size_t span_length,
+                             const char *right, size_t right_length) {
+    char key[8];
+    const char *value;
+    if (!span_length || span_length >= sizeof(key))
+        return 0;
+    memcpy(key, span, span_length);
+    key[span_length] = 0;
+    value = ttf_resource_get(e, "speech_silent", language, key, NULL);
+    if (!value || strcmp(value, "spaced"))
+        return 0;
+    return spaced_between_words(e, language, key, left, left_length, right, right_length, NULL, 0,
+                                1);
+}
+
+/* β-탄소 베타 탄소: a Greek letter or another name the speech pass gave a trailing space still
+   counts as the spoken word right before the mark (2026-11-10, real-text cycle R5; it was
+   베타 하이픈 탄소). Only when the mark is written against the next word. */
+static int named_before(const char *left, size_t left_length, const char *s, size_t n) {
+    if (left_length < 2 || left[left_length - 1] != ' ' || left[left_length - 2] == ' ')
+        return 0;
+    return n && s[0] != ' ';
 }
 
 /* A Hangul syllable, or with `cjk` a kana or Han character. */
@@ -452,14 +520,28 @@ ttf_status_t ttf_speech_output(const ttf_engine_t *e, const ttf_language_pack_t 
                    (!strcmp(ttf_resource_get(e, "speech_silent", lang, key, NULL), "1") ||
                     /* K-팝, U-보금자리론: between two spoken words only (2026-10-07) */
                     (!strcmp(ttf_resource_get(e, "speech_silent", lang, key, NULL), "between") &&
-                     PREV_SPOKEN() &&
+                     (PREV_SPOKEN() ||
+                      (out.length ? named_before(out.data, out.length,
+                                                 at + width < text->length ? text->data + at + width : right,
+                                                 at + width < text->length ? text->length - at - width
+                                                                           : right_length)
+                                  : named_before(left, left_length,
+                                                 at + width < text->length ? text->data + at + width : right,
+                                                 at + width < text->length ? text->length - at - width
+                                                                           : right_length))) &&
                      word_follows(text->data + at + width, text->length - at - width, right,
                                   right_length)) ||
-                    (!strcmp(ttf_resource_get(e, "speech_silent", lang, key, NULL), "between") &&
-                     (out.length ? spaced_between_words(out.data, out.length, text->data + at + width,
-                                                        text->length - at - width, right, right_length)
-                                 : spaced_between_words(left, left_length, text->data + at + width,
-                                                        text->length - at - width, right, right_length))) ||
+                    ((!strcmp(ttf_resource_get(e, "speech_silent", lang, key, NULL), "between") ||
+                      !strcmp(ttf_resource_get(e, "speech_silent", lang, key, NULL), "spaced") ||
+                      !strcmp(ttf_resource_get(e, "speech_silent", lang, key, NULL), "hangul")) &&
+                     (out.length ? spaced_between_words(e, lang, key, out.data, out.length,
+                                                        text->data + at + width, text->length - at - width,
+                                                        right, right_length,
+                                                        !strcmp(ttf_resource_get(e, "speech_silent", lang, key, NULL), "spaced"))
+                                 : spaced_between_words(e, lang, key, left, left_length,
+                                                        text->data + at + width, text->length - at - width,
+                                                        right, right_length,
+                                                        !strcmp(ttf_resource_get(e, "speech_silent", lang, key, NULL), "spaced")))) ||
                     ((!strcmp(ttf_resource_get(e, "speech_silent", lang, key, NULL), "hangul") ||
                       !strcmp(ttf_resource_get(e, "speech_silent", lang, key, NULL), "cjk")) &&
                      (out.length ? between_hangul(e, lang, out.data, out.length, text->data + at + width,
