@@ -786,6 +786,7 @@ static int year_follows(const ttf_pack_input_t *in, size_t from) {
 static size_t year_range(const ttf_pack_input_t *in, ttf_semantic_t *out, size_t start) {
     date_number_t first, second;
     size_t p, consumed;
+    int slash = 0;
     unsigned minimum, maximum;
     ttf_resource_layer_t layer = TTF_LAYER_COMMON;
     if (!ascii_digit(in->text[start]))
@@ -806,7 +807,27 @@ static size_t year_range(const ttf_pack_input_t *in, ttf_semantic_t *out, size_t
         return 0;
     /* built 1998-2004: two years of 1900-2099 in order read as years without a cue (owner
        sets, 2026-10-14); other pairs still need one (a page range keeps its cardinals). */
-    if (!preceding_cue(in, start, first.end, &layer)) {
+    {
+        /* 1988 / 1989 season, 1941/42: a slash between a year and a later year reads like the
+           hyphen (2026-11-10, real-text cycle R8; it was nineteen eighty eight over …) */
+        size_t r = skip_horizontal(in->text, in->length, first.end), k;
+        unsigned later = 0;
+        if (r < in->length && in->text[r] == '/') {
+            r = skip_horizontal(in->text, in->length, r + 1);
+            for (k = 0; k < 4 && r + k < in->length && ascii_digit(in->text[r + k]); ++k)
+                later = later * 10 + (unsigned)(in->text[r + k] - '0');
+            if ((r + k < in->length && ascii_digit(in->text[r + k])) ||
+                !((k == 4 && later > first.value && later <= first.value + 100) ||
+                  (k == 2 && later > first.value % 100)) ||
+                first.value < 1000 || first.value > 2099 ||
+                !(in->engine->config.default_language &&
+                  !strncmp(in->engine->config.default_language, "en", 2)) ||
+                !english_text(in, start, r + k) || page_cue(in, start))
+                return 0;
+            slash = 1;
+        }
+    }
+    if (!slash && !preceding_cue(in, start, first.end, &layer)) {
         size_t r = skip_horizontal(in->text, in->length, first.end), k;
         unsigned second_year = 0;
         if (first.value < 1000 || first.value > 2099 || r >= in->length || in->text[r] != '-')
@@ -819,18 +840,26 @@ static size_t year_range(const ttf_pack_input_t *in, ttf_semantic_t *out, size_t
         r = skip_horizontal(in->text, in->length, r + 1);
         for (k = 0; k < 4 && r + k < in->length && ascii_digit(in->text[r + k]); ++k)
             second_year = second_year * 10 + (unsigned)(in->text[r + k] - '0');
-        if (k != 4 || (r + 4 < in->length && ascii_digit(in->text[r + 4])) || second_year <= first.value ||
-            second_year > 2099)
+        /* War Diary: 1914 - 15, 1897 - 99: an English sentence's year with the next years'
+           last two digits (2026-11-10, real-text cycle R8; it was one thousand nine hundred
+           fourteen to fifteen). A bare 1988 - 93 keeps its cardinals. */
+        if (k == 2 && !(r + 2 < in->length && ascii_digit(in->text[r + 2])) &&
+            second_year > first.value % 100 && in->engine->config.default_language &&
+            !strncmp(in->engine->config.default_language, "en", 2) &&
+            english_text(in, start, r + 2) && !page_cue(in, start) && !year_follows(in, r + 2)) {
+            /* read below */
+        } else if (k != 4 || (r + 4 < in->length && ascii_digit(in->text[r + 4])) ||
+                   second_year <= first.value || second_year > 2099)
             return 0;
-        /* (1857 - 1952), Infantry, 1861 - 1864: before 1900 a pair reads as years too when it
-           spans at most 150 years and no page cue precedes it (2026-11-09, real-text cycle R1;
-           55% of such pairs in English Wikipedia text were read as cardinals). */
-        if (first.value < 1900 && (second_year - first.value > 150 || page_cue(in, start) ||
-                                   year_follows(in, r + 4)))
+        /* (1857 - 1952), Infantry, 1861 - 1864: before 1900 a pair reads as years too when no
+           page cue precedes it (2026-11-09, real-text cycle R1; 55% of such pairs in English
+           Wikipedia text were read as cardinals). The 150-year limit was dropped in cycle R8
+           (Ohio authors, 1796 - 1950; 1470 - 1900): pages rarely span centuries. */
+        else if (first.value < 1900 && (page_cue(in, start) || year_follows(in, r + 4)))
             return 0;
     }
     p = skip_horizontal(in->text, in->length, first.end);
-    if (p >= in->length || in->text[p] != '-')
+    if (p >= in->length || (in->text[p] != '-' && !(slash && in->text[p] == '/')))
         return 0;
     p = skip_horizontal(in->text, in->length, p + 1);
     second = number_at(in, p, 0);

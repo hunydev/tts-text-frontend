@@ -1,5 +1,10 @@
 # Changelog
 
+## Real-text cycle R8 (2026-11-10)
+
+- English: a year with the next years' last two digits reads as a year range in English text (`War Diary: 1914 - 15` nineteen fourteen to fifteen, was one thousand nine hundred fourteen to fifteen); a pair before 1900 reads as years whatever its span (`1796 - 1950`); a slash between a year and a later year within a century reads like the hyphen (`1988 / 1989 season`, `1941 / 42`; was over). Bare pairs, page ranges and scores keep their cardinals.
+- The real-text scorer is back to its original equivalences (the R5 widening for a silent English slash is withdrawn). With it the sample test is 94.5 → 94.6 (en 96.4 → 96.8); Korean benchmark +0/−0; owner sets unchanged; contract real_text_v172 (5).
+
 ## Real-text cycle R7 (2026-11-10)
 
 - Chinese: in a Chinese request a sentence with traditional or Japanese forms (`han_foreign`) is still a hanzi sentence, so two Latin words no longer make it English (`1727年布蓋以論文《On the masting of ships》擊敗…` 一七二七年…; was one thousand seven hundred twenty seven年 and the Han text after the title dropped). Han text lost from 5,000 fixed Chinese sentences: 30 → 10 (the rest is kana under the drop policy).
