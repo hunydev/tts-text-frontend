@@ -228,8 +228,9 @@ static int spaced_between_words(const ttf_engine_t *e, const char *lang, const c
     if (ttf_utf8_decode(left + start, left_length - 1 - start, &cp, &width) != 1)
         return 0;
     script = ttf_script_of(cp);
-    if (script != TTF_SCRIPT_HANGUL && script != TTF_SCRIPT_LATIN &&
-        !(loose && (cp == '?' || cp == '(' || cp == 0xff08 || cp == ')' || cp == 0xff09)))
+    /* 主 / 副, ポート・アーサー / ポルト: kana and Han words too (2026-11-10, real-text cycle R10) */
+    if (script != TTF_SCRIPT_HANGUL && script != TTF_SCRIPT_LATIN && script != TTF_SCRIPT_HAN &&
+        script != TTF_SCRIPT_KANA && !(loose && (cp == '?' || cp == '(' || cp == 0xff08 || cp == ')' || cp == 0xff09)))
         return 0;
     name = ttf_resource_get(e, "speech_symbol", lang, key, NULL);
     if (name && *name && strlen(name) < left_length &&
@@ -268,7 +269,10 @@ static int spaced_between_words(const ttf_engine_t *e, const char *lang, const c
                 return 0;
         }
     }
-    return word_follows(s + 1, n - 1, NULL, 0);
+    if (word_follows(s + 1, n - 1, NULL, 0))
+        return 1;
+    return ttf_utf8_decode(s + 1, n - 1, &cp, &width) == 1 &&
+           (ttf_script_of(cp) == TTF_SCRIPT_HAN || ttf_script_of(cp) == TTF_SCRIPT_KANA);
 }
 
 /* 오지 ~ 다카다 오지 다카다: a symbol token whose speech_silent value is `spaced` and that
@@ -576,7 +580,8 @@ ttf_status_t ttf_speech_output(const ttf_engine_t *e, const ttf_language_pack_t 
                                   right_length)) ||
                     ((!strcmp(ttf_resource_get(e, "speech_silent", lang, key, NULL), "between") ||
                       !strcmp(ttf_resource_get(e, "speech_silent", lang, key, NULL), "spaced") ||
-                      !strcmp(ttf_resource_get(e, "speech_silent", lang, key, NULL), "hangul")) &&
+                      !strcmp(ttf_resource_get(e, "speech_silent", lang, key, NULL), "hangul") ||
+                      !strcmp(ttf_resource_get(e, "speech_silent", lang, key, NULL), "cjk")) &&
                      (out.length ? spaced_between_words(e, lang, key, out.data, out.length,
                                                         text->data + at + width, text->length - at - width,
                                                         right, right_length,

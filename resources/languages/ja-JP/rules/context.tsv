@@ -15,6 +15,8 @@ classifier_priority	ja-JP	ja.alnum	50
 classifier_priority	ja-JP	ja.latin-unit	50
 # 136hp ひゃくさんじゅうろくhp (2026-11-09, real-text cycle R4)
 classifier_priority	ja-JP	ja.number-before-latin	100
+# 6m95 ろくメートルきゅうじゅうご (2026-11-10, real-text cycle R10)
+classifier_priority	ja-JP	ja.field-mark	100
 classifier_priority	ja-JP	ja.digit-cue	50
 classifier_priority	ja-JP	ja.latin-word	50
 classifier_priority	ja-JP	ja.latin-abbreviation	50

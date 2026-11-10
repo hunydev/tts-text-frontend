@@ -1,5 +1,10 @@
 # Changelog
 
+## Real-text cycle R10 (2026-11-10)
+
+- Japanese: a field-event mark reads metres and centimetres (`6m95` ろくメートルきゅうじゅうご, was left as digits); a slash with one space on each side between kana or Han words is a pause (`主 / 副`, was スラッシュ).
+- Output leftovers 281 → 276 (ja 144 → 139); sample test, Korean benchmark and owner sets unchanged; contract real_text_v174 (5).
+
 ## Real-text cycle R9 (2026-11-10)
 
 - Korean speech: a spaced range mark after the closing bracket of a date reads like one after the date (`9월 6일(음력 8월 1일) ~ 1505년` …일)에서…, was 물결; a dash was 하이픈), or is a pause before a word (`(1593년) ~ 만력`); a hyphen right before a Hangul syllable, a Hangul letter or a Han character after an opening quote or bracket, a space or nothing marks an affix and is not read (`'-마이신'` '마이신', was 하이픈).

@@ -1644,6 +1644,19 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             }
         }
     }
+    /* 6m95 ろくメートルきゅうじゅうご, 73m09: a field-event mark, metres and centimetres
+       (2026-11-10, real-text cycle R10; the digits were left as written) */
+    if (digit(text[begin]) && !(begin && (digit(text[begin - 1]) || alpha(text[begin - 1]) ||
+                                          text[begin - 1] == '.'))) {
+        size_t q = begin;
+        while (q < n && digit(text[q]) && q - begin < 3)
+            ++q;
+        if (q - begin <= 2 && q + 3 <= n && text[q] == 'm' && digit(text[q + 1]) && digit(text[q + 2]) &&
+            !(q + 3 < n && (digit(text[q + 3]) || alpha(text[q + 3]) || text[q + 3] == '.'))) {
+            snprintf(s->value, sizeof(s->value), "%.*s|%.2s", (int)(q - begin), text + begin, text + q + 1);
+            return finish(in, s, q + 3, TTF_SEM_SYMBOL, "ja.field-mark", "@field-mark");
+        }
+    }
     /* 136hp ひゃくさんじゅうろくhp, 26.5kgm, 50kt: a number before a Latin unit with a small
        letter that no table lists reads the number and keeps the letters as written, like
        136 hp (2026-11-09, real-text cycle R4; the digits were left as written). Capital codes
@@ -3050,6 +3063,24 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             if ((st = word(e, b, "number", "postal_prefix")) != TTF_OK)
                 return st;
             return phone(e, s->value, b);
+        }
+        if (!strcmp(s->unit, "@field-mark")) {
+            const char *bar = strchr(s->value, '|'), *metre = res(e, "unit", "m");
+            char whole[4], part[4];
+            size_t k = bar ? (size_t)(bar - s->value) : 0;
+            if (!bar || !k || k >= sizeof(whole) || !metre || !strchr(metre, ':'))
+                return TTF_EINVAL;
+            memcpy(whole, s->value, k);
+            whole[k] = 0;
+            snprintf(part, sizeof(part), "%s", bar + 1);
+            if ((st = plain_number(e, whole, b)) != TTF_OK)
+                return st;
+            if ((st = ttf_buffer_append(b, metre, (size_t)(strchr(metre, ':') - metre))) != TTF_OK)
+                return st;
+            /* 6m05 ろくメートルれいご: a leading zero is read */
+            if (part[0] == '0' && (st = word(e, b, "number", "0")) != TTF_OK)
+                return st;
+            return plain_number(e, part[0] == '0' ? part + 1 : part, b);
         }
         if (!strcmp(s->unit, "@basement")) {
             if ((st = word(e, b, "number", "basement")) != TTF_OK)
