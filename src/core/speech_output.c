@@ -208,7 +208,7 @@ static int word_follows(const char *s, size_t n, const char *right, size_t right
 /* 경남 - 창원, 영하 - 아니: a mark with one space on each side between two words is a pause
    (2026-11-09, real-text cycle R3; it was read 하이픈). The value `spaced` keeps only this case
    (investor / broker, cycle R5; it was slash). With `loose` an unknown date `?` may stand on
-   either side, a number on the right, and an opening or closing bracket ends the range
+   either side, a number on the right, a bracket on either side ((1593년) ~ 만력, cycle R9)
    (? ~ ?, ? ~ 207년, 1950년대 ~ ), ( ~ 1600년), cycle R5). A mark right after its
    own name is being named and keeps it (물결 ~ 기호). `left` ends with the space. */
 static int spaced_between_words(const ttf_engine_t *e, const char *lang, const char *key,
@@ -229,7 +229,7 @@ static int spaced_between_words(const ttf_engine_t *e, const char *lang, const c
         return 0;
     script = ttf_script_of(cp);
     if (script != TTF_SCRIPT_HANGUL && script != TTF_SCRIPT_LATIN &&
-        !(loose && (cp == '?' || cp == '(' || cp == 0xff08)))
+        !(loose && (cp == '?' || cp == '(' || cp == 0xff08 || cp == ')' || cp == 0xff09)))
         return 0;
     name = ttf_resource_get(e, "speech_symbol", lang, key, NULL);
     if (name && *name && strlen(name) < left_length &&
@@ -288,6 +288,35 @@ int ttf_speech_spaced_silent(const ttf_engine_t *e, const char *language, const 
         return 0;
     return spaced_between_words(e, language, key, left, left_length, right, right_length, NULL, 0,
                                 1);
+}
+
+/* '-마이신', '-ㅁ니다', (-互除法, …): a hyphen written right before a Hangul syllable, a
+   Hangul letter or a Han character, after an opening quote or bracket, a space or nothing,
+   marks an affix and is not read (2026-11-10, real-text cycle R9; it was 하이픈). */
+static int affix_mark(const char *left, size_t left_length, const char *s, size_t n,
+                      const char *right, size_t right_length) {
+    uint32_t cp;
+    size_t width, k = left_length;
+    while (k && left[k - 1] == ' ')
+        --k;
+    if (k) {
+        size_t start = k;
+        do
+            --start;
+        while (start && ((unsigned char)left[start] & 0xc0) == 0x80);
+        if (ttf_utf8_decode(left + start, k - start, &cp, &width) != 1 ||
+            !(cp == '(' || cp == '\'' || cp == '"' || cp == 0x2018 || cp == 0x201c || cp == 0xff08 ||
+              cp == 0x300c || cp == 0x300e || cp == '['))
+            return 0;
+    }
+    if (!n) {
+        s = right;
+        n = right_length;
+    }
+    if (!n || ttf_utf8_decode(s, n, &cp, &width) != 1)
+        return 0;
+    return (cp >= 0xac00 && cp <= 0xd7a3) || (cp >= 0x3131 && cp <= 0x318e) ||
+           ttf_script_of(cp) == TTF_SCRIPT_HAN;
 }
 
 /* β-탄소 베타 탄소: a Greek letter or another name the speech pass gave a trailing space still
@@ -528,6 +557,11 @@ ttf_status_t ttf_speech_output(const ttf_engine_t *e, const ttf_language_pack_t 
         } else if (ttf_resource_get(e, "speech_silent", lang, key, NULL) &&
                    (!strcmp(ttf_resource_get(e, "speech_silent", lang, key, NULL), "1") ||
                     /* K-팝, U-보금자리론: between two spoken words only (2026-10-07) */
+                    (!strcmp(ttf_resource_get(e, "speech_silent", lang, key, NULL), "between") &&
+                     (out.length ? affix_mark(out.data, out.length, text->data + at + width,
+                                              text->length - at - width, right, right_length)
+                                 : affix_mark(left, left_length, text->data + at + width,
+                                              text->length - at - width, right, right_length))) ||
                     (!strcmp(ttf_resource_get(e, "speech_silent", lang, key, NULL), "between") &&
                      (PREV_SPOKEN() ||
                       (out.length ? named_before(out.data, out.length,

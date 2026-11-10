@@ -1964,7 +1964,7 @@ static const char *spaced_range_mark(const ttf_engine_t *e, const char *text, si
                                      const ttf_token_t *tokens, size_t count, size_t i,
                                      size_t *taken) {
     char key[8];
-    size_t w, at, k, after;
+    size_t w, at, k, after, left;
     uint32_t cp;
     const char *separator;
     int open = 0;
@@ -1992,8 +1992,15 @@ static const char *spaced_range_mark(const ttf_engine_t *e, const char *text, si
         return NULL;
     memcpy(key, text + tokens[i + 1].begin, w);
     key[w] = 0;
+    /* (음력 8월 1일) ~ 1505년, (분카 3년 5월 2일) - 1851년: a closing bracket after the date is
+       stepped over (2026-11-10, real-text cycle R9; it was 물결, 하이픈) */
+    left = tokens[i].begin;
+    if (left && text[left - 1] == ')')
+        --left;
+    else if (left >= 3 && !memcmp(text + left - 3, "\xef\xbc\x89", 3))
+        left -= 3;
     /* the left side ends in a digit, or in one Hangul or Han counter right after a digit */
-    for (k = 0, at = tokens[i].begin; k < 2 && at; ++k) {
+    for (k = 0, at = left; k < 2 && at; ++k) {
         size_t width;
         size_t start = at - 1;
         while (start && ((unsigned char)text[start] & 0xc0) == 0x80)
@@ -2018,7 +2025,7 @@ static const char *spaced_range_mark(const ttf_engine_t *e, const char *text, si
         if (!k)
             return NULL;
         for (d = 0; d < sizeof(dated) / sizeof(dated[0]); ++d)
-            date |= tokens[i].begin >= 3 && !memcmp(text + tokens[i].begin - 3, dated[d], 3);
+            date |= left >= 3 && !memcmp(text + left - 3, dated[d], 3);
         if (!date)
             return NULL;
         memcpy(key, "~", 2);

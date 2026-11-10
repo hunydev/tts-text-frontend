@@ -1,5 +1,10 @@
 # Changelog
 
+## Real-text cycle R9 (2026-11-10)
+
+- Korean speech: a spaced range mark after the closing bracket of a date reads like one after the date (`9월 6일(음력 8월 1일) ~ 1505년` …일)에서…, was 물결; a dash was 하이픈), or is a pause before a word (`(1593년) ~ 만력`); a hyphen right before a Hangul syllable, a Hangul letter or a Han character after an opening quote or bracket, a space or nothing marks an affix and is not read (`'-마이신'` '마이신', was 하이픈).
+- Output leftovers 293 → 281 (ko 63 → 52); sample test, Korean benchmark and owner sets unchanged; contract real_text_v173 (6).
+
 ## Real-text cycle R8 (2026-11-10)
 
 - English: a year with the next years' last two digits reads as a year range in English text (`War Diary: 1914 - 15` nineteen fourteen to fifteen, was one thousand nine hundred fourteen to fifteen); a pair before 1900 reads as years whatever its span (`1796 - 1950`); a slash between a year and a later year within a century reads like the hyphen (`1988 / 1989 season`, `1941 / 42`; was over). Bare pairs, page ranges and scores keep their cardinals.
