@@ -1540,6 +1540,46 @@ static int foreign_letter(const char *t, size_t n, size_t q) {
     unsigned char c = (unsigned char)t[q], d = q + 1 < n ? (unsigned char)t[q + 1] : 0;
     return (c >= 0xe3 && c <= 0xed) || (c == 0xe1 && (d == 0xba || d == 0xbb)) || c == 0xc4 || c == 0xc6;
 }
+/* ISO 3166-2 three thousand one hundred sixty six dash two, ISO 9001:2015 nine thousand one
+   twenty fifteen: a standard number after a standards body (standard_body) with a part or a
+   year (2026-11-18, user feedback; the part was read as a range, …sixty six to two, and the
+   year form kept its digits). A plain ISO 9001 keeps the cardinal reading. */
+static size_t standard_number(const ttf_pack_input_t *in, ttf_semantic_t *out) {
+    const char *t = in->text;
+    size_t n = in->length, p = in->tokens[in->index].begin, q, b, k, part = 0, year = 0, r;
+    char body[16], v[48];
+    if (p < 2 || t[p - 1] != ' ' || !ascii_digit_char(t[p]))
+        return 0;
+    for (b = p - 1; b && ((t[b - 1] >= 'A' && t[b - 1] <= 'Z') || (t[b - 1] >= 'a' && t[b - 1] <= 'z')); --b)
+        ;
+    if (p - 1 - b < 2 || p - 1 - b >= sizeof(body) || (b && ascii_letter_char(t[b - 1])))
+        return 0;
+    memcpy(body, t + b, p - 1 - b);
+    body[p - 1 - b] = 0;
+    if (!ttf_resource_get(in->engine, "standard_body", EN, body, NULL))
+        return 0;
+    for (q = p; q < n && ascii_digit_char(t[q]) && q - p < 7; ++q)
+        ;
+    r = q;
+    if (r + 1 < n && t[r] == '-' && ascii_digit_char(t[r + 1])) {
+        for (k = r + 1; k < n && ascii_digit_char(t[k]) && k - r <= 3; ++k)
+            ;
+        part = r + 1;
+        r = k;
+    }
+    if (r + 4 < n && t[r] == ':' && ascii_digit_char(t[r + 1]) && ascii_digit_char(t[r + 2]) &&
+        ascii_digit_char(t[r + 3]) && ascii_digit_char(t[r + 4])) {
+        year = r + 1;
+        r += 5;
+    }
+    if ((!part && !year) || (r < n && (ascii_digit_char(t[r]) || ascii_letter_char(t[r]) || t[r] == '-')))
+        return 0;
+    (void)snprintf(v, sizeof(v), "%.*s|%.*s|%.*s", (int)(q - p), t + p,
+                   part ? (int)((year ? year - 1 : r) - part) : 0, part ? t + part : "",
+                   year ? 4 : 0, year ? t + year : "");
+    return owner_finish(in, out, r, TTF_SEM_SYMBOL, "@standard", v, "en.standard-number");
+}
+
 static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     const char *t = in->text;
     size_t n = in->length, p = in->tokens[in->index].begin, q, r;
@@ -1554,6 +1594,10 @@ static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     for (q = p; q < n && t[q] != '\n'; ++q)
         if (foreign_letter(t, n, q))
             return 0;
+    /* English lines only, like the forms below (ISO 3166-1 in a Korean sentence keeps its
+       Korean reading) */
+    if ((q = standard_number(in, out)) != 0)
+        return q;
     /* ---- owner v2 forms (real sentences, 2026-10-15) ---- */
     {
         static const char *const month[] = {"January", "February", "March", "April", "May", "June", "July",
@@ -4572,6 +4616,34 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
                 (st = space(b)) != TTF_OK)
                 return st;
             return card(e, c, b);
+        }
+        if (!strcmp(s->unit, "@standard")) {
+            /* 3166|2| three thousand one hundred sixty six dash two; 9001||2015 … twenty fifteen */
+            char main_part[16], sub[8];
+            const char *bar = strchr(s->value, '|'), *bar2 = bar ? strchr(bar + 1, '|') : NULL;
+            uint64_t a, c;
+            if (!bar || !bar2 || (size_t)(bar - s->value) >= sizeof(main_part) ||
+                (size_t)(bar2 - bar - 1) >= sizeof(sub))
+                return TTF_EINVAL;
+            (void)snprintf(main_part, sizeof(main_part), "%.*s", (int)(bar - s->value), s->value);
+            (void)snprintf(sub, sizeof(sub), "%.*s", (int)(bar2 - bar - 1), bar + 1);
+            if (!uint64_value(main_part, &a))
+                return TTF_EINVAL;
+            if ((st = card(e, a, b)) != TTF_OK)
+                return st;
+            if (*sub) {
+                if (!uint64_value(sub, &c))
+                    return TTF_EINVAL;
+                if ((st = ttf_buffer_puts(b, " dash ")) != TTF_OK || (st = card(e, c, b)) != TTF_OK)
+                    return st;
+            }
+            if (bar2[1]) {
+                if (!uint64_value(bar2 + 1, &c))
+                    return TTF_EINVAL;
+                if ((st = space(b)) != TTF_OK || (st = date_year(e, (unsigned)c, "year_style", b)) != TTF_OK)
+                    return st;
+            }
+            return TTF_OK;
         }
         if (!strcmp(s->unit, "@scaled") || !strcmp(s->unit, "@seconds")) {
             /* 1.2|million one point two million; 90|s ninety seconds, 1|s one second, 90|second */

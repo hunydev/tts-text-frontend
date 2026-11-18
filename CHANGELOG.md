@@ -1,5 +1,11 @@
 # Changelog
 
+## Feedback fixes (2026-11-18)
+
+- Korean: a chapter before a verse number is Sino (`6장 39절` 육 장 삼십구절, `요한복음 3장 16절` 삼 장; was 여섯 장, as for sheets of paper, which keep 여섯 장).
+- English: a standard number after a standards body (new `standard_body` list: ISO, IEC, IEEE, EN, DIN, ANSI …) with a part or a year reads the part after "dash" and the year as a year (`ISO 3166-2` … sixty six dash two, was … to two; `ISO 9001:2015` … twenty fifteen, was left as digits). English lines only; page ranges are unchanged.
+- Corpus examples: Korean chapter and verse 31 / 0 / 8 (all 39 outside the sample); Korean benchmark +0/−0; owner sets unchanged; contract feedback_v179 (5).
+
 ## Real-text cycle R13 (2026-11-11)
 
 - Cubic units with a plain 3 and a capital-K square kilometre are measure units (`300 m3` 삼백 세제곱미터 / three hundred cubic meters, `2445 cm3`, `72.9Km²` 제곱킬로미터; Korean read 엠쓰리, 센티미터 쓰리, 킬로미터 제곱).
