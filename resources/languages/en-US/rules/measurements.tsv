@@ -454,6 +454,12 @@ unit	en-US	Bq_per_L.many	becquerels per liter
 numeric_suffix	*	km2	MEASURE:square_km
 numeric_suffix	*	/km2	MEASURE:per_square_km
 numeric_suffix	*	m2	MEASURE:square_m
+# 300 m3, 2445 cm3, 72.9Km²: cubic units written with a plain 3 and a capital K (2026-11-11,
+# real-text cycle R13; Korean read 엠쓰리, 센티미터 쓰리, 킬로미터 제곱)
+numeric_suffix	*	m3	MEASURE:cubic_m
+numeric_suffix	*	cm3	MEASURE:cubic_cm
+numeric_suffix	*	Km²	MEASURE:square_km
+numeric_suffix	*	Km2	MEASURE:square_km
 numeric_suffix	*	mi²	MEASURE:square_mi
 numeric_suffix	*	mi2	MEASURE:square_mi
 numeric_suffix	*	/mi²	MEASURE:per_square_mi

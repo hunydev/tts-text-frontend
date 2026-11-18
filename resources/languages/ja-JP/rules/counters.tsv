@@ -431,3 +431,8 @@ counter	ja-JP	巡目	じゅんめ:-
 counter	ja-JP	馬身	ばしん:-
 counter	ja-JP	支社	ししゃ:s
 counter	ja-JP	支店	してん:s
+# 7男2女 しちなんにじょ, 第10男 だいじゅうなん, 5分野 ごぶんや: birth order and fields after a
+# number (2026-11-11, real-text cycle R11; they were read なな男, ごふん野)
+counter	ja-JP	男	なん:-
+counter	ja-JP	女	じょ:-
+counter	ja-JP	分野	ぶんや:-

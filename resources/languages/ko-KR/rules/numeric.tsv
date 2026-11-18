@@ -684,6 +684,17 @@ score_cue	ko-KR	따내	1
 score_cue	ko-KR	따돌렸	1
 score_cue	ko-KR	따돌리	1
 score_cue	ko-KR	접전	1
+# 4-0으로 이긴, 11-15로 패하며: inflected forms the prefix match misses (2026-11-11, real-text
+# cycle R12; 10% of score pairs before them in Korean Wikipedia text were read 사 다시 공).
+score_cue	ko-KR	이긴	1
+score_cue	ko-KR	이겨	1
+score_cue	ko-KR	패하	1
+score_cue	ko-KR	패한	1
+score_cue	ko-KR	패했	1
+score_cue	ko-KR	패해	1
+score_cue	ko-KR	패퇴	1
+score_cue	ko-KR	비긴	1
+score_cue	ko-KR	비겨	1
 # Model numbers (2026-10-01, project-owner decision): a number right after a
 # product name reads English numerals up to ten (아이폰6 아이폰식스, 노트10 노트텐)
 # and Sino-Korean from eleven (아이폰 14 아이폰 십사). A counter after it (아이폰

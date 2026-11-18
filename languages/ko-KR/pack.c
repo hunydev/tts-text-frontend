@@ -4122,6 +4122,36 @@ static size_t number_mark(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         return ttf_resource_get(in->engine, "speech_range_mark", "ko-KR", key, NULL)
                    ? ko_finish(in, s, m, TTF_SEM_SYMBOL, "", "@word", "ko:mark-until")
                    : 0;
+    /* ~5000명 약 오천 명, ~3시간 약 세 시간, (~2,200피트): a prefix mark (약 {N}) before a
+       number with a counter or a written unit word reads its prefix and leaves the number to
+       its own grammar (2026-11-11, real-text cycle R12; it was 물결오천 명) */
+    if (!unit && d + 3 <= n && (unsigned char)t[d] >= 0xea && (unsigned char)t[d] <= 0xed) {
+        const char *form = ttf_resource_get(in->engine, "number_mark", "ko-KR", key, NULL);
+        const char *slot = form ? strstr(form, "{N}") : NULL;
+        size_t cw = 0;
+        const char *suffix = quantity_resource_at(in, "numeric_suffix", d, &cw);
+        /* 1345년 출생 ~1405년, (~1933년: before a date the mark ends a span, not "about" */
+        int dated = (d + 3 <= n && (!memcmp(t + d, "\xeb\x85\x84", 3) || !memcmp(t + d, "\xec\x9b\x94", 3) ||
+                                    !memcmp(t + d, "\xec\x9d\xbc", 3) || !memcmp(t + d, "\xec\x84\xb8\xea\xb8\xb0", d + 6 <= n ? 6 : 3))) ||
+                    (d + 3 <= n && !memcmp(t + d, "\xec\x8b\x9c", 3) &&
+                     !(d + 6 <= n && !memcmp(t + d + 3, "\xea\xb0\x84", 3)));
+        /* ~1933년까지 천구백삼십삼 년까지: like ~10/31까지, a range mark before a date and 까지
+           means "until" and is not read (2026-11-11, real-text cycle R12; it was 물결) */
+        if (dated && d + 3 <= n && starts_with_word(t, n, d + 3, "\xea\xb9\x8c\xec\xa7\x80") &&
+            ttf_resource_get(in->engine, "speech_range_mark", "ko-KR", key, NULL))
+            return ko_finish(in, s, m, TTF_SEM_SYMBOL, "", "@word", "ko:mark-until");
+        if (slot && !slot[3] && slot > form && suffix && !dated &&
+            (!strncmp(suffix, "COUNTER:", 8) || !strncmp(suffix, "MEASURE:", 8)) &&
+            (size_t)(slot - form) < sizeof(v)) {
+            size_t k = (size_t)(slot - form);
+            while (k && form[k - 1] == ' ')
+                --k;
+            memcpy(v, form, k);
+            v[k] = ' ';
+            v[k + 1] = 0;
+            return ko_finish(in, s, p, TTF_SEM_SYMBOL, v, "@word", "ko:mark-about");
+        }
+    }
     if (!unit && d + 3 <= n && (unsigned char)t[d] >= 0xea && (unsigned char)t[d] <= 0xed) {
         /* ≥25이면: only a particle may follow a bare number */
         size_t k;

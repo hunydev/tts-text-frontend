@@ -1,5 +1,21 @@
 # Changelog
 
+## Real-text cycle R13 (2026-11-11)
+
+- Cubic units with a plain 3 and a capital-K square kilometre are measure units (`300 m3` 삼백 세제곱미터 / three hundred cubic meters, `2445 cm3`, `72.9Km²` 제곱킬로미터; Korean read 엠쓰리, 센티미터 쓰리, 킬로미터 제곱).
+- Real-text dev 97.4 → 97.6; Korean benchmark +0/−0; owner sets unchanged; contract real_text_v177 (5).
+
+## Real-text cycle R12 (2026-11-11)
+
+- Korean: inflected score verbs are score cues (`4-0으로 이긴` 사 대 영, `11-15로 패하며` 십일 대 십오; were 사 다시 공); a range mark before a number with a counter reads 약 (`~5000명` 약 오천 명, was 물결), except before a date, where it ends a span, and before a date and 까지, where it is not read (`~1933년까지`).
+- Real-text sample test 94.6 → 94.7 (ko 94.2 → 94.4), dev 97.3 → 97.4; Korean benchmark +7/−0; owner sets unchanged; contract real_text_v176 (4).
+
+## Real-text cycle R11 (2026-11-11)
+
+- Japanese: a year and a later year within a century across a slash are a span of years (`1998/1999` …からせんきゅうひゃくきゅうじゅうきゅう, was a fraction); counters 男 なん, 女 じょ, 分野 ぶんや (`2男4女` になんよんじょ, `5分野` ごぶんや).
+- Chinese: decorative stars ☆ ★ follow the decorative policy (dropped by default; were the English names white star, black star).
+- Real-text dev 97.1 → 97.3; output leftovers 276 → 274; Korean benchmark +0/−0; owner sets unchanged; contract real_text_v175 (5).
+
 ## Real-text cycle R10 (2026-11-10)
 
 - Japanese: a field-event mark reads metres and centimetres (`6m95` ろくメートルきゅうじゅうご, was left as digits); a slash with one space on each side between kana or Han words is a pause (`主 / 副`, was スラッシュ).

@@ -51,6 +51,14 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     *handled = 0;
     if (!SAME(r->language, ZH))
         return TTF_OK;
+    /* 新☆王道: a decorative star read only under the decorative policy (2026-11-11, real-text
+       cycle R11) */
+    if (SAME(k, "speech_decorative")) {
+        *handled = 1;
+        return key && *key && strlen(key) < 96 && v && *v && strlen(v) < 256
+                   ? TTF_OK
+                   : ttf_validation_error(d, "speech_decorative requires a symbol and a reading");
+    }
     if (SAME(k, "address_symbol")) {
         /* One printable ASCII mark read inside an e-mail address or URL. */
         *handled = 1;
