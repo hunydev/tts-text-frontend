@@ -415,3 +415,5 @@ counter_band_after	ko-KR	등	count-word
 counter_band_after	ko-KR	총	count-word
 counter_band_after	ko-KR	사	count-word
 counter_band_after	ko-KR	한정	count-small
+# 6장 39절 육 장 삼십구 절: a chapter before a verse number (2026-11-18, user feedback)
+classifier_priority	ko-KR	ko:chapter	100

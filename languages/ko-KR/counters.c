@@ -374,6 +374,18 @@ size_t ttf_ko_classify_counter(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         return finish(in, s, end, valid ? TTF_SEM_ORDINAL : TTF_SEM_TEXT,
                       valid ? "ko:prefix-ordinal" : "ko:invalid-ordinal");
     }
+    /* 6장 39절 육 장 삼십구 절, 창세기 1장 3절: a chapter before a verse number is Sino
+       (2026-11-18, user feedback; it was 여섯 장 like sheets of paper) */
+    if (valid && q + 3 <= in->length && !memcmp(in->text + q, "\xec\x9e\xa5", 3)) {
+        size_t r = spaces(in, q + 3), d = r;
+        while (d < in->length && in->text[d] >= '0' && in->text[d] <= '9')
+            ++d;
+        if (d > r && d + 3 <= in->length && !memcmp(in->text + d, "\xec\xa0\x88", 3)) {
+            snprintf(s->unit, sizeof(s->unit), "%s", "\xec\x9e\xa5");
+            snprintf(s->secondary, sizeof(s->secondary), "identifier");
+            return finish(in, s, q + 3, TTF_SEM_COUNTER, "ko:chapter");
+        }
+    }
     width = match(in, "native_ordinal_suffix", q, unit, sizeof(unit), &s->layer);
     if (!width)
         width = match(in, "counter_role_unit", q, unit, sizeof(unit), &s->layer);

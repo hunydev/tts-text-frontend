@@ -661,3 +661,20 @@ classifier_priority	en-US	en.sci-power	100
 classifier_priority	en-US	en.inches-range	100
 classifier_priority	en-US	en.times-x	100
 classifier_priority	en-US	en.price-per-unit	100
+# ISO 3166-2, ISO 9001:2015, IEC 61508-3: a number with a part or a year after a standards body
+# is a standard number (2026-11-18, user feedback; the part was read as a range).
+standard_body	en-US	ISO	1
+standard_body	en-US	IEC	1
+standard_body	en-US	IEEE	1
+standard_body	en-US	EN	1
+standard_body	en-US	DIN	1
+standard_body	en-US	ANSI	1
+standard_body	en-US	ASTM	1
+standard_body	en-US	BS	1
+standard_body	en-US	JIS	1
+standard_body	en-US	KS	1
+standard_body	en-US	ITU	1
+standard_body	en-US	RFC	1
+standard_body	en-US	NFPA	1
+standard_body	en-US	UL	1
+classifier_priority	en-US	en.standard-number	100

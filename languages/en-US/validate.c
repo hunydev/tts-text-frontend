@@ -267,6 +267,12 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    : ttf_validation_error(
                          d, "bracket_pair requires language * and one opening and closing symbol");
     }
+    if (SAME(k, "standard_body")) {
+        *handled = 1;
+        return key && strlen(key) >= 2 && strlen(key) < 16 && v && !strcmp(v, "1")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "standard_body requires a body name and 1");
+    }
     if (SAME(k, "speech_silent")) {
         *handled = 1;
         return symbol_key(key) && ttf_validation_enum(v, "0|1|spaced")
