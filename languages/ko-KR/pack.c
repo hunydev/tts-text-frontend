@@ -878,7 +878,7 @@ static int final_consonant(const ttf_buffer_t *out) {
         return 0;
     return cp >= 0xac00 && cp <= 0xd7a3 && (cp - 0xac00) % 28;
 }
-static ttf_status_t expression(const ttf_engine_t *e, const char *value, ttf_buffer_t *out) {
+static ttf_status_t expression(const ttf_engine_t *e, const char *value, int attached, ttf_buffer_t *out) {
     const char *relation = NULL, *template, *p;
     size_t length = strlen(value), left = length, right = length;
     ttf_status_t st;
@@ -898,12 +898,22 @@ static ttf_status_t expression(const ttf_engine_t *e, const char *value, ttf_buf
         size_t w = strlen(relation) - 2;
         memcpy(key, relation + 1, w);
         key[w] = 0;
-        template = ttf_resource_get(e, "math_relation", "ko-KR", key, NULL);
-        if (!template)
-            return TTF_ERESOURCE;
-        if ((st = ttf_trace_resource(e, "math_relation", "ko-KR", key, key, "expression-relation",
-                                     SIZE_MAX)) != TTF_OK)
-            return st;
+        /* x ≤ 10이면 엑스가 십 이하이면: before the copula 이 the relation is a phrase
+           (math_relation_attached; 2026-11-24, user feedback; it was 엑스는 십보다 작거나
+           같다이면) */
+        template = attached ? ttf_resource_get(e, "math_relation_attached", "ko-KR", key, NULL) : NULL;
+        if (template) {
+            if ((st = ttf_trace_resource(e, "math_relation_attached", "ko-KR", key, key,
+                                         "expression-relation-phrase", SIZE_MAX)) != TTF_OK)
+                return st;
+        } else {
+            template = ttf_resource_get(e, "math_relation", "ko-KR", key, NULL);
+            if (!template)
+                return TTF_ERESOURCE;
+            if ((st = ttf_trace_resource(e, "math_relation", "ko-KR", key, key, "expression-relation",
+                                         SIZE_MAX)) != TTF_OK)
+                return st;
+        }
     }
     for (p = template; *p;) {
         if (!strncmp(p, "{L}", 3)) {
@@ -1916,7 +1926,7 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             return TTF_OK;
         }
         if (!strcmp(s->unit, "@expression"))
-            return expression(e, s->value, out);
+            return expression(e, s->value, !strcmp(s->secondary, "copula"), out);
         if (!strcmp(s->unit, "@algebra"))
             return algebra_read(e, s->value, out);
         if (!strcmp(s->unit, "@chem"))
@@ -2003,6 +2013,25 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             TRY(ttf_buffer_puts(out, resource(e, "currency", "KRW", "원")));
             return ttf_buffer_puts(out, bar3 + 1);
         }
+        if (!strcmp(s->unit, "@verse")) {
+            /* 3|16 삼 장 십육 절, 23|1|3 이십삼 장 일 절에서 삼 절 */
+            char part[8];
+            const char *bar = strchr(s->value, '|'), *bar2 = bar ? strchr(bar + 1, '|') : NULL;
+            if (!bar || (size_t)(bar - s->value) >= sizeof(part))
+                return TTF_EINVAL;
+            (void)snprintf(part, sizeof(part), "%.*s", (int)(bar - s->value), s->value);
+            TRY(cardinal(e, part, out));
+            TRY(ttf_buffer_puts(out, " 장 "));
+            (void)snprintf(part, sizeof(part), "%.*s", (int)(bar2 ? (size_t)(bar2 - bar - 1) : strlen(bar + 1)), bar + 1);
+            TRY(cardinal(e, part, out));
+            TRY(ttf_buffer_puts(out, " 절"));
+            if (bar2) {
+                TRY(ttf_buffer_puts(out, "에서 "));
+                TRY(cardinal(e, bar2 + 1, out));
+                TRY(ttf_buffer_puts(out, " 절"));
+            }
+            return TTF_OK;
+        }
         if (!strcmp(s->unit, "@mark")) {
             /* mark|number|unit reading, placed by the number_mark template */
             char mark[8], number[32], unit[64];
@@ -2019,7 +2048,15 @@ static ttf_status_t verbalize(const ttf_engine_t *e, const ttf_semantic_t *s, co
             TRY(ttf_trace_resource(e, "number_mark", "ko-KR", mark, template, "number-mark-reading",
                                    SIZE_MAX));
             for (p = template; *p;) {
-                if (!strncmp(p, "{N}", 3)) {
+                if (!strncmp(p, "{N}", 3) && !strncmp(unit, "@C:", 3)) {
+                    /* ≤10명 열 명 이하: a counter reads the number its way */
+                    const char *max = ttf_resource_get(e, "counter_native_max", "ko-KR", unit + 3, NULL);
+                    int native = !strcmp(resource(e, "counter", unit + 3, "sino"), "native");
+                    if (native && max && (strchr(number, '.') || strlen(number) > 2 || atoi(number) > atoi(max)))
+                        native = 0;
+                    TRY(quantity(e, number, resource(e, "unit", unit + 3, unit + 3), native, out));
+                    p += 3;
+                } else if (!strncmp(p, "{N}", 3)) {
                     TRY(cardinal(e, number, out));
                     if (unit[0]) {
                         TRY(ttf_buffer_puts(out, " "));
@@ -3061,6 +3098,14 @@ static size_t short_dotted_date(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     return i - in->index;
 }
 
+static unsigned ko_gcd(unsigned a, unsigned b) {
+    while (b) {
+        unsigned r = a % b;
+        a = b;
+        b = r;
+    }
+    return a;
+}
 static size_t ko_finish(const ttf_pack_input_t *in, ttf_semantic_t *s, size_t end, ttf_semantic_type_t type,
                         const char *value, const char *unit, const char *rule) {
     size_t i;
@@ -3239,7 +3284,11 @@ static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *s) {
         /* 11/3에 김장을 했다 십일 월 삼 일: two small numbers over one before a time particle are a
            month and day, not a fraction (2026-11-02, TN round 33; was 삼 분의 십일). 에서 is left
            out: it also starts a subtraction (7/3에서 1/3을 빼면). */
-        if (t[q] == '/' && r - q - 1 <= 2 && month >= 2 && month <= 12 && day >= 1 && day < month &&
+        /* 6/12에 보자 유월 십이 일에, 6/6에: a fraction is written reduced, so an unreduced one
+           (or equal parts) before the particle is a date too (2026-11-24, user feedback; it was
+           십이 분의 육). 3/4에 해당 stays a fraction. */
+        if (t[q] == '/' && r - q - 1 <= 2 && month >= 2 && month <= 12 && day >= 1 &&
+            (day <= month || ko_gcd(month, day) > 1) &&
             !(r < n && (ko_digit(t[r]) || t[r] == '.' || t[r] == '/')) &&
             !(p && (ko_digit(t[p - 1]) || t[p - 1] == '/' || t[p - 1] == '.')) && korean_context(in) &&
             starts_with_word(t, n, r, "에|부터|까지") && !starts_with_word(t, n, r, "에서")) {
@@ -4044,6 +4093,88 @@ static size_t rating_minus(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     (void)snprintf(v + strlen(v), sizeof(v) - strlen(v), " %s", minus);
     return ko_finish(in, s, r, TTF_SEM_SYMBOL, v, "@word", "ko:rating-minus");
 }
+/* 가격은 USD 50이다 오십 달러: a currency code before an amount in a Korean sentence reads as
+   the amount in that currency, as 50 USD does (2026-11-24, user feedback; it was 유에스디 오십). */
+static size_t currency_code_prefix(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    const char *t = in->text, *kind;
+    size_t n = in->length, p = in->tokens[in->index].begin, r, used = 0;
+    char code[4], v[32];
+    if (p + 5 > n || !(t[p] >= 'A' && t[p] <= 'Z' && t[p + 1] >= 'A' && t[p + 1] <= 'Z' && t[p + 2] >= 'A' &&
+                       t[p + 2] <= 'Z') ||
+        t[p + 3] != ' ' || !ko_digit(t[p + 4]) || (p && ((t[p - 1] | 0x20) >= 'a' && (t[p - 1] | 0x20) <= 'z')) ||
+        !korean_context(in))
+        return 0;
+    memcpy(code, t + p, 3);
+    code[3] = 0;
+    kind = ttf_resource_get(in->engine, "numeric_suffix", "*", code, NULL);
+    if (!kind || strncmp(kind, "CURRENCY:", 9) || strcmp(kind + 9, code) ||
+        !ttf_resource_get(in->engine, "currency", "ko-KR", code, NULL))
+        return 0;
+    for (r = p + 4; r < n && used + 1 < sizeof(v) &&
+                    (ko_digit(t[r]) || ((t[r] == ',' || t[r] == '.') && r + 1 < n && ko_digit(t[r + 1])));
+         ++r)
+        if (t[r] != ',')
+            v[used++] = t[r];
+    v[used] = 0;
+    if (r < n && (ko_digit(t[r]) || ((t[r] | 0x20) >= 'a' && (t[r] | 0x20) <= 'z')))
+        return 0;
+    /* USD 50만, USD 5억: a Korean scale after the amount is left to the general reading */
+    if (r + 3 <= n && (!memcmp(t + r, "\xeb\xa7\x8c", 3) || !memcmp(t + r, "\xec\x96\xb5", 3) ||
+                       !memcmp(t + r, "\xec\xb2\x9c", 3) || !memcmp(t + r, "\xec\xa1\xb0", 3)))
+        return 0;
+    (void)snprintf(s->secondary, sizeof(s->secondary), "%s", "");
+    return ko_finish(in, s, r, TTF_SEM_CURRENCY, v, code, "ko:currency-code-prefix");
+}
+/* 요한복음 3:16 요한복음 삼 장 십육 절, 시편 23:1-3 시편 이십삼 장 일 절에서 삼 절: chapter and
+   verse after a book name (scripture_book; 2026-11-24, user feedback; it was 세 시 십육 분). */
+static size_t scripture_verse(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    const char *t = in->text;
+    size_t n = in->length, p = in->tokens[in->index].begin, w, q, i;
+    unsigned field[3] = {0, 0, 0};
+    int range = 0;
+    char key[40], v[32];
+    if (p < 2 || t[p - 1] != ' ' || !ko_digit(t[p]) || t[p] == '0')
+        return 0;
+    w = p - 1;
+    q = w;
+    while (q >= 3 && (unsigned char)t[q - 3] >= 0xea && (unsigned char)t[q - 3] <= 0xed)
+        q -= 3;
+    if (q == w || w - q >= sizeof(key) || (q && t[q - 1] != ' ' && t[q - 1] != '(' && t[q - 1] != '\n'))
+        return 0;
+    memcpy(key, t + q, w - q);
+    key[w - q] = 0;
+    if (!ttf_resource_get(in->engine, "scripture_book", "ko-KR", key, NULL))
+        return 0;
+    q = p;
+    for (i = 0; i < 3; ++i) {
+        size_t d;
+        if (i == 1) {
+            if (q >= n || t[q] != ':')
+                return 0;
+            ++q;
+        } else if (i == 2) {
+            if (q + 1 < n && t[q] == '-' && ko_digit(t[q + 1]))
+                ++q, range = 1;
+            else
+                break;
+        }
+        d = q;
+        if (q >= n || !ko_digit(t[q]) || t[q] == '0')
+            return 0;
+        while (q < n && ko_digit(t[q]) && q - d < 3)
+            field[i] = field[i] * 10 + (unsigned)(t[q++] - '0');
+        if (q < n && ko_digit(t[q]))
+            return 0;
+    }
+    if ((q < n && (t[q] == ':' || t[q] == '-' || ((t[q] | 0x20) >= 'a' && (t[q] | 0x20) <= 'z'))) ||
+        (range && field[2] <= field[1]))
+        return 0;
+    if (range)
+        (void)snprintf(v, sizeof(v), "%u|%u|%u", field[0], field[1], field[2]);
+    else
+        (void)snprintf(v, sizeof(v), "%u|%u", field[0], field[1]);
+    return ko_finish(in, s, q, TTF_SEM_SYMBOL, v, "@verse", "ko:scripture-verse");
+}
 /* ▲1.2% 일 점 이 퍼센트 상승, ≥60점 육십 점 이상, ~10분 약 십 분: a mark written before a
    number reads around it (number_mark, {N} is the number and its unit; 2026-10-29, was the
    mark's name before the number). The mark opens a word, so x ≥ 5 stays a relation and 3~5
@@ -4152,6 +4283,21 @@ static size_t number_mark(const ttf_pack_input_t *in, ttf_semantic_t *s) {
             return ko_finish(in, s, p, TTF_SEM_SYMBOL, v, "@word", "ko:mark-about");
         }
     }
+    /* ≤10명만 열 명 이하만, ≥3개 세 개 이상: a mark read after its number before a counter
+       reads the counter with the number (2026-11-24, user feedback; it was 이하 열 명) */
+    if (!unit && d + 3 <= n && (unsigned char)t[d] >= 0xea && (unsigned char)t[d] <= 0xed) {
+        const char *form = ttf_resource_get(in->engine, "number_mark", "ko-KR", key, NULL);
+        size_t cw = 0;
+        const char *suffix = quantity_resource_at(in, "numeric_suffix", d, &cw);
+        if (form && !strncmp(form, "{N}", 3) && suffix && !strncmp(suffix, "COUNTER:", 8) &&
+            strlen(suffix + 8) + 4 < sizeof(id) &&
+            !(d + cw < n && (ko_digit(t[d + cw]) || (t[d + cw] >= 'a' && t[d + cw] <= 'z') ||
+                             (t[d + cw] >= 'A' && t[d + cw] <= 'Z')))) {
+            (void)snprintf(id, sizeof(id), "@C:%s", suffix + 8);
+            unit = id;
+            d += cw;
+        }
+    }
     if (!unit && d + 3 <= n && (unsigned char)t[d] >= 0xea && (unsigned char)t[d] <= 0xed) {
         /* ≥25이면: only a particle may follow a bare number */
         size_t k;
@@ -4217,6 +4363,32 @@ static size_t approximate_unit(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     return ko_finish(in, s, p + width, TTF_SEM_SYMBOL, label, "@word", "ko:approximate-unit");
 }
 
+/* 8^2이다 팔의 제곱이다, 2^10은 이의 십제곱은, x^2을 엑스 제곱을: a number or one letter, a
+   caret and digits read like the superscript (8², x²; 2026-11-24, user feedback; it was 팔 캐럿
+   이). 좋아요^^ and 3^x stay. */
+static size_t caret_power(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    const char *t = in->text;
+    size_t n = in->length, p = in->tokens[in->index].begin, q = p, e;
+    char v[40];
+    if (p && (ko_digit(t[p - 1]) || ((t[p - 1] | 0x20) >= 'a' && (t[p - 1] | 0x20) <= 'z') || t[p - 1] == '.' ||
+              t[p - 1] == '^'))
+        return 0;
+    if (ko_digit(t[q]))
+        while (q < n && ko_digit(t[q]) && q - p < 7)
+            ++q;
+    else if ((t[q] | 0x20) >= 'a' && (t[q] | 0x20) <= 'z')
+        ++q;
+    else
+        return 0;
+    if (q + 1 >= n || t[q] != '^' || !ko_digit(t[q + 1]) || !korean_context(in))
+        return 0;
+    for (e = q + 1; e < n && ko_digit(t[e]); ++e)
+        ;
+    if (e - q - 1 > 3 || (e < n && (ko_digit(t[e]) || t[e] == '^' || t[e] == '.' || ((t[e] | 0x20) >= 'a' && (t[e] | 0x20) <= 'z'))))
+        return 0;
+    (void)snprintf(v, sizeof(v), "%.*s ^%.*s", (int)(q - p), t + p, (int)(e - q - 1), t + q + 1);
+    return ko_finish(in, s, e, TTF_SEM_SYMBOL, v, "@expression", "ko:caret-power");
+}
 /* x², mc², km²: a superscript power right after a Latin letter or digit that no grammar took
    reads 제곱 (2026-10-23; was passed through). Superscripts written alone (¹²³, 각주¹) stay.
    After a closing bracket too: (x+1)²=0을 (엑스 더하기 일) 제곱 (2026-10-26). */
@@ -5483,12 +5655,13 @@ static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     size_t identifier = below_zero_degrees(in, s);
     if (identifier)
         return identifier;
-    if ((identifier = official_number(in, s)) != 0 || (identifier = count_per_time(in, s)) != 0 || (identifier = field_mark(in, s)) != 0 || (identifier = open_tilde(in, s)) != 0 || (identifier = screen_inch(in, s)) != 0 || (identifier = algebra(in, s)) != 0 || (identifier = english_generation(in, s)) != 0 || (identifier = chem_isotope(in, s)) != 0 || (identifier = chem_formula_rule(in, s)) != 0 || (identifier = trig_function(in, s)) != 0 || (identifier = log_base(in, s)) != 0 || (identifier = number_mark(in, s)) != 0 || (identifier = day_countdown(in, s)) != 0 || (identifier = times_or_quarter(in, s)) != 0 || (identifier = promo_plus(in, s)) != 0 || (identifier = rating_minus(in, s)) != 0 || (identifier = file_dot(in, s)) != 0 || (identifier = range_month_day(in, s)) != 0 || (identifier = weekday_range(in, s)) != 0 || (identifier = letter_unit(in, s)) != 0 || (identifier = name_version(in, s)) != 0 || (identifier = geo_coordinate(in, s)) != 0 || (identifier = colon_score(in, s)) != 0 || (identifier = price_per_unit(in, s)) != 0 ||
+    if ((identifier = official_number(in, s)) != 0 || (identifier = count_per_time(in, s)) != 0 || (identifier = field_mark(in, s)) != 0 || (identifier = open_tilde(in, s)) != 0 || (identifier = screen_inch(in, s)) != 0 || (identifier = algebra(in, s)) != 0 || (identifier = english_generation(in, s)) != 0 || (identifier = chem_isotope(in, s)) != 0 || (identifier = chem_formula_rule(in, s)) != 0 || (identifier = trig_function(in, s)) != 0 || (identifier = log_base(in, s)) != 0 || (identifier = currency_code_prefix(in, s)) != 0 || (identifier = scripture_verse(in, s)) != 0 || (identifier = number_mark(in, s)) != 0 || (identifier = day_countdown(in, s)) != 0 || (identifier = times_or_quarter(in, s)) != 0 || (identifier = promo_plus(in, s)) != 0 || (identifier = rating_minus(in, s)) != 0 || (identifier = file_dot(in, s)) != 0 || (identifier = range_month_day(in, s)) != 0 || (identifier = weekday_range(in, s)) != 0 || (identifier = letter_unit(in, s)) != 0 || (identifier = name_version(in, s)) != 0 || (identifier = geo_coordinate(in, s)) != 0 || (identifier = colon_score(in, s)) != 0 || (identifier = price_per_unit(in, s)) != 0 ||
         (identifier = currency_pair(in, s)) != 0 || (identifier = short_dotted_date(in, s)) != 0 || (identifier = quarter(in, s)) != 0 ||
         (identifier = owner_forms(in, s)) != 0 || (identifier = owner_forms5(in, s)) != 0 ||
         (identifier = chemical_formula(in, s)) != 0 || (identifier = subscript_index(in, s)) != 0 ||
         (identifier = letters_decimal(in, s)) != 0 || (identifier = court_case(in, s)) != 0 ||
-        (identifier = superscript_expression(in, s)) != 0 || (identifier = trailing_power(in, s)) != 0 ||
+        (identifier = superscript_expression(in, s)) != 0 || (identifier = caret_power(in, s)) != 0 ||
+        (identifier = trailing_power(in, s)) != 0 ||
         (identifier = approximate_unit(in, s)) != 0)
         return identifier;
     identifier = ttf_ko_classify_basement(in, s);

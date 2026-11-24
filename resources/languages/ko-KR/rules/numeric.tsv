@@ -90,6 +90,9 @@ policy	ko-KR	range_mode	cardinal
 policy	ko-KR	range_separator	에서 
 numeric_suffix	*	개	COUNTER:개
 numeric_suffix	*	명	COUNTER:명
+# 4사람 네 사람, 1사람 한 사람 (2026-11-24, user feedback; it was 사사람).
+counter	ko-KR	사람	native
+numeric_suffix	*	사람	COUNTER:사람
 numeric_suffix	*	살	COUNTER:살
 numeric_suffix	*	시	COUNTER:시
 numeric_suffix	*	분	COUNTER:분

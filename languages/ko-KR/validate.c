@@ -139,6 +139,20 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
                    : ttf_validation_error(
                          d, "math_relation supports = < > ≤ ≥ ≠ ≈ ≡ with a {L}...{R} template");
     }
+    if (SAME(k, "math_relation_attached")) {
+        *handled = 1;
+        return (SAME(key, "=") || SAME(key, "<") || SAME(key, ">") || SAME(key, "≤") || SAME(key, "≥")) &&
+                       label(v) && strstr(v, "{L}") && strstr(v, "{R}") && strlen(v) < 256
+                   ? TTF_OK
+                   : ttf_validation_error(
+                         d, "math_relation_attached supports = < > ≤ ≥ with a {L}...{R} template");
+    }
+    if (SAME(k, "scripture_book")) {
+        *handled = 1;
+        return label(key) && strlen(key) < 40 && (unsigned char)key[0] >= 0xea && SAME(v, "1")
+                   ? TTF_OK
+                   : ttf_validation_error(d, "scripture_book requires a Korean book name and 1");
+    }
     if (SAME(k, "speech_symbol_prefix")) {
         *handled = 1;
         return symbol_key(key) && label(v) && strlen(v) < 256
