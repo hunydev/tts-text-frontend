@@ -1,5 +1,14 @@
 # Changelog
 
+## Remaining items from the integration report (2026-11-24)
+
+- `㈔` reads 사단법인 (was 사), as `㈜` reads 주식회사.
+- A number after an ellipsis is not a decimal (`음...3개` 음..세 개, was 영 점 삼 개; `Wait...3 people` three).
+- A zero-width space or an ideographic space between a number and its counter or unit is a space (`3\u200b명`, `3\u3000명` 세 명, was 삼명).
+- After the word 약 the mark `~` is not read again (`약 ~5분` 약 오 분, was 약 약 오 분).
+- After 국가번호, 국가코드 or 국제전화 a plus and one to three digits read digit by digit (`국가번호는 +82이다` 플러스 팔이, was 플러스 팔십이); `점수가 +3 올랐다` stays an amount.
+- Left to the caller as the report plans: fullwidth Latin letters (`Ｑ１`, NFKC), emoticons (`^^`) and Markdown marks. Contract feedback_v184 (10).
+
 ## Korean fixes from the integration report (2026-11-24)
 
 - A mark read after its number (≤ ≥) before a counter reads the counter with the number (`≤10명만` 열 명 이하만, was 이하 열 명만).

@@ -134,6 +134,8 @@ speech_symbol	ko-KR	±	플러스마이너스
 speech_symbol	ko-KR	×	곱하기
 speech_symbol	ko-KR	÷	나누기
 speech_symbol	ko-KR	㈜	주식회사
+# ㈔한국협회 사단법인 한국협회 (2026-11-24, user feedback; it was 사).
+speech_symbol	ko-KR	㈔	사단법인
 
 # Address words read as words inside email/URL; other alphabetic runs use the
 # pronunciation lexicon, then letter spelling. Provisional, pending review.
@@ -192,6 +194,7 @@ classifier_priority	ko-KR	ko:open-tilde	100
 classifier_priority	ko-KR	ko:scripture-verse	100
 classifier_priority	ko-KR	ko:caret-power	100
 classifier_priority	ko-KR	ko:currency-code-prefix	100
+classifier_priority	ko-KR	ko:country-code	100
 # 원/달러 환율 원 달러: a slash between two of these words names a currency pair (2026-10-29).
 currency_pair_word	ko-KR	원	1
 currency_pair_word	ko-KR	달러	1
