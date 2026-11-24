@@ -187,6 +187,8 @@ numeric_suffix	*	m/s	MEASURE:m_per_second
 numeric_suffix	*	km/s	MEASURE:km_per_second
 numeric_suffix	*	W/kg	MEASURE:W_per_kg
 numeric_suffix	*	cc	MEASURE:cc
+# 5㏄ the square cc sign (2026-11-24, user feedback; 5㏄ 주사 was 오 주사).
+numeric_suffix	*	㏄	MEASURE:cc
 unit	en-US	GWh.one	gigawatt hour
 unit	en-US	GWh.many	gigawatt hours
 unit	en-US	MWh.one	megawatt hour

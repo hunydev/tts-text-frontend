@@ -1555,6 +1555,15 @@ size_t ttf_classify_universal(const ttf_pack_input_t *in, ttf_semantic_t *out) {
         return finish(in, out, consumed_end, TTF_SEM_INITIALISM, "syntax.web-initialism");
     }
     if ((q = math_expression_end(in, b, out)) > b) {
+        /* x ≤ 10이면, x >= 4일 때: the copula 이 written against the expression makes it a
+           predicate noun; the pack may read it as a phrase (2026-11-24, user feedback). Before
+           에서 or 를 the expression stays a clause (5x>20에서). */
+        if (q + 3 <= in->length && !memcmp(in->text + q, "\xec\x9d", 2) &&
+            ((unsigned char)in->text[q + 2] == 0xb4 || (unsigned char)in->text[q + 2] == 0xbc ||
+             (unsigned char)in->text[q + 2] == 0xb8) )
+            snprintf(out->secondary, sizeof(out->secondary), "copula");
+        else if (q + 3 <= in->length && !memcmp(in->text + q, "\xec\x9e\x84", 3))
+            snprintf(out->secondary, sizeof(out->secondary), "copula");
         snprintf(out->unit, sizeof(out->unit), "@expression");
         return finish(in, out, q, TTF_SEM_SYMBOL, "syntax.math-expression");
     }

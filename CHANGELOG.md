@@ -1,5 +1,19 @@
 # Changelog
 
+## Korean fixes from the integration report (2026-11-24)
+
+- A mark read after its number (≤ ≥) before a counter reads the counter with the number (`≤10명만` 열 명 이하만, was 이하 열 명만).
+- `5㏄` 오 씨씨 (was 오); a lone `℃` reads 섭씨 (`℃ 단위로` 섭씨 단위로, was dropped).
+- 사람 is a native counter (`4사람` 네 사람, `1사람` 한 사람; was 사사람, 일사람).
+- An unreduced slash fraction or equal parts before 에, 부터 or 까지 is a month and day (`6/12에` 유월 십이 일에, was 십이 분의 육에); `3/4에 해당` stays a fraction.
+- An inequality written against the copula 이 is a phrase (`math_relation_attached`; `x ≤ 10이면` 엑스가 십 이하이면, was 엑스는 십보다 작거나 같다이면). The shared classifier marks such an expression `copula`; before 에서 or 를 and for `=` the clause stays.
+- A caret power reads like a superscript (`8^2` 팔의 제곱, `2^10` 이의 십제곱; was 팔 캐럿 이).
+- `≈ 5` 약 오 (was 거의 같음 오).
+- Chapter and verse after a Korean book name (`scripture_book`; `요한복음 3:16` 요한복음 삼 장 십육 절, was 세 시 십육 분).
+- A currency code before an amount (`USD 50` 오십 달러, was 유에스디 오십).
+- Road and lot numbers (`테헤란로 154-18`) and plain numbers of five digits or more (`50000이다`) keep the owner decisions: digits in plain text, `[[…]]{@address}` and `{@sino}` for the other reading.
+- Contract feedback_v183 (18).
+
 ## English fixes from the integration report (2026-11-24)
 
 - A sentence period after a year-first slash date ends the date (`The deadline is 2030/07/24.` July twenty fourth two thousand thirty, was twenty thirty slash zero seven slash twenty four).

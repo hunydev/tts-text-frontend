@@ -188,6 +188,10 @@ classifier_priority	ko-KR	ko:field-mark	100
 classifier_priority	ko-KR	ko:screen-inch	100
 # 9,900원~ 구천구백 원부터: an open range (2026-11-01, round 25)
 classifier_priority	ko-KR	ko:open-tilde	100
+# 요한복음 3:16, 8^2, USD 50: over the clock time, the caret name and the spelled code (2026-11-24).
+classifier_priority	ko-KR	ko:scripture-verse	100
+classifier_priority	ko-KR	ko:caret-power	100
+classifier_priority	ko-KR	ko:currency-code-prefix	100
 # 원/달러 환율 원 달러: a slash between two of these words names a currency pair (2026-10-29).
 currency_pair_word	ko-KR	원	1
 currency_pair_word	ko-KR	달러	1
@@ -252,6 +256,8 @@ number_mark	ko-KR	≥	{N} 이상
 number_mark	ko-KR	≤	{N} 이하
 number_mark	ko-KR	~	약 {N}
 number_mark	ko-KR	≒	약 {N}
+# ≈ 5 약 오, as ≒ (2026-11-24; it was 거의 같음 오).
+number_mark	ko-KR	≈	약 {N}
 number_mark_unit	ko-KR	원	원
 number_mark_unit	ko-KR	%	퍼센트
 number_mark_unit	ko-KR	%p	퍼센트포인트
@@ -697,3 +703,77 @@ electronic_word	ko-KR	books	북스
 electronic_word	ko-KR	readme	리드미
 electronic_word	ko-KR	setup	셋업
 electronic_word	ko-KR	bit	비트
+# x ≤ 10이면 엑스가 십 이하이면: a relation before a Korean ending is a phrase (2026-11-24, user
+# feedback; it was 엑스는 십보다 작거나 같다이면). = keeps 은/는 (25×4=100을 이십오 곱하기 사는 백을).
+math_relation_attached	ko-KR	<	{L}{이/가} {R} 미만
+math_relation_attached	ko-KR	>	{L}{이/가} {R} 초과
+math_relation_attached	ko-KR	≤	{L}{이/가} {R} 이하
+math_relation_attached	ko-KR	≥	{L}{이/가} {R} 이상
+# ℃ 단위로 섭씨 단위로: the sign alone (2026-11-24, user feedback; it was dropped).
+speech_symbol	ko-KR	℃	섭씨
+speech_symbol	ko-KR	℉	화씨
+# 요한복음 3:16 요한복음 삼 장 십육 절: book names before chapter:verse (2026-11-24). Names that are
+# also personal names or words (요나, 아가, 미가, 다니엘, 요엘) are left out.
+scripture_book	ko-KR	창세기	1
+scripture_book	ko-KR	출애굽기	1
+scripture_book	ko-KR	레위기	1
+scripture_book	ko-KR	민수기	1
+scripture_book	ko-KR	신명기	1
+scripture_book	ko-KR	여호수아	1
+scripture_book	ko-KR	사사기	1
+scripture_book	ko-KR	룻기	1
+scripture_book	ko-KR	사무엘상	1
+scripture_book	ko-KR	사무엘하	1
+scripture_book	ko-KR	열왕기상	1
+scripture_book	ko-KR	열왕기하	1
+scripture_book	ko-KR	역대상	1
+scripture_book	ko-KR	역대하	1
+scripture_book	ko-KR	에스라	1
+scripture_book	ko-KR	느헤미야	1
+scripture_book	ko-KR	에스더	1
+scripture_book	ko-KR	욥기	1
+scripture_book	ko-KR	시편	1
+scripture_book	ko-KR	잠언	1
+scripture_book	ko-KR	전도서	1
+scripture_book	ko-KR	아가서	1
+scripture_book	ko-KR	이사야	1
+scripture_book	ko-KR	예레미야	1
+scripture_book	ko-KR	예레미야애가	1
+scripture_book	ko-KR	에스겔	1
+scripture_book	ko-KR	호세아	1
+scripture_book	ko-KR	아모스	1
+scripture_book	ko-KR	오바댜	1
+scripture_book	ko-KR	나훔	1
+scripture_book	ko-KR	하박국	1
+scripture_book	ko-KR	스바냐	1
+scripture_book	ko-KR	학개	1
+scripture_book	ko-KR	스가랴	1
+scripture_book	ko-KR	말라기	1
+scripture_book	ko-KR	마태복음	1
+scripture_book	ko-KR	마가복음	1
+scripture_book	ko-KR	누가복음	1
+scripture_book	ko-KR	요한복음	1
+scripture_book	ko-KR	사도행전	1
+scripture_book	ko-KR	로마서	1
+scripture_book	ko-KR	고린도전서	1
+scripture_book	ko-KR	고린도후서	1
+scripture_book	ko-KR	갈라디아서	1
+scripture_book	ko-KR	에베소서	1
+scripture_book	ko-KR	빌립보서	1
+scripture_book	ko-KR	골로새서	1
+scripture_book	ko-KR	데살로니가전서	1
+scripture_book	ko-KR	데살로니가후서	1
+scripture_book	ko-KR	디모데전서	1
+scripture_book	ko-KR	디모데후서	1
+scripture_book	ko-KR	디도서	1
+scripture_book	ko-KR	빌레몬서	1
+scripture_book	ko-KR	히브리서	1
+scripture_book	ko-KR	야고보서	1
+scripture_book	ko-KR	베드로전서	1
+scripture_book	ko-KR	베드로후서	1
+scripture_book	ko-KR	요한일서	1
+scripture_book	ko-KR	요한이서	1
+scripture_book	ko-KR	요한삼서	1
+scripture_book	ko-KR	유다서	1
+scripture_book	ko-KR	요한계시록	1
+scripture_book	ko-KR	계시록	1
