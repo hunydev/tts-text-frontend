@@ -427,3 +427,29 @@ boundary_period	en-US	thur	1
 boundary_period	en-US	thurs	1
 boundary_period	en-US	fri	1
 boundary_period	en-US	sat	1
+# Vol. 36, Fig. 2, Eq. (3), p. 5, 1 Cor. 13:4: reference abbreviations whose period does not end
+# the sentence, so the number after them keeps the sentence's language (2026-11-24, user
+# feedback; in a Korean request it was read in Korean).
+boundary_period	en-US	fig	1
+boundary_period	en-US	figs	1
+boundary_period	en-US	eq	1
+boundary_period	en-US	eqs	1
+boundary_period	en-US	p	1
+boundary_period	en-US	pp	1
+boundary_period	en-US	ch	1
+boundary_period	en-US	chap	1
+boundary_period	en-US	art	1
+boundary_period	en-US	arts	1
+boundary_period	en-US	sec	1
+boundary_period	en-US	secs	1
+boundary_period	en-US	para	1
+boundary_period	en-US	vol	1
+boundary_period	en-US	vols	1
+boundary_period	en-US	cor	1
+boundary_period	en-US	rev	1
+boundary_period	en-US	gen	1
+boundary_period	en-US	ex	1
+boundary_period	en-US	ibid	1
+boundary_period	en-US	cf	1
+boundary_period	en-US	op	1
+boundary_period	en-US	approx	1

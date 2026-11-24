@@ -6,4 +6,5 @@
 /* Internal pack grammar; public ABI remains the language-pack callback. */
 size_t ttf_en_classify_date(const ttf_pack_input_t *input, ttf_semantic_t *semantic);
 
+int ttf_en_english(const ttf_pack_input_t *in);
 #endif
