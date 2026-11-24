@@ -412,9 +412,11 @@ static ttf_status_t core_record(const ttf_resource_record_t *r, int *handled,
                         KIND("quantity_lookahead_tail"))
                            ? 96
                            : 64;
-        if (strlen(key) >= limit || !ttf_validation_enum(value, "0|1"))
+        if (strlen(key) >= limit ||
+            !ttf_validation_enum(value, KIND("boundary_period") ? "0|1|digit" : "0|1"))
             return ttf_validation_error(
-                d, "boundary/continuation flag requires a bounded key and value 0 or 1");
+                d, "boundary/continuation flag requires a bounded key and value 0 or 1 "
+                   "(boundary_period also digit)");
     } else if (KIND("context_connector")) {
         uint32_t cp;
         size_t width, n = strlen(key);

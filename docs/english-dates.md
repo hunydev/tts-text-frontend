@@ -98,7 +98,7 @@ has four tab-separated columns: `kind`, `language`, `key`, `value`.
 | `decade_plural` | Plural decade word for a tens value `10`–`90`, or `100` and `1000` for a round decade (`nineteen hundreds`, `two thousands`) |
 | `date_year_quantity` | Lowercase following quantity noun that prevents a bare-year match, enabled with `1` |
 | `boundary_word` | Keep a possible continuation after this word, enabled with `1` |
-| `boundary_period` | Permit and retain the period after a date alias inside its candidate, enabled with `1` |
+| `boundary_period` | Permit and retain the period after a date alias inside its candidate, enabled with `1`; `digit` keeps the period only before a number (scripture abbreviations: `Rom. 8:28`) |
 
 A cued year followed by a hyphen and a two- or four-digit number is one RANGE
 span with `unit=year`, so both endpoints read in the year style (`the 1988 -

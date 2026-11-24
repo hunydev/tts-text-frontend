@@ -1,5 +1,19 @@
 # Changelog
 
+## English fixes from the integration report (2026-11-24)
+
+- A sentence period after a year-first slash date ends the date (`The deadline is 2030/07/24.` July twenty fourth two thousand thirty, was twenty thirty slash zero seven slash twenty four).
+- Scripture references: a capitalized book name or its dotted abbreviation (`scripture_abbreviation`) before chapter:verse, with 1 to 3 before a numbered book (`1 Cor. 13:4` first Corinthians thirteen four, was one Cor. 13:4; `Rom. 8:28-30` Romans chapter eight verses twenty eight to thirty). `boundary_period` takes the value `digit` (the period is kept only before a number), so `Rom. 8:28` stays one sentence and `I met Dan. Then` still ends. `Genesis 1:1` reads Genesis one one (the round-22 guard in tn_rounds_v149 now expects it).
+- `>=`, `<=` and `!=` are the relations ≥ ≤ ≠ in every language (`x >= 4` ex is greater than or equal to four, was ex equals four).
+- `Malcolm X` keeps the letter (`roman_name`; was Malcolm the tenth); `Pius X` stays the tenth.
+- `OH NO` is two words (an all-capital `caps_word` next to another one; was o h n o).
+- `the 1990's` (after the, early or late) is the decade nineteen nineties; `1990's best film` stays a possessive.
+- Any declared currency code before an amount reads as money (`USD 50` fifty dollars, `KRW 5000` five thousand won; was u s d fifty).
+- `₹3.50` three rupees and fifty paise (INR has two minor digits).
+- An attached decimal before V or A needs no cue word (`0.5V` zero point five volts, was zero point five V); before a noun it is singular (`a 3.7V cell` three point seven volt cell).
+- `≈` alone reads approximately (was almost equal); `8^2` eight squared and `5^3` five cubed (was eight to the second).
+- Contract feedback_v182 (22).
+
 ## English sentences in a Korean request (2026-11-24)
 
 - In a Korean request an English sentence reads its numbers by English grammar, as in an English request: the request's own pack no longer classifies tokens whose context is that English sentence (`Ages 25-48` twenty five to forty eight, was two five four eight; `The population is 10000.` ten thousand, was one zero zero zero zero; `85-67` eighty five to sixty seven).

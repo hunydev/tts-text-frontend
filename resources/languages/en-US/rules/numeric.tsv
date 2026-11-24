@@ -451,9 +451,9 @@ scripture_book	en-US	deuteronomy	1
 scripture_book	en-US	joshua	1
 scripture_book	en-US	judges	1
 scripture_book	en-US	ruth	1
-scripture_book	en-US	samuel	1
-scripture_book	en-US	kings	1
-scripture_book	en-US	chronicles	1
+scripture_book	en-US	samuel	numbered
+scripture_book	en-US	kings	numbered
+scripture_book	en-US	chronicles	numbered
 scripture_book	en-US	ezra	1
 scripture_book	en-US	nehemiah	1
 scripture_book	en-US	esther	1
@@ -482,21 +482,21 @@ scripture_book	en-US	malachi	1
 scripture_book	en-US	matthew	1
 scripture_book	en-US	mark	1
 scripture_book	en-US	luke	1
-scripture_book	en-US	john	1
+scripture_book	en-US	john	numbered
 scripture_book	en-US	acts	1
 scripture_book	en-US	romans	1
-scripture_book	en-US	corinthians	1
+scripture_book	en-US	corinthians	numbered
 scripture_book	en-US	galatians	1
 scripture_book	en-US	ephesians	1
 scripture_book	en-US	philippians	1
 scripture_book	en-US	colossians	1
-scripture_book	en-US	thessalonians	1
-scripture_book	en-US	timothy	1
+scripture_book	en-US	thessalonians	numbered
+scripture_book	en-US	timothy	numbered
 scripture_book	en-US	titus	1
 scripture_book	en-US	philemon	1
 scripture_book	en-US	hebrews	1
 scripture_book	en-US	james	1
-scripture_book	en-US	peter	1
+scripture_book	en-US	peter	numbered
 scripture_book	en-US	jude	1
 scripture_book	en-US	revelation	1
 # Numbering words (Type II diabetes; 2026-10-08).
@@ -680,3 +680,61 @@ standard_body	en-US	UL	1
 classifier_priority	en-US	en.standard-number	100
 # ~20% about twenty percent (2026-11-24, user feedback)
 classifier_priority	en-US	en.approximately	100
+# 1 Cor. 13:4 first Corinthians thirteen four: dotted book abbreviations before chapter:verse,
+# read as the book (2026-11-24, user feedback). The period is required (Dan 9:30 is a name
+# and a time); a numbered book (scripture_book numbered) takes 1 to 3 before it.
+scripture_abbreviation	en-US	gen	Genesis
+scripture_abbreviation	en-US	ex	Exodus
+scripture_abbreviation	en-US	exod	Exodus
+scripture_abbreviation	en-US	lev	Leviticus
+scripture_abbreviation	en-US	num	Numbers
+scripture_abbreviation	en-US	deut	Deuteronomy
+scripture_abbreviation	en-US	josh	Joshua
+scripture_abbreviation	en-US	judg	Judges
+scripture_abbreviation	en-US	sam	Samuel
+scripture_abbreviation	en-US	kgs	Kings
+scripture_abbreviation	en-US	chr	Chronicles
+scripture_abbreviation	en-US	chron	Chronicles
+scripture_abbreviation	en-US	neh	Nehemiah
+scripture_abbreviation	en-US	esth	Esther
+scripture_abbreviation	en-US	ps	Psalm
+scripture_abbreviation	en-US	psa	Psalm
+scripture_abbreviation	en-US	prov	Proverbs
+scripture_abbreviation	en-US	eccl	Ecclesiastes
+scripture_abbreviation	en-US	eccles	Ecclesiastes
+scripture_abbreviation	en-US	isa	Isaiah
+scripture_abbreviation	en-US	jer	Jeremiah
+scripture_abbreviation	en-US	lam	Lamentations
+scripture_abbreviation	en-US	ezek	Ezekiel
+scripture_abbreviation	en-US	dan	Daniel
+scripture_abbreviation	en-US	hos	Hosea
+scripture_abbreviation	en-US	obad	Obadiah
+scripture_abbreviation	en-US	mic	Micah
+scripture_abbreviation	en-US	nah	Nahum
+scripture_abbreviation	en-US	hab	Habakkuk
+scripture_abbreviation	en-US	zeph	Zephaniah
+scripture_abbreviation	en-US	hag	Haggai
+scripture_abbreviation	en-US	zech	Zechariah
+scripture_abbreviation	en-US	mal	Malachi
+scripture_abbreviation	en-US	matt	Matthew
+scripture_abbreviation	en-US	mt	Matthew
+scripture_abbreviation	en-US	mk	Mark
+scripture_abbreviation	en-US	lk	Luke
+scripture_abbreviation	en-US	jn	John
+scripture_abbreviation	en-US	rom	Romans
+scripture_abbreviation	en-US	cor	Corinthians
+scripture_abbreviation	en-US	gal	Galatians
+scripture_abbreviation	en-US	eph	Ephesians
+scripture_abbreviation	en-US	phil	Philippians
+scripture_abbreviation	en-US	col	Colossians
+scripture_abbreviation	en-US	thess	Thessalonians
+scripture_abbreviation	en-US	tim	Timothy
+scripture_abbreviation	en-US	tit	Titus
+scripture_abbreviation	en-US	philem	Philemon
+scripture_abbreviation	en-US	heb	Hebrews
+scripture_abbreviation	en-US	jas	James
+scripture_abbreviation	en-US	pet	Peter
+scripture_abbreviation	en-US	rev	Revelation
+classifier_priority	en-US	en.scripture-reference	100
+# Malcolm X: a name and letter that are not a regnal numeral (2026-11-24, user feedback).
+roman_name	en-US	malcolm x	1

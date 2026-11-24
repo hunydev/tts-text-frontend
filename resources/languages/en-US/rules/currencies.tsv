@@ -88,7 +88,10 @@ currency_minor_digits	en-US	CNY	0
 numeric_suffix	*	INR	CURRENCY:INR
 currency	en-US	INR.one	rupee
 currency	en-US	INR.many	rupees
-currency_minor_digits	en-US	INR	0
+# ₹3.50 three rupees and fifty paise (2026-11-24, user feedback; was three point five zero rupees).
+currency	en-US	INR.minor.one	paisa
+currency	en-US	INR.minor.many	paise
+currency_minor_digits	en-US	INR	2
 numeric_suffix	*	RUB	CURRENCY:RUB
 currency	en-US	RUB.one	ruble
 currency	en-US	RUB.many	rubles
