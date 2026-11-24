@@ -15,6 +15,18 @@ typedef struct {
     int valid, ordinal;
 } date_number_t;
 
+/* An English request, or an English sentence in another request: in a Korean request an English
+   sentence reads its dates and numbers by the English rules too (2026-11-24, user feedback; it
+   took the Korean defaults: 12/25 twelve over twenty five). */
+int ttf_en_english(const ttf_pack_input_t *in) {
+    const char *lang = in->engine->config.default_language;
+    const ttf_language_pack_t *sentence;
+    if (lang && !strncmp(lang, "en", 2))
+        return 1;
+    sentence = ttf_sentence_language(in);
+    return sentence && sentence->language_tag && !strncmp(sentence->language_tag, "en", 2);
+}
+
 static int ascii_alpha(char c) {
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
 }
@@ -581,7 +593,6 @@ static int month_cue(const ttf_pack_input_t *in, size_t start, size_t stop,
    its line (in, a newline, 1998). */
 static int english_text(const ttf_pack_input_t *in, size_t start, size_t end) {
     size_t from = start > 64 ? start - 64 : 0, p, q, words = 0;
-    const char *lang = in->engine->config.default_language;
     for (p = start; p > from; --p) {
         unsigned char c = (unsigned char)in->text[p - 1];
         if (c == '\n' || c == '\r')
@@ -601,7 +612,7 @@ static int english_text(const ttf_pack_input_t *in, size_t start, size_t end) {
     while (q < in->length && ascii_alpha(in->text[q]))
         ++q;
     words += q - p >= 2;
-    return words >= (lang && !strncmp(lang, "en", 2) ? 1u : 2u);
+    return words >= (ttf_en_english(in) ? 1u : 2u);
 }
 
 /* 1716. alone on its line, in an English default: a year heading (the English
@@ -625,9 +636,8 @@ static int month_sentence_before(const ttf_pack_input_t *in, size_t start) {
 }
 
 static int year_line(const ttf_pack_input_t *in, size_t start, size_t end) {
-    const char *lang = in->engine->config.default_language;
     size_t p = start;
-    if (!lang || strncmp(lang, "en", 2))
+    if (!ttf_en_english(in))
         return 0;
     while (p && horizontal(in->text[p - 1]))
         --p;
@@ -820,8 +830,7 @@ static size_t year_range(const ttf_pack_input_t *in, ttf_semantic_t *out, size_t
                 !((k == 4 && later > first.value && later <= first.value + 100) ||
                   (k == 2 && later > first.value % 100)) ||
                 first.value < 1000 || first.value > 2099 ||
-                !(in->engine->config.default_language &&
-                  !strncmp(in->engine->config.default_language, "en", 2)) ||
+                !ttf_en_english(in) ||
                 !english_text(in, start, r + k) || page_cue(in, start))
                 return 0;
             slash = 1;
@@ -834,8 +843,7 @@ static size_t year_range(const ttf_pack_input_t *in, ttf_semantic_t *out, size_t
             return 0;
         /* the extension below 1900 is for English requests only: 1588-1688 is a Korean
            service number */
-        if (first.value < 1900 && !(in->engine->config.default_language &&
-                                    !strncmp(in->engine->config.default_language, "en", 2)))
+        if (first.value < 1900 && !ttf_en_english(in))
             return 0;
         r = skip_horizontal(in->text, in->length, r + 1);
         for (k = 0; k < 4 && r + k < in->length && ascii_digit(in->text[r + k]); ++k)
@@ -844,8 +852,7 @@ static size_t year_range(const ttf_pack_input_t *in, ttf_semantic_t *out, size_t
            last two digits (2026-11-10, real-text cycle R8; it was one thousand nine hundred
            fourteen to fifteen). A bare 1988 - 93 keeps its cardinals. */
         if (k == 2 && !(r + 2 < in->length && ascii_digit(in->text[r + 2])) &&
-            second_year > first.value % 100 && in->engine->config.default_language &&
-            !strncmp(in->engine->config.default_language, "en", 2) &&
+            second_year > first.value % 100 && ttf_en_english(in) &&
             english_text(in, start, r + 2) && !page_cue(in, start) && !year_follows(in, r + 2)) {
             /* read below */
         } else if (k != 4 || (r + 4 < in->length && ascii_digit(in->text[r + 4])) ||
@@ -946,7 +953,6 @@ static size_t bracketed_weekday(const ttf_pack_input_t *in, ttf_semantic_t *out,
    the 16 after, and an English default or an English word before. */
 static int english_line(const ttf_pack_input_t *in, size_t start, size_t end) {
     size_t from = start > 64 ? start - 64 : 0, to = end + 16 < in->length ? end + 16 : in->length, p;
-    const char *lang = in->engine->config.default_language;
     int word = 0;
     for (p = start; p > from; --p) {
         unsigned char c = (unsigned char)in->text[p - 1];
@@ -959,7 +965,7 @@ static int english_line(const ttf_pack_input_t *in, size_t start, size_t end) {
     for (p = end; p < to && in->text[p] != '\n'; ++p)
         if ((unsigned char)in->text[p] >= 0xE3 && (unsigned char)in->text[p] <= 0xED)
             return 0;
-    return word || (lang && !strncmp(lang, "en", 2));
+    return word || ttf_en_english(in);
 }
 
 /* 6/25/1940, 02/15/2017, 6/17/13: an English month/day/year reads month first,

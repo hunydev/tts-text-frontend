@@ -1,5 +1,12 @@
 # Changelog
 
+## English sentences in a Korean request (2026-11-24)
+
+- In a Korean request an English sentence reads its numbers by English grammar, as in an English request: the request's own pack no longer classifies tokens whose context is that English sentence (`Ages 25-48` twenty five to forty eight, was two five four eight; `The population is 10000.` ten thousand, was one zero zero zero zero; `85-67` eighty five to sixty seven).
+- English rules that ran only in an English request also run in an English sentence of another request (`It was 12/25.` December twenty fifth, was twelve over twenty five; `853.672.4567` as a phone number; `10x` ten times; `report.pdf` report dot pee dee ef, was report 닷 pdf).
+- A reference abbreviation's period (Vol. Fig. Eq. p. pp. ch. Art. Sec. Cor. …) no longer ends the sentence, so the number after it keeps the sentence's language (`in Vol. 36.` volume thirty six, was volume 삼십육).
+- 2,000 English sentences read with a Korean request now match the English request's reading in 96.0% (was 94.5%); Korean benchmark +0/−0; owner sets unchanged; Korean sentences keep their readings (`ETF` 이티에프); contract feedback_v181 (8).
+
 ## Feedback fixes (2026-11-24)
 
 - English: a lone I after a lowercase numbering cue (book, part, story, chapter …) and before a lowercase word is the pronoun (`the red book I read`, was one read); `Chapter I`, `World War I`, `Book I of` keep the numeral.

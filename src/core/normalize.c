@@ -283,6 +283,17 @@ static int sentence_end(const ttf_pack_input_t *in, size_t k) {
             (((unsigned char)in->text[t->begin - 2] == 0xb8 && (unsigned char)in->text[t->begin - 1] >= 0x81) ||
              ((unsigned char)in->text[t->begin - 2] == 0xb9 && (unsigned char)in->text[t->begin - 1] <= 0x8e)))
             return 0;
+        /* Vol. 36, p. 5, Eq. (3): a period right after a short Latin word (an abbreviation)
+           and before a number does not end the sentence, so the number keeps the sentence's
+           language (2026-11-24, user feedback; in a Korean request it was read in Korean) */
+        if (cp == '.' && k >= 1 && in->tokens[k - 1].script == TTF_SCRIPT_LATIN &&
+            in->tokens[k - 1].end == t->begin && in->tokens[k - 1].end - in->tokens[k - 1].begin <= 4 &&
+            k + 2 < in->token_count && in->tokens[k + 1].script == TTF_SCRIPT_WHITESPACE &&
+            !memchr(in->text + in->tokens[k + 1].begin, '\n', in->tokens[k + 1].end - in->tokens[k + 1].begin) &&
+            (in->tokens[k + 2].script == TTF_SCRIPT_DIGIT ||
+             (in->text[in->tokens[k + 2].begin] == '(' && k + 3 < in->token_count &&
+              in->tokens[k + 3].script == TTF_SCRIPT_DIGIT)))
+            return 0;
         if (cp == '.' || cp == '!' || cp == '?' || cp == 0x3002 || cp == 0xff01 || cp == 0xff1f)
             return k + 1 == in->token_count || in->tokens[k + 1].script == TTF_SCRIPT_WHITESPACE;
     }
@@ -2440,9 +2451,16 @@ ttf_status_t ttf_process_unit_context(const ttf_engine_t *e, const char *prefix,
                     (!undeclared(e, j) || context == e->packs[j]) &&
                     !(han_context && context != e->packs[j]) &&
                     /* ja-JP in its own request leaves an English or Korean
-                       sentence alone (AI in an English sentence is not エーアイ). */
+                       sentence alone (AI in an English sentence is not エーアイ). The
+                       request's own pack does too where the token's context is that
+                       sentence's language: in a Korean request an English sentence's numbers are
+                       English grammar (Ages 25-48 twenty five to forty eight, was the
+                       Korean identifier reading two five four eight; 2026-11-24, user
+                       feedback). Hangul in the sentence keeps its Korean context. */
                     !(context != e->packs[j] && sentence_lang && sentence_lang != e->packs[j] &&
-                      declared_only(e, j)) &&
+                      (declared_only(e, j) ||
+                       (sentence_lang == context && e->default_language &&
+                        e->packs[j] == ttf_find_pack(e, e->default_language)))) &&
                     !(context != e->packs[j] &&
                       (e->frozen ? e->han_only[j]
                                  : pack_flag(e, e->packs[j], "han_sentence", 0) ||

@@ -1212,11 +1212,10 @@ static size_t mixed_fraction(const ttf_pack_input_t *in, ttf_semantic_t *out) {
         if ((unsigned char)s[i] >= 0xE3 && (unsigned char)s[i] <= 0xED)
             return 0;
     {
-        const char *lang = in->engine->config.default_language;
         int latin = 0;
         for (i = from; i + 1 < begin; ++i)
             latin |= isalpha((unsigned char)s[i]) && isalpha((unsigned char)s[i + 1]);
-        if (!latin && !(lang && !strncmp(lang, "en", 2)))
+        if (!latin && !ttf_en_english(in))
             return 0;
     }
     (void)snprintf(out->unit, sizeof(out->unit), "mixed:%.*s", (int)(whole_end - begin), s + begin);
@@ -2344,8 +2343,7 @@ static size_t dev_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     size_t n = in->length, p = in->tokens[in->index].begin, q, r, k;
     char v[96], key[24], num[40];
     /* only in an English request and speech output (text output keeps the written forms) */
-    if (p >= n || !english_window(in, p, p + 1) || !in->engine->default_language ||
-        strcmp(in->engine->default_language, EN) || in->engine->frontend_options.output_mode != TTF_OUTPUT_SPEECH)
+    if (p >= n || !english_window(in, p, p + 1) || !ttf_en_english(in) || in->engine->frontend_options.output_mode != TTF_OUTPUT_SPEECH)
         return 0;
     /* ---- listening check forms (TTS to STT on the owner set dev split, 2026-10-22) ---- */
     /* °F = °C × 9/5 + 32 degrees Fahrenheit equals degrees Celsius: a degree sign without a number */
