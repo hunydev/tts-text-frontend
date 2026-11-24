@@ -691,8 +691,30 @@ static ttf_status_t record(const ttf_resource_record_t *r, int *handled,
     }
     if (SAME(k, "scripture_book")) {
         *handled = 1;
-        if (!lowercase_letters(key, 23) || !SAME(v, "1"))
-            return ttf_validation_error(d, "scripture_book requires a lowercase book name and 1");
+        if (!lowercase_letters(key, 23) || !(SAME(v, "1") || SAME(v, "numbered")))
+            return ttf_validation_error(d, "scripture_book requires a lowercase book name and 1 or numbered");
+    }
+    if (SAME(k, "scripture_abbreviation")) {
+        size_t i;
+        *handled = 1;
+        if (!lowercase_letters(key, 7) || strlen(v) < 2 || strlen(v) > 23 || v[0] < 'A' || v[0] > 'Z')
+            return ttf_validation_error(d, "scripture_abbreviation requires a lowercase abbreviation and a book name");
+        for (i = 1; v[i]; ++i)
+            if (v[i] < 'a' || v[i] > 'z')
+                return ttf_validation_error(d, "scripture_abbreviation requires a lowercase abbreviation and a book name");
+    }
+    if (SAME(k, "roman_name")) {
+        const char *space = strchr(key, ' ');
+        size_t i;
+        *handled = 1;
+        if (!space || space == key || !space[1] || strlen(key) > 31 || !SAME(v, "1"))
+            return ttf_validation_error(d, "roman_name requires 'name numeral' in lowercase and 1");
+        for (i = 0; key + i < space; ++i)
+            if (key[i] < 'a' || key[i] > 'z')
+                return ttf_validation_error(d, "roman_name requires 'name numeral' in lowercase and 1");
+        for (i = 1; space[i]; ++i)
+            if (!strchr("ivxlcdm", space[i]))
+                return ttf_validation_error(d, "roman_name requires 'name numeral' in lowercase and 1");
     }
     if (SAME(k, "letter_name")) {
         *handled = 1;

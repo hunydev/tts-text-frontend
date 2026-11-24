@@ -221,6 +221,8 @@ caps_word	en-US	go	1
 caps_word	en-US	if	1
 caps_word	en-US	an	1
 caps_word	en-US	as	1
+# OH NO: an interjection among capital words (2026-11-24, user feedback).
+caps_word	en-US	oh	1
 # US states after a city and a comma (Kansas City, MO.; 2026-10-07).
 us_state	en-US	al	Alabama
 us_state	en-US	ak	Alaska

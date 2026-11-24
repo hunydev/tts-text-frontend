@@ -400,6 +400,11 @@ static size_t math_operator_at(const char *s, size_t n, size_t p, const char **o
                  {"\xe2\x89\xa0", "≠"},
                  {"\xe2\x89\x88", "≈"},
                  {"\xe2\x89\xa1", "≡"},
+                 /* x >= 4, x <= 4, x != 4: the ASCII spellings of ≥ ≤ ≠ (2026-11-24, user
+                    feedback; > was dropped and = read equals) */
+                 {">=", "≥"},
+                 {"<=", "≤"},
+                 {"!=", "≠"},
                  {"+", "+"},
                  {"-", "-"},
                  {"*", "*"},
@@ -798,8 +803,24 @@ static int suffix_word(const ttf_pack_input_t *in, size_t p, size_t end) {
 }
 static int cued_suffix(const ttf_pack_input_t *in, size_t p, size_t end) {
     char key[64];
+    size_t b = p;
     if (end <= p || end - p >= sizeof(key))
         return 1;
+    /* 0.5V, 3.7V: a decimal written against V is a voltage and needs no cue word (2026-11-24,
+       user feedback; 0.5V was zero point five V). A number joined to a name (GLM-4.5V) or a
+       course number (2.47J) is not. */
+    if (end - p == 1 && in->text[p] == 'V') {
+        while (b && digit(in->text[b - 1]))
+            --b;
+        if (b < p && b >= 2 && in->text[b - 1] == '.' && digit(in->text[b - 2])) {
+            b -= 2;
+            while (b && digit(in->text[b - 1]))
+                --b;
+            if (!b || !(ascii_letter(in->text[b - 1]) || in->text[b - 1] == '-' || in->text[b - 1] == '_' ||
+                        in->text[b - 1] == '.' || in->text[b - 1] == '/'))
+                return 1;
+        }
+    }
     memcpy(key, in->text + p, end - p);
     key[end - p] = '\0';
     return ttf_numeric_suffix_cued(in->engine, key, in->text, in->length);
@@ -1311,8 +1332,13 @@ static size_t slash_date(const ttf_pack_input_t *in, size_t b, ttf_semantic_t *o
         if (third_end == p || third_end - p > 2 || !first || first > 9999 ||
             !calendar_day(second, third = small_uint(s + p, third_end - p)))
             return 0;
+        /* The deadline is 2030/07/24. : a sentence period after the day ends the date; a
+           period before a digit or letter (2024/12/31.5, .txt) does not (2026-11-24, user
+           feedback; it was read twenty thirty slash zero seven slash twenty four) */
         if (third_end < n && (digit(s[third_end]) || s[third_end] == '/' ||
-                              ascii_letter(s[third_end]) || s[third_end] == '.'))
+                              ascii_letter(s[third_end]) ||
+                              (s[third_end] == '.' && third_end + 1 < n &&
+                               (digit(s[third_end + 1]) || ascii_letter(s[third_end + 1])))))
             return 0;
         snprintf(out->value, sizeof(out->value), "%04u-%02u-%02u", first, second, third);
         return finish(in, out, third_end, TTF_SEM_DATE, "syntax.slash-date");

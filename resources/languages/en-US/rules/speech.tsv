@@ -308,5 +308,8 @@ speech_symbol	en-US	⒵	Z
 # A bare relation sign reads like the relation (CLDR names read greater-than or equal; 2026-10-13).
 speech_symbol	en-US	≤	less than or equal to
 speech_symbol	en-US	≥	greater than or equal to
+# It is ≈ 5 km: approximately, as the relation reads (2026-11-24, user feedback; the Unicode
+# name almost equal was read).
+speech_symbol	en-US	≈	approximately
 # v2.1: version two point one.
 electronic_prefix	en-US	v	version

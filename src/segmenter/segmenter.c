@@ -290,7 +290,23 @@ static int quantity_before_space(const ttf_engine_t *e, const char *s, const ttf
     }
     return 0;
 }
-static int protected_period(const ttf_engine_t *e, const char *s, size_t at) {
+/* boundary_period value digit: the period is kept only before a number (Rom. 8:28, Matt. 5:9;
+   2026-11-24, user feedback), so I met Dan. Then ... still ends there. */
+static int digit_period(const ttf_engine_t *e, const char *key, const char *s, size_t length, size_t at) {
+    size_t pack, p = at + 1;
+    const char *value = ttf_resource_get(e, "boundary_period", "*", key, NULL);
+    for (pack = 0; !(value && !strcmp(value, "digit")) && pack < e->pack_count; ++pack)
+        value = ttf_resource_get(e, "boundary_period", e->packs[pack]->language_tag, key, NULL);
+    if (!value || strcmp(value, "digit"))
+        return 0;
+    while (p < length && s[p] == ' ')
+        ++p;
+    /* streaming: the number may still be on its way, so the period waits */
+    if (p == length)
+        return 1;
+    return p > at + 1 && s[p] >= '0' && s[p] <= '9';
+}
+static int protected_period(const ttf_engine_t *e, const char *s, size_t length, size_t at) {
     size_t begin = at, n;
     char key[96];
     if (at && s[at - 1] >= '0' && s[at - 1] <= '9')
@@ -323,7 +339,7 @@ static int protected_period(const ttf_engine_t *e, const char *s, size_t at) {
     for (begin = 0; begin < n; begin++)
         if (key[begin] >= 'A' && key[begin] <= 'Z')
             key[begin] += 'a' - 'A';
-    if (boundary_resource(e, "boundary_period", key))
+    if (boundary_resource(e, "boundary_period", key) || digit_period(e, key, s, length, at))
         return 1;
     if (ttf_resource_get(e, "abbreviation", "*", key, NULL))
         return 1;
@@ -509,7 +525,7 @@ ttf_status_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, i
                         next != 0x3002 && next != 0xff01 && next != 0xff1f && next != '!' &&
                         next != '?' && ttf_script_of(next) != TTF_SCRIPT_WHITESPACE)
                         sentence = 1;
-                    if (cp == '.' && protected_period(e, s, at))
+                    if (cp == '.' && protected_period(e, s, n, at))
                         sentence = 0;
                     /* 5! = 120, 3! + 1: a factorial before an operator (2026-10-14) */
                     if (cp == '!' && sentence && at && s[at - 1] >= '0' && s[at - 1] <= '9') {
@@ -667,7 +683,7 @@ ttf_status_t ttf_next_boundary(const ttf_engine_t *e, const char *s, size_t n, i
                 }
                 /* A spaced date or abbreviation may continue after this whitespace.
                    Never freeze its leading number merely to hit a phrase target. */
-                if (!(previous && s[previous - 1] == '.' && protected_period(e, s, previous - 1))) {
+                if (!(previous && s[previous - 1] == '.' && protected_period(e, s, n, previous - 1))) {
                     selected = at + w;
                     goto done;
                 }

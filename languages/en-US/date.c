@@ -529,8 +529,27 @@ static int interval_continuation(const ttf_pack_input_t *in, size_t start,
 
 /* "the 1960s", "the 80s", "the '90s": a decade is a plural year. The digits end
    in a zero, so 1965s and a model-number plural such as 787s are left alone. */
+/* the, early or late right before a decade written with 's */
+static int decade_article(const ttf_pack_input_t *in, size_t start) {
+    static const char *const words[] = {"the", "early", "late"};
+    size_t w = start, q, i, k;
+    if (!w || in->text[w - 1] != ' ')
+        return 0;
+    q = --w;
+    while (q && ascii_alpha(in->text[q - 1]))
+        --q;
+    for (k = 0; k < sizeof(words) / sizeof(*words); ++k) {
+        if (strlen(words[k]) != w - q)
+            continue;
+        for (i = 0; i < w - q && (in->text[q + i] | 0x20) == words[k][i]; ++i)
+            ;
+        if (i == w - q)
+            return 1;
+    }
+    return 0;
+}
 static size_t decade(const ttf_pack_input_t *in, ttf_semantic_t *out, size_t start) {
-    size_t p = start, digits = 0;
+    size_t p = start, digits = 0, end;
     unsigned value = 0, minimum, maximum;
     ttf_resource_layer_t layer = TTF_LAYER_COMMON;
     if (p < in->length && in->text[p] == '\'')
@@ -539,11 +558,21 @@ static size_t decade(const ttf_pack_input_t *in, ttf_semantic_t *out, size_t sta
         value = value * 10 + (unsigned)(in->text[p + digits] - '0');
         ++digits;
     }
-    if ((digits != 4 && digits != 2) || value % 10 || p + digits >= in->length ||
-        in->text[p + digits] != 's')
+    if ((digits != 4 && digits != 2) || value % 10 || p + digits >= in->length)
         return 0;
-    if (p + digits + 1 < in->length &&
-        (ascii_alpha(in->text[p + digits + 1]) || ascii_digit(in->text[p + digits + 1])))
+    end = p + digits;
+    if (in->text[end] == 's')
+        ++end;
+    /* the 1990's, the late '80's: a decade with 's after the, early or late (2026-11-24, user
+       feedback; it was nineteen ninety's). 1990's budget without them stays a possessive. */
+    else if (in->text[end] == '\'' && end + 1 < in->length && in->text[end + 1] == 's' &&
+             decade_article(in, start))
+        end += 2;
+    else if (end + 3 < in->length && !memcmp(in->text + end, "\xe2\x80\x99s", 4) && decade_article(in, start))
+        end += 4;
+    else
+        return 0;
+    if (end < in->length && (ascii_alpha(in->text[end]) || ascii_digit(in->text[end])))
         return 0;
     if (digits == 4) {
         minimum = policy_year(in, "min_year", 1000, &layer);
@@ -553,7 +582,7 @@ static size_t decade(const ttf_pack_input_t *in, ttf_semantic_t *out, size_t sta
     }
     (void)snprintf(out->value, sizeof(out->value), "%u", value);
     (void)snprintf(out->unit, sizeof(out->unit), "decade");
-    return finish(in, out, p + digits + 1, 1, layer, "en.date.decade");
+    return finish(in, out, end, 1, layer, "en.date.decade");
 }
 
 /* "the 9th of April, 1865, Grant", "In June, 1812, the war": a four-digit

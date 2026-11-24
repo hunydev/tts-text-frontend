@@ -50,21 +50,36 @@ static int word_shaped(const char *key, size_t n) {
    FANCY, FEARLESS, KOSPI, UNESCO: a run of five letters or more shaped like a word is that
    word, as song titles, brands and headlines write it; UNHCR, NCSOFT stay letters
    (2026-10-29 owner request: English song titles; was 에프에이엔씨와이). */
+/* The word next to a short capital word: capitalized and three letters or more, or (OH NO)
+   in an English sentence itself a two-letter all-capital caps_word (2026-11-24, user feedback;
+   OH NO was o h n o). Korean sentences keep their readings (TO YOU). */
+static int caps_neighbor(const ttf_pack_input_t *in, size_t k) {
+    const ttf_token_t *t = &in->tokens[k];
+    size_t len = t->end - t->begin, i;
+    char key[4];
+    if (t->script != TTF_SCRIPT_LATIN || in->text[t->begin] < 'A' || in->text[t->begin] > 'Z')
+        return 0;
+    if (len >= 3)
+        return 1;
+    for (i = 0; i < len; ++i) {
+        if (in->text[t->begin + i] < 'A' || in->text[t->begin + i] > 'Z')
+            return 0;
+        key[i] = (char)(in->text[t->begin + i] | 0x20);
+    }
+    key[len] = 0;
+    return len == 2 && ttf_en_english(in) && res(in->engine, "caps_word", key) != NULL;
+}
 static int caps_as_word(const ttf_pack_input_t *in, const char *key, size_t n, size_t consumed) {
     if (n <= 3 && res(in->engine, "caps_word", key)) {
         size_t k = in->index;
         while (k && in->tokens[k - 1].script == TTF_SCRIPT_WHITESPACE)
             --k;
-        if (k && in->tokens[k - 1].script == TTF_SCRIPT_LATIN &&
-            in->tokens[k - 1].end - in->tokens[k - 1].begin >= 3 &&
-            in->text[in->tokens[k - 1].begin] >= 'A' && in->text[in->tokens[k - 1].begin] <= 'Z')
+        if (k && caps_neighbor(in, k - 1))
             return 1;
         k = in->index + consumed;
         while (k < in->token_count && in->tokens[k].script == TTF_SCRIPT_WHITESPACE)
             ++k;
-        if (k < in->token_count && in->tokens[k].script == TTF_SCRIPT_LATIN &&
-            in->tokens[k].end - in->tokens[k].begin >= 3 &&
-            in->text[in->tokens[k].begin] >= 'A' && in->text[in->tokens[k].begin] <= 'Z')
+        if (k < in->token_count && caps_neighbor(in, k))
             return 1;
     }
     if (consumed != 1)
@@ -1122,6 +1137,17 @@ static size_t roman_numeral(const ttf_pack_input_t *in, ttf_semantic_t *out, int
     if (cue && lower_cue && n == 1 && in->text[t->begin] == 'I' && t->end + 1 < in->length &&
         in->text[t->end] == ' ' && in->text[t->end + 1] >= 'a' && in->text[t->end + 1] <= 'z')
         return 0;
+    /* Malcolm X: a name and letter that are not a regnal numeral (roman_name; 2026-11-24, user
+       feedback; it was Malcolm the tenth). Malcolm III stays. */
+    if (cue && i + 1 + n < sizeof(key)) {
+        key[i] = ' ';
+        memcpy(key + i + 1, in->text + t->begin, n);
+        key[i + 1 + n] = 0;
+        for (p = i + 1; key[p]; ++p)
+            key[p] = (char)(key[p] | 0x20);
+        if (res(in->engine, "roman_name", key))
+            return 0;
+    }
     if (cardinal_only && (!cue || strcmp(cue, "cardinal")))
         return 0;
     /* Section C, Part D, Appendix M: a lone C, D, L or M is a letter label, not 100, 500, 50
@@ -2103,25 +2129,36 @@ static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     /* (x + 2)(x − 3) x plus two times x minus three */
     if (p && t[p] == '(' && t[p - 1] == ')')
         return owner_finish(in, out, p + 1, TTF_SEM_SYMBOL, "@word", " times (", "en.product");
-    /* CAD 64.30 sixty four Canadian dollars and thirty cents: a currency code before an amount */
-    if (t[p] >= 'A' && t[p] <= 'Z' && p + 5 < n && t[p + 3] == ' ' && ascii_digit_char(t[p + 4]) &&
-        !(p && ascii_letter_char(t[p - 1]))) {
-        static const char *const codes[] = {"GBP", "CAD", "AUD", "CHF", "JPY", "CNY",
-                                            "NZD", "SGD", "HKD", "INR", "MXN"};
-        size_t k, used = 0;
-        for (k = 0; k < sizeof(codes) / sizeof(*codes); ++k)
-            if (!strncmp(t + p, codes[k], 3)) {
-                for (r = p + 4; r < n && used + 1 < sizeof(v) &&
-                                (ascii_digit_char(t[r]) ||
-                                 ((t[r] == ',' || t[r] == '.') && r + 1 < n && ascii_digit_char(t[r + 1])));
-                     ++r)
-                    if (t[r] != ',')
-                        v[used++] = t[r];
-                v[used] = 0;
-                if (r < n && (ascii_letter_char(t[r]) || ascii_digit_char(t[r])))
-                    return 0;
-                return owner_finish(in, out, r, TTF_SEM_CURRENCY, codes[k], v, "en.currency-code");
-            }
+    /* CAD 64.30 sixty four Canadian dollars and thirty cents: a currency code before an amount.
+       Any code declared as a currency suffix (50 USD) with an English name reads so (USD 50
+       fifty dollars, KRW 5000 five thousand won; 2026-11-24, user feedback; USD, EUR and KRW
+       were spelled u s d). */
+    if (t[p] >= 'A' && t[p] <= 'Z' && p + 5 < n && t[p + 1] >= 'A' && t[p + 1] <= 'Z' && t[p + 2] >= 'A' &&
+        t[p + 2] <= 'Z' && t[p + 3] == ' ' && ascii_digit_char(t[p + 4]) && !(p && ascii_letter_char(t[p - 1]))) {
+        char code[4], name[16];
+        const char *kind;
+        size_t used = 0;
+        memcpy(code, t + p, 3);
+        code[3] = 0;
+        (void)snprintf(name, sizeof(name), "%s.many", code);
+        kind = ttf_resource_get(in->engine, "numeric_suffix", "*", code, NULL);
+        if (kind && !strncmp(kind, "CURRENCY:", 9) && !strcmp(kind + 9, code) && res(in->engine, "currency", name)) {
+            for (r = p + 4; r < n && used + 1 < sizeof(v) &&
+                            (ascii_digit_char(t[r]) ||
+                             ((t[r] == ',' || t[r] == '.') && r + 1 < n && ascii_digit_char(t[r + 1])));
+                 ++r)
+                if (t[r] != ',')
+                    v[used++] = t[r];
+            v[used] = 0;
+            if (r < n && (ascii_letter_char(t[r]) || ascii_digit_char(t[r]) || t[r] == '%'))
+                return 0;
+            /* USD 5 million: the scale word belongs to the amount; left to the general reading */
+            if (r + 2 < n && t[r] == ' ' &&
+                (!strncmp(t + r + 1, "million", 7) || !strncmp(t + r + 1, "billion", 7) ||
+                 !strncmp(t + r + 1, "trillion", 8) || !strncmp(t + r + 1, "thousand", 8)))
+                return 0;
+            return owner_finish(in, out, r, TTF_SEM_CURRENCY, code, v, "en.currency-code");
+        }
     }
     /* *67 star six seven: a star code */
     if (t[p] == '*' && p + 3 <= n && ascii_digit_char(t[p + 1]) && ascii_digit_char(t[p + 2]) &&
@@ -3249,15 +3286,26 @@ no_file:
                 return say_span(in, out, e2, v, "measure-adjective");
             }
         }
-        /* the 65W charger sixty five watt, a 12V battery: an attached unit before a noun */
-        if (a + 3 < n && (t[a] == 'W' || t[a] == 'V') && t[a + 1] == ' ' && t[a + 2] >= 'a' && t[a + 2] <= 'z' &&
-            word_before(t, p, "a|an|the|this|that|each|every|one|new|old")) {
-            char noun[24];
-            if (word_at(t, n, a + 2, noun, sizeof(noun)) &&
-                in_list(noun, "charger|adapter|bulb|battery|motor|speaker|amp|amplifier|heater|fan|light|lamp|system|"
-                              "outlet|plug|supply|brick|panel|microwave|blender|drill")) {
-                (void)snprintf(v, sizeof(v), "c:%u|w:%s", (unsigned)atoi(t + p), t[a] == 'W' ? "watt" : "volt");
-                return say_span(in, out, a + 1, v, "measure-adjective");
+        /* the 65W charger sixty five watt, a 12V battery, a 3.7V cell three point seven volt (a
+           decimal 2026-11-24, user feedback; was volts cell): an attached unit before a noun */
+        {
+            size_t u = a, k;
+            if (u + 1 < n && t[u] == '.' && ascii_digit_char(t[u + 1]))
+                for (++u; u < n && ascii_digit_char(t[u]); ++u)
+                    ;
+            if (u + 3 < n && (t[u] == 'W' || t[u] == 'V') && t[u + 1] == ' ' && t[u + 2] >= 'a' && t[u + 2] <= 'z' &&
+                u - p < 16 && word_before(t, p, "a|an|the|this|that|each|every|one|new|old")) {
+                char noun[24], num[16];
+                if (word_at(t, n, u + 2, noun, sizeof(noun)) &&
+                    in_list(noun, "charger|adapter|bulb|battery|motor|speaker|amp|amplifier|heater|fan|light|lamp|system|"
+                                  "outlet|plug|supply|brick|panel|microwave|blender|drill|cell")) {
+                    for (k = 0; k < u - p; ++k)
+                        num[k] = t[p + k];
+                    num[k] = 0;
+                    (void)snprintf(v, sizeof(v), "%s:%s|w:%s", u > a ? "n" : "c", num,
+                                   t[u] == 'W' ? "watt" : "volt");
+                    return say_span(in, out, u + 1, v, "measure-adjective");
+                }
             }
         }
         /* the 200 m butterfly, a 2 L bottle: a measure before a noun is singular */
@@ -3771,13 +3819,19 @@ no_file:
         }
         if (e && !(e < n && (ascii_letter_char(t[e]) || ascii_digit_char(t[e])))) {
             size_t used;
+            int power_word = 0;
             if (form == 1)
                 used = (size_t)snprintf(v, sizeof(v), "n:%s|w:times|n:%s|w:to the", a_num, b_num);
-            else if (form == 2)
+            else if (form == 2 && !neg && (!strcmp(exp, "2") || !strcmp(exp, "3"))) {
+                /* 8^2 eight squared, 5^3 five cubed, as 8² reads (2026-11-24, user feedback; was
+                   eight to the second) */
+                used = (size_t)snprintf(v, sizeof(v), "n:%s|w:%s", b_num, exp[0] == '2' ? "squared" : "cubed");
+                power_word = 1;
+            } else if (form == 2)
                 used = (size_t)snprintf(v, sizeof(v), "n:%s|w:to the", b_num);
             else
                 used = (size_t)snprintf(v, sizeof(v), "n:%s|w:times ten to the", a_num);
-            if (used < sizeof(v))
+            if (!power_word && used < sizeof(v))
                 used += (size_t)snprintf(v + used, sizeof(v) - used, neg ? "|w:minus|c:%s" : "|o:%s", exp);
             z = e;
             if (z + 1 < n && t[z] == ' ')
@@ -4016,6 +4070,96 @@ no_file:
     return 0;
 }
 
+/* 1 Cor. 13:4 first Corinthians thirteen four, John 3:16 John three sixteen, Rom. 8:28-30
+   Romans chapter eight verses twenty eight to thirty: a capitalized book name or its dotted
+   abbreviation (scripture_abbreviation), after 1 to 3 for a numbered book, before
+   chapter:verse. A verse never starts with 0, so a clock time (Mark 9:05) is not one
+   (2026-11-24, user feedback; 13:4 stayed digits and Cor. was left as written). */
+static size_t scripture_reference(const ttf_pack_input_t *in, ttf_semantic_t *out) {
+    const char *s = in->text, *book, *abbreviation = NULL;
+    size_t n = in->length, p = in->tokens[in->index].begin, w, q, i, used;
+    unsigned order = 0, field[3] = {0, 0, 0};
+    int range = 0;
+    char key[24], name[24], v[192];
+    if (p >= n || (p && (ascii_letter_char(s[p - 1]) || ascii_digit_char(s[p - 1]) || s[p - 1] == '.' ||
+                         s[p - 1] == ':')) ||
+        !ttf_en_english(in))
+        return 0;
+    if (ascii_digit_char(s[p])) {
+        if (s[p] < '1' || s[p] > '3' || p + 2 >= n || s[p + 1] != ' ' || !(s[p + 2] >= 'A' && s[p + 2] <= 'Z'))
+            return 0;
+        order = (unsigned)(s[p] - '0');
+        p += 2;
+    }
+    if (!(s[p] >= 'A' && s[p] <= 'Z'))
+        return 0;
+    for (w = p; w < n && ascii_letter_char(s[w]); ++w)
+        if (w - p >= sizeof(key) - 1)
+            return 0;
+    for (i = 0; i < w - p; ++i)
+        key[i] = (char)(s[p + i] | 0x20);
+    key[w - p] = 0;
+    q = w;
+    if (q < n && s[q] == '.') {
+        abbreviation = res(in->engine, "scripture_abbreviation", key);
+        if (!abbreviation || strlen(abbreviation) >= sizeof(name))
+            return 0;
+        (void)snprintf(name, sizeof(name), "%s", abbreviation);
+        for (i = 0; abbreviation[i]; ++i)
+            key[i] = (char)(abbreviation[i] | 0x20);
+        key[i] = 0;
+        ++q;
+    } else
+        (void)snprintf(name, sizeof(name), "%.*s", (int)(w - p), s + p);
+    book = res(in->engine, "scripture_book", key);
+    if (!book || (order && strcmp(book, "numbered")))
+        return 0;
+    if (q >= n || s[q] != ' ')
+        return 0;
+    while (q < n && s[q] == ' ')
+        ++q;
+    for (i = 0; i < 3; ++i) {
+        size_t d;
+        if (i == 1) {
+            if (q >= n || s[q] != ':')
+                return 0;
+            ++q;
+        } else if (i == 2) {
+            size_t a = q;
+            while (a < n && s[a] == ' ')
+                ++a;
+            if (a + 1 < n && s[a] == '-' && (ascii_digit_char(s[a + 1]) || s[a + 1] == ' ')) {
+                q = a + 1;
+                while (q < n && s[q] == ' ')
+                    ++q;
+                range = 1;
+            } else
+                break;
+        }
+        d = q;
+        if (q >= n || !ascii_digit_char(s[q]) || s[q] == '0')
+            return 0;
+        while (q < n && ascii_digit_char(s[q]) && q - d < 3)
+            field[i] = field[i] * 10 + (unsigned)(s[q++] - '0');
+        if (q < n && ascii_digit_char(s[q]))
+            return 0;
+    }
+    if ((q < n && (ascii_letter_char(s[q]) || s[q] == ':' || s[q] == '-' ||
+                   (s[q] == '.' && q + 1 < n && ascii_digit_char(s[q + 1])))) ||
+        (range && field[2] <= field[1]))
+        return 0;
+    used = 0;
+    if (order)
+        used += (size_t)snprintf(v + used, sizeof(v) - used, "o:%u|", order);
+    if (range)
+        used += (size_t)snprintf(v + used, sizeof(v) - used, "w:%s|w:chapter|c:%u|w:verses|c:%u|w:to|c:%u", name,
+                                 field[0], field[1], field[2]);
+    else
+        used += (size_t)snprintf(v + used, sizeof(v) - used, "w:%s|c:%u|c:%u", name, field[0], field[1]);
+    if (used >= sizeof(v))
+        return 0;
+    return say_span(in, out, q, v, "scripture-reference");
+}
 
 static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     const ttf_token_t *t = &in->tokens[in->index];
@@ -4033,6 +4177,9 @@ static size_t classify(const ttf_pack_input_t *in, ttf_semantic_t *out) {
     if (date_tokens)
         return date_tokens;
     date_tokens = mixed_fraction(in, out);
+    if (date_tokens)
+        return date_tokens;
+    date_tokens = scripture_reference(in, out);
     if (date_tokens)
         return date_tokens;
     date_tokens = scripture_verse(in, out);
