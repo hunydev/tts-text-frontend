@@ -1081,7 +1081,7 @@ static size_t roman_numeral(const ttf_pack_input_t *in, ttf_semantic_t *out, int
     char key[32];
     const char *cue = NULL;
     unsigned value;
-    int capitalized = 1, ok = 1;
+    int capitalized = 1, ok = 1, lower_cue = 0;
     if (t->script != TTF_SCRIPT_LATIN || n > 15)
         return 0;
     value = roman_value(in->text + t->begin, n);
@@ -1113,8 +1113,15 @@ static size_t roman_numeral(const ttf_pack_input_t *in, ttf_semantic_t *out, int
         if (ok) {
             key[i] = '\0';
             cue = res(in->engine, "roman_cue", key);
+            lower_cue = in->text[word->begin] >= 'a' && in->text[word->begin] <= 'z';
         }
     }
+    /* the red book I read, the part I wrote: a lone I after a lowercase cue word and before a
+       lowercase word is the pronoun (2026-11-24, user feedback; it was one). Chapter I, World
+       War I and Book I of keep the numeral. */
+    if (cue && lower_cue && n == 1 && in->text[t->begin] == 'I' && t->end + 1 < in->length &&
+        in->text[t->end] == ' ' && in->text[t->end + 1] >= 'a' && in->text[t->end + 1] <= 'z')
+        return 0;
     if (cardinal_only && (!cue || strcmp(cue, "cardinal")))
         return 0;
     /* Section C, Part D, Appendix M: a lone C, D, L or M is a letter label, not 100, 500, 50
@@ -1598,6 +1605,29 @@ static size_t owner_forms(const ttf_pack_input_t *in, ttf_semantic_t *out) {
        Korean reading) */
     if ((q = standard_number(in, out)) != 0)
         return q;
+    /* rose ~20% about twenty percent, ~5 km about five kilometers: a wave mark written before a
+       number (after a space, a bracket or nothing) is approximate (2026-11-24, user feedback;
+       it was tilde). 3~4 stays a range. */
+    if ((t[p] == '~' || (p + 3 <= n && !memcmp(t + p, "\xef\xbd\x9e", 3))) &&
+        (!p || t[p - 1] == ' ' || t[p - 1] == '(')) {
+        size_t m = p + (t[p] == '~' ? 1 : 3), w = p, k;
+        static const char *const near[] = {"about", "around", "approximately", "roughly", "nearly",
+                                           "almost", "circa", "approx."};
+        int said = 0;
+        /* about ~5 km: a word that already says it leaves the mark unread */
+        while (w && t[w - 1] == ' ')
+            --w;
+        for (k = 0; k < sizeof(near) / sizeof(near[0]) && !said; ++k) {
+            size_t l = strlen(near[k]);
+            size_t c = 0;
+            if (w >= l)
+                while (c < l && (t[w - l + c] | 0x20) == near[k][c])
+                    ++c;
+            said = w >= l && c == l && (w == l || !ascii_letter_char(t[w - l - 1]));
+        }
+        if (m < n && ascii_digit_char(t[m]))
+            return owner_finish(in, out, m, TTF_SEM_SYMBOL, "@word", said ? "" : "about ", "en.approximately");
+    }
     /* ---- owner v2 forms (real sentences, 2026-10-15) ---- */
     {
         static const char *const month[] = {"January", "February", "March", "April", "May", "June", "July",
