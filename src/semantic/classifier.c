@@ -118,6 +118,10 @@ size_t ttf_numeric_value(const ttf_pack_input_t *in, size_t p, char value[TTF_IR
     if (p < n && (s[p] == '-' || s[p] == '+')) {
         value[k++] = s[p++];
     }
+    /* ...3개 세 개: a period after another one ends an ellipsis, not a decimal point; the
+       number starts after it (2026-11-24, user feedback; it was 영 점 삼 개) */
+    if (k == 0 && p + 1 < n && p && s[p] == '.' && s[p - 1] == '.' && digit(s[p + 1]))
+        ++p;
     first = p;
     p = integer(s, n, p);
     if (p - start >= TTF_IR_VALUE_SIZE)
@@ -194,10 +198,25 @@ static size_t skip_space(const char *s, size_t n, size_t p) {
         ++p;
     return p;
 }
+/* 3\u200b명, 3\u3000명: a zero-width space or an ideographic space between a number and its
+   counter or unit is a space (2026-11-24, user feedback; it was 삼명). */
+static size_t wide_space(const char *s, size_t n, size_t p) {
+    if (p + 3 <= n && ((unsigned char)s[p] == 0xe3 && (unsigned char)s[p + 1] == 0x80 &&
+                       (unsigned char)s[p + 2] == 0x80))
+        return 3;
+    if (p + 3 <= n && ((unsigned char)s[p] == 0xe2 && (unsigned char)s[p + 1] == 0x80 &&
+                       (unsigned char)s[p + 2] == 0x8b))
+        return 3;
+    return 0;
+}
 static size_t skip_quantity_space(const ttf_pack_input_t *in, size_t p) {
     size_t q;
     for (;;) {
         q = skip_space(in->text, in->length, p);
+        if (wide_space(in->text, in->length, q)) {
+            p = q + 3;
+            continue;
+        }
         if (q < in->length && (unsigned char)in->text[q] >= 128) {
             size_t width =
                 ttf_numeric_group_separator(in->engine, in->text, in->length, q, NULL, NULL);
@@ -214,6 +233,8 @@ static int quantity_space_before(const ttf_pack_input_t *in, size_t position) {
     if (!p)
         return 0;
     if (in->text[p - 1] == ' ' || in->text[p - 1] == '\t')
+        return 1;
+    if (p >= 3 && wide_space(in->text, position, p - 3))
         return 1;
     do {
         --p;

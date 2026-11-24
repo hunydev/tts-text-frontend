@@ -4021,6 +4021,33 @@ static size_t file_dot(const ttf_pack_input_t *in, ttf_semantic_t *s) {
 /* 1+1 행사 원 플러스 원, 2+1이라 투 플러스 원: a one-digit sum before a sales word
    (promo_cue) is the shop offer, read with the English numbers (promo_number; 2026-10-29,
    was 일 더하기 일). 1+1은 2 stays arithmetic. */
+/* 국가번호는 +82이다 플러스 팔이: after a country-code word a plus and one to three digits
+   read digit by digit, as in +82 10-1234-5678 (2026-11-24, user feedback; it was 플러스
+   팔십이). +5도 and +82점 stay amounts. */
+static size_t country_code(const ttf_pack_input_t *in, ttf_semantic_t *s) {
+    static const char *const names[] = {"\xea\xb3\xb5", "\xec\x9d\xbc", "\xec\x9d\xb4", "\xec\x82\xbc",
+                                        "\xec\x82\xac", "\xec\x98\xa4", "\xec\x9c\xa1", "\xec\xb9\xa0",
+                                        "\xed\x8c\x94", "\xea\xb5\xac"}; /* 공 일 이 삼 사 오 육 칠 팔 구 */
+    const char *t = in->text;
+    size_t n = in->length, p = in->tokens[in->index].begin, q;
+    char v[64];
+    if (p >= n || t[p] != '+' || p + 1 >= n || !ko_digit(t[p + 1]) || t[p + 1] == '0' ||
+        (p && (ko_digit(t[p - 1]) || ((t[p - 1] | 0x20) >= 'a' && (t[p - 1] | 0x20) <= 'z'))))
+        return 0;
+    for (q = p + 1; q < n && ko_digit(t[q]); ++q)
+        ;
+    if (q - p - 1 > 3 || (q < n && (t[q] == '.' || t[q] == '-' || ((t[q] | 0x20) >= 'a' && (t[q] | 0x20) <= 'z'))) ||
+        !word_within(t, p, 30, "\xea\xb5\xad\xea\xb0\x80\xeb\xb2\x88\xed\x98\xb8|"
+                               "\xea\xb5\xad\xea\xb0\x80 \xeb\xb2\x88\xed\x98\xb8|"
+                               "\xea\xb5\xad\xea\xb0\x80\xec\xbd\x94\xeb\x93\x9c|"
+                               "\xea\xb5\xad\xec\xa0\x9c\xec\xa0\x84\xed\x99\x94|"
+                               "\xea\xb5\xad\xec\xa0\x9c \xec\xa0\x84\xed\x99\x94")) /* 국가번호 국가 번호 국가코드 국제전화 국제 전화 */
+        return 0;
+    (void)snprintf(v, sizeof(v), "\xed\x94\x8c\xeb\x9f\xac\xec\x8a\xa4 "); /* 플러스 */
+    for (size_t k = p + 1; k < q; ++k)
+        (void)snprintf(v + strlen(v), sizeof(v) - strlen(v), "%s", names[t[k] - '0']);
+    return ko_finish(in, s, q, TTF_SEM_SYMBOL, v, "@word", "ko:country-code");
+}
 static size_t promo_plus(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     const char *t = in->text, *a, *b;
     size_t n = in->length, p = in->tokens[in->index].begin, q = p + 3, r, k;
@@ -4192,6 +4219,12 @@ static size_t number_mark(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     key[m - b] = 0;
     if (!ttf_resource_get(in->engine, "number_mark", "ko-KR", key, NULL) || !korean_context(in))
         return 0;
+    /* 약 ~5분 약 오 분: after the word 약 a mark read 약 is not read again (2026-11-24; it was
+       약 약 오 분) */
+    if (b >= 4 && t[b - 1] == ' ' && !memcmp(t + b - 4, "\xec\x95\xbd", 3) &&
+        (b == 4 || t[b - 5] == ' ' || t[b - 5] == '(') && m < n && (ko_digit(t[m]) || (t[m] == ' ' && m + 1 < n && ko_digit(t[m + 1]))) &&
+        !strncmp(ttf_resource_get(in->engine, "number_mark", "ko-KR", key, NULL), "\xec\x95\xbd", 3))
+        return ko_finish(in, s, m, TTF_SEM_SYMBOL, "", "@word", "ko:mark-about");
     if (b) {
         /* written apart from the word before (37.5도~38도 is a range) */
         size_t c = b;
@@ -5655,7 +5688,7 @@ static size_t classify_grammar(const ttf_pack_input_t *in, ttf_semantic_t *s) {
     size_t identifier = below_zero_degrees(in, s);
     if (identifier)
         return identifier;
-    if ((identifier = official_number(in, s)) != 0 || (identifier = count_per_time(in, s)) != 0 || (identifier = field_mark(in, s)) != 0 || (identifier = open_tilde(in, s)) != 0 || (identifier = screen_inch(in, s)) != 0 || (identifier = algebra(in, s)) != 0 || (identifier = english_generation(in, s)) != 0 || (identifier = chem_isotope(in, s)) != 0 || (identifier = chem_formula_rule(in, s)) != 0 || (identifier = trig_function(in, s)) != 0 || (identifier = log_base(in, s)) != 0 || (identifier = currency_code_prefix(in, s)) != 0 || (identifier = scripture_verse(in, s)) != 0 || (identifier = number_mark(in, s)) != 0 || (identifier = day_countdown(in, s)) != 0 || (identifier = times_or_quarter(in, s)) != 0 || (identifier = promo_plus(in, s)) != 0 || (identifier = rating_minus(in, s)) != 0 || (identifier = file_dot(in, s)) != 0 || (identifier = range_month_day(in, s)) != 0 || (identifier = weekday_range(in, s)) != 0 || (identifier = letter_unit(in, s)) != 0 || (identifier = name_version(in, s)) != 0 || (identifier = geo_coordinate(in, s)) != 0 || (identifier = colon_score(in, s)) != 0 || (identifier = price_per_unit(in, s)) != 0 ||
+    if ((identifier = official_number(in, s)) != 0 || (identifier = count_per_time(in, s)) != 0 || (identifier = field_mark(in, s)) != 0 || (identifier = open_tilde(in, s)) != 0 || (identifier = screen_inch(in, s)) != 0 || (identifier = algebra(in, s)) != 0 || (identifier = english_generation(in, s)) != 0 || (identifier = chem_isotope(in, s)) != 0 || (identifier = chem_formula_rule(in, s)) != 0 || (identifier = trig_function(in, s)) != 0 || (identifier = log_base(in, s)) != 0 || (identifier = currency_code_prefix(in, s)) != 0 || (identifier = scripture_verse(in, s)) != 0 || (identifier = number_mark(in, s)) != 0 || (identifier = day_countdown(in, s)) != 0 || (identifier = times_or_quarter(in, s)) != 0 || (identifier = country_code(in, s)) != 0 || (identifier = promo_plus(in, s)) != 0 || (identifier = rating_minus(in, s)) != 0 || (identifier = file_dot(in, s)) != 0 || (identifier = range_month_day(in, s)) != 0 || (identifier = weekday_range(in, s)) != 0 || (identifier = letter_unit(in, s)) != 0 || (identifier = name_version(in, s)) != 0 || (identifier = geo_coordinate(in, s)) != 0 || (identifier = colon_score(in, s)) != 0 || (identifier = price_per_unit(in, s)) != 0 ||
         (identifier = currency_pair(in, s)) != 0 || (identifier = short_dotted_date(in, s)) != 0 || (identifier = quarter(in, s)) != 0 ||
         (identifier = owner_forms(in, s)) != 0 || (identifier = owner_forms5(in, s)) != 0 ||
         (identifier = chemical_formula(in, s)) != 0 || (identifier = subscript_index(in, s)) != 0 ||
