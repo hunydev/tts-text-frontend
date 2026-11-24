@@ -678,3 +678,5 @@ standard_body	en-US	RFC	1
 standard_body	en-US	NFPA	1
 standard_body	en-US	UL	1
 classifier_priority	en-US	en.standard-number	100
+# ~20% about twenty percent (2026-11-24, user feedback)
+classifier_priority	en-US	en.approximately	100

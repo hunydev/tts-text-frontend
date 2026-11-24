@@ -1,5 +1,11 @@
 # Changelog
 
+## Feedback fixes (2026-11-24)
+
+- English: a lone I after a lowercase numbering cue (book, part, story, chapter …) and before a lowercase word is the pronoun (`the red book I read`, was one read); `Chapter I`, `World War I`, `Book I of` keep the numeral.
+- English: a wave mark written before a number reads "about" (`~20%` about twenty percent, was tilde twenty percent), and nothing after a word that already says it (`about ~5 km`); `3~4` stays a range.
+- Korean benchmark +0/−0; owner sets unchanged; contract feedback_v180 (6).
+
 ## Feedback fixes (2026-11-18)
 
 - Korean: a chapter before a verse number is Sino (`6장 39절` 육 장 삼십구절, `요한복음 3장 16절` 삼 장; was 여섯 장, as for sheets of paper, which keep 여섯 장).
